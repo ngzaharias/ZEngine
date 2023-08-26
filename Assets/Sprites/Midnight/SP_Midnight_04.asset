@@ -1,0 +1,7 @@
+m_Guid = "c9ce5af9-2e43-4744-9600-22ab32d9b9f7"
+m_Name = "SP_Midnight_04"
+m_Type = "Sprite"
+
+m_Texture2D = "91ffda2b-d755-ce42-35c3-7010aaf5ec5a"
+m_Position = { X = 300, Y = 700 }
+m_Size = { X = 100, Y = 100 }

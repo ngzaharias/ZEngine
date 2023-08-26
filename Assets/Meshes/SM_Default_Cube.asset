@@ -1,0 +1,5 @@
+m_Guid = "d0284c56-3e6a-49a2-9a80-25ff2731a3de"
+m_Name = "SM_Default_Cube"
+m_Type = "StaticMesh"
+
+m_SourceFile = "..\\AssetsRaw\\Meshes\\Cube.fbx"

@@ -1,0 +1,51 @@
+m_Guid = "cbbb7d3f-f44b-45fd-b9e5-a207d92262fb"
+m_Name = "SH_Sprite"
+m_Type = "Shader"
+
+[Programs]
+
+m_Vertex = """
+#version 330 core
+
+in vec3 a_Vertex;
+in vec2 a_TexCoords;
+in mat4 i_Model;
+
+in vec4 i_Colour;
+in vec4 i_TexParams;
+
+uniform mat4 u_CameraProj;
+uniform mat4 u_CameraView;
+
+out vec4 v_Colour;
+out vec2 v_TexCoords;
+
+void main()
+{
+	mat4 transform = u_CameraProj * u_CameraView * i_Model;
+	gl_Position = transform * vec4(a_Vertex, 1.f);
+	v_Colour = i_Colour;
+	v_TexCoords = a_TexCoords;
+	v_TexCoords.x *= i_TexParams.z;
+	v_TexCoords.y *= i_TexParams.w;
+	v_TexCoords.x += i_TexParams.x;
+	v_TexCoords.y += i_TexParams.y;
+}
+"""
+
+m_Fragment = """
+#version 330 core
+
+in vec4 v_Colour;
+in vec2 v_TexCoords;
+
+out vec4 f_Colour;
+
+uniform sampler2D u_Texture;
+
+void main()
+{
+	//f_Colour = vec4(v_TexCoords, 1.f, 1.f);
+	f_Colour = texture(u_Texture, v_TexCoords);
+}
+"""

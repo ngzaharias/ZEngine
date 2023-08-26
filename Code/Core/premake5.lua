@@ -1,0 +1,19 @@
+project "Core"
+	kind "StaticLib"
+	location "%{wks.location}/Core"
+	
+	vpaths 
+	{ 
+		{ ["Source/*"] = {  
+			"Core/**.h", 
+			"Core/**.cpp", 
+			"Core/**.inl" } },
+	}
+
+	includedirs 
+	{ 
+		"%{wks.location}/../3rdParty/",
+		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
+		"%{wks.location}/../3rdParty/spdlog/1.10.0/Include/",
+		"%{wks.location}/../Code/Core/",
+	}

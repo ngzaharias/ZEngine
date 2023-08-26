@@ -1,0 +1,12 @@
+m_Guid = "9cf3dbdc-769e-a09a-6e4a-a0390e246666"
+m_Name = "FB_Midnight"
+m_Type = "Flipbook"
+
+m_Fps = 30.0
+
+m_Frames = [
+{ m_Sprite = "00a51d6c-15ca-4ea9-bdb8-b4b11edffa63" },
+{ m_Sprite = "d8b48ef5-3a92-4ad6-8203-678a5934327d" },
+{ m_Sprite = "a62d4b35-5ea9-4bd8-890f-0fe89d4b1502" },
+{ m_Sprite = "c9ce5af9-2e43-4744-9600-22ab32d9b9f7" },
+{ m_Sprite = "3e0194f2-9b51-4838-82a7-0080c42390fe" }]

@@ -1,0 +1,28 @@
+{
+	"nodes":[
+		{"type":"text","text":"#### gamestate::NetworkSystem\n- Shutdown Client\n- Shutdown Server\n- Startup Server\n- Startup Client\n- Connect Client to Server\n- Wait for Server Response","id":"1630e1e4833cb4f6","x":-109,"y":-220,"width":466,"height":242,"color":"4"},
+		{"type":"text","text":"#### net::ConnectionSystem\n- Add UserComponent\n- Respond to Client","id":"8049e88b3d7edc73","x":357,"y":22,"width":466,"height":143,"color":"1"},
+		{"type":"text","text":"#### gamestate::StateSystem\n- Add gamestate::NetworkStartupComponent","id":"73739b88b9163274","x":-575,"y":-330,"width":466,"height":110,"color":"5"},
+		{"type":"text","text":"#### gamestate::NetworkSystem\n- Queue gamestate::LoadLevel\n- Queue gamestate::NetworkSync","id":"597e7bf8928f1eb4","x":-109,"y":165,"width":466,"height":135,"color":"4"},
+		{"type":"text","text":"#### gamestate::StateSystem\n- Remove gamestate::NetworkStartupComponent\n- Add gamestate::LevelLoadComponent","id":"a7bbc6cd8c851198","x":-575,"y":297,"width":466,"height":143,"color":"5"},
+		{"type":"text","text":"# <center>Client<center/>","id":"37509948cee6ae64","x":-575,"y":-430,"width":932,"height":51},
+		{"type":"text","text":"# <center>Server<center/>","id":"a27d09927dd50f42","x":357,"y":-430,"width":466,"height":51},
+		{"type":"text","text":"#### gamestate::LevelSystem\n- Load Level","id":"fc6c36c5a8262aa3","x":-109,"y":440,"width":466,"height":108,"color":"6"},
+		{"type":"text","text":"#### gamestate::StateSystem\n- Remove gamestate::LevelLoadComponent\n- Add gamestate::NetworkSyncComponent","id":"4b9d2243fcf709d1","x":-575,"y":548,"width":466,"height":143,"color":"5"},
+		{"type":"text","text":"#### gamestate::NetworkSystem\n- Wait for Synchronize Entities","id":"4b88baca158183b2","x":-109,"y":691,"width":466,"height":108,"color":"4"},
+		{"type":"text","text":"#### net::ConnectionSystem\n- Synchronize Entities","id":"4fef549105a322b0","x":357,"y":799,"width":466,"height":110,"color":"1"},
+		{"type":"text","text":"#### gamestate::NetworkSystem\n- Queue gamestate::RunningComponent","id":"a760a4e3b50804af","x":-109,"y":909,"width":466,"height":104,"color":"4"},
+		{"type":"text","text":"#### gamestate::StateSystem\n- Remove gamestate::NetworkSyncComponent\n- Add gamestate::RunningComponent","id":"8e62c612bd7f1027","x":-575,"y":1013,"width":466,"height":143,"color":"5"}
+	],
+	"edges":[
+		{"id":"ec1ec42855b3356c","fromNode":"73739b88b9163274","fromSide":"bottom","toNode":"1630e1e4833cb4f6","toSide":"left"},
+		{"id":"3f75232c7bcf0fd4","fromNode":"1630e1e4833cb4f6","fromSide":"bottom","toNode":"8049e88b3d7edc73","toSide":"left"},
+		{"id":"765c8f3f1a3bb73a","fromNode":"8049e88b3d7edc73","fromSide":"bottom","toNode":"597e7bf8928f1eb4","toSide":"right"},
+		{"id":"df2d276c14120c94","fromNode":"4b88baca158183b2","fromSide":"bottom","toNode":"4fef549105a322b0","toSide":"left"},
+		{"id":"dd4d863d27967c18","fromNode":"4fef549105a322b0","fromSide":"bottom","toNode":"a760a4e3b50804af","toSide":"right"},
+		{"id":"b582b940074b62b8","fromNode":"597e7bf8928f1eb4","fromSide":"bottom","toNode":"a7bbc6cd8c851198","toSide":"right"},
+		{"id":"cd0fbb306da8ecd6","fromNode":"a760a4e3b50804af","fromSide":"bottom","toNode":"8e62c612bd7f1027","toSide":"right"},
+		{"id":"d140974c11b6810a","fromNode":"a7bbc6cd8c851198","fromSide":"bottom","toNode":"fc6c36c5a8262aa3","toSide":"left"},
+		{"id":"97eec6649290a14a","fromNode":"4b9d2243fcf709d1","fromSide":"bottom","toNode":"4b88baca158183b2","toSide":"left"}
+	]
+}

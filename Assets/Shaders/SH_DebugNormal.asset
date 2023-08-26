@@ -1,0 +1,43 @@
+m_Guid = "4d92a620-28dc-4f2f-9926-61373b413721"
+m_Name = "SH_DebugNormal"
+m_Type = "Shader"
+
+[Programs]
+
+m_Vertex = """
+#version 410 core
+
+in vec3 a_Vertex;
+in vec3 a_Normal;
+in mat4 i_Model;
+
+uniform mat4 u_CameraProj;
+uniform mat4 u_CameraView;
+
+out vec4 v_Colour;
+out vec3 v_Normal;
+
+void main()
+{
+	mat4 transform = u_CameraProj * u_CameraView * i_Model;
+	gl_Position = transform * vec4(a_Vertex, 1.f);
+	v_Normal = a_Normal;
+
+}
+"""
+
+m_Fragment = """
+#version 410 core
+
+in vec3 v_Normal;
+
+out vec4 f_Colour;
+
+void main()
+{
+	f_Colour = vec4(v_Normal, 1.f);
+	f_Colour.x = abs(f_Colour.x);
+	f_Colour.y = abs(f_Colour.y);
+	f_Colour.z = abs(f_Colour.z);
+}
+"""

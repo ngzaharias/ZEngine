@@ -1,0 +1,61 @@
+m_Guid = "0205bbd9-a15b-459e-af0d-810ebe98b8d8"
+m_Name = "SH_Text"
+m_Type = "Shader"
+
+[Programs]
+
+m_Vertex = """
+#version 330 core
+
+in vec3 a_Vertex;
+in vec2 a_TexCoords;
+
+in mat4 i_Model;
+in float i_TexDepth;
+
+uniform mat4 u_CameraProj;
+uniform mat4 u_CameraView;
+
+out float v_TexDepth;
+out vec2 v_TexCoords;
+
+void main()
+{
+	mat4 transform = u_CameraProj * u_CameraView * i_Model;
+	gl_Position = transform * vec4(a_Vertex, 1.0);
+	v_TexDepth = i_TexDepth;
+	v_TexCoords = a_TexCoords;
+}
+"""
+
+m_Fragment = """
+#version 330 core
+
+in float v_TexDepth;
+in vec2 v_TexCoords;
+
+uniform vec2 u_UnitRange;
+uniform sampler2DArray u_Texture;
+
+out vec4 f_Colour;
+
+float median(float r, float g, float b) 
+{
+	return max(min(r, g), min(max(r, g), b));
+}
+
+float screenPxRange() 
+{
+    vec2 screenTexSize = vec2(1.0)/fwidth(v_TexCoords);
+    return max(0.5*dot(u_UnitRange, screenTexSize), 1.0) * 1000.0;
+}
+
+void main()
+{
+	vec3 msd = texture(u_Texture, vec3(v_TexCoords, v_TexDepth)).rgb;
+	float sd = median(msd.r, msd.g, msd.b);
+	float screenPxDistance = screenPxRange() * (sd - 0.5);
+	float opacity = clamp(screenPxDistance + 0.5, 0.0, 1.0);
+	f_Colour = mix(vec4(0.0), vec4(1.0), opacity);
+}
+"""

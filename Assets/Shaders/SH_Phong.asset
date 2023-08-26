@@ -1,0 +1,95 @@
+m_Guid = "ba38d79a-2027-4095-b6b4-5ceca225cb3e"
+m_Name = "SH_Phong"
+m_Type = "Shader"
+
+[Programs]
+
+m_Vertex = """
+#version 410 core
+
+in vec3 a_Vertex;
+in vec3 a_Normal;
+
+in vec3 i_Colour;
+in mat4 i_Model;
+
+uniform mat4 u_LightModel;
+uniform mat4 u_CameraProj;
+uniform mat4 u_CameraView;
+
+out vec3 v_Colour;
+out vec3 v_Normal;
+out vec3 v_FragLightPos;
+out vec3 v_FragWorldPos;
+
+void main()
+{
+	v_FragWorldPos = vec3(i_Model * vec4(a_Vertex, 1.f));
+
+	v_Colour = i_Colour;
+	v_Normal = a_Normal;
+	v_FragLightPos = vec3(u_LightModel * vec4(v_FragWorldPos, 1.f));
+
+	gl_Position = u_CameraProj * u_CameraView * vec4(v_FragWorldPos, 1.f);
+}
+"""
+
+m_Fragment = """
+#version 410 core
+
+#define AMBIENT_LIGHTS_MAX 2
+#define DIRECTIONAL_LIGHTS_MAX 2
+#define POINT_LIGHTS_MAX 16
+
+in vec3 v_Colour;
+in vec3 v_Normal;
+in vec3 v_FragLightPos;
+in vec3 v_FragWorldPos;
+
+uniform vec3 u_LightAmbient_Colour[AMBIENT_LIGHTS_MAX];
+
+uniform vec3 u_LightDirectional_Colour[DIRECTIONAL_LIGHTS_MAX];
+uniform vec3 u_LightDirectional_Direction[DIRECTIONAL_LIGHTS_MAX];
+
+uniform float u_LightPoint_Range[POINT_LIGHTS_MAX];
+uniform vec3 u_LightPoint_Colour[POINT_LIGHTS_MAX];
+uniform vec3 u_LightPoint_Position[POINT_LIGHTS_MAX];
+
+uniform sampler2D u_Texture_ShadowMap;
+
+out vec4 f_Colour;
+
+void main()
+{
+	// Ambient Lights
+	vec3 ambientColour = vec3(0.f);
+	for (int i = 0; i < AMBIENT_LIGHTS_MAX; ++i)
+	{
+		ambientColour += u_LightAmbient_Colour[i];
+	}
+
+	// Directional Lights
+	vec3 directionalColour = vec3(0.f);
+	for (int i = 0; i < DIRECTIONAL_LIGHTS_MAX; ++i)
+	{
+		float diffuse = max(dot(v_Normal, -u_LightDirectional_Direction[i]), 0.f);
+		directionalColour += u_LightDirectional_Colour[i] * diffuse;
+	}
+
+	// Point Lights
+	vec3 pointColour = vec3(0.f);
+	for (int i = 0; i < POINT_LIGHTS_MAX; ++i)
+	{
+		float dist = distance(v_FragWorldPos, u_LightPoint_Position[i]);
+		float range = u_LightPoint_Range[i];
+		float atten = 1.f - smoothstep(range * 0.75f, range, dist);
+
+		vec3 direction = normalize(u_LightPoint_Position[i] - v_FragWorldPos);
+		float diffuse = max(dot(v_Normal, direction), 0.f) * atten;
+		pointColour += u_LightPoint_Colour[i] * diffuse;
+	}
+
+	vec3 colour = ambientColour + directionalColour + pointColour;
+	f_Colour = vec4(colour, 1.f);
+}
+"""

@@ -1,0 +1,7 @@
+m_Guid = "52ffdca6-bc1d-6423-0eda-0e2056e9662b"
+m_Name = "SP_Default_Light"
+m_Type = "Sprite"
+
+m_Texture2D = "c6bb231c-e97f-104e-860e-b55e71988bdb"
+m_Position = { X = 0, Y = 0 }
+m_Size = { X = 1024, Y = 1024 }

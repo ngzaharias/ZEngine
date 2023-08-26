@@ -1,0 +1,65 @@
+#include "EnginePCH.h"
+#include "Engine/FlipbookSystem.h"
+
+#include <Core/Algorithms.h>
+#include <Core/GameTime.h>
+
+#include <ECS/EntityWorld.h>
+#include <ECS/QueryTypes.h>
+#include <ECS/WorldView.h>
+
+#include "Engine/AssetManager.h"
+#include "Engine/FlipbookComponent.h"
+#include "Engine/FlipbookAsset.h"
+
+namespace
+{
+	constexpr float s_TimeMaxEpsilon = 0.000001f;
+}
+
+void eng::FlipbookSystem::Update(World& world, const GameTime& gameTime)
+{
+	PROFILE_FUNCTION();
+
+	auto& assetManager = world.GetManager<eng::AssetManager>();
+
+	for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<eng::FlipbookComponent>>())
+	{
+		auto& flipbookComponent = world.GetComponent<eng::FlipbookComponent>(renderEntity);
+		if (!flipbookComponent.m_Flipbook.IsValid())
+			continue;
+
+		if (!flipbookComponent.m_IsPlaying)
+			continue;
+
+		const auto& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
+		if (flipbookAsset.m_Frames.IsEmpty())
+			continue;
+
+		const int32 indexCount = flipbookAsset.m_Frames.GetCount();
+		const int32 indexMax = indexCount - 1;
+
+		const float timeOld = flipbookComponent.m_Time;
+		const float timeNew = gameTime.m_TotalTime;
+		const float timeMax = indexCount / flipbookAsset.m_FPS;
+
+		if (timeNew < timeMax)
+		{
+			flipbookComponent.m_Time = timeNew;
+		}
+		else if (flipbookComponent.m_IsLooping)
+		{
+			flipbookComponent.m_Time = std::fmodf(timeNew, timeMax);
+		}
+		else
+		{
+			flipbookComponent.m_Time = timeMax;
+		}
+
+		if (indexMax > 0)
+		{
+			flipbookComponent.m_Index = static_cast<int32>(flipbookComponent.m_Time * flipbookAsset.m_FPS);
+			flipbookComponent.m_Index %= indexCount;
+		}
+	}
+}

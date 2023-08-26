@@ -1,0 +1,24 @@
+m_Guid = "255217e4-100b-489f-b276-701cf7718242"
+m_Name = "StaticMesh_07"
+
+[Name]
+m_Name = "StaticMesh_07"
+
+[Physics]
+m_Rigid = 0
+eENABLE_CCD = true
+eKINEMATIC = true
+eLOCK_LINEAR_Z = true
+eLOCK_ANGULAR_X = true
+eLOCK_ANGULAR_Y = true
+m_Shape = 0
+m_Channel = 1
+m_Extents = { X = 100.0, Y = 100.0, Z = 100.0 }
+
+[StaticMesh]
+m_StaticMesh = "d0284c56-3e6a-49a2-9a80-25ff2731a3de"
+
+[Transform]
+m_Translate = { X = -300.0, Y = 300.0, Z = 300.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

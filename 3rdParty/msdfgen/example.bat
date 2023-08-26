@@ -1,0 +1,1 @@
+msdfgen.exe msdf -font F_Kenpixel.ttf 'a' -size 96 96 -pxrange 12 -scale 2  -o a.png -autoframe

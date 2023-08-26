@@ -1,0 +1,46 @@
+m_Guid = "186be450-6236-4741-977b-c2b0568f5368"
+m_Name = "F_Kenpixel"
+m_Type = "Font"
+
+m_Height = 32
+m_Width = 32
+m_PixelRange = 12
+
+m_Characters = [
+	{ m_Character = "0", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\0.png" },
+	{ m_Character = "1", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\1.png" },
+	{ m_Character = "2", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\2.png" },
+	{ m_Character = "3", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\3.png" },
+	{ m_Character = "4", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\4.png" },
+	{ m_Character = "5", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\5.png" },
+	{ m_Character = "6", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\6.png" },
+	{ m_Character = "7", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\7.png" },
+	{ m_Character = "8", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\8.png" },
+	{ m_Character = "9", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\9.png" },
+	{ m_Character = "A", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\A.png" },
+	{ m_Character = "B", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\B.png" },
+	{ m_Character = "C", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\C.png" },
+	{ m_Character = "D", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\D.png" },
+	{ m_Character = "E", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\E.png" },
+	{ m_Character = "F", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\F.png" },
+	{ m_Character = "G", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\G.png" },
+	{ m_Character = "H", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\H.png" },
+	{ m_Character = "I", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\I.png" },
+	{ m_Character = "J", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\J.png" },
+	{ m_Character = "K", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\K.png" },
+	{ m_Character = "L", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\L.png" },
+	{ m_Character = "M", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\M.png" },
+	{ m_Character = "N", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\N.png" },
+	{ m_Character = "O", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\O.png" },
+	{ m_Character = "P", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\P.png" },
+	{ m_Character = "Q", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\Q.png" },
+	{ m_Character = "R", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\R.png" },
+	{ m_Character = "S", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\S.png" },
+	{ m_Character = "T", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\T.png" },
+	{ m_Character = "U", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\U.png" },
+	{ m_Character = "V", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\V.png" },
+	{ m_Character = "W", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\W.png" },
+	{ m_Character = "X", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\X.png" },
+	{ m_Character = "Y", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\Y.png" },
+	{ m_Character = "Z", m_SourceFile = "..\\AssetsRaw\\Fonts\\F_Kenpixel\\Z.png" },
+]

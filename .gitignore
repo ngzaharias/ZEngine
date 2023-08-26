@@ -1,0 +1,50 @@
+[Bb]uild
+[Gg]enerated
+[Ii]ntermediate
+[Ss]olution
+_Code
+.vs
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+//*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+//*.lib
+
+# Executables
+*.exe
+!premake5.exe
+!optick.exe
+*.out
+*.app
+
+*.vc
+*.db
+*.opendb
+*.user
+imgui.ini
+
+# Project Files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user

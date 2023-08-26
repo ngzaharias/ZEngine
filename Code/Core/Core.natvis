@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="str::Guid">
+    <Intrinsic Name="p0" Expression="((uint32_t*)&amp;m_Data.m_U32)[0]" />
+    <Intrinsic Name="p2" Expression="((uint16_t*)&amp;m_Data.m_U16)[2]" />
+    <Intrinsic Name="p3" Expression="((uint16_t*)&amp;m_Data.m_U16)[3]" />
+    <Intrinsic Name="p4" Expression="((uint16_t*)&amp;m_Data.m_U16)[4]" />
+    <Intrinsic Name="p5" Expression="((uint16_t*)&amp;m_Data.m_U16)[5]" />
+    <Intrinsic Name="p6" Expression="((uint16_t*)&amp;m_Data.m_U16)[6]" />
+    <Intrinsic Name="p7" Expression="((uint16_t*)&amp;m_Data.m_U16)[7]" />
+    <DisplayString>"{p0(),hb}-{p2(),hb}-{p3(),hb}-{p4(),hb}-{p7(),hb}{p6(),hb}{p5(),hb}"</DisplayString>
+  </Type>
+</AutoVisualizer>

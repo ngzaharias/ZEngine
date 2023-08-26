@@ -1,0 +1,12 @@
+m_Guid = "2de2934a-ad43-4617-9aff-91f92d2098e0"
+m_Name = "DirectionalLight_01"
+
+[Name]
+
+[DirectionalLight]
+m_Colour = { X = 0.8, Y = 0.8, Z = 0.8 }
+
+[Transform]
+m_Translate = { X = 0.0, Y = 1000.0, Z = 0.0 }
+m_Rotate = { Pitch = 50.0, Yaw = -30.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

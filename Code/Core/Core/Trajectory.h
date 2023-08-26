@@ -1,0 +1,47 @@
+#pragma once
+
+#include <Core/Array.h>
+#include <Core/Bezier3.h>
+#include <Core/Bezier4.h>
+#include <Core/StaticArray.h>
+#include <Core/Variant.h>
+
+namespace path
+{
+	struct Points
+	{
+		Array<float> m_Distances = { };
+		Array<Vector3f> m_Positions = { };
+	};
+
+	/// \brief
+	class Trajectory final
+	{
+	public:
+		using Mappings = StaticArray<float, 10>;
+		using Settings = Variant<Bezier3, Bezier4, Points>;
+
+	public:
+		Trajectory();
+		Trajectory(const Settings& settings);
+
+		float GetLength() const;
+
+		/// \brief Sample a position along the trajectory at a distance [0 to Length].
+		Vector3f AtDistance(const float distance);
+
+		/// \brief Sample a position along the trajectory at an interpolation [0 to 1].
+		/// 
+		/// This is useful to use for rendering as the distance between two segments 
+		/// is relative to the curve. The steeper the curve, the closer the points are.
+		Vector3f AtInterpolation(const float interpolation);
+
+		/// \brief Sample a position along the trajectory at a percentage [0 to 1].
+		Vector3f AtPercentage(const float percentage);
+
+	private:
+		// used for converting between interpolation values and distances
+		Mappings m_Mappings = { };
+		Settings m_Settings = { };
+	};
+}

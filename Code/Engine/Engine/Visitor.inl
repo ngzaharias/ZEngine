@@ -1,0 +1,247 @@
+#pragma once
+
+#include <Core/TypeTraits.h>
+
+template<typename Value>
+void eng::Visitor::Visit(const str::StringView& key, Value& value, const Value& defaultValue)
+{
+	toml::Table& parentNode = *m_Node->as_table();
+	if constexpr (core::IsSpecialization<Value, Array>::value)
+	{
+		if (IsReading())
+		{
+			if (toml::Array* childNode = parentNode[key].as_array())
+			{
+				m_Node = childNode;
+				VisitArray(value);
+			}
+			else
+			{
+				value = defaultValue;
+			}
+		}
+		else
+		{
+			toml::Array childNode;
+			m_Node = &childNode;
+			VisitArray(value);
+			parentNode.insert_or_assign(key, std::move(childNode));
+		}
+	}
+	else if constexpr (core::IsSpecialization<Value, Map>::value)
+	{
+		if (IsReading())
+		{
+			if (toml::Table* childNode = parentNode[key].as_table())
+			{
+				m_Node = childNode;
+				VisitMap(value);
+			}
+			else
+			{
+				value = defaultValue;
+			}
+		}
+		else
+		{
+			toml::Table childNode;
+			m_Node = &childNode;
+			VisitMap(value);
+			parentNode.insert_or_assign(key, std::move(childNode));
+		}
+	}
+	else if constexpr (std::is_enum<Value>::value)
+	{
+		VisitEnum(key, value, defaultValue);
+	}
+	else // custom
+	{
+		if (IsReading())
+		{
+			if (toml::Table* childNode = parentNode[key].as_table())
+			{
+				m_Node = childNode;
+				VisitCustom(value);
+			}
+			else
+			{
+				value = defaultValue;
+			}
+		}
+		else
+		{
+			toml::Table childNode;
+			m_Node = &childNode;
+			VisitCustom(value);
+			parentNode.insert_or_assign(key, std::move(childNode));
+		}
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Value>
+void eng::Visitor::Visit(const int32 index, Value& value)
+{
+	toml::Array& parentNode = *m_Node->as_array();
+	if constexpr (core::IsSpecialization<Value, Array>::value)
+	{
+		if (IsReading())
+		{
+			if (toml::Array* childNode = parentNode.at(index).as_array())
+			{
+				m_Node = childNode;
+				VisitArray(value);
+			}
+		}
+		else
+		{
+			toml::Array childNode;
+			m_Node = &childNode;
+			VisitArray(value);
+			parentNode.push_back(std::move(childNode));
+		}
+	}
+	else if constexpr (core::IsSpecialization<Value, Map>::value)
+	{
+		if (IsReading())
+		{
+			if (toml::Table* childNode = parentNode.at(index).as_array())
+			{
+				m_Node = childNode;
+				VisitMap(value);
+			}
+		}
+		else
+		{
+			toml::Table childNode;
+			m_Node = &childNode;
+			VisitMap(value);
+			parentNode.push_back(std::move(childNode));
+		}
+	}
+	else if constexpr (std::is_enum<Value>::value)
+	{
+		VisitEnum(index, value);
+	}
+	else // custom
+	{
+		if (IsReading())
+		{
+			if (toml::Table* childNode = parentNode.at(index).as_table())
+			{
+				m_Node = childNode;
+				VisitCustom(value);
+			}
+		}
+		else
+		{
+			toml::Table childNode;
+			m_Node = &childNode;
+			VisitCustom(value);
+			parentNode.push_back(std::move(childNode));
+		}
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Value>
+void eng::Visitor::VisitArray(Array<Value>& values)
+{
+	toml::Array& parentNode = *m_Node->as_array();
+	if (IsReading())
+	{
+		values.Resize(static_cast<int32>(parentNode.size()));
+		for (int32 i = 0; i < values.GetCount(); ++i)
+			Visit(i, values[i]);
+	}
+	else
+	{
+		parentNode.reserve(static_cast<size_t>(values.GetCount()));
+		for (int32 i = 0; i < values.GetCount(); ++i)
+			Visit(i, values[i]);
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Key, typename Value>
+void eng::Visitor::VisitMap(Map<Key, Value>& values)
+{
+	toml::Table& parentNode = *m_Node->as_table();
+	if (IsReading())
+	{
+		for (auto& node : parentNode)
+		{
+			const Key key = Key(node.first.str());
+			auto& value = values[key];
+			Visit(key, value, value);
+		}
+	}
+	else
+	{
+		for (auto&& [key, value] : values)
+			Visit(key, value, value);
+	}
+	m_Node = &parentNode;
+}
+
+template <typename TEnum>
+void eng::Visitor::VisitEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue)
+{
+	toml::Table& currentNode = *m_Node->as_table();
+	if (IsReading())
+	{
+		using Value = std::underlying_type<TEnum>::type;
+		const auto result = currentNode[key].value<Value>();
+		value = result ? static_cast<TEnum>(*result) : defaultValue;
+	}
+	else
+	{
+		currentNode.insert_or_assign(key, static_cast<int64>(value));
+	}
+}
+
+template <typename TEnum>
+void eng::Visitor::VisitEnum(const int32 index, TEnum& value)
+{
+	toml::Array& currentNode = *m_Node->as_array();
+	if (IsReading())
+	{
+		using Value = std::underlying_type<TEnum>::type;
+		if (const auto result = currentNode.at(index).value<Value>())
+			value = static_cast<TEnum>(*result);
+	}
+	else
+	{
+		currentNode.push_back(static_cast<int64>(value));
+	}
+}
+
+template<typename Value>
+void eng::Visitor::VisitPrimitive(const str::StringView& key, Value& value, const Value defaultValue)
+{
+	toml::Table& currentNode = *m_Node->as_table();
+	if (IsReading())
+	{
+		const auto result = currentNode[key].value<Value>();
+		value = result ? *result : defaultValue;
+	}
+	else
+	{
+		currentNode.insert_or_assign(key, value);
+	}
+}
+
+template<typename Value>
+void eng::Visitor::VisitPrimitive(const int32 index, Value& value)
+{
+	toml::Array& currentNode = *m_Node->as_array();
+	if (IsReading())
+	{
+		if (const auto result = currentNode.at(index).value<Value>())
+			value = *result;
+	}
+	else
+	{
+		currentNode.push_back(value);
+	}
+}

@@ -1,0 +1,15 @@
+{
+  "alwaysUpdateLinks": true,
+  "showUnsupportedFiles": false,
+  "newFileLocation": "current",
+  "newLinkFormat": "shortest",
+  "spellcheck": true,
+  "autoPairBrackets": false,
+  "foldHeading": true,
+  "foldIndent": false,
+  "defaultViewMode": "preview",
+  "showLineNumber": true,
+  "spellcheckDictionary": [
+    "customisation"
+  ]
+}

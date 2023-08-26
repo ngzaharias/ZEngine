@@ -1,0 +1,29 @@
+m_Guid = "5ab1ac45-783b-4a54-aa98-92f6e36bc639"
+m_Name = "SH_DepthBuffer"
+m_Type = "Shader"
+
+[Programs]
+
+m_Vertex = """
+#version 330 core
+
+in vec3 a_Vertex;
+in mat4 i_Model;
+
+uniform mat4 u_CameraProj;
+uniform mat4 u_CameraView;
+
+void main()
+{
+	mat4 transform = u_CameraProj * u_CameraView * i_Model;
+	gl_Position = transform * vec4(a_Vertex, 1.f);
+}
+"""
+
+m_Fragment = """
+#version 330 core
+
+void main()
+{
+}
+"""

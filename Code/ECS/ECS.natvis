@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="ecs::Entity">
+    <Intrinsic Name="Index" Expression="(m_Value &amp; 0x00000000ffffffff)"/>
+    <Intrinsic Name="Version" Expression="(m_Value &gt;&gt; 32) &amp; 0x00000000ffffffff"/>
+    <DisplayString Condition="m_Value == 0xffffffffffffffff">[Unassigned]</DisplayString>
+    <DisplayString>Index {Index()} | Version {Version()}</DisplayString>
+    <Expand>
+      <Item Name="Index">Index()</Item>
+      <Item Name="Version">Version()</Item>
+    </Expand>
+  </Type>
+</AutoVisualizer>
