@@ -1,6 +1,6 @@
 project "Engine_ut"
 	kind "ConsoleApp"
-	dependson { "Core", "Engine" }
+	dependson { "Core", "ECS", "Engine" }
 	location "%{wks.location}/Engine_ut"
 
 	defines { "Z_UNIT_TEST" }
@@ -25,6 +25,7 @@ project "Engine_ut"
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../3rdParty/SFML/Include/",
 		"%{wks.location}/../Code/Core/",
+		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
 	}
 
@@ -33,12 +34,14 @@ project "Engine_ut"
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
 		"%{wks.location}/../3rdParty/SFML/Library/%{cfg.buildcfg}/",
 		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/ECS/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Engine/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
 	
 	links 
 	{ 
 		"Core.lib",
+		"ECS.lib",
 		"Engine.lib",
 		"OptickCore.lib",
 	}
