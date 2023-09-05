@@ -1,5 +1,7 @@
 #pragma once
 
+using uint32 = uint32_t;
+
 class GameTime final
 {
 public:
