@@ -1,0 +1,140 @@
+#include <Catch2/catch.hpp>
+
+#include <Core/GameTime.h>
+#include <Core/Types.h>
+
+#include <ECS/UTHelpers.h>
+#include <ECS/WorldView.h>
+
+#include <GameClient/ContainerComponents.h>
+#include <GameClient/ContainerMemberSystem.h>
+#include <GameClient/ContainerOwnerSystem.h>
+#include <GameClient/ContainerStorageSystem.h>
+
+namespace
+{
+	struct RAIIHelper : public ut::RAIIHelper
+	{
+		RAIIHelper()
+		{
+			m_EntityWorld.RegisterComponent<container::MemberAddRequestComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberAddResultComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberChangesComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberRemoveRequestComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberRemoveResultComponent>();
+			m_EntityWorld.RegisterComponent<container::OwnerComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageChangesComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageCreateRequestComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageCreateResultComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageDestroyRequestComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageDestroyResultComponent>();
+			m_EntityWorld.RegisterSystem<container::MemberSystem>();
+			m_EntityWorld.RegisterSystem<container::StorageSystem>();
+			m_EntityWorld.RegisterSystem<container::OwnerSystem>();
+
+			Initialise();
+		}
+	};
+
+	ecs::Entity CreateStorage(RAIIHelper& world, const ecs::Entity& ownerEntity, const int32 type)
+	{
+		const ecs::Entity requestEntity = world.CreateEntity();
+		world.Update();
+
+		auto& requestComponent = world.AddComponent<container::StorageCreateRequestComponent>(requestEntity);
+		requestComponent.m_Owner = ownerEntity;
+		requestComponent.m_Type = type;
+		world.Update(2);
+
+		if (!world.HasComponent<container::StorageCreateResultComponent>(requestEntity))
+			return ecs::Entity::Unassigned;
+
+		const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestEntity);
+		return resultComponent.m_Storage;
+	}
+}
+
+TEST_CASE("container::OwnerSystem::Storage Created")
+{
+	RAIIHelper world;
+
+	const ecs::Entity deadEntity = world.CreateEntity();
+	const ecs::Entity ownerEntity = world.CreateEntity();
+	world.Update();
+	world.DestoryEntity(deadEntity);
+	world.Update();
+
+	SECTION("Unassigned Owner Entity")
+	{
+		const ecs::Entity storageEntity = CreateStorage(world, ecs::Entity::Unassigned, 0);
+		world.Update();
+
+		const auto& storageComponent = world.GetComponent<const container::StorageComponent>(storageEntity);
+		CHECK(storageComponent.m_Owner == ecs::Entity::Unassigned);
+	}
+
+	SECTION("Owner Entity is Dead")
+	{
+		const ecs::Entity storageEntity = CreateStorage(world, deadEntity, 0);
+		world.Update();
+
+		const auto& storageComponent = world.GetComponent<const container::StorageComponent>(storageEntity);
+		CHECK(storageComponent.m_Owner == deadEntity);
+	}
+
+	SECTION("Owner Entity is Valid")
+	{
+		const ecs::Entity storageEntity = CreateStorage(world, ownerEntity, 0);
+		world.Update();
+
+		const auto& storageComponent = world.GetComponent<const container::StorageComponent>(storageEntity);
+		CHECK(storageComponent.m_Owner == ownerEntity);
+	}
+
+	SECTION("Owner Entity has multiple Storages, Same Frame")
+	{
+		const ecs::Entity requestAEntity = world.CreateEntity();
+		const ecs::Entity requestBEntity = world.CreateEntity();
+		world.Update();
+
+		auto& requestAComponent = world.AddComponent<container::StorageCreateRequestComponent>(requestAEntity);
+		requestAComponent.m_Owner = ownerEntity;
+		requestAComponent.m_Type = 0;
+		auto& requestBComponent = world.AddComponent<container::StorageCreateRequestComponent>(requestBEntity);
+		requestBComponent.m_Owner = ownerEntity;
+		requestBComponent.m_Type = 1;
+		world.Update(2);
+
+		const auto& resultAComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestAEntity);
+		const auto& resultBComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestBEntity);
+		const auto& storageAComponent = world.GetComponent<const container::StorageComponent>(resultAComponent.m_Storage);
+		const auto& storageBComponent = world.GetComponent<const container::StorageComponent>(resultBComponent.m_Storage);
+		CHECK(storageAComponent.m_Owner == ownerEntity);
+		CHECK(storageBComponent.m_Owner == ownerEntity);
+	}
+
+	SECTION("Owner Entity has multiple Storages, Next Frame")
+	{
+		const ecs::Entity storageAEntity = CreateStorage(world, ownerEntity, 0);
+		const ecs::Entity storageBEntity = CreateStorage(world, ownerEntity, 1);
+
+		const auto& storageAComponent = world.GetComponent<const container::StorageComponent>(storageAEntity);
+		CHECK(storageAComponent.m_Owner == ownerEntity);
+
+		const auto& storageBComponent = world.GetComponent<const container::StorageComponent>(storageBEntity);
+		CHECK(storageBComponent.m_Owner == ownerEntity);
+	}
+}
+
+TEST_CASE("container::OwnerSystem::Storage Destroyed")
+{
+	RAIIHelper world;
+
+	const ecs::Entity deadEntity = world.CreateEntity();
+	const ecs::Entity ownerEntity = world.CreateEntity();
+	world.Update();
+	world.DestoryEntity(deadEntity);
+	world.Update();
+}

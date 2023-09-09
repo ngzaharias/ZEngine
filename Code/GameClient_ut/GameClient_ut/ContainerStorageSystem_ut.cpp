@@ -8,6 +8,7 @@
 
 #include <GameClient/ContainerComponents.h>
 #include <GameClient/ContainerMemberSystem.h>
+#include <GameClient/ContainerOwnerSystem.h>
 #include <GameClient/ContainerStorageSystem.h>
 
 namespace
@@ -16,8 +17,14 @@ namespace
 	{
 		RAIIHelper()
 		{
+			m_EntityWorld.RegisterComponent<container::MemberAddRequestComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberAddResultComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberChangesComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberRemoveRequestComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberRemoveResultComponent>();
 			m_EntityWorld.RegisterComponent<container::OwnerComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageChangesComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageCreateRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageCreateResultComponent>();
@@ -25,17 +32,20 @@ namespace
 			m_EntityWorld.RegisterComponent<container::StorageDestroyResultComponent>();
 			m_EntityWorld.RegisterSystem<container::MemberSystem>();
 			m_EntityWorld.RegisterSystem<container::StorageSystem>();
+			m_EntityWorld.RegisterSystem<container::OwnerSystem>();
 
 			Initialise();
 		}
 	};
 
-	ecs::Entity CreateStorage(RAIIHelper& world)
+	ecs::Entity CreateStorage(RAIIHelper& world, const ecs::Entity& ownerEntity, const int32 type)
 	{
 		const ecs::Entity requestEntity = world.CreateEntity();
 		world.Update();
 
-		world.AddComponent<container::StorageCreateRequestComponent>(requestEntity);
+		auto& requestComponent = world.AddComponent<container::StorageCreateRequestComponent>(requestEntity);
+		requestComponent.m_Owner = ownerEntity;
+		requestComponent.m_Type = type;
 		world.Update(2);
 
 		if (!world.HasComponent<container::StorageCreateResultComponent>(requestEntity))
@@ -65,7 +75,7 @@ TEST_CASE("container::StorageSystem::Member Add")
 {
 	RAIIHelper world;
 
-	const ecs::Entity storageEntity = CreateStorage(world);
+	const ecs::Entity storageEntity = CreateStorage(world, ecs::Entity::Unassigned, 0);
 	world.Update();
 }
 
@@ -73,7 +83,7 @@ TEST_CASE("container::StorageSystem::Member Remove")
 {
 	RAIIHelper world;
 
-	const ecs::Entity storageEntity = CreateStorage(world);
+	const ecs::Entity storageEntity = CreateStorage(world, ecs::Entity::Unassigned, 0);
 	world.Update();
 }
 
@@ -192,6 +202,18 @@ TEST_CASE("container::StorageSystem::Storage Create")
 		CHECK(storageComponent.m_Owner == ownerEntity);
 		CHECK(storageComponent.m_Limit == 1337);
 		CHECK(storageComponent.m_Type == 666);
+
+		// check changes
+		const auto& changesComponent = world.m_EntityWorld.GetSingleton<const container::StorageChangesComponent>();
+		REQUIRE(changesComponent.m_Created.GetCount() == 1);
+		REQUIRE(changesComponent.m_Destroyed.GetCount() == 0);
+		CHECK(changesComponent.m_Created[0].m_Storage == resultComponent.m_Storage);
+		CHECK(changesComponent.m_Created[0].m_Owner == ownerEntity);
+		CHECK(changesComponent.m_Created[0].m_Type == 666);
+
+		world.Update();
+		CHECK(changesComponent.m_Created.GetCount() == 0);
+		CHECK(changesComponent.m_Destroyed.GetCount() == 0);
 	}
 }
 
@@ -205,7 +227,7 @@ TEST_CASE("container::StorageSystem::Storage Destroy")
 	const ecs::Entity ownerEntity = world.CreateEntity();
 	const ecs::Entity requestAEntity = world.CreateEntity();
 	const ecs::Entity requestBEntity = world.CreateEntity();
-	const ecs::Entity storageEntity = CreateStorage(world);
+	const ecs::Entity storageEntity = CreateStorage(world, ownerEntity, 666);
 	world.Update();
 	world.DestoryEntity(deadEntity);
 	world.Update();
@@ -356,5 +378,17 @@ TEST_CASE("container::StorageSystem::Storage Destroy")
 		CHECK(resultComponent.m_Error == container::EError::None);
 
 		CHECK(!world.IsAlive(storageEntity));
+
+		// check changes
+		const auto& changesComponent = world.m_EntityWorld.GetSingleton<const container::StorageChangesComponent>();
+		REQUIRE(changesComponent.m_Created.GetCount() == 0);
+		REQUIRE(changesComponent.m_Destroyed.GetCount() == 1);
+		CHECK(changesComponent.m_Destroyed[0].m_Storage == storageEntity);
+		CHECK(changesComponent.m_Destroyed[0].m_Owner == ownerEntity);
+		CHECK(changesComponent.m_Destroyed[0].m_Type == 666);
+
+		world.Update();
+		CHECK(changesComponent.m_Created.GetCount() == 0);
+		CHECK(changesComponent.m_Destroyed.GetCount() == 0);
 	}
 }

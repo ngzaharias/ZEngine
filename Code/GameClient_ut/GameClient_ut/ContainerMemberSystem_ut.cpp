@@ -8,6 +8,8 @@
 
 #include <GameClient/ContainerComponents.h>
 #include <GameClient/ContainerMemberSystem.h>
+#include <GameClient/ContainerOwnerSystem.h>
+#include <GameClient/ContainerStorageSystem.h>
 
 namespace
 {
@@ -21,8 +23,16 @@ namespace
 			m_EntityWorld.RegisterComponent<container::MemberComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberRemoveRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberRemoveResultComponent>();
+			m_EntityWorld.RegisterComponent<container::OwnerComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageChangesComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageCreateRequestComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageCreateResultComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageDestroyRequestComponent>();
+			m_EntityWorld.RegisterComponent<container::StorageDestroyResultComponent>();
 			m_EntityWorld.RegisterSystem<container::MemberSystem>();
+			m_EntityWorld.RegisterSystem<container::StorageSystem>();
+			m_EntityWorld.RegisterSystem<container::OwnerSystem>();
 
 			Initialise();
 		}
@@ -44,11 +54,17 @@ namespace
 
 	ecs::Entity CreateStorage(RAIIHelper& world)
 	{
-		const ecs::Entity storageEntity = world.CreateEntity();
-		world.AddComponent<container::StorageComponent>(storageEntity);
+		const ecs::Entity requestEntity = world.CreateEntity();
 		world.Update();
 
-		return storageEntity;
+		world.AddComponent<container::StorageCreateRequestComponent>(requestEntity);
+		world.Update(2);
+
+		if (!world.HasComponent<container::StorageCreateResultComponent>(requestEntity))
+			return ecs::Entity::Unassigned;
+
+		const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestEntity);
+		return resultComponent.m_Storage;
 	}
 }
 
@@ -66,10 +82,6 @@ CATCH_REGISTER_ENUM(container::EError,
 	container::EError::StorageDuplicate,
 	container::EError::StorageMissing,
 	container::EError::StorageUnassigned);
-
-TEST_CASE("container::MemberSystem::Member Changes")
-{
-}
 
 TEST_CASE("container::MemberSystem::Member Add")
 {
@@ -333,6 +345,17 @@ TEST_CASE("container::MemberSystem::Member Add")
 		CHECK(memberComponent.m_GridX == 123);
 		CHECK(memberComponent.m_GridY == 456);
 		CHECK(memberComponent.m_Type == 666);
+
+		// checks changes
+		const auto& changesComponent = world.m_EntityWorld.GetSingleton<const container::MemberChangesComponent>();
+		REQUIRE(changesComponent.m_Added.GetCount() == 1);
+		REQUIRE(changesComponent.m_Removed.GetCount() == 0);
+		CHECK(changesComponent.m_Added[0].m_Member == memberEntity);
+		CHECK(changesComponent.m_Added[0].m_Storage == storageEntity);
+
+		world.Update();
+		CHECK(changesComponent.m_Added.GetCount() == 0);
+		CHECK(changesComponent.m_Removed.GetCount() == 0);
 	}
 }
 
@@ -575,5 +598,16 @@ TEST_CASE("container::MemberSystem::Member Remove")
 
 		// check member
 		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
+
+		// check changes
+		const auto& changesComponent = world.m_EntityWorld.GetSingleton<const container::MemberChangesComponent>();
+		REQUIRE(changesComponent.m_Added.GetCount() == 0);
+		REQUIRE(changesComponent.m_Removed.GetCount() == 1);
+		CHECK(changesComponent.m_Removed[0].m_Member == memberEntity);
+		CHECK(changesComponent.m_Removed[0].m_Storage == storageEntity);
+
+		world.Update();
+		CHECK(changesComponent.m_Added.GetCount() == 0);
+		CHECK(changesComponent.m_Removed.GetCount() == 0);
 	}
 }

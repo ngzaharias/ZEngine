@@ -63,6 +63,13 @@ namespace container
 		ecs::Entity m_Storage = {};
 	};
 
+	struct StorageChange
+	{
+		ecs::Entity m_Storage = {};
+		ecs::Entity m_Owner = {};
+		int32 m_Type = -1;
+	};
+
 	//////////////////////////////////////////////////////////////////////////
 
 	/// \brief Holds all information of a single member inside a container.
@@ -135,6 +142,13 @@ namespace container
 
 		// All the members of the storage.
 		Set<ecs::Entity> m_Members = { };
+	};
+
+	/// \brief 
+	struct StorageChangesComponent final : public ecs::SingletonComponent<StorageChangesComponent>
+	{
+		Array<StorageChange> m_Created;
+		Array<StorageChange> m_Destroyed;
 	};
 
 	/// \brief Request that a new storage is created.
