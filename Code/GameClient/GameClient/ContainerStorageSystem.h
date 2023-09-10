@@ -8,6 +8,7 @@
 namespace container
 {
 	struct MemberChangesComponent;
+	struct MemberComponent;
 	struct OwnerComponent;
 	struct StorageChangesComponent;
 	struct StorageComponent;
@@ -26,6 +27,7 @@ namespace container
 			container::StorageCreateResultComponent,
 			container::StorageDestroyResultComponent,
 			const container::MemberChangesComponent,
+			const container::MemberComponent,
 			const container::OwnerComponent,
 			const container::StorageCreateRequestComponent,
 			const container::StorageDestroyRequestComponent>;

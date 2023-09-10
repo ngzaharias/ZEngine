@@ -91,6 +91,19 @@ void container::StorageSystem::ProcessMemberChanges(World& world)
 		auto& storageComponent = world.GetComponent<container::StorageComponent>(data.m_Storage);
 		storageComponent.m_Members.Remove(data.m_Member);
 	}
+
+	// member lifetime is external to the container systems
+	for (const ecs::Entity& memberEntity : world.Query<ecs::query::Removed<const container::MemberComponent>>())
+	{
+		const auto& memberComponent = world.GetComponent<const container::MemberComponent>(memberEntity, false);
+		
+		// if storage was also destroyed in the previous frame
+		if (!world.IsAlive(memberComponent.m_Storage))
+			continue;
+
+		auto& storageComponent = world.GetComponent<container::StorageComponent>(memberComponent.m_Storage);
+		storageComponent.m_Members.Remove(memberEntity);
+	}
 }
 
 void container::StorageSystem::ProcessStorageRequests(World& world)
@@ -125,6 +138,8 @@ void container::StorageSystem::ProcessStorageRequests(World& world)
 			createData.m_Type = requestComponent.m_Type;
 		}
 	}
+
+	// #todo: destroy storage when owner is destroyed?
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const container::StorageDestroyRequestComponent>>())
 	{

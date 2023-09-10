@@ -48,11 +48,16 @@ namespace
 		requestComponent.m_Type = type;
 		world.Update(2);
 
-		if (!world.HasComponent<container::StorageCreateResultComponent>(requestEntity))
-			return ecs::Entity::Unassigned;
-
 		const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestEntity);
 		return resultComponent.m_Storage;
+	}
+
+	void DestroyStorage(RAIIHelper& world, const ecs::Entity& storageEntity)
+	{
+		const ecs::Entity requestEntity = world.CreateEntity();
+		auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestEntity);
+		requestComponent.m_Storage = storageEntity;
+		world.Update(2);
 	}
 }
 

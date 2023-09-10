@@ -36,8 +36,11 @@ void container::OwnerSystem::ProcessStorageChanges(World& world)
 			ownerComponent.m_Storages.Set(data->m_Type, data->m_Storage);
 	}
 
+	// gather remove requests to handle duplicates
+	Set<ecs::Entity> removeRequests;
 	for (const StorageChange& data : storageChangesComponent.m_Destroyed)
 	{
+		// storage owner is allowed to be unassigned
 		if (data.m_Owner.IsUnassigned())
 			continue;
 
@@ -45,6 +48,10 @@ void container::OwnerSystem::ProcessStorageChanges(World& world)
 		ownerComponent.m_Storages.Remove(data.m_Type);
 
 		if (ownerComponent.m_Storages.IsEmpty())
-			world.RemoveComponent<container::OwnerComponent>(data.m_Owner);
+			removeRequests.Add(data.m_Owner);
 	}
+
+	// process requests, no safety checks as that indicates an error in the system
+	for (const ecs::Entity& ownerEntity : removeRequests)
+		world.RemoveComponent<container::OwnerComponent>(ownerEntity);
 }

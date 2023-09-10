@@ -9,6 +9,7 @@ namespace container
 {
 	struct OwnerComponent;
 	struct StorageChangesComponent;
+	struct StorageComponent;
 
 	/// \brief Handles creating/destroying of storage entity and its components.
 	class OwnerSystem final : public ecs::System
@@ -16,7 +17,8 @@ namespace container
 	public:
 		using World = ecs::WorldView<
 			container::OwnerComponent,
-			const container::StorageChangesComponent>;
+			const container::StorageChangesComponent,
+			const container::StorageComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

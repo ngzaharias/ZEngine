@@ -60,15 +60,20 @@ namespace
 		world.AddComponent<container::StorageCreateRequestComponent>(requestEntity);
 		world.Update(2);
 
-		if (!world.HasComponent<container::StorageCreateResultComponent>(requestEntity))
-			return ecs::Entity::Unassigned;
-
 		const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestEntity);
 		return resultComponent.m_Storage;
 	}
+
+	void DestroyStorage(RAIIHelper& world, const ecs::Entity& storageEntity)
+	{
+		const ecs::Entity requestEntity = world.CreateEntity();
+		auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestEntity);
+		requestComponent.m_Storage = storageEntity;
+		world.Update(2);
+	}
 }
 
-CATCH_REGISTER_ENUM(container::EError, 
+CATCH_REGISTER_ENUM(container::EError,
 	container::EError::None,
 	container::EError::MemberDead,
 	container::EError::MemberDuplicate,
@@ -451,35 +456,15 @@ TEST_CASE("container::MemberSystem::Member Remove")
 		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
 	}
 
-	SECTION("Failure: Dead Storage Entity, Same Frame")
+	SECTION("Failure: Storage Destroyed, Next Frame")
 	{
 		// destroy the storage
-		world.DestoryEntity(storageEntity);
-
-		// request add
 		{
-			auto& requestComponent = world.AddComponent<container::MemberRemoveRequestComponent>(requestAEntity);
-			requestComponent.m_TransactionId = transactionId;
-			requestComponent.m_Member = memberEntity;
+			const ecs::Entity requestEntity = world.CreateEntity();
+			auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestAEntity);
+			requestComponent.m_Storage = storageEntity;
 		}
 
-		world.Update(2);
-
-		// check result
-		REQUIRE(world.HasComponent<container::MemberRemoveResultComponent>(requestAEntity));
-		const auto& resultComponent = world.GetComponent<const container::MemberRemoveResultComponent>(requestAEntity);
-		CHECK(resultComponent.m_TransactionId == transactionId);
-		CHECK(resultComponent.m_Member == memberEntity);
-		CHECK(resultComponent.m_Error == container::EError::StorageDead);
-
-		// check member
-		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
-	}
-
-	SECTION("Failure: Dead Storage Entity, Next Frame")
-	{
-		// destroy the storage
-		world.DestoryEntity(storageEntity);
 		world.Update();
 
 		// request add
@@ -496,7 +481,7 @@ TEST_CASE("container::MemberSystem::Member Remove")
 		const auto& resultComponent = world.GetComponent<const container::MemberRemoveResultComponent>(requestAEntity);
 		CHECK(resultComponent.m_TransactionId == transactionId);
 		CHECK(resultComponent.m_Member == memberEntity);
-		CHECK(resultComponent.m_Error == container::EError::MemberMissing);
+		CHECK(resultComponent.m_Error == container::EError::StorageDead);
 
 		// check member
 		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
@@ -609,5 +594,51 @@ TEST_CASE("container::MemberSystem::Member Remove")
 		world.Update();
 		CHECK(changesComponent.m_Added.GetCount() == 0);
 		CHECK(changesComponent.m_Removed.GetCount() == 0);
+	}
+
+	SECTION("Success: Storage Destroyed, Same Frame")
+	{
+		// destroy the storage
+		{
+			const ecs::Entity requestEntity = world.CreateEntity();
+			auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestAEntity);
+			requestComponent.m_Storage = storageEntity;
+		}
+
+		// request add
+		{
+			auto& requestComponent = world.AddComponent<container::MemberRemoveRequestComponent>(requestBEntity);
+			requestComponent.m_TransactionId = transactionId;
+			requestComponent.m_Member = memberEntity;
+		}
+
+		world.Update(2);
+
+		// check result
+		REQUIRE(world.HasComponent<container::MemberRemoveResultComponent>(requestBEntity));
+		const auto& resultComponent = world.GetComponent<const container::MemberRemoveResultComponent>(requestBEntity);
+		CHECK(resultComponent.m_TransactionId == transactionId);
+		CHECK(resultComponent.m_Member == memberEntity);
+		CHECK(resultComponent.m_Error == container::EError::None);
+
+		// check member
+		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
+	}
+
+	SECTION("Member and Storage Destroyed")
+	{
+		// destroy the storage
+		{
+			const ecs::Entity requestEntity = world.CreateEntity();
+			auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestAEntity);
+			requestComponent.m_Storage = storageEntity;
+		}
+
+		world.Update();
+
+		world.DestoryEntity(memberEntity);
+		world.Update();
+
+		// no crash
 	}
 }

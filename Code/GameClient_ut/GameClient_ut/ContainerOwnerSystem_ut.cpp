@@ -41,18 +41,21 @@ namespace
 	ecs::Entity CreateStorage(RAIIHelper& world, const ecs::Entity& ownerEntity, const int32 type)
 	{
 		const ecs::Entity requestEntity = world.CreateEntity();
-		world.Update();
-
 		auto& requestComponent = world.AddComponent<container::StorageCreateRequestComponent>(requestEntity);
 		requestComponent.m_Owner = ownerEntity;
 		requestComponent.m_Type = type;
 		world.Update(2);
 
-		if (!world.HasComponent<container::StorageCreateResultComponent>(requestEntity))
-			return ecs::Entity::Unassigned;
-
 		const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestEntity);
 		return resultComponent.m_Storage;
+	}
+
+	void DestroyStorage(RAIIHelper& world, const ecs::Entity& storageEntity)
+	{
+		const ecs::Entity requestEntity = world.CreateEntity();
+		auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestEntity);
+		requestComponent.m_Storage = storageEntity;
+		world.Update(2);
 	}
 }
 
@@ -91,14 +94,18 @@ TEST_CASE("container::OwnerSystem::Storage Created")
 
 		const auto& storageComponent = world.GetComponent<const container::StorageComponent>(storageEntity);
 		CHECK(storageComponent.m_Owner == ownerEntity);
+
+		REQUIRE(world.HasComponent<container::OwnerComponent>(ownerEntity));
+		const auto& ownerComponent = world.GetComponent<const container::OwnerComponent>(ownerEntity);
+		CHECK(ownerComponent.m_Storages.GetCount() == 1);
+		CHECK(ownerComponent.m_Storages.Contains(0));
+		CHECK(ownerComponent.m_Storages.Get(0) == storageEntity);
 	}
 
 	SECTION("Owner Entity has multiple Storages, Same Frame")
 	{
 		const ecs::Entity requestAEntity = world.CreateEntity();
 		const ecs::Entity requestBEntity = world.CreateEntity();
-		world.Update();
-
 		auto& requestAComponent = world.AddComponent<container::StorageCreateRequestComponent>(requestAEntity);
 		requestAComponent.m_Owner = ownerEntity;
 		requestAComponent.m_Type = 0;
@@ -132,9 +139,112 @@ TEST_CASE("container::OwnerSystem::Storage Destroyed")
 {
 	RAIIHelper world;
 
-	const ecs::Entity deadEntity = world.CreateEntity();
 	const ecs::Entity ownerEntity = world.CreateEntity();
 	world.Update();
-	world.DestoryEntity(deadEntity);
-	world.Update();
+
+	SECTION("Remove 1 of 1 Storage")
+	{
+		const ecs::Entity storageEntity = CreateStorage(world, ownerEntity, 0);
+		REQUIRE(world.HasComponent<container::OwnerComponent>(ownerEntity));
+		
+		DestroyStorage(world, storageEntity);
+		CHECK(!world.HasComponent<container::OwnerComponent>(ownerEntity));
+
+		world.Update();
+	}
+
+	SECTION("Remove 1 of 2 Storage")
+	{
+		const ecs::Entity storageAEntity = CreateStorage(world, ownerEntity, 0);
+		const ecs::Entity storageBEntity = CreateStorage(world, ownerEntity, 1);
+		REQUIRE(world.HasComponent<container::OwnerComponent>(ownerEntity));
+
+		DestroyStorage(world, storageAEntity);
+
+		REQUIRE(world.HasComponent<container::OwnerComponent>(ownerEntity));
+		const auto& ownerComponent = world.GetComponent<const container::OwnerComponent>(ownerEntity);
+		CHECK(ownerComponent.m_Storages.GetCount() == 1);
+		CHECK(ownerComponent.m_Storages.Contains(1));
+		CHECK(ownerComponent.m_Storages.Get(1) == storageBEntity);
+	}
+
+	SECTION("Remove 2 of 2 Storage")
+	{
+		const ecs::Entity storageAEntity = CreateStorage(world, ownerEntity, 0);
+		const ecs::Entity storageBEntity = CreateStorage(world, ownerEntity, 1);
+		DestroyStorage(world, storageAEntity);
+		DestroyStorage(world, storageBEntity);
+
+		CHECK(!world.HasComponent<container::OwnerComponent>(ownerEntity));
+	}
+
+	SECTION("Destroy then Create, Same Frame")
+	{
+		const ecs::Entity requestAEntity = world.CreateEntity();
+		const ecs::Entity requestBEntity = world.CreateEntity();
+		const ecs::Entity storageAEntity = CreateStorage(world, ownerEntity, 0);
+
+		// destroy the previous storage
+		{
+			const ecs::Entity requestEntity = world.CreateEntity();
+			auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestAEntity);
+			requestComponent.m_Storage = storageAEntity;
+		}
+
+		// make a new storage
+		{
+			auto& requestComponent = world.AddComponent<container::StorageCreateRequestComponent>(requestBEntity);
+			requestComponent.m_Owner = ownerEntity;
+			requestComponent.m_Type = 1;
+		}
+		
+		world.Update(2);
+
+		REQUIRE(world.HasComponent<container::StorageCreateResultComponent>(requestBEntity));
+		const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestBEntity);
+		REQUIRE(resultComponent.m_Error == container::EError::None);
+
+		const ecs::Entity storageBEntity = resultComponent.m_Storage;
+		REQUIRE(world.HasComponent<container::OwnerComponent>(ownerEntity));
+		const auto& ownerComponent = world.GetComponent<const container::OwnerComponent>(ownerEntity);
+		CHECK(ownerComponent.m_Storages.GetCount() == 1);
+		CHECK(ownerComponent.m_Storages.Contains(1));
+		CHECK(ownerComponent.m_Storages.Get(1) == storageBEntity);
+	}
+
+	SECTION("Destroy then Create, Next Frame")
+	{
+		const ecs::Entity requestAEntity = world.CreateEntity();
+		const ecs::Entity requestBEntity = world.CreateEntity();
+		const ecs::Entity storageAEntity = CreateStorage(world, ownerEntity, 0);
+
+		// destroy the previous storage
+		{
+			const ecs::Entity requestEntity = world.CreateEntity();
+			auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestAEntity);
+			requestComponent.m_Storage = storageAEntity;
+		}
+
+		world.Update();
+
+		// make a new storage
+		{
+			auto& requestComponent = world.AddComponent<container::StorageCreateRequestComponent>(requestBEntity);
+			requestComponent.m_Owner = ownerEntity;
+			requestComponent.m_Type = 1;
+		}
+
+		world.Update(2);
+
+		REQUIRE(world.HasComponent<container::StorageCreateResultComponent>(requestBEntity));
+		const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestBEntity);
+		REQUIRE(resultComponent.m_Error == container::EError::None);
+
+		const ecs::Entity storageBEntity = resultComponent.m_Storage;
+		REQUIRE(world.HasComponent<container::OwnerComponent>(ownerEntity));
+		const auto& ownerComponent = world.GetComponent<const container::OwnerComponent>(ownerEntity);
+		CHECK(ownerComponent.m_Storages.GetCount() == 1);
+		CHECK(ownerComponent.m_Storages.Contains(1));
+		CHECK(ownerComponent.m_Storages.Get(1) == storageBEntity);
+	}
 }

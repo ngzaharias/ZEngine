@@ -142,11 +142,18 @@ void container::MemberSystem::ProcessRequests(World& world)
 		}
 	}
 
+	// #todo: don't listen for removed, use container::StorageChangesComponent instead
 	for (const ecs::Entity& storageEntity : world.Query<ecs::query::Removed<const container::StorageComponent>>())
 	{
 		const auto& storageComponent = world.GetComponent<const container::StorageComponent>(storageEntity, false);
 		for (const ecs::Entity& memberEntity : storageComponent.m_Members)
+		{
+			// if member was destroyed in the same frame
+			if (!world.IsAlive(memberEntity))
+				continue;
+
 			removeRequests.Add(memberEntity);
+		}
 	}
 
 	// process requests, no safety checks as that indicates an error in the system
