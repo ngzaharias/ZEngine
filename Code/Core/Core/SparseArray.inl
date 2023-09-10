@@ -179,8 +179,6 @@ Value& SparseArray<Key, Value>::Set(const Key& key, const Value& value)
 	}
 	else
 	{
-		m_Dense.Append(key);
-
 		const int32 sparseIndex = GetIndex(key);
 		Z_ASSERT_CRASH(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
 
