@@ -5,6 +5,7 @@
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
 
+#include "GameDebug/ContainerSystem.h"
 #include "GameDebug/EntitySystem.h"
 #include "GameDebug/FrameBufferSystem.h"
 #include "GameDebug/ImGuiDemoSystem.h"
@@ -29,6 +30,8 @@ void dbg::GameDebug::Register()
 {
 	m_ClientWorld.RegisterComponent<dbg::BufferWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::BufferWindowRequestComponent>();
+	m_ClientWorld.RegisterComponent<dbg::ContainerWindowComponent>();
+	m_ClientWorld.RegisterComponent<dbg::ContainerWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ClientWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::EntityWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::EntityWindowRequestComponent>();
@@ -43,6 +46,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::SaveLevelRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ServerWindowRequestComponent>();
 
+	m_ClientWorld.RegisterSystem<dbg::ContainerSystem>();
 	m_ClientWorld.RegisterSystem<dbg::EntitySystem>(m_ClientWorld, m_ServerWorld);
 	m_ClientWorld.RegisterSystem<dbg::FrameBufferSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ImGuiDemoSystem>();

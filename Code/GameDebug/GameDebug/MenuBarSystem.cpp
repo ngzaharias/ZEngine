@@ -29,6 +29,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 		if (ImGui::BeginMenu("Windows"))
 		{
+			if (ImGui::MenuItem("Debug: Container"))
+				world.AddEventComponent<dbg::ContainerWindowRequestComponent>();
 			if (ImGui::MenuItem("Debug: Entities", "Ctrl+Shift+F11"))
 				world.AddEventComponent<dbg::EntityWindowRequestComponent>();
 			if (ImGui::MenuItem("ImGui Demo"))

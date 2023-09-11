@@ -57,10 +57,23 @@ namespace container
 		Custom_Max = UINT16_MAX,
 	};
 
-	struct MemberChange
+	struct MemberAdded
 	{
-		ecs::Entity m_Member = {};
 		ecs::Entity m_Storage = {};
+		ecs::Entity m_Member = {};
+	};
+
+	struct MemberMoved
+	{
+		ecs::Entity m_StorageA = {};
+		ecs::Entity m_StorageB = {};
+		ecs::Entity m_Member = {};
+	};
+
+	struct MemberRemoved
+	{
+		ecs::Entity m_Storage = {};
+		ecs::Entity m_Member = {};
 	};
 
 	struct StorageChange
@@ -85,18 +98,20 @@ namespace container
 	/// \brief All members that are added/removed this frame.
 	struct MemberChangesComponent final : public ecs::SingletonComponent<MemberChangesComponent>
 	{
-		Array<MemberChange> m_Added;
-		Array<MemberChange> m_Removed;
+		Array<MemberAdded> m_Added;
+		Array<MemberMoved> m_Moved;
+		Array<MemberRemoved> m_Removed;
 	};
 
 	/// \brief Make a request for a member component.
 	struct MemberAddRequestComponent final : public ecs::Component<MemberAddRequestComponent>
 	{
 		str::Guid m_TransactionId = { };
-		// Member that is being added.
-		ecs::Entity m_Member = { };
 		// Storage that it is being added to.
 		ecs::Entity m_Storage = { };
+
+		// Member that is being added.
+		ecs::Entity m_Member = { };
 		uint16 m_Count = 1;
 		uint16 m_GridX = 0;
 		uint16 m_GridY = 0;
@@ -105,6 +120,22 @@ namespace container
 
 	/// \brief Result of a request made to a member component.
 	struct MemberAddResultComponent final : public ecs::Component<MemberAddResultComponent>
+	{
+		str::Guid m_TransactionId = { };
+		ecs::Entity m_Member = { };
+		EError m_Error = { };
+	};
+
+	/// \brief Make a request for a member component.
+	struct MemberMoveRequestComponent final : public ecs::Component<MemberMoveRequestComponent>
+	{
+		str::Guid m_TransactionId = { };
+		ecs::Entity m_Storage = { };
+		ecs::Entity m_Member = { };
+	};
+
+	/// \brief Result of a request made to a member component.
+	struct MemberMoveResultComponent final : public ecs::Component<MemberMoveResultComponent>
 	{
 		str::Guid m_TransactionId = { };
 		ecs::Entity m_Member = { };

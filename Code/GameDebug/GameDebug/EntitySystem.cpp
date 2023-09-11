@@ -113,7 +113,7 @@ void dbg::EntitySystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::EntityWindowRequestComponent>>())
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
-		world.AddComponent<eng::NameComponent>(windowEntity, "Debug: Entity Debugger");
+		world.AddComponent<eng::NameComponent>(windowEntity, "Entity Debugger");
 		world.AddComponent<dbg::EntityWindowComponent>(windowEntity);
 	}
 

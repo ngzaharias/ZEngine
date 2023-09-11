@@ -11,6 +11,8 @@ namespace container
 	struct MemberAddResultComponent;
 	struct MemberChangesComponent;
 	struct MemberComponent;
+	struct MemberMoveRequestComponent;
+	struct MemberMoveResultComponent;
 	struct MemberRemoveRequestComponent;
 	struct MemberRemoveResultComponent;
 	struct StorageComponent;
@@ -23,8 +25,10 @@ namespace container
 			container::MemberAddResultComponent,
 			container::MemberChangesComponent,
 			container::MemberComponent,
+			container::MemberMoveResultComponent,
 			container::MemberRemoveResultComponent,
 			const container::MemberAddRequestComponent,
+			const container::MemberMoveRequestComponent,
 			const container::MemberRemoveRequestComponent,
 			const container::StorageComponent>;
 

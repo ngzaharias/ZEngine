@@ -80,16 +80,24 @@ void container::StorageSystem::Update(World& world, const GameTime& gameTime)
 void container::StorageSystem::ProcessMemberChanges(World& world)
 {
 	const auto& memberChangesComponent = world.GetSingleton<const container::MemberChangesComponent>();
-	for (const MemberChange& data : memberChangesComponent.m_Added)
+	for (const MemberAdded& data : memberChangesComponent.m_Added)
 	{
 		auto& storageComponent = world.GetComponent<container::StorageComponent>(data.m_Storage);
 		storageComponent.m_Members.Add(data.m_Member);
 	}
 
-	for (const MemberChange& data : memberChangesComponent.m_Removed)
+	for (const MemberRemoved& data : memberChangesComponent.m_Removed)
 	{
 		auto& storageComponent = world.GetComponent<container::StorageComponent>(data.m_Storage);
 		storageComponent.m_Members.Remove(data.m_Member);
+	}
+
+	for (const MemberMoved& data : memberChangesComponent.m_Moved)
+	{
+		auto& storageAComponent = world.GetComponent<container::StorageComponent>(data.m_StorageA);
+		auto& storageBComponent = world.GetComponent<container::StorageComponent>(data.m_StorageB);
+		storageAComponent.m_Members.Remove(data.m_Member);
+		storageBComponent.m_Members.Add(data.m_Member);
 	}
 
 	// member lifetime is external to the container systems

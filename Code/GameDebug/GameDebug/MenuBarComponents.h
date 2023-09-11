@@ -6,6 +6,7 @@ namespace dbg
 {
 	struct BufferWindowRequestComponent : ecs::EventComponent<BufferWindowRequestComponent> { };
 	struct ClientWindowRequestComponent : ecs::EventComponent<ClientWindowRequestComponent> { };
+	struct ContainerWindowRequestComponent : ecs::EventComponent<ContainerWindowRequestComponent> { };
 	struct EntityWindowRequestComponent : ecs::EventComponent<EntityWindowRequestComponent> { };
 	struct ImGuiDemoRequestComponent : ecs::EventComponent<ImGuiDemoRequestComponent> { };
 	struct LevelDialogRequestComponent : ecs::EventComponent<LevelDialogRequestComponent> { };
