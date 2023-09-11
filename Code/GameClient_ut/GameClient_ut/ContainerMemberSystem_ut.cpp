@@ -19,8 +19,9 @@ namespace
 		{
 			m_EntityWorld.RegisterComponent<container::MemberAddRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberAddResultComponent>();
-			m_EntityWorld.RegisterComponent<container::MemberChangesComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberMoveRequestComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberMoveResultComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberRemoveRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberRemoveResultComponent>();
 			m_EntityWorld.RegisterComponent<container::OwnerComponent>();
@@ -30,8 +31,8 @@ namespace
 			m_EntityWorld.RegisterComponent<container::StorageCreateResultComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyResultComponent>();
-			m_EntityWorld.RegisterSystem<container::MemberSystem>();
 			m_EntityWorld.RegisterSystem<container::StorageSystem>();
+			m_EntityWorld.RegisterSystem<container::MemberSystem>();
 			m_EntityWorld.RegisterSystem<container::OwnerSystem>();
 
 			Initialise();
@@ -102,7 +103,7 @@ TEST_CASE("container::MemberSystem::Member Add")
 	world.DestoryEntity(deadEntity);
 	world.Update();
 
-	SECTION("Failure: Unassigned Member Entity")
+	SECTION("Member is Unassigned Entity")
 	{
 		// request add
 		{
@@ -125,7 +126,7 @@ TEST_CASE("container::MemberSystem::Member Add")
 		CHECK(!world.HasComponent<container::MemberComponent>(resultComponent.m_Member));
 	}
 
-	SECTION("Failure: Dead Member Entity")
+	SECTION("Member is Dead Entity")
 	{
 		// request add
 		{
@@ -148,7 +149,7 @@ TEST_CASE("container::MemberSystem::Member Add")
 		CHECK(!world.HasComponent<container::MemberComponent>(resultComponent.m_Member));
 	}
 
-	SECTION("Failure: Duplicate Member")
+	SECTION("Member already in Storage")
 	{
 		// make a member
 		world.AddComponent<container::MemberComponent>(memberEntity);
@@ -172,7 +173,7 @@ TEST_CASE("container::MemberSystem::Member Add")
 		CHECK(resultComponent.m_Error == container::EError::MemberDuplicate);
 	}
 
-	SECTION("Failure: Unassigned Storage Entity")
+	SECTION("Storage is Unassigned Entity")
 	{
 		// request add
 		{
@@ -195,7 +196,7 @@ TEST_CASE("container::MemberSystem::Member Add")
 		CHECK(!world.HasComponent<container::MemberComponent>(resultComponent.m_Member));
 	}
 
-	SECTION("Failure: Dead Storage Entity")
+	SECTION("Storage is Dead Entity")
 	{
 		// request add
 		{
@@ -218,7 +219,7 @@ TEST_CASE("container::MemberSystem::Member Add")
 		CHECK(!world.HasComponent<container::MemberComponent>(resultComponent.m_Member));
 	}
 
-	SECTION("Failure: Missing Storage")
+	SECTION("Storage Destroyed in Previous Frame")
 	{
 		// remove storage
 		world.RemoveComponent<container::StorageComponent>(storageEntity);
@@ -245,7 +246,46 @@ TEST_CASE("container::MemberSystem::Member Add")
 		CHECK(!world.HasComponent<container::MemberComponent>(resultComponent.m_Member));
 	}
 
-	SECTION("Failure: Duplicate Member, Same Frame")
+	SECTION("Duplicate Request in Previous Frame")
+	{
+		// request add
+		{
+			auto& requestComponent = world.AddComponent<container::MemberAddRequestComponent>(requestAEntity);
+			requestComponent.m_TransactionId = transactionId;
+			requestComponent.m_Member = memberEntity;
+			requestComponent.m_Storage = storageEntity;
+		}
+
+		world.Update();
+
+		// request add
+		{
+			auto& requestComponent = world.AddComponent<container::MemberAddRequestComponent>(requestBEntity);
+			requestComponent.m_TransactionId = transactionId;
+			requestComponent.m_Member = memberEntity;
+			requestComponent.m_Storage = storageEntity;
+		}
+
+		world.Update();
+
+		// check result a
+		REQUIRE(world.HasComponent<container::MemberAddResultComponent>(requestAEntity));
+		const auto& resultAComponent = world.GetComponent<const container::MemberAddResultComponent>(requestAEntity);
+		CHECK(resultAComponent.m_TransactionId == transactionId);
+		CHECK(resultAComponent.m_Member == memberEntity);
+		CHECK(resultAComponent.m_Error == container::EError::None);
+
+		world.Update();
+
+		// check result b
+		REQUIRE(world.HasComponent<container::MemberAddResultComponent>(requestBEntity));
+		const auto& resultBComponent = world.GetComponent<const container::MemberAddResultComponent>(requestBEntity);
+		CHECK(resultBComponent.m_TransactionId == transactionId);
+		CHECK(resultBComponent.m_Member == memberEntity);
+		CHECK(resultBComponent.m_Error == container::EError::MemberDuplicate);
+	}
+
+	SECTION("Duplicate Request in Same Frame")
 	{
 		// request add
 		{
@@ -280,46 +320,7 @@ TEST_CASE("container::MemberSystem::Member Add")
 		CHECK(resultBComponent.m_Error == container::EError::MemberDuplicate);
 	}
 
-	SECTION("Failure: Duplicate Member, Next Frame")
-	{
-		// request add
-		{
-			auto& requestComponent = world.AddComponent<container::MemberAddRequestComponent>(requestAEntity);
-			requestComponent.m_TransactionId = transactionId;
-			requestComponent.m_Member = memberEntity;
-			requestComponent.m_Storage = storageEntity;
-		}
-
-		world.Update();
-
-		// request add
-		{
-			auto& requestComponent = world.AddComponent<container::MemberAddRequestComponent>(requestBEntity);
-			requestComponent.m_TransactionId = transactionId;
-			requestComponent.m_Member = memberEntity;
-			requestComponent.m_Storage = storageEntity;
-		}
-
-		world.Update();
-
-		// check result a
-		REQUIRE(world.HasComponent<container::MemberAddResultComponent>(requestAEntity));
-		const auto& resultAComponent = world.GetComponent<const container::MemberAddResultComponent>(requestAEntity);
-		CHECK(resultAComponent.m_TransactionId == transactionId);
-		CHECK(resultAComponent.m_Member == memberEntity);
-		CHECK(resultAComponent.m_Error == container::EError::None);
-
-		world.Update();
-
-		// check result b
-		REQUIRE(world.HasComponent<container::MemberAddResultComponent>(requestBEntity));
-		const auto& resultBComponent = world.GetComponent<const container::MemberAddResultComponent>(requestBEntity);
-		CHECK(resultBComponent.m_TransactionId == transactionId);
-		CHECK(resultBComponent.m_Member == memberEntity);
-		CHECK(resultBComponent.m_Error == container::EError::MemberDuplicate);
-	}
-
-	SECTION("Success")
+	SECTION("Regular Flow")
 	{
 		// request add
 		{
@@ -352,15 +353,15 @@ TEST_CASE("container::MemberSystem::Member Add")
 		CHECK(memberComponent.m_Type == 666);
 
 		// checks changes
-		const auto& changesComponent = world.m_EntityWorld.GetSingleton<const container::MemberChangesComponent>();
-		REQUIRE(changesComponent.m_Added.GetCount() == 1);
-		REQUIRE(changesComponent.m_Removed.GetCount() == 0);
-		CHECK(changesComponent.m_Added[0].m_Member == memberEntity);
-		CHECK(changesComponent.m_Added[0].m_Storage == storageEntity);
+		const auto& changesComponent = world.m_EntityWorld.GetSingleton<const container::StorageChangesComponent>();
+		REQUIRE(changesComponent.m_MemberAdded.GetCount() == 1);
+		REQUIRE(changesComponent.m_MemberRemoved.GetCount() == 0);
+		CHECK(changesComponent.m_MemberAdded[0].m_Member == memberEntity);
+		CHECK(changesComponent.m_MemberAdded[0].m_Storage == storageEntity);
 
 		world.Update();
-		CHECK(changesComponent.m_Added.GetCount() == 0);
-		CHECK(changesComponent.m_Removed.GetCount() == 0);
+		CHECK(changesComponent.m_MemberAdded.GetCount() == 0);
+		CHECK(changesComponent.m_MemberRemoved.GetCount() == 0);
 	}
 }
 
@@ -386,9 +387,9 @@ TEST_CASE("container::MemberSystem::Member Remove")
 		REQUIRE(storageComponent.m_Members.Contains(memberEntity));
 	}
 
-	SECTION("Failure: Unassigned Member Entity")
+	SECTION("Member is Unassigned Entity")
 	{
-		// request add
+		// request remove
 		{
 			auto& requestComponent = world.AddComponent<container::MemberRemoveRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
@@ -408,9 +409,9 @@ TEST_CASE("container::MemberSystem::Member Remove")
 		CHECK(world.HasComponent<container::MemberComponent>(memberEntity));
 	}
 
-	SECTION("Failure: Dead Member Entity")
+	SECTION("Member is Dead Entity")
 	{
-		// request add
+		// request remove
 		{
 			auto& requestComponent = world.AddComponent<container::MemberRemoveRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
@@ -430,13 +431,44 @@ TEST_CASE("container::MemberSystem::Member Remove")
 		CHECK(world.HasComponent<container::MemberComponent>(memberEntity));
 	}
 
-	SECTION("Failure: Missing Member")
+	SECTION("Member was Destroyed in Previous Frame")
 	{
 		// remove member
-		world.RemoveComponent<container::MemberComponent>(memberEntity);
+		world.DestoryEntity(memberEntity);
 		world.Update();
 
-		// request add
+		// request remove
+		{
+			auto& requestComponent = world.AddComponent<container::MemberRemoveRequestComponent>(requestAEntity);
+			requestComponent.m_TransactionId = transactionId;
+			requestComponent.m_Member = memberEntity;
+		}
+
+		world.Update(2);
+
+		// check result
+		REQUIRE(world.HasComponent<container::MemberRemoveResultComponent>(requestAEntity));
+		const auto& resultComponent = world.GetComponent<const container::MemberRemoveResultComponent>(requestAEntity);
+		CHECK(resultComponent.m_TransactionId == transactionId);
+		CHECK(resultComponent.m_Member == memberEntity);
+		CHECK(resultComponent.m_Error == container::EError::MemberDead);
+
+		// check member
+		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
+	}
+
+	SECTION("Storage was Destroyed in Previous Frame")
+	{
+		// destroy the storage
+		{
+			const ecs::Entity requestEntity = world.CreateEntity();
+			auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestAEntity);
+			requestComponent.m_Storage = storageEntity;
+		}
+
+		world.Update();
+
+		// request remove
 		{
 			auto& requestComponent = world.AddComponent<container::MemberRemoveRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
@@ -456,44 +488,13 @@ TEST_CASE("container::MemberSystem::Member Remove")
 		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
 	}
 
-	SECTION("Failure: Storage Destroyed, Next Frame")
+	SECTION("Storage was Destroyed in Same Frame")
 	{
 		// destroy the storage
 		{
 			const ecs::Entity requestEntity = world.CreateEntity();
 			auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestAEntity);
 			requestComponent.m_Storage = storageEntity;
-		}
-
-		world.Update();
-
-		// request add
-		{
-			auto& requestComponent = world.AddComponent<container::MemberRemoveRequestComponent>(requestAEntity);
-			requestComponent.m_TransactionId = transactionId;
-			requestComponent.m_Member = memberEntity;
-		}
-
-		world.Update(2);
-
-		// check result
-		REQUIRE(world.HasComponent<container::MemberRemoveResultComponent>(requestAEntity));
-		const auto& resultComponent = world.GetComponent<const container::MemberRemoveResultComponent>(requestAEntity);
-		CHECK(resultComponent.m_TransactionId == transactionId);
-		CHECK(resultComponent.m_Member == memberEntity);
-		CHECK(resultComponent.m_Error == container::EError::StorageDead);
-
-		// check member
-		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
-	}
-
-	SECTION("Failure: Duplicate Request, Same Frame")
-	{
-		// request remove
-		{
-			auto& requestComponent = world.AddComponent<container::MemberRemoveRequestComponent>(requestAEntity);
-			requestComponent.m_TransactionId = transactionId;
-			requestComponent.m_Member = memberEntity;
 		}
 
 		// request remove
@@ -505,25 +506,18 @@ TEST_CASE("container::MemberSystem::Member Remove")
 
 		world.Update(2);
 
-		// check result a
-		REQUIRE(world.HasComponent<container::MemberRemoveResultComponent>(requestAEntity));
-		const auto& resultAComponent = world.GetComponent<const container::MemberRemoveResultComponent>(requestAEntity);
-		CHECK(resultAComponent.m_TransactionId == transactionId);
-		CHECK(resultAComponent.m_Member == memberEntity);
-		CHECK(resultAComponent.m_Error == container::EError::None);
-
-		// check result b
+		// check result
 		REQUIRE(world.HasComponent<container::MemberRemoveResultComponent>(requestBEntity));
-		const auto& resultBComponent = world.GetComponent<const container::MemberRemoveResultComponent>(requestBEntity);
-		CHECK(resultBComponent.m_TransactionId == transactionId);
-		CHECK(resultBComponent.m_Member == memberEntity);
-		CHECK(resultBComponent.m_Error == container::EError::MemberDead);
+		const auto& resultComponent = world.GetComponent<const container::MemberRemoveResultComponent>(requestBEntity);
+		CHECK(resultComponent.m_TransactionId == transactionId);
+		CHECK(resultComponent.m_Member == memberEntity);
+		CHECK(resultComponent.m_Error == container::EError::None);
 
 		// check member
 		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
 	}
 
-	SECTION("Failure: Duplicate Request, Next Frame")
+	SECTION("Duplicate Request in Previous Frame")
 	{
 		// request remove
 		{
@@ -563,7 +557,58 @@ TEST_CASE("container::MemberSystem::Member Remove")
 		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
 	}
 
-	SECTION("Success")
+	SECTION("Duplicate Request in Same Frame")
+	{
+		// request remove
+		{
+			auto& requestComponent = world.AddComponent<container::MemberRemoveRequestComponent>(requestAEntity);
+			requestComponent.m_TransactionId = transactionId;
+			requestComponent.m_Member = memberEntity;
+		}
+
+		// request remove
+		{
+			auto& requestComponent = world.AddComponent<container::MemberRemoveRequestComponent>(requestBEntity);
+			requestComponent.m_TransactionId = transactionId;
+			requestComponent.m_Member = memberEntity;
+		}
+
+		world.Update(2);
+
+		// check result a
+		REQUIRE(world.HasComponent<container::MemberRemoveResultComponent>(requestAEntity));
+		const auto& resultAComponent = world.GetComponent<const container::MemberRemoveResultComponent>(requestAEntity);
+		CHECK(resultAComponent.m_TransactionId == transactionId);
+		CHECK(resultAComponent.m_Member == memberEntity);
+		CHECK(resultAComponent.m_Error == container::EError::None);
+
+		// check result b
+		REQUIRE(world.HasComponent<container::MemberRemoveResultComponent>(requestBEntity));
+		const auto& resultBComponent = world.GetComponent<const container::MemberRemoveResultComponent>(requestBEntity);
+		CHECK(resultBComponent.m_TransactionId == transactionId);
+		CHECK(resultBComponent.m_Member == memberEntity);
+		CHECK(resultBComponent.m_Error == container::EError::MemberDead);
+
+		// check member
+		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
+	}
+
+	SECTION("Member and Storage are Destroyed in Same Frame")
+	{
+		// destroy the storage
+		{
+			const ecs::Entity requestEntity = world.CreateEntity();
+			auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestAEntity);
+			requestComponent.m_Storage = storageEntity;
+		}
+
+		world.DestoryEntity(memberEntity);
+		world.Update(2);
+
+		// no crash
+	}
+
+	SECTION("Regular Flow")
 	{
 		// request remove
 		{
@@ -585,60 +630,14 @@ TEST_CASE("container::MemberSystem::Member Remove")
 		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
 
 		// check changes
-		const auto& changesComponent = world.m_EntityWorld.GetSingleton<const container::MemberChangesComponent>();
-		REQUIRE(changesComponent.m_Added.GetCount() == 0);
-		REQUIRE(changesComponent.m_Removed.GetCount() == 1);
-		CHECK(changesComponent.m_Removed[0].m_Member == memberEntity);
-		CHECK(changesComponent.m_Removed[0].m_Storage == storageEntity);
+		const auto& changesComponent = world.m_EntityWorld.GetSingleton<const container::StorageChangesComponent>();
+		REQUIRE(changesComponent.m_MemberAdded.GetCount() == 0);
+		REQUIRE(changesComponent.m_MemberRemoved.GetCount() == 1);
+		CHECK(changesComponent.m_MemberRemoved[0].m_Member == memberEntity);
+		CHECK(changesComponent.m_MemberRemoved[0].m_Storage == storageEntity);
 
 		world.Update();
-		CHECK(changesComponent.m_Added.GetCount() == 0);
-		CHECK(changesComponent.m_Removed.GetCount() == 0);
-	}
-
-	SECTION("Success: Storage Destroyed, Same Frame")
-	{
-		// destroy the storage
-		{
-			const ecs::Entity requestEntity = world.CreateEntity();
-			auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestAEntity);
-			requestComponent.m_Storage = storageEntity;
-		}
-
-		// request add
-		{
-			auto& requestComponent = world.AddComponent<container::MemberRemoveRequestComponent>(requestBEntity);
-			requestComponent.m_TransactionId = transactionId;
-			requestComponent.m_Member = memberEntity;
-		}
-
-		world.Update(2);
-
-		// check result
-		REQUIRE(world.HasComponent<container::MemberRemoveResultComponent>(requestBEntity));
-		const auto& resultComponent = world.GetComponent<const container::MemberRemoveResultComponent>(requestBEntity);
-		CHECK(resultComponent.m_TransactionId == transactionId);
-		CHECK(resultComponent.m_Member == memberEntity);
-		CHECK(resultComponent.m_Error == container::EError::None);
-
-		// check member
-		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
-	}
-
-	SECTION("Member and Storage Destroyed")
-	{
-		// destroy the storage
-		{
-			const ecs::Entity requestEntity = world.CreateEntity();
-			auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(requestAEntity);
-			requestComponent.m_Storage = storageEntity;
-		}
-
-		world.Update();
-
-		world.DestoryEntity(memberEntity);
-		world.Update();
-
-		// no crash
+		CHECK(changesComponent.m_MemberAdded.GetCount() == 0);
+		CHECK(changesComponent.m_MemberRemoved.GetCount() == 0);
 	}
 }

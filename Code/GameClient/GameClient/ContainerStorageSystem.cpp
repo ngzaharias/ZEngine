@@ -14,6 +14,86 @@ namespace
 {
 	using World = container::StorageSystem::World;
 
+	container::EError VerifyMemberAdd(World& world, const ecs::Entity& entity, const container::StorageChangesComponent& frameData)
+	{
+		const auto& requestComponent = world.GetComponent<const container::MemberAddRequestComponent>(entity);
+		if (requestComponent.m_Member.IsUnassigned())
+			return container::EError::MemberUnassigned;
+		if (!world.IsAlive(requestComponent.m_Member))
+			return container::EError::MemberDead;
+		if (world.HasComponent<container::MemberComponent>(requestComponent.m_Member))
+			return container::EError::MemberDuplicate;
+
+		if (requestComponent.m_Storage.IsUnassigned())
+			return container::EError::StorageUnassigned;
+		if (!world.IsAlive(requestComponent.m_Storage))
+			return container::EError::StorageDead;
+		if (!world.HasComponent<container::StorageComponent>(requestComponent.m_Storage))
+			return container::EError::StorageMissing;
+
+		auto hasDuplicate = [&](const container::MemberAdded& rhs)
+		{
+			return requestComponent.m_Member == rhs.m_Member;
+		};
+
+		if (core::ContainsIf(frameData.m_MemberAdded, hasDuplicate))
+			return container::EError::MemberDuplicate;
+
+		return container::EError::None;
+	}
+
+	container::EError VerifyMemberMove(World& world, const ecs::Entity& entity, const container::StorageChangesComponent& frameData)
+	{
+		const auto& requestComponent = world.GetComponent<const container::MemberMoveRequestComponent>(entity);
+		if (requestComponent.m_Member.IsUnassigned())
+			return container::EError::MemberUnassigned;
+		if (!world.IsAlive(requestComponent.m_Member))
+			return container::EError::MemberDead;
+		if (!world.HasComponent<container::MemberComponent>(requestComponent.m_Member))
+			return container::EError::MemberMissing;
+
+		const auto& memberComponent = world.GetComponent<const container::MemberComponent>(requestComponent.m_Member);
+		if (!world.IsAlive(memberComponent.m_Storage))
+			return container::EError::StorageDead;
+		if (!world.IsAlive(requestComponent.m_Storage))
+			return container::EError::StorageDead;
+
+		auto wasRemoved = [&](const container::MemberRemoved& rhs)
+		{
+			return requestComponent.m_Member == rhs.m_Member;
+		};
+
+		if (core::ContainsIf(frameData.m_MemberRemoved, wasRemoved))
+			return container::EError::MemberDead;
+
+		return container::EError::None;
+	}
+
+	container::EError VerifyMemberRemove(World& world, const ecs::Entity& entity, const container::StorageChangesComponent& frameData)
+	{
+		const auto& requestComponent = world.GetComponent<const container::MemberRemoveRequestComponent>(entity);
+		if (requestComponent.m_Member.IsUnassigned())
+			return container::EError::MemberUnassigned;
+		if (!world.IsAlive(requestComponent.m_Member))
+			return container::EError::MemberDead;
+		if (!world.HasComponent<container::MemberComponent>(requestComponent.m_Member))
+			return container::EError::MemberMissing;
+
+		const auto& memberComponent = world.GetComponent<const container::MemberComponent>(requestComponent.m_Member);
+		if (!world.IsAlive(memberComponent.m_Storage))
+			return container::EError::StorageDead;
+
+		auto hasDuplicate = [&](const container::MemberRemoved& rhs)
+		{
+			return requestComponent.m_Member == rhs.m_Member;
+		};
+
+		if (core::ContainsIf(frameData.m_MemberRemoved, hasDuplicate))
+			return container::EError::MemberDead;
+
+		return container::EError::None;
+	}
+
 	container::EError VerifyStorageCreate(World& world, const ecs::Entity& entity, const container::StorageChangesComponent& frameData)
 	{
 		const auto& requestComponent = world.GetComponent<const container::StorageCreateRequestComponent>(entity);
@@ -30,7 +110,7 @@ namespace
 				&& requestComponent.m_Type == rhs.m_Type;
 		};
 
-		if (core::ContainsIf(frameData.m_Created, hasDuplicate))
+		if (core::ContainsIf(frameData.m_StorageCreated, hasDuplicate))
 			return container::EError::StorageDuplicate;
 
 		return container::EError::None;
@@ -54,7 +134,7 @@ namespace
 				&& storageComponent.m_Type == rhs.m_Type;
 		};
 
-		if (core::ContainsIf(frameData.m_Destroyed, hasDuplicate))
+		if (core::ContainsIf(frameData.m_StorageDestroyed, hasDuplicate))
 			return container::EError::StorageDead;
 
 		return container::EError::None;
@@ -73,39 +153,120 @@ void container::StorageSystem::Shutdown(World& world)
 
 void container::StorageSystem::Update(World& world, const GameTime& gameTime)
 {
-	ProcessMemberChanges(world);
+	// clear values from previous frame
+	auto& changesComponent = world.GetSingleton<container::StorageChangesComponent>();
+	changesComponent.m_MemberAdded.RemoveAll();
+	changesComponent.m_MemberMoved.RemoveAll();
+	changesComponent.m_MemberRemoved.RemoveAll();
+	changesComponent.m_StorageCreated.RemoveAll();
+	changesComponent.m_StorageDestroyed.RemoveAll();
+
+	ProcessMemberAddRequests(world);
+	ProcessMemberMoveRequests(world);
+	ProcessMemberRemoveRequests(world);
 	ProcessStorageRequests(world);
+
+	// cleanup results on the next frame
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::MemberAddResultComponent>>())
+		world.RemoveComponent<container::MemberAddResultComponent>(entity);
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::MemberMoveResultComponent>>())
+		world.RemoveComponent<container::MemberMoveResultComponent>(entity);
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::MemberRemoveResultComponent>>())
+		world.RemoveComponent<container::MemberRemoveResultComponent>(entity);
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::StorageCreateResultComponent>>())
+		world.RemoveComponent<container::StorageCreateResultComponent>(entity);
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::StorageDestroyResultComponent>>())
+		world.RemoveComponent<container::StorageDestroyResultComponent>(entity);
 }
 
-void container::StorageSystem::ProcessMemberChanges(World& world)
+void container::StorageSystem::ProcessMemberAddRequests(World& world)
 {
-	const auto& memberChangesComponent = world.GetSingleton<const container::MemberChangesComponent>();
-	for (const MemberAdded& data : memberChangesComponent.m_Added)
+	auto& changesComponent = world.GetSingleton<container::StorageChangesComponent>();
+	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const container::MemberAddRequestComponent>>())
 	{
-		auto& storageComponent = world.GetComponent<container::StorageComponent>(data.m_Storage);
-		storageComponent.m_Members.Add(data.m_Member);
+		const EError error = VerifyMemberAdd(world, requestEntity, changesComponent);
+
+		const auto& requestComponent = world.GetComponent<const container::MemberAddRequestComponent>(requestEntity);
+		auto& resultComponent = world.AddComponent<container::MemberAddResultComponent>(requestEntity);
+		resultComponent.m_TransactionId = requestComponent.m_TransactionId;
+		resultComponent.m_Member = requestComponent.m_Member;
+		resultComponent.m_Error = error;
+
+		if (error == EError::None)
+		{
+			auto& storageComponent = world.GetComponent<container::StorageComponent>(requestComponent.m_Storage);
+			storageComponent.m_Members.Add(requestComponent.m_Member);
+
+			MemberAdded& data = changesComponent.m_MemberAdded.Emplace();
+			data.m_Storage = requestComponent.m_Storage;
+			data.m_Member = requestComponent.m_Member;
+			data.m_Count = requestComponent.m_Count;
+			data.m_GridX = requestComponent.m_GridX;
+			data.m_GridY = requestComponent.m_GridY;
+			data.m_Type = requestComponent.m_Type;
+		}
+	}
+}
+
+void container::StorageSystem::ProcessMemberMoveRequests(World& world)
+{
+	auto& changesComponent = world.GetSingleton<container::StorageChangesComponent>();
+	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const container::MemberMoveRequestComponent>>())
+	{
+		const EError error = VerifyMemberMove(world, requestEntity, changesComponent);
+
+		const auto& requestComponent = world.GetComponent<const container::MemberMoveRequestComponent>(requestEntity);
+		auto& resultComponent = world.AddComponent<container::MemberMoveResultComponent>(requestEntity);
+		resultComponent.m_TransactionId = requestComponent.m_TransactionId;
+		resultComponent.m_Member = requestComponent.m_Member;
+		resultComponent.m_Error = error;
+
+		if (error == EError::None)
+		{
+			const auto& memberComponent = world.GetComponent<const container::MemberComponent>(requestComponent.m_Member);
+			auto& storageAComponent = world.GetComponent<container::StorageComponent>(memberComponent.m_Storage);
+			auto& storageBComponent = world.GetComponent<container::StorageComponent>(requestComponent.m_Storage);
+			storageAComponent.m_Members.Remove(requestComponent.m_Member);
+			storageBComponent.m_Members.Add(requestComponent.m_Member);
+
+			MemberMoved& data = changesComponent.m_MemberMoved.Emplace();
+			data.m_Storage = requestComponent.m_Storage;
+			data.m_Member = requestComponent.m_Member;
+		}
+	}
+}
+
+void container::StorageSystem::ProcessMemberRemoveRequests(World& world)
+{
+	auto& changesComponent = world.GetSingleton<container::StorageChangesComponent>();
+	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const container::MemberRemoveRequestComponent>>())
+	{
+		const EError error = VerifyMemberRemove(world, requestEntity, changesComponent);
+
+		const auto& requestComponent = world.GetComponent<const container::MemberRemoveRequestComponent>(requestEntity);
+		auto& resultComponent = world.AddComponent<container::MemberRemoveResultComponent>(requestEntity);
+		resultComponent.m_TransactionId = requestComponent.m_TransactionId;
+		resultComponent.m_Member = requestComponent.m_Member;
+		resultComponent.m_Error = error;
+
+		if (error == EError::None)
+		{
+			const auto& memberComponent = world.GetComponent<const container::MemberComponent>(requestComponent.m_Member);
+			auto& storageComponent = world.GetComponent<container::StorageComponent>(memberComponent.m_Storage);
+			storageComponent.m_Members.Remove(requestComponent.m_Member);
+
+			MemberRemoved& data = changesComponent.m_MemberRemoved.Emplace();
+			data.m_Storage = memberComponent.m_Storage;
+			data.m_Member = requestComponent.m_Member;
+		}
 	}
 
-	for (const MemberRemoved& data : memberChangesComponent.m_Removed)
-	{
-		auto& storageComponent = world.GetComponent<container::StorageComponent>(data.m_Storage);
-		storageComponent.m_Members.Remove(data.m_Member);
-	}
-
-	for (const MemberMoved& data : memberChangesComponent.m_Moved)
-	{
-		auto& storageAComponent = world.GetComponent<container::StorageComponent>(data.m_StorageA);
-		auto& storageBComponent = world.GetComponent<container::StorageComponent>(data.m_StorageB);
-		storageAComponent.m_Members.Remove(data.m_Member);
-		storageBComponent.m_Members.Add(data.m_Member);
-	}
-
-	// member lifetime is external to the container systems
+	// #todo: only dead entities
+	// member lifetime is external so we need to listen to it being destroyed
 	for (const ecs::Entity& memberEntity : world.Query<ecs::query::Removed<const container::MemberComponent>>())
 	{
-		const auto& memberComponent = world.GetComponent<const container::MemberComponent>(memberEntity, false);
-		
 		// if storage was also destroyed in the previous frame
+		const auto& memberComponent = world.GetComponent<const container::MemberComponent>(memberEntity, false);
 		if (!world.IsAlive(memberComponent.m_Storage))
 			continue;
 
@@ -117,8 +278,6 @@ void container::StorageSystem::ProcessMemberChanges(World& world)
 void container::StorageSystem::ProcessStorageRequests(World& world)
 {
 	auto& storageChangesComponent = world.GetSingleton<container::StorageChangesComponent>();
-	storageChangesComponent.m_Created.RemoveAll();
-	storageChangesComponent.m_Destroyed.RemoveAll();
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const container::StorageCreateRequestComponent>>())
 	{
@@ -140,7 +299,7 @@ void container::StorageSystem::ProcessStorageRequests(World& world)
 			resultComponent.m_Storage = storageEntity;
 
 			// add to frame data so we can detect duplicates
-			StorageChange& createData = storageChangesComponent.m_Created.Emplace();
+			StorageChange& createData = storageChangesComponent.m_StorageCreated.Emplace();
 			createData.m_Storage = storageEntity;
 			createData.m_Owner = requestComponent.m_Owner;
 			createData.m_Type = requestComponent.m_Type;
@@ -160,7 +319,7 @@ void container::StorageSystem::ProcessStorageRequests(World& world)
 
 			// add to frame data so we can detect duplicates
 			const auto& storageComponent = world.GetComponent<const container::StorageComponent>(requestComponent.m_Storage);
-			StorageChange& destroyData = storageChangesComponent.m_Destroyed.Emplace();
+			StorageChange& destroyData = storageChangesComponent.m_StorageDestroyed.Emplace();
 			destroyData.m_Storage = requestComponent.m_Storage;
 			destroyData.m_Owner = storageComponent.m_Owner;
 			destroyData.m_Type = storageComponent.m_Type;
@@ -171,10 +330,4 @@ void container::StorageSystem::ProcessStorageRequests(World& world)
 		resultComponent.m_Storage = requestComponent.m_Storage;
 		resultComponent.m_Error = error;
 	}
-
-	// cleanup results on the next frame
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::StorageCreateResultComponent>>())
-		world.RemoveComponent<container::StorageCreateResultComponent>(entity);
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::StorageDestroyResultComponent>>())
-		world.RemoveComponent<container::StorageDestroyResultComponent>(entity);
 }

@@ -7,8 +7,14 @@
 
 namespace container
 {
+	struct MemberAddRequestComponent;
+	struct MemberAddResultComponent;
 	struct MemberChangesComponent;
 	struct MemberComponent;
+	struct MemberMoveRequestComponent;
+	struct MemberMoveResultComponent;
+	struct MemberRemoveRequestComponent;
+	struct MemberRemoveResultComponent;
 	struct OwnerComponent;
 	struct StorageChangesComponent;
 	struct StorageComponent;
@@ -22,12 +28,17 @@ namespace container
 	{
 	public:
 		using World = ecs::WorldView<
+			container::MemberAddResultComponent,
+			container::MemberMoveResultComponent,
+			container::MemberRemoveResultComponent,
 			container::StorageChangesComponent,
 			container::StorageComponent,
 			container::StorageCreateResultComponent,
 			container::StorageDestroyResultComponent,
-			const container::MemberChangesComponent,
+			const container::MemberAddRequestComponent,
 			const container::MemberComponent,
+			const container::MemberMoveRequestComponent,
+			const container::MemberRemoveRequestComponent,
 			const container::OwnerComponent,
 			const container::StorageCreateRequestComponent,
 			const container::StorageDestroyRequestComponent>;
@@ -38,7 +49,9 @@ namespace container
 		void Update(World& world, const GameTime& gameTime);
 
 	private:
-		void ProcessMemberChanges(World& world);
+		void ProcessMemberAddRequests(World& world);
+		void ProcessMemberMoveRequests(World& world);
+		void ProcessMemberRemoveRequests(World& world);
 		void ProcessStorageRequests(World& world);
 	};
 }

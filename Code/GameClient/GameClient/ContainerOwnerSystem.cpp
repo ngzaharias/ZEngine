@@ -20,7 +20,7 @@ void container::OwnerSystem::ProcessStorageChanges(World& world)
 	const auto& storageChangesComponent = world.GetSingleton<const container::StorageChangesComponent>();
 
 	Map<ecs::Entity, Array<const StorageChange*>> requests;
-	for (const StorageChange& data : storageChangesComponent.m_Created)
+	for (const StorageChange& data : storageChangesComponent.m_StorageCreated)
 		requests[data.m_Owner].Append(&data);
 
 	for (auto&& [ownerEntity, createRequests] : requests)
@@ -38,7 +38,7 @@ void container::OwnerSystem::ProcessStorageChanges(World& world)
 
 	// gather remove requests to handle duplicates
 	Set<ecs::Entity> removeRequests;
-	for (const StorageChange& data : storageChangesComponent.m_Destroyed)
+	for (const StorageChange& data : storageChangesComponent.m_StorageDestroyed)
 	{
 		// storage owner is allowed to be unassigned
 		if (data.m_Owner.IsUnassigned())

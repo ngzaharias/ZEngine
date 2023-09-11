@@ -19,8 +19,9 @@ namespace
 		{
 			m_EntityWorld.RegisterComponent<container::MemberAddRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberAddResultComponent>();
-			m_EntityWorld.RegisterComponent<container::MemberChangesComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberMoveRequestComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberMoveResultComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberRemoveRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberRemoveResultComponent>();
 			m_EntityWorld.RegisterComponent<container::OwnerComponent>();
@@ -30,8 +31,8 @@ namespace
 			m_EntityWorld.RegisterComponent<container::StorageCreateResultComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyResultComponent>();
-			m_EntityWorld.RegisterSystem<container::MemberSystem>();
 			m_EntityWorld.RegisterSystem<container::StorageSystem>();
+			m_EntityWorld.RegisterSystem<container::MemberSystem>();
 			m_EntityWorld.RegisterSystem<container::OwnerSystem>();
 
 			Initialise();

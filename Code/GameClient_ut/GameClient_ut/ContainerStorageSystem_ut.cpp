@@ -19,8 +19,9 @@ namespace
 		{
 			m_EntityWorld.RegisterComponent<container::MemberAddRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberAddResultComponent>();
-			m_EntityWorld.RegisterComponent<container::MemberChangesComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberMoveRequestComponent>();
+			m_EntityWorld.RegisterComponent<container::MemberMoveResultComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberRemoveRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberRemoveResultComponent>();
 			m_EntityWorld.RegisterComponent<container::OwnerComponent>();
@@ -30,8 +31,8 @@ namespace
 			m_EntityWorld.RegisterComponent<container::StorageCreateResultComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyResultComponent>();
-			m_EntityWorld.RegisterSystem<container::MemberSystem>();
 			m_EntityWorld.RegisterSystem<container::StorageSystem>();
+			m_EntityWorld.RegisterSystem<container::MemberSystem>();
 			m_EntityWorld.RegisterSystem<container::OwnerSystem>();
 
 			Initialise();
@@ -210,15 +211,15 @@ TEST_CASE("container::StorageSystem::Storage Create")
 
 		// check changes
 		const auto& changesComponent = world.m_EntityWorld.GetSingleton<const container::StorageChangesComponent>();
-		REQUIRE(changesComponent.m_Created.GetCount() == 1);
-		REQUIRE(changesComponent.m_Destroyed.GetCount() == 0);
-		CHECK(changesComponent.m_Created[0].m_Storage == resultComponent.m_Storage);
-		CHECK(changesComponent.m_Created[0].m_Owner == ownerEntity);
-		CHECK(changesComponent.m_Created[0].m_Type == 666);
+		REQUIRE(changesComponent.m_StorageCreated.GetCount() == 1);
+		REQUIRE(changesComponent.m_StorageDestroyed.GetCount() == 0);
+		CHECK(changesComponent.m_StorageCreated[0].m_Storage == resultComponent.m_Storage);
+		CHECK(changesComponent.m_StorageCreated[0].m_Owner == ownerEntity);
+		CHECK(changesComponent.m_StorageCreated[0].m_Type == 666);
 
 		world.Update();
-		CHECK(changesComponent.m_Created.GetCount() == 0);
-		CHECK(changesComponent.m_Destroyed.GetCount() == 0);
+		CHECK(changesComponent.m_StorageCreated.GetCount() == 0);
+		CHECK(changesComponent.m_StorageDestroyed.GetCount() == 0);
 	}
 }
 
@@ -386,14 +387,14 @@ TEST_CASE("container::StorageSystem::Storage Destroy")
 
 		// check changes
 		const auto& changesComponent = world.m_EntityWorld.GetSingleton<const container::StorageChangesComponent>();
-		REQUIRE(changesComponent.m_Created.GetCount() == 0);
-		REQUIRE(changesComponent.m_Destroyed.GetCount() == 1);
-		CHECK(changesComponent.m_Destroyed[0].m_Storage == storageEntity);
-		CHECK(changesComponent.m_Destroyed[0].m_Owner == ownerEntity);
-		CHECK(changesComponent.m_Destroyed[0].m_Type == 666);
+		REQUIRE(changesComponent.m_StorageCreated.GetCount() == 0);
+		REQUIRE(changesComponent.m_StorageDestroyed.GetCount() == 1);
+		CHECK(changesComponent.m_StorageDestroyed[0].m_Storage == storageEntity);
+		CHECK(changesComponent.m_StorageDestroyed[0].m_Owner == ownerEntity);
+		CHECK(changesComponent.m_StorageDestroyed[0].m_Type == 666);
 
 		world.Update();
-		CHECK(changesComponent.m_Created.GetCount() == 0);
-		CHECK(changesComponent.m_Destroyed.GetCount() == 0);
+		CHECK(changesComponent.m_StorageCreated.GetCount() == 0);
+		CHECK(changesComponent.m_StorageDestroyed.GetCount() == 0);
 	}
 }

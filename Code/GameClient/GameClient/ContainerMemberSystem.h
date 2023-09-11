@@ -7,37 +7,24 @@
 
 namespace container
 {
-	struct MemberAddRequestComponent;
-	struct MemberAddResultComponent;
-	struct MemberChangesComponent;
 	struct MemberComponent;
-	struct MemberMoveRequestComponent;
-	struct MemberMoveResultComponent;
-	struct MemberRemoveRequestComponent;
-	struct MemberRemoveResultComponent;
+	struct StorageChangesComponent;
 	struct StorageComponent;
 
-	/// \brief Handles creating/destroying of storage entity and its components.
+	/// \brief Handles adding/removing of member component on an entity.
 	class MemberSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			container::MemberAddResultComponent,
-			container::MemberChangesComponent,
 			container::MemberComponent,
-			container::MemberMoveResultComponent,
-			container::MemberRemoveResultComponent,
-			const container::MemberAddRequestComponent,
-			const container::MemberMoveRequestComponent,
-			const container::MemberRemoveRequestComponent,
+			const container::StorageChangesComponent,
 			const container::StorageComponent>;
-
-		void Initialise(World& world);
-		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 
 	private:
-		void ProcessRequests(World& world);
+		void ProcessAddRequests(World& world);
+		void ProcessMoveRequests(World& world);
+		void ProcessRemoveRequests(World& world);
 	};
 }

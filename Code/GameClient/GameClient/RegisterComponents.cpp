@@ -12,7 +12,6 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterComponent<container::MemberAddRequestComponent>();
 	entityWorld.RegisterComponent<container::MemberAddResultComponent>();
-	entityWorld.RegisterComponent<container::MemberChangesComponent>();
 	entityWorld.RegisterComponent<container::MemberComponent>();
 	entityWorld.RegisterComponent<container::MemberMoveRequestComponent>();
 	entityWorld.RegisterComponent<container::MemberMoveResultComponent>();

@@ -61,12 +61,15 @@ namespace container
 	{
 		ecs::Entity m_Storage = {};
 		ecs::Entity m_Member = {};
+		uint16 m_Count = 1;
+		uint16 m_GridX = 0;
+		uint16 m_GridY = 0;
+		uint16 m_Type = static_cast<uint16>(EMember::None);
 	};
 
 	struct MemberMoved
 	{
-		ecs::Entity m_StorageA = {};
-		ecs::Entity m_StorageB = {};
+		ecs::Entity m_Storage = {};
 		ecs::Entity m_Member = {};
 	};
 
@@ -93,14 +96,6 @@ namespace container
 		uint16 m_GridX = 0;
 		uint16 m_GridY = 0;
 		uint16 m_Type = static_cast<uint16>(EMember::None);
-	};
-
-	/// \brief All members that are added/removed this frame.
-	struct MemberChangesComponent final : public ecs::SingletonComponent<MemberChangesComponent>
-	{
-		Array<MemberAdded> m_Added;
-		Array<MemberMoved> m_Moved;
-		Array<MemberRemoved> m_Removed;
 	};
 
 	/// \brief Make a request for a member component.
@@ -178,8 +173,12 @@ namespace container
 	/// \brief 
 	struct StorageChangesComponent final : public ecs::SingletonComponent<StorageChangesComponent>
 	{
-		Array<StorageChange> m_Created;
-		Array<StorageChange> m_Destroyed;
+		Array<MemberAdded> m_MemberAdded;
+		Array<MemberMoved> m_MemberMoved;
+		Array<MemberRemoved> m_MemberRemoved;
+
+		Array<StorageChange> m_StorageCreated;
+		Array<StorageChange> m_StorageDestroyed;
 	};
 
 	/// \brief Request that a new storage is created.

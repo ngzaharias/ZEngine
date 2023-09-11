@@ -19,8 +19,10 @@
 
 void clt::RegisterSystems(ecs::EntityWorld& entityWorld, const clt::SystemDependencies& dependencies)
 {
-	entityWorld.RegisterSystem<container::MemberSystem>();
 	entityWorld.RegisterSystem<container::StorageSystem>();
+	// #todo: container::MemberSystem depends on container::StorageSystem
+	entityWorld.RegisterSystem<container::MemberSystem>();
+	// #todo: container::OwnerSystem depends on container::StorageSystem
 	entityWorld.RegisterSystem<container::OwnerSystem>();
 	entityWorld.RegisterSystem<drag::MovementSystem>();
 	entityWorld.RegisterSystem<drag::SelectionSystem>();
