@@ -60,7 +60,7 @@ namespace
 	}
 }
 
-TEST_CASE("container::OwnerSystem::Storage Created")
+TEST_CASE("container::OwnerSystem::Owner Added")
 {
 	RAIIHelper world;
 
@@ -136,7 +136,7 @@ TEST_CASE("container::OwnerSystem::Storage Created")
 	}
 }
 
-TEST_CASE("container::OwnerSystem::Storage Destroyed")
+TEST_CASE("container::OwnerSystem::Owner Removed")
 {
 	RAIIHelper world;
 
