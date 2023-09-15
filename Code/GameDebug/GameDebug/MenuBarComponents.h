@@ -14,4 +14,5 @@ namespace dbg
 	struct SaveLevelRequestComponent : ecs::EventComponent<SaveLevelRequestComponent> { };
 	struct SaveLevelAsRequestComponent : ecs::EventComponent<SaveLevelAsRequestComponent> { };
 	struct ServerWindowRequestComponent : ecs::EventComponent<ServerWindowRequestComponent> { };
+	struct TrajectoryWindowRequestComponent : ecs::EventComponent<TrajectoryWindowRequestComponent> { };
 }

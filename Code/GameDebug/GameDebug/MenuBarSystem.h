@@ -20,6 +20,7 @@ namespace dbg
 	struct NodeGraphRequestComponent;
 	struct SaveLevelRequestComponent;
 	struct SaveLevelAsRequestComponent;
+	struct TrajectoryWindowRequestComponent;
 
 	class MenuBarSystem final : public ecs::System
 	{
@@ -32,7 +33,8 @@ namespace dbg
 			dbg::NetworkWindowRequestComponent,
 			dbg::NodeGraphRequestComponent,
 			dbg::SaveLevelRequestComponent,
-			dbg::SaveLevelAsRequestComponent>;
+			dbg::SaveLevelAsRequestComponent,
+			dbg::TrajectoryWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
