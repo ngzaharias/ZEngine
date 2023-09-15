@@ -72,6 +72,16 @@ inline constexpr Vector2f Vector2f::Divide(const Vector2f& a, const Vector2f& b)
 	return Vector2f(a.x / b.x, a.y / b.y);
 }
 
+inline constexpr Vector2f Vector2f::Max(const Vector2f& a, const Vector2f& b) noexcept
+{
+	return Vector2f((a.x > b.x) ? a.x : b.x, (a.y > b.y) ? a.y : b.y);
+}
+
+inline constexpr Vector2f Vector2f::Min(const Vector2f& a, const Vector2f& b) noexcept
+{
+	return Vector2f((a.x < b.x) ? a.x : b.x, (a.y < b.y) ? a.y : b.y);
+}
+
 inline constexpr Vector2f Vector2f::Multiply(const Vector2f& a, const Vector2f& b) noexcept
 {
 	return Vector2f(a.x * b.x, a.y * b.y);

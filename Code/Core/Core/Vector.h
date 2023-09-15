@@ -49,6 +49,8 @@ public:
 	static constexpr float DistanceSqr(const Vector2f& a, const Vector2f& b) noexcept;
 	static constexpr float Dot(const Vector2f& a, const Vector2f& b) noexcept;
 	static constexpr Vector2f Divide(const Vector2f& a, const Vector2f& b) noexcept;
+	static constexpr Vector2f Max(const Vector2f& a, const Vector2f& b) noexcept;
+	static constexpr Vector2f Min(const Vector2f& a, const Vector2f& b) noexcept;
 	static constexpr Vector2f Multiply(const Vector2f& a, const Vector2f& b) noexcept;
 	static constexpr Vector2f Reflect(const Vector2f& vector, const Vector2f& normal) noexcept;
 
