@@ -13,6 +13,7 @@
 #include "GameClient/NetworkHostSystem.h"
 #include "GameClient/NetworkJoinSystem.h"
 #include "GameClient/NetworkStopSystem.h"
+#include "GameClient/ProjectileSpawnSystem.h"
 
 void clt::RegisterSystems(ecs::EntityWorld& entityWorld, const clt::SystemDependencies& dependencies)
 {
@@ -23,4 +24,5 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld, const clt::SystemDepend
 	entityWorld.RegisterSystem<gamestate::NetworkStopSystem>();
 	entityWorld.RegisterSystem<gamestate::StateSystem>();
 	entityWorld.RegisterSystem<gui::modal::StateSystem>();
+	entityWorld.RegisterSystem<projectile::SpawnSystem>();
 }

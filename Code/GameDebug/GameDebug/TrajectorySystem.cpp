@@ -12,6 +12,8 @@
 
 #include <Engine/ColourHelpers.h>
 
+#include <GameClient/ProjectileComponents.h>
+
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui_user.h>
@@ -25,7 +27,8 @@ namespace
 		return std::format("{}##{},{}", label, entity.GetIndex(), entity.GetVersion());
 	}
 
-	void DrawInspector(dbg::TrajectoryWindowComponent& component)
+	using World = dbg::TrajectorySystem::World;
+	void DrawInspector(World& world, dbg::TrajectoryWindowComponent& component)
 	{
 		Array<Vector2f>& values = component.m_Positions;
 		if (ImGui::CollapsingHeader("m_Positions"))
@@ -39,6 +42,37 @@ namespace
 			ImGui::SameLine();
 			if (ImGui::Button("Clear"))
 				values.RemoveAll();
+			ImGui::SameLine();
+			if (ImGui::Button("Spawn"))
+			{
+				constexpr float s_Length = 1000.f;
+
+				path::Points path;
+
+				float distance = 0.f;
+				for (int32 i = 0; i < component.m_Positions.GetCount(); ++i)
+				{
+					const Vector3f positionI = Vector3f(component.m_Positions[i].x, 0.f, component.m_Positions[i].y) * s_Length;
+					if (i != 0)
+					{
+						const Vector3f positionJ = Vector3f(component.m_Positions[i - 1].x, 0.f, component.m_Positions[i-1].y) * s_Length;
+						distance += Vector3f::Distance(positionJ, positionI);
+					}
+
+					path.m_Positions.Append(positionI);
+					path.m_Distances.Append(distance);
+				}
+
+				speed::Constant velocity;
+				velocity.m_Speed = 1000.f;
+
+				const ecs::Entity entity = world.CreateEntity();
+				auto& requestComponent = world.AddComponent<projectile::SpawnRequestComponent>(entity);
+				requestComponent.m_Trajectory = path::Trajectory(path);
+				requestComponent.m_Velocity = velocity;
+				requestComponent.m_Scale = Vector3f(0.1f);
+				requestComponent.m_Lifetime = 5.f;
+			}
 
 			for (auto&& [i, position] : enumerate::Forward(values))
 			{
@@ -85,8 +119,15 @@ void dbg::TrajectorySystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::TrajectoryWindowRequestComponent>>())
 	{
 		auto& windowComponent = world.AddComponent<dbg::TrajectoryWindowComponent>(world.CreateEntity());
-		windowComponent.m_Positions.Append(Vector2f::Zero);
-		windowComponent.m_Positions.Append(Vector2f::One * 100.f);
+		windowComponent.m_Positions.Append(Vector2f(0.f, 0.f));
+		windowComponent.m_Positions.Append(Vector2f(0.1f, 0.1f));
+		windowComponent.m_Positions.Append(Vector2f(-0.15f, 0.15f));
+		windowComponent.m_Positions.Append(Vector2f(0.3f, 0.3f));
+		windowComponent.m_Positions.Append(Vector2f(-0.35f, 0.4f));
+		windowComponent.m_Positions.Append(Vector2f(0.5f, 0.5f));
+		windowComponent.m_Positions.Append(Vector2f(-0.2f, 0.6f));
+		windowComponent.m_Positions.Append(Vector2f(0.1f, 0.7f));
+		windowComponent.m_Positions.Append(Vector2f(0.f, 1.f));
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::TrajectoryWindowComponent>>())
@@ -126,7 +167,7 @@ void dbg::TrajectorySystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (ImGui::Begin(inspectorLabel.c_str()))
-			DrawInspector(windowComponent);
+			DrawInspector(world, windowComponent);
 		ImGui::End();
 
 		if (ImGui::Begin(plotterLabel.c_str()))
@@ -136,4 +177,7 @@ void dbg::TrajectorySystem::Update(World& world, const GameTime& gameTime)
 		if (!isOpen)
 			world.DestroyEntity(windowEntity);
 	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::SpawnRequestComponent>>())
+		world.DestroyEntity(entity);
 }
