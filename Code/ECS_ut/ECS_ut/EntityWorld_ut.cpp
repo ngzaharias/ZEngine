@@ -273,7 +273,7 @@ TEST_CASE("ecs::EntityWorld")
 		CHECK(entityWorld.CreateEntity() == ecs::Entity(4));
 	}
 
-	SECTION("DestoryEntity")
+	SECTION("DestroyEntity")
 	{
 		ecs::EntityWorld entityWorld;
 		ecs::Entity entity = entityWorld.CreateEntity();

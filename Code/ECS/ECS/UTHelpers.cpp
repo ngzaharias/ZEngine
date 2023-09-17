@@ -41,7 +41,7 @@ ecs::Entity ut::RAIIHelper::CreateEntity()
 	return entity;
 }
 
-void ut::RAIIHelper::DestoryEntity(const ecs::Entity& entity)
+void ut::RAIIHelper::DestroyEntity(const ecs::Entity& entity)
 {
 	m_Entities.Remove(entity);
 	m_EntityWorld.DestroyEntity(entity);

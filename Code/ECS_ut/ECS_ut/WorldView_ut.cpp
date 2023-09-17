@@ -98,7 +98,7 @@ TEST_CASE("ecs::WorldView")
 		CHECK(worldView.CreateEntity() == ecs::Entity(4));
 	}
 
-	SECTION("DestoryEntity")
+	SECTION("DestroyEntity")
 	{
 		ecs::Entity entity = worldView.CreateEntity();
 		entityWorld.Update({});
