@@ -19,7 +19,7 @@ namespace ut
 		bool IsAlive(const ecs::Entity& entity) const;
 
 		auto CreateEntity()->ecs::Entity;
-		void DestoryEntity(const ecs::Entity& entity);
+		void DestroyEntity(const ecs::Entity& entity);
 
 		template<class TComponent>
 		bool HasComponent(const ecs::Entity& entity) const;
