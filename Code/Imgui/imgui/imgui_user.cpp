@@ -12,9 +12,17 @@ namespace
 	{
 		return (from.x - to.x) * (from.x - to.x) + (from.y - to.y) * (from.y - to.y);
 	}
+
 	float Remap(float value, const float fromA, const float fromB, const float toA, const float toB)
 	{
 		return toA + (value - fromA) * (toB - toA) / (fromB - fromA);
+	}
+
+	ImVec2 Remap(const ImVec2& value, const ImVec2& fromA, const ImVec2& fromB, const ImVec2& toA, const ImVec2& toB)
+	{
+		return ImVec2(
+			toA.x + (value.x - fromA.x) * (toB.x - toA.x) / (fromB.x - fromA.x),
+			toA.y + (value.y - fromA.y) * (toB.y - toA.y) / (fromB.y - fromA.y));
 	}
 }
 
@@ -113,12 +121,13 @@ void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2
 	enum StorageIDs : ImGuiID
 	{
 		ID_Dragging = 100,
-		ID_PointsMinX,
-		ID_PointsMinY,
-		ID_PointsMaxX,
-		ID_PointsMaxY,
+		ID_RangeMinX,
+		ID_RangeMinY,
+		ID_RangeMaxX,
+		ID_RangeMaxY,
 	};
 
+	constexpr ImVec2 padding = ImVec2(0,0);
 	constexpr float point_radius = 3.f;
 	constexpr float select_radius = 20.f * 20.f;
 
@@ -135,7 +144,7 @@ void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2
 		graph_size.y = (style.FramePadding.y * 2);
 
 	const ImRect frame_bb(parent_window->DC.CursorPos, parent_window->DC.CursorPos + graph_size);
-	const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+	const ImRect inner_bb(frame_bb.Min + padding, frame_bb.Max - padding);
 	if (!ImGui::BeginChildFrame(id, graph_size, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
 	{
 		ImGui::EndChild();
@@ -147,14 +156,9 @@ void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2
 	if (window->SkipItems)
 		return;
 
-	//ImGui::ItemSize(frame_bb, style.FramePadding.y);
-	//if (!ImGui::ItemAdd(frame_bb, 0, &frame_bb))
-	//	return;
-	//ImGui::RenderFrame(frame_bb.Min, frame_bb.Max, ImGui::GetColorU32(ImGuiCol_FrameBg), true, style.FrameRounding);
-
 	// adjust range
-	ImVec2 points_min = ImVec2(-1.0f, -0.4f);
-	ImVec2 points_max = ImVec2(+1.0f, +0.4f);
+	ImVec2 range_min = ImVec2(-1.0f, -0.4f);
+	ImVec2 range_max = ImVec2(+1.0f, +0.4f);
 	if (values_count >= 1)
 	{
 		for (int i = 0; i < values_count; i += 2)
@@ -163,37 +167,39 @@ void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2
 			const bool isNaNX = value.x != value.x;
 			if (!isNaNX)
 			{
-				points_min.x = ImMin(points_min.x, value.x);
-				points_max.x = ImMax(points_max.x, value.x);
+				range_min.x = ImMin(range_min.x, value.x);
+				range_max.x = ImMax(range_max.x, value.x);
 			}
 			const bool isNaNY = value.y != value.y;
 			if (!isNaNY)
 			{
-				points_min.y = ImMin(points_min.y, value.y);
-				points_max.y = ImMax(points_max.y, value.y);
+				range_min.y = ImMin(range_min.y, value.y);
+				range_max.y = ImMax(range_max.y, value.y);
 			}
 		}
 
-		const float width = points_max.x - points_min.x;
-		const float height = points_max.y - points_min.y;
+		const float width = range_max.x - range_min.x;
+		const float height = range_max.y - range_min.y;
 	}
 
-	points_min.x = storage->GetFloat(ID_PointsMinX, points_min.x);
-	points_min.y = storage->GetFloat(ID_PointsMinY, points_min.y);
-	points_max.x = storage->GetFloat(ID_PointsMaxX, points_max.x);
-	points_max.y = storage->GetFloat(ID_PointsMaxY, points_max.y);
+	range_min.x = storage->GetFloat(ID_RangeMinX, range_min.x);
+	range_min.y = storage->GetFloat(ID_RangeMinY, range_min.y);
+	range_max.x = storage->GetFloat(ID_RangeMaxX, range_max.x);
+	range_max.y = storage->GetFloat(ID_RangeMaxY, range_max.y);
 
 	if (ImGui::GetIO().MouseWheel != 0 && ImGui::ItemHoverable(frame_bb, id))
 	{
-		const float scale = powf(2, ImGui::GetIO().MouseWheel);
-		points_max.x /= scale;
-		points_max.y /= scale;
+		const float scale = 2.f * ImGui::GetIO().MouseWheel;
+		float width = (range_max.x - range_min.x) / scale / 2.f;
+		float height = (range_max.y - range_min.y) / scale / 2.f;
+		range_min += ImVec2(width, height);
+		range_max -= ImVec2(width, height);
 	}
 
-	storage->SetFloat(ID_PointsMinX, points_min.x);
-	storage->SetFloat(ID_PointsMinY, points_min.y);
-	storage->SetFloat(ID_PointsMaxX, points_max.x);
-	storage->SetFloat(ID_PointsMaxY, points_max.y);
+	storage->SetFloat(ID_RangeMinX, range_min.x);
+	storage->SetFloat(ID_RangeMinY, range_min.y);
+	storage->SetFloat(ID_RangeMaxX, range_max.x);
+	storage->SetFloat(ID_RangeMaxY, range_max.y);
 
 	int idx_hovered = -1;
 	float idx_closest = FLT_MAX;
@@ -203,13 +209,11 @@ void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2
 		const ImU32 col_hovered = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
 
 		ImVec2 v0, t0, p0;
-		//ImGui::PushClipRect(frame_bb.Min, frame_bb.Max, true);
-
 		for (int idx1 = 0; idx1 < values_count; idx1 += 2)
 		{
 			const ImVec2 v1 = ImVec2(values[idx1 + 0], values[idx1 + 1]);
-			const ImVec2 t1 = ImVec2(Remap(v1.x, points_min.x, points_max.x, 0.f, 1.f), 1.0f - Remap(v1.y, points_min.y, points_max.y, 0.f, 1.f));
-			const ImVec2 p1 = ImLerp(inner_bb.Min, inner_bb.Max, t1);
+			const ImVec2 t1 = Remap(v1, range_min, range_max, ImVec2(0, 1), ImVec2(1, 0));
+			const ImVec2 p1 = Remap(t1, ImVec2(0, 0), ImVec2(1, 1), inner_bb.Min, inner_bb.Max);
 
 			// closest point
 			const float dsqr = DistanceSqr(g.IO.MousePos, p1);
@@ -227,14 +231,14 @@ void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2
 			// copy for next point
 			p0 = p1;
 		}
-		//ImGui::PopClipRect();
 
 		// hover highlight
 		if (idx_hovered != -1)
 		{
 			const ImVec2 v1 = ImVec2(values[idx_hovered + 0], values[idx_hovered + 1]);
-			const ImVec2 t1 = ImVec2(Remap(v1.x, points_min.x, points_max.x, 0.f, 1.f), 1.0f - Remap(v1.y, points_min.y, points_max.y, 0.f, 1.f));
-			const ImVec2 p1 = ImLerp(inner_bb.Min, inner_bb.Max, t1);
+			const ImVec2 t1 = Remap(v1, range_min, range_max, ImVec2(0, 1), ImVec2(1, 0));
+			const ImVec2 p1 = Remap(t1, ImVec2(0, 0), ImVec2(1, 1), inner_bb.Min, inner_bb.Max);
+
 			window->DrawList->AddCircleFilled(p1, point_radius, col_hovered);
 		}
 
@@ -250,16 +254,16 @@ void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2
 		// update dragging
 		if (idx_dragging != -1)
 		{
-			ImVec2 pos = g.IO.MousePos;
-			pos.x = Remap(pos.x, inner_bb.Min.x, inner_bb.Max.x, points_min.x, points_max.x);
-			pos.y = Remap(pos.y, inner_bb.Min.y, inner_bb.Max.y, points_min.y, points_max.y);
+			const ImVec2 p1 = g.IO.MousePos;
+			const ImVec2 t1 = Remap(p1, inner_bb.Min, inner_bb.Max, ImVec2(0, 1), ImVec2(1, 0));
+			const ImVec2 v1 = Remap(t1, ImVec2(0, 0), ImVec2(1, 1), range_min, range_max);
 
-			values[idx_dragging + 0] = pos.x;
-			values[idx_dragging + 1] = points_max.y - pos.y;
+			values[idx_dragging + 0] = v1.x;
+			values[idx_dragging + 1] = v1.y;
 		}
 
 		// tooltip
-		if (idx_hovered != -1/* && !ImGui::IsMouseDragging(ImGuiMouseButton_Left)*/)
+		if (idx_hovered != -1)
 			ImGui::SetTooltip("[%d] %1.3f, %1.3f", idx_hovered / 2, values[idx_hovered + 0], values[idx_hovered + 1]);
 	}
 
