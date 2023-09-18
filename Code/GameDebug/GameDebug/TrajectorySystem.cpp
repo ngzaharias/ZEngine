@@ -22,9 +22,14 @@
 
 namespace
 {
+	str::String ToLabel(const char* label, const int32 windowId)
+	{
+		return std::format("{}: {}", label, windowId);
+	}
+
 	str::String ToLabel(const char* label, const ecs::Entity& entity)
 	{
-		return std::format("{}##{},{}", label, entity.GetIndex(), entity.GetVersion());
+		return std::format("{}: {}", label, entity.GetIndex());
 	}
 
 	using World = dbg::TrajectorySystem::World;
@@ -119,6 +124,7 @@ void dbg::TrajectorySystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::TrajectoryWindowRequestComponent>>())
 	{
 		auto& windowComponent = world.AddComponent<dbg::TrajectoryWindowComponent>(world.CreateEntity());
+		windowComponent.m_WindowId = !m_UnusedIds.IsEmpty() ? m_UnusedIds.Pop() : m_NextId++;
 		windowComponent.m_Positions.Append(Vector2f(0.f, 0.f));
 		windowComponent.m_Positions.Append(Vector2f(0.1f, 0.1f));
 		windowComponent.m_Positions.Append(Vector2f(-0.15f, 0.15f));
@@ -140,9 +146,9 @@ void dbg::TrajectorySystem::Update(World& world, const GameTime& gameTime)
 		//dockNodeFlags |= ImGuiDockNodeFlags_NoTabBar;
 		dockNodeFlags |= ImGuiDockNodeFlags_NoWindowMenuButton;
 
-		const str::String dockspaceLabel = ToLabel("Trajectory Debugger", windowEntity);
-		const str::String inspectorLabel = ToLabel("Inspector", windowEntity);
-		const str::String plotterLabel = ToLabel("Plotter", windowEntity);
+		const str::String dockspaceLabel = ToLabel("Trajectory Debugger", windowComponent.m_WindowId);
+		const str::String inspectorLabel = ToLabel("Inspector", windowComponent.m_WindowId);
+		const str::String plotterLabel = ToLabel("Plotter", windowComponent.m_WindowId);
 		const ImGuiID dockspaceId = ImGui::GetID(dockspaceLabel.c_str());
 
 		bool isOpen = true;
@@ -175,7 +181,10 @@ void dbg::TrajectorySystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (!isOpen)
+		{
+			m_UnusedIds.Append(windowComponent.m_WindowId);
 			world.DestroyEntity(windowEntity);
+		}
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::SpawnRequestComponent>>())

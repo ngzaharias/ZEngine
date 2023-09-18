@@ -21,6 +21,7 @@ namespace dbg
 {
 	struct TrajectoryWindowComponent : public ecs::Component<TrajectoryWindowComponent> 
 	{ 
+		int32 m_WindowId = 0;
 		Array<Vector2f> m_Positions = { };
 	};
 
@@ -33,5 +34,9 @@ namespace dbg
 			const dbg::TrajectoryWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		Array<int32> m_UnusedIds = { };
+		int32 m_NextId = 0;
 	};
 };
