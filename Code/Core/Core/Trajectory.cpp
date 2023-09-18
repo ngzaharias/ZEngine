@@ -27,7 +27,7 @@ namespace
 	}
 
 	// remap a distance to its associated interpolation value
-	float ToInterpolatedValue(const float distance, Slice<float> distances)
+	float ToInterpolatedValue(const float distance, const Slice<const float> distances)
 	{
 		const float distanceMax = distances.GetLast();
 		if (distanceMax <= 0.f)
@@ -154,7 +154,7 @@ path::Trajectory::Trajectory(const Settings& settings)
 		});
 }
 
-Vector3f path::Trajectory::AtDistance(const float distance)
+Vector3f path::Trajectory::AtDistance(const float distance) const
 {
 	Vector3f result;
 	core::VariantMatch(m_Settings,
@@ -178,7 +178,7 @@ Vector3f path::Trajectory::AtDistance(const float distance)
 	return result;
 }
 
-Vector3f path::Trajectory::AtInterpolation(const float interpolation)
+Vector3f path::Trajectory::AtInterpolation(const float interpolation) const
 {
 	Vector3f result;
 	core::VariantMatch(m_Settings,
@@ -201,7 +201,7 @@ Vector3f path::Trajectory::AtInterpolation(const float interpolation)
 	return result;
 }
 
-Vector3f path::Trajectory::AtPercentage(const float percentage)
+Vector3f path::Trajectory::AtPercentage(const float percentage) const
 {
 	const float distance = percentage * GetLength();
 	return AtDistance(distance);
