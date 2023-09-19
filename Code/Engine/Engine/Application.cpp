@@ -184,6 +184,7 @@ void eng::Application::Initialise()
 void eng::Application::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
 	m_NetworkManager.Update(gameTime);
 }
 

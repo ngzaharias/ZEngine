@@ -6,7 +6,7 @@
 // Core
 #include <Core/Assert.h>
 #include <Core/Log.h>
+#include <Core/Profiler.h>
 #include <Core/Types.h>
 
 // Engine
-#include "Engine/Profiler.h"

@@ -30,6 +30,8 @@ namespace
 
 void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	const auto& sceneComponent = world.GetSingleton<const eng::PhysicsSceneComponent>();
 	auto& linesComponent = world.GetSingleton<eng::LinesComponent>();
 

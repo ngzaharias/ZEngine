@@ -40,6 +40,8 @@ void net::UserSystem::Shutdown(World& world)
 
 void net::UserSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	const auto& userMapComponent = world.GetSingleton<const net::UserMapComponent>();
 	for (auto&& [userId, hasConnected] : m_Requests)
 	{

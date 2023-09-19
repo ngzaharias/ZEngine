@@ -1,5 +1,7 @@
 #include "ECS/EntityStorage.h"
 
+#include <Core/Profiler.h>
+
 #include "ECS/FrameBuffer.h"
 #include "ECS/QueryRegistry.h"
 
@@ -10,6 +12,8 @@ bool ecs::EntityStorage::IsAlive(const ecs::Entity& entity) const
 
 void ecs::EntityStorage::FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryRegistry& queryRegistry)
 {
+	PROFILE_FUNCTION();
+
 	const ecs::QueryMasks& queryMasks = ecs::QueryRegistry::GetMasks();
 
 	// remove dead components

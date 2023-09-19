@@ -15,5 +15,6 @@ net::ReplicationSystem::ReplicationSystem(net::ReplicationHost& replicationHost)
 
 void net::ReplicationSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
 
 }
