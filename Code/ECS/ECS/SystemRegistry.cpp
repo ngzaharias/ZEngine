@@ -3,6 +3,7 @@
 #include "ECS/System.h"
 
 #include <Core/Algorithms.h>
+#include <Core/Profiler.h>
 
 #include <algorithm>
 
@@ -21,6 +22,8 @@ ecs::SystemRegistry::SystemRegistry(ecs::EntityWorld& entityWorld)
 
 void ecs::SystemRegistry::Initialise()
 {
+	PROFILE_FUNCTION();
+
 	for (ecs::SystemEntry& entry : m_Entries.GetValues())
 		m_Priorities.Append(&entry);
 
@@ -32,6 +35,8 @@ void ecs::SystemRegistry::Initialise()
 
 void ecs::SystemRegistry::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	for (auto&& [i, entry] : enumerate::Reverse(m_Priorities))
 	{
 		entry->m_Shutdown(m_EntityWorld, *entry->m_System);
@@ -42,6 +47,8 @@ void ecs::SystemRegistry::Shutdown()
 
 void ecs::SystemRegistry::Update(const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	for (ecs::SystemEntry* entry : m_Priorities)
 		entry->m_Update(m_EntityWorld, *entry->m_System, gameTime);
 }

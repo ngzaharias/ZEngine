@@ -1,5 +1,7 @@
 #include "ECS/EntityWorld.h"
 
+#include <Core/Profiler.h>
+
 #include "ECS/Manager.h"
 #include "ECS/System.h"
 
@@ -23,6 +25,8 @@ bool ecs::EntityWorld::IsInitialised() const
 
 void ecs::EntityWorld::Initialise()
 {
+	PROFILE_FUNCTION();
+
 	m_IsInitialised = true;
 	m_SingletonEntity = CreateEntity();
 
@@ -38,6 +42,8 @@ void ecs::EntityWorld::Initialise()
 
 void ecs::EntityWorld::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	// do before managers
 	m_SystemRegistry.Shutdown();
 
@@ -48,6 +54,8 @@ void ecs::EntityWorld::Shutdown()
 
 void ecs::EntityWorld::Update(const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	m_SystemRegistry.Update(gameTime);
 
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);

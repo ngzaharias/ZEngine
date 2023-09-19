@@ -22,12 +22,14 @@ project "ECS_ut"
 	includedirs 
 	{ 
 		"%{wks.location}/../3rdParty/",
+		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
 	}
 
 	libdirs 
 	{ 
+		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
 		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/ECS/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
@@ -36,4 +38,10 @@ project "ECS_ut"
 	{ 
 		"Core.lib",
 		"ECS.lib",
+		"OptickCore.lib",
+	}
+
+	postbuildcommands 
+	{ 
+		"{COPY} %{wks.location}/../3rdParty/optick/1.3.1/Binary/*.dll $(OutDir)",
 	}

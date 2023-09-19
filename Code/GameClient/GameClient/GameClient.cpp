@@ -71,5 +71,7 @@ void clt::GameClient::Shutdown()
 
 void clt::GameClient::Update(const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	m_EntityWorld.Update(gameTime);
 }

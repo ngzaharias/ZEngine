@@ -19,6 +19,8 @@ namespace
 
 void dbg::OpenLevelSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
 	constexpr float s_DesiredWidth = 512.f;
 	constexpr ImGuiTableFlags s_TableFlags =

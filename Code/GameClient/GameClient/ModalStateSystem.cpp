@@ -11,6 +11,8 @@
 
 void gui::modal::StateSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const gui::modal::MessageComponent>>())
 	{
 		const auto& component = world.GetComponent<const gui::modal::MessageComponent>(entity);

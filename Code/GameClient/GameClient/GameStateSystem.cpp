@@ -22,7 +22,9 @@ void gamestate::StateSystem::Shutdown(World& world)
 
 void gamestate::StateSystem::Update(World& world, const GameTime& gameTime)
 {
-	for (const ecs::Entity& entity :  world.Query<ecs::query::Added<const gamestate::RequestComponent>>())
+	PROFILE_FUNCTION();
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const gamestate::RequestComponent>>())
 	{
 		const auto& requestComponent = world.GetComponent<const gamestate::RequestComponent>(entity);
 		auto& stateComponent = world.GetSingleton<gamestate::StateComponent>();

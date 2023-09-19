@@ -1,9 +1,12 @@
 #include "ECS/QueryRegistry.h"
 
 #include <Core/Assert.h>
+#include <Core/Profiler.h>
 
 void ecs::QueryRegistry::Initialise()
 {
+	PROFILE_FUNCTION();
+
 	for (const auto& [queryId, queryMask] : m_Masks)
 		m_Groups[queryId];
 }

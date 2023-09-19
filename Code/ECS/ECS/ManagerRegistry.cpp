@@ -1,9 +1,13 @@
 #include "ECS/ManagerRegistry.h"
 
+#include <Core/Profiler.h>
+
 #include "ECS/Manager.h"
 
 void ecs::ManagerRegistry::Initialise()
 {
+	PROFILE_FUNCTION();
+
 	for (ecs::ManagerEntry& entry : m_Entries.GetValues())
 	{
 		if (!entry.m_IsExternal)
@@ -13,6 +17,8 @@ void ecs::ManagerRegistry::Initialise()
 
 void ecs::ManagerRegistry::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	for (ecs::ManagerEntry& entry : m_Entries.GetValues())
 	{
 		if (!entry.m_IsExternal)
