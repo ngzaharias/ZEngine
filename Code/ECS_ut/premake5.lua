@@ -41,7 +41,7 @@ project "ECS_ut"
 		"OptickCore.lib",
 	}
 
-		postbuildcommands 
+	postbuildcommands 
 	{ 
 		"{COPY} %{wks.location}/../3rdParty/optick/1.3.1/Binary/*.dll $(OutDir)",
 	}
