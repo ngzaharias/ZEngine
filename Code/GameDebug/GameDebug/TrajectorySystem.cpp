@@ -22,6 +22,8 @@
 
 namespace
 {
+	const str::Guid strStaticMesh = str::Guid::Create("d0284c56-3e6a-49a2-9a80-25ff2731a3de");
+
 	str::String ToLabel(const char* label, const int32 windowId)
 	{
 		return std::format("{}: {}", label, windowId);
@@ -50,17 +52,15 @@ namespace
 			ImGui::SameLine();
 			if (ImGui::Button("Spawn"))
 			{
-				constexpr float s_Length = 1000.f;
-
 				path::Points path;
 
 				float distance = 0.f;
 				for (int32 i = 0; i < component.m_Positions.GetCount(); ++i)
 				{
-					const Vector3f positionI = Vector3f(component.m_Positions[i].x, 0.f, component.m_Positions[i].y) * s_Length;
+					const Vector3f positionI = Vector3f(component.m_Positions[i].x, 0.f, component.m_Positions[i].y);
 					if (i != 0)
 					{
-						const Vector3f positionJ = Vector3f(component.m_Positions[i - 1].x, 0.f, component.m_Positions[i-1].y) * s_Length;
+						const Vector3f positionJ = Vector3f(component.m_Positions[i - 1].x, 0.f, component.m_Positions[i-1].y);
 						distance += Vector3f::Distance(positionJ, positionI);
 					}
 
@@ -72,11 +72,13 @@ namespace
 				velocity.m_Speed = 1000.f;
 
 				const ecs::Entity entity = world.CreateEntity();
-				auto& requestComponent = world.AddComponent<projectile::SpawnRequestComponent>(entity);
-				requestComponent.m_Trajectory = path::Trajectory(path);
-				requestComponent.m_Velocity = velocity;
-				requestComponent.m_Scale = Vector3f(0.1f);
-				requestComponent.m_Lifetime = 5.f;
+				auto& requestComponent = world.AddComponent<projectile::RequestComponent>(entity);
+				requestComponent.m_Lifetime.m_Lifetime = 5.f;
+				requestComponent.m_Trajectory.m_Trajectory = path::Trajectory(path);
+				requestComponent.m_Trajectory.m_Scale = 1000.f;
+				requestComponent.m_Transform.m_Scale = Vector3f(0.1f);
+				requestComponent.m_Velocity.m_Velocity = velocity;
+				requestComponent.m_Visual.m_StaticMesh = strStaticMesh;
 			}
 
 			for (auto&& [i, position] : enumerate::Forward(values))
@@ -187,6 +189,6 @@ void dbg::TrajectorySystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::SpawnRequestComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::RequestComponent>>())
 		world.DestroyEntity(entity);
 }

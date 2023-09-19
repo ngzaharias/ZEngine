@@ -7,50 +7,36 @@
 
 #include <ECS/Component.h>
 
-namespace speed
-{
-	struct Constant 
-	{
-		float m_Speed = 0.f;
-	};
-
-	struct Linear
-	{
-		float m_Acceleration = 0.f;
-		float m_Maximum = 0.f;
-		float m_Minimum = 0.f;
-		float m_Initial = 0.f;
-	};
-
-	using Velocity = Variant<Constant, Linear>;
-}
+#include <GameClient/ProjectileTypes.h>
 
 namespace projectile
 {
 	/// \brief
-	struct SpawnRequestComponent final : public ecs::Component<SpawnRequestComponent>
+	struct RequestComponent final : public ecs::Component<RequestComponent>
+	{
+		LifetimeData m_Lifetime = { };
+		TrajectoryData m_Trajectory = { };
+		TransformData m_Transform = { };
+		VelocityData m_Velocity = { };
+		VisualData m_Visual = { };
+	};
+
+	/// \brief
+	struct SettingsComponent final : public ecs::Component<SettingsComponent>
 	{
 		path::Trajectory m_Trajectory = { };
 		speed::Velocity m_Velocity = { };
 
-		Vector3f m_Translate = Vector3f::Zero;
-		Rotator m_Rotate = Rotator::Zero;
-		Vector3f m_Scale = Vector3f::One;
-
+		Vector3f m_Origin = Vector3f::Zero;
 		float m_Lifetime = 0.f;
+		float m_Scale = 1.f;
 	};
 
 	/// \brief
-	struct LifetimeComponent final : public ecs::Component<LifetimeComponent>
+	struct StateComponent final : public ecs::Component<StateComponent>
 	{
-		float m_Lifetime = 0.f;
-	};
-
-	/// \brief
-	struct TrajectoryComponent final : public ecs::Component<TrajectoryComponent>
-	{
-		path::Trajectory m_Trajectory = { };
-		Vector3f m_Translate = Vector3f::Zero;
 		float m_Distance = 0.f;
+		float m_Lifetime = 0.f;
+		float m_Velocity = 0.f;
 	};
 }

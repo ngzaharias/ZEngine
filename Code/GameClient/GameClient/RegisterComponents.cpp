@@ -6,7 +6,6 @@
 #include "GameClient/DragComponents.h"
 #include "GameClient/GameStateComponents.h"
 #include "GameClient/ModalComponents.h"
-#include "GameClient/MovementComponents.h"
 #include "GameClient/ProjectileComponents.h"
 
 void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
@@ -19,9 +18,7 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<gamestate::StateComponent>();
 	entityWorld.RegisterComponent<gamestate::StateFinishedComponent>();
 	entityWorld.RegisterComponent<gui::modal::MessageComponent>();
-	entityWorld.RegisterComponent<movement::AccelerationComponent>();
-	entityWorld.RegisterComponent<movement::VelocityComponent>();
-	entityWorld.RegisterComponent<projectile::LifetimeComponent>();
-	entityWorld.RegisterComponent<projectile::SpawnRequestComponent>();
-	entityWorld.RegisterComponent<projectile::TrajectoryComponent>();
+	entityWorld.RegisterComponent<projectile::RequestComponent>();
+	entityWorld.RegisterComponent<projectile::SettingsComponent>();
+	entityWorld.RegisterComponent<projectile::StateComponent>();
 }

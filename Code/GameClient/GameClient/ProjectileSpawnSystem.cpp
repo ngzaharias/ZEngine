@@ -1,87 +1,61 @@
 #include "GameClientPCH.h"
 #include "GameClient/ProjectileSpawnSystem.h"
 
-#include <Core/GameTime.h>
-#include <Core/Guid.h>
-#include <Core/Quaternion.h>
-
 #include <ECS/EntityWorld.h>
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
 
-#include <Engine/LinesComponent.h>
 #include <Engine/StaticMeshComponent.h>
 #include <Engine/TransformComponent.h>
 
-#include "GameClient/MovementComponents.h"
 #include "GameClient/ProjectileComponents.h"
-
-namespace
-{
-	const str::Guid strStaticMesh = str::Guid::Create("d0284c56-3e6a-49a2-9a80-25ff2731a3de");
-}
 
 void projectile::SpawnSystem::Update(World& world, const GameTime& gameTime)
 {
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const projectile::SpawnRequestComponent>>())
+	PROFILE_FUNCTION();
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const projectile::RequestComponent>>())
 	{
-		const auto& requestComponent = world.GetComponent<const projectile::SpawnRequestComponent>(entity);
+		const auto& requestComponent = world.GetComponent<const projectile::RequestComponent>(entity);
 
 		const ecs::Entity projectileEntity = world.CreateEntity();
-		auto& lifetimeComponent = world.AddComponent<projectile::LifetimeComponent>(projectileEntity);
-		lifetimeComponent.m_Lifetime = requestComponent.m_Lifetime;
+		auto& settingsComponent = world.AddComponent<projectile::SettingsComponent>(projectileEntity);
+		settingsComponent.m_Trajectory = requestComponent.m_Trajectory.m_Trajectory;
+		settingsComponent.m_Velocity = requestComponent.m_Velocity.m_Velocity;
+		settingsComponent.m_Origin = requestComponent.m_Trajectory.m_Origin;
+		settingsComponent.m_Lifetime = requestComponent.m_Lifetime.m_Lifetime;
+		settingsComponent.m_Scale = requestComponent.m_Trajectory.m_Scale;
 
-		auto& trajectoryComponent = world.AddComponent<projectile::TrajectoryComponent>(projectileEntity);
-		trajectoryComponent.m_Translate = requestComponent.m_Translate;
-		trajectoryComponent.m_Trajectory = requestComponent.m_Trajectory;
-
-		auto& transformComponent = world.AddComponent<eng::TransformComponent>(projectileEntity);
-		transformComponent.m_Translate = requestComponent.m_Translate;
-		transformComponent.m_Rotate = requestComponent.m_Rotate;
-		transformComponent.m_Scale = requestComponent.m_Scale;
-
-		if (std::holds_alternative<speed::Constant>(requestComponent.m_Velocity))
+		auto& stateComponent = world.AddComponent<projectile::StateComponent>(projectileEntity);
+		if (std::holds_alternative<speed::Constant>(requestComponent.m_Velocity.m_Velocity))
 		{
-			const speed::Constant& velocity = std::get<speed::Constant>(requestComponent.m_Velocity);
-
-			auto& velocityComponent = world.AddComponent<movement::VelocityComponent>(projectileEntity);
-			velocityComponent.m_Speed = velocity.m_Speed;
+			const auto& data = std::get<speed::Constant>(settingsComponent.m_Velocity);
+			stateComponent.m_Velocity = data.m_Speed;
 		}
-		else if (std::holds_alternative<speed::Linear>(requestComponent.m_Velocity))
+		else if (std::holds_alternative<speed::Linear>(requestComponent.m_Velocity.m_Velocity))
 		{
-			const speed::Linear& velocity = std::get<speed::Linear>(requestComponent.m_Velocity);
-
-			auto& accelerationComponent = world.AddComponent<movement::AccelerationComponent>(projectileEntity);
-			accelerationComponent.m_Maximum = velocity.m_Maximum;
-			accelerationComponent.m_Minimum = velocity.m_Minimum;
-			accelerationComponent.m_Speed = velocity.m_Acceleration;
-
-			auto& velocityComponent = world.AddComponent<movement::VelocityComponent>(projectileEntity);
-			velocityComponent.m_Speed = velocity.m_Initial;
+			const auto& data = std::get<speed::Linear>(settingsComponent.m_Velocity);
+			stateComponent.m_Velocity = data.m_Initial;
 		}
 
 		auto& meshComponent = world.AddComponent<eng::StaticMeshComponent>(projectileEntity);
-		meshComponent.m_StaticMesh = strStaticMesh;
+		meshComponent.m_StaticMesh = requestComponent.m_Visual.m_StaticMesh;
+
+		auto& transformComponent = world.AddComponent<eng::TransformComponent>(projectileEntity);
+		transformComponent.m_Translate = requestComponent.m_Transform.m_Translate;
+		transformComponent.m_Rotate = requestComponent.m_Transform.m_Rotate;
+		transformComponent.m_Scale = requestComponent.m_Transform.m_Scale;
 	}
 
-
-	auto& linesComponent = world.GetSingleton<eng::LinesComponent>();
-	using Query = ecs::query::Include<
-		eng::TransformComponent,
-		projectile::TrajectoryComponent,
-		const movement::VelocityComponent>;
-	for (const ecs::Entity& entity : world.Query<Query>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const projectile::SettingsComponent, const projectile::StateComponent>>())
 	{
-		const auto& velocityComponent = world.GetComponent<const movement::VelocityComponent>(entity);
-		auto& transformComponent = world.GetComponent<eng::TransformComponent>(entity);
-		auto& projectileComponent = world.GetComponent<projectile::TrajectoryComponent>(entity);
+		const auto& settingsComponent = world.GetComponent<const projectile::SettingsComponent>(entity);
+		const auto& stateComponent = world.GetComponent<const projectile::StateComponent>(entity);
 
-		// #todo: scale and rotate
-		const Vector3f position = projectileComponent.m_Trajectory.AtDistance(projectileComponent.m_Distance);
-
-		projectileComponent.m_Distance += velocityComponent.m_Speed * gameTime.m_DeltaTime;
-		transformComponent.m_Translate = projectileComponent.m_Translate + position;
-		if (projectileComponent.m_Distance > projectileComponent.m_Trajectory.GetLength())
+		bool hasExpired = false;
+		hasExpired |= stateComponent.m_Distance >= settingsComponent.m_Trajectory.GetLength();
+		hasExpired |= stateComponent.m_Lifetime >= settingsComponent.m_Lifetime;
+		if (hasExpired)
 			world.DestroyEntity(entity);
 	}
 }
