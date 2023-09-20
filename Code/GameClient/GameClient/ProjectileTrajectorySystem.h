@@ -2,9 +2,9 @@
 
 #include <ECS/System.h>
 
-namespace eng
+namespace movement
 {
-	struct TransformComponent;
+	struct VelocityComponent;
 }
 
 namespace projectile
@@ -12,23 +12,17 @@ namespace projectile
 	struct ChangesComponent;
 	struct CreateRequestComponent;
 	struct TrajectoryComponent;
-}
 
-namespace transform
-{
 	/// \brief
-	class TransformSystem final : public ecs::System
+	class TrajectorySystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::TransformComponent,
+			projectile::TrajectoryComponent,
+			const movement::VelocityComponent,
 			const projectile::ChangesComponent,
-			const projectile::CreateRequestComponent,
-			const projectile::TrajectoryComponent>;
+			const projectile::CreateRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
-
-	private:
-		void ProjectileRequests(World& world);
 	};
 }

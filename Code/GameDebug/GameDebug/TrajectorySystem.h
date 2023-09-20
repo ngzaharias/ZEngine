@@ -14,7 +14,7 @@ namespace dbg
 
 namespace projectile
 {
-	struct RequestComponent;
+	struct CreateRequestComponent;
 }
 
 namespace dbg
@@ -30,7 +30,7 @@ namespace dbg
 	public:
 		using World = ecs::WorldView<
 			dbg::TrajectoryWindowComponent,
-			projectile::RequestComponent,
+			projectile::CreateRequestComponent,
 			const dbg::TrajectoryWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

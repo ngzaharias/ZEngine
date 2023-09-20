@@ -4,27 +4,25 @@
 
 namespace eng
 {
-	struct TransformComponent;
+	struct StaticMeshComponent;
 }
 
 namespace projectile
 {
 	struct ChangesComponent;
 	struct CreateRequestComponent;
-	struct TrajectoryComponent;
 }
 
-namespace transform
+namespace visual
 {
 	/// \brief
-	class TransformSystem final : public ecs::System
+	class VisualSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::TransformComponent,
+			eng::StaticMeshComponent,
 			const projectile::ChangesComponent,
-			const projectile::CreateRequestComponent,
-			const projectile::TrajectoryComponent>;
+			const projectile::CreateRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

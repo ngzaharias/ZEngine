@@ -2,29 +2,33 @@
 
 #include <ECS/System.h>
 
-namespace eng
-{
-	struct StaticMeshComponent;
-	struct TransformComponent;
-}
-
 namespace projectile
 {
-	struct RequestComponent;
-	struct SettingsComponent;
-	struct StateComponent;
+	struct ChangesComponent;
+	struct CreateRequestComponent;
+	struct CreateResultComponent;
+	struct SpawnComponent;
+	struct TrajectoryComponent;
 
 	/// \brief
 	class SpawnSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::StaticMeshComponent,
-			eng::TransformComponent,
-			projectile::SettingsComponent,
-			projectile::StateComponent,
-			const projectile::RequestComponent>;
+			projectile::ChangesComponent,
+			projectile::CreateResultComponent,
+			projectile::SpawnComponent,
+			const projectile::CreateRequestComponent,
+			const projectile::TrajectoryComponent>;
+
+		void Initialise(World& world);
+		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		void ProcessCreate(World& world);
+		void ProcessDestroy(World& world);
+		void ProcessLifetime(World& world, const GameTime& gameTime);
 	};
 }

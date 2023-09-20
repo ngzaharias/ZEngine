@@ -1,34 +1,19 @@
 #pragma once
 
 #include <Core/Guid.h>
+#include <Core/Nullable.h>
 #include <Core/Rotator.h>
 #include <Core/Trajectory.h>
 #include <Core/Variant.h>
 #include <Core/Vector.h>
 
-namespace speed
-{
-	struct Constant 
-	{
-		float m_Speed = 0.f;
-	};
-
-	struct Linear
-	{
-		float m_Increase = 0.f;
-		float m_Initial = 0.f;
-		float m_Maximum = 0.f;
-		float m_Minimum = 0.f;
-	};
-
-	using Velocity = Variant<speed::Constant, speed::Linear>;
-}
+#include <ECS/Entity.h>
 
 namespace projectile
 {
 	struct LifetimeData
 	{
-		float m_Lifetime = 0.f;
+		float m_Timeout = 0.f;
 	};
 
 	struct TrajectoryData
@@ -40,7 +25,6 @@ namespace projectile
 
 	struct TransformData
 	{
-		ecs::Entity m_Parent = { };
 		Vector3f m_Translate = Vector3f::Zero;
 		Rotator m_Rotate = Rotator::Zero;
 		Vector3f m_Scale = Vector3f::One;
@@ -48,7 +32,10 @@ namespace projectile
 
 	struct VelocityData
 	{
-		speed::Velocity m_Velocity = { };
+		float m_Acceleration = 0.f;
+		float m_Initial = 0.f;
+		float m_Maximum = 0.f;
+		float m_Minimum = 0.f;
 	};
 
 	struct VisualData

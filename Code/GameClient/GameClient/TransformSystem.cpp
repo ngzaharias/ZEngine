@@ -16,18 +16,29 @@ void transform::TransformSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	using ProjectileQuery = ecs::query::Include<
-		eng::TransformComponent, 
-		const projectile::StateComponent, 
-		const projectile::SettingsComponent>;
-	for (const ecs::Entity& entity : world.Query<ProjectileQuery>())
+	ProjectileRequests(world);
+}
+
+void transform::TransformSystem::ProjectileRequests(World& world)
+{
+	const auto& changesComponent = world.GetSingleton<const projectile::ChangesComponent>();
+	for (const projectile::Created& createdData : changesComponent.m_Created)
 	{
-		const auto& settingsComponent = world.GetComponent<const projectile::SettingsComponent>(entity);
-		const auto& stateComponent = world.GetComponent<const projectile::StateComponent>(entity);
+		const auto& requestComponent = world.GetComponent<const projectile::CreateRequestComponent>(createdData.m_Request);
+		auto& transformComponent = world.AddComponent<eng::TransformComponent>(createdData.m_Projectile);
+		transformComponent.m_Translate = requestComponent.m_Transform.m_Translate;
+		transformComponent.m_Rotate = requestComponent.m_Transform.m_Rotate;
+		transformComponent.m_Scale = requestComponent.m_Transform.m_Scale;
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::TransformComponent, const projectile::TrajectoryComponent>>())
+	{
+		const auto& trajectoryComponent = world.GetComponent<const projectile::TrajectoryComponent>(entity);
+		const float distance = trajectoryComponent.m_Distance / trajectoryComponent.m_Scale;
 
 		auto& transformComponent = world.GetComponent<eng::TransformComponent>(entity);
-		transformComponent.m_Translate = settingsComponent.m_Trajectory.AtDistance(stateComponent.m_Distance);
-		transformComponent.m_Translate *= settingsComponent.m_Scale;
-		transformComponent.m_Translate += settingsComponent.m_Origin;
+		transformComponent.m_Translate = trajectoryComponent.m_Trajectory.AtDistance(distance);
+		transformComponent.m_Translate *= trajectoryComponent.m_Scale;
+		transformComponent.m_Translate += trajectoryComponent.m_Origin;
 	}
 }

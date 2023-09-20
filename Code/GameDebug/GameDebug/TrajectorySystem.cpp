@@ -68,16 +68,13 @@ namespace
 					path.m_Distances.Append(distance);
 				}
 
-				speed::Constant velocity;
-				velocity.m_Speed = 1000.f;
-
 				const ecs::Entity entity = world.CreateEntity();
-				auto& requestComponent = world.AddComponent<projectile::RequestComponent>(entity);
-				requestComponent.m_Lifetime.m_Lifetime = 5.f;
+				auto& requestComponent = world.AddComponent<projectile::CreateRequestComponent>(entity);
+				requestComponent.m_Lifetime.m_Timeout = 5.f;
 				requestComponent.m_Trajectory.m_Trajectory = path::Trajectory(path);
 				requestComponent.m_Trajectory.m_Scale = 1000.f;
 				requestComponent.m_Transform.m_Scale = Vector3f(0.1f);
-				requestComponent.m_Velocity.m_Velocity = velocity;
+				requestComponent.m_Velocity.m_Initial = 1000.f;
 				requestComponent.m_Visual.m_StaticMesh = strStaticMesh;
 			}
 
@@ -189,6 +186,6 @@ void dbg::TrajectorySystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::RequestComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::CreateResultComponent>>())
 		world.DestroyEntity(entity);
 }
