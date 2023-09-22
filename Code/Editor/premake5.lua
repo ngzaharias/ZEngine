@@ -1,6 +1,11 @@
 project "Editor"
-	kind "ConsoleApp"
-	dependson { "Core", "Engine", "Game", "Editor_gen", "Imgui" }
+
+	kind "None"
+	filter "*_Editor"
+		kind "ConsoleApp"
+	filter {} -- disable the filter
+
+	dependson { "Core", "Engine", "Game", "GameClient", "GameDebug", "GameServer", "GameShared", "Imgui", "Network" }
 	pchheader "EditorPCH.h"
 	pchsource "Editor/EditorPCH.cpp"
 	location "%{wks.location}/Editor"
@@ -16,40 +21,82 @@ project "Editor"
 	includedirs 
 	{ 
 		"%{wks.location}/../3rdParty/",
+		"%{wks.location}/../3rdParty/assimp/5.2.4/Include/",
+		"%{wks.location}/../3rdParty/Freetype/2.13/Include/",
 		"%{wks.location}/../3rdParty/glew/2.1.0/Include/",
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Include/",
 		"%{wks.location}/../3rdParty/imgui/1.87/Include/",
-		"%{wks.location}/../3rdParty/imgui-nodes/0.5/Include/",
+		"%{wks.location}/../3rdParty/imnodes/0.5/Include/",
+		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../3rdParty/PhysX/Include/",
 		"%{wks.location}/../3rdParty/SFML/Include/",
-		"%{wks.location}/../3rdParty/tinyxml2/9.0.0/",
+		"%{wks.location}/../3rdParty/yojimbo/1.2.1/Include/",
 		"%{wks.location}/../Code/Core/",
+		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Editor/",
 		"%{wks.location}/../Code/Engine/",
 		"%{wks.location}/../Code/Game/",
+		"%{wks.location}/../Code/GameClient/",
+		"%{wks.location}/../Code/GameDebug/",
+		"%{wks.location}/../Code/GameServer/",
+		"%{wks.location}/../Code/GameShared/",
 		"%{wks.location}/../Code/Imgui/",
-		"%{wks.location}/Generated/Editor/",
+		"%{wks.location}/../Code/Network/",
 	}
 
 	libdirs 
 	{
 		"%{wks.location}/../3rdParty/",
+		"%{wks.location}/../3rdParty/assimp/5.2.4/Library/",
+		"%{wks.location}/../3rdParty/Freetype/2.13/Library/",
 		"%{wks.location}/../3rdParty/glew/2.1.0/Library/",
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Library/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
-		"%{wks.location}/../3rdParty/PhysX/Library/%{cfg.buildcfg}/",
-		"%{wks.location}/../3rdParty/SFML/Library/%{cfg.buildcfg}/",
 		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/ECS/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Engine/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/Game/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/GameClient/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/GameDebug/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/GameServer/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/GameShared/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Imgui/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/Network/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
+
+	filter "Debug*"
+		libdirs 
+		{
+			"%{wks.location}/../3rdParty/SFML/Library/debug/",
+			"%{wks.location}/../3rdParty/PhysX/Library/debug/",
+			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/debug/",
+		}
+	filter "Release*"
+		libdirs 
+		{
+			"%{wks.location}/../3rdParty/SFML/Library/release/",
+			"%{wks.location}/../3rdParty/PhysX/Library/release/",
+			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/release/",
+		}
+	filter {} -- disable the filter
 
 	links 
 	{ 
 		"Core.lib",
+		"ECS.lib",
 		"Engine.lib",
+		"Game.lib",
+		"GameClient.lib",
+		"GameDebug.lib",
+		"GameServer.lib",
+		"GameShared.lib",
 		"Imgui.lib",
+		"Network.lib",
+
+		"assimp.lib",
+
+		"freetype.lib",
 
 		"glew32.lib",
 		"glfw3.lib",
@@ -62,8 +109,9 @@ project "Editor"
 		"PhysXFoundation_64.lib",
 		"PhysXPvdSDK_static_64.lib",
 
+		"yojimbo.lib",
+
 		"flac.lib",
-		"freetype.lib",
 		"gdi32.lib",
 		"ogg.lib",
 		"openal32.lib",
@@ -75,30 +123,36 @@ project "Editor"
 		"ws2_32.lib",
 		"winmm.lib",
 	}
-
-	filter "Debug"
+	filter "Debug*"
 		links 
 		{ 
 			"sfml-audio-d.lib",
 		}
-	filter "Release"
+	filter "Release*"
 		links 
 		{ 
 			"sfml-audio.lib",
 		}
 	filter {} -- disable the filter
 
-	buildcommands 
-	{ 
-		"cd %{wks.location}/../Assets/Shaders/ & call generate.bat" 
-	}
-
 	postbuildcommands 
 	{ 
 		"{COPY} %{wks.location}/../3rdParty/*.dll $(OutDir)",
+		"{COPY} %{wks.location}/../3rdParty/assimp/5.2.4/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/glew/2.1.0/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/optick/1.3.1/Binary/*.dll $(OutDir)",
-		"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/%{cfg.buildcfg}/*.dll $(OutDir)",
-		"{COPY} %{wks.location}/../3rdParty/SFML/Binary/%{cfg.buildcfg}/*.dll $(OutDir)",
 	}
 
+	filter "Debug*"
+		postbuildcommands 
+		{
+			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/debug/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/debug/*.dll $(OutDir)",
+		}
+	filter "Release*"
+		postbuildcommands 
+		{
+			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/release/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/release/*.dll $(OutDir)",
+		}
+	filter {} -- disable the filter

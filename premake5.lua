@@ -1,7 +1,7 @@
 workspace "ZEngine"
 	location "Solution"
 	architecture "x86_64"
-	configurations { "Debug", "Release" }
+	configurations { "Debug", "Debug_Editor", "Release", "Release_Editor" }
 	dependson { "ZERO_CHECK" }
 	language "C++"
 	cppdialect "C++20"
@@ -15,13 +15,13 @@ workspace "ZEngine"
 	defines { "_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING", "_SILENCE_CXX20_CISO646_REMOVED_WARNING" }
 	disablewarnings { "26812" }
 
-	filter "Debug"
+	filter "Debug*"
 		defines { "_DEBUG", "Z_DEBUG", "USE_OPTICK", "ASSERTS_ENABLED", "LOGGING_ENABLED" }
 		flags { "FatalCompileWarnings" }
 		optimize "Off"
 		runtime "Debug"
 		symbols "On"
-	filter "Release"
+	filter "Release*"
 		defines { "NDEBUG", "Z_RELEASE", "USE_OPTICK", "ASSERTS_ENABLED", "LOGGING_ENABLED" }
 		editandcontinue "Off"
 		flags { "FatalWarnings" }
@@ -38,7 +38,6 @@ workspace "ZEngine"
 		-- https://stackoverflow.com/questions/3007312/resolving-lnk4098-defaultlib-msvcrt-conflicts-with
 		-- "OmitDefaultLibrary",
 	}
-
 
 	files 
 	{ 
@@ -57,6 +56,7 @@ workspace "ZEngine"
 	-- projects
 	include "Code/Core/premake5.lua"
 	include "Code/ECS/premake5.lua"
+	include "Code/Editor/premake5.lua"
 	include "Code/Engine/premake5.lua"
 	include "Code/Game/premake5.lua"
 	include "Code/GameClient/premake5.lua"

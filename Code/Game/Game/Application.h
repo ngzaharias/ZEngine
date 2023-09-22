@@ -8,7 +8,7 @@
 
 namespace game
 {
-	class Application final : public eng::Application
+	class Application : public eng::Application
 	{
 	public:
 		Application();
