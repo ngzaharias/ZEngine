@@ -11,6 +11,7 @@
 #include <Engine/FrameBufferComponent.h>
 
 #include <imgui/imgui.h>
+#include <imgui/imgui_user.h>
 
 void dbg::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -31,15 +32,10 @@ void dbg::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(label.c_str(), &isOpen))
 		{
-			auto& component = world.GetSingleton<const eng::FrameBufferComponent>();
+			const auto& component = world.GetSingleton<const eng::FrameBufferComponent>();
 
-			ImVec2 regionSize = ImGui::GetContentRegionAvail();
-			ImVec2 desiredSize = {
-				static_cast<float>(component.m_ShadowSize.x),
-				static_cast<float>(component.m_ShadowSize.y) };
-
-			ImTextureID texture = (void*)(intptr_t)component.m_ShadowTexture;
-			ImGui::Image(texture, regionSize, { 0, 1 }, { 1, 0 });
+			const ImVec2 regionSize = ImGui::GetContentRegionAvail();
+			imgui::Image(component.m_ShadowTexture, Vector2f(regionSize.x, regionSize.y));
 		}
 		ImGui::End();
 
