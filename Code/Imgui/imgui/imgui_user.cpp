@@ -6,6 +6,15 @@
 
 #include <algorithm>
 
+#include <Core/Vector.h>
+
+void imgui::AddRect(const Vector2f& min, const Vector2f& max, const Vector4f& colour, float rounding, float thickness, ImDrawFlags flags)
+{
+	ImDrawList* drawList = ImGui::GetWindowDrawList();
+	const ImU32 colourHex = ImColor(colour.x, colour.y, colour.z, colour.w);
+	drawList->AddRect({ min.x, min.y }, { max.x, max.y }, colourHex, rounding, flags, thickness);
+}
+
 void imgui::Bullet()
 {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
@@ -96,20 +105,26 @@ bool imgui::BulletHeader(const char* label, const bool selected /*= false*/)
 	return pressed;
 }
 
-ImVec4 imgui::ToColour(const int hexadecimal)
+void imgui::Image(uint32 textureId, const Vector2f& size, const Vector2f& uv0, const Vector2f& uv1)
 {
-	const int r = (hexadecimal & 0xFF000000) >> 24;
-	const int g = (hexadecimal & 0x00FF0000) >> 16;
-	const int b = (hexadecimal & 0x0000FF00) >> 8;
-	const int a = (hexadecimal & 0x000000FF);
+	const ImTextureID castedId = (void*)(intptr_t)textureId;
+	ImGui::Image(castedId, { size.x, size.y }, { uv0.x, uv1.y }, { uv1.x, uv0.y });
+}
+
+ImVec4 imgui::ToColour(const int32 hexadecimal)
+{
+	const int32 r = (hexadecimal & 0xFF000000) >> 24;
+	const int32 g = (hexadecimal & 0x00FF0000) >> 16;
+	const int32 b = (hexadecimal & 0x0000FF00) >> 8;
+	const int32 a = (hexadecimal & 0x000000FF);
 	return ImVec4(r / 255.f, g / 255.f, b / 255.f, a / 255.f);
 }
 
-ImU32 imgui::ToColour32(const int hexadecimal)
+ImU32 imgui::ToColour32(const int32 hexadecimal)
 {
-	const int r = (hexadecimal & 0xFF000000) >> 24;
-	const int g = (hexadecimal & 0x00FF0000) >> 16;
-	const int b = (hexadecimal & 0x0000FF00) >> 8;
-	const int a = (hexadecimal & 0x000000FF);
+	const int32 r = (hexadecimal & 0xFF000000) >> 24;
+	const int32 g = (hexadecimal & 0x00FF0000) >> 16;
+	const int32 b = (hexadecimal & 0x0000FF00) >> 8;
+	const int32 a = (hexadecimal & 0x000000FF);
 	return IM_COL32(r, g, b, a);
 }
