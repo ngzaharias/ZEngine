@@ -16,11 +16,13 @@ namespace game
 
 	protected:
 		void Register() override;
+
 		void Initialise() override;
 		void Shutdown() override;
+
 		void Update(const GameTime& gameTime) override;
 
-	private:
+	protected:
 		clt::GameClient m_GameClient;
 		dbg::GameDebug m_GameDebug;
 		svr::GameServer m_GameServer;

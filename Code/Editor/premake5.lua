@@ -5,7 +5,7 @@ project "Editor"
 		kind "ConsoleApp"
 	filter {} -- disable the filter
 
-	dependson { "Core", "Engine", "Game", "GameClient", "GameDebug", "GameServer", "GameShared", "Imgui", "Network" }
+	dependson { "Core", "ECS", "Engine", "Game", "GameClient", "GameDebug", "GameServer", "GameShared", "Imgui", "Network" }
 	pchheader "EditorPCH.h"
 	pchsource "Editor/EditorPCH.cpp"
 	location "%{wks.location}/Editor"
