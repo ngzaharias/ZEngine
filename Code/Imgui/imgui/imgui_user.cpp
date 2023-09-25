@@ -3,8 +3,14 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
+#include "imgui/imgui_stdlib.h"
 
 #include <algorithm>
+
+#include <Core/Guid.h>
+#include <Core/Name.h>
+#include <Core/Path.h>
+#include <Core/Vector.h>
 
 namespace
 {
@@ -24,6 +30,13 @@ namespace
 			toA.x + (value.x - fromA.x) * (toB.x - toA.x) / (fromB.x - fromA.x),
 			toA.y + (value.y - fromA.y) * (toB.y - toA.y) / (fromB.y - fromA.y));
 	}
+}
+
+void imgui::AddRect(const Vector2f& min, const Vector2f& max, const Vector4f& colour, float rounding, float thickness, ImDrawFlags flags)
+{
+	ImDrawList* drawList = ImGui::GetWindowDrawList();
+	const ImU32 colourHex = ImColor(colour.x, colour.y, colour.z, colour.w);
+	drawList->AddRect({ min.x, min.y }, { max.x, max.y }, colourHex, rounding, flags, thickness);
 }
 
 void imgui::Bullet()
@@ -116,6 +129,65 @@ bool imgui::BulletHeader(const char* label, const bool selected /*= false*/)
 	return pressed;
 }
 
+bool imgui::DragUInt(const char* label, uint32* v, float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalar(label, ImGuiDataType_U32, v, v_speed, &v_min, &v_max, format, flags);
+}
+
+bool imgui::DragUInt2(const char* label, uint32 v[2], float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 2, v_speed, &v_min, &v_max, format, flags);
+}
+
+bool imgui::DragUInt3(const char* label, uint32 v[3], float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 3, v_speed, &v_min, &v_max, format, flags);
+}
+
+bool imgui::DragUInt4(const char* label, uint32 v[4], float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 4, v_speed, &v_min, &v_max, format, flags);
+}
+
+bool imgui::Guid(const char* label, str::Guid& value)
+{
+	str::String string = value.ToString();
+	if (ImGui::InputText(label, &string) && str::Guid::IsValidString(string))
+	{
+		value = str::Guid::Create(string);
+		return true;
+	}
+	return false;
+}
+
+bool imgui::Name(const char* label, str::Name& value)
+{
+	str::String string = str::String(value);
+	if (ImGui::InputText(label, &string))
+	{
+		value = str::Name::Create(string);
+		return true;
+	}
+	return false;
+}
+
+bool imgui::Path(const char* label, str::Path& value)
+{
+	str::String string = str::String(value);
+	if (ImGui::InputText(label, &string))
+	{
+		value = str::Path(string);
+		return true;
+	}
+	return false;
+}
+
+void imgui::Image(uint32 textureId, const Vector2f& size, const Vector2f& uv0, const Vector2f& uv1)
+{
+	const ImTextureID castedId = (void*)(intptr_t)textureId;
+	ImGui::Image(castedId, { size.x, size.y }, { uv0.x, uv1.y }, { uv1.x, uv0.y });
+}
+
 void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2 graph_size, ImGuiGraphFlags flags)
 {
 	enum StorageIDs : ImGuiID
@@ -127,7 +199,7 @@ void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2
 		ID_RangeMaxY,
 	};
 
-	constexpr ImVec2 padding = ImVec2(0,0);
+	constexpr ImVec2 padding = ImVec2(0, 0);
 	constexpr float point_radius = 3.f;
 	constexpr float select_radius = 20.f * 20.f;
 
@@ -276,20 +348,20 @@ void imgui::PlotLines(const char* label, ImVec2* values, int values_count, ImVec
 	PlotLines(label, values_count > 0 ? &values->x : &dummy.x, values_count * 2, graph_size, flags);
 }
 
-ImVec4 imgui::ToColour(const int hexadecimal)
+ImVec4 imgui::ToColour(const int32 hexadecimal)
 {
-	const int r = (hexadecimal & 0xFF000000) >> 24;
-	const int g = (hexadecimal & 0x00FF0000) >> 16;
-	const int b = (hexadecimal & 0x0000FF00) >> 8;
-	const int a = (hexadecimal & 0x000000FF);
+	const int32 r = (hexadecimal & 0xFF000000) >> 24;
+	const int32 g = (hexadecimal & 0x00FF0000) >> 16;
+	const int32 b = (hexadecimal & 0x0000FF00) >> 8;
+	const int32 a = (hexadecimal & 0x000000FF);
 	return ImVec4(r / 255.f, g / 255.f, b / 255.f, a / 255.f);
 }
 
-ImU32 imgui::ToColour32(const int hexadecimal)
+ImU32 imgui::ToColour32(const int32 hexadecimal)
 {
-	const int r = (hexadecimal & 0xFF000000) >> 24;
-	const int g = (hexadecimal & 0x00FF0000) >> 16;
-	const int b = (hexadecimal & 0x0000FF00) >> 8;
-	const int a = (hexadecimal & 0x000000FF);
+	const int32 r = (hexadecimal & 0xFF000000) >> 24;
+	const int32 g = (hexadecimal & 0x00FF0000) >> 16;
+	const int32 b = (hexadecimal & 0x0000FF00) >> 8;
+	const int32 a = (hexadecimal & 0x000000FF);
 	return IM_COL32(r, g, b, a);
 }

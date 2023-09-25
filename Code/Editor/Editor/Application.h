@@ -1,21 +1,26 @@
 #pragma once
 
-#include <Engine/Application.h>
+#include <Game/Application.h>
+
+#include <Editor/Editor.h>
 
 namespace editor
 {
-	class Application final : public core::Application
+	class Application : public game::Application
 	{
 	public:
 		Application();
 		~Application();
 
-	private:
+	protected:
 		void Register() override;
-		void Initialise() override;
-		void Update(const GameTime& gameTime) override;
-		void Destroy() override;
 
-		void PlaySound();
+		void Initialise() override;
+		void Shutdown() override;
+
+		void Update(const GameTime& gameTime) override;
+
+	protected:
+		editor::Editor m_Editor;
 	};
 }

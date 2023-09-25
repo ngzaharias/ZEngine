@@ -16,3 +16,8 @@ namespace dbg
 	struct ServerWindowRequestComponent : ecs::EventComponent<ServerWindowRequestComponent> { };
 	struct TrajectoryWindowRequestComponent : ecs::EventComponent<TrajectoryWindowRequestComponent> { };
 }
+
+namespace editor
+{
+	struct FlipbookWindowRequestComponent : ecs::EventComponent<FlipbookWindowRequestComponent> { };
+}

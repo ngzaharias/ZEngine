@@ -1,5 +1,6 @@
 project "Imgui"
 	kind "StaticLib"
+	dependson { "Core" }
 	location "%{wks.location}/Imgui"
 	files 
 	{ 
@@ -40,5 +41,6 @@ project "Imgui"
 		"%{wks.location}/../3rdParty/imnodes/0.5/Include/",
 		"%{wks.location}/../3rdParty/ImGuizmo/",
 		"%{wks.location}/../3rdParty/SFML/Include/",
+		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/Imgui/",
 	}
