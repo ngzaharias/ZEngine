@@ -3,9 +3,13 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
+#include "imgui/imgui_stdlib.h"
 
 #include <algorithm>
 
+#include <Core/Guid.h>
+#include <Core/Name.h>
+#include <Core/Path.h>
 #include <Core/Vector.h>
 
 void imgui::AddRect(const Vector2f& min, const Vector2f& max, const Vector4f& colour, float rounding, float thickness, ImDrawFlags flags)
@@ -123,6 +127,39 @@ bool imgui::DragUInt3(const char* label, uint32 v[3], float v_speed, uint32 v_mi
 bool imgui::DragUInt4(const char* label, uint32 v[4], float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
 {
 	return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 4, v_speed, &v_min, &v_max, format, flags);
+}
+
+bool imgui::Guid(const char* label, str::Guid& value)
+{
+	str::String string = value.ToString();
+	if (ImGui::InputText(label, &string) && str::Guid::IsValidString(string))
+	{
+		value = str::Guid::Create(string);
+		return true;
+	}
+	return false;
+}
+
+bool imgui::Name(const char* label, str::Name& value)
+{
+	str::String string = str::String(value);
+	if (ImGui::InputText(label, &string))
+	{
+		value = str::Name::Create(string);
+		return true;
+	}
+	return false;
+}
+
+bool imgui::Path(const char* label, str::Path& value)
+{
+	str::String string = str::String(value);
+	if (ImGui::InputText(label, &string))
+	{
+		value = str::Path(string);
+		return true;
+	}
+	return false;
 }
 
 void imgui::Image(uint32 textureId, const Vector2f& size, const Vector2f& uv0, const Vector2f& uv1)
