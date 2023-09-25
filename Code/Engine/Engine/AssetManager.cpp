@@ -7,8 +7,6 @@
 
 namespace
 {
-	constexpr const char* s_Extension = ".asset";
-
 	const str::Name strGuid = NAME("m_Guid");
 	const str::Name strType = NAME("m_Type");
 }

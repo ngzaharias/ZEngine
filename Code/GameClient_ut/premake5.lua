@@ -33,12 +33,23 @@ project "GameClient_ut"
 	libdirs 
 	{ 
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
-		"%{wks.location}/../3rdParty/SFML/Library/%{cfg.buildcfg}/",
 		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/ECS/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Engine/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/GameClient/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
+
+	filter "Debug*"
+		libdirs 
+		{
+			"%{wks.location}/../3rdParty/SFML/Library/debug/",
+		}
+	filter "Release*"
+		libdirs 
+		{
+			"%{wks.location}/../3rdParty/SFML/Library/release/",
+		}
+	filter {} -- disable the filter
 	
 	links 
 	{ 
@@ -49,12 +60,12 @@ project "GameClient_ut"
 		"OptickCore.lib",
 	}
 
-	filter "Debug"
+	filter "Debug*"
 		links 
 		{ 
 			"sfml-audio-d.lib",
 		}
-	filter "Release"
+	filter "Release*"
 		links 
 		{ 
 			"sfml-audio.lib",
@@ -65,6 +76,20 @@ project "GameClient_ut"
 	{ 
 		"{COPY} %{wks.location}/../3rdParty/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/assimp/5.2.4/Binary/*.dll $(OutDir)",
+		"{COPY} %{wks.location}/../3rdParty/glew/2.1.0/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/optick/1.3.1/Binary/*.dll $(OutDir)",
-		"{COPY} %{wks.location}/../3rdParty/SFML/Binary/%{cfg.buildcfg}/*.dll $(OutDir)",
 	}
+
+	filter "Debug*"
+		postbuildcommands 
+		{
+			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/debug/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/debug/*.dll $(OutDir)",
+		}
+	filter "Release*"
+		postbuildcommands 
+		{
+			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/release/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/release/*.dll $(OutDir)",
+		}
+	filter {} -- disable the filter

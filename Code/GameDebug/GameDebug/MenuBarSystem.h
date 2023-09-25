@@ -10,10 +10,16 @@ namespace ecs
 	class EntityWorld;
 }
 
+namespace editor
+{
+	struct FlipbookWindowRequestComponent;
+}
+
 namespace dbg
 {
 	struct BufferWindowRequestComponent;
 	struct EntityWindowRequestComponent;
+	struct FlipbookWindowRequestComponent;
 	struct ImGuiDemoRequestComponent;
 	struct LevelDialogRequestComponent;
 	struct NetworkWindowRequestComponent;
@@ -27,12 +33,14 @@ namespace dbg
 		using World = ecs::WorldView<
 			dbg::BufferWindowRequestComponent,
 			dbg::EntityWindowRequestComponent,
+			dbg::FlipbookWindowRequestComponent,
 			dbg::ImGuiDemoRequestComponent,
 			dbg::LevelDialogRequestComponent,
 			dbg::NetworkWindowRequestComponent,
 			dbg::NodeGraphRequestComponent,
 			dbg::SaveLevelRequestComponent,
-			dbg::SaveLevelAsRequestComponent>;
+			dbg::SaveLevelAsRequestComponent,
+			editor::FlipbookWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
