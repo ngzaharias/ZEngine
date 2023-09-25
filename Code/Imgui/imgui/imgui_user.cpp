@@ -105,6 +105,26 @@ bool imgui::BulletHeader(const char* label, const bool selected /*= false*/)
 	return pressed;
 }
 
+bool imgui::DragUInt(const char* label, uint32* v, float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalar(label, ImGuiDataType_U32, v, v_speed, &v_min, &v_max, format, flags);
+}
+
+bool imgui::DragUInt2(const char* label, uint32 v[2], float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 2, v_speed, &v_min, &v_max, format, flags);
+}
+
+bool imgui::DragUInt3(const char* label, uint32 v[3], float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 3, v_speed, &v_min, &v_max, format, flags);
+}
+
+bool imgui::DragUInt4(const char* label, uint32 v[4], float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 4, v_speed, &v_min, &v_max, format, flags);
+}
+
 void imgui::Image(uint32 textureId, const Vector2f& size, const Vector2f& uv0, const Vector2f& uv1)
 {
 	const ImTextureID castedId = (void*)(intptr_t)textureId;
