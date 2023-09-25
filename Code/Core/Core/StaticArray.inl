@@ -103,6 +103,12 @@ constexpr Type* StaticArray<Type, TCount>::GetData() noexcept
 }
 
 template<typename Type, int32 TCount>
+constexpr const Type* StaticArray<Type, TCount>::GetData() const noexcept
+{
+	return &m_Values[0];
+}
+
+template<typename Type, int32 TCount>
 constexpr auto StaticArray<Type, TCount>::GetFirst() noexcept->Type&
 {
 	return m_Values[0];

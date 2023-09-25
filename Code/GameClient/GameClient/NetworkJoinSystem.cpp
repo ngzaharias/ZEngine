@@ -16,6 +16,8 @@
 
 void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	if (world.HasAny<ecs::query::Updated<const gamestate::StateComponent>>())
 	{
 		const auto& stateComponent = world.GetSingleton<const gamestate::StateComponent>();

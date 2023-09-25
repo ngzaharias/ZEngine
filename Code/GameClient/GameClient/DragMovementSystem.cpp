@@ -29,6 +29,8 @@ namespace
 
 void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	auto& linesComponent = world.GetSingleton<eng::LinesComponent>();
 
 	for (const ecs::Entity& dragEntity : world.Query<ecs::query::Include<const drag::SelectionComponent>>())

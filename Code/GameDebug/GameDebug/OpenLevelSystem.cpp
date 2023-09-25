@@ -11,6 +11,7 @@
 #include <Engine/LevelComponents.h>
 
 #include <imgui/imgui.h>
+#include <imgui/imgui_user.h>
 
 namespace
 {
@@ -19,6 +20,8 @@ namespace
 
 void dbg::OpenLevelSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
 	constexpr float s_DesiredWidth = 512.f;
 	constexpr ImGuiTableFlags s_TableFlags =
@@ -58,8 +61,7 @@ void dbg::OpenLevelSystem::Update(World& world, const GameTime& gameTime)
 				}
 
 				// #todo: fetch image from folder
-				ImTextureID texture = (void*)(intptr_t)0;
-				ImGui::Image(texture, { width, height }, { 0, 1 }, { 1, 0 });
+				imgui::Image(0, Vector2f(width, height));
 			}
 			ImGui::EndTable();
 		}

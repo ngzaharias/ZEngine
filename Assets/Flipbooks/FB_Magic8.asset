@@ -62,10 +62,10 @@ m_Frames = [
     { m_Position = { X = 300.0, Y = 0.0 }, m_Size = { X = 100.0, Y = 100.0 } },
     { m_Position = { X = 400.0, Y = 0.0 }, m_Size = { X = 100.0, Y = 100.0 } }
 ]
-m_Guid = '9cf3dbdc-769e-a09a-6e4a-a0390e246666'
+m_Guid = '239b0280-0e10-4847-c693-1fd49f118810'
 m_IsLooping = true
-m_Name = 'FP_Midnight'
+m_Name = 'FP_Magic8'
 m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
 m_StaticMesh = 'e94876a8-e4cc-4d16-84c8-5859b48a1af6'
-m_Texture2D = '91ffda2b-d755-ce42-35c3-7010aaf5ec5a'
+m_Texture2D = 'f9dcfdd6-014a-c528-12e2-1e73f232b7f9'
 m_Type = 'Flipbook'

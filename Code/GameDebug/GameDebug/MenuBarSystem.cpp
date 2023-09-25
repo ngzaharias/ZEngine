@@ -11,6 +11,8 @@
 
 void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
@@ -26,6 +28,14 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		}
 
 		ImGui::Separator();
+
+		if (ImGui::BeginMenu("Editors"))
+		{
+			if (ImGui::MenuItem("Flipbook Editor"))
+				world.AddEventComponent<editor::FlipbookWindowRequestComponent>();
+
+			ImGui::EndMenu();
+		}
 
 		if (ImGui::BeginMenu("Windows"))
 		{

@@ -69,5 +69,7 @@ void svr::GameServer::Shutdown()
 
 void svr::GameServer::Update(const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	m_EntityWorld.Update(gameTime);
 }

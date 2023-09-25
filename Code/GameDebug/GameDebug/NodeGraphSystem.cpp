@@ -18,6 +18,8 @@ namespace
 
 void dbg::NodeGraphSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::NodeGraphRequestComponent>>())
 		world.AddComponent<dbg::NodeGraphComponent>(world.CreateEntity());
 
