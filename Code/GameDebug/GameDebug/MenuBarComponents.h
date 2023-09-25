@@ -15,3 +15,8 @@ namespace dbg
 	struct SaveLevelAsRequestComponent : ecs::EventComponent<SaveLevelAsRequestComponent> { };
 	struct ServerWindowRequestComponent : ecs::EventComponent<ServerWindowRequestComponent> { };
 }
+
+namespace editor
+{
+	struct FlipbookWindowRequestComponent : ecs::EventComponent<FlipbookWindowRequestComponent> { };
+}

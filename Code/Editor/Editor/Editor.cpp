@@ -5,6 +5,7 @@
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
 
+#include "Editor/FlipbookEditor.h"
 
 editor::Editor::Editor(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
 	: m_ClientWorld(clientWorld)
@@ -16,7 +17,9 @@ void editor::Editor::Register()
 {
 	PROFILE_FUNCTION();
 
+	m_ClientWorld.RegisterComponent<editor::FlipbookWindowComponent>();
 
+	m_ClientWorld.RegisterSystem<editor::FlipbookEditor>();
 }
 
 void editor::Editor::Initialise()
