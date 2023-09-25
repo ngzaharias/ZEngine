@@ -16,16 +16,15 @@ namespace eng
 {
 	struct FlipbookFrame
 	{
-		str::Guid m_Sprite = { };
-		int32 m_FrameCount = 1;
-
-		Vector2u m_Min = Vector2u::Zero;
-		Vector2u m_Max = Vector2u::Zero;
+		Vector2f m_Position = Vector2f::Zero;
+		Vector2f m_Size = Vector2f::Zero;
 	};
 
 	struct FlipbookAsset : public eng::Asset
 	{
-		str::Guid m_Texture = { };
+		str::Guid m_Shader = { };
+		str::Guid m_StaticMesh = { };
+		str::Guid m_Texture2D = { };
 		float m_FPS = 30.f;
 		bool m_IsLooping = true;
 

@@ -17,6 +17,9 @@ void editor::Editor::Register()
 {
 	PROFILE_FUNCTION();
 
+	m_ClientWorld.RegisterComponent<editor::FlipbookAssetOpenComponent>();
+	m_ClientWorld.RegisterComponent<editor::FlipbookAssetSaveComponent>();
+	m_ClientWorld.RegisterComponent<editor::FlipbookExtractorComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowComponent>();
 
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditor>();

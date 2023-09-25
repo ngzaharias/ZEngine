@@ -34,16 +34,16 @@ namespace eng
 
 	struct AssetEntry
 	{
-		using Save = bool(eng::Asset* asset, const eng::AssetLoader& loader);
-		using Load = bool(eng::Asset* asset, const eng::AssetLoader& loader);
 		using Import = bool(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
+		using Load = bool(eng::Asset* asset, const eng::AssetLoader& loader);
+		using Save = bool(eng::Asset* asset, const eng::AssetLoader& loader);
 
 		str::Name m_Type = { };
 		eng::AssetLoader* m_Loader = nullptr;
 
-		Save* m_Save = nullptr;
-		Load* m_Load = nullptr;
 		Import* m_Import = nullptr;
+		Load* m_Load = nullptr;
+		Save* m_Save = nullptr;
 	};
 
 	class AssetManager final : public ecs::Manager

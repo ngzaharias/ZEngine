@@ -125,9 +125,9 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				RenderBatchID id;
 				id.m_Entity = renderEntity;
 				id.m_Depth = Vector3f::DistanceSqr(spriteTransform.m_Translate, cameraTransform.m_Translate);
-				id.m_TextureId = spriteAsset.m_Texture2D;
 				id.m_ShaderId = spriteAsset.m_Shader;
 				id.m_StaticMeshId = spriteAsset.m_StaticMesh;
+				id.m_TextureId = spriteAsset.m_Texture2D;
 				batchIDs.Append(std::move(id));
 			}
 		}
@@ -150,19 +150,15 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				const int32 frameIndex = std::clamp(flipbookComponent.m_Index, 0, frameMax);
 
 				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[frameIndex];
-				if (!flipbookFrame.m_Sprite.IsValid())
-					continue;
-
-				const eng::SpriteAsset& spriteAsset = *m_AssetManager.LoadAsset<eng::SpriteAsset>(flipbookFrame.m_Sprite);
-				if (!spriteAsset.m_Texture2D.IsValid())
+				if (!flipbookAsset.m_Texture2D.IsValid())
 					continue;
 
 				RenderBatchID id;
 				id.m_Entity = renderEntity;
 				id.m_Depth = Vector3f::DistanceSqr(flipbookTransform.m_Translate, cameraTransform.m_Translate);
-				id.m_TextureId = spriteAsset.m_Texture2D;
-				id.m_ShaderId = spriteAsset.m_Shader;
-				id.m_StaticMeshId = spriteAsset.m_StaticMesh;
+				id.m_ShaderId = flipbookAsset.m_Shader;
+				id.m_StaticMeshId = flipbookAsset.m_StaticMesh;
+				id.m_TextureId = flipbookAsset.m_Texture2D;
 				batchIDs.Append(std::move(id));
 			}
 		}
@@ -201,11 +197,10 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				const int32 frameIndex = std::clamp(flipbookComponent.m_Index, 0, frameMax);
 
 				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[frameIndex];
-				const eng::SpriteAsset& spriteAsset = *m_AssetManager.LoadAsset<eng::SpriteAsset>(flipbookFrame.m_Sprite);
-				const eng::Texture2DAsset& texture2DAsset = *m_AssetManager.LoadAsset<eng::Texture2DAsset>(spriteAsset.m_Texture2D);
+				const eng::Texture2DAsset& texture2DAsset = *m_AssetManager.LoadAsset<eng::Texture2DAsset>(flipbookAsset.m_Texture2D);
 
-				const Vector2f spritePos = Vector2f((float)spriteAsset.m_Position.x, (float)spriteAsset.m_Position.y);
-				const Vector2f spriteSize = Vector2f((float)spriteAsset.m_Size.x, (float)spriteAsset.m_Size.y);
+				const Vector2f& spritePos = flipbookFrame.m_Position;
+				const Vector2f& spriteSize = flipbookFrame.m_Size;
 				const Vector2f textureSize = Vector2f((float)texture2DAsset.m_Width, (float)texture2DAsset.m_Height);
 
 				const uint32 pixelsPerUnit = 100;
