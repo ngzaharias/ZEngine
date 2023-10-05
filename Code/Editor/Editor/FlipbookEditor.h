@@ -36,8 +36,8 @@ namespace editor
 	{
 		eng::FlipbookAsset m_Asset;
 
+		str::String m_BatchingLabel = {};
 		str::String m_DockspaceLabel = {};
-		str::String m_ExtractorLabel = {};
 		str::String m_InspectorLabel = {};
 		str::String m_PreviewerLabel = {};
 		str::String m_TextureLabel = {};

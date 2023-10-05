@@ -35,6 +35,12 @@ namespace
 	const str::Guid uuidStaticMesh = GUID("e94876a8-e4cc-4d16-84c8-5859b48a1af6");
 	const str::Guid uuidTexture2D = GUID("c6bb231c-e97f-104e-860e-b55e71988bdb");
 
+	Vector2f ToImageSize(const ImVec2& regionSize, const eng::Texture2DAsset& texture)
+	{
+		const float ratio = std::min(regionSize.x / (float)texture.m_Width, regionSize.y / (float)texture.m_Height);
+		return Vector2f((float)texture.m_Width, (float)texture.m_Height) * ratio;
+	}
+
 	str::String ToLabel(const char* label, const ecs::Entity& entity)
 	{
 		return std::format("{}: {}", label, entity.GetIndex());
@@ -49,7 +55,7 @@ namespace
 			data.m_Initial.y + (data.m_Stride.y * y));
 	}
 
-	void DrawExtractor(World& world, const ecs::Entity& entity)
+	void DrawBatcher(World& world, const ecs::Entity& entity)
 	{
 		auto& extractorComponent = world.GetComponent<editor::FlipbookExtractorComponent>(entity);
 
@@ -210,9 +216,7 @@ namespace
 		if (!textureAsset)
 			return;
 
-		const ImVec2 regionSize = ImGui::GetContentRegionAvail();
-		const Vector2f imageSize = Vector2f((float)regionSize.x, (float)regionSize.y);
-
+		const Vector2f imageSize = ToImageSize(ImGui::GetContentRegionAvail(), *textureAsset);
 		if (flipbook.m_Frames.IsEmpty())
 		{
 			imgui::Image(textureAsset->m_TextureId, imageSize);
@@ -243,11 +247,11 @@ namespace
 			return;
 
 		const ImVec2 regionSize = ImGui::GetContentRegionAvail();
+		const Vector2f imageSize = ToImageSize(regionSize, *textureAsset);
 		const ImVec2 regionMin = ImGui::GetCursorScreenPos();
-		const ImVec2 regionMax = ImVec2(regionMin.x + regionSize.x, regionMin.y + regionSize.y);
+		const ImVec2 regionMax = ImVec2(regionMin.x + imageSize.x, regionMin.y + imageSize.y);
 
-		const ImTextureID textureId = (void*)(intptr_t)textureAsset->m_TextureId;
-		ImGui::Image(textureId, regionSize, { 0, 1 }, { 1, 0 });
+		imgui::Image(textureAsset->m_TextureId, imageSize);
 
 		// draw frames of the flipbook
 		ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -295,8 +299,8 @@ void editor::FlipbookEditor::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<editor::FlipbookExtractorComponent>(windowEntity);
 
 		auto& windowComponent = world.AddComponent<editor::FlipbookWindowComponent>(windowEntity);
+		windowComponent.m_BatchingLabel = ToLabel("Batching", windowEntity);
 		windowComponent.m_DockspaceLabel = ToLabel("Flipbook Editor", windowEntity);
-		windowComponent.m_ExtractorLabel = ToLabel("Extractor", windowEntity);
 		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
 		windowComponent.m_PreviewerLabel = ToLabel("Previewer", windowEntity);
 		windowComponent.m_TextureLabel   = ToLabel("Texture", windowEntity);
@@ -324,7 +328,7 @@ void editor::FlipbookEditor::Update(World& world, const GameTime& gameTime)
 				ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.6f, &textureId, &inspectorId);
 				ImGui::DockBuilderSplitNode(inspectorId, ImGuiDir_Up, 0.6f, &inspectorId, &previewerId);
 				ImGui::DockBuilderDockWindow(windowComponent.m_TextureLabel.c_str(), textureId);
-				ImGui::DockBuilderDockWindow(windowComponent.m_ExtractorLabel.c_str(), inspectorId);
+				ImGui::DockBuilderDockWindow(windowComponent.m_BatchingLabel.c_str(), inspectorId);
 				ImGui::DockBuilderDockWindow(windowComponent.m_InspectorLabel.c_str(), inspectorId);
 				ImGui::DockBuilderDockWindow(windowComponent.m_PreviewerLabel.c_str(), previewerId);
 				ImGui::DockBuilderFinish(dockspaceId);
@@ -333,12 +337,12 @@ void editor::FlipbookEditor::Update(World& world, const GameTime& gameTime)
 		}
 		ImGui::End();
 
-		if (ImGui::Begin(windowComponent.m_TextureLabel.c_str()))
-			DrawTexture(world, windowEntity);
+		if (ImGui::Begin(windowComponent.m_BatchingLabel.c_str()))
+			DrawBatcher(world, windowEntity);
 		ImGui::End();
 
-		if (ImGui::Begin(windowComponent.m_ExtractorLabel.c_str()))
-			DrawExtractor(world, windowEntity);
+		if (ImGui::Begin(windowComponent.m_TextureLabel.c_str()))
+			DrawTexture(world, windowEntity);
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_InspectorLabel.c_str()))
