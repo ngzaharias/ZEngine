@@ -3,11 +3,8 @@
 #include <Core/Types.h>
 #include <Core/Vector.h>
 
-struct ImVec2;
-struct ImVec4;
 typedef int ImDrawFlags;
 typedef int ImGuiSliderFlags;
-typedef unsigned int ImU32;
 
 enum ImGuiGraphFlags_
 {
@@ -24,7 +21,7 @@ namespace str
 
 namespace imgui
 {
-	void AddRect(const Vector2f& min, const Vector2f& max, const Vector4f& colour, float rounding = 0.0f, float thickness = 1.0f, ImDrawFlags flags = 0);
+	void AddRect(Vector2f min, Vector2f max, Vector4f colour, float rounding = 0.0f, float thickness = 1.0f, ImDrawFlags flags = 0);
 
 	void Bullet();
 	bool BulletHeader(const char* label, const bool selected = false);
@@ -37,15 +34,17 @@ namespace imgui
 	bool Name(const char* label, str::Name& value);
 	bool Path(const char* label, str::Path& value);
 
-	void Image(uint32 textureId, const Vector2f& size, const Vector2f& uv0 = Vector2f::Zero, const Vector2f& uv1 = Vector2f::One);
+	void Grid(Vector2f graph_size, Vector2f spacing, Vector2f offset = Vector2f::Zero);
 
-	void PlotLines(const char* label, float* values, int values_count, ImVec2 graph_size, ImGuiGraphFlags flags = 0);
-	void PlotLines(const char* label, ImVec2* values, int values_count, ImVec2 graph_size, ImGuiGraphFlags flags = 0);
+	void Image(uint32 textureId, Vector2f image_size, Vector2f uv0 = Vector2f::Zero, Vector2f uv1 = Vector2f::One);
 
-	/// \brief Converts a hexadecimal colour to an ImVec4 colour.
+	void PlotLines(const char* label, float* values, int32 values_count, Vector2f graph_size, ImGuiGraphFlags flags = 0);
+	void PlotLines(const char* label, Vector2f* values, int32 values_count, Vector2f graph_size, ImGuiGraphFlags flags = 0);
+
+	/// \brief Converts a hexadecimal colour to a vector.
 	/// Example: 0xFF00FF00 -> { 1.f, 0.f, 1.f, 0.f }
-	ImVec4 ToColour(const int32 hexadecimal);
+	Vector4f ToColour(const int32 hexadecimal);
 
-	/// \brief Converts a RGBA hexadecimal colour to a ImU32 colour.
-	ImU32 ToColour32(const int32 hexadecimal);
+	/// \brief Converts a RGBA hexadecimal colour to a imgui compatible colour.
+	uint32 ToColour32(const int32 hexadecimal);
 }

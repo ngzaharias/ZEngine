@@ -32,7 +32,7 @@ namespace
 	}
 }
 
-void imgui::AddRect(const Vector2f& min, const Vector2f& max, const Vector4f& colour, float rounding, float thickness, ImDrawFlags flags)
+void imgui::AddRect(Vector2f min, Vector2f max, Vector4f colour, float rounding, float thickness, ImDrawFlags flags)
 {
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
 	const ImU32 colourHex = ImColor(colour.x, colour.y, colour.z, colour.w);
@@ -182,13 +182,44 @@ bool imgui::Path(const char* label, str::Path& value)
 	return false;
 }
 
-void imgui::Image(uint32 textureId, const Vector2f& size, const Vector2f& uv0, const Vector2f& uv1)
+void imgui::Grid(Vector2f graph_size, Vector2f spacing, Vector2f offset)
 {
-	const ImTextureID castedId = (void*)(intptr_t)textureId;
-	ImGui::Image(castedId, { size.x, size.y }, { uv0.x, uv1.y }, { uv1.x, uv0.y });
+	ImGuiWindow* window = ImGui::GetCurrentWindow();
+	if (window->SkipItems)
+		return;
+
+	ImGuiContext& g = *GImGui;
+	const ImGuiStyle& style = g.Style;
+
+	const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + graph_size);
+	ImGui::RenderFrame(frame_bb.Min, frame_bb.Max, ImGui::GetColorU32(ImGuiCol_FrameBg), true, style.FrameRounding);
+	const ImU32 col_base = ImGui::GetColorU32(ImGuiCol_Border);
+
+	ImVec2 pos0 = frame_bb.Min, pos1 = frame_bb.Min;
+	for (float x = 0.f; x <= graph_size.x; x += spacing.x)
+	{
+		// draw vertical line
+		pos0 = { frame_bb.Min.x + offset.x + x, frame_bb.Min.y };
+		pos1 = { frame_bb.Min.x + offset.x + x, frame_bb.Max.y };
+		window->DrawList->AddLine(pos0, pos1, col_base);
+
+		for (float y = 0.f; y <= graph_size.y; y += spacing.y)
+		{
+			// draw horizontal line
+			pos0 = { frame_bb.Min.x, frame_bb.Min.y + offset.y + y };
+			pos1 = { frame_bb.Max.x, frame_bb.Min.y + offset.y + y };
+			window->DrawList->AddLine(pos0, pos1, col_base);
+		}
+	}
 }
 
-void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2 graph_size, ImGuiGraphFlags flags)
+void imgui::Image(uint32 textureId, Vector2f image_size, Vector2f uv0, Vector2f uv1)
+{
+	const ImTextureID castedId = (void*)(intptr_t)textureId;
+	ImGui::Image(castedId, image_size, { uv0.x, uv1.y }, { uv1.x, uv0.y });
+}
+
+void imgui::PlotLines(const char* label, float* values, int32 values_count, Vector2f graph_size, ImGuiGraphFlags flags)
 {
 	enum StorageIDs : ImGuiID
 	{
@@ -210,8 +241,9 @@ void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2
 
 	const ImGuiID id = parent_window->GetID(label);
 	const ImGuiStyle& style = g.Style;
+
 	if (graph_size.x == 0.0f)
-		graph_size.x = ImGui::CalcItemWidth();
+		graph_size.x = ImGui::GetContentRegionAvail().x;
 	if (graph_size.y == 0.0f)
 		graph_size.y = (style.FramePadding.y * 2);
 
@@ -342,22 +374,22 @@ void imgui::PlotLines(const char* label, float* values, int values_count, ImVec2
 	ImGui::EndChildFrame();
 }
 
-void imgui::PlotLines(const char* label, ImVec2* values, int values_count, ImVec2 graph_size, ImGuiGraphFlags flags)
+void imgui::PlotLines(const char* label, Vector2f* values, int32 values_count, Vector2f graph_size, ImGuiGraphFlags flags)
 {
-	ImVec2 dummy;
+	Vector2f dummy;
 	PlotLines(label, values_count > 0 ? &values->x : &dummy.x, values_count * 2, graph_size, flags);
 }
 
-ImVec4 imgui::ToColour(const int32 hexadecimal)
+Vector4f imgui::ToColour(const int32 hexadecimal)
 {
 	const int32 r = (hexadecimal & 0xFF000000) >> 24;
 	const int32 g = (hexadecimal & 0x00FF0000) >> 16;
 	const int32 b = (hexadecimal & 0x0000FF00) >> 8;
 	const int32 a = (hexadecimal & 0x000000FF);
-	return ImVec4(r / 255.f, g / 255.f, b / 255.f, a / 255.f);
+	return Vector4f(r / 255.f, g / 255.f, b / 255.f, a / 255.f);
 }
 
-ImU32 imgui::ToColour32(const int32 hexadecimal)
+uint32 imgui::ToColour32(const int32 hexadecimal)
 {
 	const int32 r = (hexadecimal & 0xFF000000) >> 24;
 	const int32 g = (hexadecimal & 0x00FF0000) >> 16;
