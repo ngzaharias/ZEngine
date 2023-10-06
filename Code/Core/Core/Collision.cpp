@@ -1,11 +1,11 @@
 #include "Collision.h"
 
 #include "Core/AABB.h"
-#include "Core/Circle.h"
 #include "Core/Line.h"
 #include "Core/OBB.h"
 #include "Core/Plane.h"
 #include "Core/Ray.h"
+#include "Core/Sphere.h"
 #include "Core/Vector.h"
 #include "Core/VectorHelpers.h"
 
@@ -47,11 +47,9 @@ bool math::Intersection(const Ray& ray, const Plane& plane, Vector3f& out_Inters
 	return true;
 }
 
-bool math::IntersectionXZ(const Circle& circle, const Vector3f& direction, const float distance, const Line& line, Intersect& out_Result)
+bool math::IntersectionXZ(const Sphere& sphere, const Vector3f& direction, const float distance, const Line& line, Intersect& out_Result)
 {
-	const Line circleLine = Line(
-		circle.m_Position,
-		circle.m_Position + direction * distance);
+	const Line sweepLine = Line(sphere.m_Position, sphere.m_Position + direction * distance);
 
 	const Vector3f lineTagent = (line.m_PointB - line.m_PointA).Normalized();
 	const Vector3f lineNormal = Vector3f::Cross(Vector3f::AxisY, lineTagent);
@@ -61,7 +59,7 @@ bool math::IntersectionXZ(const Circle& circle, const Vector3f& direction, const
 	// use the smallest angle to account for both directions of a ray
 	const float angle = Angle(direction, -lineNormal);
 	const float theta = std::min(angle, 180.f - angle);
-	const float adjacent = circle.m_Radius;
+	const float adjacent = sphere.m_Radius;
 	const float hypotenuse = adjacent / cos(theta);
 
 	// increase the length of the line to account for the radius of the sphere
@@ -69,15 +67,15 @@ bool math::IntersectionXZ(const Circle& circle, const Vector3f& direction, const
 	const Vector3f edgeB = line.m_PointB + lineTagent * hypotenuse;
 
 	Vector3f intersectPos;
-	if (math::IntersectionXZ(circleLine, line, intersectPos))
+	if (math::IntersectionXZ(sweepLine, line, intersectPos))
 	{
 		// project intersect position onto the original line to find the hit position
 		const Vector3f hitPoint = ProjectOntoLineXZClamped(intersectPos, line.m_PointA, line.m_PointB);
 
 		// project the hit position onto the circle line to find the position that the circle is touching the line
-		const Vector3f touchPosition = ProjectOntoLineXZClamped(hitPoint, circleLine.m_PointA, circleLine.m_PointB);
+		const Vector3f touchPosition = ProjectOntoLineXZClamped(hitPoint, sweepLine.m_PointA, sweepLine.m_PointB);
 
-		const float fraction = Vector3f::DistanceXZ(circleLine.m_PointA, touchPosition) / distance;
+		const float fraction = Vector3f::DistanceXZ(sweepLine.m_PointA, touchPosition) / distance;
 		out_Result.m_HitPoint = hitPoint;
 		out_Result.m_HitNormal = lineNormal;
 		out_Result.m_HitFraction = fraction;
@@ -86,9 +84,9 @@ bool math::IntersectionXZ(const Circle& circle, const Vector3f& direction, const
 	return false;
 }
 
-bool math::IntersectionXZ(const Circle& circle, const Vector3f& direction, const float distance, const Ray& ray, Intersect& out_Result)
+bool math::IntersectionXZ(const Sphere& sphere, const Vector3f& direction, const float distance, const Ray& ray, Intersect& out_Result)
 {
-	const Ray circleRay = Ray(circle.m_Position, direction);
+	const Ray circleRay = Ray(sphere.m_Position, direction);
 
 	Vector3f intersectPos;
 	if (math::IntersectionXZ(circleRay, ray, intersectPos))
@@ -98,11 +96,11 @@ bool math::IntersectionXZ(const Circle& circle, const Vector3f& direction, const
 		// use the smallest angle to account for both directions of a ray
 		const float angle = Angle(ray.m_Direction, direction);
 		const float theta = std::min(angle, 180.f - angle);
-		const float opposite = circle.m_Radius;
+		const float opposite = sphere.m_Radius;
 		const float hypotenuse = opposite / sin(theta);
 		intersectPos -= direction * hypotenuse;
 
-		const float fraction = Vector3f::DistanceXZ(circle.m_Position, intersectPos) / distance;
+		const float fraction = Vector3f::DistanceXZ(sphere.m_Position, intersectPos) / distance;
 		const Vector3f normal = Vector3f::Cross(Vector3f::AxisY, ray.m_Direction);
 
 		out_Result.m_HitPoint = intersectPos;
@@ -242,25 +240,25 @@ bool math::IsOverlapping(const OBB& a, const OBB& b)
 	return true;
 }
 
-bool math::IsOverlappingXZ(const Circle& a, const Circle& b)
+bool math::IsOverlappingXZ(const Sphere& a, const Sphere& b)
 {
 	const float distanceSqr = Vector3f::DistanceXZSqr(a.m_Position, b.m_Position);
 	const float radiiSqr = math::Sqr(a.m_Radius + b.m_Radius);
 	return distanceSqr < radiiSqr;
 }
 
-bool math::IsOverlappingXZ(const Circle& circle, const Line& line)
+bool math::IsOverlappingXZ(const Sphere& sphere, const Line& line)
 {
-	const Vector3f intersectPos = ProjectOntoLineXZClamped(circle.m_Position, line.m_PointA, line.m_PointB);
-	const float intersectSqr = Vector3f::DistanceXZSqr(circle.m_Position, intersectPos);
-	return intersectSqr <= math::Sqr(circle.m_Radius);
+	const Vector3f intersectPos = ProjectOntoLineXZClamped(sphere.m_Position, line.m_PointA, line.m_PointB);
+	const float intersectSqr = Vector3f::DistanceXZSqr(sphere.m_Position, intersectPos);
+	return intersectSqr <= math::Sqr(sphere.m_Radius);
 }
 
-bool math::IsOverlappingXZ(const Circle& circle, const Ray& ray)
+bool math::IsOverlappingXZ(const Sphere& sphere, const Ray& ray)
 {
-	const Vector3f intersectPos = ProjectOntoRayXZ(circle.m_Position, ray.m_OriginPos, ray.m_Direction);
-	const float intersectSqr = Vector3f::DistanceXZSqr(circle.m_Position, intersectPos);
-	return intersectSqr <= math::Sqr(circle.m_Radius);
+	const Vector3f intersectPos = ProjectOntoRayXZ(sphere.m_Position, ray.m_OriginPos, ray.m_Direction);
+	const float intersectSqr = Vector3f::DistanceXZSqr(sphere.m_Position, intersectPos);
+	return intersectSqr <= math::Sqr(sphere.m_Radius);
 }
 
 // https://stackoverflow.com/questions/3838329/how-can-i-check-if-two-segments-intersect

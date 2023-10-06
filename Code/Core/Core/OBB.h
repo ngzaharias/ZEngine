@@ -7,6 +7,7 @@ class Matrix3x3;
 class Quaternion;
 class Rotator;
 
+/// \brief An orientated bounding box in 3D space denoted by 8 points.
 class OBB
 {
 public:

@@ -3,24 +3,24 @@
 #include <Core/Vector.h>
 
 class AABB;
-class Circle;
 class Line;
 class OBB;
 class Plane;
 class Ray;
-
-struct Intersect
-{
-	/// \brief The contact point between the two objects
-	Vector3f m_HitPoint;
-	/// \brief The normal of the face that was hit
-	Vector3f m_HitNormal;
-	/// \brief Fraction along source and target where the hit happened
-	float m_HitFraction;
-};
+class Sphere;
 
 namespace math
 {
+	struct Intersect
+	{
+		/// \brief The contact point between the two objects.
+		Vector3f m_HitPoint;
+		/// \brief The normal of the face that was hit.
+		Vector3f m_HitNormal;
+		/// \brief Fraction along source and target where the hit happened.
+		float m_HitFraction;
+	};
+
 	bool AreCounterClockwiseOrderedXZ(const Vector3f& a, const Vector3f& b, const Vector3f& c);
 
 	/// \brief Checks if a Line intersects a Plane and returns the IntersectPos if it does.
@@ -29,11 +29,11 @@ namespace math
 	/// \brief Checks if a Ray intersects a Plane and returns the IntersectPos if it does.
 	bool Intersection(const Ray& ray, const Plane& plane, Vector3f& out_IntersectPos);
 
-	/// \brief Checks if a Circle intersects a Line when projected along a vector in the XZ plane and returns the IntersectPos if it does.
-	bool IntersectionXZ(const Circle& circle, const Vector3f& direction, const float distance, const Line& line, Intersect& out_Result);
+	/// \brief Checks if a Sphere intersects a Line when projected along a vector in the XZ plane and returns the IntersectPos if it does.
+	bool IntersectionXZ(const Sphere& sphere, const Vector3f& direction, const float distance, const Line& line, Intersect& out_Result);
 
-	/// \brief Checks if a Circle intersects a Ray when projected along a vector in the XZ plane and returns the IntersectPos if it does.
-	bool IntersectionXZ(const Circle& circle, const Vector3f& direction, const float distance, const Ray& ray, Intersect& out_Result);
+	/// \brief Checks if a Sphere intersects a Ray when projected along a vector in the XZ plane and returns the IntersectPos if it does.
+	bool IntersectionXZ(const Sphere& sphere, const Vector3f& direction, const float distance, const Ray& ray, Intersect& out_Result);
 
 	/// \brief Checks if a Line intersects another Line in the XZ plane and returns the IntersectPos if it does.
 	bool IntersectionXZ(const Line& a, const Line& b, Vector3f& out_IntersectPos);
@@ -53,14 +53,14 @@ namespace math
 	/// \brief Checks if two Orientated Bounding Boxes are overlapping each other using Separating Axis Theorem.
 	bool IsOverlapping(const OBB& a, const OBB& b);
 
-	/// \brief Checks if two Circles are overlapping on the XZ plane.
-	bool IsOverlappingXZ(const Circle& a, const Circle& b);
+	/// \brief Checks if two Spheres are overlapping on the XZ plane.
+	bool IsOverlappingXZ(const Sphere& a, const Sphere& b);
 
-	/// \brief Checks if a Circle and a line segment are overlapping on the XZ plane.
-	bool IsOverlappingXZ(const Circle& circle, const Line& line);
+	/// \brief Checks if a Sphere and a line segment are overlapping on the XZ plane.
+	bool IsOverlappingXZ(const Sphere& sphere, const Line& line);
 
-	/// \brief Checks if a Circle and a ray are overlapping on the XZ plane.
-	bool IsOverlappingXZ(const Circle& circle, const Ray& ray);
+	/// \brief Checks if a Sphere and a ray are overlapping on the XZ plane.
+	bool IsOverlappingXZ(const Sphere& sphere, const Ray& ray);
 
 	/// \brief Checks if two Line segments are overlapping on the XZ plane.
 	bool IsOverlappingXZ(const Line& a, const Line& b);

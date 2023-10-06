@@ -4,6 +4,7 @@
 
 class Line;
 
+/// \brief A ray in 3D space denoted by a origin and direction.
 class Ray
 {
 public:

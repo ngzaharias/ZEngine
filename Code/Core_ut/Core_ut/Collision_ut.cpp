@@ -1,12 +1,12 @@
 #include <Catch2/catch.hpp>
 
 #include <Core/AABB.h>
-#include <Core/Circle.h>
 #include <Core/Collision.h>
 #include <Core/Line.h>
 #include <Core/OBB.h>
 #include <Core/Plane.h>
 #include <Core/Ray.h>
+#include <Core/Sphere.h>
 
 TEST_CASE("math::Intersection(Line, Plane)")
 {
@@ -326,7 +326,7 @@ TEST_CASE("math::IsOverlapping(OBB, OBB)")
 
 TEST_CASE("math::IsOverlappingXZ(Circle, Circle)")
 {
-	Circle a, b;
+	Sphere a, b;
 
 	{
 		INFO("Collision.");
@@ -371,7 +371,7 @@ TEST_CASE("math::IsOverlappingXZ(Circle, Circle)")
 
 TEST_CASE("math::IsOverlappingXZ(Circle, Line)")
 {
-	Circle a; Line b;
+	Sphere a; Line b;
 
 	{
 		INFO("Collision through Origin.");
@@ -406,7 +406,7 @@ TEST_CASE("math::IsOverlappingXZ(Circle, Line)")
 
 TEST_CASE("math::IsOverlappingXZ(Circle, Ray)")
 {
-	Circle a; Ray b;
+	Sphere a; Ray b;
 
 	{
 		INFO("Collision through Origin.");

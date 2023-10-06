@@ -2,7 +2,7 @@
 
 #include <Core/Vector.h>
 
-/// \brief A plane is made up of its normal and a point that lies on the plane.
+/// \brief A plane in 3D space denoted by its normal and a point that lies on the plane.
 class Plane
 {
 public:
@@ -13,5 +13,3 @@ public:
 	Vector3f m_Normal;
 	Vector3f m_Point;
 };
-
-#include "AABB.inl"
