@@ -114,8 +114,12 @@ namespace
 			}
 		}
 
-		ImGui::PushItemWidth(-1.f);
-		imgui::PlotLines("##plotter", (ImVec2*)values.GetData(), values.GetCount(), ImVec2(0, ImGui::GetContentRegionAvail().y));
+		const Vector2f plotSize = ImGui::GetContentRegionAvail();
+		const Vector2f regionMin = ImGui::GetCursorPos();
+		imgui::PlotLines("##plotter", values.GetData(), values.GetCount(), plotSize);
+
+		ImGui::SetCursorPos(regionMin);
+		imgui::Grid(plotSize, Vector2f(10.f), Vector2f::Zero);
 	}
 }
 
