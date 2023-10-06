@@ -1,0 +1,14 @@
+m_Fps = 10.0
+m_Frames = [
+    { m_Position = { X = 0.0, Y = 64.0 }, m_Size = { X = 16.0, Y = 16.0 } },
+    { m_Position = { X = 16.0, Y = 64.0 }, m_Size = { X = 16.0, Y = 16.0 } },
+    { m_Position = { X = 32.0, Y = 64.0 }, m_Size = { X = 16.0, Y = 16.0 } },
+    { m_Position = { X = 48.0, Y = 64.0 }, m_Size = { X = 16.0, Y = 16.0 } }
+]
+m_Guid = 'e13ef7be-e21c-4b70-b7b2-5e91283c7160'
+m_IsLooping = true
+m_Name = 'FP_Ghost_Idle'
+m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
+m_StaticMesh = 'e94876a8-e4cc-4d16-84c8-5859b48a1af6'
+m_Texture2D = '81173a4d-c112-4ad7-8db6-ff4c84ecbe5f'
+m_Type = 'Flipbook'

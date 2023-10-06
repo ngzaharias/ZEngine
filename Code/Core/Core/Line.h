@@ -2,7 +2,7 @@
 
 #include <Core/Vector.h>
 
-/// \brief A Line Segment denoted by two points 
+/// \brief A line in 3D space denoted by two points.
 class Line
 {
 public:

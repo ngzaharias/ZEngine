@@ -4,6 +4,7 @@
 
 class OBB;
 
+/// \brief An axis aligned bounding box in 3D space denoted by a min and max.
 class AABB
 {
 public:
