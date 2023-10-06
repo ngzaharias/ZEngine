@@ -33,6 +33,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::MenuItem("Flipbook Editor"))
 				world.AddEventComponent<editor::FlipbookWindowRequestComponent>();
+			if (ImGui::MenuItem("Trajectory Editor"))
+				world.AddEventComponent<editor::TrajectoryWindowRequestComponent>();
 
 			ImGui::EndMenu();
 		}
@@ -41,8 +43,6 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::MenuItem("Debug: Entities", "Ctrl+Shift+F11"))
 				world.AddEventComponent<dbg::EntityWindowRequestComponent>();
-			if (ImGui::MenuItem("Debug: Trajectory", "Ctrl+Shift+F11"))
-				world.AddEventComponent<dbg::TrajectoryWindowRequestComponent>();
 			if (ImGui::MenuItem("ImGui Demo"))
 				world.AddEventComponent<dbg::ImGuiDemoRequestComponent>();
 			if (ImGui::MenuItem("Network"))

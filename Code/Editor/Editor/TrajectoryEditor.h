@@ -7,31 +7,34 @@
 #include <ECS/Component.h>
 #include <ECS/System.h>
 
-namespace dbg
-{
-	struct TrajectoryWindowRequestComponent;
-}
-
 namespace projectile
 {
 	struct CreateRequestComponent;
 }
 
-namespace dbg
+namespace editor
 {
+	struct TrajectoryWindowRequestComponent;
+
 	struct TrajectoryWindowComponent : public ecs::Component<TrajectoryWindowComponent> 
 	{ 
 		int32 m_WindowId = 0;
 		Array<Vector2f> m_Positions = { };
+
+		//eng::TrajectoryAsset m_Asset;
+
+		str::String m_DockspaceLabel = {};
+		str::String m_InspectorLabel = {};
+		str::String m_PlottingLabel = {};
 	};
 
-	class TrajectorySystem final : public ecs::System
+	class TrajectoryEditor final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			dbg::TrajectoryWindowComponent,
+			editor::TrajectoryWindowComponent,
 			projectile::CreateRequestComponent,
-			const dbg::TrajectoryWindowRequestComponent>;
+			const editor::TrajectoryWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

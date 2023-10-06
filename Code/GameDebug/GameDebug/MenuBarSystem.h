@@ -13,6 +13,7 @@ namespace ecs
 namespace editor
 {
 	struct FlipbookWindowRequestComponent;
+	struct TrajectoryWindowRequestComponent;
 }
 
 namespace dbg
@@ -26,7 +27,6 @@ namespace dbg
 	struct NodeGraphRequestComponent;
 	struct SaveLevelRequestComponent;
 	struct SaveLevelAsRequestComponent;
-	struct TrajectoryWindowRequestComponent;
 
 	class MenuBarSystem final : public ecs::System
 	{
@@ -41,8 +41,8 @@ namespace dbg
 			dbg::NodeGraphRequestComponent,
 			dbg::SaveLevelRequestComponent,
 			dbg::SaveLevelAsRequestComponent,
-			dbg::TrajectoryWindowRequestComponent,
-			editor::FlipbookWindowRequestComponent>;
+			editor::FlipbookWindowRequestComponent,
+			editor::TrajectoryWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

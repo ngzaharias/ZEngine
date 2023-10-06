@@ -1,5 +1,5 @@
-#include "GameDebugPCH.h"
-#include "GameDebug/TrajectorySystem.h"
+#include "EditorPCH.h"
+#include "Editor/TrajectoryEditor.h"
 
 #include <Core/Algorithms.h>
 #include <Core/Math.h>
@@ -24,6 +24,12 @@ namespace
 {
 	const str::Guid strStaticMesh = str::Guid::Create("d0284c56-3e6a-49a2-9a80-25ff2731a3de");
 
+	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
+		ImGuiDockNodeFlags_NoCloseButton |
+		ImGuiDockNodeFlags_NoWindowMenuButton;
+	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_MenuBar;
+
 	str::String ToLabel(const char* label, const int32 windowId)
 	{
 		return std::format("{}: {}", label, windowId);
@@ -34,8 +40,8 @@ namespace
 		return std::format("{}: {}", label, entity.GetIndex());
 	}
 
-	using World = dbg::TrajectorySystem::World;
-	void DrawInspector(World& world, dbg::TrajectoryWindowComponent& component)
+	using World = editor::TrajectoryEditor::World;
+	void DrawInspector(World& world, editor::TrajectoryWindowComponent& component)
 	{
 		Array<Vector2f>& values = component.m_Positions;
 		if (ImGui::CollapsingHeader("m_Positions"))
@@ -87,7 +93,7 @@ namespace
 		}
 	}
 
-	void DrawPlotter(dbg::TrajectoryWindowComponent& component)
+	void DrawPlotter(editor::TrajectoryWindowComponent& component)
 	{
 		Array<Vector2f>& values = component.m_Positions;
 
@@ -113,17 +119,21 @@ namespace
 	}
 }
 
-void dbg::TrajectorySystem::Update(World& world, const GameTime& gameTime)
+void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	constexpr Vector2f s_DefaultPos = Vector2f(100.f, 350.f);
-	constexpr Vector2f s_DefaultSize = Vector2f(300.f, 200.f);
+	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
+	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::TrajectoryWindowRequestComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const editor::TrajectoryWindowRequestComponent>>())
 	{
-		auto& windowComponent = world.AddComponent<dbg::TrajectoryWindowComponent>(world.CreateEntity());
+		auto& windowComponent = world.AddComponent<editor::TrajectoryWindowComponent>(world.CreateEntity());
+		windowComponent.m_DockspaceLabel = ToLabel("Trajectory Editor", windowComponent.m_WindowId);
+		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowComponent.m_WindowId);
+		windowComponent.m_PlottingLabel = ToLabel("Plotter", windowComponent.m_WindowId);
 		windowComponent.m_WindowId = !m_UnusedIds.IsEmpty() ? m_UnusedIds.Pop() : m_NextId++;
+
 		windowComponent.m_Positions.Append(Vector2f(0.f, 0.f));
 		windowComponent.m_Positions.Append(Vector2f(0.1f, 0.1f));
 		windowComponent.m_Positions.Append(Vector2f(-0.15f, 0.15f));
@@ -135,47 +145,37 @@ void dbg::TrajectorySystem::Update(World& world, const GameTime& gameTime)
 		windowComponent.m_Positions.Append(Vector2f(0.f, 1.f));
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::TrajectoryWindowComponent>>())
+	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TrajectoryWindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<dbg::TrajectoryWindowComponent>(windowEntity);
-
-		ImGuiDockNodeFlags dockNodeFlags = 0;
-		dockNodeFlags |= ImGuiDockNodeFlags_NoCloseButton;
-		//dockNodeFlags |= ImGuiDockNodeFlags_NoSplit;
-		//dockNodeFlags |= ImGuiDockNodeFlags_NoTabBar;
-		dockNodeFlags |= ImGuiDockNodeFlags_NoWindowMenuButton;
-
-		const str::String dockspaceLabel = ToLabel("Trajectory Debugger", windowComponent.m_WindowId);
-		const str::String inspectorLabel = ToLabel("Inspector", windowComponent.m_WindowId);
-		const str::String plotterLabel = ToLabel("Plotter", windowComponent.m_WindowId);
-		const ImGuiID dockspaceId = ImGui::GetID(dockspaceLabel.c_str());
+		auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
-		if (ImGui::Begin(dockspaceLabel.c_str(), &isOpen))
+		if (ImGui::Begin(windowComponent.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
 		{
+			const ImGuiID dockspaceId = ImGui::GetID(windowComponent.m_DockspaceLabel.c_str());
 			if (!ImGui::DockBuilderGetNode(dockspaceId))
 			{
 				ImGui::DockBuilderRemoveNode(dockspaceId);
 				ImGui::DockBuilderAddNode(dockspaceId, ImGuiDockNodeFlags_DockSpace);
 				ImGui::DockBuilderSetNodeSize(dockspaceId, ImGui::GetWindowSize());
 
-				ImGuiID leftId, rightId;
-				ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.5f, &leftId, &rightId);
-				ImGui::DockBuilderDockWindow(inspectorLabel.c_str(), leftId);
-				ImGui::DockBuilderDockWindow(plotterLabel.c_str(), rightId);
+				ImGuiID inspectorId, plottingId;
+				ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.7f, &plottingId, &inspectorId);
+				ImGui::DockBuilderDockWindow(windowComponent.m_InspectorLabel.c_str(), inspectorId);
+				ImGui::DockBuilderDockWindow(windowComponent.m_PlottingLabel.c_str(), plottingId);
 				ImGui::DockBuilderFinish(dockspaceId);
 			}
-			ImGui::DockSpace(dockspaceId, ImVec2(0, 0), dockNodeFlags);
+			ImGui::DockSpace(dockspaceId, ImVec2(0, 0), s_DockNodeFlags);
 		}
 		ImGui::End();
 
-		if (ImGui::Begin(inspectorLabel.c_str()))
+		if (ImGui::Begin(windowComponent.m_InspectorLabel.c_str()))
 			DrawInspector(world, windowComponent);
 		ImGui::End();
 
-		if (ImGui::Begin(plotterLabel.c_str()))
+		if (ImGui::Begin(windowComponent.m_PlottingLabel.c_str()))
 			DrawPlotter(windowComponent);
 		ImGui::End();
 

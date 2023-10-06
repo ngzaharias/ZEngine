@@ -16,7 +16,6 @@
 #include "GameDebug/NodeGraphSystem.h"
 #include "GameDebug/OpenLevelSystem.h"
 #include "GameDebug/OverlaySystem.h"
-#include "GameDebug/TrajectorySystem.h"
 
 dbg::GameDebug::GameDebug(
 	ecs::EntityWorld& clientWorld,
@@ -43,9 +42,8 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::SaveLevelAsRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::SaveLevelRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ServerWindowRequestComponent>();
-	m_ClientWorld.RegisterComponent<dbg::TrajectoryWindowComponent>();
-	m_ClientWorld.RegisterComponent<dbg::TrajectoryWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowRequestComponent>();
+	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowRequestComponent>();
 
 	m_ClientWorld.RegisterSystem<dbg::EntitySystem>(m_ClientWorld, m_ServerWorld);
 	m_ClientWorld.RegisterSystem<dbg::FrameBufferSystem>();
@@ -55,7 +53,6 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<dbg::NodeGraphSystem>();
 	m_ClientWorld.RegisterSystem<dbg::OpenLevelSystem>();
 	m_ClientWorld.RegisterSystem<dbg::OverlaySystem>();
-	m_ClientWorld.RegisterSystem<dbg::TrajectorySystem>();
 }
 
 void dbg::GameDebug::Initialise()
