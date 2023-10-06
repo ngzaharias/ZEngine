@@ -19,7 +19,7 @@ void editor::Editor::Register()
 
 	m_ClientWorld.RegisterComponent<editor::FlipbookAssetOpenComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookAssetSaveComponent>();
-	m_ClientWorld.RegisterComponent<editor::FlipbookExtractorComponent>();
+	m_ClientWorld.RegisterComponent<editor::FlipbookBatchingComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowComponent>();
 
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditor>();

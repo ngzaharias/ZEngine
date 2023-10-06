@@ -46,10 +46,10 @@ namespace
 		return std::format("{}: {}", label, entity.GetIndex());
 	}
 
-	Vector2f ToPosition(const uint32 index, const editor::FlipbookExtractorComponent& data)
+	Vector2f ToPosition(const uint32 index, const editor::FlipbookBatchingComponent& data)
 	{
-		const uint32 x = (index % data.m_Dimensions.x);
-		const uint32 y = (index / data.m_Dimensions.x) % data.m_Dimensions.y;
+		const uint32 x = (index % data.m_Iterations.x);
+		const uint32 y = (index / data.m_Iterations.x) % data.m_Iterations.y;
 		return Vector2f(
 			data.m_Initial.x + (data.m_Stride.x * x), 
 			data.m_Initial.y + (data.m_Stride.y * y));
@@ -57,7 +57,7 @@ namespace
 
 	void DrawBatcher(World& world, const ecs::Entity& entity)
 	{
-		auto& extractorComponent = world.GetComponent<editor::FlipbookExtractorComponent>(entity);
+		auto& extractorComponent = world.GetComponent<editor::FlipbookBatchingComponent>(entity);
 
 		if (ImGui::Button("Extract"))
 		{
@@ -73,15 +73,15 @@ namespace
 		ImGui::Separator();
 
 		ImGui::TextDisabled("Batch:");
-		imgui::DragUInt2("m_Dimensions", &extractorComponent.m_Dimensions.x, 0.05f, 1, INT16_MAX);
+		imgui::DragUInt2("m_Iterations", &extractorComponent.m_Iterations.x, 0.05f, 1, INT16_MAX);
 		ImGui::DragFloat2("m_Initial", &extractorComponent.m_Initial.x);
 		ImGui::DragFloat2("m_Stride", &extractorComponent.m_Stride.x);
 
 		ImGui::Separator();
 
-		ImGui::TextDisabled("Sprite:");
-		const int32 countMax = extractorComponent.m_Dimensions.x * extractorComponent.m_Dimensions.y;
+		ImGui::TextDisabled("Frames:");
 		ImGui::DragFloat2("m_Size", &extractorComponent.m_Size.x);
+		const int32 countMax = extractorComponent.m_Iterations.x * extractorComponent.m_Iterations.y;
 		ImGui::SliderInt("m_Count", &extractorComponent.m_Count, 0, countMax);
 
 		ImGui::Separator();
@@ -254,7 +254,6 @@ namespace
 		imgui::Image(textureAsset->m_TextureId, imageSize);
 
 		// draw frames of the flipbook
-		ImDrawList* draw_list = ImGui::GetWindowDrawList();
 		for (const eng::FlipbookFrame& frame : flipbook.m_Frames)
 		{
 			Vector2f min = frame.m_Position;
@@ -268,7 +267,7 @@ namespace
 		}
 
 		// draw frames to be extracted
-		const auto& extractorComponent = world.GetComponent<const editor::FlipbookExtractorComponent>(entity);
+		const auto& extractorComponent = world.GetComponent<const editor::FlipbookBatchingComponent>(entity);
 		if (extractorComponent.m_IsPreviewing)
 		{
 			for (int32 i = 0; i < extractorComponent.m_Count; ++i)
@@ -296,7 +295,7 @@ void editor::FlipbookEditor::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::FlipbookWindowRequestComponent>>())
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
-		world.AddComponent<editor::FlipbookExtractorComponent>(windowEntity);
+		world.AddComponent<editor::FlipbookBatchingComponent>(windowEntity);
 
 		auto& windowComponent = world.AddComponent<editor::FlipbookWindowComponent>(windowEntity);
 		windowComponent.m_BatchingLabel = ToLabel("Batching", windowEntity);
