@@ -165,6 +165,13 @@ Vector3f colour::ToRGB(const Vector3f& hsv)
 	return rgb;
 }
 
+const Vector4f& colour::From(const void* value)
+{
+	auto iValue = reinterpret_cast<std::uintptr_t>(value);
+	const uint32 index = iValue % s_ColoursCount;
+	return s_Colours[index];
+}
+
 const Vector4f& colour::From(const int32 value)
 {
 	const uint32 index = static_cast<uint32>(value) % s_ColoursCount;
@@ -180,5 +187,12 @@ const Vector4f& colour::From(const uint32 value)
 const Vector4f& colour::From(const ecs::Entity& value)
 {
 	const uint32 index = static_cast<uint32>(value.m_Value) % s_ColoursCount;
+	return s_Colours[index];
+}
+
+const Vector4f& colour::Generate()
+{
+	static uint32 index = 0;
+	index = (++index) % s_ColoursCount;
 	return s_Colours[index];
 }

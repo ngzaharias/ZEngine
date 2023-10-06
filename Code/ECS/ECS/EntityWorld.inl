@@ -101,6 +101,7 @@ auto ecs::EntityWorld::GetComponent(const ecs::Entity& entity, const bool alive 
 	static_assert(std::is_base_of<ecs::Component<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::Component.");
 	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use GetSingleton instead.");
 
+	Z_ASSERT_CRASH(!alive || IsAlive(entity), "Entity isn't alive!");
 	Z_ASSERT_CRASH(IsRegistered<TComponent>(), "Component isn't registered!");
 	Z_ASSERT_CRASH(HasComponent<TComponent>(entity, alive), "Entity doesn't have this component!");
 
@@ -116,7 +117,7 @@ auto ecs::EntityWorld::GetSingleton(const bool alive /*= true*/)->TComponent&
 	using NonConst = typename std::remove_const<TComponent>::type;
 	static_assert(std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::SingletonComponent.");
 
-	Z_ASSERT_CRASH(alive == IsAlive(m_SingletonEntity), "Entity isn't alive!");
+	Z_ASSERT_CRASH(!alive || IsAlive(m_SingletonEntity), "Entity isn't alive!");
 	Z_ASSERT_CRASH(IsRegistered<TComponent>(), "Component isn't registered!");
 	Z_ASSERT_CRASH(HasSingleton<TComponent>(), "Component hasn't been added!");
 
