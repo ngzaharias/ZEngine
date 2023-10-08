@@ -30,6 +30,7 @@
 #include "Engine/StaticMeshPrototype.h"
 #include "Engine/TextPrototype.h"
 #include "Engine/Texture2DAsset.h"
+#include "Engine/TrajectoryAsset.h"
 #include "Engine/TransformPrototype.h"
 #include "Engine/VoxelChunkPrototype.h"
 
@@ -61,6 +62,7 @@ namespace
 	const str::Name strTemplate = NAME("Template");
 	const str::Name strText = NAME("Text");
 	const str::Name strTexture2D = NAME("Texture2D");
+	const str::Name strTrajectory = NAME("Trajectory");
 	const str::Name strTransform = NAME("Transform");
 	const str::Name strVoxelChunk = NAME("VoxelChunk");
 }
@@ -152,6 +154,7 @@ void eng::Application::Register()
 		m_AssetManager.RegisterAsset<eng::SpriteAsset, eng::SpriteAssetLoader>(strSprite);
 		m_AssetManager.RegisterAsset<eng::StaticMeshAsset, eng::StaticMeshAssetLoader>(strStaticMesh);
 		m_AssetManager.RegisterAsset<eng::Texture2DAsset, eng::Texture2DAssetLoader>(strTexture2D);
+		m_AssetManager.RegisterAsset<eng::TrajectoryAsset, eng::TrajectoryAssetLoader>(strTrajectory);
 	}
 
 	// prototypes
