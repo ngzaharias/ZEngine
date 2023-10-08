@@ -10,8 +10,6 @@
 namespace eng
 {
 	class AssetManager;
-	struct FlipbookComponent;
-	struct NameComponent;
 }
 
 namespace editor
@@ -54,13 +52,13 @@ namespace editor
 	{
 	public:
 		using World = ecs::WorldView<
+			// managers
+			eng::AssetManager,
+			// components
 			editor::FlipbookAssetOpenComponent,
 			editor::FlipbookAssetSaveComponent,
 			editor::FlipbookBatchingComponent,
 			editor::FlipbookWindowComponent,
-			eng::AssetManager,
-			eng::FlipbookComponent,
-			eng::NameComponent,
 			const editor::FlipbookWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

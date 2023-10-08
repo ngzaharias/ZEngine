@@ -7,8 +7,6 @@
 
 #include <Engine/AssetManager.h>
 #include <Engine/FileHelpers.h>
-#include <Engine/FlipbookComponent.h>
-#include <Engine/NameComponent.h>
 #include <Engine/Texture2DAsset.h>
 
 #include <GameDebug/MenuBarComponents.h>
