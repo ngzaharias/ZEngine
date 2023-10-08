@@ -10,7 +10,9 @@
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
 
-#include <Engine/ColourHelpers.h>
+#include <Engine/AssetManager.h>
+#include <Engine/FileHelpers.h>
+#include <Engine/TrajectoryAsset.h>
 
 #include <GameClient/ProjectileComponents.h>
 
@@ -41,11 +43,57 @@ namespace
 	}
 
 	using World = editor::TrajectoryEditor::World;
-	void DrawInspector(World& world, editor::TrajectoryWindowComponent& component)
+
+	void DrawMenuBar(World& world, const ecs::Entity& entity)
 	{
-		Array<Vector2f>& values = component.m_Positions;
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("New"))
+				{
+					eng::TrajectoryAsset trajectory;
+					trajectory.m_Points.Append(Vector2f(0.f, 0.f));
+					trajectory.m_Points.Append(Vector2f(0.1f, 0.1f));
+					trajectory.m_Points.Append(Vector2f(-0.15f, 0.15f));
+					trajectory.m_Points.Append(Vector2f(0.3f, 0.3f));
+					trajectory.m_Points.Append(Vector2f(-0.35f, 0.4f));
+					trajectory.m_Points.Append(Vector2f(0.5f, 0.5f));
+					trajectory.m_Points.Append(Vector2f(-0.2f, 0.6f));
+					trajectory.m_Points.Append(Vector2f(0.1f, 0.7f));
+					trajectory.m_Points.Append(Vector2f(0.f, 1.f));
+
+					auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+					windowComponent.m_Asset = trajectory;
+				}
+
+				if (ImGui::MenuItem("Open"))
+					world.AddComponent<editor::TrajectoryAssetOpenComponent>(entity);
+
+				if (ImGui::MenuItem("Save"))
+					world.AddComponent<editor::TrajectoryAssetSaveComponent>(entity);
+
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
+	};
+
+	void DrawInspector(World& world, const ecs::Entity& entity)
+	{
+		auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+		eng::TrajectoryAsset& trajectory = windowComponent.m_Asset;
+
+		imgui::Guid("m_Guid", trajectory.m_Guid);
+		imgui::Name("m_Name", trajectory.m_Name);
+		imgui::Path("m_Path", trajectory.m_Path);
+
+		ImGui::Separator();
+
 		if (ImGui::CollapsingHeader("m_Positions"))
 		{
+			Array<Vector2f>& values = trajectory.m_Points;
+
 			ImGui::Indent();
 			if (ImGui::Button("Add"))
 				values.Append(Vector2f::Zero);
@@ -61,12 +109,12 @@ namespace
 				path::Points path;
 
 				float distance = 0.f;
-				for (int32 i = 0; i < component.m_Positions.GetCount(); ++i)
+				for (int32 i = 0; i < values.GetCount(); ++i)
 				{
-					const Vector3f positionI = Vector3f(component.m_Positions[i].x, 0.f, component.m_Positions[i].y);
+					const Vector3f positionI = Vector3f(values[i].x, 0.f, values[i].y);
 					if (i != 0)
 					{
-						const Vector3f positionJ = Vector3f(component.m_Positions[i - 1].x, 0.f, component.m_Positions[i-1].y);
+						const Vector3f positionJ = Vector3f(values[i - 1].x, 0.f, values[i-1].y);
 						distance += Vector3f::Distance(positionJ, positionI);
 					}
 
@@ -93,10 +141,12 @@ namespace
 		}
 	}
 
-	void DrawPlotter(editor::TrajectoryWindowComponent& component)
+	void DrawPlotter(World& world, const ecs::Entity& entity)
 	{
-		Array<Vector2f>& values = component.m_Positions;
+		auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+		eng::TrajectoryAsset& trajectory = windowComponent.m_Asset;
 
+		Array<Vector2f>& values = trajectory.m_Points;
 		if (ImGui::Button("Normalize"))
 		{
 			Vector2f range_min = Vector2f(+FLT_MAX);
@@ -121,6 +171,43 @@ namespace
 		ImGui::SetCursorPos(regionMin);
 		imgui::Grid(plotSize, Vector2f(10.f), Vector2f::Zero);
 	}
+
+	void DrawPopupOpen(World& world, const ecs::Entity& entity)
+	{
+		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
+		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
+		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
+
+		if (world.HasComponent<editor::TrajectoryAssetOpenComponent>(entity))
+		{
+			world.RemoveComponent<editor::TrajectoryAssetOpenComponent>(entity);
+		}
+	};
+
+	void DrawPopupSave(World& world, const ecs::Entity& entity)
+	{
+		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
+		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
+		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
+
+		if (world.HasComponent<editor::TrajectoryAssetSaveComponent>(entity))
+		{
+			auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+
+			eng::SaveFileSettings settings;
+			settings.m_Title = "Save Trajectory";
+			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
+			settings.m_Directory = str::GetPath(str::EPath::Assets);
+			const str::Path filepath = eng::SaveFileDialog(settings);
+			if (!filepath.IsEmpty())
+			{
+				auto& assetBrowser = world.GetManager<eng::AssetManager>();
+				assetBrowser.SaveAsset(windowComponent.m_Asset, filepath);
+			}
+
+			world.RemoveComponent<editor::TrajectoryAssetSaveComponent>(entity);
+		}
+	};
 }
 
 void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
@@ -137,16 +224,6 @@ void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
 		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowComponent.m_WindowId);
 		windowComponent.m_PlottingLabel = ToLabel("Plotter", windowComponent.m_WindowId);
 		windowComponent.m_WindowId = !m_UnusedIds.IsEmpty() ? m_UnusedIds.Pop() : m_NextId++;
-
-		windowComponent.m_Positions.Append(Vector2f(0.f, 0.f));
-		windowComponent.m_Positions.Append(Vector2f(0.1f, 0.1f));
-		windowComponent.m_Positions.Append(Vector2f(-0.15f, 0.15f));
-		windowComponent.m_Positions.Append(Vector2f(0.3f, 0.3f));
-		windowComponent.m_Positions.Append(Vector2f(-0.35f, 0.4f));
-		windowComponent.m_Positions.Append(Vector2f(0.5f, 0.5f));
-		windowComponent.m_Positions.Append(Vector2f(-0.2f, 0.6f));
-		windowComponent.m_Positions.Append(Vector2f(0.1f, 0.7f));
-		windowComponent.m_Positions.Append(Vector2f(0.f, 1.f));
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TrajectoryWindowComponent>>())
@@ -158,6 +235,8 @@ void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
 		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(windowComponent.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
 		{
+			DrawMenuBar(world, windowEntity);
+
 			const ImGuiID dockspaceId = ImGui::GetID(windowComponent.m_DockspaceLabel.c_str());
 			if (!ImGui::DockBuilderGetNode(dockspaceId))
 			{
@@ -176,12 +255,15 @@ void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_InspectorLabel.c_str()))
-			DrawInspector(world, windowComponent);
+			DrawInspector(world, windowEntity);
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_PlottingLabel.c_str()))
-			DrawPlotter(windowComponent);
+			DrawPlotter(world, windowEntity);
 		ImGui::End();
+
+		DrawPopupOpen(world, windowEntity);
+		DrawPopupSave(world, windowEntity);
 
 		if (!isOpen)
 		{

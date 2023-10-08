@@ -22,6 +22,8 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::FlipbookAssetSaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookBatchingComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowComponent>();
+	m_ClientWorld.RegisterComponent<editor::TrajectoryAssetOpenComponent>();
+	m_ClientWorld.RegisterComponent<editor::TrajectoryAssetSaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowComponent>();
 
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditor>();
