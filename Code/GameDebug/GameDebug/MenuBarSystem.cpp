@@ -33,6 +33,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::MenuItem("Flipbook Editor"))
 				world.AddEventComponent<editor::FlipbookWindowRequestComponent>();
+			if (ImGui::MenuItem("Trajectory Editor"))
+				world.AddEventComponent<editor::TrajectoryWindowRequestComponent>();
 
 			ImGui::EndMenu();
 		}
