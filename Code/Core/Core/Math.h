@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+using int32 = int32_t;
+
 constexpr float KINDA_LARGE_FLOAT = 9999999.0f;
 constexpr float KINDA_SMALL_FLOAT = 0.0000001f;
 
@@ -16,51 +18,67 @@ constexpr float DIAGONAL_1D = 1.f;
 constexpr float DIAGONAL_2D = SQUARE_ROOT_TWO;
 constexpr float DIAGONAL_3D = SQUARE_ROOT_THREE;
 
+// https://cplusplus.com/forum/articles/3638/
+
 namespace math
 {
-	/// \brief 
+	/// \brief Clamps value between min and max so that it doesn't exceed either.
 	template<typename Type>
 	inline constexpr Type Clamp(const Type& value, const Type& min, const Type& max)
 	{
 		return value < min ? min : value > max ? max : value;
 	}
 
-	/// \brief 
-	template<typename Type>
-	inline constexpr Type Ceiling(const float value)
+	/// \brief Rounds value to the nearest whole value towards +infinity.
+	template<typename Type = float>
+	inline Type Ceiling(const float value)
 	{
 		return static_cast<Type>(std::ceilf(value));
 	}
 
-	/// \brief 
-	template<typename Type>
-	inline constexpr Type Floor(const float value)
+	/// \brief Rounds value to the nearest whole value towards +infinity to the nearest multiplier.
+	template<typename Type = float>
+	inline Type Ceiling(const float value, const float multiplier)
+	{
+		return Ceiling<Type>(value / multiplier) * multiplier;
+	}
+
+	/// \brief Rounds value to the nearest whole value towards -infinity.
+	template<typename Type = float>
+	inline Type Floor(const float value)
 	{
 		return static_cast<Type>(std::floorf(value));
 	}
 
-	/// \brief 
+	/// \brief Rounds value to the nearest whole value towards -infinity to the nearest multiplier.
+	template<typename Type = float>
+	inline Type Floor(const float value, const float multiplier)
+	{
+		return Floor<Type>(value / multiplier) * multiplier;
+	}
+
+	/// \brief Linearly interpolations from a -> b based on t.
 	template<typename Type>
 	inline constexpr Type Lerp(const Type& a, const Type& b, const float t)
 	{
 		return a + (b - a) * t;
 	}
 
-	/// \brief 
+	/// \brief Returns the smaller number of the two.
 	template<typename Type>
 	inline constexpr Type Min(const Type& a, const Type& b)
 	{
 		return (a < b) ? a : b;
 	}
 
-	/// \brief 
+	/// \brief Returns the bigger number of the two.
 	template<typename Type>
 	inline constexpr Type Max(const Type& a, const Type& b)
 	{
 		return (a > b) ? a : b;
 	}
 
-	/// \brief 
+	/// \brief Converts value from one range to another range.
 	template<typename Type>
 	inline constexpr Type Remap(Type value, const Type& fromA, const Type& fromB, const Type& toA, const Type& toB)
 	{
@@ -69,39 +87,46 @@ namespace math
 		return value * (toB - toA) + toA;
 	}
 
-	/// \brief 
-	template<typename Type>
-	inline constexpr Type Round(const float value)
+	/// \brief Rounds the value towards the nearest whole number away from zero.
+	template<typename Type = float>
+	inline Type Round(const float value)
 	{
 		return static_cast<Type>(std::roundf(value));
 	}
 
-	/// \brief 
+	/// \brief Rounds the value towards the nearest multiplier away from zero.
+	template<typename Type = float>
+	inline Type Round(const float value, const float multiplier)
+	{
+		return Round<Type>(value / multiplier) * multiplier;
+	}
+
+	/// \brief Returns -1 for a negative number and +1 for a positive number.
 	inline constexpr float Sign(float value)
 	{
 		return (value < 0.0f) ? -1.0f : 1.0f;
 	}
 
-	/// \brief 
+	/// \brief Returns the squared value of the value.
 	template<typename Type>
 	inline constexpr float Sqr(const Type value)
 	{
 		return value * value;
 	}
 
-	/// \brief 
+	/// \brief Returns the squared root of the value.
 	inline float Sqrt(const float value)
 	{
 		return sqrtf(value);
 	}
 
-	/// \brief 
+	/// \brief Converts a radian to an euler angle.
 	inline constexpr float ToDegrees(float radians)
 	{
 		return radians * 57.2958f;
 	}
 
-	/// \brief 
+	/// \brief Converts a an euler angle to a radian.
 	inline constexpr float ToRadians(float degrees)
 	{
 		return degrees * 0.0174533f;
