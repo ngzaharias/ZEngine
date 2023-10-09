@@ -19,11 +19,6 @@ namespace
 		return (from.x - to.x) * (from.x - to.x) + (from.y - to.y) * (from.y - to.y);
 	}
 
-	float Remap(float value, const float fromA, const float fromB, const float toA, const float toB)
-	{
-		return toA + (value - fromA) * (toB - toA) / (fromB - fromA);
-	}
-
 	ImVec2 Remap(const ImVec2& value, const ImVec2& fromA, const ImVec2& fromB, const ImVec2& toA, const ImVec2& toB)
 	{
 		return ImVec2(
@@ -369,6 +364,47 @@ void imgui::PlotLines(const char* label, float* values, int32 values_count, Vect
 		// tooltip
 		if (idx_hovered != -1)
 			ImGui::SetTooltip("[%d] %1.3f, %1.3f", idx_hovered / 2, values[idx_hovered + 0], values[idx_hovered + 1]);
+	}
+
+	if (flags & ImGuiGraphFlags_Grid)
+	{
+		const ImU32 col_base = ImGui::GetColorU32(ImGuiCol_Border);
+
+		ImVec2 offset = { 0, 0 };
+		ImVec2 spacing = { 0.1f, 0.1f };
+		ImVec2 pos0 = frame_bb.Min, pos1 = frame_bb.Min;
+
+		// draw vertical lines
+		for (float x = 0.f; x <= graph_size.x; x += spacing.x)
+		{
+			pos0 = { frame_bb.Min.x + offset.x + x, frame_bb.Min.y };
+			pos1 = { frame_bb.Min.x + offset.x + x, frame_bb.Max.y };
+			window->DrawList->AddLine(pos0, pos1, col_base);
+
+			if (flags & ImGuiGraphFlags_TextX)
+			{
+				char buff0[8];
+				const float value = math::Remap(x, 0.f, graph_size.x, range_min.x, range_max.x);
+				const char* buff1 = buff0 + ImGui::DataTypeFormatString(buff0, IM_ARRAYSIZE(buff0), ImGuiDataType_Float, &value, "%g");
+				ImGui::RenderTextClipped(pos0, frame_bb.Max, buff0, buff1, nullptr);
+			}
+		}
+
+		// draw horizontal lines
+		for (float y = 0.f; y <= graph_size.y; y += spacing.y)
+		{
+			pos0 = { frame_bb.Min.x, frame_bb.Min.y + offset.y + y };
+			pos1 = { frame_bb.Max.x, frame_bb.Min.y + offset.y + y };
+			window->DrawList->AddLine(pos0, pos1, col_base);
+
+			if (flags & ImGuiGraphFlags_TextY)
+			{
+				char buff0[8];
+				const float value = math::Remap(y, 0.f, graph_size.y, range_min.y, range_max.y);
+				const char* buff1 = buff0 + ImGui::DataTypeFormatString(buff0, IM_ARRAYSIZE(buff0), ImGuiDataType_Float, &value, "%g");
+				ImGui::RenderTextClipped(pos0, frame_bb.Max, buff0, buff1, nullptr);
+			}
+		}
 	}
 
 	ImGui::EndChildFrame();

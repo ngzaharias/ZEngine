@@ -8,9 +8,11 @@ typedef int ImGuiSliderFlags;
 
 enum ImGuiGraphFlags_
 {
-	ImGuiGraphFlags_Grid = 1 << 0,	// No condition (always set the variable)
+	ImGuiGraphFlags_Grid     = 1 << 0,
+	ImGuiGraphFlags_TextX    = 1 << 1,
+	ImGuiGraphFlags_TextY    = 1 << 2,
 };
-using ImGuiGraphFlags = int; // -> enum ImGuiGraphFlags_     // Flags: for Begin(), BeginChild()
+using ImGuiGraphFlags = int; // -> enum ImGuiGraphFlags_
 
 namespace str
 {
@@ -38,8 +40,8 @@ namespace imgui
 
 	void Image(uint32 textureId, Vector2f image_size, Vector2f uv0 = Vector2f::Zero, Vector2f uv1 = Vector2f::One);
 
-	void PlotLines(const char* label, float* values, int32 values_count, Vector2f graph_size, ImGuiGraphFlags flags = 0);
-	void PlotLines(const char* label, Vector2f* values, int32 values_count, Vector2f graph_size, ImGuiGraphFlags flags = 0);
+	void PlotLines(const char* label, float* values, int32 values_count, Vector2f graph_size = Vector2f::Zero, ImGuiGraphFlags flags = 0);
+	void PlotLines(const char* label, Vector2f* values, int32 values_count, Vector2f graph_size = Vector2f::Zero, ImGuiGraphFlags flags = 0);
 
 	/// \brief Converts a hexadecimal colour to a vector.
 	/// Example: 0xFF00FF00 -> { 1.f, 0.f, 1.f, 0.f }

@@ -164,12 +164,9 @@ namespace
 			}
 		}
 
-		const Vector2f plotSize = ImGui::GetContentRegionAvail();
-		const Vector2f regionMin = ImGui::GetCursorPos();
-		imgui::PlotLines("##plotter", values.GetData(), values.GetCount(), plotSize);
-
-		ImGui::SetCursorPos(regionMin);
-		imgui::Grid(plotSize, Vector2f(10.f), Vector2f::Zero);
+		const ImGuiGraphFlags flags = ImGuiGraphFlags_Grid | ImGuiGraphFlags_TextX | ImGuiGraphFlags_TextY;
+		const Vector2f size = ImGui::GetContentRegionAvail();
+		imgui::PlotLines("##plotter", values.GetData(), values.GetCount(), size, flags);
 	}
 
 	void DrawPopupOpen(World& world, const ecs::Entity& entity)
