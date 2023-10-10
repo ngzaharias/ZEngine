@@ -32,7 +32,6 @@ namespace editor
 		str::String m_DockspaceLabel = {};
 		str::String m_InspectorLabel = {};
 		str::String m_PlottingLabel = {};
-		int32 m_WindowId = 0;
 	};
 
 	class TrajectoryEditor final : public ecs::System
@@ -49,9 +48,5 @@ namespace editor
 			const editor::TrajectoryWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
-
-	private:
-		Array<int32> m_UnusedIds = { };
-		int32 m_NextId = 0;
 	};
 };

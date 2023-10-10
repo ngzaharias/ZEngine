@@ -216,11 +216,11 @@ void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const editor::TrajectoryWindowRequestComponent>>())
 	{
-		auto& windowComponent = world.AddComponent<editor::TrajectoryWindowComponent>(world.CreateEntity());
-		windowComponent.m_DockspaceLabel = ToLabel("Trajectory Editor", windowComponent.m_WindowId);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowComponent.m_WindowId);
-		windowComponent.m_PlottingLabel = ToLabel("Plotter", windowComponent.m_WindowId);
-		windowComponent.m_WindowId = !m_UnusedIds.IsEmpty() ? m_UnusedIds.Pop() : m_NextId++;
+		const ecs::Entity windowEntity = world.CreateEntity();
+		auto& windowComponent = world.AddComponent<editor::TrajectoryWindowComponent>(windowEntity);
+		windowComponent.m_DockspaceLabel = ToLabel("Trajectory Editor", windowEntity);
+		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
+		windowComponent.m_PlottingLabel = ToLabel("Plotter", windowEntity);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TrajectoryWindowComponent>>())
@@ -263,10 +263,7 @@ void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
 		DrawPopupSave(world, windowEntity);
 
 		if (!isOpen)
-		{
-			m_UnusedIds.Append(windowComponent.m_WindowId);
 			world.DestroyEntity(windowEntity);
-		}
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::CreateResultComponent>>())

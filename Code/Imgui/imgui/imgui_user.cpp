@@ -258,37 +258,23 @@ void imgui::PlotLines(const char* label, float* values, int32 values_count, Vect
 	// adjust range
 	ImVec2 range_min = ImVec2(-1.0f, -0.4f);
 	ImVec2 range_max = ImVec2(+1.0f, +0.4f);
-	if (values_count >= 1)
-	{
-		for (int i = 0; i < values_count; i += 2)
-		{
-			const ImVec2 value = ImVec2(values[i + 0], values[i + 1]);
-			const bool isNaNX = value.x != value.x;
-			if (!isNaNX)
-			{
-				range_min.x = ImMin(range_min.x, value.x);
-				range_max.x = ImMax(range_max.x, value.x);
-			}
-			const bool isNaNY = value.y != value.y;
-			if (!isNaNY)
-			{
-				range_min.y = ImMin(range_min.y, value.y);
-				range_max.y = ImMax(range_max.y, value.y);
-			}
-		}
-
-		const float width = range_max.x - range_min.x;
-		const float height = range_max.y - range_min.y;
-	}
-
 	range_min.x = storage->GetFloat(ID_RangeMinX, range_min.x);
 	range_min.y = storage->GetFloat(ID_RangeMinY, range_min.y);
 	range_max.x = storage->GetFloat(ID_RangeMaxX, range_max.x);
 	range_max.y = storage->GetFloat(ID_RangeMaxY, range_max.y);
 
+	if (ImGui::IsMouseDragging(ImGuiMouseButton_Right) && ImGui::ItemHoverable(frame_bb, id))
+	{
+		const ImVec2 delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
+		range_min.x -= delta.x * 0.00001f;
+		range_min.y += delta.y * 0.00001f;
+		range_max.x -= delta.x * 0.00001f;
+		range_max.y += delta.y * 0.00001f;
+	}
+
 	if (ImGui::GetIO().MouseWheel != 0 && ImGui::ItemHoverable(frame_bb, id))
 	{
-		const float scale = 2.f * ImGui::GetIO().MouseWheel;
+		const float scale = ImGui::GetIO().MouseWheel * 2.f;
 		float width = (range_max.x - range_min.x) / scale / 2.f;
 		float height = (range_max.y - range_min.y) / scale / 2.f;
 		range_min += ImVec2(width, height);
@@ -369,39 +355,42 @@ void imgui::PlotLines(const char* label, float* values, int32 values_count, Vect
 	if (flags & ImGuiGraphFlags_Grid)
 	{
 		const ImU32 col_base = ImGui::GetColorU32(ImGuiCol_Border);
+		const ImVec2 spacing = (range_max - range_min) * 0.5f * 0.25f;
 
-		ImVec2 offset = { 0, 0 };
-		ImVec2 spacing = { 0.1f, 0.1f };
 		ImVec2 pos0 = frame_bb.Min, pos1 = frame_bb.Min;
+		ImVec2 clamp_min = { math::Round(range_min.x, spacing.x), math::Round(range_min.y, spacing.y) };
+		ImVec2 clamp_max = { math::Round(range_max.x, spacing.x), math::Round(range_max.y, spacing.y) };
 
 		// draw vertical lines
-		for (float x = 0.f; x <= graph_size.x; x += spacing.x)
+		pos0.y = frame_bb.Min.y;
+		pos1.y = frame_bb.Max.y;
+		for (float x = clamp_min.x; x <= clamp_max.x; x += spacing.x)
 		{
-			pos0 = { frame_bb.Min.x + offset.x + x, frame_bb.Min.y };
-			pos1 = { frame_bb.Min.x + offset.x + x, frame_bb.Max.y };
+			pos0.x = math::Remap(x, range_min.x, range_max.x, frame_bb.Min.x, frame_bb.Max.x);
+			pos1.x = math::Remap(x, range_min.x, range_max.x, frame_bb.Min.x, frame_bb.Max.x);
 			window->DrawList->AddLine(pos0, pos1, col_base);
 
 			if (flags & ImGuiGraphFlags_TextX)
 			{
 				char buff0[8];
-				const float value = math::Remap(x, 0.f, graph_size.x, range_min.x, range_max.x);
-				const char* buff1 = buff0 + ImGui::DataTypeFormatString(buff0, IM_ARRAYSIZE(buff0), ImGuiDataType_Float, &value, "%g");
+				const char* buff1 = buff0 + ImGui::DataTypeFormatString(buff0, IM_ARRAYSIZE(buff0), ImGuiDataType_Float, &x, "%g");
 				ImGui::RenderTextClipped(pos0, frame_bb.Max, buff0, buff1, nullptr);
 			}
 		}
 
 		// draw horizontal lines
-		for (float y = 0.f; y <= graph_size.y; y += spacing.y)
+		pos0.x = frame_bb.Min.x;
+		pos1.x = frame_bb.Max.x;
+		for (float y = clamp_min.y; y <= clamp_max.y; y += spacing.y)
 		{
-			pos0 = { frame_bb.Min.x, frame_bb.Min.y + offset.y + y };
-			pos1 = { frame_bb.Max.x, frame_bb.Min.y + offset.y + y };
+			pos0.y = math::Remap(y, range_min.y, range_max.y, frame_bb.Max.y, frame_bb.Min.y);
+			pos1.y = math::Remap(y, range_min.y, range_max.y, frame_bb.Max.y, frame_bb.Min.y);
 			window->DrawList->AddLine(pos0, pos1, col_base);
 
-			if (flags & ImGuiGraphFlags_TextY)
+			if (flags & ImGuiGraphFlags_TextX)
 			{
 				char buff0[8];
-				const float value = math::Remap(y, 0.f, graph_size.y, range_min.y, range_max.y);
-				const char* buff1 = buff0 + ImGui::DataTypeFormatString(buff0, IM_ARRAYSIZE(buff0), ImGuiDataType_Float, &value, "%g");
+				const char* buff1 = buff0 + ImGui::DataTypeFormatString(buff0, IM_ARRAYSIZE(buff0), ImGuiDataType_Float, &y, "%g");
 				ImGui::RenderTextClipped(pos0, frame_bb.Max, buff0, buff1, nullptr);
 			}
 		}
