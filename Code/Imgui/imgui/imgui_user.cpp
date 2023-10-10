@@ -263,13 +263,18 @@ void imgui::PlotLines(const char* label, float* values, int32 values_count, Vect
 	range_max.x = storage->GetFloat(ID_RangeMaxX, range_max.x);
 	range_max.y = storage->GetFloat(ID_RangeMaxY, range_max.y);
 
+	ImVec2 spacing = (range_max - range_min) * 0.5f * 0.25f;
+	spacing.x = math::Max(math::Round(spacing.x, 0.25f), 0.25f);
+	spacing.y = math::Max(math::Round(spacing.y, 0.25f), 0.25f);
+
 	if (ImGui::IsMouseDragging(ImGuiMouseButton_Right) && ImGui::ItemHoverable(frame_bb, id))
 	{
 		const ImVec2 delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
-		range_min.x -= delta.x * 0.00001f;
-		range_min.y += delta.y * 0.00001f;
-		range_max.x -= delta.x * 0.00001f;
-		range_max.y += delta.y * 0.00001f;
+		ImGui::ResetMouseDragDelta(ImGuiMouseButton_Right);
+		range_min.x -= delta.x * spacing.x * 0.01f;
+		range_min.y += delta.y * spacing.y * 0.01f;
+		range_max.x -= delta.x * spacing.x * 0.01f;
+		range_max.y += delta.y * spacing.y * 0.01f;
 	}
 
 	if (ImGui::GetIO().MouseWheel != 0 && ImGui::ItemHoverable(frame_bb, id))
@@ -355,7 +360,6 @@ void imgui::PlotLines(const char* label, float* values, int32 values_count, Vect
 	if (flags & ImGuiGraphFlags_Grid)
 	{
 		const ImU32 col_base = ImGui::GetColorU32(ImGuiCol_Border);
-		const ImVec2 spacing = (range_max - range_min) * 0.5f * 0.25f;
 
 		ImVec2 pos0 = frame_bb.Min, pos1 = frame_bb.Min;
 		ImVec2 clamp_min = { math::Round(range_min.x, spacing.x), math::Round(range_min.y, spacing.y) };
