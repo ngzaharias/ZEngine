@@ -219,13 +219,14 @@ void imgui::PlotLines(const char* label, float* values, int32 values_count, Vect
 	enum StorageIDs : ImGuiID
 	{
 		ID_Dragging = 100,
-		ID_RangeMinX,
-		ID_RangeMinY,
-		ID_RangeMaxX,
-		ID_RangeMaxY,
+		ID_PositionX,
+		ID_PositionY,
+		ID_SpacingX,
+		ID_SpacingY,
 	};
 
 	constexpr ImVec2 padding = ImVec2(0, 0);
+	constexpr int32 grid_major = 5;
 	constexpr float point_radius = 3.f;
 	constexpr float select_radius = 20.f * 20.f;
 
@@ -255,41 +256,39 @@ void imgui::PlotLines(const char* label, float* values, int32 values_count, Vect
 	if (window->SkipItems)
 		return;
 
-	// adjust range
-	ImVec2 range_min = ImVec2(-1.0f, -0.4f);
-	ImVec2 range_max = ImVec2(+1.0f, +0.4f);
-	range_min.x = storage->GetFloat(ID_RangeMinX, range_min.x);
-	range_min.y = storage->GetFloat(ID_RangeMinY, range_min.y);
-	range_max.x = storage->GetFloat(ID_RangeMaxX, range_max.x);
-	range_max.y = storage->GetFloat(ID_RangeMaxY, range_max.y);
-
-	ImVec2 spacing = (range_max - range_min) * 0.5f * 0.25f;
-	spacing.x = math::Max(math::Round(spacing.x, 0.25f), 0.25f);
-	spacing.y = math::Max(math::Round(spacing.y, 0.25f), 0.25f);
+	ImVec2 position = ImVec2(-4.f, -2.f);
+	ImVec2 spacing = ImVec2(+1.0f, +0.4f);
+	position.x = storage->GetFloat(ID_PositionX, position.x);
+	position.y = storage->GetFloat(ID_PositionY, position.y);
+	spacing.x = storage->GetFloat(ID_SpacingX, spacing.x);
+	spacing.y = storage->GetFloat(ID_SpacingY, spacing.y);
 
 	if (ImGui::IsMouseDragging(ImGuiMouseButton_Right) && ImGui::ItemHoverable(frame_bb, id))
 	{
 		const ImVec2 delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
 		ImGui::ResetMouseDragDelta(ImGuiMouseButton_Right);
-		range_min.x -= delta.x * spacing.x * 0.01f;
-		range_min.y += delta.y * spacing.y * 0.01f;
-		range_max.x -= delta.x * spacing.x * 0.01f;
-		range_max.y += delta.y * spacing.y * 0.01f;
+		position.x -= delta.x * spacing.x * 0.01f;
+		position.y += delta.y * spacing.y * 0.01f;
 	}
 
 	if (ImGui::GetIO().MouseWheel != 0 && ImGui::ItemHoverable(frame_bb, id))
 	{
-		const float scale = ImGui::GetIO().MouseWheel * 2.f;
-		float width = (range_max.x - range_min.x) / scale / 2.f;
-		float height = (range_max.y - range_min.y) / scale / 2.f;
-		range_min += ImVec2(width, height);
-		range_max -= ImVec2(width, height);
+		spacing *= math::Remap(ImGui::GetIO().MouseWheel, -1.f, 1.f, 2.f, 0.5f);
 	}
 
-	storage->SetFloat(ID_RangeMinX, range_min.x);
-	storage->SetFloat(ID_RangeMinY, range_min.y);
-	storage->SetFloat(ID_RangeMaxX, range_max.x);
-	storage->SetFloat(ID_RangeMaxY, range_max.y);
+	storage->SetFloat(ID_PositionX, position.x);
+	storage->SetFloat(ID_PositionY, position.y);
+	storage->SetFloat(ID_SpacingX, spacing.x);
+	storage->SetFloat(ID_SpacingY, spacing.y);
+
+	ImVec2 range_min = position;
+	ImVec2 range_max = range_min;
+	{
+		constexpr float distance = 100.f;
+		ImVec2 count = (frame_bb.Max - frame_bb.Min) / distance;
+		range_max.x += spacing.x * count.x;
+		range_max.y += spacing.y * count.y;
+	}
 
 	int idx_hovered = -1;
 	float idx_closest = FLT_MAX;
@@ -359,7 +358,8 @@ void imgui::PlotLines(const char* label, float* values, int32 values_count, Vect
 
 	if (flags & ImGuiGraphFlags_Grid)
 	{
-		const ImU32 col_base = ImGui::GetColorU32(ImGuiCol_Border);
+		const ImU32 col_major = ImGui::GetColorU32(ImGuiCol_SeparatorActive);
+		const ImU32 col_minor = ImGui::GetColorU32(ImGuiCol_Separator);
 
 		ImVec2 pos0 = frame_bb.Min, pos1 = frame_bb.Min;
 		ImVec2 clamp_min = { math::Round(range_min.x, spacing.x), math::Round(range_min.y, spacing.y) };
@@ -370,14 +370,17 @@ void imgui::PlotLines(const char* label, float* values, int32 values_count, Vect
 		pos1.y = frame_bb.Max.y;
 		for (float x = clamp_min.x; x <= clamp_max.x; x += spacing.x)
 		{
+			const bool isMajor = (math::Round<int32>(x / spacing.x) % grid_major) == 0;
+			const ImU32 col = isMajor ? col_major : col_minor;
+
 			pos0.x = math::Remap(x, range_min.x, range_max.x, frame_bb.Min.x, frame_bb.Max.x);
 			pos1.x = math::Remap(x, range_min.x, range_max.x, frame_bb.Min.x, frame_bb.Max.x);
-			window->DrawList->AddLine(pos0, pos1, col_base);
+			window->DrawList->AddLine(pos0, pos1, col);
 
-			if (flags & ImGuiGraphFlags_TextX)
+			if (isMajor && flags & ImGuiGraphFlags_TextX)
 			{
 				char buff0[8];
-				const char* buff1 = buff0 + ImGui::DataTypeFormatString(buff0, IM_ARRAYSIZE(buff0), ImGuiDataType_Float, &x, "%g");
+				const char* buff1 = buff0 + ImGui::DataTypeFormatString(buff0, IM_ARRAYSIZE(buff0), ImGuiDataType_Float, &x, " %g");
 				ImGui::RenderTextClipped(pos0, frame_bb.Max, buff0, buff1, nullptr);
 			}
 		}
@@ -387,14 +390,17 @@ void imgui::PlotLines(const char* label, float* values, int32 values_count, Vect
 		pos1.x = frame_bb.Max.x;
 		for (float y = clamp_min.y; y <= clamp_max.y; y += spacing.y)
 		{
+			const bool isMajor = (math::Round<int32>(y / spacing.y) % grid_major) == 0;
+			const ImU32 col = isMajor ? col_major : col_minor;
+
 			pos0.y = math::Remap(y, range_min.y, range_max.y, frame_bb.Max.y, frame_bb.Min.y);
 			pos1.y = math::Remap(y, range_min.y, range_max.y, frame_bb.Max.y, frame_bb.Min.y);
-			window->DrawList->AddLine(pos0, pos1, col_base);
+			window->DrawList->AddLine(pos0, pos1, col);
 
-			if (flags & ImGuiGraphFlags_TextX)
+			if (isMajor && flags & ImGuiGraphFlags_TextX)
 			{
 				char buff0[8];
-				const char* buff1 = buff0 + ImGui::DataTypeFormatString(buff0, IM_ARRAYSIZE(buff0), ImGuiDataType_Float, &y, "%g");
+				const char* buff1 = buff0 + ImGui::DataTypeFormatString(buff0, IM_ARRAYSIZE(buff0), ImGuiDataType_Float, &y, " %g");
 				ImGui::RenderTextClipped(pos0, frame_bb.Max, buff0, buff1, nullptr);
 			}
 		}
