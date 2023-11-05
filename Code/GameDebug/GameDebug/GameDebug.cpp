@@ -43,6 +43,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::SaveLevelRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ServerWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowRequestComponent>();
+	m_ClientWorld.RegisterComponent<editor::SpellWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowRequestComponent>();
 
 	m_ClientWorld.RegisterSystem<dbg::EntitySystem>(m_ClientWorld, m_ServerWorld);

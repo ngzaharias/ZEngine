@@ -8,6 +8,7 @@
 #include "GameClient/ModalComponents.h"
 #include "GameClient/MovementComponents.h"
 #include "GameClient/ProjectileComponents.h"
+#include "GameClient/SpellComponents.h"
 
 void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 {
@@ -26,4 +27,7 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<projectile::CreateResultComponent>();
 	entityWorld.RegisterComponent<projectile::SpawnComponent>();
 	entityWorld.RegisterComponent<projectile::TrajectoryComponent>();
+	entityWorld.RegisterComponent<spell::DefinitionMapComponent>();
+	entityWorld.RegisterComponent<spell::RootComponent>();
+	entityWorld.RegisterComponent<spell::SubComponent>();
 }

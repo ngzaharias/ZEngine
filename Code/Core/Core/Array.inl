@@ -8,7 +8,7 @@ template<typename Type>
 Array<Type>::Array()
 	: m_Values()
 {
-	static_assert(std::is_default_constructible<Type>::value, "Implement Default Constructor.");
+	//static_assert(std::is_default_constructible<Type>::value, "Implement Default Constructor.");
 
 	// #hack: std::vector<bool> behaves differently to other types and a lot of functionality is broken if we allow it.
 	// Eventually we will convert to not using std::vector and at that point it can be allowed again.

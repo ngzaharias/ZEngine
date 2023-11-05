@@ -77,7 +77,8 @@ bool imgui::BulletHeader(const char* label, const bool selected /*= false*/)
 	// We vertically grow up to current line height up the typical widget height.
 	const float frame_height = ImMax(ImMin(window->DC.CurrLineSize.y, g.FontSize + style.FramePadding.y * 2), label_size.y + padding.y * 2);
 	ImRect frame_bb;
-	frame_bb.Min.x = window->WorkRect.Min.x;
+	frame_bb.Min.x = window->DC.CursorPos.x;
+	//frame_bb.Min.x = window->WorkRect.Min.x;
 	frame_bb.Min.y = window->DC.CursorPos.y;
 	frame_bb.Max.x = window->WorkRect.Max.x;
 	frame_bb.Max.y = window->DC.CursorPos.y + frame_height;
