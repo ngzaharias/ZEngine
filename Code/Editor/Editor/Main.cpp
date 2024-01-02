@@ -27,7 +27,7 @@ int main(int agrc, char* argv[])
 
 	core::LogInitialise();
 
-	Z_LOG(ELog::Debug, "=================Session Start====================");
+	Z_LOG(ELog::Debug, "=================Application Start====================");
 	Z_LOG(ELog::Debug, "AppData Directory: {}", appdataDirectory.ToChar());
 	Z_LOG(ELog::Debug, "Asset Directory:   {}", assetDirectory.ToChar());
 	Z_LOG(ELog::Debug, "Binary Filepath:   {}", executableFilepath.ToChar());
