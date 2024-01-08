@@ -124,7 +124,7 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 				RenderBatchID id;
 				id.m_Entity = renderEntity;
-				id.m_Depth = Vector3f::DistanceSqr(meshTransform.m_Translate, cameraTransform.m_Translate);
+				id.m_Depth = math::DistanceSqr(meshTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_TextureId = { };
 				id.m_ShaderId = strPhongShader;
 				id.m_StaticMeshId = meshComponent.m_StaticMesh;

@@ -5,6 +5,7 @@
 #include <Core/Math.h>
 #include <Core/Trajectory.h>
 #include <Core/Vector.h>
+#include <Core/VectorMath.h>
 
 #include <ECS/EntityWorld.h>
 #include <ECS/QueryTypes.h>
@@ -115,7 +116,7 @@ namespace
 					if (i != 0)
 					{
 						const Vector3f positionJ = Vector3f(values[i - 1].x, 0.f, values[i-1].y);
-						distance += Vector3f::Distance(positionJ, positionI);
+						distance += math::Distance(positionJ, positionI);
 					}
 
 					path.m_Positions.Append(positionI);
@@ -153,8 +154,8 @@ namespace
 			Vector2f range_max = Vector2f(-FLT_MAX);
 			for (const Vector2f& value : values)
 			{
-				range_min = Vector2f::Min(range_min, value);
-				range_max = Vector2f::Max(range_max, value);
+				range_min = math::Min(range_min, value);
+				range_max = math::Max(range_max, value);
 			}
 
 			for (Vector2f& value : values)

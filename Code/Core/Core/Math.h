@@ -23,64 +23,64 @@ constexpr float DIAGONAL_3D = SQUARE_ROOT_THREE;
 namespace math
 {
 	/// \brief Clamps value between min and max so that it doesn't exceed either.
-	template<typename Type>
-	inline constexpr Type Clamp(const Type& value, const Type& min, const Type& max)
+	template<typename Type = float>
+	inline constexpr Type Clamp(const Type& value, const Type& min, const Type& max) noexcept
 	{
 		return value < min ? min : value > max ? max : value;
 	}
 
 	/// \brief Rounds value to the nearest whole value towards +infinity.
 	template<typename Type = float>
-	inline Type Ceiling(const float value)
+	inline Type Ceiling(const float value) noexcept
 	{
 		return static_cast<Type>(std::ceilf(value));
 	}
 
 	/// \brief Rounds value to the nearest whole value towards +infinity to the nearest multiplier.
 	template<typename Type = float>
-	inline Type Ceiling(const float value, const float multiplier)
+	inline Type Ceiling(const float value, const float multiplier) noexcept
 	{
-		return Ceiling<Type>(value / multiplier) * multiplier;
+		return static_cast<Type>(std::ceilf(value / multiplier)) * multiplier;
 	}
 
 	/// \brief Rounds value to the nearest whole value towards -infinity.
 	template<typename Type = float>
-	inline Type Floor(const float value)
+	inline Type Floor(const float value) noexcept
 	{
 		return static_cast<Type>(std::floorf(value));
 	}
 
 	/// \brief Rounds value to the nearest whole value towards -infinity to the nearest multiplier.
 	template<typename Type = float>
-	inline Type Floor(const float value, const float multiplier)
+	inline Type Floor(const float value, const float multiplier) noexcept
 	{
-		return Floor<Type>(value / multiplier) * multiplier;
+		return static_cast<Type>(std::floorf(value / multiplier)) * multiplier;
 	}
 
 	/// \brief Linearly interpolations from a -> b based on t.
-	template<typename Type>
-	inline constexpr Type Lerp(const Type& a, const Type& b, const float t)
+	template<typename Type = float>
+	inline constexpr Type Lerp(const Type& a, const Type& b, const float t) noexcept
 	{
 		return a + (b - a) * t;
 	}
 
 	/// \brief Returns the smaller number of the two.
-	template<typename Type>
-	inline constexpr Type Min(const Type& a, const Type& b)
+	template<typename Type = float>
+	inline constexpr Type Min(const Type& a, const Type& b) noexcept
 	{
 		return (a < b) ? a : b;
 	}
 
 	/// \brief Returns the bigger number of the two.
-	template<typename Type>
-	inline constexpr Type Max(const Type& a, const Type& b)
+	template<typename Type = float>
+	inline constexpr Type Max(const Type& a, const Type& b) noexcept
 	{
 		return (a > b) ? a : b;
 	}
 
 	/// \brief Converts value from one range to another range.
-	template<typename Type>
-	inline constexpr Type Remap(Type value, const Type& fromA, const Type& fromB, const Type& toA, const Type& toB)
+	template<typename Type = float>
+	inline constexpr Type Remap(Type value, const Type& fromA, const Type& fromB, const Type& toA, const Type& toB) noexcept
 	{
 		value -= fromA;
 		value /= (fromB - fromA);
@@ -89,45 +89,45 @@ namespace math
 
 	/// \brief Rounds the value towards the nearest whole number away from zero.
 	template<typename Type = float>
-	inline Type Round(const float value)
+	inline Type Round(const float value) noexcept
 	{
 		return static_cast<Type>(std::roundf(value));
 	}
 
 	/// \brief Rounds the value towards the nearest multiplier away from zero.
 	template<typename Type = float>
-	inline Type Round(const float value, const float multiplier)
+	inline Type Round(const float value, const float multiplier) noexcept
 	{
 		return Round<Type>(value / multiplier) * multiplier;
 	}
 
 	/// \brief Returns -1 for a negative number and +1 for a positive number.
-	inline constexpr float Sign(float value)
+	inline constexpr float Sign(float value) noexcept
 	{
 		return (value < 0.0f) ? -1.0f : 1.0f;
 	}
 
 	/// \brief Returns the squared value of the value.
-	template<typename Type>
-	inline constexpr float Sqr(const Type value)
+	template<typename Type = float>
+	inline constexpr float Sqr(const Type value) noexcept
 	{
 		return value * value;
 	}
 
 	/// \brief Returns the squared root of the value.
-	inline float Sqrt(const float value)
+	inline float Sqrt(const float value) noexcept
 	{
 		return sqrtf(value);
 	}
 
 	/// \brief Converts a radian to an euler angle.
-	inline constexpr float ToDegrees(float radians)
+	inline constexpr float ToDegrees(float radians) noexcept
 	{
 		return radians * 57.2958f;
 	}
 
 	/// \brief Converts a an euler angle to a radian.
-	inline constexpr float ToRadians(float degrees)
+	inline constexpr float ToRadians(float degrees) noexcept
 	{
 		return degrees * 0.0174533f;
 	}

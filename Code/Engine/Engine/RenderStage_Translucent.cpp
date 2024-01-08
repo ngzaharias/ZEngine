@@ -124,7 +124,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 				RenderBatchID id;
 				id.m_Entity = renderEntity;
-				id.m_Depth = Vector3f::DistanceSqr(spriteTransform.m_Translate, cameraTransform.m_Translate);
+				id.m_Depth = math::DistanceSqr(spriteTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_ShaderId = spriteAsset.m_Shader;
 				id.m_StaticMeshId = spriteAsset.m_StaticMesh;
 				id.m_TextureId = spriteAsset.m_Texture2D;
@@ -155,7 +155,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 				RenderBatchID id;
 				id.m_Entity = renderEntity;
-				id.m_Depth = Vector3f::DistanceSqr(flipbookTransform.m_Translate, cameraTransform.m_Translate);
+				id.m_Depth = math::DistanceSqr(flipbookTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_ShaderId = flipbookAsset.m_Shader;
 				id.m_StaticMeshId = flipbookAsset.m_StaticMesh;
 				id.m_TextureId = flipbookAsset.m_Texture2D;

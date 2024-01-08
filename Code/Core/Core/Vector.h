@@ -7,56 +7,66 @@ class Vector2f;
 class Vector3f;
 class Vector4f;
 
-/// \brief
+/// \brief A geometric object that has length and direction that can be used to represent positions and/or directions in 2d.
 class Vector2f
 {
 public:
-	constexpr Vector2f() noexcept : x(), y() {}
+	/// \brief Construct with components initialized to 0.
+	constexpr Vector2f() noexcept : x(0.f), y(0.f) {}
+	/// \brief Construct with both components initialized to value.
 	constexpr explicit Vector2f(const float value) noexcept : x(value), y(value) {}
+	/// \brief Construct with components initialized to values x and y.
 	constexpr explicit Vector2f(const float x, const float y) noexcept : x(x), y(y) {}
 
-	constexpr bool operator==(const Vector2f& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y); }
-	constexpr bool operator!=(const Vector2f& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y); }
+	[[nodiscard]] constexpr bool operator==(const Vector2f& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y); }
+	[[nodiscard]] constexpr bool operator!=(const Vector2f& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y); }
 
-	constexpr Vector2f operator+(const Vector2f& rhs) const noexcept { return Vector2f(x + rhs.x, y + rhs.y); }
-	constexpr Vector2f operator-(const Vector2f& rhs) const noexcept { return Vector2f(x - rhs.x, y - rhs.y); }
+	[[nodiscard]] constexpr Vector2f operator+(const Vector2f& rhs) const noexcept { return Vector2f(x + rhs.x, y + rhs.y); }
+	[[nodiscard]] constexpr Vector2f operator-(const Vector2f& rhs) const noexcept { return Vector2f(x - rhs.x, y - rhs.y); }
 
 	constexpr Vector2f& operator+=(const Vector2f& rhs) noexcept { x += rhs.x; y += rhs.y; return *this; }
 	constexpr Vector2f& operator-=(const Vector2f& rhs) noexcept { x -= rhs.x; y -= rhs.y; return *this; }
 
-	constexpr Vector2f operator*(const float rhs) const noexcept { return Vector2f(x * rhs, y * rhs); }
-	constexpr Vector2f operator/(const float rhs) const noexcept { return Vector2f(x / rhs, y / rhs); }
+	[[nodiscard]] constexpr Vector2f operator*(const float rhs) const noexcept { return Vector2f(x * rhs, y * rhs); }
+	[[nodiscard]] constexpr Vector2f operator/(const float rhs) const noexcept { return Vector2f(x / rhs, y / rhs); }
 
 	constexpr Vector2f& operator*=(const float rhs) noexcept { x *= rhs; y *= rhs; return *this; }
 	constexpr Vector2f& operator/=(const float rhs) noexcept { x /= rhs; y /= rhs; return *this; }
 
-	constexpr Vector2f operator+() const noexcept { return *this; }
-	constexpr Vector2f operator-() const noexcept { return Vector2f(-x, -y); }
+	[[nodiscard]] constexpr Vector2f operator+() const noexcept { return *this; }
+	[[nodiscard]] constexpr Vector2f operator-() const noexcept { return Vector2f(-x, -y); }
 
-	float Length() const noexcept;
-	constexpr float LengthSqr() const noexcept;
+	/// \brief Returns the length of this vector.
+	[[nodiscard]] float Length() const noexcept;
+	/// \brief Returns the squared length of this vector.
+	[[nodiscard]] constexpr float LengthSqr() const noexcept;
 
+	/// \brief Reduce the vector length so that it doesn't exceed value.
+	/// If the length of the vector is 0 and value is less than 0 then it makes it a NaN vector.
+	void Limit(const float value) noexcept;
+	/// \brief Normalize this vector have a length of 1 unit.
+	/// If the length of the vector is 0 then it makes it a NaN vector.
 	void Normalize() noexcept;
-	void NormalizeUnsafe() noexcept;
 
+	/// \brief Returns a vector whose length doesn't exceed value.
+	/// If the length of the vector is 0 and value is less than 0 then it returns a NaN vector.
+	[[nodiscard]] Vector2f Limited(const float value) const noexcept;
+	/// \brief Returns a normalized vector with a length of 1 unit.
+	/// If the length of the vector is 0 then it returns a NaN vector.
 	[[nodiscard]] Vector2f Normalized() const noexcept;
-	[[nodiscard]] Vector2f NormalizedUnsafe() const noexcept;
 
+	/// \brief Converts this vector to a Vector3f with 0 in place of Y, and Y in place of Z.
 	constexpr Vector3f X0Y() const noexcept;
+	/// \brief Converts this vector to a Vector3f with 0 in place of Z.
 	constexpr Vector3f XY0() const noexcept;
 
-	static float Distance(const Vector2f& a, const Vector2f& b) noexcept;
-	static constexpr float DistanceSqr(const Vector2f& a, const Vector2f& b) noexcept;
-	static constexpr float Dot(const Vector2f& a, const Vector2f& b) noexcept;
-	static constexpr Vector2f Divide(const Vector2f& a, const Vector2f& b) noexcept;
-	static constexpr Vector2f Max(const Vector2f& a, const Vector2f& b) noexcept;
-	static constexpr Vector2f Min(const Vector2f& a, const Vector2f& b) noexcept;
-	static constexpr Vector2f Multiply(const Vector2f& a, const Vector2f& b) noexcept;
-	static constexpr Vector2f Reflect(const Vector2f& vector, const Vector2f& normal) noexcept;
-
+	/// \brief Shorthand for writing Vector2f(1.f, 0.f).
 	static const Vector2f AxisX;
+	/// \brief Shorthand for writing Vector2f(0.f, 1.f).
 	static const Vector2f AxisY;
+	/// \brief Shorthand for writing Vector2f(1.f).
 	static const Vector2f One;
+	/// \brief Shorthand for writing Vector2f(0.f).
 	static const Vector2f Zero;
 
 public:
@@ -72,7 +82,7 @@ inline constexpr Vector2f Vector2f::Zero(0.f);
 class Vector2i
 {
 public:
-	constexpr Vector2i()  noexcept : x(), y() {}
+	constexpr Vector2i()  noexcept : x(0), y(0) {}
 	constexpr explicit Vector2i(const int32 value)  noexcept : x(value), y(value) {}
 	constexpr explicit Vector2i(const int32 x, const int32 y)  noexcept : x(x), y(y) {}
 
@@ -100,7 +110,7 @@ inline constexpr Vector2i Vector2i::Zero(0);
 class Vector2u
 {
 public:
-	constexpr Vector2u() noexcept : x(), y() {}
+	constexpr Vector2u() noexcept : x(0), y(0) {}
 	constexpr explicit Vector2u(const uint32 value) noexcept : x(value), y(value) {}
 	constexpr explicit Vector2u(const uint32 x, const uint32 y) noexcept : x(x), y(y) {}
 
@@ -125,7 +135,7 @@ inline constexpr Vector2u Vector2u::Zero(0);
 class Vector3f
 {
 public:
-	constexpr Vector3f() noexcept : x(), y(), z() {}
+	constexpr Vector3f() noexcept : x(0.f), y(0.f), z(0.f) {}
 	constexpr explicit Vector3f(const float value) noexcept : x(value), y(value), z(value) {}
 	constexpr explicit Vector3f(const float x, const float y, const float z) noexcept : x(x), y(y), z(z) {}
 	constexpr explicit Vector3f(const Vector2f& value, const float z) noexcept : x(value.x), y(value.y), z(z) {}
@@ -149,26 +159,20 @@ public:
 	constexpr Vector3f operator-() const noexcept { return Vector3f(-x, -y, -z); }
 
 	float Length() const noexcept;
+	float LengthXY() const noexcept;
 	float LengthXZ() const noexcept;
 	constexpr float LengthSqr() const noexcept;
+	constexpr float LengthXYSqr() const noexcept;
 	constexpr float LengthXZSqr() const noexcept;
 
 	void Normalize() noexcept;
-	void NormalizeUnsafe() noexcept;
 
 	[[nodiscard]] Vector3f Normalized() const noexcept;
-	[[nodiscard]] Vector3f NormalizedUnsafe() const noexcept;
 
 	constexpr Vector2f XY() const noexcept;
 	constexpr Vector2f XZ() const noexcept;
+	constexpr Vector3f XY0() const noexcept;
 	constexpr Vector3f X0Z() const noexcept;
-
-	static constexpr Vector3f Cross(const Vector3f& a, const Vector3f& b) noexcept;
-	static float Distance(const Vector3f& a, const Vector3f& b) noexcept;
-	static float DistanceXZ(const Vector3f& a, const Vector3f& b) noexcept;
-	static constexpr float DistanceSqr(const Vector3f& a, const Vector3f& b) noexcept;
-	static constexpr float DistanceXZSqr(const Vector3f& a, const Vector3f& b) noexcept;
-	static constexpr float Dot(const Vector3f& a, const Vector3f& b) noexcept;
 
 	static const Vector3f AxisX;
 	static const Vector3f AxisY;
@@ -190,7 +194,7 @@ inline constexpr Vector3f Vector3f::Zero(0.f);
 class Vector3i
 {
 public:
-	constexpr Vector3i() noexcept : x(), y(), z() {}
+	constexpr Vector3i() noexcept : x(0), y(0), z(0) {}
 	constexpr explicit Vector3i(const int32 value) noexcept : x(value), y(value), z(value) {}
 	constexpr explicit Vector3i(const int32 x, const int32 y, const int32 z) noexcept : x(x), y(y), z(z) {}
 	constexpr explicit Vector3i(const Vector2i& value, const int32 z) noexcept : x(value.x), y(value.y), z(z) {}
@@ -221,7 +225,7 @@ inline constexpr Vector3i Vector3i::Zero(0);
 class ALIGN_16 Vector4f
 {
 public:
-	constexpr Vector4f() noexcept : x(), y(), z(), w() { }
+	constexpr Vector4f() noexcept : x(0.f), y(0.f), z(0.f), w(0.f) { }
 	constexpr explicit Vector4f(const float xyzw) noexcept : x(xyzw), y(xyzw), z(xyzw), w(xyzw) { }
 	constexpr explicit Vector4f(const float x, const float y, const float z, const float w) noexcept : x(x), y(y), z(z), w(w) { }
 	constexpr explicit Vector4f(const Vector3f& value, const float w) noexcept : x(value.x), y(value.y), z(value.z), w(w) { }
@@ -248,10 +252,8 @@ public:
 	constexpr float LengthSqr() const noexcept;
 
 	void Normalize() noexcept;
-	void NormalizeUnsafe() noexcept;
 
 	[[nodiscard]] Vector4f Normalized() const noexcept;
-	[[nodiscard]] Vector4f NormalizedUnsafe() const noexcept;
 
 	static const Vector4f AxisW;
 	static const Vector4f AxisX;

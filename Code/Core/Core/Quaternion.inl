@@ -4,6 +4,7 @@
 #include <Core/Matrix.h>
 #include <Core/Rotator.h>
 #include <Core/Vector.h>
+#include <Core/VectorMath.h>
 
 #include <cmath>
 
@@ -252,9 +253,9 @@ inline constexpr Vector2f operator*(const Vector2f& lhs, const Quaternion& rhs) 
 {
 	const Vector3f lhsv(lhs, 0.f);
 	const Vector3f rhsv(rhs.x, rhs.y, rhs.z);
-	const Vector3f result = rhsv * (2.0f * Vector3f::Dot(rhsv, lhsv))
-		+ lhsv * (rhs.w * rhs.w - Vector3f::Dot(rhsv, rhsv))
-		+ Vector3f::Cross(rhsv, lhsv) * (2.0f * rhs.w);
+	const Vector3f result = rhsv * (2.0f * math::Dot(rhsv, lhsv))
+		+ lhsv * (rhs.w * rhs.w - math::Dot(rhsv, rhsv))
+		+ math::Cross(rhsv, lhsv) * (2.0f * rhs.w);
 	return result.XY();
 }
 
@@ -262,9 +263,9 @@ inline constexpr Vector2f operator*(const Vector2f& lhs, const Quaternion& rhs) 
 inline constexpr Vector3f operator*(const Vector3f& lhs, const Quaternion& rhs) noexcept
 {
 	const Vector3f rhsv(rhs.x, rhs.y, rhs.z);
-	return rhsv * (2.0f * Vector3f::Dot(rhsv, lhs))
-		+ lhs * (rhs.w * rhs.w - Vector3f::Dot(rhsv, rhsv))
-		+ Vector3f::Cross(rhsv, lhs) * (2.0f * rhs.w);
+	return rhsv * (2.0f * math::Dot(rhsv, lhs))
+		+ lhs * (rhs.w * rhs.w - math::Dot(rhsv, rhsv))
+		+ math::Cross(rhsv, lhs) * (2.0f * rhs.w);
 }
 
 inline constexpr Vector2f& operator*=(Vector2f& lhs, const Quaternion& rhs) noexcept

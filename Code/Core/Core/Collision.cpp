@@ -7,7 +7,7 @@
 #include "Core/Ray.h"
 #include "Core/Sphere.h"
 #include "Core/Vector.h"
-#include "Core/VectorHelpers.h"
+#include "Core/VectorMath.h"
 
 #include <algorithm>
 #include <float.h>
@@ -22,8 +22,8 @@ bool math::Intersection(const Line& line, const Plane& plane, Vector3f& out_Inte
 {
 	const Vector3f v = line.m_PointB - line.m_PointA;
 	const Vector3f w = plane.m_Point - line.m_PointA;
-	const float d0 = Vector3f::Dot(w, plane.m_Normal);
-	const float d1 = Vector3f::Dot(v, plane.m_Normal);
+	const float d0 = math::Dot(w, plane.m_Normal);
+	const float d1 = math::Dot(v, plane.m_Normal);
 	if (d1 == 0.f)
 		return false;
 
@@ -37,8 +37,8 @@ bool math::Intersection(const Line& line, const Plane& plane, Vector3f& out_Inte
 bool math::Intersection(const Ray& ray, const Plane& plane, Vector3f& out_IntersectPos)
 {
 	Vector3f w = plane.m_Point - ray.m_OriginPos;
-	const float d0 = Vector3f::Dot(w, plane.m_Normal);
-	const float d1 = Vector3f::Dot(ray.m_Direction, plane.m_Normal);
+	const float d0 = math::Dot(w, plane.m_Normal);
+	const float d1 = math::Dot(ray.m_Direction, plane.m_Normal);
 	if (d1 == 0.f)
 		return false;
 
@@ -52,7 +52,7 @@ bool math::IntersectionXZ(const Sphere& sphere, const Vector3f& direction, const
 	const Line sweepLine = Line(sphere.m_Position, sphere.m_Position + direction * distance);
 
 	const Vector3f lineTagent = (line.m_PointB - line.m_PointA).Normalized();
-	const Vector3f lineNormal = Vector3f::Cross(Vector3f::AxisY, lineTagent);
+	const Vector3f lineNormal = math::Cross(Vector3f::AxisY, lineTagent);
 
 	// SOHCAHTOA - CAH
 	// use the intersection angle of our ray and the line normal
@@ -70,12 +70,12 @@ bool math::IntersectionXZ(const Sphere& sphere, const Vector3f& direction, const
 	if (math::IntersectionXZ(sweepLine, line, intersectPos))
 	{
 		// project intersect position onto the original line to find the hit position
-		const Vector3f hitPoint = ProjectOntoLineXZClamped(intersectPos, line.m_PointA, line.m_PointB);
+		const Vector3f hitPoint = math::ProjectOntoLineXZClamped(intersectPos, line.m_PointA, line.m_PointB);
 
 		// project the hit position onto the circle line to find the position that the circle is touching the line
-		const Vector3f touchPosition = ProjectOntoLineXZClamped(hitPoint, sweepLine.m_PointA, sweepLine.m_PointB);
+		const Vector3f touchPosition = math::ProjectOntoLineXZClamped(hitPoint, sweepLine.m_PointA, sweepLine.m_PointB);
 
-		const float fraction = Vector3f::DistanceXZ(sweepLine.m_PointA, touchPosition) / distance;
+		const float fraction = math::DistanceXZ(sweepLine.m_PointA, touchPosition) / distance;
 		out_Result.m_HitPoint = hitPoint;
 		out_Result.m_HitNormal = lineNormal;
 		out_Result.m_HitFraction = fraction;
@@ -100,8 +100,8 @@ bool math::IntersectionXZ(const Sphere& sphere, const Vector3f& direction, const
 		const float hypotenuse = opposite / sin(theta);
 		intersectPos -= direction * hypotenuse;
 
-		const float fraction = Vector3f::DistanceXZ(sphere.m_Position, intersectPos) / distance;
-		const Vector3f normal = Vector3f::Cross(Vector3f::AxisY, ray.m_Direction);
+		const float fraction = math::DistanceXZ(sphere.m_Position, intersectPos) / distance;
+		const Vector3f normal = math::Cross(Vector3f::AxisY, ray.m_Direction);
 
 		out_Result.m_HitPoint = intersectPos;
 		out_Result.m_HitNormal = normal;
@@ -157,10 +157,10 @@ bool math::IsAxisOverlapping(const OBB& a, const OBB& b, const Vector3f& axis)
 	float bMax = -FLT_MAX;
 	for (int32 i = 0; i < 8; ++i)
 	{
-		aDis = Vector3f::Dot(a.m_Points[i], axis);
+		aDis = math::Dot(a.m_Points[i], axis);
 		aMin = (aDis < aMin) ? aDis : aMin;
 		aMax = (aDis > aMax) ? aDis : aMax;
-		bDis = Vector3f::Dot(b.m_Points[i], axis);
+		bDis = math::Dot(b.m_Points[i], axis);
 		bMin = (bDis < bMin) ? bDis : bMin;
 		bMax = (bDis > bMax) ? bDis : bMax;
 	}
@@ -225,39 +225,39 @@ bool math::IsOverlapping(const OBB& a, const OBB& b)
 	if (!IsAxisOverlapping(a, b, b2)) return false;
 
 	// cross products
-	if (!IsAxisOverlapping(a, b, Vector3f::Cross(a0, b0))) return false;
-	if (!IsAxisOverlapping(a, b, Vector3f::Cross(a0, b1))) return false;
-	if (!IsAxisOverlapping(a, b, Vector3f::Cross(a0, b2))) return false;
+	if (!IsAxisOverlapping(a, b, math::Cross(a0, b0))) return false;
+	if (!IsAxisOverlapping(a, b, math::Cross(a0, b1))) return false;
+	if (!IsAxisOverlapping(a, b, math::Cross(a0, b2))) return false;
 
-	if (!IsAxisOverlapping(a, b, Vector3f::Cross(a1, b0))) return false;
-	if (!IsAxisOverlapping(a, b, Vector3f::Cross(a1, b1))) return false;
-	if (!IsAxisOverlapping(a, b, Vector3f::Cross(a1, b2))) return false;
+	if (!IsAxisOverlapping(a, b, math::Cross(a1, b0))) return false;
+	if (!IsAxisOverlapping(a, b, math::Cross(a1, b1))) return false;
+	if (!IsAxisOverlapping(a, b, math::Cross(a1, b2))) return false;
 
-	if (!IsAxisOverlapping(a, b, Vector3f::Cross(a2, b0))) return false;
-	if (!IsAxisOverlapping(a, b, Vector3f::Cross(a2, b1))) return false;
-	if (!IsAxisOverlapping(a, b, Vector3f::Cross(a2, b2))) return false;
+	if (!IsAxisOverlapping(a, b, math::Cross(a2, b0))) return false;
+	if (!IsAxisOverlapping(a, b, math::Cross(a2, b1))) return false;
+	if (!IsAxisOverlapping(a, b, math::Cross(a2, b2))) return false;
 
 	return true;
 }
 
 bool math::IsOverlappingXZ(const Sphere& a, const Sphere& b)
 {
-	const float distanceSqr = Vector3f::DistanceXZSqr(a.m_Position, b.m_Position);
+	const float distanceSqr = math::DistanceXZSqr(a.m_Position, b.m_Position);
 	const float radiiSqr = math::Sqr(a.m_Radius + b.m_Radius);
 	return distanceSqr < radiiSqr;
 }
 
 bool math::IsOverlappingXZ(const Sphere& sphere, const Line& line)
 {
-	const Vector3f intersectPos = ProjectOntoLineXZClamped(sphere.m_Position, line.m_PointA, line.m_PointB);
-	const float intersectSqr = Vector3f::DistanceXZSqr(sphere.m_Position, intersectPos);
+	const Vector3f intersectPos = math::ProjectOntoLineXZClamped(sphere.m_Position, line.m_PointA, line.m_PointB);
+	const float intersectSqr = math::DistanceXZSqr(sphere.m_Position, intersectPos);
 	return intersectSqr <= math::Sqr(sphere.m_Radius);
 }
 
 bool math::IsOverlappingXZ(const Sphere& sphere, const Ray& ray)
 {
-	const Vector3f intersectPos = ProjectOntoRayXZ(sphere.m_Position, ray.m_OriginPos, ray.m_Direction);
-	const float intersectSqr = Vector3f::DistanceXZSqr(sphere.m_Position, intersectPos);
+	const Vector3f intersectPos = math::ProjectOntoRayXZ(sphere.m_Position, ray.m_OriginPos, ray.m_Direction);
+	const float intersectSqr = math::DistanceXZSqr(sphere.m_Position, intersectPos);
 	return intersectSqr <= math::Sqr(sphere.m_Radius);
 }
 
