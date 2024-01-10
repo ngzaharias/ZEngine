@@ -198,6 +198,41 @@ TEST_CASE("math::Vector2f::Clamp")
 	CHECK(math::Clamp(Vector2f(3.f, -20.f), min, max) == Vector2f(3.f, min.y));
 }
 
+TEST_CASE("math::Vector3f::Clamp")
+{
+	const Vector3f min = Vector3f(1.f, 2.f, 3.f);
+	const Vector3f max = Vector3f(7.f, 8.f, 9.f);
+
+	// nothing clamped
+	CHECK(math::Clamp(Vector3f(4.f, 5.f, 6.f), min, max) == Vector3f(4.f, 5.f, 6.f));
+
+	// x, y and z clamped to max
+	CHECK(math::Clamp(Vector3f(+10.f, +20.f, +30.f), min, max) == max);
+	// x only clamped to max
+	CHECK(math::Clamp(Vector3f(+10.f, 5.f, 6.f), min, max) == Vector3f(max.x, 5.f, 6.f));
+	// y only clamped to max
+	CHECK(math::Clamp(Vector3f(4.f, +20.f, 6.f), min, max) == Vector3f(4.f, max.y, 6.f));
+	// z only clamped to max
+	CHECK(math::Clamp(Vector3f(4.f, 5.f, +30.f), min, max) == Vector3f(4.f, 5.f, max.z));
+
+	// x, y and z clamped to min
+	CHECK(math::Clamp(Vector3f(-10.f, -20.f, -30.f), min, max) == min);
+	// x only clamped to min
+	CHECK(math::Clamp(Vector3f(-10.f, 5.f, 6.f), min, max) == Vector3f(min.x, 5.f, 6.f));
+	// y only clamped to min
+	CHECK(math::Clamp(Vector3f(4.f, -20.f, 6.f), min, max) == Vector3f(4.f, min.y, 6.f));
+	// z only clamped to min
+	CHECK(math::Clamp(Vector3f(4.f, 5.f, -30.f), min, max) == Vector3f(4.f, 5.f, min.z));
+}
+
+TEST_CASE("math::Vector2f::Cross")
+{
+	CHECK(math::Cross(Vector2f::AxisX, +Vector2f::AxisX) == +0.f);
+	CHECK(math::Cross(Vector2f::AxisX, +Vector2f::AxisY) == +1.f);
+	CHECK(math::Cross(Vector2f::AxisX, -Vector2f::AxisX) == +0.f);
+	CHECK(math::Cross(Vector2f::AxisX, -Vector2f::AxisY) == -1.f);
+}
+
 TEST_CASE("math::Vector3f::Cross")
 {
 	CHECK(math::Cross(Vector3f::AxisX, Vector3f::AxisY) == Vector3f::AxisZ);
@@ -215,6 +250,10 @@ TEST_CASE("math::Vector2f::DistanceSqr")
 
 TEST_CASE("math::Vector2f::Dot")
 {
+	CHECK(math::Dot(Vector2f::AxisX, +Vector2f::AxisX) == +1.f);
+	CHECK(math::Dot(Vector2f::AxisX, +Vector2f::AxisY) == +0.f);
+	CHECK(math::Dot(Vector2f::AxisX, -Vector2f::AxisX) == -1.f);
+	CHECK(math::Dot(Vector2f::AxisX, -Vector2f::AxisY) == +0.f);
 }
 
 TEST_CASE("math::Vector3f::Dot")
@@ -229,43 +268,128 @@ TEST_CASE("math::Vector2f::Divide")
 {
 }
 
+TEST_CASE("math::Vector3f::Divide")
+{
+}
+
 TEST_CASE("math::Vector2f::Max")
 {
+	CHECK(math::Max(Vector2f(+1.f, +2.f), Vector2f(+3.f, +4.f)) == Vector2f(+3.f, +4.f));
+	CHECK(math::Max(Vector2f(+3.f, +4.f), Vector2f(+1.f, +2.f)) == Vector2f(+3.f, +4.f));
+	CHECK(math::Max(Vector2f(+1.f, +4.f), Vector2f(+3.f, +2.f)) == Vector2f(+3.f, +4.f));
+	CHECK(math::Max(Vector2f(+3.f, +2.f), Vector2f(+1.f, +4.f)) == Vector2f(+3.f, +4.f));
+
+	CHECK(math::Max(Vector2f(-1.f, -2.f), Vector2f(-3.f, -4.f)) == Vector2f(-1.f, -2.f));
+	CHECK(math::Max(Vector2f(-3.f, -4.f), Vector2f(-1.f, -2.f)) == Vector2f(-1.f, -2.f));
+	CHECK(math::Max(Vector2f(-1.f, -4.f), Vector2f(-3.f, -2.f)) == Vector2f(-1.f, -2.f));
+	CHECK(math::Max(Vector2f(-3.f, -2.f), Vector2f(-1.f, -4.f)) == Vector2f(-1.f, -2.f));
+}
+
+TEST_CASE("math::Vector3f::Max")
+{
+	CHECK(math::Max(Vector3f(+1.f, +2.f, +3.f), Vector3f(+4.f, +5.f, +6.f)) == Vector3f(+4.f, +5.f, +6.f));
+	CHECK(math::Max(Vector3f(+4.f, +5.f, +6.f), Vector3f(+1.f, +2.f, +3.f)) == Vector3f(+4.f, +5.f, +6.f));
+	CHECK(math::Max(Vector3f(+1.f, +2.f, +6.f), Vector3f(+4.f, +5.f, +3.f)) == Vector3f(+4.f, +5.f, +6.f));
+	CHECK(math::Max(Vector3f(+1.f, +5.f, +3.f), Vector3f(+4.f, +2.f, +6.f)) == Vector3f(+4.f, +5.f, +6.f));
+	CHECK(math::Max(Vector3f(+4.f, +2.f, +3.f), Vector3f(+1.f, +5.f, +6.f)) == Vector3f(+4.f, +5.f, +6.f));
+
+	CHECK(math::Max(Vector3f(-1.f, -2.f, -3.f), Vector3f(-4.f, -5.f, -6.f)) == Vector3f(-1.f, -2.f, -3.f));
+	CHECK(math::Max(Vector3f(-4.f, -5.f, -6.f), Vector3f(-1.f, -2.f, -3.f)) == Vector3f(-1.f, -2.f, -3.f));
+	CHECK(math::Max(Vector3f(-1.f, -2.f, -6.f), Vector3f(-4.f, -5.f, -3.f)) == Vector3f(-1.f, -2.f, -3.f));
+	CHECK(math::Max(Vector3f(-1.f, -5.f, -3.f), Vector3f(-4.f, -2.f, -6.f)) == Vector3f(-1.f, -2.f, -3.f));
+	CHECK(math::Max(Vector3f(-4.f, -2.f, -3.f), Vector3f(-1.f, -5.f, -6.f)) == Vector3f(-1.f, -2.f, -3.f));
 }
 
 TEST_CASE("math::Vector2f::Min")
 {
+	CHECK(math::Min(Vector2f(+1.f, +2.f), Vector2f(+3.f, +4.f)) == Vector2f(+1.f, +2.f));
+	CHECK(math::Min(Vector2f(+3.f, +4.f), Vector2f(+1.f, +2.f)) == Vector2f(+1.f, +2.f));
+	CHECK(math::Min(Vector2f(+1.f, +4.f), Vector2f(+3.f, +2.f)) == Vector2f(+1.f, +2.f));
+	CHECK(math::Min(Vector2f(+3.f, +2.f), Vector2f(+1.f, +4.f)) == Vector2f(+1.f, +2.f));
+
+	CHECK(math::Min(Vector2f(-1.f, -2.f), Vector2f(-3.f, -4.f)) == Vector2f(-3.f, -4.f));
+	CHECK(math::Min(Vector2f(-3.f, -4.f), Vector2f(-1.f, -2.f)) == Vector2f(-3.f, -4.f));
+	CHECK(math::Min(Vector2f(-1.f, -4.f), Vector2f(-3.f, -2.f)) == Vector2f(-3.f, -4.f));
+	CHECK(math::Min(Vector2f(-3.f, -2.f), Vector2f(-1.f, -4.f)) == Vector2f(-3.f, -4.f));
+}
+
+TEST_CASE("math::Vector3f::Min")
+{
+	CHECK(math::Min(Vector3f(+1.f, +2.f, +3.f), Vector3f(+4.f, +5.f, +6.f)) == Vector3f(+1.f, +2.f, +3.f));
+	CHECK(math::Min(Vector3f(+4.f, +5.f, +6.f), Vector3f(+1.f, +2.f, +3.f)) == Vector3f(+1.f, +2.f, +3.f));
+	CHECK(math::Min(Vector3f(+1.f, +2.f, +6.f), Vector3f(+4.f, +5.f, +3.f)) == Vector3f(+1.f, +2.f, +3.f));
+	CHECK(math::Min(Vector3f(+1.f, +5.f, +3.f), Vector3f(+4.f, +2.f, +6.f)) == Vector3f(+1.f, +2.f, +3.f));
+	CHECK(math::Min(Vector3f(+4.f, +2.f, +3.f), Vector3f(+1.f, +5.f, +6.f)) == Vector3f(+1.f, +2.f, +3.f));
+
+	CHECK(math::Min(Vector3f(-1.f, -2.f, -3.f), Vector3f(-4.f, -5.f, -6.f)) == Vector3f(-4.f, -5.f, -6.f));
+	CHECK(math::Min(Vector3f(-4.f, -5.f, -6.f), Vector3f(-1.f, -2.f, -3.f)) == Vector3f(-4.f, -5.f, -6.f));
+	CHECK(math::Min(Vector3f(-1.f, -2.f, -6.f), Vector3f(-4.f, -5.f, -3.f)) == Vector3f(-4.f, -5.f, -6.f));
+	CHECK(math::Min(Vector3f(-1.f, -5.f, -3.f), Vector3f(-4.f, -2.f, -6.f)) == Vector3f(-4.f, -5.f, -6.f));
+	CHECK(math::Min(Vector3f(-4.f, -2.f, -3.f), Vector3f(-1.f, -5.f, -6.f)) == Vector3f(-4.f, -5.f, -6.f));
 }
 
 TEST_CASE("math::Vector2f::Multiply")
 {
+	CHECK(math::Multiply(Vector2f(+1.f, +2.f), Vector2f(+3.f, +4.f)) == Vector2f(+3.f, +8.f));
+	CHECK(math::Multiply(Vector2f(+3.f, +4.f), Vector2f(+1.f, +2.f)) == Vector2f(+3.f, +8.f));
+	CHECK(math::Multiply(Vector2f(+1.f, +4.f), Vector2f(+3.f, +2.f)) == Vector2f(+3.f, +8.f));
+	CHECK(math::Multiply(Vector2f(+3.f, +2.f), Vector2f(+1.f, +4.f)) == Vector2f(+3.f, +8.f));
+
+	CHECK(math::Multiply(Vector2f(-1.f, -2.f), Vector2f(-3.f, -4.f)) == Vector2f(+3.f, +8.f));
+	CHECK(math::Multiply(Vector2f(-3.f, -4.f), Vector2f(-1.f, -2.f)) == Vector2f(+3.f, +8.f));
+	CHECK(math::Multiply(Vector2f(-1.f, -4.f), Vector2f(-3.f, -2.f)) == Vector2f(+3.f, +8.f));
+	CHECK(math::Multiply(Vector2f(-3.f, -2.f), Vector2f(-1.f, -4.f)) == Vector2f(+3.f, +8.f));
+}
+
+TEST_CASE("math::Vector3f::Multiply")
+{
+	CHECK(math::Multiply(Vector3f(+1.f, +2.f, +3.f), Vector3f(+4.f, +5.f, +6.f)) == Vector3f(+4.f, +10.f, +18.f));
+	CHECK(math::Multiply(Vector3f(+4.f, +5.f, +6.f), Vector3f(+1.f, +2.f, +3.f)) == Vector3f(+4.f, +10.f, +18.f));
+	CHECK(math::Multiply(Vector3f(+1.f, +2.f, +6.f), Vector3f(+4.f, +5.f, +3.f)) == Vector3f(+4.f, +10.f, +18.f));
+	CHECK(math::Multiply(Vector3f(+1.f, +5.f, +3.f), Vector3f(+4.f, +2.f, +6.f)) == Vector3f(+4.f, +10.f, +18.f));
+	CHECK(math::Multiply(Vector3f(+4.f, +2.f, +3.f), Vector3f(+1.f, +5.f, +6.f)) == Vector3f(+4.f, +10.f, +18.f));
+
+	CHECK(math::Multiply(Vector3f(-1.f, -2.f, -3.f), Vector3f(-4.f, -5.f, -6.f)) == Vector3f(+4.f, +10.f, +18.f));
+	CHECK(math::Multiply(Vector3f(-4.f, -5.f, -6.f), Vector3f(-1.f, -2.f, -3.f)) == Vector3f(+4.f, +10.f, +18.f));
+	CHECK(math::Multiply(Vector3f(-1.f, -2.f, -6.f), Vector3f(-4.f, -5.f, -3.f)) == Vector3f(+4.f, +10.f, +18.f));
+	CHECK(math::Multiply(Vector3f(-1.f, -5.f, -3.f), Vector3f(-4.f, -2.f, -6.f)) == Vector3f(+4.f, +10.f, +18.f));
+	CHECK(math::Multiply(Vector3f(-4.f, -2.f, -3.f), Vector3f(-1.f, -5.f, -6.f)) == Vector3f(+4.f, +10.f, +18.f));
 }
 
 TEST_CASE("math::Vector2f::Perpendicular")
 {
+	const Vector2f vectorA = math::Perpendicular(Vector2f::AxisX);
+	const Vector2f vectorB = math::Perpendicular(vectorA);
+	const Vector2f vectorC = math::Perpendicular(vectorB);
+	const Vector2f vectorD = math::Perpendicular(vectorC);
+
+	CHECK(vectorA == -Vector2f::AxisY);
+	CHECK(vectorB == -Vector2f::AxisX);
+	CHECK(vectorC == +Vector2f::AxisY);
+	CHECK(vectorD == +Vector2f::AxisX);
 }
 
-TEST_CASE("math::Vector3f::ProjectOntoLine(Vector3f)")
+TEST_CASE("math::Vector3f::Project(Line)")
 {
 }
 
-TEST_CASE("math::Vector3f::ProjectOntoLineClamped(Vector3f)")
+TEST_CASE("math::Vector3f::Project(Ray)")
 {
 }
 
-TEST_CASE("math::Vector3f::ProjectOntoLineXZ(Vector3f)")
+TEST_CASE("math::Vector3f::ProjectXY(Line)")
 {
 }
 
-TEST_CASE("math::Vector3f::ProjectOntoLineXZClamped(Vector3f)")
+TEST_CASE("math::Vector3f::ProjectXY(Ray)")
 {
 }
 
-TEST_CASE("math::Vector3f::ProjectOntoRay(Vector3f)")
+TEST_CASE("math::Vector3f::ProjectXZ(Line)")
 {
 }
 
-TEST_CASE("math::Vector3f::ProjectOntoRayXZ(Vector3f)")
+TEST_CASE("math::Vector3f::ProjectXZ(Ray)")
 {
 }
 

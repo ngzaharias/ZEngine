@@ -1,4 +1,4 @@
-#include "Collision.h"
+#include "CollisionMath.h"
 
 #include "Core/AABB.h"
 #include "Core/Line.h"
@@ -70,10 +70,10 @@ bool math::IntersectionXZ(const Sphere& sphere, const Vector3f& direction, const
 	if (math::IntersectionXZ(sweepLine, line, intersectPos))
 	{
 		// project intersect position onto the original line to find the hit position
-		const Vector3f hitPoint = math::ProjectOntoLineXZClamped(intersectPos, line.m_PointA, line.m_PointB);
+		const Vector3f hitPoint = math::ProjectXZ(intersectPos, line);
 
 		// project the hit position onto the circle line to find the position that the circle is touching the line
-		const Vector3f touchPosition = math::ProjectOntoLineXZClamped(hitPoint, sweepLine.m_PointA, sweepLine.m_PointB);
+		const Vector3f touchPosition = math::ProjectXZ(hitPoint, sweepLine);
 
 		const float fraction = math::DistanceXZ(sweepLine.m_PointA, touchPosition) / distance;
 		out_Result.m_HitPoint = hitPoint;
@@ -249,14 +249,14 @@ bool math::IsOverlappingXZ(const Sphere& a, const Sphere& b)
 
 bool math::IsOverlappingXZ(const Sphere& sphere, const Line& line)
 {
-	const Vector3f intersectPos = math::ProjectOntoLineXZClamped(sphere.m_Position, line.m_PointA, line.m_PointB);
+	const Vector3f intersectPos = math::ProjectXZ(sphere.m_Position, line);
 	const float intersectSqr = math::DistanceXZSqr(sphere.m_Position, intersectPos);
 	return intersectSqr <= math::Sqr(sphere.m_Radius);
 }
 
 bool math::IsOverlappingXZ(const Sphere& sphere, const Ray& ray)
 {
-	const Vector3f intersectPos = math::ProjectOntoRayXZ(sphere.m_Position, ray.m_OriginPos, ray.m_Direction);
+	const Vector3f intersectPos = math::ProjectXZ(sphere.m_Position, ray);
 	const float intersectSqr = math::DistanceXZSqr(sphere.m_Position, intersectPos);
 	return intersectSqr <= math::Sqr(sphere.m_Radius);
 }

@@ -1,5 +1,12 @@
 #pragma once
 
+#ifdef VECTOR_ASSERTS_ENABLED
+#include <cassert>
+#define VECTOR_ASSERT(condition, ...) assert(condition)
+#else
+#define VECTOR_ASSERT(...)
+#endif
+
 inline float math::Angle(const Vector2f& a, const Vector2f& b)
 {
 	return std::acos(math::Dot(a, b));
@@ -39,6 +46,33 @@ inline constexpr Vector3f math::Clamp(const Vector3f& value, const Vector3f& min
 		(value.x < min.x) ? min.x : (value.x > max.x) ? max.x : value.x,
 		(value.y < min.y) ? min.y : (value.y > max.y) ? max.y : value.y,
 		(value.z < min.z) ? min.z : (value.z > max.z) ? max.z : value.z);
+}
+
+inline Vector2f math::ClampLength(const Vector2f& value, const float max) noexcept
+{
+	Vector2f result = value;
+	const float length = result.Length();
+	if (length > max)
+		result *= (max / length);
+
+	VECTOR_ASSERT(!std::isnan(result.x), "math::ClampLength resulted in NaN!");
+	return result;
+}
+
+inline Vector3f math::ClampLength(const Vector3f& value, const float max) noexcept
+{
+	Vector3f result = value;
+	const float length = result.Length();
+	if (length > max)
+		result *= (max / length);
+
+	VECTOR_ASSERT(!std::isnan(result.x), "math::ClampLength resulted in NaN!");
+	return result;
+}
+
+inline constexpr float math::Cross(const Vector2f& a, const Vector2f& b) noexcept
+{
+	return a.x * b.y - a.y * b.x;
 }
 
 inline constexpr Vector3f math::Cross(const Vector3f& a, const Vector3f& b) noexcept
@@ -155,116 +189,87 @@ inline constexpr Vector2f math::Perpendicular(const Vector2f& vector) noexcept
 }
 
 // https://gamedev.stackexchange.com/questions/72528/how-can-i-project-a-3d-point-onto-a-3d-line
-inline constexpr Vector3f math::ProjectOntoLine(const Vector3f& point, const Vector3f& lineA, const Vector3f& lineB)
+inline constexpr Vector3f math::Project(const Vector3f& point, const Line& line)
 {
-	const Vector3f lineAB = lineB - lineA;
-	const Vector3f lineAP = point - lineA;
-	const float p = math::Dot(lineAP, lineAB) / lineAB.LengthSqr();
-	return lineA + lineAB * p;
-}
-
-inline constexpr Vector3f math::ProjectOntoLineClamped(const Vector3f& point, const Vector3f& lineA, const Vector3f& lineB)
-{
-	if (lineA == lineB)
-		return lineA;
-
-	const Vector3f lineAB = lineB - lineA;
-	const Vector3f lineAP = point - lineA;
+	const Vector3f lineAB = line.m_PointB - line.m_PointA;
+	const Vector3f lineAP = point - line.m_PointA;
 	const float p = math::Dot(lineAP, lineAB) / lineAB.LengthSqr();
 
 	if (p < 0.f)
 	{
-		return lineA;
+		return line.m_PointA;
 	}
 	else if (p > 1.f)
 	{
-		return lineB;
+		return line.m_PointB;
 	}
 	else
 	{
-		return lineA + lineAB * p;
+		return line.m_PointA + lineAB * p;
 	}
 }
 
-inline constexpr Vector3f math::ProjectOntoLineXY(const Vector3f& point, const Vector3f& lineA, const Vector3f& lineB)
+inline constexpr Vector3f math::Project(const Vector3f& point, const Ray& ray)
 {
-	const Vector3f lineAB = (lineB - lineA);
-	const Vector2f lineXZ = lineAB.XY();
-	const Vector2f lineAP = point.XY() - lineA.XY();
-	const float p = math::Dot(lineAP, lineXZ) / lineAB.LengthSqr();
-	return lineA + lineAB * p;
+	const Vector3f lineAP = point - ray.m_OriginPos;
+	const float p = math::Dot(lineAP, ray.m_Direction);
+	return ray.m_OriginPos + ray.m_Direction * p;
 }
 
-inline constexpr Vector3f math::ProjectOntoLineXZ(const Vector3f& point, const Vector3f& lineA, const Vector3f& lineB)
+inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Line& line)
 {
-	const Vector3f lineAB = (lineB - lineA);
-	const Vector2f lineXZ = lineAB.XZ();
-	const Vector2f lineAP = point.XZ() - lineA.XZ();
-	const float p = math::Dot(lineAP, lineXZ) / lineAB.LengthSqr();
-	return lineA + lineAB * p;
-}
-
-inline constexpr Vector3f math::ProjectOntoLineXYClamped(const Vector3f& point, const Vector3f& lineA, const Vector3f& lineB)
-{
-	const Vector3f lineAB = (lineB - lineA);
+	const Vector3f lineAB = line.m_PointB - line.m_PointA;
 	const Vector2f lineXZ = lineAB.XY();
-	const Vector2f lineAP = point.XY() - lineA.XY();
+	const Vector2f lineAP = point.XY() - line.m_PointA.XY();
 	const float p = math::Dot(lineAP, lineXZ) / lineAB.LengthSqr();
 
 	if (p < 0.f)
 	{
-		return lineA;
+		return line.m_PointA;
 	}
 	else if (p > 1.f)
 	{
-		return lineB;
+		return line.m_PointB;
 	}
 	else
 	{
-		return lineA + lineAB * p;
+		return line.m_PointA + lineAB * p;
 	}
 }
 
-inline constexpr Vector3f math::ProjectOntoLineXZClamped(const Vector3f& point, const Vector3f& lineA, const Vector3f& lineB)
+inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Ray& ray)
 {
-	const Vector3f lineAB = (lineB - lineA);
+	const Vector2f lineAP = point.XY() - ray.m_OriginPos.XY();
+	const float p = math::Dot(lineAP, ray.m_Direction.XY());
+	return ray.m_OriginPos + ray.m_Direction * p;
+}
+
+inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Line& line)
+{
+	const Vector3f lineAB = line.m_PointB - line.m_PointA;
 	const Vector2f lineXZ = lineAB.XZ();
-	const Vector2f lineAP = point.XZ() - lineA.XZ();
+	const Vector2f lineAP = point.XZ() - line.m_PointA.XZ();
 	const float p = math::Dot(lineAP, lineXZ) / lineAB.LengthSqr();
 
 	if (p < 0.f)
 	{
-		return lineA;
+		return line.m_PointA;
 	}
 	else if (p > 1.f)
 	{
-		return lineB;
+		return line.m_PointB;
 	}
 	else
 	{
-		return lineA + lineAB * p;
+		return line.m_PointA + lineAB * p;
 	}
 }
 
-inline constexpr Vector3f math::ProjectOntoRay(const Vector3f& point, const Vector3f& rayOrigin, const Vector3f& rayDir)
+inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Ray& ray)
 {
-	const Vector3f lineAP = point - rayOrigin;
-	const float p = math::Dot(lineAP, rayDir);
-	return rayOrigin + rayDir * p;
-}
-
-inline constexpr Vector3f math::ProjectOntoRayXY(const Vector3f& point, const Vector3f& rayOrigin, const Vector3f& rayDir)
-{
-	const Vector2f lineAP = point.XY() - rayOrigin.XY();
-	const float p = math::Dot(lineAP, rayDir.XY());
-	return rayOrigin + rayDir * p;
-}
-
-inline constexpr Vector3f math::ProjectOntoRayXZ(const Vector3f& point, const Vector3f& rayOrigin, const Vector3f& rayDir)
-{
-	const Vector2f lineAP = point.XZ() - rayOrigin.XZ();
-	const float p = math::Dot(lineAP, rayDir.XZ());
-	return rayOrigin + rayDir * p;
+	const Vector2f lineAP = point.XZ() - ray.m_OriginPos.XZ();
+	const float p = math::Dot(lineAP, ray.m_Direction.XZ());
+	return ray.m_OriginPos + ray.m_Direction * p;
 }
 
 inline constexpr Vector2f math::Reflect(const Vector2f& vector, const Vector2f& normal) noexcept
@@ -272,4 +277,36 @@ inline constexpr Vector2f math::Reflect(const Vector2f& vector, const Vector2f& 
 	// -2 * (V dot N) * N + V
 	const float dot2 = -2.0f * math::Dot(vector, normal);
 	return math::Multiply(Vector2f(dot2), normal) + vector;
+}
+
+inline constexpr Vector2i math::ToGridPos(const Vector2f& worldPos, const float cellSize /*= 1.f*/)
+{
+	return Vector2i(
+		math::Floor<int32>(worldPos.x / cellSize),
+		math::Floor<int32>(worldPos.y / cellSize));
+}
+
+inline constexpr Vector3i math::ToGridPos(const Vector3f& worldPos, const float cellSize /*= 1.f*/)
+{
+	return Vector3i(
+		math::Floor<int32>(worldPos.x / cellSize),
+		math::Floor<int32>(worldPos.y / cellSize),
+		math::Floor<int32>(worldPos.z / cellSize));
+}
+
+inline constexpr Vector2f math::ToWorldPos(const Vector2i& gridPos, const float cellSize /*= 1.f*/)
+{
+	const float half = cellSize * 0.5f;
+	return Vector2f(
+		gridPos.x * cellSize + half,
+		gridPos.y * cellSize + half);
+}
+
+inline constexpr Vector3f math::ToWorldPos(const Vector3i& gridPos, const float cellSize /*= 1.f*/)
+{
+	const float half = cellSize * 0.5f;
+	return Vector3f(
+		gridPos.x * cellSize + half,
+		gridPos.y * cellSize + half,
+		gridPos.z * cellSize + half);
 }

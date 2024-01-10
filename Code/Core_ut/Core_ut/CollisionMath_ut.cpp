@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
 
 #include <Core/AABB.h>
-#include <Core/Collision.h>
+#include <Core/CollisionMath.h>
 #include <Core/Line.h>
 #include <Core/OBB.h>
 #include <Core/Plane.h>

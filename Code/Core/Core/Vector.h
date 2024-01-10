@@ -13,8 +13,8 @@ class Vector2f
 public:
 	/// \brief Construct with components initialized to 0.
 	constexpr Vector2f() noexcept : x(0.f), y(0.f) {}
-	/// \brief Construct with both components initialized to value.
-	constexpr explicit Vector2f(const float value) noexcept : x(value), y(value) {}
+	/// \brief Construct with both components initialized to the same value.
+	constexpr explicit Vector2f(const float xy) noexcept : x(xy), y(xy) {}
 	/// \brief Construct with components initialized to values x and y.
 	constexpr explicit Vector2f(const float x, const float y) noexcept : x(x), y(y) {}
 
@@ -41,16 +41,10 @@ public:
 	/// \brief Returns the squared length of this vector.
 	[[nodiscard]] constexpr float LengthSqr() const noexcept;
 
-	/// \brief Reduce the vector length so that it doesn't exceed value.
-	/// If the length of the vector is 0 and value is less than 0 then it makes it a NaN vector.
-	void Limit(const float value) noexcept;
 	/// \brief Normalize this vector have a length of 1 unit.
 	/// If the length of the vector is 0 then it makes it a NaN vector.
 	void Normalize() noexcept;
 
-	/// \brief Returns a vector whose length doesn't exceed value.
-	/// If the length of the vector is 0 and value is less than 0 then it returns a NaN vector.
-	[[nodiscard]] Vector2f Limited(const float value) const noexcept;
 	/// \brief Returns a normalized vector with a length of 1 unit.
 	/// If the length of the vector is 0 then it returns a NaN vector.
 	[[nodiscard]] Vector2f Normalized() const noexcept;
@@ -135,9 +129,13 @@ inline constexpr Vector2u Vector2u::Zero(0);
 class Vector3f
 {
 public:
+	/// \brief Construct with components initialized to 0.
 	constexpr Vector3f() noexcept : x(0.f), y(0.f), z(0.f) {}
-	constexpr explicit Vector3f(const float value) noexcept : x(value), y(value), z(value) {}
+	/// \brief Construct with both components initialized to the same value.
+	constexpr explicit Vector3f(const float xyz) noexcept : x(xyz), y(xyz), z(xyz) {}
+	/// \brief Construct with components initialized to values x, y and z.
 	constexpr explicit Vector3f(const float x, const float y, const float z) noexcept : x(x), y(y), z(z) {}
+	/// \brief Construct with components initialized to vector x and y, and value z.
 	constexpr explicit Vector3f(const Vector2f& value, const float z) noexcept : x(value.x), y(value.y), z(z) {}
 
 	constexpr bool operator==(const Vector3f& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z); }
@@ -158,26 +156,45 @@ public:
 	constexpr Vector3f operator+() const noexcept { return *this; }
 	constexpr Vector3f operator-() const noexcept { return Vector3f(-x, -y, -z); }
 
+	/// \brief Returns the length of this vector.
 	float Length() const noexcept;
+	/// \brief Returns the length of this vector on the XY plane.
 	float LengthXY() const noexcept;
+	/// \brief Returns the length of this vector on the XZ plane.
 	float LengthXZ() const noexcept;
+	/// \brief Returns the squared length of this vector.
 	constexpr float LengthSqr() const noexcept;
+	/// \brief Returns the squared length of this vector on the XY plane.
 	constexpr float LengthXYSqr() const noexcept;
+	/// \brief Returns the squared length of this vector on the XZ plane.
 	constexpr float LengthXZSqr() const noexcept;
 
+	/// \brief Normalize this vector have a length of 1 unit.
+	/// If the length of the vector is 0 then it makes it a NaN vector.
 	void Normalize() noexcept;
 
+	/// \brief Returns a normalized vector with a length of 1 unit.
+	/// If the length of the vector is 0 then it returns a NaN vector.
 	[[nodiscard]] Vector3f Normalized() const noexcept;
 
+	/// \brief Converts this vector to a Vector2f.
 	constexpr Vector2f XY() const noexcept;
+	/// \brief Converts this vector to a Vector2f with Z in place of Y.
 	constexpr Vector2f XZ() const noexcept;
+	/// \brief Converts this vector to a Vector3f with 0 in place of Z.
 	constexpr Vector3f XY0() const noexcept;
+	/// \brief Converts this vector to a Vector3f with 0 in place of Y.
 	constexpr Vector3f X0Z() const noexcept;
 
+	/// \brief Shorthand for writing Vector3f(1.f, 0.f, 0.f).
 	static const Vector3f AxisX;
+	/// \brief Shorthand for writing Vector3f(0.f, 1.f, 0.f).
 	static const Vector3f AxisY;
+	/// \brief Shorthand for writing Vector3f(0.f, 0.f, 1.f).
 	static const Vector3f AxisZ;
+	/// \brief Shorthand for writing Vector3f(1.f, 1.f, 1.f).
 	static const Vector3f One;
+	/// \brief Shorthand for writing Vector3f(0.f, 0.f, 0.f).
 	static const Vector3f Zero;
 
 public:
@@ -225,9 +242,13 @@ inline constexpr Vector3i Vector3i::Zero(0);
 class ALIGN_16 Vector4f
 {
 public:
+	/// \brief Construct with components initialized to 0.
 	constexpr Vector4f() noexcept : x(0.f), y(0.f), z(0.f), w(0.f) { }
+	/// \brief Construct with both components initialized to the same value.
 	constexpr explicit Vector4f(const float xyzw) noexcept : x(xyzw), y(xyzw), z(xyzw), w(xyzw) { }
+	/// \brief Construct with components initialized to values x, y, z and w.
 	constexpr explicit Vector4f(const float x, const float y, const float z, const float w) noexcept : x(x), y(y), z(z), w(w) { }
+	/// \brief Construct with components initialized to vector x, y and z, and value w.
 	constexpr explicit Vector4f(const Vector3f& value, const float w) noexcept : x(value.x), y(value.y), z(value.z), w(w) { }
 
 	constexpr bool operator==(const Vector4f& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z) && (w == rhs.w); }
@@ -248,18 +269,30 @@ public:
 	constexpr Vector4f operator+() const noexcept { return *this; }
 	constexpr Vector4f operator-() const noexcept { return Vector4f(-x, -y, -z, -w); }
 
+	/// \brief Returns the length of this vector.
 	float Length() const noexcept;
+	/// \brief Returns the squared length of this vector.
 	constexpr float LengthSqr() const noexcept;
 
+	/// \brief Normalize this vector have a length of 1 unit.
+	/// If the length of the vector is 0 then it makes it a NaN vector.
 	void Normalize() noexcept;
 
+	/// \brief Returns a normalized vector with a length of 1 unit.
+	/// If the length of the vector is 0 then it returns a NaN vector.
 	[[nodiscard]] Vector4f Normalized() const noexcept;
 
+	/// \brief Shorthand for writing Vector4f(0.f, 0.f, 0.f, 1.f).
 	static const Vector4f AxisW;
+	/// \brief Shorthand for writing Vector4f(1.f, 0.f, 0.f, 0.f).
 	static const Vector4f AxisX;
+	/// \brief Shorthand for writing Vector4f(0.f, 1.f, 0.f, 0.f).
 	static const Vector4f AxisY;
+	/// \brief Shorthand for writing Vector4f(0.f, 0.f, 1.f, 0.f).
 	static const Vector4f AxisZ;
+	/// \brief Shorthand for writing Vector4f(0.f, 0.f, 0.f, 1.f).
 	static const Vector4f Identity;
+	/// \brief Shorthand for writing Vector4f(0.f, 0.f, 0.f, 0.f).
 	static const Vector4f Zero;
 
 public:
