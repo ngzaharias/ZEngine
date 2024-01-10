@@ -233,38 +233,6 @@ TEST_CASE("math::Vector2f::LengthSqr")
 	CHECK(Vector2f(0.f, 10.f).LengthSqr() == 100.f);
 }
 
-TEST_CASE("math::Vector2f::Limit")
-{
-	Vector2f vectorA = Vector2f::Zero;
-	vectorA.Limit(-1.f);
-	CHECK(std::isnan(vectorA.Length()));
-
-	Vector2f vectorB = Vector2f::Zero;
-	vectorB.Limit(0.f);
-	CHECK(vectorB.Length() == 0.f);
-	CHECK(vectorB == Vector2f::AxisX * 0.f);
-
-	Vector2f vectorC = Vector2f::AxisX;
-	vectorC.Limit(0.1f);
-	CHECK(vectorC.Length() == 0.1f);
-	CHECK(vectorC == Vector2f::AxisX * 0.1f);
-
-	Vector2f vectorD = Vector2f::AxisY;
-	vectorD.Limit(1.f);
-	CHECK(vectorD.Length() == 1.f);
-	CHECK(vectorD == Vector2f::AxisY * 1.f);
-
-	Vector2f vectorE = Vector2f::AxisX;
-	vectorE.Limit(10.f);
-	CHECK(vectorE.Length() == 1.f);
-	CHECK(vectorE == Vector2f::AxisX * 1.f);
-
-	Vector2f vectorF = Vector2f::AxisY * 10000000.f;
-	vectorF.Limit(500.f);
-	CHECK(vectorF.Length() == 500.f);
-	CHECK(vectorF == Vector2f::AxisY * 500.f);
-}
-
 TEST_CASE("math::Vector2f::Normalize")
 {
 	Vector2f vectorA = Vector2f::Zero;
@@ -290,32 +258,6 @@ TEST_CASE("math::Vector2f::Normalize")
 	vectorE.Normalize();
 	CHECK(vectorE.Length() == 1.f);
 	CHECK(vectorE == Vector2f::AxisY);
-}
-
-TEST_CASE("math::Vector2f::Limited")
-{
-	const Vector2f vectorA = (Vector2f::Zero).Limited(-1.f);
-	CHECK(std::isnan(vectorA.Length()));
-
-	const Vector2f vectorB = (Vector2f::Zero).Limited(0.1f);
-	CHECK(vectorB.Length() == 0.f);
-	CHECK(vectorB == Vector2f::AxisX * 0.f);
-
-	const Vector2f vectorC = (Vector2f::AxisX).Limited(0.1f);
-	CHECK(vectorC.Length() == 0.1f);
-	CHECK(vectorC == Vector2f::AxisX * 0.1f);
-
-	const Vector2f vectorD = (Vector2f::AxisY).Limited(1.f);
-	CHECK(vectorD.Length() == 1.f);
-	CHECK(vectorD == Vector2f::AxisY * 1.f);
-
-	const Vector2f vectorE = (Vector2f::AxisX).Limited(10.f);
-	CHECK(vectorE.Length() == 1.f);
-	CHECK(vectorE == Vector2f::AxisX * 1.f);
-
-	const Vector2f vectorF = (Vector2f::AxisY * 10000000.f).Limited(500.f);
-	CHECK(vectorF.Length() == 500.f);
-	CHECK(vectorF == Vector2f::AxisY * 500.f);
 }
 
 TEST_CASE("math::Vector2f::Normalized")

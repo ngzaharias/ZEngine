@@ -362,6 +362,7 @@ TEST_CASE("math::Vector3f::XZ")
 
 TEST_CASE("math::Vector3f::XY0")
 {
+	CHECK(Vector3f(1.f, 2.f, 3.f).X0Z() == Vector3f(1.f, 2.f, 0.f));
 }
 
 TEST_CASE("math::Vector3f::X0Z")

@@ -225,6 +225,58 @@ TEST_CASE("math::Vector3f::Clamp")
 	CHECK(math::Clamp(Vector3f(4.f, 5.f, -30.f), min, max) == Vector3f(4.f, 5.f, min.z));
 }
 
+TEST_CASE("math::Vector2f::ClampLength")
+{
+	const Vector2f vectorA = math::ClampLength(Vector2f::Zero, -1.f);
+	CHECK(std::isnan(vectorA.Length()));
+
+	const Vector2f vectorB = math::ClampLength(Vector2f::Zero, 0.f);
+	CHECK(vectorB.Length() == 0.f);
+	CHECK(vectorB == Vector2f::AxisX * 0.f);
+
+	const Vector2f vectorC = math::ClampLength(Vector2f::AxisX, 0.1f);
+	CHECK(vectorC.Length() == 0.1f);
+	CHECK(vectorC == Vector2f::AxisX * 0.1f);
+
+	const Vector2f vectorD = math::ClampLength(Vector2f::AxisY, 1.f);
+	CHECK(vectorD.Length() == 1.f);
+	CHECK(vectorD == Vector2f::AxisY * 1.f);
+
+	const Vector2f vectorE = math::ClampLength(Vector2f::AxisX, 10.f);
+	CHECK(vectorE.Length() == 1.f);
+	CHECK(vectorE == Vector2f::AxisX * 1.f);
+
+	const Vector2f vectorF = math::ClampLength(Vector2f::AxisY * 10000000.f, 500.f);
+	CHECK(vectorF.Length() == 500.f);
+	CHECK(vectorF == Vector2f::AxisY * 500.f);
+}
+
+TEST_CASE("math::Vector3f::ClampLength")
+{
+	const Vector3f vectorA = math::ClampLength(Vector3f::Zero, -1.f);
+	CHECK(std::isnan(vectorA.Length()));
+
+	const Vector3f vectorB = math::ClampLength(Vector3f::Zero, 0.f);
+	CHECK(vectorB.Length() == 0.f);
+	CHECK(vectorB == Vector3f::AxisX * 0.f);
+
+	const Vector3f vectorC = math::ClampLength(Vector3f::AxisX, 0.1f);
+	CHECK(vectorC.Length() == 0.1f);
+	CHECK(vectorC == Vector3f::AxisX * 0.1f);
+
+	const Vector3f vectorD = math::ClampLength(Vector3f::AxisY, 1.f);
+	CHECK(vectorD.Length() == 1.f);
+	CHECK(vectorD == Vector3f::AxisY * 1.f);
+
+	const Vector3f vectorE = math::ClampLength(Vector3f::AxisX, 10.f);
+	CHECK(vectorE.Length() == 1.f);
+	CHECK(vectorE == Vector3f::AxisX * 1.f);
+
+	const Vector3f vectorF = math::ClampLength(Vector3f::AxisY * 10000000.f, 500.f);
+	CHECK(vectorF.Length() == 500.f);
+	CHECK(vectorF == Vector3f::AxisY * 500.f);
+}
+
 TEST_CASE("math::Vector2f::Cross")
 {
 	CHECK(math::Cross(Vector2f::AxisX, +Vector2f::AxisX) == +0.f);
