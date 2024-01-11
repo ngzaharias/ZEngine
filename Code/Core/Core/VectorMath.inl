@@ -7,17 +7,17 @@
 #define VECTOR_ASSERT(...)
 #endif
 
-inline float math::Angle(const Vector2f& a, const Vector2f& b)
+inline float math::Angle(const Vector2f& a, const Vector2f& b) noexcept
 {
 	return std::acos(math::Dot(a, b));
 }
 
-inline float math::Angle(const Vector3f& a, const Vector3f& b)
+inline float math::Angle(const Vector3f& a, const Vector3f& b) noexcept
 {
 	return std::acos(math::Dot(a, b));
 }
 
-inline float math::AngleSigned(const Vector2f& a, const Vector2f& b)
+inline float math::AngleSigned(const Vector2f& a, const Vector2f& b) noexcept
 {
 	const float angle = math::Angle(a, b);
 	if (a.x * b.y - a.y * b.x >= 0.f)
@@ -25,7 +25,7 @@ inline float math::AngleSigned(const Vector2f& a, const Vector2f& b)
 	return -angle;
 }
 
-inline float math::AngleSigned(const Vector3f& a, const Vector3f& b, const Vector3f& normal)
+inline float math::AngleSigned(const Vector3f& a, const Vector3f& b, const Vector3f& normal) noexcept
 {
 	const float angle = math::Angle(a, b);
 	if (math::Dot(normal, math::Cross(a, b)) >= 0.f)

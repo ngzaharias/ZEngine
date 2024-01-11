@@ -17,26 +17,10 @@ inline constexpr float Vector2f::LengthSqr() const noexcept
 	return x * x + y * y;
 }
 
-inline void Vector2f::Limit(const float value) noexcept
-{
-	const float length = Length();
-	if (length > value)
-		*this *= (value / length);
-
-	VECTOR_ASSERT(!std::isnan(x), "Vector2f::Limit resulted in NaN!");
-}
-
 inline void Vector2f::Normalize() noexcept
 {
 	*this *= 1.f / Length();
 	VECTOR_ASSERT(!std::isnan(x), "Vector2f::Normalize resulted in NaN!");
-}
-
-inline Vector2f Vector2f::Limited(const float value) const noexcept
-{
-	Vector2f result(*this);
-	result.Limit(value);
-	return result;
 }
 
 inline Vector2f Vector2f::Normalized() const noexcept

@@ -258,10 +258,24 @@ TEST_CASE("math::Vector3f::Length")
 
 TEST_CASE("math::Vector3f::LengthXY")
 {
+	CHECK(Vector3f::Zero.LengthXY() == 0.f);
+	CHECK(Vector3f::AxisX.LengthXY() == 1.f);
+	CHECK(Vector3f::AxisY.LengthXY() == 1.f);
+	CHECK(Vector3f::AxisZ.LengthXY() == 0.f);
+	CHECK(Vector3f(10.f, 0.f, 0.f).LengthXY() == 10.f);
+	CHECK(Vector3f(0.f, 10.f, 0.f).LengthXY() == 10.f);
+	CHECK(Vector3f(0.f, 0.f, 10.f).LengthXY() == 0.f);
 }
 
 TEST_CASE("math::Vector3f::LengthXZ")
 {
+	CHECK(Vector3f::Zero.LengthXZ() == 0.f);
+	CHECK(Vector3f::AxisX.LengthXZ() == 1.f);
+	CHECK(Vector3f::AxisY.LengthXZ() == 0.f);
+	CHECK(Vector3f::AxisZ.LengthXZ() == 1.f);
+	CHECK(Vector3f(10.f, 0.f, 0.f).LengthXZ() == 10.f);
+	CHECK(Vector3f(0.f, 10.f, 0.f).LengthXZ() == 0.f);
+	CHECK(Vector3f(0.f, 0.f, 10.f).LengthXZ() == 10.f);
 }
 
 TEST_CASE("math::Vector3f::LengthSqr")
@@ -277,10 +291,24 @@ TEST_CASE("math::Vector3f::LengthSqr")
 
 TEST_CASE("math::Vector3f::LengthXYSqr")
 {
+	CHECK(Vector3f::Zero.LengthXYSqr() == 0.f);
+	CHECK(Vector3f::AxisX.LengthXYSqr() == 1.f);
+	CHECK(Vector3f::AxisY.LengthXYSqr() == 1.f);
+	CHECK(Vector3f::AxisZ.LengthXYSqr() == 0.f);
+	CHECK(Vector3f(10.f, 0.f, 0.f).LengthXYSqr() == 100.f);
+	CHECK(Vector3f(0.f, 10.f, 0.f).LengthXYSqr() == 100.f);
+	CHECK(Vector3f(0.f, 0.f, 10.f).LengthXYSqr() == 0.f);
 }
 
 TEST_CASE("math::Vector3f::LengthXZSqr")
 {
+	CHECK(Vector3f::Zero.LengthXZSqr() == 0.f);
+	CHECK(Vector3f::AxisX.LengthXZSqr() == 1.f);
+	CHECK(Vector3f::AxisY.LengthXZSqr() == 0.f);
+	CHECK(Vector3f::AxisZ.LengthXZSqr() == 1.f);
+	CHECK(Vector3f(10.f, 0.f, 0.f).LengthXZSqr() == 100.f);
+	CHECK(Vector3f(0.f, 10.f, 0.f).LengthXZSqr() == 0.f);
+	CHECK(Vector3f(0.f, 0.f, 10.f).LengthXZSqr() == 100.f);
 }
 
 TEST_CASE("math::Vector3f::Normalize")
