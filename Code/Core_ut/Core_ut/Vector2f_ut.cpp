@@ -282,14 +282,14 @@ TEST_CASE("math::Vector2f::Normalized")
 	CHECK(vectorE == Vector2f::AxisY);
 }
 
-TEST_CASE("math::Vector2f::X0Y")
-{
-	CHECK(Vector2f(1.f, 2.f).X0Y() == Vector3f(1.f, 0.f, 2.f));
-}
-
 TEST_CASE("math::Vector2f::XY0")
 {
 	CHECK(Vector2f(1.f, 2.f).XY0() == Vector3f(1.f, 2.f, 0.f));
+}
+
+TEST_CASE("math::Vector2f::X0Y")
+{
+	CHECK(Vector2f(1.f, 2.f).X0Y() == Vector3f(1.f, 0.f, 2.f));
 }
 
 TEST_CASE("math::Vector2f::AxisX")

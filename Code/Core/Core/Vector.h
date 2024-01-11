@@ -49,10 +49,10 @@ public:
 	/// If the length of the vector is 0 then it returns a NaN vector.
 	[[nodiscard]] Vector2f Normalized() const noexcept;
 
-	/// \brief Converts this vector to a Vector3f with 0 in place of Y, and Y in place of Z.
-	constexpr Vector3f X0Y() const noexcept;
 	/// \brief Converts this vector to a Vector3f with 0 in place of Z.
 	constexpr Vector3f XY0() const noexcept;
+	/// \brief Converts this vector to a Vector3f with 0 in place of Y, and Y in place of Z.
+	constexpr Vector3f X0Y() const noexcept;
 
 	/// \brief Shorthand for writing Vector2f(1.f, 0.f).
 	static const Vector2f AxisX;

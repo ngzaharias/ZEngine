@@ -30,14 +30,14 @@ inline Vector2f Vector2f::Normalized() const noexcept
 	return result;
 }
 
+inline constexpr Vector3f Vector2f::XY0() const noexcept
+{
+	return Vector3f(x, y, 0.f);
+}
+
 inline constexpr Vector3f Vector2f::X0Y() const noexcept
 {
 	return Vector3f(x, 0.f, y);
-}
-
-inline constexpr Vector3f Vector2f::XY0() const noexcept
-{
-	return Vector3f(*this, 0.f);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,6 +93,11 @@ inline constexpr Vector2f Vector3f::XY() const noexcept
 inline constexpr Vector2f Vector3f::XZ() const noexcept
 {
 	return Vector2f(x, z);
+}
+
+inline constexpr Vector3f Vector3f::XY0() const noexcept
+{
+	return Vector3f(x, y, 0.f);
 }
 
 inline constexpr Vector3f Vector3f::X0Z() const noexcept
