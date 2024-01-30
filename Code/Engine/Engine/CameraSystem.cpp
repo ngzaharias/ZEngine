@@ -51,7 +51,8 @@ void eng::CameraSystem::Update(World& world, const GameTime& gameTime)
 			if (inputComponent.IsKeyHeld(input::EKeyboard::Control_L))
 				translateSpeed *= 5.f;
 
-			translateDir.Normalize();
+			if (translateDir != Vector3f::Zero)
+				translateDir.Normalize();
 			translate = (translateDir * translateSpeed) * Quaternion::FromRotator(transformComponent.m_Rotate);
 			transformComponent.m_Translate += translate;
 
