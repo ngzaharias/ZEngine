@@ -2,6 +2,7 @@
 #include "Engine/VoxelMeshingSystem.h"
 
 #include <Core/Algorithms.h>
+#include <Core/VectorMath.h>
 
 #include <ECS/EntityWorld.h>
 #include <ECS/QueryTypes.h>
@@ -11,6 +12,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Engine/DynamicMeshComponent.h"
+#include "Engine/TransformComponent.h"
 #include "Engine/VoxelComponents.h"
 
 namespace
@@ -84,8 +86,8 @@ namespace
 
 	int32 ToInnerIndex(const Vector3i& innerPos)
 	{
-		constexpr int32 s_Count1D = voxel::s_ChunkSize1D;
-		constexpr int32 s_Count2D = voxel::s_ChunkSize2D;
+		constexpr int32 s_Count1D = voxel::s_BlockCount1D;
+		constexpr int32 s_Count2D = voxel::s_BlockCount2D;
 		return innerPos.x
 			+ innerPos.y * s_Count1D
 			+ innerPos.z * s_Count2D;
@@ -93,15 +95,15 @@ namespace
 
 	Vector3i ToInnerPos(const int32 innerIndex)
 	{
-		constexpr int32 s_Count1D = voxel::s_ChunkSize1D;
-		constexpr int32 s_Count2D = voxel::s_ChunkSize2D;
+		constexpr int32 s_Count1D = voxel::s_BlockCount1D;
+		constexpr int32 s_Count2D = voxel::s_BlockCount2D;
 		return Vector3i(
 			innerIndex % s_Count1D,
 			(innerIndex / s_Count1D) % s_Count1D,
 			(innerIndex / s_Count2D) % s_Count1D);
 	}
 
-	Vector3i ToInnerPos(Vector3i innerPos, const voxel::EDirection direction)
+	Vector3i ToNeighbourPos(Vector3i innerPos, const voxel::EDirection direction)
 	{
 		switch (direction)
 		{
@@ -134,7 +136,7 @@ namespace
 
 		if (innerPos.x < 0 || innerPos.y < 0 || innerPos.z < 0)
 			return false;
-		if (innerPos.x >= s_ChunkSize1D || innerPos.y >= s_ChunkSize1D || innerPos.z >= s_ChunkSize1D)
+		if (innerPos.x >= s_BlockCount1D || innerPos.y >= s_BlockCount1D || innerPos.z >= s_BlockCount1D)
 			return false;
 
 		const int32 innerIndex = ToInnerIndex(innerPos);
@@ -148,6 +150,29 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	Set<ecs::Entity> entitiesToUpdate;
+	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Include<const voxel::ModifyComponent>>())
+	{
+		const auto& modifyComponent = world.GetComponent<const voxel::ModifyComponent>(requestEntity);
+		for (const voxel::Modify& request : modifyComponent.m_Changes)
+		{
+			for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
+			{
+				const auto& transform = world.GetComponent<const eng::TransformComponent>(voxelEntity);
+
+				const Vector3i requestPos = math::ToGridPos(request.m_WorldPos - transform.m_Translate, voxel::s_ChunkSize1D);
+				if (requestPos != Vector3i::Zero)
+					continue;
+
+				const Vector3f worldPos = request.m_WorldPos - transform.m_Translate;
+				const Vector3i innerPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
+				const int32 innerIndex = ToInnerIndex(innerPos);
+				auto& chunk = world.GetComponent<voxel::ChunkComponent>(voxelEntity);
+				chunk.m_Data[innerIndex] = request.m_Data;
+
+				entitiesToUpdate.Add(voxelEntity);
+			}
+		}
+	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const voxel::ChunkComponent>::Exclude<const eng::DynamicMeshComponent>>())
 		world.AddComponent<eng::DynamicMeshComponent>(entity);
@@ -170,6 +195,10 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const auto& chunkComponent = world.GetComponent<const voxel::ChunkComponent>(entity);
 		auto& meshComponent = world.GetComponent<eng::DynamicMeshComponent>(entity);
+		meshComponent.m_Indices.RemoveAll();
+		meshComponent.m_Normals.RemoveAll();
+		meshComponent.m_TexCoords.RemoveAll();
+		meshComponent.m_Vertices.RemoveAll();
 
 		for (auto&& [i, block] : enumerate::Forward(chunkComponent.m_Data))
 		{
@@ -213,7 +242,7 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 				break;
 			}
 
-			const Vector3i innerPos_XNeg = ToInnerPos(innerPos, EDirection::XNeg);
+			const Vector3i innerPos_XNeg = ToNeighbourPos(innerPos, EDirection::XNeg);
 			if (!HasBlock(innerPos_XNeg, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesXNeg);
@@ -223,7 +252,7 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 				SetOffset(texCoordOffset, meshComponent.m_TexCoords);
 			}
 
-			const Vector3i innerPos_XPos = ToInnerPos(innerPos, EDirection::XPos);
+			const Vector3i innerPos_XPos = ToNeighbourPos(innerPos, EDirection::XPos);
 			if (!HasBlock(innerPos_XPos, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesXPos);
@@ -233,7 +262,7 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 				SetOffset(texCoordOffset, meshComponent.m_TexCoords);
 			}
 
-			const Vector3i innerPos_YNeg = ToInnerPos(innerPos, EDirection::YNeg);
+			const Vector3i innerPos_YNeg = ToNeighbourPos(innerPos, EDirection::YNeg);
 			if (!HasBlock(innerPos_YNeg, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesYNeg);
@@ -243,7 +272,7 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 				SetOffset(texCoordOffset, meshComponent.m_TexCoords);
 			}
 
-			const Vector3i innerPos_YPos = ToInnerPos(innerPos, EDirection::YPos);
+			const Vector3i innerPos_YPos = ToNeighbourPos(innerPos, EDirection::YPos);
 			if (!HasBlock(innerPos_YPos, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesYPos);
@@ -253,7 +282,7 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 				SetOffset(texCoordOffset, meshComponent.m_TexCoords);
 			}
 
-			const Vector3i innerPos_ZNeg = ToInnerPos(innerPos, EDirection::ZNeg);
+			const Vector3i innerPos_ZNeg = ToNeighbourPos(innerPos, EDirection::ZNeg);
 			if (!HasBlock(innerPos_ZNeg, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesZNeg);
@@ -263,7 +292,7 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 				SetOffset(texCoordOffset, meshComponent.m_TexCoords);
 			}
 
-			const Vector3i innerPos_ZPos = ToInnerPos(innerPos, EDirection::ZPos);
+			const Vector3i innerPos_ZPos = ToNeighbourPos(innerPos, EDirection::ZPos);
 			if (!HasBlock(innerPos_ZPos, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesZPos);

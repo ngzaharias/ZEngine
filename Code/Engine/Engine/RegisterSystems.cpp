@@ -17,8 +17,8 @@
 #include "Engine/ReplicationPeer.h"
 #include "Engine/Screen.h"
 #include "Engine/SoundSystem.h"
-#include "Engine/VoxelLoadingSystem.h"
 #include "Engine/VoxelMeshingSystem.h"
+#include "Engine/VoxelModifySystem.h"
 
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::ClientDependencies& dependencies)
 {
@@ -31,8 +31,8 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::Client
 	entityWorld.RegisterSystem<eng::RenderSystem>(
 		entityWorld,
 		dependencies.m_Window);
-	entityWorld.RegisterSystem<voxel::LoadingSystem>();
 	entityWorld.RegisterSystem<voxel::MeshingSystem>();
+	entityWorld.RegisterSystem<voxel::ModifySystem>();
 
 	// render system needs to run after most systems
 	entityWorld.RegisterSystemPriority<eng::RenderSystem>(5000);
