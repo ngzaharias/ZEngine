@@ -34,53 +34,39 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
 			const auto& inputComponent = world.GetComponent<const eng::InputComponent>(inputEntity);
-			if (inputComponent.IsKeyPressed(input::EKeyboard::F))
+			if (inputComponent.IsKeyHeld(input::EKeyboard::F))
 			{
 				const ecs::Entity entity = world.CreateEntity();
 				auto& requestComponent = world.AddComponent<voxel::ModifyComponent>(entity);
-				requestComponent.m_Changes.Emplace(alignPos, voxel::Block{ voxel::EFlags::None, voxel::EType::Black });
-			}
 
-			if (inputComponent.IsKeyPressed(input::EKeyboard::G))
-			{
-				const ecs::Entity entity = world.CreateEntity();
-				auto& requestComponent = world.AddComponent<voxel::ModifyComponent>(entity);
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(-voxel::s_BlockSize1D, -voxel::s_BlockSize1D, -voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(0                    , -voxel::s_BlockSize1D, -voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(+voxel::s_BlockSize1D, -voxel::s_BlockSize1D, -voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(-voxel::s_BlockSize1D, 0                    , -voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(0                    , 0                    , -voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(+voxel::s_BlockSize1D, 0                    , -voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(-voxel::s_BlockSize1D, +voxel::s_BlockSize1D, -voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(0                    , +voxel::s_BlockSize1D, -voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(+voxel::s_BlockSize1D, +voxel::s_BlockSize1D, -voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
+				int32 i = 0;
+				constexpr int32 extent = 2;
+				for (const Vector3i& index : enumerate::Vector(Vector3i(-extent), Vector3i(+extent)))
+				{
+					const Vector3f offset = Vector3f(
+						voxel::s_BlockSize1D * index.x,
+						voxel::s_BlockSize1D * index.y,
+						voxel::s_BlockSize1D * index.z);
 
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(-voxel::s_BlockSize1D, -voxel::s_BlockSize1D, 0                    ), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(0                    , -voxel::s_BlockSize1D, 0                    ), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(+voxel::s_BlockSize1D, -voxel::s_BlockSize1D, 0                    ), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(-voxel::s_BlockSize1D, 0                    , 0                    ), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(0                    , 0                    , 0                    ), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(+voxel::s_BlockSize1D, 0                    , 0                    ), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(-voxel::s_BlockSize1D, +voxel::s_BlockSize1D, 0                    ), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(0                    , +voxel::s_BlockSize1D, 0                    ), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(+voxel::s_BlockSize1D, +voxel::s_BlockSize1D, 0                    ), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(-voxel::s_BlockSize1D, -voxel::s_BlockSize1D, +voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(0                    , -voxel::s_BlockSize1D, +voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(+voxel::s_BlockSize1D, -voxel::s_BlockSize1D, +voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(-voxel::s_BlockSize1D, 0                    , +voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(0                    , 0                    , +voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(+voxel::s_BlockSize1D, 0                    , +voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(-voxel::s_BlockSize1D, +voxel::s_BlockSize1D, +voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(0                    , +voxel::s_BlockSize1D, +voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
-				requestComponent.m_Changes.Emplace(alignPos + Vector3f(+voxel::s_BlockSize1D, +voxel::s_BlockSize1D, +voxel::s_BlockSize1D), voxel::Block{ voxel::EFlags::None, voxel::EType::None });
+					const voxel::EType type = static_cast<voxel::EType>( (i++ % 7) + 1);
+					requestComponent.m_Changes.Emplace(alignPos + offset, voxel::Block{ voxel::EFlags::None, type });
+				}
 			}
 
 			if (inputComponent.IsKeyHeld(input::EMouse::Left))
 			{
 				const ecs::Entity entity = world.CreateEntity();
 				auto& requestComponent = world.AddComponent<voxel::ModifyComponent>(entity);
-				requestComponent.m_Changes.Emplace(alignPos, voxel::Block{ voxel::EFlags::None, voxel::EType::None });
+
+				constexpr int32 extent = 3;
+				for (const Vector3i& index : enumerate::Vector(Vector3i(-extent), Vector3i(+extent)))
+				{
+					const Vector3f offset = Vector3f(
+						voxel::s_BlockSize1D * index.x,
+						voxel::s_BlockSize1D * index.y,
+						voxel::s_BlockSize1D * index.z);
+					requestComponent.m_Changes.Emplace(alignPos + offset, voxel::Block{ voxel::EFlags::None, voxel::EType::None });
+				}
 			}
 		}
 	}
