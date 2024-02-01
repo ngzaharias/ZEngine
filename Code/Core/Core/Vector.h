@@ -219,6 +219,12 @@ public:
 	constexpr bool operator==(const Vector3i& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z); }
 	constexpr bool operator!=(const Vector3i& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y) || (z != rhs.z); }
 
+	constexpr Vector3i operator+(const Vector3i& rhs) const noexcept { return Vector3i(x + rhs.x, y + rhs.y, z + rhs.z); }
+	constexpr Vector3i operator-(const Vector3i& rhs) const noexcept { return Vector3i(x - rhs.x, y - rhs.y, z - rhs.z); }
+
+	constexpr Vector3i& operator+=(const Vector3i& rhs) noexcept { x += rhs.x; y += rhs.y; z += rhs.z; return *this; }
+	constexpr Vector3i& operator-=(const Vector3i& rhs) noexcept { x -= rhs.x; y -= rhs.y; z -= rhs.z; return *this; }
+
 	constexpr Vector3i operator+() const noexcept { return *this; }
 	constexpr Vector3i operator-() const noexcept { return Vector3i(-x, -y, -z); }
 

@@ -306,3 +306,59 @@ inline auto enumerate::Vector(const Vector3i& value)
 
 	return Range(value);
 }
+
+inline auto enumerate::Vector(const Vector3i& min, const Vector3i& max)
+{
+	struct Iterator
+	{
+		Iterator(const Vector3i& min, const Vector3i& max, const Vector3i& range, const int32 index)
+			: m_Min(min), m_Max(max), m_Range(range), m_Index(index) { }
+
+		auto operator*() -> Vector3i
+		{
+			return m_Min + Vector3i(
+				m_Index % m_Range.x,
+				(m_Index / m_Range.x) % m_Range.y,
+				(m_Index / (m_Range.x * m_Range.y)) % m_Range.z);
+		}
+
+		auto operator++() -> Iterator&
+		{
+			m_Index++;
+			return *this;
+		}
+
+		bool operator!=(const Iterator& other) const
+		{
+			return m_Index != other.m_Index;
+		}
+
+		const Vector3i& m_Min;
+		const Vector3i& m_Max;
+		const Vector3i& m_Range;
+		int32 m_Index = UINT32_MAX;
+	};
+
+	struct Range
+	{
+		Range(const Vector3i& min, const Vector3i& max) 
+			: m_Min(min), m_Max(max), m_Range(m_Max - m_Min + Vector3i::One) { }
+
+		auto begin() -> Iterator
+		{
+			return Iterator{ m_Min, m_Max, m_Range, 0 };
+		}
+
+		auto end() -> Iterator
+		{
+			const int32 count = m_Range.x * m_Range.y * m_Range.z;
+			return Iterator{ m_Min, m_Max, m_Range, count };
+		}
+
+		const Vector3i& m_Min;
+		const Vector3i& m_Max;
+		const Vector3i m_Range = Vector3i(UINT32_MAX);
+	};
+
+	return Range(min, max);
+}
