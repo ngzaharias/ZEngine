@@ -26,4 +26,10 @@ namespace voxel
 	{
 		Array<Modify> m_Changes;
 	};
+
+	struct ModifySettingsComponent : public ecs::SingletonComponent<ModifySettingsComponent>
+	{
+		voxel::EType m_Type = voxel::EType::None;
+		int32 m_Radius = 0;
+	};
 }

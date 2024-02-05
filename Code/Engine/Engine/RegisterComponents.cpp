@@ -136,6 +136,7 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<voxel::ChunkComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkLoadedEventComponent>();
 	entityWorld.RegisterComponent<voxel::ModifyComponent>();
+	entityWorld.RegisterComponent<voxel::ModifySettingsComponent>();
 }
 
 void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)

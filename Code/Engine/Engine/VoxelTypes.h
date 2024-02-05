@@ -8,11 +8,9 @@ namespace voxel
 	constexpr int32 s_BlockCount1D = 16;
 	constexpr int32 s_BlockCount2D = s_BlockCount1D * s_BlockCount1D;
 	constexpr int32 s_BlockCount3D = s_BlockCount1D * s_BlockCount1D * s_BlockCount1D;
-	constexpr float	s_BlockSize1D = 100.f;
 
+	constexpr float	s_BlockSize1D = 100.f;
 	constexpr float s_ChunkSize1D = s_BlockSize1D * s_BlockCount1D;
-	constexpr float s_ChunkSize2D = s_BlockSize1D * s_BlockCount2D;
-	constexpr float s_ChunkSize3D = s_BlockSize1D * s_BlockCount3D;
 
 	enum class EDirection
 	{
