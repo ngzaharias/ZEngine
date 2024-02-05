@@ -5,7 +5,7 @@ m_Name = "Text"
 m_Name = "Text"
 
 [Text]
-m_Text = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+m_Text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 .:,;'\"(!?)+-*/="
 m_Font = "186be450-6236-4741-977b-c2b0568f5368"
 
 [Transform]
