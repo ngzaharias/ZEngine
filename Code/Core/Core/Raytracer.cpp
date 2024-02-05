@@ -51,7 +51,7 @@ bool path::Raytracer::Iterator::operator!=(const Iterator& rhs) const
 	return m_Index != rhs.m_Index;
 }
 
-auto path::Raytracer::begin() -> Iterator
+auto path::Raytracer::begin() const -> Iterator
 {
 	const Vector3f direction = (m_Target - m_Source).Normalized();
 	const Vector3i gridPosA = math::ToGridPos(m_Source, m_CellSize);
@@ -87,7 +87,7 @@ auto path::Raytracer::begin() -> Iterator
 	return std::move(itr);
 }
 
-auto path::Raytracer::end() -> Iterator
+auto path::Raytracer::end() const -> Iterator
 {
 	const Vector3i gridPosA = math::ToGridPos(m_Source, m_CellSize);
 	const Vector3i gridPosB = math::ToGridPos(m_Target, m_CellSize);
