@@ -134,7 +134,7 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 			const auto& textTransform = world.GetComponent<const eng::TransformComponent>(textEntity);
 			const auto& binding = mesh.m_Binding;
 
-			const int32 instanceCount = static_cast<int32>(textComponent.m_Text.size());
+			int32 instanceCount = static_cast<int32>(textComponent.m_Text.size());
 			const eng::FontAsset& fontAsset = *m_AssetManager.LoadAsset<eng::FontAsset>(textComponent.m_Font);
 			if (fontAsset.m_TextureId == 0)
 				continue;
@@ -142,7 +142,7 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 			const Matrix4x4 model = Matrix4x4::FromTransform(
 				textTransform.m_Translate,
 				Quaternion::FromRotator(textTransform.m_Rotate),
-				textTransform.m_Scale).Inversed();
+				textTransform.m_Scale);
 
 			Array<float> depths;
 			Array<Matrix4x4> models;
@@ -150,15 +150,20 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 			models.Reserve(instanceCount);
 			for (auto&& [i, character] : enumerate::Forward(textComponent.m_Text))
 			{
-				const eng::Glyph glyph = fontAsset.m_Glyphs.Get(character);
-				depths.Append(glyph.m_Depth);
+				if (fontAsset.m_Glyphs.Contains(character))
+				{
+					const eng::Glyph glyph = fontAsset.m_Glyphs.Get(character);
+					depths.Append(glyph.m_Depth);
 
-				Vector3f offset = Vector3f::Zero;
-				offset.x = static_cast<float>(glyph.m_AdvanceX * i);
+					Vector3f offset = Vector3f::Zero;
+					offset.x = static_cast<float>(glyph.m_AdvanceX * i);
+					offset.y = static_cast<float>(glyph.m_AdvanceY);
 
-				Matrix4x4& charModel = models.Append(model);
-				charModel.Translate(offset);
+					Matrix4x4& charModel = models.Append(model);
+					charModel.Translate(offset);
+				}
 			}
+			instanceCount = models.GetCount();
 
 			// vertices
 			if (shader.a_Vertex)
