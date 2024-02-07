@@ -194,19 +194,7 @@ inline constexpr Vector3f math::Project(const Vector3f& point, const Line& line)
 	const Vector3f lineAB = line.m_PointB - line.m_PointA;
 	const Vector3f lineAP = point - line.m_PointA;
 	const float p = math::Dot(lineAP, lineAB) / lineAB.LengthSqr();
-
-	if (p < 0.f)
-	{
-		return line.m_PointA;
-	}
-	else if (p > 1.f)
-	{
-		return line.m_PointB;
-	}
-	else
-	{
-		return line.m_PointA + lineAB * p;
-	}
+	return line.m_PointA + lineAB * p;
 }
 
 inline constexpr Vector3f math::Project(const Vector3f& point, const Ray& ray)
@@ -216,25 +204,34 @@ inline constexpr Vector3f math::Project(const Vector3f& point, const Ray& ray)
 	return ray.m_OriginPos + ray.m_Direction * p;
 }
 
+// https://gamedev.stackexchange.com/questions/72528/how-can-i-project-a-3d-point-onto-a-3d-line
+inline constexpr Vector3f math::Project(const Vector3f& point, const Segment& segment)
+{
+	const Vector3f lineAB = segment.m_PointB - segment.m_PointA;
+	const Vector3f lineAP = point - segment.m_PointA;
+	const float p = math::Dot(lineAP, lineAB) / lineAB.LengthSqr();
+
+	if (p < 0.f)
+	{
+		return segment.m_PointA;
+	}
+	else if (p > 1.f)
+	{
+		return segment.m_PointB;
+	}
+	else
+	{
+		return segment.m_PointA + lineAB * p;
+	}
+}
+
 inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Line& line)
 {
 	const Vector3f lineAB = line.m_PointB - line.m_PointA;
 	const Vector2f lineXZ = lineAB.XY();
 	const Vector2f lineAP = point.XY() - line.m_PointA.XY();
 	const float p = math::Dot(lineAP, lineXZ) / lineAB.LengthSqr();
-
-	if (p < 0.f)
-	{
-		return line.m_PointA;
-	}
-	else if (p > 1.f)
-	{
-		return line.m_PointB;
-	}
-	else
-	{
-		return line.m_PointA + lineAB * p;
-	}
+	return line.m_PointA + lineAB * p;
 }
 
 inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Ray& ray)
@@ -244,25 +241,34 @@ inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Ray& ray)
 	return ray.m_OriginPos + ray.m_Direction * p;
 }
 
+inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Segment& segment)
+{
+	const Vector3f lineAB = segment.m_PointB - segment.m_PointA;
+	const Vector2f lineXZ = lineAB.XY();
+	const Vector2f lineAP = point.XY() - segment.m_PointA.XY();
+	const float p = math::Dot(lineAP, lineXZ) / lineAB.LengthSqr();
+
+	if (p < 0.f)
+	{
+		return segment.m_PointA;
+	}
+	else if (p > 1.f)
+	{
+		return segment.m_PointB;
+	}
+	else
+	{
+		return segment.m_PointA + lineAB * p;
+	}
+}
+
 inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Line& line)
 {
 	const Vector3f lineAB = line.m_PointB - line.m_PointA;
 	const Vector2f lineXZ = lineAB.XZ();
 	const Vector2f lineAP = point.XZ() - line.m_PointA.XZ();
 	const float p = math::Dot(lineAP, lineXZ) / lineAB.LengthSqr();
-
-	if (p < 0.f)
-	{
-		return line.m_PointA;
-	}
-	else if (p > 1.f)
-	{
-		return line.m_PointB;
-	}
-	else
-	{
-		return line.m_PointA + lineAB * p;
-	}
+	return line.m_PointA + lineAB * p;
 }
 
 inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Ray& ray)
@@ -270,6 +276,27 @@ inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Ray& ray)
 	const Vector2f lineAP = point.XZ() - ray.m_OriginPos.XZ();
 	const float p = math::Dot(lineAP, ray.m_Direction.XZ());
 	return ray.m_OriginPos + ray.m_Direction * p;
+}
+
+inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Segment& segment)
+{
+	const Vector3f lineAB = segment.m_PointB - segment.m_PointA;
+	const Vector2f lineXZ = lineAB.XZ();
+	const Vector2f lineAP = point.XZ() - segment.m_PointA.XZ();
+	const float p = math::Dot(lineAP, lineXZ) / lineAB.LengthSqr();
+
+	if (p < 0.f)
+	{
+		return segment.m_PointA;
+	}
+	else if (p > 1.f)
+	{
+		return segment.m_PointB;
+	}
+	else
+	{
+		return segment.m_PointA + lineAB * p;
+	}
 }
 
 inline constexpr Vector2f math::Reflect(const Vector2f& vector, const Vector2f& normal) noexcept

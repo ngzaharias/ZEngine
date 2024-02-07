@@ -1,21 +1,20 @@
 #pragma once
 
-#include "Core/Line.h"
 #include "Core/Ray.h"
-
-Ray Ray::FromLine(const Line& line)
-{
-	Ray ray;
-	ray.m_OriginPos = line.m_PointA;
-	ray.m_Direction = (line.m_PointB - line.m_PointA).Normalized();
-	return ray;
-}
-
+#include "Core/Segment.h"
 
 Ray Ray::FromPoints(const Vector3f& pointA, const Vector3f& pointB)
 {
 	Ray ray;
 	ray.m_OriginPos = pointA;
 	ray.m_Direction = (pointB - pointA).Normalized();
+	return ray;
+}
+
+Ray Ray::FromSegment(const Segment& segment)
+{
+	Ray ray;
+	ray.m_OriginPos = segment.m_PointA;
+	ray.m_Direction = (segment.m_PointB - segment.m_PointA).Normalized();
 	return ray;
 }
