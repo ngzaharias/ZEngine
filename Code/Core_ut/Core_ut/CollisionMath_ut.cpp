@@ -6,11 +6,12 @@
 #include <Core/OBB.h>
 #include <Core/Plane.h>
 #include <Core/Ray.h>
+#include <Core/Segment.h>
 #include <Core/Sphere.h>
 
 TEST_CASE("math::Intersection(Line, Plane)")
 {
-	Line a;
+	Segment a;
 	Plane b;
 	Vector3f c;
 
@@ -89,9 +90,78 @@ TEST_CASE("math::Intersection(Ray, Plane)")
 	}
 }
 
-TEST_CASE("math::IntersectionXZ(Line, Line)")
+TEST_CASE("math::IntersectionXZ(Ray, Ray)")
 {
-	Line a, b;
+	Ray a, b;
+	Vector3f c;
+
+	{
+		INFO("Intersects at origin.");
+		a.m_OriginPos = Vector3f(-1.f, 0.f, 0.f);
+		a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
+		b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
+		b.m_Direction = Vector3f(0.f, 0.f, +1.f);
+
+		CHECK(math::IntersectionXZ(a, b, c));
+		CHECK(c == Vector3f::Zero);
+	}
+
+	{
+		INFO("Intersects at origin, but one ray is offset on the X axis.");
+		a.m_OriginPos = Vector3f(-10.f, 0.f, 0.f);
+		a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
+		b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
+		b.m_Direction = Vector3f(0.f, 0.f, +1.f);
+
+		CHECK(math::IntersectionXZ(a, b, c));
+		CHECK(c == Vector3f::Zero);
+	}
+
+	{
+		INFO("Intersects at origin, but one ray is offset on the Y axis.");
+		a.m_OriginPos = Vector3f(-1.f, -1.f, 0.f);
+		a.m_Direction = Vector3f(+1.f, -1.f, 0.f);
+		b.m_OriginPos = Vector3f(0.f, +1.f, -1.f);
+		b.m_Direction = Vector3f(0.f, +1.f, +1.f);
+
+		CHECK(math::IntersectionXZ(a, b, c));
+		CHECK(c == Vector3f::Zero);
+	}
+
+	{
+		INFO("Perpendicular rays, but one ray is in front of the other.");
+		a.m_OriginPos = Vector3f(+10.f, -1.f, 0.f);
+		a.m_Direction = Vector3f(+1.f, -1.f, 0.f);
+		b.m_OriginPos = Vector3f(0.f, +1.f, -1.f);
+		b.m_Direction = Vector3f(0.f, +1.f, +1.f);
+
+		CHECK(!math::IntersectionXZ(a, b, c));
+	}
+
+	{
+		INFO("Parallel Lines.");
+		a.m_OriginPos = Vector3f(-1.f, 0.f, -1.f);
+		a.m_Direction = Vector3f(+1.f, 0.f, -1.f);
+		b.m_OriginPos = Vector3f(-1.f, 0.f, +1.f);
+		b.m_Direction = Vector3f(+1.f, 0.f, +1.f);
+
+		CHECK(!math::IntersectionXZ(a, b, c));
+	}
+
+	{
+		INFO("Parallel rays, but one ray is offset on the X axis.");
+		a.m_OriginPos = Vector3f(-10.f, 0.f, -1.f);
+		a.m_Direction = Vector3f(+1.f, 0.f, -1.f);
+		b.m_OriginPos = Vector3f(-1.f, 0.f, +1.f);
+		b.m_Direction = Vector3f(+1.f, 0.f, +1.f);
+
+		CHECK(!math::IntersectionXZ(a, b, c));
+	}
+}
+
+TEST_CASE("math::IntersectionXZ(Segment, Segment)")
+{
+	Segment a, b;
 	Vector3f c;
 
 	{
@@ -111,65 +181,6 @@ TEST_CASE("math::IntersectionXZ(Line, Line)")
 		a.m_PointB = Vector3f(+1.f, 0.f, -1.f);
 		b.m_PointA = Vector3f(-1.f, 0.f, +1.f);
 		b.m_PointB = Vector3f(+1.f, 0.f, +1.f);
-
-		CHECK(!math::IntersectionXZ(a, b, c));
-	}
-}
-
-TEST_CASE("math::IntersectionXZ(Ray, Ray)")
-{
-	Ray a, b;
-	Vector3f c;
-
-	{
-		INFO("Collision.");
-		a.m_OriginPos = Vector3f(-1.f, 0.f, 0.f);
-		a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
-		b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
-		b.m_Direction = Vector3f(0.f, 0.f, +1.f);
-
-		CHECK(math::IntersectionXZ(a, b, c));
-		CHECK(c == Vector3f::Zero);
-	}
-
-	{
-		INFO("Collision.");
-		a.m_OriginPos = Vector3f(-10.f, 0.f, 0.f);
-		a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
-		b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
-		b.m_Direction = Vector3f(0.f, 0.f, +1.f);
-
-		CHECK(math::IntersectionXZ(a, b, c));
-		CHECK(c == Vector3f::Zero);
-	}
-
-	{
-		INFO("Collision.");
-		a.m_OriginPos = Vector3f(-1.f, -1.f, 0.f);
-		a.m_Direction = Vector3f(+1.f, -1.f, 0.f);
-		b.m_OriginPos = Vector3f(0.f, +1.f, -1.f);
-		b.m_Direction = Vector3f(0.f, +1.f, +1.f);
-
-		CHECK(math::IntersectionXZ(a, b, c));
-		CHECK(c == Vector3f::Zero);
-	}
-
-	{
-		INFO("Parallel Lines.");
-		a.m_OriginPos = Vector3f(-1.f, 0.f, -1.f);
-		a.m_Direction = Vector3f(+1.f, 0.f, -1.f);
-		b.m_OriginPos = Vector3f(-1.f, 0.f, +1.f);
-		b.m_Direction = Vector3f(+1.f, 0.f, +1.f);
-
-		CHECK(!math::IntersectionXZ(a, b, c));
-	}
-
-	{
-		INFO("Parallel Lines With Further Origin.");
-		a.m_OriginPos = Vector3f(-10.f, 0.f, -1.f);
-		a.m_Direction = Vector3f(+1.f, 0.f, -1.f);
-		b.m_OriginPos = Vector3f(-1.f, 0.f, +1.f);
-		b.m_Direction = Vector3f(+1.f, 0.f, +1.f);
 
 		CHECK(!math::IntersectionXZ(a, b, c));
 	}
@@ -449,51 +460,6 @@ TEST_CASE("math::IsOverlappingXZ(Circle, Ray)")
 	}
 }
 
-TEST_CASE("math::IsOverlappingXZ(Line, Line)")
-{
-	Line a, b;
-
-	{
-		INFO("Collision.");
-		a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
-		a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
-		b.m_PointA = Vector3f(0.f, 0.f, -1.f);
-		b.m_PointB = Vector3f(0.f, 0.f, +1.f);
-
-		CHECK(math::IsOverlappingXZ(a, b));
-	}
-
-	{
-		INFO("No Collision.");
-		a.m_PointA = Vector3f(-10.f, 0.f, 0.f);
-		a.m_PointB = Vector3f(-0.1f, 0.f, 0.f);
-		b.m_PointA = Vector3f(0.f, 0.f, -1.f);
-		b.m_PointB = Vector3f(0.f, 0.f, +1.f);
-
-		CHECK(!math::IsOverlappingXZ(a, b));
-	}
-
-	{
-		INFO("Collision.");
-		a.m_PointA = Vector3f(-1.f, -1.f, 0.f);
-		a.m_PointB = Vector3f(+1.f, -1.f, 0.f);
-		b.m_PointA = Vector3f(0.f, +1.f, -1.f);
-		b.m_PointB = Vector3f(0.f, +1.f, +1.f);
-
-		CHECK(math::IsOverlappingXZ(a, b));
-	}
-
-	{
-		INFO("Parallel Lines.");
-		a.m_PointA = Vector3f(-1.f, 0.f, -1.f);
-		a.m_PointB = Vector3f(+1.f, 0.f, -1.f);
-		b.m_PointA = Vector3f(-1.f, 0.f, +1.f);
-		b.m_PointB = Vector3f(+1.f, 0.f, +1.f);
-
-		CHECK(!math::IsOverlappingXZ(a, b));
-	}
-}
-
 TEST_CASE("math::IsOverlappingXZ(Ray, Ray)")
 {
 	Ray a, b;
@@ -544,6 +510,51 @@ TEST_CASE("math::IsOverlappingXZ(Ray, Ray)")
 		a.m_Direction = Vector3f(+1.f, 0.f, -1.f);
 		b.m_OriginPos = Vector3f(-1.f, 0.f, +1.f);
 		b.m_Direction = Vector3f(+1.f, 0.f, +1.f);
+
+		CHECK(!math::IsOverlappingXZ(a, b));
+	}
+}
+
+TEST_CASE("math::IsOverlappingXZ(Segment, Segment)")
+{
+	Segment a, b;
+
+	{
+		INFO("Collision.");
+		a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
+		a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
+		b.m_PointA = Vector3f(0.f, 0.f, -1.f);
+		b.m_PointB = Vector3f(0.f, 0.f, +1.f);
+
+		CHECK(math::IsOverlappingXZ(a, b));
+	}
+
+	{
+		INFO("No Collision.");
+		a.m_PointA = Vector3f(-10.f, 0.f, 0.f);
+		a.m_PointB = Vector3f(-0.1f, 0.f, 0.f);
+		b.m_PointA = Vector3f(0.f, 0.f, -1.f);
+		b.m_PointB = Vector3f(0.f, 0.f, +1.f);
+
+		CHECK(!math::IsOverlappingXZ(a, b));
+	}
+
+	{
+		INFO("Collision.");
+		a.m_PointA = Vector3f(-1.f, -1.f, 0.f);
+		a.m_PointB = Vector3f(+1.f, -1.f, 0.f);
+		b.m_PointA = Vector3f(0.f, +1.f, -1.f);
+		b.m_PointB = Vector3f(0.f, +1.f, +1.f);
+
+		CHECK(math::IsOverlappingXZ(a, b));
+	}
+
+	{
+		INFO("Parallel Lines.");
+		a.m_PointA = Vector3f(-1.f, 0.f, -1.f);
+		a.m_PointB = Vector3f(+1.f, 0.f, -1.f);
+		b.m_PointA = Vector3f(-1.f, 0.f, +1.f);
+		b.m_PointB = Vector3f(+1.f, 0.f, +1.f);
 
 		CHECK(!math::IsOverlappingXZ(a, b));
 	}

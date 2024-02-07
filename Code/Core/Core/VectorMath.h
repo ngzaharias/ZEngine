@@ -5,6 +5,7 @@
 #include <Core/Line.h>
 #include <Core/Math.h>
 #include <Core/Ray.h>
+#include <Core/Segment.h>
 #include <Core/Vector.h>
 
 namespace math
@@ -86,14 +87,22 @@ namespace math
 	inline constexpr Vector3f Project(const Vector3f& point, const Line& line);
 	/// \brief Projects the point onto the nearest position along a ray.
 	inline constexpr Vector3f Project(const Vector3f& point, const Ray& ray);
+	/// \brief Projects the point onto the nearest position along a line.
+	inline constexpr Vector3f Project(const Vector3f& point, const Segment& segment);
+
 	/// \brief Projects the point onto the nearest position along a line on the XY plane.
 	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Line& line);
 	/// \brief Projects the point onto the nearest position along a ray on the XY plane.
 	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Ray& ray);
+	/// \brief Projects the point onto the nearest position along a line on the XY plane.
+	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Segment& segment);
+
 	/// \brief Projects the point onto the nearest position along a line on the XZ plane.
 	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Line& line);
 	/// \brief Projects the point onto the nearest position along a ray on the XZ plane.
 	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Ray& ray);
+	/// \brief Projects the point onto the nearest position along a line on the XZ plane.
+	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Segment& segment);
 
 	/// \brief Reflects the vector off the plane defined by a normal.
 	inline constexpr Vector2f Reflect(const Vector2f& vector, const Vector2f& normal) noexcept;

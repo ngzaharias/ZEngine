@@ -5,6 +5,7 @@
 #include "Core/OBB.h"
 #include "Core/Plane.h"
 #include "Core/Ray.h"
+#include "Core/Segment.h"
 #include "Core/Sphere.h"
 #include "Core/Vector.h"
 #include "Core/VectorMath.h"
@@ -12,23 +13,89 @@
 #include <algorithm>
 #include <float.h>
 
+namespace
+{
+	bool GetIntersection(const float dst1, const float dst2, const Segment& segment, Vector3f& out_IntersectPos)
+	{
+		if (dst1 * dst2 >= 0.0f)
+			return false;
+		if (dst1 == dst2)
+			return false;
+
+		out_IntersectPos = segment.m_PointA + (segment.m_PointB - segment.m_PointA) * (-dst1 / (dst2 - dst1));
+		return true;
+	}
+
+	bool InBox(const AABB& aabb, const Vector3f& intersectPos, const int axis)
+	{
+		if (axis == 1 && intersectPos.z > aabb.m_Min.z && intersectPos.z < aabb.m_Max.z && intersectPos.y > aabb.m_Min.y && intersectPos.y < aabb.m_Max.y)
+			return true;
+		if (axis == 2 && intersectPos.z > aabb.m_Min.z && intersectPos.z < aabb.m_Max.z && intersectPos.x > aabb.m_Min.x && intersectPos.x < aabb.m_Max.x)
+			return true;
+		if (axis == 3 && intersectPos.x > aabb.m_Min.x && intersectPos.x < aabb.m_Max.x && intersectPos.y > aabb.m_Min.y && intersectPos.y < aabb.m_Max.y)
+			return true;
+		return false;
+	}
+}
+
 bool math::AreCounterClockwiseOrderedXZ(const Vector3f& a, const Vector3f& b, const Vector3f& c)
 {
 	return (c.z - a.z) * (b.x - a.x) > (b.z - a.z) * (c.x - a.x);
 }
 
-// https://github.com/BSVino/MathForGameDevelopers/blob/line-plane-intersection/math/collision.cpp
-bool math::Intersection(const Line& line, const Plane& plane, Vector3f& out_IntersectPos)
+// returns true if line (L1, L2) intersects with the box (B1, B2)
+// returns intersection point in Hit
+//int CheckLineBox(CVec3 B1, CVec3 B2, CVec3 L1, CVec3 L2, CVec3& Hit)
+bool math::Intersection(const Segment& segment, const AABB& aabb, Vector3f& out_IntersectPos)
 {
-	const Vector3f v = line.m_PointB - line.m_PointA;
-	const Vector3f w = plane.m_Point - line.m_PointA;
+	if (segment.m_PointB.x < aabb.m_Min.x && segment.m_PointA.x < aabb.m_Min.x)
+		return false;
+	if (segment.m_PointB.x > aabb.m_Max.x && segment.m_PointA.x > aabb.m_Max.x)
+		return false;
+	if (segment.m_PointB.y < aabb.m_Min.y && segment.m_PointA.y < aabb.m_Min.y)
+		return false;
+	if (segment.m_PointB.y > aabb.m_Max.y && segment.m_PointA.y > aabb.m_Max.y)
+		return false;
+	if (segment.m_PointB.z < aabb.m_Min.z && segment.m_PointA.z < aabb.m_Min.z)
+		return false;
+	if (segment.m_PointB.z > aabb.m_Max.z && segment.m_PointA.z > aabb.m_Max.z)
+		return false;
+	if (segment.m_PointA.x > aabb.m_Min.x && segment.m_PointA.x < aabb.m_Max.x &&
+		segment.m_PointA.y > aabb.m_Min.y && segment.m_PointA.y < aabb.m_Max.y &&
+		segment.m_PointA.z > aabb.m_Min.z && segment.m_PointA.z < aabb.m_Max.z)
+	{
+		out_IntersectPos = segment.m_PointA;
+		return true;
+	}
+
+	if (GetIntersection(segment.m_PointA.x - aabb.m_Min.x, segment.m_PointB.x - aabb.m_Min.x, segment, out_IntersectPos) && InBox(aabb, out_IntersectPos, 1))
+		return true;
+	if (GetIntersection(segment.m_PointA.y - aabb.m_Min.y, segment.m_PointB.y - aabb.m_Min.y, segment, out_IntersectPos) && InBox(aabb, out_IntersectPos, 2))
+		return true;
+	if (GetIntersection(segment.m_PointA.z - aabb.m_Min.z, segment.m_PointB.z - aabb.m_Min.z, segment, out_IntersectPos) && InBox(aabb, out_IntersectPos, 3))
+		return true;
+	if (GetIntersection(segment.m_PointA.x - aabb.m_Max.x, segment.m_PointB.x - aabb.m_Max.x, segment, out_IntersectPos) && InBox(aabb, out_IntersectPos, 1))
+		return true;
+	if (GetIntersection(segment.m_PointA.y - aabb.m_Max.y, segment.m_PointB.y - aabb.m_Max.y, segment, out_IntersectPos) && InBox(aabb, out_IntersectPos, 2))
+		return true;
+	if (GetIntersection(segment.m_PointA.z - aabb.m_Max.z, segment.m_PointB.z - aabb.m_Max.z, segment, out_IntersectPos) && InBox(aabb, out_IntersectPos, 3))
+		return true;
+
+	return false;
+}
+
+// https://github.com/BSVino/MathForGameDevelopers/blob/line-plane-intersection/math/collision.cpp
+bool math::Intersection(const Segment& segment, const Plane& plane, Vector3f& out_IntersectPos)
+{
+	const Vector3f v = segment.m_PointB - segment.m_PointA;
+	const Vector3f w = plane.m_Point - segment.m_PointA;
 	const float d0 = math::Dot(w, plane.m_Normal);
 	const float d1 = math::Dot(v, plane.m_Normal);
 	if (d1 == 0.f)
 		return false;
 
 	const float k = d0 / d1;
-	out_IntersectPos = line.m_PointA + v * k;
+	out_IntersectPos = segment.m_PointA + v * k;
 
 	return k >= 0 && k <= 1;
 }
@@ -47,32 +114,32 @@ bool math::Intersection(const Ray& ray, const Plane& plane, Vector3f& out_Inters
 	return true;
 }
 
-bool math::IntersectionXZ(const Sphere& sphere, const Vector3f& direction, const float distance, const Line& line, Intersect& out_Result)
+bool math::IntersectionXZ(const Sphere& sphere, const Vector3f& direction, const float distance, const Segment& segment, Intersect& out_Result)
 {
-	const Line sweepLine = Line(sphere.m_Position, sphere.m_Position + direction * distance);
+	const Segment sweepLine = Segment(sphere.m_Position, sphere.m_Position + direction * distance);
 
-	const Vector3f lineTagent = (line.m_PointB - line.m_PointA).Normalized();
+	const Vector3f lineTagent = (segment.m_PointB - segment.m_PointA).Normalized();
 	const Vector3f lineNormal = math::Cross(Vector3f::AxisY, lineTagent);
 
 	// SOHCAHTOA - CAH
-	// use the intersection angle of our ray and the line normal
+	// use the intersection angle of our ray and the segment normal
 	// use the smallest angle to account for both directions of a ray
 	const float angle = Angle(direction, -lineNormal);
 	const float theta = std::min(angle, 180.f - angle);
 	const float adjacent = sphere.m_Radius;
 	const float hypotenuse = adjacent / cos(theta);
 
-	// increase the length of the line to account for the radius of the sphere
-	const Vector3f edgeA = line.m_PointA - lineTagent * hypotenuse;
-	const Vector3f edgeB = line.m_PointB + lineTagent * hypotenuse;
+	// increase the length of the segment to account for the radius of the sphere
+	const Vector3f edgeA = segment.m_PointA - lineTagent * hypotenuse;
+	const Vector3f edgeB = segment.m_PointB + lineTagent * hypotenuse;
 
 	Vector3f intersectPos;
-	if (math::IntersectionXZ(sweepLine, line, intersectPos))
+	if (math::IntersectionXZ(sweepLine, segment, intersectPos))
 	{
-		// project intersect position onto the original line to find the hit position
-		const Vector3f hitPoint = math::ProjectXZ(intersectPos, line);
+		// project intersect position onto the original segment to find the hit position
+		const Vector3f hitPoint = math::ProjectXZ(intersectPos, segment);
 
-		// project the hit position onto the circle line to find the position that the circle is touching the line
+		// project the hit position onto the circle segment to find the position that the circle is touching the segment
 		const Vector3f touchPosition = math::ProjectXZ(hitPoint, sweepLine);
 
 		const float fraction = math::DistanceXZ(sweepLine.m_PointA, touchPosition) / distance;
@@ -111,20 +178,6 @@ bool math::IntersectionXZ(const Sphere& sphere, const Vector3f& direction, const
 	return false;
 }
 
-bool math::IntersectionXZ(const Line& a, const Line& b, Vector3f& out_IntersectPos)
-{
-	if (!IsOverlappingXZ(a, b))
-		return false;
-
-	const float det = (a.m_PointA.x - a.m_PointB.x) * (b.m_PointA.z - b.m_PointB.z) - (a.m_PointA.z - a.m_PointB.z) * (b.m_PointA.x - b.m_PointB.x);
-	if (det == 0.f)
-		return false;
-
-	out_IntersectPos.x = ((b.m_PointA.x - b.m_PointB.x) * (a.m_PointA.x * a.m_PointB.z - a.m_PointA.z * a.m_PointB.x) - (a.m_PointA.x - a.m_PointB.x) * (b.m_PointA.x * b.m_PointB.z - b.m_PointA.z * b.m_PointB.x)) / det;
-	out_IntersectPos.z = ((b.m_PointA.z - b.m_PointB.z) * (a.m_PointA.x * a.m_PointB.z - a.m_PointA.z * a.m_PointB.x) - (a.m_PointA.z - a.m_PointB.z) * (b.m_PointA.x * b.m_PointB.z - b.m_PointA.z * b.m_PointB.x)) / det;
-	return true;
-}
-
 // https://www.anycodings.com/1questions/1479872/determining-if-two-rays-intersect
 bool math::IntersectionXZ(const Ray& a, const Ray& b, Vector3f& out_IntersectPos)
 {
@@ -141,6 +194,20 @@ bool math::IntersectionXZ(const Ray& a, const Ray& b, Vector3f& out_IntersectPos
 
 	out_IntersectPos.x = a.m_OriginPos.x + a.m_Direction.x * u;
 	out_IntersectPos.z = a.m_OriginPos.z + a.m_Direction.z * u;
+	return true;
+}
+
+bool math::IntersectionXZ(const Segment& a, const Segment& b, Vector3f& out_IntersectPos)
+{
+	if (!IsOverlappingXZ(a, b))
+		return false;
+
+	const float det = (a.m_PointA.x - a.m_PointB.x) * (b.m_PointA.z - b.m_PointB.z) - (a.m_PointA.z - a.m_PointB.z) * (b.m_PointA.x - b.m_PointB.x);
+	if (det == 0.f)
+		return false;
+
+	out_IntersectPos.x = ((b.m_PointA.x - b.m_PointB.x) * (a.m_PointA.x * a.m_PointB.z - a.m_PointA.z * a.m_PointB.x) - (a.m_PointA.x - a.m_PointB.x) * (b.m_PointA.x * b.m_PointB.z - b.m_PointA.z * b.m_PointB.x)) / det;
+	out_IntersectPos.z = ((b.m_PointA.z - b.m_PointB.z) * (a.m_PointA.x * a.m_PointB.z - a.m_PointA.z * a.m_PointB.x) - (a.m_PointA.z - a.m_PointB.z) * (b.m_PointA.x * b.m_PointB.z - b.m_PointA.z * b.m_PointB.x)) / det;
 	return true;
 }
 
@@ -261,13 +328,6 @@ bool math::IsOverlappingXZ(const Sphere& sphere, const Ray& ray)
 	return intersectSqr <= math::Sqr(sphere.m_Radius);
 }
 
-// https://stackoverflow.com/questions/3838329/how-can-i-check-if-two-segments-intersect
-bool math::IsOverlappingXZ(const Line& a, const Line& b)
-{
-	return AreCounterClockwiseOrderedXZ(a.m_PointA, b.m_PointA, b.m_PointB) != AreCounterClockwiseOrderedXZ(a.m_PointB, b.m_PointA, b.m_PointB)
-		&& AreCounterClockwiseOrderedXZ(a.m_PointA, a.m_PointB, b.m_PointA) != AreCounterClockwiseOrderedXZ(a.m_PointA, a.m_PointB, b.m_PointB);
-}
-
 bool math::IsOverlappingXZ(const Ray& a, const Ray& b)
 {
 	const float det = (b.m_Direction.x * a.m_Direction.z) - (b.m_Direction.z * a.m_Direction.x);
@@ -279,4 +339,11 @@ bool math::IsOverlappingXZ(const Ray& a, const Ray& b)
 	const float u = (dz * b.m_Direction.x - dx * b.m_Direction.z) / det;
 	const float v = (dz * a.m_Direction.x - dx * a.m_Direction.z) / det;
 	return u >= 0.f && v >= 0.f;
+}
+
+// https://stackoverflow.com/questions/3838329/how-can-i-check-if-two-segments-intersect
+bool math::IsOverlappingXZ(const Segment& a, const Segment& b)
+{
+	return AreCounterClockwiseOrderedXZ(a.m_PointA, b.m_PointA, b.m_PointB) != AreCounterClockwiseOrderedXZ(a.m_PointB, b.m_PointA, b.m_PointB)
+		&& AreCounterClockwiseOrderedXZ(a.m_PointA, a.m_PointB, b.m_PointA) != AreCounterClockwiseOrderedXZ(a.m_PointA, a.m_PointB, b.m_PointB);
 }

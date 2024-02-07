@@ -1,6 +1,7 @@
 #include <Catch2/catch.hpp>
 
 #include <Core/Common.h>
+#include <Core/Segment.h>
 #include <Core/VectorMath.h>
 
 TEST_CASE("math::Vector2f::IsNearly")
@@ -473,50 +474,6 @@ TEST_CASE("math::Vector2f::Perpendicular")
 	CHECK(vectorD == +Vector2f::AxisX);
 }
 
-TEST_CASE("math::Vector3f::Project(Line)")
-{
-	// min
-	const Vector3f vectorA = math::Project(Vector3f(0.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorB = math::Project(Vector3f(2.f, 0.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorC = math::Project(Vector3f(2.f, 2.f, 0.f), Line(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorA == Vector3f::Zero);
-	CHECK(vectorB == Vector3f::Zero);
-	CHECK(vectorC == Vector3f::Zero);
-
-	// mid
-	const Vector3f vectorD = math::Project(Vector3f(.5f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorE = math::Project(Vector3f(2.f, .5f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorF = math::Project(Vector3f(2.f, 2.f, .5f), Line(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorD == Vector3f::AxisX * 0.5f);
-	CHECK(vectorE == Vector3f::AxisY * 0.5f);
-	CHECK(vectorF == Vector3f::AxisZ * 0.5f);
-
-	// max
-	const Vector3f vectorG = math::Project(Vector3f(1.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorH = math::Project(Vector3f(2.f, 1.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorI = math::Project(Vector3f(2.f, 2.f, 1.f), Line(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorG == Vector3f::AxisX);
-	CHECK(vectorH == Vector3f::AxisY);
-	CHECK(vectorI == Vector3f::AxisZ);
-
-
-	// min clamped
-	const Vector3f vectorJ = math::Project(Vector3f(-1.f, +2.f, +2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorK = math::Project(Vector3f(+2.f, -1.f, +2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorL = math::Project(Vector3f(+2.f, +2.f, -1.f), Line(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorJ == Vector3f::Zero);
-	CHECK(vectorK == Vector3f::Zero);
-	CHECK(vectorL == Vector3f::Zero);
-
-	// max clamped
-	const Vector3f vectorM = math::Project(Vector3f(2.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorN = math::Project(Vector3f(2.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorO = math::Project(Vector3f(2.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorM == Vector3f::AxisX);
-	CHECK(vectorN == Vector3f::AxisY);
-	CHECK(vectorO == Vector3f::AxisZ);
-}
-
 TEST_CASE("math::Vector3f::Project(Ray)")
 {
 	// min
@@ -561,48 +518,48 @@ TEST_CASE("math::Vector3f::Project(Ray)")
 	CHECK(vectorO == Vector3f::AxisZ * 2.f);
 }
 
-TEST_CASE("math::Vector3f::ProjectXY(Line)")
+TEST_CASE("math::Vector3f::Project(Segment)")
 {
 	// min
-	const Vector3f vectorA = math::ProjectXY(Vector3f(0.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorB = math::ProjectXY(Vector3f(2.f, 0.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorC = math::ProjectXY(Vector3f(2.f, 2.f, 0.f), Line(Vector3f::Zero, Vector3f::AxisZ));
+	const Vector3f vectorA = math::Project(Vector3f(0.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorB = math::Project(Vector3f(2.f, 0.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorC = math::Project(Vector3f(2.f, 2.f, 0.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
 	CHECK(vectorA == Vector3f::Zero);
 	CHECK(vectorB == Vector3f::Zero);
 	CHECK(vectorC == Vector3f::Zero);
 
 	// mid
-	const Vector3f vectorD = math::ProjectXY(Vector3f(.5f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorE = math::ProjectXY(Vector3f(2.f, .5f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorF = math::ProjectXY(Vector3f(2.f, 2.f, .5f), Line(Vector3f::Zero, Vector3f::AxisZ));
+	const Vector3f vectorD = math::Project(Vector3f(.5f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorE = math::Project(Vector3f(2.f, .5f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorF = math::Project(Vector3f(2.f, 2.f, .5f), Segment(Vector3f::Zero, Vector3f::AxisZ));
 	CHECK(vectorD == Vector3f::AxisX * 0.5f);
 	CHECK(vectorE == Vector3f::AxisY * 0.5f);
-	CHECK(vectorF == Vector3f::Zero);
+	CHECK(vectorF == Vector3f::AxisZ * 0.5f);
 
 	// max
-	const Vector3f vectorG = math::ProjectXY(Vector3f(1.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorH = math::ProjectXY(Vector3f(2.f, 1.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorI = math::ProjectXY(Vector3f(2.f, 2.f, 1.f), Line(Vector3f::Zero, Vector3f::AxisZ));
+	const Vector3f vectorG = math::Project(Vector3f(1.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorH = math::Project(Vector3f(2.f, 1.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorI = math::Project(Vector3f(2.f, 2.f, 1.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
 	CHECK(vectorG == Vector3f::AxisX);
 	CHECK(vectorH == Vector3f::AxisY);
-	CHECK(vectorI == Vector3f::Zero);
+	CHECK(vectorI == Vector3f::AxisZ);
 
 
-	// min un-clamped
-	const Vector3f vectorJ = math::ProjectXY(Vector3f(-1.f, +2.f, +2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorK = math::ProjectXY(Vector3f(+2.f, -1.f, +2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorL = math::ProjectXY(Vector3f(+2.f, +2.f, -1.f), Line(Vector3f::Zero, Vector3f::AxisZ));
+	// min clamped
+	const Vector3f vectorJ = math::Project(Vector3f(-1.f, +2.f, +2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorK = math::Project(Vector3f(+2.f, -1.f, +2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorL = math::Project(Vector3f(+2.f, +2.f, -1.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
 	CHECK(vectorJ == Vector3f::Zero);
 	CHECK(vectorK == Vector3f::Zero);
 	CHECK(vectorL == Vector3f::Zero);
 
-	// max un-clamped
-	const Vector3f vectorM = math::ProjectXY(Vector3f(2.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorN = math::ProjectXY(Vector3f(2.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorO = math::ProjectXY(Vector3f(2.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisZ));
+	// max clamped
+	const Vector3f vectorM = math::Project(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorN = math::Project(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorO = math::Project(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
 	CHECK(vectorM == Vector3f::AxisX);
 	CHECK(vectorN == Vector3f::AxisY);
-	CHECK(vectorO == Vector3f::Zero);
+	CHECK(vectorO == Vector3f::AxisZ);
 }
 
 TEST_CASE("math::Vector3f::ProjectXY(Ray)")
@@ -648,48 +605,48 @@ TEST_CASE("math::Vector3f::ProjectXY(Ray)")
 	CHECK(vectorO == Vector3f::Zero);
 }
 
-TEST_CASE("math::Vector3f::ProjectXZ(Line)")
+TEST_CASE("math::Vector3f::ProjectXY(Segment)")
 {
 	// min
-	const Vector3f vectorA = math::ProjectXZ(Vector3f(0.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorB = math::ProjectXZ(Vector3f(2.f, 0.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorC = math::ProjectXZ(Vector3f(2.f, 2.f, 0.f), Line(Vector3f::Zero, Vector3f::AxisZ));
+	const Vector3f vectorA = math::ProjectXY(Vector3f(0.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorB = math::ProjectXY(Vector3f(2.f, 0.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorC = math::ProjectXY(Vector3f(2.f, 2.f, 0.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
 	CHECK(vectorA == Vector3f::Zero);
 	CHECK(vectorB == Vector3f::Zero);
 	CHECK(vectorC == Vector3f::Zero);
 
 	// mid
-	const Vector3f vectorD = math::ProjectXZ(Vector3f(.5f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorE = math::ProjectXZ(Vector3f(2.f, .5f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorF = math::ProjectXZ(Vector3f(2.f, 2.f, .5f), Line(Vector3f::Zero, Vector3f::AxisZ));
+	const Vector3f vectorD = math::ProjectXY(Vector3f(.5f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorE = math::ProjectXY(Vector3f(2.f, .5f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorF = math::ProjectXY(Vector3f(2.f, 2.f, .5f), Segment(Vector3f::Zero, Vector3f::AxisZ));
 	CHECK(vectorD == Vector3f::AxisX * 0.5f);
-	CHECK(vectorE == Vector3f::Zero);
-	CHECK(vectorF == Vector3f::AxisZ * 0.5f);
+	CHECK(vectorE == Vector3f::AxisY * 0.5f);
+	CHECK(vectorF == Vector3f::Zero);
 
 	// max
-	const Vector3f vectorG = math::ProjectXZ(Vector3f(1.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorH = math::ProjectXZ(Vector3f(2.f, 1.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorI = math::ProjectXZ(Vector3f(2.f, 2.f, 1.f), Line(Vector3f::Zero, Vector3f::AxisZ));
+	const Vector3f vectorG = math::ProjectXY(Vector3f(1.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorH = math::ProjectXY(Vector3f(2.f, 1.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorI = math::ProjectXY(Vector3f(2.f, 2.f, 1.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
 	CHECK(vectorG == Vector3f::AxisX);
-	CHECK(vectorH == Vector3f::Zero);
-	CHECK(vectorI == Vector3f::AxisZ);
+	CHECK(vectorH == Vector3f::AxisY);
+	CHECK(vectorI == Vector3f::Zero);
 
 
 	// min un-clamped
-	const Vector3f vectorJ = math::ProjectXZ(Vector3f(-1.f, +2.f, +2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorK = math::ProjectXZ(Vector3f(+2.f, -1.f, +2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorL = math::ProjectXZ(Vector3f(+2.f, +2.f, -1.f), Line(Vector3f::Zero, Vector3f::AxisZ));
+	const Vector3f vectorJ = math::ProjectXY(Vector3f(-1.f, +2.f, +2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorK = math::ProjectXY(Vector3f(+2.f, -1.f, +2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorL = math::ProjectXY(Vector3f(+2.f, +2.f, -1.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
 	CHECK(vectorJ == Vector3f::Zero);
 	CHECK(vectorK == Vector3f::Zero);
 	CHECK(vectorL == Vector3f::Zero);
 
 	// max un-clamped
-	const Vector3f vectorM = math::ProjectXZ(Vector3f(2.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorN = math::ProjectXZ(Vector3f(2.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorO = math::ProjectXZ(Vector3f(2.f, 2.f, 2.f), Line(Vector3f::Zero, Vector3f::AxisZ));
+	const Vector3f vectorM = math::ProjectXY(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorN = math::ProjectXY(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorO = math::ProjectXY(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
 	CHECK(vectorM == Vector3f::AxisX);
-	CHECK(vectorN == Vector3f::Zero);
-	CHECK(vectorO == Vector3f::AxisZ);
+	CHECK(vectorN == Vector3f::AxisY);
+	CHECK(vectorO == Vector3f::Zero);
 }
 
 TEST_CASE("math::Vector3f::ProjectXZ(Ray)")
@@ -734,6 +691,50 @@ TEST_CASE("math::Vector3f::ProjectXZ(Ray)")
 	CHECK(vectorM == Vector3f::AxisX * 2.f);
 	CHECK(vectorN == Vector3f::Zero);
 	CHECK(vectorO == Vector3f::AxisZ * 2.f);
+}
+
+TEST_CASE("math::Vector3f::ProjectXZ(Segment)")
+{
+	// min
+	const Vector3f vectorA = math::ProjectXZ(Vector3f(0.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorB = math::ProjectXZ(Vector3f(2.f, 0.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorC = math::ProjectXZ(Vector3f(2.f, 2.f, 0.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
+	CHECK(vectorA == Vector3f::Zero);
+	CHECK(vectorB == Vector3f::Zero);
+	CHECK(vectorC == Vector3f::Zero);
+
+	// mid
+	const Vector3f vectorD = math::ProjectXZ(Vector3f(.5f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorE = math::ProjectXZ(Vector3f(2.f, .5f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorF = math::ProjectXZ(Vector3f(2.f, 2.f, .5f), Segment(Vector3f::Zero, Vector3f::AxisZ));
+	CHECK(vectorD == Vector3f::AxisX * 0.5f);
+	CHECK(vectorE == Vector3f::Zero);
+	CHECK(vectorF == Vector3f::AxisZ * 0.5f);
+
+	// max
+	const Vector3f vectorG = math::ProjectXZ(Vector3f(1.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorH = math::ProjectXZ(Vector3f(2.f, 1.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorI = math::ProjectXZ(Vector3f(2.f, 2.f, 1.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
+	CHECK(vectorG == Vector3f::AxisX);
+	CHECK(vectorH == Vector3f::Zero);
+	CHECK(vectorI == Vector3f::AxisZ);
+
+
+	// min un-clamped
+	const Vector3f vectorJ = math::ProjectXZ(Vector3f(-1.f, +2.f, +2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorK = math::ProjectXZ(Vector3f(+2.f, -1.f, +2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorL = math::ProjectXZ(Vector3f(+2.f, +2.f, -1.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
+	CHECK(vectorJ == Vector3f::Zero);
+	CHECK(vectorK == Vector3f::Zero);
+	CHECK(vectorL == Vector3f::Zero);
+
+	// max un-clamped
+	const Vector3f vectorM = math::ProjectXZ(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
+	const Vector3f vectorN = math::ProjectXZ(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
+	const Vector3f vectorO = math::ProjectXZ(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
+	CHECK(vectorM == Vector3f::AxisX);
+	CHECK(vectorN == Vector3f::Zero);
+	CHECK(vectorO == Vector3f::AxisZ);
 }
 
 TEST_CASE("math::Vector2f::Reflect")
