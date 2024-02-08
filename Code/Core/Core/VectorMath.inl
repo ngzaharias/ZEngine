@@ -201,6 +201,9 @@ inline constexpr Vector3f math::Project(const Vector3f& point, const Ray& ray)
 {
 	const Vector3f lineAP = point - ray.m_OriginPos;
 	const float p = math::Dot(lineAP, ray.m_Direction);
+
+	if (p < 0.f)
+		return ray.m_OriginPos;
 	return ray.m_OriginPos + ray.m_Direction * p;
 }
 

@@ -474,92 +474,272 @@ TEST_CASE("math::Vector2f::Perpendicular")
 	CHECK(vectorD == +Vector2f::AxisX);
 }
 
+TEST_CASE("math::Vector3f::Project(Line)")
+{
+	constexpr Line lineX = Line(-Vector3f::AxisX, +Vector3f::AxisX);
+	constexpr Line lineY = Line(-Vector3f::AxisY, +Vector3f::AxisY);
+	constexpr Line lineZ = Line(-Vector3f::AxisZ, +Vector3f::AxisZ);
+
+	{
+		INFO("Point is projected to first Line point.");
+		const Vector3f vectorA = math::Project(Vector3f(-1.f, +2.f, +2.f), lineX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, -1.f, +2.f), lineY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, -1.f), lineZ);
+		const Vector3f vectorD = math::Project(Vector3f(-1.f, -2.f, -2.f), lineX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, -1.f, -2.f), lineY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, -1.f), lineZ);
+		CHECK(vectorA == -Vector3f::AxisX);
+		CHECK(vectorB == -Vector3f::AxisY);
+		CHECK(vectorC == -Vector3f::AxisZ);
+		CHECK(vectorD == -Vector3f::AxisX);
+		CHECK(vectorE == -Vector3f::AxisY);
+		CHECK(vectorF == -Vector3f::AxisZ);
+	}
+
+	{
+		INFO("Point is projected midway between the Line points.");
+		const Vector3f vectorA = math::Project(Vector3f(+0.f, +2.f, +2.f), lineX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, +0.f, +2.f), lineY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, +0.f), lineZ);
+		const Vector3f vectorD = math::Project(Vector3f(+0.f, -2.f, -2.f), lineX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, +0.f, -2.f), lineY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, +0.f), lineZ);
+		CHECK(vectorA == Vector3f::Zero);
+		CHECK(vectorB == Vector3f::Zero);
+		CHECK(vectorC == Vector3f::Zero);
+		CHECK(vectorD == Vector3f::Zero);
+		CHECK(vectorE == Vector3f::Zero);
+		CHECK(vectorF == Vector3f::Zero);
+	}
+
+	{
+		INFO("Point is projected to second Line point.");
+		const Vector3f vectorA = math::Project(Vector3f(+1.f, +2.f, +2.f), lineX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, +1.f, +2.f), lineY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, +1.f), lineZ);
+		const Vector3f vectorD = math::Project(Vector3f(+1.f, -2.f, -2.f), lineX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, +1.f, -2.f), lineY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, +1.f), lineZ);
+		CHECK(vectorA == +Vector3f::AxisX);
+		CHECK(vectorB == +Vector3f::AxisY);
+		CHECK(vectorC == +Vector3f::AxisZ);
+		CHECK(vectorD == +Vector3f::AxisX);
+		CHECK(vectorE == +Vector3f::AxisY);
+		CHECK(vectorF == +Vector3f::AxisZ);
+	}
+
+	{
+		INFO("Point is projected beyond the first Line point.");
+		const Vector3f vectorA = math::Project(Vector3f(-2.f, +2.f, +2.f), lineX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, -2.f, +2.f), lineY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, -2.f), lineZ);
+		const Vector3f vectorD = math::Project(Vector3f(-2.f, -2.f, -2.f), lineX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, -2.f, -2.f), lineY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, -2.f), lineZ);
+		CHECK(vectorA == -Vector3f::AxisX * 2.f);
+		CHECK(vectorB == -Vector3f::AxisY * 2.f);
+		CHECK(vectorC == -Vector3f::AxisZ * 2.f);
+		CHECK(vectorD == -Vector3f::AxisX * 2.f);
+		CHECK(vectorE == -Vector3f::AxisY * 2.f);
+		CHECK(vectorF == -Vector3f::AxisZ * 2.f);
+	}
+
+	{
+		INFO("Point is projected beyond the second Line point.");
+		const Vector3f vectorA = math::Project(Vector3f(+2.f, +2.f, +2.f), lineX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, +2.f, +2.f), lineY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, +2.f), lineZ);
+		const Vector3f vectorD = math::Project(Vector3f(+2.f, -2.f, -2.f), lineX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, +2.f, -2.f), lineY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, +2.f), lineZ);
+		CHECK(vectorA == +Vector3f::AxisX * 2.f);
+		CHECK(vectorB == +Vector3f::AxisY * 2.f);
+		CHECK(vectorC == +Vector3f::AxisZ * 2.f);
+		CHECK(vectorD == +Vector3f::AxisX * 2.f);
+		CHECK(vectorE == +Vector3f::AxisY * 2.f);
+		CHECK(vectorF == +Vector3f::AxisZ * 2.f);
+	}
+}
+
 TEST_CASE("math::Vector3f::Project(Ray)")
 {
-	// min
-	const Vector3f vectorA = math::Project(Vector3f(0.f, 2.f, 2.f), Ray(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorB = math::Project(Vector3f(2.f, 0.f, 2.f), Ray(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorC = math::Project(Vector3f(2.f, 2.f, 0.f), Ray(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorA == Vector3f::Zero);
-	CHECK(vectorB == Vector3f::Zero);
-	CHECK(vectorC == Vector3f::Zero);
+	constexpr Ray rayNegX = Ray(+Vector3f::AxisX, -Vector3f::AxisX);
+	constexpr Ray rayNegY = Ray(+Vector3f::AxisY, -Vector3f::AxisY);
+	constexpr Ray rayNegZ = Ray(+Vector3f::AxisZ, -Vector3f::AxisZ);
+	constexpr Ray rayPosX = Ray(-Vector3f::AxisX, +Vector3f::AxisX);
+	constexpr Ray rayPosY = Ray(-Vector3f::AxisY, +Vector3f::AxisY);
+	constexpr Ray rayPosZ = Ray(-Vector3f::AxisZ, +Vector3f::AxisZ);
 
-	// mid
-	const Vector3f vectorD = math::Project(Vector3f(.5f, 2.f, 2.f), Ray(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorE = math::Project(Vector3f(2.f, .5f, 2.f), Ray(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorF = math::Project(Vector3f(2.f, 2.f, .5f), Ray(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorD == Vector3f::AxisX * 0.5f);
-	CHECK(vectorE == Vector3f::AxisY * 0.5f);
-	CHECK(vectorF == Vector3f::AxisZ * 0.5f);
+	{
+		INFO("Point is projected to Ray origin.");
+		const Vector3f vectorA = math::Project(Vector3f(+1.f, +2.f, +2.f), rayNegX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, +1.f, +2.f), rayNegY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, +1.f), rayNegZ);
+		const Vector3f vectorD = math::Project(Vector3f(+1.f, -2.f, -2.f), rayNegX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, +1.f, -2.f), rayNegY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, +1.f), rayNegZ);
+		const Vector3f vectorG = math::Project(Vector3f(-1.f, +2.f, +2.f), rayPosX);
+		const Vector3f vectorH = math::Project(Vector3f(+2.f, -1.f, +2.f), rayPosY);
+		const Vector3f vectorI = math::Project(Vector3f(+2.f, +2.f, -1.f), rayPosZ);
+		const Vector3f vectorJ = math::Project(Vector3f(-1.f, -2.f, -2.f), rayPosX);
+		const Vector3f vectorK = math::Project(Vector3f(-2.f, -1.f, -2.f), rayPosY);
+		const Vector3f vectorL = math::Project(Vector3f(-2.f, -2.f, -1.f), rayPosZ);
+		CHECK(vectorA == +Vector3f::AxisX);
+		CHECK(vectorB == +Vector3f::AxisY);
+		CHECK(vectorC == +Vector3f::AxisZ);
+		CHECK(vectorD == +Vector3f::AxisX);
+		CHECK(vectorE == +Vector3f::AxisY);
+		CHECK(vectorF == +Vector3f::AxisZ);
+		CHECK(vectorG == -Vector3f::AxisX);
+		CHECK(vectorH == -Vector3f::AxisY);
+		CHECK(vectorI == -Vector3f::AxisZ);
+		CHECK(vectorJ == -Vector3f::AxisX);
+		CHECK(vectorK == -Vector3f::AxisY);
+		CHECK(vectorL == -Vector3f::AxisZ);
+	}
 
-	// max
-	const Vector3f vectorG = math::Project(Vector3f(1.f, 2.f, 2.f), Ray(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorH = math::Project(Vector3f(2.f, 1.f, 2.f), Ray(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorI = math::Project(Vector3f(2.f, 2.f, 1.f), Ray(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorG == Vector3f::AxisX);
-	CHECK(vectorH == Vector3f::AxisY);
-	CHECK(vectorI == Vector3f::AxisZ);
+	{
+		INFO("Point is projected along ray.");
+		const Vector3f vectorA = math::Project(Vector3f(+0.f, +2.f, +2.f), rayNegX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, +0.f, +2.f), rayNegY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, +0.f), rayNegZ);
+		const Vector3f vectorD = math::Project(Vector3f(+0.f, -2.f, -2.f), rayNegX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, +0.f, -2.f), rayNegY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, +0.f), rayNegZ);
+		const Vector3f vectorG = math::Project(Vector3f(-0.f, +2.f, +2.f), rayPosX);
+		const Vector3f vectorH = math::Project(Vector3f(+2.f, -0.f, +2.f), rayPosY);
+		const Vector3f vectorI = math::Project(Vector3f(+2.f, +2.f, -0.f), rayPosZ);
+		const Vector3f vectorJ = math::Project(Vector3f(-0.f, -2.f, -2.f), rayPosX);
+		const Vector3f vectorK = math::Project(Vector3f(-2.f, -0.f, -2.f), rayPosY);
+		const Vector3f vectorL = math::Project(Vector3f(-2.f, -2.f, -0.f), rayPosZ);
+		CHECK(vectorA == Vector3f::Zero);
+		CHECK(vectorB == Vector3f::Zero);
+		CHECK(vectorC == Vector3f::Zero);
+		CHECK(vectorD == Vector3f::Zero);
+		CHECK(vectorE == Vector3f::Zero);
+		CHECK(vectorF == Vector3f::Zero);
+		CHECK(vectorG == Vector3f::Zero);
+		CHECK(vectorH == Vector3f::Zero);
+		CHECK(vectorI == Vector3f::Zero);
+		CHECK(vectorJ == Vector3f::Zero);
+		CHECK(vectorK == Vector3f::Zero);
+		CHECK(vectorL == Vector3f::Zero);
+	}
 
-
-	// min clamped
-	const Vector3f vectorJ = math::Project(Vector3f(-1.f, +2.f, +2.f), Ray(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorK = math::Project(Vector3f(+2.f, -1.f, +2.f), Ray(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorL = math::Project(Vector3f(+2.f, +2.f, -1.f), Ray(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorJ == Vector3f::AxisX * -1.f);
-	CHECK(vectorK == Vector3f::AxisY * -1.f);
-	CHECK(vectorL == Vector3f::AxisZ * -1.f);
-
-	// max clamped
-	const Vector3f vectorM = math::Project(Vector3f(2.f, 2.f, 2.f), Ray(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorN = math::Project(Vector3f(2.f, 2.f, 2.f), Ray(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorO = math::Project(Vector3f(2.f, 2.f, 2.f), Ray(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorM == Vector3f::AxisX * 2.f);
-	CHECK(vectorN == Vector3f::AxisY * 2.f);
-	CHECK(vectorO == Vector3f::AxisZ * 2.f);
+	{
+		INFO("Point is projected behind ray.");
+		const Vector3f vectorA = math::Project(Vector3f(-9.f, +2.f, +2.f), rayNegX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, -9.f, +2.f), rayNegY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, -9.f), rayNegZ);
+		const Vector3f vectorD = math::Project(Vector3f(-9.f, -2.f, -2.f), rayNegX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, -9.f, -2.f), rayNegY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, -9.f), rayNegZ);
+		const Vector3f vectorG = math::Project(Vector3f(+9.f, +2.f, +2.f), rayPosX);
+		const Vector3f vectorH = math::Project(Vector3f(+2.f, +9.f, +2.f), rayPosY);
+		const Vector3f vectorI = math::Project(Vector3f(+2.f, +2.f, +9.f), rayPosZ);
+		const Vector3f vectorJ = math::Project(Vector3f(+9.f, -2.f, -2.f), rayPosX);
+		const Vector3f vectorK = math::Project(Vector3f(-2.f, +9.f, -2.f), rayPosY);
+		const Vector3f vectorL = math::Project(Vector3f(-2.f, -2.f, +9.f), rayPosZ);
+		CHECK(vectorA == -Vector3f::AxisX * 9.f);
+		CHECK(vectorB == -Vector3f::AxisY * 9.f);
+		CHECK(vectorC == -Vector3f::AxisZ * 9.f);
+		CHECK(vectorD == -Vector3f::AxisX * 9.f);
+		CHECK(vectorE == -Vector3f::AxisY * 9.f);
+		CHECK(vectorF == -Vector3f::AxisZ * 9.f);
+		CHECK(vectorG == +Vector3f::AxisX * 9.f);
+		CHECK(vectorH == +Vector3f::AxisY * 9.f);
+		CHECK(vectorI == +Vector3f::AxisZ * 9.f);
+		CHECK(vectorJ == +Vector3f::AxisX * 9.f);
+		CHECK(vectorK == +Vector3f::AxisY * 9.f);
+		CHECK(vectorL == +Vector3f::AxisZ * 9.f);
+	}
 }
 
 TEST_CASE("math::Vector3f::Project(Segment)")
 {
-	// min
-	const Vector3f vectorA = math::Project(Vector3f(0.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorB = math::Project(Vector3f(2.f, 0.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorC = math::Project(Vector3f(2.f, 2.f, 0.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorA == Vector3f::Zero);
-	CHECK(vectorB == Vector3f::Zero);
-	CHECK(vectorC == Vector3f::Zero);
+	constexpr Segment segmentX = Segment(-Vector3f::AxisX, +Vector3f::AxisX);
+	constexpr Segment segmentY = Segment(-Vector3f::AxisY, +Vector3f::AxisY);
+	constexpr Segment segmentZ = Segment(-Vector3f::AxisZ, +Vector3f::AxisZ);
 
-	// mid
-	const Vector3f vectorD = math::Project(Vector3f(.5f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorE = math::Project(Vector3f(2.f, .5f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorF = math::Project(Vector3f(2.f, 2.f, .5f), Segment(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorD == Vector3f::AxisX * 0.5f);
-	CHECK(vectorE == Vector3f::AxisY * 0.5f);
-	CHECK(vectorF == Vector3f::AxisZ * 0.5f);
+	{
+		INFO("Point is projected to first Segment point.");
+		const Vector3f vectorA = math::Project(Vector3f(-1.f, +2.f, +2.f), segmentX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, -1.f, +2.f), segmentY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, -1.f), segmentZ);
+		const Vector3f vectorD = math::Project(Vector3f(-1.f, -2.f, -2.f), segmentX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, -1.f, -2.f), segmentY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, -1.f), segmentZ);
+		CHECK(vectorA == -Vector3f::AxisX);
+		CHECK(vectorB == -Vector3f::AxisY);
+		CHECK(vectorC == -Vector3f::AxisZ);
+		CHECK(vectorD == -Vector3f::AxisX);
+		CHECK(vectorE == -Vector3f::AxisY);
+		CHECK(vectorF == -Vector3f::AxisZ);
+	}
 
-	// max
-	const Vector3f vectorG = math::Project(Vector3f(1.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorH = math::Project(Vector3f(2.f, 1.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorI = math::Project(Vector3f(2.f, 2.f, 1.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorG == Vector3f::AxisX);
-	CHECK(vectorH == Vector3f::AxisY);
-	CHECK(vectorI == Vector3f::AxisZ);
+	{
+		INFO("Point is projected midway between the Segment points.");
+		const Vector3f vectorA = math::Project(Vector3f(+0.f, +2.f, +2.f), segmentX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, +0.f, +2.f), segmentY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, +0.f), segmentZ);
+		const Vector3f vectorD = math::Project(Vector3f(+0.f, -2.f, -2.f), segmentX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, +0.f, -2.f), segmentY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, +0.f), segmentZ);
+		CHECK(vectorA == Vector3f::Zero);
+		CHECK(vectorB == Vector3f::Zero);
+		CHECK(vectorC == Vector3f::Zero);
+		CHECK(vectorD == Vector3f::Zero);
+		CHECK(vectorE == Vector3f::Zero);
+		CHECK(vectorF == Vector3f::Zero);
+	}
 
+	{
+		INFO("Point is projected to second Segment point.");
+		const Vector3f vectorA = math::Project(Vector3f(+1.f, +2.f, +2.f), segmentX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, +1.f, +2.f), segmentY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, +1.f), segmentZ);
+		const Vector3f vectorD = math::Project(Vector3f(+1.f, -2.f, -2.f), segmentX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, +1.f, -2.f), segmentY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, +1.f), segmentZ);
+		CHECK(vectorA == +Vector3f::AxisX);
+		CHECK(vectorB == +Vector3f::AxisY);
+		CHECK(vectorC == +Vector3f::AxisZ);
+		CHECK(vectorD == +Vector3f::AxisX);
+		CHECK(vectorE == +Vector3f::AxisY);
+		CHECK(vectorF == +Vector3f::AxisZ);
+	}
 
-	// min clamped
-	const Vector3f vectorJ = math::Project(Vector3f(-1.f, +2.f, +2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorK = math::Project(Vector3f(+2.f, -1.f, +2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorL = math::Project(Vector3f(+2.f, +2.f, -1.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorJ == Vector3f::Zero);
-	CHECK(vectorK == Vector3f::Zero);
-	CHECK(vectorL == Vector3f::Zero);
+	{
+		INFO("Point is beyond first point, but projected to the first Line point.");
+		const Vector3f vectorA = math::Project(Vector3f(-2.f, +2.f, +2.f), segmentX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, -2.f, +2.f), segmentY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, -2.f), segmentZ);
+		const Vector3f vectorD = math::Project(Vector3f(-2.f, -2.f, -2.f), segmentX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, -2.f, -2.f), segmentY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, -2.f), segmentZ);
+		CHECK(vectorA == -Vector3f::AxisX);
+		CHECK(vectorB == -Vector3f::AxisY);
+		CHECK(vectorC == -Vector3f::AxisZ);
+		CHECK(vectorD == -Vector3f::AxisX);
+		CHECK(vectorE == -Vector3f::AxisY);
+		CHECK(vectorF == -Vector3f::AxisZ);
+	}
 
-	// max clamped
-	const Vector3f vectorM = math::Project(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
-	const Vector3f vectorN = math::Project(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
-	const Vector3f vectorO = math::Project(Vector3f(2.f, 2.f, 2.f), Segment(Vector3f::Zero, Vector3f::AxisZ));
-	CHECK(vectorM == Vector3f::AxisX);
-	CHECK(vectorN == Vector3f::AxisY);
-	CHECK(vectorO == Vector3f::AxisZ);
+	{
+		INFO("Point is beyond second point, but projected to the second Line point.");
+		const Vector3f vectorA = math::Project(Vector3f(+2.f, +2.f, +2.f), segmentX);
+		const Vector3f vectorB = math::Project(Vector3f(+2.f, +2.f, +2.f), segmentY);
+		const Vector3f vectorC = math::Project(Vector3f(+2.f, +2.f, +2.f), segmentZ);
+		const Vector3f vectorD = math::Project(Vector3f(+2.f, -2.f, -2.f), segmentX);
+		const Vector3f vectorE = math::Project(Vector3f(-2.f, +2.f, -2.f), segmentY);
+		const Vector3f vectorF = math::Project(Vector3f(-2.f, -2.f, +2.f), segmentZ);
+		CHECK(vectorA == +Vector3f::AxisX);
+		CHECK(vectorB == +Vector3f::AxisY);
+		CHECK(vectorC == +Vector3f::AxisZ);
+		CHECK(vectorD == +Vector3f::AxisX);
+		CHECK(vectorE == +Vector3f::AxisY);
+		CHECK(vectorF == +Vector3f::AxisZ);
+	}
 }
 
 TEST_CASE("math::Vector3f::ProjectXY(Ray)")
@@ -631,7 +811,6 @@ TEST_CASE("math::Vector3f::ProjectXY(Segment)")
 	CHECK(vectorH == Vector3f::AxisY);
 	CHECK(vectorI == Vector3f::Zero);
 
-
 	// min un-clamped
 	const Vector3f vectorJ = math::ProjectXY(Vector3f(-1.f, +2.f, +2.f), Segment(Vector3f::Zero, Vector3f::AxisX));
 	const Vector3f vectorK = math::ProjectXY(Vector3f(+2.f, -1.f, +2.f), Segment(Vector3f::Zero, Vector3f::AxisY));
@@ -675,7 +854,6 @@ TEST_CASE("math::Vector3f::ProjectXZ(Ray)")
 	CHECK(vectorH == Vector3f::Zero);
 	CHECK(vectorI == Vector3f::AxisZ);
 
-
 	// min un-clamped
 	const Vector3f vectorJ = math::ProjectXZ(Vector3f(-1.f, +2.f, +2.f), Ray(Vector3f::Zero, Vector3f::AxisX));
 	const Vector3f vectorK = math::ProjectXZ(Vector3f(+2.f, -1.f, +2.f), Ray(Vector3f::Zero, Vector3f::AxisY));
@@ -718,7 +896,6 @@ TEST_CASE("math::Vector3f::ProjectXZ(Segment)")
 	CHECK(vectorG == Vector3f::AxisX);
 	CHECK(vectorH == Vector3f::Zero);
 	CHECK(vectorI == Vector3f::AxisZ);
-
 
 	// min un-clamped
 	const Vector3f vectorJ = math::ProjectXZ(Vector3f(-1.f, +2.f, +2.f), Segment(Vector3f::Zero, Vector3f::AxisX));

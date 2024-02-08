@@ -16,7 +16,6 @@ TEST_CASE("math::Intersection(Line, Plane)")
 	Vector3f c;
 
 	{
-		INFO("No Collision.");
 		INFO("Plane Normal and Line are perpendicular to each other.");
 		a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 		a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
@@ -27,7 +26,6 @@ TEST_CASE("math::Intersection(Line, Plane)")
 	}
 
 	{
-		INFO("No Collision.");
 		INFO("Line stops on the plane.");
 		a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 		a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
@@ -39,7 +37,6 @@ TEST_CASE("math::Intersection(Line, Plane)")
 	}
 
 	{
-		INFO("No Collision.");
 		INFO("Line stops short of the plane.");
 		a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 		a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
@@ -50,7 +47,6 @@ TEST_CASE("math::Intersection(Line, Plane)")
 	}
 
 	{
-		INFO("Collision.");
 		a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 		a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
 		b.m_Normal = Vector3f(+1.f, 0.f, 0.f);
@@ -68,7 +64,6 @@ TEST_CASE("math::Intersection(Ray, Plane)")
 	Vector3f c;
 
 	{
-		INFO("No Collision.");
 		INFO("Plane Normal and Ray are perpendicular to each other.");
 		a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
 		a.m_OriginPos = Vector3f(-1.f, 0.f, 0.f);
@@ -79,7 +74,6 @@ TEST_CASE("math::Intersection(Ray, Plane)")
 	}
 
 	{
-		INFO("Collision.");
 		a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
 		a.m_OriginPos = Vector3f(-1.f, 0.f, 0.f);
 		b.m_Normal = Vector3f(+1.f, 0.f, 0.f);
@@ -165,7 +159,6 @@ TEST_CASE("math::IntersectionXZ(Segment, Segment)")
 	Vector3f c;
 
 	{
-		INFO("Collision.");
 		a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 		a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
 		b.m_PointA = Vector3f(0.f, 0.f, -1.f);
@@ -176,7 +169,6 @@ TEST_CASE("math::IntersectionXZ(Segment, Segment)")
 	}
 
 	{
-		INFO("No Collision.");
 		a.m_PointA = Vector3f(-1.f, 0.f, -1.f);
 		a.m_PointB = Vector3f(+1.f, 0.f, -1.f);
 		b.m_PointA = Vector3f(-1.f, 0.f, +1.f);
@@ -195,7 +187,6 @@ TEST_CASE("math::IsOverlapping(AABB, AABB)")
 	AABB a, b;
 
 	{
-		INFO("Collision.");
 		a.m_Min = Vector3f(0.0f);
 		a.m_Max = Vector3f(1.0f);
 		b.m_Min = Vector3f(0.5f);
@@ -204,7 +195,6 @@ TEST_CASE("math::IsOverlapping(AABB, AABB)")
 	}
 
 	{
-		INFO("No Collision.");
 		a.m_Min = Vector3f(0.f);
 		a.m_Max = Vector3f(1.f);
 		b.m_Min = Vector3f(2.f);
@@ -258,14 +248,12 @@ TEST_CASE("math::IsOverlapping(AABB, Ray)")
 	Ray ray;
 
 	{
-		INFO("Collision.");
 		ray.m_Direction = -Vector3f::AxisX;
 		ray.m_OriginPos = Vector3f(1.5f, 0.5f, 0.5f);
 		CHECK(math::IsOverlapping(aabb, ray));
 	}
 
 	{
-		INFO("No Collision.");
 		ray.m_Direction = Vector3f::AxisX;
 		ray.m_OriginPos = Vector3f(1.5f, 0.5f, 0.5f);
 		CHECK(!math::IsOverlapping(aabb, ray));
@@ -340,7 +328,6 @@ TEST_CASE("math::IsOverlappingXZ(Circle, Circle)")
 	Sphere a, b;
 
 	{
-		INFO("Collision.");
 		a.m_Position = Vector3f(0.f, 0.f, 0.f);
 		a.m_Radius = 1.f;
 		b.m_Position = Vector3f(1.f, 0.f, 0.f);
@@ -350,7 +337,6 @@ TEST_CASE("math::IsOverlappingXZ(Circle, Circle)")
 	}
 
 	{
-		INFO("No Collision.");
 		a.m_Position = Vector3f(0.f, 0.f, 0.f);
 		a.m_Radius = 1.f;
 		b.m_Position = Vector3f(3.f, 0.f, 0.f);
@@ -395,7 +381,6 @@ TEST_CASE("math::IsOverlappingXZ(Circle, Line)")
 	}
 
 	{
-		INFO("No Collision.");
 		a.m_Position = Vector3f(2.f, 0.f, 0.f);
 		a.m_Radius = 1.f;
 		b.m_PointA = Vector3f(0.f, 0.f, -1.f);
@@ -440,7 +425,6 @@ TEST_CASE("math::IsOverlappingXZ(Circle, Ray)")
 	}
 
 	{
-		INFO("No Collision.");
 		a.m_Position = Vector3f(2.f, 0.f, 0.f);
 		a.m_Radius = 1.f;
 		b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
@@ -465,7 +449,6 @@ TEST_CASE("math::IsOverlappingXZ(Ray, Ray)")
 	Ray a, b;
 
 	{
-		INFO("Collision.");
 		a.m_OriginPos = Vector3f(-1.f, 0.f, 0.f);
 		a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
 		b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
@@ -475,7 +458,6 @@ TEST_CASE("math::IsOverlappingXZ(Ray, Ray)")
 	}
 
 	{
-		INFO("Collision.");
 		a.m_OriginPos = Vector3f(-10.f, 0.f, 0.f);
 		a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
 		b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
@@ -485,7 +467,6 @@ TEST_CASE("math::IsOverlappingXZ(Ray, Ray)")
 	}
 
 	{
-		INFO("Collision.");
 		a.m_OriginPos = Vector3f(-1.f, -1.f, 0.f);
 		a.m_Direction = Vector3f(+1.f, -1.f, 0.f);
 		b.m_OriginPos = Vector3f(0.f, +1.f, -1.f);
@@ -520,7 +501,6 @@ TEST_CASE("math::IsOverlappingXZ(Segment, Segment)")
 	Segment a, b;
 
 	{
-		INFO("Collision.");
 		a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 		a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
 		b.m_PointA = Vector3f(0.f, 0.f, -1.f);
@@ -530,7 +510,6 @@ TEST_CASE("math::IsOverlappingXZ(Segment, Segment)")
 	}
 
 	{
-		INFO("No Collision.");
 		a.m_PointA = Vector3f(-10.f, 0.f, 0.f);
 		a.m_PointB = Vector3f(-0.1f, 0.f, 0.f);
 		b.m_PointA = Vector3f(0.f, 0.f, -1.f);
@@ -540,7 +519,6 @@ TEST_CASE("math::IsOverlappingXZ(Segment, Segment)")
 	}
 
 	{
-		INFO("Collision.");
 		a.m_PointA = Vector3f(-1.f, -1.f, 0.f);
 		a.m_PointB = Vector3f(+1.f, -1.f, 0.f);
 		b.m_PointA = Vector3f(0.f, +1.f, -1.f);
