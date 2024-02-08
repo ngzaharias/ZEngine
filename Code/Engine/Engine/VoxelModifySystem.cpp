@@ -29,7 +29,7 @@ namespace
 			+ innerPos.z * voxel::s_BlockCount2D;
 	}
 
-	Vector3f Raycast(voxel::ModifySystem::World& world, const Line& line)
+	Vector3f Raycast(voxel::ModifySystem::World& world, const Segment& segment)
 	{
 		Array<ecs::Entity> voxelEntities;
 		auto& linesComponent = world.GetSingleton<eng::LinesComponent>();
@@ -39,17 +39,17 @@ namespace
 			const AABB aabb = AABB(transform.m_Translate, transform.m_Translate + Vector3f(voxel::s_ChunkSize1D));
 
 			Vector3f intersectPos;
-			if (!math::Intersection(aabb, line, intersectPos))
+			if (!math::Intersection(segment, aabb, intersectPos))
 				continue;
 
 			linesComponent.AddAABB(
-				transform.m_Translate + Vector3f(voxel::s_ChunkSize1D * 0.5f), 
-				voxel::s_ChunkSize1D * 0.51f, 
+				transform.m_Translate + Vector3f(voxel::s_ChunkSize1D * 0.5f),
+				voxel::s_ChunkSize1D * 0.51f,
 				Vector4f(1.f));
 			voxelEntities.Append(voxelEntity);
 		}
 
-		const path::Raytracer raytracer(line.m_PointA, line.m_PointB, voxel::s_BlockSize1D);
+		const path::Raytracer raytracer(segment.m_PointA, segment.m_PointB, voxel::s_BlockSize1D);
 		for (const Vector3i& gridPos : raytracer)
 		{
 			const Vector3f worldPos = math::ToWorldPos(gridPos, voxel::s_BlockSize1D);
@@ -72,7 +72,7 @@ namespace
 				return worldPos;
 			}
 		}
-		return line.m_PointB;
+		return segment.m_PointB;
 	}
 }
 
@@ -98,8 +98,8 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 	auto& settingsComponent = world.GetSingleton<voxel::ModifySettingsComponent>();
 	auto& textComponent = world.GetComponent<eng::TextComponent>(ecs::Entity(0));
 	textComponent.m_Text = std::format(
-		"Type = {}, Radius = {}", 
-		(int)settingsComponent.m_Type, 
+		"Type = {}, Radius = {}",
+		(int)settingsComponent.m_Type,
 		settingsComponent.m_Radius);
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
@@ -107,12 +107,12 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
 		const auto& transformComponent = world.GetComponent<const eng::TransformComponent>(cameraEntity);
 
-		const Line line = Line(
-			transformComponent.m_Translate, 
-			transformComponent.m_Translate + 
-			Vector3f::AxisZ * Quaternion::FromRotator(transformComponent.m_Rotate) * 
+		const Segment segment = Segment(
+			transformComponent.m_Translate,
+			transformComponent.m_Translate +
+			Vector3f::AxisZ * Quaternion::FromRotator(transformComponent.m_Rotate) *
 			100000.f);
-		const Vector3f worldPos = Raycast(world, line);
+		const Vector3f worldPos = Raycast(world, segment);
 		const Vector3i gridPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
 		const Vector3f alignPos = math::ToWorldPos(gridPos, voxel::s_BlockSize1D);
 		linesComponent.AddAABB(alignPos, voxel::s_BlockSize1D * 0.5f, Vector4f(1.f));
