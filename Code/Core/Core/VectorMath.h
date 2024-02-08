@@ -87,21 +87,21 @@ namespace math
 	inline constexpr Vector3f Project(const Vector3f& point, const Line& line);
 	/// \brief Projects the point onto the nearest position along a ray.
 	inline constexpr Vector3f Project(const Vector3f& point, const Ray& ray);
-	/// \brief Projects the point onto the nearest position along a line.
+	/// \brief Projects the point onto the nearest position along a segment.
 	inline constexpr Vector3f Project(const Vector3f& point, const Segment& segment);
 
 	/// \brief Projects the point onto the nearest position along a line on the XY plane.
 	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Line& line);
 	/// \brief Projects the point onto the nearest position along a ray on the XY plane.
 	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Ray& ray);
-	/// \brief Projects the point onto the nearest position along a line on the XY plane.
+	/// \brief Projects the point onto the nearest position along a segment on the XY plane.
 	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Segment& segment);
 
 	/// \brief Projects the point onto the nearest position along a line on the XZ plane.
 	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Line& line);
 	/// \brief Projects the point onto the nearest position along a ray on the XZ plane.
 	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Ray& ray);
-	/// \brief Projects the point onto the nearest position along a line on the XZ plane.
+	/// \brief Projects the point onto the nearest position along a segment on the XZ plane.
 	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Segment& segment);
 
 	/// \brief Reflects the vector off the plane defined by a normal.
