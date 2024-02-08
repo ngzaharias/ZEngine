@@ -21,6 +21,7 @@ namespace voxel
 	{
 	public:
 		using World = ecs::WorldView<
+			eng::LinesComponent,
 			eng::TextComponent,
 			eng::TransformComponent,
 			voxel::ModifyComponent,
