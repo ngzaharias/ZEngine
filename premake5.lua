@@ -1,3 +1,6 @@
+package.path = package.path .. ";./Code/_Premake/?.lua"
+require "SmartArguments"
+
 workspace "ZEngine"
 	location "Solution"
 	architecture "x86_64"

@@ -99,7 +99,7 @@ TEST_CASE("math::Vector3f::operator/=(float)")
 	CHECK(vector == Vector3f(2.f));
 }
 
-TEST_CASE("math::Vector3f::operator*(Matrix4x4)::Translate")
+TEST_CASE("math::Vector3f::operator*(Matrix4x4) - Translate")
 {
 	const Vector3f vectorA = Vector3f(2.f) * Matrix4x4::FromTranslate(Vector3f(4.f));
 	CHECK(vectorA == Vector3f(6.f));
@@ -108,7 +108,7 @@ TEST_CASE("math::Vector3f::operator*(Matrix4x4)::Translate")
 	CHECK(vectorB == Vector3f(-2.f));
 }
 
-TEST_CASE("math::Vector3f::operator*(Matrix4x4)::Rotate")
+TEST_CASE("math::Vector3f::operator*(Matrix4x4) - Rotate")
 {
 	{
 		INFO("X-Axis");
@@ -157,7 +157,7 @@ TEST_CASE("math::Vector3f::operator*(Matrix4x4)::Rotate")
 	}
 }
 
-TEST_CASE("math::Vector3f::operator*(Matrix4x4)::Scale")
+TEST_CASE("math::Vector3f::operator*(Matrix4x4) - Scale")
 {
 	const Vector3f vectorA = Vector3f(2.f) * Matrix4x4::FromScale({ 3.f });
 	const Vector3f vectorB = Vector3f(6.f) * Matrix4x4::FromScale({ 0.5f });
@@ -173,27 +173,27 @@ TEST_CASE("math::Vector3f::operator*(Matrix4x4)::Scale")
 	CHECK(vectorF == Vector3f(-6.f));
 }
 
-TEST_CASE("math::Vector3f::operator*(Matrix4x4)::Translate & Rotate")
+TEST_CASE("math::Vector3f::operator*(Matrix4x4) - Translate & Rotate")
 {
 	const Quaternion quaternion = Quaternion::FromAxisAngle(Vector3f::AxisZ, math::ToRadians(90.f));
 	const Vector3f vector = Vector3f(2.f) * Matrix4x4::FromTransform(Vector3f(1.f), quaternion, 1.f);
 	CHECK(IsNearly(vector, Vector3f(-1.f, 3.f, 3.f)));
 }
 
-TEST_CASE("math::Vector3f::operator*(Matrix4x4)::Translate & Scale")
+TEST_CASE("math::Vector3f::operator*(Matrix4x4) - Translate & Scale")
 {
 	const Vector3f vector = Vector3f(2.f) * Matrix4x4::FromTransform(Vector3f(1.f), Quaternion::Identity, 2.f);
 	CHECK(vector == Vector3f(5.f));
 }
 
-TEST_CASE("math::Vector3f::operator*(Matrix4x4)::Rotate & Scale")
+TEST_CASE("math::Vector3f::operator*(Matrix4x4) - Rotate & Scale")
 {
 	const Quaternion quaternion = Quaternion::FromAxisAngle(Vector3f::AxisZ, math::ToRadians(90.f));
 	const Vector3f vector = Vector3f(2.f) * Matrix4x4::FromTransform(Vector3f(0.f), quaternion, 2.f);
 	CHECK(IsNearly(vector, Vector3f(-4.f, 4.f, 4.f)));
 }
 
-TEST_CASE("math::Vector3f::operator*(Matrix4x4)::Translate, Rotate & Scale")
+TEST_CASE("math::Vector3f::operator*(Matrix4x4) - Translate, Rotate & Scale")
 {
 	const Quaternion quaternion = Quaternion::FromAxisAngle(Vector3f::AxisZ, math::ToRadians(90.f));
 	const Vector3f vector = Vector3f(2.f) * Matrix4x4::FromTransform(Vector3f(2.f), quaternion, 2.f);
