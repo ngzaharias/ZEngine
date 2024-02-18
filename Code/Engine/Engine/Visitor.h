@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Core/Variant.h>
 #include <Engine/TomlTypes.h>
 
 #include <iostream>
@@ -141,6 +142,9 @@ namespace eng
 		void VisitPrimitive(const str::StringView& key, Value& value, const Value defaultValue);
 		template<typename Value>
 		void VisitPrimitive(const int32 index, Value& value);
+
+		template<typename ...Types>
+		void VisitVariant(Variant<Types...>& value);
 
 	public:
 		toml::Table m_Root = { };

@@ -8,6 +8,7 @@
 #include <Core/Quaternion.h>
 #include <Core/Rotator.h>
 #include <Core/String.h>
+#include <Core/Variant.h>
 #include <Core/Vector.h>
 
 #include <Engine/Visitor.h>
@@ -19,54 +20,56 @@ namespace
 	const str::Guid& strGuidA = GUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
 	const str::Guid& strGuidB = GUID("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
 
-	const str::Name strBool = NAME("Bool");
-	const str::Name strFloat = NAME("Float");
-	const str::Name strDouble = NAME("Double");
-	const str::Name strInt8 = NAME("Int8");
-	const str::Name strInt16 = NAME("Int16");
-	const str::Name strInt32 = NAME("Int32");
-	const str::Name strInt64 = NAME("Int64");
-	const str::Name strUInt8 = NAME("UInt8");
-	const str::Name strUInt16 = NAME("UInt16");
-	const str::Name strUInt32 = NAME("UInt32");
+	constexpr str::StringView strBool = "Bool";
+	constexpr str::StringView strFloat = "Float";
+	constexpr str::StringView strDouble = "Double";
+	constexpr str::StringView strInt8 = "Int8";
+	constexpr str::StringView strInt16 = "Int16";
+	constexpr str::StringView strInt32 = "Int32";
+	constexpr str::StringView strInt64 = "Int64";
+	constexpr str::StringView strUInt8 = "UInt8";
+	constexpr str::StringView strUInt16 = "UInt16";
+	constexpr str::StringView strUInt32 = "UInt32";
 
-	const str::Name strEnumInt8 = NAME("EnumInt8");
-	const str::Name strEnumInt16 = NAME("EnumInt16");
-	const str::Name strEnumInt32 = NAME("EnumInt32");
-	const str::Name strEnumInt64 = NAME("EnumInt64");
-	const str::Name strEnumUInt8 = NAME("EnumUInt8");
-	const str::Name strEnumUInt16 = NAME("EnumUInt16");
-	const str::Name strEnumUInt32 = NAME("EnumUInt32");
+	constexpr str::StringView strEnumInt8 = "EnumInt8";
+	constexpr str::StringView strEnumInt16 = "EnumInt16";
+	constexpr str::StringView strEnumInt32 = "EnumInt32";
+	constexpr str::StringView strEnumInt64 = "EnumInt64";
+	constexpr str::StringView strEnumUInt8 = "EnumUInt8";
+	constexpr str::StringView strEnumUInt16 = "EnumUInt16";
+	constexpr str::StringView strEnumUInt32 = "EnumUInt32";
 
-	const str::Name strGuid = NAME("Guid");
-	const str::Name strName = NAME("Name");
-	const str::Name strPath = NAME("Path");
-	const str::Name strString = NAME("String");
+	constexpr str::StringView strGuid = "Guid";
+	constexpr str::StringView strName = "Name";
+	constexpr str::StringView strPath = "Path";
+	constexpr str::StringView strString = "String";
 
-	const str::Name strStruct = NAME("Struct");
+	constexpr str::StringView strStruct = "Struct";
 
-	const str::Name strQuaternion = NAME("Quaternion");
-	const str::Name strRotator = NAME("Rotator");
-	const str::Name strVector2f = NAME("Vector2f");
-	const str::Name strVector2i = NAME("Vector2i");
-	const str::Name strVector2u = NAME("Vector2u");
-	const str::Name strVector3f = NAME("Vector3f");
-	const str::Name strVector3i = NAME("Vector3i");
-	const str::Name strVector4f = NAME("Vector4f");
+	constexpr str::StringView strQuaternion = "Quaternion";
+	constexpr str::StringView strRotator = "Rotator";
+	constexpr str::StringView strVector2f = "Vector2f";
+	constexpr str::StringView strVector2i = "Vector2i";
+	constexpr str::StringView strVector2u = "Vector2u";
+	constexpr str::StringView strVector3f = "Vector3f";
+	constexpr str::StringView strVector3i = "Vector3i";
+	constexpr str::StringView strVector4f = "Vector4f";
 
-	const str::Name strArrayEnum = NAME("Array<Enum>");
-	const str::Name strArrayInt32 = NAME("Array<Int32>");
-	const str::Name strArrayVector2f = NAME("Array<Vector2f>");
-	const str::Name strArrayArrayEnum = NAME("Array<Array<Enum>>");
-	const str::Name strArrayArrayInt32 = NAME("Array<Array<Int32>>");
-	const str::Name strArrayArrayVector2f = NAME("Array<Array<Vector2f>>");
+	constexpr str::StringView strArrayEnum = "Array<Enum>";
+	constexpr str::StringView strArrayInt32 = "Array<Int32>";
+	constexpr str::StringView strArrayVector2f = "Array<Vector2f>";
+	constexpr str::StringView strArrayArrayEnum = "Array<Array<Enum>>";
+	constexpr str::StringView strArrayArrayInt32 = "Array<Array<Int32>>";
+	constexpr str::StringView strArrayArrayVector2f = "Array<Array<Vector2f>>";
 
-	const str::Name strMapEnum = NAME("Map<Enum>");
-	const str::Name strMapInt32 = NAME("Map<Int32>");
-	const str::Name strMapVector2f = NAME("Map<Vector2f>");
-	const str::Name strMapMapEnum = NAME("Map<Map<Enum>>");
-	const str::Name strMapMapInt32 = NAME("Map<Map<Int32>>");
-	const str::Name strMapMapVector2f = NAME("Map<Map<Vector2f>>");
+	constexpr str::StringView strMapEnum = "Map<Enum>";
+	constexpr str::StringView strMapInt32 = "Map<Int32>";
+	constexpr str::StringView strMapVector2f = "Map<Vector2f>";
+	constexpr str::StringView strMapMapEnum = "Map<Map<Enum>>";
+	constexpr str::StringView strMapMapInt32 = "Map<Map<Int32>>";
+	constexpr str::StringView strMapMapVector2f = "Map<Map<Vector2f>>";
+
+	constexpr str::StringView strVariant = "Variant";
 
 	enum class EInt8 : int8 { Min = -INT8_MAX, Max = +INT8_MAX };
 	enum class EInt16 : int16 { Min = -INT16_MAX, Max = +INT16_MAX };
@@ -1164,7 +1167,7 @@ TEST_CASE("eng::Visitor::Array<Enum>")
 		Array<EInt32> myArray = { EInt32::Max };
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayEnum, myArray, { });
+		visitor.Visit(strArrayEnum, myArray, {});
 
 		str::String string = visitor;
 		CHECK(string == "'Array<Enum>' = [ 2147483647 ]");
@@ -1175,7 +1178,7 @@ TEST_CASE("eng::Visitor::Array<Enum>")
 		Array<EInt32> myArray;
 		eng::Visitor visitor = str::StringView("'Array<Enum>' = [ 2147483647 ]");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayEnum, myArray, { });
+		visitor.Visit(strArrayEnum, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		CHECK(myArray[0] == EInt32::Max);
@@ -1200,7 +1203,7 @@ TEST_CASE("eng::Visitor::Array<Int32>")
 		Array<int32> myArray = { 2 };
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayInt32, myArray, { });
+		visitor.Visit(strArrayInt32, myArray, {});
 
 		str::String string = visitor;
 		CHECK(string == "'Array<Int32>' = [ 2 ]");
@@ -1211,7 +1214,7 @@ TEST_CASE("eng::Visitor::Array<Int32>")
 		Array<int32> myArray;
 		eng::Visitor visitor = str::StringView("'Array<Int32>' = [ 2 ]");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayInt32, myArray, { });
+		visitor.Visit(strArrayInt32, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		CHECK(myArray[0] == 2);
@@ -1236,7 +1239,7 @@ TEST_CASE("eng::Visitor::Array<Vector2f>")
 		Array<Vector2f> myArray = { Vector2f::One };
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayVector2f, myArray, { });
+		visitor.Visit(strArrayVector2f, myArray, {});
 
 		str::String string = visitor;
 		CHECK(string == "'Array<Vector2f>' = [ { X = 1.0, Y = 1.0 } ]");
@@ -1247,7 +1250,7 @@ TEST_CASE("eng::Visitor::Array<Vector2f>")
 		Array<Vector2f> myArray;
 		eng::Visitor visitor = str::StringView("[['Array<Vector2f>']]\n X = 1.0\n Y = 1.0");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayVector2f, myArray, { });
+		visitor.Visit(strArrayVector2f, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		CHECK(myArray[0] == Vector2f::One);
@@ -1258,7 +1261,7 @@ TEST_CASE("eng::Visitor::Array<Vector2f>")
 		Array<Vector2f> myArray;
 		eng::Visitor visitor = str::StringView("'Array<Vector2f>' = [ { X = 1.0, Y = 1.0 } ]");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayVector2f, myArray, { });
+		visitor.Visit(strArrayVector2f, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		CHECK(myArray[0] == Vector2f::One);
@@ -1269,7 +1272,7 @@ TEST_CASE("eng::Visitor::Array<Vector2f>")
 		Array<Vector2f> myArray;
 		eng::Visitor visitor = str::StringView("[['Array<Vector2f>']]\n X = 1.0\n Y = 1.0\n [['Array<Vector2f>']]\n X = 2.0\n Y = 2.0");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayVector2f, myArray, { });
+		visitor.Visit(strArrayVector2f, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 2);
 		CHECK(myArray[0] == Vector2f(1.f));
@@ -1295,7 +1298,7 @@ TEST_CASE("eng::Visitor::Array<Array<Enum>>")
 		Array<Array<EInt32>> myArray = { { EInt32::Max } };
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayArrayEnum, myArray, { });
+		visitor.Visit(strArrayArrayEnum, myArray, {});
 
 		str::String string = visitor;
 		CHECK(string == "'Array<Array<Enum>>' = [ [ 2147483647 ] ]");
@@ -1306,7 +1309,7 @@ TEST_CASE("eng::Visitor::Array<Array<Enum>>")
 		Array<Array<EInt32>> myArray;
 		eng::Visitor visitor = str::StringView("'Array<Array<Enum>>' = [ [ 2147483647 ] ]");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayArrayEnum, myArray, { });
+		visitor.Visit(strArrayArrayEnum, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		REQUIRE(myArray[0].GetCount() == 1);
@@ -1333,7 +1336,7 @@ TEST_CASE("eng::Visitor::Array<Array<Int32>>")
 		Array<Array<int32>> myArray = { { 2 } };
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayArrayInt32, myArray, { });
+		visitor.Visit(strArrayArrayInt32, myArray, {});
 
 		str::String string = visitor;
 		CHECK(string == "'Array<Array<Int32>>' = [ [ 2 ] ]");
@@ -1344,7 +1347,7 @@ TEST_CASE("eng::Visitor::Array<Array<Int32>>")
 		Array<Array<int32>> myArray;
 		eng::Visitor visitor = str::StringView("'Array<Array<Int32>>' = [ [ 2 ] ]");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayArrayInt32, myArray, { });
+		visitor.Visit(strArrayArrayInt32, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		REQUIRE(myArray[0].GetCount() == 1);
@@ -1371,7 +1374,7 @@ TEST_CASE("eng::Visitor::Array<Array<Vector2f>>")
 		Array<Array<Vector2f>> myArray = { { Vector2f::One } };
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayArrayVector2f, myArray, { });
+		visitor.Visit(strArrayArrayVector2f, myArray, {});
 
 		str::String string = visitor;
 		CHECK(string == "'Array<Array<Vector2f>>' = [ [ { X = 1.0, Y = 1.0 } ] ]");
@@ -1382,7 +1385,7 @@ TEST_CASE("eng::Visitor::Array<Array<Vector2f>>")
 		Array<Array<Vector2f>> myArray;
 		eng::Visitor visitor = str::StringView("'Array<Array<Vector2f>>' = [ [ { X = 1.0, Y = 1.0 } ] ]");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayArrayVector2f, myArray, { });
+		visitor.Visit(strArrayArrayVector2f, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		REQUIRE(myArray[0].GetCount() == 1);
@@ -1409,7 +1412,7 @@ TEST_CASE("eng::Visitor::Map<Enum>")
 		Map<str::String, EInt32> myMap = { { "A", EInt32::Max } };
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapEnum, myMap, { });
+		visitor.Visit(strMapEnum, myMap, {});
 
 		str::String string = visitor;
 		CHECK(string == "['Map<Enum>']\nA = 2147483647");
@@ -1420,7 +1423,7 @@ TEST_CASE("eng::Visitor::Map<Enum>")
 		Map<str::String, EInt32> myMap;
 		eng::Visitor visitor = str::StringView("['Map<Enum>']\nA = 2147483647");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapEnum, myMap, { });
+		visitor.Visit(strMapEnum, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		CHECK(myMap["A"] == EInt32::Max);
@@ -1445,7 +1448,7 @@ TEST_CASE("eng::Visitor::Map<Int32>")
 		Map<str::String, int32> myMap = { { "A", 2 } };
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapInt32, myMap, { });
+		visitor.Visit(strMapInt32, myMap, {});
 
 		str::String string = visitor;
 		CHECK(string == "['Map<Int32>']\nA = 2");
@@ -1456,7 +1459,7 @@ TEST_CASE("eng::Visitor::Map<Int32>")
 		Map<str::String, int32> myMap;
 		eng::Visitor visitor = str::StringView("['Map<Int32>']\nA = 2");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapInt32, myMap, { });
+		visitor.Visit(strMapInt32, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		CHECK(myMap["A"] == 2);
@@ -1481,7 +1484,7 @@ TEST_CASE("eng::Visitor::Map<Vector2f>")
 		Map<str::String, Vector2f> myMap = { { "A", Vector2f::One } };
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapVector2f, myMap, { });
+		visitor.Visit(strMapVector2f, myMap, {});
 
 		str::String string = visitor;
 		CHECK(string == "['Map<Vector2f>']\nA = { X = 1.0, Y = 1.0 }");
@@ -1492,7 +1495,7 @@ TEST_CASE("eng::Visitor::Map<Vector2f>")
 		Map<str::String, Vector2f> myMap;
 		eng::Visitor visitor = str::StringView("['Map<Vector2f>']\nA = { X = 1.0, Y = 1.0 }");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapVector2f, myMap, { });
+		visitor.Visit(strMapVector2f, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		CHECK(myMap["A"] == Vector2f::One);
@@ -1518,7 +1521,7 @@ TEST_CASE("eng::Visitor::Map<Map<Enum>>")
 		myMap["A"]["B"] = EInt32::Max;
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapMapEnum, myMap, { });
+		visitor.Visit(strMapMapEnum, myMap, {});
 
 		str::String string = visitor;
 		CHECK(string == "['Map<Map<Enum>>'.A]\nB = 2147483647");
@@ -1529,7 +1532,7 @@ TEST_CASE("eng::Visitor::Map<Map<Enum>>")
 		Map<str::String, Map<str::String, EInt32>> myMap;
 		eng::Visitor visitor = str::StringView("['Map<Map<Enum>>'.A]\nB = 2147483647");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapMapEnum, myMap, { });
+		visitor.Visit(strMapMapEnum, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		REQUIRE(myMap["A"].GetCount() == 1);
@@ -1562,7 +1565,7 @@ TEST_CASE("eng::Visitor::Map<Map<Int32>>")
 		myMap["A"]["B"] = 2;
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapMapInt32, myMap, { });
+		visitor.Visit(strMapMapInt32, myMap, {});
 
 		str::String string = visitor;
 		CHECK(string == "['Map<Map<Int32>>'.A]\nB = 2");
@@ -1573,7 +1576,7 @@ TEST_CASE("eng::Visitor::Map<Map<Int32>>")
 		Map<str::String, Map<str::String, int32>> myMap;
 		eng::Visitor visitor = str::StringView("['Map<Map<Int32>>'.A]\nB = 2");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapMapInt32, myMap, { });
+		visitor.Visit(strMapMapInt32, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		REQUIRE(myMap["A"].GetCount() == 1);
@@ -1606,7 +1609,7 @@ TEST_CASE("eng::Visitor::Map<Map<Vector2f>>")
 		myMap["A"]["B"] = Vector2f::One;
 		eng::Visitor visitor;
 		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapMapVector2f, myMap, { });
+		visitor.Visit(strMapMapVector2f, myMap, {});
 
 		str::String string = visitor;
 		CHECK(string == "['Map<Map<Vector2f>>'.A]\nB = { X = 1.0, Y = 1.0 }");
@@ -1617,7 +1620,7 @@ TEST_CASE("eng::Visitor::Map<Map<Vector2f>>")
 		Map<str::String, Map<str::String, Vector2f>> myMap;
 		eng::Visitor visitor = str::StringView("['Map<Map<Vector2f>>'.A]\nB = { X = 1.0, Y = 1.0 }");
 		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapMapVector2f, myMap, { });
+		visitor.Visit(strMapMapVector2f, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		REQUIRE(myMap["A"].GetCount() == 1);
@@ -1639,5 +1642,41 @@ TEST_CASE("eng::Visitor::Map<Map<Vector2f>>")
 		REQUIRE(myMap.GetCount() == 1);
 		REQUIRE(myMap["A"].GetCount() == 1);
 		CHECK(myMap["A"]["B"] == Vector2f::One);
+	}
+}
+
+TEST_CASE("eng::Visitor::Variant<bool, int32>")
+{
+	{
+		INFO("Write");
+		Variant<bool, int32> myVariant = 3;
+		eng::Visitor visitor;
+		visitor.SetMode(eng::Visitor::Write);
+		visitor.Visit(strVariant, myVariant, {});
+
+		str::String string = visitor;
+		CHECK(string == "[Variant]\nTypeId = 1\nTypeVal = 3");
+	}
+
+	{
+		INFO("Read");
+		Variant<bool, int32> myVariant;
+		eng::Visitor visitor = str::StringView("Variant = { TypeId = 1, TypeVal = 3 }");
+		visitor.SetMode(eng::Visitor::Read);
+		visitor.Visit(strVariant, myVariant, Variant<bool, int32>{0});
+
+		REQUIRE(std::holds_alternative<int32>(myVariant));
+		CHECK(std::get<int32>(myVariant) == 3);
+	}
+
+	{
+		INFO("Read - Default");
+		Variant<bool, int32> myVariant;
+		eng::Visitor visitor = str::StringView("");
+		visitor.SetMode(eng::Visitor::Read);
+		visitor.Visit(strVariant, myVariant, Variant<bool, int32>{3});
+
+		REQUIRE(std::holds_alternative<int32>(myVariant));
+		CHECK(std::get<int32>(myVariant) == 3);
 	}
 }
