@@ -16,6 +16,7 @@
 #include "GameClient/NetworkStopSystem.h"
 #include "GameClient/ProjectileSpawnSystem.h"
 #include "GameClient/ProjectileTrajectorySystem.h"
+#include "GameClient/SpringDamperSystem.h"
 #include "GameClient/TransformSystem.h"
 #include "GameClient/VelocitySystem.h"
 #include "GameClient/VisualSystem.h"
@@ -33,6 +34,7 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld, const clt::SystemDepend
 	entityWorld.RegisterSystem<movement::VelocitySystem>();
 	entityWorld.RegisterSystem<projectile::SpawnSystem>();
 	entityWorld.RegisterSystem<projectile::TrajectorySystem>();
+	entityWorld.RegisterSystem<spring::DamperSystem>();
 	entityWorld.RegisterSystem<transform::TransformSystem>();
 	entityWorld.RegisterSystem<visual::VisualSystem>();
 }
