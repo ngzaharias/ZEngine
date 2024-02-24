@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Engine/CameraTypes.h>
 #include <Engine/Prototype.h>
 #include <Engine/PrototypeLoader.h>
 #include <Engine/TomlTypes.h>
@@ -17,6 +18,7 @@ namespace eng
 
 	struct CameraPrototype final : public eng::Prototype
 	{
+		camera::Projection m_Projection = camera::Perspective();
 	};
 
 	class CameraPrototypeLoader final : public eng::PrototypeLoader
