@@ -105,10 +105,7 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
-		const Matrix4x4 cameraView = Matrix4x4::FromTransform(
-			cameraTransform.m_Translate,
-			Quaternion::FromRotator(cameraTransform.m_Rotate),
-			cameraTransform.m_Scale).Inversed();
+		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 		Array<RenderBatchID> batchIDs;
 
@@ -122,13 +119,12 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 				if (!meshComponent.m_StaticMesh.IsValid())
 					continue;
 
-				RenderBatchID id;
+				RenderBatchID& id = batchIDs.Emplace();
 				id.m_Entity = renderEntity;
 				id.m_Depth = math::DistanceSqr(meshTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_TextureId = { };
 				id.m_ShaderId = strPhongShader;
 				id.m_StaticMeshId = meshComponent.m_StaticMesh;
-				batchIDs.Append(std::move(id));
 			}
 		}
 
@@ -196,15 +192,12 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 			const auto& meshTransform = world.GetComponent<const eng::TransformComponent>(id.m_Entity);
 			const auto& meshAsset = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
 
-			Matrix4x4 model = Matrix4x4::FromTransform(
-				meshTransform.m_Translate,
-				Quaternion::FromRotator(meshTransform.m_Rotate),
-				meshTransform.m_Scale);
+			const Matrix4x4 model = meshTransform.ToTransform();
 
 			const Vector4f& colour = colour::From(id.m_Entity);
 
 			batchData.m_Colours.Emplace(colour.x, colour.y, colour.z);
-			batchData.m_Models.Append(std::move(model));
+			batchData.m_Models.Append(model);
 			batchData.m_TexParams.Append(Vector4f::Zero);
 
 			// do last

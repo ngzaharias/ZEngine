@@ -144,10 +144,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 			const Vector3f translate = cameraTransform.m_Translate + offset;
 
 			const Matrix4x4 lightProj = camera::GetProjection(bufferComponent.m_ShadowSize, orthographic);
-			const Matrix4x4 lightView = Matrix4x4::FromTransform(
-				translate,
-				lightRotate,
-				Vector3f::One).Inversed();
+			const Matrix4x4 lightView = lightTransform.ToTransform().Inversed();
 
 			Array<RenderBatchID> batchIDs;
 
@@ -159,11 +156,10 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 					if (!meshComponent.m_StaticMesh.IsValid())
 						continue;
 
-					RenderBatchID id;
+					RenderBatchID& id = batchIDs.Emplace();
 					id.m_Entity = renderEntity;
 					id.m_ShaderId = strDepthShader;
 					id.m_StaticMeshId = meshComponent.m_StaticMesh;
-					batchIDs.Append(std::move(id));
 				}
 			}
 
@@ -192,11 +188,8 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 				const auto& meshTransform = world.GetComponent<const eng::TransformComponent>(id.m_Entity);
 				const auto& meshAsset = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
 
-				Matrix4x4 model = Matrix4x4::FromTransform(
-					meshTransform.m_Translate,
-					Quaternion::FromRotator(meshTransform.m_Rotate),
-					meshTransform.m_Scale);
-				batchData.m_Models.Append(std::move(model));
+				const Matrix4x4 model = meshTransform.ToTransform();
+				batchData.m_Models.Append(model);
 
 				// do last
 				batchID = id;

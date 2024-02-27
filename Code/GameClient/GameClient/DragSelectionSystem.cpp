@@ -48,10 +48,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
-		const Matrix4x4 cameraView = Matrix4x4::FromTransform(
-			cameraTranslate,
-			cameraRotate,
-			cameraTransform.m_Scale);
+		const Matrix4x4 cameraView = cameraTransform.ToTransform();
 
 		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{

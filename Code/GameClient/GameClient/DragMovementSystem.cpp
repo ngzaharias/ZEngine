@@ -43,10 +43,7 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 
 		const Quaternion cameraRotate = Quaternion::FromRotator(cameraTransform.m_Rotate);
 		const Vector3f& cameraTranslate = cameraTransform.m_Translate;
-		const Matrix4x4 cameraView = Matrix4x4::FromTransform(
-			cameraTransform.m_Translate,
-			cameraRotate,
-			cameraTransform.m_Scale);
+		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 		const Vector3f mousePosition = camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
 		const Vector3f mouseForward = (mousePosition - cameraTranslate).Normalized();

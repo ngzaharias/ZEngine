@@ -101,10 +101,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
-		const Matrix4x4 cameraView = Matrix4x4::FromTransform(
-			cameraTransform.m_Translate,
-			Quaternion::FromRotator(cameraTransform.m_Rotate),
-			cameraTransform.m_Scale).Inversed();
+		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 		Array<RenderBatchID> batchIDs;
 
@@ -128,7 +125,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				id.m_ShaderId = spriteAsset.m_Shader;
 				id.m_StaticMeshId = spriteAsset.m_StaticMesh;
 				id.m_TextureId = spriteAsset.m_Texture2D;
-				batchIDs.Append(std::move(id));
+				batchIDs.Append(id);
 			}
 		}
 
@@ -153,13 +150,12 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				if (!flipbookAsset.m_Texture2D.IsValid())
 					continue;
 
-				RenderBatchID id;
+				RenderBatchID& id = batchIDs.Emplace();
 				id.m_Entity = renderEntity;
 				id.m_Depth = math::DistanceSqr(flipbookTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_ShaderId = flipbookAsset.m_Shader;
 				id.m_StaticMeshId = flipbookAsset.m_StaticMesh;
 				id.m_TextureId = flipbookAsset.m_Texture2D;
-				batchIDs.Append(std::move(id));
 			}
 		}
 
@@ -209,10 +205,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					static_cast<float>(textureSize.y / pixelsPerUnit),
 					static_cast<float>(textureSize.y / pixelsPerUnit));
 
-				Matrix4x4 model = Matrix4x4::FromTransform(
-					flipbookTransform.m_Translate,
-					Quaternion::FromRotator(flipbookTransform.m_Rotate),
-					flipbookTransform.m_Scale);
+				const Matrix4x4 model = flipbookTransform.ToTransform();
 
 				const Vector2f texcoordOffset = Vector2f(
 					spritePos.x / textureSize.x,
@@ -224,7 +217,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				const Vector4f& colour = colour::From(id.m_Entity);
 
 				batchData.m_Colours.Emplace(colour.x, colour.y, colour.z);
-				batchData.m_Models.Append(std::move(model));
+				batchData.m_Models.Append(model);
 				batchData.m_TexParams.Emplace(
 					texcoordOffset.x, texcoordOffset.y,
 					texcoordScale.x, texcoordScale.y);
@@ -254,10 +247,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					static_cast<float>(textureSize.y / pixelsPerUnit),
 					static_cast<float>(textureSize.y / pixelsPerUnit));
 
-				Matrix4x4 model = Matrix4x4::FromTransform(
-					spriteTransform.m_Translate,
-					Quaternion::FromRotator(spriteTransform.m_Rotate),
-					spriteTransform.m_Scale);
+				const Matrix4x4 model = spriteTransform.ToTransform();
 
 				const Vector2f texcoordOffset = Vector2f(
 					spritePos.x / textureSize.x,
@@ -269,7 +259,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				const Vector4f& colour = colour::From(id.m_Entity);
 
 				batchData.m_Colours.Emplace(colour.x, colour.y, colour.z);
-				batchData.m_Models.Append(std::move(model));
+				batchData.m_Models.Append(model);
 				batchData.m_TexParams.Emplace(
 					texcoordOffset.x, texcoordOffset.y,
 					texcoordScale.x, texcoordScale.y);

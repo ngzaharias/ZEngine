@@ -77,10 +77,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
-		const Matrix4x4 cameraView = Matrix4x4::FromTransform(
-			cameraTransform.m_Translate,
-			Quaternion::FromRotator(cameraTransform.m_Rotate),
-			cameraTransform.m_Scale).Inversed();
+		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 		constexpr size_t s_PointOffset = offsetof(LineVertex, m_Point);
 		constexpr size_t s_ColourOffset = offsetof(LineVertex, m_Colour);

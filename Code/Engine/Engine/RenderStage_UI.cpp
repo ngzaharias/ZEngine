@@ -120,10 +120,7 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
-		const Matrix4x4 cameraView = Matrix4x4::FromTransform(
-			cameraTransform.m_Translate,
-			Quaternion::FromRotator(cameraTransform.m_Rotate),
-			cameraTransform.m_Scale).Inversed();
+		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 		glUseProgram(shader.m_ProgramId);
 		glBindVertexArray(m_AttributeObject);
@@ -139,10 +136,7 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 			if (fontAsset.m_TextureId == 0)
 				continue;
 
-			const Matrix4x4 model = Matrix4x4::FromTransform(
-				textTransform.m_Translate,
-				Quaternion::FromRotator(textTransform.m_Rotate),
-				textTransform.m_Scale);
+			const Matrix4x4 model = textTransform.ToTransform();
 
 			Array<float> depths;
 			Array<Matrix4x4> models;
@@ -243,10 +237,7 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 			// model
 			if (shader.u_Model)
 			{
-				Matrix4x4 model = Matrix4x4::FromTransform(
-					textTransform.m_Translate,
-					Quaternion::FromRotator(textTransform.m_Rotate),
-					textTransform.m_Scale).Inversed();
+				Matrix4x4 model = textTransform.ToTransform().Inversed();
 
 				const uint32 location = *shader.u_Model;
 				glUniformMatrix4fv(location, 1, false, &model[0][0]);
