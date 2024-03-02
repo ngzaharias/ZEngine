@@ -20,7 +20,7 @@ auto ecs::FrameBuffer::AddComponent(const ecs::Entity& entity, TArgs&&... args)-
 	m_EntityChanges[entity].m_Added.Raise(componentId);
 
 	ecs::IComponentStorage* istorage = m_Components.Get(componentId);
-	Storage* storage = dynamic_cast<Storage*>(istorage);
+	Storage* storage = static_cast<Storage*>(istorage);
 	return storage->Emplace(entity, std::forward<TArgs>(args)...);
 }
 

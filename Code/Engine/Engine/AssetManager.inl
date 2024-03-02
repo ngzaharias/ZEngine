@@ -98,7 +98,7 @@ const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 
 	const auto find = cache.Find(guid);
 	if (find != cache.end())
-		return dynamic_cast<const TAsset*>(find->second);
+		return static_cast<const TAsset*>(find->second);
 
 	Z_PANIC(core::Contains(m_FileMap, guid), "Asset doesn't exist! Guid[{}]", guid.ToString().c_str());
 	const eng::AssetFile& file = m_FileMap.Get(guid);
@@ -153,8 +153,8 @@ bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
 template<typename TAsset, typename TLoader>
 bool eng::AssetManager::ImportFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath)
 {
-	const TLoader* tLoader = dynamic_cast<const TLoader*>(&loader);
-	TAsset* tAsset = dynamic_cast<TAsset*>(asset);
+	const TLoader* tLoader = static_cast<const TLoader*>(&loader);
+	TAsset* tAsset = static_cast<TAsset*>(asset);
 	return tLoader->Import(tAsset, filepath);
 }
 
@@ -167,8 +167,8 @@ bool eng::AssetManager::LoadFunction(eng::Asset* asset, const eng::AssetLoader& 
 	visitor.LoadFromFile(asset->m_Path);
 	visitor.Visit("m_Name", asset->m_Name, {});
 
-	const TLoader* tLoader = dynamic_cast<const TLoader*>(&loader);
-	TAsset* tAsset = dynamic_cast<TAsset*>(asset);
+	const TLoader* tLoader = static_cast<const TLoader*>(&loader);
+	TAsset* tAsset = static_cast<TAsset*>(asset);
 
 	return tLoader->Load(tAsset, visitor);
 }
@@ -184,8 +184,8 @@ bool eng::AssetManager::SaveFunction(eng::Asset* asset, const eng::AssetLoader& 
 	visitor.Visit("m_Name", asset->m_Name, {});
 	visitor.Visit("m_Type", asset->m_Type, {});
 
-	const TLoader* tLoader = dynamic_cast<const TLoader*>(&loader);
-	TAsset* tAsset = dynamic_cast<TAsset*>(asset);
+	const TLoader* tLoader = static_cast<const TLoader*>(&loader);
+	TAsset* tAsset = static_cast<TAsset*>(asset);
 
 	if (!tLoader->Save(tAsset, visitor))
 		return false;

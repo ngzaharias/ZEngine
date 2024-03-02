@@ -35,15 +35,15 @@ eng::Prototype* eng::PrototypeManager::NewFunction()
 template<typename TPrototype, typename TLoader>
 void eng::PrototypeManager::LoadFunction(eng::Prototype* prototype, const eng::PrototypeLoader* loader, eng::Visitor& visitor)
 {
-	const TLoader* tLoader = dynamic_cast<const TLoader*>(loader);
-	TPrototype* tPrototype = dynamic_cast<TPrototype*>(prototype);
+	const TLoader* tLoader = static_cast<const TLoader*>(loader);
+	TPrototype* tPrototype = static_cast<TPrototype*>(prototype);
 	tLoader->Load(*tPrototype, visitor);
 }
 
 template<typename TPrototype, typename TLoader>
 void eng::PrototypeManager::AddFunction(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::Prototype* prototype, const eng::PrototypeLoader* loader)
 {
-	const TLoader* tLoader = dynamic_cast<const TLoader*>(loader);
-	const TPrototype* tPrototype = dynamic_cast<const TPrototype*>(prototype);
+	const TLoader* tLoader = static_cast<const TLoader*>(loader);
+	const TPrototype* tPrototype = static_cast<const TPrototype*>(prototype);
 	tLoader->Add(world, entity, *tPrototype);
 }
