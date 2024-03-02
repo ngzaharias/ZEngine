@@ -15,12 +15,10 @@ namespace ecs
 	class SystemRegistry
 	{
 	public:
-		SystemRegistry(ecs::EntityWorld& entityWorld);
+		void Initialise(ecs::EntityWorld& entityWorld);
+		void Shutdown(ecs::EntityWorld& entityWorld);
 
-		void Initialise();
-		void Shutdown();
-
-		void Update(const GameTime& gameTime);
+		void Update(ecs::EntityWorld& entityWorld, const GameTime& gameTime);
 
 		template<class TSystem, typename... TArgs>
 		void Register(TArgs&&... args);
@@ -42,8 +40,6 @@ namespace ecs
 		static void UpdateFunction(ecs::EntityWorld& entityWorld, ecs::System& system, const GameTime& gameTime);
 
 	private:
-		ecs::EntityWorld& m_EntityWorld;
-
 		Array<ecs::SystemEntry*> m_Priorities = { };
 		SparseArray<ecs::SystemId, ecs::SystemEntry> m_Entries = { };
 	};

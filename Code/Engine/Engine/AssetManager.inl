@@ -18,7 +18,7 @@ void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 	static_assert(std::is_base_of<eng::AssetLoader, TLoader>::value, "Loader isn't a base of eng::AssetLoader!");
 
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_ASSERT_CRASH(!core::Contains(m_EntryMap, typeId), "Asset type has already been registered! TypeId[{}]", typeId);
+	Z_PANIC(!core::Contains(m_EntryMap, typeId), "Asset type has already been registered! TypeId[{}]", typeId);
 
 	eng::AssetEntry& entry = m_EntryMap[typeId];
 	entry.m_Type = type;
@@ -42,8 +42,8 @@ const TAsset* eng::AssetManager::ImportAsset(const str::Path& inputPath, const s
 {
 	constexpr TypeId typeId = ToTypeId<TAsset>();
 	const str::Guid guid = str::Guid::Generate();
-	Z_ASSERT_CRASH(core::Contains(m_EntryMap, typeId), "Asset type hasn't been registered! TypeId[{}]", typeId);
-	Z_ASSERT_CRASH(!core::Contains(m_FileMap, guid), "Duplicate Asset already exists! Guid[{}]", guid.ToString().c_str());
+	Z_PANIC(core::Contains(m_EntryMap, typeId), "Asset type hasn't been registered! TypeId[{}]", typeId);
+	Z_PANIC(!core::Contains(m_FileMap, guid), "Duplicate Asset already exists! Guid[{}]", guid.ToString().c_str());
 
 	auto& entry = m_EntryMap[typeId];
 	auto& loader = *entry.m_Loader;
@@ -90,7 +90,7 @@ const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 	PROFILE_FUNCTION();
 
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_ASSERT_CRASH(core::Contains(m_EntryMap, typeId), "Asset type hasn't been registered! TypeId[{}]", typeId);
+	Z_PANIC(core::Contains(m_EntryMap, typeId), "Asset type hasn't been registered! TypeId[{}]", typeId);
 
 	auto& entry = m_EntryMap[typeId];
 	auto& loader = *entry.m_Loader;
@@ -100,7 +100,7 @@ const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 	if (find != cache.end())
 		return dynamic_cast<const TAsset*>(find->second);
 
-	Z_ASSERT_CRASH(core::Contains(m_FileMap, guid), "Asset doesn't exist! Guid[{}]", guid.ToString().c_str());
+	Z_PANIC(core::Contains(m_FileMap, guid), "Asset doesn't exist! Guid[{}]", guid.ToString().c_str());
 	const eng::AssetFile& file = m_FileMap.Get(guid);
 
 	TAsset* asset = new TAsset();
@@ -126,7 +126,7 @@ bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
 	PROFILE_FUNCTION();
 
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_ASSERT_CRASH(core::Contains(m_EntryMap, typeId), "Asset type hasn't been registered! TypeId[{}]", typeId);
+	Z_PANIC(core::Contains(m_EntryMap, typeId), "Asset type hasn't been registered! TypeId[{}]", typeId);
 
 	auto& entry = m_EntryMap[typeId];
 	auto& save = entry.m_Save;
@@ -161,7 +161,7 @@ bool eng::AssetManager::ImportFunction(eng::Asset* asset, const eng::AssetLoader
 template<typename TAsset, typename TLoader>
 bool eng::AssetManager::LoadFunction(eng::Asset* asset, const eng::AssetLoader& loader)
 {
-	Z_ASSERT_CRASH(!asset->m_Path.IsEmpty(), "Invalid Path [{}]", asset->m_Path.ToChar());
+	Z_PANIC(!asset->m_Path.IsEmpty(), "Invalid Path [{}]", asset->m_Path.ToChar());
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(asset->m_Path);
@@ -176,7 +176,7 @@ bool eng::AssetManager::LoadFunction(eng::Asset* asset, const eng::AssetLoader& 
 template<typename TAsset, typename TLoader>
 bool eng::AssetManager::SaveFunction(eng::Asset* asset, const eng::AssetLoader& loader)
 {
-	Z_ASSERT_CRASH(!asset->m_Path.IsEmpty(), "Invalid Path [{}]", asset->m_Path.ToChar());
+	Z_PANIC(!asset->m_Path.IsEmpty(), "Invalid Path [{}]", asset->m_Path.ToChar());
 
 	eng::Visitor visitor;
 	visitor.SetMode(eng::Visitor::Write);

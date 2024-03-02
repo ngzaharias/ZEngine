@@ -21,7 +21,7 @@ Matrix4x4 camera::GetProjection(const Vector2u& windowSize, const Projection& va
 
 Matrix4x4 camera::GetProjection(const Vector2u& windowSize, const Cinematic& settings)
 {
-	Z_ASSERT_CRASH(false, "");
+	Z_PANIC(false, "");
 	return Matrix4x4::Identity;
 }
 
@@ -110,7 +110,7 @@ Vector3f camera::ScreenToWorld(const Vector2f& pixelPos, const float depth, cons
 
 Vector2f camera::WorldToScreen(const Vector3f& worldPos, const Projection& projection, const Matrix4x4& transform)
 {
-	Z_ASSERT_CRASH(false, "Incomplete function!");
+	Z_PANIC(false, "Incomplete function!");
 
 	const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 	const Matrix4x4 cameraProj = GetProjection(screenSize, projection);

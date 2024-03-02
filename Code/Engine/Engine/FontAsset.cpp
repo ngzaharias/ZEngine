@@ -113,7 +113,7 @@ bool eng::FontAssetLoader::Load(FontAsset* asset, eng::Visitor& visitor) const
 				int32 width, height, channels;
 				stbi_set_flip_vertically_on_load(true);
 				unsigned char* data = stbi_load(filepath.ToChar(), &width, &height, &channels, STBI_rgb_alpha);
-				Z_ASSERT_CRASH(data, "STB Image: Failed to load file [{}]!", filepath.ToChar());
+				Z_PANIC(data, "STB Image: Failed to load file [{}]!", filepath.ToChar());
 
 				const int32 mipmap = 0;
 				const int32 offsetX = 0, offsetY = 0, offsetZ = static_cast<int32>(glyph.m_Depth);

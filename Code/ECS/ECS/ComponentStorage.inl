@@ -55,7 +55,7 @@ inline void ecs::ComponentStorage<TComponent>::Move(IComponentStorage& destinati
 	auto& storage = dynamic_cast<ecs::ComponentStorage<TComponent>&>(destination);
 	for (auto&& [entity, component] : m_Data)
 	{
-		Z_ASSERT_CRASH(!storage.Contains(entity), "Trying to add component to an entity that already has it!");
+		Z_PANIC(!storage.Contains(entity), "Trying to add component to an entity that already has it!");
 		storage.Set(entity, std::move(component));
 	}
 	RemoveAll();
@@ -65,7 +65,7 @@ template<typename TComponent>
 inline void ecs::ComponentStorage<TComponent>::Move(const ecs::Entity& entity, IComponentStorage& destination)
 {
 	auto& storage = dynamic_cast<ecs::ComponentStorage<TComponent>&>(destination);
-	Z_ASSERT_CRASH(!storage.Contains(entity), "Trying to add component to an entity that already has it!");
+	Z_PANIC(!storage.Contains(entity), "Trying to add component to an entity that already has it!");
 
 	TComponent& component = Get(entity);
 	storage.Set(entity, std::move(component));

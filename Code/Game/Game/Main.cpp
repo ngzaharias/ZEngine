@@ -23,7 +23,7 @@ int main(int agrc, char* argv[])
 
 	// #todo: handle result
 	const int chdirResult = _chdir(immediateDirectory.ToChar());
-	Z_ASSERT_CRASH(chdirResult == 0, "Failed to swap to immediate directory [{}]", immediateDirectory.ToChar());
+	Z_PANIC(chdirResult == 0, "Failed to swap to immediate directory [{}]", immediateDirectory.ToChar());
 
 	core::LogInitialise();
 

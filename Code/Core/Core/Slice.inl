@@ -41,14 +41,14 @@ auto Slice<Type>::operator=(const Slice& rhs)->Slice&
 template<typename Type>
 auto Slice<Type>::operator [](const int32 index)->Type&
 {
-	Z_ASSERT_CRASH(index >= 0 && index < GetCount(), "Index out of bounds!");
+	Z_PANIC(index >= 0 && index < GetCount(), "Index out of bounds!");
 	return m_Begin[index];
 }
 
 template<typename Type>
 auto Slice<Type>::operator [](const int32 index) const -> const Type&
 {
-	Z_ASSERT_CRASH(index >= 0 && index < GetCount(), "Index out of bounds!");
+	Z_PANIC(index >= 0 && index < GetCount(), "Index out of bounds!");
 	return m_Begin[index];
 }
 

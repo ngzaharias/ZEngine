@@ -79,14 +79,14 @@ auto Array<Type>::operator=(std::initializer_list<Type>&& rhs)->Array&
 template<typename Type>
 auto Array<Type>::operator [](const int32 index)->Type&
 {
-	Z_ASSERT_CRASH(index >= 0 && index < GetCount(), "Index out of bounds!");
+	Z_PANIC(index >= 0 && index < GetCount(), "Index out of bounds!");
 	return m_Values[index];
 }
 
 template<typename Type>
 auto Array<Type>::operator [](const int32 index) const -> const Type&
 {
-	Z_ASSERT_CRASH(index >= 0 && index < GetCount(), "Index out of bounds!");
+	Z_PANIC(index >= 0 && index < GetCount(), "Index out of bounds!");
 	return m_Values[index];
 }
 

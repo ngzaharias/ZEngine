@@ -133,7 +133,7 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 
 void net::ReplicationHost::RegisterPeer(const PeerId& peerId)
 {
-	Z_ASSERT_CRASH(!IsRegistered(peerId), "Peer is already registered!");
+	Z_PANIC(!IsRegistered(peerId), "Peer is already registered!");
 
 	PeerReplicationData peerReplicationData;
 	peerReplicationData.m_PeerId = peerId;
@@ -142,13 +142,13 @@ void net::ReplicationHost::RegisterPeer(const PeerId& peerId)
 
 void net::ReplicationHost::UnregisterPeer(const PeerId& peerId)
 {
-	Z_ASSERT_CRASH(IsRegistered(peerId), "Peer isn't registered!");
+	Z_PANIC(IsRegistered(peerId), "Peer isn't registered!");
 	m_PeerReplicationData.Remove(peerId);
 }
 
 void net::ReplicationHost::StartReplicateToPeer(const PeerId& peerId, const ecs::Entity& entity)
 {
-	Z_ASSERT_CRASH(IsRegistered(peerId), "Peer isn't registered!");
+	Z_PANIC(IsRegistered(peerId), "Peer isn't registered!");
 
 	auto& peerReplicationData = m_PeerReplicationData.Get(peerId);
 	if (peerReplicationData.m_EntitiesToDestroy.Contains(entity))
@@ -157,7 +157,7 @@ void net::ReplicationHost::StartReplicateToPeer(const PeerId& peerId, const ecs:
 	}
 	else
 	{
-		Z_ASSERT_CRASH(!IsReplicated(peerId, entity), "Trying to start replication of an entity that is already replicated!");
+		Z_PANIC(!IsReplicated(peerId, entity), "Trying to start replication of an entity that is already replicated!");
 		peerReplicationData.m_EntitiesToCreate.Add(entity);
 		peerReplicationData.m_EntitiesReplicated.Add(entity);
 
@@ -171,7 +171,7 @@ void net::ReplicationHost::StartReplicateToPeer(const PeerId& peerId, const ecs:
 
 void net::ReplicationHost::StopReplicateToPeer(const PeerId& peerId, const ecs::Entity& entity)
 {
-	Z_ASSERT_CRASH(IsRegistered(peerId), "Peer isn't registered!");
+	Z_PANIC(IsRegistered(peerId), "Peer isn't registered!");
 
 	auto& peerReplicationData = m_PeerReplicationData.Get(peerId);
 	if (peerReplicationData.m_EntitiesToCreate.Contains(entity))
@@ -180,7 +180,7 @@ void net::ReplicationHost::StopReplicateToPeer(const PeerId& peerId, const ecs::
 	}
 	else
 	{
-		Z_ASSERT_CRASH(IsReplicated(peerId, entity), "Trying to stop replication of an entity that isn't replicated!");
+		Z_PANIC(IsReplicated(peerId, entity), "Trying to stop replication of an entity that isn't replicated!");
 		peerReplicationData.m_EntitiesToDestroy.Add(entity);
 
 		auto& peerComponent = m_EntityWorld.GetComponent<net::ReplicationComponent>(entity);
@@ -197,7 +197,7 @@ bool net::ReplicationHost::IsRegistered(const PeerId& peerId)
 
 bool net::ReplicationHost::IsReplicated(const PeerId& peerId, const ecs::Entity& entity)
 {
-	Z_ASSERT_CRASH(IsRegistered(peerId), "Peer isn't registered!");
+	Z_PANIC(IsRegistered(peerId), "Peer isn't registered!");
 
 	const auto& peerReplicationData = m_PeerReplicationData.Get(peerId);
 	return peerReplicationData.m_EntitiesReplicated.Contains(entity);

@@ -10,7 +10,7 @@ void eng::PrototypeManager::RegisterPrototype(const str::Name& type, TArgs&&... 
 	static_assert(std::is_base_of<eng::PrototypeLoader, TLoader>::value, "Loader isn't a base of eng::PrototypeLoader!");
 
 	constexpr TypeId typeId = ToTypeId<TPrototype>();
-	Z_ASSERT_CRASH(!core::Contains(m_EntryMap, typeId), "Type is already registered!");
+	Z_PANIC(!core::Contains(m_EntryMap, typeId), "Type is already registered!");
 
 	eng::PrototypeEntry& entry = m_EntryMap[typeId];
 	entry.m_Type = type;
@@ -22,7 +22,7 @@ void eng::PrototypeManager::RegisterPrototype(const str::Name& type, TArgs&&... 
 	entry.m_Load = &LoadFunction<TPrototype, TLoader>;
 	entry.m_New = &NewFunction<TPrototype>;
 
-	Z_ASSERT_CRASH(!core::Contains(m_TypeMap, type), "Type is already registered!");
+	Z_PANIC(!core::Contains(m_TypeMap, type), "Type is already registered!");
 	m_TypeMap[type] = typeId;
 }
 

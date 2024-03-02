@@ -135,7 +135,7 @@ uint32 eng::ShaderAssetLoader::Compile(uint32 shaderType, const str::StringView&
 		Z_LOG(ELog::Debug, "Compilation error in shader: {}", strInfoLog);
 		delete[] strInfoLog;
 
-		Z_ASSERT_CRASH(false, "Failed to compile shader!");
+		Z_PANIC(false, "Failed to compile shader!");
 	}
 
 	return shaderId;

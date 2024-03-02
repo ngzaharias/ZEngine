@@ -18,6 +18,6 @@ ecs::QueryMasks& ecs::QueryRegistry::GetMasks()
 
 const ecs::QueryGroup& ecs::QueryRegistry::GetGroup(const ecs::QueryId queryId) const
 {
-	Z_ASSERT_CRASH(m_Groups.Find(queryId) != m_Groups.end(), "Query hasn't been registered! Ensure that Initialise has been called.");
+	Z_PANIC(m_Groups.Find(queryId) != m_Groups.end(), "Query hasn't been registered! Ensure that Initialise has been called.");
 	return m_Groups.Get(queryId);
 }

@@ -6,6 +6,7 @@
 
 #include <cassert>
 
+/// \brief Logs a message to file and output window (if attached to visual studio).
 #define Z_ASSERT(condition, ...) \
 { \
 	if (!(condition)) \
@@ -14,7 +15,8 @@
 	} \
 }
 
-#define Z_ASSERT_CRASH(condition, ...) \
+/// \brief Logs a message to file and output window (if attached to visual studio), and then immediately crashes the program.
+#define Z_PANIC(condition, ...) \
 { \
 	if (!(condition)) \
 	{ \
@@ -26,6 +28,6 @@
 #else
 
 #define Z_ASSERT(condition, ...) {}
-#define Z_ASSERT_CRASH(condition, ...) {}
+#define Z_PANIC(condition, ...) {}
 
 #endif // ASSERTS_ENABLED

@@ -149,7 +149,7 @@ template <typename... TObjects>
 template<class TQuery>
 auto ecs::WorldView<TObjects...>::HasAny()-> bool
 {
-	Z_ASSERT_CRASH(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
+	Z_PANIC(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
 
 	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
 	const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
@@ -160,7 +160,7 @@ template <typename... TObjects>
 template<class TQuery>
 auto ecs::WorldView<TObjects...>::Query()-> const Set<Entity>&
 {
-	Z_ASSERT_CRASH(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
+	Z_PANIC(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
 
 	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
 	const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);

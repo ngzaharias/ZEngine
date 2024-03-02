@@ -10,7 +10,7 @@ ecs::EntityWorld::EntityWorld()
 	, m_EntityStorage()
 	, m_QueryRegistry()
 	, m_ManagerRegistry()
-	, m_SystemRegistry(*this)
+	, m_SystemRegistry()
 {
 }
 
@@ -35,7 +35,7 @@ void ecs::EntityWorld::Initialise()
 	m_ManagerRegistry.Initialise();
 
 	// do after managers
-	m_SystemRegistry.Initialise();
+	m_SystemRegistry.Initialise(*this);
 
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
 }
@@ -45,7 +45,7 @@ void ecs::EntityWorld::Shutdown()
 	PROFILE_FUNCTION();
 
 	// do before managers
-	m_SystemRegistry.Shutdown();
+	m_SystemRegistry.Shutdown(*this);
 
 	m_ManagerRegistry.Shutdown();
 
@@ -56,7 +56,7 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	m_SystemRegistry.Update(gameTime);
+	m_SystemRegistry.Update(*this, gameTime);
 
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
 

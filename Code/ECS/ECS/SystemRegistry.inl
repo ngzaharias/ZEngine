@@ -17,7 +17,7 @@ void ecs::SystemRegistry::Register(TArgs&&... args)
 {
 	static_assert(std::is_convertible<TSystem*, ecs::System*>::value, "System must inherit from ecs::System using the [public] keyword!");
 	static_assert(std::is_base_of<ecs::System, TSystem>::value, "Type doesn't inherit from ecs::System.");
-	Z_ASSERT_CRASH(!IsRegistered<TSystem>(), "System has already been registered!");
+	Z_PANIC(!IsRegistered<TSystem>(), "System has already been registered!");
 
 	const ecs::SystemId systemId = ToTypeIndex<TSystem, ecs::SystemTag>();
 
@@ -35,7 +35,7 @@ void ecs::SystemRegistry::Register(TArgs&&... args)
 template<class TSystem>
 void ecs::SystemRegistry::RegisterPriority(const int32 priority)
 {
-	Z_ASSERT_CRASH(IsRegistered<TSystem>(), "System hasn't been registered!");
+	Z_PANIC(IsRegistered<TSystem>(), "System hasn't been registered!");
 
 	const ecs::SystemId systemId = ToTypeIndex<TSystem, ecs::SystemTag>();
 	m_Entries.Get(systemId).m_Priority = priority;
@@ -52,12 +52,12 @@ bool ecs::SystemRegistry::IsRegistered() const
 template<class TSystem>
 TSystem& ecs::SystemRegistry::GetSystem()
 {
-	Z_ASSERT_CRASH(IsRegistered<TSystem>(), "System hasn't been registered!");
+	Z_PANIC(IsRegistered<TSystem>(), "System hasn't been registered!");
 
 	using NonConst = std::remove_const<TSystem>::type;
 	const ecs::SystemId systemId = ToTypeIndex<NonConst, ecs::SystemTag>();
 	const ecs::SystemEntry& entry = m_Entries.Get(systemId);
-	return *dynamic_cast<TSystem*>(entry.m_System);
+	return *static_cast<TSystem*>(entry.m_System);
 }
 
 template<typename TSystem>
@@ -68,7 +68,7 @@ void ecs::SystemRegistry::InitialiseFunction(ecs::EntityWorld& entityWorld, ecs:
 	{
 		WorldView worldView(entityWorld);
 
-		auto& tSystem = dynamic_cast<TSystem&>(system);
+		auto& tSystem = static_cast<TSystem&>(system);
 		tSystem.Initialise(worldView);
 	}
 	else
@@ -85,7 +85,7 @@ void ecs::SystemRegistry::ShutdownFunction(ecs::EntityWorld& entityWorld, ecs::S
 	{
 		WorldView worldView(entityWorld);
 
-		auto& tSystem = dynamic_cast<TSystem&>(system);
+		auto& tSystem = static_cast<TSystem&>(system);
 		tSystem.Shutdown(worldView);
 	}
 	else
@@ -102,7 +102,7 @@ void ecs::SystemRegistry::UpdateFunction(ecs::EntityWorld& entityWorld, ecs::Sys
 	{
 		WorldView worldView(entityWorld);
 
-		auto& tSystem = dynamic_cast<TSystem&>(system);
+		auto& tSystem = static_cast<TSystem&>(system);
 		tSystem.Update(worldView, gameTime);
 	}
 	else

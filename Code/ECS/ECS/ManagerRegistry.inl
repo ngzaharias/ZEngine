@@ -5,7 +5,7 @@ void ecs::ManagerRegistry::Register(TManager& manager)
 {
 	static_assert(std::is_convertible<TManager*, ecs::Manager*>::value, "Manager must inherit from ecs::Manager using the [public] keyword!");
 	static_assert(std::is_base_of<ecs::Manager, TManager>::value, "Type doesn't inherit from ecs::Manager.");
-	Z_ASSERT_CRASH(!IsRegistered<TManager>(), "Manager has already been registered!");
+	Z_PANIC(!IsRegistered<TManager>(), "Manager has already been registered!");
 
 	ecs::ManagerEntry entry;
 	entry.m_Manager = &manager;
@@ -21,7 +21,7 @@ void ecs::ManagerRegistry::Register(TArgs&&... args)
 {
 	static_assert(std::is_convertible<TManager*, ecs::Manager*>::value, "Manager must inherit from ecs::Manager using the [public] keyword!");
 	static_assert(std::is_base_of<ecs::Manager, TManager>::value, "Type doesn't inherit from ecs::Manager.");
-	Z_ASSERT_CRASH(!IsRegistered<TManager>(), "Manager has already been registered!");
+	Z_PANIC(!IsRegistered<TManager>(), "Manager has already been registered!");
 
 	ecs::ManagerEntry entry;
 	entry.m_Manager = new TManager(std::forward<TArgs>(args)...);
@@ -43,10 +43,10 @@ bool ecs::ManagerRegistry::IsRegistered() const
 template<class TManager>
 TManager& ecs::ManagerRegistry::GetManager()
 {
-	Z_ASSERT_CRASH(IsRegistered<TManager>(), "Manager hasn't been registered!");
+	Z_PANIC(IsRegistered<TManager>(), "Manager hasn't been registered!");
 
 	using NonConst = std::remove_const<TManager>::type;
 	const ecs::ManagerId managerId = ToTypeIndex<NonConst, ecs::ManagerTag>();
 	const ecs::ManagerEntry& entry = m_Entries.Get(managerId);
-	return *dynamic_cast<NonConst*>(entry.m_Manager);
+	return *static_cast<NonConst*>(entry.m_Manager);
 }
