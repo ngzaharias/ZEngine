@@ -7,6 +7,7 @@
 #include <ECS/FrameBuffer.h>
 #include <ECS/ManagerRegistry.h>
 #include <ECS/QueryRegistry.h>
+#include <ECS/ResourceRegistry.h>
 #include <ECS/System.h>
 #include <ECS/SystemRegistry.h>
 
@@ -31,6 +32,9 @@ namespace ecs
 
 		template<class TComponent>
 		void RegisterComponent();
+
+		template<class TResource>
+		void AddResource(TResource& resource);
 
 		/// \brief Registers an existing manager.
 		template<class TManager>
@@ -103,6 +107,7 @@ namespace ecs
 
 		ecs::ComponentRegistry m_ComponentRegistry;
 		ecs::ManagerRegistry m_ManagerRegistry;
+		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
 	};
 }
