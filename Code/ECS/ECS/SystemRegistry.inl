@@ -19,17 +19,17 @@ void ecs::SystemRegistry::Register(TArgs&&... args)
 	static_assert(std::is_base_of<ecs::System, TSystem>::value, "Type doesn't inherit from ecs::System.");
 	Z_PANIC(!IsRegistered<TSystem>(), "System has already been registered!");
 
-	const ecs::SystemId systemId = ToTypeIndex<TSystem, ecs::SystemTag>();
+	using NonConst = std::remove_const<TSystem>::type;
+	const ecs::SystemId systemId = ToTypeIndex<NonConst, ecs::SystemTag>();
 
-	ecs::SystemEntry entry;
+	ecs::SystemEntry& entry = m_Entries.Emplace(systemId);
 	entry.m_System = new TSystem(std::forward<TArgs>(args)...);
-	entry.m_Initialise = &InitialiseFunction<TSystem>;
-	entry.m_Shutdown = &ShutdownFunction<TSystem>;
-	entry.m_Update = &UpdateFunction<TSystem>;
 	entry.m_Priority = systemId;
-	entry.m_DebugName = ToTypeName<TSystem>();
+	entry.m_Name = ToTypeName<NonConst>();
 
-	m_Entries.Set(systemId, std::move(entry));
+	entry.m_Initialise = &InitialiseFunction<NonConst>;
+	entry.m_Shutdown = &ShutdownFunction<NonConst>;
+	entry.m_Update = &UpdateFunction<NonConst>;
 }
 
 template<class TSystem>

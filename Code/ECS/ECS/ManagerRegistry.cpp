@@ -9,10 +9,7 @@ void ecs::ManagerRegistry::Initialise()
 	PROFILE_FUNCTION();
 
 	for (ecs::ManagerEntry& entry : m_Entries.GetValues())
-	{
-		if (!entry.m_IsExternal)
-			entry.m_Manager->Initialise();
-	}
+		entry.m_Manager->Initialise();
 }
 
 void ecs::ManagerRegistry::Shutdown()
@@ -21,11 +18,8 @@ void ecs::ManagerRegistry::Shutdown()
 
 	for (ecs::ManagerEntry& entry : m_Entries.GetValues())
 	{
-		if (!entry.m_IsExternal)
-		{
-			entry.m_Manager->Shutdown();
-			delete entry.m_Manager;
-		}
+		entry.m_Manager->Shutdown();
+		delete entry.m_Manager;
 	}
 	m_Entries.RemoveAll();
 }
