@@ -25,7 +25,7 @@ bool SparseArray<Key, Value>::Contains(const Key& key) const
 	if (valueIndex == s_Unassigned)
 		return false;
 
-	Z_ASSERT_CRASH(m_Dense[valueIndex] == key, "");
+	Z_PANIC(m_Dense[valueIndex] == key, "");
 	return true;
 }
 
@@ -122,7 +122,7 @@ Value& SparseArray<Key, Value>::Emplace(const Key& key, Args&& ...args)
 	else
 	{
 		const int32 sparseIndex = GetIndex(key);
-		Z_ASSERT_CRASH(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
+		Z_PANIC(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
 
 		const int32 sparseCount = m_Sparse.GetCount();
 		if (sparseIndex >= sparseCount)
@@ -151,7 +151,7 @@ Value& SparseArray<Key, Value>::Set(const Key& key, Value&& value)
 	else
 	{
 		const int32 sparseIndex = GetIndex(key);
-		Z_ASSERT_CRASH(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
+		Z_PANIC(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
 
 		const int32 sparseCount = m_Sparse.GetCount();
 		if (sparseIndex >= sparseCount)
@@ -180,7 +180,7 @@ Value& SparseArray<Key, Value>::Set(const Key& key, const Value& value)
 	else
 	{
 		const int32 sparseIndex = GetIndex(key);
-		Z_ASSERT_CRASH(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
+		Z_PANIC(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
 
 		const int32 sparseCount = m_Sparse.GetCount();
 		if (sparseIndex >= sparseCount)
@@ -199,7 +199,7 @@ void SparseArray<Key, Value>::Remove(const Key& key)
 {
 	static_assert(std::is_move_assignable<Value>::value, "SparseArray 'Value' type is not move-assignable.");
 
-	Z_ASSERT_CRASH(Contains(key), "");
+	Z_PANIC(Contains(key), "");
 
 	const int32 sparseIndex = GetIndex(key);
 	const int32 valueIndex = m_Sparse[sparseIndex];

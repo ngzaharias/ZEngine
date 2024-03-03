@@ -74,8 +74,8 @@ bool eng::StaticMeshAssetLoader::Load(StaticMeshAsset* asset, eng::Visitor& visi
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(filepath.ToChar(), flags);
 
-	Z_ASSERT_CRASH(scene, "");
-	Z_ASSERT_CRASH(scene->HasMeshes(), "");
+	Z_PANIC(scene, "");
+	Z_PANIC(scene->HasMeshes(), "");
 
 	for (uint32 i = 0; i < scene->mNumMeshes; ++i)
 	{

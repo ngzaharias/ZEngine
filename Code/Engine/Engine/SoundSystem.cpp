@@ -23,7 +23,7 @@ void eng::SoundSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.GetManager<eng::AssetManager>();
+	auto& assetManager = world.GetResource<eng::AssetManager>();
 
 	for (const eng::SoundRequest& request : m_Requests)
 	{

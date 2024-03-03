@@ -194,7 +194,7 @@ namespace
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& assetBrowser = world.GetManager<eng::AssetManager>();
+				auto& assetBrowser = world.GetResource<eng::AssetManager>();
 				assetBrowser.SaveAsset(windowComponent.m_Asset, filepath);
 			}
 
@@ -209,7 +209,7 @@ namespace
 		if (!flipbook.m_Texture2D.IsValid())
 			return;
 
-		auto& assetBrowser = world.GetManager<eng::AssetManager>();
+		auto& assetBrowser = world.GetResource<eng::AssetManager>();
 		const auto* textureAsset = assetBrowser.LoadAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
 		if (!textureAsset)
 			return;
@@ -239,7 +239,7 @@ namespace
 		if (!flipbook.m_Texture2D.IsValid())
 			return;
 
-		auto& assetBrowser = world.GetManager<eng::AssetManager>();
+		auto& assetBrowser = world.GetResource<eng::AssetManager>();
 		const auto* textureAsset = assetBrowser.LoadAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
 		if (!textureAsset)
 			return;

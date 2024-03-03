@@ -1,7 +1,5 @@
 #pragma once
 
-#include <ECS/Manager.h>
-
 namespace physx
 {
 	class PxPhysics;
@@ -11,11 +9,11 @@ namespace physx
 
 namespace eng
 {
-	class PhysicsManager final : public ecs::Manager
+	class PhysicsManager final
 	{
 	public:
-		void Initialise() override;
-		void Shutdown() override;
+		void Initialise();
+		void Shutdown();
 
 		physx::PxPhysics& GetPhysics() const { return *m_Physics; }
 

@@ -13,11 +13,9 @@ namespace ecs
 
 	struct SystemEntry
 	{
-		ecs::System* m_System = nullptr;
-
 		int32 m_Priority = 0;
-		SystemId m_SystemId = INT32_MAX;
-		str::String m_DebugName = { };
+		ecs::System* m_System = nullptr;
+		str::String m_Name = { };
 
 		using Initialise = void(ecs::EntityWorld&, ecs::System&);
 		using Shutdown = void(ecs::EntityWorld&, ecs::System&);

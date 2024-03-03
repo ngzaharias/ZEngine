@@ -128,7 +128,7 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 			glDrawArrays(GL_TRIANGLES, 0, voxelDynamicMesh.m_Vertices.GetCount());
 
 #ifdef ASSERT_RENDER
-			Z_ASSERT_CRASH(voxelModel.IsValid(), "Invalid matrix for entity model!");
+			Z_PANIC(voxelModel.IsValid(), "Invalid matrix for entity model!");
 #endif
 		}
 	}

@@ -24,7 +24,7 @@ net::ReplicationPeer::ReplicationPeer(ecs::EntityWorld& entityWorld)
 
 void net::ReplicationPeer::Initialise()
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& adaptor = networkManager.GetAdaptor();
 	auto& peer = networkManager.GetPeer();
 
@@ -116,7 +116,7 @@ void net::ReplicationPeer::OnAddComponent(const net::AddComponentMessage* messag
 	Z_LOG(ELog::Network, "Peer: AddComponentMessage");
 	Z_ASSERT(core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& serializer = networkManager.GetSerializer();
 
 	const ecs::Entity& peerHandle = m_HostToPeer[message->m_Entity];
@@ -129,7 +129,7 @@ void net::ReplicationPeer::OnUpdateComponent(const net::UpdateComponentMessage* 
 	Z_LOG(ELog::Network, "Peer: UpdateComponentMessage");
 	Z_ASSERT(core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& serializer = networkManager.GetSerializer();
 
 	const ecs::Entity& peerHandle = m_HostToPeer[message->m_Entity];
@@ -142,7 +142,7 @@ void net::ReplicationPeer::OnRemoveComponent(const net::RemoveComponentMessage* 
 	Z_LOG(ELog::Network, "Peer: RemoveComponentMessage");
 	Z_ASSERT(core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& serializer = networkManager.GetSerializer();
 
 	const ecs::Entity& peerHandle = m_HostToPeer[message->m_Entity];

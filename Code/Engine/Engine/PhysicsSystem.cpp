@@ -102,7 +102,7 @@ namespace physx
 
 void eng::PhysicsSystem::Initialise(World& world)
 {
-	auto& physicsManager = world.GetManager<eng::PhysicsManager>();
+	auto& physicsManager = world.GetResource<eng::PhysicsManager>();
 	physx::PxPhysics& physics = physicsManager.GetPhysics();
 
 	physx::PxSceneDesc sceneDesc(physics.getTolerancesScale());

@@ -57,7 +57,7 @@ namespace
 				continue;
 
 			const ecs::ComponentEntry& entry = world.m_ComponentRegistry.GetEntry(i);
-			imgui::BulletHeader(entry.m_DebugName.c_str());
+			imgui::BulletHeader(entry.m_Name.c_str());
 		}
 	}
 

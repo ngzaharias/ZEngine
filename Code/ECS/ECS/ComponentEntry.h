@@ -8,7 +8,6 @@ namespace ecs
 
 	struct ComponentEntry
 	{
-		ecs::ComponentId m_ComponentId = INT32_MAX;
-		str::String m_DebugName = { };
+		str::String m_Name = { };
 	};
 }

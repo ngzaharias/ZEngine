@@ -7,6 +7,7 @@
 #include <ECS/FrameBuffer.h>
 #include <ECS/ManagerRegistry.h>
 #include <ECS/QueryRegistry.h>
+#include <ECS/ResourceRegistry.h>
 #include <ECS/System.h>
 #include <ECS/SystemRegistry.h>
 
@@ -20,24 +21,89 @@ namespace ecs
 	{
 	public:
 		EntityWorld();
-		~EntityWorld();
-
-		bool IsInitialised() const;
 
 		void Initialise();
 		void Shutdown();
 
 		void Update(const GameTime& gameTime);
 
+		template<class TType>
+		bool IsRegistered() const;
+
+		template<class TWorldView>
+		TWorldView GetWorldView();
+
+		//////////////////////////////////////////////////////////////////////////
+		// Entity
+
+		bool IsAlive(const ecs::Entity& entity) const;
+
+		auto CreateEntity()->ecs::Entity;
+
+		void DestroyEntity(const ecs::Entity& entity);
+
+		//////////////////////////////////////////////////////////////////////////
+		// Component
+
 		template<class TComponent>
 		void RegisterComponent();
 
-		/// \brief Registers an existing manager.
-		template<class TManager>
-		void RegisterManager(TManager& manager);
+		template<class TComponent>
+		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
+
+		template<class TComponent>
+		auto GetComponent(const ecs::Entity& entity, const bool alive = true)->TComponent&;
+
+		template<class TComponent, typename... TArgs>
+		auto AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto);
+		template<class TComponent, typename... TArgs>
+		auto AddEventComponent(TArgs&&... args)->decltype(auto);
+
+		template<class TComponent>
+		void RemoveComponent(const ecs::Entity& entity);
+
+		//////////////////////////////////////////////////////////////////////////
+		// Component - Singleton
+
+		template<class TComponent>
+		bool HasSingleton(const bool alive = true) const;
+
+		template<class TComponent>
+		auto GetSingleton(const bool alive = true)->TComponent&;
+
+		template<class TComponent, typename... TArgs>
+		auto AddSingleton(TArgs&&... args)->decltype(auto);
+
+		template<class TComponent>
+		void RemoveSingleton();
+
+		//////////////////////////////////////////////////////////////////////////
+		// Manager
+
 		/// \brief Registers and creates a manager.
 		template<class TManager, typename... TArgs>
 		void RegisterManager(TArgs&&... args);
+
+		template<class TManager>
+		auto GetManager()->TManager&;
+
+		//////////////////////////////////////////////////////////////////////////
+		// Resource
+
+		template<class TResource>
+		bool HasResource();
+
+		template<class TResource>
+		auto GetResource()->TResource&;
+
+		template<class TResource>
+		void AddResource(TResource& resource);
+
+		template<class TResource>
+		void RemoveResource();
+
+		//////////////////////////////////////////////////////////////////////////
+		// System
 
 		/// \brief Registers and creates a system.
 		template<class TSystem, typename... TArgs>
@@ -47,53 +113,10 @@ namespace ecs
 		template<class TSystem>
 		void RegisterSystemPriority(const int32 priority);
 
-		bool IsAlive(const ecs::Entity& entity) const;
-
-		template<class TType>
-		bool IsRegistered() const;
-
-		auto CreateEntity()->ecs::Entity;
-		void DestroyEntity(const ecs::Entity& entity);
-
-		//////////////////////////////////////////////////////////////////////////
-		// Component
-		template<class TComponent>
-		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
-		template<class TComponent>
-		bool HasSingleton(const bool alive = true) const;
-
-		template<class TComponent>
-		auto GetComponent(const ecs::Entity& entity, const bool alive = true)->TComponent&;
-		template<class TComponent>
-		auto GetSingleton(const bool alive = true)->TComponent&;
-
-		template<class TComponent, typename... TArgs>
-		auto AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto);
-		template<class TComponent, typename... TArgs>
-		auto AddEventComponent(TArgs&&... args)->decltype(auto);
-		template<class TComponent, typename... TArgs>
-		auto AddSingleton(TArgs&&... args)->decltype(auto);
-
-		template<class TComponent>
-		void RemoveComponent(const ecs::Entity& entity);
-		template<class TComponent>
-		void RemoveSingleton();
-
-		//////////////////////////////////////////////////////////////////////////
-		// Manager
-		template<class TManager>
-		auto GetManager()->TManager&;
-
-		//////////////////////////////////////////////////////////////////////////
-		// System
 		template<class TSystem>
 		auto GetSystem()->TSystem&;
 
-		template<class TWorldView>
-		TWorldView GetWorldView();
-
 	public:
-		bool m_IsInitialised = false;
 		ecs::Entity m_SingletonEntity = { };
 		Array<ecs::Entity> m_EventEntities = { };
 
@@ -103,6 +126,7 @@ namespace ecs
 
 		ecs::ComponentRegistry m_ComponentRegistry;
 		ecs::ManagerRegistry m_ManagerRegistry;
+		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
 	};
 }

@@ -54,7 +54,7 @@ void network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& networkManager = world.GetManager<eng::NetworkManager>();
+	auto& networkManager = world.GetResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 	auto& peer = networkManager.GetPeer();
 

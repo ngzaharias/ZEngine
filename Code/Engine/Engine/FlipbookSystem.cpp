@@ -21,7 +21,7 @@ void eng::FlipbookSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.GetManager<eng::AssetManager>();
+	auto& assetManager = world.GetResource<eng::AssetManager>();
 
 	for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<eng::FlipbookComponent>>())
 	{

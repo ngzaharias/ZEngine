@@ -10,7 +10,7 @@ void eng::PrototypeManager::RegisterPrototype(const str::Name& type, TArgs&&... 
 	static_assert(std::is_base_of<eng::PrototypeLoader, TLoader>::value, "Loader isn't a base of eng::PrototypeLoader!");
 
 	constexpr TypeId typeId = ToTypeId<TPrototype>();
-	Z_ASSERT_CRASH(!core::Contains(m_EntryMap, typeId), "Type is already registered!");
+	Z_PANIC(!core::Contains(m_EntryMap, typeId), "Type is already registered!");
 
 	eng::PrototypeEntry& entry = m_EntryMap[typeId];
 	entry.m_Type = type;
@@ -22,7 +22,7 @@ void eng::PrototypeManager::RegisterPrototype(const str::Name& type, TArgs&&... 
 	entry.m_Load = &LoadFunction<TPrototype, TLoader>;
 	entry.m_New = &NewFunction<TPrototype>;
 
-	Z_ASSERT_CRASH(!core::Contains(m_TypeMap, type), "Type is already registered!");
+	Z_PANIC(!core::Contains(m_TypeMap, type), "Type is already registered!");
 	m_TypeMap[type] = typeId;
 }
 
@@ -35,15 +35,15 @@ eng::Prototype* eng::PrototypeManager::NewFunction()
 template<typename TPrototype, typename TLoader>
 void eng::PrototypeManager::LoadFunction(eng::Prototype* prototype, const eng::PrototypeLoader* loader, eng::Visitor& visitor)
 {
-	const TLoader* tLoader = dynamic_cast<const TLoader*>(loader);
-	TPrototype* tPrototype = dynamic_cast<TPrototype*>(prototype);
+	const TLoader* tLoader = static_cast<const TLoader*>(loader);
+	TPrototype* tPrototype = static_cast<TPrototype*>(prototype);
 	tLoader->Load(*tPrototype, visitor);
 }
 
 template<typename TPrototype, typename TLoader>
 void eng::PrototypeManager::AddFunction(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::Prototype* prototype, const eng::PrototypeLoader* loader)
 {
-	const TLoader* tLoader = dynamic_cast<const TLoader*>(loader);
-	const TPrototype* tPrototype = dynamic_cast<const TPrototype*>(prototype);
+	const TLoader* tLoader = static_cast<const TLoader*>(loader);
+	const TPrototype* tPrototype = static_cast<const TPrototype*>(prototype);
 	tLoader->Add(world, entity, *tPrototype);
 }

@@ -12,8 +12,6 @@ namespace ecs
 	class ManagerRegistry
 	{
 	public:
-		template<class TManager>
-		void Register(TManager& manager);
 		template<class TManager, typename... TArgs>
 		void Register(TArgs&&... args);
 

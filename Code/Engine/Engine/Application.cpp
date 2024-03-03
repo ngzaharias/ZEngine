@@ -177,11 +177,10 @@ void eng::Application::Register()
 void eng::Application::Initialise()
 {
 	PROFILE_FUNCTION();
+
 	m_Window->Initialize();
 	m_AssetManager.Initialise();
-	m_NetworkManager.Initialise();
 	m_PhysicsManager.Initialise();
-	m_PrototypeManager.Initialise();
 }
 
 void eng::Application::Update(const GameTime& gameTime)
@@ -194,9 +193,8 @@ void eng::Application::Update(const GameTime& gameTime)
 void eng::Application::Shutdown()
 {
 	PROFILE_FUNCTION();
-	m_PrototypeManager.Shutdown();
+
 	m_PhysicsManager.Shutdown();
-	m_NetworkManager.Shutdown();
 	m_AssetManager.Shutdown();
 	m_Window->Shutdown();
 }

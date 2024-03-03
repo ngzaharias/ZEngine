@@ -96,7 +96,7 @@ void eng::LevelSystem::LoadLevel(World& world, const str::Name& name, const str:
 {
 	constexpr const char* s_Extension = ".prototype";
 
-	auto& prototypeManager = world.GetManager<eng::PrototypeManager>();
+	auto& prototypeManager = world.GetResource<eng::PrototypeManager>();
 
 	{
 		const ecs::Entity entity = world.CreateEntity();
