@@ -26,6 +26,8 @@ namespace ecs
 
 		void Update(const GameTime& gameTime);
 
+		bool IsInitialised() const;
+
 		template<class TType>
 		bool IsRegistered() const;
 
@@ -106,9 +108,6 @@ namespace ecs
 		auto GetSystem()->TSystem&;
 
 	public:
-		ecs::Entity m_SingletonEntity = { };
-		Array<ecs::Entity> m_EventEntities = { };
-
 		ecs::FrameBuffer m_FrameBuffer;
 		ecs::EntityStorage m_EntityStorage;
 		ecs::QueryRegistry m_QueryRegistry;
@@ -116,6 +115,11 @@ namespace ecs
 		ecs::ComponentRegistry m_ComponentRegistry;
 		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
+
+
+		Array<ecs::Entity> m_EventEntities = { };
+		ecs::Entity m_SingletonEntity = { };
+		bool m_IsInitialised = false;
 	};
 }
 

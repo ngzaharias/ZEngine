@@ -16,6 +16,7 @@ void ecs::EntityWorld::Initialise()
 {
 	PROFILE_FUNCTION();
 
+	m_IsInitialised = true;
 	m_SingletonEntity = CreateEntity();
 
 	m_QueryRegistry.Initialise();
@@ -48,4 +49,9 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 	for (const ecs::Entity& entity : m_EventEntities)
 		DestroyEntity(entity);
 	m_EventEntities.RemoveAll();
+}
+
+bool ecs::EntityWorld::IsInitialised() const
+{
+	return m_IsInitialised;
 }

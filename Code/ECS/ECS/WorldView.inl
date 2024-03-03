@@ -91,6 +91,8 @@ template <typename... TTypes>
 template<class TComponent>
 bool ecs::WorldView<TTypes...>::HasSingleton(const bool alive /*= true*/) const
 {
+	Z_PANIC(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
+
 	static_assert(!std::is_const_v<TComponent>, "Component cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Component cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Component cannot be a pointer.");
@@ -103,6 +105,8 @@ template <typename... TTypes>
 template<class TComponent>
 auto ecs::WorldView<TTypes...>::GetSingleton(const bool alive /*= true*/)->TComponent&
 {
+	Z_PANIC(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
+
 	static_assert(!std::is_reference_v<TComponent>, "Component cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Component cannot be a pointer.");
 	static_assert(core::Contains<TComponent, TTypes...>(), "Component isn't present in WorldView.");
@@ -114,6 +118,8 @@ template <typename... TTypes>
 template <typename TComponent, typename... TArgs>
 auto ecs::WorldView<TTypes...>::AddSingleton(TArgs&&... args)->decltype(auto)
 {
+	Z_PANIC(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
+
 	static_assert(!std::is_const_v<TComponent>, "Component cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Component cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Component cannot be a pointer.");
@@ -126,6 +132,8 @@ template <typename... TTypes>
 template<class TComponent>
 void ecs::WorldView<TTypes...>::RemoveSingleton()
 {
+	Z_PANIC(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
+
 	static_assert(!std::is_const_v<TComponent>, "Component cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Component cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Component cannot be a pointer.");
@@ -185,6 +193,8 @@ template <typename... TObjects>
 template<class TQuery>
 auto ecs::WorldView<TObjects...>::HasAny()-> bool
 {
+	Z_PANIC(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
+
 	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
 	const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
 	return !queryGroup.IsEmpty();
@@ -194,6 +204,8 @@ template <typename... TObjects>
 template<class TQuery>
 auto ecs::WorldView<TObjects...>::Query()-> const Set<Entity>&
 {
+	Z_PANIC(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
+
 	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
 	const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
 	return queryGroup;
