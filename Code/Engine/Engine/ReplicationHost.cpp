@@ -48,7 +48,7 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& serializer = networkManager.GetSerializer();
 	const int32 serializeCount = serializer.m_Entries.GetCount();
 
@@ -70,7 +70,7 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 			{
 				if (!componentMask.Has(worldId))
 					continue;
-				
+
 				const auto find = serializer.m_WorldToLocal.Find(worldId);
 				if (find == serializer.m_WorldToLocal.end())
 					continue;
@@ -205,7 +205,7 @@ bool net::ReplicationHost::IsReplicated(const PeerId& peerId, const ecs::Entity&
 
 void net::ReplicationHost::CreateEntity(const net::PeerId& peerId, const ecs::Entity& entity)
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<CreateEntityMessage>(peerId, EMessage::CreateEntity);
@@ -215,7 +215,7 @@ void net::ReplicationHost::CreateEntity(const net::PeerId& peerId, const ecs::En
 
 void net::ReplicationHost::DestroyEntity(const net::PeerId& peerId, const ecs::Entity& entity)
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<DestroyEntityMessage>(peerId, EMessage::DestroyEntity);
@@ -226,7 +226,7 @@ void net::ReplicationHost::DestroyEntity(const net::PeerId& peerId, const ecs::E
 
 void net::ReplicationHost::AddComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<AddComponentMessage>(peerId, EMessage::AddComponent);
@@ -239,7 +239,7 @@ void net::ReplicationHost::AddComponent(const net::PeerId& peerId, const ecs::En
 
 void net::ReplicationHost::RemoveComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<RemoveComponentMessage>(peerId, EMessage::RemoveComponent);
@@ -251,7 +251,7 @@ void net::ReplicationHost::RemoveComponent(const net::PeerId& peerId, const ecs:
 
 void net::ReplicationHost::UpdateComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<UpdateComponentMessage>(peerId, EMessage::UpdateComponent);

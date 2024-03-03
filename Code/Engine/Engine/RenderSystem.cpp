@@ -33,7 +33,7 @@ eng::RenderSystem::RenderSystem(
 	: m_EntityWorld(entityWorld)
 	, m_Window(window)
 {
-	auto& assetManager = entityWorld.GetManager<eng::AssetManager>();
+	auto& assetManager = entityWorld.GetResource<eng::AssetManager>();
 	m_RenderStages.Append(new eng::RenderStage_Shadow(assetManager));
 	m_RenderStages.Append(new eng::RenderStage_Voxels(assetManager));
 	m_RenderStages.Append(new eng::RenderStage_Opaque(assetManager));

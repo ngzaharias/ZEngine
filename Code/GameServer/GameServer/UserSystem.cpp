@@ -20,7 +20,7 @@ net::UserSystem::UserSystem(net::ReplicationHost& replicationHost)
 
 void net::UserSystem::Initialise(World& world)
 {
-	auto& networkManager = world.GetManager<eng::NetworkManager>();
+	auto& networkManager = world.GetResource<eng::NetworkManager>();
 	auto& adaptor = networkManager.GetAdaptor();
 
 	world.AddSingleton<net::UserMapComponent>();

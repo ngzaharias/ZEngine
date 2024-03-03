@@ -8,8 +8,6 @@
 #include <Core/StringHelpers.h>
 #include <Core/TypeTraits.h>
 
-#include <ECS/Manager.h>
-
 #include <Engine/Asset.h>
 #include <Engine/TypeInfo.h>
 #include <Engine/Visitor.h>
@@ -46,7 +44,7 @@ namespace eng
 		Save* m_Save = nullptr;
 	};
 
-	class AssetManager final : public ecs::Manager
+	class AssetManager final
 	{
 		static constexpr const char* s_Extension = ".asset";
 

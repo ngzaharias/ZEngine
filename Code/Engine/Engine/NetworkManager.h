@@ -1,7 +1,5 @@
 #pragma once
 
-#include <ECS/Manager.h>
-
 #include <Engine/ComponentSerializer.h>
 
 #include <Network/Adaptor.h>
@@ -13,7 +11,7 @@ class GameTime;
 
 namespace eng
 {
-	class NetworkManager : public ecs::Manager
+	class NetworkManager final
 	{
 	public:
 		NetworkManager(net::ComponentSerializer& serializer);

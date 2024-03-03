@@ -6,8 +6,6 @@
 #include <Core/Map.h>
 #include <Core/Name.h>
 
-#include <ECS/Manager.h>
-
 #include <Engine/PrototypeLoader.h>
 #include <Engine/TypeInfo.h>
 #include <Engine/Visitor.h>
@@ -39,7 +37,7 @@ namespace eng
 		New* m_New = nullptr;
 	};
 
-	class PrototypeManager final : public ecs::Manager
+	class PrototypeManager final
 	{
 		using FileMap = Map<str::Guid, eng::Prototype*>;
 		using EntryMap = Map<TypeId, eng::PrototypeEntry>;

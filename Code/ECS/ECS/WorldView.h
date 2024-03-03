@@ -47,6 +47,8 @@ namespace ecs
 
 		template<class TManager>
 		auto GetManager()->TManager&;
+		template<class TResource>
+		auto GetResource()->TResource&;
 
 		template<class TQuery>
 		auto HasAny()-> bool;

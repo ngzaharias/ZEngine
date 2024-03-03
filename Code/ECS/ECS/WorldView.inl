@@ -145,6 +145,17 @@ auto ecs::WorldView<TTypes...>::GetManager()->TManager&
 	return m_EntityWorld.template GetManager<TManager>();
 }
 
+template <typename... TTypes>
+template<class TResource>
+auto ecs::WorldView<TTypes...>::GetResource()->TResource&
+{
+	static_assert(!std::is_reference_v<TResource>, "Resource cannot be a reference.");
+	static_assert(!std::is_pointer_v<TResource>, "Resource cannot be a pointer.");
+	static_assert(core::Contains<TResource, TTypes...>(), "Resource isn't present in WorldView.");
+
+	return m_EntityWorld.template GetResource<TResource>();
+}
+
 template <typename... TObjects>
 template<class TQuery>
 auto ecs::WorldView<TObjects...>::HasAny()-> bool

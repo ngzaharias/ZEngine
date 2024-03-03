@@ -47,7 +47,7 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 		{
 		case NetworkJoinComponent::EState::Connect:
 		{
-			const auto& networkManager = world.GetManager<const eng::NetworkManager>();
+			const auto& networkManager = world.GetResource<const eng::NetworkManager>();
 			const auto& networkPeer = networkManager.GetPeer();
 			if (networkPeer.IsConnected())
 			{
