@@ -6,23 +6,18 @@ bool ecs::EntityWorld::IsRegistered() const
 	using NonConst = std::remove_const<TType>::type;
 
 	constexpr bool isComponent = std::is_base_of<ecs::Component<NonConst>, NonConst>::value;
-	constexpr bool isManager = std::is_base_of<ecs::Manager, NonConst>::value;
 	constexpr bool isSystem = std::is_base_of<ecs::System, NonConst>::value;
 
 	if constexpr (isComponent)
 	{
 		return m_EntityStorage.IsRegistered<NonConst>();
 	}
-	else if constexpr (isManager)
-	{
-		return m_ManagerRegistry.IsRegistered<NonConst>();
-	}
 	else if constexpr (isSystem)
 	{
 		return m_SystemRegistry.IsRegistered<NonConst>();
 	}
 
-	static_assert(isComponent || isManager || isSystem, "Type doesn't inherit from ecs::Component, ecs::Manager or ecs::System!");
+	static_assert(isComponent || isSystem, "Type doesn't inherit from ecs::Component, ecs::Manager or ecs::System!");
 	return false;
 }
 
@@ -165,19 +160,6 @@ void ecs::EntityWorld::RemoveSingleton()
 	Z_PANIC(IsAlive(m_SingletonEntity), "Entity isn't alive!");
 	Z_PANIC(HasSingleton<TComponent>(), "Entity doesn't have this component!");
 	m_FrameBuffer.RemoveComponent<TComponent>(m_SingletonEntity);
-}
-
-template<class TManager, typename... TArgs>
-void ecs::EntityWorld::RegisterManager(TArgs&&... args)
-{
-	m_ManagerRegistry.Register<TManager>(std::forward<TArgs>(args)...);
-}
-
-template<class TManager>
-TManager& ecs::EntityWorld::GetManager()
-{
-	Z_PANIC(IsRegistered<TManager>(), "Manager isn't registered!");
-	return m_ManagerRegistry.GetManager<TManager>();
 }
 
 template<class TResource>

@@ -5,7 +5,6 @@
 #include <ECS/ComponentRegistry.h>
 #include <ECS/EntityStorage.h>
 #include <ECS/FrameBuffer.h>
-#include <ECS/ManagerRegistry.h>
 #include <ECS/QueryRegistry.h>
 #include <ECS/ResourceRegistry.h>
 #include <ECS/System.h>
@@ -78,16 +77,6 @@ namespace ecs
 		void RemoveSingleton();
 
 		//////////////////////////////////////////////////////////////////////////
-		// Manager
-
-		/// \brief Registers and creates a manager.
-		template<class TManager, typename... TArgs>
-		void RegisterManager(TArgs&&... args);
-
-		template<class TManager>
-		auto GetManager()->TManager&;
-
-		//////////////////////////////////////////////////////////////////////////
 		// Resource
 
 		template<class TResource>
@@ -125,7 +114,6 @@ namespace ecs
 		ecs::QueryRegistry m_QueryRegistry;
 
 		ecs::ComponentRegistry m_ComponentRegistry;
-		ecs::ManagerRegistry m_ManagerRegistry;
 		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
 	};

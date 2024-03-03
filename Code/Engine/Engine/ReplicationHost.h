@@ -5,7 +5,6 @@
 #include <Core/SparseArray.h>
 
 #include <ECS/Entity.h>
-#include <ECS/Manager.h>
 
 #include <Engine/TypeInfo.h>
 

@@ -4,7 +4,6 @@
 
 #include <ECS/Component.h>
 #include <ECS/EntityWorld.h>
-#include <ECS/Manager.h>
 #include <ECS/System.h>
 #include <ECS/WorldView.h>
 
@@ -28,27 +27,8 @@ namespace
 		int32 m_Int32 = 0;
 	};
 
-	class ManagerA : public ecs::Manager
-	{
-	public:
-		void Initialise() override { m_IsInitialised = true; }
-		void Shutdown() override { m_IsShutdown = true; }
-
-	public:
-		bool m_IsInitialised = false;
-		bool m_IsShutdown = false;
-	};
-
-	class ManagerB : public ecs::Manager
-	{
-	public:
-		void Initialise() override { m_IsInitialised = true; }
-		void Shutdown() override { m_IsShutdown = true; }
-
-	public:
-		bool m_IsInitialised = false;
-		bool m_IsShutdown = false;
-	};
+	class ResourceA { };
+	class ResourceB { };
 
 	class SystemA : public ecs::System
 	{
@@ -90,13 +70,6 @@ TEST_CASE("ecs::EntityWorld")
 		entityWorld.RegisterComponent<ComponentB>();
 	}
 
-	SECTION("Register Managers")
-	{
-		ecs::EntityWorld entityWorld;
-		entityWorld.RegisterManager<ManagerA>();
-		entityWorld.RegisterManager<ManagerB>();
-	}
-
 	SECTION("Register Systems")
 	{
 		ecs::EntityWorld entityWorld;
@@ -107,34 +80,6 @@ TEST_CASE("ecs::EntityWorld")
 	SECTION("Initialise")
 	{
 		ecs::EntityWorld entityWorld;
-
-		SECTION("Single Manager")
-		{
-			entityWorld.RegisterManager<ManagerA>();
-			const auto& manager = entityWorld.GetManager<ManagerA>();
-
-			CHECK(!manager.m_IsInitialised);
-
-			entityWorld.Initialise();
-
-			CHECK(manager.m_IsInitialised);
-		}
-
-		SECTION("Multiple Managers")
-		{
-			entityWorld.RegisterManager<ManagerA>();
-			entityWorld.RegisterManager<ManagerB>();
-			const auto& managerA = entityWorld.GetManager<ManagerA>();
-			const auto& managerB = entityWorld.GetManager<ManagerB>();
-
-			CHECK(!managerA.m_IsInitialised);
-			CHECK(!managerB.m_IsInitialised);
-
-			entityWorld.Initialise();
-
-			CHECK(managerA.m_IsInitialised);
-			CHECK(managerB.m_IsInitialised);
-		}
 
 		SECTION("Single System")
 		{
@@ -168,34 +113,6 @@ TEST_CASE("ecs::EntityWorld")
 	SECTION("Destroy")
 	{
 		ecs::EntityWorld entityWorld;
-
-		SECTION("Single Manager")
-		{
-			entityWorld.RegisterManager<ManagerA>();
-			const auto& manager = entityWorld.GetManager<ManagerA>();
-
-			CHECK(!manager.m_IsShutdown);
-
-			entityWorld.Shutdown();
-
-			CHECK(manager.m_IsShutdown);
-		}
-
-		SECTION("Multiple Managers")
-		{
-			entityWorld.RegisterManager<ManagerA>();
-			entityWorld.RegisterManager<ManagerB>();
-			const auto& managerA = entityWorld.GetManager<ManagerA>();
-			const auto& managerB = entityWorld.GetManager<ManagerB>();
-
-			CHECK(!managerA.m_IsShutdown);
-			CHECK(!managerB.m_IsShutdown);
-
-			entityWorld.Shutdown();
-
-			CHECK(managerA.m_IsShutdown);
-			CHECK(managerB.m_IsShutdown);
-		}
 
 		SECTION("Single System")
 		{

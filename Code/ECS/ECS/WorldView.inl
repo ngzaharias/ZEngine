@@ -135,17 +135,6 @@ void ecs::WorldView<TTypes...>::RemoveSingleton()
 }
 
 template <typename... TTypes>
-template<class TManager>
-auto ecs::WorldView<TTypes...>::GetManager()->TManager&
-{
-	static_assert(!std::is_reference_v<TManager>, "Manager cannot be a reference.");
-	static_assert(!std::is_pointer_v<TManager>, "Manager cannot be a pointer.");
-	static_assert(core::Contains<TManager, TTypes...>(), "Manager isn't present in WorldView.");
-
-	return m_EntityWorld.template GetManager<TManager>();
-}
-
-template <typename... TTypes>
 template<class TResource>
 bool ecs::WorldView<TTypes...>::HasResource()
 {

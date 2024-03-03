@@ -4,7 +4,6 @@
 
 #include <ECS/Component.h>
 #include <ECS/EntityWorld.h>
-#include <ECS/Manager.h>
 #include <ECS/WorldView.h>
 #include <ECS/QueryRegistry.h>
 
@@ -54,17 +53,8 @@ namespace
 		float m_Float = 0.f;
 	};
 
-	class ManagerA : public ecs::Manager
-	{
-	public:
-		bool FunctionA() { return true; };
-	};
-
-	class ManagerB : public ecs::Manager
-	{
-	public:
-		bool FunctionB() { return true; };
-	};
+	class ResourceA { };
+	class ResourceB { };
 }
 
 TEST_CASE("ecs::WorldView")
@@ -76,8 +66,6 @@ TEST_CASE("ecs::WorldView")
 	entityWorld.RegisterComponent<SingletonA>();
 	entityWorld.RegisterComponent<SingletonB>();
 	entityWorld.RegisterComponent<SingletonC>();
-	entityWorld.RegisterManager<ManagerA>();
-	entityWorld.RegisterManager<ManagerB>();
 	entityWorld.Initialise();
 
 	using WorldView = ecs::WorldView<
@@ -87,7 +75,7 @@ TEST_CASE("ecs::WorldView")
 		SingletonA, 
 		const SingletonB, 
 		const SingletonC,
-		const ManagerA, const ManagerB>;
+		const ResourceA, const ResourceB>;
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 
 	SECTION("CreateEntity")
@@ -319,15 +307,6 @@ TEST_CASE("ecs::WorldView")
 			//worldView.RemoveSingleton<SingletonA>();
 			//CHECK_THROWS(entityWorld.Update({}));
 		}
-	}
-
-	SECTION("GetManager")
-	{
-		ManagerA& managerA = worldView.GetManager<ManagerA>();
-		CHECK(managerA.FunctionA());
-
-		ManagerB& managerB = worldView.GetManager<ManagerB>();
-		CHECK(managerB.FunctionB());
 	}
 
 	SECTION("Query")

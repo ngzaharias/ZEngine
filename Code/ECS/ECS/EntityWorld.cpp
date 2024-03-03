@@ -2,14 +2,12 @@
 
 #include <Core/Profiler.h>
 
-#include "ECS/Manager.h"
 #include "ECS/System.h"
 
 ecs::EntityWorld::EntityWorld()
 	: m_FrameBuffer()
 	, m_EntityStorage()
 	, m_QueryRegistry()
-	, m_ManagerRegistry()
 	, m_SystemRegistry()
 {
 }
@@ -21,8 +19,6 @@ void ecs::EntityWorld::Initialise()
 	m_SingletonEntity = CreateEntity();
 
 	m_QueryRegistry.Initialise();
-
-	m_ManagerRegistry.Initialise();
 
 	// do after managers
 	m_SystemRegistry.Initialise(*this);
@@ -36,8 +32,6 @@ void ecs::EntityWorld::Shutdown()
 
 	// do before managers
 	m_SystemRegistry.Shutdown(*this);
-
-	m_ManagerRegistry.Shutdown();
 
 	DestroyEntity(m_SingletonEntity);
 }
