@@ -2,6 +2,7 @@
 #include "GameClient/DragMovementSystem.h"
 
 #include <Core/CollisionMath.h>
+#include <Core/OBB.h>
 #include <Core/Ray.h>
 
 #include <ECS/EntityWorld.h>
@@ -43,24 +44,25 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 
 		const Quaternion cameraRotate = Quaternion::FromRotator(cameraTransform.m_Rotate);
 		const Vector3f& cameraTranslate = cameraTransform.m_Translate;
-		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
+		const Matrix4x4 cameraView = cameraTransform.ToTransform();
 
 		const Vector3f mousePosition = camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
 		const Vector3f mouseForward = (mousePosition - cameraTranslate).Normalized();
 
-		//// debug
-		//{
-		//	const Vector3f planeTranslate = dragComponent.m_TranslatePlane.m_Point;
-		//	const Vector3f planeForward = dragComponent.m_TranslatePlane.m_Normal;
-		//	const float amount = 500.f;
+		// debug
+		{
+			const Vector3f planeTranslate = dragComponent.m_TranslatePlane.m_Point;
+			const Vector3f planeForward = dragComponent.m_TranslatePlane.m_Normal;
+			const Vector3f planeRight = math::Cross(planeForward, Vector3f::AxisY);
+			const Vector3f planeUp = math::Cross(planeForward, planeRight);
 
-		//	const float pitch = math::ToDegrees(asinf(-planeForward.y));
-		//	const float yaw = math::ToDegrees(atan2f(planeForward.x, planeForward.z));
-		//	const Rotator rotator = Rotator(pitch, yaw, 0.f);
+			const float pitch = math::ToDegrees(asinf(-planeForward.y));
+			const float yaw = math::ToDegrees(atan2f(planeForward.x, planeForward.z));
+			const Rotator rotator = Rotator(pitch, yaw, 0.f);
 
-		//	const OBB obb = OBB::FromExtents(rotator, Vector3f(amount, amount, 0.f));
-		//	linesComponent.AddOBB(planeTranslate, obb, s_ColourW);
-		//}
+			const OBB obb = OBB::FromExtents(rotator, Vector3f(500.f, 500.f, 0.f));
+			linesComponent.AddOBB(planeTranslate, obb, s_ColourW);
+		}
 
 		{
 			Ray ray;

@@ -117,7 +117,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 		const auto& dragComponent = world.GetComponent<const drag::SelectionComponent>(dragEntity);
 		const auto& inputComponent = world.GetComponent<const eng::InputComponent>(dragComponent.m_InputEntity);
 
-		if (inputComponent.IsKeyReleased(input::EMouse::Left))
+		if (!inputComponent.IsKeyHeld(input::EMouse::Left))
 			world.DestroyEntity(dragEntity);
 	}
 }
