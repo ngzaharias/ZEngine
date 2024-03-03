@@ -14,20 +14,10 @@ ecs::EntityWorld::EntityWorld()
 {
 }
 
-ecs::EntityWorld::~EntityWorld()
-{
-}
-
-bool ecs::EntityWorld::IsInitialised() const
-{
-	return m_IsInitialised;
-}
-
 void ecs::EntityWorld::Initialise()
 {
 	PROFILE_FUNCTION();
 
-	m_IsInitialised = true;
 	m_SingletonEntity = CreateEntity();
 
 	m_QueryRegistry.Initialise();

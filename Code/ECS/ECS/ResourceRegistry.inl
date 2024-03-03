@@ -1,9 +1,28 @@
 #pragma once
 
 template<class TResource>
-void ecs::ResourceRegistry::Register(TResource& resource)
+bool ecs::ResourceRegistry::Has() const
 {
-	Z_ASSERT_CRASH(!IsRegistered<TResource>(), "Resource has already been registered!");
+	using NonConst = std::remove_const<TResource>::type;
+	const ecs::ResourceId resourceId = ToTypeIndex<NonConst, ecs::ResourceTag>();
+	return m_Entries.Contains(resourceId);
+}
+
+template<class TResource>
+TResource& ecs::ResourceRegistry::Get()
+{
+	Z_PANIC(Has<TResource>(), "Resource hasn't been added!");
+
+	using NonConst = std::remove_const<TResource>::type;
+	const ecs::ResourceId resourceId = ToTypeIndex<NonConst, ecs::ResourceTag>();
+	const ecs::ResourceEntry& entry = m_Entries.Get(resourceId);
+	return *static_cast<NonConst*>(entry.m_Resource);
+}
+
+template<class TResource>
+void ecs::ResourceRegistry::Add(TResource& resource)
+{
+	Z_PANIC(!Has<TResource>(), "Resource has already been added!");
 
 	using NonConst = std::remove_const<TResource>::type;
 	const ecs::ResourceId resourceId = ToTypeIndex<NonConst, ecs::ResourceTag>();
@@ -14,20 +33,12 @@ void ecs::ResourceRegistry::Register(TResource& resource)
 }
 
 template<class TResource>
-bool ecs::ResourceRegistry::IsRegistered() const
+void ecs::ResourceRegistry::Remove(TResource& resource)
 {
-	using NonConst = std::remove_const<TResource>::type;
-	const ecs::ResourceId resourceId = ToTypeIndex<NonConst, ecs::ResourceTag>();
-	return m_Entries.Contains(resourceId);
-}
-
-template<class TResource>
-TResource& ecs::ResourceRegistry::GetResource()
-{
-	Z_ASSERT_CRASH(IsRegistered<TResource>(), "Resource hasn't been registered!");
+	Z_PANIC(Has<TResource>(), "Resource hasn't been added!");
 
 	using NonConst = std::remove_const<TResource>::type;
 	const ecs::ResourceId resourceId = ToTypeIndex<NonConst, ecs::ResourceTag>();
-	const ecs::ResourceEntry& entry = m_Entries.Get(resourceId);
-	return *static_cast<NonConst*>(entry.m_Resource);
+
+	m_Entries.Remove(resourceId);
 }

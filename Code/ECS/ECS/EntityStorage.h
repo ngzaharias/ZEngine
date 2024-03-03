@@ -33,6 +33,7 @@ namespace ecs
 
 		template<class TComponent>
 		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
+
 		template<class TComponent>
 		auto GetComponent(const ecs::Entity& entity, const bool alive = true)->TComponent&;
 

@@ -17,13 +17,16 @@ namespace ecs
 	{
 	public:
 		template<class TResource>
-		void Register(TResource& manager);
+		bool Has() const;
 
 		template<class TResource>
-		bool IsRegistered() const;
+		TResource& Get();
 
 		template<class TResource>
-		TResource& GetResource();
+		void Add(TResource& resource);
+
+		template<class TResource>
+		void Remove(TResource& resource);
 
 	private:
 		SparseArray<ecs::ResourceId, ecs::ResourceEntry> m_Entries = { };
