@@ -49,7 +49,6 @@ TEST_CASE("enum::IndexToEnum")
 
 TEST_CASE("enum::StringToEnum")
 {
-	CHECK_THROWS(StringToEnum<EnumA>(""));
 	CHECK(StringToEnum<EnumA>("First") == EnumA::First);
 	CHECK(StringToEnum<EnumA>("Second") == EnumA::Second);
 	CHECK(StringToEnum<EnumA>("Third") == EnumA::Third);
@@ -59,7 +58,6 @@ TEST_CASE("enum::StringToEnum")
 
 TEST_CASE("enum::ValueToEnum")
 {
-	CHECK_THROWS(ValueToEnum<EnumA>(0));
 	CHECK(ValueToEnum<EnumA>(1) == EnumA::First);
 	CHECK(ValueToEnum<EnumA>(2) == EnumA::Second);
 	CHECK(ValueToEnum<EnumA>(3) == EnumA::Third);

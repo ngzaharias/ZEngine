@@ -4,7 +4,7 @@
 
 class OBB;
 
-/// \brief An axis aligned bounding box in 3D space denoted by a min and max.
+/// \brief An axis aligned bounding box in 3D space using floating-point coordinates.
 class AABB
 {
 public:

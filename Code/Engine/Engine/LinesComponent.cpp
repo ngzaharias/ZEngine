@@ -5,8 +5,10 @@
 #include "Engine/Screen.h"
 
 #include <Core/AABB.h>
+#include <Core/Circle.h>
 #include <Core/Matrix.h>
 #include <Core/OBB.h>
+#include <Core/Sphere.h>
 
 void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB& extents, const Vector4f& colour)
 {
@@ -64,6 +66,32 @@ void eng::LinesComponent::AddAABB(const Vector3f& translate, const float extents
 	AddLine(corners[1], corners[5], colour);
 	AddLine(corners[2], corners[6], colour);
 	AddLine(corners[3], corners[7], colour);
+}
+
+void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& circle, const Vector4f& colour)
+{
+	Vector3f corners[8];
+	corners[0] = translate + circle.m_Position.X0Y() + Vector3f(-circle.m_Radius, 0.f, 0.f);
+	corners[1] = translate + circle.m_Position.X0Y() + Vector3f(+circle.m_Radius, 0.f, 0.f);
+	corners[2] = translate + circle.m_Position.X0Y() + Vector3f(0.f, -circle.m_Radius, 0.f);
+	corners[3] = translate + circle.m_Position.X0Y() + Vector3f(0.f, +circle.m_Radius, 0.f);
+	corners[4] = translate + circle.m_Position.X0Y() + Vector3f(0.f, 0.f, -circle.m_Radius);
+	corners[5] = translate + circle.m_Position.X0Y() + Vector3f(0.f, 0.f, +circle.m_Radius);
+
+	AddLine(corners[0], corners[2], colour);
+	AddLine(corners[2], corners[1], colour);
+	AddLine(corners[1], corners[3], colour);
+	AddLine(corners[3], corners[0], colour);
+
+	AddLine(corners[0], corners[4], colour);
+	AddLine(corners[4], corners[1], colour);
+	AddLine(corners[1], corners[5], colour);
+	AddLine(corners[5], corners[0], colour);
+
+	AddLine(corners[2], corners[4], colour);
+	AddLine(corners[4], corners[3], colour);
+	AddLine(corners[3], corners[5], colour);
+	AddLine(corners[5], corners[2], colour);
 }
 
 void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Projection& projection, const Vector4f& colour)
@@ -176,15 +204,15 @@ void eng::LinesComponent::AddOBB(const Vector3f& translate, const OBB& obb, cons
 	AddLine(translate + obb.m_Points[3], translate + obb.m_Points[7], colour);
 }
 
-void eng::LinesComponent::AddSphere(const Vector3f& translate, const float radius, const Vector4f& colour)
+void eng::LinesComponent::AddSphere(const Vector3f& translate, const Sphere3f& sphere, const Vector4f& colour)
 {
 	Vector3f corners[8];
-	corners[0] = translate + Vector3f(-radius, 0.f, 0.f);
-	corners[1] = translate + Vector3f(+radius, 0.f, 0.f);
-	corners[2] = translate + Vector3f(0.f, -radius, 0.f);
-	corners[3] = translate + Vector3f(0.f, +radius, 0.f);
-	corners[4] = translate + Vector3f(0.f, 0.f, -radius);
-	corners[5] = translate + Vector3f(0.f, 0.f, +radius);
+	corners[0] = translate + sphere.m_Position + Vector3f(-sphere.m_Radius, 0.f, 0.f);
+	corners[1] = translate + sphere.m_Position + Vector3f(+sphere.m_Radius, 0.f, 0.f);
+	corners[2] = translate + sphere.m_Position + Vector3f(0.f, -sphere.m_Radius, 0.f);
+	corners[3] = translate + sphere.m_Position + Vector3f(0.f, +sphere.m_Radius, 0.f);
+	corners[4] = translate + sphere.m_Position + Vector3f(0.f, 0.f, -sphere.m_Radius);
+	corners[5] = translate + sphere.m_Position + Vector3f(0.f, 0.f, +sphere.m_Radius);
 
 	AddLine(corners[0], corners[2], colour);
 	AddLine(corners[2], corners[1], colour);

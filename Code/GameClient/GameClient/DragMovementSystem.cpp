@@ -65,9 +65,9 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 		}
 
 		{
-			Ray ray;
+			Ray3f ray;
+			ray.m_Position = mousePosition;
 			ray.m_Direction = mouseForward;
-			ray.m_OriginPos = mousePosition;
 
 			Vector3f intersectPos;
 			if (math::Intersection(ray, dragComponent.m_TranslatePlane, intersectPos))
