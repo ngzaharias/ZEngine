@@ -37,8 +37,6 @@ namespace math
 		float m_HitFraction;
 	};
 
-	bool AreCounterClockwiseOrdered(const Vector2f& a, const Vector2f& b, const Vector2f& c);
-
 	bool Intersection(const Line2f& a, const Circle2f& b, Vector3f& out_IntersectPos);
 	bool Intersection(const Line2f& a, const Line2f& b, Vector3f& out_IntersectPos);
 	bool Intersection(const Line2f& a, const Ray2f& b, Vector3f& out_IntersectPos);

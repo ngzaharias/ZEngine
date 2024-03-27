@@ -15,9 +15,12 @@
 #include <algorithm>
 #include <float.h>
 
-bool math::AreCounterClockwiseOrdered(const Vector2f& a, const Vector2f& b, const Vector2f& c)
+namespace
 {
-	return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x);
+	bool AreCounterClockwiseOrdered(const Vector2f& a, const Vector2f& b, const Vector2f& c)
+	{
+		return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x);
+	}
 }
 
 bool math::Intersection(const Line3f& line, const Plane& plane, Vector3f& out_IntersectPos)
@@ -87,13 +90,13 @@ bool math::IsOverlapping(const Circle2f& a, const Ray2f& b)
 // https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
 bool math::IsOverlapping(const Circle2f& a, const Rect2f& b)
 {
-	const float distX = std::abs(a.m_Position.x - b.m_Min.x);
 	const float halfW = (b.m_Max.x - b.m_Min.x) * 0.5f;
+	const float distX = std::abs(a.m_Position.x - (b.m_Min.x + halfW));
 	if (distX > (halfW + a.m_Radius))
 		return false;
 
-	const float distY = std::abs(a.m_Position.y - b.m_Min.y);
 	const float halfH = (b.m_Max.y - b.m_Min.y) * 0.5f;
+	const float distY = std::abs(a.m_Position.y - (b.m_Min.y + halfW));
 	if (distY > (halfW + a.m_Radius))
 		return false;
 
@@ -142,19 +145,14 @@ bool math::IsOverlapping(const Line2f& a, const Ray2f& b)
 // https://stackoverflow.com/questions/3746274/line-intersection-with-aabb-rectangle
 bool math::IsOverlapping(const Line2f& a, const Rect2f& b)
 {
-	const Line2f b1 = Line2f(b.m_Min, Vector2f(b.m_Min.x, b.m_Max.y));
-	if (math::IsOverlapping(a, b1))
+	if (math::IsOverlapping(a, Segment2f(b.m_Min, Vector2f(b.m_Min.x, b.m_Max.y))))
 		return true;
-	const Line2f b2 = Line2f(b.m_Min, Vector2f(b.m_Max.x, b.m_Min.y));
-	if (math::IsOverlapping(a, b2))
+	if (math::IsOverlapping(a, Segment2f(b.m_Min, Vector2f(b.m_Max.x, b.m_Min.y))))
 		return true;
-	const Line2f b3 = Line2f(Vector2f(b.m_Min.x, b.m_Max.y), b.m_Max);
-	if (math::IsOverlapping(a, b3))
+	if (math::IsOverlapping(a, Segment2f(Vector2f(b.m_Min.x, b.m_Max.y), b.m_Max)))
 		return true;
-	const Line2f b4 = Line2f(Vector2f(b.m_Max.x, b.m_Min.y), b.m_Max);
-	if (math::IsOverlapping(a, b4))
+	if (math::IsOverlapping(a, Segment2f(Vector2f(b.m_Max.x, b.m_Min.y), b.m_Max)))
 		return true;
-
 	return false;
 }
 
@@ -293,8 +291,8 @@ bool math::IsOverlapping(const Segment2f& a, const Rect2f& b)
 // https://stackoverflow.com/questions/3838329/how-can-i-check-if-two-segments-intersect
 bool math::IsOverlapping(const Segment2f& a, const Segment2f& b)
 {
-	return math::AreCounterClockwiseOrdered(a.m_PointA, b.m_PointA, b.m_PointB) != math::AreCounterClockwiseOrdered(a.m_PointB, b.m_PointA, b.m_PointB)
-		&& math::AreCounterClockwiseOrdered(a.m_PointA, a.m_PointB, b.m_PointA) != math::AreCounterClockwiseOrdered(a.m_PointA, a.m_PointB, b.m_PointB);
+	return ::AreCounterClockwiseOrdered(a.m_PointA, b.m_PointA, b.m_PointB) != ::AreCounterClockwiseOrdered(a.m_PointB, b.m_PointA, b.m_PointB)
+		&& ::AreCounterClockwiseOrdered(a.m_PointA, a.m_PointB, b.m_PointA) != ::AreCounterClockwiseOrdered(a.m_PointA, a.m_PointB, b.m_PointB);
 }
 
 /*
