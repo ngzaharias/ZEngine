@@ -245,8 +245,8 @@ bool math::IsOverlapping(const Rect2f& a, const Ray2f& b)
 
 bool math::IsOverlapping(const Rect2f& a, const Rect2f& b)
 {
-	return (a.m_Min.x <= b.m_Max.x && a.m_Max.x > b.m_Min.x)
-		&& (a.m_Min.y <= b.m_Max.y && a.m_Max.y > b.m_Min.y);
+	return (a.m_Min.x <= b.m_Max.x && a.m_Max.x >= b.m_Min.x)
+		&& (a.m_Min.y <= b.m_Max.y && a.m_Max.y >= b.m_Min.y);
 }
 
 bool math::IsOverlapping(const Rect2f& a, const Segment2f& b)
