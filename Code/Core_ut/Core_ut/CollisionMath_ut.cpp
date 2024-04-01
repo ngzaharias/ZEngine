@@ -12,11 +12,6 @@
 #include <Core/Segment.h>
 #include <Core/Sphere.h>
 
-namespace
-{
-	constexpr Vector3f s_OBBExtents = Vector3f(0.5f);
-}
-
 TEST_CASE("math::Intersection(Plane Line3f). Line intersects with points either side of the Plane at Origin.")
 {
 	Line3f a; Plane b;
@@ -192,7 +187,7 @@ TEST_CASE("math::Intersection(Plane Segment3f). Segment doesn't intersect when S
 	CHECK(!math::Intersection(a, b, c));
 }
 
-TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles touch each others centres.")
+TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles overlap when their edges touch each others centres.")
 {
 	Circle2f a, b;
 	a.m_Position = Vector2f(0.f, 0.f);
@@ -202,7 +197,7 @@ TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles touch each others cen
 	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles don't touch.")
+TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles don't overlap when they are separated.")
 {
 	Circle2f a, b;
 	a.m_Position = Vector2f(0.f, 0.f);
@@ -212,7 +207,7 @@ TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles don't touch.")
 	CHECK(!math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles with radius 0 touches.")
+TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles overlap when one circle with 0 radius is enclosed by the other.")
 {
 	Circle2f a, b;
 	a.m_Position = Vector2f(0.f, 0.f);
@@ -222,14 +217,14 @@ TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles with radius 0 touches
 	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles touch each others edges.")
+TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles overlap when they touch each others edges.")
 {
 	Circle2f a, b;
 	a.m_Position = Vector2f(0.f, 0.f);
 	a.m_Radius = 1.f;
 	b.m_Position = Vector2f(2.f, 0.f);
 	b.m_Radius = 1.f;
-	CHECK(!math::IsOverlapping(a, b));
+	CHECK(math::IsOverlapping(a, b));
 }
 
 TEST_CASE("math::IsOverlapping(Circle2f Line2f). Circle and Line overlap when line runs through centre of circle.")
@@ -429,6 +424,33 @@ TEST_CASE("math::IsOverlapping(Circle2f Segment2f). Circle and Segment overlap w
 	a.m_Radius = 1.f;
 	b.m_PointA = Vector2f(0.f, -2.f);
 	b.m_PointB = Vector2f(0.f, +2.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Circle2f Vector2f). Circle and Point overlap when the point is enclosed by the circle.")
+{
+	Circle2f a; Vector2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b = Vector2f(0.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Circle2f Vector2f). Circle and Point don't overlap when the point is outside the circle.")
+{
+	Circle2f a; Vector2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b = Vector2f(2.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Circle2f Vector2f). Circle and Point overlap when the point touches the circle's edge.")
+{
+	Circle2f a; Vector2f b;
+	a.m_Position = Vector2f(1.f, 0.f);
+	a.m_Radius = 1.f;
+	b = Vector2f(0.f, 0.f);
 	CHECK(math::IsOverlapping(a, b));
 }
 
@@ -1062,9 +1084,101 @@ TEST_CASE("math::IsOverlapping(Rect2f Rect2f). Rects overlap when they are ident
 	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlapping(Rect2f Segment2f). ")
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment runs through the centre of the rect.")
 {
-	// #todo
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b.m_PointA = Vector2f(-2.f, 0.f);
+	b.m_PointB = Vector2f(+2.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment runs through the centre of the rect away from origin.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(+97.f, +96.f);
+	a.m_Max = Vector2f(+98.f, +98.f);
+	b.m_PointA = Vector2f(-96.f, +97.f);
+	b.m_PointB = Vector2f(+99.f, +97.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment runs through the centre of the rect but points aren't either side.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b.m_PointA = Vector2f(-4.f, 0.f);
+	b.m_PointB = Vector2f(-2.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment don't overlap when segment misses the rect.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b.m_PointA = Vector2f(-2.f, -2.f);
+	b.m_PointB = Vector2f(+2.f, -2.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment touches the edge of the rect.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b.m_PointA = Vector2f(-2.f, -1.f);
+	b.m_PointB = Vector2f(+2.f, -1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment touches the corner of the rect.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-1.f, 0.f);
+	a.m_Max = Vector2f(0.f, +1.f);
+	b.m_PointA = Vector2f(-1.f, -1.f);
+	b.m_PointB = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment is contained inside the rect.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-2.f, -2.f);
+	a.m_Max = Vector2f(+2.f, +2.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Vector2f). Rect and Point overlap when the point is enclosed by the rect.")
+{
+	Rect2f a; Vector2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b = Vector2f(0.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Vector2f). Rect and Point don't overlap when the point is outside the rect.")
+{
+	Rect2f a; Vector2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b = Vector2f(2.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Vector2f). Rect and Point overlap when the point touches the rect's edge.")
+{
+	Rect2f a; Vector2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b = Vector2f(1.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
 TEST_CASE("math::IsOverlapping(Segment2f Circle2f).")
@@ -1175,4 +1289,14 @@ TEST_CASE("math::IsOverlapping(Segment2f Segment2f). Segments overlap when the S
 	b.m_PointA = Vector2f(0.f, 0.f);
 	b.m_PointB = Vector2f(0.f, 1.f);
 	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Vector2f Circle2f).")
+{
+	// math::IsOverlapping(Circle2f Vector2f).
+}
+
+TEST_CASE("math::IsOverlapping(Vector2f Rect2f).")
+{
+	// math::IsOverlapping(Rect2f Vector2f).
 }

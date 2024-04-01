@@ -70,7 +70,7 @@ bool math::IsOverlapping(const Circle2f& a, const Circle2f& b)
 {
 	const float distanceSqr = math::DistanceSqr(a.m_Position, b.m_Position);
 	const float radiiSqr = math::Sqr(a.m_Radius + b.m_Radius);
-	return distanceSqr < radiiSqr;
+	return distanceSqr <= radiiSqr;
 }
 
 bool math::IsOverlapping(const Circle2f& a, const Line2f& b)
@@ -114,6 +114,13 @@ bool math::IsOverlapping(const Circle2f& a, const Segment2f& b)
 	const Vector2f intersectPos = math::Project(a.m_Position, b);
 	const float intersectSqr = math::DistanceSqr(a.m_Position, intersectPos);
 	return intersectSqr <= math::Sqr(a.m_Radius);
+}
+
+bool math::IsOverlapping(const Circle2f& a, const Vector2f& b)
+{
+	const float distanceSqr = math::DistanceSqr(a.m_Position, b);
+	const float radiiSqr = math::Sqr(a.m_Radius);
+	return distanceSqr <= radiiSqr;
 }
 
 bool math::IsOverlapping(const Line2f& a, const Circle2f& b)
@@ -251,21 +258,26 @@ bool math::IsOverlapping(const Rect2f& a, const Rect2f& b)
 
 bool math::IsOverlapping(const Rect2f& a, const Segment2f& b)
 {
-	if (b.m_PointB.x < a.m_Min.x && b.m_PointA.x < a.m_Min.x)
-		return false;
-	if (b.m_PointB.x > a.m_Max.x && b.m_PointA.x > a.m_Max.x)
-		return false;
-	if (b.m_PointB.y < a.m_Min.y && b.m_PointA.y < a.m_Min.y)
-		return false;
-	if (b.m_PointB.y > a.m_Max.y && b.m_PointA.y > a.m_Max.y)
-		return false;
-	if (b.m_PointA.x > a.m_Min.x && b.m_PointA.x < a.m_Max.x &&
-		b.m_PointA.y > a.m_Min.y && b.m_PointA.y < a.m_Max.y)
-	{
+	const Vector2f& a1 = a.m_Min;
+	const Vector2f& a3 = a.m_Max;
+	const Vector2f a2 = Vector2f(a.m_Min.x, a.m_Max.y);
+	const Vector2f a4 = Vector2f(a.m_Max.x, a.m_Min.y);
+	if (math::IsOverlapping(Segment2f(a1, a2), b))
 		return true;
-	}
+	if (math::IsOverlapping(Segment2f(a1, a4), b))
+		return true;
+	if (math::IsOverlapping(Segment2f(a2, a3), b))
+		return true;
+	if (math::IsOverlapping(Segment2f(a4, a3), b))
+		return true;
 
-	return false;
+	return math::IsOverlapping(a, b.m_PointA) || math::IsOverlapping(a, b.m_PointB);
+}
+
+bool math::IsOverlapping(const Rect2f& a, const Vector2f& b)
+{
+	return b.x >= a.m_Min.x && b.x <= a.m_Max.x
+		&& b.y >= a.m_Min.y && b.y <= a.m_Max.y;
 }
 
 bool math::IsOverlapping(const Segment2f& a, const Circle2f& b)
@@ -293,6 +305,16 @@ bool math::IsOverlapping(const Segment2f& a, const Segment2f& b)
 {
 	return ::AreCounterClockwiseOrdered(a.m_PointA, b.m_PointA, b.m_PointB) != ::AreCounterClockwiseOrdered(a.m_PointB, b.m_PointA, b.m_PointB)
 		&& ::AreCounterClockwiseOrdered(a.m_PointA, a.m_PointB, b.m_PointA) != ::AreCounterClockwiseOrdered(a.m_PointA, a.m_PointB, b.m_PointB);
+}
+
+bool math::IsOverlapping(const Vector2f& a, const Circle2f& b)
+{
+	return math::IsOverlapping(b, a);
+}
+
+bool math::IsOverlapping(const Vector2f& a, const Rect2f& b)
+{
+	return math::IsOverlapping(b, a);
 }
 
 /*

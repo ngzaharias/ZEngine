@@ -68,6 +68,7 @@ namespace math
 	bool IsOverlapping(const Circle2f& a, const Ray2f& b);
 	bool IsOverlapping(const Circle2f& a, const Rect2f& b);
 	bool IsOverlapping(const Circle2f& a, const Segment2f& b);
+	bool IsOverlapping(const Circle2f& a, const Vector2f& b);
 
 	bool IsOverlapping(const Line2f& a, const Circle2f& b);
 	bool IsOverlapping(const Line2f& a, const Line2f& b);
@@ -86,12 +87,16 @@ namespace math
 	bool IsOverlapping(const Rect2f& a, const Ray2f& b);
 	bool IsOverlapping(const Rect2f& a, const Rect2f& b);
 	bool IsOverlapping(const Rect2f& a, const Segment2f& b);
+	bool IsOverlapping(const Rect2f& a, const Vector2f& b);
 
 	bool IsOverlapping(const Segment2f& a, const Circle2f& b);
 	bool IsOverlapping(const Segment2f& a, const Line2f& b);
 	bool IsOverlapping(const Segment2f& a, const Ray2f& b);
 	bool IsOverlapping(const Segment2f& a, const Rect2f& b);
 	bool IsOverlapping(const Segment2f& a, const Segment2f& b);
+
+	bool IsOverlapping(const Vector2f& a, const Circle2f& b);
+	bool IsOverlapping(const Vector2f& a, const Rect2f& b);
 
 	//////////////////////////////////////////////////////////////////////////
 	// 3D
