@@ -1,22 +1,72 @@
+
 #include <Catch2/catch.hpp>
 
 #include <Core/AABB.h>
+#include <Core/Circle.h>
 #include <Core/CollisionMath.h>
 #include <Core/Line.h>
 #include <Core/OBB.h>
 #include <Core/Plane.h>
 #include <Core/Ray.h>
+#include <Core/Rect.h>
 #include <Core/Segment.h>
 #include <Core/Sphere.h>
 
-namespace
+TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects with points either side of the Plane at Origin.")
 {
-	constexpr Vector3f s_OBBExtents = Vector3f(0.5f);
+	Line3f a; Plane3f b;
+	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
+	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
+	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
+	b.m_Point = Vector3f(0.f, 0.f, 0.f);
+
+	Vector3f c;
+	CHECK(math::Intersection(a, b, c));
+	CHECK(c == Vector3f::Zero);
 }
 
-TEST_CASE("math::Intersection(Segment, Plane)::Plane normal and Segment are perpendicular to each other.")
+TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects with points either side of the Plane but not at Origin.")
 {
-	Segment a; Plane b;
+	Line3f a; Plane3f b;
+	a.m_PointA = Vector3f(-KINDA_LARGE_FLOAT, 0.f, 0.f);
+	a.m_PointB = Vector3f(+KINDA_LARGE_FLOAT, 0.f, 0.f);
+	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
+	b.m_Point = Vector3f(-1100.f);
+
+	Vector3f c;
+	CHECK(math::Intersection(a, b, c));
+	CHECK(c == Vector3f(-1100.f, 0.f, 0.f));
+}
+
+TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects with points on the left side of the Plane.")
+{
+	Line3f a; Plane3f b;
+	a.m_PointA = Vector3f(-2.f, 0.f, 0.f);
+	a.m_PointB = Vector3f(-1.f, 0.f, 0.f);
+	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
+	b.m_Point = Vector3f(0.f, 0.f, 0.f);
+
+	Vector3f c;
+	CHECK(math::Intersection(a, b, c));
+	CHECK(c == Vector3f::Zero);
+}
+
+TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects with points on the right side of the Plane.")
+{
+	Line3f a; Plane3f b;
+	a.m_PointA = Vector3f(+1.f, 0.f, 0.f);
+	a.m_PointB = Vector3f(+2.f, 0.f, 0.f);
+	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
+	b.m_Point = Vector3f(0.f, 0.f, 0.f);
+
+	Vector3f c;
+	CHECK(math::Intersection(a, b, c));
+	CHECK(c == Vector3f::Zero);
+}
+
+TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects Plane when Plane normal and Line direction are parallel to each other.")
+{
+	Line3f a; Plane3f b;
 	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(0.f, 1.f, 0.f);
@@ -26,37 +76,12 @@ TEST_CASE("math::Intersection(Segment, Plane)::Plane normal and Segment are perp
 	CHECK(!math::Intersection(a, b, c));
 }
 
-TEST_CASE("math::Intersection(Segment, Plane)::Segment stops on the plane.")
+TEST_CASE("math::Intersection(Ray3f Plane3f). Ray intersects when starting on the left side of the Plane but points right.")
 {
-	Segment a; Plane b;
-	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
-	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
-	b.m_Normal = Vector3f(+1.f, 0.f, 0.f);
-	b.m_Point = Vector3f(+1.f, 0.f, 0.f);
-
-	Vector3f c;
-	CHECK(math::Intersection(a, b, c));
-	CHECK(c == Vector3f(+1.f, 0.f, 0.f));
-}
-
-TEST_CASE("math::Intersection(Segment, Plane)::Segment stops short of the plane.")
-{
-	Segment a; Plane b;
-	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
-	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
-	b.m_Normal = Vector3f(+1.f, 0.f, 0.f);
-	b.m_Point = Vector3f(+1.01f, 0.f, 0.f);
-
-	Vector3f c;
-	CHECK(!math::Intersection(a, b, c));
-}
-
-TEST_CASE("math::Intersection(Segment, Plane)")
-{
-	Segment a; Plane b;
-	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
-	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
-	b.m_Normal = Vector3f(+1.f, 0.f, 0.f);
+	Ray3f a; Plane3f b;
+	a.m_Position = Vector3f(-1.f, 0.f, 0.f);
+	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
+	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
 	b.m_Point = Vector3f(0.f, 0.f, 0.f);
 
 	Vector3f c;
@@ -64,37 +89,36 @@ TEST_CASE("math::Intersection(Segment, Plane)")
 	CHECK(c == Vector3f::Zero);
 }
 
-TEST_CASE("math::Intersection(Ray, Plane)::Plane normal and Ray are perpendicular to each other.")
+TEST_CASE("math::Intersection(Ray3f Plane3f). Ray intersects when starting on the left side of the Plane but points left.")
 {
-	Ray a; Plane b;
-	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
-	a.m_OriginPos = Vector3f(-1.f, 0.f, 0.f);
-	b.m_Normal = Vector3f(0.f, 1.f, 0.f);
-	b.m_Point = Vector3f(0.f, 0.f, 0.f);
-
-	Vector3f c;
-	CHECK(!math::Intersection(a, b, c));
-}
-
-TEST_CASE("math::Intersection(Ray, Plane)::Plane normal and Ray are parallel to each other.")
-{
-	Ray a; Plane b;
-	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
-	a.m_OriginPos = Vector3f(-1.f, 0.f, 0.f);
-	b.m_Normal = Vector3f(+1.f, 0.f, 0.f);
-	b.m_Point = Vector3f(0.f, 0.f, 0.f);
-
-	Vector3f c;
-	CHECK(math::Intersection(a, b, c));
-	CHECK(c == Vector3f::Zero);
-}
-
-TEST_CASE("math::Intersection(Ray, Plane)::Ray points in the opposite direction to the Plane normal.")
-{
-	Ray a; Plane b;
+	Ray3f a; Plane3f b;
+	a.m_Position = Vector3f(-1.f, 0.f, 0.f);
 	a.m_Direction = Vector3f(-1.f, 0.f, 0.f);
-	a.m_OriginPos = Vector3f(-1.f, 0.f, 0.f);
-	b.m_Normal = Vector3f(+1.f, 0.f, 0.f);
+	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
+	b.m_Point = Vector3f(0.f, 0.f, 0.f);
+
+	Vector3f c;
+	CHECK(!math::Intersection(a, b, c));
+}
+
+TEST_CASE("math::Intersection(Ray3f Plane3f). Ray doesn't intersect when starting on the right side of the Plane but points right.")
+{
+	Ray3f a; Plane3f b;
+	a.m_Position = Vector3f(+1.f, 0.f, 0.f);
+	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
+	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
+	b.m_Point = Vector3f(0.f, 0.f, 0.f);
+
+	Vector3f c;
+	CHECK(!math::Intersection(a, b, c));
+}
+
+TEST_CASE("math::Intersection(Ray3f Plane3f). Ray intersects when starting on the right side of the Plane but points left.")
+{
+	Ray3f a; Plane3f b;
+	a.m_Position = Vector3f(+1.f, 0.f, 0.f);
+	a.m_Direction = Vector3f(-1.f, 0.f, 0.f);
+	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
 	b.m_Point = Vector3f(0.f, 0.f, 0.f);
 
 	Vector3f c;
@@ -102,509 +126,1177 @@ TEST_CASE("math::Intersection(Ray, Plane)::Ray points in the opposite direction 
 	CHECK(c == Vector3f::Zero);
 }
 
-TEST_CASE("math::IntersectionXZ(Ray, Ray)::Intersects at origin.")
+TEST_CASE("math::Intersection(Ray3f Plane3f). Ray doesn't intersect when Plane normal and Ray direction are perpendicular to each other.")
 {
-	Ray a, b;
-	a.m_OriginPos = Vector3f(-1.f, 0.f, 0.f);
+	Ray3f a; Plane3f b;
+	a.m_Position = Vector3f(-1.f, 0.f, 0.f);
 	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
-	b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
-	b.m_Direction = Vector3f(0.f, 0.f, +1.f);
+	b.m_Normal = Vector3f(0.f, 1.f, 0.f);
+	b.m_Point = Vector3f(0.f, 0.f, 0.f);
 
 	Vector3f c;
-	CHECK(math::IntersectionXZ(a, b, c));
-	CHECK(c == Vector3f::Zero);
+	CHECK(!math::Intersection(a, b, c));
 }
 
-TEST_CASE("math::IntersectionXZ(Ray, Ray)::Intersects at origin, but one Ray is offset on the X axis.")
+TEST_CASE("math::Intersection(Segment3f Plane3f). Segment intersects when points are either side of the Plane.")
 {
-	Ray a, b;
-	a.m_OriginPos = Vector3f(-10.f, 0.f, 0.f);
-	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
-	b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
-	b.m_Direction = Vector3f(0.f, 0.f, +1.f);
-
-	Vector3f c;
-	CHECK(math::IntersectionXZ(a, b, c));
-	CHECK(c == Vector3f::Zero);
-}
-
-TEST_CASE("math::IntersectionXZ(Ray, Ray)::Intersects at origin, but one Ray is offset on the Y axis.")
-{
-	Ray a, b;
-	a.m_OriginPos = Vector3f(-1.f, -1.f, 0.f);
-	a.m_Direction = Vector3f(+1.f, -1.f, 0.f);
-	b.m_OriginPos = Vector3f(0.f, +1.f, -1.f);
-	b.m_Direction = Vector3f(0.f, +1.f, +1.f);
-
-	Vector3f c;
-	CHECK(math::IntersectionXZ(a, b, c));
-	CHECK(c == Vector3f::Zero);
-}
-
-TEST_CASE("math::IntersectionXZ(Ray, Ray)::Perpendicular Rays, but one Ray is in front of the other.")
-{
-	Ray a, b;
-	a.m_OriginPos = Vector3f(+10.f, -1.f, 0.f);
-	a.m_Direction = Vector3f(+1.f, -1.f, 0.f);
-	b.m_OriginPos = Vector3f(0.f, +1.f, -1.f);
-	b.m_Direction = Vector3f(0.f, +1.f, +1.f);
-
-	Vector3f c;
-	CHECK(!math::IntersectionXZ(a, b, c));
-}
-
-TEST_CASE("math::IntersectionXZ(Ray, Ray)::Parallel Rays.")
-{
-	Ray a, b;
-	a.m_OriginPos = Vector3f(-1.f, 0.f, -1.f);
-	a.m_Direction = Vector3f(+1.f, 0.f, -1.f);
-	b.m_OriginPos = Vector3f(-1.f, 0.f, +1.f);
-	b.m_Direction = Vector3f(+1.f, 0.f, +1.f);
-
-	Vector3f c;
-	CHECK(!math::IntersectionXZ(a, b, c));
-}
-
-TEST_CASE("Parallel Rays, but one Ray is offset on the X axis.")
-{
-	Ray a, b;
-	a.m_OriginPos = Vector3f(-10.f, 0.f, -1.f);
-	a.m_Direction = Vector3f(+1.f, 0.f, -1.f);
-	b.m_OriginPos = Vector3f(-1.f, 0.f, +1.f);
-	b.m_Direction = Vector3f(+1.f, 0.f, +1.f);
-
-	Vector3f c;
-	CHECK(!math::IntersectionXZ(a, b, c));
-}
-
-TEST_CASE("math::IntersectionXZ(Segment, Segment)::Segments intersect at origin.")
-{
-	Segment a, b;
+	Segment3f a; Plane3f b;
 	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
-	b.m_PointA = Vector3f(0.f, 0.f, -1.f);
-	b.m_PointB = Vector3f(0.f, 0.f, +1.f);
+	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
+	b.m_Point = Vector3f(0.f, 0.f, 0.f);
 
 	Vector3f c;
-	CHECK(math::IntersectionXZ(a, b, c));
+	CHECK(math::Intersection(a, b, c));
 	CHECK(c == Vector3f::Zero);
 }
 
-TEST_CASE("math::IntersectionXZ(Segment, Segment)::Segments intersect at origin with different Y.")
+TEST_CASE("math::Intersection(Segment3f Plane3f). Segment doesn't intersect when points are on the left side of the Plane.")
 {
-	Segment a, b;
+	Segment3f a; Plane3f b;
+	a.m_PointA = Vector3f(-2.f, 0.f, 0.f);
+	a.m_PointB = Vector3f(-1.f, 0.f, 0.f);
+	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
+	b.m_Point = Vector3f(0.f, 0.f, 0.f);
+
+	Vector3f c;
+	CHECK(!math::Intersection(a, b, c));
+}
+
+TEST_CASE("math::Intersection(Segment3f Plane3f). Segment doesn't intersect when points are on the right side of the Plane.")
+{
+	Segment3f a; Plane3f b;
+	a.m_PointA = Vector3f(+1.f, 0.f, 0.f);
+	a.m_PointB = Vector3f(+2.f, 0.f, 0.f);
+	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
+	b.m_Point = Vector3f(0.f, 0.f, 0.f);
+
+	Vector3f c;
+	CHECK(!math::Intersection(a, b, c));
+}
+
+TEST_CASE("math::Intersection(Segment3f Plane3f). Segment doesn't intersect when Segment points and Plane normal are perpendicular to each other.")
+{
+	Segment3f a; Plane3f b;
 	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
-	b.m_PointA = Vector3f(0.f, 0.f, -1.f);
-	b.m_PointB = Vector3f(0.f, 0.f, +1.f);
+	b.m_Normal = Vector3f(0.f, 1.f, 0.f);
+	b.m_Point = Vector3f(0.f, 0.f, 0.f);
 
 	Vector3f c;
-	CHECK(math::IntersectionXZ(a, b, c));
-	CHECK(c == Vector3f::Zero);
+	CHECK(!math::Intersection(a, b, c));
 }
 
-TEST_CASE("math::IntersectionXZ(Segment, Segment)::Segments are separated by Z.")
+TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles overlap when their edges touch each others centres.")
 {
-	Segment a, b;
-	a.m_PointA = Vector3f(-1.f, 0.f, -1.f);
-	a.m_PointB = Vector3f(+1.f, 0.f, -1.f);
-	b.m_PointA = Vector3f(-1.f, 0.f, +1.f);
-	b.m_PointB = Vector3f(+1.f, 0.f, +1.f);
-
-	Vector3f c;
-	CHECK(!math::IntersectionXZ(a, b, c));
-}
-
-TEST_CASE("math::IsAxisIntersecting(OBB, OBB, Axis)")
-{
-}
-
-TEST_CASE("math::IsOverlapping(AABB, AABB)::A overlaps B.")
-{
-	AABB a, b;
-	a.m_Min = Vector3f(0.0f);
-	a.m_Max = Vector3f(1.0f);
-	b.m_Min = Vector3f(0.5f);
-	b.m_Max = Vector3f(1.5f);
-	CHECK(math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlapping(AABB, AABB)::No overlap.")
-{
-	AABB a, b;
-	a.m_Min = Vector3f(0.f);
-	a.m_Max = Vector3f(1.f);
-	b.m_Min = Vector3f(2.f);
-	b.m_Max = Vector3f(3.f);
-	CHECK(!math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlapping(AABB, AABB)::Share Corner.")
-{
-	AABB a, b;
-	a.m_Min = Vector3f(0.f);
-	a.m_Max = Vector3f(1.f);
-	b.m_Min = Vector3f(1.f);
-	b.m_Max = Vector3f(2.f);
-	CHECK(!math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlapping(AABB, AABB)::Share Edge.")
-{
-	AABB a, b;
-	a.m_Min = Vector3f(0.f);
-	a.m_Max = Vector3f(1.f);
-	b.m_Min = Vector3f(1.f, 0.f, 0.f);
-	b.m_Max = Vector3f(1.f, 2.f, 2.f);
-	CHECK(!math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlapping(AABB, AABB)::A Inside B.")
-{
-	AABB a, b;
-	a.m_Min = Vector3f(-1.f);
-	a.m_Max = Vector3f(+1.f);
-	b.m_Min = Vector3f(-2.f);
-	b.m_Max = Vector3f(+2.f);
-	CHECK(math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlapping(AABB, AABB)::B Inside A.")
-{
-	AABB a, b;
-	a.m_Min = Vector3f(-2.f);
-	a.m_Max = Vector3f(+2.f);
-	b.m_Min = Vector3f(-1.f);
-	b.m_Max = Vector3f(+1.f);
-	CHECK(math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlapping(AABB, Ray)::Ray touches edge.")
-{
-	constexpr AABB aabb = AABB(Vector3f::Zero, Vector3f::One);
-
-	Ray ray;
-	ray.m_Direction = -Vector3f::AxisX;
-	ray.m_OriginPos = Vector3f(1.5f, 0.5f, 0.5f);
-	CHECK(math::IsOverlapping(aabb, ray));
-}
-
-TEST_CASE("math::IsOverlapping(AABB, Ray)::Ray points in wrong direction.")
-{
-	constexpr AABB aabb = AABB(Vector3f::Zero, Vector3f::One);
-
-	Ray ray;
-	ray.m_Direction = Vector3f::AxisX;
-	ray.m_OriginPos = Vector3f(1.5f, 0.5f, 0.5f);
-	CHECK(!math::IsOverlapping(aabb, ray));
-}
-
-TEST_CASE("math::IsOverlapping(AABB, Ray)::Glancing Corner.")
-{
-	constexpr AABB aabb = AABB(Vector3f::Zero, Vector3f::One);
-
-	Ray ray;
-	ray.m_Direction = Vector3f::AxisZ;
-	ray.m_OriginPos = Vector3f(1.f);
-	CHECK(!math::IsOverlapping(aabb, ray));
-}
-
-TEST_CASE("math::IsOverlapping(AABB, Ray)::Glancing Edge.")
-{
-	constexpr AABB aabb = AABB(Vector3f::Zero, Vector3f::One);
-
-	Ray ray;
-	ray.m_Direction = Vector3f::AxisZ;
-	ray.m_OriginPos = Vector3f(1.f, 0.5f, -1.f);
-	CHECK(!math::IsOverlapping(aabb, ray));
-}
-
-TEST_CASE("math::IsOverlapping(OBB, OBB)::Collision, No Rotation.")
-{
-	OBB a, b;
-	a = OBB::FromExtents(Vector3f(0.5f), Matrix3x3::Identity, s_OBBExtents);
-	b = OBB::FromExtents(Vector3f(1.0f), Matrix3x3::Identity, s_OBBExtents);
-	CHECK(math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlapping(OBB, OBB)::No Collision, No Rotation.")
-{
-	OBB a, b;
-	a = OBB::FromExtents(Vector3f(0.5f), Matrix3x3::Identity, s_OBBExtents);
-	b = OBB::FromExtents(Vector3f(2.5f), Matrix3x3::Identity, s_OBBExtents);
-	CHECK(!math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlapping(OBB, OBB)::Share Corner, No Rotation.")
-{
-	OBB a, b;
-	a = OBB::FromExtents(Vector3f(0.5f), Matrix3x3::Identity, s_OBBExtents);
-	b = OBB::FromExtents(Vector3f(1.5f), Matrix3x3::Identity, s_OBBExtents);
-	CHECK(math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlapping(OBB, OBB)::Share Edge, No Rotation.")
-{
-	OBB a, b;
-	a = OBB::FromExtents(Vector3f(0.5f), Matrix3x3::Identity, s_OBBExtents);
-	b = OBB::FromExtents(Vector3f(1.5f, 0.f, 0.f), Matrix3x3::Identity, s_OBBExtents);
-	CHECK(math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlapping(OBB, OBB)::A Inside B, No Rotation.")
-{
-	OBB a, b;
-	a = OBB::FromExtents(Vector3f::Zero, Matrix3x3::Identity, Vector3f::One);
-	b = OBB::FromExtents(Vector3f::Zero, Matrix3x3::Identity, Vector3f(2.f));
-	CHECK(math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlapping(OBB, OBB)::B Inside A, No Rotation.")
-{
-	OBB a, b;
-	a = OBB::FromExtents(Vector3f::Zero, Matrix3x3::Identity, Vector3f(2.f));
-	b = OBB::FromExtents(Vector3f::Zero, Matrix3x3::Identity, Vector3f::One);
-	CHECK(math::IsOverlapping(a, b));
-}
-
-TEST_CASE("math::IsOverlappingXZ(Sphere, Sphere)::Spheres touch each others centres.")
-{
-	Sphere a, b;
-	a.m_Position = Vector3f(0.f, 0.f, 0.f);
+	Circle2f a, b;
+	a.m_Position = Vector2f(0.f, 0.f);
 	a.m_Radius = 1.f;
-	b.m_Position = Vector3f(1.f, 0.f, 0.f);
+	b.m_Position = Vector2f(1.f, 0.f);
 	b.m_Radius = 1.f;
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Sphere, Sphere)::Spheres don't touch.")
+TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles don't overlap when they are separated.")
 {
-	Sphere a, b;
-	a.m_Position = Vector3f(0.f, 0.f, 0.f);
+	Circle2f a, b;
+	a.m_Position = Vector2f(0.f, 0.f);
 	a.m_Radius = 1.f;
-	b.m_Position = Vector3f(3.f, 0.f, 0.f);
+	b.m_Position = Vector2f(3.f, 0.f);
 	b.m_Radius = 1.f;
-
-	CHECK(!math::IsOverlappingXZ(a, b));
+	CHECK(!math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Sphere, Sphere)::Sphere with radius 0 touches.")
+TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles overlap when one circle with 0 radius is enclosed by the other.")
 {
-	Sphere a, b;
-	a.m_Position = Vector3f(0.f, 0.f, 0.f);
+	Circle2f a, b;
+	a.m_Position = Vector2f(0.f, 0.f);
 	a.m_Radius = 1.f;
-	b.m_Position = Vector3f(0.f, 0.f, 0.f);
+	b.m_Position = Vector2f(0.f, 0.f);
 	b.m_Radius = 0.f;
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Sphere, Sphere)::Spheres touch each others edges.")
+TEST_CASE("math::IsOverlapping(Circle2f Circle2f). Circles overlap when they touch each others edges.")
 {
-	Sphere a, b;
-	a.m_Position = Vector3f(0.f, 0.f, 0.f);
+	Circle2f a, b;
+	a.m_Position = Vector2f(0.f, 0.f);
 	a.m_Radius = 1.f;
-	b.m_Position = Vector3f(2.f, 0.f, 0.f);
+	b.m_Position = Vector2f(2.f, 0.f);
 	b.m_Radius = 1.f;
-
-	CHECK(!math::IsOverlappingXZ(a, b));
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Sphere, Line)::Line intersects middle of Sphere.")
+TEST_CASE("math::IsOverlapping(Circle2f Line2f). Circle and Line overlap when line runs through centre of circle.")
 {
-	Sphere a; Line b;
-	a.m_Position = Vector3f(0.f, 0.f, 0.f);
+	Circle2f a; Line2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
 	a.m_Radius = 1.f;
-	b.m_PointA = Vector3f(0.f, 0.f, -2.f);
-	b.m_PointB = Vector3f(0.f, 0.f, +2.f);
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	b.m_PointA = Vector2f(0.f, -2.f);
+	b.m_PointB = Vector2f(0.f, +2.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Sphere, Line)::Line misses Sphere's edge.")
+TEST_CASE("math::IsOverlapping(Circle2f Line2f). Circle and Line overlap when line runs through centre of circle but points aren't either side.")
 {
-	Sphere a; Line b;
-	a.m_Position = Vector3f(2.f, 0.f, 0.f);
+	Circle2f a; Line2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
 	a.m_Radius = 1.f;
-	b.m_PointA = Vector3f(0.f, 0.f, -1.f);
-	b.m_PointB = Vector3f(0.f, 0.f, +1.f);
-
-	CHECK(!math::IsOverlappingXZ(a, b));
+	b.m_PointA = Vector2f(0.f, -4.f);
+	b.m_PointB = Vector2f(0.f, -5.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Sphere, Line)::Line touches Sphere's edge.")
+TEST_CASE("math::IsOverlapping(Circle2f Line2f). Circle and Line don't overlap when the line misses the circle's edge.")
 {
-	Sphere a; Line b;
-	a.m_Position = Vector3f(0.f, 0.f, 0.f);
+	Circle2f a; Line2f b;
+	a.m_Position = Vector2f(2.f, 0.f);
 	a.m_Radius = 1.f;
-	b.m_PointA = Vector3f(1.f, 0.f, -1.f);
-	b.m_PointB = Vector3f(1.f, 0.f, +1.f);
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	b.m_PointA = Vector2f(0.f, -2.f);
+	b.m_PointB = Vector2f(0.f, +2.f);
+	CHECK(!math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Sphere, Ray)::Ray intersects middle of Sphere.")
+TEST_CASE("math::IsOverlapping(Circle2f Line2f). Circle and Line overlap when the line touches the circle's edge.")
 {
-	Sphere a; Ray b;
-	a.m_Position = Vector3f(0.f, 0.f, 0.f);
+	Circle2f a; Line2f b;
+	a.m_Position = Vector2f(1.f, 0.f);
 	a.m_Radius = 1.f;
-	b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
-	b.m_Direction = Vector3f(0.f, 0.f, +1.f);
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	b.m_PointA = Vector2f(0.f, -2.f);
+	b.m_PointB = Vector2f(0.f, +2.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Sphere, Ray)::Ray intersects middle of Sphere from far away.")
+TEST_CASE("math::IsOverlapping(Circle2f Ray2f). Circle and Ray overlap when ray runs through centre of circle.")
 {
-	Sphere a; Ray b;
-	a.m_Position = Vector3f(0.f, 0.f, 0.f);
+	Circle2f a; Ray2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
 	a.m_Radius = 1.f;
-	b.m_OriginPos = Vector3f(0.f, 0.f, -10.f);
-	b.m_Direction = Vector3f(0.f, 0.f, +1.f);
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	b.m_Position = Vector2f(0.f, -2.f);
+	b.m_Direction = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Sphere, Ray)::Ray misses Sphere's edge.")
+TEST_CASE("math::IsOverlapping(Circle2f Ray2f). Circle and Ray don't overlap when ray points in the opposite direction.")
 {
-	Sphere a; Ray b;
-	a.m_Position = Vector3f(2.f, 0.f, 0.f);
+	Circle2f a; Ray2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
 	a.m_Radius = 1.f;
-	b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
-	b.m_Direction = Vector3f(0.f, 0.f, +1.f);
-
-	CHECK(!math::IsOverlappingXZ(a, b));
+	b.m_Position = Vector2f(0.f, -2.f);
+	b.m_Direction = Vector2f(0.f, -1.f);
+	CHECK(!math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Sphere, Ray)::Ray touches Sphere's edge.")
+TEST_CASE("math::IsOverlapping(Circle2f Ray2f). Circle and Ray don't overlap when the ray misses the circle's edge.")
 {
-	Sphere a; Ray b;
-	a.m_Position = Vector3f(0.f, 0.f, 0.f);
+	Circle2f a; Ray2f b;
+	a.m_Position = Vector2f(2.f, 0.f);
 	a.m_Radius = 1.f;
-	b.m_OriginPos = Vector3f(1.f, 0.f, -1.f);
-	b.m_Direction = Vector3f(0.f, 0.f, +1.f);
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	b.m_Position = Vector2f(0.f, -2.f);
+	b.m_Direction = Vector2f(0.f, +1.f);
+	CHECK(!math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Ray, Ray)::Perpendicular at Origin.")
+TEST_CASE("math::IsOverlapping(Circle2f Ray2f). Circle and Ray overlap when the ray touches the circle's edge.")
 {
-	Ray a, b;
-	a.m_OriginPos = Vector3f(-1.f, 0.f, 0.f);
-	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
-	b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
-	b.m_Direction = Vector3f(0.f, 0.f, +1.f);
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	Circle2f a; Ray2f b;
+	a.m_Position = Vector2f(1.f, 0.f);
+	a.m_Radius = 1.f;
+	b.m_Position = Vector2f(+0.f, -2.f);
+	b.m_Direction = Vector2f(+0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Ray, Ray)::Perpendicular away from Origin.")
+TEST_CASE("math::IsOverlapping(Circle2f Rect2f). Circle and Rect overlap when the rect min in inside the circle.")
 {
-	Ray a, b;
-	a.m_OriginPos = Vector3f(-10.f, 0.f, 0.f);
-	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
-	b.m_OriginPos = Vector3f(0.f, 0.f, -1.f);
-	b.m_Direction = Vector3f(0.f, 0.f, +1.f);
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	Circle2f a; Rect2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b.m_Min = Vector2f(+0.f, +0.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Ray, Ray)::Perpendicular with different Y.")
+TEST_CASE("math::IsOverlapping(Circle2f Rect2f). Circle and Rect overlap when the rect min in inside the circle away from origin.")
 {
-	Ray a, b;
-	a.m_OriginPos = Vector3f(-1.f, -1.f, 0.f);
-	a.m_Direction = Vector3f(+1.f, -1.f, 0.f);
-	b.m_OriginPos = Vector3f(0.f, +1.f, -1.f);
-	b.m_Direction = Vector3f(0.f, +1.f, +1.f);
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	Circle2f a; Rect2f b;
+	a.m_Position = Vector2f(+998.f, +998.f);
+	a.m_Radius = 1.f;
+	b.m_Min = Vector2f(+998.f, +998.f);
+	b.m_Max = Vector2f(+999.f, +999.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Ray, Ray)::Perpendicular with overlapping origins.")
+TEST_CASE("math::IsOverlapping(Circle2f Rect2f). Circle and Rect don't overlap when the rect min is outside the circle.")
 {
-	Ray a, b;
-	a.m_OriginPos = Vector3f( 0.f, 0.f, 0.f);
-	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
-	b.m_OriginPos = Vector3f(0.f, 0.f,  0.f);
-	b.m_Direction = Vector3f(0.f, 0.f, +1.f);
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	Circle2f a; Rect2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b.m_Min = Vector2f(+1.f, +1.f);
+	b.m_Max = Vector2f(+2.f, +2.f);
+	CHECK(!math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Ray, Ray)::Perpendicular with offset origins.")
+TEST_CASE("math::IsOverlapping(Circle2f Rect2f). Circle and Rect overlap when the rect max in inside the circle.")
 {
-	Ray a, b;
-	a.m_OriginPos = Vector3f(-1.f, 0.f, 0.f);
-	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
-	b.m_OriginPos = Vector3f(0.f, 0.f, +1.f);
-	b.m_Direction = Vector3f(0.f, 0.f, +1.f);
-
-	CHECK(!math::IsOverlappingXZ(a, b));
+	Circle2f a; Rect2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+0.f, +0.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Ray, Ray)::Parallel Lines.")
+TEST_CASE("math::IsOverlapping(Circle2f Rect2f). Circle and Rect don't overlap when the rect max in outside the circle.")
 {
-	Ray a, b;
-	a.m_OriginPos = Vector3f(-1.f, 0.f, -1.f);
-	a.m_Direction = Vector3f(+1.f, 0.f, -1.f);
-	b.m_OriginPos = Vector3f(-1.f, 0.f, +1.f);
-	b.m_Direction = Vector3f(+1.f, 0.f, +1.f);
-
-	CHECK(!math::IsOverlappingXZ(a, b));
+	Circle2f a; Rect2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b.m_Min = Vector2f(-2.f, -2.f);
+	b.m_Max = Vector2f(-1.f, -1.f);
+	CHECK(!math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Ray, Ray)::Parallel Lines With Further Origin.")
+TEST_CASE("math::IsOverlapping(Circle2f Rect2f). Circle and Rect overlap when the rect touches the edge of the circle.")
 {
-	Ray a, b;
-	a.m_OriginPos = Vector3f(-10.f, 0.f, -1.f);
-	a.m_Direction = Vector3f(+1.f, 0.f, -1.f);
-	b.m_OriginPos = Vector3f(-1.f, 0.f, +1.f);
-	b.m_Direction = Vector3f(+1.f, 0.f, +1.f);
-
-	CHECK(!math::IsOverlappingXZ(a, b));
+	Circle2f a; Rect2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b.m_Min = Vector2f(+1.f, +0.f);
+	b.m_Max = Vector2f(+2.f, +2.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Segment, Segment)::Perpendicular at Origin.")
+TEST_CASE("math::IsOverlapping(Circle2f Rect2f). Circle and Rect overlap when the rect envelops the circle.")
 {
-	Segment a, b;
-	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
-	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
-	b.m_PointA = Vector3f(0.f, 0.f, -1.f);
-	b.m_PointB = Vector3f(0.f, 0.f, +1.f);
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	Circle2f a; Rect2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b.m_Min = Vector2f(-2.f, -2.f);
+	b.m_Max = Vector2f(+2.f, +2.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Segment, Segment)::Perpendicular away from Origin.")
+TEST_CASE("math::IsOverlapping(Circle2f Rect2f). Circle and Rect overlap when the circle envelops the rect.")
 {
-	Segment a, b;
-	a.m_PointA = Vector3f(-10.f, 0.f, 0.f);
-	a.m_PointB = Vector3f(-0.1f, 0.f, 0.f);
-	b.m_PointA = Vector3f(0.f, 0.f, -1.f);
-	b.m_PointB = Vector3f(0.f, 0.f, +1.f);
-
-	CHECK(!math::IsOverlappingXZ(a, b));
+	Circle2f a; Rect2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 4.f;
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Segment, Segment)::Perpendicular with different Y.")
+TEST_CASE("math::IsOverlapping(Circle2f Segment2f). Circle and Segment overlap when segment runs through centre of circle.")
 {
-	Segment a, b;
-	a.m_PointA = Vector3f(-1.f, -1.f, 0.f);
-	a.m_PointB = Vector3f(+1.f, -1.f, 0.f);
-	b.m_PointA = Vector3f(0.f, +1.f, -1.f);
-	b.m_PointB = Vector3f(0.f, +1.f, +1.f);
-
-	CHECK(math::IsOverlappingXZ(a, b));
+	Circle2f a; Segment2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b.m_PointA = Vector2f(0.f, -2.f);
+	b.m_PointB = Vector2f(0.f, +2.f);
+	CHECK(math::IsOverlapping(a, b));
 }
 
-TEST_CASE("math::IsOverlappingXZ(Segment, Segment)::Parallel Lines.")
+TEST_CASE("math::IsOverlapping(Circle2f Segment2f). Circle and Segment don't overlap when segment stops short of circle.")
 {
-	Segment a, b;
-	a.m_PointA = Vector3f(-1.f, 0.f, -1.f);
-	a.m_PointB = Vector3f(+1.f, 0.f, -1.f);
-	b.m_PointA = Vector3f(-1.f, 0.f, +1.f);
-	b.m_PointB = Vector3f(+1.f, 0.f, +1.f);
+	Circle2f a; Segment2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b.m_PointA = Vector2f(0.f, -2.f);
+	b.m_PointB = Vector2f(0.f, -4.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
 
-	CHECK(!math::IsOverlappingXZ(a, b));
+TEST_CASE("math::IsOverlapping(Circle2f Segment2f). Circle and Segment don't overlap when the segment misses the circle's edge.")
+{
+	Circle2f a; Segment2f b;
+	a.m_Position = Vector2f(2.f, 0.f);
+	a.m_Radius = 1.f;
+	b.m_PointA = Vector2f(0.f, -2.f);
+	b.m_PointB = Vector2f(0.f, +2.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Circle2f Segment2f). Circle and Segment overlap when the segment touches the circle's edge.")
+{
+	Circle2f a; Segment2f b;
+	a.m_Position = Vector2f(1.f, 0.f);
+	a.m_Radius = 1.f;
+	b.m_PointA = Vector2f(0.f, -2.f);
+	b.m_PointB = Vector2f(0.f, +2.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Circle2f Vector2f). Circle and Point overlap when the point is enclosed by the circle.")
+{
+	Circle2f a; Vector2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b = Vector2f(0.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Circle2f Vector2f). Circle and Point don't overlap when the point is outside the circle.")
+{
+	Circle2f a; Vector2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Radius = 1.f;
+	b = Vector2f(2.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Circle2f Vector2f). Circle and Point overlap when the point touches the circle's edge.")
+{
+	Circle2f a; Vector2f b;
+	a.m_Position = Vector2f(1.f, 0.f);
+	a.m_Radius = 1.f;
+	b = Vector2f(0.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Circle2f). Line and Circle overlap when line runs through centre of circle.")
+{
+	// math::IsOverlapping(Circle2f Line2f).
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Line2f). Lines overlap when they are perpendicular at Origin.")
+{
+	Line2f a, b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(0.f, -1.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Line2f). Lines overlap when they are perpendicular but not at Origin.")
+{
+	Line2f a, b;
+	a.m_PointA = Vector2f(-999.f, 100.f);
+	a.m_PointB = Vector2f(-998.f, 100.f);
+	b.m_PointA = Vector2f(100.f, -1.f);
+	b.m_PointB = Vector2f(100.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Line2f). Lines don't overlap when they are parallel.")
+{
+	Line2f a, b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(-1.f, 1.f);
+	b.m_PointB = Vector2f(+1.f, 1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Line2f). Lines don't overlap when they are identical.")
+{
+	Line2f a, b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Ray2f). Line and Ray overlap when they are perpendicular at Origin.")
+{
+	Line2f a; Ray2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(0.f, -1.f);
+	b.m_Direction = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Ray2f). Line and Ray overlap when they are perpendicular but not at Origin.")
+{
+	Line2f a; Ray2f b;
+	a.m_PointA = Vector2f(-999.f, 100.f);
+	a.m_PointB = Vector2f(-998.f, 100.f);
+	b.m_Position = Vector2f(100.f, -1.f);
+	b.m_Direction = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Ray2f). Line and Ray don't overlap when they are perpendicular but Ray points downwards.")
+{
+	Line2f a; Ray2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(0.f, -1.f);
+	b.m_Direction = Vector2f(0.f, -1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Ray2f). Line and Ray don't overlap when they are perpendicular but Ray is above.")
+{
+	Line2f a; Ray2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(0.f, +1.f);
+	b.m_Direction = Vector2f(0.f, +1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Ray2f). Line and Ray don't overlap when they are parallel.")
+{
+	Line2f a; Ray2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(-1.f, 1.f);
+	b.m_Direction = Vector2f(1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Ray2f). Line and Ray don't overlap when they are parallel on top of each other.")
+{
+	Line2f a; Ray2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(-1.f, 0.f);
+	b.m_Direction = Vector2f(+1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Ray2f). Line and Ray overlap when they cross at an angle and they are far away from each other.")
+{
+	Line2f a; Ray2f b;
+	a.m_PointA = Vector2f(+999998.f, 0.f);
+	a.m_PointB = Vector2f(+999999.f, 0.f);
+	b.m_Position = Vector2f(-99999999.f);
+	b.m_Direction = Vector2f(0.9999f, 0.0001f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Ray2f). Line and Ray don't overlap when floating point precision is a factor.")
+{
+	Line2f a; Ray2f b;
+	a.m_PointA = Vector2f(+99999999998.f, 0.f);
+	a.m_PointB = Vector2f(+99999999999.f, 0.f);
+	b.m_Position = Vector2f(-9999999999999.f);
+	b.m_Direction = Vector2f(0.9999f, 0.0001f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Rect2f). Line and Rect overlap when line runs through the centre of the rect.")
+{
+	Line2f a; Rect2f b;
+	a.m_PointA = Vector2f(-2.f, 0.f);
+	a.m_PointB = Vector2f(+2.f, 0.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Rect2f). Line and Rect overlap when line runs through the centre of the rect away from origin.")
+{
+	Line2f a; Rect2f b;
+	a.m_PointA = Vector2f(-96.f, +97.f);
+	a.m_PointB = Vector2f(+99.f, +97.f);
+	b.m_Min = Vector2f(+97.f, +96.f);
+	b.m_Max = Vector2f(+98.f, +98.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Rect2f). Line and Rect overlap when line runs through the centre of the rect but points aren't either side.")
+{
+	Line2f a; Rect2f b;
+	a.m_PointA = Vector2f(-4.f, 0.f);
+	a.m_PointB = Vector2f(-2.f, 0.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Rect2f). Line and Rect don't overlap when line misses the rect.")
+{
+	Line2f a; Rect2f b;
+	a.m_PointA = Vector2f(-2.f, -2.f);
+	a.m_PointB = Vector2f(+2.f, -2.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(!math::IsOverlapping(a, b)); 
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Rect2f). Line and Rect overlap when line touches the edge of the rect.")
+{
+	Line2f a; Rect2f b;
+	a.m_PointA = Vector2f(-2.f, -1.f);
+	a.m_PointB = Vector2f(+2.f, -1.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Rect2f). Line and Rect overlap when line touches the corner of the rect.")
+{
+	Line2f a; Rect2f b;
+	a.m_PointA = Vector2f(-1.f, -1.f);
+	a.m_PointB = Vector2f(+1.f, +1.f);
+	b.m_Min = Vector2f(-1.f, 0.f);
+	b.m_Max = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment overlap when they are perpendicular at Origin.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(0.f, -1.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment overlap when they are perpendicular and their edge's touch.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(0.f, 0.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment overlap when they are perpendicular not at Origin.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-999.f, 0.f);
+	a.m_PointB = Vector2f(-998.f, 0.f);
+	b.m_PointA = Vector2f(100.f, -1.f);
+	b.m_PointB = Vector2f(100.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment overlap when they are perpendicular at Origin but points are flipped.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(0.f, +1.f);
+	b.m_PointB = Vector2f(0.f, -1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment don't overlap when they are perpendicular but Segment is below Line.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(0.f, -10.f);
+	b.m_PointB = Vector2f(0.f, -11.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment don't overlap when they are parallel.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(-1.f, 1.f);
+	b.m_PointB = Vector2f(+1.f, 1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment don't overlap when they are parallel on top of each other.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment overlap when they overlap at an 45 degree angle.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-100.f, -1.f);
+	a.m_PointB = Vector2f(+100.f, +1.f);
+	b.m_PointA = Vector2f(-100.f, 0.f);
+	b.m_PointB = Vector2f(+100.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment overlap when the Segments first point touches the Line.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(0.f, 0.f);
+	b.m_PointB = Vector2f(0.f, 1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Circle2f).")
+{
+	// math::IsOverlapping(Circle2f Ray2f).
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Line2f).")
+{
+	// math::IsOverlapping(Line2f Ray2f).
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Ray2f). Rays overlap when they are perpendicular at Origin.")
+{
+	Ray2f a, b;
+	a.m_Position = Vector2f(-1.f, 0.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(0.f, -1.f);
+	b.m_Direction = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Ray2f). Rays overlap when they are perpendicular but not at Origin.")
+{
+	Ray2f a, b;
+	a.m_Position = Vector2f(-999.f, 100.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(999.f, -1.f);
+	b.m_Direction = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Ray2f). Rays overlap when they are perpendicular and origin pos is shared.")
+{
+	Ray2f a, b;
+	a.m_Position = Vector2f(-1.f, 0.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(-1.f, 0.f);
+	b.m_Direction = Vector2f(0.f, 1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Ray2f). Rays overlap when they are perpendicular and they share an edge.")
+{
+	Ray2f a, b;
+	a.m_Position = Vector2f(-1.f, 0.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(+10.f, 0.f);
+	b.m_Direction = Vector2f(0.f, 1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Ray2f). Rays don't overlap when they are perpendicular but direction is opposite.")
+{
+	Ray2f a, b;
+	a.m_Position = Vector2f(-1.f, +1.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(-1.f, -1.f);
+	b.m_Direction = Vector2f(0.f, -1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Ray2f). Rays don't overlap when they are parallel.")
+{
+	Ray2f a, b;
+	a.m_Position = Vector2f(-1.f, 0.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(-1.f, 1.f);
+	b.m_Direction = Vector2f(+1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Ray2f). Rays don't overlap when they are parallel on top of each other.")
+{
+	Ray2f a, b;
+	a.m_Position = Vector2f(-2.f, 0.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(-1.f, 0.f);
+	b.m_Direction = Vector2f(+1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Ray2f). Rays don't overlap when they are parallel on top of each other, but directions are opposite.")
+{
+	Ray2f a, b;
+	a.m_Position = Vector2f(-1.f, 0.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Position = Vector2f(+1.f, 0.f);
+	b.m_Direction = Vector2f(-1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Rect2f). Ray and Rect overlap when ray runs through the centre of the rect.")
+{
+	Ray2f a; Rect2f b;
+	a.m_Position = Vector2f(-2.f, 0.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Rect2f). Ray and Rect don't overlap when ray points in the wrong direction.")
+{
+	Ray2f a; Rect2f b;
+	a.m_Position = Vector2f(-2.f, 0.f);
+	a.m_Direction = Vector2f(-1.f, 0.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Rect2f). Ray and Rect overlap when ray runs through the centre of the rect away from origin.")
+{
+	Ray2f a; Rect2f b;
+	a.m_Position = Vector2f(-96.f, +97.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Min = Vector2f(+97.f, +96.f);
+	b.m_Max = Vector2f(+98.f, +98.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Rect2f). Ray and Rect overlap when ray runs through the centre of the rect but points aren't either side.")
+{
+	Ray2f a; Rect2f b;
+	a.m_Position = Vector2f(-4.f, 0.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Rect2f). Ray and Rect don't overlap when ray misses the rect.")
+{
+	Ray2f a; Rect2f b;
+	a.m_Position = Vector2f(-2.f, -2.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Rect2f). Ray and Rect overlap when ray touches the edge of the rect.")
+{
+	Ray2f a; Rect2f b;
+	a.m_Position = Vector2f(-2.f, -1.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Rect2f). Ray and Rect overlap when ray touches the corner of the rect.")
+{
+	Ray2f a; Rect2f b;
+	a.m_Position = Vector2f(-1.f, -1.f);
+	a.m_Direction = Vector2f(+1.f, +1.f);
+	b.m_Min = Vector2f(-1.f, 0.f);
+	b.m_Max = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Segment2f). Ray and Segment overlap when they are perpendicular at Origin.")
+{
+	Ray2f a; Segment2f b;
+	a.m_Position = Vector2f(0.f, -1.f);
+	a.m_Direction = Vector2f(0.f, +1.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Segment2f). Ray and Segment overlap when when they are perpendicular and their edge's touch.")
+{
+	Ray2f a; Segment2f b;
+	a.m_Position = Vector2f(0.f, 0.f);
+	a.m_Direction = Vector2f(0.f, 1.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Segment2f). Ray and Segment don't overlap when Ray is beside the Segment.")
+{
+	Ray2f a; Segment2f b;
+	a.m_Position = Vector2f(2.f, -1.f);
+	a.m_Direction = Vector2f(0.f, +1.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Segment2f). Ray and Segment overlap when they are perpendicular but not at Origin.")
+{
+	Ray2f a; Segment2f b;
+	a.m_Position = Vector2f(100.f, -1.f);
+	a.m_Direction = Vector2f(0.f, +1.f);
+	b.m_PointA = Vector2f(-100.f, 100.f);
+	b.m_PointB = Vector2f(+100.f, 100.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Segment2f). Ray and Segment don't overlap when they are perpendicular but Ray points downwards.")
+{
+	Ray2f a; Segment2f b;
+	a.m_Position = Vector2f(0.f, -1.f);
+	a.m_Direction = Vector2f(0.f, -1.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Segment2f). Ray and Segment don't overlap when they are perpendicular but Ray is above.")
+{
+	Ray2f a; Segment2f b;
+	a.m_Position = Vector2f(0.f, +1.f);
+	a.m_Direction = Vector2f(0.f, +1.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Segment2f). Ray and Segment don't overlap when they are parallel.")
+{
+	Ray2f a; Segment2f b;
+	a.m_Position = Vector2f(-1.f, 1.f);
+	a.m_Direction = Vector2f(1.f, 0.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Segment2f). Ray and Segment don't overlap when they are parallel on top of each other.")
+{
+	Ray2f a; Segment2f b;
+	a.m_Position = Vector2f(-1.f, 0.f);
+	a.m_Direction = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Segment2f). Ray and Segment overlap when they cross at an angle and they are far away from each other.")
+{
+	Ray2f a; Segment2f b;
+	a.m_Position = Vector2f(-9999.f, -1.f);
+	a.m_Direction = Vector2f(0.9999f, 0.0001f);
+	b.m_PointA = Vector2f(-999999.f, 0.f);
+	b.m_PointB = Vector2f(+999999.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Ray2f Segment2f). Ray and Segment don't overlap when floating point precision is a factor.")
+{
+	Ray2f a; Segment2f b;
+	a.m_Position = Vector2f(-9999999999999.f);
+	a.m_Direction = Vector2f(0.9999f, 0.0001f);
+	b.m_PointA = Vector2f(-99999999999.f, 0.f);
+	b.m_PointB = Vector2f(+99999999999.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Circle2f). ")
+{
+	// math::IsOverlapping(Circle2f Rect2f).
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Line2f). ")
+{
+	// math::IsOverlapping(Line2f Rect2f).
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Ray2f). ")
+{
+	// math::IsOverlapping(Ray2f Rect2f).
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Rect2f). Rects overlap when rect min or rect max is inside the other rect.")
+{
+	Rect2f a, b;
+	a.m_Min = Vector2f(-2.f, -2.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+2.f, +2.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Rect2f). Rects don't overlap when they are apart.")
+{
+	Rect2f a, b;
+	a.m_Min = Vector2f(-2.f, -2.f);
+	a.m_Max = Vector2f(-1.f, -1.f);
+	b.m_Min = Vector2f(+1.f, +1.f);
+	b.m_Max = Vector2f(+2.f, +2.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Rect2f). Rects overlap when they share an edge.")
+{
+	Rect2f a, b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+0.f, +0.f);
+	b.m_Min = Vector2f(-1.f, +0.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Rect2f). Rects overlap when they share a corner.")
+{
+	Rect2f a, b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+0.f, +0.f);
+	b.m_Min = Vector2f(+0.f, +0.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Rect2f). Rects overlap when they are identical.")
+{
+	Rect2f a, b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Rect2f). Rects overlap when one encloses the other.")
+{
+	Rect2f a, b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b.m_Min = Vector2f(-2.f, -2.f);
+	b.m_Max = Vector2f(+2.f, +2.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Rect2f). Rects overlap when one is just a point inside the other.")
+{
+	Rect2f a, b;
+	a.m_Min = Vector2f(0.f);
+	a.m_Max = Vector2f(0.f);
+	b.m_Min = Vector2f(-1.f, -1.f);
+	b.m_Max = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Rect2f). Rects overlap when they are identical and just a point.")
+{
+	Rect2f a, b;
+	a.m_Min = Vector2f(0.f);
+	a.m_Max = Vector2f(0.f);
+	b.m_Min = Vector2f(0.f);
+	b.m_Max = Vector2f(0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment runs through the centre of the rect.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b.m_PointA = Vector2f(-2.f, 0.f);
+	b.m_PointB = Vector2f(+2.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment runs through the centre of the rect away from origin.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(+97.f, +96.f);
+	a.m_Max = Vector2f(+98.f, +98.f);
+	b.m_PointA = Vector2f(-96.f, +97.f);
+	b.m_PointB = Vector2f(+99.f, +97.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment runs through the centre of the rect but points aren't either side.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b.m_PointA = Vector2f(-4.f, 0.f);
+	b.m_PointB = Vector2f(-2.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment don't overlap when segment misses the rect.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b.m_PointA = Vector2f(-2.f, -2.f);
+	b.m_PointB = Vector2f(+2.f, -2.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment touches the edge of the rect.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b.m_PointA = Vector2f(-2.f, -1.f);
+	b.m_PointB = Vector2f(+2.f, -1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment touches the corner of the rect.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-1.f, 0.f);
+	a.m_Max = Vector2f(0.f, +1.f);
+	b.m_PointA = Vector2f(-1.f, -1.f);
+	b.m_PointB = Vector2f(+1.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Segment2f). Rect and Segment overlap when segment is contained inside the rect.")
+{
+	Rect2f a; Segment2f b;
+	a.m_Min = Vector2f(-2.f, -2.f);
+	a.m_Max = Vector2f(+2.f, +2.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Vector2f). Rect and Point overlap when the point is enclosed by the rect.")
+{
+	Rect2f a; Vector2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b = Vector2f(0.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Vector2f). Rect and Point don't overlap when the point is outside the rect.")
+{
+	Rect2f a; Vector2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b = Vector2f(2.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Rect2f Vector2f). Rect and Point overlap when the point touches the rect's edge.")
+{
+	Rect2f a; Vector2f b;
+	a.m_Min = Vector2f(-1.f, -1.f);
+	a.m_Max = Vector2f(+1.f, +1.f);
+	b = Vector2f(1.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Circle2f).")
+{
+	// math::IsOverlapping(Circle2f Segment2f).
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Line2f).")
+{
+	// math::IsOverlapping(Line2f Segment2f).
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Ray2f).")
+{
+	// math::IsOverlapping(Ray2f Segment2f).
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Rect2f). ")
+{
+	// math::IsOverlapping(Rect2f Segment2f).
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Segment2f). Segments overlap when they are perpendicular at Origin.")
+{
+	Segment2f a, b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(0.f, -1.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Segment2f). Segments overlap when they are perpendicular and their edges touch.")
+{
+	Segment2f a, b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(0.f,  0.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Segment2f). Segments overlap when they are perpendicular not at Origin.")
+{
+	Segment2f a, b;
+	a.m_PointA = Vector2f(-999.f, 0.f);
+	a.m_PointB = Vector2f(+999.f, 0.f);
+	b.m_PointA = Vector2f(100.f, -1.f);
+	b.m_PointB = Vector2f(100.f, +1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Segment2f). Segments overlap when they are perpendicular at Origin but points are flipped.")
+{
+	Segment2f a, b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(0.f, +1.f);
+	b.m_PointB = Vector2f(0.f, -1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Segment2f). Segments don't overlap when they are perpendicular but Segment is below Line.")
+{
+	Segment2f a, b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(0.f, -10.f);
+	b.m_PointB = Vector2f(0.f, -11.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Segment2f). Segments don't overlap when they are parallel.")
+{
+	Segment2f a, b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(-1.f, 1.f);
+	b.m_PointB = Vector2f(+1.f, 1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Segment2f). Segments don't overlap when they are parallel on top of each other.")
+{
+	Segment2f a, b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(-1.f, 0.f);
+	b.m_PointB = Vector2f(+1.f, 0.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Segment2f). Segments overlap when they overlap at an 45 degree angle.")
+{
+	Segment2f a, b;
+	a.m_PointA = Vector2f(-100.f, -1.f);
+	a.m_PointB = Vector2f(+100.f, +1.f);
+	b.m_PointA = Vector2f(-100.f, 0.f);
+	b.m_PointB = Vector2f(+100.f, 0.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Segment2f Segment2f). Segments overlap when the Segments first point touches the Line.")
+{
+	Segment2f a, b;
+	a.m_PointA = Vector2f(-1.f, 0.f);
+	a.m_PointB = Vector2f(+1.f, 0.f);
+	b.m_PointA = Vector2f(0.f, 0.f);
+	b.m_PointB = Vector2f(0.f, 1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Vector2f Circle2f).")
+{
+	// math::IsOverlapping(Circle2f Vector2f).
+}
+
+TEST_CASE("math::IsOverlapping(Vector2f Rect2f).")
+{
+	// math::IsOverlapping(Rect2f Vector2f).
 }

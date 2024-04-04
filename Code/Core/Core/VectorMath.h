@@ -84,28 +84,37 @@ namespace math
 	inline constexpr Vector2f Perpendicular(const Vector2f& vector) noexcept;
 
 	/// \brief Projects the point onto the nearest position along a line.
-	inline constexpr Vector3f Project(const Vector3f& point, const Line& line);
+	inline constexpr Vector2f Project(const Vector2f& point, const Line2f& line);
 	/// \brief Projects the point onto the nearest position along a ray.
-	inline constexpr Vector3f Project(const Vector3f& point, const Ray& ray);
+	inline constexpr Vector2f Project(const Vector2f& point, const Ray2f& ray);
 	/// \brief Projects the point onto the nearest position along a segment.
-	inline constexpr Vector3f Project(const Vector3f& point, const Segment& segment);
+	inline constexpr Vector2f Project(const Vector2f& point, const Segment2f& segment);
+
+	/// \brief Projects the point onto the nearest position along a line.
+	inline constexpr Vector3f Project(const Vector3f& point, const Line3f& line);
+	/// \brief Projects the point onto the nearest position along a ray.
+	inline constexpr Vector3f Project(const Vector3f& point, const Ray3f& ray);
+	/// \brief Projects the point onto the nearest position along a segment.
+	inline constexpr Vector3f Project(const Vector3f& point, const Segment3f& segment);
 
 	/// \brief Projects the point onto the nearest position along a line on the XY plane.
-	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Line& line);
+	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Line3f& line);
 	/// \brief Projects the point onto the nearest position along a ray on the XY plane.
-	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Ray& ray);
+	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Ray3f& ray);
 	/// \brief Projects the point onto the nearest position along a segment on the XY plane.
-	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Segment& segment);
+	inline constexpr Vector3f ProjectXY(const Vector3f& point, const Segment3f& segment);
 
 	/// \brief Projects the point onto the nearest position along a line on the XZ plane.
-	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Line& line);
+	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Line3f& line);
 	/// \brief Projects the point onto the nearest position along a ray on the XZ plane.
-	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Ray& ray);
+	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Ray3f& ray);
 	/// \brief Projects the point onto the nearest position along a segment on the XZ plane.
-	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Segment& segment);
+	inline constexpr Vector3f ProjectXZ(const Vector3f& point, const Segment3f& segment);
 
 	/// \brief Reflects the vector off the plane defined by a normal.
 	inline constexpr Vector2f Reflect(const Vector2f& vector, const Vector2f& normal) noexcept;
+
+	inline constexpr float Sign(const Vector2f& a, const Vector2f& b, const Vector2f& c) noexcept;
 
 	/// \brief Convert a world position to a grid position.
 	/// Input in the range of >= 0.f and < 1.f will all map to the same value.

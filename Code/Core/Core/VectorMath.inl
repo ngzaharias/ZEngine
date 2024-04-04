@@ -185,11 +185,49 @@ inline constexpr Vector3f math::Multiply(const Vector3f& a, const Vector3f& b) n
 
 inline constexpr Vector2f math::Perpendicular(const Vector2f& vector) noexcept
 {
-	return Vector2f(vector.y, -vector.x);
+	return Vector2f(-vector.y, vector.x);
+}
+
+inline constexpr Vector2f math::Project(const Vector2f& point, const Line2f& line)
+{
+	const Vector2f lineAB = line.m_PointB - line.m_PointA;
+	const Vector2f lineAP = point - line.m_PointA;
+	const float p = math::Dot(lineAP, lineAB) / lineAB.LengthSqr();
+	return line.m_PointA + lineAB * p;
+}
+
+inline constexpr Vector2f math::Project(const Vector2f& point, const Ray2f& ray)
+{
+	const Vector2f lineAP = point - ray.m_Position;
+	const float p = math::Dot(lineAP, ray.m_Direction);
+
+	if (p < 0.f)
+		return ray.m_Position;
+	return ray.m_Position + ray.m_Direction * p;
+}
+
+inline constexpr Vector2f math::Project(const Vector2f& point, const Segment2f& segment)
+{
+	const Vector2f lineAB = segment.m_PointB - segment.m_PointA;
+	const Vector2f lineAP = point - segment.m_PointA;
+	const float p = math::Dot(lineAP, lineAB) / lineAB.LengthSqr();
+
+	if (p < 0.f)
+	{
+		return segment.m_PointA;
+	}
+	else if (p > 1.f)
+	{
+		return segment.m_PointB;
+	}
+	else
+	{
+		return segment.m_PointA + lineAB * p;
+	}
 }
 
 // https://gamedev.stackexchange.com/questions/72528/how-can-i-project-a-3d-point-onto-a-3d-line
-inline constexpr Vector3f math::Project(const Vector3f& point, const Line& line)
+inline constexpr Vector3f math::Project(const Vector3f& point, const Line3f& line)
 {
 	const Vector3f lineAB = line.m_PointB - line.m_PointA;
 	const Vector3f lineAP = point - line.m_PointA;
@@ -197,18 +235,18 @@ inline constexpr Vector3f math::Project(const Vector3f& point, const Line& line)
 	return line.m_PointA + lineAB * p;
 }
 
-inline constexpr Vector3f math::Project(const Vector3f& point, const Ray& ray)
+inline constexpr Vector3f math::Project(const Vector3f& point, const Ray3f& ray)
 {
-	const Vector3f lineAP = point - ray.m_OriginPos;
+	const Vector3f lineAP = point - ray.m_Position;
 	const float p = math::Dot(lineAP, ray.m_Direction);
 
 	if (p < 0.f)
-		return ray.m_OriginPos;
-	return ray.m_OriginPos + ray.m_Direction * p;
+		return ray.m_Position;
+	return ray.m_Position + ray.m_Direction * p;
 }
 
 // https://gamedev.stackexchange.com/questions/72528/how-can-i-project-a-3d-point-onto-a-3d-line
-inline constexpr Vector3f math::Project(const Vector3f& point, const Segment& segment)
+inline constexpr Vector3f math::Project(const Vector3f& point, const Segment3f& segment)
 {
 	const Vector3f lineAB = segment.m_PointB - segment.m_PointA;
 	const Vector3f lineAP = point - segment.m_PointA;
@@ -228,28 +266,28 @@ inline constexpr Vector3f math::Project(const Vector3f& point, const Segment& se
 	}
 }
 
-inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Line& line)
+inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Line3f& line)
 {
 	const Vector3f lineAB = line.m_PointB - line.m_PointA;
-	const Vector2f lineXZ = lineAB.XY();
+	const Vector2f lineXY = lineAB.XY();
 	const Vector2f lineAP = point.XY() - line.m_PointA.XY();
-	const float p = math::Dot(lineAP, lineXZ) / lineAB.LengthSqr();
+	const float p = math::Dot(lineAP, lineXY) / lineAB.LengthSqr();
 	return line.m_PointA + lineAB * p;
 }
 
-inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Ray& ray)
+inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Ray3f& ray)
 {
-	const Vector2f lineAP = point.XY() - ray.m_OriginPos.XY();
+	const Vector2f lineAP = point.XY() - ray.m_Position.XY();
 	const float p = math::Dot(lineAP, ray.m_Direction.XY());
-	return ray.m_OriginPos + ray.m_Direction * p;
+	return ray.m_Position + ray.m_Direction * p;
 }
 
-inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Segment& segment)
+inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Segment3f& segment)
 {
 	const Vector3f lineAB = segment.m_PointB - segment.m_PointA;
-	const Vector2f lineXZ = lineAB.XY();
+	const Vector2f lineXY = lineAB.XY();
 	const Vector2f lineAP = point.XY() - segment.m_PointA.XY();
-	const float p = math::Dot(lineAP, lineXZ) / lineAB.LengthSqr();
+	const float p = math::Dot(lineAP, lineXY) / lineAB.LengthSqr();
 
 	if (p < 0.f)
 	{
@@ -265,7 +303,7 @@ inline constexpr Vector3f math::ProjectXY(const Vector3f& point, const Segment& 
 	}
 }
 
-inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Line& line)
+inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Line3f& line)
 {
 	const Vector3f lineAB = line.m_PointB - line.m_PointA;
 	const Vector2f lineXZ = lineAB.XZ();
@@ -274,14 +312,14 @@ inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Line& lin
 	return line.m_PointA + lineAB * p;
 }
 
-inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Ray& ray)
+inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Ray3f& ray)
 {
-	const Vector2f lineAP = point.XZ() - ray.m_OriginPos.XZ();
+	const Vector2f lineAP = point.XZ() - ray.m_Position.XZ();
 	const float p = math::Dot(lineAP, ray.m_Direction.XZ());
-	return ray.m_OriginPos + ray.m_Direction * p;
+	return ray.m_Position + ray.m_Direction * p;
 }
 
-inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Segment& segment)
+inline constexpr Vector3f math::ProjectXZ(const Vector3f& point, const Segment3f& segment)
 {
 	const Vector3f lineAB = segment.m_PointB - segment.m_PointA;
 	const Vector2f lineXZ = lineAB.XZ();
@@ -307,6 +345,11 @@ inline constexpr Vector2f math::Reflect(const Vector2f& vector, const Vector2f& 
 	// -2 * (V dot N) * N + V
 	const float dot2 = -2.0f * math::Dot(vector, normal);
 	return math::Multiply(Vector2f(dot2), normal) + vector;
+}
+
+inline constexpr float math::Sign(const Vector2f& a, const Vector2f& b, const Vector2f& c) noexcept
+{
+	return (a.x - c.x) * (b.y - c.y) - (b.x - c.x) * (a.y - c.y);
 }
 
 inline constexpr Vector2i math::ToGridPos(const Vector2f& worldPos, const float cellSize /*= 1.f*/)

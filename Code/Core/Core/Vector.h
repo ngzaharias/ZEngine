@@ -83,6 +83,12 @@ public:
 	constexpr bool operator==(const Vector2i& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y); }
 	constexpr bool operator!=(const Vector2i& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y); }
 
+	[[nodiscard]] constexpr Vector2i operator+(const Vector2i& rhs) const noexcept { return Vector2i(x + rhs.x, y + rhs.y); }
+	[[nodiscard]] constexpr Vector2i operator-(const Vector2i& rhs) const noexcept { return Vector2i(x - rhs.x, y - rhs.y); }
+
+	constexpr Vector2i& operator+=(const Vector2i& rhs) noexcept { x += rhs.x; y += rhs.y; return *this; }
+	constexpr Vector2i& operator-=(const Vector2i& rhs) noexcept { x -= rhs.x; y -= rhs.y; return *this; }
+
 	constexpr Vector2i operator+() const noexcept { return *this; }
 	constexpr Vector2i operator-() const noexcept { return Vector2i(-x, -y); }
 

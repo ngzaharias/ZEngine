@@ -2,19 +2,36 @@
 
 #include <Core/Vector.h>
 
-class Segment;
+class Segment2f;
+class Segment3f;
 
-/// \brief A ray in 3D space denoted by a origin and direction.
-class Ray
+/// \brief A ray in 2D space denoted by a origin and direction using floating-point coordinates.
+class Ray2f
 {
 public:
-	constexpr Ray() noexcept : m_Direction(), m_OriginPos() { }
-	constexpr Ray(const Vector3f& origin, const Vector3f& direction) noexcept : m_OriginPos(origin), m_Direction(direction) { }
+	constexpr Ray2f() noexcept : m_Direction(), m_Position() { }
+	constexpr Ray2f(const Vector2f& position, const Vector2f& direction) noexcept : m_Position(position), m_Direction(direction) { }
 
-	[[nodiscard]] static Ray FromPoints(const Vector3f& pointA, const Vector3f& pointB);
-	[[nodiscard]] static Ray FromSegment(const Segment& segment);
+	[[nodiscard]] static Ray2f FromPoints(const Vector2f& pointA, const Vector2f& pointB);
+	[[nodiscard]] static Ray2f FromSegment(const Segment2f& segment);
 
 public:
-	Vector3f m_OriginPos;
+	Vector2f m_Position;
+	Vector2f m_Direction;
+};
+
+
+/// \brief A ray in 3D space denoted by a origin and direction using floating-point coordinates.
+class Ray3f
+{
+public:
+	constexpr Ray3f() noexcept : m_Direction(), m_Position() { }
+	constexpr Ray3f(const Vector3f& position, const Vector3f& direction) noexcept : m_Position(position), m_Direction(direction) { }
+
+	[[nodiscard]] static Ray3f FromPoints(const Vector3f& pointA, const Vector3f& pointB);
+	[[nodiscard]] static Ray3f FromSegment(const Segment3f& segment);
+
+public:
+	Vector3f m_Position;
 	Vector3f m_Direction;
 };
