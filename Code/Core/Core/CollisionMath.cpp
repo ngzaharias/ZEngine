@@ -9,6 +9,7 @@
 #include "Core/Rect.h"
 #include "Core/Segment.h"
 #include "Core/Sphere.h"
+#include "Core/Triangle.h"
 #include "Core/Vector.h"
 #include "Core/VectorMath.h"
 
@@ -23,7 +24,7 @@ namespace
 	}
 }
 
-bool math::Intersection(const Line3f& line, const Plane& plane, Vector3f& out_IntersectPos)
+bool math::Intersection(const Line3f& line, const Plane3f& plane, Vector3f& out_IntersectPos)
 {
 	const Vector3f v = line.m_PointB - line.m_PointA;
 	const float d0 = math::Dot(v, plane.m_Normal);
@@ -38,7 +39,7 @@ bool math::Intersection(const Line3f& line, const Plane& plane, Vector3f& out_In
 }
 
 // https://github.com/BSVino/MathForGameDevelopers/blob/line-plane-intersection/math/collision.cpp
-bool math::Intersection(const Ray3f& ray, const Plane& plane, Vector3f& out_IntersectPos)
+bool math::Intersection(const Ray3f& ray, const Plane3f& plane, Vector3f& out_IntersectPos)
 {
 	const float d0 = math::Dot(ray.m_Direction, plane.m_Normal);
 	if (d0 == 0.f)
@@ -52,7 +53,7 @@ bool math::Intersection(const Ray3f& ray, const Plane& plane, Vector3f& out_Inte
 }
 
 // https://github.com/BSVino/MathForGameDevelopers/blob/line-plane-intersection/math/collision.cpp
-bool math::Intersection(const Segment3f& segment, const Plane& plane, Vector3f& out_IntersectPos)
+bool math::Intersection(const Segment3f& segment, const Plane3f& plane, Vector3f& out_IntersectPos)
 {
 	const Vector3f v = segment.m_PointB - segment.m_PointA;
 	const float d0 = math::Dot(v, plane.m_Normal);
@@ -116,6 +117,11 @@ bool math::IsOverlapping(const Circle2f& a, const Segment2f& b)
 	return intersectSqr <= math::Sqr(a.m_Radius);
 }
 
+bool math::IsOverlapping(const Circle2f& a, const Triangle2f& b)
+{
+	return false;
+}
+
 bool math::IsOverlapping(const Circle2f& a, const Vector2f& b)
 {
 	const float distanceSqr = math::DistanceSqr(a.m_Position, b);
@@ -177,6 +183,11 @@ bool math::IsOverlapping(const Line2f& a, const Segment2f& b)
 	return d1 >= 0.f && d2 >= 0.f;
 }
 
+bool math::IsOverlapping(const Line2f& a, const Triangle2f& b)
+{
+	return false;
+}
+
 bool math::IsOverlapping(const Ray2f& a, const Circle2f& b)
 {
 	return math::IsOverlapping(b, a);
@@ -235,6 +246,11 @@ bool math::IsOverlapping(const Ray2f& a, const Segment2f& b)
 	return t1 >= 0.0 && (t2 >= 0.0 && t2 <= 1.0);
 }
 
+bool math::IsOverlapping(const Ray2f& a, const Triangle2f& b)
+{
+	return false;
+}
+
 bool math::IsOverlapping(const Rect2f& a, const Circle2f& b)
 {
 	return math::IsOverlapping(b, a);
@@ -274,6 +290,11 @@ bool math::IsOverlapping(const Rect2f& a, const Segment2f& b)
 	return math::IsOverlapping(a, b.m_PointA) || math::IsOverlapping(a, b.m_PointB);
 }
 
+bool math::IsOverlapping(const Rect2f& a, const Triangle2f& b)
+{
+	return false;
+}
+
 bool math::IsOverlapping(const Rect2f& a, const Vector2f& b)
 {
 	return b.x >= a.m_Min.x && b.x <= a.m_Max.x
@@ -307,6 +328,53 @@ bool math::IsOverlapping(const Segment2f& a, const Segment2f& b)
 		&& ::AreCounterClockwiseOrdered(a.m_PointA, a.m_PointB, b.m_PointA) != ::AreCounterClockwiseOrdered(a.m_PointA, a.m_PointB, b.m_PointB);
 }
 
+bool math::IsOverlapping(const Segment2f& a, const Triangle2f& b)
+{
+	return false;
+}
+
+bool math::IsOverlapping(const Triangle2f& a, const Circle2f& b)
+{
+	return math::IsOverlapping(b, a);
+}
+
+bool math::IsOverlapping(const Triangle2f& a, const Line2f& b)
+{
+	return math::IsOverlapping(b, a);
+}
+
+bool math::IsOverlapping(const Triangle2f& a, const Ray2f& b)
+{
+	return math::IsOverlapping(b, a);
+}
+
+bool math::IsOverlapping(const Triangle2f& a, const Rect2f& b)
+{
+	return math::IsOverlapping(b, a);
+}
+
+bool math::IsOverlapping(const Triangle2f& a, const Segment2f& b)
+{
+	return math::IsOverlapping(b, a);
+}
+
+bool math::IsOverlapping(const Triangle2f& a, const Triangle2f& b)
+{
+	return false;
+}
+
+// https://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
+bool math::IsOverlapping(const Triangle2f& a, const Vector2f& b)
+{
+	const float d0 = math::Sign(b, a.m_PointA, a.m_PointB);
+	const float d1 = math::Sign(b, a.m_PointB, a.m_PointC);
+	const float d2 = math::Sign(b, a.m_PointC, a.m_PointA);
+
+	const bool has_neg = d0 < 0.f || d1 < 0.f || d2 < 0.f;
+	const bool has_pos = d0 > 0.f || d1 > 0.f || d2 > 0.f;
+	return !(has_neg && has_pos);
+}
+
 bool math::IsOverlapping(const Vector2f& a, const Circle2f& b)
 {
 	return math::IsOverlapping(b, a);
@@ -315,6 +383,11 @@ bool math::IsOverlapping(const Vector2f& a, const Circle2f& b)
 bool math::IsOverlapping(const Vector2f& a, const Rect2f& b)
 {
 	return math::IsOverlapping(b, a);
+}
+
+bool math::IsOverlapping(const Vector2f& a, const Triangle2f& b)
+{
+	return false;
 }
 
 /*

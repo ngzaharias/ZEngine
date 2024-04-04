@@ -114,6 +114,8 @@ namespace math
 	/// \brief Reflects the vector off the plane defined by a normal.
 	inline constexpr Vector2f Reflect(const Vector2f& vector, const Vector2f& normal) noexcept;
 
+	inline constexpr float Sign(const Vector2f& a, const Vector2f& b, const Vector2f& c) noexcept;
+
 	/// \brief Convert a world position to a grid position.
 	/// Input in the range of >= 0.f and < 1.f will all map to the same value.
 	inline constexpr Vector2i ToGridPos(const Vector2f& worldPos, const float cellSize = 1.f);

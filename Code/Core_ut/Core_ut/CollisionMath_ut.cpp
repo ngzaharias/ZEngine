@@ -12,9 +12,9 @@
 #include <Core/Segment.h>
 #include <Core/Sphere.h>
 
-TEST_CASE("math::Intersection(Plane Line3f). Line intersects with points either side of the Plane at Origin.")
+TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects with points either side of the Plane at Origin.")
 {
-	Line3f a; Plane b;
+	Line3f a; Plane3f b;
 	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
@@ -25,9 +25,9 @@ TEST_CASE("math::Intersection(Plane Line3f). Line intersects with points either 
 	CHECK(c == Vector3f::Zero);
 }
 
-TEST_CASE("math::Intersection(Plane Line3f). Line intersects with points either side of the Plane but not at Origin.")
+TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects with points either side of the Plane but not at Origin.")
 {
-	Line3f a; Plane b;
+	Line3f a; Plane3f b;
 	a.m_PointA = Vector3f(-KINDA_LARGE_FLOAT, 0.f, 0.f);
 	a.m_PointB = Vector3f(+KINDA_LARGE_FLOAT, 0.f, 0.f);
 	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
@@ -38,9 +38,9 @@ TEST_CASE("math::Intersection(Plane Line3f). Line intersects with points either 
 	CHECK(c == Vector3f(-1100.f, 0.f, 0.f));
 }
 
-TEST_CASE("math::Intersection(Plane Line3f). Line intersects with points on the left side of the Plane.")
+TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects with points on the left side of the Plane.")
 {
-	Line3f a; Plane b;
+	Line3f a; Plane3f b;
 	a.m_PointA = Vector3f(-2.f, 0.f, 0.f);
 	a.m_PointB = Vector3f(-1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
@@ -51,9 +51,9 @@ TEST_CASE("math::Intersection(Plane Line3f). Line intersects with points on the 
 	CHECK(c == Vector3f::Zero);
 }
 
-TEST_CASE("math::Intersection(Plane Line3f). Line intersects with points on the right side of the Plane.")
+TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects with points on the right side of the Plane.")
 {
-	Line3f a; Plane b;
+	Line3f a; Plane3f b;
 	a.m_PointA = Vector3f(+1.f, 0.f, 0.f);
 	a.m_PointB = Vector3f(+2.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
@@ -64,9 +64,9 @@ TEST_CASE("math::Intersection(Plane Line3f). Line intersects with points on the 
 	CHECK(c == Vector3f::Zero);
 }
 
-TEST_CASE("math::Intersection(Plane Line3f). Line intersects Plane when Plane normal and Line direction are parallel to each other.")
+TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects Plane when Plane normal and Line direction are parallel to each other.")
 {
-	Line3f a; Plane b;
+	Line3f a; Plane3f b;
 	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(0.f, 1.f, 0.f);
@@ -76,9 +76,9 @@ TEST_CASE("math::Intersection(Plane Line3f). Line intersects Plane when Plane no
 	CHECK(!math::Intersection(a, b, c));
 }
 
-TEST_CASE("math::Intersection(Plane Ray3f). Ray intersects when starting on the left side of the Plane but points right.")
+TEST_CASE("math::Intersection(Ray3f Plane3f). Ray intersects when starting on the left side of the Plane but points right.")
 {
-	Ray3f a; Plane b;
+	Ray3f a; Plane3f b;
 	a.m_Position = Vector3f(-1.f, 0.f, 0.f);
 	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
@@ -89,9 +89,9 @@ TEST_CASE("math::Intersection(Plane Ray3f). Ray intersects when starting on the 
 	CHECK(c == Vector3f::Zero);
 }
 
-TEST_CASE("math::Intersection(Plane Ray3f). Ray intersects when starting on the left side of the Plane but points left.")
+TEST_CASE("math::Intersection(Ray3f Plane3f). Ray intersects when starting on the left side of the Plane but points left.")
 {
-	Ray3f a; Plane b;
+	Ray3f a; Plane3f b;
 	a.m_Position = Vector3f(-1.f, 0.f, 0.f);
 	a.m_Direction = Vector3f(-1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
@@ -101,9 +101,9 @@ TEST_CASE("math::Intersection(Plane Ray3f). Ray intersects when starting on the 
 	CHECK(!math::Intersection(a, b, c));
 }
 
-TEST_CASE("math::Intersection(Plane Ray3f). Ray doesn't intersect when starting on the right side of the Plane but points right.")
+TEST_CASE("math::Intersection(Ray3f Plane3f). Ray doesn't intersect when starting on the right side of the Plane but points right.")
 {
-	Ray3f a; Plane b;
+	Ray3f a; Plane3f b;
 	a.m_Position = Vector3f(+1.f, 0.f, 0.f);
 	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
@@ -113,9 +113,9 @@ TEST_CASE("math::Intersection(Plane Ray3f). Ray doesn't intersect when starting 
 	CHECK(!math::Intersection(a, b, c));
 }
 
-TEST_CASE("math::Intersection(Plane Ray3f). Ray intersects when starting on the right side of the Plane but points left.")
+TEST_CASE("math::Intersection(Ray3f Plane3f). Ray intersects when starting on the right side of the Plane but points left.")
 {
-	Ray3f a; Plane b;
+	Ray3f a; Plane3f b;
 	a.m_Position = Vector3f(+1.f, 0.f, 0.f);
 	a.m_Direction = Vector3f(-1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
@@ -126,9 +126,9 @@ TEST_CASE("math::Intersection(Plane Ray3f). Ray intersects when starting on the 
 	CHECK(c == Vector3f::Zero);
 }
 
-TEST_CASE("math::Intersection(Plane Ray3f). Ray doesn't intersect when Plane normal and Ray direction are perpendicular to each other.")
+TEST_CASE("math::Intersection(Ray3f Plane3f). Ray doesn't intersect when Plane normal and Ray direction are perpendicular to each other.")
 {
-	Ray3f a; Plane b;
+	Ray3f a; Plane3f b;
 	a.m_Position = Vector3f(-1.f, 0.f, 0.f);
 	a.m_Direction = Vector3f(+1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(0.f, 1.f, 0.f);
@@ -138,9 +138,9 @@ TEST_CASE("math::Intersection(Plane Ray3f). Ray doesn't intersect when Plane nor
 	CHECK(!math::Intersection(a, b, c));
 }
 
-TEST_CASE("math::Intersection(Plane Segment3f). Segment intersects when points are either side of the Plane.")
+TEST_CASE("math::Intersection(Segment3f Plane3f). Segment intersects when points are either side of the Plane.")
 {
-	Segment3f a; Plane b;
+	Segment3f a; Plane3f b;
 	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
@@ -151,9 +151,9 @@ TEST_CASE("math::Intersection(Plane Segment3f). Segment intersects when points a
 	CHECK(c == Vector3f::Zero);
 }
 
-TEST_CASE("math::Intersection(Plane Segment3f). Segment doesn't intersect when points are on the left side of the Plane.")
+TEST_CASE("math::Intersection(Segment3f Plane3f). Segment doesn't intersect when points are on the left side of the Plane.")
 {
-	Segment3f a; Plane b;
+	Segment3f a; Plane3f b;
 	a.m_PointA = Vector3f(-2.f, 0.f, 0.f);
 	a.m_PointB = Vector3f(-1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
@@ -163,9 +163,9 @@ TEST_CASE("math::Intersection(Plane Segment3f). Segment doesn't intersect when p
 	CHECK(!math::Intersection(a, b, c));
 }
 
-TEST_CASE("math::Intersection(Plane Segment3f). Segment doesn't intersect when points are on the right side of the Plane.")
+TEST_CASE("math::Intersection(Segment3f Plane3f). Segment doesn't intersect when points are on the right side of the Plane.")
 {
-	Segment3f a; Plane b;
+	Segment3f a; Plane3f b;
 	a.m_PointA = Vector3f(+1.f, 0.f, 0.f);
 	a.m_PointB = Vector3f(+2.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(1.f, 0.f, 0.f);
@@ -175,9 +175,9 @@ TEST_CASE("math::Intersection(Plane Segment3f). Segment doesn't intersect when p
 	CHECK(!math::Intersection(a, b, c));
 }
 
-TEST_CASE("math::Intersection(Plane Segment3f). Segment doesn't intersect when Segment points and Plane normal are perpendicular to each other.")
+TEST_CASE("math::Intersection(Segment3f Plane3f). Segment doesn't intersect when Segment points and Plane normal are perpendicular to each other.")
 {
-	Segment3f a; Plane b;
+	Segment3f a; Plane3f b;
 	a.m_PointA = Vector3f(-1.f, 0.f, 0.f);
 	a.m_PointB = Vector3f(+1.f, 0.f, 0.f);
 	b.m_Normal = Vector3f(0.f, 1.f, 0.f);

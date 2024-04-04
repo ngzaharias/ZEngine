@@ -347,6 +347,11 @@ inline constexpr Vector2f math::Reflect(const Vector2f& vector, const Vector2f& 
 	return math::Multiply(Vector2f(dot2), normal) + vector;
 }
 
+inline constexpr float math::Sign(const Vector2f& a, const Vector2f& b, const Vector2f& c) noexcept
+{
+	return (a.x - c.x) * (b.y - c.y) - (b.x - c.x) * (a.y - c.y);
+}
+
 inline constexpr Vector2i math::ToGridPos(const Vector2f& worldPos, const float cellSize /*= 1.f*/)
 {
 	return Vector2i(

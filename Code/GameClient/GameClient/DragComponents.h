@@ -14,6 +14,6 @@ namespace drag
 		ecs::Entity m_SelectedEntity = { };
 
 		Vector3f m_TranslateOffset = { };
-		Plane m_TranslatePlane = { };
+		Plane3f m_TranslatePlane = { };
 	};
 }

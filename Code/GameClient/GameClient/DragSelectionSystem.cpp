@@ -104,7 +104,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 						dragComponent.m_CameraEntity = cameraEntity;
 						dragComponent.m_InputEntity = inputEntity;
 						dragComponent.m_SelectedEntity = selectedEntity;
-						dragComponent.m_TranslatePlane = Plane(-cameraForward, hitPosition);
+						dragComponent.m_TranslatePlane = Plane3f(-cameraForward, hitPosition);
 						dragComponent.m_TranslateOffset = transformComponent.m_Translate - hitPosition;
 					}
 				}
