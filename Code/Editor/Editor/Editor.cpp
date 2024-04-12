@@ -6,6 +6,7 @@
 #include <ECS/WorldView.h>
 
 #include "Editor/FlipbookEditor.h"
+#include "Editor/TableEditor.h"
 #include "Editor/TrajectoryEditor.h"
 
 editor::Editor::Editor(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
@@ -22,11 +23,13 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::FlipbookAssetSaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookBatchingComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowComponent>();
+	m_ClientWorld.RegisterComponent<editor::TableWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryAssetOpenComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryAssetSaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowComponent>();
 
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditor>();
+	m_ClientWorld.RegisterSystem<editor::TableEditor>();
 	m_ClientWorld.RegisterSystem<editor::TrajectoryEditor>();
 }
 
