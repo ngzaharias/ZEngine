@@ -28,7 +28,8 @@ namespace eng
 	};
 
 	str::Path GetAppDataDirectory();
-	str::Path GetAssetDirectory();
+	str::Path GetAssetsDirectory();
+	str::Path GetConfigDirectory();
 	str::Path GetExecutableFilepath();
 	str::Path GetWorkingDirectory();
 

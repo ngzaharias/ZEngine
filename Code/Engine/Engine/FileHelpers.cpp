@@ -22,7 +22,7 @@ str::Path eng::GetAppDataDirectory()
 #endif
 }
 
-str::Path eng::GetAssetDirectory()
+str::Path eng::GetAssetsDirectory()
 {
 #ifdef _WIN32
 	const std::filesystem::path directory = std::filesystem::current_path();
@@ -31,6 +31,26 @@ str::Path eng::GetAssetDirectory()
 	while (!path.IsEmpty())
 	{
 		path += "\\Assets";
+		if (std::filesystem::is_directory(path.ToChar()))
+			return str::Path(path, "\\");
+
+		path = path.GetParent();
+		path = path.GetParent();
+	}
+
+	return {};
+#endif
+}
+
+str::Path eng::GetConfigDirectory()
+{
+#ifdef _WIN32
+	const std::filesystem::path directory = std::filesystem::current_path();
+
+	str::Path path = directory.string();
+	while (!path.IsEmpty())
+	{
+		path += "\\Config";
 		if (std::filesystem::is_directory(path.ToChar()))
 			return str::Path(path, "\\");
 

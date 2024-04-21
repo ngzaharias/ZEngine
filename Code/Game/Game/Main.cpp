@@ -11,7 +11,8 @@ int main(int agrc, char* argv[])
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
 
 	const str::Path appdataDirectory = eng::GetAppDataDirectory();
-	const str::Path assetDirectory = eng::GetAssetDirectory();
+	const str::Path assetsDirectory = eng::GetAssetsDirectory();
+	const str::Path configDirectory = eng::GetConfigDirectory();
 	const str::Path executableFilepath = eng::GetExecutableFilepath();
 	const str::Path workingDirectory = eng::GetWorkingDirectory();
 	const str::Path immediateDirectory = executableFilepath.GetDirectory();
@@ -28,10 +29,11 @@ int main(int agrc, char* argv[])
 	core::LogInitialise();
 
 	Z_LOG(ELog::Debug, "=================Session Start====================");
-	Z_LOG(ELog::Debug, "AppData Directory: {}", appdataDirectory.ToChar());
-	Z_LOG(ELog::Debug, "Asset Directory:   {}", assetDirectory.ToChar());
-	Z_LOG(ELog::Debug, "Binary Filepath:   {}", executableFilepath.ToChar());
-	Z_LOG(ELog::Debug, "Working Directory: {}", workingDirectory.ToChar());
+	Z_LOG(ELog::Debug, "AppData Directory:   {}", appdataDirectory.ToChar());
+	Z_LOG(ELog::Debug, "Assets Directory:    {}", assetsDirectory.ToChar());
+	Z_LOG(ELog::Debug, "Config Directory:    {}", configDirectory.ToChar());
+	Z_LOG(ELog::Debug, "Executable Filepath: {}", executableFilepath.ToChar());
+	Z_LOG(ELog::Debug, "Working Directory:   {}", workingDirectory.ToChar());
 
 	game::Application* application = new game::Application();
 	application->Execute(agrc, argv);

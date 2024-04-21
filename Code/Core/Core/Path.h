@@ -9,6 +9,7 @@ namespace str
 	{
 		AppData,
 		Assets,
+		Config,
 		Executable,
 		WorkingDir,
 	};
