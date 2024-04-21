@@ -3,6 +3,12 @@
 #include <Core/TypeTraits.h>
 #include <Core/VariantHelpers.h>
 
+template<typename Key, typename Value>
+void eng::Visitor::Visit(Map<Key, Value>& values)
+{
+	VisitMap(values);
+}
+
 template<typename Value>
 void eng::Visitor::Visit(const str::StringView& key, Value& value, const Value& defaultValue)
 {
@@ -188,15 +194,65 @@ void eng::Visitor::VisitArray(Array<Value>& values)
 	m_Node = &parentNode;
 }
 
-template<typename Key, typename Value>
-void eng::Visitor::VisitMap(Map<Key, Value>& values)
+template<typename Value>
+void eng::Visitor::VisitMap(Map<str::Guid, Value>& values)
 {
 	toml::Table& parentNode = *m_Node->as_table();
 	if (IsReading())
 	{
 		for (auto& node : parentNode)
 		{
-			const Key key = Key(node.first.str());
+			const str::String key = str::String(node.first.str());
+			if (str::Guid::IsValidString(key))
+			{
+				const str::Guid guid = str::Guid::Create(key);
+				auto& value = values[guid];
+				Visit(key, value, value);
+			}
+		}
+	}
+	else
+	{
+		for (auto&& [guid, value] : values)
+		{
+			const str::String key = guid.ToString();
+			Visit(key, value, value);
+		}
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Value>
+void eng::Visitor::VisitMap(Map<str::Name, Value>& values)
+{
+	toml::Table& parentNode = *m_Node->as_table();
+	if (IsReading())
+	{
+		for (auto& node : parentNode)
+		{
+			const str::String key = str::String(node.first.str());
+			const str::Name name = str::Name::Create(key);
+			auto& value = values[name];
+			Visit(key, value, value);
+		}
+	}
+	else
+	{
+		for (auto&& [key, value] : values)
+			Visit(key, value, value);
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Value>
+void eng::Visitor::VisitMap(Map<str::String, Value>& values)
+{
+	toml::Table& parentNode = *m_Node->as_table();
+	if (IsReading())
+	{
+		for (auto& node : parentNode)
+		{
+			const str::String key = str::String(node.first.str());
 			auto& value = values[key];
 			Visit(key, value, value);
 		}

@@ -270,7 +270,6 @@ void eng::Visitor::Visit(const int32 index, uint32& value)
 	VisitPrimitive(index, value);
 }
 
-
 void eng::Visitor::Visit(const int32 index, str::Guid& value)
 {
 	toml::Array& currentNode = *m_Node->as_array();
