@@ -31,6 +31,7 @@ namespace eng
 	str::Path GetAssetsDirectory();
 	str::Path GetConfigDirectory();
 	str::Path GetExecutableFilepath();
+	str::Path GetRootDirectory();
 	str::Path GetWorkingDirectory();
 
 	bool LoadFileAsBinary(const str::Path& filepath, str::String& out_String);

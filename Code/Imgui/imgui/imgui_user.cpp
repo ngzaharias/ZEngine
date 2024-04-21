@@ -10,6 +10,7 @@
 #include <Core/Guid.h>
 #include <Core/Name.h>
 #include <Core/Path.h>
+#include <Core/String.h>
 #include <Core/Vector.h>
 
 namespace
@@ -175,6 +176,11 @@ bool imgui::Path(const char* label, str::Path& value)
 		return true;
 	}
 	return false;
+}
+
+bool imgui::String(const char* label, str::String& value)
+{
+	return ImGui::InputText(label, &value);
 }
 
 void imgui::Grid(Vector2f graph_size, Vector2f spacing, Vector2f offset)

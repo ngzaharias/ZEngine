@@ -13,6 +13,7 @@ namespace ecs
 namespace editor
 {
 	struct FlipbookWindowRequestComponent;
+	struct TableWindowRequestComponent;
 	struct TrajectoryWindowRequestComponent;
 }
 
@@ -42,6 +43,7 @@ namespace dbg
 			dbg::SaveLevelRequestComponent,
 			dbg::SaveLevelAsRequestComponent,
 			editor::FlipbookWindowRequestComponent,
+			editor::TableWindowRequestComponent,
 			editor::TrajectoryWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Core/String.h>
 #include <Core/Types.h>
 #include <Core/Vector.h>
 
@@ -19,6 +20,7 @@ namespace str
 	class Guid;
 	class Name;
 	class Path;
+	using String = std::string;
 }
 
 namespace imgui
@@ -35,6 +37,7 @@ namespace imgui
 	bool Guid(const char* label, str::Guid& value);
 	bool Name(const char* label, str::Name& value);
 	bool Path(const char* label, str::Path& value);
+	bool String(const char* label, str::String& value);
 
 	void Grid(Vector2f graph_size, Vector2f spacing, Vector2f offset = Vector2f::Zero);
 

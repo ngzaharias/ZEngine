@@ -77,6 +77,15 @@ str::Path eng::GetExecutableFilepath()
 #endif
 }
 
+str::Path eng::GetRootDirectory()
+{
+#ifdef _WIN32
+	const std::filesystem::path directory = std::filesystem::current_path();
+	return directory.string();
+#endif
+}
+
+
 str::Path eng::GetWorkingDirectory()
 {
 #ifdef _WIN32

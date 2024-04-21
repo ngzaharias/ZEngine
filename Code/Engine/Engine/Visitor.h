@@ -83,6 +83,10 @@ namespace eng
 
 		void JumpToNode(toml::Node& node);
 
+		// Visit as Map
+		template<typename Key, typename Value>
+		void Visit(Map<Key, Value>& values);
+
 		// Visit by Key
 		template<typename Value>
 		void Visit(const str::StringView& key, Value& value, const Value& defaultValue);
@@ -135,8 +139,12 @@ namespace eng
 		template <typename TEnum>
 		void VisitEnum(const int32 index, TEnum& value);
 
-		template<typename Key, typename Value>
-		void VisitMap(Map<Key, Value>& values);
+		template<typename Value>
+		void VisitMap(Map<str::Guid, Value>& values);
+		template<typename Value>
+		void VisitMap(Map<str::Name, Value>& values);
+		template<typename Value>
+		void VisitMap(Map<str::String, Value>& values);
 
 		template<typename Value>
 		void VisitPrimitive(const str::StringView& key, Value& value, const Value defaultValue);
