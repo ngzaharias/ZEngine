@@ -53,7 +53,7 @@ namespace eng
 	{
 		RAIIHelper()
 		{
-			const str::Path root = eng::GetRootDirectory();
+			const str::Path root = eng::GetCurrentFilepath();
 			m_AssetPath = root.GetParent();
 			m_AssetPath = m_AssetPath.GetParent();
 			m_AssetPath += "\\Code\\";

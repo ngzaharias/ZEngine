@@ -22,7 +22,7 @@ namespace eng
 	class TrajectoryAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Save(TrajectoryAsset* asset, eng::Visitor& visitor) const;
-		bool Load(TrajectoryAsset* asset, eng::Visitor& visitor) const;
+		bool Save(TrajectoryAsset& asset, eng::Visitor& visitor) const;
+		bool Load(TrajectoryAsset& asset, eng::Visitor& visitor) const;
 	};
 }

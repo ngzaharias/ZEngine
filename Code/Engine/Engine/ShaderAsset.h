@@ -69,6 +69,6 @@ namespace eng
 		static void Bindings(const uint32 programId, ShaderAsset& asset);
 		static uint32 Compile(uint32 shaderType, const str::StringView& data);
 
-		bool Load(ShaderAsset* asset, eng::Visitor& visitor) const;
+		bool Load(ShaderAsset& asset, eng::Visitor& visitor) const;
 	};
 }
