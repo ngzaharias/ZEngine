@@ -22,10 +22,8 @@ namespace eng
 {
 	struct AssetFile
 	{
-		AssetFile(const str::Guid& guid, const str::Path& path, const str::Name& type)
-			: m_Guid(guid), m_Path(path), m_Type(type) { }
-
 		str::Guid m_Guid = { };
+		str::Name m_Name = { };
 		str::Path m_Path = { };
 		str::Name m_Type = { };
 	};
@@ -33,8 +31,8 @@ namespace eng
 	struct AssetEntry
 	{
 		using Import = bool(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
-		using Load = bool(eng::Asset* asset, const eng::AssetLoader& loader);
-		using Save = bool(eng::Asset* asset, const eng::AssetLoader& loader);
+		using Load = bool(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
+		using Save = bool(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
 
 		str::Name m_Type = { };
 		eng::AssetLoader* m_Loader = nullptr;
@@ -49,7 +47,7 @@ namespace eng
 		static constexpr const char* s_Extension = ".asset";
 
 		using FileMap = Map<str::Guid, eng::AssetFile>;
-		using EntryMap = Map<TypeId, eng::AssetEntry>;
+		using Registry = Map<TypeId, eng::AssetEntry>;
 
 	public:
 		void Initialise();
@@ -59,28 +57,28 @@ namespace eng
 		void RegisterAsset(const str::Name& type, TArgs&&... args);
 
 		template<class TAsset>
-		const TAsset* ImportAsset(const str::Path& inputPath, const str::Path& outputPath);
+		bool ImportAsset(TAsset& asset, const str::Path& filepath);
 		template<class TAsset>
 		const TAsset* LoadAsset(const str::Guid& guid);
 		template<class TAsset>
-		bool SaveAsset(TAsset& asset, const str::Path& filepath);
+		bool SaveAsset(TAsset& asset, str::Path filepath);
 
-	public:
 		// #temp: need to find a better way of discovering assets, AddEntry perhaps ?
 		void LoadFilepath(const str::Path& filepath, const bool canSearchSubdirectories);
 
+	public:
 		template<typename TAsset, typename TLoader>
 		static bool ImportFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
 
 		template<typename TAsset, typename TLoader>
-		static bool LoadFunction(eng::Asset* asset, const eng::AssetLoader& loader);
+		static bool LoadFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
 
 		template<typename TAsset, typename TLoader>
-		static bool SaveFunction(eng::Asset* asset, const eng::AssetLoader& loader);
+		static bool SaveFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
 
 	private:
 		FileMap m_FileMap = { };
-		EntryMap m_EntryMap = { };
+		Registry m_Registry = { };
 	};
 }
 

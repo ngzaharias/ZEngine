@@ -21,6 +21,6 @@ namespace eng
 	class SoundAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Load(SoundAsset* asset, eng::Visitor& visitor) const;
+		bool Load(SoundAsset& asset, eng::Visitor& visitor) const;
 	};
 }

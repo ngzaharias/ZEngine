@@ -48,6 +48,6 @@ namespace eng
 	public:
 		static void Bind(eng::StaticMeshAsset& asset);
 
-		bool Load(StaticMeshAsset* asset, eng::Visitor& visitor) const;
+		bool Load(StaticMeshAsset& asset, eng::Visitor& visitor) const;
 	};
 }

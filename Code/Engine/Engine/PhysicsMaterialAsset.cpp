@@ -20,16 +20,16 @@ eng::PhysicsMaterialAssetLoader::PhysicsMaterialAssetLoader(eng::PhysicsManager&
 { 
 }
 
-bool eng::PhysicsMaterialAssetLoader::Load(PhysicsMaterialAsset* asset, eng::Visitor& visitor) const
+bool eng::PhysicsMaterialAssetLoader::Load(PhysicsMaterialAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strDynamicFriction, asset->m_DynamicFriction, 0.f);
-	visitor.Visit(strRestituation, asset->m_Restituation, 0.f);
-	visitor.Visit(strStaticFriction, asset->m_StaticFriction, 0.f);
+	visitor.Visit(strDynamicFriction, asset.m_DynamicFriction, 0.f);
+	visitor.Visit(strRestituation, asset.m_Restituation, 0.f);
+	visitor.Visit(strStaticFriction, asset.m_StaticFriction, 0.f);
 
 	physx::PxPhysics& physics = m_PhysicsManager.GetPhysics();
-	asset->m_Material = physics.createMaterial(
-		asset->m_StaticFriction, 
-		asset->m_DynamicFriction, 
-		asset->m_Restituation);
+	asset.m_Material = physics.createMaterial(
+		asset.m_StaticFriction, 
+		asset.m_DynamicFriction, 
+		asset.m_Restituation);
 	return true;
 }

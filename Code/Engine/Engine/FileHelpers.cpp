@@ -62,6 +62,14 @@ str::Path eng::GetConfigDirectory()
 #endif
 }
 
+str::Path eng::GetCurrentFilepath()
+{
+#ifdef _WIN32
+	const std::filesystem::path directory = std::filesystem::current_path();
+	return directory.string();
+#endif
+}
+
 str::Path eng::GetExecutableFilepath()
 {
 #ifdef _WIN32
@@ -76,15 +84,6 @@ str::Path eng::GetExecutableFilepath()
 	return str::Path(std::move(string));
 #endif
 }
-
-str::Path eng::GetRootDirectory()
-{
-#ifdef _WIN32
-	const std::filesystem::path directory = std::filesystem::current_path();
-	return directory.string();
-#endif
-}
-
 
 str::Path eng::GetWorkingDirectory()
 {
@@ -140,7 +139,7 @@ str::Path eng::SaveFileDialog(const SaveFileSettings& settings)
 
 	pfd::save_file saveFile = pfd::save_file(
 		settings.m_Title,
-		settings.m_Directory,
+		settings.m_Path,
 		filters,
 		pfd::opt::force_overwrite);
 
@@ -154,7 +153,7 @@ Array<str::Path> eng::SelectFileDialog(const SelectFileSettings& settings)
 
 	pfd::open_file openFile = pfd::open_file(
 		settings.m_Title,
-		settings.m_Directory,
+		settings.m_Path,
 		filters,
 		settings.m_IsMultiSelect ? pfd::opt::multiselect : pfd::opt::none);
 
@@ -168,7 +167,7 @@ str::Path eng::SelectFolderDialog(const SelectFolderSettings& settings)
 {
 	pfd::select_folder selectFile = pfd::select_folder(
 		settings.m_Title, 
-		settings.m_Directory);
+		settings.m_Path);
 
 	return selectFile.result();
 }
