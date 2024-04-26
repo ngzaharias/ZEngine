@@ -30,7 +30,6 @@ namespace
 		ImGuiWindowFlags_MenuBar;
 
 	const str::Guid uuidShader = GUID("cbbb7d3f-f44b-45fd-b9e5-a207d92262fb");
-	const str::Guid uuidStaticMesh = GUID("e94876a8-e4cc-4d16-84c8-5859b48a1af6");
 	const str::Guid uuidTexture2D = GUID("c6bb231c-e97f-104e-860e-b55e71988bdb");
 
 	Vector2f ToImageSize(const ImVec2& regionSize, const eng::Texture2DAsset& texture)
@@ -95,12 +94,10 @@ namespace
 
 		imgui::Guid("m_Guid", flipbook.m_Guid);
 		imgui::Name("m_Name", flipbook.m_Name);
-		imgui::Path("m_Path", flipbook.m_Path);
 
 		ImGui::Separator();
 
 		imgui::Guid("m_Shader", flipbook.m_Shader);
-		imgui::Guid("m_StaticMesh", flipbook.m_StaticMesh);
 		imgui::Guid("m_Texture2D", flipbook.m_Texture2D);
 
 		ImGui::DragFloat("m_FPS", &flipbook.m_FPS);
@@ -146,7 +143,6 @@ namespace
 					flipbook.m_Guid = str::Guid::Generate();
 					flipbook.m_Name = str::Name::Create("FP_MyFlipbook");
 					flipbook.m_Shader = uuidShader;
-					flipbook.m_StaticMesh = uuidStaticMesh;
 					flipbook.m_Texture2D = str::Guid::Create("f9dcfdd6-014a-c528-12e2-1e73f232b7f9");
 
 					auto& windowComponent = world.GetComponent<editor::FlipbookWindowComponent>(entity);
@@ -186,16 +182,19 @@ namespace
 		if (world.HasComponent<editor::FlipbookAssetSaveComponent>(entity))
 		{
 			auto& windowComponent = world.GetComponent<editor::FlipbookWindowComponent>(entity);
+			const str::Name& name = windowComponent.m_Asset.m_Name;
 
 			eng::SaveFileSettings settings;
 			settings.m_Title = "Save Flipbook";
 			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
-			settings.m_Directory = str::GetPath(str::EPath::Assets);
+			settings.m_Path = str::GetPath(str::EPath::Assets);
+			settings.m_Path += name;
+
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& assetBrowser = world.GetResource<eng::AssetManager>();
-				assetBrowser.SaveAsset(windowComponent.m_Asset, filepath);
+				auto& assetManager = world.GetResource<eng::AssetManager>();
+				assetManager.SaveAsset(windowComponent.m_Asset, filepath);
 			}
 
 			world.RemoveComponent<editor::FlipbookAssetSaveComponent>(entity);
@@ -209,8 +208,8 @@ namespace
 		if (!flipbook.m_Texture2D.IsValid())
 			return;
 
-		auto& assetBrowser = world.GetResource<eng::AssetManager>();
-		const auto* textureAsset = assetBrowser.LoadAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
+		auto& assetManager = world.GetResource<eng::AssetManager>();
+		const auto* textureAsset = assetManager.LoadAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
 		if (!textureAsset)
 			return;
 
@@ -239,8 +238,8 @@ namespace
 		if (!flipbook.m_Texture2D.IsValid())
 			return;
 
-		auto& assetBrowser = world.GetResource<eng::AssetManager>();
-		const auto* textureAsset = assetBrowser.LoadAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
+		auto& assetManager = world.GetResource<eng::AssetManager>();
+		const auto* textureAsset = assetManager.LoadAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
 		if (!textureAsset)
 			return;
 

@@ -30,7 +30,7 @@ namespace eng
 	public:
 		PhysicsMaterialAssetLoader(eng::PhysicsManager& physicsManager);
 
-		bool Load(PhysicsMaterialAsset* asset, eng::Visitor& visitor) const;
+		bool Load(PhysicsMaterialAsset& asset, eng::Visitor& visitor) const;
 
 	protected:
 		eng::PhysicsManager& m_PhysicsManager;

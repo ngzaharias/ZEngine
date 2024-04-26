@@ -23,7 +23,6 @@ namespace eng
 	struct FlipbookAsset : public eng::Asset
 	{
 		str::Guid m_Shader = { };
-		str::Guid m_StaticMesh = { };
 		str::Guid m_Texture2D = { };
 		float m_FPS = 30.f;
 		bool m_IsLooping = true;
@@ -34,7 +33,7 @@ namespace eng
 	class FlipbookAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Save(FlipbookAsset* asset, eng::Visitor& visitor) const;
-		bool Load(FlipbookAsset* asset, eng::Visitor& visitor) const;
+		bool Save(FlipbookAsset& asset, eng::Visitor& visitor) const;
+		bool Load(FlipbookAsset& asset, eng::Visitor& visitor) const;
 	};
 }

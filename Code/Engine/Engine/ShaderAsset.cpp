@@ -141,35 +141,35 @@ uint32 eng::ShaderAssetLoader::Compile(uint32 shaderType, const str::StringView&
 	return shaderId;
 }
 
-bool eng::ShaderAssetLoader::Load(ShaderAsset* asset, eng::Visitor& visitor) const
+bool eng::ShaderAssetLoader::Load(ShaderAsset& asset, eng::Visitor& visitor) const
 {
 	Programs programs;
 	visitor.Visit(strPrograms, programs, {});
 
-	asset->m_ProgramId = glCreateProgram();
+	asset.m_ProgramId = glCreateProgram();
 
 	uint32 vertexShaderId = 0;
 	if (!programs.m_Vertex.empty())
 	{
 		vertexShaderId = Compile(GL_VERTEX_SHADER, programs.m_Vertex);
-		glAttachShader(asset->m_ProgramId, vertexShaderId);
+		glAttachShader(asset.m_ProgramId, vertexShaderId);
 	}
 
 	uint32 fragmentShaderId = 0;
 	if (!programs.m_Fragment.empty())
 	{
 		fragmentShaderId = Compile(GL_FRAGMENT_SHADER, programs.m_Fragment);
-		glAttachShader(asset->m_ProgramId, fragmentShaderId);
+		glAttachShader(asset.m_ProgramId, fragmentShaderId);
 	}
 
-	glLinkProgram(asset->m_ProgramId);
-	glValidateProgram(asset->m_ProgramId);
+	glLinkProgram(asset.m_ProgramId);
+	glValidateProgram(asset.m_ProgramId);
 
 	if (vertexShaderId)
 		glDeleteShader(vertexShaderId);
 	if (fragmentShaderId)
 		glDeleteShader(fragmentShaderId);
 
-	Bindings(asset->m_ProgramId, *asset);
+	Bindings(asset.m_ProgramId, asset);
 	return true;
 }

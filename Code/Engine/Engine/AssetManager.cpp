@@ -7,8 +7,9 @@
 
 namespace
 {
-	const str::Name strGuid = NAME("m_Guid");
-	const str::Name strType = NAME("m_Type");
+	const str::StringView strGuid = "m_Guid";
+	const str::StringView strName = "m_Name";
+	const str::StringView strType = "m_Type";
 }
 
 void eng::AssetManager::Initialise()
@@ -29,11 +30,12 @@ void eng::AssetManager::LoadFilepath(const str::Path& filepath, const bool canSe
 		eng::Visitor visitor;
 		if (visitor.LoadFromFile(filepath))
 		{
-			str::Guid guid;
-			str::Name type;
-			visitor.Visit(strGuid, guid, {});
-			visitor.Visit(strType, type, {});
-			m_FileMap.Insert(guid, eng::AssetFile(guid, filepath, type));
+			eng::AssetFile assetFile;
+			assetFile.m_Path = filepath;
+			visitor.Visit(strGuid, assetFile.m_Guid, {});
+			visitor.Visit(strName, assetFile.m_Name, {});
+			visitor.Visit(strType, assetFile.m_Type, {});
+			m_FileMap.Insert(assetFile.m_Guid, assetFile);
 		}
 	}
 	else if (filepath.IsDirectory())

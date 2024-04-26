@@ -87,7 +87,6 @@ namespace
 
 		imgui::Guid("m_Guid", trajectory.m_Guid);
 		imgui::Name("m_Name", trajectory.m_Name);
-		imgui::Path("m_Path", trajectory.m_Path);
 
 		ImGui::Separator();
 
@@ -191,16 +190,19 @@ namespace
 		if (world.HasComponent<editor::TrajectoryAssetSaveComponent>(entity))
 		{
 			auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+			const str::Name& name = windowComponent.m_Asset.m_Name;
 
 			eng::SaveFileSettings settings;
 			settings.m_Title = "Save Trajectory";
 			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
-			settings.m_Directory = str::GetPath(str::EPath::Assets);
+			settings.m_Path = str::GetPath(str::EPath::Assets);
+			settings.m_Path += name;
+
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& assetBrowser = world.GetResource<eng::AssetManager>();
-				assetBrowser.SaveAsset(windowComponent.m_Asset, filepath);
+				auto& assetManager = world.GetResource<eng::AssetManager>();
+				assetManager.SaveAsset(windowComponent.m_Asset, filepath);
 			}
 
 			world.RemoveComponent<editor::TrajectoryAssetSaveComponent>(entity);

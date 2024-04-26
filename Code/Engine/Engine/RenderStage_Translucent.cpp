@@ -43,6 +43,8 @@ namespace
 			return a.m_StaticMeshId < b.m_StaticMeshId;
 		}
 	};
+
+	const str::Guid strQuadMesh = str::Guid::Create("e94876a8-e4cc-4d16-84c8-5859b48a1af6");
 }
 
 eng::RenderStage_Translucent::RenderStage_Translucent(eng::AssetManager& m_AssetManager)
@@ -123,7 +125,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				id.m_Entity = renderEntity;
 				id.m_Depth = math::DistanceSqr(spriteTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_ShaderId = spriteAsset.m_Shader;
-				id.m_StaticMeshId = spriteAsset.m_StaticMesh;
+				id.m_StaticMeshId = strQuadMesh;
 				id.m_TextureId = spriteAsset.m_Texture2D;
 				batchIDs.Append(id);
 			}
@@ -154,7 +156,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				id.m_Entity = renderEntity;
 				id.m_Depth = math::DistanceSqr(flipbookTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_ShaderId = flipbookAsset.m_Shader;
-				id.m_StaticMeshId = flipbookAsset.m_StaticMesh;
+				id.m_StaticMeshId = strQuadMesh;
 				id.m_TextureId = flipbookAsset.m_Texture2D;
 			}
 		}
@@ -199,12 +201,6 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				const Vector2f& spriteSize = flipbookFrame.m_Size;
 				const Vector2f textureSize = Vector2f((float)texture2DAsset.m_Width, (float)texture2DAsset.m_Height);
 
-				const uint32 pixelsPerUnit = 100;
-				const Vector3f scale = Vector3f(
-					static_cast<float>(textureSize.x / pixelsPerUnit),
-					static_cast<float>(textureSize.y / pixelsPerUnit),
-					static_cast<float>(textureSize.y / pixelsPerUnit));
-
 				const Matrix4x4 model = flipbookTransform.ToTransform();
 
 				const Vector2f texcoordOffset = Vector2f(
@@ -241,13 +237,14 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				const Vector2f spriteSize = Vector2f((float)spriteAsset.m_Size.x, (float)spriteAsset.m_Size.y);
 				const Vector2f textureSize = Vector2f((float)texture2DAsset.m_Width, (float)texture2DAsset.m_Height);
 
-				const uint32 pixelsPerUnit = 100;
-				const Vector3f scale = Vector3f(
-					static_cast<float>(textureSize.x / pixelsPerUnit),
-					static_cast<float>(textureSize.y / pixelsPerUnit),
-					static_cast<float>(textureSize.y / pixelsPerUnit));
+				const Vector3f modelScale = spriteTransform.m_Scale;
+				const Vector3f spriteScale = Vector3f(
+					(float)spriteComponent.m_Size.x / 100.f,
+					(float)spriteComponent.m_Size.y / 100.f,
+					1.f);
 
-				const Matrix4x4 model = spriteTransform.ToTransform();
+				Matrix4x4 model = spriteTransform.ToTransform();
+				model.SetScale(math::Multiply(modelScale, spriteScale));
 
 				const Vector2f texcoordOffset = Vector2f(
 					spritePos.x / textureSize.x,

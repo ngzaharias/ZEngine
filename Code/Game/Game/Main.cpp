@@ -18,7 +18,7 @@ int main(int agrc, char* argv[])
 	const str::Path immediateDirectory = executableFilepath.GetDirectory();
 
 	str::SetPath(str::EPath::AppData, appdataDirectory);
-	str::SetPath(str::EPath::Assets, assetDirectory);
+	str::SetPath(str::EPath::Assets, assetsDirectory);
 	str::SetPath(str::EPath::Executable, executableFilepath);
 	str::SetPath(str::EPath::WorkingDir, workingDirectory);
 

@@ -15,7 +15,6 @@ namespace eng
 
 		str::Guid m_Guid = { };
 		str::Name m_Name = { };
-		str::Path m_Path = { };
 		str::Name m_Type = { };
 	};
 }
