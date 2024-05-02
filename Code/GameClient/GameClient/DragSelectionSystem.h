@@ -14,6 +14,7 @@ namespace eng
 
 namespace drag
 {
+	struct IsSelectableComponent;
 	struct SelectionComponent;
 
 	class SelectionSystem final : public ecs::System
@@ -23,6 +24,7 @@ namespace drag
 			drag::SelectionComponent,
 			eng::NameComponent,
 			eng::LinesComponent,
+			const drag::IsSelectableComponent,
 			const eng::CameraComponent,
 			const eng::InputComponent,
 			const eng::PhysicsSceneComponent,
