@@ -1,0 +1,20 @@
+m_Guid = "fcdc5529-80ab-4193-9af2-e87a17d69a33"
+m_Name = "Bear01"
+
+[Name]
+m_Name = "Bear01"
+
+[Physics]
+m_Rigid = 1
+m_Shape = 0
+m_Channel = 0
+m_Extents = { X = 100.0, Y = 100.0, Z = 1.0 }
+
+[Sprite]
+m_Size = { X = 328, Y = 220 }
+m_Sprite = "7be11393-aed4-45ea-8c25-27b208a651be"
+
+[Transform]
+m_Translate = { X = 0.0, Y = 0.0, Z = -10.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
