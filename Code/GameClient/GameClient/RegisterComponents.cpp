@@ -11,6 +11,7 @@
 
 void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 {
+	entityWorld.RegisterComponent<drag::IsSelectableComponent>();
 	entityWorld.RegisterComponent<drag::SelectionComponent>();
 	entityWorld.RegisterComponent<gamestate::NetworkHostComponent>();
 	entityWorld.RegisterComponent<gamestate::NetworkJoinComponent>();

@@ -87,7 +87,9 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 				const Vector3f hitPosition = Vector3f(closestHit.position.x, closestHit.position.y, closestHit.position.z);
 
 				const ecs::Entity selectedEntity = reinterpret_cast<uint64>(closestHit.actor->userData);
-				if (world.HasComponent<eng::TransformComponent>(selectedEntity))
+				const bool hasSelectable = world.HasComponent<drag::IsSelectableComponent>(selectedEntity);
+				const bool hasTransform = world.HasComponent<eng::TransformComponent>(selectedEntity);
+				if (hasSelectable && hasTransform)
 				{
 					constexpr float s_Extents = 100.1f;
 
