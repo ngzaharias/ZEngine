@@ -1,0 +1,14 @@
+m_Guid = "db08af04-6f7e-40e2-88d2-9a6fa602c791"
+m_Name = "Bear02"
+
+[Name]
+m_Name = "Bear02"
+
+[Sprite]
+m_Size = { X = 328, Y = 220 }
+m_Sprite = "fc2105dd-f536-4fa7-b2e6-9ac13d6a5cea"
+
+[Transform]
+m_Translate = { X = 0.0, Y = 0.0, Z = -20.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
