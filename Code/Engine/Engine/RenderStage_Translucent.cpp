@@ -89,7 +89,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
-		glDepthMask(GL_FALSE);
+		glDepthMask(GL_TRUE);
 
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
