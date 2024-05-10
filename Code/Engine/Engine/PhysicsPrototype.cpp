@@ -37,20 +37,21 @@ namespace
 
 	const str::Guid strDefaultMaterial = GUID("a4835493-ae5a-40ba-8083-06deb381c801");
 
-	const str::Name strChannel = NAME("m_Channel");
-	const str::Name strExtents = NAME("m_Extents");
-	const str::Name strRadius = NAME("m_Radius");
-	const str::Name strRigid = NAME("m_Rigid");
-	const str::Name strShape = NAME("m_Shape");
+	const str::StringView strChannel = "m_Channel";
+	const str::StringView strExtents = "m_Extents";
+	const str::StringView strRadius = "m_Radius";
+	const str::StringView strRigid = "m_Rigid";
+	const str::StringView strShape = "m_Shape";
+	const str::StringView strTranslate = "m_Translate";
 
-	const str::Name strENABLE_CCD = NAME("eENABLE_CCD");
-	const str::Name strKINEMATIC = NAME("eKINEMATIC");
-	const str::Name strLOCK_ANGULAR_X = NAME("eLOCK_ANGULAR_X");
-	const str::Name strLOCK_ANGULAR_Y = NAME("eLOCK_ANGULAR_Y");
-	const str::Name strLOCK_ANGULAR_Z = NAME("eLOCK_ANGULAR_Z");
-	const str::Name strLOCK_LINEAR_X = NAME("eLOCK_LINEAR_X");
-	const str::Name strLOCK_LINEAR_Y = NAME("eLOCK_LINEAR_Y");
-	const str::Name strLOCK_LINEAR_Z = NAME("eLOCK_LINEAR_Z");
+	const str::StringView strENABLE_CCD = "eENABLE_CCD";
+	const str::StringView strKINEMATIC = "eKINEMATIC";
+	const str::StringView strLOCK_ANGULAR_X = "eLOCK_ANGULAR_X";
+	const str::StringView strLOCK_ANGULAR_Y = "eLOCK_ANGULAR_Y";
+	const str::StringView strLOCK_ANGULAR_Z = "eLOCK_ANGULAR_Z";
+	const str::StringView strLOCK_LINEAR_X = "eLOCK_LINEAR_X";
+	const str::StringView strLOCK_LINEAR_Y = "eLOCK_LINEAR_Y";
+	const str::StringView strLOCK_LINEAR_Z = "eLOCK_LINEAR_Z";
 }
 
 eng::PhysicsPrototypeLoader::PhysicsPrototypeLoader(eng::PhysicsManager& physicsManager)
