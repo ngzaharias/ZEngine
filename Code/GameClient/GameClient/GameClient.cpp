@@ -11,8 +11,14 @@
 #include <GameShared/RegisterComponents.h>
 #include <GameShared/RegisterSystems.h>
 
+#include "GameClient/HiddenObjectPrototype.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
+
+namespace
+{
+	const str::Name strHiddenObject = NAME("HiddenObject");
+}
 
 clt::GameClient::GameClient()
 	: m_ReplicationPeer(m_EntityWorld)
@@ -21,7 +27,13 @@ clt::GameClient::GameClient()
 
 void clt::GameClient::Register(const Dependencies& dependencies)
 {
-	// managers
+	// prototypes
+	{
+		auto& prototypeManager = dependencies.m_PrototypeManager;
+		prototypeManager.RegisterPrototype<hidden::ObjectPrototype, hidden::ObjectPrototypeLoader>(strHiddenObject);
+	}
+
+	// resources
 	{
 		m_EntityWorld.AddResource(dependencies.m_AssetManager);
 		m_EntityWorld.AddResource(dependencies.m_NetworkManager);

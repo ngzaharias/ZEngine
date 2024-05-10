@@ -47,5 +47,7 @@ void main()
 {
 	//f_Colour = vec4(v_TexCoords, 1.f, 1.f);
 	f_Colour = texture(u_Texture, v_TexCoords);
+	if (f_Colour.a <= 0f)
+		discard;
 }
 """

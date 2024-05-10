@@ -5,7 +5,7 @@ m_Name = "Camera"
 m_Name = "Camera"
 
 [Camera]
-m_Projection = { TypeId = 1 }
+m_Projection = { TypeId = 0 }
 
 [Transform]
 m_Translate = { X = 0.0, Y = 0.0, Z = -500.0 }

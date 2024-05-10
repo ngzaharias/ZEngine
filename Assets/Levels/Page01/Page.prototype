@@ -5,7 +5,7 @@ m_Name = "Page"
 m_Name = "Page"
 
 [Sprite]
-m_Size = { X = 328, Y = 220 }
+m_Size = { X = 656, Y = 440 }
 m_Sprite = "4fe12ae7-c8b7-484d-b595-bc366bba28d5"
 
 [Transform]
