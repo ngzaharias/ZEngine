@@ -17,6 +17,7 @@ namespace editor
 	struct TableWindowRequestComponent;
 	struct TextureWindowRequestComponent;
 	struct TrajectoryWindowRequestComponent;
+	struct TransformWindowRequestComponent;
 }
 
 namespace dbg
@@ -48,7 +49,8 @@ namespace dbg
 			editor::SpriteWindowRequestComponent,
 			editor::TableWindowRequestComponent,
 			editor::TextureWindowRequestComponent,
-			editor::TrajectoryWindowRequestComponent>;
+			editor::TrajectoryWindowRequestComponent,
+			editor::TransformWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

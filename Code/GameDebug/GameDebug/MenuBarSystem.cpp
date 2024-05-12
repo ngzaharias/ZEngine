@@ -41,6 +41,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<editor::TextureWindowRequestComponent>();
 			if (ImGui::MenuItem("Trajectory Editor"))
 				world.AddEventComponent<editor::TrajectoryWindowRequestComponent>();
+			if (ImGui::MenuItem("Transform Editor"))
+				world.AddEventComponent<editor::TransformWindowRequestComponent>();
 
 			ImGui::EndMenu();
 		}

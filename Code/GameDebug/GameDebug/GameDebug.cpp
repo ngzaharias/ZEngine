@@ -47,6 +47,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<editor::TableWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::TextureWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowRequestComponent>();
+	m_ClientWorld.RegisterComponent<editor::TransformWindowRequestComponent>();
 
 	m_ClientWorld.RegisterSystem<dbg::EntitySystem>(m_ClientWorld, m_ServerWorld);
 	m_ClientWorld.RegisterSystem<dbg::FrameBufferSystem>();

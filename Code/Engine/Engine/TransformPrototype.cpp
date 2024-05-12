@@ -21,7 +21,7 @@ void eng::TransformPrototypeLoader::Add(ecs::EntityWorld& world, const ecs::Enti
 	component.m_Scale = prototype.m_Scale;
 }
 
-void eng::TransformPrototypeLoader::Load(TransformPrototype& prototype, eng::Visitor& visitor) const
+void eng::TransformPrototypeLoader::Load(eng::TransformPrototype& prototype, eng::Visitor& visitor) const
 {
 	visitor.Visit(strTranslate, prototype.m_Translate, Vector3f::Zero);
 	visitor.Visit(strRotate, prototype.m_Rotate, Rotator::Zero);
