@@ -10,6 +10,7 @@
 #include "Editor/SpriteEditor.h"
 #include "Editor/TextureEditor.h"
 #include "Editor/TrajectoryEditor.h"
+#include "Editor/TransformEditor.h"
 
 editor::Editor::Editor(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
 	: m_ClientWorld(clientWorld)
@@ -33,6 +34,8 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::TextureAssetOpenComponent>();
 	m_ClientWorld.RegisterComponent<editor::TextureAssetSaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::TextureWindowComponent>();
+	m_ClientWorld.RegisterComponent<editor::TransformAssetSaveComponent>();
+	m_ClientWorld.RegisterComponent<editor::TransformWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryAssetOpenComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryAssetSaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowComponent>();
@@ -42,6 +45,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::SpriteEditor>();
 	m_ClientWorld.RegisterSystem<editor::TextureEditor>();
 	m_ClientWorld.RegisterSystem<editor::TrajectoryEditor>();
+	m_ClientWorld.RegisterSystem<editor::TransformEditor>();
 }
 
 void editor::Editor::Initialise()

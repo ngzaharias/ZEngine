@@ -23,4 +23,5 @@ namespace editor
 	struct TextureWindowRequestComponent : ecs::EventComponent<TextureWindowRequestComponent> { };
 	struct SpriteWindowRequestComponent : ecs::EventComponent<SpriteWindowRequestComponent> { };
 	struct TrajectoryWindowRequestComponent : ecs::EventComponent<TrajectoryWindowRequestComponent> { };
+	struct TransformWindowRequestComponent : ecs::EventComponent<TransformWindowRequestComponent> { };
 }

@@ -28,6 +28,6 @@ namespace eng
 	{
 	public:
 		void Add(ecs::EntityWorld& world, const ecs::Entity& entity, const TransformPrototype& prototype) const;
-		void Load(TransformPrototype& prototype, eng::Visitor& visitor) const;
+		void Load(eng::TransformPrototype& prototype, eng::Visitor& visitor) const;
 	};
 }

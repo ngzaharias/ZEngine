@@ -15,6 +15,8 @@ enum ImGuiGraphFlags_
 };
 using ImGuiGraphFlags = int; // -> enum ImGuiGraphFlags_
 
+class Rotator;
+
 namespace str
 {
 	class Guid;
@@ -33,6 +35,10 @@ namespace imgui
 	bool DragUInt2(const char* label, uint32 v[2], float v_speed = 1.0f, uint32 v_min = 0, uint32 v_max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
 	bool DragUInt3(const char* label, uint32 v[3], float v_speed = 1.0f, uint32 v_min = 0, uint32 v_max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
 	bool DragUInt4(const char* label, uint32 v[4], float v_speed = 1.0f, uint32 v_min = 0, uint32 v_max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
+	bool DragRotator(const char* label, Rotator& value, float v_speed = 1.0f, float v_min = 0.f, float v_max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+	bool DragVector(const char* label, Vector2f& value, float v_speed = 1.0f, float v_min = 0.f, float v_max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+	bool DragVector(const char* label, Vector3f& value, float v_speed = 1.0f, float v_min = 0.f, float v_max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+	bool DragVector(const char* label, Vector4f& value, float v_speed = 1.0f, float v_min = 0.f, float v_max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
 
 	bool Guid(const char* label, str::Guid& value);
 	bool Name(const char* label, str::Name& value);

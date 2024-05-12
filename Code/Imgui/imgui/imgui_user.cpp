@@ -10,6 +10,7 @@
 #include <Core/Guid.h>
 #include <Core/Name.h>
 #include <Core/Path.h>
+#include <Core/Rotator.h>
 #include <Core/String.h>
 #include <Core/Vector.h>
 
@@ -143,6 +144,26 @@ bool imgui::DragUInt3(const char* label, uint32 v[3], float v_speed, uint32 v_mi
 bool imgui::DragUInt4(const char* label, uint32 v[4], float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
 {
 	return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 4, v_speed, &v_min, &v_max, format, flags);
+}
+
+bool imgui::DragRotator(const char* label, Rotator& value, float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragFloat3(label, &value.m_Pitch, v_speed, v_min, v_max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, Vector2f& value, float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragFloat2(label, &value.x, v_speed, v_min, v_max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, Vector3f& value, float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragFloat3(label, &value.x, v_speed, v_min, v_max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, Vector4f& value, float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragFloat4(label, &value.x, v_speed, v_min, v_max, format, flags);
 }
 
 bool imgui::Guid(const char* label, str::Guid& value)
