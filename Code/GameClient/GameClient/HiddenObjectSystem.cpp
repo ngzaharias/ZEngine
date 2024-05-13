@@ -29,6 +29,17 @@ namespace
 {
 	constexpr Vector4f s_ColourM = Vector4f(1.f, 0.f, 1.f, 1.f);
 	constexpr Vector4f s_ColourW = Vector4f(1.f, 1.f, 1.f, 1.f);
+
+	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::CameraComponent& camera, const eng::TransformComponent& transform)
+	{
+		if (std::holds_alternative<camera::Orthographic>(camera.m_Projection))
+		{
+			const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
+			return Vector3f::AxisZ * cameraRotate;
+		}
+
+		return (mousePosition - transform.m_Translate).Normalized();
+	}
 }
 
 void hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
@@ -71,15 +82,16 @@ void hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 			// mouse
 			constexpr float s_Distance = 100000.f;
 			const Vector3f mousePosition = camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
+			const Vector3f mouseDirection = ToMouseDirection(mousePosition, cameraComponent, cameraTransform);
 
 			const physx::PxVec3 position = { 
 				mousePosition.x,
 				mousePosition.y,
 				mousePosition.z };
 			const physx::PxVec3 direction = { 
-				cameraForward.x,
-				cameraForward.y,
-				cameraForward.z };
+				mouseDirection.x,
+				mouseDirection.y,
+				mouseDirection.z };
 
 			physx::PxRaycastBuffer hitcall;
 			sceneComponent.m_PhysicsScene->raycast(position, direction, s_Distance, hitcall);
