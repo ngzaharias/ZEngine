@@ -1,0 +1,20 @@
+m_Guid = '36d02551-b4ca-4498-8256-6ae426659cc5'
+m_Name = 'Hand03'
+
+[Name]
+m_Name = 'Hand03'
+
+[Physics]
+m_Channel = 0
+m_Extents = { X = 100.0, Y = 100.0, Z = 1.0 }
+m_Rigid = 1
+m_Shape = 0
+
+[HiddenObject]
+m_Size = { X = 100, Y = 100 }
+m_Sprite = '3e9365c9-63f1-49ec-9801-1578e500825c'
+
+[Transform]
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 343.0, Y = 86.0, Z = -1.0 }

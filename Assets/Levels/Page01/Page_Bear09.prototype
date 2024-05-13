@@ -1,8 +1,8 @@
-m_Guid = '093460f8-0de3-4499-b77d-3fbd3e987da8'
-m_Name = 'Bear04'
+m_Guid = '6e117fd0-dc2f-4e81-9e0b-fc7f8252869d'
+m_Name = 'Bear09'
 
 [Name]
-m_Name = 'Bear04'
+m_Name = 'Bear09'
 
 [Physics]
 m_Channel = 0
@@ -12,9 +12,9 @@ m_Shape = 0
 
 [HiddenObject]
 m_Size = { X = 25, Y = 25 }
-m_Sprite = '39000c91-21dc-4987-a4d6-aeaff41ea6ab'
+m_Sprite = '0aad1366-b473-4514-97d3-2f0abcdb07eb'
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = -180.0, Y = 306.0, Z = -1.0 }
+m_Translate = { X = 560.0, Y = -286.0, Z = -1.0 }

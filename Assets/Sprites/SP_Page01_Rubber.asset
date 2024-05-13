@@ -4,4 +4,4 @@ m_Type = 'Sprite'
 m_Guid = '72261805-21d7-4546-90af-db9ac42b6d2c'
 
 m_Position = { X = 0, Y = 0 }
-m_Size = { X = 3281, Y = 2201 }
+m_Size = { X = 256, Y = 128 }
