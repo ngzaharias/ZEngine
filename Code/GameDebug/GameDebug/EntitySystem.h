@@ -11,10 +11,6 @@
 namespace ecs
 {
 	class EntityWorld;
-}
-
-namespace eng
-{
 	struct NameComponent;
 }
 
@@ -33,7 +29,7 @@ namespace dbg
 	public:
 		using World = ecs::WorldView<
 			dbg::EntityWindowComponent,
-			eng::NameComponent,
+			ecs::NameComponent,
 			const dbg::EntityWindowRequestComponent>;
 
 		EntitySystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld);

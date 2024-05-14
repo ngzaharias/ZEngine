@@ -9,10 +9,14 @@
 
 #include <Network/UserId.h>
 
+namespace ecs
+{
+	struct NameComponent;
+}
+
 namespace eng
 {
 	class NetworkManager;
-	struct NameComponent;
 }
 
 namespace net
@@ -31,8 +35,8 @@ namespace net
 	{
 	public:
 		using World = ecs::WorldView<
+			ecs::NameComponent,
 			eng::NetworkManager,
-			eng::NameComponent,
 			net::UserComponent,
 			net::UserMapComponent>;
 

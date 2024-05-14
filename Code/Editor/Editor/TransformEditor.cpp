@@ -1,16 +1,16 @@
 #include "EditorPCH.h"
 #include "Editor/TransformEditor.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
 #include <Core/Rotator.h>
 #include <Core/Vector.h>
 
+#include <ECS/EntityWorld.h>
+#include <ECS/NameComponent.h>
+#include <ECS/QueryTypes.h>
+#include <ECS/WorldView.h>
+
 #include <Engine/FileHelpers.h>
 #include <Engine/InputComponent.h>
-#include <Engine/NameComponent.h>
 #include <Engine/TransformComponent.h>
 #include <Engine/Visitor.h>
 
@@ -55,9 +55,9 @@ namespace
 
 	const char* ToName(World& world, const ecs::Entity& entity)
 	{
-		if (world.HasComponent<eng::NameComponent>(entity))
+		if (world.HasComponent<ecs::NameComponent>(entity))
 		{
-			const auto& name = world.GetComponent<const eng::NameComponent>(entity);
+			const auto& name = world.GetComponent<const ecs::NameComponent>(entity);
 			return name.m_Name.c_str();
 		}
 		return "<unknown>";

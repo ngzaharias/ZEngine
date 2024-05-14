@@ -4,6 +4,7 @@
 #include <Core/MemBuffer.h>
 
 #include <ECS/EntityWorld.h>
+#include <ECS/NameComponent.h>
 
 #include <yojimbo/yojimbo.h>
 
@@ -16,9 +17,9 @@
 #include "Engine/LevelComponents.h"
 #include "Engine/LightComponents.h"
 #include "Engine/LinesComponent.h"
-#include "Engine/NameComponent.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/PhysicsSceneComponent.h"
+#include "Engine/PrototypeManager.h"
 #include "Engine/ReplicationComponents.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
@@ -40,12 +41,12 @@ namespace
 
 	struct NameSerializer final
 	{
-		static void Read(eng::NameComponent& component, const MemBuffer& buffer)
+		static void Read(ecs::NameComponent& component, const MemBuffer& buffer)
 		{
 			buffer.Read(component.m_Name);
 		}
 
-		static void Write(const eng::NameComponent& component, MemBuffer& buffer)
+		static void Write(const ecs::NameComponent& component, MemBuffer& buffer)
 		{
 			buffer.Write(component.m_Name);
 		}
@@ -150,15 +151,15 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	entityWorld.RegisterComponent<eng::LevelLoadedComponent>();
 	entityWorld.RegisterComponent<eng::LevelLoadRequestComponent>();
 	entityWorld.RegisterComponent<eng::LevelUnloadRequestComponent>();
-	entityWorld.RegisterComponent<eng::NameComponent>();
 	entityWorld.RegisterComponent<eng::PhysicsSceneComponent>();
+	entityWorld.RegisterComponent<eng::PrototypeComponent>();
 	entityWorld.RegisterComponent<eng::SpriteComponent>();
 	entityWorld.RegisterComponent<eng::TransformComponent>();
 	entityWorld.RegisterComponent<net::ReplicationComponent>();
 	entityWorld.RegisterComponent<net::UserComponent>();
 
 	serializer.RegisterComponent<eng::CameraComponent, Default<eng::CameraComponent>>();
-	serializer.RegisterComponent<eng::NameComponent,      NameSerializer>();
+	serializer.RegisterComponent<ecs::NameComponent,      NameSerializer>();
 	serializer.RegisterComponent<eng::SpriteComponent,    SpriteSerializer>();
 	serializer.RegisterComponent<eng::TransformComponent, TransformSerializer>();
 	serializer.RegisterComponent<net::UserComponent,      UserSerializer>();

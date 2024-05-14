@@ -7,10 +7,9 @@
 #include <Core/Vector.h>
 
 #include <ECS/EntityWorld.h>
+#include <ECS/NameComponent.h>
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
-
-#include <Engine/NameComponent.h>
 
 #include <GameClient/GameStateComponents.h>
 
@@ -30,7 +29,7 @@ void dbg::NetworkSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::NetworkWindowRequestComponent>>())
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
-		world.AddComponent<eng::NameComponent>(windowEntity, "Debug: Network Window");
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Debug: Network Window");
 		world.AddComponent<dbg::NetworkWindowComponent>(windowEntity);
 	}
 

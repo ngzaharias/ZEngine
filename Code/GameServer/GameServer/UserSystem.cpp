@@ -2,10 +2,10 @@
 #include "GameServer/UserSystem.h"
 
 #include <ECS/EntityWorld.h>
+#include <ECS/NameComponent.h>
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
 
-#include <Engine/NameComponent.h>
 #include <Engine/NetworkManager.h>
 #include <Engine/ReplicationHost.h>
 #include <Engine/UserComponents.h>
@@ -49,7 +49,7 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 		if (hasConnected && !isConnected)
 		{
 			const ecs::Entity userEntity = world.CreateEntity();
-			auto& nameComponent = world.AddComponent<eng::NameComponent>(userEntity);
+			auto& nameComponent = world.AddComponent<ecs::NameComponent>(userEntity);
 			nameComponent.m_Name = "User: ";
 			nameComponent.m_Name += std::to_string(userId.GetInputId());
 			nameComponent.m_Name += ", ";

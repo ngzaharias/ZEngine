@@ -2,6 +2,7 @@
 
 #include <Core/Profiler.h>
 
+#include "ECS/NameComponent.h"
 #include "ECS/System.h"
 
 ecs::EntityWorld::EntityWorld()
@@ -18,6 +19,9 @@ void ecs::EntityWorld::Initialise()
 
 	m_IsInitialised = true;
 	m_SingletonEntity = CreateEntity();
+
+	RegisterComponent<ecs::NameComponent>();
+	AddComponent<ecs::NameComponent>(m_SingletonEntity, "Singleton");
 
 	m_QueryRegistry.Initialise();
 

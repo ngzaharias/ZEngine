@@ -4,6 +4,7 @@
 #include <Core/Assert.h>
 
 #include <ECS/EntityWorld.h>
+#include <ECS/NameComponent.h>
 
 #include "Engine/AssetManager.h"
 #include "Engine/Prototype.h"
@@ -70,11 +71,21 @@ bool eng::PrototypeManager::CreateEntity(ecs::EntityWorld& world, const ecs::Ent
 			}
 
 			addFunc(world, entity, prototype, loader);
-
-			// #todo: add level component
-			// #todo: add name component ?
 		}
 	}
+
+	{
+		auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
+		prototypeComponent.m_Guid = guid;
+	}
+
+	if (!name.IsEmpty())
+	{
+		auto& nameComponent = world.AddComponent<ecs::NameComponent>(entity);
+		nameComponent.m_Name = name;
+	}
+
+	// #todo: add level component
 
 	return true;
 }

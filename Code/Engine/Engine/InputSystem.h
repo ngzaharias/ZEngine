@@ -10,15 +10,21 @@ namespace glfw
 	class Window;
 }
 
+namespace ecs
+{
+	struct NameComponent;
+}
+
 namespace eng
 {
 	struct InputComponent;
-	struct NameComponent;
 
 	class InputSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<eng::NameComponent, eng::InputComponent>;
+		using World = ecs::WorldView<
+			ecs::NameComponent, 
+			eng::InputComponent>;
 
 		InputSystem(glfw::Window& window);
 

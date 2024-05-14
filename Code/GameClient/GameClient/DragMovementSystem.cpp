@@ -6,6 +6,7 @@
 #include <Core/Ray.h>
 
 #include <ECS/EntityWorld.h>
+#include <ECS/NameComponent.h>
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
 
@@ -13,7 +14,6 @@
 #include <Engine/CameraHelpers.h>
 #include <Engine/LinesComponent.h>
 #include <Engine/InputComponent.h>
-#include <Engine/NameComponent.h>
 #include <Engine/PhysicsSceneComponent.h>
 #include <Engine/Screen.h>
 #include <Engine/TransformComponent.h>

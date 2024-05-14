@@ -8,10 +8,10 @@
 #include <Core/Vector.h>
 
 #include <ECS/EntityWorld.h>
+#include <ECS/NameComponent.h>
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
 
-#include <Engine/NameComponent.h>
 #include <Engine/TypeInfo.h>
 
 #include <imgui/imgui.h>
@@ -26,9 +26,9 @@ namespace
 		int32 index = entity.GetIndex();
 		int32 salt = entity.GetVersion();
 		s_ScratchString = std::to_string(index) + ", " + std::to_string(salt);
-		if (entityWorld.HasComponent<eng::NameComponent>(entity))
+		if (entityWorld.HasComponent<ecs::NameComponent>(entity))
 		{
-			const auto& nameComponent = entityWorld.GetComponent<const eng::NameComponent>(entity);
+			const auto& nameComponent = entityWorld.GetComponent<const ecs::NameComponent>(entity);
 			if (!nameComponent.m_Name.empty())
 				s_ScratchString += " - " + nameComponent.m_Name;
 		}
@@ -41,9 +41,9 @@ namespace
 	void DebugComponents(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
 		const char* name = nullptr;
-		if (world.HasComponent<eng::NameComponent>(entity))
+		if (world.HasComponent<ecs::NameComponent>(entity))
 		{
-			const auto& nameComponent = world.GetComponent<const eng::NameComponent>(entity);
+			const auto& nameComponent = world.GetComponent<const ecs::NameComponent>(entity);
 			name = nameComponent.m_Name.c_str();
 		}
 
@@ -113,7 +113,7 @@ void dbg::EntitySystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::EntityWindowRequestComponent>>())
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
-		world.AddComponent<eng::NameComponent>(windowEntity, "Debug: Entity Debugger");
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Debug: Entity Debugger");
 		world.AddComponent<dbg::EntityWindowComponent>(windowEntity);
 	}
 
