@@ -1,9 +1,6 @@
 m_Guid = "7831c525-1ff0-4529-bcaa-bb9d9f064759"
 m_Name = "AmbientLight_01"
 
-[Name]
-m_Name = "AmbientLight_01"
-
 [AmbientLight]
 m_Colour = { X = 0.0, Y = 0.1, Z = 0.1 }
 

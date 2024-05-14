@@ -1,8 +1,6 @@
 m_Guid = "79d87664-c821-448a-8723-c32f91aae44b"
 m_Name = "Sprite_03"
 
-[Name]
-
 [Sprite]
 m_Size = { X = 50, Y = 50 }
 m_Sprite = "00a51d6c-15ca-4ea9-bdb8-b4b11edffa63"

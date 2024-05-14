@@ -1,9 +1,6 @@
 m_Guid = "255217e4-100b-489f-b276-701cf7718242"
 m_Name = "StaticMesh_07"
 
-[Name]
-m_Name = "StaticMesh_07"
-
 [Physics]
 m_Rigid = 0
 eENABLE_CCD = true

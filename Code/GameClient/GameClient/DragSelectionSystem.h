@@ -2,12 +2,16 @@
 
 #include <ECS/System.h>
 
+namespace ecs
+{
+	struct NameComponent;
+}
+
 namespace eng
 {
 	struct CameraComponent;
 	struct InputComponent;
 	struct LinesComponent;
-	struct NameComponent;
 	struct PhysicsSceneComponent;
 	struct TransformComponent;
 }
@@ -22,7 +26,7 @@ namespace drag
 	public:
 		using World = ecs::WorldView<
 			drag::SelectionComponent,
-			eng::NameComponent,
+			ecs::NameComponent,
 			eng::LinesComponent,
 			const drag::IsSelectableComponent,
 			const eng::CameraComponent,

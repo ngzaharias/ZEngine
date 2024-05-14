@@ -11,8 +11,6 @@
 #include "Engine/FontAsset.h"
 #include "Engine/GLFW/Window.h"
 #include "Engine/LightPrototypes.h"
-#include "Engine/NameComponent.h"
-#include "Engine/NamePrototype.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
@@ -51,7 +49,6 @@ namespace
 	const str::Name strExample = NAME("Example");
 	const str::Name strFont = NAME("Font");
 	const str::Name strFlipbook = NAME("Flipbook");
-	const str::Name strName = NAME("Name");
 	const str::Name strPhysics = NAME("Physics");
 	const str::Name strPhysicsMaterial = NAME("PhysicsMaterial");
 	const str::Name strPointLight = NAME("PointLight");
@@ -163,7 +160,6 @@ void eng::Application::Register()
 		m_PrototypeManager.RegisterPrototype<eng::FlipbookPrototype, eng::FlipbookPrototypeLoader>(strFlipbook);
 		m_PrototypeManager.RegisterPrototype<eng::AmbientLightPrototype, eng::LightPrototypeLoader>(strAmbientLight);
 		m_PrototypeManager.RegisterPrototype<eng::DirectionalLightPrototype, eng::LightPrototypeLoader>(strDirectionalLight);
-		m_PrototypeManager.RegisterPrototype<eng::NamePrototype, eng::NamePrototypeLoader>(strName);
 		m_PrototypeManager.RegisterPrototype<eng::PhysicsPrototype, eng::PhysicsPrototypeLoader>(strPhysics, m_PhysicsManager);
 		m_PrototypeManager.RegisterPrototype<eng::PointLightPrototype, eng::LightPrototypeLoader>(strPointLight);
 		m_PrototypeManager.RegisterPrototype<eng::SpritePrototype, eng::SpritePrototypeLoader>(strSprite);

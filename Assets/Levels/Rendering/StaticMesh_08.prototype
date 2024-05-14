@@ -1,8 +1,6 @@
 m_Guid = "56c85636-54d2-416a-bb47-dd56d45c700e"
 m_Name = "StaticMesh_08"
 
-[Name]
-
 [StaticMesh]
 m_StaticMesh = "d0284c56-3e6a-49a2-9a80-25ff2731a3de"
 

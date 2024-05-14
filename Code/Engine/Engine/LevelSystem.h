@@ -9,6 +9,11 @@ namespace str
 	class Name;
 }
 
+namespace ecs
+{
+	struct NameComponent;
+}
+
 namespace eng
 {
 	class PrototypeManager;
@@ -17,19 +22,20 @@ namespace eng
 	struct LevelLoadedComponent;
 	struct LevelLoadRequestComponent;
 	struct LevelUnloadRequestComponent;
-	struct NameComponent;
 
 	class LevelSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
+			// managers
 			eng::PrototypeManager,
+			// components
+			ecs::NameComponent,
 			eng::LevelDirectoryComponent,
 			eng::LevelEntityComponent,
 			eng::LevelLoadedComponent,
 			eng::LevelLoadRequestComponent,
-			eng::LevelUnloadRequestComponent,
-			eng::NameComponent>;
+			eng::LevelUnloadRequestComponent>;
 		
 		LevelSystem(ecs::EntityWorld& entityWorld);
 

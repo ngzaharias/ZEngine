@@ -1,8 +1,6 @@
 m_Guid = "e3b377b1-6eec-44be-931b-89c3a872ead1"
 m_Name = "Flipbook_02"
 
-[Name]
-
 [Flipbook]
 m_Size = { X = 50, Y = 50 }
 m_Flipbook = "9cf3dbdc-769e-a09a-6e4a-a0390e246666"

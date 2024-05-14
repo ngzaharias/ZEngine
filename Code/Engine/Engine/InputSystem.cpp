@@ -2,12 +2,11 @@
 #include "Engine/InputSystem.h"
 
 #include <ECS/EntityWorld.h>
+#include <ECS/NameComponent.h>
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
 
 #include "Engine/InputComponent.h"
-#include "Engine/NameComponent.h"
-
 #include "Engine/GLFW/Window.h"
 
 eng::InputSystem::InputSystem(glfw::Window& window)
@@ -18,8 +17,8 @@ eng::InputSystem::InputSystem(glfw::Window& window)
 void eng::InputSystem::Initialise(World& world)
 {
 	const ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<ecs::NameComponent>(entity, "Input");
 	world.AddComponent<eng::InputComponent>(entity);
-	world.AddComponent<eng::NameComponent>(entity, "Input");
 }
 
 void eng::InputSystem::Update(World& world, const GameTime& gameTime)

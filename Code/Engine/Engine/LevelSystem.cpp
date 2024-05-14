@@ -6,10 +6,9 @@
 #include <Core/Path.h>
 
 #include <ECS/EntityWorld.h>
+#include <ECS/NameComponent.h>
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
-
-#include <Engine/NameComponent.h>
 
 #include "Engine/LevelComponents.h"
 #include "Engine/PrototypeManager.h"
@@ -103,7 +102,7 @@ void eng::LevelSystem::LoadLevel(World& world, const str::Name& name, const str:
 		auto& levelComponent = world.AddComponent<eng::LevelLoadedComponent>(entity);
 		levelComponent.m_Name = name;
 
-		auto& nameComponent = world.AddComponent<eng::NameComponent>(entity);
+		auto& nameComponent = world.AddComponent<ecs::NameComponent>(entity);
 		nameComponent.m_Name = "Level: " + name.ToString();
 	}
 

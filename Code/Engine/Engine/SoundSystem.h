@@ -13,10 +13,14 @@ namespace sf
 	class Time;
 }
 
+namespace ecs
+{
+	struct NameComponent;
+}
+
 namespace eng
 {
 	class AssetManager;
-	struct NameComponent;
 	struct SoundComponent;
 
 	struct SoundRequest
@@ -28,8 +32,8 @@ namespace eng
 	{
 	public:
 		using World = ecs::WorldView<
+			ecs::NameComponent,
 			eng::AssetManager,
-			eng::NameComponent,
 			eng::SoundComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

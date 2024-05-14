@@ -1,8 +1,6 @@
 m_Guid = "1cad6729-cb77-48de-8a1c-dac76ac2772c"
 m_Name = "PointLight_01"
 
-[Name]
-
 [PointLight]
 m_Range = 500.0
 m_Colour = { X = 1.0, Y = 0.0, Z = 0.0 }

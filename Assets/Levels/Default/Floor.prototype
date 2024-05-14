@@ -1,9 +1,6 @@
 m_Guid = "0b0237ad-9ff5-439f-86b0-bd48d26c3dba"
 m_Name = "Floor"
 
-[Name]
-m_Name = "Floor"
-
 [Physics]
 m_Rigid = 1
 m_Shape = 0

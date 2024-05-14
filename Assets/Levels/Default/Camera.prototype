@@ -1,9 +1,6 @@
 m_Guid = "547bef26-99ee-41ea-99cf-83d1f39ee548"
 m_Name = "Camera"
 
-[Name]
-m_Name = "Camera"
-
 [Camera]
 
 [Transform]

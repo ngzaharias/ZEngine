@@ -6,10 +6,14 @@
 #include <ECS/Entity.h>
 #include <ECS/System.h>
 
+namespace ecs
+{
+	struct NameComponent;
+}
+
 namespace eng
 {
 	struct InputComponent;
-	struct NameComponent;
 	struct TransformComponent;
 }
 
@@ -37,9 +41,9 @@ namespace editor
 			editor::TransformAssetSaveComponent,
 			editor::TransformWindowComponent,
 			eng::TransformComponent,
+			const ecs::NameComponent,
 			const editor::TransformWindowRequestComponent,
-			const eng::InputComponent,
-			const eng::NameComponent>;
+			const eng::InputComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

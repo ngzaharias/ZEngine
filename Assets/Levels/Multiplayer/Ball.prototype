@@ -1,8 +1,6 @@
 m_Guid = "6d5eddf9-9a6e-40f5-851b-5a73e7e89c26"
 m_Name = "Ball"
 
-[Name]
-
 [Sprite]
 m_Size = { X = 50, Y = 50 }
 m_Sprite = "00a51d6c-15ca-4ea9-bdb8-b4b11edffa63"

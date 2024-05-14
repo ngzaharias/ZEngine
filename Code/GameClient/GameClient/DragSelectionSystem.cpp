@@ -5,6 +5,7 @@
 #include <Core/Ray.h>
 
 #include <ECS/EntityWorld.h>
+#include <ECS/NameComponent.h>
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
 
@@ -12,7 +13,6 @@
 #include <Engine/CameraHelpers.h>
 #include <Engine/LinesComponent.h>
 #include <Engine/InputComponent.h>
-#include <Engine/NameComponent.h>
 #include <Engine/PhysicsSceneComponent.h>
 #include <Engine/Screen.h>
 #include <Engine/TransformComponent.h>
@@ -99,7 +99,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 					if (inputComponent.IsKeyPressed(input::EMouse::Left))
 					{
 						const ecs::Entity dragEntity = world.CreateEntity();
-						auto& nameComponent = world.AddComponent<eng::NameComponent>(dragEntity);
+						auto& nameComponent = world.AddComponent<ecs::NameComponent>(dragEntity);
 						nameComponent.m_Name = "Drag Entity";
 
 						auto& dragComponent = world.AddComponent<drag::SelectionComponent>(dragEntity);

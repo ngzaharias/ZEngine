@@ -7,7 +7,7 @@ namespace gamestate
 	struct RequestComponent;
 }
 
-namespace eng
+namespace ecs
 {
 	struct NameComponent;
 }
@@ -22,7 +22,7 @@ namespace dbg
 	public:
 		using World = ecs::WorldView<
 			dbg::NetworkWindowComponent,
-			eng::NameComponent,
+			ecs::NameComponent,
 			gamestate::RequestComponent,
 			const dbg::NetworkWindowRequestComponent>;
 

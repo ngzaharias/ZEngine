@@ -5,7 +5,7 @@
 
 #include <ECS/Component.h>
 
-namespace eng
+namespace ecs
 {
 	struct NameComponent : public ecs::Component<NameComponent>
 	{

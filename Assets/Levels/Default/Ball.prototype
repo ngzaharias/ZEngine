@@ -1,9 +1,6 @@
 m_Guid = "6d5eddf9-9a6e-40f5-851b-5a73e7e89c26"
 m_Name = "Ball"
 
-[Name]
-m_Name = "Ball"
-
 [Physics]
 m_Rigid = 0
 eENABLE_CCD = true

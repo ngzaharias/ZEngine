@@ -6,13 +6,13 @@
 #include <Core/Random.h>
 
 #include <ECS/EntityWorld.h>
+#include <ECS/NameComponent.h>
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
 
 #include <SFML/Audio/SoundBuffer.hpp>
 
 #include "Engine/AssetManager.h"
-#include "Engine/NameComponent.h"
 #include "Engine/SoundAsset.h"
 #include "Engine/SoundComponent.h"
 #include "Engine/TransformComponent.h"
@@ -34,7 +34,7 @@ void eng::SoundSystem::Update(World& world, const GameTime& gameTime)
 
 		const ecs::Entity entity = world.CreateEntity();
 
-		auto& nameComponent = world.AddComponent<eng::NameComponent>(entity);
+		auto& nameComponent = world.AddComponent<ecs::NameComponent>(entity);
 		nameComponent.m_Name = request.m_Guid.ToString().c_str();
 
 		auto& soundComponent = world.AddComponent<eng::SoundComponent>(entity);

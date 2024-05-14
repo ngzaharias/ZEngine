@@ -6,6 +6,8 @@
 #include <Core/Map.h>
 #include <Core/Name.h>
 
+#include <ECS/Component.h>
+
 #include <Engine/PrototypeLoader.h>
 #include <Engine/TypeInfo.h>
 #include <Engine/Visitor.h>
@@ -22,6 +24,11 @@ namespace eng
 	class Path;
 	class Visitor;
 	struct Prototype;
+
+	struct PrototypeComponent : public ecs::Component<PrototypeComponent>
+	{
+		str::Guid m_Guid = {};
+	};
 
 	struct PrototypeEntry
 	{

@@ -1,9 +1,6 @@
 m_Guid = "e1a05691-3c6a-4aef-9f40-906c2596209e"
 m_Name = "Trigger"
 
-[Name]
-m_Name = "Trigger"
-
 [Physics]
 m_Rigid = 1
 m_Shape = 0

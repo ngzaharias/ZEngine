@@ -1,9 +1,6 @@
 m_Guid = "56719d84-388d-4aad-bf40-79af7b7ef085"
 m_Name = "Hero_01"
 
-[Name]
-m_Name = "Hero_01"
-
 [Flipbook]
 m_Size = { X = 64, Y = 64 }
 m_Flipbook = 'e13ef7be-e21c-4b70-b7b2-5e91283c7160'
