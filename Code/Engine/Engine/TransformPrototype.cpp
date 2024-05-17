@@ -8,9 +8,9 @@
 
 namespace
 {
-	const str::Name strTranslate = NAME("m_Translate");
-	const str::Name strRotate = NAME("m_Rotate");
-	const str::Name strScale = NAME("m_Scale");
+	const str::StringView strTranslate = "m_Translate";
+	const str::StringView strRotate = "m_Rotate";
+	const str::StringView strScale = "m_Scale";
 }
 
 void eng::TransformPrototypeLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const TransformPrototype& prototype) const
