@@ -17,6 +17,39 @@ namespace eng
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+
+eng::Visitor::Iterator::Iterator(Itr itr, Node** node)
+	: m_Itr(itr)
+	, m_Node(node)
+	, m_Parent(*node)
+{
+}
+
+eng::Visitor::Iterator::~Iterator()
+{
+	*m_Node = m_Parent;
+}
+
+auto eng::Visitor::Iterator::operator*() -> str::StringView
+{
+	*m_Node = &m_Itr->second;
+	return m_Itr->first.str();
+}
+
+auto eng::Visitor::Iterator::operator++() -> Iterator&
+{
+	m_Itr++;
+	return *this;
+}
+
+bool eng::Visitor::Iterator::operator!=(const Iterator& other) const
+{
+	return m_Itr != other.m_Itr;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 eng::Visitor::Visitor(Visitor&& value) noexcept
 	: m_Root(std::move(value.m_Root))
 	, m_Node(&m_Root)
@@ -100,12 +133,6 @@ bool eng::Visitor::LoadFromFile(const str::Path& filepath)
 	m_Mode = EMode::Read;
 	m_Root = std::move(result).table();
 	return true;
-}
-
-void eng::Visitor::JumpToNode(toml::Node& node)
-{
-	m_Node = &node;
-	m_Mode = EMode::Read;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -324,6 +351,18 @@ void eng::Visitor::Visit(const int32 index, str::String& value)
 	{
 		currentNode.push_back(value);
 	}
+}
+
+auto eng::Visitor::begin()->Iterator
+{
+	toml::Table* table = m_Node->as_table();
+	return Iterator(table->begin(), &m_Node);
+}
+
+auto eng::Visitor::end()->Iterator
+{
+	toml::Table* table = m_Node->as_table();
+	return Iterator(table->end(), &m_Node);
 }
 
 //////////////////////////////////////////////////////////////////////////

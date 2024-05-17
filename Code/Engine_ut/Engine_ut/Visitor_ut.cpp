@@ -1680,3 +1680,18 @@ TEST_CASE("eng::Visitor::Variant<bool, int32>")
 		CHECK(std::get<int32>(myVariant) == 3);
 	}
 }
+
+TEST_CASE("eng::Visitor::Iterator Range-based for loop")
+{
+	eng::Visitor visitor = str::StringView("First = {Bool = true}\nSecond = {Number = 1}");
+	visitor.SetMode(eng::Visitor::Read);
+
+	int32 index = 0;
+	Array<str::StringView> results = { "First", "Bool", "Second", "Number" };
+	for (const str::StringView& keyA : visitor)
+	{
+		CHECK(keyA == results[index++]);
+		for (const str::StringView& keyB : visitor)
+			CHECK(keyB == results[index++]);
+	}
+}
