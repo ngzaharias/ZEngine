@@ -15,7 +15,7 @@
 
 namespace
 {
-	constexpr const char* s_Title = "Level: Load";
+	constexpr const char* s_Title = "Level: Open";
 }
 
 void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
