@@ -17,7 +17,7 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Load Level", "Ctrl+O"))
+			if (ImGui::MenuItem("Open Level", "Ctrl+O"))
 				world.AddEventComponent<dbg::level::OpenRequestComponent>();
 			if (ImGui::MenuItem("Save Level", "Ctrl+S", nullptr, false))
 				world.AddEventComponent<dbg::level::SaveRequestComponent>();
