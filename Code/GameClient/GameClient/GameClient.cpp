@@ -30,7 +30,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 	// prototypes
 	{
 		auto& prototypeManager = dependencies.m_PrototypeManager;
-		prototypeManager.RegisterPrototype<hidden::ObjectPrototype, hidden::ObjectPrototypeLoader>(strHiddenObject);
+		prototypeManager.RegisterPrototype<hidden::ObjectPrototype, hidden::ObjectLoader>(strHiddenObject);
 	}
 
 	// resources
