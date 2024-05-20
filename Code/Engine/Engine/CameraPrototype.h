@@ -1,9 +1,7 @@
 #pragma once
 
 #include <Engine/CameraTypes.h>
-#include <Engine/Prototype.h>
 #include <Engine/PrototypeLoader.h>
-#include <Engine/TomlTypes.h>
 
 namespace ecs
 {
@@ -16,15 +14,15 @@ namespace eng
 {
 	class Visitor;
 
-	struct CameraPrototype final : public eng::Prototype
+	struct CameraPrototype final
 	{
 		camera::Projection m_Projection = camera::Perspective();
 	};
 
-	class CameraPrototypeLoader final : public eng::PrototypeLoader
+	class CameraLoader final : public eng::PrototypeLoader
 	{
 	public:
-		void Add(ecs::EntityWorld& world, const ecs::Entity& entity, const CameraPrototype& prototype) const;
-		void Load(CameraPrototype& prototype, eng::Visitor& visitor) const;
+		void Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::CameraPrototype& prototype) const;
+		void Load(eng::CameraPrototype& prototype, eng::Visitor& visitor) const;
 	};
 }

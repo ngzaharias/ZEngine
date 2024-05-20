@@ -3,7 +3,6 @@
 #include <Core/Variant.h>
 #include <Core/Vector.h>
 
-#include <Engine/Prototype.h>
 #include <Engine/PrototypeLoader.h>
 
 namespace ecs
@@ -14,6 +13,7 @@ namespace ecs
 
 namespace eng
 {
+	class AssetManager;
 	class PhysicsManager;
 	class Visitor;
 
@@ -48,21 +48,22 @@ namespace eng
 	using Shape = Variant<ShapeBox, ShapeSphere>;
 	using Rigidbody = Variant<RigidDynamic, RigidStatic>;
 
-	struct PhysicsPrototype final : public eng::Prototype
+	struct PhysicsPrototype final
 	{
 		Shape m_Shape = { };
 		Rigidbody m_Rigidbody = { };
 	};
 
-	class PhysicsPrototypeLoader final : public eng::PrototypeLoader
+	class PhysicsLoader final : public eng::PrototypeLoader
 	{
 	public:
-		PhysicsPrototypeLoader(eng::PhysicsManager& physicsManager);
+		PhysicsLoader(eng::AssetManager& assetManager, eng::PhysicsManager& physicsManager);
 
-		void Add(ecs::EntityWorld& world, const ecs::Entity& entity, const PhysicsPrototype& prototype) const;
-		void Load(PhysicsPrototype& prototype, eng::Visitor& visitor) const;
+		void Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::PhysicsPrototype& prototype) const;
+		void Load(eng::PhysicsPrototype& prototype, eng::Visitor& visitor) const;
 
 	private:
+		eng::AssetManager& m_AssetManager;
 		eng::PhysicsManager& m_PhysicsManager;
 	};
 }

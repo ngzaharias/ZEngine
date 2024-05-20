@@ -26,12 +26,19 @@ namespace dbg
 	struct EntityWindowRequestComponent;
 	struct FlipbookWindowRequestComponent;
 	struct ImGuiDemoRequestComponent;
-	struct LevelDialogRequestComponent;
 	struct NetworkWindowRequestComponent;
 	struct NodeGraphRequestComponent;
-	struct SaveLevelRequestComponent;
-	struct SaveLevelAsRequestComponent;
+}
 
+namespace dbg::level
+{
+	struct OpenRequestComponent;
+	struct SaveRequestComponent;
+	struct SaveAsRequestComponent;
+}
+
+namespace dbg
+{
 	class MenuBarSystem final : public ecs::System
 	{
 	public:
@@ -40,11 +47,11 @@ namespace dbg
 			dbg::EntityWindowRequestComponent,
 			dbg::FlipbookWindowRequestComponent,
 			dbg::ImGuiDemoRequestComponent,
-			dbg::LevelDialogRequestComponent,
+			dbg::level::OpenRequestComponent,
+			dbg::level::SaveRequestComponent,
+			dbg::level::SaveAsRequestComponent,
 			dbg::NetworkWindowRequestComponent,
 			dbg::NodeGraphRequestComponent,
-			dbg::SaveLevelRequestComponent,
-			dbg::SaveLevelAsRequestComponent,
 			editor::FlipbookWindowRequestComponent,
 			editor::SpriteWindowRequestComponent,
 			editor::TableWindowRequestComponent,

@@ -54,14 +54,15 @@ namespace
 	const str::StringView strLOCK_LINEAR_Z = "eLOCK_LINEAR_Z";
 }
 
-eng::PhysicsPrototypeLoader::PhysicsPrototypeLoader(eng::PhysicsManager& physicsManager)
-	: m_PhysicsManager(physicsManager) 
-{ 
+eng::PhysicsLoader::PhysicsLoader(eng::AssetManager& assetManager, eng::PhysicsManager& physicsManager)
+	: m_AssetManager(assetManager)
+	, m_PhysicsManager(physicsManager)
+{
 }
 
-void eng::PhysicsPrototypeLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const PhysicsPrototype& prototype) const
+void eng::PhysicsLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::PhysicsPrototype& prototype) const
 {
-	const auto* asset = m_AssetManager->LoadAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
+	const auto* asset = m_AssetManager.LoadAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
 
 	physx::PxPhysics& physics = m_PhysicsManager.GetPhysics();
 
@@ -140,7 +141,7 @@ void eng::PhysicsPrototypeLoader::Add(ecs::EntityWorld& world, const ecs::Entity
 	}
 }
 
-void eng::PhysicsPrototypeLoader::Load(PhysicsPrototype& prototype, eng::Visitor& visitor) const
+void eng::PhysicsLoader::Load(eng::PhysicsPrototype& prototype, eng::Visitor& visitor) const
 {
 	// #todo: array of shapes
 	// #todo: should become an asset ?

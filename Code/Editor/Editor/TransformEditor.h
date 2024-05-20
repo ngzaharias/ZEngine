@@ -13,7 +13,9 @@ namespace ecs
 
 namespace eng
 {
+	class PrototypeManager;
 	struct InputComponent;
+	struct PrototypeComponent;
 	struct TransformComponent;
 }
 
@@ -37,13 +39,15 @@ namespace editor
 	public:
 		using World = ecs::WorldView<
 			// managers
+			const eng::PrototypeManager,
 			// components
 			editor::TransformAssetSaveComponent,
 			editor::TransformWindowComponent,
 			eng::TransformComponent,
 			const ecs::NameComponent,
 			const editor::TransformWindowRequestComponent,
-			const eng::InputComponent>;
+			const eng::InputComponent,
+			const eng::PrototypeComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

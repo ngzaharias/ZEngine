@@ -6,24 +6,26 @@
 #include <ECS/EntityWorld.h>
 #include <ECS/NameComponent.h>
 
-#include "Engine/AssetManager.h"
-#include "Engine/Prototype.h"
 #include "Engine/PrototypeLoader.h"
-#include "Engine/TomlHelpers.h"
-#include "Engine/TypeInfo.h"
+#include "Engine/Visitor.h"
 
 namespace
 {
-	const str::Name strGuid = NAME("m_Guid");
-	const str::Name strName = NAME("m_Name");
+	const str::StringView strGuid = "m_Guid";
+	const str::StringView strName = "m_Name";
 }
 
-eng::PrototypeManager::PrototypeManager(eng::AssetManager& assetManager)
-	: m_AssetManager(assetManager)
+eng::PrototypeManager::PrototypeManager()
 {
 }
 
-bool eng::PrototypeManager::CreateEntity(ecs::EntityWorld& world, const ecs::Entity& entity, const str::Path& filepath)
+eng::PrototypeManager::~PrototypeManager()
+{
+	for (auto&& [key, value] : m_EntryMap)
+		delete value.m_Loader;
+}
+
+ecs::Entity eng::PrototypeManager::CreateEntity(ecs::EntityWorld& world, const str::Path& filepath)
 {
 	PROFILE_FUNCTION();
 
@@ -32,60 +34,30 @@ bool eng::PrototypeManager::CreateEntity(ecs::EntityWorld& world, const ecs::Ent
 
 	str::Guid guid;
 	visitor.Visit(strGuid, guid, {});
-	if (!guid.IsValid())
-		return false;
-
+	
 	str::Name name;
 	visitor.Visit(strName, name, {});
 
-	if (toml::Table* table = visitor.m_Root.as_table())
+	if (!guid.IsValid())
+		return ecs::Entity::Unassigned;
+
+	const ecs::Entity entity = world.CreateEntity();
+	for (str::StringView key : visitor)
 	{
-		for (auto&& [key, value] : *table)
-		{
-			const str::Name type = NAME(key.str());
-			if (!core::Contains(m_TypeMap, type))
-				continue;
+		const str::Name typeName = NAME(key);
+		if (!m_EntryMap.Contains(typeName))
+			continue;
 
-			const TypeId& typeId = m_TypeMap[type];
-			auto& entry = m_EntryMap[typeId];
-			auto& addFunc = entry.m_Add;
-			auto& loadFunc = entry.m_Load;
-			auto& newFunc = entry.m_New;
-
-			auto* loader = entry.m_Loader;
-			auto& cache = loader->m_Cache;
-
-			Prototype* prototype = cache[guid];
-			if (!prototype)
-			{
-				prototype = newFunc();
-				prototype->m_Guid = guid;
-				prototype->m_Name = name;
-				prototype->m_Path = filepath;
-				prototype->m_Type = entry.m_Type;
-
-				Visitor child;
-				child.JumpToNode(value);
-				loadFunc(prototype, loader, child);
-				cache[guid] = prototype;
-			}
-
-			addFunc(world, entity, prototype, loader);
-		}
+		const eng::PrototypeEntry& entry = m_EntryMap.Get(typeName);
+		entry.m_Create(visitor, world, entity, *entry.m_Loader);
 	}
 
-	{
-		auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
-		prototypeComponent.m_Guid = guid;
-	}
+	auto& nameComponent = world.AddComponent<ecs::NameComponent>(entity);
+	nameComponent.m_Name = name;
 
-	if (!name.IsEmpty())
-	{
-		auto& nameComponent = world.AddComponent<ecs::NameComponent>(entity);
-		nameComponent.m_Name = name;
-	}
+	auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
+	prototypeComponent.m_Guid = guid;
+	prototypeComponent.m_Path = filepath;
 
-	// #todo: add level component
-
-	return true;
+	return entity;
 }

@@ -3,12 +3,6 @@
 #include <ECS/Entity.h>
 #include <ECS/System.h>
 
-namespace str
-{
-	class Path;
-	class Name;
-}
-
 namespace ecs
 {
 	struct NameComponent;
@@ -17,13 +11,26 @@ namespace ecs
 namespace eng
 {
 	class PrototypeManager;
-	struct LevelDirectoryComponent;
-	struct LevelEntityComponent;
-	struct LevelLoadedComponent;
-	struct LevelLoadRequestComponent;
-	struct LevelUnloadRequestComponent;
+}
 
-	class LevelSystem final : public ecs::System
+namespace eng::level
+{
+	struct DirectoryComponent;
+	struct EntityComponent;
+	struct LoadedComponent;
+	struct LoadRequestComponent;
+	struct UnloadRequestComponent;
+}
+
+namespace str
+{
+	class Path;
+	class Name;
+}
+
+namespace eng::level
+{
+	class LoadSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
@@ -31,13 +38,13 @@ namespace eng
 			eng::PrototypeManager,
 			// components
 			ecs::NameComponent,
-			eng::LevelDirectoryComponent,
-			eng::LevelEntityComponent,
-			eng::LevelLoadedComponent,
-			eng::LevelLoadRequestComponent,
-			eng::LevelUnloadRequestComponent>;
+			eng::level::DirectoryComponent,
+			eng::level::EntityComponent,
+			eng::level::LoadedComponent,
+			eng::level::LoadRequestComponent,
+			eng::level::UnloadRequestComponent>;
 		
-		LevelSystem(ecs::EntityWorld& entityWorld);
+		LoadSystem(ecs::EntityWorld& entityWorld);
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

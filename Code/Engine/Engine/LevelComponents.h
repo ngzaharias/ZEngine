@@ -6,43 +6,43 @@
 
 #include <ECS/Component.h>
 
-namespace eng
+namespace eng::level
 {
 	/// \brief Contains every available level that can be loaded.
-	struct LevelDirectoryComponent : public ecs::SingletonComponent<LevelDirectoryComponent>
+	struct DirectoryComponent : public ecs::SingletonComponent<DirectoryComponent>
 	{
 		Map<str::Name, str::Path> m_Levels;
 	};
 
 	/// \brief Attached to entities that were loaded from a level.
-	struct LevelEntityComponent : public ecs::Component<LevelEntityComponent>
+	struct EntityComponent : public ecs::Component<EntityComponent>
 	{
-		LevelEntityComponent() = default;
-		LevelEntityComponent(const str::Name & name) : m_Name(name) { }
+		EntityComponent() = default;
+		EntityComponent(const str::Name & name) : m_Name(name) { }
 		str::Name m_Name = { };
 	};
 
 	/// \brief There exists one of these components for every level that is loaded.
-	struct LevelLoadedComponent : public ecs::Component<LevelLoadedComponent>
+	struct LoadedComponent : public ecs::Component<LoadedComponent>
 	{
-		LevelLoadedComponent() = default;
-		LevelLoadedComponent(const str::Name & name) : m_Name(name) { }
+		LoadedComponent() = default;
+		LoadedComponent(const str::Name & name) : m_Name(name) { }
 		str::Name m_Name = { };
 	};
 
 	/// \brief Used to request to load a specific level.
-	struct LevelLoadRequestComponent : public ecs::EventComponent<LevelLoadRequestComponent>
+	struct LoadRequestComponent : public ecs::EventComponent<LoadRequestComponent>
 	{
-		LevelLoadRequestComponent() = default;
-		LevelLoadRequestComponent(const str::Name& name) : m_Name(name) { }
+		LoadRequestComponent() = default;
+		LoadRequestComponent(const str::Name& name) : m_Name(name) { }
 		str::Name m_Name = { };
-	};
+	}; 
 
 	/// \brief Used to request to unload a specific level.
-	struct LevelUnloadRequestComponent : public ecs::EventComponent<LevelUnloadRequestComponent>
+	struct UnloadRequestComponent : public ecs::EventComponent<UnloadRequestComponent>
 	{
-		LevelUnloadRequestComponent() = default;
-		LevelUnloadRequestComponent(const str::Name & name) : m_Name(name) { }
+		UnloadRequestComponent() = default;
+		UnloadRequestComponent(const str::Name & name) : m_Name(name) { }
 		str::Name m_Name = { };
 	};
 }

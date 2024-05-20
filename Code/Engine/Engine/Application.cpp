@@ -68,7 +68,7 @@ eng::Application::Application()
 	: m_AssetManager()
 	, m_NetworkManager(m_ComponentSerializer)
 	, m_PhysicsManager()
-	, m_PrototypeManager(m_AssetManager)
+	, m_PrototypeManager()
 	, m_ComponentSerializer()
 	, m_Window(nullptr)
 {
@@ -156,17 +156,17 @@ void eng::Application::Register()
 
 	// prototypes
 	{
-		m_PrototypeManager.RegisterPrototype<eng::CameraPrototype, eng::CameraPrototypeLoader>(strCamera);
-		m_PrototypeManager.RegisterPrototype<eng::FlipbookPrototype, eng::FlipbookPrototypeLoader>(strFlipbook);
-		m_PrototypeManager.RegisterPrototype<eng::AmbientLightPrototype, eng::LightPrototypeLoader>(strAmbientLight);
-		m_PrototypeManager.RegisterPrototype<eng::DirectionalLightPrototype, eng::LightPrototypeLoader>(strDirectionalLight);
-		m_PrototypeManager.RegisterPrototype<eng::PhysicsPrototype, eng::PhysicsPrototypeLoader>(strPhysics, m_PhysicsManager);
-		m_PrototypeManager.RegisterPrototype<eng::PointLightPrototype, eng::LightPrototypeLoader>(strPointLight);
-		m_PrototypeManager.RegisterPrototype<eng::SpritePrototype, eng::SpritePrototypeLoader>(strSprite);
-		m_PrototypeManager.RegisterPrototype<eng::StaticMeshPrototype, eng::StaticMeshPrototypeLoader>(strStaticMesh);
-		m_PrototypeManager.RegisterPrototype<eng::TextPrototype, eng::TextPrototypeLoader>(strText);
-		m_PrototypeManager.RegisterPrototype<eng::TransformPrototype, eng::TransformPrototypeLoader>(strTransform);
-		m_PrototypeManager.RegisterPrototype<eng::VoxelChunkPrototype, eng::VoxelChunkPrototypeLoader>(strVoxelChunk);
+		m_PrototypeManager.RegisterPrototype<eng::CameraPrototype, eng::CameraLoader>(strCamera);
+		m_PrototypeManager.RegisterPrototype<eng::FlipbookPrototype, eng::FlipbookLoader>(strFlipbook);
+		m_PrototypeManager.RegisterPrototype<eng::AmbientLightPrototype, eng::LightLoader>(strAmbientLight);
+		m_PrototypeManager.RegisterPrototype<eng::DirectionalLightPrototype, eng::LightLoader>(strDirectionalLight);
+		m_PrototypeManager.RegisterPrototype<eng::PhysicsPrototype, eng::PhysicsLoader>(strPhysics, m_AssetManager, m_PhysicsManager);
+		m_PrototypeManager.RegisterPrototype<eng::PointLightPrototype, eng::LightLoader>(strPointLight);
+		m_PrototypeManager.RegisterPrototype<eng::SpritePrototype, eng::SpriteLoader>(strSprite);
+		m_PrototypeManager.RegisterPrototype<eng::StaticMeshPrototype, eng::StaticMeshLoader>(strStaticMesh);
+		m_PrototypeManager.RegisterPrototype<eng::TextPrototype, eng::TextLoader>(strText);
+		m_PrototypeManager.RegisterPrototype<eng::TransformPrototype, eng::TransformLoader>(strTransform);
+		m_PrototypeManager.RegisterPrototype<eng::VoxelChunkPrototype, eng::VoxelChunkLoader>(strVoxelChunk);
 	}
 }
 

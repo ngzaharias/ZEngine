@@ -146,11 +146,11 @@ void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::ComponentSerializer& serializer)
 {
 	entityWorld.RegisterComponent<eng::CameraComponent>();
-	entityWorld.RegisterComponent<eng::LevelDirectoryComponent>();
-	entityWorld.RegisterComponent<eng::LevelEntityComponent>();
-	entityWorld.RegisterComponent<eng::LevelLoadedComponent>();
-	entityWorld.RegisterComponent<eng::LevelLoadRequestComponent>();
-	entityWorld.RegisterComponent<eng::LevelUnloadRequestComponent>();
+	entityWorld.RegisterComponent<eng::level::DirectoryComponent>();
+	entityWorld.RegisterComponent<eng::level::EntityComponent>();
+	entityWorld.RegisterComponent<eng::level::LoadedComponent>();
+	entityWorld.RegisterComponent<eng::level::LoadRequestComponent>();
+	entityWorld.RegisterComponent<eng::level::UnloadRequestComponent>();
 	entityWorld.RegisterComponent<eng::PhysicsSceneComponent>();
 	entityWorld.RegisterComponent<eng::PrototypeComponent>();
 	entityWorld.RegisterComponent<eng::SpriteComponent>();

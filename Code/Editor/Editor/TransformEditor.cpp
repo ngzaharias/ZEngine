@@ -11,6 +11,7 @@
 
 #include <Engine/FileHelpers.h>
 #include <Engine/InputComponent.h>
+#include <Engine/PrototypeManager.h>
 #include <Engine/TransformComponent.h>
 #include <Engine/Visitor.h>
 
@@ -92,7 +93,7 @@ namespace
 	{
 		auto& windowComponent = world.GetComponent<editor::TransformWindowComponent>(entity);
 
-		using Query = ecs::query::Include<const eng::TransformComponent>;
+		using Query = ecs::query::Include<const eng::PrototypeComponent, const eng::TransformComponent>;
 		for (auto&& view : world.Query<Query>())
 		{
 			const char* name = ToName(world, view);
@@ -122,6 +123,8 @@ namespace
 		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
 		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
 
+		const auto& prototypeManager = world.GetResource<const eng::PrototypeManager>();
+
 		if (world.HasComponent<editor::TransformAssetSaveComponent>(entity))
 			world.RemoveComponent<editor::TransformAssetSaveComponent>(entity);
 
@@ -129,20 +132,26 @@ namespace
 		{
 			auto& windowComponent = world.GetComponent<editor::TransformWindowComponent>(entity);
 			const ecs::Entity selected = windowComponent.m_Selected;
-			if (world.HasComponent<eng::TransformComponent>(selected))
+
+			const bool hasPrototype = world.HasComponent<eng::PrototypeComponent>(selected);
+			const bool hasTransform = world.HasComponent<eng::TransformComponent>(selected);
+			if (hasPrototype && hasTransform)
 			{
+				const auto& prototypeComponent = world.GetComponent<const eng::PrototypeComponent>(selected);
 				const auto& transformComponent = world.GetComponent<const eng::TransformComponent>(selected);
-				Transform transform;
-				transform.m_Translate = transformComponent.m_Translate;
-				transform.m_Rotate = transformComponent.m_Rotate;
-				transform.m_Scale = transformComponent.m_Scale;
 
 				eng::SaveFileSettings settings;
 				settings.m_Filters = { "Prototypes (*.prototype)", "*.prototype" };
+				settings.m_Path = prototypeComponent.m_Path;
 
 				const str::Path filepath = eng::SaveFileDialog(settings);
 				if (!filepath.IsEmpty())
 				{
+					Transform transform;
+					transform.m_Translate = transformComponent.m_Translate;
+					transform.m_Rotate = transformComponent.m_Rotate;
+					transform.m_Scale = transformComponent.m_Scale;
+
 					eng::Visitor visitor;
 					visitor.LoadFromFile(filepath);
 					visitor.SetMode(eng::Visitor::Write);
