@@ -8,40 +8,40 @@
 
 namespace
 {
-	const str::Name strColour = NAME("m_Colour");
-	const str::Name strRange = NAME("m_Range");
+	const str::StringView strColour = "m_Colour";
+	const str::StringView strRange = "m_Range";
 }
 
-void eng::LightPrototypeLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const AmbientLightPrototype& prototype) const
+void eng::LightLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::AmbientLightPrototype& prototype) const
 {
 	auto& component = world.AddComponent<eng::LightAmbientComponent>(entity);
 	component.m_Colour = prototype.m_Colour;
 }
 
-void eng::LightPrototypeLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const DirectionalLightPrototype& prototype) const
+void eng::LightLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::DirectionalLightPrototype& prototype) const
 {
 	auto& component = world.AddComponent<eng::LightDirectionalComponent>(entity);
 	component.m_Colour = prototype.m_Colour;
 }
 
-void eng::LightPrototypeLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const PointLightPrototype& prototype) const
+void eng::LightLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::PointLightPrototype& prototype) const
 {
 	auto& component = world.AddComponent<eng::LightPointComponent>(entity);
 	component.m_Range = prototype.m_Range;
 	component.m_Colour = prototype.m_Colour;
 }
 
-void eng::LightPrototypeLoader::Load(eng::AmbientLightPrototype& prototype, eng::Visitor& visitor) const
+void eng::LightLoader::Load(eng::AmbientLightPrototype& prototype, eng::Visitor& visitor) const
 {
 	visitor.Visit(strColour, prototype.m_Colour, Vector3f::One);
 }
 
-void eng::LightPrototypeLoader::Load(eng::DirectionalLightPrototype& prototype, eng::Visitor& visitor) const
+void eng::LightLoader::Load(eng::DirectionalLightPrototype& prototype, eng::Visitor& visitor) const
 {
 	visitor.Visit(strColour, prototype.m_Colour, Vector3f::One);
 }
 
-void eng::LightPrototypeLoader::Load(eng::PointLightPrototype& prototype, eng::Visitor& visitor) const
+void eng::LightLoader::Load(eng::PointLightPrototype& prototype, eng::Visitor& visitor) const
 {
 	visitor.Visit(strRange, prototype.m_Range, 500.f);
 	visitor.Visit(strColour, prototype.m_Colour, Vector3f::One);

@@ -9,7 +9,7 @@
 #include "Engine/FlipbookSystem.h"
 #include "Engine/GLFW/Window.h"
 #include "Engine/InputSystem.h"
-#include "Engine/LevelSystem.h"
+#include "Engine/LevelLoadSystem.h"
 #include "Engine/NetworkSystem.h"
 #include "Engine/PhysicsSystem.h"
 #include "Engine/RenderSystem.h"
@@ -44,6 +44,6 @@ void eng::RegisterServerSystems(ecs::EntityWorld& entityWorld, const eng::Server
 
 void eng::RegisterSharedSystems(ecs::EntityWorld& entityWorld, const eng::SharedDependencies& dependencies)
 {
-	entityWorld.RegisterSystem<eng::LevelSystem>(entityWorld);
+	entityWorld.RegisterSystem<eng::level::LoadSystem>(entityWorld);
 	entityWorld.RegisterSystem<eng::PhysicsSystem>();
 }

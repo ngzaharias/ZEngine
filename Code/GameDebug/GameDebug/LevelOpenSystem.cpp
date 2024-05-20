@@ -1,5 +1,5 @@
 #include "GameDebugPCH.h"
-#include "GameDebug/OpenLevelSystem.h"
+#include "GameDebug/LevelOpenSystem.h"
 
 #include <Core/Math.h>
 #include <Core/Vector.h>
@@ -15,10 +15,10 @@
 
 namespace
 {
-	constexpr const char* s_Title = "Level: Open";
+	constexpr const char* s_Title = "Level: Load";
 }
 
-void dbg::OpenLevelSystem::Update(World& world, const GameTime& gameTime)
+void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -31,7 +31,7 @@ void dbg::OpenLevelSystem::Update(World& world, const GameTime& gameTime)
 	constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
 	constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::LevelDialogRequestComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::level::OpenRequestComponent>>())
 		ImGui::OpenPopup(s_Title, s_PopupFlags);
 
 	bool isOpen = true;
@@ -49,14 +49,14 @@ void dbg::OpenLevelSystem::Update(World& world, const GameTime& gameTime)
 			const float width = ImGui::GetContentRegionAvail().x / count;
 			const float height = 64.f;
 
-			const auto& directoryComponent = world.GetSingleton<eng::LevelDirectoryComponent>();
+			const auto& directoryComponent = world.GetSingleton<eng::level::DirectoryComponent>();
 			for (auto&& [name, path] : directoryComponent.m_Levels)
 			{
 				ImGui::TableNextColumn();
 
 				if (ImGui::Button(name.ToChar(), { width, 0 }))
 				{
-					world.AddEventComponent<eng::LevelLoadRequestComponent>(name);
+					world.AddEventComponent<eng::level::LoadRequestComponent>(name);
 					ImGui::CloseCurrentPopup();
 				}
 

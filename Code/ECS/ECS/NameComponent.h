@@ -9,7 +9,7 @@ namespace ecs
 {
 	struct NameComponent : public ecs::Component<NameComponent>
 	{
-		NameComponent() : m_Name() { }
+		NameComponent() = default;
 		NameComponent(const str::StringView& value) : m_Name(value) { }
 
 		str::String m_Name = { };

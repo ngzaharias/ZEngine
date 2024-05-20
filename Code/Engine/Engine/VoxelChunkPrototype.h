@@ -2,7 +2,6 @@
 
 #include <Core/Array.h>
 
-#include <Engine/Prototype.h>
 #include <Engine/PrototypeLoader.h>
 #include <Engine/VoxelTypes.h>
 
@@ -16,15 +15,15 @@ namespace eng
 {
 	class Visitor;
 
-	struct VoxelChunkPrototype final : public eng::Prototype
+	struct VoxelChunkPrototype final
 	{
 		Array<voxel::Block> m_Data;
 	};
 
-	class VoxelChunkPrototypeLoader final : public eng::PrototypeLoader
+	class VoxelChunkLoader final : public eng::PrototypeLoader
 	{
 	public:
-		void Add(ecs::EntityWorld& world, const ecs::Entity& entity, const VoxelChunkPrototype& prototype) const;
-		void Load(VoxelChunkPrototype& prototype, eng::Visitor& visitor) const;
+		void Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::VoxelChunkPrototype& prototype) const;
+		void Load(eng::VoxelChunkPrototype& prototype, eng::Visitor& visitor) const;
 	};
 }

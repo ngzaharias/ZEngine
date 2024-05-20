@@ -5,7 +5,11 @@
 namespace eng
 {
 	class NetworkManager;
-	struct LevelLoadRequestComponent;
+}
+
+namespace eng::level
+{
+	struct LoadRequestComponent;
 }
 
 namespace gui::modal
@@ -35,7 +39,7 @@ namespace gamestate
 	public:
 		using World = ecs::WorldView<
 			eng::NetworkManager,
-			eng::LevelLoadRequestComponent,
+			eng::level::LoadRequestComponent,
 			gui::modal::MessageComponent,
 			gamestate::NetworkJoinComponent,
 			gamestate::StateFinishedComponent,

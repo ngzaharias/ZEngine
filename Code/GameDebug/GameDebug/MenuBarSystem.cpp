@@ -17,12 +17,12 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Open Level", "Ctrl+O"))
-				world.AddEventComponent<dbg::LevelDialogRequestComponent>();
+			if (ImGui::MenuItem("Load Level", "Ctrl+O"))
+				world.AddEventComponent<dbg::level::OpenRequestComponent>();
 			if (ImGui::MenuItem("Save Level", "Ctrl+S", nullptr, false))
-				world.AddEventComponent<dbg::SaveLevelRequestComponent>();
+				world.AddEventComponent<dbg::level::SaveRequestComponent>();
 			if (ImGui::MenuItem("Save Level As...", "Ctrl+S+A", nullptr, false))
-				world.AddEventComponent<dbg::SaveLevelAsRequestComponent>();
+				world.AddEventComponent<dbg::level::SaveAsRequestComponent>();
 
 			ImGui::EndMenu();
 		}

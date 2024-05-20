@@ -8,12 +8,12 @@
 
 namespace
 {
-	const str::Name strData = NAME("m_Data");
-	const str::Name strFlags = NAME("m_Flags");
-	const str::Name strType = NAME("m_Type");
+	const str::StringView strData = "m_Data";
+	const str::StringView strFlags = "m_Flags";
+	const str::StringView strType = "m_Type";
 }
 
-void eng::VoxelChunkPrototypeLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const VoxelChunkPrototype& prototype) const
+void eng::VoxelChunkLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const VoxelChunkPrototype& prototype) const
 {
 	PROFILE_FUNCTION();
 
@@ -21,7 +21,7 @@ void eng::VoxelChunkPrototypeLoader::Add(ecs::EntityWorld& world, const ecs::Ent
 	component.m_Data = prototype.m_Data;
 }
 
-void eng::VoxelChunkPrototypeLoader::Load(VoxelChunkPrototype& prototype, eng::Visitor& visitor) const
+void eng::VoxelChunkLoader::Load(VoxelChunkPrototype& prototype, eng::Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 

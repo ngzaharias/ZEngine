@@ -52,6 +52,25 @@ namespace eng
 		};
 
 	public:
+		struct Iterator
+		{
+			using Itr = toml::Table::iterator;
+			using Node = toml::Node;
+
+			Iterator(Itr itr, Node** node);
+			~Iterator();
+
+			auto operator*()->str::StringView;
+			auto operator++()->Iterator&;
+			bool operator!=(const Iterator& rhs) const;
+
+		private:
+			Itr m_Itr;
+			Node** m_Node;
+			Node* m_Parent;
+		};
+
+	public:
 		Visitor() noexcept = default;
 		Visitor(Visitor&& rhs) noexcept;
 		Visitor(const str::StringView& value);
@@ -80,8 +99,6 @@ namespace eng
 		/// \brief Read the contents of a file to the visitor.
 		/// Also switches the visitor to read mode.
 		bool LoadFromFile(const str::Path& path);
-
-		void JumpToNode(toml::Node& node);
 
 		// Visit as Map
 		template<typename Key, typename Value>
@@ -153,6 +170,10 @@ namespace eng
 
 		template<typename ...Types>
 		void VisitVariant(Variant<Types...>& value);
+
+	public:
+		auto begin()->Iterator;
+		auto end()->Iterator;
 
 	public:
 		toml::Table m_Root = { };

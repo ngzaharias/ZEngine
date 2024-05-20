@@ -8,12 +8,12 @@
 
 namespace
 {
-	const str::Name strTranslate = NAME("m_Translate");
-	const str::Name strRotate = NAME("m_Rotate");
-	const str::Name strScale = NAME("m_Scale");
+	const str::StringView strTranslate = "m_Translate";
+	const str::StringView strRotate = "m_Rotate";
+	const str::StringView strScale = "m_Scale";
 }
 
-void eng::TransformPrototypeLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const TransformPrototype& prototype) const
+void eng::TransformLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::TransformPrototype& prototype) const
 {
 	auto& component = world.AddComponent<eng::TransformComponent>(entity);
 	component.m_Translate = prototype.m_Translate;
@@ -21,7 +21,7 @@ void eng::TransformPrototypeLoader::Add(ecs::EntityWorld& world, const ecs::Enti
 	component.m_Scale = prototype.m_Scale;
 }
 
-void eng::TransformPrototypeLoader::Load(eng::TransformPrototype& prototype, eng::Visitor& visitor) const
+void eng::TransformLoader::Load(eng::TransformPrototype& prototype, eng::Visitor& visitor) const
 {
 	visitor.Visit(strTranslate, prototype.m_Translate, Vector3f::Zero);
 	visitor.Visit(strRotate, prototype.m_Rotate, Rotator::Zero);

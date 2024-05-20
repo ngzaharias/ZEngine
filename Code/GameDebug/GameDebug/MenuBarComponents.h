@@ -8,12 +8,16 @@ namespace dbg
 	struct ClientWindowRequestComponent : ecs::EventComponent<ClientWindowRequestComponent> { };
 	struct EntityWindowRequestComponent : ecs::EventComponent<EntityWindowRequestComponent> { };
 	struct ImGuiDemoRequestComponent : ecs::EventComponent<ImGuiDemoRequestComponent> { };
-	struct LevelDialogRequestComponent : ecs::EventComponent<LevelDialogRequestComponent> { };
 	struct NetworkWindowRequestComponent : ecs::EventComponent<NetworkWindowRequestComponent> { };
 	struct NodeGraphRequestComponent : ecs::EventComponent<NodeGraphRequestComponent> { };
-	struct SaveLevelRequestComponent : ecs::EventComponent<SaveLevelRequestComponent> { };
-	struct SaveLevelAsRequestComponent : ecs::EventComponent<SaveLevelAsRequestComponent> { };
 	struct ServerWindowRequestComponent : ecs::EventComponent<ServerWindowRequestComponent> { };
+}
+
+namespace dbg::level
+{
+	struct OpenRequestComponent : ecs::EventComponent<OpenRequestComponent> { };
+	struct SaveRequestComponent : ecs::EventComponent<SaveRequestComponent> { };
+	struct SaveAsRequestComponent : ecs::EventComponent<SaveAsRequestComponent> { };
 }
 
 namespace editor
