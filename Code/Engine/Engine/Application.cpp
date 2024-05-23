@@ -21,7 +21,7 @@
 #include "Engine/RegisterSystems.h"
 #include "Engine/Screen.h"
 #include "Engine/ShaderAsset.h"
-#include "Engine/SoundAsset.h"
+#include "Engine/SoundAssets.h"
 #include "Engine/SpriteAsset.h"
 #include "Engine/SpritePrototype.h"
 #include "Engine/StaticMeshAsset.h"
@@ -53,7 +53,9 @@ namespace
 	const str::Name strPhysicsMaterial = NAME("PhysicsMaterial");
 	const str::Name strPointLight = NAME("PointLight");
 	const str::Name strShader = NAME("Shader");
-	const str::Name strSound = NAME("Sound");
+	const str::Name strSoundRandom = NAME("SoundRandom");
+	const str::Name strSoundSequence = NAME("SoundSequence");
+	const str::Name strSoundSingle = NAME("SoundSingle");
 	const str::Name strSprite = NAME("Sprite");
 	const str::Name strStaticMesh = NAME("StaticMesh");
 	const str::Name strTemplate = NAME("Template");
@@ -147,7 +149,9 @@ void eng::Application::Register()
 		m_AssetManager.RegisterAsset<eng::FontAsset, eng::FontAssetLoader>(strFont);
 		m_AssetManager.RegisterAsset<eng::PhysicsMaterialAsset, eng::PhysicsMaterialAssetLoader>(strPhysicsMaterial, m_PhysicsManager);
 		m_AssetManager.RegisterAsset<eng::ShaderAsset, eng::ShaderAssetLoader>(strShader);
-		m_AssetManager.RegisterAsset<eng::SoundAsset, eng::SoundAssetLoader>(strSound);
+		m_AssetManager.RegisterAsset<eng::sound::RandomAsset, eng::sound::AssetLoader>(strSoundRandom);
+		m_AssetManager.RegisterAsset<eng::sound::SequenceAsset, eng::sound::AssetLoader>(strSoundSequence);
+		m_AssetManager.RegisterAsset<eng::sound::SingleAsset, eng::sound::AssetLoader>(strSoundSingle);
 		m_AssetManager.RegisterAsset<eng::SpriteAsset, eng::SpriteAssetLoader>(strSprite);
 		m_AssetManager.RegisterAsset<eng::StaticMeshAsset, eng::StaticMeshAssetLoader>(strStaticMesh);
 		m_AssetManager.RegisterAsset<eng::Texture2DAsset, eng::Texture2DAssetLoader>(strTexture2D);

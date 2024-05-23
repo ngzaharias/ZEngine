@@ -14,25 +14,17 @@ namespace eng
 
 namespace eng::sound
 {
-	struct RandomContainer
-	{
-	};
-
-	struct SequenceContainer
-	{
-	};
-
 	struct RandomAsset : public eng::Asset
 	{
-		Array<str::Guid> m_Sounds = {};
+		Array<str::Guid> m_Handles = {};
 	};
 
 	struct SequenceAsset : public eng::Asset
 	{
-		Array<str::Guid> m_Sounds = {};
+		Array<str::Guid> m_Handles = {};
 	};
 
-	struct SourceAsset : public eng::Asset
+	struct SingleAsset : public eng::Asset
 	{
 		sf::SoundBuffer m_SoundBuffer = { };
 		str::Path m_SourceFile = { };
@@ -43,6 +35,6 @@ namespace eng::sound
 	public:
 		bool Load(eng::sound::RandomAsset& asset, eng::Visitor& visitor) const;
 		bool Load(eng::sound::SequenceAsset& asset, eng::Visitor& visitor) const;
-		bool Load(eng::sound::SourceAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::sound::SingleAsset& asset, eng::Visitor& visitor) const;
 	};
 }
