@@ -23,6 +23,7 @@
 #include "Engine/ReplicationComponents.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
+#include "Engine/SoundComponents.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshComponent.h"
 #include "Engine/TextComponent.h"
@@ -128,6 +129,14 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::LinesComponent>();
 	entityWorld.RegisterComponent<eng::RigidDynamicComponent>();
 	entityWorld.RegisterComponent<eng::RigidStaticComponent>();
+	entityWorld.RegisterComponent<eng::sound::ObjectComponent>();
+	entityWorld.RegisterComponent<eng::sound::RandomComponent>();
+	entityWorld.RegisterComponent<eng::sound::RandomBufferComponent>();
+	entityWorld.RegisterComponent<eng::sound::RandomRequestComponent>();
+	entityWorld.RegisterComponent<eng::sound::SequenceComponent>();
+	entityWorld.RegisterComponent<eng::sound::SequenceBufferComponent>();
+	entityWorld.RegisterComponent<eng::sound::SequenceRequestComponent>();
+	entityWorld.RegisterComponent<eng::sound::SingleRequestComponent>();
 	entityWorld.RegisterComponent<eng::StaticMeshComponent>();
 	entityWorld.RegisterComponent<eng::TextComponent>();
 	entityWorld.RegisterComponent<network::RequestComponent>();

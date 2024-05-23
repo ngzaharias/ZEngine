@@ -36,7 +36,6 @@ project "Engine"
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
-		"%{wks.location}/../Code/Engine/Engine/",
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Network/",
 	}
