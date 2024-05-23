@@ -17,6 +17,7 @@
 #include <Engine/PhysicsSceneComponent.h>
 #include <Engine/RigidStaticComponent.h>
 #include <Engine/Screen.h>
+#include <Engine/SoundComponents.h>
 #include <Engine/SpriteComponent.h>
 #include <Engine/TransformComponent.h>
 
@@ -30,6 +31,8 @@ namespace
 	constexpr Vector4f s_ColourM = Vector4f(1.f, 0.f, 1.f, 1.f);
 	constexpr Vector4f s_ColourW = Vector4f(1.f, 1.f, 1.f, 1.f);
 
+	const str::Guid strSoundSequence = GUID("2bde153c-851a-429c-8895-7b6b0fd482fb");
+
 	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::CameraComponent& camera, const eng::TransformComponent& transform)
 	{
 		if (std::holds_alternative<camera::Orthographic>(camera.m_Projection))
@@ -40,6 +43,16 @@ namespace
 
 		return (mousePosition - transform.m_Translate).Normalized();
 	}
+}
+
+void hidden::ObjectSystem::Initialise(World& world)
+{
+	m_SoundEntity = world.CreateEntity();
+}
+
+void hidden::ObjectSystem::Shutdown(World& world)
+{
+	world.DestroyEntity(m_SoundEntity);
 }
 
 void hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
@@ -125,9 +138,15 @@ void hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 						spriteComponent.m_Sprite = hiddenComponent.m_Sprite;
 
 						world.RemoveComponent<eng::RigidStaticComponent>(selectedEntity);
+
+						auto& soundComponent = world.AddComponent<eng::sound::SequenceRequestComponent>(m_SoundEntity);
+						soundComponent.m_Handle = strSoundSequence;
 					}
 				}
 			}
 		}
 	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::sound::SequenceRequestComponent>>())
+		world.RemoveComponent<eng::sound::SequenceRequestComponent>(m_SoundEntity);
 }

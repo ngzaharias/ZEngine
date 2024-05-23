@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ECS/Entity.h>
 #include <ECS/System.h>
 
 namespace eng
@@ -13,6 +14,11 @@ namespace eng
 	struct TransformComponent;
 }
 
+namespace eng::sound
+{
+	struct SequenceRequestComponent;
+}
+
 namespace hidden
 {
 	struct ObjectComponent;
@@ -23,6 +29,7 @@ namespace hidden
 		using World = ecs::WorldView<
 			eng::LinesComponent,
 			eng::RigidStaticComponent,
+			eng::sound::SequenceRequestComponent,
 			eng::SpriteComponent,
 			const eng::CameraComponent,
 			const eng::InputComponent,
@@ -30,6 +37,12 @@ namespace hidden
 			const eng::TransformComponent,
 			const hidden::ObjectComponent>;
 
+		void Initialise(World& world);
+		void Shutdown(World& world);
+
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		ecs::Entity m_SoundEntity = {};
 	};
 }
