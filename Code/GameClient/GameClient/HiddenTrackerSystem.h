@@ -3,9 +3,9 @@
 #include <ECS/Entity.h>
 #include <ECS/System.h>
 
-namespace eng::level
+namespace gui::modal
 {
-	struct UnloadRequestComponent;
+	struct MessageComponent;
 }
 
 namespace hidden
@@ -20,7 +20,7 @@ namespace hidden
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::level::UnloadRequestComponent,
+			gui::modal::MessageComponent,
 			const hidden::ObjectComponent,
 			const hidden::RevealedComponent>;
 

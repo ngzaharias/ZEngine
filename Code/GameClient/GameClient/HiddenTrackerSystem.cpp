@@ -5,29 +5,29 @@
 #include <ECS/QueryTypes.h>
 #include <ECS/WorldView.h>
 
-#include <Engine/LevelComponents.h>
-
 #include "GameClient/HiddenObjectComponents.h"
+#include "GameClient/ModalComponents.h"
 
 void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	using Query = ecs::query
+	using RevealedQuery = ecs::query
 		::Added<const hidden::RevealedComponent>
 		::Include<const hidden::ObjectComponent>;
 
-	for (const ecs::Entity& entity : world.Query<Query>())
+	for (const ecs::Entity& entity : world.Query<RevealedQuery>())
 	{
-		using Remaining = ecs::query
+		using RemainingQuery = ecs::query
 			::Include<const hidden::ObjectComponent>
 			::Exclude<const hidden::RevealedComponent>;
-		const auto& query = world.Query<Remaining>();
+		const auto& query = world.Query<RemainingQuery>();
 		if (query.IsEmpty())
 		{
 			// #todo: load next level
-			auto& requestComponent = world.AddEventComponent<eng::level::UnloadRequestComponent>();
-			requestComponent.m_Name = NAME("Page01");
+			const ecs::Entity messageEntity = world.CreateEntity();
+			auto& component = world.AddComponent<gui::modal::MessageComponent>(messageEntity);
+			component.m_Message = "Level Complete!";
 		}
 	}
 }
