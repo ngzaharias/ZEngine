@@ -1,5 +1,5 @@
 #include "GameClientPCH.h"
-#include "GameClient/HiddenObjectSystem.h"
+#include "GameClient/HiddenRevealSystem.h"
 
 #include <Core/AABB.h>
 #include <Core/CollisionMath.h>
@@ -45,17 +45,17 @@ namespace
 	}
 }
 
-void hidden::ObjectSystem::Initialise(World& world)
+void hidden::RevealSystem::Initialise(World& world)
 {
 	m_SoundEntity = world.CreateEntity();
 }
 
-void hidden::ObjectSystem::Shutdown(World& world)
+void hidden::RevealSystem::Shutdown(World& world)
 {
 	world.DestroyEntity(m_SoundEntity);
 }
 
-void hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
+void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -130,23 +130,11 @@ void hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 						linesComponent.AddSphere(hitPosition, s_Sphere, s_ColourM);
 					}
 
-					const bool isRevealed = world.HasComponent<eng::SpriteComponent>(selectedEntity);
+					const bool isRevealed = world.HasComponent<hidden::RevealedComponent>(selectedEntity);
 					if (!isRevealed && inputComponent.IsKeyPressed(input::EMouse::Left))
-					{
-						auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(selectedEntity);
-						spriteComponent.m_Size = hiddenComponent.m_Size;
-						spriteComponent.m_Sprite = hiddenComponent.m_Sprite;
-
-						world.RemoveComponent<eng::RigidStaticComponent>(selectedEntity);
-
-						auto& soundComponent = world.AddComponent<eng::sound::SequenceRequestComponent>(m_SoundEntity);
-						soundComponent.m_Handle = strSoundSequence;
-					}
+						world.AddComponent<hidden::RevealedComponent>(selectedEntity);
 				}
 			}
 		}
 	}
-
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::sound::SequenceRequestComponent>>())
-		world.RemoveComponent<eng::sound::SequenceRequestComponent>(m_SoundEntity);
 }

@@ -5,13 +5,7 @@
 
 namespace eng
 {
-	struct CameraComponent;
-	struct InputComponent;
-	struct LinesComponent;
-	struct PhysicsSceneComponent;
-	struct RigidStaticComponent;
 	struct SpriteComponent;
-	struct TransformComponent;
 }
 
 namespace eng::sound
@@ -22,20 +16,18 @@ namespace eng::sound
 namespace hidden
 {
 	struct ObjectComponent;
+	struct RevealedComponent;
+}
 
-	class ObjectSystem final : public ecs::System
+namespace hidden
+{
+	class SoundSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::LinesComponent,
-			eng::RigidStaticComponent,
 			eng::sound::SequenceRequestComponent,
-			eng::SpriteComponent,
-			const eng::CameraComponent,
-			const eng::InputComponent,
-			const eng::PhysicsSceneComponent,
-			const eng::TransformComponent,
-			const hidden::ObjectComponent>;
+			const hidden::ObjectComponent,
+			const hidden::RevealedComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);
