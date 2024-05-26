@@ -83,7 +83,7 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 
 			for (const ecs::Entity& loadedEntity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 			{
-				const auto& loadedComponent = world.GetComponent<const eng::level::LoadedComponent>(requestEntity);
+				const auto& loadedComponent = world.GetComponent<const eng::level::LoadedComponent>(loadedEntity);
 				if (requestComponent.m_Name == loadedComponent.m_Name)
 					UnloadLevel(world, loadedComponent.m_Name);
 			}
