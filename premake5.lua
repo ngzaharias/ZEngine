@@ -76,6 +76,7 @@ workspace "ZEngine"
 		include "Code/ECS_ut/premake5.lua"
 		include "Code/Engine_ut/premake5.lua"
 		include "Code/GameClient_ut/premake5.lua"
+		include "Code/Lua_ut/premake5.lua"
 	group ""
 
 project "ZERO_CHECK"
