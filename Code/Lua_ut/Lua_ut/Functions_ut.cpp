@@ -29,7 +29,7 @@ TEST_CASE("lua::CppToLua")
 	)";
 
 	lua_State* L = luaL_newstate();
-	luaL_dostring(L, LUA_FILE);
+	luaL_loadstring(L, LUA_FILE);
 	lua_getglobal(L, "MyLuaFunction");
 
 	if (lua_isfunction(L, -1))
@@ -61,7 +61,7 @@ TEST_CASE("lua::LuaToCpp")
 	lua_pushcfunction(L, MyCppFunction);
 	lua_setglobal(L, "MyCppFunction");
 
-	luaL_dostring(L, LUA_FILE);
+	luaL_loadstring(L, LUA_FILE);
 	lua_getglobal(L, "MyLuaFunction");
 
 	if (lua_isfunction(L, -1))
