@@ -99,7 +99,9 @@ void eng::level::LoadSystem::LoadLevel(World& world, const str::Name& levelName,
 
 	{
 		const ecs::Entity levelEntity = world.CreateEntity();
-		world.AddComponent<eng::level::LoadedComponent>(levelEntity, levelName);
+		auto& levelComponent = world.AddComponent<eng::level::LoadedComponent>(levelEntity);
+		levelComponent.m_Name = levelName;
+		levelComponent.m_Path = directory;
 
 		auto& nameComponent = world.AddComponent<ecs::NameComponent>(levelEntity);
 		nameComponent.m_Name = "Level: " + levelName.ToString();

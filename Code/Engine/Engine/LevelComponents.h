@@ -19,15 +19,14 @@ namespace eng::level
 	{
 		EntityComponent() = default;
 		EntityComponent(const str::Name & name) : m_Name(name) { }
-		str::Name m_Name = { };
+		str::Name m_Name = {};
 	};
 
 	/// \brief There exists one of these components for every level that is loaded.
 	struct LoadedComponent : public ecs::Component<LoadedComponent>
 	{
-		LoadedComponent() = default;
-		LoadedComponent(const str::Name & name) : m_Name(name) { }
-		str::Name m_Name = { };
+		str::Name m_Name = {};
+		str::Path m_Path = {};
 	};
 
 	/// \brief Used to request to load a specific level.
@@ -35,7 +34,7 @@ namespace eng::level
 	{
 		LoadRequestComponent() = default;
 		LoadRequestComponent(const str::Name& name) : m_Name(name) { }
-		str::Name m_Name = { };
+		str::Name m_Name = {};
 	}; 
 
 	/// \brief Used to request to unload a specific level.
@@ -43,6 +42,6 @@ namespace eng::level
 	{
 		UnloadRequestComponent() = default;
 		UnloadRequestComponent(const str::Name & name) : m_Name(name) { }
-		str::Name m_Name = { };
+		str::Name m_Name = {};
 	};
 }
