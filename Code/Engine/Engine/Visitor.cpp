@@ -100,8 +100,12 @@ eng::Visitor& eng::Visitor::operator=(const str::StringView& rhs) noexcept
 
 eng::Visitor::operator str::String() noexcept
 {
+	//std::stringstream stream;
+	//stream << m_Root;
+	//return stream.str();
+
 	std::stringstream stream;
-	stream << m_Root;
+	m_Node->visit([&stream](const auto& n) { stream << n; });
 	return stream.str();
 }
 
