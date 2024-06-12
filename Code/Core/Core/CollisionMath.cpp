@@ -169,22 +169,29 @@ bool math::IsOverlapping(const Line2f& a, const Rect2f& b)
 	return false;
 }
 
+// https://stackoverflow.com/questions/14307158/how-do-you-check-for-intersection-between-a-line-segment-and-a-line-ray-emanatin
 bool math::IsOverlapping(const Line2f& a, const Segment2f& b)
 {
-	const Vector2f v1 = a.m_PointB - a.m_PointA;
-	const Vector2f v2 = math::Perpendicular(b.m_PointB - b.m_PointA);
+	const Vector2f v1 = b.m_PointB - b.m_PointA;
+	const Vector2f v2 = math::Perpendicular(a.m_PointB - a.m_PointA);
 	const float d0 = math::Dot(v1, v2);
 	if (d0 == 0.f)
 		return false;
 
-	const Vector2f w = b.m_PointA - a.m_PointA;
-	const float d1 = math::Cross(v1, w) / d0;
-	const float d2 = math::Dot(w, v2) / d0;
-	return d1 >= 0.f && d2 >= 0.f;
+	const Vector2f w = a.m_PointA - b.m_PointA;
+	const float t1 = math::Cross(v1, w) / d0;
+	const float t2 = math::Dot(w, v2) / d0;
+	return t1 >= 0.f && (t2 >= 0.f && t2 <= 1.f);
 }
 
 bool math::IsOverlapping(const Line2f& a, const Triangle2f& b)
 {
+	if (math::IsOverlapping(a, Segment2f(b.m_PointA, b.m_PointB)))
+		return true;
+	if (math::IsOverlapping(a, Segment2f(b.m_PointB, b.m_PointC)))
+		return true;
+	if (math::IsOverlapping(a, Segment2f(b.m_PointC, b.m_PointA)))
+		return true;
 	return false;
 }
 
@@ -243,11 +250,17 @@ bool math::IsOverlapping(const Ray2f& a, const Segment2f& b)
 	const Vector2f w = a.m_Position - b.m_PointA;
 	const float t1 = math::Cross(v1, w) / d0;
 	const float t2 = math::Dot(w, v2) / d0;
-	return t1 >= 0.0 && (t2 >= 0.0 && t2 <= 1.0);
+	return t1 >= 0.f && (t2 >= 0.f && t2 <= 1.f);
 }
 
 bool math::IsOverlapping(const Ray2f& a, const Triangle2f& b)
 {
+	if (math::IsOverlapping(a, Segment2f(b.m_PointA, b.m_PointB)))
+		return true;
+	if (math::IsOverlapping(a, Segment2f(b.m_PointB, b.m_PointC)))
+		return true;
+	if (math::IsOverlapping(a, Segment2f(b.m_PointC, b.m_PointA)))
+		return true;
 	return false;
 }
 
@@ -330,7 +343,15 @@ bool math::IsOverlapping(const Segment2f& a, const Segment2f& b)
 
 bool math::IsOverlapping(const Segment2f& a, const Triangle2f& b)
 {
-	return false;
+	if (math::IsOverlapping(a, Segment2f(b.m_PointA, b.m_PointB)))
+		return true;
+	if (math::IsOverlapping(a, Segment2f(b.m_PointB, b.m_PointC)))
+		return true;
+	if (math::IsOverlapping(a, Segment2f(b.m_PointC, b.m_PointA)))
+		return true;
+
+	// if either of the points are inside the triangle we are overlapping
+	return math::IsOverlapping(a.m_PointA, b);
 }
 
 bool math::IsOverlapping(const Triangle2f& a, const Circle2f& b)
@@ -387,7 +408,7 @@ bool math::IsOverlapping(const Vector2f& a, const Rect2f& b)
 
 bool math::IsOverlapping(const Vector2f& a, const Triangle2f& b)
 {
-	return false;
+	return math::IsOverlapping(b, a);
 }
 
 /*

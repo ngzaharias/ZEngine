@@ -11,6 +11,7 @@
 #include <Core/Rect.h>
 #include <Core/Segment.h>
 #include <Core/Sphere.h>
+#include <Core/Triangle.h>
 
 TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects with points either side of the Plane at Origin.")
 {
@@ -727,6 +728,112 @@ TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment overlap when 
 	b.m_PointA = Vector2f(0.f, 0.f);
 	b.m_PointB = Vector2f(0.f, 1.f);
 	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment don't overlap when both points of the Line are above the Segment.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-1.f, +5.f);
+	a.m_PointB = Vector2f(+1.f, +5.f);
+	b.m_PointA = Vector2f(-1.f, -1.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment don't overlap when both points of the Line are above the Segment, but Line direction is swapped.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(+1.f, +5.f);
+	a.m_PointB = Vector2f(-1.f, +5.f);
+	b.m_PointA = Vector2f(-1.f, -1.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment don't overlap when both points of the Line are above the Segment, but segment direction is swapped.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-1.f, +5.f);
+	a.m_PointB = Vector2f(+1.f, +5.f);
+	b.m_PointA = Vector2f(0.f, +1.f);
+	b.m_PointB = Vector2f(-1.f, -1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment don't overlap when both points of the Line are below the Segment.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(-1.f, -5.f);
+	a.m_PointB = Vector2f(+1.f, -5.f);
+	b.m_PointA = Vector2f(-1.f, -1.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Triangle2f). Line and Triangle overlap when Line points are either side of the Triangle.")
+{
+	Line2f a; Triangle2f b;
+	a.m_PointA = Vector2f(-10.f, 0.f);
+	a.m_PointB = Vector2f(+10.f, 0.f);
+	b.m_PointA = Vector2f(-1.f, -1.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	b.m_PointC = Vector2f(+1.f, -1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Triangle2f). Line and Triangle overlap when first point of the Line is inside the Triangle.")
+{
+	Line2f a; Triangle2f b;
+	a.m_PointA = Vector2f(0.f, 0.f);
+	a.m_PointB = Vector2f(+10.f, 0.f);
+	b.m_PointA = Vector2f(-1.f, -1.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	b.m_PointC = Vector2f(+1.f, -1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Triangle2f). Line and Triangle overlap when second point of the Line is inside the Triangle.")
+{
+	Line2f a; Triangle2f b;
+	a.m_PointA = Vector2f(-10.f, 0.f);
+	a.m_PointB = Vector2f(0.f, 0.f);
+	b.m_PointA = Vector2f(-1.f, -1.f);
+	b.m_PointB = Vector2f( 0.f, +1.f);
+	b.m_PointC = Vector2f(+1.f, -1.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Triangle2f). Line and Triangle overlap when both points of the Line are inside the Triangle.")
+{
+	Line2f a; Triangle2f b;
+	a.m_PointA = Vector2f(-1.f, -1.f);
+	a.m_PointB = Vector2f(+1.f, -1.f);
+	b.m_PointA = Vector2f(-2.f, -2.f);
+	b.m_PointB = Vector2f(0.f, +2.f);
+	b.m_PointC = Vector2f(+2.f, -2.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Triangle2f). Line and Triangle don't overlap when both points of the Line are above the Triangle.")
+{
+	Line2f a; Triangle2f b;
+	a.m_PointA = Vector2f(-1.f, +5.f);
+	a.m_PointB = Vector2f(+1.f, +5.f);
+	b.m_PointA = Vector2f(-1.f, -1.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	b.m_PointC = Vector2f(+1.f, -1.f);
+	CHECK(!math::IsOverlapping(a, b));
+}
+
+TEST_CASE("math::IsOverlapping(Line2f Triangle2f). Line and Triangle don't overlap when both points of the Line are below the Triangle.")
+{
+	Line2f a; Triangle2f b;
+	a.m_PointA = Vector2f(-1.f, -5.f);
+	a.m_PointB = Vector2f(+1.f, -5.f);
+	b.m_PointA = Vector2f(-1.f, -1.f);
+	b.m_PointB = Vector2f(0.f, +1.f);
+	b.m_PointC = Vector2f(+1.f, -1.f);
+	CHECK(!math::IsOverlapping(a, b));
 }
 
 TEST_CASE("math::IsOverlapping(Ray2f Circle2f).")
