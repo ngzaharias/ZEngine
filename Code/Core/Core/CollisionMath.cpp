@@ -181,7 +181,7 @@ bool math::IsOverlapping(const Line2f& a, const Segment2f& b)
 	const Vector2f w = a.m_PointA - b.m_PointA;
 	const float t1 = math::Cross(v1, w) / d0;
 	const float t2 = math::Dot(w, v2) / d0;
-	return t1 >= 0.f && (t2 >= 0.f && t2 <= 1.f);
+	return t2 >= 0.f && t2 <= 1.f;
 }
 
 bool math::IsOverlapping(const Line2f& a, const Triangle2f& b)

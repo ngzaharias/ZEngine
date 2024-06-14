@@ -770,6 +770,16 @@ TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment don't overlap
 	CHECK(!math::IsOverlapping(a, b));
 }
 
+TEST_CASE("math::IsOverlapping(Line2f Segment2f). Line and Segment overlap when line direction is opposite.")
+{
+	Line2f a; Segment2f b;
+	a.m_PointA = Vector2f(0.f, +1.f);
+	a.m_PointB = Vector2f(0.f, -1.f);
+	b.m_PointA = Vector2f(-100.f, +500.f);
+	b.m_PointB = Vector2f(+100.f, +500.f);
+	CHECK(math::IsOverlapping(a, b));
+}
+
 TEST_CASE("math::IsOverlapping(Line2f Triangle2f). Line and Triangle overlap when Line points are either side of the Triangle.")
 {
 	Line2f a; Triangle2f b;
