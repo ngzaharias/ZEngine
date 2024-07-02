@@ -22,48 +22,72 @@ namespace
 	{
 		return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x);
 	}
+
+	Vector2f GetMinMax_SAT(const Triangle2f& triangle, const Vector2f& axis)
+	{
+		const float d1 = math::Dot(axis, triangle.m_PointA);
+		const float d2 = math::Dot(axis, triangle.m_PointB);
+		const float d3 = math::Dot(axis, triangle.m_PointC);
+
+		const float min = std::min({ d1, d2, d3 });
+		const float max = std::max({ d1, d2, d3 });
+
+		return Vector2f(min, max);
+	}
+
+	bool IsOverlapping_SAT(const Triangle2f& a, const Triangle2f& b, const Vector2f& axis)
+	{
+		const Vector2f minMaxA = ::GetMinMax_SAT(a, axis);
+		const Vector2f minMaxB = ::GetMinMax_SAT(b, axis);
+
+		const float testA = minMaxA.x - minMaxB.y;
+		const float testB = minMaxB.x - minMaxA.y;
+		if (testA > 0.f || testB > 0.f)
+			return false;
+		return true;
+	}
 }
 
-bool math::Intersection(const Line3f& line, const Plane3f& plane, Vector3f& out_IntersectPos)
+bool math::Intersection(const Line3f& a, const Plane3f& b, Vector3f& out_IntersectPos)
 {
-	const Vector3f v = line.m_PointB - line.m_PointA;
-	const float d0 = math::Dot(v, plane.m_Normal);
+	const Vector3f v = a.m_PointB - a.m_PointA;
+	const float d0 = math::Dot(v, b.m_Normal);
 	if (d0 == 0.f)
 		return false;
 
-	const Vector3f w = line.m_PointA - plane.m_Point;
-	const float d1 = math::Dot(w, plane.m_Normal);
+	const Vector3f w = a.m_PointA - b.m_Point;
+	const float d1 = math::Dot(w, b.m_Normal);
 	const float d2 = d1 / d0;
-	out_IntersectPos = line.m_PointA - v * d2;
+	out_IntersectPos = a.m_PointA - v * d2;
 	return true;
 }
 
 // https://github.com/BSVino/MathForGameDevelopers/blob/line-plane-intersection/math/collision.cpp
-bool math::Intersection(const Ray3f& ray, const Plane3f& plane, Vector3f& out_IntersectPos)
+bool math::Intersection(const Ray3f& a, const Plane3f& b, Vector3f& out_IntersectPos)
 {
-	const float d0 = math::Dot(ray.m_Direction, plane.m_Normal);
+	const float d0 = math::Dot(a.m_Direction, b.m_Normal);
 	if (d0 == 0.f)
 		return false;
 
-	const Vector3f w = plane.m_Point - ray.m_Position;
-	const float d1 = math::Dot(w, plane.m_Normal);
+	const Vector3f w = b.m_Point - a.m_Position;
+	const float d1 = math::Dot(w, b.m_Normal);
 	const float d2 = d1 / d0;
-	out_IntersectPos = ray.m_Position + ray.m_Direction * d2;
+	out_IntersectPos = a.m_Position + a.m_Direction * d2;
 	return d2 >= 0.f;
 }
 
 // https://github.com/BSVino/MathForGameDevelopers/blob/line-plane-intersection/math/collision.cpp
-bool math::Intersection(const Segment3f& segment, const Plane3f& plane, Vector3f& out_IntersectPos)
+bool math::Intersection(const Segment3f& a, const Plane3f& b, Vector3f& out_IntersectPos)
 {
-	const Vector3f v = segment.m_PointB - segment.m_PointA;
-	const float d0 = math::Dot(v, plane.m_Normal);
+	const Vector3f v = a.m_PointB - a.m_PointA;
+	const float d0 = math::Dot(v, b.m_Normal);
 	if (d0 == 0.f)
 		return false;
 
-	const Vector3f w = plane.m_Point - segment.m_PointA;
-	const float d1 = math::Dot(w, plane.m_Normal);
+	const Vector3f w = b.m_Point - a.m_PointA;
+	const float d1 = math::Dot(w, b.m_Normal);
 	const float d2 = d1 / d0;
-	out_IntersectPos = segment.m_PointA + v * d2;
+	out_IntersectPos = a.m_PointA + v * d2;
 	return d2 >= 0.f && d2 <= 1.f;
 }
 
@@ -119,6 +143,14 @@ bool math::IsOverlapping(const Circle2f& a, const Segment2f& b)
 
 bool math::IsOverlapping(const Circle2f& a, const Triangle2f& b)
 {
+	if (math::IsOverlapping(a.m_Position, b))
+		return true;
+	if (math::IsOverlapping(a, Segment2f(b.m_PointA, b.m_PointB)))
+		return true;
+	if (math::IsOverlapping(a, Segment2f(b.m_PointB, b.m_PointC)))
+		return true;
+	if (math::IsOverlapping(a, Segment2f(b.m_PointC, b.m_PointA)))
+		return true;
 	return false;
 }
 
@@ -174,14 +206,13 @@ bool math::IsOverlapping(const Line2f& a, const Segment2f& b)
 {
 	const Vector2f v1 = b.m_PointB - b.m_PointA;
 	const Vector2f v2 = math::Perpendicular(a.m_PointB - a.m_PointA);
-	const float d0 = math::Dot(v1, v2);
-	if (d0 == 0.f)
+	const float det = math::Dot(v1, v2);
+	if (det == 0.f)
 		return false;
 
 	const Vector2f w = a.m_PointA - b.m_PointA;
-	const float t1 = math::Cross(v1, w) / d0;
-	const float t2 = math::Dot(w, v2) / d0;
-	return t2 >= 0.f && t2 <= 1.f;
+	const float t = math::Dot(w, v2) / det;
+	return t >= 0.f && t <= 1.f;
 }
 
 bool math::IsOverlapping(const Line2f& a, const Triangle2f& b)
@@ -243,13 +274,13 @@ bool math::IsOverlapping(const Ray2f& a, const Segment2f& b)
 {
 	const Vector2f v1 = b.m_PointB - b.m_PointA;
 	const Vector2f v2 = math::Perpendicular(a.m_Direction);
-	const float d0 = math::Dot(v1, v2);
-	if (d0 == 0.f)
+	const float det = math::Dot(v1, v2);
+	if (det == 0.f)
 		return false;
 
 	const Vector2f w = a.m_Position - b.m_PointA;
-	const float t1 = math::Cross(v1, w) / d0;
-	const float t2 = math::Dot(w, v2) / d0;
+	const float t1 = math::Cross(v1, w) / det;
+	const float t2 = math::Dot(w, v2) / det;
 	return t1 >= 0.f && (t2 >= 0.f && t2 <= 1.f);
 }
 
@@ -379,9 +410,42 @@ bool math::IsOverlapping(const Triangle2f& a, const Segment2f& b)
 	return math::IsOverlapping(b, a);
 }
 
+// https://code.tutsplus.com/collision-detection-using-the-separating-axis-theorem--gamedev-169t
 bool math::IsOverlapping(const Triangle2f& a, const Triangle2f& b)
 {
-	return false;
+	// Triangle A
+	const Vector2f tangentA = a.m_PointA - a.m_PointB;
+	const Vector2f normalA = math::Perpendicular(tangentA);
+	if (!::IsOverlapping_SAT(a, b, normalA))
+		return false;
+
+	const Vector2f tangentB = a.m_PointB - a.m_PointC;
+	const Vector2f normalB = math::Perpendicular(tangentB);
+	if (!::IsOverlapping_SAT(a, b, normalB))
+		return false;
+
+	const Vector2f tangentC = a.m_PointC - a.m_PointA;
+	const Vector2f normalC = math::Perpendicular(tangentC);
+	if (!::IsOverlapping_SAT(a, b, normalC))
+		return false;
+
+	// Triangle B
+	const Vector2f tangentD = b.m_PointA - b.m_PointB;
+	const Vector2f normalD = math::Perpendicular(tangentD);
+	if (!::IsOverlapping_SAT(a, b, normalD))
+		return false;
+
+	const Vector2f tangentE = b.m_PointB - b.m_PointC;
+	const Vector2f normalE = math::Perpendicular(tangentE);
+	if (!::IsOverlapping_SAT(a, b, normalE))
+		return false;
+
+	const Vector2f tangentF = b.m_PointC - b.m_PointA;
+	const Vector2f normalF = math::Perpendicular(tangentF);
+	if (!::IsOverlapping_SAT(a, b, normalF))
+		return false;
+
+	return true;
 }
 
 // https://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
