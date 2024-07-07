@@ -1,15 +1,14 @@
 #include "EditorPCH.h"
 #include "Editor/FlipbookEditor.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/AssetManager.h>
-#include <Engine/FileHelpers.h>
-#include <Engine/Texture2DAsset.h>
-
-#include <GameDebug/MenuBarComponents.h>
+#include "Core/Rect.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/AssetManager.h"
+#include "Engine/FileHelpers.h"
+#include "Engine/Texture2DAsset.h"
+#include "GameDebug/MenuBarComponents.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -260,7 +259,7 @@ namespace
 			max.x = math::Remap(max.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
 			max.y = math::Remap(max.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
 
-			imgui::AddRect(min, max, Vector4f(1.0f, 1.0f, 0.4f, 1.0f));
+			imgui::AddRect({ min, max }, Vector4f(1.0f, 1.0f, 0.4f, 1.0f));
 		}
 
 		// draw frames to be extracted
@@ -276,7 +275,7 @@ namespace
 				max.x = math::Remap(max.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
 				max.y = math::Remap(max.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
 
-				imgui::AddRect(min, max, Vector4f(1.0f, 0.4f, 0.0f, 1.0f));
+				imgui::AddRect({ min, max }, Vector4f(1.0f, 0.4f, 0.0f, 1.0f));
 			}
 		}
 	};

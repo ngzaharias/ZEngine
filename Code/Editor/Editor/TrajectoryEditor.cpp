@@ -164,7 +164,7 @@ namespace
 			}
 		}
 
-		const ImGuiGraphFlags flags = ImGuiGraphFlags_Grid | ImGuiGraphFlags_TextX | ImGuiGraphFlags_TextY;
+		const ImGuiPlotFlags flags = ImGuiPlotFlags_Grid | ImGuiPlotFlags_TextX | ImGuiPlotFlags_TextY;
 		const Vector2f size = ImGui::GetContentRegionAvail();
 		imgui::PlotLines("##plotter", values.GetData(), values.GetCount(), size, flags);
 	}
