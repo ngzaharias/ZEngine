@@ -11,6 +11,7 @@ namespace dbg
 	struct NetworkWindowRequestComponent : ecs::EventComponent<NetworkWindowRequestComponent> { };
 	struct NodeGraphRequestComponent : ecs::EventComponent<NodeGraphRequestComponent> { };
 	struct ServerWindowRequestComponent : ecs::EventComponent<ServerWindowRequestComponent> { };
+	struct ShapeWindowRequestComponent : ecs::EventComponent<ShapeWindowRequestComponent> { };
 }
 
 namespace dbg::level

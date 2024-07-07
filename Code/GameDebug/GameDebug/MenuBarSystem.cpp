@@ -59,6 +59,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<dbg::NodeGraphRequestComponent>();
 			if (ImGui::MenuItem("Render: Frame Buffer"))
 				world.AddEventComponent<dbg::BufferWindowRequestComponent>();
+			if (ImGui::MenuItem("Shape Tester"))
+				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
 
 			ImGui::EndMenu();
 		}
