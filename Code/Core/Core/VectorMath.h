@@ -10,6 +10,11 @@
 
 namespace math
 {
+	/// \brief Returns a vector made up of the largest components of the two vectors.
+	inline constexpr Vector2f Abs(const Vector2f& value) noexcept;
+	/// \brief Returns a vector made up of the largest components of the two vectors.
+	inline constexpr Vector3f Abs(const Vector3f& value) noexcept;
+
 	/// \brief Calculates the unsigned angle between two vectors in radians.
 	inline float Angle(const Vector2f& a, const Vector2f& b) noexcept;
 	/// \brief Calculates the unsigned angle between two vectors in radians.

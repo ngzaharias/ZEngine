@@ -7,6 +7,16 @@
 #define VECTOR_ASSERT(...)
 #endif
 
+inline constexpr Vector2f math::Abs(const Vector2f& value) noexcept
+{
+	return Vector2f(std::abs(value.x), std::abs(value.y));
+}
+
+inline constexpr Vector3f math::Abs(const Vector3f& value) noexcept
+{
+	return Vector3f(std::abs(value.x), std::abs(value.y), std::abs(value.z));
+}
+
 inline float math::Angle(const Vector2f& a, const Vector2f& b) noexcept
 {
 	return std::acos(math::Dot(a, b));

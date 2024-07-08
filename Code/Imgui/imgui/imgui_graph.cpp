@@ -13,6 +13,7 @@
 #include <Core/Rect.h>
 #include <Core/Segment.h>
 #include <Core/Triangle.h>
+#include <Core/VectorMath.h>
 
 namespace
 {
@@ -65,6 +66,13 @@ namespace
 
 		ImGuiStorage* storage = ImGui::GetStateStorage();
 		return dragIdx == storage->GetInt(ID_DragIdx);
+	}
+
+	bool IsOverlappingControl(const ImVec2& mousePos, const ImVec2& controlPos)
+	{
+		const ImVec2 vector = controlPos - mousePos;
+		const float distanceSqr = vector.x * vector.x + vector.y * vector.y;
+		return distanceSqr < selectRadiusSqr;
 	}
 
 	void AssignDrag(int shapeIdx)
@@ -294,20 +302,22 @@ void imgui::GraphShape(Circle2f& value, int segments, float thickness)
 	const ImU32 colourB = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
 	const ImRect inner_bb = GetInner();
 	const ImRect range_bb = GetRange();
-	const Vector2f mousePos = ToWorld(ImGui::GetIO().MousePos, inner_bb, range_bb);
+	const ImVec2 mousePos = ImGui::GetIO().MousePos;
 
-	const bool isHovered = math::IsOverlapping(mousePos, value);
+	ImVec2 localPos = ToLocal(value.m_Position, inner_bb, range_bb);
+	const bool isHovered = IsOverlappingControl(mousePos, localPos);
 	if (isHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 		AssignDrag(dragIdx);
 
-	ImVec2 localPos = ToLocal(value.m_Position, inner_bb, range_bb);
 	if (IsDragging(ImGuiMouseButton_Left, dragIdx))
-		localPos += ConsumeDrag(ImGuiMouseButton_Left);
+		localPos = mousePos;
 
 	float radius = value.m_Radius * scale;
-	const ImU32 colour = !isHovered ? colourA : colourB;
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
-	drawList->AddCircle(localPos, radius, colour, segments, thickness);
+	drawList->AddCircle(localPos, radius, colourA, segments, thickness);
+
+	const ImU32 colour = !isHovered ? colourA : colourB;
+	drawList->AddCircle(localPos, controlRadius, colour);
 
 	value.m_Position = ToWorld(localPos, inner_bb, range_bb);
 	value.m_Radius = radius / scale;
@@ -322,31 +332,33 @@ void imgui::GraphShape(Line2f& value, float thickness)
 	const ImU32 colourB = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
 	const ImRect inner_bb = GetInner();
 	const ImRect range_bb = GetRange();
-	const Vector2f mousePos = ToWorld(ImGui::GetIO().MousePos, inner_bb, range_bb);
-
-	const bool isHoveredA = false;// math::IsOverlapping(mousePos, value);
-	if (isHoveredA && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-		AssignDrag(dragIdx1);
-
-	const bool isHoveredB = false; // math::IsOverlapping(mousePos, value);
-	if (isHoveredB && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-		AssignDrag(dragIdx2);
+	const ImVec2 mousePos = ImGui::GetIO().MousePos;
 
 	ImVec2 p1 = ToLocal(value.m_PointA, inner_bb, range_bb);
-	if (IsDragging(ImGuiMouseButton_Left, dragIdx1))
-		p1 += ConsumeDrag(ImGuiMouseButton_Left);
+	const bool isHovered1 = IsOverlappingControl(mousePos, p1);
+	if (isHovered1 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx1);
 
 	ImVec2 p2 = ToLocal(value.m_PointB, inner_bb, range_bb);
+	const bool isHovered2 = IsOverlappingControl(mousePos, p2);
+	if (isHovered2 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx2);
+
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx1))
+		p1 = mousePos;
 	if (IsDragging(ImGuiMouseButton_Left, dragIdx2))
-		p1 += ConsumeDrag(ImGuiMouseButton_Left);
+		p2 = mousePos;
 
 	ImVec2 d0 = p2 - p1;
 	ImVec2 p3 = p1 + d0 * 9999.f;
 	ImVec2 p4 = p2 - d0 * 9999.f;
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
 	drawList->AddLine(p3, p4, colourA, thickness);
-	drawList->AddCircleFilled(p1, controlRadius, colourA);
-	drawList->AddCircleFilled(p2, controlRadius, colourA);
+
+	const ImU32 colour1 = !isHovered1 ? colourA : colourB;
+	const ImU32 colour2 = !isHovered2 ? colourA : colourB;
+	drawList->AddCircle(p1, controlRadius, colour1);
+	drawList->AddCircle(p2, controlRadius, colour2);
 
 	value.m_PointA = ToWorld(p1, inner_bb, range_bb);
 	value.m_PointB = ToWorld(p2, inner_bb, range_bb);
@@ -361,29 +373,36 @@ void imgui::GraphShape(Ray2f& value, float thickness)
 	const ImU32 colourB = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
 	const ImRect inner_bb = GetInner();
 	const ImRect range_bb = GetRange();
-	const Vector2f mousePos = ToWorld(ImGui::GetIO().MousePos, inner_bb, range_bb);
-
-	const bool isHoveredA = false;// math::IsOverlapping(mousePos, value);
-	if (isHoveredA && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-		AssignDrag(dragIdx1);
-
-	const bool isHoveredB = false; // math::IsOverlapping(mousePos, value);
-	if (isHoveredB && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-		AssignDrag(dragIdx2);
+	const ImVec2 mousePos = ImGui::GetIO().MousePos;
 
 	ImVec2 p1 = ToLocal(value.m_Position, inner_bb, range_bb);
-	if (IsDragging(ImGuiMouseButton_Left, dragIdx1))
-		p1 += ConsumeDrag(ImGuiMouseButton_Left);
+	const bool isHovered1 = IsOverlappingControl(mousePos, p1);
+	if (isHovered1 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx1);
 
 	ImVec2 d1 = { value.m_Direction.x, -value.m_Direction.y };
-	if (IsDragging(ImGuiMouseButton_Left, dragIdx2))
-		d1 += ConsumeDrag(ImGuiMouseButton_Left);
+	ImVec2 p2 = p1 + d1 * scaleMultiplier;
+	const bool isHovered2 = IsOverlappingControl(mousePos, p2);
+	if (isHovered2 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx2);
 
-	ImVec2 p2 = p1 + d1 * 9999.f;
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx1))
+		p1 = mousePos;
+
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx2))
+	{
+		p2 = mousePos;
+		d1 = p2 - p1;
+	}
+
+	ImVec2 p3 = p1 + d1 * 9999.f;
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
-	drawList->AddLine(p1, p2, colourA, thickness);
-	drawList->AddCircleFilled(p1, controlRadius, colourA);
-	drawList->AddCircleFilled(p1 + d1 * scaleMultiplier, controlRadius, colourA);
+	drawList->AddLine(p1, p3, colourA, thickness);
+
+	const ImU32 colour1 = !isHovered1 ? colourA : colourB;
+	const ImU32 colour2 = !isHovered2 ? colourA : colourB;
+	drawList->AddCircle(p1, controlRadius, colour1);
+	drawList->AddCircle(p2, controlRadius, colour2);
 
 	value.m_Position = ToWorld(p1, inner_bb, range_bb);
 	value.m_Direction = Vector2f(d1.x, -d1.y);
@@ -393,49 +412,76 @@ void imgui::GraphShape(Ray2f& value, float thickness)
 void imgui::GraphShape(Rect2f& value, float rounding, float thickness, ImDrawFlags flags)
 {
 	const float scale = GetScale();
-	const int dragIdx = GenerateDragIndex();
+	const int dragIdx1 = GenerateDragIndex();
+	const int dragIdx2 = GenerateDragIndex();
 	const ImU32 colourA = ImGui::GetColorU32(ImGuiCol_PlotLines);
 	const ImU32 colourB = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
 	const ImRect inner_bb = GetInner();
 	const ImRect range_bb = GetRange();
-	const Vector2f mousePos = ToWorld(ImGui::GetIO().MousePos, inner_bb, range_bb);
-
-	const bool isHovered = math::IsOverlapping(mousePos, value);
-	if (isHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-		AssignDrag(dragIdx);
+	const ImVec2 mousePos = ImGui::GetIO().MousePos;
 
 	ImVec2 min = ToLocal(value.m_Min, inner_bb, range_bb);
-	ImVec2 max = ToLocal(value.m_Max, inner_bb, range_bb);
-	if (IsDragging(ImGuiMouseButton_Left, dragIdx))
-	{
-		const ImVec2 delta = ConsumeDrag(ImGuiMouseButton_Left);
-		min += delta;
-		max += delta;
-	}
+	const bool isHovered1 = IsOverlappingControl(mousePos, min);
+	if (isHovered1 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx1);
 
-	const ImU32 colour = !isHovered ? colourA : colourB;
+	ImVec2 max = ToLocal(value.m_Max, inner_bb, range_bb);
+	const bool isHovered2 = IsOverlappingControl(mousePos, max);
+	if (isHovered2 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx2);
+
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx1))
+		min = mousePos;
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx2))
+		max = mousePos;
+
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
-	drawList->AddRect(min, max, colour, rounding, flags, thickness);
+	drawList->AddRect(min, max, colourA, rounding, flags, thickness);
+
+	const ImU32 colour1 = !isHovered1 ? colourA : colourB;
+	const ImU32 colour2 = !isHovered2 ? colourA : colourB;
+	drawList->AddCircle(min, controlRadius, colour1);
+	drawList->AddCircle(max, controlRadius, colour2);
 
 	value.m_Min = ToWorld(min, inner_bb, range_bb);
 	value.m_Max = ToWorld(max, inner_bb, range_bb);
+	value.m_Min = math::Min(value.m_Min, value.m_Max);
+	value.m_Max = math::Max(value.m_Min, value.m_Max);
 }
 
 void imgui::GraphShape(Segment2f& value, float thickness)
 {
-	const ImU32 col_base = ImGui::GetColorU32(ImGuiCol_PlotLines);
-	const ImU32 col_hove = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
+	const float scale = GetScale();
+	const int dragIdx1 = GenerateDragIndex();
+	const int dragIdx2 = GenerateDragIndex();
+	const ImU32 colourA = ImGui::GetColorU32(ImGuiCol_PlotLines);
+	const ImU32 colourB = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
+	const ImRect inner_bb = GetInner();
+	const ImRect range_bb = GetRange();
+	const ImVec2 mousePos = ImGui::GetIO().MousePos;
 
-	ImGuiStorage* storage = ImGui::GetStateStorage();
-	storage->SetInt(ID_ShapeIdx, storage->GetInt(ID_ShapeIdx) + 1);
-
-	ImRect inner_bb = GetInner();
-	ImRect range_bb = GetRange();
 	ImVec2 p1 = ToLocal(value.m_PointA, inner_bb, range_bb);
+	const bool isHovered1 = IsOverlappingControl(mousePos, p1);
+	if (isHovered1 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx1);
+
 	ImVec2 p2 = ToLocal(value.m_PointB, inner_bb, range_bb);
+	const bool isHovered2 = IsOverlappingControl(mousePos, p2);
+	if (isHovered2 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx2);
+
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx1))
+		p1 = mousePos;
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx2))
+		p2 = mousePos;
 
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
-	drawList->AddLine(p1, p2, col_base, thickness);
+	drawList->AddLine(p1, p2, colourA, thickness);
+
+	const ImU32 colour1 = !isHovered1 ? colourA : colourB;
+	const ImU32 colour2 = !isHovered2 ? colourA : colourB;
+	drawList->AddCircle(p1, controlRadius, colour1);
+	drawList->AddCircle(p2, controlRadius, colour2);
 
 	value.m_PointA = ToWorld(p1, inner_bb, range_bb);
 	value.m_PointB = ToWorld(p2, inner_bb, range_bb);
@@ -443,20 +489,47 @@ void imgui::GraphShape(Segment2f& value, float thickness)
 
 void imgui::GraphShape(Triangle2f& value, float thickness)
 {
-	const ImU32 col_base = ImGui::GetColorU32(ImGuiCol_PlotLines);
-	const ImU32 col_hove = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
+	const float scale = GetScale();
+	const int dragIdx1 = GenerateDragIndex();
+	const int dragIdx2 = GenerateDragIndex();
+	const int dragIdx3 = GenerateDragIndex();
+	const ImU32 colourA = ImGui::GetColorU32(ImGuiCol_PlotLines);
+	const ImU32 colourB = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
+	const ImRect inner_bb = GetInner();
+	const ImRect range_bb = GetRange();
+	const ImVec2 mousePos = ImGui::GetIO().MousePos;
 
-	ImGuiStorage* storage = ImGui::GetStateStorage();
-	storage->SetInt(ID_ShapeIdx, storage->GetInt(ID_ShapeIdx) + 1);
-
-	ImRect inner_bb = GetInner();
-	ImRect range_bb = GetRange();
 	ImVec2 p1 = ToLocal(value.m_PointA, inner_bb, range_bb);
+	const bool isHovered1 = IsOverlappingControl(mousePos, p1);
+	if (isHovered1 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx1);
+
 	ImVec2 p2 = ToLocal(value.m_PointB, inner_bb, range_bb);
+	const bool isHovered2 = IsOverlappingControl(mousePos, p2);
+	if (isHovered2 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx2);
+
 	ImVec2 p3 = ToLocal(value.m_PointC, inner_bb, range_bb);
+	const bool isHovered3 = IsOverlappingControl(mousePos, p3);
+	if (isHovered3 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx3);
+
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx1))
+		p1 = mousePos;
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx2))
+		p2 = mousePos;
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx3))
+		p3 = mousePos;
 
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
-	drawList->AddTriangle(p1, p2, p3, col_base, thickness);
+	drawList->AddTriangle(p1, p2, p3, colourA, thickness);
+
+	const ImU32 colour1 = !isHovered1 ? colourA : colourB;
+	const ImU32 colour2 = !isHovered2 ? colourA : colourB;
+	const ImU32 colour3 = !isHovered3 ? colourA : colourB;
+	drawList->AddCircle(p1, controlRadius, colour1);
+	drawList->AddCircle(p2, controlRadius, colour2);
+	drawList->AddCircle(p3, controlRadius, colour3);
 
 	value.m_PointA = ToWorld(p1, inner_bb, range_bb);
 	value.m_PointB = ToWorld(p2, inner_bb, range_bb);
@@ -465,18 +538,25 @@ void imgui::GraphShape(Triangle2f& value, float thickness)
 
 void imgui::GraphShape(Vector2f& value, float thickness)
 {
-	const ImU32 col_base = ImGui::GetColorU32(ImGuiCol_PlotLines);
-	const ImU32 col_hove = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
+	const float scale = GetScale();
+	const int dragIdx = GenerateDragIndex();
+	const ImU32 colourA = ImGui::GetColorU32(ImGuiCol_PlotLines);
+	const ImU32 colourB = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
+	const ImRect inner_bb = GetInner();
+	const ImRect range_bb = GetRange();
+	const ImVec2 mousePos = ImGui::GetIO().MousePos;
 
-	ImGuiStorage* storage = ImGui::GetStateStorage();
-	storage->SetInt(ID_ShapeIdx, storage->GetInt(ID_ShapeIdx) + 1);
+	ImVec2 localPos = ToLocal(value, inner_bb, range_bb);
+	const bool isHovered = IsOverlappingControl(mousePos, localPos);
+	if (isHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx);
 
-	ImRect inner_bb = GetInner();
-	ImRect range_bb = GetRange();
-	ImVec2 pos = ToLocal(value, inner_bb, range_bb);
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx))
+		localPos = mousePos;
 
+	const ImU32 colour = !isHovered ? colourA : colourB;
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
-	drawList->AddCircleFilled(pos, 10.f, col_base);
+	drawList->AddCircle(localPos, controlRadius, colour);
 
-	value = ToWorld(pos, inner_bb, range_bb);
+	value = ToWorld(localPos, inner_bb, range_bb);
 }
