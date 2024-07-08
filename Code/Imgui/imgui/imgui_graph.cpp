@@ -414,37 +414,67 @@ void imgui::GraphShape(Rect2f& value, float rounding, float thickness, ImDrawFla
 	const float scale = GetScale();
 	const int dragIdx1 = GenerateDragIndex();
 	const int dragIdx2 = GenerateDragIndex();
+	const int dragIdx3 = GenerateDragIndex();
+	const int dragIdx4 = GenerateDragIndex();
 	const ImU32 colourA = ImGui::GetColorU32(ImGuiCol_PlotLines);
 	const ImU32 colourB = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
 	const ImRect inner_bb = GetInner();
 	const ImRect range_bb = GetRange();
 	const ImVec2 mousePos = ImGui::GetIO().MousePos;
 
-	ImVec2 min = ToLocal(value.m_Min, inner_bb, range_bb);
-	const bool isHovered1 = IsOverlappingControl(mousePos, min);
+	ImVec2 p1 = ToLocal(value.m_Min, inner_bb, range_bb);
+	ImVec2 p3 = ToLocal(value.m_Max, inner_bb, range_bb);
+	ImVec2 p2 = { p1.x, p3.y };
+	ImVec2 p4 = { p3.x, p1.y };
+
+	const bool isHovered1 = IsOverlappingControl(mousePos, p1);
 	if (isHovered1 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 		AssignDrag(dragIdx1);
-
-	ImVec2 max = ToLocal(value.m_Max, inner_bb, range_bb);
-	const bool isHovered2 = IsOverlappingControl(mousePos, max);
+	const bool isHovered2 = IsOverlappingControl(mousePos, p2);
 	if (isHovered2 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 		AssignDrag(dragIdx2);
+	const bool isHovered3 = IsOverlappingControl(mousePos, p3);
+	if (isHovered3 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx3);
+	const bool isHovered4 = IsOverlappingControl(mousePos, p4);
+	if (isHovered4 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		AssignDrag(dragIdx4);
 
 	if (IsDragging(ImGuiMouseButton_Left, dragIdx1))
-		min = mousePos;
+	{
+		p1 = mousePos;
+		p2.x = mousePos.x;
+		p4.y = mousePos.y;
+	}
 	if (IsDragging(ImGuiMouseButton_Left, dragIdx2))
-		max = mousePos;
+	{
+		p1.x = mousePos.x;
+		p2 = mousePos;
+		p3.y = mousePos.y;
+	}
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx3))
+	{
+		p2.y = mousePos.y;
+		p3 = mousePos;
+		p4.x = mousePos.x;
+	}
+	if (IsDragging(ImGuiMouseButton_Left, dragIdx4))
+	{
+		p3.x = mousePos.x;
+		p4 = mousePos;
+		p1.y = mousePos.y;
+	}
 
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
-	drawList->AddRect(min, max, colourA, rounding, flags, thickness);
+	drawList->AddRect(p1, p3, colourA, rounding, flags, thickness);
 
-	const ImU32 colour1 = !isHovered1 ? colourA : colourB;
-	const ImU32 colour2 = !isHovered2 ? colourA : colourB;
-	drawList->AddCircle(min, controlRadius, colour1);
-	drawList->AddCircle(max, controlRadius, colour2);
+	drawList->AddCircle(p1, controlRadius, !isHovered1 ? colourA : colourB);
+	drawList->AddCircle(p2, controlRadius, !isHovered2 ? colourA : colourB);
+	drawList->AddCircle(p3, controlRadius, !isHovered3 ? colourA : colourB);
+	drawList->AddCircle(p4, controlRadius, !isHovered4 ? colourA : colourB);
 
-	value.m_Min = ToWorld(min, inner_bb, range_bb);
-	value.m_Max = ToWorld(max, inner_bb, range_bb);
+	value.m_Min = ToWorld(p1, inner_bb, range_bb);
+	value.m_Max = ToWorld(p3, inner_bb, range_bb);
 	value.m_Min = math::Min(value.m_Min, value.m_Max);
 	value.m_Max = math::Max(value.m_Min, value.m_Max);
 }
