@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ECS/Component.h>
-#include <ECS/System.h>
-
-#include <GameDebug/FPSCounter.h>
+#include "ECS/Component.h"
+#include "ECS/System.h"
+#include "GameDebug/FPSCounter.h"
 
 namespace dbg
 {

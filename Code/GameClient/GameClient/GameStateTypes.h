@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Name.h>
-#include <Core/Variant.h>
-
-#include <Network/Types.h>
+#include "Core/Name.h"
+#include "Core/Variant.h"
+#include "Network/Types.h"
 
 namespace gamestate
 {

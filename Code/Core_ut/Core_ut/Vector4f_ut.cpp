@@ -1,6 +1,6 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Vector.h>
+#include "Core/Vector.h"
 
 TEST_CASE("math::Vector4f::Alignment")
 {

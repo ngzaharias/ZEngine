@@ -1,8 +1,8 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Array.h>
-#include <Core/Raytracer.h>
-#include <Core/Vector.h>
+#include "Core/Array.h"
+#include "Core/Raytracer.h"
+#include "Core/Vector.h"
 
 TEST_CASE("path::Raytracer")
 {

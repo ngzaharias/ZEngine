@@ -1,13 +1,10 @@
 #pragma once
 
-#include <Core/Map.h>
-
-#include <ECS/Entity.h>
-#include <ECS/System.h>
-
-#include <Engine/SinkCollection.h>
-
-#include <Network/UserId.h>
+#include "Core/Map.h"
+#include "ECS/Entity.h"
+#include "ECS/System.h"
+#include "Engine/SinkCollection.h"
+#include "Network/UserId.h"
 
 namespace ecs
 {

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <Core/Guid.h>
-
-#include <Engine/PrototypeLoader.h>
+#include "Core/Guid.h"
+#include "Engine/PrototypeLoader.h"
 
 namespace ecs
 {

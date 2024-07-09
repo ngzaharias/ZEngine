@@ -1,11 +1,11 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Algorithms.h>
-#include <Core/Array.h>
-#include <Core/Map.h>
-#include <Core/Set.h>
-#include <Core/String.h>
-#include <Core/Types.h>
+#include "Core/Algorithms.h"
+#include "Core/Array.h"
+#include "Core/Map.h"
+#include "Core/Set.h"
+#include "Core/String.h"
+#include "Core/Types.h"
 
 // #todo: const vs non-const
 

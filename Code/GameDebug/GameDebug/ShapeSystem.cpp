@@ -1,19 +1,18 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/ShapeSystem.h"
 
-#include <Core/CollisionMath.h>
-#include <Core/VariantHelpers.h>
-#include <ECS/EntityWorld.h>
-#include <ECS/NameComponent.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
+#include "Core/CollisionMath.h"
+#include "Core/VariantHelpers.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "GameDebug/ShapeComponents.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui_graph.h>
 #include <imgui/imgui_user.h>
-
-#include "GameDebug/ShapeComponents.h"
 
 namespace
 {
@@ -34,10 +33,10 @@ namespace
 	const char* ToName(const dbg::Shape& value)
 	{
 		return core::VariantMatch(value,
+			[](const AABB2f&) { return "AABB2f"; },
 			[](const Circle2f&) { return "Circle2f"; },
 			[](const Line2f&) { return "Line2f"; },
 			[](const Ray2f&) { return "Ray2f"; },
-			[](const AABB2f&) { return "AABB2f"; },
 			[](const Segment2f&) { return "Segment2f"; },
 			[](const Triangle2f&) { return "Triangle2f"; });
 	}
@@ -57,14 +56,14 @@ namespace
 		const char* preview = ToName(value);
 		if (ImGui::BeginCombo("Shape", preview))
 		{
+			if (ImGui::Selectable("AABB2f"))
+				value = AABB2f(-Vector2f::One, +Vector2f::One);
 			if (ImGui::Selectable("Circle2f"))
 				value = Circle2f(Vector2f::Zero, 1.f);
 			if (ImGui::Selectable("Line2f"))
 				value = Line2f(-Vector2f::One, +Vector2f::One);
 			if (ImGui::Selectable("Ray2f"))
 				value = Ray2f(Vector2f::Zero, Vector2f::One);
-			if (ImGui::Selectable("AABB2f"))
-				value = AABB2f(-Vector2f::One, +Vector2f::One);
 			if (ImGui::Selectable("Segment2f"))
 				value = Segment2f(-Vector2f::One, +Vector2f::One);
 			if (ImGui::Selectable("Triangle2f"))
@@ -73,6 +72,11 @@ namespace
 		}
 
 		core::VariantMatch(value,
+		[](AABB2f& data)
+		{
+			imgui::DragVector("m_Min", data.m_Min, 0.1f);
+			imgui::DragVector("m_Max", data.m_Max, 0.1f);
+		},
 		[](Circle2f& data)
 		{
 			imgui::DragVector("m_Position", data.m_Position, 0.1f);
@@ -87,11 +91,6 @@ namespace
 		{
 			imgui::DragVector("m_Direction", data.m_Direction, 0.1f);
 			imgui::DragVector("m_Position", data.m_Position, 0.1f);
-		},
-		[](AABB2f& data)
-		{
-			imgui::DragVector("m_Min", data.m_Min, 0.1f);
-			imgui::DragVector("m_Max", data.m_Max, 0.1f);
 		},
 		[](Segment2f& data)
 		{

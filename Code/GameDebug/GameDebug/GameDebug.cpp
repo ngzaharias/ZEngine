@@ -1,10 +1,9 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/GameDebug.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "GameDebug/EntitySystem.h"
 #include "GameDebug/FrameBufferSystem.h"
 #include "GameDebug/ImGuiDemoSystem.h"

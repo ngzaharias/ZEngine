@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Core/Guid.h>
-#include <Core/Name.h>
-#include <Core/Rotator.h>
-#include <Core/Vector.h>
+#include "Core/Guid.h"
+#include "Core/Name.h"
+#include "Core/Rotator.h"
+#include "Core/Vector.h"
 
 template<typename Type>
 Type toml::Parse(const toml::Node& value, const Type& _default)

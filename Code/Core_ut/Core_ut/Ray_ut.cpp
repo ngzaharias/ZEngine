@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Ray.h>
-#include <Core/Vector.h>
+#include "Core/Ray.h"
+#include "Core/Vector.h"
 
 TEST_CASE("Ray3f")
 {

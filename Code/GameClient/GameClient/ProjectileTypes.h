@@ -1,13 +1,12 @@
 #pragma once
 
-#include <Core/Guid.h>
-#include <Core/Nullable.h>
-#include <Core/Rotator.h>
-#include <Core/Trajectory.h>
-#include <Core/Variant.h>
-#include <Core/Vector.h>
-
-#include <ECS/Entity.h>
+#include "Core/Guid.h"
+#include "Core/Nullable.h"
+#include "Core/Rotator.h"
+#include "Core/Trajectory.h"
+#include "Core/Variant.h"
+#include "Core/Vector.h"
+#include "ECS/Entity.h"
 
 namespace projectile
 {

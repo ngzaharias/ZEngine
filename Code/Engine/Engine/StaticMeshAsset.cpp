@@ -3,14 +3,12 @@
 
 #include "Engine/AssetManager.h"
 #include "Engine/Visitor.h"
-
-#include <Core/Algorithms.h>
+#include "Core/Algorithms.h"
 
 #include <assimp/BaseImporter.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
-
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
 

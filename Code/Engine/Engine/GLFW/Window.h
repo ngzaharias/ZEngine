@@ -1,11 +1,10 @@
 #pragma once
 
 #ifdef Z_GLFW
-#include <Core/Set.h>
-#include <Core/String.h>
-#include <Core/Vector.h>
-
-#include <Engine/IWindow.h>
+#include "Core/Set.h"
+#include "Core/String.h"
+#include "Core/Vector.h"
+#include "Engine/IWindow.h"
 
 struct GLFWwindow;
 

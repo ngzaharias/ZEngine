@@ -1,13 +1,11 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Map.h>
-#include <Core/SparseArray.h>
-
-#include <ECS/Component.h>
-#include <ECS/EntityWorld.h>
-
-#include <Engine/TypeInfo.h>
+#include "Core/Array.h"
+#include "Core/Map.h"
+#include "Core/SparseArray.h"
+#include "ECS/Component.h"
+#include "ECS/EntityWorld.h"
+#include "Engine/TypeInfo.h"
 
 class MemBuffer;
 

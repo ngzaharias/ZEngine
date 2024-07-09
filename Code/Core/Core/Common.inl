@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Core/Matrix.h>
-#include <Core/Quaternion.h>
-#include <Core/Vector.h>
+#include "Core/Matrix.h"
+#include "Core/Quaternion.h"
+#include "Core/Vector.h"
 
 inline constexpr bool IsNearly(const Quaternion& a, const Quaternion& b, const float threshold /*= 0.001f*/) noexcept
 {

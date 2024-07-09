@@ -1,16 +1,13 @@
 #include "EnginePCH.h"
 #include "Engine/ReplicationHost.h"
 
+#include "Core/Algorithms.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/ReplicationComponents.h"
-
-#include <Core/Algorithms.h>
-
-#include <Engine/ComponentSerializer.h>
-#include <Engine/NetworkComponents.h>
-
-#include <Network/Host.h>
-#include <Network/Messages.h>
+#include "Engine/ComponentSerializer.h"
+#include "Engine/NetworkComponents.h"
+#include "Network/Host.h"
+#include "Network/Messages.h"
 
 #include <yojimbo/yojimbo.h>
 

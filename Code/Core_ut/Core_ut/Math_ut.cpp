@@ -1,6 +1,6 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Math.h>
+#include "Core/Math.h"
 
 TEST_CASE("math::Ceiling")
 {

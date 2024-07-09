@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
-#include <Engine/EnginePCH.h>
 
-#include <Engine/SinkCollection.h>
+#include "Engine/EnginePCH.h"
+#include "Engine/SinkCollection.h"
 
 #include <entt/signal/sigh.hpp>
 

@@ -1,14 +1,12 @@
 #include "EnginePCH.h"
 #include "Engine/CameraSystem.h"
 
-#include <Core/GameTime.h>
-#include <Core/Quaternion.h>
-#include <Core/Rotator.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
+#include "Core/GameTime.h"
+#include "Core/Quaternion.h"
+#include "Core/Rotator.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/InputComponent.h"
 #include "Engine/TransformComponent.h"

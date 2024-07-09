@@ -84,4 +84,4 @@ constexpr Vector3f operator*(const Vector3f& lhs, const Quaternion& rhs) noexcep
 constexpr Vector2f& operator*=(Vector2f& lhs, const Quaternion& rhs) noexcept;
 constexpr Vector3f& operator*=(Vector3f& lhs, const Quaternion& rhs) noexcept;
 
-#include <Core/Quaternion.inl>
+#include "Core/Quaternion.inl"

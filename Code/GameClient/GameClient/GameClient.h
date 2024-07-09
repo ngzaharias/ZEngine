@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ECS/EntityWorld.h>
-
-#include <Engine/ReplicationPeer.h>
+#include "ECS/EntityWorld.h"
+#include "Engine/ReplicationPeer.h"
 
 class GameTime;
 

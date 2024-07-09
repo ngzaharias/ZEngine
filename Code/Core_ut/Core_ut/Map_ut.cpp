@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Map.h>
-#include <Core/Types.h>
+#include "Core/Map.h"
+#include "Core/Types.h"
 
 namespace
 {

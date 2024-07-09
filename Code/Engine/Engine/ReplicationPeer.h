@@ -1,12 +1,9 @@
 #pragma once
 
-#include <Core/Map.h>
-
-#include <ECS/Entity.h>
-
-#include <Engine/SinkCollection.h>
-
-#include <Network/Entity.h>
+#include "Core/Map.h"
+#include "ECS/Entity.h"
+#include "Engine/SinkCollection.h"
+#include "Network/Entity.h"
 
 class GameTime;
 

@@ -1,17 +1,16 @@
 #include "EnginePCH.h"
 #include "Engine/FontAsset.h"
 
+#include "Core/Algorithms.h"
 #include "Engine/AssetManager.h"
 #include "Engine/TomlHelpers.h"
 #include "Engine/Visitor.h"
 
-#include <Core/Algorithms.h>
-
+#include <ft2build.h>
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
 
-#include <ft2build.h>
 #include FT_FREETYPE_H
 
 // https://medium.com/@calebfaith/implementing-msdf-font-in-opengl-ea09a9ab7e00

@@ -1,19 +1,17 @@
 #include "EditorPCH.h"
 #include "Editor/TransformEditor.h"
 
-#include <Core/Rotator.h>
-#include <Core/Vector.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/NameComponent.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/FileHelpers.h>
-#include <Engine/InputComponent.h>
-#include <Engine/PrototypeManager.h>
-#include <Engine/TransformComponent.h>
-#include <Engine/Visitor.h>
+#include "Core/Rotator.h"
+#include "Core/Vector.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/FileHelpers.h"
+#include "Engine/InputComponent.h"
+#include "Engine/PrototypeManager.h"
+#include "Engine/TransformComponent.h"
+#include "Engine/Visitor.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>

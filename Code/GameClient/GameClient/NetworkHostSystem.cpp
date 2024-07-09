@@ -1,15 +1,12 @@
 #include "GameClientPCH.h"
 #include "GameClient/NetworkHostSystem.h"
 
-#include <Core/GameTime.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/NetworkComponents.h>
-#include <Engine/NetworkManager.h>
-
+#include "Core/GameTime.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/NetworkComponents.h"
+#include "Engine/NetworkManager.h"
 #include "GameClient/GameStateComponents.h"
 
 void gamestate::NetworkHostSystem::Update(World& world, const GameTime& gameTime)

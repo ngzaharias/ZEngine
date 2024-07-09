@@ -1,16 +1,16 @@
 
 #include <Catch2/catch.hpp>
 
-#include <Core/AABB.h>
-#include <Core/Circle.h>
-#include <Core/CollisionMath.h>
-#include <Core/Line.h>
-#include <Core/OBB.h>
-#include <Core/Plane.h>
-#include <Core/Ray.h>
-#include <Core/Segment.h>
-#include <Core/Sphere.h>
-#include <Core/Triangle.h>
+#include "Core/AABB.h"
+#include "Core/Circle.h"
+#include "Core/CollisionMath.h"
+#include "Core/Line.h"
+#include "Core/OBB.h"
+#include "Core/Plane.h"
+#include "Core/Ray.h"
+#include "Core/Segment.h"
+#include "Core/Sphere.h"
+#include "Core/Triangle.h"
 
 TEST_CASE("math::Intersection(Line3f Plane3f). Line intersects with points either side of the Plane at Origin.")
 {

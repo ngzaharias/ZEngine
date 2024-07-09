@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/Guid.h>
-#include <Core/String.h>
-#include <Core/Vector.h>
-
-#include <ECS/Component.h>
+#include "Core/Guid.h"
+#include "Core/String.h"
+#include "Core/Vector.h"
+#include "ECS/Component.h"
 
 namespace eng
 {

@@ -1,16 +1,14 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/OverlaySystem.h"
 
-#include <Core/GameTime.h>
-#include <Core/Math.h>
-#include <Core/Vector.h>
-
-#include <Engine/ColourHelpers.h>
-#include <Engine/Screen.h>
+#include "Core/GameTime.h"
+#include "Core/Math.h"
+#include "Core/Vector.h"
+#include "Engine/ColourHelpers.h"
+#include "Engine/Screen.h"
+#include "GameDebug/FPSCounter.h"
 
 #include <imgui/imgui.h>
-
-#include "GameDebug/FPSCounter.h"
 
 namespace
 {

@@ -1,11 +1,10 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Types.h>
-
-#include <ECS/Component.h>
-#include <ECS/EntityWorld.h>
-#include <ECS/System.h>
-#include <ECS/WorldView.h>
+#include "Core/Types.h"
+#include "ECS/Component.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 class GameTime
 {

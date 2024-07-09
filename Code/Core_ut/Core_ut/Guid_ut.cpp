@@ -1,6 +1,6 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Guid.h>
+#include "Core/Guid.h"
 
 #pragma optimize("", off)
 

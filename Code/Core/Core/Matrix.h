@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/Defines.h>
-#include <Core/Types.h>
+#include "Core/Defines.h"
+#include "Core/Types.h"
 
 class Matrix4x4;
 class Quaternion;
@@ -164,4 +164,4 @@ inline constexpr Vector2f operator*(const Vector2f& lhs, const Matrix4x4& rhs) n
 inline constexpr Vector3f operator*(const Vector3f& lhs, const Matrix4x4& rhs) noexcept;
 inline constexpr Vector4f operator*(const Vector4f& lhs, const Matrix4x4& rhs) noexcept;
 
-#include <Core/Matrix.inl>
+#include "Core/Matrix.inl"

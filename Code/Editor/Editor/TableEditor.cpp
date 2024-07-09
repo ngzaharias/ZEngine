@@ -1,13 +1,11 @@
 #include "EditorPCH.h"
 #include "Editor/TableEditor.h"
 
-#include <Core/Algorithms.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <GameDebug/MenuBarComponents.h>
+#include "Core/Algorithms.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "GameDebug/MenuBarComponents.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>

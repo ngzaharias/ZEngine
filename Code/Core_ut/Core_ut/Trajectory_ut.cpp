@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Trajectory.h>
-#include <Core/Vector.h>
+#include "Core/Trajectory.h"
+#include "Core/Vector.h"
 
 TEST_CASE("path::Trajectory")
 {

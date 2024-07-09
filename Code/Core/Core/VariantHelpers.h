@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/Variant.h>
+#include "Core/Variant.h"
 
 namespace core
 {

@@ -1,12 +1,10 @@
 #include "GameClientPCH.h"
 #include "GameClient/GameStateSystem.h"
 
-#include <Core/VariantHelpers.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
+#include "Core/VariantHelpers.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "GameClient/GameStateComponents.h"
 #include "GameClient/GameStateTypes.h"
 

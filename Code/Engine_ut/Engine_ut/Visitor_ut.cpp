@@ -1,17 +1,16 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Array.h>
-#include <Core/Guid.h>
-#include <Core/Map.h>
-#include <Core/Name.h>
-#include <Core/Path.h>
-#include <Core/Quaternion.h>
-#include <Core/Rotator.h>
-#include <Core/String.h>
-#include <Core/Variant.h>
-#include <Core/Vector.h>
-
-#include <Engine/Visitor.h>
+#include "Core/Array.h"
+#include "Core/Guid.h"
+#include "Core/Map.h"
+#include "Core/Name.h"
+#include "Core/Path.h"
+#include "Core/Quaternion.h"
+#include "Core/Rotator.h"
+#include "Core/String.h"
+#include "Core/Variant.h"
+#include "Core/Vector.h"
+#include "Engine/Visitor.h"
 
 #include <format>
 

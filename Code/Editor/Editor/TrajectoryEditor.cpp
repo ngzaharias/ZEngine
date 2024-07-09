@@ -1,27 +1,23 @@
 #include "EditorPCH.h"
 #include "Editor/TrajectoryEditor.h"
 
-#include <Core/Algorithms.h>
-#include <Core/Math.h>
-#include <Core/Trajectory.h>
-#include <Core/Vector.h>
-#include <Core/VectorMath.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/AssetManager.h>
-#include <Engine/FileHelpers.h>
-#include <Engine/TrajectoryAsset.h>
-
-#include <GameClient/ProjectileComponents.h>
+#include "Core/Algorithms.h"
+#include "Core/Math.h"
+#include "Core/Trajectory.h"
+#include "Core/Vector.h"
+#include "Core/VectorMath.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/AssetManager.h"
+#include "Engine/FileHelpers.h"
+#include "Engine/TrajectoryAsset.h"
+#include "GameClient/ProjectileComponents.h"
+#include "GameDebug/MenuBarComponents.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui_user.h>
-
-#include "GameDebug/MenuBarComponents.h"
 
 namespace
 {

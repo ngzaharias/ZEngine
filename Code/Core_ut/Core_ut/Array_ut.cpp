@@ -1,8 +1,8 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Array.h>
-#include <Core/Slice.h>
-#include <Core/Types.h>
+#include "Core/Array.h"
+#include "Core/Slice.h"
+#include "Core/Types.h"
 
 namespace
 {

@@ -1,8 +1,8 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Algorithms.h>
-#include <Core/SparseArray.h>
-#include <Core/Types.h>
+#include "Core/Algorithms.h"
+#include "Core/SparseArray.h"
+#include "Core/Types.h"
 
 namespace
 {

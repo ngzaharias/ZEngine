@@ -1,9 +1,15 @@
 #include "EnginePCH.h"
 #include "Engine/PhysicsPrototype.h"
 
-#include <Core/Algorithms.h>
-
-#include <ECS/EntityWorld.h>
+#include "Core/Algorithms.h"
+#include "ECS/EntityWorld.h"
+#include "Engine/AssetManager.h"
+#include "Engine/PhysicsManager.h"
+#include "Engine/PhysicsMaterialAsset.h"
+#include "Engine/RigidDynamicComponent.h"
+#include "Engine/RigidStaticComponent.h"
+#include "Engine/TransformComponent.h"
+#include "Engine/Visitor.h"
 
 #include <PhysX/PxPhysics.h>
 #include <PhysX/PxRigidDynamic.h>
@@ -12,14 +18,6 @@
 #include <PhysX/PxShape.h>
 #include <PhysX/foundation/PxVec3.h>
 #include <PhysX/foundation/PxQuat.h>
-
-#include "Engine/AssetManager.h"
-#include "Engine/PhysicsManager.h"
-#include "Engine/PhysicsMaterialAsset.h"
-#include "Engine/RigidDynamicComponent.h"
-#include "Engine/RigidStaticComponent.h"
-#include "Engine/TransformComponent.h"
-#include "Engine/Visitor.h"
 
 namespace
 {

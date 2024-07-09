@@ -1,6 +1,6 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Path.h>
+#include "Core/Path.h"
 
 #include <filesystem>
 

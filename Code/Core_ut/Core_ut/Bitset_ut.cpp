@@ -1,6 +1,6 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Bitset.h>
+#include "Core/Bitset.h"
 
 TEST_CASE("Bitset")
 {

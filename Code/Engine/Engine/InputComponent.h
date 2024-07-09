@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/Input.h>
-#include <Core/Set.h>
-#include <Core/Vector.h>
-
-#include <ECS/Component.h>
+#include "Core/Input.h"
+#include "Core/Set.h"
+#include "Core/Vector.h"
+#include "ECS/Component.h"
 
 namespace eng
 {

@@ -1,14 +1,12 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/FrameBufferSystem.h"
 
-#include <Core/String.h>
-#include <Core/Vector.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/FrameBufferComponent.h>
+#include "Core/String.h"
+#include "Core/Vector.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/FrameBufferComponent.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_user.h>

@@ -1,14 +1,13 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Algorithms.h>
-#include <Core/Types.h>
-#include <Core/TypeInfo.h>
-#include <Core/TypeList.h>
-
-#include <ECS/Component.h>
-#include <ECS/Entity.h>
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryRegistry.h>
+#include "Core/Algorithms.h"
+#include "Core/Types.h"
+#include "Core/TypeInfo.h"
+#include "Core/TypeList.h"
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryRegistry.h"
 
 class GameTime {};
 

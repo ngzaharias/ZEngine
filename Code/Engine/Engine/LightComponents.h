@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Variant.h>
-#include <Core/Vector.h>
-
-#include <ECS/Component.h>
+#include "Core/Variant.h"
+#include "Core/Vector.h"
+#include "ECS/Component.h"
 
 namespace eng
 {

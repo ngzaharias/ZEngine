@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Common.h>
-#include <Core/Matrix.h>
+#include "Core/Common.h"
+#include "Core/Matrix.h"
 
 TEST_CASE("Matrix3x3")
 {

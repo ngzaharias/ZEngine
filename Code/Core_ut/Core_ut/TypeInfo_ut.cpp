@@ -1,6 +1,6 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/TypeInfo.h>
+#include "Core/TypeInfo.h"
 
 namespace first
 {

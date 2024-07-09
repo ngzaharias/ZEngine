@@ -1,20 +1,18 @@
 #include "EnginePCH.h"
 #include "Engine/SoundPlaySystem.h"
 
-#include <Core/Algorithms.h>
-#include <Core/Guid.h>
-#include <Core/Random.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/NameComponent.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <SFML/Audio/SoundBuffer.hpp>
-
+#include "Core/Algorithms.h"
+#include "Core/Guid.h"
+#include "Core/Random.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/SoundAssets.h"
 #include "Engine/SoundComponents.h"
+
+#include <SFML/Audio/SoundBuffer.hpp>
 
 // #todo: load volume from config
 

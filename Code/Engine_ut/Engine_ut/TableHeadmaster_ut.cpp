@@ -1,11 +1,10 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Guid.h>
-
-#include <Engine/FileHelpers.h>
-#include <Engine/TableHeadmaster.h>
-#include <Engine/TableManager.h>
-#include <Engine/Visitor.h>
+#include "Core/Guid.h"
+#include "Engine/FileHelpers.h"
+#include "Engine/TableHeadmaster.h"
+#include "Engine/TableManager.h"
+#include "Engine/Visitor.h"
 
 namespace eng
 {

@@ -1,7 +1,10 @@
 #include "EnginePCH.h"
 #include "Engine/RenderStage_ImGui.h"
 
-#include <ECS/EntityWorld.h>
+#include "ECS/EntityWorld.h"
+#include "Engine/AssetManager.h"
+#include "Engine/Screen.h"
+#include "Engine/GLFW/Window.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -10,10 +13,6 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <imnodes/imnodes.h>
-
-#include "Engine/AssetManager.h"
-#include "Engine/Screen.h"
-#include "Engine/GLFW/Window.h"
 
 eng::RenderStage_ImGui::RenderStage_ImGui(eng::AssetManager& assetManager, glfw::Window& window)
 	: RenderStage(assetManager)

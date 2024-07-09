@@ -1,9 +1,9 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Common.h>
-#include <Core/Matrix.h>
-#include <Core/Vector.h>
-#include <Core/VectorMath.h>
+#include "Core/Common.h"
+#include "Core/Matrix.h"
+#include "Core/Vector.h"
+#include "Core/VectorMath.h"
 
 TEST_CASE("math::Vector2f::Alignment")
 {

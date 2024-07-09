@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Guid.h>
-#include <Core/Map.h>
-
-#include <Engine/TomlTypes.h>
+#include "Core/Guid.h"
+#include "Core/Map.h"
+#include "Engine/TomlTypes.h"
 
 namespace eng
 {

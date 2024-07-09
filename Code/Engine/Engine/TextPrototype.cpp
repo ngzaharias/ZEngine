@@ -1,8 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/TextPrototype.h"
 
-#include <ECS/EntityWorld.h>
-
+#include "ECS/EntityWorld.h"
 #include "Engine/TextComponent.h"
 #include "Engine/Visitor.h"
 

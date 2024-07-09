@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Array.h>
-
-#include <ECS/Entity.h>
-#include <ECS/System.h>
+#include "Core/Array.h"
+#include "ECS/Entity.h"
+#include "ECS/System.h"
 
 namespace glfw
 {

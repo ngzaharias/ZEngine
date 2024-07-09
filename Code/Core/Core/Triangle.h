@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/Vector.h>
+#include "Core/Vector.h"
 
 /// \brief A triangle in 2D space using floating-point coordinates.
 class Triangle2f

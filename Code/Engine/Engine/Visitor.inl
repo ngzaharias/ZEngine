@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/TypeTraits.h>
-#include <Core/VariantHelpers.h>
+#include "Core/TypeTraits.h"
+#include "Core/VariantHelpers.h"
 
 template<typename Key, typename Value>
 void eng::Visitor::Visit(Map<Key, Value>& values)

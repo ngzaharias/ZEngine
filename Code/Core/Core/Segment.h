@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/Vector.h>
+#include "Core/Vector.h"
 
 /// \brief A line in 3D space bounded by two points.
 class Segment2f

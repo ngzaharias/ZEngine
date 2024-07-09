@@ -1,19 +1,16 @@
 #include "EnginePCH.h"
 #include "Engine/ReplicationPeer.h"
 
+#include "Core/Algorithms.h"
+#include "ECS/EntityWorld.h"
 #include "Engine/ComponentSerializer.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/ReplicationComponents.h"
-
-#include <Core/Algorithms.h>
-
-#include <ECS/EntityWorld.h>
-
-#include <Network/Adaptor.h>
-#include <Network/Messages.h>
-#include <Network/Peer.h>
-#include <Network/PeerId.h>
+#include "Network/Adaptor.h"
+#include "Network/Messages.h"
+#include "Network/Peer.h"
+#include "Network/PeerId.h"
 
 #include <yojimbo/yojimbo.h>
 

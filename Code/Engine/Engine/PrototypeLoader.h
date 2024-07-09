@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/Guid.h>
-#include <Core/Map.h>
+#include "Core/Guid.h"
+#include "Core/Map.h"
 
 namespace ecs
 {

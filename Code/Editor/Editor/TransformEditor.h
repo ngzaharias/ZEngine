@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/String.h>
-
-#include <ECS/Component.h>
-#include <ECS/Entity.h>
-#include <ECS/System.h>
+#include "Core/String.h"
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
+#include "ECS/System.h"
 
 namespace ecs
 {

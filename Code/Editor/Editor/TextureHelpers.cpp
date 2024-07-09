@@ -1,9 +1,9 @@
 #include "EditorPCH.h"
 #include "Editor/TextureHelpers.h"
 
-#include <Core/Math.h>
-#include <Core/Vector.h>
-#include <Core/VectorMath.h>
+#include "Core/Math.h"
+#include "Core/Vector.h"
+#include "Core/VectorMath.h"
 
 Vector2f editor::FitImageToRegion(const Vector2f& imageSize, const Vector2f& regionSize)
 {

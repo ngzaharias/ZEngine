@@ -1,6 +1,6 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/EnumHelpers.h>
+#include "Core/EnumHelpers.h"
 
 namespace
 {

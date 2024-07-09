@@ -1,16 +1,15 @@
 #pragma once
 
-#include <Core/Algorithms.h>
-#include <Core/Assert.h>
-#include <Core/Guid.h>
-#include <Core/Map.h>
-#include <Core/Name.h>
-#include <Core/StringHelpers.h>
-#include <Core/TypeTraits.h>
-
-#include <Engine/Asset.h>
-#include <Engine/TypeInfo.h>
-#include <Engine/Visitor.h>
+#include "Core/Algorithms.h"
+#include "Core/Assert.h"
+#include "Core/Guid.h"
+#include "Core/Map.h"
+#include "Core/Name.h"
+#include "Core/StringHelpers.h"
+#include "Core/TypeTraits.h"
+#include "Engine/Asset.h"
+#include "Engine/TypeInfo.h"
+#include "Engine/Visitor.h"
 
 namespace eng
 {

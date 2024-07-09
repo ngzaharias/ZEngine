@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Core/SparseArray.h>
+#include "Core/SparseArray.h"
 
-#include <ECS/Component.h>
-#include <ECS/ComponentEntry.h>
+#include "ECS/Component.h"
+#include "ECS/ComponentEntry.h"
 
 class GameTime;
 

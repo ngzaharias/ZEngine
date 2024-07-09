@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/Path.h>
-#include <Core/SparseArray.h>
-
-#include <Engine/Asset.h>
-#include <Engine/AssetLoader.h>
+#include "Core/Path.h"
+#include "Core/SparseArray.h"
+#include "Engine/Asset.h"
+#include "Engine/AssetLoader.h"
 
 namespace eng
 {

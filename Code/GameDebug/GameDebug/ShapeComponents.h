@@ -12,10 +12,10 @@
 namespace dbg
 {
 	using Shape = Variant<
+		AABB2f,
 		Circle2f,
 		Line2f,
 		Ray2f,
-		AABB2f,
 		Segment2f,
 		Triangle2f>;
 
@@ -25,7 +25,7 @@ namespace dbg
 		str::String m_InspectorLabel = {};
 		str::String m_PlottingLabel = {};
 
-		Shape m_ShapeA = {};
-		Shape m_ShapeB = {};
+		Shape m_ShapeA = AABB2f(-Vector2f::One, +Vector2f::One);
+		Shape m_ShapeB = Circle2f(Vector2f::Zero, 1.f);
 	};
 }

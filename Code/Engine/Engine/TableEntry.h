@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/Path.h>
-#include <Core/String.h>
+#include "Core/Path.h"
+#include "Core/String.h"
 
 using int32 = int32_t;
 

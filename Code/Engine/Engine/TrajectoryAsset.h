@@ -1,11 +1,10 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Vector.h>
-
-#include <Engine/Asset.h>
-#include <Engine/AssetLoader.h>
-#include <Engine/SpriteAsset.h>
+#include "Core/Array.h"
+#include "Core/Vector.h"
+#include "Engine/Asset.h"
+#include "Engine/AssetLoader.h"
+#include "Engine/SpriteAsset.h"
 
 namespace eng
 {

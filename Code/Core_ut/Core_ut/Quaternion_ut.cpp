@@ -1,9 +1,9 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Common.h>
-#include <Core/Math.h>
-#include <Core/Matrix.h>
-#include <Core/Quaternion.h>
+#include "Core/Common.h"
+#include "Core/Math.h"
+#include "Core/Matrix.h"
+#include "Core/Quaternion.h"
 
 TEST_CASE("Quaternion")
 {

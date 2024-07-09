@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Plane.h>
-
-#include <ECS/Component.h>
-#include <ECS/Entity.h>
+#include "Core/Plane.h"
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
 
 namespace drag
 {

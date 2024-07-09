@@ -1,15 +1,13 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/ImGuiDemoSystem.h"
 
-#include <Core/Vector.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
+#include "Core/Vector.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "GameDebug/MenuBarComponents.h"
 
 #include <imgui/imgui.h>
-
-#include "GameDebug/MenuBarComponents.h"
 
 void dbg::ImGuiDemoSystem::Update(World& world, const GameTime& gameTime)
 {

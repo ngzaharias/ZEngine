@@ -1,12 +1,11 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Set.h>
-#include <Core/String.h>
-
-#include <ECS/Component.h>
-#include <ECS/Entity.h>
-#include <ECS/System.h>
+#include "Core/Array.h"
+#include "Core/Set.h"
+#include "Core/String.h"
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
+#include "ECS/System.h"
 
 namespace ecs
 {

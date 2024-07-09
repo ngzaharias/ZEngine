@@ -1,7 +1,7 @@
 #include "ECS/QueryRegistry.h"
 
-#include <Core/Assert.h>
-#include <Core/Profiler.h>
+#include "Core/Assert.h"
+#include "Core/Profiler.h"
 
 void ecs::QueryRegistry::Initialise()
 {

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <Game/Application.h>
-
-#include <Editor/Editor.h>
+#include "Game/Application.h"
+#include "Editor/Editor.h"
 
 namespace editor
 {

@@ -1,8 +1,8 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Matrix.h>
-#include <Core/Rotator.h>
-#include <Core/Quaternion.h>
+#include "Core/Matrix.h"
+#include "Core/Rotator.h"
+#include "Core/Quaternion.h"
 
 TEST_CASE("Rotator")
 {

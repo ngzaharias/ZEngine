@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/Variant.h>
-#include <Engine/TomlTypes.h>
+#include "Core/Variant.h"
+#include "Engine/TomlTypes.h"
 
 #include <iostream>
 

@@ -1,8 +1,7 @@
 #include "Network/Peer.h"
 
-#include <Core/Assert.h>
-#include <Core/GameTime.h>
-
+#include "Core/Assert.h"
+#include "Core/GameTime.h"
 #include "Network/Adaptor.h"
 #include "Network/Config.h"
 

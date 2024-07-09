@@ -1,8 +1,8 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Parse.h>
-#include <Core/String.h>
-#include <Core/StringView.h>
+#include "Core/Parse.h"
+#include "Core/String.h"
+#include "Core/StringView.h"
 
 TEST_CASE("str::Parse")
 {

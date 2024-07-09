@@ -1,11 +1,10 @@
 #include "EnginePCH.h"
 #include "Engine/InputSystem.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/NameComponent.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "Engine/InputComponent.h"
 #include "Engine/GLFW/Window.h"
 

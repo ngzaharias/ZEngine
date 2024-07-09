@@ -1,12 +1,12 @@
 #include "EnginePCH.h"
 #include "Engine/Visitor.h"
 
-#include <Core/Guid.h>
-#include <Core/Name.h>
-#include <Core/Path.h>
-#include <Core/Quaternion.h>
-#include <Core/String.h>
-#include <Core/Vector.h>
+#include "Core/Guid.h"
+#include "Core/Name.h"
+#include "Core/Path.h"
+#include "Core/Quaternion.h"
+#include "Core/String.h"
+#include "Core/Vector.h"
 
 namespace eng
 {

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <Core/Set.h>
-
-#include <ECS/EntityWorld.h>
+#include "Core/Set.h"
+#include "ECS/EntityWorld.h"
 
 namespace ut
 {

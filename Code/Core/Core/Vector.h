@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/Defines.h>
-#include <Core/Types.h>
+#include "Core/Defines.h"
+#include "Core/Types.h"
 
 class Vector2f;
 class Vector3f;
@@ -318,4 +318,4 @@ inline constexpr Vector4f Vector4f::AxisZ(0.f, 0.f, 1.f, 0.f);
 inline constexpr Vector4f Vector4f::Identity(0.f, 0.f, 0.f, 1.f);
 inline constexpr Vector4f Vector4f::Zero(0.f, 0.f, 0.f, 0.f);
 
-#include <Core/Vector.inl>
+#include "Core/Vector.inl"

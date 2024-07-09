@@ -1,11 +1,9 @@
 #include "GameServerPCH.h"
 #include "GameServer/RegisterSystems.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/ReplicationHost.h>
-
+#include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
+#include "Engine/ReplicationHost.h"
 #include "GameServer/ReplicationSystem.h"
 #include "GameServer/UserSystem.h"
 

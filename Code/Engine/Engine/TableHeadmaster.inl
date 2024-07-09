@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/Name.h>
-#include <Core/TypeInfo.h>
+#include "Core/Name.h"
+#include "Core/TypeInfo.h"
 
 template<class TManager>
 bool eng::TableHeadmaster::IsRegistered() const

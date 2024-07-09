@@ -1,12 +1,11 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Types.h>
-#include <Core/TypeInfo.h>
-#include <Core/TypeList.h>
-
-#include <ECS/Component.h>
-#include <ECS/ComponentMask.h>
-#include <ECS/QueryTypes.h>
+#include "Core/Types.h"
+#include "Core/TypeInfo.h"
+#include "Core/TypeList.h"
+#include "ECS/Component.h"
+#include "ECS/ComponentMask.h"
+#include "ECS/QueryTypes.h"
 
 namespace
 {

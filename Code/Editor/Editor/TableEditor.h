@@ -1,11 +1,10 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Map.h>
-#include <Core/Name.h>
-
-#include <ECS/Component.h>
-#include <ECS/System.h>
+#include "Core/Array.h"
+#include "Core/Map.h"
+#include "Core/Name.h"
+#include "ECS/Component.h"
+#include "ECS/System.h"
 
 namespace editor
 {

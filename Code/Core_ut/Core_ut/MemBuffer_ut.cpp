@@ -1,8 +1,8 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Guid.h>
-#include <Core/MemBuffer.h>
-#include <Core/Vector.h>
+#include "Core/Guid.h"
+#include "Core/MemBuffer.h"
+#include "Core/Vector.h"
 
 TEST_CASE("MemBuffer")
 {

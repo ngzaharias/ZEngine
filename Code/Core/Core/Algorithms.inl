@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Core/Tuple.h>
-#include <Core/TypeTraits.h>
-#include <Core/Vector.h>
+#include "Core/Tuple.h"
+#include "Core/TypeTraits.h"
+#include "Core/Vector.h"
 
 #include <algorithm>
 

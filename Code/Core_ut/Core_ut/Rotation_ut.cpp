@@ -1,10 +1,10 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Matrix.h>
-#include <Core/Rotator.h>
-#include <Core/Quaternion.h>
-#include <Core/Variant.h>
-#include <Core/VariantHelpers.h>
+#include "Core/Matrix.h"
+#include "Core/Rotator.h"
+#include "Core/Quaternion.h"
+#include "Core/Variant.h"
+#include "Core/VariantHelpers.h"
 
 namespace
 {

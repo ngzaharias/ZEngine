@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ECS/Entity.h>
-#include <ECS/QueryRegistry.h>
+#include "ECS/Entity.h"
+#include "ECS/QueryRegistry.h"
 
 template <typename... TObjects>
 ecs::WorldView<TObjects...>::WorldView(ecs::EntityWorld& entityWorld)

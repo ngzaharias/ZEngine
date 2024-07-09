@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Set.h>
-#include <Core/Types.h>
+#include "Core/Set.h"
+#include "Core/Types.h"
 
 namespace
 {

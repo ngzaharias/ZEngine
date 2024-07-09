@@ -1,18 +1,15 @@
 #include "GameServerPCH.h"
 #include "GameServer/GameServer.h"
 
-#include <Engine/AssetManager.h>
-#include <Engine/NetworkManager.h>
-#include <Engine/PhysicsManager.h>
-#include <Engine/PrototypeManager.h>
-#include <Engine/RegisterComponents.h>
-#include <Engine/RegisterSystems.h>
-
-#include <GameShared/RegisterComponents.h>
-#include <GameShared/RegisterSystems.h>
-
+#include "Engine/AssetManager.h"
+#include "Engine/NetworkManager.h"
+#include "Engine/PhysicsManager.h"
+#include "Engine/PrototypeManager.h"
+#include "Engine/RegisterComponents.h"
+#include "Engine/RegisterSystems.h"
 #include "GameServer/RegisterComponents.h"
 #include "GameServer/RegisterSystems.h"
+#include "GameShared/RegisterComponents.h"
 
 svr::GameServer::GameServer()
 	: m_ReplicationHost(m_EntityWorld)
@@ -42,9 +39,7 @@ void svr::GameServer::Register(const Dependencies& dependencies)
 
 	// shared
 	{
-		shd::Dependencies sharedDependencies = { };
 		shd::RegisterComponents(m_EntityWorld, dependencies.m_Serializer);
-		shd::RegisterSystems(m_EntityWorld, sharedDependencies);
 	}
 
 	// server

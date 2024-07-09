@@ -3,7 +3,7 @@
 #include "Engine/Screen.h"
 
 #ifdef Z_GLFW
-#include <Core/Input.h>
+#include "Core/Input.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>

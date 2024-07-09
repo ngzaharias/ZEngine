@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/StaticArray.h>
-#include <Core/Types.h>
+#include "Core/StaticArray.h"
+#include "Core/Types.h"
 
 TEST_CASE("StaticArray")
 {

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <Core/SparseArray.h>
-
-#include <ECS/Entity.h>
+#include "Core/SparseArray.h"
+#include "ECS/Entity.h"
 
 namespace ecs
 {

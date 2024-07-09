@@ -1,11 +1,10 @@
 #include "EnginePCH.h"
 #include "Engine/ShaderAsset.h"
 
+#include "Core/Parse.h"
 #include "Engine/AssetManager.h"
 #include "Engine/TomlHelpers.h"
 #include "Engine/Visitor.h"
-
-#include <Core/Parse.h>
 
 #include <GLEW/glew.h>
 

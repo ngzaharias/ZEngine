@@ -1,17 +1,15 @@
 #include "EnginePCH.h"
 #include "Engine/VoxelMeshingSystem.h"
 
-#include <Core/Algorithms.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
+#include "Core/Algorithms.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/DynamicMeshComponent.h"
+#include "Engine/VoxelComponents.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
-
-#include "Engine/DynamicMeshComponent.h"
-#include "Engine/VoxelComponents.h"
 
 namespace
 {

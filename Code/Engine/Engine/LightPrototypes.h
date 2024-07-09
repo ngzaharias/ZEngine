@@ -1,8 +1,7 @@
 #pragma once
 
-#include <Core/Vector.h>
-
-#include <Engine/PrototypeLoader.h>
+#include "Core/Vector.h"
+#include "Engine/PrototypeLoader.h"
 
 namespace ecs
 {

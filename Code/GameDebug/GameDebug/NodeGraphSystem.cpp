@@ -1,15 +1,14 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/NodeGraphSystem.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/NodeGraphComponents.h"
 
 #include <imgui/imgui.h>
 #include <imnodes/imnodes_example.h>
-
-#include "GameDebug/MenuBarComponents.h"
-#include "GameDebug/NodeGraphComponents.h"
 
 namespace
 {
