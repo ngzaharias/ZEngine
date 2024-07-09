@@ -4,7 +4,7 @@
 #include <Core/Types.h>
 #include <Core/Vector.h>
 
-class Rect2f;
+class AABB2f;
 class Rotator;
 typedef int ImDrawFlags;
 typedef int ImGuiSliderFlags;
@@ -27,7 +27,7 @@ namespace str
 
 namespace imgui
 {
-	void AddRect(const Rect2f& value, Vector4f colour, float rounding = 0.f, float thickness = 1.f, ImDrawFlags flags = 0);
+	void AddRect(const AABB2f& value, Vector4f colour, float rounding = 0.f, float thickness = 1.f, ImDrawFlags flags = 0);
 
 	void Bullet();
 	bool BulletHeader(const char* label, const bool selected = false);

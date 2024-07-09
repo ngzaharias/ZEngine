@@ -6,14 +6,14 @@
 #include "imgui/imgui_user.h"
 #include "imgui/imgui_stdlib.h"
 
-#include <Core/Circle.h>
-#include <Core/CollisionMath.h>
-#include <Core/Line.h>
-#include <Core/Ray.h>
-#include <Core/Rect.h>
-#include <Core/Segment.h>
-#include <Core/Triangle.h>
-#include <Core/VectorMath.h>
+#include "Core/AABB.h"
+#include "Core/Circle.h"
+#include "Core/CollisionMath.h"
+#include "Core/Line.h"
+#include "Core/Ray.h"
+#include "Core/Segment.h"
+#include "Core/Triangle.h"
+#include "Core/VectorMath.h"
 
 namespace
 {
@@ -409,7 +409,7 @@ void imgui::GraphShape(Ray2f& value, float thickness)
 	value.m_Direction.Normalize();
 }
 
-void imgui::GraphShape(Rect2f& value, float rounding, float thickness, ImDrawFlags flags)
+void imgui::GraphShape(AABB2f& value, float rounding, float thickness, ImDrawFlags flags)
 {
 	const float scale = GetScale();
 	const int dragIdx1 = GenerateDragIndex();

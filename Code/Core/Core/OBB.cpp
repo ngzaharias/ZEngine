@@ -5,11 +5,35 @@
 #include "Core/Quaternion.h"
 #include "Core/Rotator.h"
 
-OBB OBB::FromExtents(const Rotator& rotate, const Vector3f& extents) noexcept
+OBB2f OBB2f::FromExtents(const Rotator& rotate, const Vector2f& extents) noexcept
 {
 	const Matrix3x3 matrix = Matrix3x3::FromRotate(rotate);
 
-	OBB obb;
+	OBB2f obb;
+	obb.m_Points[0] = Vector2f(-extents.x, -extents.y) * matrix;
+	obb.m_Points[1] = Vector2f(-extents.x, -extents.y) * matrix;
+	obb.m_Points[2] = Vector2f(+extents.x, -extents.y) * matrix;
+	obb.m_Points[3] = Vector2f(+extents.x, -extents.y) * matrix;
+	return obb;
+}
+
+OBB2f OBB2f::FromExtents(const Vector2f& centre, const Rotator& rotate, const Vector2f& extents) noexcept
+{
+	const Matrix3x3 matrix = Matrix3x3::FromRotate(rotate);
+
+	OBB2f obb;
+	obb.m_Points[0] = centre + Vector2f(-extents.x, -extents.y) * matrix;
+	obb.m_Points[1] = centre + Vector2f(-extents.x, -extents.y) * matrix;
+	obb.m_Points[2] = centre + Vector2f(+extents.x, -extents.y) * matrix;
+	obb.m_Points[3] = centre + Vector2f(+extents.x, -extents.y) * matrix;
+	return obb;
+}
+
+OBB3f OBB3f::FromExtents(const Rotator& rotate, const Vector3f& extents) noexcept
+{
+	const Matrix3x3 matrix = Matrix3x3::FromRotate(rotate);
+
+	OBB3f obb;
 	obb.m_Points[0] = Vector3f(-extents.x, -extents.y, -extents.z) * matrix;
 	obb.m_Points[1] = Vector3f(-extents.x, -extents.y, +extents.z) * matrix;
 	obb.m_Points[2] = Vector3f(+extents.x, -extents.y, +extents.z) * matrix;
@@ -21,11 +45,11 @@ OBB OBB::FromExtents(const Rotator& rotate, const Vector3f& extents) noexcept
 	return obb;
 }
 
-OBB OBB::FromExtents(const Vector3f& centre, const Rotator& rotate, const Vector3f& extents) noexcept
+OBB3f OBB3f::FromExtents(const Vector3f& centre, const Rotator& rotate, const Vector3f& extents) noexcept
 {
 	const Matrix3x3 matrix = Matrix3x3::FromRotate(rotate);
 
-	OBB obb;
+	OBB3f obb;
 	obb.m_Points[0] = centre + Vector3f(-extents.x, -extents.y, -extents.z) * matrix;
 	obb.m_Points[1] = centre + Vector3f(-extents.x, -extents.y, +extents.z) * matrix;
 	obb.m_Points[2] = centre + Vector3f(+extents.x, -extents.y, +extents.z) * matrix;

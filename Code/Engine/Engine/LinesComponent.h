@@ -7,9 +7,9 @@
 
 #include <Engine/CameraTypes.h>
 
-class AABB;
+class AABB3f;
 class Circle2f;
-class OBB;
+class OBB3f;
 class Rotator;
 class Sphere3f;
 
@@ -23,7 +23,7 @@ namespace eng
 
 	struct LinesComponent final : public ecs::SingletonComponent<LinesComponent>
 	{
-		void AddAABB(const Vector3f& translate, const AABB& abb, const Vector4f& colour);
+		void AddAABB(const Vector3f& translate, const AABB3f& abb, const Vector4f& colour);
 		void AddAABB(const Vector3f& translate, const float extents, const Vector4f& colour);
 
 		void AddCircle(const Vector3f& translate, const Circle2f& circle, const Vector4f& colour);
@@ -34,7 +34,7 @@ namespace eng
 
 		void AddLine(const Vector3f& pointA, const Vector3f& pointB, const Vector4f& colour);
 
-		void AddOBB(const Vector3f& translate, const OBB& obb, const Vector4f& colour);
+		void AddOBB(const Vector3f& translate, const OBB3f& obb, const Vector4f& colour);
 
 		void AddSphere(const Vector3f& translate, const Sphere3f& sphere, const Vector4f& colour);
 

@@ -37,7 +37,7 @@ namespace
 			[](const Circle2f&) { return "Circle2f"; },
 			[](const Line2f&) { return "Line2f"; },
 			[](const Ray2f&) { return "Ray2f"; },
-			[](const Rect2f&) { return "Rect2f"; },
+			[](const AABB2f&) { return "AABB2f"; },
 			[](const Segment2f&) { return "Segment2f"; },
 			[](const Triangle2f&) { return "Triangle2f"; });
 	}
@@ -63,8 +63,8 @@ namespace
 				value = Line2f(-Vector2f::One, +Vector2f::One);
 			if (ImGui::Selectable("Ray2f"))
 				value = Ray2f(Vector2f::Zero, Vector2f::One);
-			if (ImGui::Selectable("Rect2f"))
-				value = Rect2f(-Vector2f::One, +Vector2f::One);
+			if (ImGui::Selectable("AABB2f"))
+				value = AABB2f(-Vector2f::One, +Vector2f::One);
 			if (ImGui::Selectable("Segment2f"))
 				value = Segment2f(-Vector2f::One, +Vector2f::One);
 			if (ImGui::Selectable("Triangle2f"))
@@ -88,7 +88,7 @@ namespace
 			imgui::DragVector("m_Direction", data.m_Direction, 0.1f);
 			imgui::DragVector("m_Position", data.m_Position, 0.1f);
 		},
-		[](Rect2f& data)
+		[](AABB2f& data)
 		{
 			imgui::DragVector("m_Min", data.m_Min, 0.1f);
 			imgui::DragVector("m_Max", data.m_Max, 0.1f);

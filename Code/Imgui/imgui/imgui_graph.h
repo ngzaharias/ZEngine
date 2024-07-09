@@ -5,7 +5,7 @@
 class Circle2f;
 class Line2f;
 class Ray2f;
-class Rect2f;
+class AABB2f;
 class Segment2f;
 class Triangle2f;
 typedef int ImDrawFlags;
@@ -26,7 +26,7 @@ namespace imgui
 	void GraphShape(Circle2f& value, int segments = 0, float thickness = 1.f);
 	void GraphShape(Line2f& value, float thickness = 1.f);
 	void GraphShape(Ray2f& value, float thickness = 1.f);
-	void GraphShape(Rect2f& value, float rounding = 0.f, float thickness = 1.f, ImDrawFlags flags = 0);
+	void GraphShape(AABB2f& value, float rounding = 0.f, float thickness = 1.f, ImDrawFlags flags = 0);
 	void GraphShape(Segment2f& value, float thickness = 1.f);
 	void GraphShape(Triangle2f& value, float thickness = 1.f);
 	void GraphShape(Vector2f& value, float thickness = 1.f);

@@ -6,7 +6,6 @@
 #include "Core/OBB.h"
 #include "Core/Plane.h"
 #include "Core/Ray.h"
-#include "Core/Rect.h"
 #include "Core/Segment.h"
 #include "Core/Sphere.h"
 #include "Core/Triangle.h"
@@ -110,6 +109,123 @@ bool math::Intersection(const Segment3f& a, const Plane3f& b, Vector3f& out_Inte
 	return d2 >= 0.f && d2 <= 1.f;
 }
 
+bool math::IsOverlapping(const AABB2f& a, const AABB2f& b)
+{
+	return (a.m_Min.x <= b.m_Max.x && a.m_Max.x >= b.m_Min.x)
+		&& (a.m_Min.y <= b.m_Max.y && a.m_Max.y >= b.m_Min.y);
+}
+
+bool math::IsOverlapping(const AABB2f& a, const Circle2f& b)
+{
+	const Vector2f half = (a.m_Max - a.m_Min) * 0.5f;
+	const Vector2f centre = a.m_Min + half;
+	const Vector2f dist = math::Abs(b.m_Position - centre);
+	if (dist.x > (half.x + b.m_Radius))
+		return false;
+	if (dist.y > (half.y + b.m_Radius))
+		return false;
+
+	if (dist.x <= half.x)
+		return true;
+	if (dist.y <= half.y)
+		return true;
+
+	const float dSqr = math::Sqr(dist.x - half.x) + math::Sqr(dist.y - half.y);
+	return dSqr <= math::Sqr(b.m_Radius);
+}
+
+bool math::IsOverlapping(const AABB2f& a, const Line2f& b)
+{
+	if (math::IsOverlapping(b, Segment2f(a.m_Min, Vector2f(a.m_Min.x, a.m_Max.y))))
+		return true;
+	if (math::IsOverlapping(b, Segment2f(a.m_Min, Vector2f(a.m_Max.x, a.m_Min.y))))
+		return true;
+	if (math::IsOverlapping(b, Segment2f(Vector2f(a.m_Min.x, a.m_Max.y), a.m_Max)))
+		return true;
+	if (math::IsOverlapping(b, Segment2f(Vector2f(a.m_Max.x, a.m_Min.y), a.m_Max)))
+		return true;
+	return false;
+}
+
+bool math::IsOverlapping(const AABB2f& a, const Ray2f& b)
+{
+	const Vector2f reciprocal = Vector2f(
+		1.f / b.m_Direction.x,
+		1.f / b.m_Direction.y);
+
+	const float t1 = (a.m_Min.x - b.m_Position.x) * reciprocal.x;
+	const float t2 = (a.m_Max.x - b.m_Position.x) * reciprocal.x;
+	const float t3 = (a.m_Min.y - b.m_Position.y) * reciprocal.y;
+	const float t4 = (a.m_Max.y - b.m_Position.y) * reciprocal.y;
+
+	const float tmin = std::max(std::min(t1, t2), std::min(t3, t4));
+	const float tmax = std::min(std::max(t1, t2), std::max(t3, t4));
+
+	if (tmax < 0.f)
+		return false;
+	if (tmin > tmax)
+		return false;
+	return true;
+}
+
+bool math::IsOverlapping(const AABB2f& a, const Segment2f& b)
+{
+	const Vector2f& a1 = a.m_Min;
+	const Vector2f& a3 = a.m_Max;
+	const Vector2f a2 = Vector2f(a.m_Min.x, a.m_Max.y);
+	const Vector2f a4 = Vector2f(a.m_Max.x, a.m_Min.y);
+	if (math::IsOverlapping(Segment2f(a1, a2), b))
+		return true;
+	if (math::IsOverlapping(Segment2f(a1, a4), b))
+		return true;
+	if (math::IsOverlapping(Segment2f(a2, a3), b))
+		return true;
+	if (math::IsOverlapping(Segment2f(a4, a3), b))
+		return true;
+
+	return math::IsOverlapping(a, b.m_PointA) || math::IsOverlapping(a, b.m_PointB);
+}
+
+bool math::IsOverlapping(const AABB2f& a, const Triangle2f& b)
+{
+	const Array4 p1 = { a.m_Min, Vector2f(a.m_Min.x, a.m_Max.y), a.m_Max, Vector2f(a.m_Max.x, a.m_Min.y) };
+	const Array3 p2 = { b.m_PointA, b.m_PointB, b.m_PointC };
+
+	// Rect
+	for (int32 i = 0; i < 4; ++i)
+	{
+		const int32 j = (i + 1) % 4;
+		const Vector2f tangent = p1[i] - p1[j];
+		const Vector2f normal = math::Perpendicular(tangent);
+		if (IsAxisSeparated(p1, p2, normal))
+			return false;
+	}
+
+	// Triangle
+	for (int32 i = 0; i < 3; ++i)
+	{
+		const int32 j = (i + 1) % 3;
+		const Vector2f tangent = p2[i] - p2[j];
+		const Vector2f normal = math::Perpendicular(tangent);
+		if (IsAxisSeparated(p1, p2, normal))
+			return false;
+	}
+
+	return true;
+}
+
+bool math::IsOverlapping(const AABB2f& a, const Vector2f& b)
+{
+	return b.x >= a.m_Min.x && b.x <= a.m_Max.x
+		&& b.y >= a.m_Min.y && b.y <= a.m_Max.y;
+}
+
+// https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
+bool math::IsOverlapping(const Circle2f& a, const AABB2f& b)
+{
+	return math::IsOverlapping(b, a);
+}
+
 bool math::IsOverlapping(const Circle2f& a, const Circle2f& b)
 {
 	const float distanceSqr = math::DistanceSqr(a.m_Position, b.m_Position);
@@ -129,26 +245,6 @@ bool math::IsOverlapping(const Circle2f& a, const Ray2f& b)
 	const Vector2f intersectPos = math::Project(a.m_Position, b);
 	const float intersectSqr = math::DistanceSqr(a.m_Position, intersectPos);
 	return intersectSqr <= math::Sqr(a.m_Radius);
-}
-
-// https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
-bool math::IsOverlapping(const Circle2f& a, const Rect2f& b)
-{
-	const Vector2f half = (b.m_Max - b.m_Min) * 0.5f;
-	const Vector2f centre = b.m_Min + half;
-	const Vector2f dist = math::Abs(a.m_Position - centre);
-	if (dist.x > (half.x + a.m_Radius))
-		return false;
-	if (dist.y > (half.y + a.m_Radius))
-		return false;
-
-	if (dist.x <= half.x)
-		return true;
-	if (dist.y <= half.y)
-		return true;
-
-	const float dSqr = math::Sqr(dist.x - half.x) + math::Sqr(dist.y - half.y);
-	return dSqr <= math::Sqr(a.m_Radius);
 }
 
 bool math::IsOverlapping(const Circle2f& a, const Segment2f& b)
@@ -178,6 +274,13 @@ bool math::IsOverlapping(const Circle2f& a, const Vector2f& b)
 	return distanceSqr <= radiiSqr;
 }
 
+// https://stackoverflow.com/questions/99353/how-to-test-if-a-line-segment-intersects-an-axis-aligned-rectange-in-2d
+// https://stackoverflow.com/questions/3746274/line-intersection-with-aabb-rectangle
+bool math::IsOverlapping(const Line2f& a, const AABB2f& b)
+{
+	return math::IsOverlapping(b, a);
+}
+
 bool math::IsOverlapping(const Line2f& a, const Circle2f& b)
 {
 	return math::IsOverlapping(b, a);
@@ -200,21 +303,6 @@ bool math::IsOverlapping(const Line2f& a, const Ray2f& b)
 	const Vector2f w = b.m_Position - a.m_PointA;
 	const float t1 = math::Cross(v1, w) / det;
 	return t1 >= 0.f;
-}
-
-// https://stackoverflow.com/questions/99353/how-to-test-if-a-line-segment-intersects-an-axis-aligned-rectange-in-2d
-// https://stackoverflow.com/questions/3746274/line-intersection-with-aabb-rectangle
-bool math::IsOverlapping(const Line2f& a, const Rect2f& b)
-{
-	if (math::IsOverlapping(a, Segment2f(b.m_Min, Vector2f(b.m_Min.x, b.m_Max.y))))
-		return true;
-	if (math::IsOverlapping(a, Segment2f(b.m_Min, Vector2f(b.m_Max.x, b.m_Min.y))))
-		return true;
-	if (math::IsOverlapping(a, Segment2f(Vector2f(b.m_Min.x, b.m_Max.y), b.m_Max)))
-		return true;
-	if (math::IsOverlapping(a, Segment2f(Vector2f(b.m_Max.x, b.m_Min.y), b.m_Max)))
-		return true;
-	return false;
 }
 
 // https://stackoverflow.com/questions/14307158/how-do-you-check-for-intersection-between-a-line-segment-and-a-line-ray-emanatin
@@ -242,6 +330,11 @@ bool math::IsOverlapping(const Line2f& a, const Triangle2f& b)
 	return false;
 }
 
+bool math::IsOverlapping(const Ray2f& a, const AABB2f& b)
+{
+	return math::IsOverlapping(b, a);
+}
+
 bool math::IsOverlapping(const Ray2f& a, const Circle2f& b)
 {
 	return math::IsOverlapping(b, a);
@@ -262,27 +355,6 @@ bool math::IsOverlapping(const Ray2f& a, const Ray2f& b)
 	const float u = (w.y * b.m_Direction.x - w.x * b.m_Direction.y) / det;
 	const float v = (w.y * a.m_Direction.x - w.x * a.m_Direction.y) / det;
 	return u >= 0.f && v >= 0.f;
-}
-
-bool math::IsOverlapping(const Ray2f& a, const Rect2f& b)
-{
-	const Vector2f reciprocal = Vector2f(
-		1.f / a.m_Direction.x, 
-		1.f / a.m_Direction.y);
-
-	const float t1 = (b.m_Min.x - a.m_Position.x) * reciprocal.x;
-	const float t2 = (b.m_Max.x - a.m_Position.x) * reciprocal.x;
-	const float t3 = (b.m_Min.y - a.m_Position.y) * reciprocal.y;
-	const float t4 = (b.m_Max.y - a.m_Position.y) * reciprocal.y;
-
-	const float tmin = std::max(std::min(t1, t2), std::min(t3, t4));
-	const float tmax = std::min(std::max(t1, t2), std::max(t3, t4));
-
-	if (tmax < 0.f)
-		return false;
-	if (tmin > tmax)
-		return false;
-	return true;
 }
 
 // https://stackoverflow.com/questions/14307158/how-do-you-check-for-intersection-between-a-line-segment-and-a-line-ray-emanatin
@@ -311,77 +383,9 @@ bool math::IsOverlapping(const Ray2f& a, const Triangle2f& b)
 	return false;
 }
 
-bool math::IsOverlapping(const Rect2f& a, const Circle2f& b)
+bool math::IsOverlapping(const Segment2f& a, const AABB2f& b)
 {
 	return math::IsOverlapping(b, a);
-}
-
-bool math::IsOverlapping(const Rect2f& a, const Line2f& b)
-{
-	return math::IsOverlapping(b, a);
-}
-
-bool math::IsOverlapping(const Rect2f& a, const Ray2f& b)
-{
-	return math::IsOverlapping(b, a);
-}
-
-bool math::IsOverlapping(const Rect2f& a, const Rect2f& b)
-{
-	return (a.m_Min.x <= b.m_Max.x && a.m_Max.x >= b.m_Min.x)
-		&& (a.m_Min.y <= b.m_Max.y && a.m_Max.y >= b.m_Min.y);
-}
-
-bool math::IsOverlapping(const Rect2f& a, const Segment2f& b)
-{
-	const Vector2f& a1 = a.m_Min;
-	const Vector2f& a3 = a.m_Max;
-	const Vector2f a2 = Vector2f(a.m_Min.x, a.m_Max.y);
-	const Vector2f a4 = Vector2f(a.m_Max.x, a.m_Min.y);
-	if (math::IsOverlapping(Segment2f(a1, a2), b))
-		return true;
-	if (math::IsOverlapping(Segment2f(a1, a4), b))
-		return true;
-	if (math::IsOverlapping(Segment2f(a2, a3), b))
-		return true;
-	if (math::IsOverlapping(Segment2f(a4, a3), b))
-		return true;
-
-	return math::IsOverlapping(a, b.m_PointA) || math::IsOverlapping(a, b.m_PointB);
-}
-
-bool math::IsOverlapping(const Rect2f& a, const Triangle2f& b)
-{
-	const Array4 p1 = { a.m_Min, Vector2f(a.m_Min.x, a.m_Max.y), a.m_Max, Vector2f(a.m_Max.x, a.m_Min.y) };
-	const Array3 p2 = { b.m_PointA, b.m_PointB, b.m_PointC };
-
-	// Rect
-	for (int32 i = 0; i < 4; ++i)
-	{
-		const int32 j = (i + 1) % 4;
-		const Vector2f tangent = p1[i] - p1[j];
-		const Vector2f normal = math::Perpendicular(tangent);
-		if (IsAxisSeparated(p1, p2, normal))
-			return false;
-	}
-
-	// Triangle
-	for (int32 i = 0; i < 3; ++i)
-	{
-		const int32 j = (i + 1) % 3;
-		const Vector2f tangent = p2[i] - p2[j];
-		const Vector2f normal = math::Perpendicular(tangent);
-		if (IsAxisSeparated(p1, p2, normal))
-			return false;
-	}
-
-	return true;
-}
-
-bool math::IsOverlapping(const Rect2f& a, const Vector2f& b)
-{
-	return b.x >= a.m_Min.x && b.x <= a.m_Max.x
-		&& b.y >= a.m_Min.y && b.y <= a.m_Max.y;
 }
 
 bool math::IsOverlapping(const Segment2f& a, const Circle2f& b)
@@ -395,11 +399,6 @@ bool math::IsOverlapping(const Segment2f& a, const Line2f& b)
 }
 
 bool math::IsOverlapping(const Segment2f& a, const Ray2f& b)
-{
-	return math::IsOverlapping(b, a);
-}
-
-bool math::IsOverlapping(const Segment2f& a, const Rect2f& b)
 {
 	return math::IsOverlapping(b, a);
 }
@@ -424,6 +423,11 @@ bool math::IsOverlapping(const Segment2f& a, const Triangle2f& b)
 	return math::IsOverlapping(a.m_PointA, b);
 }
 
+bool math::IsOverlapping(const Triangle2f& a, const AABB2f& b)
+{
+	return math::IsOverlapping(b, a);
+}
+
 bool math::IsOverlapping(const Triangle2f& a, const Circle2f& b)
 {
 	return math::IsOverlapping(b, a);
@@ -435,11 +439,6 @@ bool math::IsOverlapping(const Triangle2f& a, const Line2f& b)
 }
 
 bool math::IsOverlapping(const Triangle2f& a, const Ray2f& b)
-{
-	return math::IsOverlapping(b, a);
-}
-
-bool math::IsOverlapping(const Triangle2f& a, const Rect2f& b)
 {
 	return math::IsOverlapping(b, a);
 }
@@ -490,12 +489,12 @@ bool math::IsOverlapping(const Triangle2f& a, const Vector2f& b)
 	return !(has_neg && has_pos);
 }
 
-bool math::IsOverlapping(const Vector2f& a, const Circle2f& b)
+bool math::IsOverlapping(const Vector2f& a, const AABB2f& b)
 {
 	return math::IsOverlapping(b, a);
 }
 
-bool math::IsOverlapping(const Vector2f& a, const Rect2f& b)
+bool math::IsOverlapping(const Vector2f& a, const Circle2f& b)
 {
 	return math::IsOverlapping(b, a);
 }
@@ -504,200 +503,3 @@ bool math::IsOverlapping(const Vector2f& a, const Triangle2f& b)
 {
 	return math::IsOverlapping(b, a);
 }
-
-/*
-bool math::IsOverlapping(const AABB& a, const AABB& b)
-{
-
-}
-
-bool math::IsOverlapping(const AABB& a, const Line3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const AABB& a, const OBB& b)
-{
-
-}
-
-bool math::IsOverlapping(const AABB& a, const Ray3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const AABB& a, const Segment3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const AABB& a, const Sphere3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const Line3f& a, const AABB& b)
-{
-
-}
-
-bool math::IsOverlapping(const Line3f& a, const OBB& b)
-{
-
-}
-
-bool math::IsOverlapping(const Line3f& a, const Ray3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const Line3f& a, const Segment3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const Line3f& a, const Sphere3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const OBB& a, const AABB& b)
-{
-
-}
-
-bool math::IsOverlapping(const OBB& a, const Line3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const OBB& a, const OBB& b)
-{
-
-}
-
-bool math::IsOverlapping(const OBB& a, const Ray3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const OBB& a, const Segment3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const OBB& a, const Sphere3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const Sphere3f& a, const Line3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const Sphere3f& a, const Ray3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const Sphere3f& a, const Segment3f& b)
-{
-
-}
-
-bool math::IsOverlapping(const Sphere3f& a, const Sphere3f& b)
-{
-
-}
-
-bool math::Raycast(const Ray2f& a, const Circle2f& b, Intersect2D& out_Result)
-{
-
-}
-
-bool math::Raycast(const Ray2f& a, const Line2f& b, Intersect2D& out_Result)
-{
-
-}
-
-bool math::Raycast(const Ray2f& a, const Ray2f& b, Intersect2D& out_Result)
-{
-
-}
-
-bool math::Raycast(const Ray2f& a, const Segment2f& b, Intersect2D& out_Result)
-{
-
-}
-
-bool math::Raycast(const Ray3f& a, const AABB& b, Intersect3D& out_Result)
-{
-
-}
-
-bool math::Raycast(const Ray3f& a, const Plane& b, Intersect3D& out_Result)
-{
-
-}
-
-bool math::Raycast(const Ray3f& a, const OBB& b, Intersect3D& out_Result)
-{
-
-}
-
-bool math::Raycast(const Ray3f& a, const Sphere3f& b, Intersect3D& out_Result)
-{
-
-}
-
-bool math::Sweep(const Circle2f& a, const Circle2f& b, const Vector2f& direction, const float distance, Intersect2D& out_Result)
-{
-
-}
-
-bool math::Sweep(const Circle2f& a, const Line2f& b, const Vector2f& direction, const float distance, Intersect2D& out_Result)
-{
-
-}
-
-bool math::Sweep(const Circle2f& a, const Ray2f& b, const Vector2f& direction, const float distance, Intersect2D& out_Result)
-{
-
-}
-
-bool math::Sweep(const Circle2f& a, const Segment2f& b, const Vector2f& direction, const float distance, Intersect2D& out_Result)
-{
-
-}
-
-bool math::Sweep(const Sphere3f& a, const AABB& b, const Vector3f& direction, const float distance, Intersect3D& out_Result)
-{
-
-}
-
-bool math::Sweep(const Sphere3f& a, const Line3f& b, const Vector3f& direction, const float distance, Intersect3D& out_Result)
-{
-
-}
-
-bool math::Sweep(const Sphere3f& a, const OBB& b, const Vector3f& direction, const float distance, Intersect3D& out_Result)
-{
-
-}
-
-bool math::Sweep(const Sphere3f& a, const Ray3f& b, const Vector3f& direction, const float distance, Intersect3D& out_Result)
-{
-
-}
-
-bool math::Sweep(const Sphere3f& a, const Segment3f& b, const Vector3f& direction, const float distance, Intersect3D& out_Result)
-{
-
-}
-
-bool math::Sweep(const Sphere3f& a, const Sphere3f& b, const Vector3f& direction, const float distance, Intersect3D& out_Result)
-{
-
-}
-*/

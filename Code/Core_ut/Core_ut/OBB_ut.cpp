@@ -2,7 +2,6 @@
 
 #include <Core/OBB.h>
 
-TEST_CASE("OBB")
+TEST_CASE("OBB3f")
 {
-
 }

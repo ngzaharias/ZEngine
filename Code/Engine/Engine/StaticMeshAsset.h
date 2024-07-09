@@ -30,7 +30,7 @@ namespace eng
 	{
 		str::Path m_SourceFile = { };
 
-		AABB m_Bounds;
+		AABB3f m_Bounds;
 
 		Array<uint32> m_Indices;
 		Array<Vector3f> m_Normals;

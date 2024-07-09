@@ -1,7 +1,7 @@
 #include "EditorPCH.h"
 #include "Editor/FlipbookEditor.h"
 
-#include "Core/Rect.h"
+#include "Core/AABB.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"

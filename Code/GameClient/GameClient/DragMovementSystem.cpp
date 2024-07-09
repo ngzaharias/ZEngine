@@ -61,7 +61,7 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 			const float yaw = math::ToDegrees(atan2f(planeForward.x, planeForward.z));
 			const Rotator rotator = Rotator(pitch, yaw, 0.f);
 
-			const OBB obb = OBB::FromExtents(rotator, Vector3f(500.f, 500.f, 0.f));
+			const OBB3f obb = OBB3f::FromExtents(rotator, Vector3f(500.f, 500.f, 0.f));
 			linesComponent.AddOBB(planeTranslate, obb, s_ColourW);
 		}
 

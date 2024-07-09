@@ -1,19 +1,19 @@
 #include "imgui/imgui_user.h"
 
+#include "Core/AABB.h"
+#include "Core/Guid.h"
+#include "Core/Name.h"
+#include "Core/Path.h"
+#include "Core/Rotator.h"
+#include "Core/String.h"
+#include "Core/Vector.h"
+
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 #include "imgui/imgui_stdlib.h"
 
 #include <algorithm>
-
-#include <Core/Guid.h>
-#include <Core/Name.h>
-#include <Core/Path.h>
-#include <Core/Rect.h>
-#include <Core/Rotator.h>
-#include <Core/String.h>
-#include <Core/Vector.h>
 
 namespace
 {
@@ -47,7 +47,7 @@ namespace
 	}
 }
 
-void imgui::AddRect(const Rect2f& value, Vector4f colour, float rounding, float thickness, ImDrawFlags flags)
+void imgui::AddRect(const AABB2f& value, Vector4f colour, float rounding, float thickness, ImDrawFlags flags)
 {
 	const Vector2f& min = value.m_Min;
 	const Vector2f& max = value.m_Max;

@@ -10,7 +10,7 @@
 #include <Core/OBB.h>
 #include <Core/Sphere.h>
 
-void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB& extents, const Vector4f& colour)
+void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& extents, const Vector4f& colour)
 {
 	Vector3f corners[8];
 	corners[0] = translate + Vector3f(extents.m_Min.x, extents.m_Min.y, extents.m_Min.z);
@@ -186,7 +186,7 @@ void eng::LinesComponent::AddLine(const Vector3f& pointA, const Vector3f& pointB
 	m_Vertices.Append({ pointB, colour });
 }
 
-void eng::LinesComponent::AddOBB(const Vector3f& translate, const OBB& obb, const Vector4f& colour)
+void eng::LinesComponent::AddOBB(const Vector3f& translate, const OBB3f& obb, const Vector4f& colour)
 {
 	AddLine(translate + obb.m_Points[0], translate + obb.m_Points[1], colour);
 	AddLine(translate + obb.m_Points[1], translate + obb.m_Points[2], colour);
