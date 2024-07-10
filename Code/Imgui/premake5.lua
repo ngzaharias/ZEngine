@@ -43,4 +43,5 @@ project "Imgui"
 		"%{wks.location}/../3rdParty/SFML/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/Imgui/",
+		"%{wks.location}/../Code/Math/",
 	}

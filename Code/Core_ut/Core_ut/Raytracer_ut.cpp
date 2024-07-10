@@ -2,7 +2,7 @@
 
 #include "Core/Array.h"
 #include "Core/Raytracer.h"
-#include "Core/Vector.h"
+#include "Math/Vector.h"
 
 TEST_CASE("path::Raytracer")
 {

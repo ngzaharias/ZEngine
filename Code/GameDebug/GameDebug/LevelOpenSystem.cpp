@@ -1,12 +1,12 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/LevelOpenSystem.h"
 
-#include "Core/Math.h"
-#include "Core/Vector.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/LevelComponents.h"
+#include "Math/Math.h"
+#include "Math/Vector.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_user.h>

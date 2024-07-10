@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Core/AABB.h"
-#include "Core/Circle.h"
-#include "Core/Line.h"
-#include "Core/Ray.h"
-#include "Core/Segment.h"
-#include "Core/Triangle.h"
 #include "Core/Variant.h"
 #include "ECS/Component.h"
+#include "Math/AABB.h"
+#include "Math/Circle.h"
+#include "Math/Line.h"
+#include "Math/Ray.h"
+#include "Math/Segment.h"
+#include "Math/Triangle.h"
 
 namespace dbg
 {

@@ -24,14 +24,17 @@ project "Core_ut"
 		"%{wks.location}/../3rdParty/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../Code/Core/",
+		"%{wks.location}/../Code/Math/",
 	}
 
 	libdirs 
 	{ 
-		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/" 
+		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/Math/%{cfg.buildcfg}_%{cfg.platform}/" 
 	}
 	
 	links 
 	{ 
-		"Core.lib" 
+		"Core.lib",
+		"Math.lib" 
 	}

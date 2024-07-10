@@ -1,13 +1,13 @@
 #include "EnginePCH.h"
 #include "Engine/LinesComponent.h"
 
-#include "Core/AABB.h"
-#include "Core/Circle.h"
-#include "Core/Matrix.h"
-#include "Core/OBB.h"
-#include "Core/Sphere.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/Screen.h"
+#include "Math/AABB.h"
+#include "Math/Circle.h"
+#include "Math/Matrix.h"
+#include "Math/OBB.h"
+#include "Math/Sphere.h"
 
 void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& extents, const Vector4f& colour)
 {

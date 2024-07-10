@@ -1,10 +1,6 @@
 #include "GameClientPCH.h"
 #include "GameClient/DragMovementSystem.h"
 
-#include "Core/CollisionMath.h"
-#include "Core/OBB.h"
-#include "Core/Ray.h"
-#include "Core/Triangle.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
@@ -17,6 +13,10 @@
 #include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
 #include "GameClient/DragComponents.h"
+#include "Math/CollisionMath.h"
+#include "Math/OBB.h"
+#include "Math/Ray.h"
+#include "Math/Triangle.h"
 
 #include <PhysX/PxRigidActor.h>
 #include <PhysX/PxScene.h>

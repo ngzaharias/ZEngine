@@ -2,10 +2,10 @@
 
 #include "Core/Array.h"
 #include "Core/Trajectory.h"
-#include "Core/Vector.h"
 #include "ECS/Component.h"
 #include "ECS/System.h"
 #include "Engine/TrajectoryAsset.h"
+#include "Math/Vector.h"
 
 namespace eng
 {

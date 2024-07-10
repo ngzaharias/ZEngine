@@ -27,6 +27,7 @@ project "Engine_ut"
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
+		"%{wks.location}/../Code/Math/",
 	}
 
 	libdirs 
@@ -35,6 +36,7 @@ project "Engine_ut"
 		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/ECS/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Engine/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/Math/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
 
 	filter "Debug*"
@@ -54,6 +56,8 @@ project "Engine_ut"
 		"Core.lib",
 		"ECS.lib",
 		"Engine.lib",
+		"Math.lib",
+
 		"OptickCore.lib",
 	}
 

@@ -2,7 +2,7 @@
 
 #include "Core/String.h"
 #include "Core/Types.h"
-#include "Core/Vector.h"
+#include "Math/Vector.h"
 
 class AABB2f;
 class Rotator;

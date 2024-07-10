@@ -3,8 +3,8 @@
 #ifdef Z_GLFW
 #include "Core/Set.h"
 #include "Core/String.h"
-#include "Core/Vector.h"
 #include "Engine/IWindow.h"
+#include "Math/Vector.h"
 
 struct GLFWwindow;
 

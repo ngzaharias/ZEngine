@@ -2,12 +2,12 @@
 #include "GameClient/TransformSystem.h"
 
 #include "Core/GameTime.h"
-#include "Core/Quaternion.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/TransformComponent.h"
 #include "GameClient/ProjectileComponents.h"
+#include "Math/Quaternion.h"
 
 void transform::TransformSystem::Update(World& world, const GameTime& gameTime)
 {

@@ -30,5 +30,6 @@ project "GameDebug"
 		"%{wks.location}/../Code/GameServer/",
 		"%{wks.location}/../Code/GameShared/",
 		"%{wks.location}/../Code/Imgui/",
+		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
 	}

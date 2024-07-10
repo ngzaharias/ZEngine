@@ -1,12 +1,12 @@
 #include "imgui/imgui_user.h"
 
-#include "Core/AABB.h"
 #include "Core/Guid.h"
 #include "Core/Name.h"
 #include "Core/Path.h"
-#include "Core/Rotator.h"
 #include "Core/String.h"
-#include "Core/Vector.h"
+#include "Math/AABB.h"
+#include "Math/Rotator.h"
+#include "Math/Vector.h"
 
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui/imgui.h"

@@ -44,11 +44,6 @@ namespace enumerate
 
 	template<typename Range>
 	inline auto Reverse(Range&& value);
-
-	inline auto Length(const float stride, const float length);
-
-	inline auto Vector(const Vector3i& value);
-	inline auto Vector(const Vector3i& min, const Vector3i& max);
 }
 
 #include "Algorithms.inl"

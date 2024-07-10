@@ -22,5 +22,6 @@ project "GameShared"
 		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
 		"%{wks.location}/../Code/GameShared/",
+		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
 	}

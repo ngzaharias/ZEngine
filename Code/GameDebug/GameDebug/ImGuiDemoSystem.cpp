@@ -1,11 +1,11 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/ImGuiDemoSystem.h"
 
-#include "Core/Vector.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "GameDebug/MenuBarComponents.h"
+#include "Math/Vector.h"
 
 #include <imgui/imgui.h>
 

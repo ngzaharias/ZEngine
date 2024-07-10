@@ -4,9 +4,9 @@
 #include "Core/Guid.h"
 #include "Core/Name.h"
 #include "Core/Path.h"
-#include "Core/Quaternion.h"
 #include "Core/String.h"
-#include "Core/Vector.h"
+#include "Math/Quaternion.h"
+#include "Math/Vector.h"
 
 namespace eng
 {

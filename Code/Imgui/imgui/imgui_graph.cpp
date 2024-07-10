@@ -6,14 +6,14 @@
 #include "imgui/imgui_user.h"
 #include "imgui/imgui_stdlib.h"
 
-#include "Core/AABB.h"
-#include "Core/Circle.h"
-#include "Core/CollisionMath.h"
-#include "Core/Line.h"
-#include "Core/Ray.h"
-#include "Core/Segment.h"
-#include "Core/Triangle.h"
-#include "Core/VectorMath.h"
+#include "Math/AABB.h"
+#include "Math/Circle.h"
+#include "Math/CollisionMath.h"
+#include "Math/Line.h"
+#include "Math/Ray.h"
+#include "Math/Segment.h"
+#include "Math/Triangle.h"
+#include "Math/VectorMath.h"
 
 namespace
 {

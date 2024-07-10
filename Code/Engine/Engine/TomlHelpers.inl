@@ -2,8 +2,8 @@
 
 #include "Core/Guid.h"
 #include "Core/Name.h"
-#include "Core/Rotator.h"
-#include "Core/Vector.h"
+#include "Math/Rotator.h"
+#include "Math/Vector.h"
 
 template<typename Type>
 Type toml::Parse(const toml::Node& value, const Type& _default)

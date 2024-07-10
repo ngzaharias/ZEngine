@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Rotator.h"
-#include "Core/Vector.h"
 #include "Engine/PrototypeLoader.h"
+#include "Math/Rotator.h"
+#include "Math/Vector.h"
 
 namespace ecs
 {

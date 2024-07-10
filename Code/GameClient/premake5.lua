@@ -27,5 +27,6 @@ project "GameClient"
 		"%{wks.location}/../Code/Engine/",
 		"%{wks.location}/../Code/GameClient/",
 		"%{wks.location}/../Code/GameShared/",
+		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
 	}

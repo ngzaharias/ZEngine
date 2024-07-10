@@ -2,9 +2,9 @@
 
 #include "Core/Array.h"
 #include "Core/Guid.h"
-#include "Core/Matrix.h"
-#include "Core/Vector.h"
 #include "ECS/Entity.h"
+#include "Math/Matrix.h"
+#include "Math/Vector.h"
 
 //#define ASSERT_RENDER
 

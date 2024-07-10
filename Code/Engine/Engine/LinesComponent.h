@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Core/Array.h"
-#include "Core/Vector.h"
 #include "ECS/Component.h"
 #include "Engine/CameraTypes.h"
+#include "Math/Vector.h"
 
 class AABB3f;
 class Circle2f;

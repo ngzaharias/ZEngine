@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/String.h"
-#include "Core/Vector.h"
 #include "Engine/PrototypeLoader.h"
 
 namespace ecs

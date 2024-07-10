@@ -1,8 +1,6 @@
 #include "GameClientPCH.h"
 #include "GameClient/DragSelectionSystem.h"
 
-#include "Core/CollisionMath.h"
-#include "Core/Ray.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
@@ -15,6 +13,8 @@
 #include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
 #include "GameClient/DragComponents.h"
+#include "Math/CollisionMath.h"
+#include "Math/Ray.h"
 
 #include <PhysX/PxRigidActor.h>
 #include <PhysX/PxScene.h>

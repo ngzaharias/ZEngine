@@ -2,7 +2,7 @@
 
 #include "Core/Guid.h"
 #include "Core/MemBuffer.h"
-#include "Core/Vector.h"
+#include "Math/Vector.h"
 
 TEST_CASE("MemBuffer")
 {

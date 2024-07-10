@@ -5,12 +5,12 @@
 #include "Core/Map.h"
 #include "Core/Name.h"
 #include "Core/Path.h"
-#include "Core/Quaternion.h"
-#include "Core/Rotator.h"
 #include "Core/String.h"
 #include "Core/Variant.h"
-#include "Core/Vector.h"
 #include "Engine/Visitor.h"
+#include "Math/Quaternion.h"
+#include "Math/Rotator.h"
+#include "Math/Vector.h"
 
 #include <format>
 

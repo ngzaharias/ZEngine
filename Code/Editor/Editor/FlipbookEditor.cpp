@@ -1,7 +1,6 @@
 #include "EditorPCH.h"
 #include "Editor/FlipbookEditor.h"
 
-#include "Core/AABB.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -9,6 +8,7 @@
 #include "Engine/FileHelpers.h"
 #include "Engine/Texture2DAsset.h"
 #include "GameDebug/MenuBarComponents.h"
+#include "Math/AABB.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>

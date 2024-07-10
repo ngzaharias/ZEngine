@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Matrix.h"
 #include "Engine/CameraTypes.h"
+#include "Math/Matrix.h"
 
 namespace camera
 {

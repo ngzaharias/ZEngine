@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Core/AABB.h"
 #include "Core/Array.h"
 #include "Core/Types.h"
-#include "Core/Vector.h"
 #include "Engine/Asset.h"
 #include "Engine/AssetLoader.h"
+#include "Math/AABB.h"
+#include "Math/Vector.h"
 
 namespace eng
 {
