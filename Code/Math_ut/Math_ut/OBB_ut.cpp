@@ -2,6 +2,7 @@
 
 #include "Math/OBB.h"
 
-TEST_CASE("OBB3f")
+TEST_CASE("OBB3f.")
 {
+	CHECK(false);
 }

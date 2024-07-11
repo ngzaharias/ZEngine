@@ -75,62 +75,54 @@ namespace
 	}
 }
 
-TEST_CASE("Rotation")
+TEST_CASE("Rotation. Rotator -> Matrix3x3 -> Quaternion -> Rotator.")
 {
+	Rotator input = Rotator(45.f, -45.f, 0.f);
 
-	{
-		INFO("Rotator -> Matrix3x3 -> Quaternion -> Rotator");
+	auto matrix = Matrix3x3::FromRotate(input);
+	auto quater = Quaternion::FromMatrix(matrix);
+	auto output = Rotator::FromQuaternion(quater);
 
-		Rotator input = Rotator(45.f, -45.f, 0.f);
+	CHECK(input.m_Pitch == Approx(output.m_Pitch));
+	CHECK(input.m_Yaw == Approx(output.m_Yaw));
+	CHECK(input.m_Roll == Approx(output.m_Roll));
+}
 
-		auto matrix = Matrix3x3::FromRotate(input);
-		auto quater = Quaternion::FromMatrix(matrix);
-		auto output = Rotator::FromQuaternion(quater);
+TEST_CASE("Rotation. Rotator -> Quaternion -> Matrix3x3 -> Rotator.")
+{
+	Rotator input = Rotator(45.f, -45.f, 0.f);
 
-		CHECK(input.m_Pitch == Approx(output.m_Pitch));
-		CHECK(input.m_Yaw == Approx(output.m_Yaw));
-		CHECK(input.m_Roll == Approx(output.m_Roll));
-	}
+	auto quater = Quaternion::FromRotator(input);
+	auto matrix = Matrix3x3::FromRotate(quater);
+	auto output = Rotator::FromMatrix(matrix);
 
-	{
-		INFO("Rotator -> Quaternion -> Matrix3x3 -> Rotator");
+	CHECK(input.m_Pitch == Approx(output.m_Pitch));
+	CHECK(input.m_Yaw == Approx(output.m_Yaw));
+	CHECK(input.m_Roll == Approx(output.m_Roll));
+}
 
-		Rotator input = Rotator(45.f, -45.f, 0.f);
+TEST_CASE("Rotation. Rotator -> Matrix4x4 -> Quaternion -> Rotator.")
+{
+	Rotator input = Rotator(45.f, -45.f, 0.f);
 
-		auto quater = Quaternion::FromRotator(input);
-		auto matrix = Matrix3x3::FromRotate(quater);
-		auto output = Rotator::FromMatrix(matrix);
+	auto matrix = Matrix4x4::FromRotate(input);
+	auto quater = Quaternion::FromMatrix(matrix);
+	auto output = Rotator::FromQuaternion(quater);
 
-		CHECK(input.m_Pitch == Approx(output.m_Pitch));
-		CHECK(input.m_Yaw == Approx(output.m_Yaw));
-		CHECK(input.m_Roll == Approx(output.m_Roll));
-	}
+	CHECK(input.m_Pitch == Approx(output.m_Pitch));
+	CHECK(input.m_Yaw == Approx(output.m_Yaw));
+	CHECK(input.m_Roll == Approx(output.m_Roll));
+}
 
-	{
-		INFO("Rotator -> Matrix4x4 -> Quaternion -> Rotator");
+TEST_CASE("Rotation. Rotator -> Quaternion -> Matrix4x4 -> Rotator.")
+{
+	Rotator input = Rotator(45.f, -45.f, 0.f);
 
-		Rotator input = Rotator(45.f, -45.f, 0.f);
+	auto quater = Quaternion::FromRotator(input);
+	auto matrix = Matrix4x4::FromRotate(quater);
+	auto output = Rotator::FromMatrix(matrix);
 
-		auto matrix = Matrix4x4::FromRotate(input);
-		auto quater = Quaternion::FromMatrix(matrix);
-		auto output = Rotator::FromQuaternion(quater);
-
-		CHECK(input.m_Pitch == Approx(output.m_Pitch));
-		CHECK(input.m_Yaw == Approx(output.m_Yaw));
-		CHECK(input.m_Roll == Approx(output.m_Roll));
-	}
-
-	{
-		INFO("Rotator -> Quaternion -> Matrix4x4 -> Rotator");
-
-		Rotator input = Rotator(45.f, -45.f, 0.f);
-
-		auto quater = Quaternion::FromRotator(input);
-		auto matrix = Matrix4x4::FromRotate(quater);
-		auto output = Rotator::FromMatrix(matrix);
-
-		CHECK(input.m_Pitch == Approx(output.m_Pitch));
-		CHECK(input.m_Yaw == Approx(output.m_Yaw));
-		CHECK(input.m_Roll == Approx(output.m_Roll));
-	}
+	CHECK(input.m_Pitch == Approx(output.m_Pitch));
+	CHECK(input.m_Yaw == Approx(output.m_Yaw));
+	CHECK(input.m_Roll == Approx(output.m_Roll));
 }

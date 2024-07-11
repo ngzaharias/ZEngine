@@ -3,7 +3,7 @@
 #include "Math/Ray.h"
 #include "Math/Vector.h"
 
-TEST_CASE("Ray3f")
+TEST_CASE("Ray3f.")
 {
 	{
 		Ray3f ray = Ray3f(Vector3f::Zero, Vector3f::AxisX);

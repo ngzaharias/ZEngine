@@ -5,97 +5,97 @@
 #include "Math/Vector.h"
 #include "Math/VectorMath.h"
 
-TEST_CASE("math::Vector2f::Alignment")
+TEST_CASE("Vector2f. Alignment.")
 {
 	CHECK(alignof(Vector2f) == 4);
 }
 
-TEST_CASE("math::Vector2f::Vector2f()")
+TEST_CASE("Vector2f. Vector2f().")
 {
 	constexpr Vector2f vector;
 	CHECK(vector.x == 0.f);
 	CHECK(vector.y == 0.f);
 }
 
-TEST_CASE("math::Vector2f::Vector2f(float)")
+TEST_CASE("Vector2f. Vector2f(float).")
 {
 	constexpr Vector2f vector(1.f);
 	CHECK(vector.x == 1.f);
 	CHECK(vector.y == 1.f);
 }
 
-TEST_CASE("math::Vector2f::Vector2f(float, float)")
+TEST_CASE("Vector2f. Vector2f(float, float).")
 {
 	constexpr Vector2f vector(1.f, 2.f);
 	CHECK(vector.x == 1.f);
 	CHECK(vector.y == 2.f);
 }
 
-TEST_CASE("math::Vector2f::operator==(Vector2f)")
+TEST_CASE("Vector2f. operator==(Vector2f).")
 {
 	CHECK(Vector2f::Zero == Vector2f::Zero);
 	CHECK_FALSE(Vector2f::Zero == Vector2f(1.f));
 }
 
-TEST_CASE("math::Vector2f::operator!=(Vector2f)")
+TEST_CASE("Vector2f. operator!=(Vector2f).")
 {
 	CHECK(Vector2f::Zero != Vector2f(1.f));
 	CHECK_FALSE(Vector2f::Zero != Vector2f::Zero);
 }
 
-TEST_CASE("math::Vector2f::operator+(Vector2f)")
+TEST_CASE("Vector2f. operator+(Vector2f).")
 {
 	const Vector2f vector = Vector2f(1.f) + Vector2f(2.f);
 	CHECK(vector == Vector2f(3.f));
 }
 
-TEST_CASE("math::Vector2f::operator-(Vector2f)")
+TEST_CASE("Vector2f. operator-(Vector2f).")
 {
 	const Vector2f vector = Vector2f(3.f) - Vector2f(2.f);
 	CHECK(vector == Vector2f(1.f));
 }
 
-TEST_CASE("math::Vector2f::operator+=(Vector2f)")
+TEST_CASE("Vector2f. operator+=(Vector2f).")
 {
 	Vector2f vector = Vector2f(1.f);
 	vector += Vector2f(2.f);
 	CHECK(vector == Vector2f(3.f));
 }
 
-TEST_CASE("math::Vector2f::operator-=(Vector2f)")
+TEST_CASE("Vector2f. operator-=(Vector2f).")
 {
 	Vector2f vector = Vector2f(3.f);
 	vector -= Vector2f(2.f);
 	CHECK(vector == Vector2f(1.f));
 }
 
-TEST_CASE("math::Vector2f::operator*(float)")
+TEST_CASE("Vector2f. operator*(float).")
 {
 	const Vector2f vector = Vector2f(2.f) * 3.f;
 	CHECK(vector == Vector2f(6.f));
 }
 
-TEST_CASE("math::Vector2f::operator/(float)")
+TEST_CASE("Vector2f. operator/(float).")
 {
 	const Vector2f vector = Vector2f(6.f) / 3.f;
 	CHECK(vector == Vector2f(2.f));
 }
 
-TEST_CASE("math::Vector2f::operator*=(float)")
+TEST_CASE("Vector2f. operator*=(float).")
 {
 	Vector2f vector = Vector2f(2.f);
 	vector *= 3.f;
 	CHECK(vector == Vector2f(6.f));
 }
 
-TEST_CASE("math::Vector2f::operator/=(float)")
+TEST_CASE("Vector2f. operator/=(float).")
 {
 	Vector2f vector = Vector2f(6.f);
 	vector /= 3.f;
 	CHECK(vector == Vector2f(2.f));
 }
 
-TEST_CASE("math::Vector2f::operator*(Matrix4x4) - Translate")
+TEST_CASE("Vector2f. operator*(Matrix4x4) - Translate.")
 {
 	const Vector2f vectorA = Vector2f(2.f) * Matrix4x4::FromTranslate(Vector3f(4.f));
 	const Vector2f vectorB = Vector2f(2.f) * Matrix4x4::FromTranslate(Vector3f(-4.f));
@@ -104,7 +104,7 @@ TEST_CASE("math::Vector2f::operator*(Matrix4x4) - Translate")
 	CHECK(vectorB == Vector2f(-2.f));
 }
 
-TEST_CASE("math::Vector2f::operator*(Matrix4x4) - Rotate")
+TEST_CASE("Vector2f. operator*(Matrix4x4) - Rotate.")
 {
 	{
 		INFO("X-Axis");
@@ -146,7 +146,7 @@ TEST_CASE("math::Vector2f::operator*(Matrix4x4) - Rotate")
 	}
 }
 
-TEST_CASE("math::Vector2f::operator*(Matrix4x4) - Scale")
+TEST_CASE("Vector2f. operator*(Matrix4x4) - Scale.")
 {
 	const Vector2f vectorA = Vector2f(2.f) * Matrix4x4::FromScale(Vector3f(4.f, 3.f, 2.f));
 	const Vector2f vectorB = Vector2f(8.f) * Matrix4x4::FromScale(Vector3f(0.5f, 0.25f, 0.125f));
@@ -163,46 +163,46 @@ TEST_CASE("math::Vector2f::operator*(Matrix4x4) - Scale")
 	CHECK(vectorF == Vector2f(-6.f));
 }
 
-TEST_CASE("math::Vector2f::operator*(Matrix4x4) - Translate & Scale")
+TEST_CASE("Vector2f. operator*(Matrix4x4) - Translate & Scale.")
 {
 	const Vector2f vector = Vector2f(2.f) * Matrix4x4::FromTransform(Vector3f(1.f), Quaternion::Identity, 2.f);
 	CHECK(vector == Vector2f(5.f));
 }
 
-TEST_CASE("math::Vector2f::operator*(Matrix4x4) - Translate & Rotate")
+TEST_CASE("Vector2f. operator*(Matrix4x4) - Translate & Rotate.")
 {
 	const Quaternion quaternion = Quaternion::FromAxisAngle(Vector3f::AxisZ, math::ToRadians(90.f));
 	const Vector2f vector = Vector2f(2.f) * Matrix4x4::FromTransform(Vector3f(1.f), quaternion, 1.f);
 	CHECK(IsNearly(vector, Vector2f(-1.f, 3.f)));
 }
 
-TEST_CASE("math::Vector2f::operator*(Matrix4x4) - Rotate & Scale")
+TEST_CASE("Vector2f. operator*(Matrix4x4) - Rotate & Scale.")
 {
 	const Quaternion quaternion = Quaternion::FromAxisAngle(Vector3f::AxisZ, math::ToRadians(90.f));
 	const Vector2f vector = Vector2f(2.f) * Matrix4x4::FromTransform(Vector3f(0.f), quaternion, 2.f);
 	CHECK(IsNearly(vector, Vector2f(-4.f, 4.f)));
 }
 
-TEST_CASE("math::Vector2f::operator*(Matrix4x4) - Translate, Rotate & Scale")
+TEST_CASE("Vector2f. operator*(Matrix4x4) - Translate, Rotate & Scale.")
 {
 	const Quaternion quaternion = Quaternion::FromAxisAngle(Vector3f::AxisZ, math::ToRadians(90.f));
 	const Vector2f vector = Vector2f(2.f) * Matrix4x4::FromTransform(Vector3f(2.f), quaternion, 2.f);
 	CHECK(IsNearly(vector, Vector2f(-2.f, 6.f)));
 }
 
-TEST_CASE("math::Vector2f::operator+()")
+TEST_CASE("Vector2f. operator+().")
 {
 	CHECK(+Vector2f(1.f) == Vector2f(1.f));
 	CHECK(+Vector2f(-1.f) == Vector2f(-1.f));
 }
 
-TEST_CASE("math::Vector2f::operator-()")
+TEST_CASE("Vector2f. operator-().")
 {
 	CHECK(-Vector2f(1.f) == Vector2f(-1.f));
 	CHECK(-Vector2f(-1.f) == Vector2f(1.f));
 }
 
-TEST_CASE("math::Vector2f::Length")
+TEST_CASE("Vector2f. Length.")
 {
 	CHECK(Vector2f::Zero.Length() == 0.f);
 	CHECK(Vector2f::AxisX.Length() == 1.f);
@@ -211,7 +211,7 @@ TEST_CASE("math::Vector2f::Length")
 	CHECK(Vector2f(0.f, 10.f).Length() == 10.f);
 }
 
-TEST_CASE("math::Vector2f::LengthSqr")
+TEST_CASE("Vector2f. LengthSqr.")
 {
 	CHECK(Vector2f::Zero.LengthSqr() == 0.f);
 	CHECK(Vector2f::AxisX.LengthSqr() == 1.f);
@@ -220,7 +220,7 @@ TEST_CASE("math::Vector2f::LengthSqr")
 	CHECK(Vector2f(0.f, 10.f).LengthSqr() == 100.f);
 }
 
-TEST_CASE("math::Vector2f::Normalize")
+TEST_CASE("Vector2f. Normalize.")
 {
 	Vector2f vectorA = Vector2f::Zero;
 	vectorA.Normalize();
@@ -247,7 +247,7 @@ TEST_CASE("math::Vector2f::Normalize")
 	CHECK(vectorE == Vector2f::AxisY);
 }
 
-TEST_CASE("math::Vector2f::Normalized")
+TEST_CASE("Vector2f. Normalized.")
 {
 	const Vector2f vectorA = (Vector2f::Zero).Normalized();
 	CHECK(std::isnan(vectorA.Length()));
@@ -269,32 +269,32 @@ TEST_CASE("math::Vector2f::Normalized")
 	CHECK(vectorE == Vector2f::AxisY);
 }
 
-TEST_CASE("math::Vector2f::XY0")
+TEST_CASE("Vector2f. XY0.")
 {
 	CHECK(Vector2f(1.f, 2.f).XY0() == Vector3f(1.f, 2.f, 0.f));
 }
 
-TEST_CASE("math::Vector2f::X0Y")
+TEST_CASE("Vector2f. X0Y.")
 {
 	CHECK(Vector2f(1.f, 2.f).X0Y() == Vector3f(1.f, 0.f, 2.f));
 }
 
-TEST_CASE("math::Vector2f::AxisX")
+TEST_CASE("Vector2f. AxisX.")
 {
 	CHECK(Vector2f::AxisX == Vector2f(1.f, 0.f));
 }
 
-TEST_CASE("math::Vector2f::AxisY")
+TEST_CASE("Vector2f. AxisY.")
 {
 	CHECK(Vector2f::AxisY == Vector2f(0.f, 1.f));
 }
 
-TEST_CASE("math::Vector2f::Zero")
+TEST_CASE("Vector2f. Zero.")
 {
 	CHECK(Vector2f::Zero == Vector2f(0.f));
 }
 
-TEST_CASE("math::Vector2f::One")
+TEST_CASE("Vector2f. One.")
 {
 	CHECK(Vector2f::One == Vector2f(1.f));
 }
