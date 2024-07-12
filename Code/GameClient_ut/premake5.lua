@@ -1,6 +1,6 @@
 project "GameClient_ut"
 	kind "ConsoleApp"
-	dependson { "Core", "ECS", "Engine", "GameClient" }
+	dependson { "Core", "ECS", "Engine", "GameClient", "Math" }
 	location "%{wks.location}/GameClient_ut"
 
 	defines { "Z_UNIT_TEST" }

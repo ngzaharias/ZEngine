@@ -1,6 +1,6 @@
 project "Imgui"
 	kind "StaticLib"
-	dependson { "Core" }
+	dependson { "Core", "Math" }
 	location "%{wks.location}/Imgui"
 	files 
 	{ 

@@ -196,7 +196,7 @@ bool imgui::BeginGraph(const char* label, Vector2f graph_size, ImGuiGraphFlags f
 
 	if (ImGui::GetIO().MouseWheel != 0 && ImGui::ItemHoverable(frame_bb, id))
 	{
-		constexpr float count = 18.f;
+		constexpr float count = 10.f;
 		const float min = std::powf(0.5f, count);
 		const float max = std::powf(2.0f, count);
 

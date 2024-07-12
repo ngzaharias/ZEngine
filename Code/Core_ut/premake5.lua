@@ -1,6 +1,6 @@
 project "Core_ut"
 	kind "ConsoleApp"
-	dependson { "Core" }
+	dependson { "Core", "Math" }
 	location "%{wks.location}/Core_ut"
 
 	defines { "Z_UNIT_TEST" }

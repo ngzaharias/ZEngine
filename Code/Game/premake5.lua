@@ -5,7 +5,7 @@ project "Game"
 		kind "StaticLib"
 	filter {} -- disable the filter
 
-	dependson { "Core", "Engine", "GameClient", "GameDebug", "GameServer", "GameShared", "Imgui", "Network" }
+	dependson { "Core", "Engine", "GameClient", "GameDebug", "GameServer", "GameShared", "Imgui", "Math", "Network" }
 	pchheader "GamePCH.h"
 	pchsource "Game/GamePCH.cpp"
 	location "%{wks.location}/Game"

@@ -1,6 +1,6 @@
 project "GameServer"
 	kind "StaticLib"
-	dependson { "Core", "ECS", "Engine", "GameShared", "Network" }
+	dependson { "Core", "ECS", "Engine", "GameShared", "Math", "Network" }
 	pchheader "GameServerPCH.h"
 	pchsource "GameServer/GameServerPCH.cpp"
 	location "%{wks.location}/GameServer"

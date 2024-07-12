@@ -1,6 +1,6 @@
 project "Engine"
 	kind "StaticLib"
-	dependson { "Core", "Imgui", "Network" }
+	dependson { "Core", "Imgui", "Math", "Network" }
 	pchheader "EnginePCH.h"
 	pchsource "Engine/EnginePCH.cpp"
 	location "%{wks.location}/Engine"

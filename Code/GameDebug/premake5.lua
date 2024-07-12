@@ -1,6 +1,6 @@
 project "GameDebug"
 	kind "StaticLib"
-	dependson { "Core", "Engine", "GameClient", "GameServer", "GameShared", "Imgui", "Network" }
+	dependson { "Core", "Engine", "GameClient", "GameServer", "GameShared", "Imgui", "Math", "Network" }
 	pchheader "GameDebugPCH.h"
 	pchsource "GameDebug/GameDebugPCH.cpp"
 	location "%{wks.location}/GameDebug"
