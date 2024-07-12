@@ -2,7 +2,6 @@
 
 premake.modules.lua = {}
 local m = premake.modules.lua
-
 local p = premake
 
 newaction {
