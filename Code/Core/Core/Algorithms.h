@@ -4,7 +4,7 @@ class Vector3i;
 
 using int32 = int32_t;
 
-namespace core
+namespace enumerate
 {
 	/// \brief Enumerates the values and returns true if the value is found.
 	template<typename Range, typename Type>
@@ -23,10 +23,7 @@ namespace core
 	/// Example: The intersection of [0, 1, 2] and [1, 2, 3] will be the value [1, 2].
 	template<typename Range>
 	void Intersection(const Range& inputA, const Range& inputB, Range& output);
-}
 
-namespace enumerate
-{
 	template<typename Range>
 	constexpr auto BeginForward(Range&& value) -> decltype(auto);
 

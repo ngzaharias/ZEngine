@@ -96,7 +96,7 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 			{
 				// #note: components added on the same frame it started replicating
 				// will show up in the added query, so they need to ignored
-				if (core::Contains(toCreate, entity))
+				if (enumerate::Contains(toCreate, entity))
 					continue;
 				if (!IsReplicated(peerId, entity))
 					continue;
@@ -114,7 +114,7 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 
 			for (const ecs::Entity& entity : toUpdate)
 			{
-				if (core::Contains(toRemove, entity))
+				if (enumerate::Contains(toRemove, entity))
 					continue;
 				if (!IsReplicated(peerId, entity))
 					continue;

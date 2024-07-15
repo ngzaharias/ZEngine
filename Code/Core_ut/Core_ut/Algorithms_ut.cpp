@@ -9,319 +9,281 @@
 
 // #todo: const vs non-const
 
-TEST_CASE("core::Contains")
-{
-	SECTION("Array")
-	{
-		const Array<int32> values = { 1, 2, 3 };
-		CHECK(!core::Contains(values, 0));
-		CHECK(core::Contains(values, 1));
-		CHECK(core::Contains(values, 2));
-		CHECK(core::Contains(values, 3));
-		CHECK(!core::Contains(values, 4));
-	}
-
-	SECTION("Set")
-	{
-		const Set<int32> values = { 1, 2, 3 };
-		CHECK(!core::Contains(values, 0));
-		CHECK(core::Contains(values, 1));
-		CHECK(core::Contains(values, 2));
-		CHECK(core::Contains(values, 3));
-		CHECK(!core::Contains(values, 4));
-	}
-
-	SECTION("Map")
-	{
-		const Map<int32, int32> values = { { 1, 1337 }, { 2, 666 } };
-		CHECK(!core::Contains(values, 0));
-		CHECK(core::Contains(values, 1));
-	}
-}
-
-TEST_CASE("core::ContainsIf")
+namespace
 {
 	struct Struct
 	{
 		bool operator< (const Struct& rhs) const { return m_Value < rhs.m_Value; }
 		int32 m_Value;
 	};
-
-	SECTION("Array")
-	{
-		const Array<Struct> values = { { 1 }, { 2 }, { 3 } };
-		CHECK(!core::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 0; }));
-		CHECK(core::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 1; }));
-		CHECK(core::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 2; }));
-		CHECK(core::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 3; }));
-		CHECK(!core::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 4; }));
-	}
-
-	SECTION("Set")
-	{
-		const Set<Struct> values = { { 1 }, { 2 }, { 3 } };
-		CHECK(!core::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 0; }));
-		CHECK(core::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 1; }));
-		CHECK(core::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 2; }));
-		CHECK(core::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 3; }));
-		CHECK(!core::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 4; }));
-	}
-
-	SECTION("Map")
-	{
-	}
 }
 
-TEST_CASE("core::Difference")
+TEST_CASE("enumerate::Contains. Array.")
 {
-	SECTION("Array")
-	{
-		Array<int32> inputA = { 1, 2, 3 };
-		Array<int32> inputB = { 2, 3, 4 };
-
-		INFO("Array only contains values that were present in inputA, but not in inputB.");
-		Array<int32> outputA;
-		core::Difference(inputA, inputB, outputA);
-		CHECK(core::Contains(outputA, 1));
-		CHECK(!core::Contains(outputA, 2));
-		CHECK(!core::Contains(outputA, 3));
-		CHECK(!core::Contains(outputA, 4));
-
-		INFO("Array only contains values that were present in inputB, but not in inputA.");
-		Array<int32> outputB;
-		core::Difference(inputB, inputA, outputB);
-		CHECK(!core::Contains(outputB, 1));
-		CHECK(!core::Contains(outputB, 2));
-		CHECK(!core::Contains(outputB, 3));
-		CHECK(core::Contains(outputB, 4));
-	}
-
-	SECTION("Set")
-	{
-		Set<int32> inputA = { 1, 2, 3 };
-		Set<int32> inputB = { 2, 3, 4 };
-
-		INFO("Set only contains values that were present in inputA, but not in inputB.");
-		Set<int32> outputA;
-		core::Difference(inputA, inputB, outputA);
-		CHECK(core::Contains(outputA, 1));
-		CHECK(!core::Contains(outputA, 2));
-		CHECK(!core::Contains(outputA, 3));
-		CHECK(!core::Contains(outputA, 4));
-
-		INFO("Set only contains values that were present in inputB, but not in inputA.");
-		Set<int32> outputB;
-		core::Difference(inputB, inputA, outputB);
-		CHECK(!core::Contains(outputB, 1));
-		CHECK(!core::Contains(outputB, 2));
-		CHECK(!core::Contains(outputB, 3));
-		CHECK(core::Contains(outputB, 4));
-	}
-
-	SECTION("Map")
-	{
-		//// #todo: Map version of Contains
-		//Map<int32, int32> inputA = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
-		//Map<int32, int32> inputB = { { 2, 2 }, { 3, 3 }, { 4, 4 } };
-
-		//INFO("Map only contains values that were present in inputA, but not in inputB.");
-		//Map<int32, int32> outputA;
-		//core::Difference(inputA, inputB, outputA);
-		//CHECK(core::Contains(outputA, 1));
-		//CHECK(!core::Contains(outputA, 2));
-		//CHECK(!core::Contains(outputA, 3));
-		//CHECK(!core::Contains(outputA, 4));
-
-		//INFO("Map only contains values that were present in inputB, but not in inputA.");
-		//Map<int32, int32> outputB;
-		//core::Difference(inputB, inputA, outputB);
-		//CHECK(!core::Contains(outputB, 1));
-		//CHECK(!core::Contains(outputB, 2));
-		//CHECK(!core::Contains(outputB, 3));
-		//CHECK(core::Contains(outputB, 4));
-	}
+	const Array<int32> values = { 1, 2, 3 };
+	CHECK(!enumerate::Contains(values, 0));
+	CHECK(enumerate::Contains(values, 1));
+	CHECK(enumerate::Contains(values, 2));
+	CHECK(enumerate::Contains(values, 3));
+	CHECK(!enumerate::Contains(values, 4));
 }
 
-TEST_CASE("core::Intersection")
+TEST_CASE("enumerate::Contains. Set.")
 {
-	SECTION("Array")
-	{
-		Array<int32> inputA = { 1, 2, 3 };
-		Array<int32> inputB = { 2, 3, 4 };
-
-		Array<int32> output;
-		core::Intersection(inputA, inputB, output);
-		CHECK(core::Contains(output, 2));
-		CHECK(core::Contains(output, 3));
-		CHECK(!core::Contains(output, 1));
-		CHECK(!core::Contains(output, 4));
-	}
-
-	SECTION("Set")
-	{
-		Set<int32> inputA = { 1, 2, 3 };
-		Set<int32> inputB = { 2, 3, 4 };
-
-		Set<int32> output;
-		core::Intersection(inputA, inputB, output);
-		CHECK(core::Contains(output, 2));
-		CHECK(core::Contains(output, 3));
-		CHECK(!core::Contains(output, 1));
-		CHECK(!core::Contains(output, 4));
-	}
-
-	SECTION("Map")
-	{
-		//Map<int32, int32> inputA = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
-		//Map<int32, int32> inputB = { { 2, 2 }, { 3, 3 }, { 4, 4 } };
-
-		//Map<int32, int32> output;
-		//core::Intersection(inputA, inputB, output);
-		//CHECK(!core::Contains(output, 1));
-		//CHECK(core::Contains(output, 2));
-		//CHECK(core::Contains(output, 3));
-		//CHECK(!core::Contains(output, 4));
-	}
+	const Set<int32> values = { 1, 2, 3 };
+	CHECK(!enumerate::Contains(values, 0));
+	CHECK(enumerate::Contains(values, 1));
+	CHECK(enumerate::Contains(values, 2));
+	CHECK(enumerate::Contains(values, 3));
+	CHECK(!enumerate::Contains(values, 4));
 }
 
-TEST_CASE("enumerate::BeginForward")
+TEST_CASE("enumerate::Contains. Map.")
 {
-	SECTION("Array")
-	{
-	}
-
-	SECTION("Set")
-	{
-	}
-
-	SECTION("Map")
-	{
-	}
+	const Map<int32, int32> values = { { 1, 1337 }, { 2, 666 } };
+	CHECK(!enumerate::Contains(values, 0));
+	CHECK(enumerate::Contains(values, 1));
 }
 
-TEST_CASE("enumerate::BeginReverse")
+TEST_CASE("enumerate::ContainsIf. Array.")
 {
-	SECTION("Array")
-	{
-	}
-
-	SECTION("Set")
-	{
-	}
-
-	SECTION("Map")
-	{
-	}
+	const Array<Struct> values = { { 1 }, { 2 }, { 3 } };
+	CHECK(!enumerate::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 0; }));
+	CHECK(enumerate::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 1; }));
+	CHECK(enumerate::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 2; }));
+	CHECK(enumerate::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 3; }));
+	CHECK(!enumerate::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 4; }));
 }
 
-TEST_CASE("enumerate::EndForward")
+TEST_CASE("enumerate::ContainsIf. Set.")
 {
-	SECTION("Array")
-	{
-	}
-
-	SECTION("Set")
-	{
-	}
-
-	SECTION("Map")
-	{
-	}
+	const Set<Struct> values = { { 1 }, { 2 }, { 3 } };
+	CHECK(!enumerate::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 0; }));
+	CHECK(enumerate::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 1; }));
+	CHECK(enumerate::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 2; }));
+	CHECK(enumerate::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 3; }));
+	CHECK(!enumerate::ContainsIf(values, [](auto lhs) { return lhs.m_Value == 4; }));
 }
 
-TEST_CASE("enumerate::EndReverse")
+TEST_CASE("enumerate::ContainsIf. Map.")
 {
-	SECTION("Array")
-	{
-	}
-
-	SECTION("Set")
-	{
-	}
-
-	SECTION("Map")
-	{
-	}
+	CHECK(false);
 }
 
-TEST_CASE("enumerate::Forward")
+TEST_CASE("enumerate::Difference. Array.")
 {
-	SECTION("Array")
-	{
-		int32 i = 0;
-		Array<int32> values = { 0, 10, 20 };
-		for (auto&& [index, value] : enumerate::Forward(values))
-		{
-			CHECK(index == i);
-			CHECK(value == i * 10);
-			i++;
-		}
+	Array<int32> inputA = { 1, 2, 3 };
+	Array<int32> inputB = { 2, 3, 4 };
 
-		INFO("Empty Array doesn't enumerate.");
-		values.RemoveAll();
-		for (auto&& [index, value] : enumerate::Forward(values))
-			FAIL();
-	}
+	INFO("Array only contains values that were present in inputA, but not in inputB.");
+	Array<int32> outputA;
+	enumerate::Difference(inputA, inputB, outputA);
+	CHECK(enumerate::Contains(outputA, 1));
+	CHECK(!enumerate::Contains(outputA, 2));
+	CHECK(!enumerate::Contains(outputA, 3));
+	CHECK(!enumerate::Contains(outputA, 4));
 
-	SECTION("Set")
-	{
-		int32 i = 0;
-		Set<int32> values = { 0, 10, 20 };
-		for (auto&& [index, value] : enumerate::Forward(values))
-		{
-			CHECK(index == i);
-			CHECK(value == i * 10);
-			i++;
-		}
-
-		INFO("Empty Set doesn't enumerate.");
-		values.RemoveAll();
-		for (auto&& [index, value] : enumerate::Forward(values))
-			FAIL();
-	}
-
-	SECTION("Map")
-	{
-	}
+	INFO("Array only contains values that were present in inputB, but not in inputA.");
+	Array<int32> outputB;
+	enumerate::Difference(inputB, inputA, outputB);
+	CHECK(!enumerate::Contains(outputB, 1));
+	CHECK(!enumerate::Contains(outputB, 2));
+	CHECK(!enumerate::Contains(outputB, 3));
+	CHECK(enumerate::Contains(outputB, 4));
 }
 
-TEST_CASE("enumerate::Reverse")
+TEST_CASE("enumerate::Difference. Set.")
 {
-	SECTION("Array")
-	{
-		int32 i = 2;
-		Array<int32> values = { 0, 10, 20 };
-		for (auto&& [index, value] : enumerate::Reverse(values))
-		{
-			CHECK(index == i);
-			CHECK(value == i * 10);
-			i--;
-		}
+	Set<int32> inputA = { 1, 2, 3 };
+	Set<int32> inputB = { 2, 3, 4 };
 
-		INFO("Empty Array doesn't enumerate.");
-		values = { };
-		for (auto&& [index, value] : enumerate::Reverse(values))
-			FAIL();
+	INFO("Set only contains values that were present in inputA, but not in inputB.");
+	Set<int32> outputA;
+	enumerate::Difference(inputA, inputB, outputA);
+	CHECK(enumerate::Contains(outputA, 1));
+	CHECK(!enumerate::Contains(outputA, 2));
+	CHECK(!enumerate::Contains(outputA, 3));
+	CHECK(!enumerate::Contains(outputA, 4));
+
+	INFO("Set only contains values that were present in inputB, but not in inputA.");
+	Set<int32> outputB;
+	enumerate::Difference(inputB, inputA, outputB);
+	CHECK(!enumerate::Contains(outputB, 1));
+	CHECK(!enumerate::Contains(outputB, 2));
+	CHECK(!enumerate::Contains(outputB, 3));
+	CHECK(enumerate::Contains(outputB, 4));
+}
+
+TEST_CASE("enumerate::Difference. Map.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::Intersection. Array.")
+{
+	Array<int32> inputA = { 1, 2, 3 };
+	Array<int32> inputB = { 2, 3, 4 };
+
+	Array<int32> output;
+	enumerate::Intersection(inputA, inputB, output);
+	CHECK(enumerate::Contains(output, 2));
+	CHECK(enumerate::Contains(output, 3));
+	CHECK(!enumerate::Contains(output, 1));
+	CHECK(!enumerate::Contains(output, 4));
+}
+
+TEST_CASE("enumerate::Intersection. Set.")
+{
+	Set<int32> inputA = { 1, 2, 3 };
+	Set<int32> inputB = { 2, 3, 4 };
+
+	Set<int32> output;
+	enumerate::Intersection(inputA, inputB, output);
+	CHECK(enumerate::Contains(output, 2));
+	CHECK(enumerate::Contains(output, 3));
+	CHECK(!enumerate::Contains(output, 1));
+	CHECK(!enumerate::Contains(output, 4));
+}
+
+TEST_CASE("enumerate::Intersection. Map.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::BeginForward. Array.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::BeginForward. Set.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::BeginForward. Map.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::BeginReverse. Array.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::BeginReverse. Set.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::BeginReverse. Map.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::EndForward. Array.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::EndForward. Set.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::EndForward. Map.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::EndReverse. Array.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::EndReverse. Set.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::EndReverse. Map.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::Forward. Array.")
+{
+	int32 i = 0;
+	Array<int32> values = { 0, 10, 20 };
+	for (auto&& [index, value] : enumerate::Forward(values))
+	{
+		CHECK(index == i);
+		CHECK(value == i * 10);
+		i++;
 	}
 
-	SECTION("Set")
-	{
-		int32 i = 2;
-		Set<int32> values = { 0, 10, 20 };
-		for (auto&& [index, value] : enumerate::Reverse(values))
-		{
-			CHECK(index == i);
-			CHECK(value == i * 10);
-			i--;
-		}
+	INFO("Empty Array doesn't enumerate.");
+	values.RemoveAll();
+	for (auto&& [index, value] : enumerate::Forward(values))
+		FAIL();
+}
 
-		INFO("Empty Set doesn't enumerate.");
-		values.RemoveAll();
-		for (auto&& [index, value] : enumerate::Reverse(values))
-			FAIL();
+TEST_CASE("enumerate::Forward. Set.")
+{
+	int32 i = 0;
+	Set<int32> values = { 0, 10, 20 };
+	for (auto&& [index, value] : enumerate::Forward(values))
+	{
+		CHECK(index == i);
+		CHECK(value == i * 10);
+		i++;
 	}
 
-	SECTION("Map")
+	INFO("Empty Set doesn't enumerate.");
+	values.RemoveAll();
+	for (auto&& [index, value] : enumerate::Forward(values))
+		FAIL();
+}
+
+TEST_CASE("enumerate::Forward. Map.")
+{
+	CHECK(false);
+}
+
+TEST_CASE("enumerate::Reverse. Array.")
+{
+	int32 i = 2;
+	Array<int32> values = { 0, 10, 20 };
+	for (auto&& [index, value] : enumerate::Reverse(values))
 	{
+		CHECK(index == i);
+		CHECK(value == i * 10);
+		i--;
 	}
+
+	INFO("Empty Array doesn't enumerate.");
+	values = { };
+	for (auto&& [index, value] : enumerate::Reverse(values))
+		FAIL();
+}
+
+TEST_CASE("enumerate::Reverse. Set.")
+{
+	int32 i = 2;
+	Set<int32> values = { 0, 10, 20 };
+	for (auto&& [index, value] : enumerate::Reverse(values))
+	{
+		CHECK(index == i);
+		CHECK(value == i * 10);
+		i--;
+	}
+
+	INFO("Empty Set doesn't enumerate.");
+	values.RemoveAll();
+	for (auto&& [index, value] : enumerate::Reverse(values))
+		FAIL();
+}
+
+TEST_CASE("enumerate::Reverse. Map.")
+{
+	CHECK(false);
 }

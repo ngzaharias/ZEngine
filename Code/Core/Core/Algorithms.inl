@@ -18,7 +18,7 @@ namespace detail
 }
 
 template<typename Range, typename Type>
-bool core::Contains(const Range& range, const Type& item)
+bool enumerate::Contains(const Range& range, const Type& item)
 {
 	if constexpr (core::IsDetected<detail::HasContainsMethod, Range, Type>::value)
 	{
@@ -39,13 +39,13 @@ bool core::Contains(const Range& range, const Type& item)
 }
 
 template<typename Range, typename Predicate>
-bool core::ContainsIf(const Range& range, const Predicate& predicate)
+bool enumerate::ContainsIf(const Range& range, const Predicate& predicate)
 {
 	return std::find_if(range.cbegin(), range.cend(), predicate) != range.cend();
 }
 
 template<typename Range>
-void core::Difference(const Range& inputA, const Range& inputB, Range& output)
+void enumerate::Difference(const Range& inputA, const Range& inputB, Range& output)
 {
 	std::set_difference(
 		inputA.cbegin(),
@@ -56,7 +56,7 @@ void core::Difference(const Range& inputA, const Range& inputB, Range& output)
 }
 
 template<typename Range>
-void core::Intersection(const Range& inputA, const Range& inputB, Range& output)
+void enumerate::Intersection(const Range& inputA, const Range& inputB, Range& output)
 {
 	std::set_intersection(
 		inputA.cbegin(),
