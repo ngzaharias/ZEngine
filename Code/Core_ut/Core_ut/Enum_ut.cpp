@@ -14,14 +14,18 @@ namespace
 	};
 }
 
-TEST_CASE("enum::EnumToCount")
+TEST_CASE("enum::EnumToCount. Get number of values in the enum.")
 {
 	CHECK(EnumToCount<EnumA>() == 5);
 }
 
-TEST_CASE("enum::EnumToString")
+TEST_CASE("enum::EnumToString. Convert enum type to string.")
 {
 	CHECK(EnumToString<EnumA>() == "EnumA");
+}
+
+TEST_CASE("enum::EnumToString. Convert enum value to string.")
+{
 	CHECK(EnumToString(EnumA::First) == "First");
 	CHECK(EnumToString(EnumA::Second) == "Second");
 	CHECK(EnumToString(EnumA::Third) == "Third");
@@ -29,7 +33,7 @@ TEST_CASE("enum::EnumToString")
 	CHECK(EnumToString(EnumA::Leet) == "Leet");
 }
 
-TEST_CASE("enum::EnumToValue")
+TEST_CASE("enum::EnumToValue. Convert enum value to integer value.")
 {
 	CHECK(EnumToValue(EnumA::First) == 1);
 	CHECK(EnumToValue(EnumA::Second) == 2);
@@ -38,7 +42,7 @@ TEST_CASE("enum::EnumToValue")
 	CHECK(EnumToValue(EnumA::Leet) == 128);
 }
 
-TEST_CASE("enum::IndexToEnum")
+TEST_CASE("enum::IndexToEnum. Convert integer index to enum value.")
 {
 	CHECK(IndexToEnum<EnumA>(0) == EnumA::First);
 	CHECK(IndexToEnum<EnumA>(1) == EnumA::Second);
@@ -47,7 +51,7 @@ TEST_CASE("enum::IndexToEnum")
 	CHECK(IndexToEnum<EnumA>(4) == EnumA::Leet);
 }
 
-TEST_CASE("enum::StringToEnum")
+TEST_CASE("enum::StringToEnum. Convert string to enum value.")
 {
 	CHECK(StringToEnum<EnumA>("First") == EnumA::First);
 	CHECK(StringToEnum<EnumA>("Second") == EnumA::Second);
@@ -56,7 +60,7 @@ TEST_CASE("enum::StringToEnum")
 	CHECK(StringToEnum<EnumA>("Leet") == EnumA::Leet);
 }
 
-TEST_CASE("enum::ValueToEnum")
+TEST_CASE("enum::ValueToEnum. Convert integer value to enum value.")
 {
 	CHECK(ValueToEnum<EnumA>(1) == EnumA::First);
 	CHECK(ValueToEnum<EnumA>(2) == EnumA::Second);

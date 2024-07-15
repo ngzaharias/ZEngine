@@ -18,45 +18,49 @@ namespace
 	struct ComponentC : public ecs::Component<ComponentC> { };
 }
 
-TEST_CASE("ecs::QueryRegistry")
+TEST_CASE("ecs::QueryRegistry. Include only ComponentA.")
 {
 	ecs::QueryRegistry queryRegistry;
 	queryRegistry.Initialise();
 
-	{
-		INFO("Include only ComponentA");
+	using Query = ecs::query::Include<ComponentA>;
+	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
+}
 
-		using Query = ecs::query::Include<ComponentA>;
-		CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
-	}
+TEST_CASE("ecs::QueryRegistry. Include both ComponentA and ComponentC.")
+{
+	ecs::QueryRegistry queryRegistry;
+	queryRegistry.Initialise();
 
-	{
-		INFO("Include both ComponentA and ComponentC");
+	using Query = ecs::query::Include<ComponentA, ComponentC>;
+	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
+}
 
-		using Query = ecs::query::Include<ComponentA, ComponentC>;
-		CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
-	}
+TEST_CASE("ecs::QueryRegistry. Exclude only ComponentA.")
+{
+	ecs::QueryRegistry queryRegistry;
+	queryRegistry.Initialise();
 
-	{
-		INFO("Exclude only ComponentA");
+	using Query = ecs::query::Exclude<ComponentA>;
+	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
+}
 
-		using Query = ecs::query::Exclude<ComponentA>;
-		CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
-	}
+TEST_CASE("ecs::QueryRegistry. Exclude both ComponentA and ComponentC.")
+{
+	ecs::QueryRegistry queryRegistry;
+	queryRegistry.Initialise();
 
-	{
-		INFO("Exclude both ComponentA and ComponentC");
+	using Query = ecs::query::Exclude<ComponentA, ComponentC>;
+	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
+}
 
-		using Query = ecs::query::Exclude<ComponentA, ComponentC>;
-		CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
-	}
+TEST_CASE("ecs::QueryRegistry. Include ComponentA and Exclude ComponentC.")
+{
+	ecs::QueryRegistry queryRegistry;
+	queryRegistry.Initialise();
 
-	{
-		INFO("Include ComponentA and Exclude ComponentC");
-
-		using Query = ecs::query
-			::Include<ComponentA>
-			::Exclude<ComponentC>;
-		CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
-	}
+	using Query = ecs::query
+		::Include<ComponentA>
+		::Exclude<ComponentC>;
+	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
 }

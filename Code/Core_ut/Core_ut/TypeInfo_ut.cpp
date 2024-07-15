@@ -20,7 +20,7 @@ namespace second
 	};
 }
 
-TEST_CASE("TypeIndex")
+TEST_CASE("TypeIndex. ToTypeIndex.")
 {
 	struct A {}; struct B {}; struct C {}; struct TagA {};
 	struct D {}; struct E {}; struct F {}; struct TagB {};

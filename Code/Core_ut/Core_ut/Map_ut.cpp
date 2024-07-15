@@ -14,136 +14,96 @@ namespace
 	};
 }
 
-TEST_CASE("Map")
+TEST_CASE("Map. Default constructor.")
 {
-	SECTION("Constructors")
-	{
-		{
-			INFO("Default Constructor.");
-			Map<int32, int32> myMap;
+	Map<int32, int32> myMap;
 
-			CHECK(myMap.GetCount() == 0);
-		}
+	CHECK(myMap.GetCount() == 0);
+}
 
-		{
-			INFO("Copy Constructor.");
-			Map<int32, int32> myMapA = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
-			Map<int32, int32> myMapB = myMapA;
+TEST_CASE("Map. Copy constructor.")
+{
+	Map<int32, int32> myMapA = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
+	Map<int32, int32> myMapB = myMapA;
 
-			CHECK(myMapB.GetCount() == 3);
-			CHECK(myMapB.Contains(1));
-			CHECK(myMapB.Contains(2));
-			CHECK(myMapB.Contains(3));
-			CHECK(myMapB[1] == 1);
-			CHECK(myMapB[2] == 2);
-			CHECK(myMapB[3] == 3);
-		}
+	CHECK(myMapB.GetCount() == 3);
+	CHECK(myMapB.Contains(1));
+	CHECK(myMapB.Contains(2));
+	CHECK(myMapB.Contains(3));
+	CHECK(myMapB[1] == 1);
+	CHECK(myMapB[2] == 2);
+	CHECK(myMapB[3] == 3);
+}
 
-		{
-			INFO("Move Constructor.");
-			Map<int32, int32> myMapA = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
-			Map<int32, int32> myMapB = std::move(myMapA);
+TEST_CASE("Map. Move constructor.")
+{
+	Map<int32, int32> myMapA = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
+	Map<int32, int32> myMapB = std::move(myMapA);
 
-			CHECK(myMapB.GetCount() == 3);
-			CHECK(myMapB.Contains(1));
-			CHECK(myMapB.Contains(2));
-			CHECK(myMapB.Contains(3));
-			CHECK(myMapB[1] == 1);
-			CHECK(myMapB[2] == 2);
-			CHECK(myMapB[3] == 3);
-		}
+	CHECK(myMapB.GetCount() == 3);
+	CHECK(myMapB.Contains(1));
+	CHECK(myMapB.Contains(2));
+	CHECK(myMapB.Contains(3));
+	CHECK(myMapB[1] == 1);
+	CHECK(myMapB[2] == 2);
+	CHECK(myMapB[3] == 3);
+}
 
-		{
-			INFO("std::initializer_list.");
-			Map<int32, int32> myMap = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
+TEST_CASE("Map. initializer_list constructor.")
+{
+	Map<int32, int32> myMap = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
 
-			CHECK(myMap.GetCount() == 3);
-			CHECK(myMap.Contains(1));
-			CHECK(myMap.Contains(2));
-			CHECK(myMap.Contains(3));
-			CHECK(myMap[1] == 1);
-			CHECK(myMap[2] == 2);
-			CHECK(myMap[3] == 3);
-		}
-	}
+	CHECK(myMap.GetCount() == 3);
+	CHECK(myMap.Contains(1));
+	CHECK(myMap.Contains(2));
+	CHECK(myMap.Contains(3));
+	CHECK(myMap[1] == 1);
+	CHECK(myMap[2] == 2);
+	CHECK(myMap[3] == 3);
+}
 
-	SECTION("operator[]")
-	{
-	}
+TEST_CASE("Map. IsEmpty")
+{
+	Map<int32, int32> myMap;
+	CHECK(myMap.IsEmpty());
 
-	SECTION("operator=")
-	{
-	}
+	myMap = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
+	CHECK(!myMap.IsEmpty());
+}
 
-	SECTION("IsEmpty")
-	{
-		Map<int32, int32> myMap;
-		CHECK(myMap.IsEmpty());
+TEST_CASE("Map. GetCount")
+{
+	Map<int32, int32> myMap;
+	CHECK(myMap.GetCount() == 0);
 
-		myMap = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
-		CHECK(!myMap.IsEmpty());
-	}
+	myMap = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
+	CHECK(myMap.GetCount() == 3);
+}
 
-	SECTION("GetCount")
-	{
-		Map<int32, int32> myMap;
-		CHECK(myMap.GetCount() == 0);
+TEST_CASE("Map. Contains")
+{
+	Map<int32, int32> myMap = { { 1, 1 }, { 3, 3 } };
 
-		myMap = { { 1, 1 }, { 2, 2 }, { 3, 3 } };
-		CHECK(myMap.GetCount() == 3);
-	}
+	CHECK(myMap.Contains(1));
+	CHECK(!myMap.Contains(2));
+}
 
-	SECTION("Contains")
-	{
-		Map<int32, int32> myMap = { { 1, 1 }, { 3, 3 } };
+TEST_CASE("Map. Emplace.")
+{
+	Map<int32, MyStruct> myMap;
+	myMap.Emplace(1, 1);
 
-		CHECK(myMap.Contains(1));
-		CHECK(!myMap.Contains(2));
-	}
+	CHECK(myMap.GetCount() == 1);
+	CHECK(myMap.Contains(1));
+	CHECK(myMap[1].m_Int32 == 1);
+}
 
-	SECTION("Find")
-	{
-	}
+TEST_CASE("Map. Emplace with the same key won't change the value.")
+{
+	Map<int32, MyStruct> myMap;
+	myMap.Emplace(1, 1);
+	myMap.Emplace(1, 2);
 
-	SECTION("Emplace")
-	{
-		{
-			Map<int32, MyStruct> myMap;
-			myMap.Emplace(1, 1);
-
-			CHECK(myMap.GetCount() == 1);
-			CHECK(myMap.Contains(1));
-			CHECK(myMap[1].m_Int32 == 1);
-		}
-
-		{
-			INFO("Emplace with the same key won't change the value.");
-			Map<int32, MyStruct> myMap;
-			myMap.Emplace(1, 1);
-			myMap.Emplace(1, 2);
-
-			CHECK(myMap.GetCount() == 1);
-			CHECK(myMap[1].m_Int32 == 1);
-		}
-	}
-
-	SECTION("Insert")
-	{
-	}
-
-	SECTION("Set")
-	{
-	}
-
-	SECTION("Remove")
-	{
-	}
-
-	SECTION("RemoveAll")
-	{
-	}
-
-	SECTION("Range-based for loop")
-	{
-	}
+	CHECK(myMap.GetCount() == 1);
+	CHECK(myMap[1].m_Int32 == 1);
 }

@@ -4,7 +4,7 @@
 #include "Core/MemBuffer.h"
 #include "Math/Vector.h"
 
-TEST_CASE("MemBuffer")
+TEST_CASE("MemBuffer. Read/Write.")
 {
 	MemBuffer buffer;
 	const str::Guid guid = str::Guid::Generate();

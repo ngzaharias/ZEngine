@@ -2,6 +2,7 @@
 
 #include "ECS/ResourceRegistry.h"
 
-TEST_CASE("ecs::ResourceRegistry")
+TEST_CASE("ecs::ResourceRegistry. ")
 {
+	CHECK(false);
 }
