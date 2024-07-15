@@ -19,7 +19,7 @@ namespace
 			return entity == rhs.m_Projectile;
 		};
 
-		if (core::ContainsIf(frameData.m_Destroyed, hasDuplicate))
+		if (enumerate::ContainsIf(frameData.m_Destroyed, hasDuplicate))
 			return projectile::EError::ProjectileDead;
 
 		return projectile::EError::None;
