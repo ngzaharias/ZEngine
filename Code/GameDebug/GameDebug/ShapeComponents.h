@@ -15,6 +15,7 @@ namespace dbg
 		AABB2f,
 		Circle2f,
 		Line2f,
+		OBB2f,
 		Ray2f,
 		Segment2f,
 		Triangle2f>;

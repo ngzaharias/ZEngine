@@ -64,6 +64,13 @@ namespace
 		const Vector2f i2 = GetInterval(b, axis);
 		return i1.x > i2.y || i2.x > i1.y;
 	}
+
+	bool IsAxisSeparated(const Array4& a, const Array4& b, const Vector2f& axis)
+	{
+		const Vector2f i1 = GetInterval(a, axis);
+		const Vector2f i2 = GetInterval(b, axis);
+		return i1.x > i2.y || i2.x > i1.y;
+	}
 }
 
 bool math::Intersection(const Line3f& a, const Plane3f& b, Vector3f& out_IntersectPos)
@@ -145,6 +152,34 @@ bool math::IsOverlapping(const AABB2f& a, const Line2f& b)
 	if (math::IsOverlapping(b, Segment2f(Vector2f(a.m_Max.x, a.m_Min.y), a.m_Max)))
 		return true;
 	return false;
+}
+
+bool math::IsOverlapping(const AABB2f& a, const OBB2f& b)
+{
+	const Array4 p1 = { a.m_Min, Vector2f(a.m_Min.x, a.m_Max.y), a.m_Max, Vector2f(a.m_Max.x, a.m_Min.y) };
+	const Array4& p2 = b.m_Points;
+
+	// AABB
+	for (int32 i = 0; i < 3; ++i)
+	{
+		const int32 j = (i + 1) % 3;
+		const Vector2f tangent = p1[i] - p1[j];
+		const Vector2f normal = math::Perpendicular(tangent);
+		if (IsAxisSeparated(p1, p2, normal))
+			return false;
+	}
+
+	// OBB
+	for (int32 i = 0; i < 3; ++i)
+	{
+		const int32 j = (i + 1) % 3;
+		const Vector2f tangent = p2[i] - p2[j];
+		const Vector2f normal = math::Perpendicular(tangent);
+		if (IsAxisSeparated(p1, p2, normal))
+			return false;
+	}
+
+	return true;
 }
 
 bool math::IsOverlapping(const AABB2f& a, const Ray2f& b)
