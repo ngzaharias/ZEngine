@@ -93,12 +93,12 @@ void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& c
 	AddLine(corners[5], corners[2], colour);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Projection& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustum(const Vector3f& translate, const Rotator& rotate, const camera::Projection& projection, const Vector4f& colour)
 {
-	std::visit([&](auto projection) { AddFrustrum(translate, rotate, projection, colour); }, projection);
+	std::visit([&](auto projection) { AddFrustum(translate, rotate, projection, colour); }, projection);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Orthographic& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustum(const Vector3f& translate, const Rotator& rotate, const camera::Orthographic& projection, const Vector4f& colour)
 {
 	const float halfSize = projection.m_Size * 0.5f;
 
@@ -135,7 +135,7 @@ void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Perspective& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustum(const Vector3f& translate, const Rotator& rotate, const camera::Perspective& projection, const Vector4f& colour)
 {
 	const float ratio = Screen::width / Screen::height;
 	const float fovy = math::ToRadians(projection.m_FieldOfView);
@@ -177,6 +177,23 @@ void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[1], corners[5], colour);
 	AddLine(corners[2], corners[6], colour);
 	AddLine(corners[3], corners[7], colour);
+}
+
+void eng::LinesComponent::AddHexagon(const Vector3f& translate, const float radius, const Vector4f& colour)
+{
+	constexpr Vector3f s_DirectionE  = Vector3f(+1.f, 0.f, 0.f);
+	constexpr Vector3f s_DirectionSE = Vector3f(+0.500000656f, -0.866025090f, 0.f);
+	constexpr Vector3f s_DirectionSW = Vector3f(-0.499999702f, -0.866025627f, 0.f);
+	constexpr Vector3f s_DirectionW  = Vector3f(-1.f, 0.f, 0.f);
+	constexpr Vector3f s_DirectionNW = Vector3f(-0.500000656f, +0.866025090f, 0.f);
+	constexpr Vector3f s_DirectionNE = Vector3f(+0.499999702f, +0.866025627f, 0.f);
+
+	AddLine(translate + s_DirectionE  * radius, translate + s_DirectionSE * radius, colour);
+	AddLine(translate + s_DirectionSE * radius, translate + s_DirectionSW * radius, colour);
+	AddLine(translate + s_DirectionSW * radius, translate + s_DirectionW  * radius, colour);
+	AddLine(translate + s_DirectionW  * radius, translate + s_DirectionNW * radius, colour);
+	AddLine(translate + s_DirectionNW * radius, translate + s_DirectionNE * radius, colour);
+	AddLine(translate + s_DirectionNE * radius, translate + s_DirectionE  * radius, colour);
 }
 
 void eng::LinesComponent::AddLine(const Vector3f& pointA, const Vector3f& pointB, const Vector4f& colour)
