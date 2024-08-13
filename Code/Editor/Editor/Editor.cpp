@@ -5,6 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Editor/FlipbookEditor.h"
+#include "Editor/GizmoSystem.h"
 #include "Editor/TableEditor.h"
 #include "Editor/SpriteEditor.h"
 #include "Editor/TextureEditor.h"
@@ -40,6 +41,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowComponent>();
 
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditor>();
+	m_ClientWorld.RegisterSystem<editor::GizmoSystem>();
 	m_ClientWorld.RegisterSystem<editor::TableEditor>();
 	m_ClientWorld.RegisterSystem<editor::SpriteEditor>();
 	m_ClientWorld.RegisterSystem<editor::TextureEditor>();
