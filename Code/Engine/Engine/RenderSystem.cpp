@@ -63,15 +63,6 @@ void eng::RenderSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	{
-		constexpr float s_Distance = 100000.f;
-
-		auto& linesComponent = world.GetSingleton<eng::LinesComponent>();
-		linesComponent.AddLine(Vector3f::AxisX * -s_Distance, Vector3f::AxisX * s_Distance, Vector4f(1.f, 0.f, 0.f, 1.f));
-		linesComponent.AddLine(Vector3f::AxisY * -s_Distance, Vector3f::AxisY * s_Distance, Vector4f(0.f, 1.f, 0.f, 1.f));
-		linesComponent.AddLine(Vector3f::AxisZ * -s_Distance, Vector3f::AxisZ * s_Distance, Vector4f(0.f, 0.f, 1.f, 1.f));
-	}
-
 	for (auto&& stage : m_RenderStages)
 		stage->Render(m_EntityWorld);
 }
