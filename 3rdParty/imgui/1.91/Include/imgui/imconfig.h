@@ -14,6 +14,10 @@
 
 #pragma once
 
+#include "Math/Vector.h"
+#include <cstdint>
+#include <imgui/imgui_sfml_export.h>
+
 //---- Define assertion handler. Defaults to calling assert().
 // If your macro uses multiple statements, make sure is enclosed in a 'do { .. } while (0)' block so it can be used as a single statement.
 //#define IM_ASSERT(_EXPR)  MyAssert(_EXPR)
@@ -95,17 +99,17 @@
 
 //---- Define constructor and implicit cast operators to convert back<>forth between your math types and ImVec2/ImVec4.
 // This will be inlined as part of ImVec2 and ImVec4 class declarations.
-/*
-#define IM_VEC2_CLASS_EXTRA                                                     \
-        constexpr ImVec2(const MyVec2& f) : x(f.x), y(f.y) {}                   \
-        operator MyVec2() const { return MyVec2(x,y); }
 
-#define IM_VEC4_CLASS_EXTRA                                                     \
-        constexpr ImVec4(const MyVec4& f) : x(f.x), y(f.y), z(f.z), w(f.w) {}   \
-        operator MyVec4() const { return MyVec4(x,y,z,w); }
-*/
+#define IM_VEC2_CLASS_EXTRA                                                       \
+		constexpr ImVec2(const Vector2f& f) : x(f.x), y(f.y) {}                   \
+		operator Vector2f() const { return Vector2f(x,y); }
+
+#define IM_VEC4_CLASS_EXTRA                                                       \
+        constexpr ImVec4(const Vector4f& f) : x(f.x), y(f.y), z(f.z), w(f.w) {}   \
+        operator Vector4f() const { return Vector4f(x,y,z,w); }
+
 //---- ...Or use Dear ImGui's own very basic math operators.
-//#define IMGUI_DEFINE_MATH_OPERATORS
+#define IMGUI_DEFINE_MATH_OPERATORS
 
 //---- Use 32-bit vertex indices (default is 16-bit) is one way to allow large meshes with more than 64K vertices.
 // Your renderer backend will need to support it (most example renderer backends support both 16/32-bit indices).
