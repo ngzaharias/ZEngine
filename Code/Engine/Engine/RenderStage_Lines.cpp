@@ -33,6 +33,7 @@ eng::RenderStage_Lines::~RenderStage_Lines()
 void eng::RenderStage_Lines::Initialise(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.AddSingleton<eng::LinesComponent>();
+	return;
 
 	glGenVertexArrays(1, &m_AttributeObject);
 	glBindVertexArray(m_AttributeObject);
@@ -47,6 +48,7 @@ void eng::RenderStage_Lines::Shutdown(ecs::EntityWorld& entityWorld)
 void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
+	return;
 
 	using World = ecs::WorldView<
 		eng::LinesComponent,

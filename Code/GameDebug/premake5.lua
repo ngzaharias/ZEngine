@@ -16,7 +16,7 @@ project "GameDebug"
 	includedirs 
 	{ 
 		"%{wks.location}/../3rdParty/",
-		"%{wks.location}/../3rdParty/imgui/1.87/Include/",
+		"%{wks.location}/../3rdParty/imgui/1.91/Include/",
 		"%{wks.location}/../3rdParty/imnodes/0.5/Include/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",

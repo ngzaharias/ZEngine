@@ -10,7 +10,7 @@
 
 class GameTime;
 
-namespace glfw
+namespace sfml
 {
 	class Window;
 }
@@ -41,6 +41,6 @@ namespace eng
 
 		net::ComponentSerializer m_ComponentSerializer;
 
-		glfw::Window* m_Window;
+		sfml::Window* m_Window;
 	};
 }

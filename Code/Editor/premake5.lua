@@ -25,12 +25,12 @@ project "Editor"
 		"%{wks.location}/../3rdParty/Freetype/2.13/Include/",
 		"%{wks.location}/../3rdParty/glew/2.1.0/Include/",
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Include/",
-		"%{wks.location}/../3rdParty/imgui/1.87/Include/",
+		"%{wks.location}/../3rdParty/imgui/1.91/Include/",
 		"%{wks.location}/../3rdParty/imnodes/0.5/Include/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../3rdParty/PhysX/Include/",
-		"%{wks.location}/../3rdParty/SFML/Include/",
+		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",
 		"%{wks.location}/../3rdParty/yojimbo/1.2.1/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
@@ -70,14 +70,14 @@ project "Editor"
 	filter "Debug*"
 		libdirs 
 		{
-			"%{wks.location}/../3rdParty/SFML/Library/debug/",
+			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/debug/",
 			"%{wks.location}/../3rdParty/PhysX/Library/debug/",
 			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/debug/",
 		}
 	filter "Release*"
 		libdirs 
 		{
-			"%{wks.location}/../3rdParty/SFML/Library/release/",
+			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/release/",
 			"%{wks.location}/../3rdParty/PhysX/Library/release/",
 			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/release/",
 		}
@@ -130,11 +130,19 @@ project "Editor"
 		links 
 		{ 
 			"sfml-audio-d.lib",
+			"sfml-graphics-d.lib",
+			"sfml-network-d.lib",
+			"sfml-system-d.lib",
+			"sfml-window-d.lib",
 		}
 	filter "Release*"
 		links 
 		{ 
 			"sfml-audio.lib",
+			"sfml-graphics.lib",
+			"sfml-network.lib",
+			"sfml-system.lib",
+			"sfml-window.lib",
 		}
 	filter {} -- disable the filter
 
@@ -150,12 +158,12 @@ project "Editor"
 		postbuildcommands 
 		{
 			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/debug/*.dll $(OutDir)",
-			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/debug/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/SFML/2.6.1/Binary/debug/*.dll $(OutDir)",
 		}
 	filter "Release*"
 		postbuildcommands 
 		{
 			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/release/*.dll $(OutDir)",
-			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/release/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/SFML/2.6.1/Binary/release/*.dll $(OutDir)",
 		}
 	filter {} -- disable the filter

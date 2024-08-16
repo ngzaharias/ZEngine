@@ -9,8 +9,7 @@ namespace eng
 {
 	struct WindowConfig
 	{
-		str::StringView m_Name;
-		Vector2u m_Position; 
+		str::String m_Name;
 		Vector2u m_Size; 
 	};
 

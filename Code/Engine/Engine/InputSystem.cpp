@@ -6,9 +6,9 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputComponent.h"
-#include "Engine/GLFW/Window.h"
+#include "Engine/SFML/Window.h"
 
-eng::InputSystem::InputSystem(glfw::Window& window)
+eng::InputSystem::InputSystem(sfml::Window& window)
 	: m_Window(window)
 {
 }
@@ -28,8 +28,8 @@ void eng::InputSystem::Update(World& world, const GameTime& gameTime)
 	m_MousePrevious = std::move(m_MouseCurrent);
 
 	Vector2f glfwMouseDelta, glfwMousePos;
-	m_Window.GatherKeyboard(m_KeyboardCurrent);
-	m_Window.GatherMouse(m_MouseCurrent, glfwMouseDelta, glfwMousePos);
+	//m_Window.GatherKeyboard(m_KeyboardCurrent);
+	//m_Window.GatherMouse(m_MouseCurrent, glfwMouseDelta, glfwMousePos);
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::InputComponent>>())
 	{

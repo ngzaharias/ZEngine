@@ -13,7 +13,7 @@ namespace eng
 	class PrototypeManager;
 }
 
-namespace glfw
+namespace sfml
 {
 	class Window;
 }
@@ -32,7 +32,7 @@ namespace clt
 		eng::PhysicsManager& m_PhysicsManager;
 		eng::PrototypeManager& m_PrototypeManager;
 
-		glfw::Window& m_Window;
+		sfml::Window& m_Window;
 
 		net::ComponentSerializer& m_Serializer;
 	};

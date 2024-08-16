@@ -186,7 +186,7 @@ bool imgui::BeginGraph(const char* label, Vector2f graph_size, ImGuiGraphFlags f
 	position.x = storage->GetFloat(ID_PositionX, position.x);
 	position.y = storage->GetFloat(ID_PositionY, position.y);
 
-	if (ImGui::IsMouseDragging(ImGuiMouseButton_Right) && ImGui::ItemHoverable(frame_bb, id))
+	if (ImGui::IsMouseDragging(ImGuiMouseButton_Right) && ImGui::ItemHoverable(frame_bb, id, 0))
 	{
 		const ImVec2 delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
 		ImGui::ResetMouseDragDelta(ImGuiMouseButton_Right);
@@ -194,7 +194,7 @@ bool imgui::BeginGraph(const char* label, Vector2f graph_size, ImGuiGraphFlags f
 		position.y += delta.y * spacing * 0.01f;
 	}
 
-	if (ImGui::GetIO().MouseWheel != 0 && ImGui::ItemHoverable(frame_bb, id))
+	if (ImGui::GetIO().MouseWheel != 0 && ImGui::ItemHoverable(frame_bb, id, 0))
 	{
 		constexpr float count = 10.f;
 		const float min = std::powf(0.5f, count);

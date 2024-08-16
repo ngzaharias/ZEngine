@@ -4,7 +4,7 @@
 #include "Core/Set.h"
 #include "ECS/System.h"
 
-namespace glfw
+namespace sfml
 {
 	class Window;
 }
@@ -25,14 +25,14 @@ namespace eng
 			ecs::NameComponent, 
 			eng::InputComponent>;
 
-		InputSystem(glfw::Window& window);
+		InputSystem(sfml::Window& window);
 
 		void Initialise(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 
 	private:
-		glfw::Window& m_Window;
+		sfml::Window& m_Window;
 
 		Set<input::EKeyboard> m_KeyboardPrevious;
 		Set<input::EKeyboard> m_KeyboardCurrent;

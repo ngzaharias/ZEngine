@@ -23,7 +23,7 @@ project "Engine_ut"
 	{ 
 		"%{wks.location}/../3rdParty/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
-		"%{wks.location}/../3rdParty/SFML/Include/",
+		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
@@ -42,12 +42,12 @@ project "Engine_ut"
 	filter "Debug*"
 		libdirs 
 		{
-			"%{wks.location}/../3rdParty/SFML/Library/debug/",
+			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/debug/",
 		}
 	filter "Release*"
 		libdirs 
 		{
-			"%{wks.location}/../3rdParty/SFML/Library/release/",
+			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/release/",
 		}
 	filter {} -- disable the filter
 	
@@ -85,12 +85,12 @@ project "Engine_ut"
 		postbuildcommands 
 		{
 			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/debug/*.dll $(OutDir)",
-			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/debug/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/SFML/2.6.1/Binary/debug/*.dll $(OutDir)",
 		}
 	filter "Release*"
 		postbuildcommands 
 		{
 			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/release/*.dll $(OutDir)",
-			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/release/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/SFML/2.6.1/Binary/release/*.dll $(OutDir)",
 		}
 	filter {} -- disable the filter

@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace glfw
+namespace sfml
 {
 	class Window;
 }
@@ -20,7 +20,7 @@ namespace clt
 {
 	struct SystemDependencies
 	{
-		glfw::Window& m_Window;
+		sfml::Window& m_Window;
 		net::ReplicationPeer& m_ReplicationPeer;
 		net::ComponentSerializer& m_ComponentSerializer;
 	};

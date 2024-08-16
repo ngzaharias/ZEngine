@@ -8,7 +8,6 @@
 #include "Engine/FlipbookAsset.h"
 #include "Engine/FlipbookPrototype.h"
 #include "Engine/FontAsset.h"
-#include "Engine/GLFW/Window.h"
 #include "Engine/LightPrototypes.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/NetworkManager.h"
@@ -19,6 +18,7 @@
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
 #include "Engine/Screen.h"
+#include "Engine/SFML/Window.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/SoundAssets.h"
 #include "Engine/SpriteAsset.h"
@@ -78,9 +78,8 @@ eng::Application::Application()
 	{
 		eng::WindowConfig windowConfig;
 		windowConfig.m_Name = "Window A";
-		windowConfig.m_Position = Vector2u::Zero;
 		windowConfig.m_Size = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-		m_Window = new glfw::Window(windowConfig);
+		m_Window = new sfml::Window(windowConfig);
 	}
 }
 
@@ -101,8 +100,7 @@ void eng::Application::Execute(int argc, char* argv[])
 
 	GameTime gameTime;
 
-	double currTime = 0.0;
-	double lastTime = 0.0;
+	sf::Clock clock;
 	while (true)
 	{
 		PROFILE_TICK("MainThread");
@@ -115,10 +113,8 @@ void eng::Application::Execute(int argc, char* argv[])
 			isWaitingForProfiler = false;
 		}
 
-		lastTime = currTime;
-		currTime = glfwGetTime();
-
-		gameTime.m_DeltaTime = static_cast<float>(currTime - lastTime);
+		sf::Time elapsed = clock.restart();
+		gameTime.m_DeltaTime = elapsed.asSeconds();
 		gameTime.m_TotalTime += gameTime.m_DeltaTime;
 		gameTime.m_Frame++;
 

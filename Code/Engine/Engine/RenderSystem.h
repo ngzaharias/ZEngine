@@ -4,7 +4,7 @@
 #include "ECS/Entity.h"
 #include "ECS/System.h"
 
-namespace glfw
+namespace sfml
 {
 	class Window;
 }
@@ -27,7 +27,7 @@ namespace eng
 
 		RenderSystem(
 			ecs::EntityWorld& entityWorld,
-			glfw::Window& window);
+			sfml::Window& window);
 		~RenderSystem();
 
 		void Initialise(World& world);
@@ -37,7 +37,7 @@ namespace eng
 
 	private:
 		ecs::EntityWorld& m_EntityWorld;
-		glfw::Window& m_Window;
+		sfml::Window& m_Window;
 
 		Array<RenderStage*> m_RenderStages;
 	};

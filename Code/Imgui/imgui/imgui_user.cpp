@@ -125,7 +125,7 @@ bool imgui::BulletHeader(const char* label, const bool selected /*= false*/)
 
 	// Render
 	const ImU32 text_col = ImGui::GetColorU32(ImGuiCol_Text);
-	ImGuiNavHighlightFlags nav_highlight_flags = ImGuiNavHighlightFlags_TypeThin;
+	ImGuiNavHighlightFlags nav_highlight_flags = ImGuiNavHighlightFlags_Compact;
 	{
 		const auto bg_flag = 
 			(hovered && held) ? ImGuiCol_HeaderActive :
@@ -311,7 +311,7 @@ void imgui::PlotLines(const char* label, Vector2f* values, int32 values_count, V
 	spacing.x = storage->GetFloat(ID_SpacingX, spacing.x);
 	spacing.y = storage->GetFloat(ID_SpacingY, spacing.y);
 
-	if (ImGui::IsMouseDragging(ImGuiMouseButton_Right) && ImGui::ItemHoverable(frame_bb, id))
+	if (ImGui::IsMouseDragging(ImGuiMouseButton_Right) && ImGui::ItemHoverable(frame_bb, id, 0))
 	{
 		const ImVec2 delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
 		ImGui::ResetMouseDragDelta(ImGuiMouseButton_Right);
@@ -319,7 +319,7 @@ void imgui::PlotLines(const char* label, Vector2f* values, int32 values_count, V
 		position.y += delta.y * spacing.y * 0.01f;
 	}
 
-	if (ImGui::GetIO().MouseWheel != 0 && ImGui::ItemHoverable(frame_bb, id))
+	if (ImGui::GetIO().MouseWheel != 0 && ImGui::ItemHoverable(frame_bb, id, 0))
 	{
 		spacing *= math::Remap(ImGui::GetIO().MouseWheel, -1.f, 1.f, 2.f, 0.5f);
 	}
@@ -387,7 +387,7 @@ void imgui::PlotLines(const char* label, Vector2f* values, int32 values_count, V
 		int idx_hovered = -1;
 		float idx_closest = FLT_MAX;
 
-		const bool isActive = ImGui::ItemHoverable(frame_bb, id);
+		const bool isActive = ImGui::ItemHoverable(frame_bb, id, 0);
 		const ImU32 col_base = ImGui::GetColorU32(ImGuiCol_PlotLines);
 		const ImU32 col_hovered = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
 

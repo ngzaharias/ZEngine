@@ -16,7 +16,7 @@
 #include "Engine/RenderStage_Translucent.h"
 #include "Engine/RenderStage_UI.h"
 #include "Engine/RenderStage_Voxels.h"
-#include "Engine/GLFW/Window.h"
+#include "Engine/SFML/Window.h"
 
 #include <GLFW/glfw3.h>
 
@@ -26,17 +26,17 @@
 
 eng::RenderSystem::RenderSystem(
 	ecs::EntityWorld& entityWorld,
-	glfw::Window& window)
+	sfml::Window& window)
 	: m_EntityWorld(entityWorld)
 	, m_Window(window)
 {
 	auto& assetManager = entityWorld.GetResource<eng::AssetManager>();
-	m_RenderStages.Append(new eng::RenderStage_Shadow(assetManager));
-	m_RenderStages.Append(new eng::RenderStage_Voxels(assetManager));
-	m_RenderStages.Append(new eng::RenderStage_Opaque(assetManager));
+	//m_RenderStages.Append(new eng::RenderStage_Shadow(assetManager));
+	//m_RenderStages.Append(new eng::RenderStage_Voxels(assetManager));
+	//m_RenderStages.Append(new eng::RenderStage_Opaque(assetManager));
 	m_RenderStages.Append(new eng::RenderStage_Lines(assetManager));
-	m_RenderStages.Append(new eng::RenderStage_Translucent(assetManager));
-	m_RenderStages.Append(new eng::RenderStage_UI(assetManager));
+	//m_RenderStages.Append(new eng::RenderStage_Translucent(assetManager));
+	//m_RenderStages.Append(new eng::RenderStage_UI(assetManager));
 	m_RenderStages.Append(new eng::RenderStage_ImGui(assetManager, window));
 }
 

@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace glfw
+namespace sfml
 {
 	class Window;
 }
@@ -14,7 +14,7 @@ namespace eng
 {
 	struct ClientDependencies
 	{
-		glfw::Window& m_Window;
+		sfml::Window& m_Window;
 	};
 
 	struct ServerDependencies

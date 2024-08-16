@@ -8,7 +8,7 @@ namespace ecs
 	struct Entity;
 }
 
-namespace glfw
+namespace sfml
 {
 	class Window;
 }
@@ -20,7 +20,7 @@ namespace eng
 	class RenderStage_ImGui final : public eng::RenderStage
 	{
 	public:
-		RenderStage_ImGui(eng::AssetManager& assetManager, glfw::Window& window);
+		RenderStage_ImGui(eng::AssetManager& assetManager, sfml::Window& window);
 		~RenderStage_ImGui() override;
 
 		void Initialise(ecs::EntityWorld& world) override;
@@ -29,6 +29,6 @@ namespace eng
 		void Render(ecs::EntityWorld& world) override;
 
 	private:
-		glfw::Window& m_Window;
+		sfml::Window& m_Window;
 	};
 }
