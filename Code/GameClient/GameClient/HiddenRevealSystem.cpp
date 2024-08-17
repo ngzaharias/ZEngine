@@ -1,30 +1,28 @@
 #include "GameClientPCH.h"
 #include "GameClient/HiddenRevealSystem.h"
 
-#include <Core/AABB.h>
-#include <Core/CollisionMath.h>
-#include <Core/Ray.h>
-#include <Core/Sphere.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/CameraComponent.h>
-#include <Engine/CameraHelpers.h>
-#include <Engine/LinesComponent.h>
-#include <Engine/InputComponent.h>
-#include <Engine/PhysicsSceneComponent.h>
-#include <Engine/RigidStaticComponent.h>
-#include <Engine/Screen.h>
-#include <Engine/SoundComponents.h>
-#include <Engine/SpriteComponent.h>
-#include <Engine/TransformComponent.h>
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/CameraComponent.h"
+#include "Engine/CameraHelpers.h"
+#include "Engine/LinesComponent.h"
+#include "Engine/InputComponent.h"
+#include "Engine/PhysicsSceneComponent.h"
+#include "Engine/RigidStaticComponent.h"
+#include "Engine/Screen.h"
+#include "Engine/SoundComponents.h"
+#include "Engine/SpriteComponent.h"
+#include "Engine/TransformComponent.h"
+#include "GameClient/HiddenObjectComponents.h"
+#include "Math/AABB.h"
+#include "Math/CollisionMath.h"
+#include "Math/Ray.h"
+#include "Math/Sphere.h"
 
 #include <PhysX/PxRigidActor.h>
 #include <PhysX/PxScene.h>
 
-#include "GameClient/HiddenObjectComponents.h"
 
 namespace
 {
@@ -123,7 +121,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 
 						const float sizeX = (float)hiddenComponent.m_Size.x;
 						const float sizeY = (float)hiddenComponent.m_Size.y;
-						const AABB s_Extents = AABB::FromExtents(Vector3f(sizeX, sizeY, 1.f));
+						const AABB3f s_Extents = AABB3f::FromExtents(Vector3f(sizeX, sizeY, 1.f));
 
 						const auto& transformComponent = world.GetComponent<const eng::TransformComponent>(selectedEntity);
 						linesComponent.AddAABB(transformComponent.m_Translate, s_Extents, s_ColourM);

@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/Guid.h>
-#include <Core/Vector.h>
-
-#include <ECS/Component.h>
-#include <ECS/Entity.h>
+#include "Core/Guid.h"
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
+#include "Math/Vector.h"
 
 namespace hidden
 {

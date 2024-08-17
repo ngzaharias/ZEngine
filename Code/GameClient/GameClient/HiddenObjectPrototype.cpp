@@ -1,10 +1,8 @@
 #include "GameClientPCH.h"
 #include "GameClient/HiddenObjectPrototype.h"
 
-#include <ECS/EntityWorld.h>
-
-#include <Engine/Visitor.h>
-
+#include "ECS/EntityWorld.h"
+#include "Engine/Visitor.h"
 #include "GameClient/HiddenObjectComponents.h"
 
 namespace

@@ -1,10 +1,9 @@
 #include "GameClientPCH.h"
 #include "GameClient/HiddenTrackerSystem.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "GameClient/HiddenObjectComponents.h"
 #include "GameClient/ModalComponents.h"
 
