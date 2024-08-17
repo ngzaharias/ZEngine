@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/StringView.h>
-#include <Core/Vector.h>
+#include "Core/StringView.h"
+#include "Math/Vector.h"
 
 class GameTime;
 

@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/TypeInfo.h>
-#include <Core/TypeList.h>
-
-#include <ECS/ComponentMask.h>
-#include <ECS/QueryTypes.h>
+#include "Core/TypeInfo.h"
+#include "Core/TypeList.h"
+#include "ECS/ComponentMask.h"
+#include "ECS/QueryTypes.h"
 
 template<class TQuery>
 const ecs::QueryId ecs::QueryProxy<TQuery>::m_QueryId = ecs::QueryProxy<TQuery>::Id();

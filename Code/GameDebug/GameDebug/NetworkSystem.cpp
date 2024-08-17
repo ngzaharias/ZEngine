@@ -1,23 +1,20 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/NetworkSystem.h"
 
-#include <Core/GameTime.h>
-#include <Core/Math.h>
-#include <Core/Parse.h>
-#include <Core/Vector.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/NameComponent.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <GameClient/GameStateComponents.h>
+#include "Core/GameTime.h"
+#include "Core/Parse.h"
+#include "Math/Vector.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "GameClient/GameStateComponents.h"
+#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/NetworkComponents.h"
+#include "Math/Math.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_stdlib.h>
-
-#include "GameDebug/MenuBarComponents.h"
-#include "GameDebug/NetworkComponents.h"
 
 void dbg::NetworkSystem::Update(World& world, const GameTime& gameTime)
 {

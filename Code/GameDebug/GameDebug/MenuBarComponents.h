@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ECS/Component.h>
+#include "ECS/Component.h"
 
 namespace dbg
 {
@@ -11,6 +11,7 @@ namespace dbg
 	struct NetworkWindowRequestComponent : ecs::EventComponent<NetworkWindowRequestComponent> { };
 	struct NodeGraphRequestComponent : ecs::EventComponent<NodeGraphRequestComponent> { };
 	struct ServerWindowRequestComponent : ecs::EventComponent<ServerWindowRequestComponent> { };
+	struct ShapeWindowRequestComponent : ecs::EventComponent<ShapeWindowRequestComponent> { };
 }
 
 namespace dbg::level

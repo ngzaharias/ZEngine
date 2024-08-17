@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Rotator.h>
-#include <Core/Vector.h>
-
-#include <ECS/Component.h>
+#include "ECS/Component.h"
+#include "Math/Rotator.h"
+#include "Math/Vector.h"
 
 class Matrix4x4;
 

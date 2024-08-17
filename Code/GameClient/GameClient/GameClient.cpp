@@ -1,19 +1,15 @@
 #include "GameClientPCH.h"
 #include "GameClient/GameClient.h"
 
-#include <Engine/AssetManager.h>
-#include <Engine/NetworkManager.h>
-#include <Engine/PhysicsManager.h>
-#include <Engine/PrototypeManager.h>
-#include <Engine/RegisterComponents.h>
-#include <Engine/RegisterSystems.h>
-
-#include <GameShared/RegisterComponents.h>
-#include <GameShared/RegisterSystems.h>
-
-#include "GameClient/HiddenObjectPrototype.h"
+#include "Engine/AssetManager.h"
+#include "Engine/NetworkManager.h"
+#include "Engine/PhysicsManager.h"
+#include "Engine/PrototypeManager.h"
+#include "Engine/RegisterComponents.h"
+#include "Engine/RegisterSystems.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
+#include "GameShared/RegisterComponents.h"
 
 namespace
 {
@@ -54,9 +50,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 
 	// shared
 	{
-		shd::Dependencies sharedDependencies = { };
 		shd::RegisterComponents(m_EntityWorld, dependencies.m_Serializer);
-		shd::RegisterSystems(m_EntityWorld, sharedDependencies);
 	}
 
 	// client

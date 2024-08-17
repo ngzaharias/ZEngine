@@ -1,16 +1,13 @@
 #include "GameClientPCH.h"
 #include "GameClient/NetworkJoinSystem.h"
 
-#include <Core/GameTime.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/LevelComponents.h>
-#include <Engine/NetworkComponents.h>
-#include <Engine/NetworkManager.h>
-
+#include "Core/GameTime.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/LevelComponents.h"
+#include "Engine/NetworkComponents.h"
+#include "Engine/NetworkManager.h"
 #include "GameClient/GameStateComponents.h"
 #include "GameClient/ModalComponents.h"
 

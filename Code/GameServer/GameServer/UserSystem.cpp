@@ -1,17 +1,15 @@
 #include "GameServerPCH.h"
 #include "GameServer/UserSystem.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/NameComponent.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/NetworkManager.h>
-#include <Engine/ReplicationHost.h>
-#include <Engine/UserComponents.h>
-
-#include <Network/Adaptor.h>
-#include <Network/Host.h>
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/NetworkManager.h"
+#include "Engine/ReplicationHost.h"
+#include "Engine/UserComponents.h"
+#include "Network/Adaptor.h"
+#include "Network/Host.h"
 
 net::UserSystem::UserSystem(net::ReplicationHost& replicationHost)
 	: m_ReplicationHost(replicationHost)

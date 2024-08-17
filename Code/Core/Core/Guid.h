@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Core/String.h>
-#include <Core/StringView.h>
-#include <Core/Types.h>
+#include "Core/String.h"
+#include "Core/StringView.h"
+#include "Core/Types.h"
 
 #define GUID(string) str::Guid::Create(string)
 

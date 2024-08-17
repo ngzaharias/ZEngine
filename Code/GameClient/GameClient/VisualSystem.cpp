@@ -1,12 +1,10 @@
 #include "GameClientPCH.h"
 #include "GameClient/VisualSystem.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/StaticMeshComponent.h>
-
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/StaticMeshComponent.h"
 #include "GameClient/ProjectileComponents.h"
 
 void visual::VisualSystem::Update(World& world, const GameTime& gameTime)

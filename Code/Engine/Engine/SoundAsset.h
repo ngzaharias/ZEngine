@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Array.h>
-
-#include <Engine/Asset.h>
-#include <Engine/AssetLoader.h>
+#include "Core/Array.h"
+#include "Engine/Asset.h"
+#include "Engine/AssetLoader.h"
 
 #include <SFML/Audio/SoundBuffer.hpp>
 

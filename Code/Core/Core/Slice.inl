@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/Assert.h>
+#include "Core/Assert.h"
 
 template<typename Type>
 Slice<Type>::Slice()

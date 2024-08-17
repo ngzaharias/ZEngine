@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/Guid.h>
-#include <Core/Name.h>
-#include <Core/Path.h>
-
-#include <Engine/TypeInfo.h>
+#include "Core/Guid.h"
+#include "Core/Name.h"
+#include "Core/Path.h"
+#include "Engine/TypeInfo.h"
 
 namespace eng
 {

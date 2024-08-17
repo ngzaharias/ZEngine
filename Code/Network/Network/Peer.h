@@ -1,11 +1,10 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/String.h>
-#include <Core/Types.h>
-
-#include <Network/Messages.h>
-#include <Network/PeerId.h>
+#include "Core/Array.h"
+#include "Core/String.h"
+#include "Core/Types.h"
+#include "Network/Messages.h"
+#include "Network/PeerId.h"
 
 #include <entt/signal/sigh.hpp>
 

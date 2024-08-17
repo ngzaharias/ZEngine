@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Variant.h>
-#include <Core/Vector.h>
-
-#include <Engine/PrototypeLoader.h>
+#include "Core/Variant.h"
+#include "Engine/PrototypeLoader.h"
+#include "Math/Vector.h"
 
 namespace ecs
 {

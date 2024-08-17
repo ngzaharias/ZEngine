@@ -1,26 +1,23 @@
 #include "GameClientPCH.h"
 #include "GameClient/DragSelectionSystem.h"
 
-#include <Core/CollisionMath.h>
-#include <Core/Ray.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/NameComponent.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/CameraComponent.h>
-#include <Engine/CameraHelpers.h>
-#include <Engine/LinesComponent.h>
-#include <Engine/InputComponent.h>
-#include <Engine/PhysicsSceneComponent.h>
-#include <Engine/Screen.h>
-#include <Engine/TransformComponent.h>
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/CameraComponent.h"
+#include "Engine/CameraHelpers.h"
+#include "Engine/LinesComponent.h"
+#include "Engine/InputComponent.h"
+#include "Engine/PhysicsSceneComponent.h"
+#include "Engine/Screen.h"
+#include "Engine/TransformComponent.h"
+#include "GameClient/DragComponents.h"
+#include "Math/CollisionMath.h"
+#include "Math/Ray.h"
 
 #include <PhysX/PxRigidActor.h>
 #include <PhysX/PxScene.h>
-
-#include "GameClient/DragComponents.h"
 
 namespace
 {

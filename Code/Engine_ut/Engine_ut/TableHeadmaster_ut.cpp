@@ -1,11 +1,10 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Guid.h>
-
-#include <Engine/FileHelpers.h>
-#include <Engine/TableHeadmaster.h>
-#include <Engine/TableManager.h>
-#include <Engine/Visitor.h>
+#include "Core/Guid.h"
+#include "Engine/FileHelpers.h"
+#include "Engine/TableHeadmaster.h"
+#include "Engine/TableManager.h"
+#include "Engine/Visitor.h"
 
 namespace eng
 {
@@ -53,8 +52,9 @@ namespace eng
 	{
 		RAIIHelper()
 		{
-			const str::Path root = eng::GetCurrentFilepath();
+			const str::Path root = eng::GetCurrentFilepath().GetParent();
 			m_AssetPath = root.GetParent();
+			m_AssetPath = m_AssetPath.GetParent();
 			m_AssetPath = m_AssetPath.GetParent();
 			m_AssetPath += "\\Code\\";
 			m_AssetPath += root.GetStem();

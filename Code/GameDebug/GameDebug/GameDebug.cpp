@@ -1,10 +1,9 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/GameDebug.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "GameDebug/EntitySystem.h"
 #include "GameDebug/FrameBufferSystem.h"
 #include "GameDebug/ImGuiDemoSystem.h"
@@ -16,6 +15,8 @@
 #include "GameDebug/NodeGraphComponents.h"
 #include "GameDebug/NodeGraphSystem.h"
 #include "GameDebug/OverlaySystem.h"
+#include "GameDebug/ShapeComponents.h"
+#include "GameDebug/ShapeSystem.h"
 
 dbg::GameDebug::GameDebug(
 	ecs::EntityWorld& clientWorld,
@@ -42,6 +43,8 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::NodeGraphComponent>();
 	m_ClientWorld.RegisterComponent<dbg::NodeGraphRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ServerWindowRequestComponent>();
+	m_ClientWorld.RegisterComponent<dbg::ShapeWindowComponent>();
+	m_ClientWorld.RegisterComponent<dbg::ShapeWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::SpriteWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::TableWindowRequestComponent>();
@@ -57,6 +60,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<dbg::NetworkSystem>();
 	m_ClientWorld.RegisterSystem<dbg::NodeGraphSystem>();
 	m_ClientWorld.RegisterSystem<dbg::OverlaySystem>();
+	m_ClientWorld.RegisterSystem<dbg::ShapeSystem>();
 }
 
 void dbg::GameDebug::Initialise()

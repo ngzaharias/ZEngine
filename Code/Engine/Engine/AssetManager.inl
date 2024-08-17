@@ -18,7 +18,7 @@ void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 	static_assert(std::is_base_of<eng::AssetLoader, TLoader>::value, "Loader isn't a base of eng::AssetLoader!");
 
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_PANIC(!core::Contains(m_Registry, typeId), "Asset has already been registered! Type[{}] ", ToTypeName<TAsset>());
+	Z_PANIC(!enumerate::Contains(m_Registry, typeId), "Asset has already been registered! Type[{}] ", ToTypeName<TAsset>());
 
 	eng::AssetEntry& entry = m_Registry[typeId];
 	entry.m_Type = type;
@@ -41,7 +41,7 @@ template<class TAsset>
 bool eng::AssetManager::ImportAsset(TAsset& asset, const str::Path& filepath)
 {
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_PANIC(core::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
+	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
 
 	auto& entry = m_Registry[typeId];
 	auto& loader = *entry.m_Loader;
@@ -65,7 +65,7 @@ const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 	PROFILE_FUNCTION();
 
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_PANIC(core::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
+	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
 
 	auto& entry = m_Registry[typeId];
 	auto& loader = *entry.m_Loader;
@@ -75,7 +75,7 @@ const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 	if (find != cache.end())
 		return static_cast<const TAsset*>(find->second);
 
-	Z_PANIC(core::Contains(m_FileMap, guid), "Asset doesn't exist! Guid[{}]", guid.ToString().c_str());
+	Z_PANIC(enumerate::Contains(m_FileMap, guid), "Asset doesn't exist! Guid[{}]", guid.ToString().c_str());
 	const eng::AssetFile& file = m_FileMap.Get(guid);
 
 	TAsset* asset = new TAsset();
@@ -99,7 +99,7 @@ bool eng::AssetManager::SaveAsset(TAsset& asset, str::Path filepath)
 	PROFILE_FUNCTION();
 
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_PANIC(core::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
+	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
 
 	auto& entry = m_Registry[typeId];
 	auto& loader = *entry.m_Loader;

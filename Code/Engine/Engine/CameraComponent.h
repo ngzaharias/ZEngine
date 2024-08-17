@@ -1,10 +1,8 @@
 #pragma once
 
-#include <Core/Variant.h>
-
-#include <ECS/Component.h>
-
-#include <Engine/CameraTypes.h>
+#include "Core/Variant.h"
+#include "ECS/Component.h"
+#include "Engine/CameraTypes.h"
 
 namespace eng
 {

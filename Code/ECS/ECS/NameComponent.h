@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/String.h>
-#include <Core/StringView.h>
-
-#include <ECS/Component.h>
+#include "Core/String.h"
+#include "Core/StringView.h"
+#include "ECS/Component.h"
 
 namespace ecs
 {

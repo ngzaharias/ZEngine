@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Engine/CameraTypes.h>
-#include <Engine/PrototypeLoader.h>
+#include "Engine/CameraTypes.h"
+#include "Engine/PrototypeLoader.h"
 
 namespace ecs
 {

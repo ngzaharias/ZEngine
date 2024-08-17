@@ -1,13 +1,12 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/MenuBarSystem.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "GameDebug/MenuBarComponents.h"
 
 #include <imgui/imgui.h>
-
-#include "GameDebug/MenuBarComponents.h"
 
 void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -59,6 +58,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<dbg::NodeGraphRequestComponent>();
 			if (ImGui::MenuItem("Render: Frame Buffer"))
 				world.AddEventComponent<dbg::BufferWindowRequestComponent>();
+			if (ImGui::MenuItem("Shape Tester"))
+				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
 
 			ImGui::EndMenu();
 		}

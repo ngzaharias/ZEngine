@@ -1,12 +1,11 @@
 #pragma once
 
-#include <Core/AABB.h>
-#include <Core/Array.h>
-#include <Core/Types.h>
-#include <Core/Vector.h>
-
-#include <Engine/Asset.h>
-#include <Engine/AssetLoader.h>
+#include "Core/Array.h"
+#include "Core/Types.h"
+#include "Engine/Asset.h"
+#include "Engine/AssetLoader.h"
+#include "Math/AABB.h"
+#include "Math/Vector.h"
 
 namespace eng
 {
@@ -30,7 +29,7 @@ namespace eng
 	{
 		str::Path m_SourceFile = { };
 
-		AABB m_Bounds;
+		AABB3f m_Bounds;
 
 		Array<uint32> m_Indices;
 		Array<Vector3f> m_Normals;

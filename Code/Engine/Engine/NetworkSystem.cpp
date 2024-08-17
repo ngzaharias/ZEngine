@@ -1,17 +1,14 @@
 #include "EnginePCH.h"
 #include "Engine/NetworkSystem.h"
 
-#include <Core/GameTime.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Network/Host.h>
-#include <Network/Peer.h>
-
+#include "Core/GameTime.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/NetworkManager.h"
+#include "Network/Host.h"
+#include "Network/Peer.h"
 
 namespace
 {

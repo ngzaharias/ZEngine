@@ -1,6 +1,6 @@
 project "Network"
 	kind "StaticLib"
-	dependson { "Core" }
+	dependson { "Core", "Math" }
 	location "%{wks.location}/Network"
 
 	vpaths 

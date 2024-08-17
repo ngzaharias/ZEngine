@@ -1,11 +1,9 @@
 #pragma once
 
-#include <Core/Trajectory.h>
-#include <Core/Vector.h>
-
-#include <ECS/Component.h>
-
-#include <GameClient/ProjectileTypes.h>
+#include "Core/Trajectory.h"
+#include "ECS/Component.h"
+#include "GameClient/ProjectileTypes.h"
+#include "Math/Vector.h"
 
 namespace projectile
 {

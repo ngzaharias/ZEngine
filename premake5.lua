@@ -14,6 +14,7 @@ workspace "ZEngine"
 
 	targetdir "%{wks.location}/Build/%{prj.name}/%{cfg.buildcfg}_%{cfg.platform}/"
 	objdir "%{wks.location}/Intermediate/%{prj.name}/%{cfg.buildcfg}_%{cfg.platform}/"
+	debugdir "%{wks.location}/Build/%{prj.name}/%{cfg.buildcfg}_%{cfg.platform}/"
 
 	defines { "_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING", "_SILENCE_CXX20_CISO646_REMOVED_WARNING" }
 	disablewarnings { "26812" }
@@ -67,6 +68,7 @@ workspace "ZEngine"
 	include "Code/GameServer/premake5.lua"
 	include "Code/GameShared/premake5.lua"
 	include "Code/Imgui/premake5.lua"
+	include "Code/Math/premake5.lua"
 	include "Code/Network/premake5.lua"
 
 	group "gen"
@@ -77,6 +79,7 @@ workspace "ZEngine"
 		include "Code/Engine_ut/premake5.lua"
 		include "Code/GameClient_ut/premake5.lua"
 		include "Code/Lua_ut/premake5.lua"
+		include "Code/Math_ut/premake5.lua"
 	group ""
 
 project "ZERO_CHECK"

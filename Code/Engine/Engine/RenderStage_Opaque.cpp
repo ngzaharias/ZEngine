@@ -1,15 +1,10 @@
 #include "EnginePCH.h"
 #include "Engine/RenderStage_Opaque.h"
 
-#include <Core/Algorithms.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <GLEW/glew.h>
-#include <GLFW/glfw3.h>
-
+#include "Core/Algorithms.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
@@ -21,6 +16,9 @@
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/StaticMeshComponent.h"
 #include "Engine/TransformComponent.h"
+
+#include <GLEW/glew.h>
+#include <GLFW/glfw3.h>
 
 namespace
 {

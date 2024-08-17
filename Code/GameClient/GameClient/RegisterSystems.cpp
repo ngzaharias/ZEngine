@@ -1,11 +1,9 @@
 #include "GameClientPCH.h"
 #include "GameClient/RegisterSystems.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/ReplicationHost.h>
-
+#include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
+#include "Engine/ReplicationHost.h"
 #include "GameClient/AccelerationSystem.h"
 #include "GameClient/DragMovementSystem.h"
 #include "GameClient/DragSelectionSystem.h"

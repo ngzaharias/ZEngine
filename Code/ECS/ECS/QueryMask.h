@@ -1,8 +1,6 @@
 #pragma once
 
-#include <ECS/ComponentMask.h>
-
-#include <iostream>
+#include "ECS/ComponentMask.h"
 
 namespace ecs
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Engine/RenderStage.h>
-#include <Engine/Texture2DAsset.h>
+#include "Engine/RenderStage.h"
+#include "Engine/Texture2DAsset.h"
 
 namespace ecs
 {

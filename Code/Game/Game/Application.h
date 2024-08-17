@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Engine/Application.h>
-
-#include <GameClient/GameClient.h>
-#include <GameServer/GameServer.h>
-#include <GameDebug/GameDebug.h>
+#include "Engine/Application.h"
+#include "GameClient/GameClient.h"
+#include "GameServer/GameServer.h"
+#include "GameDebug/GameDebug.h"
 
 namespace game
 {

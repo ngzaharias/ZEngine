@@ -1,8 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/StaticMeshPrototype.h"
 
-#include <ECS/EntityWorld.h>
-
+#include "ECS/EntityWorld.h"
 #include "Engine/StaticMeshComponent.h"
 #include "Engine/Visitor.h"
 

@@ -1,12 +1,10 @@
 #pragma once
 
-#include <Core/Set.h>
-
-#include <ECS/Component.h>
-#include <ECS/Entity.h>
-
-#include <Network/Entity.h>
-#include <Network/PeerId.h>
+#include "Core/Set.h"
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
+#include "Network/Entity.h"
+#include "Network/PeerId.h"
 
 namespace net
 {

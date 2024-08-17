@@ -1,8 +1,7 @@
 #pragma once
 
-#include <Core/Array.h>
-
-#include <ECS/System.h>
+#include "Core/Array.h"
+#include "ECS/System.h"
 
 #include <entt/signal/sigh.hpp>
 

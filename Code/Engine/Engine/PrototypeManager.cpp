@@ -1,11 +1,9 @@
 #include "EnginePCH.h"
 #include "Engine/PrototypeManager.h"
 
-#include <Core/Assert.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/NameComponent.h>
-
+#include "Core/Assert.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "Engine/PrototypeLoader.h"
 #include "Engine/Visitor.h"
 

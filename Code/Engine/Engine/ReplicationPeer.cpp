@@ -1,19 +1,16 @@
 #include "EnginePCH.h"
 #include "Engine/ReplicationPeer.h"
 
+#include "Core/Algorithms.h"
+#include "ECS/EntityWorld.h"
 #include "Engine/ComponentSerializer.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/ReplicationComponents.h"
-
-#include <Core/Algorithms.h>
-
-#include <ECS/EntityWorld.h>
-
-#include <Network/Adaptor.h>
-#include <Network/Messages.h>
-#include <Network/Peer.h>
-#include <Network/PeerId.h>
+#include "Network/Adaptor.h"
+#include "Network/Messages.h"
+#include "Network/Peer.h"
+#include "Network/PeerId.h"
 
 #include <yojimbo/yojimbo.h>
 
@@ -89,7 +86,7 @@ void net::ReplicationPeer::OnProcessMessage(const yojimbo::Message* message)
 void net::ReplicationPeer::OnCreateEntity(const net::CreateEntityMessage* message)
 {
 	Z_LOG(ELog::Network, "Peer: CreateEntityMessage");
-	Z_ASSERT(!core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] has already been added on peer!", message->m_Entity.m_Value);
+	Z_ASSERT(!enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] has already been added on peer!", message->m_Entity.m_Value);
 
 	const net::Entity hostHandle = message->m_Entity;
 	const ecs::Entity peerHandle = m_EntityWorld.CreateEntity();
@@ -101,7 +98,7 @@ void net::ReplicationPeer::OnCreateEntity(const net::CreateEntityMessage* messag
 void net::ReplicationPeer::OnDestroyEntity(const net::DestroyEntityMessage* message)
 {
 	Z_LOG(ELog::Network, "Peer: DestroyEntityMessage");
-	Z_ASSERT(core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
+	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
 	const net::Entity& hostHandle = message->m_Entity;
 	const ecs::Entity& peerHandle = m_HostToPeer[hostHandle];
@@ -114,7 +111,7 @@ void net::ReplicationPeer::OnDestroyEntity(const net::DestroyEntityMessage* mess
 void net::ReplicationPeer::OnAddComponent(const net::AddComponentMessage* message)
 {
 	Z_LOG(ELog::Network, "Peer: AddComponentMessage");
-	Z_ASSERT(core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
+	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
 	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& serializer = networkManager.GetSerializer();
@@ -127,7 +124,7 @@ void net::ReplicationPeer::OnAddComponent(const net::AddComponentMessage* messag
 void net::ReplicationPeer::OnUpdateComponent(const net::UpdateComponentMessage* message)
 {
 	Z_LOG(ELog::Network, "Peer: UpdateComponentMessage");
-	Z_ASSERT(core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
+	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
 	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& serializer = networkManager.GetSerializer();
@@ -140,7 +137,7 @@ void net::ReplicationPeer::OnUpdateComponent(const net::UpdateComponentMessage* 
 void net::ReplicationPeer::OnRemoveComponent(const net::RemoveComponentMessage* message)
 {
 	Z_LOG(ELog::Network, "Peer: RemoveComponentMessage");
-	Z_ASSERT(core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
+	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
 	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
 	auto& serializer = networkManager.GetSerializer();

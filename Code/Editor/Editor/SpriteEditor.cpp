@@ -1,18 +1,16 @@
 #include "EditorPCH.h"
 #include "Editor/SpriteEditor.h"
 
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "Editor/TextureHelpers.h"
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/AssetManager.h>
-#include <Engine/FileHelpers.h>
-#include <Engine/InputComponent.h>
-#include <Engine/Texture2DAsset.h>
-
-#include <GameDebug/MenuBarComponents.h>
+#include "Engine/AssetManager.h"
+#include "Engine/FileHelpers.h"
+#include "Engine/InputComponent.h"
+#include "Engine/Texture2DAsset.h"
+#include "GameDebug/MenuBarComponents.h"
+#include "Math/AABB.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -207,7 +205,7 @@ namespace
 			max.x = math::Remap(max.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
 			max.y = math::Remap(max.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
 
-			imgui::AddRect(min, max, Vector4f(1.0f, 1.0f, 0.4f, 1.0f)); 
+			imgui::AddRect({ min, max }, Vector4f(1.0f, 1.0f, 0.4f, 1.0f));
 		}
 
 		imgui::Image(textureAsset->m_TextureId, imageSize);

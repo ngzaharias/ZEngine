@@ -1,12 +1,10 @@
 #include "GameClientPCH.h"
 #include "GameClient/VelocitySystem.h"
 
-#include <Core/GameTime.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
+#include "Core/GameTime.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "GameClient/MovementComponents.h"
 #include "GameClient/ProjectileComponents.h"
 

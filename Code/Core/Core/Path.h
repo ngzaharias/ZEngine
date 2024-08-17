@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/String.h>
-#include <Core/StringView.h>
+#include "Core/String.h"
+#include "Core/StringView.h"
 
 namespace str
 {

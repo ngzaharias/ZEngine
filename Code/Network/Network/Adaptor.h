@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Types.h>
+#include "Core/Types.h"
 
 #include <entt/signal/sigh.hpp>
-
 #include <yojimbo/yojimbo.h>
 
 namespace yojimbo

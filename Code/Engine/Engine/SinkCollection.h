@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/Array.h>
+#include "Core/Array.h"
 
 #include <entt/signal/sigh.hpp>
 

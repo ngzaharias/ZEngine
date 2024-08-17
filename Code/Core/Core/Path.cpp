@@ -150,16 +150,18 @@ str::StringView str::Path::GetFileNameNoExtension() const
 str::StringView str::Path::GetParent() const
 {
 	const size_t size = m_Value.size();
-	const auto find = m_Value.find_last_of("/\\", m_Value.size());
+
+	const auto find = m_Value.find_last_of("/\\", m_Value.size() - 2);
 	if (find != std::string::npos && find + 1 < size)
 		return str::StringView(m_Value.c_str(), find);
+
 	return { };
 }
 
 str::StringView str::Path::GetStem() const
 {
 	const size_t size = m_Value.size();
-	auto find = m_Value.find_last_of("/\\", size);
+	const auto find = m_Value.find_last_of("/\\", size);
 	if (find != std::string::npos)
 		return str::StringView(m_Value.c_str() + find + 1, size - find - 1);
 

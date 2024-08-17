@@ -1,8 +1,7 @@
 #pragma once
 
-#include <Core/Path.h>
-
-#include <Engine/TomlTypes.h>
+#include "Core/Path.h"
+#include "Engine/TomlTypes.h"
 
 namespace toml
 {

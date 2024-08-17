@@ -1,10 +1,9 @@
 #include "EditorPCH.h"
 #include "Editor/Editor.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "Editor/FlipbookEditor.h"
 #include "Editor/TableEditor.h"
 #include "Editor/SpriteEditor.h"

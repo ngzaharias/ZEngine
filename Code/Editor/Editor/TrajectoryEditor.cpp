@@ -1,27 +1,23 @@
 #include "EditorPCH.h"
 #include "Editor/TrajectoryEditor.h"
 
-#include <Core/Algorithms.h>
-#include <Core/Math.h>
-#include <Core/Trajectory.h>
-#include <Core/Vector.h>
-#include <Core/VectorMath.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/AssetManager.h>
-#include <Engine/FileHelpers.h>
-#include <Engine/TrajectoryAsset.h>
-
-#include <GameClient/ProjectileComponents.h>
+#include "Core/Algorithms.h"
+#include "Core/Trajectory.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/AssetManager.h"
+#include "Engine/FileHelpers.h"
+#include "Engine/TrajectoryAsset.h"
+#include "GameClient/ProjectileComponents.h"
+#include "GameDebug/MenuBarComponents.h"
+#include "Math/Math.h"
+#include "Math/Vector.h"
+#include "Math/VectorMath.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui_user.h>
-
-#include "GameDebug/MenuBarComponents.h"
 
 namespace
 {
@@ -164,7 +160,7 @@ namespace
 			}
 		}
 
-		const ImGuiGraphFlags flags = ImGuiGraphFlags_Grid | ImGuiGraphFlags_TextX | ImGuiGraphFlags_TextY;
+		const ImGuiPlotFlags flags = ImGuiPlotFlags_Grid | ImGuiPlotFlags_TextX | ImGuiPlotFlags_TextY;
 		const Vector2f size = ImGui::GetContentRegionAvail();
 		imgui::PlotLines("##plotter", values.GetData(), values.GetCount(), size, flags);
 	}

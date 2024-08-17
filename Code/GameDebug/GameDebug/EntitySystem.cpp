@@ -1,18 +1,16 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/EntitySystem.h"
 
-#include <Core/Algorithms.h>
-#include <Core/Map.h>
-#include <Core/Name.h>
-#include <Core/String.h>
-#include <Core/Vector.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/NameComponent.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/TypeInfo.h>
+#include "Core/Algorithms.h"
+#include "Core/Map.h"
+#include "Core/Name.h"
+#include "Core/String.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/TypeInfo.h"
+#include "Math/Vector.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_user.h>

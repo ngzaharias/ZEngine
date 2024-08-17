@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Path.h>
-#include <Core/String.h>
+#include "Core/Array.h"
+#include "Core/Path.h"
+#include "Core/String.h"
 
 using int32 = int32_t;
 using uint8 = uint8_t;

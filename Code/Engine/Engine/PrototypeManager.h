@@ -1,12 +1,11 @@
 #pragma once
 
-#include <Core/Guid.h>
-#include <Core/Map.h>
-#include <Core/Name.h>
-#include <Core/Path.h>
-
-#include <ECS/Component.h>
-#include <ECS/Entity.h>
+#include "Core/Guid.h"
+#include "Core/Map.h"
+#include "Core/Name.h"
+#include "Core/Path.h"
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
 
 namespace ecs
 {

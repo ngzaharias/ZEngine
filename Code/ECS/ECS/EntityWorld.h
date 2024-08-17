@@ -1,14 +1,13 @@
 #pragma once
 
-#include <Core/Set.h>
-
-#include <ECS/ComponentRegistry.h>
-#include <ECS/EntityStorage.h>
-#include <ECS/FrameBuffer.h>
-#include <ECS/QueryRegistry.h>
-#include <ECS/ResourceRegistry.h>
-#include <ECS/System.h>
-#include <ECS/SystemRegistry.h>
+#include "Core/Set.h"
+#include "ECS/ComponentRegistry.h"
+#include "ECS/EntityStorage.h"
+#include "ECS/FrameBuffer.h"
+#include "ECS/QueryRegistry.h"
+#include "ECS/ResourceRegistry.h"
+#include "ECS/System.h"
+#include "ECS/SystemRegistry.h"
 
 class GameTime;
 

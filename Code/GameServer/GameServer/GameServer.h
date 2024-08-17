@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ECS/EntityWorld.h>
-
-#include <Engine/ReplicationHost.h>
+#include "ECS/EntityWorld.h"
+#include "Engine/ReplicationHost.h"
 
 class GameTime;
 

@@ -1,21 +1,21 @@
 #pragma once
 
-#include <Core/String.h>
-#include <Core/Types.h>
-#include <Core/Vector.h>
+#include "Core/String.h"
+#include "Core/Types.h"
+#include "Math/Vector.h"
 
+class AABB2f;
+class Rotator;
 typedef int ImDrawFlags;
 typedef int ImGuiSliderFlags;
 
-enum ImGuiGraphFlags_
+enum ImGuiPlotFlags_
 {
-	ImGuiGraphFlags_Grid     = 1 << 0,
-	ImGuiGraphFlags_TextX    = 1 << 1,
-	ImGuiGraphFlags_TextY    = 1 << 2,
+	ImGuiPlotFlags_Grid = 1 << 0,
+	ImGuiPlotFlags_TextX = 1 << 1,
+	ImGuiPlotFlags_TextY = 1 << 2,
 };
-using ImGuiGraphFlags = int; // -> enum ImGuiGraphFlags_
-
-class Rotator;
+using ImGuiPlotFlags = int; // -> enum ImGuiPlotFlags_
 
 namespace str
 {
@@ -27,7 +27,7 @@ namespace str
 
 namespace imgui
 {
-	void AddRect(Vector2f min, Vector2f max, Vector4f colour, float rounding = 0.0f, float thickness = 1.0f, ImDrawFlags flags = 0);
+	void AddRect(const AABB2f& value, Vector4f colour, float rounding = 0.f, float thickness = 1.f, ImDrawFlags flags = 0);
 
 	void Bullet();
 	bool BulletHeader(const char* label, const bool selected = false);
@@ -49,8 +49,7 @@ namespace imgui
 
 	void Image(uint32 textureId, Vector2f image_size, Vector2f uv0 = Vector2f::Zero, Vector2f uv1 = Vector2f::One);
 
-	void PlotLines(const char* label, float* values, int32 values_count, Vector2f graph_size = Vector2f::Zero, ImGuiGraphFlags flags = 0);
-	void PlotLines(const char* label, Vector2f* values, int32 values_count, Vector2f graph_size = Vector2f::Zero, ImGuiGraphFlags flags = 0);
+	void PlotLines(const char* label, Vector2f* values, int32 values_count, Vector2f graph_size = Vector2f::Zero, ImGuiPlotFlags flags = 0);
 
 	/// \brief Converts a hexadecimal colour to a vector.
 	/// Example: 0xFF00FF00 -> { 1.f, 0.f, 1.f, 0.f }

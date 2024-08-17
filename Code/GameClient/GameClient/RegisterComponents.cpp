@@ -1,8 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/RegisterComponents.h"
 
-#include <ECS/EntityWorld.h>
-
+#include "ECS/EntityWorld.h"
 #include "GameClient/DragComponents.h"
 #include "GameClient/GameStateComponents.h"
 #include "GameClient/HiddenObjectComponents.h"

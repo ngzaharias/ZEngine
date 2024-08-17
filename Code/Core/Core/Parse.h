@@ -1,11 +1,11 @@
 #pragma once
 
-#include <type_traits>
+#include "Core/Nullable.h"
+#include "Core/StringHelpers.h"
+#include "Core/StringView.h"
+#include "Core/Types.h"
 
-#include <Core/Nullable.h>
-#include <Core/StringHelpers.h>
-#include <Core/StringView.h>
-#include <Core/Types.h>
+#include <type_traits>
 
 namespace str
 {

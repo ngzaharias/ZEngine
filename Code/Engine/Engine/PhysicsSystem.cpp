@@ -1,24 +1,22 @@
 #include "EnginePCH.h"
 #include "Engine/PhysicsSystem.h"
 
-#include <Core/GameTime.h>
-#include <Core/Quaternion.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
+#include "Core/GameTime.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/PhysicsSceneComponent.h"
+#include "Engine/PhysicsManager.h"
+#include "Engine/RigidDynamicComponent.h"
+#include "Engine/RigidStaticComponent.h"
+#include "Engine/TransformComponent.h"
+#include "Math/Quaternion.h"
 
 #include <PhysX/PxRigidDynamic.h>
 #include <PhysX/PxRigidStatic.h>
 #include <PhysX/PxPhysics.h>
 #include <PhysX/PxPhysicsAPI.h>
 #include <PhysX/PxScene.h>
-
-#include "Engine/PhysicsSceneComponent.h"
-#include "Engine/PhysicsManager.h"
-#include "Engine/RigidDynamicComponent.h"
-#include "Engine/RigidStaticComponent.h"
-#include "Engine/TransformComponent.h"
 
 namespace
 {

@@ -1,14 +1,11 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Name.h>
-
-#include <ECS/Component.h>
-#include <ECS/Entity.h>
-
-#include <Network/Config.h>
-
+#include "Core/Array.h"
+#include "Core/Name.h"
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
 #include "GameClient/GameStateTypes.h"
+#include "Network/Config.h"
 
 namespace gamestate
 {

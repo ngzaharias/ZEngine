@@ -1,18 +1,16 @@
 #include "EditorPCH.h"
 #include "Editor/TextureEditor.h"
 
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "Editor/TextureHelpers.h"
+#include "Engine/AssetManager.h"
+#include "Engine/FileHelpers.h"
+#include "Engine/InputComponent.h"
+#include "Engine/Texture2DAsset.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/AssetManager.h>
-#include <Engine/FileHelpers.h>
-#include <Engine/InputComponent.h>
-#include <Engine/Texture2DAsset.h>
-
-#include <GameDebug/MenuBarComponents.h>
+#include "GameDebug/MenuBarComponents.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>

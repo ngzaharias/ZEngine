@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Set.h>
-#include <Core/Tuple.h>
+#include "Core/Array.h"
+#include "Core/Set.h"
+#include "Core/Tuple.h"
 
 // #todo: support indexes other than int32
 

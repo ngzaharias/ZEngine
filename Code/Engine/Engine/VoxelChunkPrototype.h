@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Array.h>
-
-#include <Engine/PrototypeLoader.h>
-#include <Engine/VoxelTypes.h>
+#include "Core/Array.h"
+#include "Engine/PrototypeLoader.h"
+#include "Engine/VoxelTypes.h"
 
 namespace ecs
 {

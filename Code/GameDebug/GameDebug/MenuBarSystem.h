@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ECS/Component.h>
-#include <ECS/System.h>
+#include "ECS/Component.h"
+#include "ECS/System.h"
 
 class GameTime;
 
@@ -28,6 +28,7 @@ namespace dbg
 	struct ImGuiDemoRequestComponent;
 	struct NetworkWindowRequestComponent;
 	struct NodeGraphRequestComponent;
+	struct ShapeWindowRequestComponent;
 }
 
 namespace dbg::level
@@ -52,6 +53,7 @@ namespace dbg
 			dbg::level::SaveAsRequestComponent,
 			dbg::NetworkWindowRequestComponent,
 			dbg::NodeGraphRequestComponent,
+			dbg::ShapeWindowRequestComponent,
 			editor::FlipbookWindowRequestComponent,
 			editor::SpriteWindowRequestComponent,
 			editor::TableWindowRequestComponent,

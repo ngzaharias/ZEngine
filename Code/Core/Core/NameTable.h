@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Hash.h>
-#include <Core/Map.h>
-#include <Core/String.h>
-#include <Core/StringView.h>
+#include "Core/Array.h"
+#include "Core/Hash.h"
+#include "Core/Map.h"
+#include "Core/String.h"
+#include "Core/StringView.h"
 
 namespace str
 {

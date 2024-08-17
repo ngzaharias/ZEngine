@@ -1,10 +1,9 @@
 #include "GameClientPCH.h"
 #include "GameClient/ModalStateSystem.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "GameClient/ModalComponents.h"
 
 #include <imgui/imgui.h>

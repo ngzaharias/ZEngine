@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/Map.h>
-#include <Core/Name.h>
-#include <Core/Path.h>
-
-#include <ECS/Component.h>
+#include "Core/Map.h"
+#include "Core/Name.h"
+#include "Core/Path.h"
+#include "ECS/Component.h"
 
 namespace eng::level
 {

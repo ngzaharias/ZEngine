@@ -1,8 +1,8 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Array.h>
-#include <Core/Slice.h>
-#include <Core/Types.h>
+#include "Core/Array.h"
+#include "Core/Slice.h"
+#include "Core/Types.h"
 
 namespace
 {
@@ -12,14 +12,14 @@ namespace
 	};
 }
 
-TEST_CASE("Array::Constructor Default.")
+TEST_CASE("Array. Default constructor.")
 {
 	Array<int32> myArray;
 
 	CHECK(myArray.GetCount() == 0);
 }
 
-TEST_CASE("Array::Constructor Copy.")
+TEST_CASE("Array. Copy constructor.")
 {
 	Array<int32> myArrayA = { 1, 2, 3 };
 	Array<int32> myArrayB = myArrayA;
@@ -30,7 +30,7 @@ TEST_CASE("Array::Constructor Copy.")
 	CHECK(myArrayB[2] == 3);
 }
 
-TEST_CASE("Array::Constructor Move.")
+TEST_CASE("Array. Move constructor.")
 {
 	Array<int32> myArrayA = { 1, 2, 3 };
 	Array<int32> myArrayB = std::move(myArrayA);
@@ -41,7 +41,7 @@ TEST_CASE("Array::Constructor Move.")
 	CHECK(myArrayB[2] == 3);
 }
 
-TEST_CASE("Array::Constructor std::initializer_list.")
+TEST_CASE("Array. initializer_list constructor.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 
@@ -51,7 +51,7 @@ TEST_CASE("Array::Constructor std::initializer_list.")
 	CHECK(myArray[2] == 3);
 }
 
-TEST_CASE("Array::operator=")
+TEST_CASE("Array. operator=.")
 {
 	Array<int32> myArrayA = { 1, 2, 3 };
 	Array<int32> myArrayB = { 4, 5, 6 };
@@ -63,16 +63,7 @@ TEST_CASE("Array::operator=")
 	CHECK(myArrayA[2] == 6);
 }
 
-TEST_CASE("Array::operator[] Const")
-{
-	const Array<int32> myArray = { 1, 2, 3 };
-
-	REQUIRE(myArray.GetCount() == 3);
-	CHECK(myArray[0] == 1);
-	CHECK(myArray[1] == 2);
-	CHECK(myArray[2] == 3);
-}
-TEST_CASE("Array::operator[] Non-Const")
+TEST_CASE("Array. operator[].")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 	myArray[0] = 4;
@@ -85,18 +76,17 @@ TEST_CASE("Array::operator[] Non-Const")
 	CHECK(myArray[2] == 6);
 }
 
-TEST_CASE("Array::operator Slice<T> Const")
+TEST_CASE("Array. operator[] const.")
 {
+	const Array<int32> myArray = { 1, 2, 3 };
 
-	Array<int32> myArray = { 1, 2, 3 };
-	Slice<int32> mySlice = myArray;
-	CHECK(mySlice.GetCount() == 3);
-	CHECK(mySlice[0] == 1);
-	CHECK(mySlice[1] == 2);
-	CHECK(mySlice[2] == 3);
+	REQUIRE(myArray.GetCount() == 3);
+	CHECK(myArray[0] == 1);
+	CHECK(myArray[1] == 2);
+	CHECK(myArray[2] == 3);
 }
 
-TEST_CASE("Array::operator Slice<T> Non-Const")
+TEST_CASE("Array. operator Slice<T>.")
 {
 
 	const Array<int32> myArray = { 1, 2, 3 };
@@ -107,7 +97,18 @@ TEST_CASE("Array::operator Slice<T> Non-Const")
 	CHECK(mySlice[2] == 3);
 }
 
-TEST_CASE("Array::IsEmpty")
+TEST_CASE("Array. operator Slice<T> const.")
+{
+
+	Array<int32> myArray = { 1, 2, 3 };
+	Slice<int32> mySlice = myArray;
+	CHECK(mySlice.GetCount() == 3);
+	CHECK(mySlice[0] == 1);
+	CHECK(mySlice[1] == 2);
+	CHECK(mySlice[2] == 3);
+}
+
+TEST_CASE("Array. IsEmpty.")
 {
 	Array<int32> myArray;
 	CHECK(myArray.IsEmpty());
@@ -116,7 +117,7 @@ TEST_CASE("Array::IsEmpty")
 	CHECK(!myArray.IsEmpty());
 }
 
-TEST_CASE("Array::GetCapacity")
+TEST_CASE("Array. GetCapacity.")
 {
 	Array<int32> myArray;
 	CHECK(myArray.GetCapacity() == 0);
@@ -130,7 +131,7 @@ TEST_CASE("Array::GetCapacity")
 	CHECK(myArray.GetCapacity() == 6);
 }
 
-TEST_CASE("Array::GetCount")
+TEST_CASE("Array. GetCount.")
 {
 	Array<int32> myArray;
 	CHECK(myArray.GetCount() == 0);
@@ -144,11 +145,11 @@ TEST_CASE("Array::GetCount")
 	CHECK(myArray.GetCount() == 6);
 }
 
-TEST_CASE("Array::GetData")
+TEST_CASE("Array. GetData.")
 {
 }
 
-TEST_CASE("Array::Resize")
+TEST_CASE("Array. Resize.")
 {
 	Array<int32> myArray;
 	CHECK(myArray.GetCount() == 0);
@@ -157,7 +158,7 @@ TEST_CASE("Array::Resize")
 	CHECK(myArray.GetCount() == 3);
 }
 
-TEST_CASE("Array::Reserve")
+TEST_CASE("Array. Reserve.")
 {
 	Array<int32> myArray;
 	CHECK(myArray.GetCapacity() == 0);
@@ -166,25 +167,25 @@ TEST_CASE("Array::Reserve")
 	CHECK(myArray.GetCapacity() == 3);
 }
 
-TEST_CASE("Array::GetFirst")
+TEST_CASE("Array. GetFirst.")
 {
 	const Array<int32> myArray = { 1, 2, 3 };
 	CHECK(myArray.GetFirst() == 1);
 }
 
-TEST_CASE("Array::GetLast")
+TEST_CASE("Array. GetLast.")
 {
 	const Array<int32> myArray = { 1, 2, 3 };
 	CHECK(myArray.GetLast() == 3);
 }
 
-TEST_CASE("Array::Pop")
+TEST_CASE("Array. Pop.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 	CHECK(myArray.Pop() == 3);
 }
 
-TEST_CASE("Array::Append Copy Value.")
+TEST_CASE("Array. Append copy value.")
 {
 	MyStruct myStruct = { 1 };
 	Array<MyStruct> myArray;
@@ -194,7 +195,7 @@ TEST_CASE("Array::Append Copy Value.")
 	CHECK(myArray[0].m_Int32 == 1);
 }
 
-TEST_CASE("Array::Append Move Value.")
+TEST_CASE("Array. Append move value.")
 {
 	MyStruct myStruct = { 1 };
 	Array<MyStruct> myArray;
@@ -204,7 +205,7 @@ TEST_CASE("Array::Append Move Value.")
 	CHECK(myArray[0].m_Int32 == 1);
 }
 
-TEST_CASE("Array::Append Copy Range.")
+TEST_CASE("Array. Append copy range.")
 {
 	Array<int32> myArrayA;
 	Array<int32> myArrayB = { 3, 4, 5 };
@@ -216,7 +217,7 @@ TEST_CASE("Array::Append Copy Range.")
 	CHECK(myArrayA[2] == 5);
 }
 
-TEST_CASE("Array::Append Move Range.")
+TEST_CASE("Array. Append move range.")
 {
 	Array<int32> myArrayA;
 	Array<int32> myArrayB = { 3, 4, 5 };
@@ -228,7 +229,7 @@ TEST_CASE("Array::Append Move Range.")
 	CHECK(myArrayA[2] == 5);
 }
 
-TEST_CASE("Array::Append std::initializer_list.")
+TEST_CASE("Array. Append initializer_list.")
 {
 	Array<int32> myArray;
 	myArray.Append({ 3, 4, 5 });
@@ -239,7 +240,7 @@ TEST_CASE("Array::Append std::initializer_list.")
 	CHECK(myArray[2] == 5);
 }
 
-TEST_CASE("Array::Emplace")
+TEST_CASE("Array. Emplace")
 {
 	Array<MyStruct> myArray;
 	myArray.Emplace(1);
@@ -248,7 +249,7 @@ TEST_CASE("Array::Emplace")
 	CHECK(myArray[0].m_Int32 == 1);
 }
 
-TEST_CASE("Array::Insert Copy Value.")
+TEST_CASE("Array. Insert copy value.")
 {
 	MyStruct myStructA = { 1 };
 	MyStruct myStructB = { 2 };
@@ -264,7 +265,7 @@ TEST_CASE("Array::Insert Copy Value.")
 	CHECK(myArray[2].m_Int32 == 1);
 }
 
-TEST_CASE("Array::Insert Move Value.")
+TEST_CASE("Array. Insert move value.")
 {
 	MyStruct myStructA = { 1 };
 	MyStruct myStructB = { 2 };
@@ -280,7 +281,7 @@ TEST_CASE("Array::Insert Move Value.")
 	CHECK(myArray[2].m_Int32 == 1);
 }
 
-TEST_CASE("Array::RemoveAt First")
+TEST_CASE("Array. RemoveAt first.")
 {
 
 	Array<int32> myArray = { 1, 2, 3, 4, 5 };
@@ -293,7 +294,7 @@ TEST_CASE("Array::RemoveAt First")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array::RemoveAt Middle")
+TEST_CASE("Array. RemoveAt middle.")
 {
 
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
@@ -306,7 +307,7 @@ TEST_CASE("Array::RemoveAt Middle")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array::RemoveAt Last")
+TEST_CASE("Array. RemoveAt last.")
 {
 
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
@@ -319,7 +320,7 @@ TEST_CASE("Array::RemoveAt Last")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array::RemoveOrderedAt First")
+TEST_CASE("Array. RemoveOrderedAt first.")
 {
 
 	Array<int32> myArray = { 1, 2, 3, 4, 5 };
@@ -332,7 +333,7 @@ TEST_CASE("Array::RemoveOrderedAt First")
 	CHECK(myArray[3] == 5);
 }
 
-TEST_CASE("Array::RemoveOrderedAt Middle")
+TEST_CASE("Array. RemoveOrderedAt middle.")
 {
 
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
@@ -345,7 +346,7 @@ TEST_CASE("Array::RemoveOrderedAt Middle")
 	CHECK(myArray[3] == 5);
 }
 
-TEST_CASE("Array::RemoveOrderedAt Last")
+TEST_CASE("Array. RemoveOrderedAt last.")
 {
 
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
@@ -358,7 +359,7 @@ TEST_CASE("Array::RemoveOrderedAt Last")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array::RemoveLast")
+TEST_CASE("Array. RemoveLast.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 	myArray.RemoveLast();
@@ -368,7 +369,7 @@ TEST_CASE("Array::RemoveLast")
 	CHECK(myArray[1] == 2);
 }
 
-TEST_CASE("Array::RemoveAll")
+TEST_CASE("Array. RemoveAll.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 	myArray.RemoveAll();
@@ -376,7 +377,7 @@ TEST_CASE("Array::RemoveAll")
 	CHECK(myArray.GetCount() == 0);
 }
 
-TEST_CASE("Array::Iterator Pre-increment.")
+TEST_CASE("Array. Iterator pre-increment.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 
@@ -387,7 +388,7 @@ TEST_CASE("Array::Iterator Pre-increment.")
 	CHECK(++iterator == myArray.end());
 }
 
-TEST_CASE("Array::Iterator Post-increment.")
+TEST_CASE("Array. Iterator post-increment.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 
@@ -398,7 +399,7 @@ TEST_CASE("Array::Iterator Post-increment.")
 	CHECK(iterator == myArray.end());
 }
 
-TEST_CASE("Array::Iterator Range-based for loop")
+TEST_CASE("Array. Iterator range-based for loop.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 

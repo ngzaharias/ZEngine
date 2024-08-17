@@ -1,11 +1,10 @@
 #include "EnginePCH.h"
 #include "Engine/TableHeadmaster.h"
 
+#include "Core/Guid.h"
+#include "Core/Path.h"
 #include "Engine/TableManager.h"
 #include "Engine/Visitor.h"
-
-#include <Core/Guid.h>
-#include <Core/Path.h>
 
 void eng::TableHeadmaster::Initialise(const str::Path& folderPath)
 {

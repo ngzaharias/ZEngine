@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Input.h>
-#include <Core/Set.h>
-
-#include <ECS/System.h>
+#include "Core/Input.h"
+#include "Core/Set.h"
+#include "ECS/System.h"
 
 namespace glfw
 {

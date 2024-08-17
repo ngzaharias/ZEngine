@@ -1,12 +1,12 @@
 #include "GameClientPCH.h"
 #include "GameClient/ProjectileSpawnSystem.h"
 
-#include <Core/Algorithms.h>
-#include <Core/GameTime.h>
+#include "Core/Algorithms.h"
+#include "Core/GameTime.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 
 #include "GameClient/ProjectileComponents.h"
 
@@ -19,7 +19,7 @@ namespace
 			return entity == rhs.m_Projectile;
 		};
 
-		if (core::ContainsIf(frameData.m_Destroyed, hasDuplicate))
+		if (enumerate::ContainsIf(frameData.m_Destroyed, hasDuplicate))
 			return projectile::EError::ProjectileDead;
 
 		return projectile::EError::None;
