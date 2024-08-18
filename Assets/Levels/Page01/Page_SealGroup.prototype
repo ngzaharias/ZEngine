@@ -1,0 +1,12 @@
+m_Guid = '5b505ef6-e5d9-4770-996d-46b859721382'
+m_Name = 'SealGroup'
+
+[HiddenGroup]
+m_Objects = [ '98fcf9b9-00d5-4216-8008-335e475596b5' ]
+m_Size = { X = 70, Y = 4 }
+m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
+
+[Transform]
+m_Rotate = { Pitch = 0.0, Roll = -4.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -310.0, Y = -415.0, Z = 0.0 }

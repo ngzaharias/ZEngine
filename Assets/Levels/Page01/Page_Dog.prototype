@@ -11,6 +11,7 @@ m_Rigid = 1
 m_Shape = 0
 
 [HiddenObject]
+m_Group = '58af002b-d6d0-4e3b-be66-153bf807ba8a'
 m_Size = { X = 25, Y = 25 }
 m_Sprite = '90845288-5360-4871-8100-af83609f539b'
 
