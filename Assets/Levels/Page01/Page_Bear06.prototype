@@ -1,9 +1,6 @@
 m_Guid = '17ee61dc-747c-4396-a3eb-a488d0893e7c'
 m_Name = 'Bear06'
 
-[Name]
-m_Name = 'Bear06'
-
 [Physics]
 m_Channel = 0
 m_Extents = { X = 25.0, Y = 25.0, Z = 1.0 }
@@ -12,6 +9,7 @@ m_Shape = 0
 
 [HiddenObject]
 m_Size = { X = 25, Y = 25 }
+m_Group = 'ab4d37e0-a36f-400c-ba7f-56e47dbe9b70'
 m_Sprite = '39000c91-21dc-4987-a4d6-aeaff41ea6ab'
 
 [Transform]

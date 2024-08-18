@@ -20,7 +20,11 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	auto& linesComponent = world.GetSingleton<eng::LinesComponent>();
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const ::hidden::ObjectComponent, const eng::TransformComponent>>())
+
+	using Query = ecs::query
+		::Include<const ::hidden::ObjectComponent, const eng::TransformComponent>
+		::Exclude<const ::hidden::RevealedComponent>;
+	for (const ecs::Entity& entity : world.Query<Query>())
 	{
 		const auto& hiddenComponent = world.GetComponent<const ::hidden::ObjectComponent>(entity);
 		const auto& transformComponent = world.GetComponent<const eng::TransformComponent>(entity);

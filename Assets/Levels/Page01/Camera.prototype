@@ -6,7 +6,7 @@ m_Name = "Camera"
 
 [Camera]
 m_Projection = { TypeId = 0 }
-m_Behaviour  = 1
+m_Behaviour = 1
 
 [Transform]
 m_Translate = { X = 0.0, Y = 0.0, Z = -500.0 }

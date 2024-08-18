@@ -28,7 +28,8 @@ ecs::Entity eng::PrototypeManager::CreateEntity(ecs::EntityWorld& world, const s
 	PROFILE_FUNCTION();
 
 	eng::Visitor visitor;
-	visitor.LoadFromFile(filepath);
+	if (!visitor.LoadFromFile(filepath))
+		return false;
 
 	str::Guid guid;
 	visitor.Visit(strGuid, guid, {});

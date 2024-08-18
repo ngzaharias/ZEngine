@@ -20,6 +20,7 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<gamestate::StateComponent>();
 	entityWorld.RegisterComponent<gamestate::StateFinishedComponent>();
 	entityWorld.RegisterComponent<gui::modal::MessageComponent>();
+	entityWorld.RegisterComponent<hidden::GroupComponent>();
 	entityWorld.RegisterComponent<hidden::ObjectComponent>();
 	entityWorld.RegisterComponent<hidden::RevealedComponent>();
 	entityWorld.RegisterComponent<movement::AccelerationComponent>();

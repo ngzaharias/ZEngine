@@ -8,7 +8,7 @@
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
 #include "Engine/GLFW/Window.h"
-#include "GameClient/HiddenObjectPrototype.h"
+#include "GameClient/HiddenObjectPrototypes.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
 #include "GameShared/RegisterComponents.h"
@@ -16,6 +16,7 @@
 namespace
 {
 	const str::Name strHiddenObject = NAME("HiddenObject");
+	const str::Name strHiddenGroup = NAME("HiddenGroup");
 }
 
 clt::GameClient::GameClient()
@@ -29,6 +30,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 	{
 		auto& prototypeManager = dependencies.m_PrototypeManager;
 		prototypeManager.RegisterPrototype<hidden::ObjectPrototype, hidden::ObjectLoader>(strHiddenObject);
+		prototypeManager.RegisterPrototype<hidden::GroupPrototype, hidden::GroupLoader>(strHiddenGroup);
 	}
 
 	// resources
