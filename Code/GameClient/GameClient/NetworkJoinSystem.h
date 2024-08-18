@@ -12,6 +12,12 @@ namespace eng::level
 	struct LoadRequestComponent;
 }
 
+namespace eng::network
+{
+	struct RequestComponent;
+	struct RequestFinishedComponent;
+}
+
 namespace gui::modal
 {
 	struct MessageComponent;
@@ -20,12 +26,6 @@ namespace gui::modal
 namespace net
 {
 	struct UserComponent;
-}
-
-namespace network
-{
-	struct RequestComponent;
-	struct RequestFinishedComponent;
 }
 
 namespace gamestate
@@ -38,15 +38,15 @@ namespace gamestate
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::NetworkManager,
 			eng::level::LoadRequestComponent,
+			eng::NetworkManager,
+			eng::network::RequestComponent,
 			gui::modal::MessageComponent,
 			gamestate::NetworkJoinComponent,
 			gamestate::StateFinishedComponent,
-			network::RequestComponent,
+			const eng::network::RequestFinishedComponent,
 			const gamestate::StateComponent,
-			const net::UserComponent,
-			const network::RequestFinishedComponent>;
+			const net::UserComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

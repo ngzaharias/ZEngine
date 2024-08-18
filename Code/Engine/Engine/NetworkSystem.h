@@ -15,7 +15,7 @@ namespace net
 	struct PeerId;
 }
 
-namespace network
+namespace eng::network
 {
 	struct RequestComponent;
 	struct RequestFinishedComponent;
@@ -26,9 +26,9 @@ namespace network
 	public:
 		using World = ecs::WorldView<
 			eng::NetworkManager,
-			network::RequestFinishedComponent,
-			network::StateComponent,
-			const network::RequestComponent>;
+			eng::network::RequestFinishedComponent,
+			eng::network::StateComponent,
+			const eng::network::RequestComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

@@ -21,9 +21,9 @@ void gamestate::NetworkHostSystem::Update(World& world, const GameTime& gameTime
 			world.AddSingleton<gamestate::NetworkHostComponent>();
 
 			const auto& request = std::get<gamestate::NetworkHost>(stateComponent.m_State);
-			auto& component = world.AddEventComponent<network::RequestComponent>();
+			auto& component = world.AddEventComponent<eng::network::RequestComponent>();
 
-			network::Startup startup;
+			eng::network::Startup startup;
 			startup.m_Mode = request.m_Mode;
 			startup.m_ClientAddress = request.m_ClientAddress;
 			startup.m_ClientPort = request.m_ClientPort;
@@ -34,7 +34,7 @@ void gamestate::NetworkHostSystem::Update(World& world, const GameTime& gameTime
 	}
 
 	const bool isHosting = world.HasAny<ecs::query::Include<gamestate::NetworkHostComponent>>();
-	const bool isFinished = world.HasAny<ecs::query::Include<const network::RequestFinishedComponent>>();
+	const bool isFinished = world.HasAny<ecs::query::Include<const eng::network::RequestFinishedComponent>>();
 	if (isHosting && isFinished)
 	{
 		world.RemoveSingleton<gamestate::NetworkHostComponent>();

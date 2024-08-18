@@ -22,18 +22,15 @@ namespace eng
 	{
 	public:
 		using World = ecs::WorldView<
-			ecs::NameComponent, 
-			eng::InputComponent>;
-
-		InputSystem(glfw::Window& window);
+			ecs::NameComponent,
+			eng::InputComponent,
+			const glfw::Window>;
 
 		void Initialise(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 
 	private:
-		glfw::Window& m_Window;
-
 		Set<input::EKeyboard> m_KeyboardPrevious;
 		Set<input::EKeyboard> m_KeyboardCurrent;
 		Set<input::EMouse> m_MousePrevious;

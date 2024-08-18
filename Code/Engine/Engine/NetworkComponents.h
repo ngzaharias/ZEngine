@@ -4,7 +4,7 @@
 #include "ECS/Component.h"
 #include "Network/Types.h"
 
-namespace network
+namespace eng::network
 {
 	struct Shutdown { };
 

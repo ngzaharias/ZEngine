@@ -7,8 +7,11 @@ namespace eng
 	struct CameraComponent;
 	struct InputComponent;
 	struct TransformComponent;
+}
 
-	class CameraSystem final : public ecs::System
+namespace eng::camera
+{
+	class BehaviourSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<

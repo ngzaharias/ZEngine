@@ -20,13 +20,13 @@ void gamestate::NetworkStopSystem::Update(World& world, const GameTime& gameTime
 		{
 			world.AddSingleton<gamestate::NetworkStopComponent>();
 
-			auto& component = world.AddEventComponent<network::RequestComponent>();
-			component.m_Request = network::Shutdown();
+			auto& component = world.AddEventComponent<eng::network::RequestComponent>();
+			component.m_Request = eng::network::Shutdown();
 		}
 	}
 
 	const bool isStopping = world.HasAny<ecs::query::Include<gamestate::NetworkStopComponent>>();
-	const bool isFinished = world.HasAny<ecs::query::Include<const network::RequestFinishedComponent>>();
+	const bool isFinished = world.HasAny<ecs::query::Include<const eng::network::RequestFinishedComponent>>();
 	if (isStopping && isFinished)
 	{
 		world.RemoveSingleton<gamestate::NetworkStopComponent>();

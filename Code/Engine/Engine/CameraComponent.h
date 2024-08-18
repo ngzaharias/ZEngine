@@ -8,7 +8,7 @@ namespace eng
 {
 	struct CameraComponent : public ecs::Component<CameraComponent>
 	{
-		camera::Projection m_Projection = camera::Perspective();
-		camera::EBehaviour m_Behaviour = camera::EBehaviour::Free;
+		::camera::Projection m_Projection = ::camera::Perspective();
+		::camera::EBehaviour m_Behaviour = ::camera::EBehaviour::Free;
 	};
 }

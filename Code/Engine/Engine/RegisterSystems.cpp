@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraSystem.h"
+#include "Engine/CameraBehaviourSystem.h"
 #include "Engine/FlipbookSystem.h"
 #include "Engine/GLFW/Window.h"
 #include "Engine/InputSystem.h"
@@ -23,17 +23,14 @@
 
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::ClientDependencies& dependencies)
 {
+	entityWorld.RegisterSystem<eng::camera::BehaviourSystem>();
+	entityWorld.RegisterSystem<eng::InputSystem>();
+	entityWorld.RegisterSystem<eng::FlipbookSystem>();
+	entityWorld.RegisterSystem<eng::network::NetworkSystem>();
+	entityWorld.RegisterSystem<eng::RenderSystem>(entityWorld);
 	entityWorld.RegisterSystem<eng::sound::PlaySystem>();
 	entityWorld.RegisterSystem<eng::sound::RandomSystem>();
 	entityWorld.RegisterSystem<eng::sound::SequenceSystem>();
-	entityWorld.RegisterSystem<eng::CameraSystem>();
-	entityWorld.RegisterSystem<eng::InputSystem>(
-		dependencies.m_Window);
-	entityWorld.RegisterSystem<network::NetworkSystem>();
-	entityWorld.RegisterSystem<eng::FlipbookSystem>();
-	entityWorld.RegisterSystem<eng::RenderSystem>(
-		entityWorld,
-		dependencies.m_Window);
 	entityWorld.RegisterSystem<voxel::LoadingSystem>();
 	entityWorld.RegisterSystem<voxel::MeshingSystem>();
 
