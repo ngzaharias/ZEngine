@@ -23,6 +23,10 @@ void eng::CameraSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, eng::TransformComponent>>())
 	{
+		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
+		if (cameraComponent.m_Behaviour != camera::EBehaviour::Free)
+			continue;
+
 		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
 			const auto& inputComponent = world.GetComponent<const eng::InputComponent>(inputEntity);
