@@ -1,22 +1,24 @@
 #pragma once
 
+#include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
-
-namespace ecs
-{
-	class EntityWorld;
-	struct Entity;
-}
 
 namespace eng
 {
 	class AssetManager;
+	struct CameraComponent;
+	struct LinesComponent;
+	struct TransformComponent;
 
 	class RenderStage_Lines final : public eng::RenderStage
 	{
 	public:
-		RenderStage_Lines(eng::AssetManager& assetManager);
-		~RenderStage_Lines() override;
+		using World = ecs::WorldView<
+			eng::AssetManager,
+			eng::LinesComponent,
+			const eng::CameraComponent,
+			const eng::TransformComponent>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

@@ -2,6 +2,7 @@
 #include "Engine/RenderStage_ImGui.h"
 
 #include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/Screen.h"
 #include "Engine/GLFW/Window.h"
@@ -14,18 +15,10 @@
 #include <imgui/imgui_impl_opengl3.h>
 #include <imnodes/imnodes.h>
 
-eng::RenderStage_ImGui::RenderStage_ImGui(eng::AssetManager& assetManager, glfw::Window& window)
-	: RenderStage(assetManager)
-	, m_Window(window)
-{
-}
-
-eng::RenderStage_ImGui::~RenderStage_ImGui()
-{
-}
-
 void eng::RenderStage_ImGui::Initialise(ecs::EntityWorld& entityWorld)
 {
+	const auto& window = entityWorld.GetResource<const glfw::Window>();
+
 	const char* glsl_version = "#version 410";
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -39,7 +32,7 @@ void eng::RenderStage_ImGui::Initialise(ecs::EntityWorld& entityWorld)
 	io.ConfigViewportsNoDecoration = false;
 	io.ConfigViewportsNoDefaultParent = false;
 
-	ImGui_ImplGlfw_InitForOpenGL(m_Window.GetWindow(), true);
+	ImGui_ImplGlfw_InitForOpenGL(window.GetWindow(), true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
 	// style
@@ -93,6 +86,8 @@ void eng::RenderStage_ImGui::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
+	const auto& window = entityWorld.GetResource<const glfw::Window>();
+
 	// render
 	{
 		PROFILE_CUSTOM("ImGui::Render");
@@ -109,7 +104,7 @@ void eng::RenderStage_ImGui::Render(ecs::EntityWorld& entityWorld)
 			PROFILE_CUSTOM("ImGui::UpdatePlatformWindows");
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(m_Window.GetWindow());
+			glfwMakeContextCurrent(window.GetWindow());
 		}
 	}
 

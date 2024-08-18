@@ -33,11 +33,6 @@ namespace
 	};
 }
 
-eng::RenderStage_Shadow::RenderStage_Shadow(eng::AssetManager& assetManager)
-	: RenderStage(assetManager)
-{
-}
-
 void eng::RenderStage_Shadow::Initialise(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.AddSingleton<eng::FrameBufferComponent>();
@@ -58,13 +53,8 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	using World = ecs::WorldView<
-		eng::FrameBufferComponent,
-		const eng::CameraComponent,
-		const eng::TransformComponent,
-		const eng::LightDirectionalComponent,
-		const eng::StaticMeshComponent>;
 	World world = entityWorld.GetWorldView<World>();
+	auto& assetManager = world.GetResource<eng::AssetManager>();
 
 	// initialise
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::FrameBufferComponent>>())
@@ -178,13 +168,13 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 
 				if (!isSameBatch)
 				{
-					RenderBatch(entityWorld, batchID, batchData, stageData);
+					RenderBatch(world, batchID, batchData, stageData);
 					batchData.m_Models.RemoveAll();
 				}
 
 				const auto& meshComponent = world.GetComponent<const eng::StaticMeshComponent>(id.m_Entity);
 				const auto& meshTransform = world.GetComponent<const eng::TransformComponent>(id.m_Entity);
-				const auto& meshAsset = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
+				const auto& meshAsset = *assetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
 
 				const Matrix4x4 model = meshTransform.ToTransform();
 				batchData.m_Models.Append(model);
@@ -193,19 +183,20 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 				batchID = id;
 			}
 
-			RenderBatch(entityWorld, batchID, batchData, stageData);
+			RenderBatch(world, batchID, batchData, stageData);
 		}
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void eng::RenderStage_Shadow::RenderBatch(ecs::EntityWorld& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData)
+void eng::RenderStage_Shadow::RenderBatch(World& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData)
 {
 	PROFILE_FUNCTION();
 
-	const auto& mesh = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto& shader = *m_AssetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	auto& assetManager = world.GetResource<eng::AssetManager>();
+	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
 
 	glUseProgram(shader.m_ProgramId);
 

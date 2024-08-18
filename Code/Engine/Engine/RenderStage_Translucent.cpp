@@ -45,15 +45,6 @@ namespace
 	const str::Guid strQuadMesh = str::Guid::Create("e94876a8-e4cc-4d16-84c8-5859b48a1af6");
 }
 
-eng::RenderStage_Translucent::RenderStage_Translucent(eng::AssetManager& m_AssetManager)
-	: RenderStage(m_AssetManager)
-{
-}
-
-eng::RenderStage_Translucent::~RenderStage_Translucent()
-{
-}
-
 void eng::RenderStage_Translucent::Initialise(ecs::EntityWorld& entityWorld)
 {
 	glGenBuffers(1, &m_ColourBuffer);
@@ -72,12 +63,8 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	using World = ecs::WorldView<
-		const eng::CameraComponent,
-		const eng::FlipbookComponent,
-		const eng::SpriteComponent,
-		const eng::TransformComponent>;
 	World world = entityWorld.GetWorldView<World>();
+	auto& assetManager = world.GetResource<eng::AssetManager>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -115,7 +102,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				if (!spriteComponent.m_Sprite.IsValid())
 					continue;
 
-				const eng::SpriteAsset& spriteAsset = *m_AssetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
+				const eng::SpriteAsset& spriteAsset = *assetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
 				if (!spriteAsset.m_Texture2D.IsValid())
 					continue;
 
@@ -139,7 +126,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				if (!flipbookComponent.m_Flipbook.IsValid())
 					continue;
 
-				const eng::FlipbookAsset& flipbookAsset = *m_AssetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
+				const eng::FlipbookAsset& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 				if (flipbookAsset.m_Frames.IsEmpty())
 					continue;
 
@@ -177,7 +164,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 			if (!isSameBatch)
 			{
-				RenderBatch(batchID, batchData, stageData);
+				RenderBatch(world, batchID, batchData, stageData);
 				batchData.m_Colours.RemoveAll();
 				batchData.m_Models.RemoveAll();
 				batchData.m_TexParams.RemoveAll();
@@ -187,13 +174,13 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 			{
 				const auto& flipbookComponent = world.GetComponent<const eng::FlipbookComponent>(id.m_Entity);
 				const auto& flipbookTransform = world.GetComponent<const eng::TransformComponent>(id.m_Entity);
-				const auto& flipbookAsset = *m_AssetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
+				const auto& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 
 				const int32 frameMax = flipbookAsset.m_Frames.GetCount() - 1;
 				const int32 frameIndex = std::clamp(flipbookComponent.m_Index, 0, frameMax);
 
 				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[frameIndex];
-				const eng::Texture2DAsset& texture2DAsset = *m_AssetManager.LoadAsset<eng::Texture2DAsset>(flipbookAsset.m_Texture2D);
+				const eng::Texture2DAsset& texture2DAsset = *assetManager.LoadAsset<eng::Texture2DAsset>(flipbookAsset.m_Texture2D);
 
 				const Vector2f& spritePos = flipbookFrame.m_Position;
 				const Vector2f& spriteSize = flipbookFrame.m_Size;
@@ -223,11 +210,11 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				if (!spriteComponent.m_Sprite.IsValid())
 					continue;
 
-				const eng::SpriteAsset& spriteAsset = *m_AssetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
+				const eng::SpriteAsset& spriteAsset = *assetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
 				if (!spriteAsset.m_Texture2D.IsValid())
 					continue;
 
-				const eng::Texture2DAsset& texture2DAsset = *m_AssetManager.LoadAsset<eng::Texture2DAsset>(spriteAsset.m_Texture2D);
+				const eng::Texture2DAsset& texture2DAsset = *assetManager.LoadAsset<eng::Texture2DAsset>(spriteAsset.m_Texture2D);
 				if (texture2DAsset.m_TextureId == 0)
 					continue;
 
@@ -264,17 +251,18 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 			batchID = id;
 		}
 
-		RenderBatch(batchID, batchData, stageData);
+		RenderBatch(world, batchID, batchData, stageData);
 	}
 }
 
-void eng::RenderStage_Translucent::RenderBatch(const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData)
+void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData)
 {
 	PROFILE_FUNCTION();
 
-	const auto& mesh = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto& shader = *m_AssetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
-	const auto& texture = *m_AssetManager.LoadAsset<eng::Texture2DAsset>(batchID.m_TextureId);
+	auto& assetManager = world.GetResource<eng::AssetManager>();
+	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	const auto& texture = *assetManager.LoadAsset<eng::Texture2DAsset>(batchID.m_TextureId);
 
 	glUseProgram(shader.m_ProgramId);
 

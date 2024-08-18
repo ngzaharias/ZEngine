@@ -125,6 +125,9 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::LightDirectionalComponent>();
 	entityWorld.RegisterComponent<eng::LightPointComponent>();
 	entityWorld.RegisterComponent<eng::LinesComponent>();
+	entityWorld.RegisterComponent<eng::network::RequestComponent>();
+	entityWorld.RegisterComponent<eng::network::RequestFinishedComponent>();
+	entityWorld.RegisterComponent<eng::network::StateComponent>();
 	entityWorld.RegisterComponent<eng::RigidDynamicComponent>();
 	entityWorld.RegisterComponent<eng::RigidStaticComponent>();
 	entityWorld.RegisterComponent<eng::sound::ObjectComponent>();
@@ -137,9 +140,6 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::sound::SingleRequestComponent>();
 	entityWorld.RegisterComponent<eng::StaticMeshComponent>();
 	entityWorld.RegisterComponent<eng::TextComponent>();
-	entityWorld.RegisterComponent<network::RequestComponent>();
-	entityWorld.RegisterComponent<network::RequestFinishedComponent>();
-	entityWorld.RegisterComponent<network::StateComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkChangedEventComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkLoadedEventComponent>();
@@ -165,7 +165,7 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	entityWorld.RegisterComponent<net::ReplicationComponent>();
 	entityWorld.RegisterComponent<net::UserComponent>();
 
-	serializer.RegisterComponent<eng::CameraComponent, Default<eng::CameraComponent>>();
+	serializer.RegisterComponent<eng::CameraComponent,    Default<eng::CameraComponent>>();
 	serializer.RegisterComponent<ecs::NameComponent,      NameSerializer>();
 	serializer.RegisterComponent<eng::SpriteComponent,    SpriteSerializer>();
 	serializer.RegisterComponent<eng::TransformComponent, TransformSerializer>();

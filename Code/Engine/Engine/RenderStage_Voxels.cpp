@@ -25,21 +25,12 @@ namespace
 	const str::Guid strVoxelTexture = GUID("f87d23dd-5e7b-4d6d-bff8-8b0eb676f80c");
 }
 
-eng::RenderStage_Voxels::RenderStage_Voxels(eng::AssetManager& assetManager)
-	: RenderStage(assetManager)
-{
-}
-
 void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	using World = ecs::WorldView<
-		const eng::CameraComponent,
-		const eng::TransformComponent,
-		const eng::DynamicMeshComponent,
-		const voxel::ChunkComponent>;
 	World world = entityWorld.GetWorldView<World>();
+	auto& assetManager = world.GetResource<eng::AssetManager>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -64,8 +55,8 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
-		const auto& shader = *m_AssetManager.LoadAsset<eng::ShaderAsset>(strVoxelShader);
-		const auto& texture = *m_AssetManager.LoadAsset<eng::Texture2DAsset>(strVoxelTexture);
+		const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(strVoxelShader);
+		const auto& texture = *assetManager.LoadAsset<eng::Texture2DAsset>(strVoxelTexture);
 
 		glUseProgram(shader.m_ProgramId);
 

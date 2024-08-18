@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Array.h"
-#include "ECS/Entity.h"
 #include "ECS/System.h"
 
 namespace glfw
@@ -11,23 +10,16 @@ namespace glfw
 
 namespace eng
 {
-	class AssetManager;
 	class RenderStage;
-
 	struct FrameBufferComponent;
 	struct LinesComponent;
 
 	class RenderSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			eng::AssetManager,
-			eng::FrameBufferComponent,
-			eng::LinesComponent>;
+		using World = ecs::WorldView<>;
 
-		RenderSystem(
-			ecs::EntityWorld& entityWorld,
-			glfw::Window& window);
+		RenderSystem(ecs::EntityWorld& entityWorld);
 		~RenderSystem();
 
 		void Initialise(World& world);
@@ -37,7 +29,6 @@ namespace eng
 
 	private:
 		ecs::EntityWorld& m_EntityWorld;
-		glfw::Window& m_Window;
 
 		Array<RenderStage*> m_RenderStages;
 	};

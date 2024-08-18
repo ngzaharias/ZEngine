@@ -24,9 +24,9 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 			joinComponent.m_State = NetworkJoinComponent::EState::Connect;
 
 			const auto& request = std::get<gamestate::NetworkJoin>(stateComponent.m_State);
-			auto& requestComponent = world.AddEventComponent<network::RequestComponent>();
+			auto& requestComponent = world.AddEventComponent<eng::network::RequestComponent>();
 
-			network::Startup startup;
+			eng::network::Startup startup;
 			startup.m_Mode = request.m_Mode;
 			startup.m_ClientAddress = request.m_ClientAddress;
 			startup.m_ClientPort = request.m_ClientPort;

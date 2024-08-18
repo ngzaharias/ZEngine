@@ -2,7 +2,7 @@
 
 #include "ECS/System.h"
 
-namespace network
+namespace eng::network
 {
 	struct RequestComponent;
 	struct RequestFinishedComponent;
@@ -18,11 +18,11 @@ namespace gamestate
 	{
 	public:
 		using World = ecs::WorldView<
+			eng::network::RequestComponent,
 			gamestate::NetworkHostComponent,
 			gamestate::StateFinishedComponent,
-			network::RequestComponent,
-			const gamestate::StateComponent,
-			const network::RequestFinishedComponent>;
+			const eng::network::RequestFinishedComponent,
+			const gamestate::StateComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

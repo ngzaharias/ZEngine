@@ -21,15 +21,6 @@ namespace
 	const str::Guid strLinesShader = GUID("dad72cc0-7659-496b-83b1-c5a85a4b3695");
 }
 
-eng::RenderStage_Lines::RenderStage_Lines(eng::AssetManager& assetManager)
-	: RenderStage(assetManager)
-{
-}
-
-eng::RenderStage_Lines::~RenderStage_Lines()
-{
-}
-
 void eng::RenderStage_Lines::Initialise(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.AddSingleton<eng::LinesComponent>();
@@ -48,11 +39,8 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	using World = ecs::WorldView<
-		eng::LinesComponent,
-		const eng::CameraComponent,
-		const eng::TransformComponent>;
 	World world = entityWorld.GetWorldView<World>();
+	auto& assetManager = world.GetResource<eng::AssetManager>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -64,7 +52,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 		glDepthMask(GL_TRUE);
 	}
 
-	const auto* linesShader = m_AssetManager.LoadAsset<eng::ShaderAsset>(strLinesShader);
+	const auto* linesShader = assetManager.LoadAsset<eng::ShaderAsset>(strLinesShader);
 	if (!linesShader)
 		return;
 

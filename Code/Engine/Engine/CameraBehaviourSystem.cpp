@@ -1,5 +1,5 @@
 #include "EnginePCH.h"
-#include "Engine/CameraSystem.h"
+#include "Engine/CameraBehaviourSystem.h"
 
 #include "Core/GameTime.h"
 #include "ECS/EntityWorld.h"
@@ -17,14 +17,14 @@ namespace
 	constexpr Rotator s_RotateSpeed = Rotator(0.2f);
 }
 
-void eng::CameraSystem::Update(World& world, const GameTime& gameTime)
+void eng::camera::BehaviourSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, eng::TransformComponent>>())
 	{
 		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
-		if (cameraComponent.m_Behaviour != camera::EBehaviour::Free)
+		if (cameraComponent.m_Behaviour != ::camera::EBehaviour::Free)
 			continue;
 
 		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
