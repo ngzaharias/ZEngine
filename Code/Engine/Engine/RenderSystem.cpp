@@ -24,20 +24,16 @@
 // https://blog.molecular-matters.com/2014/11/06/stateless-layered-multi-threaded-rendering-part-1/
 // https://gamedevelopment.tutsplus.com/articles/gamma-correction-and-why-it-matters--gamedev-14466
 
-eng::RenderSystem::RenderSystem(
-	ecs::EntityWorld& entityWorld,
-	glfw::Window& window)
+eng::RenderSystem::RenderSystem(ecs::EntityWorld& entityWorld)
 	: m_EntityWorld(entityWorld)
-	, m_Window(window)
 {
-	auto& assetManager = entityWorld.GetResource<eng::AssetManager>();
-	m_RenderStages.Append(new eng::RenderStage_Shadow(assetManager));
-	m_RenderStages.Append(new eng::RenderStage_Voxels(assetManager));
-	m_RenderStages.Append(new eng::RenderStage_Opaque(assetManager));
-	m_RenderStages.Append(new eng::RenderStage_Lines(assetManager));
-	m_RenderStages.Append(new eng::RenderStage_Translucent(assetManager));
-	m_RenderStages.Append(new eng::RenderStage_UI(assetManager));
-	m_RenderStages.Append(new eng::RenderStage_ImGui(assetManager, window));
+	m_RenderStages.Append(new eng::RenderStage_Shadow());
+	m_RenderStages.Append(new eng::RenderStage_Voxels());
+	m_RenderStages.Append(new eng::RenderStage_Opaque());
+	m_RenderStages.Append(new eng::RenderStage_Lines());
+	m_RenderStages.Append(new eng::RenderStage_Translucent());
+	m_RenderStages.Append(new eng::RenderStage_UI());
+	m_RenderStages.Append(new eng::RenderStage_ImGui());
 }
 
 eng::RenderSystem::~RenderSystem()

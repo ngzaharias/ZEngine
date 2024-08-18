@@ -24,15 +24,6 @@ namespace
 	const str::Guid strShader = GUID("0205bbd9-a15b-459e-af0d-810ebe98b8d8");
 }
 
-eng::RenderStage_UI::RenderStage_UI(eng::AssetManager& assetManager)
-	: RenderStage(assetManager)
-{
-}
-
-eng::RenderStage_UI::~RenderStage_UI()
-{
-}
-
 void eng::RenderStage_UI::Initialise(ecs::EntityWorld& entityWorld)
 {
 	glGenVertexArrays(1, &m_AttributeObject);
@@ -87,14 +78,10 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	using World = ecs::WorldView<
-		const eng::CameraComponent,
-		const eng::TextComponent,
-		const eng::TransformComponent>;
 	World world = entityWorld.GetWorldView<World>();
-
-	const auto& mesh = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(strModel);
-	const auto& shader = *m_AssetManager.LoadAsset<eng::ShaderAsset>(strShader);
+	auto& assetManager = world.GetResource<eng::AssetManager>();
+	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(strModel);
+	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(strShader);
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -130,7 +117,7 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 			const auto& binding = mesh.m_Binding;
 
 			int32 instanceCount = static_cast<int32>(textComponent.m_Text.size());
-			const eng::FontAsset& fontAsset = *m_AssetManager.LoadAsset<eng::FontAsset>(textComponent.m_Font);
+			const eng::FontAsset& fontAsset = *assetManager.LoadAsset<eng::FontAsset>(textComponent.m_Font);
 			if (fontAsset.m_TextureId == 0)
 				continue;
 

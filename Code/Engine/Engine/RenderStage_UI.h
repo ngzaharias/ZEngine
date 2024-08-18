@@ -1,12 +1,8 @@
 #pragma once
 
+#include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
-
-namespace ecs
-{
-	class EntityWorld;
-	struct Entity;
-}
 
 namespace glfw
 {
@@ -16,12 +12,18 @@ namespace glfw
 namespace eng
 {
 	class AssetManager;
+	struct CameraComponent;
+	struct TextComponent;
+	struct TransformComponent;
 
 	class RenderStage_UI final : public eng::RenderStage
 	{
 	public:
-		RenderStage_UI(eng::AssetManager& assetManager);
-		~RenderStage_UI() override;
+		using World = ecs::WorldView<
+			eng::AssetManager,
+			const eng::CameraComponent,
+			const eng::TextComponent,
+			const eng::TransformComponent>;
 
 		void Initialise(ecs::EntityWorld& world) override;
 		void Shutdown(ecs::EntityWorld& world) override;

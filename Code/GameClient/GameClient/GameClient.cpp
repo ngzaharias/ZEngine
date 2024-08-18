@@ -7,6 +7,7 @@
 #include "Engine/PrototypeManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
+#include "Engine/GLFW/Window.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
 #include "GameShared/RegisterComponents.h"
@@ -24,6 +25,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.AddResource(dependencies.m_NetworkManager);
 		m_EntityWorld.AddResource(dependencies.m_PhysicsManager);
 		m_EntityWorld.AddResource(dependencies.m_PrototypeManager);
+		m_EntityWorld.AddResource(dependencies.m_Window);
 	}
 
 	// engine
