@@ -6,8 +6,14 @@ namespace camera
 {
 	enum class EAxis
 	{
-		Horizontal,
+		Horizontal = 0,
 		Vertical,
+	};
+
+	enum class EBehaviour
+	{
+		Free = 0,
+		Static,
 	};
 
 	struct Cinematic

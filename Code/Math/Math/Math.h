@@ -3,6 +3,7 @@
 #include <cmath>
 
 using int32 = int32_t;
+using uint64 = uint64_t;
 
 constexpr float KINDA_LARGE_FLOAT = 9999999.0f;
 constexpr float KINDA_SMALL_FLOAT = 0.0000001f;
@@ -17,6 +18,9 @@ constexpr float SQUARE_ROOT_THREE = 1.732050807568877f;
 constexpr float DIAGONAL_1D = 1.f;
 constexpr float DIAGONAL_2D = SQUARE_ROOT_TWO;
 constexpr float DIAGONAL_3D = SQUARE_ROOT_THREE;
+
+#define BIT32(value) (1<<value)
+#define BIT64(value) (static_cast<uint64>(1)<<(value))
 
 // https://cplusplus.com/forum/articles/3638/
 

@@ -11,6 +11,7 @@ namespace
 	const camera::Perspective s_DefaultPerspective = { };
 	const camera::Projection s_DefaultProjection = s_DefaultPerspective;
 
+	const str::StringView strBehaviour = "m_Behaviour";
 	const str::StringView strClippingFar = "m_ClippingFar";
 	const str::StringView strClippingNear = "m_ClippingNear";
 	const str::StringView strFieldOfView = "m_FieldOfView";
@@ -40,9 +41,11 @@ void eng::CameraLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, 
 {
 	auto& cameraComponent = world.AddComponent<eng::CameraComponent>(entity);
 	cameraComponent.m_Projection = prototype.m_Projection;
+	cameraComponent.m_Behaviour = prototype.m_Behaviour;
 }
 
 void eng::CameraLoader::Load(eng::CameraPrototype& prototype, eng::Visitor& visitor) const
 {
 	visitor.Visit(strProjection, prototype.m_Projection, s_DefaultProjection);
+	visitor.Visit(strBehaviour, prototype.m_Behaviour, camera::EBehaviour::Free);
 }
