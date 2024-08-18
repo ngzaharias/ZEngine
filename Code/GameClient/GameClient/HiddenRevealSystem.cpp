@@ -114,20 +114,6 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 				const ecs::Entity selectedEntity = reinterpret_cast<uint64>(closestHit.actor->userData);
 				if (world.HasComponent<hidden::ObjectComponent>(selectedEntity))
 				{
-					const auto& hiddenComponent = world.GetComponent<const hidden::ObjectComponent>(selectedEntity);
-					if (world.HasComponent<eng::TransformComponent>(selectedEntity))
-					{
-						constexpr Sphere3f s_Sphere = Sphere3f(Vector3f::Zero, 10.f);
-
-						const float sizeX = (float)hiddenComponent.m_Size.x;
-						const float sizeY = (float)hiddenComponent.m_Size.y;
-						const AABB3f s_Extents = AABB3f::FromExtents(Vector3f(sizeX, sizeY, 1.f));
-
-						const auto& transformComponent = world.GetComponent<const eng::TransformComponent>(selectedEntity);
-						linesComponent.AddAABB(transformComponent.m_Translate, s_Extents, s_ColourM);
-						linesComponent.AddSphere(hitPosition, s_Sphere, s_ColourM);
-					}
-
 					const bool isRevealed = world.HasComponent<hidden::RevealedComponent>(selectedEntity);
 					if (!isRevealed && inputComponent.IsKeyPressed(input::EMouse::Left))
 						world.AddComponent<hidden::RevealedComponent>(selectedEntity);
