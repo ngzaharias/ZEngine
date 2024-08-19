@@ -43,16 +43,6 @@ namespace
 	}
 }
 
-void hidden::RevealSystem::Initialise(World& world)
-{
-	m_SoundEntity = world.CreateEntity();
-}
-
-void hidden::RevealSystem::Shutdown(World& world)
-{
-	world.DestroyEntity(m_SoundEntity);
-}
-
 void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();

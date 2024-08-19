@@ -40,12 +40,6 @@ namespace hidden
 			const eng::TransformComponent,
 			const hidden::ObjectComponent>;
 
-		void Initialise(World& world);
-		void Shutdown(World& world);
-
 		void Update(World& world, const GameTime& gameTime);
-
-	private:
-		ecs::Entity m_SoundEntity = {};
 	};
 }
