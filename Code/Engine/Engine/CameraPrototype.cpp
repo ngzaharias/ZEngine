@@ -9,7 +9,7 @@ namespace
 {
 	const camera::Orthographic s_DefaultOrthographic = { };
 	const camera::Perspective s_DefaultPerspective = { };
-	const camera::Projection s_DefaultProjection = s_DefaultPerspective;
+	const eng::CameraPrototype s_DefaultPrototype = {};
 
 	const str::StringView strBehaviour = "m_Behaviour";
 	const str::StringView strClippingFar = "m_ClippingFar";
@@ -46,6 +46,6 @@ void eng::CameraLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, 
 
 void eng::CameraLoader::Load(eng::CameraPrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strProjection, prototype.m_Projection, s_DefaultProjection);
-	visitor.Visit(strBehaviour, prototype.m_Behaviour, camera::EBehaviour::Free3D);
+	visitor.Visit(strBehaviour, prototype.m_Behaviour, s_DefaultPrototype.m_Behaviour);
+	visitor.Visit(strProjection, prototype.m_Projection, s_DefaultPrototype.m_Projection);
 }
