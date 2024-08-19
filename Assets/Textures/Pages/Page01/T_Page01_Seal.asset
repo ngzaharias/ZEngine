@@ -1,4 +1,4 @@
 m_Guid = '8675619f-63c3-4cb9-fbba-9a6ce2ad0aa8'
 m_Name = 'T_Page01_Seal'
-m_SourceFile = '..\Assets\Textures\T_Page01_Seal.png'
+m_SourceFile = '..\AssetsRaw\Textures\Pages\Page01\T_Page01_Seal.png'
 m_Type = 'Texture2D'

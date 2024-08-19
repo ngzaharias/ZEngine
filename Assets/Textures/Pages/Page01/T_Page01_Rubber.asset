@@ -1,4 +1,4 @@
 m_Guid = '50f08a2e-0918-493b-4a98-5739c092ad8c'
 m_Name = 'T_Page01_Rubber'
-m_SourceFile = '..\Assets\Textures\T_Page01_Rubber.png'
+m_SourceFile = '..\AssetsRaw\Textures\Pages\Page01\T_Page01_Rubber.png'
 m_Type = 'Texture2D'
