@@ -13,6 +13,7 @@
 #include "GameClient/HiddenSoundSystem.h"
 #include "GameClient/HiddenSpriteSystem.h"
 #include "GameClient/HiddenTrackerSystem.h"
+#include "GameClient/HiddenVFXSystem.h"
 #include "GameClient/ModalStateSystem.h"
 #include "GameClient/NetworkHostSystem.h"
 #include "GameClient/NetworkJoinSystem.h"
@@ -37,6 +38,7 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld, const clt::SystemDepend
 	entityWorld.RegisterSystem<hidden::SoundSystem>();
 	entityWorld.RegisterSystem<hidden::SpriteSystem>();
 	entityWorld.RegisterSystem<hidden::TrackerSystem>();
+	entityWorld.RegisterSystem<hidden::VFXSystem>();
 	entityWorld.RegisterSystem<movement::AccelerationSystem>();
 	entityWorld.RegisterSystem<movement::VelocitySystem>();
 	entityWorld.RegisterSystem<projectile::SpawnSystem>();
