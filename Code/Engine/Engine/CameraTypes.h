@@ -12,8 +12,9 @@ namespace camera
 
 	enum class EBehaviour
 	{
-		Free = 0,
-		Static,
+		Static = 0,
+		Free2D,
+		Free3D,
 	};
 
 	struct Cinematic

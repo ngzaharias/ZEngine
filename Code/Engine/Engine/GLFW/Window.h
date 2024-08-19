@@ -38,9 +38,11 @@ namespace glfw
 
 		void GatherKeyboard(Set<input::EKeyboard>& out_Keys) const;
 		void GatherMouse(Set<input::EMouse>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const;
+		void GatherScroll(Vector2f& out_Delta) const;
 
 	private:
-		static void FramebufferResizeCallback(GLFWwindow* glfwWindow, int width, int height);
+		static void Callback_FramebufferResized(GLFWwindow* glfwWindow, int width, int height);
+		static void Callback_ScrollChanged(GLFWwindow* glfwWindow, double xOffset, double yOffset);
 
 	private:
 		str::String m_Name = { };
@@ -48,6 +50,7 @@ namespace glfw
 
 		Vector2f m_MousePos = Vector2f::Zero;
 		Vector2f m_MouseDelta = Vector2f::Zero;
+		Vector2f m_ScrollDelta = Vector2f::Zero;
 
 		GLFWwindow* m_Window = nullptr;
 		bool m_HasResized = false;

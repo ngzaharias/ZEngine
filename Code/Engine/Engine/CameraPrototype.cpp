@@ -47,5 +47,5 @@ void eng::CameraLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, 
 void eng::CameraLoader::Load(eng::CameraPrototype& prototype, eng::Visitor& visitor) const
 {
 	visitor.Visit(strProjection, prototype.m_Projection, s_DefaultProjection);
-	visitor.Visit(strBehaviour, prototype.m_Behaviour, camera::EBehaviour::Free);
+	visitor.Visit(strBehaviour, prototype.m_Behaviour, camera::EBehaviour::Free3D);
 }

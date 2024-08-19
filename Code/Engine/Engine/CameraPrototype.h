@@ -17,7 +17,7 @@ namespace eng
 	struct CameraPrototype final
 	{
 		camera::Projection m_Projection = camera::Perspective();
-		camera::EBehaviour m_Behaviour = camera::EBehaviour::Free;
+		camera::EBehaviour m_Behaviour = camera::EBehaviour::Free3D;
 	};
 
 	class CameraLoader final : public eng::PrototypeLoader

@@ -24,9 +24,10 @@ void eng::InputSystem::Update(World& world, const GameTime& gameTime)
 	m_KeyboardPrevious = std::move(m_KeyboardCurrent);
 	m_MousePrevious = std::move(m_MouseCurrent);
 
-	Vector2f glfwMouseDelta, glfwMousePos;
+	Vector2f mouseDelta, mousePos, scrollDelta;
 	window.GatherKeyboard(m_KeyboardCurrent);
-	window.GatherMouse(m_MouseCurrent, glfwMouseDelta, glfwMousePos);
+	window.GatherMouse(m_MouseCurrent, mouseDelta, mousePos);
+	window.GatherScroll(scrollDelta);
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::InputComponent>>())
 	{
@@ -35,7 +36,8 @@ void eng::InputSystem::Update(World& world, const GameTime& gameTime)
 		component.m_KeyboardCurrent = m_KeyboardCurrent;
 		component.m_MousePrevious = m_MousePrevious;
 		component.m_MouseCurrent = m_MouseCurrent;
-		component.m_MouseDelta = glfwMouseDelta;
-		component.m_MousePosition = glfwMousePos;
+		component.m_MouseDelta = mouseDelta;
+		component.m_MousePosition = mousePos;
+		component.m_ScrollDelta = scrollDelta;
 	}
 }
