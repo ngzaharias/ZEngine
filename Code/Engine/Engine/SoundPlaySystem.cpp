@@ -9,17 +9,17 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
+#include "Engine/SettingsComponents.h"
 #include "Engine/SoundAssets.h"
 #include "Engine/SoundComponents.h"
 
 #include <SFML/Audio/SoundBuffer.hpp>
 
-// #todo: load volume from config
-
 void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& localSettings = world.GetSingleton<const eng::settings::LocalComponent>();
 
 	Array<str::Guid> requests;
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SingleRequestComponent>>())
@@ -58,13 +58,13 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 		auto& soundComponent = world.AddComponent<eng::sound::ObjectComponent>(entity);
 		soundComponent.m_Sound = new sf::Sound();
 		soundComponent.m_Sound->setBuffer(soundAsset->m_SoundBuffer);
-		soundComponent.m_Sound->setVolume(m_Volume);
+		soundComponent.m_Sound->setVolume(static_cast<float>(localSettings.m_EffectVolume));
 		soundComponent.m_Sound->play();
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::sound::ObjectComponent>>())
 	{
-		auto& component = world.GetComponent<const eng::sound::ObjectComponent>(entity);
+		const auto& component = world.GetComponent<const eng::sound::ObjectComponent>(entity);
 		if (component.m_Sound->getStatus() == sf::Sound::Stopped)
 			world.DestroyEntity(entity);
 	}

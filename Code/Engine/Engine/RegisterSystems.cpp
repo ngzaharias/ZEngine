@@ -9,12 +9,14 @@
 #include "Engine/GLFW/Window.h"
 #include "Engine/InputSystem.h"
 #include "Engine/LevelLoadSystem.h"
+#include "Engine/MusicSystem.h"
 #include "Engine/NetworkSystem.h"
 #include "Engine/PhysicsSystem.h"
 #include "Engine/RenderSystem.h"
 #include "Engine/ReplicationHost.h"
 #include "Engine/ReplicationPeer.h"
 #include "Engine/Screen.h"
+#include "Engine/SettingsLocalSystem.h"
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SoundRandomSystem.h"
 #include "Engine/SoundSequenceSystem.h"
@@ -26,8 +28,10 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::Client
 	entityWorld.RegisterSystem<eng::camera::BehaviourSystem>();
 	entityWorld.RegisterSystem<eng::InputSystem>();
 	entityWorld.RegisterSystem<eng::FlipbookSystem>();
+	entityWorld.RegisterSystem<eng::MusicSystem>();
 	entityWorld.RegisterSystem<eng::network::NetworkSystem>();
 	entityWorld.RegisterSystem<eng::RenderSystem>(entityWorld);
+	entityWorld.RegisterSystem<eng::settings::LocalSystem>();
 	entityWorld.RegisterSystem<eng::sound::PlaySystem>();
 	entityWorld.RegisterSystem<eng::sound::RandomSystem>();
 	entityWorld.RegisterSystem<eng::sound::SequenceSystem>();

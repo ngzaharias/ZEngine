@@ -12,6 +12,11 @@ namespace eng
 	class AssetManager;
 }
 
+namespace eng::settings
+{
+	struct LocalComponent;
+}
+
 namespace eng::sound
 {
 	struct ObjectComponent;
@@ -31,13 +36,11 @@ namespace eng::sound
 			// components
 			ecs::NameComponent,
 			eng::sound::ObjectComponent,
+			const eng::settings::LocalComponent,
 			const eng::sound::RandomBufferComponent,
 			const eng::sound::SequenceBufferComponent,
 			const eng::sound::SingleRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
-
-	private:
-		float m_Volume = 50.f;
 	};
 };

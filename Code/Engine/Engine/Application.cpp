@@ -183,12 +183,6 @@ void eng::Application::Initialise()
 	m_Window->Initialize();
 	m_AssetManager.Initialise();
 	m_PhysicsManager.Initialise();
-
-	static sf::Music music;
-	const auto* musicAsset = m_AssetManager.LoadAsset<eng::MusicAsset>(GUID("d193864e-e4f4-44e7-b6aa-bb84b95bcc5b"));
-	const str::Path filepath = str::Path(str::EPath::Assets, musicAsset->m_SourceFile);
-	music.openFromFile(filepath.ToChar());
-	music.play();
 }
 
 void eng::Application::Update(const GameTime& gameTime)
