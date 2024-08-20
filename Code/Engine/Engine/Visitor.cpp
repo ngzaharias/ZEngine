@@ -58,7 +58,7 @@ eng::Visitor::Visitor(Visitor&& value) noexcept
 }
 
 eng::Visitor::Visitor(const str::StringView& value)
-	: m_Mode(EMode::Write)
+	: m_Mode(EMode::Read)
 	, m_Node(&m_Root)
 {
 	if (toml::parse_result result = toml::parse(value))
@@ -130,11 +130,11 @@ bool eng::Visitor::LoadFromFile(const str::Path& filepath)
 {
 	PROFILE_FUNCTION();
 
+	m_Mode = EMode::Read;
 	toml::parse_result result = toml::parse_file(filepath.ToView());
 	if (!result)
 		return false;
 
-	m_Mode = EMode::Read;
 	m_Root = std::move(result).table();
 	return true;
 }

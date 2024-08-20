@@ -100,6 +100,10 @@ namespace eng
 		/// Also switches the visitor to read mode.
 		bool LoadFromFile(const str::Path& path);
 
+		// Visit as Object
+		template<typename Value>
+		void Visit(Value& value);
+
 		// Visit as Map
 		template<typename Key, typename Value>
 		void Visit(Map<Key, Value>& values);

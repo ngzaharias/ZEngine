@@ -3,6 +3,12 @@
 #include "Core/TypeTraits.h"
 #include "Core/VariantHelpers.h"
 
+template<typename Value>
+void eng::Visitor::Visit(Value& value)
+{
+	VisitCustom<Value>(value);
+}
+
 template<typename Key, typename Value>
 void eng::Visitor::Visit(Map<Key, Value>& values)
 {
