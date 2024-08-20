@@ -10,6 +10,7 @@
 #include "Engine/FontAsset.h"
 #include "Engine/GLFW/Window.h"
 #include "Engine/LightPrototypes.h"
+#include "Engine/MusicAsset.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
@@ -48,6 +49,7 @@ namespace
 	const str::Name strExample = NAME("Example");
 	const str::Name strFont = NAME("Font");
 	const str::Name strFlipbook = NAME("Flipbook");
+	const str::Name strMusic = NAME("Music");
 	const str::Name strPhysics = NAME("Physics");
 	const str::Name strPhysicsMaterial = NAME("PhysicsMaterial");
 	const str::Name strPointLight = NAME("PointLight");
@@ -146,6 +148,7 @@ void eng::Application::Register()
 	{
 		m_AssetManager.RegisterAsset<eng::FlipbookAsset, eng::FlipbookAssetLoader>(strFlipbook);
 		m_AssetManager.RegisterAsset<eng::FontAsset, eng::FontAssetLoader>(strFont);
+		m_AssetManager.RegisterAsset<eng::MusicAsset, eng::MusicAssetLoader>(strMusic);
 		m_AssetManager.RegisterAsset<eng::PhysicsMaterialAsset, eng::PhysicsMaterialAssetLoader>(strPhysicsMaterial, m_PhysicsManager);
 		m_AssetManager.RegisterAsset<eng::ShaderAsset, eng::ShaderAssetLoader>(strShader);
 		m_AssetManager.RegisterAsset<eng::sound::RandomAsset, eng::sound::AssetLoader>(strSoundRandom);
@@ -180,6 +183,12 @@ void eng::Application::Initialise()
 	m_Window->Initialize();
 	m_AssetManager.Initialise();
 	m_PhysicsManager.Initialise();
+
+	static sf::Music music;
+	const auto* musicAsset = m_AssetManager.LoadAsset<eng::MusicAsset>(GUID("d193864e-e4f4-44e7-b6aa-bb84b95bcc5b"));
+	const str::Path filepath = str::Path(str::EPath::Assets, musicAsset->m_SourceFile);
+	music.openFromFile(filepath.ToChar());
+	music.play();
 }
 
 void eng::Application::Update(const GameTime& gameTime)
