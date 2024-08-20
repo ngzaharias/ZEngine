@@ -18,7 +18,7 @@ str::Path eng::GetAppDataDirectory()
 	wcstombs_s(count, cDirectory, wDirectory, MAX_PATH);
 
 	str::String string = cDirectory;
-	return str::Path(std::move(string), "\\");
+	return str::Path(std::move(string), "\\ZEngine\\");
 #endif
 }
 
