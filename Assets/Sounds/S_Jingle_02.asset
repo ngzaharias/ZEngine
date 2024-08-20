@@ -2,4 +2,4 @@ m_Guid = "dd00c467-9770-4b8c-a0e8-516c48a1c727"
 m_Name = "S_Jingle_02"
 m_Type = "SoundSingle"
 
-m_SourceFile = "Sounds\\S_Jingle_02.ogg"
+m_SourceFile = "..\\AssetsRaw\\Sounds\\S_Jingle_02.ogg"
