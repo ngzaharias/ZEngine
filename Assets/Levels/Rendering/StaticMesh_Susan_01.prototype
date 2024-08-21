@@ -1,0 +1,10 @@
+m_Guid = "49228a0f-0254-4100-a887-399001aa3910"
+m_Name = "StaticMesh_Susan_01"
+
+[StaticMesh]
+m_StaticMesh = "e94876a8-e4cc-4d16-84c8-5859b48a1af7"
+
+[Transform]
+m_Translate = { X = 0.0, Y = 0.0, Z = -600.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

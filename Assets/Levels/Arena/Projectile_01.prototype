@@ -1,0 +1,11 @@
+m_Guid = "46719d84-388d-4aad-bf40-79af7b7ef085"
+m_Name = "Projectile_01"
+
+[Flipbook]
+m_Size = { X = 128, Y = 128 }
+m_Flipbook = 'cb8758ed-8432-4312-5993-8f517867c5d3'
+
+[Transform]
+m_Translate = { X = 200.0, Y = 0.0, Z = 0.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

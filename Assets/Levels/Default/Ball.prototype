@@ -1,0 +1,21 @@
+m_Guid = "6d5eddf9-9a6e-40f5-851b-5a73e7e89c26"
+m_Name = "Ball"
+
+[Physics]
+m_Rigid = 0
+eENABLE_CCD = true
+eLOCK_LINEAR_Z = true
+eLOCK_ANGULAR_X = true
+eLOCK_ANGULAR_Y = true
+m_Shape = 1
+m_Channel = 1
+m_Radius = 50.0
+
+[Sprite]
+m_Size = { X = 50, Y = 50 }
+m_Sprite = "00a51d6c-15ca-4ea9-bdb8-b4b11edffa63"
+
+[Transform]
+m_Translate = { X = 0.0, Y = 200.0, Z = 0.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
