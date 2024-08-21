@@ -20,6 +20,6 @@ void eng::SpriteLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, 
 
 void eng::SpriteLoader::Load(SpritePrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strSize, prototype.m_Size, Vector2u::Zero);
-	visitor.Visit(strSprite, prototype.m_Sprite, {});
+	visitor.Read(strSize, prototype.m_Size, Vector2u::Zero);
+	visitor.Read(strSprite, prototype.m_Sprite, {});
 }

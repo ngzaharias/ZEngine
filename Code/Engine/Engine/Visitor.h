@@ -45,13 +45,6 @@ namespace eng
 		friend std::ostream& operator<<(std::ostream& lhs, const eng::Visitor& rhs);
 
 	public:
-		enum EMode
-		{
-			Read,
-			Write,
-		};
-
-	public:
 		struct Iterator
 		{
 			using Itr = toml::Table::iterator;
@@ -81,99 +74,154 @@ namespace eng
 
 		operator str::String() noexcept;
 
-		/// \brief Returns true if the document is current in read mode.
-		bool IsReading() const { return m_Mode == EMode::Read; }
-		/// \brief Returns true if the document is current in write mode.
-		bool IsWriting() const { return m_Mode == EMode::Write; }
-
 		/// \brief Marks that the current object being visited should be streamed as inline.
 		void SetInline();
-
-		/// \brief Swap the document between read/write mode.
-		/// See ::Visit for more details.
-		void SetMode(const EMode value) { m_Mode = value; };
 
 		/// \brief Save the contents of the visitor to file.
 		/// Can be done regardless if the file is in read/write mode.
 		bool SaveToFile(const str::Path& path);
+
 		/// \brief Read the contents of a file to the visitor.
 		/// Also switches the visitor to read mode.
 		bool LoadFromFile(const str::Path& path);
 
-		// Visit as Object
+	public:
+		// Read
 		template<typename Value>
-		void Visit(Value& value);
+		void Read(Value& value) const;
 
-		// Visit as Map
 		template<typename Key, typename Value>
-		void Visit(Map<Key, Value>& values);
+		void Read(Map<Key, Value>& values) const;
 
-		// Visit by Key
 		template<typename Value>
-		void Visit(const str::StringView& key, Value& value, const Value& defaultValue);
+		void Read(const str::StringView& key, Value& value, const Value& defaultValue) const;
+		void Read(const str::StringView& key, bool& value, const bool defaultValue) const;
+		void Read(const str::StringView& key, float& value, const float defaultValue) const;
+		void Read(const str::StringView& key, double& value, const double defaultValue) const;
+		void Read(const str::StringView& key, int8& value, const int8 defaultValue) const;
+		void Read(const str::StringView& key, int16& value, const int16 defaultValue) const;
+		void Read(const str::StringView& key, int32& value, const int32 defaultValue) const;
+		void Read(const str::StringView& key, int64& value, const int64 defaultValue) const;
+		void Read(const str::StringView& key, uint8& value, const uint8 defaultValue) const;
+		void Read(const str::StringView& key, uint16& value, const uint16 defaultValue) const;
+		void Read(const str::StringView& key, uint32& value, const uint32 defaultValue) const;
+		void Read(const str::StringView& key, str::Guid& value, const str::Guid& defaultValue) const;
+		void Read(const str::StringView& key, str::Name& value, const str::Name& defaultValue) const;
+		void Read(const str::StringView& key, str::Path& value, const str::Path& defaultValue) const;
+		void Read(const str::StringView& key, str::String& value, const str::String& defaultValue) const;
 
-		void Visit(const str::StringView& key, bool& value, const bool defaultValue);
-		void Visit(const str::StringView& key, float& value, const float defaultValue);
-		void Visit(const str::StringView& key, double& value, const double defaultValue);
-		void Visit(const str::StringView& key, int8& value, const int8 defaultValue);
-		void Visit(const str::StringView& key, int16& value, const int16 defaultValue);
-		void Visit(const str::StringView& key, int32& value, const int32 defaultValue);
-		void Visit(const str::StringView& key, int64& value, const int64 defaultValue);
-		void Visit(const str::StringView& key, uint8& value, const uint8 defaultValue);
-		void Visit(const str::StringView& key, uint16& value, const uint16 defaultValue);
-		void Visit(const str::StringView& key, uint32& value, const uint32 defaultValue);
+		template<typename Value>
+		void Read(const int32 index, Value& value) const;
+		void Read(const int32 index, bool& value) const;
+		void Read(const int32 index, float& value) const;
+		void Read(const int32 index, double& value) const;
+		void Read(const int32 index, int8& value) const;
+		void Read(const int32 index, int16& value) const;
+		void Read(const int32 index, int32& value) const;
+		void Read(const int32 index, int64& value) const;
+		void Read(const int32 index, uint8& value) const;
+		void Read(const int32 index, uint16& value) const;
+		void Read(const int32 index, uint32& value) const;
+		void Read(const int32 index, str::Guid& value) const;
+		void Read(const int32 index, str::Name& value) const;
+		void Read(const int32 index, str::Path& value) const;
+		void Read(const int32 index, str::String& value) const;
 
-		void Visit(const str::StringView& key, str::Guid& value, const str::Guid& defaultValue);
-		void Visit(const str::StringView& key, str::Name& value, const str::Name& defaultValue);
-		void Visit(const str::StringView& key, str::Path& value, const str::Path& defaultValue);
-		void Visit(const str::StringView& key, str::String& value, const str::String& defaultValue);
+		// Write
+		template<typename Value>
+		void Write(const Value& value);
+
+		template<typename Key, typename Value>
+		void Write(const Map<Key, Value>& values);
+
+		template<typename Value>
+		void Write(const str::StringView& key, const Value& value);
+		void Write(const str::StringView& key, const bool& value);
+		void Write(const str::StringView& key, const float& value);
+		void Write(const str::StringView& key, const double& value);
+		void Write(const str::StringView& key, const int8& value);
+		void Write(const str::StringView& key, const int16& value);
+		void Write(const str::StringView& key, const int32& value);
+		void Write(const str::StringView& key, const int64& value);
+		void Write(const str::StringView& key, const uint8& value);
+		void Write(const str::StringView& key, const uint16& value);
+		void Write(const str::StringView& key, const uint32& value);
+		void Write(const str::StringView& key, const str::Guid& value);
+		void Write(const str::StringView& key, const str::Name& value);
+		void Write(const str::StringView& key, const str::Path& value);
+		void Write(const str::StringView& key, const str::String& value);
+
+		template<typename Value>
+		void Write(const int32 index, const Value& value);
+		void Write(const int32 index, const bool& value);
+		void Write(const int32 index, const float& value);
+		void Write(const int32 index, const double& value);
+		void Write(const int32 index, const int8& value);
+		void Write(const int32 index, const int16& value);
+		void Write(const int32 index, const int32& value);
+		void Write(const int32 index, const int64& value);
+		void Write(const int32 index, const uint8& value);
+		void Write(const int32 index, const uint16& value);
+		void Write(const int32 index, const uint32& value);
+		void Write(const int32 index, const str::Guid& value);
+		void Write(const int32 index, const str::Name& value);
+		void Write(const int32 index, const str::Path& value);
+		void Write(const int32 index, const str::String& value);
 
 	private:
-		// Visit by Index
+		// Read
 		template<typename Value>
-		void Visit(const int32 index, Value& value);
-
-		void Visit(const int32 index, bool& value);
-		void Visit(const int32 index, float& value);
-		void Visit(const int32 index, double& value);
-		void Visit(const int32 index, int8& value);
-		void Visit(const int32 index, int16& value);
-		void Visit(const int32 index, int32& value);
-		void Visit(const int32 index, int64& value);
-		void Visit(const int32 index, uint8& value);
-		void Visit(const int32 index, uint16& value);
-		void Visit(const int32 index, uint32& value);
-
-		void Visit(const int32 index, str::Guid& value);
-		void Visit(const int32 index, str::Name& value);
-		void Visit(const int32 index, str::Path& value);
-		void Visit(const int32 index, str::String& value);
+		void ReadArray(Array<Value>& values) const;
 
 		template<typename Value>
-		void VisitArray(Array<Value>& values);
-
-		template<typename Value>
-		inline void VisitCustom(Value& value);
+		inline void ReadCustom(Value& value) const;
 
 		template <typename TEnum>
-		void VisitEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue);
+		void ReadEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue) const;
 		template <typename TEnum>
-		void VisitEnum(const int32 index, TEnum& value);
+		void ReadEnum(const int32 index, TEnum& value) const;
 
 		template<typename Value>
-		void VisitMap(Map<str::Guid, Value>& values);
+		void ReadMap(Map<str::Guid, Value>& values) const;
 		template<typename Value>
-		void VisitMap(Map<str::Name, Value>& values);
+		void ReadMap(Map<str::Name, Value>& values) const;
 		template<typename Value>
-		void VisitMap(Map<str::String, Value>& values);
+		void ReadMap(Map<str::String, Value>& values) const;
 
 		template<typename Value>
-		void VisitPrimitive(const str::StringView& key, Value& value, const Value defaultValue);
+		void ReadPrimitive(const str::StringView& key, Value& value, const Value defaultValue) const;
 		template<typename Value>
-		void VisitPrimitive(const int32 index, Value& value);
+		void ReadPrimitive(const int32 index, Value& value) const;
 
 		template<typename ...Types>
-		void VisitVariant(Variant<Types...>& value);
+		void ReadVariant(Variant<Types...>& value) const;
+
+		// Write
+		template<typename Value>
+		void WriteArray(const Array<Value>& values);
+
+		template<typename Value>
+		inline void WriteCustom(const Value& value);
+
+		template <typename TEnum>
+		void WriteEnum(const str::StringView& key, const TEnum& value);
+		template <typename TEnum>
+		void WriteEnum(const int32 index, const TEnum& value);
+
+		template<typename Value>
+		void WriteMap(const Map<str::Guid, Value>& values);
+		template<typename Value>
+		void WriteMap(const Map<str::Name, Value>& values);
+		template<typename Value>
+		void WriteMap(const Map<str::String, Value>& values);
+
+		template<typename Value>
+		void WritePrimitive(const str::StringView& key, const Value& value);
+		template<typename Value>
+		void WritePrimitive(const int32 index, const Value& value);
+
+		template<typename ...Types>
+		void WriteVariant(const Variant<Types...>& value);
 
 	public:
 		auto begin()->Iterator;
@@ -183,8 +231,7 @@ namespace eng
 		toml::Table m_Root = { };
 
 	private:
-		toml::Node* m_Node = &m_Root;
-		EMode m_Mode = EMode::Write;
+		mutable toml::Node* m_Node = &m_Root;
 	};
 }
 

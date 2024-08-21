@@ -32,16 +32,16 @@ void eng::LightLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, c
 
 void eng::LightLoader::Load(eng::AmbientLightPrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strColour, prototype.m_Colour, Vector3f::One);
+	visitor.Read(strColour, prototype.m_Colour, Vector3f::One);
 }
 
 void eng::LightLoader::Load(eng::DirectionalLightPrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strColour, prototype.m_Colour, Vector3f::One);
+	visitor.Read(strColour, prototype.m_Colour, Vector3f::One);
 }
 
 void eng::LightLoader::Load(eng::PointLightPrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strRange, prototype.m_Range, 500.f);
-	visitor.Visit(strColour, prototype.m_Colour, Vector3f::One);
+	visitor.Read(strRange, prototype.m_Range, 500.f);
+	visitor.Read(strColour, prototype.m_Colour, Vector3f::One);
 }

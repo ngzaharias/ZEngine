@@ -20,28 +20,27 @@ namespace
 }
 
 template<>
-void eng::Visitor::VisitCustom<eng::FlipbookFrame>(eng::FlipbookFrame& value)
+void eng::Visitor::ReadCustom(eng::FlipbookFrame& value) const
 {
-	SetInline();
-	Visit(strPosition, value.m_Position, s_DefaultFrame.m_Position);
-	Visit(strSize, value.m_Size, s_DefaultFrame.m_Size);
+	Read(strPosition, value.m_Position, s_DefaultFrame.m_Position);
+	Read(strSize, value.m_Size, s_DefaultFrame.m_Size);
 }
 
 bool eng::FlipbookAssetLoader::Save(FlipbookAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strFps, asset.m_FPS, s_DefaultAsset.m_FPS);
-	visitor.Visit(strFrames, asset.m_Frames, s_DefaultAsset.m_Frames);
-	visitor.Visit(strIsLooping, asset.m_IsLooping, s_DefaultAsset.m_IsLooping);
-	visitor.Visit(strShader, asset.m_Shader, s_DefaultAsset.m_Shader);
-	visitor.Visit(strTexture2D, asset.m_Texture2D, s_DefaultAsset.m_Texture2D);
+	visitor.Read(strFps, asset.m_FPS, s_DefaultAsset.m_FPS);
+	visitor.Read(strFrames, asset.m_Frames, s_DefaultAsset.m_Frames);
+	visitor.Read(strIsLooping, asset.m_IsLooping, s_DefaultAsset.m_IsLooping);
+	visitor.Read(strShader, asset.m_Shader, s_DefaultAsset.m_Shader);
+	visitor.Read(strTexture2D, asset.m_Texture2D, s_DefaultAsset.m_Texture2D);
 	return true;
 }
 
 bool eng::FlipbookAssetLoader::Load(FlipbookAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strFps, asset.m_FPS, s_DefaultAsset.m_FPS);
-	visitor.Visit(strFrames, asset.m_Frames, s_DefaultAsset.m_Frames);
-	visitor.Visit(strShader, asset.m_Shader, s_DefaultAsset.m_Shader);
-	visitor.Visit(strTexture2D, asset.m_Texture2D, s_DefaultAsset.m_Texture2D);
+	visitor.Read(strFps, asset.m_FPS, s_DefaultAsset.m_FPS);
+	visitor.Read(strFrames, asset.m_Frames, s_DefaultAsset.m_Frames);
+	visitor.Read(strShader, asset.m_Shader, s_DefaultAsset.m_Shader);
+	visitor.Read(strTexture2D, asset.m_Texture2D, s_DefaultAsset.m_Texture2D);
 	return true;
 }

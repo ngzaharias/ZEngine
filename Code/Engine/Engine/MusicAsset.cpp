@@ -11,6 +11,6 @@ namespace
 
 bool eng::MusicAssetLoader::Load(eng::MusicAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strSourceFile, asset.m_SourceFile, {});
+	visitor.Read(strSourceFile, asset.m_SourceFile, {});
 	return true;
 }

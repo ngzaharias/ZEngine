@@ -41,9 +41,9 @@ namespace eng
 }
 
 template<>
-void eng::Visitor::VisitCustom<eng::MyObject>(eng::MyObject& value)
+void eng::Visitor::ReadCustom(eng::MyObject& value) const
 {
-	Visit("m_Int32", value.m_Int32, 0);
+	Read("m_Int32", value.m_Int32, 0);
 }
 
 namespace eng

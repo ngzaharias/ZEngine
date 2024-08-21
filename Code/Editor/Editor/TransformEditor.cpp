@@ -29,11 +29,11 @@ namespace
 }
 
 template<>
-void eng::Visitor::VisitCustom<Transform>(Transform& value)
+void eng::Visitor::WriteCustom(const Transform& value)
 {
-	Visit("m_Translate", value.m_Translate, {});
-	Visit("m_Rotate", value.m_Rotate, {});
-	Visit("m_Scale", value.m_Scale, {});
+	Write("m_Translate", value.m_Translate);
+	Write("m_Rotate", value.m_Rotate);
+	Write("m_Scale", value.m_Scale);
 }
 
 namespace
@@ -152,8 +152,7 @@ namespace
 
 					eng::Visitor visitor;
 					visitor.LoadFromFile(filepath);
-					visitor.SetMode(eng::Visitor::Write);
-					visitor.Visit("Transform", transform, {});
+					visitor.Write("Transform", transform);
 
 					str::String string = visitor;
 					visitor.SaveToFile(filepath);

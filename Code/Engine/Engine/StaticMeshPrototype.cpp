@@ -18,5 +18,5 @@ void eng::StaticMeshLoader::Add(ecs::EntityWorld& world, const ecs::Entity& enti
 
 void eng::StaticMeshLoader::Load(StaticMeshPrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strStaticMesh, prototype.m_StaticMesh, {});
+	visitor.Read(strStaticMesh, prototype.m_StaticMesh, {});
 }

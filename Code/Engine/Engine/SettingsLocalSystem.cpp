@@ -20,10 +20,18 @@ namespace
 }
 
 template<>
-void eng::Visitor::VisitCustom<eng::settings::LocalComponent>(eng::settings::LocalComponent& value)
+void eng::Visitor::ReadCustom(eng::settings::LocalComponent& value) const
 {
-	Visit(strEffectVolume, value.m_EffectVolume, value.m_EffectVolume);
-	Visit(strMusicVolume, value.m_MusicVolume, value.m_MusicVolume);
+	Read(strEffectVolume, value.m_EffectVolume, value.m_EffectVolume);
+	Read(strMusicVolume, value.m_MusicVolume, value.m_MusicVolume);
+}
+
+
+template<>
+void eng::Visitor::WriteCustom(const eng::settings::LocalComponent& value)
+{
+	Write(strEffectVolume, value.m_EffectVolume);
+	Write(strMusicVolume, value.m_MusicVolume);
 }
 
 void eng::settings::LocalSystem::Initialise(World& world)
@@ -32,18 +40,11 @@ void eng::settings::LocalSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Visit(strAudio, world.AddSingleton<eng::settings::LocalComponent>(), {});
+	visitor.Read(strAudio, world.AddSingleton<eng::settings::LocalComponent>(), {});
 }
 
 void eng::settings::LocalSystem::Shutdown(World& world)
 {
-	const str::Path filepath = str::Path(str::EPath::AppData, strFilepath);
-
-	eng::Visitor visitor;
-	visitor.SetMode(eng::Visitor::Write);
-	visitor.Visit(strAudio, world.GetSingleton<eng::settings::LocalComponent>(), {});
-	visitor.SaveToFile(filepath);
-
 	world.RemoveSingleton<eng::settings::LocalComponent>();
 }
 
@@ -53,12 +54,8 @@ void eng::settings::LocalSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilepath);
 
-		// #hack: take a copy so the visitor can use it without us needing to take write access
-		auto component = world.GetSingleton<const eng::settings::LocalComponent>();
-
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strAudio, world.GetSingleton<eng::settings::LocalComponent>(), {});
+		visitor.Write(strAudio, world.GetSingleton<const eng::settings::LocalComponent>());
 		visitor.SaveToFile(filepath);
 	}
 }

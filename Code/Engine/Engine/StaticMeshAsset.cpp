@@ -52,7 +52,7 @@ void eng::StaticMeshAssetLoader::Bind(eng::StaticMeshAsset& asset)
 
 bool eng::StaticMeshAssetLoader::Load(StaticMeshAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strSourceFile, asset.m_SourceFile, {});
+	visitor.Read(strSourceFile, asset.m_SourceFile, {});
 
 	// #todo: error message
 	// #todo: fallback to default asset

@@ -3,7 +3,7 @@
 #include "Engine/Visitor.h"
 
 template<typename TKey, typename TValue>
-void eng::TableManager<TKey, TValue>::Visit(eng::Visitor& visitor)
+void eng::TableManager<TKey, TValue>::Read(eng::Visitor& visitor)
 {
-	visitor.Visit(m_ObjectMap);
+	visitor.Read(m_ObjectMap);
 }

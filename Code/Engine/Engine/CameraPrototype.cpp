@@ -21,20 +21,20 @@ namespace
 }
 
 template<>
-void eng::Visitor::VisitCustom<camera::Orthographic>(camera::Orthographic& value)
+void eng::Visitor::ReadCustom(camera::Orthographic& value) const
 {
-	Visit(strClippingNear, value.m_ClippingNear, s_DefaultOrthographic.m_ClippingNear);
-	Visit(strClippingFar, value.m_ClippingFar, s_DefaultOrthographic.m_ClippingFar);
-	Visit(strSize, value.m_Size, s_DefaultOrthographic.m_Size);
+	Read(strClippingNear, value.m_ClippingNear, s_DefaultOrthographic.m_ClippingNear);
+	Read(strClippingFar, value.m_ClippingFar, s_DefaultOrthographic.m_ClippingFar);
+	Read(strSize, value.m_Size, s_DefaultOrthographic.m_Size);
 }
 
 template<>
-void eng::Visitor::VisitCustom<camera::Perspective>(camera::Perspective& value)
+void eng::Visitor::ReadCustom(camera::Perspective& value) const
 {
-	Visit(strClippingNear, value.m_ClippingNear, s_DefaultPerspective.m_ClippingNear);
-	Visit(strClippingFar, value.m_ClippingFar, s_DefaultPerspective.m_ClippingFar);
-	Visit(strFieldOfView, value.m_FieldOfView, s_DefaultPerspective.m_FieldOfView);
-	Visit(strFoVAxis, value.m_FoVAxis, s_DefaultPerspective.m_FoVAxis);
+	Read(strClippingNear, value.m_ClippingNear, s_DefaultPerspective.m_ClippingNear);
+	Read(strClippingFar, value.m_ClippingFar, s_DefaultPerspective.m_ClippingFar);
+	Read(strFieldOfView, value.m_FieldOfView, s_DefaultPerspective.m_FieldOfView);
+	Read(strFoVAxis, value.m_FoVAxis, s_DefaultPerspective.m_FoVAxis);
 }
 
 void eng::CameraLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::CameraPrototype& prototype) const
@@ -46,6 +46,6 @@ void eng::CameraLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, 
 
 void eng::CameraLoader::Load(eng::CameraPrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strBehaviour, prototype.m_Behaviour, s_DefaultPrototype.m_Behaviour);
-	visitor.Visit(strProjection, prototype.m_Projection, s_DefaultPrototype.m_Projection);
+	visitor.Read(strBehaviour, prototype.m_Behaviour, s_DefaultPrototype.m_Behaviour);
+	visitor.Read(strProjection, prototype.m_Projection, s_DefaultPrototype.m_Projection);
 }

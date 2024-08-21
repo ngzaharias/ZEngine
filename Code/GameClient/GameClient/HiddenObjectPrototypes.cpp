@@ -23,9 +23,9 @@ void hidden::ObjectLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entit
 
 void hidden::ObjectLoader::Load(hidden::ObjectPrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strGroup, prototype.m_Group, {});
-	visitor.Visit(strSize, prototype.m_Size, Vector2u::Zero);
-	visitor.Visit(strSprite, prototype.m_Sprite, {});
+	visitor.Read(strGroup, prototype.m_Group, {});
+	visitor.Read(strSize, prototype.m_Size, Vector2u::Zero);
+	visitor.Read(strSprite, prototype.m_Sprite, {});
 }
 
 void hidden::GroupLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const hidden::GroupPrototype& prototype) const
@@ -39,7 +39,7 @@ void hidden::GroupLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity
 
 void hidden::GroupLoader::Load(hidden::GroupPrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strObjects, prototype.m_Objects, {});
-	visitor.Visit(strSize, prototype.m_Size, {});
-	visitor.Visit(strSprite, prototype.m_Sprite, {});
+	visitor.Read(strObjects, prototype.m_Objects, {});
+	visitor.Read(strSize, prototype.m_Size, {});
+	visitor.Read(strSprite, prototype.m_Sprite, {});
 }
