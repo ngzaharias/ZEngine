@@ -5,21 +5,6 @@
 
 class GameTime;
 
-namespace ecs
-{
-	class EntityWorld;
-}
-
-namespace editor
-{
-	struct FlipbookWindowRequestComponent;
-	struct SpriteWindowRequestComponent;
-	struct TableWindowRequestComponent;
-	struct TextureWindowRequestComponent;
-	struct TrajectoryWindowRequestComponent;
-	struct TransformWindowRequestComponent;
-}
-
 namespace dbg
 {
 	struct BufferWindowRequestComponent;
@@ -36,6 +21,31 @@ namespace dbg::level
 	struct OpenRequestComponent;
 	struct SaveRequestComponent;
 	struct SaveAsRequestComponent;
+}
+
+namespace ecs
+{
+	class EntityWorld;
+}
+
+namespace editor
+{
+	struct FlipbookWindowRequestComponent;
+	struct SpriteWindowRequestComponent;
+	struct TableWindowRequestComponent;
+	struct TextureWindowRequestComponent;
+	struct TrajectoryWindowRequestComponent;
+	struct TransformWindowRequestComponent;
+}
+
+namespace eng::settings
+{
+	struct LocalComponent;
+}
+
+namespace gui::settings
+{
+	struct OpenRequestComponent;
 }
 
 namespace dbg
@@ -59,7 +69,9 @@ namespace dbg
 			editor::TableWindowRequestComponent,
 			editor::TextureWindowRequestComponent,
 			editor::TrajectoryWindowRequestComponent,
-			editor::TransformWindowRequestComponent>;
+			editor::TransformWindowRequestComponent,
+			eng::settings::LocalComponent,
+			gui::settings::OpenRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

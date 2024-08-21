@@ -5,6 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "GameDebug/MenuBarComponents.h"
+#include "GameUI/SettingsComponents.h"
 
 #include <imgui/imgui.h>
 
@@ -50,6 +51,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::MenuItem("Debug: Entities", "Ctrl+Shift+F11"))
 				world.AddEventComponent<dbg::EntityWindowRequestComponent>();
+			if (ImGui::MenuItem("Debug: Shapes"))
+				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
 			if (ImGui::MenuItem("ImGui Demo"))
 				world.AddEventComponent<dbg::ImGuiDemoRequestComponent>();
 			if (ImGui::MenuItem("Network"))
@@ -58,8 +61,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<dbg::NodeGraphRequestComponent>();
 			if (ImGui::MenuItem("Render: Frame Buffer"))
 				world.AddEventComponent<dbg::BufferWindowRequestComponent>();
-			if (ImGui::MenuItem("Shape Tester"))
-				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
+			if (ImGui::MenuItem("Settings"))
+				world.AddEventComponent<gui::settings::OpenRequestComponent>();
 
 			ImGui::EndMenu();
 		}

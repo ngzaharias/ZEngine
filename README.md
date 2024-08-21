@@ -17,3 +17,8 @@
 - [stb](https://github.com/nothings/stb)
 - [toml11](https://github.com/ToruNiina/toml11)
 - [yojimbo](https://github.com/networkprotocol/yojimbo)
+
+## Assets
+- [bdragon1727](https://bdragon1727.itch.io/)
+- [kenney](https://kenney.nl/)
+- [incompetech](https://incompetech.com/music/royalty-free/music.html)

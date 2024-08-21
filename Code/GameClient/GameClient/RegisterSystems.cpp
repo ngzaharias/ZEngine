@@ -8,6 +8,12 @@
 #include "GameClient/DragMovementSystem.h"
 #include "GameClient/DragSelectionSystem.h"
 #include "GameClient/GameStateSystem.h"
+#include "GameClient/HiddenPhysicsSystem.h"
+#include "GameClient/HiddenRevealSystem.h"
+#include "GameClient/HiddenSoundSystem.h"
+#include "GameClient/HiddenSpriteSystem.h"
+#include "GameClient/HiddenTrackerSystem.h"
+#include "GameClient/HiddenVFXSystem.h"
 #include "GameClient/ModalStateSystem.h"
 #include "GameClient/NetworkHostSystem.h"
 #include "GameClient/NetworkJoinSystem.h"
@@ -27,6 +33,12 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld, const clt::SystemDepend
 	entityWorld.RegisterSystem<gamestate::NetworkStopSystem>();
 	entityWorld.RegisterSystem<gamestate::StateSystem>();
 	entityWorld.RegisterSystem<gui::modal::StateSystem>();
+	entityWorld.RegisterSystem<hidden::PhysicsSystem>();
+	entityWorld.RegisterSystem<hidden::RevealSystem>();
+	entityWorld.RegisterSystem<hidden::SoundSystem>();
+	entityWorld.RegisterSystem<hidden::SpriteSystem>();
+	entityWorld.RegisterSystem<hidden::TrackerSystem>();
+	entityWorld.RegisterSystem<hidden::VFXSystem>();
 	entityWorld.RegisterSystem<movement::AccelerationSystem>();
 	entityWorld.RegisterSystem<movement::VelocitySystem>();
 	entityWorld.RegisterSystem<projectile::SpawnSystem>();

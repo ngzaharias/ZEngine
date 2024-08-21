@@ -22,7 +22,7 @@ void eng::TransformLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entit
 
 void eng::TransformLoader::Load(eng::TransformPrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strTranslate, prototype.m_Translate, Vector3f::Zero);
-	visitor.Visit(strRotate, prototype.m_Rotate, Rotator::Zero);
-	visitor.Visit(strScale, prototype.m_Scale, Vector3f::One);
+	visitor.Read(strTranslate, prototype.m_Translate, Vector3f::Zero);
+	visitor.Read(strRotate, prototype.m_Rotate, Rotator::Zero);
+	visitor.Read(strScale, prototype.m_Scale, Vector3f::One);
 }

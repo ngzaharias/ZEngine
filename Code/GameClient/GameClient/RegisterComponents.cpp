@@ -4,6 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "GameClient/DragComponents.h"
 #include "GameClient/GameStateComponents.h"
+#include "GameClient/HiddenObjectComponents.h"
 #include "GameClient/ModalComponents.h"
 #include "GameClient/MovementComponents.h"
 #include "GameClient/ProjectileComponents.h"
@@ -19,6 +20,9 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<gamestate::StateComponent>();
 	entityWorld.RegisterComponent<gamestate::StateFinishedComponent>();
 	entityWorld.RegisterComponent<gui::modal::MessageComponent>();
+	entityWorld.RegisterComponent<hidden::GroupComponent>();
+	entityWorld.RegisterComponent<hidden::ObjectComponent>();
+	entityWorld.RegisterComponent<hidden::RevealedComponent>();
 	entityWorld.RegisterComponent<movement::AccelerationComponent>();
 	entityWorld.RegisterComponent<movement::VelocityComponent>();
 	entityWorld.RegisterComponent<projectile::ChangesComponent>();

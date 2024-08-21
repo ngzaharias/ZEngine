@@ -1,0 +1,14 @@
+m_Guid = "22b11b8c-1eab-480c-9147-7ce975beb286"
+m_Name = "Camera"
+
+[Name]
+m_Name = "Camera"
+
+[Camera]
+m_Projection = { TypeId = 0 }
+m_Behaviour = 1
+
+[Transform]
+m_Translate = { X = 0.0, Y = 0.0, Z = -500.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

@@ -23,5 +23,6 @@ namespace eng
 		Set<input::EMouse> m_MouseCurrent;
 		Vector2f m_MouseDelta;
 		Vector2f m_MousePosition;
+		Vector2f m_ScrollDelta;
 	};
 }

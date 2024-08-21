@@ -129,11 +129,10 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				const eng::FlipbookAsset& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 				if (flipbookAsset.m_Frames.IsEmpty())
 					continue;
+				if (flipbookComponent.m_Index >= flipbookAsset.m_Frames.GetCount())
+					continue;
 
-				const int32 frameMax = flipbookAsset.m_Frames.GetCount() - 1;
-				const int32 frameIndex = std::clamp(flipbookComponent.m_Index, 0, frameMax);
-
-				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[frameIndex];
+				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[flipbookComponent.m_Index];
 				if (!flipbookAsset.m_Texture2D.IsValid())
 					continue;
 
@@ -176,17 +175,21 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				const auto& flipbookTransform = world.GetComponent<const eng::TransformComponent>(id.m_Entity);
 				const auto& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 
-				const int32 frameMax = flipbookAsset.m_Frames.GetCount() - 1;
-				const int32 frameIndex = std::clamp(flipbookComponent.m_Index, 0, frameMax);
-
-				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[frameIndex];
+				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[flipbookComponent.m_Index];
 				const eng::Texture2DAsset& texture2DAsset = *assetManager.LoadAsset<eng::Texture2DAsset>(flipbookAsset.m_Texture2D);
 
 				const Vector2f& spritePos = flipbookFrame.m_Position;
 				const Vector2f& spriteSize = flipbookFrame.m_Size;
 				const Vector2f textureSize = Vector2f((float)texture2DAsset.m_Width, (float)texture2DAsset.m_Height);
 
-				const Matrix4x4 model = flipbookTransform.ToTransform();
+				const Vector3f modelScale = flipbookTransform.m_Scale;
+				const Vector3f spriteScale = Vector3f(
+					(float)flipbookComponent.m_Size.x / 100.f,
+					(float)flipbookComponent.m_Size.y / 100.f,
+					1.f);
+
+				Matrix4x4 model = flipbookTransform.ToTransform();
+				model.SetScale(math::Multiply(modelScale, spriteScale));
 
 				const Vector2f texcoordOffset = Vector2f(
 					spritePos.x / textureSize.x,

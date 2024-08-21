@@ -21,9 +21,15 @@ void eng::FlipbookSystem::Update(World& world, const GameTime& gameTime)
 
 	auto& assetManager = world.GetResource<eng::AssetManager>();
 
-	for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<eng::FlipbookComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::FlipbookComponent>>())
 	{
-		auto& flipbookComponent = world.GetComponent<eng::FlipbookComponent>(renderEntity);
+		auto& flipbookComponent = world.GetComponent<eng::FlipbookComponent>(entity);
+		flipbookComponent.m_TimeStart = gameTime.m_TotalTime;
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::FlipbookComponent>>())
+	{
+		auto& flipbookComponent = world.GetComponent<eng::FlipbookComponent>(entity);
 		if (!flipbookComponent.m_Flipbook.IsValid())
 			continue;
 
@@ -35,29 +41,16 @@ void eng::FlipbookSystem::Update(World& world, const GameTime& gameTime)
 			continue;
 
 		const int32 indexCount = flipbookAsset.m_Frames.GetCount();
-		const int32 indexMax = indexCount - 1;
-
-		const float timeOld = flipbookComponent.m_Time;
-		const float timeNew = gameTime.m_TotalTime;
 		const float timeMax = indexCount / flipbookAsset.m_FPS;
+		const float time = gameTime.m_TotalTime - flipbookComponent.m_TimeStart;
 
-		if (timeNew < timeMax)
+		if (indexCount >= 1)
 		{
-			flipbookComponent.m_Time = timeNew;
-		}
-		else if (flipbookComponent.m_IsLooping)
-		{
-			flipbookComponent.m_Time = std::fmodf(timeNew, timeMax);
-		}
-		else
-		{
-			flipbookComponent.m_Time = timeMax;
-		}
+			const float index = math::Remap(time, 0.f, timeMax, 0.f, float(indexCount));
+			flipbookComponent.m_Index = math::Round<int32>(index);
 
-		if (indexMax > 0)
-		{
-			flipbookComponent.m_Index = static_cast<int32>(flipbookComponent.m_Time * flipbookAsset.m_FPS);
-			flipbookComponent.m_Index %= indexCount;
+			if (flipbookComponent.m_IsLooping)
+				flipbookComponent.m_Index %= indexCount;
 		}
 	}
 }

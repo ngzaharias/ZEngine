@@ -10,6 +10,7 @@
 #include "Engine/FontAsset.h"
 #include "Engine/GLFW/Window.h"
 #include "Engine/LightPrototypes.h"
+#include "Engine/MusicAsset.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
@@ -48,6 +49,7 @@ namespace
 	const str::Name strExample = NAME("Example");
 	const str::Name strFont = NAME("Font");
 	const str::Name strFlipbook = NAME("Flipbook");
+	const str::Name strMusic = NAME("Music");
 	const str::Name strPhysics = NAME("Physics");
 	const str::Name strPhysicsMaterial = NAME("PhysicsMaterial");
 	const str::Name strPointLight = NAME("PointLight");
@@ -146,6 +148,7 @@ void eng::Application::Register()
 	{
 		m_AssetManager.RegisterAsset<eng::FlipbookAsset, eng::FlipbookAssetLoader>(strFlipbook);
 		m_AssetManager.RegisterAsset<eng::FontAsset, eng::FontAssetLoader>(strFont);
+		m_AssetManager.RegisterAsset<eng::MusicAsset, eng::MusicAssetLoader>(strMusic);
 		m_AssetManager.RegisterAsset<eng::PhysicsMaterialAsset, eng::PhysicsMaterialAssetLoader>(strPhysicsMaterial, m_PhysicsManager);
 		m_AssetManager.RegisterAsset<eng::ShaderAsset, eng::ShaderAssetLoader>(strShader);
 		m_AssetManager.RegisterAsset<eng::sound::RandomAsset, eng::sound::AssetLoader>(strSoundRandom);

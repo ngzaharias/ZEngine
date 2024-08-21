@@ -1,7 +1,0 @@
-m_Guid = "d8b48ef5-3a92-4ad6-8203-678a5934327d"
-m_Name = "SP_Midnight_02"
-m_Type = "Sprite"
-
-m_Texture2D = "91ffda2b-d755-ce42-35c3-7010aaf5ec5a"
-m_Position = { X = 100, Y = 700 }
-m_Size = { X = 100, Y = 100 }

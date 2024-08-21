@@ -20,5 +20,10 @@ namespace eng::camera
 			const eng::InputComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		void BehaviourFree2D(World& world, const GameTime& gameTime, const ecs::Entity& entity);
+		void BehaviourFree3D(World& world, const GameTime& gameTime, const ecs::Entity& entity);
+		void BehaviourStatic(World& world, const GameTime& gameTime, const ecs::Entity& entity);
 	};
 }

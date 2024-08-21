@@ -168,6 +168,24 @@ namespace
 
 		if (world.HasComponent<editor::FlipbookAssetOpenComponent>(entity))
 		{
+			auto& windowComponent = world.GetComponent<editor::FlipbookWindowComponent>(entity);
+			const str::Name& name = windowComponent.m_Asset.m_Name;
+
+			eng::SelectFileSettings settings;
+			settings.m_Title = "Open Flipbook";
+			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
+			settings.m_Path = str::GetPath(str::EPath::Assets);
+			settings.m_Path += name;
+
+			const str::Path filepath = eng::SelectFileDialog(settings);
+			if (!filepath.IsEmpty())
+			{
+				eng::Visitor visitor;
+				visitor.LoadFromFile(filepath);
+				eng::FlipbookAssetLoader loader;
+				loader.Load(windowComponent.m_Asset, visitor);
+			}
+
 			world.RemoveComponent<editor::FlipbookAssetOpenComponent>(entity);
 		}
 	};

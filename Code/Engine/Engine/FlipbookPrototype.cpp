@@ -20,6 +20,6 @@ void eng::FlipbookLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity
 
 void eng::FlipbookLoader::Load(eng::FlipbookPrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strSize, prototype.m_Size, Vector2u::Zero);
-	visitor.Visit(strFlipbook, prototype.m_Flipbook, {});
+	visitor.Read(strSize, prototype.m_Size, Vector2u::Zero);
+	visitor.Read(strFlipbook, prototype.m_Flipbook, {});
 }

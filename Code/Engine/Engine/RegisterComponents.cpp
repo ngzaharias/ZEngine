@@ -13,12 +13,14 @@
 #include "Engine/LevelComponents.h"
 #include "Engine/LightComponents.h"
 #include "Engine/LinesComponent.h"
+#include "Engine/MusicComponents.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/ReplicationComponents.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
+#include "Engine/SettingsComponents.h"
 #include "Engine/SoundComponents.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshComponent.h"
@@ -125,11 +127,13 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::LightDirectionalComponent>();
 	entityWorld.RegisterComponent<eng::LightPointComponent>();
 	entityWorld.RegisterComponent<eng::LinesComponent>();
+	entityWorld.RegisterComponent<eng::MusicComponent>();
 	entityWorld.RegisterComponent<eng::network::RequestComponent>();
 	entityWorld.RegisterComponent<eng::network::RequestFinishedComponent>();
 	entityWorld.RegisterComponent<eng::network::StateComponent>();
 	entityWorld.RegisterComponent<eng::RigidDynamicComponent>();
 	entityWorld.RegisterComponent<eng::RigidStaticComponent>();
+	entityWorld.RegisterComponent<eng::settings::LocalComponent>();
 	entityWorld.RegisterComponent<eng::sound::ObjectComponent>();
 	entityWorld.RegisterComponent<eng::sound::RandomComponent>();
 	entityWorld.RegisterComponent<eng::sound::RandomBufferComponent>();

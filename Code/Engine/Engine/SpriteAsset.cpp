@@ -18,18 +18,18 @@ namespace
 
 bool eng::SpriteAssetLoader::Save(SpriteAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strShader, asset.m_Shader, uuidShader);
-	visitor.Visit(strTexture2D, asset.m_Texture2D, uuidTexture2D);
-	visitor.Visit(strPosition, asset.m_Position, Vector2u::Zero);
-	visitor.Visit(strSize, asset.m_Size, Vector2u(1024));
+	visitor.Read(strShader, asset.m_Shader, uuidShader);
+	visitor.Read(strTexture2D, asset.m_Texture2D, uuidTexture2D);
+	visitor.Read(strPosition, asset.m_Position, Vector2u::Zero);
+	visitor.Read(strSize, asset.m_Size, Vector2u(1024));
 	return true;
 }
 
 bool eng::SpriteAssetLoader::Load(SpriteAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strShader, asset.m_Shader, uuidShader);
-	visitor.Visit(strTexture2D, asset.m_Texture2D, uuidTexture2D);
-	visitor.Visit(strPosition, asset.m_Position, Vector2u::Zero);
-	visitor.Visit(strSize, asset.m_Size, Vector2u(1024));
+	visitor.Read(strShader, asset.m_Shader, uuidShader);
+	visitor.Read(strTexture2D, asset.m_Texture2D, uuidTexture2D);
+	visitor.Read(strPosition, asset.m_Position, Vector2u::Zero);
+	visitor.Read(strSize, asset.m_Size, Vector2u(1024));
 	return true;
 }

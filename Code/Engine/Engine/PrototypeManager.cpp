@@ -28,13 +28,14 @@ ecs::Entity eng::PrototypeManager::CreateEntity(ecs::EntityWorld& world, const s
 	PROFILE_FUNCTION();
 
 	eng::Visitor visitor;
-	visitor.LoadFromFile(filepath);
+	if (!visitor.LoadFromFile(filepath))
+		return false;
 
 	str::Guid guid;
-	visitor.Visit(strGuid, guid, {});
+	visitor.Read(strGuid, guid, {});
 	
 	str::Name name;
-	visitor.Visit(strName, name, {});
+	visitor.Read(strName, name, {});
 
 	if (!guid.IsValid())
 		return ecs::Entity::Unassigned;

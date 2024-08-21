@@ -1,0 +1,7 @@
+m_Guid = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
+m_Name = 'SP_Censored'
+m_Texture2D = 'c2ac1ab7-3a3e-4df4-bc11-efbec19f9ab2'
+m_Type = 'Sprite'
+
+m_Position = { X = 0, Y = 0 }
+m_Size = { X = 200, Y = 20 }

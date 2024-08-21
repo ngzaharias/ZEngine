@@ -1,0 +1,18 @@
+m_Guid = '08cae3e8-6870-4647-8dfb-1b477860ea47'
+m_Name = 'Bear08'
+
+[Physics]
+m_Channel = 0
+m_Extents = { X = 25.0, Y = 25.0, Z = 1.0 }
+m_Rigid = 1
+m_Shape = 0
+
+[HiddenObject]
+m_Size = { X = 25, Y = 25 }
+m_Group = 'ab4d37e0-a36f-400c-ba7f-56e47dbe9b70'
+m_Sprite = '8bb1cf16-f6dc-4338-b897-f1099a8f91b4'
+
+[Transform]
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 253.0, Y = -191.0, Z = -1.0 }

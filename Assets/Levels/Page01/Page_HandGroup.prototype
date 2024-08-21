@@ -1,0 +1,17 @@
+m_Guid = 'eaba7a09-8920-434c-8cc6-02a2dd8be89a'
+m_Name = 'HandGroup'
+
+[HiddenGroup]
+m_Objects = [
+    '5f5d9b49-c0b4-4cf2-8fe7-ebbcfb87862b',
+    '2a1466fb-ff1e-4b9e-a133-e779cf81fd12',
+    '36d02551-b4ca-4498-8256-6ae426659cc5',
+    'a2c8af82-73a2-43cb-9e34-650bb3b6b7b1'
+]
+m_Size = { X = 130, Y = 4 }
+m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
+
+[Transform]
+m_Rotate = { Pitch = 0.0, Roll = -1.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 441.0, Y = -413.0, Z = 0.0 }

@@ -6,6 +6,7 @@
 #include "ECS/WorldView.h"
 #include "GameDebug/EntitySystem.h"
 #include "GameDebug/FrameBufferSystem.h"
+#include "GameDebug/HiddenObjectSystem.h"
 #include "GameDebug/ImGuiDemoSystem.h"
 #include "GameDebug/LevelOpenSystem.h"
 #include "GameDebug/MenuBarComponents.h"
@@ -54,6 +55,7 @@ void dbg::GameDebug::Register()
 
 	m_ClientWorld.RegisterSystem<dbg::EntitySystem>(m_ClientWorld, m_ServerWorld);
 	m_ClientWorld.RegisterSystem<dbg::FrameBufferSystem>();
+	m_ClientWorld.RegisterSystem<dbg::hidden::ObjectSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ImGuiDemoSystem>();
 	m_ClientWorld.RegisterSystem<dbg::level::OpenSystem>();
 	m_ClientWorld.RegisterSystem<dbg::MenuBarSystem>();

@@ -150,7 +150,7 @@ bool eng::AssetManager::LoadFunction(eng::Asset* asset, const eng::AssetLoader& 
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Visit("m_Name", asset->m_Name, {});
+	visitor.Read("m_Name", asset->m_Name, {});
 
 	const TLoader* tLoader = static_cast<const TLoader*>(&loader);
 	TAsset* tAsset = static_cast<TAsset*>(asset);
@@ -164,10 +164,9 @@ bool eng::AssetManager::SaveFunction(eng::Asset* asset, const eng::AssetLoader& 
 	Z_PANIC(!filepath.IsEmpty(), "Invalid filepath! Path[{}]", filepath.ToChar());
 
 	eng::Visitor visitor;
-	visitor.SetMode(eng::Visitor::Write);
-	visitor.Visit("m_Guid", asset->m_Guid, {});
-	visitor.Visit("m_Name", asset->m_Name, {});
-	visitor.Visit("m_Type", asset->m_Type, {});
+	visitor.Write("m_Guid", asset->m_Guid);
+	visitor.Write("m_Name", asset->m_Name);
+	visitor.Write("m_Type", asset->m_Type);
 
 	const TLoader* tLoader = static_cast<const TLoader*>(&loader);
 	TAsset* tAsset = static_cast<TAsset*>(asset);

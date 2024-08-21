@@ -25,7 +25,7 @@ void eng::VoxelChunkLoader::Load(VoxelChunkPrototype& prototype, eng::Visitor& v
 	PROFILE_FUNCTION();
 
 	Array<voxel::EType> values;
-	visitor.Visit(strData, values, {});
+	visitor.Read(strData, values, {});
 	for (const voxel::EType value : values)
 	{
 		voxel::Block& block = prototype.m_Data.Emplace();

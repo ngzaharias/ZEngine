@@ -1,0 +1,21 @@
+m_Guid = '98fcf9b9-00d5-4216-8008-335e475596b5'
+m_Name = 'Seal'
+
+[Name]
+m_Name = 'Seal'
+
+[Physics]
+m_Channel = 0
+m_Extents = { X = 50.0, Y = 25.0, Z = 1.0 }
+m_Rigid = 1
+m_Shape = 0
+
+[HiddenObject]
+m_Group = '5b505ef6-e5d9-4770-996d-46b859721382'
+m_Size = { X = 50, Y = 25 }
+m_Sprite = 'a38981f4-3f46-4207-8145-92effe464eec'
+
+[Transform]
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 468.0, Y = -204.0, Z = -1.0 }

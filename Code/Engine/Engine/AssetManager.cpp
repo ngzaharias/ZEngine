@@ -32,9 +32,9 @@ void eng::AssetManager::LoadFilepath(const str::Path& filepath, const bool canSe
 		{
 			eng::AssetFile assetFile;
 			assetFile.m_Path = filepath;
-			visitor.Visit(strGuid, assetFile.m_Guid, {});
-			visitor.Visit(strName, assetFile.m_Name, {});
-			visitor.Visit(strType, assetFile.m_Type, {});
+			visitor.Read(strGuid, assetFile.m_Guid, {});
+			visitor.Read(strName, assetFile.m_Name, {});
+			visitor.Read(strType, assetFile.m_Type, {});
 			m_FileMap.Insert(assetFile.m_Guid, assetFile);
 		}
 	}

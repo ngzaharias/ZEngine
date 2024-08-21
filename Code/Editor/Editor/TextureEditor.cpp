@@ -98,13 +98,13 @@ namespace
 			settings.m_Title = "Select File";
 			settings.m_Filters.Append({ "PNG (*.png)", "*.png" });
 
-			const Array<str::Path> filepaths = eng::SelectFileDialog(settings);
-			if (!filepaths.IsEmpty())
+			const str::Path filepath = eng::SelectFileDialog(settings);
+			if (!filepath.IsEmpty())
 			{
 				auto& windowComponent = world.GetComponent<editor::TextureWindowComponent>(entity);
 
 				auto& assetManager = world.GetResource<eng::AssetManager>();
-				assetManager.ImportAsset(windowComponent.m_Asset, filepaths.GetFirst());
+				assetManager.ImportAsset(windowComponent.m_Asset, filepath);
 			}
 		}
 	};

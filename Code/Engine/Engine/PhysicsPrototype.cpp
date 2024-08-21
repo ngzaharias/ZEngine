@@ -145,22 +145,22 @@ void eng::PhysicsLoader::Load(eng::PhysicsPrototype& prototype, eng::Visitor& vi
 	// #todo: should become an asset ?
 	{
 		EShape shape;
-		visitor.Visit(strShape, shape, EShape::Box);
+		visitor.Read(strShape, shape, EShape::Box);
 		switch (shape)
 		{
 		case EShape::Box:
 		{
 			ShapeBox box;
-			visitor.Visit(strChannel, box.m_Channel, 0);
-			visitor.Visit(strExtents, box.m_Extents, Vector3f::Zero);
+			visitor.Read(strChannel, box.m_Channel, 0);
+			visitor.Read(strExtents, box.m_Extents, Vector3f::Zero);
 			prototype.m_Shape = box;
 		} break;
 
 		case EShape::Sphere:
 		{
 			ShapeSphere sphere;
-			visitor.Visit(strChannel, sphere.m_Channel, 0);
-			visitor.Visit(strRadius, sphere.m_Radius, 0.f);
+			visitor.Read(strChannel, sphere.m_Channel, 0);
+			visitor.Read(strRadius, sphere.m_Radius, 0.f);
 			prototype.m_Shape = sphere;
 		} break;
 		}
@@ -169,20 +169,20 @@ void eng::PhysicsLoader::Load(eng::PhysicsPrototype& prototype, eng::Visitor& vi
 	// #todo: should become an asset ?
 	{
 		ERigidbody rigidbody;
-		visitor.Visit(strRigid, rigidbody, ERigidbody::Static);
+		visitor.Read(strRigid, rigidbody, ERigidbody::Static);
 		switch (rigidbody)
 		{
 		case ERigidbody::Dynamic:
 		{
 			RigidDynamic dynamic;
-			visitor.Visit(strENABLE_CCD, dynamic.eENABLE_CCD, false);
-			visitor.Visit(strKINEMATIC, dynamic.eKINEMATIC, false);
-			visitor.Visit(strLOCK_ANGULAR_X, dynamic.eLOCK_ANGULAR_X, false);
-			visitor.Visit(strLOCK_ANGULAR_Y, dynamic.eLOCK_ANGULAR_Y, false);
-			visitor.Visit(strLOCK_ANGULAR_Z, dynamic.eLOCK_ANGULAR_Z, false);
-			visitor.Visit(strLOCK_LINEAR_X, dynamic.eLOCK_LINEAR_X, false);
-			visitor.Visit(strLOCK_LINEAR_Y, dynamic.eLOCK_LINEAR_Y, false);
-			visitor.Visit(strLOCK_LINEAR_Z, dynamic.eLOCK_LINEAR_Z, false);
+			visitor.Read(strENABLE_CCD, dynamic.eENABLE_CCD, false);
+			visitor.Read(strKINEMATIC, dynamic.eKINEMATIC, false);
+			visitor.Read(strLOCK_ANGULAR_X, dynamic.eLOCK_ANGULAR_X, false);
+			visitor.Read(strLOCK_ANGULAR_Y, dynamic.eLOCK_ANGULAR_Y, false);
+			visitor.Read(strLOCK_ANGULAR_Z, dynamic.eLOCK_ANGULAR_Z, false);
+			visitor.Read(strLOCK_LINEAR_X, dynamic.eLOCK_LINEAR_X, false);
+			visitor.Read(strLOCK_LINEAR_Y, dynamic.eLOCK_LINEAR_Y, false);
+			visitor.Read(strLOCK_LINEAR_Z, dynamic.eLOCK_LINEAR_Z, false);
 			prototype.m_Rigidbody = dynamic;
 		} break;
 

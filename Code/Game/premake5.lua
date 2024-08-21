@@ -1,6 +1,6 @@
 project "Game"
 
-	kind "WindowedApp"
+	kind "ConsoleApp"
 	filter "*_Editor"
 		kind "StaticLib"
 	filter {} -- disable the filter
@@ -40,6 +40,7 @@ project "Game"
 		"%{wks.location}/../Code/GameDebug/",
 		"%{wks.location}/../Code/GameServer/",
 		"%{wks.location}/../Code/GameShared/",
+		"%{wks.location}/../Code/GameUI/",
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
@@ -60,6 +61,7 @@ project "Game"
 		"%{wks.location}/Build/GameDebug/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/GameServer/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/GameShared/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/GameUI/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Imgui/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Math/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Network/%{cfg.buildcfg}_%{cfg.platform}/",
@@ -90,6 +92,7 @@ project "Game"
 		"GameDebug.lib",
 		"GameServer.lib",
 		"GameShared.lib",
+		"GameUI.lib",
 		"Imgui.lib",
 		"Math.lib",
 		"Network.lib",

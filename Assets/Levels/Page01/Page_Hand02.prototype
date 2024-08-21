@@ -1,0 +1,21 @@
+m_Guid = '2a1466fb-ff1e-4b9e-a133-e779cf81fd12'
+m_Name = 'Hand02'
+
+[Name]
+m_Name = 'Hand02'
+
+[Physics]
+m_Channel = 0
+m_Extents = { X = 100.0, Y = 100.0, Z = 1.0 }
+m_Rigid = 1
+m_Shape = 0
+
+[HiddenObject]
+m_Group = 'eaba7a09-8920-434c-8cc6-02a2dd8be89a'
+m_Size = { X = 100, Y = 100 }
+m_Sprite = '54003a9d-06d3-4972-be0c-9deeda6ec8b4'
+
+[Transform]
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -20.0, Y = -257.0, Z = -1.0 }

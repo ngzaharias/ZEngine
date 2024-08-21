@@ -1,0 +1,12 @@
+m_Guid = '87cfbd9e-dfdf-46ad-96cf-5a9db651f049'
+m_Name = 'RubberGroup'
+
+[HiddenGroup]
+m_Objects = [ '3595c797-b638-46af-8364-9ce12905477b' ]
+m_Size = { X = 80, Y = 4 }
+m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
+
+[Transform]
+m_Rotate = { Pitch = 0.0, Roll = 3.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 345.0, Y = -386.0, Z = 0.0 }

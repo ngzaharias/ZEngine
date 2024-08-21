@@ -25,7 +25,6 @@ bool SparseArray<Key, Value>::Contains(const Key& key) const
 	if (valueIndex == s_Unassigned)
 		return false;
 
-	Z_PANIC(m_Dense[valueIndex] == key, "");
 	return true;
 }
 

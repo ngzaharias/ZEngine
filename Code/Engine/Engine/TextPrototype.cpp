@@ -20,6 +20,6 @@ void eng::TextLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, co
 
 void eng::TextLoader::Load(eng::TextPrototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Visit(strText, prototype.m_Text, {});
-	visitor.Visit(strFont, prototype.m_Font, {});
+	visitor.Read(strText, prototype.m_Text, {});
+	visitor.Read(strFont, prototype.m_Font, {});
 }

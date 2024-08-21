@@ -3,6 +3,7 @@
 
 #include "Engine/FileHelpers.h"
 
+#include <filesystem>
 #include <direct.h>
 #include <windows.h>
 
@@ -19,8 +20,11 @@ int main(int agrc, char* argv[])
 
 	str::SetPath(str::EPath::AppData, appdataDirectory);
 	str::SetPath(str::EPath::Assets, assetsDirectory);
+	str::SetPath(str::EPath::Config, configDirectory);
 	str::SetPath(str::EPath::Executable, executableFilepath);
 	str::SetPath(str::EPath::WorkingDir, workingDirectory);
+
+	std::filesystem::create_directories(appdataDirectory.ToChar());
 
 	// #todo: handle result
 	const int chdirResult = _chdir(immediateDirectory.ToChar());

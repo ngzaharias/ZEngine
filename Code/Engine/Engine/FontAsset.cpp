@@ -42,20 +42,29 @@ namespace
 }
 
 template<>
-void eng::Visitor::VisitCustom<::Character>(::Character& value)
+void eng::Visitor::ReadCustom(::Character& value) const
+{
+	Read(strAdvanceX, value.m_AdvanceX, 200u);
+	Read(strAdvanceY, value.m_AdvanceY, 0u);
+	Read(strCharacter, value.m_Character, {});
+	Read(strSourceFile, value.m_SourceFile, {});
+}
+
+template<>
+void eng::Visitor::WriteCustom(const ::Character& value)
 {
 	SetInline();
-	Visit(strAdvanceX, value.m_AdvanceX, 200);
-	Visit(strAdvanceY, value.m_AdvanceY, 0);
-	Visit(strCharacter, value.m_Character, {});
-	Visit(strSourceFile, value.m_SourceFile, {});
+	Write(strAdvanceX, value.m_AdvanceX);
+	Write(strAdvanceY, value.m_AdvanceY);
+	Write(strCharacter, value.m_Character);
+	Write(strSourceFile, value.m_SourceFile);
 }
 
 bool eng::FontAssetLoader::Save(FontAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strWidth, asset.m_Width, 0);
-	visitor.Visit(strHeight, asset.m_Height, 0);
-	visitor.Visit(strPixelRange, asset.m_PixelRange, 0);
+	visitor.Write(strWidth, asset.m_Width);
+	visitor.Write(strHeight, asset.m_Height);
+	visitor.Write(strPixelRange, asset.m_PixelRange);
 
 	if (!asset.m_Glyphs.IsEmpty())
 	{
@@ -68,7 +77,7 @@ bool eng::FontAssetLoader::Save(FontAsset& asset, eng::Visitor& visitor) const
 			character.m_Character = str::String(1, charcode);
 			character.m_SourceFile = glyph.m_SourceFile;
 		}
-		visitor.Visit(strCharacters, characters, {});
+		visitor.Write(strCharacters, characters);
 	}
 
 	return true;
@@ -79,12 +88,12 @@ bool eng::FontAssetLoader::Load(FontAsset& asset, eng::Visitor& visitor) const
 	// #todo: assert file exists
 	// #todo: fallback to default on failure
 
-	visitor.Visit(strWidth, asset.m_Width, 0);
-	visitor.Visit(strHeight, asset.m_Height, 0);
-	visitor.Visit(strPixelRange, asset.m_PixelRange, 0);
+	visitor.Read(strWidth, asset.m_Width, 0);
+	visitor.Read(strHeight, asset.m_Height, 0);
+	visitor.Read(strPixelRange, asset.m_PixelRange, 0);
 
 	Array<Character> characters;
-	visitor.Visit(strCharacters, characters, {});
+	visitor.Read(strCharacters, characters, {});
 	if (!characters.IsEmpty())
 	{
 		const int32 count = characters.GetCount();
