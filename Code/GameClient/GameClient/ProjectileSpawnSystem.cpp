@@ -40,7 +40,7 @@ void projectile::SpawnSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& changesComponent = world.GetSingleton<projectile::ChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<projectile::ChangesComponent>();
 	changesComponent.m_Created.RemoveAll();
 	changesComponent.m_Destroyed.RemoveAll();
 
@@ -54,10 +54,10 @@ void projectile::SpawnSystem::Update(World& world, const GameTime& gameTime)
 
 void projectile::SpawnSystem::ProcessCreate(World& world)
 {
-	auto& changesComponent = world.GetSingleton<projectile::ChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<projectile::ChangesComponent>();
 	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const projectile::CreateRequestComponent>>())
 	{
-		const auto& requestComponent = world.GetComponent<const projectile::CreateRequestComponent>(requestEntity);
+		const auto& requestComponent = world.ReadComponent< projectile::CreateRequestComponent>(requestEntity);
 
 		auto& resultComponent = world.AddComponent<projectile::CreateResultComponent>(requestEntity);
 		resultComponent.m_TransactionId = requestComponent.m_TransactionId;
@@ -83,17 +83,17 @@ void projectile::SpawnSystem::ProcessCreate(World& world)
 
 void projectile::SpawnSystem::ProcessDestroy(World& world)
 {
-	auto& changesComponent = world.GetSingleton<projectile::ChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<projectile::ChangesComponent>();
 	for (const Destroyed& destroyData : changesComponent.m_Destroyed)
 		world.DestroyEntity(destroyData.m_Projectile);
 }
 
 void projectile::SpawnSystem::ProcessLifetime(World& world, const GameTime& gameTime)
 {
-	auto& changesComponent = world.GetSingleton<projectile::ChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<projectile::ChangesComponent>();
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::SpawnComponent>>())
 	{
-		auto& spawnComponent = world.GetComponent<projectile::SpawnComponent>(entity);
+		auto& spawnComponent = world.WriteComponent<projectile::SpawnComponent>(entity);
 		spawnComponent.m_Lifetime += gameTime.m_DeltaTime;
 
 		if (spawnComponent.m_Lifetime >= spawnComponent.m_Timeout)
@@ -109,7 +109,7 @@ void projectile::SpawnSystem::ProcessLifetime(World& world, const GameTime& game
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const projectile::TrajectoryComponent>>())
 	{
-		const auto& trajectoryComponent = world.GetComponent<const projectile::TrajectoryComponent>(entity);
+		const auto& trajectoryComponent = world.ReadComponent< projectile::TrajectoryComponent>(entity);
 		if (trajectoryComponent.m_Distance >= trajectoryComponent.m_Trajectory.GetLength() * trajectoryComponent.m_Scale)
 		{
 			const EError error = VerifyDestroy(entity, changesComponent);

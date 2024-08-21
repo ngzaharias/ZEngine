@@ -17,7 +17,7 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 
 	if (world.HasAny<ecs::query::Updated<const gamestate::StateComponent>>())
 	{
-		const auto& stateComponent = world.GetSingleton<const gamestate::StateComponent>();
+		const auto& stateComponent = world.ReadSingleton< gamestate::StateComponent>();
 		if (std::holds_alternative<gamestate::NetworkJoin>(stateComponent.m_State))
 		{
 			auto& joinComponent = world.AddSingleton<gamestate::NetworkJoinComponent>();
@@ -39,12 +39,12 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 	const bool isJoining = world.HasAny<ecs::query::Include<gamestate::NetworkJoinComponent>>();
 	if (world.HasSingleton<gamestate::NetworkJoinComponent>())
 	{
-		auto& joinComponent = world.GetSingleton<gamestate::NetworkJoinComponent>();
+		auto& joinComponent = world.WriteSingleton<gamestate::NetworkJoinComponent>();
 		switch (joinComponent.m_State)
 		{
 		case NetworkJoinComponent::EState::Connect:
 		{
-			const auto& networkManager = world.GetResource<const eng::NetworkManager>();
+			const auto& networkManager = world.ReadResource< eng::NetworkManager>();
 			const auto& networkPeer = networkManager.GetPeer();
 			if (networkPeer.IsConnected())
 			{

@@ -25,7 +25,7 @@ void eng::camera::BehaviourSystem::Update(World& world, const GameTime& gameTime
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent< eng::CameraComponent>(cameraEntity);
 		switch (cameraComponent.m_Behaviour)
 		{
 		case ::camera::EBehaviour::Static:
@@ -46,9 +46,9 @@ void eng::camera::BehaviourSystem::BehaviourFree2D(World& world, const GameTime&
 {
 	for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 	{
-		const auto& inputComponent = world.GetComponent<const eng::InputComponent>(inputEntity);
-		auto& cameraComponent = world.GetComponent<eng::CameraComponent>(entity);
-		auto& transformComponent = world.GetComponent<eng::TransformComponent>(entity);
+		const auto& inputComponent = world.ReadComponent< eng::InputComponent>(inputEntity);
+		auto& cameraComponent = world.WriteComponent<eng::CameraComponent>(entity);
+		auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);
 
 		float translateSpeed = s_TranslateSpeed * gameTime.m_DeltaTime;
 		float zoomSpeed = s_ZoomSpeed * gameTime.m_DeltaTime;
@@ -93,8 +93,8 @@ void eng::camera::BehaviourSystem::BehaviourFree3D(World& world, const GameTime&
 {
 	for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 	{
-		const auto& inputComponent = world.GetComponent<const eng::InputComponent>(inputEntity);
-		auto& transformComponent = world.GetComponent<eng::TransformComponent>(entity);
+		const auto& inputComponent = world.ReadComponent< eng::InputComponent>(inputEntity);
+		auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);
 
 		float translateSpeed = s_TranslateSpeed * gameTime.m_DeltaTime;
 		Vector3f translate = Vector3f::Zero;

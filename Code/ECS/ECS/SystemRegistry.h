@@ -19,13 +19,14 @@ namespace ecs
 
 		void Update(ecs::EntityWorld& entityWorld, const GameTime& gameTime);
 
-		template<class TSystem, typename... TArgs>
-		void Register(TArgs&&... args);
-		template<class TSystem>
-		void RegisterPriority(const int32 priority);
-
 		template<class TSystem>
 		bool IsRegistered() const;
+
+		template<class TSystem, typename... TArgs>
+		void Register(TArgs&&... args);
+
+		template<class TSystem>
+		void RegisterPriority(const int32 priority);
 
 		template<class TSystem>
 		TSystem& GetSystem();

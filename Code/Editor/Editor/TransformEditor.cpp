@@ -56,7 +56,7 @@ namespace
 	{
 		if (world.HasComponent<ecs::NameComponent>(entity))
 		{
-			const auto& name = world.GetComponent<const ecs::NameComponent>(entity);
+			const auto& name = world.ReadComponent< ecs::NameComponent>(entity);
 			return name.m_Name.c_str();
 		}
 		return "<unknown>";
@@ -66,7 +66,7 @@ namespace
 	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& input = world.GetComponent<const eng::InputComponent>(entity);
+			const auto& input = world.ReadComponent< eng::InputComponent>(entity);
 			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::S);
 		}
 		return false;
@@ -89,7 +89,7 @@ namespace
 
 	void DrawEntities(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TransformWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::TransformWindowComponent>(entity);
 
 		using Query = ecs::query::Include<const eng::PrototypeComponent, const eng::TransformComponent>;
 		for (auto&& view : world.Query<Query>())
@@ -103,12 +103,12 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TransformWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::TransformWindowComponent>(entity);
 
 		const ecs::Entity selected = windowComponent.m_Selected;
 		if (world.HasComponent<eng::TransformComponent>(selected))
 		{
-			auto& transform = world.GetComponent<eng::TransformComponent>(selected);
+			auto& transform = world.WriteComponent<eng::TransformComponent>(selected);
 			imgui::DragVector("m_Translate", transform.m_Translate);
 			imgui::DragRotator("m_Rotate", transform.m_Rotate);
 			imgui::DragVector("m_Scale", transform.m_Scale);
@@ -121,22 +121,22 @@ namespace
 		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
 		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
 
-		const auto& prototypeManager = world.GetResource<const eng::PrototypeManager>();
+		const auto& prototypeManager = world.ReadResource< eng::PrototypeManager>();
 
 		if (world.HasComponent<editor::TransformAssetSaveComponent>(entity))
 			world.RemoveComponent<editor::TransformAssetSaveComponent>(entity);
 
 		if (world.HasComponent<editor::TransformAssetSaveComponent>(entity) || HasInput_Save(world))
 		{
-			auto& windowComponent = world.GetComponent<editor::TransformWindowComponent>(entity);
+			auto& windowComponent = world.WriteComponent<editor::TransformWindowComponent>(entity);
 			const ecs::Entity selected = windowComponent.m_Selected;
 
 			const bool hasPrototype = world.HasComponent<eng::PrototypeComponent>(selected);
 			const bool hasTransform = world.HasComponent<eng::TransformComponent>(selected);
 			if (hasPrototype && hasTransform)
 			{
-				const auto& prototypeComponent = world.GetComponent<const eng::PrototypeComponent>(selected);
-				const auto& transformComponent = world.GetComponent<const eng::TransformComponent>(selected);
+				const auto& prototypeComponent = world.ReadComponent< eng::PrototypeComponent>(selected);
+				const auto& transformComponent = world.ReadComponent< eng::TransformComponent>(selected);
 
 				eng::SaveFileSettings settings;
 				settings.m_Filters = { "Prototypes (*.prototype)", "*.prototype" };
@@ -180,7 +180,7 @@ void editor::TransformEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TransformWindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<editor::TransformWindowComponent>(windowEntity);
+		auto& windowComponent = world.WriteComponent<editor::TransformWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);

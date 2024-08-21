@@ -37,7 +37,7 @@ namespace
 	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& input = world.GetComponent<const eng::InputComponent>(entity);
+			const auto& input = world.ReadComponent< eng::InputComponent>(entity);
 			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::I);
 		}
 		return false;
@@ -47,7 +47,7 @@ namespace
 	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& input = world.GetComponent<const eng::InputComponent>(entity);
+			const auto& input = world.ReadComponent< eng::InputComponent>(entity);
 			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::S);
 		}
 		return false;
@@ -76,7 +76,7 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TextureWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(entity);
 		eng::Texture2DAsset& texture = windowComponent.m_Asset;
 
 		imgui::Guid("m_Guid", texture.m_Guid);
@@ -101,9 +101,9 @@ namespace
 			const str::Path filepath = eng::SelectFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& windowComponent = world.GetComponent<editor::TextureWindowComponent>(entity);
+				auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(entity);
 
-				auto& assetManager = world.GetResource<eng::AssetManager>();
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
 				assetManager.ImportAsset(windowComponent.m_Asset, filepath);
 			}
 		}
@@ -144,7 +144,7 @@ namespace
 
 		if (world.HasComponent<editor::TextureAssetSaveComponent>(entity) || HasInput_Save(world))
 		{
-			auto& windowComponent = world.GetComponent<editor::TextureWindowComponent>(entity);
+			auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(entity);
 			const str::Name& name = windowComponent.m_Asset.m_Name;
 
 			eng::SaveFileSettings settings;
@@ -154,7 +154,7 @@ namespace
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& assetManager = world.GetResource<eng::AssetManager>();
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
 				assetManager.SaveAsset(windowComponent.m_Asset, filepath);
 			}
 		}
@@ -162,7 +162,7 @@ namespace
 
 	void DrawPreviewer(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TextureWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(entity);
 		eng::Texture2DAsset& texture = windowComponent.m_Asset;
 
 		const Vector2f textureSize = Vector2f((float)texture.m_Width, (float)texture.m_Height);
@@ -191,7 +191,7 @@ void editor::TextureEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TextureWindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<editor::TextureWindowComponent>(windowEntity);
+		auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);

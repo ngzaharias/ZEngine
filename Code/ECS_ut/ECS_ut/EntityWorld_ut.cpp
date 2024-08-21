@@ -245,15 +245,15 @@ TEST_CASE("ecs::EntityWorld. GetComponent.")
 	entityWorld.RegisterComponent<ComponentB>();
 	ecs::Entity entity = entityWorld.CreateEntity();
 
-	//CHECK_THROWS(entityWorld.GetComponent<ComponentA>(entity));
-	//CHECK_THROWS(entityWorld.GetComponent<ComponentB>(entity));
+	//CHECK_THROWS(entityWorld.WriteComponent<ComponentA>(entity));
+	//CHECK_THROWS(entityWorld.WriteComponent<ComponentB>(entity));
 
 	entityWorld.AddComponent<ComponentA>(entity);
 	entityWorld.AddComponent<ComponentB>(entity);
 	entityWorld.Update({});
 
-	CHECK_NOTHROW(entityWorld.GetComponent<ComponentA>(entity));
-	CHECK_NOTHROW(entityWorld.GetComponent<ComponentB>(entity));
+	CHECK_NOTHROW(entityWorld.WriteComponent<ComponentA>(entity));
+	CHECK_NOTHROW(entityWorld.WriteComponent<ComponentB>(entity));
 }
 
 TEST_CASE("ecs::EntityWorld. Add a single component.")

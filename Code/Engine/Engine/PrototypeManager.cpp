@@ -23,7 +23,7 @@ eng::PrototypeManager::~PrototypeManager()
 		delete value.m_Loader;
 }
 
-ecs::Entity eng::PrototypeManager::CreateEntity(ecs::EntityWorld& world, const str::Path& filepath)
+ecs::Entity eng::PrototypeManager::CreateEntity(ecs::EntityWorld& world, const str::Path& filepath) const
 {
 	PROFILE_FUNCTION();
 

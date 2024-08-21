@@ -19,28 +19,28 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& localSettings = world.GetSingleton<const eng::settings::LocalComponent>();
+	const auto& localSettings = world.ReadSingleton< eng::settings::LocalComponent>();
 
 	Array<str::Guid> requests;
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SingleRequestComponent>>())
 	{
-		const auto& requestComponent = world.GetComponent<const eng::sound::SingleRequestComponent>(entity);
+		const auto& requestComponent = world.ReadComponent< eng::sound::SingleRequestComponent>(entity);
 		requests.Append(requestComponent.m_Handle);
 	}
 
 	// Random Buffer
 	{
-		const auto& bufferComponent = world.GetSingleton<const eng::sound::RandomBufferComponent>();
+		const auto& bufferComponent = world.ReadSingleton< eng::sound::RandomBufferComponent>();
 		requests.Append(bufferComponent.m_Requests);
 	}
 
 	// Sequence Buffer
 	{
-		const auto& bufferComponent = world.GetSingleton<const eng::sound::SequenceBufferComponent>();
+		const auto& bufferComponent = world.ReadSingleton< eng::sound::SequenceBufferComponent>();
 		requests.Append(bufferComponent.m_Requests);
 	}
 
-	auto& assetManager = world.GetResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	for (const str::Guid& request : requests)
 	{
 		if (!request.IsValid())
@@ -64,14 +64,14 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::sound::ObjectComponent>>())
 	{
-		const auto& component = world.GetComponent<const eng::sound::ObjectComponent>(entity);
+		const auto& component = world.ReadComponent< eng::sound::ObjectComponent>(entity);
 		if (component.m_Sound->getStatus() == sf::Sound::Stopped)
 			world.DestroyEntity(entity);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::sound::ObjectComponent>>())
 	{
-		auto& component = world.GetComponent<eng::sound::ObjectComponent>(entity, false);
+		auto& component = world.WriteComponent<eng::sound::ObjectComponent>(entity, false);
 		delete component.m_Sound;
 	}
 }

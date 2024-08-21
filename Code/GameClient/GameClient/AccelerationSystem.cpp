@@ -12,10 +12,10 @@ void movement::AccelerationSystem::Update(World& world, const GameTime& gameTime
 {
 	PROFILE_FUNCTION();
 
-	const auto& changesComponent = world.GetSingleton<const projectile::ChangesComponent>();
+	const auto& changesComponent = world.ReadSingleton< projectile::ChangesComponent>();
 	for (const projectile::Created& createdData : changesComponent.m_Created)
 	{
-		const auto& requestComponent = world.GetComponent<const projectile::CreateRequestComponent>(createdData.m_Request);
+		const auto& requestComponent = world.ReadComponent< projectile::CreateRequestComponent>(createdData.m_Request);
 		if (requestComponent.m_Velocity.m_Acceleration != 0.f)
 		{
 			auto& accelerationComponent = world.AddComponent<movement::AccelerationComponent>(createdData.m_Projectile);

@@ -19,17 +19,17 @@ void eng::FlipbookSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.GetResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::FlipbookComponent>>())
 	{
-		auto& flipbookComponent = world.GetComponent<eng::FlipbookComponent>(entity);
+		auto& flipbookComponent = world.WriteComponent<eng::FlipbookComponent>(entity);
 		flipbookComponent.m_TimeStart = gameTime.m_TotalTime;
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::FlipbookComponent>>())
 	{
-		auto& flipbookComponent = world.GetComponent<eng::FlipbookComponent>(entity);
+		auto& flipbookComponent = world.WriteComponent<eng::FlipbookComponent>(entity);
 		if (!flipbookComponent.m_Flipbook.IsValid())
 			continue;
 

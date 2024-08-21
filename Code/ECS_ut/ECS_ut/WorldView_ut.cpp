@@ -218,16 +218,16 @@ TEST_CASE("ecs::WorldView. GetComponent.")
 	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 
-	//CHECK_THROWS(worldView.GetComponent<ComponentA>(entity));
-	//CHECK_THROWS(worldView.GetComponent<ComponentB>(entity));
+	//CHECK_THROWS(worldView.WriteComponent<ComponentA>(entity));
+	//CHECK_THROWS(worldView.WriteComponent<ComponentB>(entity));
 
 	ecs::Entity entity = worldView.CreateEntity();
 	worldView.AddComponent<ComponentA>(entity);
 	worldView.AddComponent<ComponentB>(entity);
 	entityWorld.Update({});
 
-	CHECK_NOTHROW(worldView.GetComponent<ComponentA>(entity));
-	CHECK_NOTHROW(worldView.GetComponent<ComponentB>(entity));
+	CHECK_NOTHROW(worldView.WriteComponent<ComponentA>(entity));
+	CHECK_NOTHROW(worldView.WriteComponent<ComponentB>(entity));
 }
 
 TEST_CASE("ecs::WorldView. GetSingleton.")
@@ -236,16 +236,16 @@ TEST_CASE("ecs::WorldView. GetSingleton.")
 	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
 	entityWorld.Initialise();
 
-	//CHECK_THROWS(worldView.GetSingleton<SingletonA>());
-	//CHECK_THROWS(worldView.GetSingleton<SingletonB>());
+	//CHECK_THROWS(worldView.WriteSingleton<SingletonA>());
+	//CHECK_THROWS(worldView.WriteSingleton<SingletonB>());
 
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 	worldView.AddSingleton<SingletonA>();
 	worldView.AddSingleton<SingletonB>();
 	entityWorld.Update({});
 
-	CHECK_NOTHROW(worldView.GetSingleton<SingletonA>());
-	CHECK_NOTHROW(worldView.GetSingleton<SingletonB>());
+	CHECK_NOTHROW(worldView.WriteSingleton<SingletonA>());
+	CHECK_NOTHROW(worldView.WriteSingleton<SingletonB>());
 }
 
 TEST_CASE("ecs::WorldView. AddComponent - Single.")
@@ -475,11 +475,11 @@ TEST_CASE("ecs::WorldView. Query - Updated.")
 
 	{
 		INFO("Non-const calls to GetComponent are added to the Updated Query.");
-		worldView.GetComponent<ComponentA>(raii.m_EntityA);
-		worldView.GetComponent<ComponentB>(raii.m_EntityB);
-		worldView.GetComponent<ComponentC>(raii.m_EntityC);
-		worldView.GetComponent<ComponentA>(raii.m_EntityAB);
-		worldView.GetComponent<ComponentB>(raii.m_EntityAB);
+		worldView.WriteComponent<ComponentA>(raii.m_EntityA);
+		worldView.WriteComponent<ComponentB>(raii.m_EntityB);
+		worldView.WriteComponent<ComponentC>(raii.m_EntityC);
+		worldView.WriteComponent<ComponentA>(raii.m_EntityAB);
+		worldView.WriteComponent<ComponentB>(raii.m_EntityAB);
 
 		INFO("Query is active on the next frame.");
 		entityWorld.Update({});
@@ -498,11 +498,11 @@ TEST_CASE("ecs::WorldView. Query - Updated.")
 
 	{
 		INFO("Const calls to GetComponent are not added to the Updated Query.");
-		worldView.GetComponent<const ComponentA>(raii.m_EntityA);
-		worldView.GetComponent<const ComponentB>(raii.m_EntityB);
-		worldView.GetComponent<const ComponentC>(raii.m_EntityC);
-		worldView.GetComponent<const ComponentA>(raii.m_EntityAB);
-		worldView.GetComponent<const ComponentB>(raii.m_EntityAB);
+		worldView.ReadComponent< ComponentA>(raii.m_EntityA);
+		worldView.ReadComponent< ComponentB>(raii.m_EntityB);
+		worldView.ReadComponent< ComponentC>(raii.m_EntityC);
+		worldView.ReadComponent< ComponentA>(raii.m_EntityAB);
+		worldView.ReadComponent< ComponentB>(raii.m_EntityAB);
 
 		entityWorld.Update({});
 		CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().IsEmpty());

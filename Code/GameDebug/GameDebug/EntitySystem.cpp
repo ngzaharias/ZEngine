@@ -26,7 +26,7 @@ namespace
 		s_ScratchString = std::to_string(index) + ", " + std::to_string(salt);
 		if (entityWorld.HasComponent<ecs::NameComponent>(entity))
 		{
-			const auto& nameComponent = entityWorld.GetComponent<const ecs::NameComponent>(entity);
+			const auto& nameComponent = entityWorld.ReadComponent< ecs::NameComponent>(entity);
 			if (!nameComponent.m_Name.empty())
 				s_ScratchString += " - " + nameComponent.m_Name;
 		}
@@ -41,7 +41,7 @@ namespace
 		const char* name = nullptr;
 		if (world.HasComponent<ecs::NameComponent>(entity))
 		{
-			const auto& nameComponent = world.GetComponent<const ecs::NameComponent>(entity);
+			const auto& nameComponent = world.ReadComponent< ecs::NameComponent>(entity);
 			name = nameComponent.m_Name.c_str();
 		}
 
@@ -117,7 +117,7 @@ void dbg::EntitySystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<dbg::EntityWindowComponent>>())
 	{
-		auto& component = world.GetComponent<dbg::EntityWindowComponent>(entity);
+		auto& component = world.WriteComponent<dbg::EntityWindowComponent>(entity);
 		const str::String label = "Debug: Entities##" + std::to_string(entity.GetIndex());
 
 		bool isOpen = true;

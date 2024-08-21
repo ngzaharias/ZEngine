@@ -18,7 +18,7 @@ void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<Query>())
 	{
-		const auto& hiddenComponent = world.GetComponent<const hidden::ObjectComponent>(entity);
+		const auto& hiddenComponent = world.ReadComponent< hidden::ObjectComponent>(entity);
 		auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(entity);
 		spriteComponent.m_Size = hiddenComponent.m_Size;
 		spriteComponent.m_Sprite = hiddenComponent.m_Sprite;

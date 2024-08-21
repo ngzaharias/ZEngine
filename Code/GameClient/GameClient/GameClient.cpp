@@ -35,11 +35,11 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 
 	// resources
 	{
-		m_EntityWorld.AddResource(dependencies.m_AssetManager);
-		m_EntityWorld.AddResource(dependencies.m_NetworkManager);
-		m_EntityWorld.AddResource(dependencies.m_PhysicsManager);
-		m_EntityWorld.AddResource(dependencies.m_PrototypeManager);
-		m_EntityWorld.AddResource(dependencies.m_Window);
+		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
+		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
+		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
+		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
+		m_EntityWorld.RegisterResource(dependencies.m_Window);
 	}
 
 	// engine

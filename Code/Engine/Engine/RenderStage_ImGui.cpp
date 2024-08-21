@@ -17,7 +17,7 @@
 
 void eng::RenderStage_ImGui::Initialise(ecs::EntityWorld& entityWorld)
 {
-	const auto& window = entityWorld.GetResource<const glfw::Window>();
+	const auto& window = entityWorld.ReadResource< glfw::Window>();
 
 	const char* glsl_version = "#version 410";
 	IMGUI_CHECKVERSION();
@@ -86,7 +86,7 @@ void eng::RenderStage_ImGui::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	const auto& window = entityWorld.GetResource<const glfw::Window>();
+	const auto& window = entityWorld.ReadResource< glfw::Window>();
 
 	// render
 	{

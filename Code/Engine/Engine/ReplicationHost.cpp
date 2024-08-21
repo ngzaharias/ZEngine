@@ -45,8 +45,8 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
-	auto& serializer = networkManager.GetSerializer();
+	const auto& networkManager = m_EntityWorld.ReadResource<eng::NetworkManager>();
+	const auto& serializer = networkManager.GetSerializer();
 	const int32 serializeCount = serializer.m_Entries.GetCount();
 
 	for (auto&& [peerId, replicationData] : m_PeerReplicationData)
@@ -161,7 +161,7 @@ void net::ReplicationHost::StartReplicateToPeer(const PeerId& peerId, const ecs:
 		// #todo: will crash when replicated to two peers in the same frame
 		auto& peerComponent = !m_EntityWorld.HasComponent<net::ReplicationComponent>(entity)
 			? m_EntityWorld.AddComponent<net::ReplicationComponent>(entity)
-			: m_EntityWorld.GetComponent<net::ReplicationComponent>(entity);
+			: m_EntityWorld.WriteComponent<net::ReplicationComponent>(entity);
 		peerComponent.m_Peers.Add(peerId);
 	}
 }
@@ -180,7 +180,7 @@ void net::ReplicationHost::StopReplicateToPeer(const PeerId& peerId, const ecs::
 		Z_PANIC(IsReplicated(peerId, entity), "Trying to stop replication of an entity that isn't replicated!");
 		peerReplicationData.m_EntitiesToDestroy.Add(entity);
 
-		auto& peerComponent = m_EntityWorld.GetComponent<net::ReplicationComponent>(entity);
+		auto& peerComponent = m_EntityWorld.WriteComponent<net::ReplicationComponent>(entity);
 		peerComponent.m_Peers.Remove(peerId);
 		if (peerComponent.m_Peers.IsEmpty())
 			m_EntityWorld.RemoveComponent<net::ReplicationComponent>(entity);
@@ -202,7 +202,7 @@ bool net::ReplicationHost::IsReplicated(const PeerId& peerId, const ecs::Entity&
 
 void net::ReplicationHost::CreateEntity(const net::PeerId& peerId, const ecs::Entity& entity)
 {
-	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<CreateEntityMessage>(peerId, EMessage::CreateEntity);
@@ -212,7 +212,7 @@ void net::ReplicationHost::CreateEntity(const net::PeerId& peerId, const ecs::En
 
 void net::ReplicationHost::DestroyEntity(const net::PeerId& peerId, const ecs::Entity& entity)
 {
-	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<DestroyEntityMessage>(peerId, EMessage::DestroyEntity);
@@ -223,7 +223,7 @@ void net::ReplicationHost::DestroyEntity(const net::PeerId& peerId, const ecs::E
 
 void net::ReplicationHost::AddComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<AddComponentMessage>(peerId, EMessage::AddComponent);
@@ -236,7 +236,7 @@ void net::ReplicationHost::AddComponent(const net::PeerId& peerId, const ecs::En
 
 void net::ReplicationHost::RemoveComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<RemoveComponentMessage>(peerId, EMessage::RemoveComponent);
@@ -248,7 +248,7 @@ void net::ReplicationHost::RemoveComponent(const net::PeerId& peerId, const ecs:
 
 void net::ReplicationHost::UpdateComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.GetResource<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<UpdateComponentMessage>(peerId, EMessage::UpdateComponent);

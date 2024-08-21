@@ -20,14 +20,14 @@ namespace net
 	template<typename TComponent, typename TSerializer>
 	void ReadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& buffer)
 	{
-		auto& component = world.GetComponent<TComponent>(entity);
+		auto& component = world.WriteComponent<TComponent>(entity);
 		TSerializer::Read(component, buffer);
 	}
 
 	template<typename TComponent, typename TSerializer>
 	void WriteComponent(ecs::EntityWorld& world, const ecs::Entity& entity, MemBuffer& buffer)
 	{
-		const auto& component = world.GetComponent<const TComponent>(entity);
+		const auto& component = world.ReadComponent< TComponent>(entity);
 		TSerializer::Write(component, buffer);
 	}
 }

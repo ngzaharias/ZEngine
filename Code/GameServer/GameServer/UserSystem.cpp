@@ -18,7 +18,7 @@ net::UserSystem::UserSystem(net::ReplicationHost& replicationHost)
 
 void net::UserSystem::Initialise(World& world)
 {
-	auto& networkManager = world.GetResource<eng::NetworkManager>();
+	auto& networkManager = world.WriteResource<eng::NetworkManager>();
 	auto& adaptor = networkManager.GetAdaptor();
 
 	world.AddSingleton<net::UserMapComponent>();
@@ -40,7 +40,7 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& userMapComponent = world.GetSingleton<const net::UserMapComponent>();
+	const auto& userMapComponent = world.ReadSingleton< net::UserMapComponent>();
 	for (auto&& [userId, hasConnected] : m_Requests)
 	{
 		const bool isConnected = userMapComponent.m_UserToEntity.Contains(userId);
@@ -56,7 +56,7 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 			auto& userComponent = world.AddComponent<net::UserComponent>(userEntity);
 			userComponent.m_UserId = userId;
 
-			auto& mapComponent = world.GetSingleton<net::UserMapComponent>();
+			auto& mapComponent = world.WriteSingleton<net::UserMapComponent>();
 			mapComponent.m_EntityToUser.Set(userEntity, userId);
 			mapComponent.m_UserToEntity.Set(userId, userEntity);
 
@@ -68,7 +68,7 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 			const ecs::Entity userEntity = userMapComponent.m_UserToEntity.Get(userId);
 			world.DestroyEntity(userEntity);
 
-			auto& mapComponent = world.GetSingleton<net::UserMapComponent>();
+			auto& mapComponent = world.WriteSingleton<net::UserMapComponent>();
 			mapComponent.m_EntityToUser.Remove(userEntity);
 			mapComponent.m_UserToEntity.Remove(userId);
 

@@ -22,13 +22,13 @@ void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 
 		for (const ecs::Entity& objectEntity : world.Query<RevealedQuery>())
 		{
-			const auto& objectComponent = world.GetComponent<const eng::PrototypeComponent>(objectEntity);
+			const auto& objectComponent = world.ReadComponent< eng::PrototypeComponent>(objectEntity);
 			for (const ecs::Entity& groupEntity : world.Query<GroupQuery>())
 			{
-				const auto& groupComponent = world.GetComponent<const hidden::GroupComponent>(groupEntity);
+				const auto& groupComponent = world.ReadComponent< hidden::GroupComponent>(groupEntity);
 				if (groupComponent.m_Objects.Contains(objectComponent.m_Guid))
 				{
-					auto& component = world.GetComponent<hidden::GroupComponent>(groupEntity);
+					auto& component = world.WriteComponent<hidden::GroupComponent>(groupEntity);
 					component.m_Revealed.Add(objectComponent.m_Guid);
 				}
 			}
@@ -40,7 +40,7 @@ void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 		using Query = ecs::query::Updated<const hidden::GroupComponent>;
 		for (const ecs::Entity& groupEntity : world.Query<Query>())
 		{
-			const auto& groupComponent = world.GetComponent<const hidden::GroupComponent>(groupEntity);
+			const auto& groupComponent = world.ReadComponent< hidden::GroupComponent>(groupEntity);
 			if (groupComponent.m_Objects.GetCount() == groupComponent.m_Revealed.GetCount())
 			{
 				auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(groupEntity);

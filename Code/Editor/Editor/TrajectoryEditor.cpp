@@ -60,7 +60,7 @@ namespace
 					trajectory.m_Points.Append(Vector2f(0.1f, 0.7f));
 					trajectory.m_Points.Append(Vector2f(0.f, 1.f));
 
-					auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+					auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(entity);
 					windowComponent.m_Asset = trajectory;
 				}
 
@@ -78,7 +78,7 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(entity);
 		eng::TrajectoryAsset& trajectory = windowComponent.m_Asset;
 
 		imgui::Guid("m_Guid", trajectory.m_Guid);
@@ -139,7 +139,7 @@ namespace
 
 	void DrawPlotter(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(entity);
 		eng::TrajectoryAsset& trajectory = windowComponent.m_Asset;
 
 		Array<Vector2f>& values = trajectory.m_Points;
@@ -185,7 +185,7 @@ namespace
 
 		if (world.HasComponent<editor::TrajectoryAssetSaveComponent>(entity))
 		{
-			auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+			auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(entity);
 			const str::Name& name = windowComponent.m_Asset.m_Name;
 
 			eng::SaveFileSettings settings;
@@ -197,7 +197,7 @@ namespace
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& assetManager = world.GetResource<eng::AssetManager>();
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
 				assetManager.SaveAsset(windowComponent.m_Asset, filepath);
 			}
 
@@ -224,7 +224,7 @@ void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TrajectoryWindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(windowEntity);
+		auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);

@@ -55,7 +55,7 @@ void eng::settings::LocalSystem::Update(World& world, const GameTime& gameTime)
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilepath);
 
 		eng::Visitor visitor;
-		visitor.Write(strAudio, world.GetSingleton<const eng::settings::LocalComponent>());
+		visitor.Write(strAudio, world.ReadSingleton< eng::settings::LocalComponent>());
 		visitor.SaveToFile(filepath);
 	}
 }

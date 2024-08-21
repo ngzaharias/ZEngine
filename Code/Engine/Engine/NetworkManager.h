@@ -27,6 +27,7 @@ namespace eng
 		const net::Peer& GetPeer() const { return m_Peer; }
 
 		net::ComponentSerializer& GetSerializer() { return m_Serializer; }
+		const net::ComponentSerializer& GetSerializer() const { return m_Serializer; }
 
 	private:
 		net::ComponentSerializer& m_Serializer;

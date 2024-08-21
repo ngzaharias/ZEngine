@@ -20,10 +20,10 @@ void svr::GameServer::Register(const Dependencies& dependencies)
 {
 	// managers
 	{
-		m_EntityWorld.AddResource(dependencies.m_AssetManager);
-		m_EntityWorld.AddResource(dependencies.m_NetworkManager);
-		m_EntityWorld.AddResource(dependencies.m_PhysicsManager);
-		m_EntityWorld.AddResource(dependencies.m_PrototypeManager);
+		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
+		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
+		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
+		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
 	}
 
 	// engine

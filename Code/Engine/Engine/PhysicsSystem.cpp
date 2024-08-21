@@ -100,7 +100,7 @@ namespace physx
 
 void eng::PhysicsSystem::Initialise(World& world)
 {
-	auto& physicsManager = world.GetResource<eng::PhysicsManager>();
+	auto& physicsManager = world.WriteResource<eng::PhysicsManager>();
 	physx::PxPhysics& physics = physicsManager.GetPhysics();
 
 	physx::PxSceneDesc sceneDesc(physics.getTolerancesScale());
@@ -122,7 +122,7 @@ void eng::PhysicsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& sceneComponent = world.GetSingleton<eng::PhysicsSceneComponent>();
+	auto& sceneComponent = world.WriteSingleton<eng::PhysicsSceneComponent>();
 
 	// must be done before the simulation is run
 	ProcessAdded(world);
@@ -150,12 +150,12 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 {
 	PROFILE_FUNCTION();
 
-	auto& sceneComponent = world.GetSingleton<eng::PhysicsSceneComponent>();
+	auto& sceneComponent = world.WriteSingleton<eng::PhysicsSceneComponent>();
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::RigidDynamicComponent>>())
 	{
-		auto& rigidComponent = world.GetComponent<eng::RigidDynamicComponent>(entity);
-		const auto& transformComponent = world.GetComponent<const eng::TransformComponent>(entity);
+		auto& rigidComponent = world.WriteComponent<eng::RigidDynamicComponent>(entity);
+		const auto& transformComponent = world.ReadComponent< eng::TransformComponent>(entity);
 
 		const Quaternion quaternion = Quaternion::FromRotator(transformComponent.m_Rotate);
 
@@ -176,8 +176,8 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::RigidStaticComponent>>())
 	{
-		auto& rigidComponent = world.GetComponent<eng::RigidStaticComponent>(entity);
-		const auto& transformComponent = world.GetComponent<const eng::TransformComponent>(entity);
+		auto& rigidComponent = world.WriteComponent<eng::RigidStaticComponent>(entity);
+		const auto& transformComponent = world.ReadComponent< eng::TransformComponent>(entity);
 
 		const Quaternion quaternion = Quaternion::FromRotator(transformComponent.m_Rotate);
 
@@ -205,16 +205,16 @@ void eng::PhysicsSystem::ProcessUpdated(World& world)
 		::Include<eng::TransformComponent, const eng::RigidDynamicComponent>;
 	for (const ecs::Entity& entity : world.Query<Query>())
 	{
-		const auto& rigidComponent = world.GetComponent<const eng::RigidDynamicComponent>(entity);
+		const auto& rigidComponent = world.ReadComponent< eng::RigidDynamicComponent>(entity);
 		if (!rigidComponent.m_IsKinematic)
 		{
-			auto& transformComponent = world.GetComponent<eng::TransformComponent>(entity);
+			auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);
 			const physx::PxVec3 translate = rigidComponent.m_Actor->getGlobalPose().p;
 			transformComponent.m_Translate = Vector3f(translate.x, translate.y, translate.z);
 		}
 		else
 		{
-			const auto& transformComponent = world.GetComponent<eng::TransformComponent>(entity);
+			const auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);
 			const Quaternion quaternion = Quaternion::FromRotator(transformComponent.m_Rotate);
 
 			physx::PxVec3 translate;
@@ -238,7 +238,7 @@ void eng::PhysicsSystem::ProcessRemoved(World& world)
 {
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::RigidDynamicComponent>>())
 	{
-		auto& rigidComponent = world.GetComponent<eng::RigidDynamicComponent>(entity, false);
+		auto& rigidComponent = world.WriteComponent<eng::RigidDynamicComponent>(entity, false);
 		for (auto* shape : rigidComponent.m_Shapes)
 		{
 			rigidComponent.m_Actor->detachShape(*shape);
@@ -250,7 +250,7 @@ void eng::PhysicsSystem::ProcessRemoved(World& world)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::RigidStaticComponent>>())
 	{
-		auto& rigidComponent = world.GetComponent<eng::RigidStaticComponent>(entity, false);
+		auto& rigidComponent = world.WriteComponent<eng::RigidStaticComponent>(entity, false);
 		for (auto* shape : rigidComponent.m_Shapes)
 		{
 			rigidComponent.m_Actor->detachShape(*shape);

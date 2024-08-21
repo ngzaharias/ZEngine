@@ -43,7 +43,7 @@ namespace eng
 		PrototypeManager();
 		~PrototypeManager();
 
-		ecs::Entity CreateEntity(ecs::EntityWorld& world, const str::Path& filepath);
+		ecs::Entity CreateEntity(ecs::EntityWorld& world, const str::Path& filepath) const;
 
 		template<typename TPrototype, typename TLoader, typename... TArgs>
 		void RegisterPrototype(const str::Name& type, TArgs&&... args);

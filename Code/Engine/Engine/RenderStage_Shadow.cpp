@@ -40,7 +40,7 @@ void eng::RenderStage_Shadow::Initialise(ecs::EntityWorld& entityWorld)
 
 void eng::RenderStage_Shadow::Shutdown(ecs::EntityWorld& entityWorld)
 {
-	auto& bufferComponent = entityWorld.GetSingleton<eng::FrameBufferComponent>();
+	auto& bufferComponent = entityWorld.WriteSingleton<eng::FrameBufferComponent>();
 
 	glDeleteFramebuffers(1, &bufferComponent.m_ShadowBuffer);
 	glDeleteTextures(1, &bufferComponent.m_ShadowTexture);
@@ -54,14 +54,14 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	auto& assetManager = world.GetResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	// initialise
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::FrameBufferComponent>>())
 	{
 		// texture and buffer
 		{
-			auto& bufferComponent = world.GetSingleton<eng::FrameBufferComponent>();
+			auto& bufferComponent = world.WriteSingleton<eng::FrameBufferComponent>();
 			bufferComponent.m_ShadowSize = Vector2u(1024, 1024);
 
 			glGenFramebuffers(1, &bufferComponent.m_ShadowBuffer);
@@ -89,7 +89,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 	}
 
 
-	auto& bufferComponent = entityWorld.GetSingleton<eng::FrameBufferComponent>();
+	auto& bufferComponent = entityWorld.WriteSingleton<eng::FrameBufferComponent>();
 
 	{
 		glViewport(0, 0, bufferComponent.m_ShadowSize.x, bufferComponent.m_ShadowSize.y);
@@ -113,14 +113,14 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraTransform = world.GetComponent<const eng::TransformComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent< eng::TransformComponent>(cameraEntity);
 		const Matrix3x3 cameraRotate = Matrix3x3::FromRotate(cameraTransform.m_Rotate);
 		const Vector3f cameraFoward = Vector3f::AxisZ * cameraRotate;
 
 		for (const ecs::Entity& lightEntity : world.Query<ecs::query::Include<const eng::LightDirectionalComponent, const eng::TransformComponent>>())
 		{
-			const auto& lightComponent = world.GetComponent<const eng::LightDirectionalComponent>(lightEntity);
-			const auto& lightTransform = world.GetComponent<const eng::TransformComponent>(lightEntity);
+			const auto& lightComponent = world.ReadComponent< eng::LightDirectionalComponent>(lightEntity);
+			const auto& lightTransform = world.ReadComponent< eng::TransformComponent>(lightEntity);
 
 			camera::Orthographic orthographic;
 
@@ -140,7 +140,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 			{
 				for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::StaticMeshComponent, const eng::TransformComponent>>())
 				{
-					const auto& meshComponent = world.GetComponent<const eng::StaticMeshComponent>(renderEntity);
+					const auto& meshComponent = world.ReadComponent< eng::StaticMeshComponent>(renderEntity);
 					if (!meshComponent.m_StaticMesh.IsValid())
 						continue;
 
@@ -172,8 +172,8 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 					batchData.m_Models.RemoveAll();
 				}
 
-				const auto& meshComponent = world.GetComponent<const eng::StaticMeshComponent>(id.m_Entity);
-				const auto& meshTransform = world.GetComponent<const eng::TransformComponent>(id.m_Entity);
+				const auto& meshComponent = world.ReadComponent< eng::StaticMeshComponent>(id.m_Entity);
+				const auto& meshTransform = world.ReadComponent< eng::TransformComponent>(id.m_Entity);
 				const auto& meshAsset = *assetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
 
 				const Matrix4x4 model = meshTransform.ToTransform();
@@ -194,7 +194,7 @@ void eng::RenderStage_Shadow::RenderBatch(World& world, const RenderBatchID& bat
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.GetResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
 	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
 

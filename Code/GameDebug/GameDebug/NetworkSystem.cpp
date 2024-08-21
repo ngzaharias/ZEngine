@@ -39,7 +39,7 @@ void dbg::NetworkSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(label.c_str(), &isOpen))
 		{
-			auto& networkComponent = world.GetComponent<dbg::NetworkWindowComponent>(entity);
+			auto& networkComponent = world.WriteComponent<dbg::NetworkWindowComponent>(entity);
 
 			ImGui::InputText("##client_address", &networkComponent.m_ClientAddress);
 			ImGui::SameLine();

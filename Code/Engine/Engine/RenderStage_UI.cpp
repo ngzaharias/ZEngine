@@ -79,7 +79,7 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	auto& assetManager = world.GetResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(strModel);
 	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(strShader);
 
@@ -100,8 +100,8 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.GetComponent<const eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent< eng::CameraComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent< eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
@@ -112,8 +112,8 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 
 		for (const ecs::Entity& textEntity : world.Query<ecs::query::Include<const eng::TransformComponent, const eng::TextComponent>>())
 		{
-			const auto& textComponent = world.GetComponent<const eng::TextComponent>(textEntity);
-			const auto& textTransform = world.GetComponent<const eng::TransformComponent>(textEntity);
+			const auto& textComponent = world.ReadComponent< eng::TextComponent>(textEntity);
+			const auto& textTransform = world.ReadComponent< eng::TransformComponent>(textEntity);
 			const auto& binding = mesh.m_Binding;
 
 			int32 instanceCount = static_cast<int32>(textComponent.m_Text.size());

@@ -51,14 +51,14 @@ void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& networkManager = world.GetResource<eng::NetworkManager>();
+	auto& networkManager = world.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 	auto& peer = networkManager.GetPeer();
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::network::RequestComponent>>())
 	{
-		const auto& eventComponent = world.GetComponent<const eng::network::RequestComponent>(entity);
-		auto& stateComponent = world.GetSingleton<eng::network::StateComponent>();
+		const auto& eventComponent = world.ReadComponent< eng::network::RequestComponent>(entity);
+		auto& stateComponent = world.WriteSingleton<eng::network::StateComponent>();
 
 		if (IsClient(stateComponent.m_Mode))
 			peer.Shutdown();

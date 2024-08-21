@@ -19,7 +19,7 @@ void eng::InputSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& window = world.GetResource<const glfw::Window>();
+	const auto& window = world.ReadResource< glfw::Window>();
 
 	m_KeyboardPrevious = std::move(m_KeyboardCurrent);
 	m_MousePrevious = std::move(m_MouseCurrent);
@@ -31,7 +31,7 @@ void eng::InputSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::InputComponent>>())
 	{
-		auto& component = world.GetComponent<eng::InputComponent>(entity);
+		auto& component = world.WriteComponent<eng::InputComponent>(entity);
 		component.m_KeyboardPrevious = m_KeyboardPrevious;
 		component.m_KeyboardCurrent = m_KeyboardCurrent;
 		component.m_MousePrevious = m_MousePrevious;

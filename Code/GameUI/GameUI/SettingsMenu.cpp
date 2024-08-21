@@ -30,7 +30,7 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 	const bool hasWindow = world.HasAny<ecs::query::Include<gui::settings::WindowComponent>>();
 	if (!hasWindow && world.HasAny<ecs::query::Include<gui::settings::OpenRequestComponent>>())
 	{
-		const auto& localComponent = world.GetSingleton<const eng::settings::LocalComponent>();
+		const auto& localComponent = world.ReadSingleton< eng::settings::LocalComponent>();
 
 		const ecs::Entity entity = world.CreateEntity();
 		auto& windowComponent = world.AddComponent<gui::settings::WindowComponent>(entity);
@@ -47,7 +47,7 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::settings::WindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<gui::settings::WindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<gui::settings::WindowComponent>(entity);
 
 		bool isWindowOpen = true;
 		if (ImGui::Begin(windowComponent.m_Label.c_str(), &isWindowOpen, s_WindowFlags))
@@ -57,7 +57,7 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::Button("Apply"))
 			{
-				auto& localComponent = world.GetSingleton<eng::settings::LocalComponent>();
+				auto& localComponent = world.WriteSingleton<eng::settings::LocalComponent>();
 				localComponent.m_EffectVolume = windowComponent.m_EffectVolume;
 				localComponent.m_MusicVolume = windowComponent.m_MusicVolume;
 			}

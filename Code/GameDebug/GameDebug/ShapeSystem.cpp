@@ -134,7 +134,7 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& window = world.GetComponent<dbg::ShapeWindowComponent>(entity);
+		auto& window = world.WriteComponent<dbg::ShapeWindowComponent>(entity);
 
 		if (ImGui::CollapsingHeader("Shape A"))
 		{
@@ -153,7 +153,7 @@ namespace
 
 	void DrawPlotter(World& world, const ecs::Entity& entity)
 	{
-		auto& window = world.GetComponent<dbg::ShapeWindowComponent>(entity);
+		auto& window = world.WriteComponent<dbg::ShapeWindowComponent>(entity);
 
 		const ImGuiGraphFlags flags = ImGuiGraphFlags_Grid | ImGuiGraphFlags_TextX | ImGuiGraphFlags_TextY;
 		const Vector2f size = ImGui::GetContentRegionAvail();
@@ -194,7 +194,7 @@ void dbg::ShapeSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::ShapeWindowComponent>>())
 	{
-		auto& window = world.GetComponent<dbg::ShapeWindowComponent>(windowEntity);
+		auto& window = world.WriteComponent<dbg::ShapeWindowComponent>(windowEntity);
 
 		bool isWindowOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);

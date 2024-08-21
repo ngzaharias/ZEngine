@@ -47,7 +47,7 @@ void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 			const float width = ImGui::GetContentRegionAvail().x / count;
 			const float height = 64.f;
 
-			const auto& directoryComponent = world.GetSingleton<eng::level::DirectoryComponent>();
+			const auto& directoryComponent = world.WriteSingleton<eng::level::DirectoryComponent>();
 			for (auto&& [name, path] : directoryComponent.m_Levels)
 			{
 				ImGui::TableNextColumn();

@@ -40,7 +40,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	auto& assetManager = world.GetResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -58,8 +58,8 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.GetComponent<const eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent< eng::CameraComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent< eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
@@ -71,7 +71,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 		glUseProgram(linesShader->m_ProgramId);
 
 		{
-			auto& linesComponent = world.GetSingleton<eng::LinesComponent>();
+			auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 			if (!linesComponent.m_Vertices.IsEmpty())
 			{
 				const uint32 lineCount = linesComponent.m_Vertices.GetCount();

@@ -49,7 +49,7 @@ namespace
 		{
 			ImGui::Indent();
 
-			auto& windowComponent = world.GetComponent<editor::TableWindowComponent>(entity);
+			auto& windowComponent = world.WriteComponent<editor::TableWindowComponent>(entity);
 			for (auto&& [name, schema] : windowComponent.m_TablesMap)
 			{
 				if (ImGui::Selectable(name.ToChar()))
@@ -62,7 +62,7 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TableWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::TableWindowComponent>(entity);
 
 		Array<int32> toRemove;
 		if (ImGui::BeginTabBar("##tables"))
@@ -151,7 +151,7 @@ void editor::TableEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TableWindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<editor::TableWindowComponent>(windowEntity);
+		auto& windowComponent = world.WriteComponent<editor::TableWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
