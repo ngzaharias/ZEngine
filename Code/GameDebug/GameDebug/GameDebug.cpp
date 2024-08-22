@@ -34,8 +34,8 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::ClientWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::EntityWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::EntityWindowRequestComponent>();
-	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoRequestComponent>();
+	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::level::OpenRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::level::SaveAsRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::level::SaveRequestComponent>();

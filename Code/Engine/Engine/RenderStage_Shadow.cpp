@@ -35,7 +35,35 @@ namespace
 
 void eng::RenderStage_Shadow::Initialise(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.AddSingleton<eng::FrameBufferComponent>();
+	World world = entityWorld.GetWorldView<World>();
+
+	// texture and buffer
+	{
+		auto& bufferComponent = world.WriteSingleton<eng::FrameBufferComponent>();
+		bufferComponent.m_ShadowSize = Vector2u(1024, 1024);
+
+		glGenFramebuffers(1, &bufferComponent.m_ShadowBuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, bufferComponent.m_ShadowBuffer);
+
+		glGenTextures(1, &bufferComponent.m_ShadowTexture);
+		glBindTexture(GL_TEXTURE_2D, bufferComponent.m_ShadowTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, bufferComponent.m_ShadowSize.x, bufferComponent.m_ShadowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, bufferComponent.m_ShadowTexture, 0);
+
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	// instance attributes
+	{
+		glGenBuffers(1, &m_ModelBuffer);
+	}
 }
 
 void eng::RenderStage_Shadow::Shutdown(ecs::EntityWorld& entityWorld)
@@ -45,8 +73,6 @@ void eng::RenderStage_Shadow::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteFramebuffers(1, &bufferComponent.m_ShadowBuffer);
 	glDeleteTextures(1, &bufferComponent.m_ShadowTexture);
 	glDeleteBuffers(1, &m_ModelBuffer);
-
-	entityWorld.RemoveSingleton<eng::FrameBufferComponent>();
 }
 
 void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
@@ -56,40 +82,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 	World world = entityWorld.GetWorldView<World>();
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
-	// initialise
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::FrameBufferComponent>>())
-	{
-		// texture and buffer
-		{
-			auto& bufferComponent = world.WriteSingleton<eng::FrameBufferComponent>();
-			bufferComponent.m_ShadowSize = Vector2u(1024, 1024);
-
-			glGenFramebuffers(1, &bufferComponent.m_ShadowBuffer);
-			glBindFramebuffer(GL_FRAMEBUFFER, bufferComponent.m_ShadowBuffer);
-
-			glGenTextures(1, &bufferComponent.m_ShadowTexture);
-			glBindTexture(GL_TEXTURE_2D, bufferComponent.m_ShadowTexture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, bufferComponent.m_ShadowSize.x, bufferComponent.m_ShadowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, bufferComponent.m_ShadowTexture, 0);
-
-			glDrawBuffer(GL_NONE);
-			glReadBuffer(GL_NONE);
-
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		}
-
-		// instance attributes
-		{
-			glGenBuffers(1, &m_ModelBuffer);
-		}
-	}
-
-
-	auto& bufferComponent = entityWorld.WriteSingleton<eng::FrameBufferComponent>();
+	const auto& bufferComponent = entityWorld.ReadSingleton<eng::FrameBufferComponent>();
 
 	{
 		glViewport(0, 0, bufferComponent.m_ShadowSize.x, bufferComponent.m_ShadowSize.y);

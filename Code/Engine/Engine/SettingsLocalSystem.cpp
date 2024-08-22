@@ -40,12 +40,11 @@ void eng::settings::LocalSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(strAudio, world.AddSingleton<eng::settings::LocalComponent>(), {});
+	visitor.Read(strAudio, world.WriteSingleton<eng::settings::LocalComponent>(), {});
 }
 
 void eng::settings::LocalSystem::Shutdown(World& world)
 {
-	world.RemoveSingleton<eng::settings::LocalComponent>();
 }
 
 void eng::settings::LocalSystem::Update(World& world, const GameTime& gameTime)

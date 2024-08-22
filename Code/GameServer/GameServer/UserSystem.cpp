@@ -21,8 +21,6 @@ void net::UserSystem::Initialise(World& world)
 	auto& networkManager = world.WriteResource<eng::NetworkManager>();
 	auto& adaptor = networkManager.GetAdaptor();
 
-	world.AddSingleton<net::UserMapComponent>();
-
 	m_Connections =
 	{
 		entt::sink(adaptor.m_OnServerClientConnected).connect<&net::UserSystem::OnClientConnected>(this),
@@ -32,7 +30,6 @@ void net::UserSystem::Initialise(World& world)
 
 void net::UserSystem::Shutdown(World& world)
 {
-	world.RemoveSingleton<net::UserMapComponent>();
 	m_Connections.Disconnect();
 }
 
@@ -41,10 +38,10 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const auto& userMapComponent = world.ReadSingleton< net::UserMapComponent>();
-	for (auto&& [userId, hasConnected] : m_Requests)
+	for (auto&& [userId, wantsConnected] : m_Requests)
 	{
 		const bool isConnected = userMapComponent.m_UserToEntity.Contains(userId);
-		if (hasConnected && !isConnected)
+		if (wantsConnected && !isConnected)
 		{
 			const ecs::Entity userEntity = world.CreateEntity();
 			auto& nameComponent = world.AddComponent<ecs::NameComponent>(userEntity);
@@ -63,7 +60,7 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 			m_ReplicationHost.RegisterPeer(userId.GetPeerId());
 			m_ReplicationHost.StartReplicateToPeer(userId.GetPeerId(), userEntity);
 		}
-		else if (!hasConnected && isConnected)
+		else if (!wantsConnected && isConnected)
 		{
 			const ecs::Entity userEntity = userMapComponent.m_UserToEntity.Get(userId);
 			world.DestroyEntity(userEntity);

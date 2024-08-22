@@ -8,16 +8,6 @@
 #include "Engine/SoundAssets.h"
 #include "Engine/SoundComponents.h"
 
-void eng::sound::SequenceSystem::Initialise(World& world)
-{
-	world.AddSingleton<eng::sound::SequenceBufferComponent>();
-}
-
-void eng::sound::SequenceSystem::Shutdown(World& world)
-{
-	world.RemoveSingleton<eng::sound::SequenceBufferComponent>();
-}
-
 void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();

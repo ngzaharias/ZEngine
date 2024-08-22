@@ -9,16 +9,6 @@
 #include "Engine/SoundAssets.h"
 #include "Engine/SoundComponents.h"
 
-void eng::sound::RandomSystem::Initialise(World& world)
-{
-	world.AddSingleton<eng::sound::RandomBufferComponent>();
-}
-
-void eng::sound::RandomSystem::Shutdown(World& world)
-{
-	world.RemoveSingleton<eng::sound::RandomBufferComponent>();
-}
-
 void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();

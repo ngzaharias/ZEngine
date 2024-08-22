@@ -27,9 +27,6 @@ namespace eng::sound
 			eng::sound::SequenceBufferComponent,
 			const eng::sound::SequenceRequestComponent>;
 
-		void Initialise(World& world);
-		void Shutdown(World& world);
-
 		void Update(World& world, const GameTime& gameTime);
 	};
 };

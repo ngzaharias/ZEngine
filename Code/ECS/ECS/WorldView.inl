@@ -100,61 +100,25 @@ auto ecs::WorldView<TTypes...>::AddEventComponent(TArgs&&... args)->decltype(aut
 }
 
 template <typename... TTypes>
-template <typename TComponent, typename... TArgs>
-auto ecs::WorldView<TTypes...>::AddSingleton(TArgs&&... args)->decltype(auto)
+template<class TComponent>
+auto ecs::WorldView<TTypes...>::ReadSingleton()->const TComponent&
 {
-	static_assert(!std::is_const_v<TComponent>, "Component cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Component cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Component cannot be a pointer.");
 	static_assert(core::Contains<TComponent, TTypes...>(), "Component isn't present in WorldView.");
 
-	return m_EntityWorld.template AddSingleton<TComponent>(std::forward<TArgs>(args)...);
+	return m_EntityWorld.template ReadSingleton<TComponent>();
 }
 
 template <typename... TTypes>
 template<class TComponent>
-void ecs::WorldView<TTypes...>::RemoveSingleton()
-{
-	static_assert(!std::is_const_v<TComponent>, "Component cannot be const.");
-	static_assert(!std::is_reference_v<TComponent>, "Component cannot be a reference.");
-	static_assert(!std::is_pointer_v<TComponent>, "Component cannot be a pointer.");
-	static_assert(core::Contains<TComponent, TTypes...>(), "Component isn't present in WorldView.");
-
-	m_EntityWorld.template RemoveSingleton<TComponent>();
-}
-
-template <typename... TTypes>
-template<class TComponent>
-bool ecs::WorldView<TTypes...>::HasSingleton(const bool alive /*= true*/) const
-{
-	static_assert(!std::is_const_v<TComponent>, "Component cannot be const.");
-	static_assert(!std::is_reference_v<TComponent>, "Component cannot be a reference.");
-	static_assert(!std::is_pointer_v<TComponent>, "Component cannot be a pointer.");
-	static_assert(core::Contains<TComponent, TTypes...>(), "Component isn't present in WorldView.");
-
-	return m_EntityWorld.template HasSingleton<TComponent>(alive);
-}
-
-template <typename... TTypes>
-template<class TComponent>
-auto ecs::WorldView<TTypes...>::ReadSingleton(const bool alive /*= true*/)->const TComponent&
+auto ecs::WorldView<TTypes...>::WriteSingleton()->TComponent&
 {
 	static_assert(!std::is_reference_v<TComponent>, "Component cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Component cannot be a pointer.");
 	static_assert(core::Contains<TComponent, TTypes...>(), "Component isn't present in WorldView.");
 
-	return m_EntityWorld.template ReadSingleton<TComponent>(alive);
-}
-
-template <typename... TTypes>
-template<class TComponent>
-auto ecs::WorldView<TTypes...>::WriteSingleton(const bool alive /*= true*/)->TComponent&
-{
-	static_assert(!std::is_reference_v<TComponent>, "Component cannot be a reference.");
-	static_assert(!std::is_pointer_v<TComponent>, "Component cannot be a pointer.");
-	static_assert(core::Contains<TComponent, TTypes...>(), "Component isn't present in WorldView.");
-
-	return m_EntityWorld.template WriteSingleton<TComponent>(alive);
+	return m_EntityWorld.template WriteSingleton<TComponent>();
 }
 
 template <typename... TTypes>

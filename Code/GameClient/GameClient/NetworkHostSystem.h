@@ -10,7 +10,6 @@ namespace eng::network
 
 namespace gamestate
 {
-	struct NetworkHostComponent;
 	struct StateComponent;
 	struct StateFinishedComponent;
 
@@ -19,7 +18,6 @@ namespace gamestate
 	public:
 		using World = ecs::WorldView<
 			eng::network::RequestComponent,
-			gamestate::NetworkHostComponent,
 			gamestate::StateFinishedComponent,
 			const eng::network::RequestFinishedComponent,
 			const gamestate::StateComponent>;

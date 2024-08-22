@@ -8,16 +8,6 @@
 #include "GameClient/GameStateComponents.h"
 #include "GameClient/GameStateTypes.h"
 
-void gamestate::StateSystem::Initialise(World& world)
-{
-	world.AddSingleton<gamestate::StateComponent>();
-}
-
-void gamestate::StateSystem::Shutdown(World& world)
-{
-	world.RemoveSingleton<gamestate::StateComponent>();
-}
-
 void gamestate::StateSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();

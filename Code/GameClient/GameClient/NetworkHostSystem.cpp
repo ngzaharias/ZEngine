@@ -18,8 +18,6 @@ void gamestate::NetworkHostSystem::Update(World& world, const GameTime& gameTime
 		const auto& stateComponent = world.ReadSingleton< gamestate::StateComponent>();
 		if (std::holds_alternative<gamestate::NetworkHost>(stateComponent.m_State))
 		{
-			world.AddSingleton<gamestate::NetworkHostComponent>();
-
 			const auto& request = std::get<gamestate::NetworkHost>(stateComponent.m_State);
 			auto& component = world.AddEventComponent<eng::network::RequestComponent>();
 
@@ -33,11 +31,10 @@ void gamestate::NetworkHostSystem::Update(World& world, const GameTime& gameTime
 		}
 	}
 
-	const bool isHosting = world.HasAny<ecs::query::Include<gamestate::NetworkHostComponent>>();
-	const bool isFinished = world.HasAny<ecs::query::Include<const eng::network::RequestFinishedComponent>>();
-	if (isHosting && isFinished)
+	if (world.HasAny<ecs::query::Include<const eng::network::RequestFinishedComponent>>())
 	{
-		world.RemoveSingleton<gamestate::NetworkHostComponent>();
-		world.AddEventComponent<gamestate::StateFinishedComponent>();
+		const auto& stateComponent = world.ReadSingleton<gamestate::StateComponent>();
+		if (std::holds_alternative<gamestate::NetworkHost>(stateComponent.m_State))
+			world.AddEventComponent<gamestate::StateFinishedComponent>();
 	}
 }

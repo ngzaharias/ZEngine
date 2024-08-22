@@ -10,7 +10,6 @@ namespace eng::network
 
 namespace gamestate
 {
-	struct NetworkStopComponent;
 	struct StateComponent;
 	struct StateFinishedComponent;
 
@@ -18,11 +17,10 @@ namespace gamestate
 	{
 	public:
 		using World = ecs::WorldView<
-			gamestate::NetworkStopComponent,
-			gamestate::StateFinishedComponent,
 			eng::network::RequestComponent,
-			const gamestate::StateComponent,
-			const eng::network::RequestFinishedComponent>;
+			gamestate::StateFinishedComponent,
+			const eng::network::RequestFinishedComponent,
+			const gamestate::StateComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

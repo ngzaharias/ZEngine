@@ -47,7 +47,6 @@ namespace eng::level
 		LoadSystem(ecs::EntityWorld& entityWorld);
 
 		void Initialise(World& world);
-		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 

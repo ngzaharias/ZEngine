@@ -23,8 +23,6 @@ namespace
 
 void eng::RenderStage_Lines::Initialise(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.AddSingleton<eng::LinesComponent>();
-
 	glGenVertexArrays(1, &m_AttributeObject);
 	glBindVertexArray(m_AttributeObject);
 	glGenBuffers(1, &m_VertexBuffer);
@@ -32,7 +30,6 @@ void eng::RenderStage_Lines::Initialise(ecs::EntityWorld& entityWorld)
 
 void eng::RenderStage_Lines::Shutdown(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.RemoveSingleton<eng::LinesComponent>();
 }
 
 void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)

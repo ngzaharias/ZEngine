@@ -70,22 +70,16 @@ namespace ecs
 		auto AddEventComponent(TArgs&&... args)->decltype(auto);
 
 		//////////////////////////////////////////////////////////////////////////
-		// Component - Singleton
+		// Singleton
 
-		template<class TComponent, typename... TArgs>
-		auto AddSingleton(TArgs&&... args)->decltype(auto);
+		template<class TSingleton, typename... TArgs>
+		void RegisterSingleton(TArgs&&... args);
 
-		template<class TComponent>
-		void RemoveSingleton();
+		template<class TSingleton>
+		auto ReadSingleton()->const TSingleton&;
 
-		template<class TComponent>
-		bool HasSingleton(const bool alive = true) const;
-
-		template<class TComponent>
-		auto ReadSingleton(const bool alive = true)->const TComponent&;
-
-		template<class TComponent>
-		auto WriteSingleton(const bool alive = true)->TComponent&;
+		template<class TSingleton>
+		auto WriteSingleton()->TSingleton&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Resource

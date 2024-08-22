@@ -41,9 +41,9 @@ namespace gamestate
 			eng::level::LoadRequestComponent,
 			eng::NetworkManager,
 			eng::network::RequestComponent,
-			gui::modal::MessageComponent,
 			gamestate::NetworkJoinComponent,
 			gamestate::StateFinishedComponent,
+			gui::modal::MessageComponent,
 			const eng::network::RequestFinishedComponent,
 			const gamestate::StateComponent,
 			const net::UserComponent>;

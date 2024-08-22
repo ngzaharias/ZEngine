@@ -20,7 +20,7 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 		const auto& stateComponent = world.ReadSingleton< gamestate::StateComponent>();
 		if (std::holds_alternative<gamestate::NetworkJoin>(stateComponent.m_State))
 		{
-			auto& joinComponent = world.AddSingleton<gamestate::NetworkJoinComponent>();
+			auto& joinComponent = world.WriteSingleton<gamestate::NetworkJoinComponent>();
 			joinComponent.m_State = NetworkJoinComponent::EState::Connect;
 
 			const auto& request = std::get<gamestate::NetworkJoin>(stateComponent.m_State);
@@ -36,11 +36,11 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 		}
 	}
 
-	const bool isJoining = world.HasAny<ecs::query::Include<gamestate::NetworkJoinComponent>>();
-	if (world.HasSingleton<gamestate::NetworkJoinComponent>())
+	const auto& readComponent = world.ReadSingleton<gamestate::NetworkJoinComponent>();
+	if (readComponent.m_State != NetworkJoinComponent::EState::None)
 	{
-		auto& joinComponent = world.WriteSingleton<gamestate::NetworkJoinComponent>();
-		switch (joinComponent.m_State)
+		auto& writeComponent = world.WriteSingleton<gamestate::NetworkJoinComponent>();
+		switch (writeComponent.m_State)
 		{
 		case NetworkJoinComponent::EState::Connect:
 		{
@@ -48,12 +48,12 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 			const auto& networkPeer = networkManager.GetPeer();
 			if (networkPeer.IsConnected())
 			{
-				joinComponent.m_State = NetworkJoinComponent::EState::LoadLevel;
+				writeComponent.m_State = NetworkJoinComponent::EState::LoadLevel;
 			}
 			else if (networkPeer.HasConnectionFailed())
 			{
-				joinComponent.m_Result = NetworkJoinComponent::EResult::Failure;
-				joinComponent.m_State = NetworkJoinComponent::EState::Finished;
+				writeComponent.m_Result = NetworkJoinComponent::EResult::Failure;
+				writeComponent.m_State = NetworkJoinComponent::EState::Finished;
 				
 				auto& messageComponent = world.AddComponent<gui::modal::MessageComponent>(world.CreateEntity());
 				messageComponent.m_Title = "Network: Error";
@@ -64,17 +64,17 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 		case NetworkJoinComponent::EState::LoadLevel:
 		{
 			world.AddEventComponent<eng::level::LoadRequestComponent>();
-			joinComponent.m_State = NetworkJoinComponent::EState::SyncWorld;
+			writeComponent.m_State = NetworkJoinComponent::EState::SyncWorld;
 		} break;
 
 		case NetworkJoinComponent::EState::SyncWorld:
 		{
-			joinComponent.m_State = NetworkJoinComponent::EState::Finished;
+			writeComponent.m_State = NetworkJoinComponent::EState::Finished;
 		} break;
 
 		case NetworkJoinComponent::EState::Finished:
 		{
-			world.RemoveSingleton<gamestate::NetworkJoinComponent>();
+			writeComponent.m_State = NetworkJoinComponent::EState::None;
 			world.AddEventComponent<gamestate::StateFinishedComponent>();
 		} break;
 		}

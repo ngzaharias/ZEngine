@@ -37,16 +37,6 @@ namespace
 	}
 }
 
-void eng::network::NetworkSystem::Initialise(World& world)
-{
-	world.AddSingleton<eng::network::StateComponent>();
-}
-
-void eng::network::NetworkSystem::Shutdown(World& world)
-{
-	world.RemoveSingleton<eng::network::StateComponent>();
-}
-
 void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();

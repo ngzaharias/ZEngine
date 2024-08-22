@@ -25,7 +25,7 @@ eng::level::LoadSystem::LoadSystem(ecs::EntityWorld& entityWorld)
 
 void eng::level::LoadSystem::Initialise(World& world)
 {
-	auto& directoryComponent = world.AddSingleton<eng::level::DirectoryComponent>();
+	auto& directoryComponent = world.WriteSingleton<eng::level::DirectoryComponent>();
 
 	str::Path subpath;
 	const str::Path path = str::Path(str::EPath::Assets, strLevels.ToChar());
@@ -38,11 +38,6 @@ void eng::level::LoadSystem::Initialise(World& world)
 			directoryComponent.m_Levels.Emplace(name, subpath);
 		}
 	}
-}
-
-void eng::level::LoadSystem::Shutdown(World& world)
-{
-	world.RemoveSingleton<eng::level::DirectoryComponent>();
 }
 
 void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)

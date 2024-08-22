@@ -26,16 +26,6 @@ namespace
 	}
 }
 
-void projectile::SpawnSystem::Initialise(World& world)
-{
-	world.AddSingleton<projectile::ChangesComponent>();
-}
-
-void projectile::SpawnSystem::Shutdown(World& world)
-{
-	world.RemoveSingleton<projectile::ChangesComponent>();
-}
-
 void projectile::SpawnSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();

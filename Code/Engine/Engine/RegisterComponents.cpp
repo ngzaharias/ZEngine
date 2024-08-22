@@ -121,25 +121,18 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterComponent<eng::DynamicMeshComponent>();
 	entityWorld.RegisterComponent<eng::FlipbookComponent>();
-	entityWorld.RegisterComponent<eng::FrameBufferComponent>();
 	entityWorld.RegisterComponent<eng::InputComponent>();
 	entityWorld.RegisterComponent<eng::LightAmbientComponent>();
 	entityWorld.RegisterComponent<eng::LightDirectionalComponent>();
 	entityWorld.RegisterComponent<eng::LightPointComponent>();
-	entityWorld.RegisterComponent<eng::LinesComponent>();
-	entityWorld.RegisterComponent<eng::MusicComponent>();
 	entityWorld.RegisterComponent<eng::network::RequestComponent>();
 	entityWorld.RegisterComponent<eng::network::RequestFinishedComponent>();
-	entityWorld.RegisterComponent<eng::network::StateComponent>();
 	entityWorld.RegisterComponent<eng::RigidDynamicComponent>();
 	entityWorld.RegisterComponent<eng::RigidStaticComponent>();
-	entityWorld.RegisterComponent<eng::settings::LocalComponent>();
 	entityWorld.RegisterComponent<eng::sound::ObjectComponent>();
 	entityWorld.RegisterComponent<eng::sound::RandomComponent>();
-	entityWorld.RegisterComponent<eng::sound::RandomBufferComponent>();
 	entityWorld.RegisterComponent<eng::sound::RandomRequestComponent>();
 	entityWorld.RegisterComponent<eng::sound::SequenceComponent>();
-	entityWorld.RegisterComponent<eng::sound::SequenceBufferComponent>();
 	entityWorld.RegisterComponent<eng::sound::SequenceRequestComponent>();
 	entityWorld.RegisterComponent<eng::sound::SingleRequestComponent>();
 	entityWorld.RegisterComponent<eng::StaticMeshComponent>();
@@ -147,22 +140,29 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<voxel::ChunkChangedEventComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkLoadedEventComponent>();
+
+	entityWorld.RegisterSingleton<eng::FrameBufferComponent>();
+	entityWorld.RegisterSingleton<eng::LinesComponent>();
+	entityWorld.RegisterSingleton<eng::MusicComponent>();
+	entityWorld.RegisterSingleton<eng::network::StateComponent>();
+	entityWorld.RegisterSingleton<eng::settings::LocalComponent>();
+	entityWorld.RegisterSingleton<eng::sound::RandomBufferComponent>();
+	entityWorld.RegisterSingleton<eng::sound::SequenceBufferComponent>();
 }
 
 void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.RegisterComponent<net::UserMapComponent>();
+	entityWorld.RegisterSingleton<net::UserMapComponent>();
 }
 
 void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::ComponentSerializer& serializer)
 {
 	entityWorld.RegisterComponent<eng::CameraComponent>();
-	entityWorld.RegisterComponent<eng::level::DirectoryComponent>();
+	entityWorld.RegisterSingleton<eng::level::DirectoryComponent>();
 	entityWorld.RegisterComponent<eng::level::EntityComponent>();
 	entityWorld.RegisterComponent<eng::level::LoadedComponent>();
 	entityWorld.RegisterComponent<eng::level::LoadRequestComponent>();
 	entityWorld.RegisterComponent<eng::level::UnloadRequestComponent>();
-	entityWorld.RegisterComponent<eng::PhysicsSceneComponent>();
 	entityWorld.RegisterComponent<eng::PrototypeComponent>();
 	entityWorld.RegisterComponent<eng::SpriteComponent>();
 	entityWorld.RegisterComponent<eng::TransformComponent>();
@@ -174,4 +174,6 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	serializer.RegisterComponent<eng::SpriteComponent,    SpriteSerializer>();
 	serializer.RegisterComponent<eng::TransformComponent, TransformSerializer>();
 	serializer.RegisterComponent<net::UserComponent,      UserSerializer>();
+
+	entityWorld.RegisterSingleton<eng::PhysicsSceneComponent>();
 }

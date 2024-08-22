@@ -30,8 +30,6 @@ namespace eng::network
 			eng::network::StateComponent,
 			const eng::network::RequestComponent>;
 
-		void Initialise(World& world);
-		void Shutdown(World& world);
 		void Update(World& world, const GameTime& gameTime);
 
 	private:

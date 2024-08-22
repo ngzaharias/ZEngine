@@ -21,9 +21,6 @@ namespace projectile
 			const projectile::CreateRequestComponent,
 			const projectile::TrajectoryComponent>;
 
-		void Initialise(World& world);
-		void Shutdown(World& world);
-
 		void Update(World& world, const GameTime& gameTime);
 
 	private:

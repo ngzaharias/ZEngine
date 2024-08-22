@@ -110,7 +110,7 @@ void eng::PhysicsSystem::Initialise(World& world)
 	sceneDesc.gravity = physx::PxVec3(0.f, s_Gravity, 0.f);
 	sceneDesc.simulationEventCallback = this;
 
-	auto& sceneComponent = world.AddSingleton<eng::PhysicsSceneComponent>();
+	auto& sceneComponent = world.WriteSingleton<eng::PhysicsSceneComponent>();
 	sceneComponent.m_PhysicsScene = physics.createScene(sceneDesc);
 }
 

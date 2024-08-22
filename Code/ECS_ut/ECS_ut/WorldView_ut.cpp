@@ -72,9 +72,9 @@ namespace
 			m_EntityWorld.RegisterComponent<ComponentA>();
 			m_EntityWorld.RegisterComponent<ComponentB>();
 			m_EntityWorld.RegisterComponent<ComponentC>();
-			m_EntityWorld.RegisterComponent<SingletonA>();
-			m_EntityWorld.RegisterComponent<SingletonB>();
-			m_EntityWorld.RegisterComponent<SingletonC>();
+			m_EntityWorld.RegisterSingleton<SingletonA>();
+			m_EntityWorld.RegisterSingleton<SingletonB>();
+			m_EntityWorld.RegisterSingleton<SingletonC>();
 		}
 
 		ecs::EntityWorld m_EntityWorld;
@@ -87,9 +87,9 @@ namespace
 			m_EntityWorld.RegisterComponent<ComponentA>();
 			m_EntityWorld.RegisterComponent<ComponentB>();
 			m_EntityWorld.RegisterComponent<ComponentC>();
-			m_EntityWorld.RegisterComponent<SingletonA>();
-			m_EntityWorld.RegisterComponent<SingletonB>();
-			m_EntityWorld.RegisterComponent<SingletonC>();
+			m_EntityWorld.RegisterSingleton<SingletonA>();
+			m_EntityWorld.RegisterSingleton<SingletonB>();
+			m_EntityWorld.RegisterSingleton<SingletonC>();
 			m_EntityWorld.Initialise();
 
 			WorldView worldView = m_EntityWorld.GetWorldView<WorldView>();
@@ -194,24 +194,6 @@ TEST_CASE("ecs::WorldView. HasComponent.")
 	CHECK(worldView.HasComponent<ComponentB>(entity));
 }
 
-TEST_CASE("ecs::WorldView. HasSingleton.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-
-	entityWorld.Initialise();
-	CHECK(!worldView.HasSingleton<SingletonA>());
-	CHECK(!worldView.HasSingleton<SingletonB>());
-
-	worldView.AddSingleton<SingletonA>();
-	worldView.AddSingleton<SingletonB>();
-	entityWorld.Update({});
-
-	CHECK(worldView.HasSingleton<SingletonA>());
-	CHECK(worldView.HasSingleton<SingletonB>());
-}
-
 TEST_CASE("ecs::WorldView. GetComponent.")
 {
 	RAIIHelper raiihelper;
@@ -239,11 +221,9 @@ TEST_CASE("ecs::WorldView. GetSingleton.")
 	//CHECK_THROWS(worldView.WriteSingleton<SingletonA>());
 	//CHECK_THROWS(worldView.WriteSingleton<SingletonB>());
 
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-	worldView.AddSingleton<SingletonA>();
-	worldView.AddSingleton<SingletonB>();
 	entityWorld.Update({});
 
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 	CHECK_NOTHROW(worldView.WriteSingleton<SingletonA>());
 	CHECK_NOTHROW(worldView.WriteSingleton<SingletonB>());
 }
@@ -290,48 +270,6 @@ TEST_CASE("ecs::WorldView. AddComponent - Vardic.")
 	CHECK(componentB.m_Int32 == -1337);
 }
 
-TEST_CASE("ecs::WorldView. AddSingleton - Single.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-	entityWorld.Initialise();
-
-	CHECK_NOTHROW(worldView.AddSingleton<SingletonA>());
-	entityWorld.Update({});
-
-	CHECK(worldView.HasSingleton<SingletonA>());
-	CHECK(!worldView.HasSingleton<SingletonB>());
-}
-
-TEST_CASE("ecs::WorldView. AddSingleton - Double.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-	entityWorld.Initialise();
-
-	worldView.AddSingleton<SingletonA>();
-	entityWorld.Update({});
-	CHECK(worldView.HasSingleton<SingletonA>());
-
-	//entityWorld.AddComponent<SingletonA>();
-	//CHECK_THROWS(entityWorld.Update({}));
-}
-
-TEST_CASE("ecs::WorldView. AddSingleton - Vardic.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-	entityWorld.Initialise();
-
-	const auto& componentA = worldView.AddSingleton<SingletonA>(true);
-	const auto& componentB = worldView.AddSingleton<SingletonB>(-1337);
-	CHECK(componentA.m_Bool == true);
-	CHECK(componentB.m_Int32 == -1337);
-}
-
 TEST_CASE("ecs::WorldView. RemoveComponent - Single.")
 {
 	RAIIHelper raiihelper;
@@ -368,45 +306,6 @@ TEST_CASE("ecs::WorldView. RemoveComponent - Double.")
 	CHECK(worldView.HasComponent<ComponentB>(entity));
 
 	//worldView.RemoveComponent<ComponentA>(entity);
-	//CHECK_THROWS(entityWorld.Update({}));
-}
-
-TEST_CASE("ecs::WorldView. RemoveSingleton - Single.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-	entityWorld.Initialise();
-
-	worldView.AddSingleton<SingletonA>();
-	worldView.AddSingleton<SingletonB>();
-	entityWorld.Update({});
-
-	CHECK_NOTHROW(worldView.RemoveSingleton<SingletonA>());
-	entityWorld.Update({});
-
-	CHECK(!worldView.HasSingleton<SingletonA>());
-	CHECK(worldView.HasSingleton<SingletonB>());
-}
-
-TEST_CASE("ecs::WorldView. RemoveSingleton - Double.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-	entityWorld.Initialise();
-
-	worldView.AddSingleton<SingletonA>();
-	worldView.AddSingleton<SingletonB>();
-	entityWorld.Update({});
-
-	CHECK_NOTHROW(worldView.RemoveSingleton<SingletonA>());
-	entityWorld.Update({});
-
-	CHECK(!worldView.HasSingleton<SingletonA>());
-	CHECK(worldView.HasSingleton<SingletonB>());
-
-	//worldView.RemoveSingleton<SingletonA>();
 	//CHECK_THROWS(entityWorld.Update({}));
 }
 
