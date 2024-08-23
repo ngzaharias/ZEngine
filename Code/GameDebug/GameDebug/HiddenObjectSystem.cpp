@@ -29,8 +29,8 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 		const auto& hiddenComponent = world.ReadComponent< ::hidden::ObjectComponent>(entity);
 		const auto& transformComponent = world.ReadComponent< eng::TransformComponent>(entity);
 
-		const float sizeX = (float)hiddenComponent.m_Size.x;
-		const float sizeY = (float)hiddenComponent.m_Size.y;
+		const float sizeX = (float)hiddenComponent.m_Size.x * 0.5f;
+		const float sizeY = (float)hiddenComponent.m_Size.y * 0.5f;
 		const AABB3f s_Extents = AABB3f::FromExtents(Vector3f(sizeX, sizeY, 1.f));
 
 		linesComponent.AddAABB(transformComponent.m_Translate, s_Extents, s_ColourM);

@@ -12,7 +12,7 @@ m_Shape = 0
 
 [HiddenObject]
 m_Group = 'eaba7a09-8920-434c-8cc6-02a2dd8be89a'
-m_Size = { X = 100, Y = 100 }
+m_Size = { X = 200, Y = 200 }
 m_Sprite = '54003a9d-06d3-4972-be0c-9deeda6ec8b4'
 
 [Transform]
