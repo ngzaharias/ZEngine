@@ -16,6 +16,8 @@ namespace
 	const str::StringView strClippingNear = "m_ClippingNear";
 	const str::StringView strFieldOfView = "m_FieldOfView";
 	const str::StringView strFoVAxis = "m_FoVAxis";
+	const str::StringView strFrustrumEdgeMax = "m_FrustrumEdgeMax";
+	const str::StringView strFrustrumEdgeMin = "m_FrustrumEdgeMin";
 	const str::StringView strProjection = "m_Projection";
 	const str::StringView strSize = "m_Size";
 	const str::StringView strZoomMax = "m_ZoomMax";
@@ -44,6 +46,8 @@ void eng::CameraLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, 
 	auto& cameraComponent = world.AddComponent<eng::CameraComponent>(entity);
 	cameraComponent.m_Projection = prototype.m_Projection;
 	cameraComponent.m_Behaviour = prototype.m_Behaviour;
+	cameraComponent.m_FrustrumEdgeMax = prototype.m_FrustrumEdgeMax;
+	cameraComponent.m_FrustrumEdgeMin = prototype.m_FrustrumEdgeMin;
 	cameraComponent.m_ZoomMax = prototype.m_ZoomMax;
 	cameraComponent.m_ZoomMin = prototype.m_ZoomMin;
 }
@@ -52,6 +56,8 @@ void eng::CameraLoader::Load(eng::CameraPrototype& prototype, eng::Visitor& visi
 {
 	visitor.Read(strBehaviour, prototype.m_Behaviour, s_DefaultPrototype.m_Behaviour);
 	visitor.Read(strProjection, prototype.m_Projection, s_DefaultPrototype.m_Projection);
+	visitor.Read(strFrustrumEdgeMax, prototype.m_FrustrumEdgeMax, s_DefaultPrototype.m_FrustrumEdgeMax);
+	visitor.Read(strFrustrumEdgeMin, prototype.m_FrustrumEdgeMin, s_DefaultPrototype.m_FrustrumEdgeMin);
 	visitor.Read(strZoomMax, prototype.m_ZoomMax, s_DefaultPrototype.m_ZoomMax);
 	visitor.Read(strZoomMin, prototype.m_ZoomMin, s_DefaultPrototype.m_ZoomMin);
 }

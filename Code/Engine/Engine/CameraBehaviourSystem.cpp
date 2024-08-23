@@ -87,6 +87,20 @@ void eng::camera::BehaviourSystem::BehaviourFree2D(World& world, const GameTime&
 				data.m_Size -= inputComponent.m_ScrollDelta.y * zoomSpeed;
 				data.m_Size = math::Clamp(data.m_Size, cameraComponent.m_ZoomMin, cameraComponent.m_ZoomMax);
 
+				const float aspect = Screen::width / Screen::height;
+				const Vector2f rangeMin = cameraComponent.m_FrustrumEdgeMin.XY();
+				const Vector2f rangeMax = cameraComponent.m_FrustrumEdgeMax.XY();
+				const Vector2f rangeHalf = (rangeMax - rangeMin) * 0.5f;
+				const Vector2f frustrumHalf = Vector2f(data.m_Size * aspect, data.m_Size) * 0.5f;
+
+				const Vector2f clamped = math::Max(Vector2f::Zero, rangeHalf - frustrumHalf);
+				const Vector2f clampedCen = rangeMin + rangeHalf;
+				const Vector2f clampedMin = clampedCen - clamped;
+				const Vector2f clampedMax = clampedCen + clamped;
+				
+				auto& translate = transformComponent.m_Translate;
+				translate.x = math::Clamp(translate.x, clampedMin.x, clampedMax.x);
+				translate.y = math::Clamp(translate.y, clampedMin.y, clampedMax.y);
 			},
 			[&](::camera::Perspective& data)
 			{

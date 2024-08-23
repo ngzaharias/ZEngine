@@ -12,6 +12,8 @@ namespace eng
 	{
 		::camera::Projection m_Projection = ::camera::Perspective();
 		::camera::EBehaviour m_Behaviour = ::camera::EBehaviour::Free3D;
+		Vector3f m_FrustrumEdgeMax = Vector3f(+KINDA_LARGE_FLOAT);
+		Vector3f m_FrustrumEdgeMin = Vector3f(-KINDA_LARGE_FLOAT);
 		float m_ZoomMax = KINDA_LARGE_FLOAT;
 		float m_ZoomMin = 1.f;
 	};

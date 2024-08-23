@@ -3,6 +3,8 @@ m_Name = "Camera"
 
 [Camera]
 m_Behaviour = 1
+m_FrustrumEdgeMax = { X = +656, Y = +440, Z = 0 } 
+m_FrustrumEdgeMin = { X = -656, Y = -440, Z = 0 } 
 m_ZoomMax = 900.0
 m_ZoomMin = 400.0
 
