@@ -64,11 +64,6 @@ void eng::camera::BehaviourSystem::BehaviourFree2D(World& world, const GameTime&
 			translateDir.y -= 1.f;
 		if (inputComponent.IsKeyHeld(input::EKeyboard::D))
 			translateDir.x += 1.f;
-		if (inputComponent.IsKeyHeld(input::EMouse::Middle))
-		{
-			translateDir.x += inputComponent.m_MouseDelta.x;
-			translateDir.y -= inputComponent.m_MouseDelta.y;
-		}
 
 		if (inputComponent.IsKeyHeld(input::EKeyboard::Shift_L))
 			translateSpeed *= 3.f;
@@ -80,6 +75,21 @@ void eng::camera::BehaviourSystem::BehaviourFree2D(World& world, const GameTime&
 
 		translate = (translateDir * translateSpeed) * Quaternion::FromRotator(transformComponent.m_Rotate);
 		transformComponent.m_Translate += translate;
+
+		if (inputComponent.IsKeyHeld(input::EMouse::Middle))
+		{
+			const Vector3f worldPosA = ::camera::ScreenToWorld(
+				Vector2f::Zero,
+				cameraComponent.m_Projection,
+				Matrix4x4::Identity);
+			const Vector3f worldPosB = ::camera::ScreenToWorld(
+				inputComponent.m_MouseDelta,
+				cameraComponent.m_Projection,
+				Matrix4x4::Identity);
+			const Vector3f delta = (worldPosB - worldPosA);
+
+			transformComponent.m_Translate += delta;
+		}
 
 		core::VariantMatch(cameraComponent.m_Projection,
 			[&](::camera::Orthographic& data)
