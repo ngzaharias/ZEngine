@@ -18,6 +18,8 @@ namespace
 	const str::StringView strFoVAxis = "m_FoVAxis";
 	const str::StringView strProjection = "m_Projection";
 	const str::StringView strSize = "m_Size";
+	const str::StringView strZoomMax = "m_ZoomMax";
+	const str::StringView strZoomMin = "m_ZoomMin";
 }
 
 template<>
@@ -42,10 +44,14 @@ void eng::CameraLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, 
 	auto& cameraComponent = world.AddComponent<eng::CameraComponent>(entity);
 	cameraComponent.m_Projection = prototype.m_Projection;
 	cameraComponent.m_Behaviour = prototype.m_Behaviour;
+	cameraComponent.m_ZoomMax = prototype.m_ZoomMax;
+	cameraComponent.m_ZoomMin = prototype.m_ZoomMin;
 }
 
 void eng::CameraLoader::Load(eng::CameraPrototype& prototype, eng::Visitor& visitor) const
 {
 	visitor.Read(strBehaviour, prototype.m_Behaviour, s_DefaultPrototype.m_Behaviour);
 	visitor.Read(strProjection, prototype.m_Projection, s_DefaultPrototype.m_Projection);
+	visitor.Read(strZoomMax, prototype.m_ZoomMax, s_DefaultPrototype.m_ZoomMax);
+	visitor.Read(strZoomMin, prototype.m_ZoomMin, s_DefaultPrototype.m_ZoomMin);
 }

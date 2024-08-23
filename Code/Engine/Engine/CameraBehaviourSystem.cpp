@@ -7,8 +7,11 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
+#include "Engine/CameraHelpers.h"
 #include "Engine/InputComponent.h"
+#include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
+#include "Math/Math.h"
 #include "Math/Quaternion.h"
 #include "Math/Rotator.h"
 
@@ -38,7 +41,6 @@ void eng::camera::BehaviourSystem::Update(World& world, const GameTime& gameTime
 			BehaviourFree3D(world, gameTime, cameraEntity);
 			break;
 		}
-
 	}
 }
 
@@ -75,6 +77,7 @@ void eng::camera::BehaviourSystem::BehaviourFree2D(World& world, const GameTime&
 
 		if (translateDir != Vector3f::Zero)
 			translateDir.Normalize();
+
 		translate = (translateDir * translateSpeed) * Quaternion::FromRotator(transformComponent.m_Rotate);
 		transformComponent.m_Translate += translate;
 
@@ -82,6 +85,8 @@ void eng::camera::BehaviourSystem::BehaviourFree2D(World& world, const GameTime&
 			[&](::camera::Orthographic& data)
 			{
 				data.m_Size -= inputComponent.m_ScrollDelta.y * zoomSpeed;
+				data.m_Size = math::Clamp(data.m_Size, cameraComponent.m_ZoomMin, cameraComponent.m_ZoomMax);
+
 			},
 			[&](::camera::Perspective& data)
 			{
@@ -122,13 +127,13 @@ void eng::camera::BehaviourSystem::BehaviourFree3D(World& world, const GameTime&
 		translate = (translateDir * translateSpeed) * Quaternion::FromRotator(transformComponent.m_Rotate);
 		transformComponent.m_Translate += translate;
 
-		if (inputComponent.IsKeyHeld(input::EMouse::Right))
+		if (inputComponent.IsKeyHeld(input::EMouse::Middle))
 		{
 			Rotator rotator = Rotator::Zero;
 			rotator.m_Pitch = -inputComponent.m_MouseDelta.y * s_RotateSpeed.m_Pitch;
 			rotator.m_Yaw = -inputComponent.m_MouseDelta.x * s_RotateSpeed.m_Yaw;
 
-			// #todo: V-Sync enabled rotates faster than when it is disabled
+			// #todo: V-Sync causes the game to rotate faster than when it is disabled
 			transformComponent.m_Rotate += rotator;
 		}
 	}

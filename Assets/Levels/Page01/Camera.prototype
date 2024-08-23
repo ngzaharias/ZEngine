@@ -1,12 +1,13 @@
 m_Guid = "22b11b8c-1eab-480c-9147-7ce975beb286"
 m_Name = "Camera"
 
-[Name]
-m_Name = "Camera"
-
 [Camera]
-m_Projection = { TypeId = 0 }
 m_Behaviour = 1
+m_ZoomMax = 900.0
+m_ZoomMin = 400.0
+
+[Camera.m_Projection]
+TypeId = 0
 
 [Transform]
 m_Translate = { X = 0.0, Y = 0.0, Z = -500.0 }
