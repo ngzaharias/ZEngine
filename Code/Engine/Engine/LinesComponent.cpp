@@ -93,25 +93,28 @@ void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& c
 	AddLine(corners[5], corners[2], colour);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Projection& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const ::camera::Projection& projection, const Vector4f& colour)
 {
 	std::visit([&](auto projection) { AddFrustrum(translate, rotate, projection, colour); }, projection);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Orthographic& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const ::camera::Orthographic& projection, const Vector4f& colour)
 {
-	const float halfSize = projection.m_Size * 0.5f;
+	// #todo: pass in width & height
+	const float aspect = Screen::width / Screen::height;
+	const float widthH = projection.m_Size * aspect * 0.5f;
+	const float heightH = projection.m_Size * 0.5f;
 
 	Vector3f corners[8];
-	corners[0] = Vector3f(-halfSize, +halfSize, projection.m_ClippingNear);
-	corners[1] = Vector3f(+halfSize, +halfSize, projection.m_ClippingNear);
-	corners[2] = Vector3f(-halfSize, -halfSize, projection.m_ClippingNear);
-	corners[3] = Vector3f(+halfSize, -halfSize, projection.m_ClippingNear);
+	corners[0] = Vector3f(-widthH, +heightH, projection.m_ClippingNear);
+	corners[1] = Vector3f(+widthH, +heightH, projection.m_ClippingNear);
+	corners[2] = Vector3f(-widthH, -heightH, projection.m_ClippingNear);
+	corners[3] = Vector3f(+widthH, -heightH, projection.m_ClippingNear);
 
-	corners[4] = Vector3f(-halfSize, +halfSize, projection.m_ClippingFar);
-	corners[5] = Vector3f(+halfSize, +halfSize, projection.m_ClippingFar);
-	corners[6] = Vector3f(-halfSize, -halfSize, projection.m_ClippingFar);
-	corners[7] = Vector3f(+halfSize, -halfSize, projection.m_ClippingFar);
+	corners[4] = Vector3f(-widthH, +heightH, projection.m_ClippingFar);
+	corners[5] = Vector3f(+widthH, +heightH, projection.m_ClippingFar);
+	corners[6] = Vector3f(-widthH, -heightH, projection.m_ClippingFar);
+	corners[7] = Vector3f(+widthH, -heightH, projection.m_ClippingFar);
 
 	Matrix4x4 transform = Matrix4x4::FromRotate(rotate);
 	transform.SetTranslate(translate);
@@ -135,8 +138,9 @@ void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Perspective& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const ::camera::Perspective& projection, const Vector4f& colour)
 {
+	// #todo: pass in width & height
 	const float ratio = Screen::width / Screen::height;
 	const float fovy = math::ToRadians(projection.m_FieldOfView);
 

@@ -11,6 +11,15 @@ class OBB3f;
 class Rotator;
 class Sphere3f;
 
+namespace camera
+{
+	struct Orthographic;
+	struct Perspective;
+	using Projection = Variant<
+		Orthographic,
+		Perspective>;
+}
+
 namespace eng
 {
 	struct LineVertex
@@ -26,9 +35,9 @@ namespace eng
 
 		void AddCircle(const Vector3f& translate, const Circle2f& circle, const Vector4f& colour);
 
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Projection& projection, const Vector4f& colour);
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Orthographic& projection, const Vector4f& colour);
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Perspective& projection, const Vector4f& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const ::camera::Projection& projection, const Vector4f& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const ::camera::Orthographic& projection, const Vector4f& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const ::camera::Perspective& projection, const Vector4f& colour);
 
 		void AddLine(const Vector3f& pointA, const Vector3f& pointB, const Vector4f& colour);
 
