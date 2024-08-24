@@ -12,7 +12,7 @@ void movement::VelocitySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& changesComponent = world.ReadSingleton< projectile::ChangesComponent>();
+	const auto& changesComponent = world.ReadSingleton<projectile::ChangesComponent>();
 	for (const projectile::Created& createdData : changesComponent.m_Created)
 	{
 		const auto& requestComponent = world.ReadComponent<projectile::CreateRequestComponent>(createdData.m_Request);

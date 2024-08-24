@@ -47,7 +47,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& sceneComponent = world.ReadSingleton< eng::PhysicsSceneComponent>();
+	const auto& sceneComponent = world.ReadSingleton<eng::PhysicsSceneComponent>();
 	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())

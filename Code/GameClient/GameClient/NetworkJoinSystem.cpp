@@ -17,7 +17,7 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 
 	if (world.HasAny<ecs::query::Updated<const gamestate::StateComponent>>())
 	{
-		const auto& stateComponent = world.ReadSingleton< gamestate::StateComponent>();
+		const auto& stateComponent = world.ReadSingleton<gamestate::StateComponent>();
 		if (std::holds_alternative<gamestate::NetworkJoin>(stateComponent.m_State))
 		{
 			auto& joinComponent = world.WriteSingleton<gamestate::NetworkJoinComponent>();

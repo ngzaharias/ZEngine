@@ -37,7 +37,7 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& userMapComponent = world.ReadSingleton< net::UserMapComponent>();
+	const auto& userMapComponent = world.ReadSingleton<net::UserMapComponent>();
 	for (auto&& [userId, wantsConnected] : m_Requests)
 	{
 		const bool isConnected = userMapComponent.m_UserToEntity.Contains(userId);

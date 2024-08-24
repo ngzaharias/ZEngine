@@ -18,7 +18,7 @@ void transform::TransformSystem::Update(World& world, const GameTime& gameTime)
 
 void transform::TransformSystem::ProjectileRequests(World& world)
 {
-	const auto& changesComponent = world.ReadSingleton< projectile::ChangesComponent>();
+	const auto& changesComponent = world.ReadSingleton<projectile::ChangesComponent>();
 	for (const projectile::Created& createdData : changesComponent.m_Created)
 	{
 		const auto& requestComponent = world.ReadComponent<projectile::CreateRequestComponent>(createdData.m_Request);

@@ -301,7 +301,6 @@ void glfw::Window::Callback_FramebufferResized(GLFWwindow* glfwWindow, int width
 	//glScissor(0, 0, width, height);
 }
 
-
 void glfw::Window::Callback_ScrollChanged(GLFWwindow* glfwWindow, double xOffset, double yOffset)
 {
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));

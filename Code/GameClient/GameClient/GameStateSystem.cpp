@@ -19,7 +19,7 @@ void gamestate::StateSystem::Update(World& world, const GameTime& gameTime)
 		stateComponent.m_Queue.Append(requestComponent.m_Queue);
 	}
 
-	const auto& constComponent = world.ReadSingleton< gamestate::StateComponent>();
+	const auto& constComponent = world.ReadSingleton<gamestate::StateComponent>();
 	const bool hasEmptyState = std::holds_alternative<gamestate::None>(constComponent.m_State);
 	const bool hasStateQueued = !constComponent.m_Queue.IsEmpty();
 	const bool hasStateFinished = world.HasAny<ecs::query::Include<gamestate::StateFinishedComponent>>();
