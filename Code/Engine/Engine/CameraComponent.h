@@ -8,6 +8,7 @@
 
 namespace eng::camera
 {
+	/// \brief
 	struct BehaviourComponent : public ecs::Component<BehaviourComponent>
 	{
 		eng::camera::EBehaviour m_Behaviour = eng::camera::EBehaviour::Free3D;
@@ -17,6 +18,7 @@ namespace eng::camera
 		float m_ZoomMin = 1.f;
 	};
 
+	/// \brief
 	struct ProjectionComponent : public ecs::Component<ProjectionComponent>
 	{
 		eng::camera::Projection m_Projection = eng::camera::Perspective();

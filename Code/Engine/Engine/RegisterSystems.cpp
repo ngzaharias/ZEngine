@@ -5,6 +5,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraBehaviourSystem.h"
+#include "Engine/CameraZoom2DSystem.h"
 #include "Engine/FlipbookSystem.h"
 #include "Engine/GLFW/Window.h"
 #include "Engine/InputSystem.h"
@@ -26,6 +27,7 @@
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::ClientDependencies& dependencies)
 {
 	entityWorld.RegisterSystem<eng::camera::BehaviourSystem>();
+	entityWorld.RegisterSystem<eng::camera::Zoom2DSystem>();
 	entityWorld.RegisterSystem<eng::InputSystem>();
 	entityWorld.RegisterSystem<eng::FlipbookSystem>();
 	entityWorld.RegisterSystem<eng::MusicSystem>();
