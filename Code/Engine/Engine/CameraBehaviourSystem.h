@@ -8,6 +8,11 @@ namespace eng
 	struct TransformComponent;
 }
 
+namespace eng::settings
+{
+	struct LocalComponent;
+}
+
 namespace eng::camera
 {
 	struct BehaviourComponent;
@@ -20,7 +25,8 @@ namespace eng::camera
 			eng::TransformComponent,
 			const eng::camera::BehaviourComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::InputComponent>;
+			const eng::InputComponent,
+			const eng::settings::LocalComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

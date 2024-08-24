@@ -30,13 +30,14 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 	const bool hasWindow = world.HasAny<ecs::query::Include<gui::settings::WindowComponent>>();
 	if (!hasWindow && world.HasAny<ecs::query::Include<gui::settings::OpenRequestComponent>>())
 	{
-		const auto& localComponent = world.ReadSingleton< eng::settings::LocalComponent>();
+		const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
+		const auto& audioSettings = localSettings.m_Audio;
 
 		const ecs::Entity entity = world.CreateEntity();
 		auto& windowComponent = world.AddComponent<gui::settings::WindowComponent>(entity);
 		windowComponent.m_Label = ToLabel("Settings Menu", entity);
-		windowComponent.m_EffectVolume = localComponent.m_EffectVolume;
-		windowComponent.m_MusicVolume = localComponent.m_MusicVolume;
+		windowComponent.m_EffectVolume = audioSettings.m_EffectVolume;
+		windowComponent.m_MusicVolume = audioSettings.m_MusicVolume;
 	}
 	
 	if (hasWindow && world.HasAny<ecs::query::Include<gui::settings::CloseRequestComponent>>())
@@ -57,9 +58,11 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::Button("Apply"))
 			{
-				auto& localComponent = world.WriteSingleton<eng::settings::LocalComponent>();
-				localComponent.m_EffectVolume = windowComponent.m_EffectVolume;
-				localComponent.m_MusicVolume = windowComponent.m_MusicVolume;
+				auto& localSettings = world.WriteSingleton<eng::settings::LocalComponent>();
+				auto& audioSettings = localSettings.m_Audio;
+
+				audioSettings.m_EffectVolume = windowComponent.m_EffectVolume;
+				audioSettings.m_MusicVolume = windowComponent.m_MusicVolume;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Close"))

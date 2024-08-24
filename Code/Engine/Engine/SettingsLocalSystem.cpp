@@ -13,25 +13,53 @@
 
 namespace
 {
-	const str::StringView strAudio = "Audio";
-	const str::StringView strEffectVolume = "m_EffectVolume";
 	const str::StringView strFilepath = "Settings.toml";
+
+	const str::StringView strAudio = "m_Audio";
+	const str::StringView strCamera = "m_Camera";
+	const str::StringView strEffectVolume = "m_EffectVolume";
 	const str::StringView strMusicVolume = "m_MusicVolume";
+	const str::StringView strZoomSpeed = "m_ZoomSpeed";
 }
 
 template<>
 void eng::Visitor::ReadCustom(eng::settings::LocalComponent& value) const
 {
+	Read(strAudio, value.m_Audio, value.m_Audio);
+	Read(strCamera, value.m_Camera, value.m_Camera);
+}
+
+template<>
+void eng::Visitor::ReadCustom(eng::settings::Audio& value) const
+{
 	Read(strEffectVolume, value.m_EffectVolume, value.m_EffectVolume);
 	Read(strMusicVolume, value.m_MusicVolume, value.m_MusicVolume);
 }
 
+template<>
+void eng::Visitor::ReadCustom(eng::settings::Camera& value) const
+{
+	Read(strZoomSpeed, value.m_ZoomSpeed, value.m_ZoomSpeed);
+}
 
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::LocalComponent& value)
 {
+	Write(strAudio, value.m_Audio);
+	Write(strCamera, value.m_Camera);
+}
+
+template<>
+void eng::Visitor::WriteCustom(const eng::settings::Audio& value)
+{
 	Write(strEffectVolume, value.m_EffectVolume);
 	Write(strMusicVolume, value.m_MusicVolume);
+}
+
+template<>
+void eng::Visitor::WriteCustom(const eng::settings::Camera& value)
+{
+	Write(strZoomSpeed, value.m_ZoomSpeed);
 }
 
 void eng::settings::LocalSystem::Initialise(World& world)
@@ -40,11 +68,7 @@ void eng::settings::LocalSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(strAudio, world.WriteSingleton<eng::settings::LocalComponent>(), {});
-}
-
-void eng::settings::LocalSystem::Shutdown(World& world)
-{
+	visitor.Read(world.WriteSingleton<eng::settings::LocalComponent>());
 }
 
 void eng::settings::LocalSystem::Update(World& world, const GameTime& gameTime)
@@ -54,7 +78,7 @@ void eng::settings::LocalSystem::Update(World& world, const GameTime& gameTime)
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilepath);
 
 		eng::Visitor visitor;
-		visitor.Write(strAudio, world.ReadSingleton< eng::settings::LocalComponent>());
+		visitor.Write(world.ReadSingleton<eng::settings::LocalComponent>());
 		visitor.SaveToFile(filepath);
 	}
 }

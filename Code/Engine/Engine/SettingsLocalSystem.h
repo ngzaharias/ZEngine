@@ -13,7 +13,6 @@ namespace eng::settings
 			eng::settings::LocalComponent>;
 
 		void Initialise(World& world);
-		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

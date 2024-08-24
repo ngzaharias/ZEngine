@@ -19,7 +19,8 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& localSettings = world.ReadSingleton< eng::settings::LocalComponent>();
+	const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
+	const auto& audioSettings = localSettings.m_Audio;
 
 	Array<str::Guid> requests;
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SingleRequestComponent>>())
@@ -30,13 +31,13 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 
 	// Random Buffer
 	{
-		const auto& bufferComponent = world.ReadSingleton< eng::sound::RandomBufferComponent>();
+		const auto& bufferComponent = world.ReadSingleton<eng::sound::RandomBufferComponent>();
 		requests.Append(bufferComponent.m_Requests);
 	}
 
 	// Sequence Buffer
 	{
-		const auto& bufferComponent = world.ReadSingleton< eng::sound::SequenceBufferComponent>();
+		const auto& bufferComponent = world.ReadSingleton<eng::sound::SequenceBufferComponent>();
 		requests.Append(bufferComponent.m_Requests);
 	}
 
@@ -58,7 +59,7 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 		auto& soundComponent = world.AddComponent<eng::sound::ObjectComponent>(entity);
 		soundComponent.m_Sound = new sf::Sound();
 		soundComponent.m_Sound->setBuffer(soundAsset->m_SoundBuffer);
-		soundComponent.m_Sound->setVolume(static_cast<float>(localSettings.m_EffectVolume));
+		soundComponent.m_Sound->setVolume(static_cast<float>(audioSettings.m_EffectVolume));
 		soundComponent.m_Sound->play();
 	}
 
