@@ -53,13 +53,13 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 	if (!linesShader)
 		return;
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.ReadComponent< eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent< eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
+		const Matrix4x4 cameraProj = eng::camera::GetProjection(screenSize, cameraComponent.m_Projection);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 		constexpr size_t s_PointOffset = offsetof(LineVertex, m_Point);

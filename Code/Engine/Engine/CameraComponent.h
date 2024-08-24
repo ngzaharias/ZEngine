@@ -6,15 +6,19 @@
 #include "Math/Math.h"
 #include "Math/Vector.h"
 
-namespace eng
+namespace eng::camera
 {
-	struct CameraComponent : public ecs::Component<CameraComponent>
+	struct BehaviourComponent : public ecs::Component<BehaviourComponent>
 	{
-		::camera::Projection m_Projection = ::camera::Perspective();
-		::camera::EBehaviour m_Behaviour = ::camera::EBehaviour::Free3D;
+		eng::camera::EBehaviour m_Behaviour = eng::camera::EBehaviour::Free3D;
 		Vector3f m_FrustrumEdgeMax = Vector3f(+KINDA_LARGE_FLOAT);
 		Vector3f m_FrustrumEdgeMin = Vector3f(-KINDA_LARGE_FLOAT);
 		float m_ZoomMax = KINDA_LARGE_FLOAT;
 		float m_ZoomMin = 1.f;
+	};
+
+	struct ProjectionComponent : public ecs::Component<ProjectionComponent>
+	{
+		eng::camera::Projection m_Projection = eng::camera::Perspective();
 	};
 }

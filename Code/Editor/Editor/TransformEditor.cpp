@@ -56,7 +56,7 @@ namespace
 	{
 		if (world.HasComponent<ecs::NameComponent>(entity))
 		{
-			const auto& name = world.ReadComponent< ecs::NameComponent>(entity);
+			const auto& name = world.ReadComponent<ecs::NameComponent>(entity);
 			return name.m_Name.c_str();
 		}
 		return "<unknown>";
@@ -66,7 +66,7 @@ namespace
 	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& input = world.ReadComponent< eng::InputComponent>(entity);
+			const auto& input = world.ReadComponent<eng::InputComponent>(entity);
 			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::S);
 		}
 		return false;
@@ -135,8 +135,8 @@ namespace
 			const bool hasTransform = world.HasComponent<eng::TransformComponent>(selected);
 			if (hasPrototype && hasTransform)
 			{
-				const auto& prototypeComponent = world.ReadComponent< eng::PrototypeComponent>(selected);
-				const auto& transformComponent = world.ReadComponent< eng::TransformComponent>(selected);
+				const auto& prototypeComponent = world.ReadComponent<eng::PrototypeComponent>(selected);
+				const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(selected);
 
 				eng::SaveFileSettings settings;
 				settings.m_Filters = { "Prototypes (*.prototype)", "*.prototype" };

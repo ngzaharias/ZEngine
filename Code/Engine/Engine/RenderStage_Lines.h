@@ -4,10 +4,14 @@
 #include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
 
+namespace eng::camera
+{
+	struct ProjectionComponent;
+}
+
 namespace eng
 {
 	class AssetManager;
-	struct CameraComponent;
 	struct LinesComponent;
 	struct TransformComponent;
 
@@ -17,7 +21,7 @@ namespace eng
 		using World = ecs::WorldView<
 			eng::AssetManager,
 			eng::LinesComponent,
-			const eng::CameraComponent,
+			const eng::camera::ProjectionComponent,
 			const eng::TransformComponent>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;

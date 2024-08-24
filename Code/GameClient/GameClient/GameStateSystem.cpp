@@ -14,7 +14,7 @@ void gamestate::StateSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const gamestate::RequestComponent>>())
 	{
-		const auto& requestComponent = world.ReadComponent< gamestate::RequestComponent>(entity);
+		const auto& requestComponent = world.ReadComponent<gamestate::RequestComponent>(entity);
 		auto& stateComponent = world.WriteSingleton<gamestate::StateComponent>();
 		stateComponent.m_Queue.Append(requestComponent.m_Queue);
 	}

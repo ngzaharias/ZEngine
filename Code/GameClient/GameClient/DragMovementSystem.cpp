@@ -34,17 +34,17 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& dragEntity : world.Query<ecs::query::Include<const drag::SelectionComponent>>())
 	{
-		const auto& dragComponent = world.ReadComponent< drag::SelectionComponent>(dragEntity);
-		const auto& inputComponent = world.ReadComponent< eng::InputComponent>(dragComponent.m_InputEntity);
+		const auto& dragComponent = world.ReadComponent<drag::SelectionComponent>(dragEntity);
+		const auto& inputComponent = world.ReadComponent<eng::InputComponent>(dragComponent.m_InputEntity);
 
-		const auto& cameraComponent = world.ReadComponent< eng::CameraComponent>(dragComponent.m_CameraEntity);
-		const auto& cameraTransform = world.ReadComponent< eng::TransformComponent>(dragComponent.m_CameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(dragComponent.m_CameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(dragComponent.m_CameraEntity);
 
 		const Quaternion cameraRotate = Quaternion::FromRotator(cameraTransform.m_Rotate);
 		const Vector3f& cameraTranslate = cameraTransform.m_Translate;
 		const Matrix4x4 cameraView = cameraTransform.ToTransform();
 
-		const Vector3f mousePosition = camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
+		const Vector3f mousePosition = eng::camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
 		const Vector3f mouseForward = (mousePosition - cameraTranslate).Normalized();
 
 		// debug

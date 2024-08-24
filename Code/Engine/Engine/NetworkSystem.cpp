@@ -47,7 +47,7 @@ void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::network::RequestComponent>>())
 	{
-		const auto& eventComponent = world.ReadComponent< eng::network::RequestComponent>(entity);
+		const auto& eventComponent = world.ReadComponent<eng::network::RequestComponent>(entity);
 		auto& stateComponent = world.WriteSingleton<eng::network::StateComponent>();
 
 		if (IsClient(stateComponent.m_Mode))

@@ -22,14 +22,14 @@ void gui::modal::StateSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const gui::modal::MessageComponent>>())
 	{
-		const auto& component = world.ReadComponent< gui::modal::MessageComponent>(entity);
+		const auto& component = world.ReadComponent<gui::modal::MessageComponent>(entity);
 		const char* title = GetSafeTitle(component.m_Title);
 		ImGui::OpenPopup(title);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const gui::modal::MessageComponent>>())
 	{
-		const auto& component = world.ReadComponent< gui::modal::MessageComponent>(entity);
+		const auto& component = world.ReadComponent<gui::modal::MessageComponent>(entity);
 		const char* title = GetSafeTitle(component.m_Title);
 		if (ImGui::BeginPopupModal(title))
 		{

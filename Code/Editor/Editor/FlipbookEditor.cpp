@@ -281,7 +281,7 @@ namespace
 		}
 
 		// draw frames to be extracted
-		const auto& extractorComponent = world.ReadComponent< editor::FlipbookBatchingComponent>(entity);
+		const auto& extractorComponent = world.ReadComponent<editor::FlipbookBatchingComponent>(entity);
 		if (extractorComponent.m_IsPreviewing)
 		{
 			for (int32 i = 0; i < extractorComponent.m_Count; ++i)

@@ -5,13 +5,17 @@
 
 namespace eng
 {
-	struct CameraComponent;
 	struct InputComponent;
 	struct LinesComponent;
 	struct PhysicsSceneComponent;
 	struct RigidStaticComponent;
 	struct SpriteComponent;
 	struct TransformComponent;
+}
+
+namespace eng::camera
+{
+	struct ProjectionComponent;
 }
 
 namespace eng::sound
@@ -34,7 +38,7 @@ namespace hidden
 			eng::LinesComponent,
 			eng::RigidStaticComponent,
 			hidden::RevealedComponent,
-			const eng::CameraComponent,
+			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,
 			const eng::PhysicsSceneComponent,
 			const eng::TransformComponent,

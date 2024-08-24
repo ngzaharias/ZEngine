@@ -50,12 +50,12 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 	{
 		for (const ecs::Entity& requestEntity : world.Query<ecs::query::Include<const eng::level::LoadRequestComponent>>())
 		{
-			const auto& requestComponent = world.ReadComponent< eng::level::LoadRequestComponent>(requestEntity);
+			const auto& requestComponent = world.ReadComponent<eng::level::LoadRequestComponent>(requestEntity);
 
 			// unload current levels
 			for (const ecs::Entity& loadedEntity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 			{
-				const auto& loadedComponent = world.ReadComponent< eng::level::LoadedComponent>(loadedEntity);
+				const auto& loadedComponent = world.ReadComponent<eng::level::LoadedComponent>(loadedEntity);
 				UnloadLevel(world, loadedComponent.m_Name);
 			}
 
@@ -72,11 +72,11 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 	{
 		for (const ecs::Entity& requestEntity : world.Query<ecs::query::Include<const eng::level::UnloadRequestComponent>>())
 		{
-			const auto& requestComponent = world.ReadComponent< eng::level::UnloadRequestComponent>(requestEntity);
+			const auto& requestComponent = world.ReadComponent<eng::level::UnloadRequestComponent>(requestEntity);
 
 			for (const ecs::Entity& loadedEntity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 			{
-				const auto& loadedComponent = world.ReadComponent< eng::level::LoadedComponent>(loadedEntity);
+				const auto& loadedComponent = world.ReadComponent<eng::level::LoadedComponent>(loadedEntity);
 				if (requestComponent.m_Name == loadedComponent.m_Name)
 					UnloadLevel(world, loadedComponent.m_Name);
 			}
@@ -128,14 +128,14 @@ void eng::level::LoadSystem::UnloadLevel(World& world, const str::Name& levelNam
 {
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::EntityComponent>>())
 	{
-		const auto& component = world.ReadComponent< eng::level::EntityComponent>(entity);
+		const auto& component = world.ReadComponent<eng::level::EntityComponent>(entity);
 		if (component.m_Name == levelName)
 			world.DestroyEntity(entity);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 	{
-		const auto& component = world.ReadComponent< eng::level::LoadedComponent>(entity);
+		const auto& component = world.ReadComponent<eng::level::LoadedComponent>(entity);
 		if (component.m_Name == levelName)
 			world.DestroyEntity(entity);
 	}

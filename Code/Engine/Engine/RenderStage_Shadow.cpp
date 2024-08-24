@@ -104,16 +104,16 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraTransform = world.ReadComponent< eng::TransformComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 		const Matrix3x3 cameraRotate = Matrix3x3::FromRotate(cameraTransform.m_Rotate);
 		const Vector3f cameraFoward = Vector3f::AxisZ * cameraRotate;
 
 		for (const ecs::Entity& lightEntity : world.Query<ecs::query::Include<const eng::LightDirectionalComponent, const eng::TransformComponent>>())
 		{
-			const auto& lightComponent = world.ReadComponent< eng::LightDirectionalComponent>(lightEntity);
-			const auto& lightTransform = world.ReadComponent< eng::TransformComponent>(lightEntity);
+			const auto& lightComponent = world.ReadComponent<eng::LightDirectionalComponent>(lightEntity);
+			const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(lightEntity);
 
 			camera::Orthographic orthographic;
 
@@ -133,7 +133,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 			{
 				for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::StaticMeshComponent, const eng::TransformComponent>>())
 				{
-					const auto& meshComponent = world.ReadComponent< eng::StaticMeshComponent>(renderEntity);
+					const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(renderEntity);
 					if (!meshComponent.m_StaticMesh.IsValid())
 						continue;
 
@@ -165,8 +165,8 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 					batchData.m_Models.RemoveAll();
 				}
 
-				const auto& meshComponent = world.ReadComponent< eng::StaticMeshComponent>(id.m_Entity);
-				const auto& meshTransform = world.ReadComponent< eng::TransformComponent>(id.m_Entity);
+				const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(id.m_Entity);
+				const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
 				const auto& meshAsset = *assetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
 
 				const Matrix4x4 model = meshTransform.ToTransform();

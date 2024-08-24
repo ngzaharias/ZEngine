@@ -162,7 +162,7 @@ void eng::Application::Register()
 
 	// prototypes
 	{
-		m_PrototypeManager.RegisterPrototype<eng::CameraPrototype, eng::CameraLoader>(strCamera);
+		m_PrototypeManager.RegisterPrototype<eng::camera::Prototype, eng::camera::Loader>(strCamera);
 		m_PrototypeManager.RegisterPrototype<eng::FlipbookPrototype, eng::FlipbookLoader>(strFlipbook);
 		m_PrototypeManager.RegisterPrototype<eng::AmbientLightPrototype, eng::LightLoader>(strAmbientLight);
 		m_PrototypeManager.RegisterPrototype<eng::DirectionalLightPrototype, eng::LightLoader>(strDirectionalLight);

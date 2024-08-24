@@ -9,10 +9,14 @@ namespace glfw
 	class Window;
 }
 
+namespace eng::camera
+{
+	struct ProjectionComponent;
+}
+
 namespace eng
 {
 	class AssetManager;
-	struct CameraComponent;
 	struct TextComponent;
 	struct TransformComponent;
 
@@ -21,7 +25,7 @@ namespace eng
 	public:
 		using World = ecs::WorldView<
 			eng::AssetManager,
-			const eng::CameraComponent,
+			const eng::camera::ProjectionComponent,
 			const eng::TextComponent,
 			const eng::TransformComponent>;
 

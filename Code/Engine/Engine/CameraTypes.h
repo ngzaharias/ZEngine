@@ -2,7 +2,7 @@
 
 #include "Core/Variant.h"
 
-namespace camera
+namespace eng::camera
 {
 	enum class EAxis
 	{

@@ -31,9 +31,9 @@ namespace
 
 	const str::Guid strSoundSequence = GUID("2bde153c-851a-429c-8895-7b6b0fd482fb");
 
-	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::CameraComponent& camera, const eng::TransformComponent& transform)
+	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
 	{
-		if (std::holds_alternative<camera::Orthographic>(camera.m_Projection))
+		if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
 		{
 			const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
 			return Vector3f::AxisZ * cameraRotate;
@@ -50,10 +50,10 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 	const auto& sceneComponent = world.ReadSingleton< eng::PhysicsSceneComponent>();
 	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.ReadComponent< eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent< eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Quaternion cameraRotate = Quaternion::FromRotator(cameraTransform.m_Rotate);
 		const Vector3f& cameraTranslate = cameraTransform.m_Translate;
@@ -62,12 +62,12 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 		const Vector3f cameraForward = Vector3f::AxisZ * cameraRotate;
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
+		const Matrix4x4 cameraProj = eng::camera::GetProjection(screenSize, cameraComponent.m_Projection);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform();
 
 		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& inputComponent = world.ReadComponent< eng::InputComponent>(inputEntity);
+			const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
 			const Vector3f cameraPoint = cameraTranslate + cameraForward * 30.f;
 
 			// camera
@@ -82,7 +82,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 
 			// mouse
 			constexpr float s_Distance = 100000.f;
-			const Vector3f mousePosition = camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
+			const Vector3f mousePosition = eng::camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
 			const Vector3f mouseDirection = ToMouseDirection(mousePosition, cameraComponent, cameraTransform);
 
 			const physx::PxVec3 position = { 

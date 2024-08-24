@@ -81,10 +81,10 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 		glFrontFace(GL_CW);
 	}
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.ReadComponent< eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent< eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
@@ -96,8 +96,8 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 		{
 			for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::SpriteComponent, const eng::TransformComponent>>())
 			{
-				const auto& spriteComponent = world.ReadComponent< eng::SpriteComponent>(renderEntity);
-				const auto& spriteTransform = world.ReadComponent< eng::TransformComponent>(renderEntity);
+				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(renderEntity);
+				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
 				if (!spriteComponent.m_Sprite.IsValid())
 					continue;
@@ -120,8 +120,8 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 		{
 			for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::FlipbookComponent, const eng::TransformComponent>>())
 			{
-				const auto& flipbookComponent = world.ReadComponent< eng::FlipbookComponent>(renderEntity);
-				const auto& flipbookTransform = world.ReadComponent< eng::TransformComponent>(renderEntity);
+				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(renderEntity);
+				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
 				if (!flipbookComponent.m_Flipbook.IsValid())
 					continue;
@@ -171,8 +171,8 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 			if (world.HasComponent<eng::FlipbookComponent>(id.m_Entity))
 			{
-				const auto& flipbookComponent = world.ReadComponent< eng::FlipbookComponent>(id.m_Entity);
-				const auto& flipbookTransform = world.ReadComponent< eng::TransformComponent>(id.m_Entity);
+				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(id.m_Entity);
+				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
 				const auto& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 
 				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[flipbookComponent.m_Index];
@@ -208,8 +208,8 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 			}
 			else if (world.HasComponent<eng::SpriteComponent>(id.m_Entity))
 			{
-				const auto& spriteComponent = world.ReadComponent< eng::SpriteComponent>(id.m_Entity);
-				const auto& spriteTransform = world.ReadComponent< eng::TransformComponent>(id.m_Entity);
+				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(id.m_Entity);
+				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
 				if (!spriteComponent.m_Sprite.IsValid())
 					continue;
 

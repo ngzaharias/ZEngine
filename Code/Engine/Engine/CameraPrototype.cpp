@@ -7,9 +7,9 @@
 
 namespace
 {
-	const camera::Orthographic s_DefaultOrthographic = { };
-	const camera::Perspective s_DefaultPerspective = { };
-	const eng::CameraPrototype s_DefaultPrototype = {};
+	const eng::camera::Orthographic s_DefaultOrthographic = { };
+	const eng::camera::Perspective s_DefaultPerspective = { };
+	const eng::camera::Prototype s_DefaultPrototype = {};
 
 	const str::StringView strBehaviour = "m_Behaviour";
 	const str::StringView strClippingFar = "m_ClippingFar";
@@ -41,21 +41,22 @@ void eng::Visitor::ReadCustom(camera::Perspective& value) const
 	Read(strFoVAxis, value.m_FoVAxis, s_DefaultPerspective.m_FoVAxis);
 }
 
-void eng::CameraLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::CameraPrototype& prototype) const
+void eng::camera::Loader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::camera::Prototype& prototype) const
 {
-	auto& cameraComponent = world.AddComponent<eng::CameraComponent>(entity);
-	cameraComponent.m_Projection = prototype.m_Projection;
-	cameraComponent.m_Behaviour = prototype.m_Behaviour;
-	cameraComponent.m_FrustrumEdgeMax = prototype.m_FrustrumEdgeMax;
-	cameraComponent.m_FrustrumEdgeMin = prototype.m_FrustrumEdgeMin;
-	cameraComponent.m_ZoomMax = prototype.m_ZoomMax;
-	cameraComponent.m_ZoomMin = prototype.m_ZoomMin;
+	auto& projection = world.AddComponent<eng::camera::ProjectionComponent>(entity);
+	projection.m_Projection = prototype.m_Projection;
+	auto& behaviour = world.AddComponent<eng::camera::BehaviourComponent>(entity);
+	behaviour.m_Behaviour = prototype.m_Behaviour;
+	behaviour.m_FrustrumEdgeMax = prototype.m_FrustrumEdgeMax;
+	behaviour.m_FrustrumEdgeMin = prototype.m_FrustrumEdgeMin;
+	behaviour.m_ZoomMax = prototype.m_ZoomMax;
+	behaviour.m_ZoomMin = prototype.m_ZoomMin;
 }
 
-void eng::CameraLoader::Load(eng::CameraPrototype& prototype, eng::Visitor& visitor) const
+void eng::camera::Loader::Load(eng::camera::Prototype& prototype, eng::Visitor& visitor) const
 {
-	visitor.Read(strBehaviour, prototype.m_Behaviour, s_DefaultPrototype.m_Behaviour);
 	visitor.Read(strProjection, prototype.m_Projection, s_DefaultPrototype.m_Projection);
+	visitor.Read(strBehaviour, prototype.m_Behaviour, s_DefaultPrototype.m_Behaviour);
 	visitor.Read(strFrustrumEdgeMax, prototype.m_FrustrumEdgeMax, s_DefaultPrototype.m_FrustrumEdgeMax);
 	visitor.Read(strFrustrumEdgeMin, prototype.m_FrustrumEdgeMin, s_DefaultPrototype.m_FrustrumEdgeMin);
 	visitor.Read(strZoomMax, prototype.m_ZoomMax, s_DefaultPrototype.m_ZoomMax);

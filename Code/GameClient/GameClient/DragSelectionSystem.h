@@ -9,11 +9,15 @@ namespace ecs
 
 namespace eng
 {
-	struct CameraComponent;
 	struct InputComponent;
 	struct LinesComponent;
 	struct PhysicsSceneComponent;
 	struct TransformComponent;
+}
+
+namespace eng::camera
+{
+	struct ProjectionComponent;
 }
 
 namespace drag
@@ -29,7 +33,7 @@ namespace drag
 			ecs::NameComponent,
 			eng::LinesComponent,
 			const drag::IsSelectableComponent,
-			const eng::CameraComponent,
+			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,
 			const eng::PhysicsSceneComponent,
 			const eng::TransformComponent>;

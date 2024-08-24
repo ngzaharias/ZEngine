@@ -397,11 +397,11 @@ TEST_CASE("ecs::WorldView. Query - Updated.")
 
 	{
 		INFO("Const calls to GetComponent are not added to the Updated Query.");
-		worldView.ReadComponent< ComponentA>(raii.m_EntityA);
-		worldView.ReadComponent< ComponentB>(raii.m_EntityB);
-		worldView.ReadComponent< ComponentC>(raii.m_EntityC);
-		worldView.ReadComponent< ComponentA>(raii.m_EntityAB);
-		worldView.ReadComponent< ComponentB>(raii.m_EntityAB);
+		worldView.ReadComponent<ComponentA>(raii.m_EntityA);
+		worldView.ReadComponent<ComponentB>(raii.m_EntityB);
+		worldView.ReadComponent<ComponentC>(raii.m_EntityC);
+		worldView.ReadComponent<ComponentA>(raii.m_EntityAB);
+		worldView.ReadComponent<ComponentB>(raii.m_EntityAB);
 
 		entityWorld.Update({});
 		CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().IsEmpty());

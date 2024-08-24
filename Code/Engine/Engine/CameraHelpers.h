@@ -3,7 +3,7 @@
 #include "Engine/CameraTypes.h"
 #include "Math/Matrix.h"
 
-namespace camera
+namespace eng::camera
 {
 	Matrix4x4 GetProjection(const Vector2u& windowSize, const Projection& value);
 

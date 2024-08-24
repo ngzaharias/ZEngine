@@ -4,10 +4,14 @@
 #include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
 
+namespace eng::camera
+{
+	struct ProjectionComponent;
+}
+
 namespace eng
 {
 	class AssetManager;
-	struct CameraComponent;
 	struct FrameBufferComponent;
 	struct LightAmbientComponent;
 	struct LightDirectionalComponent;
@@ -21,7 +25,7 @@ namespace eng
 		using World = ecs::WorldView<
 			eng::AssetManager,
 			eng::FrameBufferComponent,
-			const eng::CameraComponent,
+			const eng::camera::ProjectionComponent,
 			const eng::LightAmbientComponent,
 			const eng::LightDirectionalComponent,
 			const eng::LightPointComponent,

@@ -3,6 +3,7 @@
 
 #include "Core/Assert.h"
 #include "Engine/Screen.h"
+#include "Math/Math.h"
 
 #include <algorithm>
 
@@ -12,24 +13,24 @@
 // http://learnwebgl.brown37.net/08_projections/projections_ortho.html
 // http://learnwebgl.brown37.net/08_projections/projections_perspective.html
 
-Matrix4x4 camera::GetProjection(const Vector2u& windowSize, const Projection& value)
+Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Projection& value)
 {
 	Matrix4x4 projection = Matrix4x4::Identity;
 	std::visit([&](auto data) { projection = GetProjection(windowSize, data); }, value);
 	return projection;
 }
 
-Matrix4x4 camera::GetProjection(const Vector2u& windowSize, const Cinematic& settings)
+Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Cinematic& settings)
 {
 	Z_PANIC(false, "");
 	return Matrix4x4::Identity;
 }
 
-Matrix4x4 camera::GetProjection(const Vector2u& windowSize, const Orthographic& settings)
+Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Orthographic& settings)
 {
 	const float aspect = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
-	const float near = std::max(settings.m_ClippingNear, 0.1f);
-	const float far = std::max(settings.m_ClippingFar, near + 0.1f);
+	const float near = math::Max(settings.m_ClippingNear, 0.1f);
+	const float far = math::Max(settings.m_ClippingFar, near + 0.1f);
 
 #ifdef Z_OPENGL
 	const float width = settings.m_Size * aspect;
@@ -49,11 +50,11 @@ Matrix4x4 camera::GetProjection(const Vector2u& windowSize, const Orthographic& 
 #endif
 }
 
-Matrix4x4 camera::GetProjection(const Vector2u& windowSize, const Perspective& settings)
+Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Perspective& settings)
 {
 	const float aspect = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
-	const float near = std::max(settings.m_ClippingNear, 0.1f);
-	const float far = std::max(settings.m_ClippingFar, near + 0.1f);
+	const float near = math::Max(settings.m_ClippingNear, 0.1f);
+	const float far = math::Max(settings.m_ClippingFar, near + 0.1f);
 
 #if defined Z_OPENGL
 	const bool isHorizontal = settings.m_FoVAxis == EAxis::Horizontal;
@@ -78,12 +79,12 @@ Matrix4x4 camera::GetProjection(const Vector2u& windowSize, const Perspective& s
 #endif
 }
 
-Vector3f camera::ScreenToWorld(const Vector2f& pixelPos, const Projection& projection, const Matrix4x4& transform)
+Vector3f eng::camera::ScreenToWorld(const Vector2f& pixelPos, const Projection& projection, const Matrix4x4& transform)
 {
 	return ScreenToWorld(pixelPos, 0.f, projection, transform);
 }
 
-Vector3f camera::ScreenToWorld(const Vector2f& pixelPos, const float depth, const Projection& projection, const Matrix4x4& transform)
+Vector3f eng::camera::ScreenToWorld(const Vector2f& pixelPos, const float depth, const Projection& projection, const Matrix4x4& transform)
 {
 	const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 	const Matrix4x4 inverseProj = GetProjection(screenSize, projection).Inversed();
@@ -108,7 +109,7 @@ Vector3f camera::ScreenToWorld(const Vector2f& pixelPos, const float depth, cons
 	return localPos * transform;
 }
 
-Vector2f camera::WorldToScreen(const Vector3f& worldPos, const Projection& projection, const Matrix4x4& transform)
+Vector2f eng::camera::WorldToScreen(const Vector3f& worldPos, const Projection& projection, const Matrix4x4& transform)
 {
 	Z_PANIC(false, "Incomplete function!");
 

@@ -21,8 +21,8 @@ void hidden::VFXSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& objectEntity : world.Query<ecs::query::Added<const hidden::RevealedComponent>>())
 	{
-		const auto& objectLevel = world.ReadComponent< eng::level::EntityComponent>(objectEntity);
-		const auto& objectTransform = world.ReadComponent< eng::TransformComponent>(objectEntity);
+		const auto& objectLevel = world.ReadComponent<eng::level::EntityComponent>(objectEntity);
+		const auto& objectTransform = world.ReadComponent<eng::TransformComponent>(objectEntity);
 
 		const ecs::Entity vfxEntity = world.CreateEntity();
 		auto& vfxLevel = world.AddComponent<eng::level::EntityComponent>(vfxEntity);

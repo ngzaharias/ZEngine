@@ -157,8 +157,9 @@ void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 
 void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::ComponentSerializer& serializer)
 {
-	entityWorld.RegisterComponent<eng::CameraComponent>();
-	entityWorld.RegisterSingleton<eng::level::DirectoryComponent>();
+	// components
+	entityWorld.RegisterComponent<eng::camera::BehaviourComponent>();
+	entityWorld.RegisterComponent<eng::camera::ProjectionComponent>();
 	entityWorld.RegisterComponent<eng::level::EntityComponent>();
 	entityWorld.RegisterComponent<eng::level::LoadedComponent>();
 	entityWorld.RegisterComponent<eng::level::LoadRequestComponent>();
@@ -169,11 +170,14 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	entityWorld.RegisterComponent<net::ReplicationComponent>();
 	entityWorld.RegisterComponent<net::UserComponent>();
 
-	serializer.RegisterComponent<eng::CameraComponent,    Default<eng::CameraComponent>>();
-	serializer.RegisterComponent<ecs::NameComponent,      NameSerializer>();
-	serializer.RegisterComponent<eng::SpriteComponent,    SpriteSerializer>();
-	serializer.RegisterComponent<eng::TransformComponent, TransformSerializer>();
-	serializer.RegisterComponent<net::UserComponent,      UserSerializer>();
-
+	// singletons
+	entityWorld.RegisterSingleton<eng::level::DirectoryComponent>();
 	entityWorld.RegisterSingleton<eng::PhysicsSceneComponent>();
+
+	// serialization
+	serializer.RegisterComponent<eng::camera::ProjectionComponent, Default<eng::camera::ProjectionComponent>>();
+	serializer.RegisterComponent<ecs::NameComponent, NameSerializer>();
+	serializer.RegisterComponent<eng::SpriteComponent, SpriteSerializer>();
+	serializer.RegisterComponent<eng::TransformComponent, TransformSerializer>();
+	serializer.RegisterComponent<net::UserComponent, UserSerializer>();
 }

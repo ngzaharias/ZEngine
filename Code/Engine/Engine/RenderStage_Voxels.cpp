@@ -46,10 +46,10 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 		glFrontFace(GL_CW);
 	}
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.ReadComponent< eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent< eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
@@ -62,9 +62,9 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 
 		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<const eng::DynamicMeshComponent, const eng::TransformComponent>>())
 		{
-			const auto& voxelComponent = world.ReadComponent< voxel::ChunkComponent>(voxelEntity);
-			const auto& voxelDynamicMesh = world.ReadComponent< eng::DynamicMeshComponent>(voxelEntity);
-			const auto& voxelTransform = world.ReadComponent< eng::TransformComponent>(voxelEntity);
+			const auto& voxelComponent = world.ReadComponent<voxel::ChunkComponent>(voxelEntity);
+			const auto& voxelDynamicMesh = world.ReadComponent<eng::DynamicMeshComponent>(voxelEntity);
+			const auto& voxelTransform = world.ReadComponent<eng::TransformComponent>(voxelEntity);
 
 			const Matrix4x4 voxelModel = voxelTransform.ToTransform();
 

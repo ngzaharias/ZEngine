@@ -9,10 +9,14 @@ namespace voxel
 	struct ChunkComponent;
 }
 
+namespace eng::camera
+{
+	struct ProjectionComponent;
+}
+
 namespace eng
 {
 	class AssetManager;
-	struct CameraComponent;
 	struct TransformComponent;
 	struct DynamicMeshComponent;
 
@@ -21,7 +25,7 @@ namespace eng
 	public:
 		using World = ecs::WorldView<
 			eng::AssetManager,
-			const eng::CameraComponent,
+			const eng::camera::ProjectionComponent,
 			const eng::TransformComponent,
 			const eng::DynamicMeshComponent,
 			const voxel::ChunkComponent>;

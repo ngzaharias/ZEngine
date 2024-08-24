@@ -41,7 +41,7 @@ namespace
 	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& input = world.ReadComponent< eng::InputComponent>(entity);
+			const auto& input = world.ReadComponent<eng::InputComponent>(entity);
 			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::S);
 		}
 		return false;

@@ -155,7 +155,7 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::RigidDynamicComponent>>())
 	{
 		auto& rigidComponent = world.WriteComponent<eng::RigidDynamicComponent>(entity);
-		const auto& transformComponent = world.ReadComponent< eng::TransformComponent>(entity);
+		const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(entity);
 
 		const Quaternion quaternion = Quaternion::FromRotator(transformComponent.m_Rotate);
 
@@ -177,7 +177,7 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::RigidStaticComponent>>())
 	{
 		auto& rigidComponent = world.WriteComponent<eng::RigidStaticComponent>(entity);
-		const auto& transformComponent = world.ReadComponent< eng::TransformComponent>(entity);
+		const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(entity);
 
 		const Quaternion quaternion = Quaternion::FromRotator(transformComponent.m_Rotate);
 
@@ -205,7 +205,7 @@ void eng::PhysicsSystem::ProcessUpdated(World& world)
 		::Include<eng::TransformComponent, const eng::RigidDynamicComponent>;
 	for (const ecs::Entity& entity : world.Query<Query>())
 	{
-		const auto& rigidComponent = world.ReadComponent< eng::RigidDynamicComponent>(entity);
+		const auto& rigidComponent = world.ReadComponent<eng::RigidDynamicComponent>(entity);
 		if (!rigidComponent.m_IsKinematic)
 		{
 			auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);

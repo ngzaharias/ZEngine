@@ -21,7 +21,7 @@ void transform::TransformSystem::ProjectileRequests(World& world)
 	const auto& changesComponent = world.ReadSingleton< projectile::ChangesComponent>();
 	for (const projectile::Created& createdData : changesComponent.m_Created)
 	{
-		const auto& requestComponent = world.ReadComponent< projectile::CreateRequestComponent>(createdData.m_Request);
+		const auto& requestComponent = world.ReadComponent<projectile::CreateRequestComponent>(createdData.m_Request);
 		auto& transformComponent = world.AddComponent<eng::TransformComponent>(createdData.m_Projectile);
 		transformComponent.m_Translate = requestComponent.m_Transform.m_Translate;
 		transformComponent.m_Rotate = requestComponent.m_Transform.m_Rotate;
@@ -30,7 +30,7 @@ void transform::TransformSystem::ProjectileRequests(World& world)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::TransformComponent, const projectile::TrajectoryComponent>>())
 	{
-		const auto& trajectoryComponent = world.ReadComponent< projectile::TrajectoryComponent>(entity);
+		const auto& trajectoryComponent = world.ReadComponent<projectile::TrajectoryComponent>(entity);
 		const float distance = trajectoryComponent.m_Distance / trajectoryComponent.m_Scale;
 
 		auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);

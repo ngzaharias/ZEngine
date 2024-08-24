@@ -24,7 +24,7 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 	Array<str::Guid> requests;
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SingleRequestComponent>>())
 	{
-		const auto& requestComponent = world.ReadComponent< eng::sound::SingleRequestComponent>(entity);
+		const auto& requestComponent = world.ReadComponent<eng::sound::SingleRequestComponent>(entity);
 		requests.Append(requestComponent.m_Handle);
 	}
 
@@ -64,7 +64,7 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::sound::ObjectComponent>>())
 	{
-		const auto& component = world.ReadComponent< eng::sound::ObjectComponent>(entity);
+		const auto& component = world.ReadComponent<eng::sound::ObjectComponent>(entity);
 		if (component.m_Sound->getStatus() == sf::Sound::Stopped)
 			world.DestroyEntity(entity);
 	}

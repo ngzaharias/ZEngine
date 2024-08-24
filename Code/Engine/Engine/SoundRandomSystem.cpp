@@ -20,7 +20,7 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::RandomRequestComponent>>())
 	{
-		const auto& requestComponent = world.ReadComponent< eng::sound::RandomRequestComponent>(entity);
+		const auto& requestComponent = world.ReadComponent<eng::sound::RandomRequestComponent>(entity);
 		if (!requestComponent.m_Handle.IsValid())
 			continue;
 

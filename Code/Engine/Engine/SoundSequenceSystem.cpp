@@ -19,7 +19,7 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SequenceRequestComponent>>())
 	{
-		const auto& requestComponent = world.ReadComponent< eng::sound::SequenceRequestComponent>(entity);
+		const auto& requestComponent = world.ReadComponent<eng::sound::SequenceRequestComponent>(entity);
 		if (!requestComponent.m_Handle.IsValid())
 			continue;
 

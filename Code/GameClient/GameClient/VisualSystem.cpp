@@ -19,7 +19,7 @@ void visual::VisualSystem::ProjectileRequests(World& world)
 	const auto& changesComponent = world.ReadSingleton< projectile::ChangesComponent>();
 	for (const projectile::Created& createdData : changesComponent.m_Created)
 	{
-		const auto& requestComponent = world.ReadComponent< projectile::CreateRequestComponent>(createdData.m_Request);
+		const auto& requestComponent = world.ReadComponent<projectile::CreateRequestComponent>(createdData.m_Request);
 		auto& meshComponent = world.AddComponent<eng::StaticMeshComponent>(createdData.m_Projectile);
 		meshComponent.m_StaticMesh = requestComponent.m_Visual.m_StaticMesh;
 	}

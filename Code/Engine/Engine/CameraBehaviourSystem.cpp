@@ -11,6 +11,7 @@
 #include "Engine/InputComponent.h"
 #include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
+#include "Math/Common.h"
 #include "Math/Math.h"
 #include "Math/Quaternion.h"
 #include "Math/Rotator.h"
@@ -26,18 +27,18 @@ void eng::camera::BehaviourSystem::Update(World& world, const GameTime& gameTime
 {
 	PROFILE_FUNCTION();
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::BehaviourComponent, eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.ReadComponent< eng::CameraComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::BehaviourComponent>(cameraEntity);
 		switch (cameraComponent.m_Behaviour)
 		{
-		case ::camera::EBehaviour::Static:
+		case eng::camera::EBehaviour::Static:
 			BehaviourStatic(world, gameTime, cameraEntity);
 			break;
-		case ::camera::EBehaviour::Free2D:
+		case eng::camera::EBehaviour::Free2D:
 			BehaviourFree2D(world, gameTime, cameraEntity);
 			break;
-		case ::camera::EBehaviour::Free3D:
+		case eng::camera::EBehaviour::Free3D:
 			BehaviourFree3D(world, gameTime, cameraEntity);
 			break;
 		}
@@ -46,75 +47,98 @@ void eng::camera::BehaviourSystem::Update(World& world, const GameTime& gameTime
 
 void eng::camera::BehaviourSystem::BehaviourFree2D(World& world, const GameTime& gameTime, const ecs::Entity& entity)
 {
+	const auto& cameraBehaviour = world.ReadComponent<eng::camera::BehaviourComponent>(entity);
+	const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(entity);
+
 	for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 	{
-		const auto& inputComponent = world.ReadComponent< eng::InputComponent>(inputEntity);
-		auto& cameraComponent = world.WriteComponent<eng::CameraComponent>(entity);
-		auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);
+		const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
+		const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(entity);
+		Vector3f translate = transformComponent.m_Translate;
 
-		float translateSpeed = s_TranslateSpeed * gameTime.m_DeltaTime;
-		float zoomSpeed = s_ZoomSpeed * gameTime.m_DeltaTime;
-		Vector3f translate = Vector3f::Zero;
-		Vector3f translateDir = Vector3f::Zero;
-		if (inputComponent.IsKeyHeld(input::EKeyboard::W))
-			translateDir.y += 1.f;
-		if (inputComponent.IsKeyHeld(input::EKeyboard::A))
-			translateDir.x -= 1.f;
-		if (inputComponent.IsKeyHeld(input::EKeyboard::S))
-			translateDir.y -= 1.f;
-		if (inputComponent.IsKeyHeld(input::EKeyboard::D))
-			translateDir.x += 1.f;
-
-		if (inputComponent.IsKeyHeld(input::EKeyboard::Shift_L))
-			translateSpeed *= 3.f;
-		if (inputComponent.IsKeyHeld(input::EKeyboard::Control_L))
-			translateSpeed *= 5.f;
-
-		if (translateDir != Vector3f::Zero)
-			translateDir.Normalize();
-
-		translate = (translateDir * translateSpeed) * Quaternion::FromRotator(transformComponent.m_Rotate);
-		transformComponent.m_Translate += translate;
-
-		if (inputComponent.IsKeyHeld(input::EMouse::Middle))
+		// panning wasd
 		{
-			const Vector3f worldPosA = ::camera::ScreenToWorld(
-				Vector2f::Zero,
-				cameraComponent.m_Projection,
-				Matrix4x4::Identity);
-			const Vector3f worldPosB = ::camera::ScreenToWorld(
-				inputComponent.m_MouseDelta,
-				cameraComponent.m_Projection,
-				Matrix4x4::Identity);
-			const Vector3f delta = (worldPosB - worldPosA);
+			float speed = s_TranslateSpeed * gameTime.m_DeltaTime;
+			Vector3f direction = Vector3f::Zero;
+			if (inputComponent.IsKeyHeld(input::EKeyboard::W))
+				direction.y += 1.f;
+			if (inputComponent.IsKeyHeld(input::EKeyboard::A))
+				direction.x -= 1.f;
+			if (inputComponent.IsKeyHeld(input::EKeyboard::S))
+				direction.y -= 1.f;
+			if (inputComponent.IsKeyHeld(input::EKeyboard::D))
+				direction.x += 1.f;
 
-			transformComponent.m_Translate += delta;
+			if (inputComponent.IsKeyHeld(input::EKeyboard::Shift_L))
+				speed *= 3.f;
+			if (inputComponent.IsKeyHeld(input::EKeyboard::Control_L))
+				speed *= 5.f;
+
+			if (direction != Vector3f::Zero)
+				direction.Normalize();
+
+			const Vector3f delta = (direction * speed) * Quaternion::FromRotator(transformComponent.m_Rotate);
+			translate += delta;
 		}
 
-		core::VariantMatch(cameraComponent.m_Projection,
-			[&](::camera::Orthographic& data)
+		// panning mouse
+		if (inputComponent.IsKeyHeld(input::EMouse::Middle))
+		{
+			const Vector3f worldPosA = eng::camera::ScreenToWorld(
+				Vector2f::Zero,
+				cameraProjection.m_Projection,
+				Matrix4x4::Identity);
+			const Vector3f worldPosB = eng::camera::ScreenToWorld(
+				inputComponent.m_MouseDelta,
+				cameraProjection.m_Projection,
+				Matrix4x4::Identity);
+
+			translate += (worldPosB - worldPosA);
+		}
+
+		core::VariantMatch(cameraProjection.m_Projection,
+			[&](const eng::camera::Orthographic& data)
 			{
-				data.m_Size -= inputComponent.m_ScrollDelta.y * zoomSpeed;
-				data.m_Size = math::Clamp(data.m_Size, cameraComponent.m_ZoomMin, cameraComponent.m_ZoomMax);
+				// zoom
+				{
+					float size = data.m_Size;
+					size -= inputComponent.m_ScrollDelta.y * s_ZoomSpeed * gameTime.m_DeltaTime;
+					size = math::Clamp(size, cameraBehaviour.m_ZoomMin, cameraBehaviour.m_ZoomMax);
 
-				const float aspect = Screen::width / Screen::height;
-				const Vector2f rangeMin = cameraComponent.m_FrustrumEdgeMin.XY();
-				const Vector2f rangeMax = cameraComponent.m_FrustrumEdgeMax.XY();
-				const Vector2f rangeHalf = (rangeMax - rangeMin) * 0.5f;
-				const Vector2f frustrumHalf = Vector2f(data.m_Size * aspect, data.m_Size) * 0.5f;
+					if (size != data.m_Size)
+					{
+						auto& camera = world.WriteComponent<eng::camera::ProjectionComponent>(entity);
+						auto& projection = std::get<eng::camera::Orthographic>(camera.m_Projection);
+						projection.m_Size = size;
+					}
+				}
 
-				const Vector2f clamped = math::Max(Vector2f::Zero, rangeHalf - frustrumHalf);
-				const Vector2f clampedCen = rangeMin + rangeHalf;
-				const Vector2f clampedMin = clampedCen - clamped;
-				const Vector2f clampedMax = clampedCen + clamped;
-				
-				auto& translate = transformComponent.m_Translate;
-				translate.x = math::Clamp(translate.x, clampedMin.x, clampedMax.x);
-				translate.y = math::Clamp(translate.y, clampedMin.y, clampedMax.y);
+				// panning clamp
+				{
+					const float aspect = Screen::width / Screen::height;
+					const Vector2f rangeMin = cameraBehaviour.m_FrustrumEdgeMin.XY();
+					const Vector2f rangeMax = cameraBehaviour.m_FrustrumEdgeMax.XY();
+					const Vector2f rangeHalf = (rangeMax - rangeMin) * 0.5f;
+					const Vector2f frustrumHalf = Vector2f(data.m_Size * aspect, data.m_Size) * 0.5f;
+
+					const Vector2f clamped = math::Max(Vector2f::Zero, rangeHalf - frustrumHalf);
+					const Vector2f clampedCen = rangeMin + rangeHalf;
+					const Vector2f clampedMin = clampedCen - clamped;
+					const Vector2f clampedMax = clampedCen + clamped;
+
+					translate.x = math::Clamp(translate.x, clampedMin.x, clampedMax.x);
+					translate.y = math::Clamp(translate.y, clampedMin.y, clampedMax.y);
+				}
 			},
-			[&](::camera::Perspective& data)
+			[&](const eng::camera::Perspective& data)
 			{
 			});
+
+		if (!IsNearly(transformComponent.m_Translate, translate))
+		{
+			auto& transform = world.WriteComponent<eng::TransformComponent>(entity);
+			transform.m_Translate = translate;
+		}
 	}
 }
 
@@ -122,7 +146,7 @@ void eng::camera::BehaviourSystem::BehaviourFree3D(World& world, const GameTime&
 {
 	for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 	{
-		const auto& inputComponent = world.ReadComponent< eng::InputComponent>(inputEntity);
+		const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
 		auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);
 
 		float translateSpeed = s_TranslateSpeed * gameTime.m_DeltaTime;
