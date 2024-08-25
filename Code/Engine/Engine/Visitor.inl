@@ -48,6 +48,11 @@ void eng::Visitor::Read(const str::StringView& key, Value& value, const Value& d
 	}
 	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
 	// so instead we have to check the actual type rather than our friendly version.
+	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
+	{
+		ReadOptional(key, value, defaultValue);
+	}
+	// same as above
 	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
 	{
 		if (toml::Table* childNode = parentNode[key].as_table())
@@ -124,6 +129,24 @@ void eng::Visitor::ReadArray(Array<Value>& values) const
 	m_Node = &parentNode;
 }
 
+template <typename TEnum>
+void eng::Visitor::ReadEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue) const
+{
+	toml::Table& currentNode = *m_Node->as_table();
+	using Value = std::underlying_type<TEnum>::type;
+	const auto result = currentNode[key].value<Value>();
+	value = result ? static_cast<TEnum>(*result) : defaultValue;
+}
+
+template <typename TEnum>
+void eng::Visitor::ReadEnum(const int32 index, TEnum& value) const
+{
+	toml::Array& currentNode = *m_Node->as_array();
+	using Value = std::underlying_type<TEnum>::type;
+	if (const auto result = currentNode.at(index).value<Value>())
+		value = static_cast<TEnum>(*result);
+}
+
 template<typename Value>
 void eng::Visitor::ReadMap(Map<str::Guid, Value>& values) const
 {
@@ -168,22 +191,19 @@ void eng::Visitor::ReadMap(Map<str::String, Value>& values) const
 	m_Node = &parentNode;
 }
 
-template <typename TEnum>
-void eng::Visitor::ReadEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue) const
+template<typename Type>
+void eng::Visitor::ReadOptional(const str::StringView& key, Optional<Type>& value, const Optional<Type>& defaultValue) const
 {
 	toml::Table& currentNode = *m_Node->as_table();
-	using Value = std::underlying_type<TEnum>::type;
-	const auto result = currentNode[key].value<Value>();
-	value = result ? static_cast<TEnum>(*result) : defaultValue;
-}
-
-template <typename TEnum>
-void eng::Visitor::ReadEnum(const int32 index, TEnum& value) const
-{
-	toml::Array& currentNode = *m_Node->as_array();
-	using Value = std::underlying_type<TEnum>::type;
-	if (const auto result = currentNode.at(index).value<Value>())
-		value = static_cast<TEnum>(*result);
+	if (currentNode.contains(key))
+	{
+		value.emplace();
+		Read(key, *value, {});
+	}
+	else
+	{
+		value = defaultValue;
+	}
 }
 
 template<typename Value>
@@ -257,6 +277,10 @@ inline void eng::Visitor::Write(const str::StringView& key, const Value& value)
 	}
 	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
 	// so instead we have to check the actual type rather than our friendly version.
+	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
+	{
+		WriteOptional(key, value);
+	}
 	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
 	{
 		toml::Table childNode;
@@ -320,6 +344,20 @@ void eng::Visitor::WriteArray(const Array<Value>& values)
 	m_Node = &parentNode;
 }
 
+template <typename TEnum>
+void eng::Visitor::WriteEnum(const str::StringView& key, const TEnum& value)
+{
+	toml::Table& currentNode = *m_Node->as_table();
+	currentNode.insert_or_assign(key, static_cast<int64>(value));
+}
+
+template <typename TEnum>
+void eng::Visitor::WriteEnum(const int32 index, const TEnum& value)
+{
+	toml::Array& currentNode = *m_Node->as_array();
+	currentNode.push_back(static_cast<int64>(value));
+}
+
 template<typename Value>
 void eng::Visitor::WriteMap(const Map<str::Guid, Value>& values)
 {
@@ -350,18 +388,11 @@ void eng::Visitor::WriteMap(const Map<str::String, Value>& values)
 	m_Node = &parentNode;
 }
 
-template <typename TEnum>
-void eng::Visitor::WriteEnum(const str::StringView& key, const TEnum& value)
+template<typename Type>
+void eng::Visitor::WriteOptional(const str::StringView& key, const Optional<Type>& value)
 {
-	toml::Table& currentNode = *m_Node->as_table();
-	currentNode.insert_or_assign(key, static_cast<int64>(value));
-}
-
-template <typename TEnum>
-void eng::Visitor::WriteEnum(const int32 index, const TEnum& value)
-{
-	toml::Array& currentNode = *m_Node->as_array();
-	currentNode.push_back(static_cast<int64>(value));
+	if (value)
+		Write(key, *value);
 }
 
 template<typename Value>

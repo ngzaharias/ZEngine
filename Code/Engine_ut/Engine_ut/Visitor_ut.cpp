@@ -4,6 +4,7 @@
 #include "Core/Guid.h"
 #include "Core/Map.h"
 #include "Core/Name.h"
+#include "Core/Optional.h"
 #include "Core/Path.h"
 #include "Core/String.h"
 #include "Core/Variant.h"
@@ -1472,6 +1473,103 @@ TEST_CASE("eng::Visitor::Map<Map<Vector2f>>")
 		REQUIRE(myMap.GetCount() == 1);
 		REQUIRE(myMap["A"].GetCount() == 1);
 		CHECK(myMap["A"]["B"] == Vector2f::One);
+	}
+}
+
+TEST_CASE("eng::Visitor::Optional<int32>")
+{
+	{
+		INFO("Write. With Value.");
+		Optional<int32> myOptional = 3;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myOptional);
+
+		str::String string = visitor;
+		CHECK(string == "MyKey = 3");
+	}
+
+	{
+		INFO("Write. Without Value.");
+		Optional<int32> myOptional = std::nullopt;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myOptional);
+
+		str::String string = visitor;
+		CHECK(string.empty());
+	}
+
+	{
+		INFO("Read");
+		Optional<int32> myOptional;
+		eng::Visitor visitor = str::StringView("MyKey = 3");
+		visitor.Read(strMyKey, myOptional, { 0 });
+
+		REQUIRE(myOptional);
+		CHECK(*myOptional == 3);
+	}
+
+	{
+		INFO("Read - Default");
+		Optional<int32> myOptional;
+		eng::Visitor visitor = str::StringView("");
+		visitor.Read(strMyKey, myOptional, { 3 });
+
+		REQUIRE(myOptional);
+		CHECK(*myOptional == 3);
+	}
+}
+
+TEST_CASE("eng::Visitor::Optional<Optional<int32>>")
+{
+	{
+		INFO("Write. With Value.");
+		Optional<Optional<int32>> myOptional = 3;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myOptional);
+
+		str::String string = visitor;
+		CHECK(string == "MyKey = 3");
+	}
+
+	{
+		INFO("Write. With outer value.");
+		Optional<int32> myInner = std::nullopt;
+		Optional<Optional<int32>> myOuter = myInner;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myOuter);
+
+		str::String string = visitor;
+		CHECK(string.empty());
+	}
+
+	{
+		INFO("Write. Without Value.");
+		Optional<Optional<int32>> myOptional = std::nullopt;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myOptional);
+
+		str::String string = visitor;
+		CHECK(string.empty());
+	}
+
+	{
+		INFO("Read");
+		Optional<Optional<int32>> myOptional;
+		eng::Visitor visitor = str::StringView("MyKey = 3");
+		visitor.Read(strMyKey, myOptional, { 0 });
+
+		REQUIRE(myOptional);
+		CHECK(*myOptional == 3);
+	}
+
+	{
+		INFO("Read - Default");
+		Optional<Optional<int32>> myOptional;
+		eng::Visitor visitor = str::StringView("");
+		visitor.Read(strMyKey, myOptional, { 3 });
+
+		REQUIRE(myOptional);
+		CHECK(*myOptional == 3);
 	}
 }
 

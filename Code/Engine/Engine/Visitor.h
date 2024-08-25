@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Optional.h"
 #include "Core/Variant.h"
 #include "Engine/TomlTypes.h"
 
@@ -188,6 +189,9 @@ namespace eng
 		template<typename Value>
 		void ReadMap(Map<str::String, Value>& values) const;
 
+		template<typename Type>
+		void ReadOptional(const str::StringView& key, Optional<Type>& value, const Optional<Type>& defaultValue) const;
+
 		template<typename Value>
 		void ReadPrimitive(const str::StringView& key, Value& value, const Value defaultValue) const;
 		template<typename Value>
@@ -214,6 +218,9 @@ namespace eng
 		void WriteMap(const Map<str::Name, Value>& values);
 		template<typename Value>
 		void WriteMap(const Map<str::String, Value>& values);
+
+		template<typename Type>
+		void WriteOptional(const str::StringView& key, const Optional<Type>& value);
 
 		template<typename Value>
 		void WritePrimitive(const str::StringView& key, const Value& value);
