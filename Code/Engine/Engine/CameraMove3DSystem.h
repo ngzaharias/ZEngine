@@ -18,7 +18,7 @@ namespace eng::camera
 	struct BehaviourComponent;
 	struct ProjectionComponent;
 
-	class BehaviourSystem final : public ecs::System
+	class Move3DSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
