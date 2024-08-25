@@ -55,13 +55,13 @@ void eng::Visitor::ReadCustom(Programs& value) const
 
 void eng::ShaderAssetLoader::Bindings(const uint32 programId, ShaderAsset& asset)
 {
-	auto ATTRIBUTE = [&programId](const char* name, Nullable<uint32>& out_Value)
+	auto ATTRIBUTE = [&programId](const char* name, Optional<uint32>& out_Value)
 	{
 		const int32 location = glGetAttribLocation(programId, name);
 		if (location != -1) out_Value = location;
 	};
 
-	auto UNIFORM = [&programId](const char* name, Nullable<uint32>& out_Value)
+	auto UNIFORM = [&programId](const char* name, Optional<uint32>& out_Value)
 	{
 		const int32 location = glGetUniformLocation(programId, name);
 		if (location != -1) out_Value = location;

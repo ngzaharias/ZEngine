@@ -3,4 +3,4 @@
 #include <optional>
 
 template<typename Type>
-using Nullable = std::optional<Type>;
+using Optional = std::optional<Type>;

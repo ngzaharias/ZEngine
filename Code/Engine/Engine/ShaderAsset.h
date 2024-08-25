@@ -2,7 +2,7 @@
 
 #include "Core/Map.h"
 #include "Core/Name.h"
-#include "Core/Nullable.h"
+#include "Core/Optional.h"
 #include "Core/Types.h"
 #include "Engine/Asset.h"
 #include "Engine/AssetLoader.h"
@@ -19,47 +19,47 @@ namespace eng
 		uint32 m_ProgramId = 0;
 
 		// Per Vertex (Attributes)
-		Nullable<uint32> a_Colour = { };
-		Nullable<uint32> a_Normal = { };
-		Nullable<uint32> a_TexCoords = { };
-		Nullable<uint32> a_Vertex = { };
+		Optional<uint32> a_Colour = { };
+		Optional<uint32> a_Normal = { };
+		Optional<uint32> a_TexCoords = { };
+		Optional<uint32> a_Vertex = { };
 
 		// Per Instance (Attributes)
-		Nullable<uint32> i_Colour = { };
-		Nullable<uint32> i_Model = { };
-		Nullable<uint32> i_Position = { };
-		Nullable<uint32> i_TexDepth = { };
-		Nullable<uint32> i_TexParams = { };
+		Optional<uint32> i_Colour = { };
+		Optional<uint32> i_Model = { };
+		Optional<uint32> i_Position = { };
+		Optional<uint32> i_TexDepth = { };
+		Optional<uint32> i_TexParams = { };
 
 		// Per Shader (Uniforms)
 		// - Camera
-		Nullable<uint32> u_CameraProj = { };
-		Nullable<uint32> u_CameraView = { };
+		Optional<uint32> u_CameraProj = { };
+		Optional<uint32> u_CameraView = { };
 
 		// - Light Ambient
-		Nullable<uint32> u_LightAmbient_Colour = { };
+		Optional<uint32> u_LightAmbient_Colour = { };
 		
 		// - Light Directional
-		Nullable<uint32> u_LightDirectional_Colour = { };
-		Nullable<uint32> u_LightDirectional_Direction = { };
+		Optional<uint32> u_LightDirectional_Colour = { };
+		Optional<uint32> u_LightDirectional_Direction = { };
 		
 		// - Light Point
-		Nullable<uint32> u_LightPoint_Range = { };
-		Nullable<uint32> u_LightPoint_Colour = { };
-		Nullable<uint32> u_LightPoint_Position = { };
+		Optional<uint32> u_LightPoint_Range = { };
+		Optional<uint32> u_LightPoint_Colour = { };
+		Optional<uint32> u_LightPoint_Position = { };
 
 		// - Textures
-		Nullable<uint32> u_Texture = { };
-		Nullable<uint32> u_Texture_Depth = { };
-		Nullable<uint32> u_Texture_ShadowMap = { };
+		Optional<uint32> u_Texture = { };
+		Optional<uint32> u_Texture_Depth = { };
+		Optional<uint32> u_Texture_ShadowMap = { };
 
 		// - Other
-		Nullable<uint32> u_Model = { };
-		Nullable<uint32> u_PixelRange = { };
-		Nullable<uint32> u_Resolution = { };
-		Nullable<uint32> u_Time = { };
-		Nullable<uint32> u_Transform = { };
-		Nullable<uint32> u_Translate = { };
+		Optional<uint32> u_Model = { };
+		Optional<uint32> u_PixelRange = { };
+		Optional<uint32> u_Resolution = { };
+		Optional<uint32> u_Time = { };
+		Optional<uint32> u_Transform = { };
+		Optional<uint32> u_Translate = { };
 	};
 
 	class ShaderAssetLoader final : public eng::AssetLoader
