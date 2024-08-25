@@ -30,7 +30,9 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
 		const auto& behaviour = world.ReadComponent<eng::camera::BehaviourComponent>(cameraEntity);
-		if (behaviour.m_Behaviour != EBehaviour::Free3D)
+		if (!behaviour.m_Move)
+			continue;
+		if (!std::holds_alternative<Move3D>(*behaviour.m_Move))
 			continue;
 
 		const auto& readTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);

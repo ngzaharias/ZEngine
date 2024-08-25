@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Optional.h"
 #include "Core/Variant.h"
 #include "ECS/Component.h"
 #include "Engine/CameraTypes.h"
@@ -11,11 +12,9 @@ namespace eng::camera
 	/// \brief
 	struct BehaviourComponent : public ecs::Component<BehaviourComponent>
 	{
-		EBehaviour m_Behaviour = EBehaviour::Free3D;
-		Vector3f m_FrustrumEdgeMax = Vector3f(+KINDA_LARGE_FLOAT);
-		Vector3f m_FrustrumEdgeMin = Vector3f(-KINDA_LARGE_FLOAT);
-		float m_ZoomMax = KINDA_LARGE_FLOAT;
-		float m_ZoomMin = 1.f;
+		Optional<BehaviourBound> m_Bound = std::nullopt;
+		Optional<BehaviourMove> m_Move = std::nullopt;
+		Optional<BehaviourZoom> m_Zoom = std::nullopt;
 	};
 
 	/// \brief

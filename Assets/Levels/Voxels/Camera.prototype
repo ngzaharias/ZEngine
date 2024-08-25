@@ -2,6 +2,8 @@ m_Guid = "547bef26-99ee-41ea-99cf-83d1f39ee548"
 m_Name = "Camera"
 
 [Camera]
+[Camera.m_Move]
+TypeId = 1
 
 [Transform]
 m_Translate = { X = 500.0, Y = 500.0, Z = -500.0 }

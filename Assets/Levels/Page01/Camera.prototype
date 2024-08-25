@@ -2,11 +2,21 @@ m_Guid = "22b11b8c-1eab-480c-9147-7ce975beb286"
 m_Name = "Camera"
 
 [Camera]
-m_Behaviour = 1
-m_FrustrumEdgeMax = { X = +656, Y = +440, Z = 0 } 
-m_FrustrumEdgeMin = { X = -656, Y = -440, Z = 0 } 
-m_ZoomMax = 900.0
-m_ZoomMin = 400.0
+
+[Camera.m_Bound]
+TypeId = 0
+[Camera.m_Bound.TypeVal]
+m_Max = { X = +656, Y = +440 }
+m_Min = { X = -656, Y = -440 } 
+
+[Camera.m_Move]
+TypeId = 0
+
+[Camera.m_Zoom]
+TypeId = 0
+[Camera.m_Zoom.TypeVal]
+m_Max = 900
+m_Min = 400
 
 [Camera.m_Projection]
 TypeId = 0

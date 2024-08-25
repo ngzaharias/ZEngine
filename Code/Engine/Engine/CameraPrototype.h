@@ -1,9 +1,8 @@
 #pragma once
 
+#include "Core/Optional.h"
 #include "Engine/CameraTypes.h"
 #include "Engine/PrototypeLoader.h"
-#include "Math/Math.h"
-#include "Math/Vector.h"
 
 namespace ecs
 {
@@ -20,12 +19,11 @@ namespace eng::camera
 {
 	struct Prototype final
 	{
-		eng::camera::Projection m_Projection = eng::camera::Perspective();
-		eng::camera::EBehaviour m_Behaviour = eng::camera::EBehaviour::Free3D;
-		Vector3f m_FrustrumEdgeMax = Vector3f(+KINDA_LARGE_FLOAT);
-		Vector3f m_FrustrumEdgeMin = Vector3f(-KINDA_LARGE_FLOAT);
-		float m_ZoomMax = KINDA_LARGE_FLOAT;
-		float m_ZoomMin = 1.f;
+		Projection m_Projection = Perspective();
+
+		Optional<BehaviourBound> m_Bound = std::nullopt;
+		Optional<BehaviourMove> m_Move = std::nullopt;
+		Optional<BehaviourZoom> m_Zoom = std::nullopt;
 	};
 
 	class Loader final : public eng::PrototypeLoader

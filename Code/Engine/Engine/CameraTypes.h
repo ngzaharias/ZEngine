@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/Variant.h"
+#include "Math/Math.h"
+#include "Math/Vector.h"
 
 namespace eng::camera
 {
@@ -10,12 +12,24 @@ namespace eng::camera
 		Vertical,
 	};
 
-	enum class EBehaviour
+	struct Bound2D
 	{
-		Static = 0,
-		Free2D,
-		Free3D,
+		Vector2f m_Max = Vector2f(+KINDA_LARGE_FLOAT);
+		Vector2f m_Min = Vector2f(-KINDA_LARGE_FLOAT);
 	};
+
+	struct Move2D {};
+	struct Move3D {};
+
+	struct Zoom2D
+	{
+		float m_Max = KINDA_LARGE_FLOAT;
+		float m_Min = 1.f;
+	};
+
+	using BehaviourBound = Variant<Bound2D>;
+	using BehaviourMove = Variant<Move2D, Move3D>;
+	using BehaviourZoom = Variant<Zoom2D>;
 
 	struct Cinematic
 	{

@@ -27,6 +27,12 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 		const auto& readBehaviour = world.ReadComponent<eng::camera::BehaviourComponent>(cameraEntity);
 		const auto& readProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 
+		if (!readBehaviour.m_Zoom)
+			continue;
+		if (!std::holds_alternative<Zoom2D>(*readBehaviour.m_Zoom))
+			continue;
+		const auto& zoom2d = std::get<Zoom2D>(*readBehaviour.m_Zoom);
+
 		for (const ecs::Entity& inputEntity : world.Query<InputQuery>())
 		{
 			const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
@@ -36,7 +42,7 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 
 				float size = readOrthographic.m_Size;
 				size -= inputComponent.m_ScrollDelta.y * cameraSettings.m_ZoomSpeed * gameTime.m_DeltaTime;
-				size = math::Clamp(size, readBehaviour.m_ZoomMin, readBehaviour.m_ZoomMax);
+				size = math::Clamp(size, zoom2d.m_Min, zoom2d.m_Max);
 
 				if (size != readOrthographic.m_Size)
 				{
