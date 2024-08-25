@@ -3,7 +3,7 @@ m_Name = 'StickGroup'
 
 [HiddenGroup]
 m_Objects = [ 'f0d8d8e7-adec-4e49-a8b8-b781a2fa028f' ]
-m_Size = { X = 100, Y = 4 }
+m_Size = { X = 200, Y = 8 }
 m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
 
 [Transform]

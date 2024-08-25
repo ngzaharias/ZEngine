@@ -3,7 +3,7 @@ m_Name = 'SealGroup'
 
 [HiddenGroup]
 m_Objects = [ '98fcf9b9-00d5-4216-8008-335e475596b5' ]
-m_Size = { X = 70, Y = 4 }
+m_Size = { X = 140, Y = 8 }
 m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
 
 [Transform]

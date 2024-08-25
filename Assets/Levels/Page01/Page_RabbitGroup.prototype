@@ -3,7 +3,7 @@ m_Name = 'RabbitGroup'
 
 [HiddenGroup]
 m_Objects = [ '2cc219ff-ac03-4c76-afee-2b287989e871' ]
-m_Size = { X = 60, Y = 4 }
+m_Size = { X = 120, Y = 8 }
 m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
 
 [Transform]

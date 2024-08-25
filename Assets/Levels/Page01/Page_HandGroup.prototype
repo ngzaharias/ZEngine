@@ -8,7 +8,7 @@ m_Objects = [
     '36d02551-b4ca-4498-8256-6ae426659cc5',
     'a2c8af82-73a2-43cb-9e34-650bb3b6b7b1'
 ]
-m_Size = { X = 130, Y = 4 }
+m_Size = { X = 260, Y = 8 }
 m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
 
 [Transform]
