@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraBoundsSystem.h"
+#include "Engine/CameraBound2DSystem.h"
 #include "Engine/CameraMove2DSystem.h"
 #include "Engine/CameraMove3DSystem.h"
 #include "Engine/CameraPanningSystem.h"
@@ -29,7 +29,7 @@
 
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::ClientDependencies& dependencies)
 {
-	entityWorld.RegisterSystem<eng::camera::BoundsSystem>();
+	entityWorld.RegisterSystem<eng::camera::Bound2DSystem>();
 	entityWorld.RegisterSystem<eng::camera::Move2DSystem>();
 	entityWorld.RegisterSystem<eng::camera::Move3DSystem>();
 	entityWorld.RegisterSystem<eng::camera::PanningSystem>();
@@ -55,7 +55,7 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::Client
 	entityWorld.RegisterSystemPriority<eng::camera::Move2DSystem>(4000);
 	entityWorld.RegisterSystemPriority<eng::camera::Move3DSystem>(4000);
 	entityWorld.RegisterSystemPriority<eng::camera::PanningSystem>(4000);
-	entityWorld.RegisterSystemPriority<eng::camera::BoundsSystem>(4001);
+	entityWorld.RegisterSystemPriority<eng::camera::Bound2DSystem>(4001);
 
 	// render system needs to run after most systems
 	entityWorld.RegisterSystemPriority<eng::RenderSystem>(5000);

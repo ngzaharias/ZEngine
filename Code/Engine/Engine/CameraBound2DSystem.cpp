@@ -1,5 +1,5 @@
 #include "EnginePCH.h"
-#include "Engine/CameraBoundsSystem.h"
+#include "Engine/CameraBound2DSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -13,7 +13,7 @@
 #include "Math/Common.h"
 #include "Math/Math.h"
 
-void eng::camera::BoundsSystem::Update(World& world, const GameTime& gameTime)
+void eng::camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -25,6 +25,12 @@ void eng::camera::BoundsSystem::Update(World& world, const GameTime& gameTime)
 		const auto& behaviour = world.ReadComponent<eng::camera::BehaviourComponent>(cameraEntity);
 		const auto& projection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& readTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		if (!behaviour.m_Bound)
+			continue;
+		if (!std::holds_alternative<Bound2D>(*behaviour.m_Bound))
+			continue;
+
+		const auto& bound2d = std::get<Bound2D>(*behaviour.m_Bound);
 
 		for (const ecs::Entity& inputEntity : world.Query<InputQuery>())
 		{
@@ -35,8 +41,8 @@ void eng::camera::BoundsSystem::Update(World& world, const GameTime& gameTime)
 				const auto& orthographic = std::get<eng::camera::Orthographic>(projection.m_Projection);
 
 				const float aspect = Screen::width / Screen::height;
-				const Vector2f rangeMin = behaviour.m_FrustrumEdgeMin.XY();
-				const Vector2f rangeMax = behaviour.m_FrustrumEdgeMax.XY();
+				const Vector2f rangeMin = bound2d.m_Min;
+				const Vector2f rangeMax = bound2d.m_Max;
 				const Vector2f rangeHalf = (rangeMax - rangeMin) * 0.5f;
 				const Vector2f frustrumHalf = Vector2f(orthographic.m_Size * aspect, orthographic.m_Size) * 0.5f;
 

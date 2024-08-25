@@ -13,7 +13,7 @@ namespace eng::camera
 	struct BehaviourComponent;
 	struct ProjectionComponent;
 
-	class BoundsSystem final : public ecs::System
+	class Bound2DSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
