@@ -11,7 +11,7 @@ namespace eng::camera
 	/// \brief
 	struct BehaviourComponent : public ecs::Component<BehaviourComponent>
 	{
-		eng::camera::EBehaviour m_Behaviour = eng::camera::EBehaviour::Free3D;
+		EBehaviour m_Behaviour = EBehaviour::Free3D;
 		Vector3f m_FrustrumEdgeMax = Vector3f(+KINDA_LARGE_FLOAT);
 		Vector3f m_FrustrumEdgeMin = Vector3f(-KINDA_LARGE_FLOAT);
 		float m_ZoomMax = KINDA_LARGE_FLOAT;
