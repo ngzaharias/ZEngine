@@ -78,30 +78,6 @@ void eng::camera::BehaviourSystem::BehaviourFree2D(World& world, const GameTime&
 			translate += delta;
 		}
 
-		core::VariantMatch(cameraProjection.m_Projection,
-			[&](const eng::camera::Orthographic& data)
-			{
-				// panning clamp
-				{
-					const float aspect = Screen::width / Screen::height;
-					const Vector2f rangeMin = cameraBehaviour.m_FrustrumEdgeMin.XY();
-					const Vector2f rangeMax = cameraBehaviour.m_FrustrumEdgeMax.XY();
-					const Vector2f rangeHalf = (rangeMax - rangeMin) * 0.5f;
-					const Vector2f frustrumHalf = Vector2f(data.m_Size * aspect, data.m_Size) * 0.5f;
-
-					const Vector2f clamped = math::Max(Vector2f::Zero, rangeHalf - frustrumHalf);
-					const Vector2f clampedCen = rangeMin + rangeHalf;
-					const Vector2f clampedMin = clampedCen - clamped;
-					const Vector2f clampedMax = clampedCen + clamped;
-
-					translate.x = math::Clamp(translate.x, clampedMin.x, clampedMax.x);
-					translate.y = math::Clamp(translate.y, clampedMin.y, clampedMax.y);
-				}
-			},
-			[&](const eng::camera::Perspective& data)
-			{
-			});
-
 		if (!IsNearly(transformComponent.m_Translate, translate))
 		{
 			auto& transform = world.WriteComponent<eng::TransformComponent>(entity);
@@ -146,7 +122,7 @@ void eng::camera::BehaviourSystem::BehaviourFree3D(World& world, const GameTime&
 		translate = (translateDir * translateSpeed) * Quaternion::FromRotator(transformComponent.m_Rotate);
 		transformComponent.m_Translate += translate;
 
-		if (inputComponent.IsKeyHeld(input::EMouse::Middle))
+		if (inputComponent.IsKeyHeld(input::EMouse::Right))
 		{
 			Rotator rotator = Rotator::Zero;
 			rotator.m_Pitch = -inputComponent.m_MouseDelta.y * cameraSettings.m_RotateSpeed.m_Pitch;

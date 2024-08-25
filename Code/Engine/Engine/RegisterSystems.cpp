@@ -5,6 +5,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraBehaviourSystem.h"
+#include "Engine/CameraBoundsSystem.h"
 #include "Engine/CameraPanningSystem.h"
 #include "Engine/CameraZoom2DSystem.h"
 #include "Engine/FlipbookSystem.h"
@@ -28,6 +29,7 @@
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::ClientDependencies& dependencies)
 {
 	entityWorld.RegisterSystem<eng::camera::BehaviourSystem>();
+	entityWorld.RegisterSystem<eng::camera::BoundsSystem>();
 	entityWorld.RegisterSystem<eng::camera::PanningSystem>();
 	entityWorld.RegisterSystem<eng::camera::Zoom2DSystem>();
 	entityWorld.RegisterSystem<eng::InputSystem>();
@@ -46,6 +48,11 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::Client
 	entityWorld.RegisterSystemPriority<eng::sound::RandomSystem>(4000);
 	entityWorld.RegisterSystemPriority<eng::sound::SequenceSystem>(4000);
 	entityWorld.RegisterSystemPriority<eng::sound::PlaySystem>(4001);
+
+	// BehaviourSystem and PanningSystem need to run before BoundsSystem
+	entityWorld.RegisterSystemPriority<eng::camera::BehaviourSystem>(4000);
+	entityWorld.RegisterSystemPriority<eng::camera::PanningSystem>(4000);
+	entityWorld.RegisterSystemPriority<eng::camera::BoundsSystem>(4001);
 
 	// render system needs to run after most systems
 	entityWorld.RegisterSystemPriority<eng::RenderSystem>(5000);
