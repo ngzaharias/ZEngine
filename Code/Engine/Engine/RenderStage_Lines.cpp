@@ -11,6 +11,7 @@
 #include "Engine/LinesComponent.h"
 #include "Engine/Screen.h"
 #include "Engine/ShaderAsset.h"
+#include "Engine/SettingsComponents.h"
 #include "Engine/TransformComponent.h"
 
 #include <GLEW/glew.h>
@@ -38,6 +39,9 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	if (!debugSettings.m_AreLinesEnabled)
+		return;
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));

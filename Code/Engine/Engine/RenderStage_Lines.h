@@ -9,6 +9,11 @@ namespace eng::camera
 	struct ProjectionComponent;
 }
 
+namespace eng::settings
+{
+	struct DebugComponent;
+}
+
 namespace eng
 {
 	class AssetManager;
@@ -22,6 +27,7 @@ namespace eng
 			eng::AssetManager,
 			eng::LinesComponent,
 			const eng::camera::ProjectionComponent,
+			const eng::settings::DebugComponent,
 			const eng::TransformComponent>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;

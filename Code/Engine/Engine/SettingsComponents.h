@@ -20,6 +20,7 @@ namespace eng::settings
 	/// \brief Debug settings that is only used in non-gold builds.
 	struct DebugComponent : public ecs::SingletonComponent<DebugComponent>
 	{
+		bool m_AreLinesEnabled = false;
 	};
 
 	/// \brief Shared settings for all local users that is saved to a config file.
