@@ -6,6 +6,7 @@
 #include "Engine/AssetManager.h"
 #include "Engine/CameraBehaviourSystem.h"
 #include "Engine/CameraBoundsSystem.h"
+#include "Engine/CameraMove2DSystem.h"
 #include "Engine/CameraPanningSystem.h"
 #include "Engine/CameraZoom2DSystem.h"
 #include "Engine/FlipbookSystem.h"
@@ -30,6 +31,7 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::Client
 {
 	entityWorld.RegisterSystem<eng::camera::BehaviourSystem>();
 	entityWorld.RegisterSystem<eng::camera::BoundsSystem>();
+	entityWorld.RegisterSystem<eng::camera::Move2DSystem>();
 	entityWorld.RegisterSystem<eng::camera::PanningSystem>();
 	entityWorld.RegisterSystem<eng::camera::Zoom2DSystem>();
 	entityWorld.RegisterSystem<eng::InputSystem>();
@@ -51,6 +53,7 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::Client
 
 	// BehaviourSystem and PanningSystem need to run before BoundsSystem
 	entityWorld.RegisterSystemPriority<eng::camera::BehaviourSystem>(4000);
+	entityWorld.RegisterSystemPriority<eng::camera::Move2DSystem>(4000);
 	entityWorld.RegisterSystemPriority<eng::camera::PanningSystem>(4000);
 	entityWorld.RegisterSystemPriority<eng::camera::BoundsSystem>(4001);
 

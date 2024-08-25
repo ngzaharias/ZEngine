@@ -26,62 +26,9 @@ void eng::camera::BehaviourSystem::Update(World& world, const GameTime& gameTime
 		const auto& cameraComponent = world.ReadComponent<eng::camera::BehaviourComponent>(cameraEntity);
 		switch (cameraComponent.m_Behaviour)
 		{
-		case eng::camera::EBehaviour::Static:
-			BehaviourStatic(world, gameTime, cameraEntity);
-			break;
-		case eng::camera::EBehaviour::Free2D:
-			BehaviourFree2D(world, gameTime, cameraEntity);
-			break;
 		case eng::camera::EBehaviour::Free3D:
 			BehaviourFree3D(world, gameTime, cameraEntity);
 			break;
-		}
-	}
-}
-
-void eng::camera::BehaviourSystem::BehaviourFree2D(World& world, const GameTime& gameTime, const ecs::Entity& entity)
-{
-	const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
-	const auto& cameraSettings = localSettings.m_Camera;
-	
-	const auto& cameraBehaviour = world.ReadComponent<eng::camera::BehaviourComponent>(entity);
-	const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(entity);
-
-	for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
-	{
-		const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
-		const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(entity);
-		Vector3f translate = transformComponent.m_Translate;
-
-		// panning wasd
-		{
-			float speed = cameraSettings.m_TranslateSpeed * gameTime.m_DeltaTime;
-			Vector3f direction = Vector3f::Zero;
-			if (inputComponent.IsKeyHeld(input::EKeyboard::W))
-				direction.y += 1.f;
-			if (inputComponent.IsKeyHeld(input::EKeyboard::A))
-				direction.x -= 1.f;
-			if (inputComponent.IsKeyHeld(input::EKeyboard::S))
-				direction.y -= 1.f;
-			if (inputComponent.IsKeyHeld(input::EKeyboard::D))
-				direction.x += 1.f;
-
-			if (inputComponent.IsKeyHeld(input::EKeyboard::Shift_L))
-				speed *= 3.f;
-			if (inputComponent.IsKeyHeld(input::EKeyboard::Control_L))
-				speed *= 5.f;
-
-			if (direction != Vector3f::Zero)
-				direction.Normalize();
-
-			const Vector3f delta = (direction * speed) * Quaternion::FromRotator(transformComponent.m_Rotate);
-			translate += delta;
-		}
-
-		if (!IsNearly(transformComponent.m_Translate, translate))
-		{
-			auto& transform = world.WriteComponent<eng::TransformComponent>(entity);
-			transform.m_Translate = translate;
 		}
 	}
 }
@@ -132,8 +79,4 @@ void eng::camera::BehaviourSystem::BehaviourFree3D(World& world, const GameTime&
 			transformComponent.m_Rotate += rotator;
 		}
 	}
-}
-
-void eng::camera::BehaviourSystem::BehaviourStatic(World& world, const GameTime& gameTime, const ecs::Entity& entity)
-{
 }
