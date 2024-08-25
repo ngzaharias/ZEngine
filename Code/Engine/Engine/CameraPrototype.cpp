@@ -45,6 +45,7 @@ void eng::camera::Loader::Add(ecs::EntityWorld& world, const ecs::Entity& entity
 {
 	auto& projection = world.AddComponent<eng::camera::ProjectionComponent>(entity);
 	projection.m_Projection = prototype.m_Projection;
+
 	auto& behaviour = world.AddComponent<eng::camera::BehaviourComponent>(entity);
 	behaviour.m_Behaviour = prototype.m_Behaviour;
 	behaviour.m_FrustrumEdgeMax = prototype.m_FrustrumEdgeMax;

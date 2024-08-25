@@ -78,21 +78,6 @@ void eng::camera::BehaviourSystem::BehaviourFree2D(World& world, const GameTime&
 			translate += delta;
 		}
 
-		// panning mouse
-		if (inputComponent.IsKeyHeld(input::EMouse::Middle))
-		{
-			const Vector3f worldPosA = eng::camera::ScreenToWorld(
-				Vector2f::Zero,
-				cameraProjection.m_Projection,
-				Matrix4x4::Identity);
-			const Vector3f worldPosB = eng::camera::ScreenToWorld(
-				inputComponent.m_MouseDelta,
-				cameraProjection.m_Projection,
-				Matrix4x4::Identity);
-
-			translate += (worldPosB - worldPosA);
-		}
-
 		core::VariantMatch(cameraProjection.m_Projection,
 			[&](const eng::camera::Orthographic& data)
 			{

@@ -16,16 +16,13 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	using CameraQuery = ecs::query::Include<
-		eng::camera::ProjectionComponent,
-		const eng::camera::BehaviourComponent>;
-
+	using CameraQuery = ecs::query::Include<eng::camera::ProjectionComponent, const eng::camera::BehaviourComponent>;
 	using InputQuery = ecs::query::Include<const eng::InputComponent>;
 
 	const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
 	const auto& cameraSettings = localSettings.m_Camera;
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<CameraQuery>>())
+	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
 		const auto& readBehaviour = world.ReadComponent<eng::camera::BehaviourComponent>(cameraEntity);
 		const auto& readProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
