@@ -2,6 +2,7 @@
 
 #include "Core/String.h"
 #include "ECS/Component.h"
+#include "Engine/SettingsComponents.h"
 
 namespace gui::settings
 {
@@ -12,7 +13,7 @@ namespace gui::settings
 	{
 		str::String m_Label = {};
 
-		int32 m_EffectVolume = 50;
-		int32 m_MusicVolume = 50;
+		eng::settings::DebugComponent m_Debug;
+		eng::settings::LocalComponent m_Local;
 	};
 }

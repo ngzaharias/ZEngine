@@ -13,7 +13,7 @@
 
 namespace
 {
-	const str::StringView strFilepath = "Settings.toml";
+	const str::StringView strFilename = "Settings.toml";
 
 	const str::StringView strAudio = "m_Audio";
 	const str::StringView strCamera = "m_Camera";
@@ -64,7 +64,7 @@ void eng::Visitor::WriteCustom(const eng::settings::Camera& value)
 
 void eng::settings::LocalSystem::Initialise(World& world)
 {
-	const str::Path filepath = str::Path(str::EPath::AppData, strFilepath);
+	const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
@@ -75,7 +75,7 @@ void eng::settings::LocalSystem::Update(World& world, const GameTime& gameTime)
 {
 	if (world.HasAny<ecs::query::Updated<const eng::settings::LocalComponent>>())
 	{
-		const str::Path filepath = str::Path(str::EPath::AppData, strFilepath);
+		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
 		visitor.Write(world.ReadSingleton<eng::settings::LocalComponent>());

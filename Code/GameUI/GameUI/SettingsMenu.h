@@ -6,6 +6,7 @@
 
 namespace eng::settings
 {
+	struct DebugComponent;
 	struct LocalComponent;
 }
 
@@ -19,6 +20,7 @@ namespace gui::settings
 	{
 	public:
 		using World = ecs::WorldView<
+			eng::settings::DebugComponent,
 			eng::settings::LocalComponent,
 			gui::settings::WindowComponent,
 			const gui::settings::CloseRequestComponent,

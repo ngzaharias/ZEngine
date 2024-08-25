@@ -36,8 +36,8 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		const ecs::Entity entity = world.CreateEntity();
 		auto& windowComponent = world.AddComponent<gui::settings::WindowComponent>(entity);
 		windowComponent.m_Label = ToLabel("Settings Menu", entity);
-		windowComponent.m_EffectVolume = audioSettings.m_EffectVolume;
-		windowComponent.m_MusicVolume = audioSettings.m_MusicVolume;
+		windowComponent.m_Debug = world.ReadSingleton<eng::settings::DebugComponent>();
+		windowComponent.m_Local = world.ReadSingleton<eng::settings::LocalComponent>();
 	}
 	
 	if (hasWindow && world.HasAny<ecs::query::Include<gui::settings::CloseRequestComponent>>())
@@ -53,16 +53,34 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		bool isWindowOpen = true;
 		if (ImGui::Begin(windowComponent.m_Label.c_str(), &isWindowOpen, s_WindowFlags))
 		{
-			ImGui::SliderInt("Effect Volume", &windowComponent.m_EffectVolume, 0, 100);
-			ImGui::SliderInt("Music Volume", &windowComponent.m_MusicVolume, 0, 100);
+			if (ImGui::BeginTabBar("##tabs"))
+			{
+				if (ImGui::BeginTabItem("Local"))
+				{
+					auto& localSettings = windowComponent.m_Local;
+					auto& audioSettings = localSettings.m_Audio;
+
+					ImGui::SliderInt("Effect Volume", &audioSettings.m_EffectVolume, 0, 100);
+					ImGui::SliderInt("Music Volume", &audioSettings.m_MusicVolume, 0, 100);
+
+					ImGui::EndTabItem();
+				}
+
+				if (ImGui::BeginTabItem("Debug"))
+				{
+					auto& debugSettings = windowComponent.m_Debug;
+
+					ImGui::Checkbox("Are Lines Enabled", &debugSettings.m_AreLinesEnabled);
+
+					ImGui::EndTabItem();
+				}
+				ImGui::EndTabBar();
+			}
 
 			if (ImGui::Button("Apply"))
 			{
-				auto& localSettings = world.WriteSingleton<eng::settings::LocalComponent>();
-				auto& audioSettings = localSettings.m_Audio;
-
-				audioSettings.m_EffectVolume = windowComponent.m_EffectVolume;
-				audioSettings.m_MusicVolume = windowComponent.m_MusicVolume;
+				world.WriteSingleton<eng::settings::DebugComponent>() = windowComponent.m_Debug;
+				world.WriteSingleton<eng::settings::LocalComponent>() = windowComponent.m_Local;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Close"))
