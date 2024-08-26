@@ -16,7 +16,7 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	using CameraQuery = ecs::query::Include<eng::camera::ProjectionComponent, const eng::camera::BehaviourComponent>;
+	using CameraQuery = ecs::query::Include<eng::camera::ProjectionComponent, const eng::camera::Zoom2DComponent>;
 	using InputQuery = ecs::query::Include<const eng::InputComponent>;
 
 	const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
@@ -24,14 +24,8 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
-		const auto& readBehaviour = world.ReadComponent<eng::camera::BehaviourComponent>(cameraEntity);
+		const auto& zoom2d = world.ReadComponent<eng::camera::Zoom2DComponent>(cameraEntity);
 		const auto& readProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-
-		if (!readBehaviour.m_Zoom)
-			continue;
-		if (!std::holds_alternative<Zoom2D>(*readBehaviour.m_Zoom))
-			continue;
-		const auto& zoom2d = std::get<Zoom2D>(*readBehaviour.m_Zoom);
 
 		for (const ecs::Entity& inputEntity : world.Query<InputQuery>())
 		{
@@ -41,7 +35,7 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 				const auto& readOrthographic = std::get<eng::camera::Orthographic>(readProjection.m_Projection);
 
 				float size = readOrthographic.m_Size;
-				size -= inputComponent.m_ScrollDelta.y * cameraSettings.m_ZoomSpeed * gameTime.m_DeltaTime;
+				size -= inputComponent.m_ScrollDelta.y * cameraSettings.m_ZoomSpeed;
 				size = math::Clamp(size, zoom2d.m_Min, zoom2d.m_Max);
 
 				if (size != readOrthographic.m_Size)

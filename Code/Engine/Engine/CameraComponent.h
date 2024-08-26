@@ -10,15 +10,36 @@
 namespace eng::camera
 {
 	/// \brief
-	struct BehaviourComponent : public ecs::Component<BehaviourComponent>
+	struct Bound2DComponent final : public ecs::Component<Bound2DComponent>
 	{
-		Optional<BehaviourBound> m_Bound = std::nullopt;
-		Optional<BehaviourMove> m_Move = std::nullopt;
-		Optional<BehaviourZoom> m_Zoom = std::nullopt;
+		Vector2f m_Max = Vector2f(+KINDA_LARGE_FLOAT);
+		Vector2f m_Min = Vector2f(-KINDA_LARGE_FLOAT);
 	};
 
 	/// \brief
-	struct ProjectionComponent : public ecs::Component<ProjectionComponent>
+	struct Move2DComponent final : public ecs::Component<Move2DComponent>
+	{
+	};
+
+	/// \brief
+	struct Move3DComponent final : public ecs::Component<Move3DComponent>
+	{
+	};
+
+	/// \brief
+	struct Pan3DComponent final : public ecs::Component<Pan3DComponent>
+	{
+	};
+
+	/// \brief
+	struct Zoom2DComponent final : public ecs::Component<Zoom2DComponent>
+	{
+		float m_Max = KINDA_LARGE_FLOAT;
+		float m_Min = 1.f;
+	};
+
+	/// \brief
+	struct ProjectionComponent final : public ecs::Component<ProjectionComponent>
 	{
 		eng::camera::Projection m_Projection = eng::camera::Perspective();
 	};

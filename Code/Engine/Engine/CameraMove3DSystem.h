@@ -15,7 +15,7 @@ namespace eng::settings
 
 namespace eng::camera
 {
-	struct BehaviourComponent;
+	struct Move3DComponent;
 	struct ProjectionComponent;
 
 	class Move3DSystem final : public ecs::System
@@ -23,14 +23,11 @@ namespace eng::camera
 	public:
 		using World = ecs::WorldView<
 			eng::TransformComponent,
-			const eng::camera::BehaviourComponent,
+			const eng::camera::Move3DComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,
 			const eng::settings::LocalComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
-
-	private:
-		void BehaviourFree3D(World& world, const GameTime& gameTime, const ecs::Entity& entity);
 	};
 }

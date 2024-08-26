@@ -10,7 +10,7 @@ namespace eng
 
 namespace eng::camera
 {
-	struct BehaviourComponent;
+	struct Bound2DComponent;
 	struct ProjectionComponent;
 
 	class Bound2DSystem final : public ecs::System
@@ -18,7 +18,7 @@ namespace eng::camera
 	public:
 		using World = ecs::WorldView<
 			eng::TransformComponent,
-			const eng::camera::BehaviourComponent,
+			const eng::camera::Bound2DComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::InputComponent>;
 

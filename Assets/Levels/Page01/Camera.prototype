@@ -3,18 +3,21 @@ m_Name = "Camera"
 
 [Camera]
 
-[Camera.m_Bound]
+[Camera.m_Bounded]
 TypeId = 0
-[Camera.m_Bound.TypeVal]
+[Camera.m_Bounded.TypeVal]
 m_Max = { X = +656, Y = +440 }
 m_Min = { X = -656, Y = -440 } 
 
-[Camera.m_Move]
+[Camera.m_Movement]
 TypeId = 0
 
-[Camera.m_Zoom]
+[Camera.m_Panning]
 TypeId = 0
-[Camera.m_Zoom.TypeVal]
+
+[Camera.m_Zooming]
+TypeId = 0
+[Camera.m_Zooming.TypeVal]
 m_Max = 900
 m_Min = 400
 

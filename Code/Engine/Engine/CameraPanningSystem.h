@@ -15,7 +15,7 @@ namespace eng::settings
 
 namespace eng::camera
 {
-	struct BehaviourComponent;
+	struct PanningComponent;
 	struct ProjectionComponent;
 
 	class PanningSystem final : public ecs::System
@@ -23,7 +23,7 @@ namespace eng::camera
 	public:
 		using World = ecs::WorldView<
 			eng::TransformComponent,
-			const eng::camera::BehaviourComponent,
+			const eng::camera::PanningComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,
 			const eng::settings::LocalComponent>;

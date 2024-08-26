@@ -21,7 +21,7 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::ProjectionComponent>;
+	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Move3DComponent, const eng::camera::ProjectionComponent>;
 	using InputQuery = ecs::query::Include<const eng::InputComponent>;
 
 	const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
@@ -29,12 +29,6 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
-		const auto& behaviour = world.ReadComponent<eng::camera::BehaviourComponent>(cameraEntity);
-		if (!behaviour.m_Move)
-			continue;
-		if (!std::holds_alternative<Move3D>(*behaviour.m_Move))
-			continue;
-
 		const auto& readTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 		for (const ecs::Entity& inputEntity : world.Query<InputQuery>())
 		{
@@ -62,7 +56,7 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 
 			const Quaternion rotation = Quaternion::FromRotator(readTransform.m_Rotate);
 			Vector3f translate = readTransform.m_Translate;
-			translate += (direction * speed) * rotation;;
+			translate += (direction * speed) * rotation;
 
 			if (!IsNearly(readTransform.m_Translate, translate))
 			{

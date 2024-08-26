@@ -159,7 +159,11 @@ void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::ComponentSerializer& serializer)
 {
 	// components
-	entityWorld.RegisterComponent<eng::camera::BehaviourComponent>();
+	entityWorld.RegisterComponent<eng::camera::Bound2DComponent>();
+	entityWorld.RegisterComponent<eng::camera::Move2DComponent>();
+	entityWorld.RegisterComponent<eng::camera::Move3DComponent>();
+	entityWorld.RegisterComponent<eng::camera::Pan3DComponent>();
+	entityWorld.RegisterComponent<eng::camera::Zoom2DComponent>();
 	entityWorld.RegisterComponent<eng::camera::ProjectionComponent>();
 	entityWorld.RegisterComponent<eng::level::EntityComponent>();
 	entityWorld.RegisterComponent<eng::level::LoadedComponent>();

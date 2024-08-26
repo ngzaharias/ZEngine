@@ -15,14 +15,14 @@ namespace eng::settings
 
 namespace eng::camera
 {
-	struct BehaviourComponent;
+	struct Move2DComponent;
 
 	class Move2DSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
 			eng::TransformComponent,
-			const eng::camera::BehaviourComponent,
+			const eng::camera::Move2DComponent,
 			const eng::InputComponent,
 			const eng::settings::LocalComponent>;
 

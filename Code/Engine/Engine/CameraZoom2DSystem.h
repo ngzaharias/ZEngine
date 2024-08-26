@@ -14,15 +14,15 @@ namespace eng::settings
 
 namespace eng::camera
 {
-	struct BehaviourComponent;
 	struct ProjectionComponent;
+	struct Zoom2DComponent;
 
 	class Zoom2DSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
 			eng::camera::ProjectionComponent,
-			const eng::camera::BehaviourComponent,
+			const eng::camera::Zoom2DComponent,
 			const eng::InputComponent,
 			const eng::settings::LocalComponent>;
 

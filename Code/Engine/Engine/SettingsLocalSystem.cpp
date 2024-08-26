@@ -19,6 +19,8 @@ namespace
 	const str::StringView strCamera = "m_Camera";
 	const str::StringView strEffectVolume = "m_EffectVolume";
 	const str::StringView strMusicVolume = "m_MusicVolume";
+	const str::StringView strTranslateSpeed = "m_TranslateSpeed";
+	const str::StringView strRotateSpeed = "m_RotateSpeed";
 	const str::StringView strZoomSpeed = "m_ZoomSpeed";
 }
 
@@ -39,6 +41,8 @@ void eng::Visitor::ReadCustom(eng::settings::Audio& value) const
 template<>
 void eng::Visitor::ReadCustom(eng::settings::Camera& value) const
 {
+	Read(strTranslateSpeed, value.m_TranslateSpeed, value.m_TranslateSpeed);
+	Read(strRotateSpeed, value.m_RotateSpeed, value.m_RotateSpeed);
 	Read(strZoomSpeed, value.m_ZoomSpeed, value.m_ZoomSpeed);
 }
 
@@ -59,6 +63,8 @@ void eng::Visitor::WriteCustom(const eng::settings::Audio& value)
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::Camera& value)
 {
+	Write(strTranslateSpeed, value.m_TranslateSpeed);
+	Write(strRotateSpeed, value.m_RotateSpeed);
 	Write(strZoomSpeed, value.m_ZoomSpeed);
 }
 

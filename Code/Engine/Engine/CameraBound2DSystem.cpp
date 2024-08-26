@@ -17,20 +17,14 @@ void eng::camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::ProjectionComponent>;
+	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Bound2DComponent, const eng::camera::ProjectionComponent>;
 	using InputQuery = ecs::query::Include<const eng::InputComponent>;
 
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
-		const auto& behaviour = world.ReadComponent<eng::camera::BehaviourComponent>(cameraEntity);
+		const auto& bound2d = world.ReadComponent<eng::camera::Bound2DComponent>(cameraEntity);
 		const auto& projection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& readTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
-		if (!behaviour.m_Bound)
-			continue;
-		if (!std::holds_alternative<Bound2D>(*behaviour.m_Bound))
-			continue;
-
-		const auto& bound2d = std::get<Bound2D>(*behaviour.m_Bound);
 
 		for (const ecs::Entity& inputEntity : world.Query<InputQuery>())
 		{

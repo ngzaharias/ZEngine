@@ -21,7 +21,7 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::ProjectionComponent>;
+	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Pan3DComponent, const eng::camera::ProjectionComponent>;
 	using InputQuery = ecs::query::Include<const eng::InputComponent>;
 
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
