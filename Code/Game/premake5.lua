@@ -1,6 +1,7 @@
 project "Game"
 
 	kind "ConsoleApp"
+	--kind "WindowedApp"
 	filter "*_Editor"
 		kind "StaticLib"
 	filter {} -- disable the filter
@@ -114,6 +115,7 @@ project "Game"
 
 		"yojimbo.lib",
 
+		"Dbghelp.lib",
 		"flac.lib",
 		"gdi32.lib",
 		"ogg.lib",
