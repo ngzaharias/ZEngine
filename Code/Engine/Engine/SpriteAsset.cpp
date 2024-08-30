@@ -18,18 +18,18 @@ namespace
 
 bool eng::SpriteAssetLoader::Save(SpriteAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Read(strShader, asset.m_Shader, uuidShader);
-	visitor.Read(strTexture2D, asset.m_Texture2D, uuidTexture2D);
-	visitor.Read(strPosition, asset.m_Position, Vector2u::Zero);
-	visitor.Read(strSize, asset.m_Size, Vector2u(1024));
+	visitor.Write(strPosition, asset.m_Position);
+	visitor.Write(strShader, asset.m_Shader);
+	visitor.Write(strSize, asset.m_Size);
+	visitor.Write(strTexture2D, asset.m_Texture2D);
 	return true;
 }
 
 bool eng::SpriteAssetLoader::Load(SpriteAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Read(strShader, asset.m_Shader, uuidShader);
-	visitor.Read(strTexture2D, asset.m_Texture2D, uuidTexture2D);
 	visitor.Read(strPosition, asset.m_Position, Vector2u::Zero);
+	visitor.Read(strShader, asset.m_Shader, uuidShader);
 	visitor.Read(strSize, asset.m_Size, Vector2u(1024));
+	visitor.Read(strTexture2D, asset.m_Texture2D, uuidTexture2D);
 	return true;
 }
