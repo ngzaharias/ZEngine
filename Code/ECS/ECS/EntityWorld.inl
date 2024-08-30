@@ -45,6 +45,9 @@ inline void ecs::EntityWorld::DestroyEntity(const ecs::Entity& entity)
 template<class TComponent>
 void ecs::EntityWorld::RegisterComponent()
 {
+	using NonConst = typename std::remove_const<TComponent>::type;
+	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use RegisterSingleton instead.");
+
 	m_ComponentRegistry.Register<TComponent>();
 	m_EntityStorage.RegisterComponent<TComponent>();
 	m_FrameBuffer.RegisterComponent<TComponent>();
@@ -56,7 +59,7 @@ auto ecs::EntityWorld::AddComponent(const ecs::Entity& entity, TArgs&&... args)-
 	using NonConst = typename std::remove_const<TComponent>::type;
 	static_assert(std::is_base_of<ecs::Component<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::Component.");
 	static_assert(!std::is_base_of<ecs::EventComponent<NonConst>, NonConst>::value, "Type inherits from ecs::EventComponent, use AddEventComponent instead.");
-	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use RegisterSingleton instead.");
+	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use AddSingleton instead.");
 	Z_PANIC(!entity.IsUnassigned(), "Entity is unassigned!");
 	Z_PANIC(IsRegistered<NonConst>(), "Component isn't registered!");
 
@@ -67,6 +70,8 @@ template<class TComponent>
 void ecs::EntityWorld::RemoveComponent(const ecs::Entity& entity)
 {
 	using NonConst = typename std::remove_const<TComponent>::type;
+	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent and isn't supported.");
+
 	Z_PANIC(IsAlive(entity), "Entity isn't alive!");
 	Z_PANIC(HasComponent<NonConst>(entity), "Entity doesn't have this component!");
 
@@ -78,7 +83,7 @@ bool ecs::EntityWorld::HasComponent(const ecs::Entity& entity, const bool alive 
 {
 	using NonConst = typename std::remove_const<TComponent>::type;
 	static_assert(std::is_base_of<ecs::Component<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::Component.");
-	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use HasSingleton instead.");
+	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent and isn't supported.");
 
 	Z_PANIC(IsRegistered<NonConst>(), "Component isn't registered!");
 	return m_EntityStorage.HasComponent<NonConst>(entity, alive);
@@ -89,7 +94,7 @@ auto ecs::EntityWorld::ReadComponent(const ecs::Entity& entity, const bool alive
 {
 	using NonConst = typename std::remove_const<TComponent>::type;
 	static_assert(std::is_base_of<ecs::Component<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::Component.");
-	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use GetSingleton instead.");
+	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use ReadSingleton instead.");
 
 	Z_PANIC(!alive || IsAlive(entity), "Entity isn't alive!");
 	Z_PANIC(IsRegistered<NonConst>(), "Component isn't registered!");
@@ -103,7 +108,7 @@ auto ecs::EntityWorld::WriteComponent(const ecs::Entity& entity, const bool aliv
 {
 	using NonConst = typename std::remove_const<TComponent>::type;
 	static_assert(std::is_base_of<ecs::Component<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::Component.");
-	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use GetSingleton instead.");
+	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use WriteSingleton instead.");
 
 	Z_PANIC(!alive || IsAlive(entity), "Entity isn't alive!");
 	Z_PANIC(IsRegistered<NonConst>(), "Component isn't registered!");
@@ -118,6 +123,7 @@ auto ecs::EntityWorld::AddEventComponent(TArgs&&... args)->decltype(auto)
 {
 	using NonConst = typename std::remove_const<TComponent>::type;
 	static_assert(std::is_base_of<ecs::EventComponent<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::EventComponent.");
+	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent and isn't supported.");
 
 	const ecs::Entity entity = CreateEntity();
 	m_EventEntities.Append(entity);
@@ -132,7 +138,10 @@ void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
 	using NonConst = typename std::remove_const<TSingleton>::type;
 	static_assert(std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::SingletonComponent.");
 
-	RegisterComponent<NonConst>();
+	m_ComponentRegistry.Register<TSingleton>();
+	m_EntityStorage.RegisterComponent<TSingleton>();
+	m_FrameBuffer.RegisterComponent<TSingleton>();
+
 	m_FrameBuffer.AddComponent<NonConst>(m_SingletonEntity, std::forward<TArgs>(args)...);
 }
 
