@@ -6,8 +6,10 @@
 #include "ECS/WorldView.h"
 #include "Editor/FlipbookEditor.h"
 #include "Editor/GizmoSystem.h"
-#include "Editor/TableEditor.h"
+#include "Editor/SettingsComponents.h"
+#include "Editor/SettingsLocalSystem.h"
 #include "Editor/SpriteEditor.h"
+#include "Editor/TableEditor.h"
 #include "Editor/TextureEditor.h"
 #include "Editor/TrajectoryEditor.h"
 #include "Editor/TransformEditor.h"
@@ -40,6 +42,9 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::TrajectoryAssetSaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowComponent>();
 
+	m_ClientWorld.RegisterSingleton<edit::settings::LocalComponent>();
+
+	m_ClientWorld.RegisterSystem<edit::settings::LocalSystem>();
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditor>();
 	m_ClientWorld.RegisterSystem<editor::GizmoSystem>();
 	m_ClientWorld.RegisterSystem<editor::TableEditor>();
