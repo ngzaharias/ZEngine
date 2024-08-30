@@ -32,8 +32,6 @@ int main(int agrc, char* argv[])
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
 	SetUnhandledExceptionFilter(MyUnhandledExceptionFilter);
 
-	Z_PANIC(false, "TEST");
-
 	const str::Path appdataDirectory = eng::GetAppDataDirectory();
 	const str::Path assetsDirectory = eng::GetAssetsDirectory();
 	const str::Path configDirectory = eng::GetConfigDirectory();
