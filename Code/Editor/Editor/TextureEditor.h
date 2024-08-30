@@ -5,6 +5,11 @@
 #include "ECS/System.h"
 #include "Engine/Texture2DAsset.h"
 
+namespace edit::settings
+{
+	struct LocalComponent;
+}
+
 namespace eng
 {
 	class AssetManager;
@@ -32,9 +37,10 @@ namespace editor
 	{
 	public:
 		using World = ecs::WorldView<
-			// managers
+			// resources
 			eng::AssetManager,
 			// components
+			edit::settings::LocalComponent,
 			editor::TextureAssetImportComponent,
 			editor::TextureAssetOpenComponent,
 			editor::TextureAssetSaveComponent,

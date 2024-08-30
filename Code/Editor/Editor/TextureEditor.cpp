@@ -4,6 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Editor/SettingsComponents.h"
 #include "Editor/TextureHelpers.h"
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
@@ -94,17 +95,23 @@ namespace
 
 		if (world.HasComponent<editor::TextureAssetImportComponent>(entity) || HasInput_Import(world))
 		{
+			const auto& readSettings = world.ReadSingleton<edit::settings::LocalComponent>();
+			const auto& readWindow = world.ReadComponent<editor::TextureWindowComponent>(entity);
+
 			eng::SelectFileSettings settings;
 			settings.m_Title = "Select File";
 			settings.m_Filters.Append({ "PNG (*.png)", "*.png" });
+			settings.m_Path = readSettings.m_Texture.m_Import;
 
 			const str::Path filepath = eng::SelectFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(entity);
+				auto& writeSettings = world.WriteSingleton<edit::settings::LocalComponent>();
+				writeSettings.m_Texture.m_Import = filepath.GetDirectory();
 
+				auto& writeWindow = world.WriteComponent<editor::TextureWindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				assetManager.ImportAsset(windowComponent.m_Asset, filepath);
+				assetManager.ImportAsset(writeWindow.m_Asset, filepath);
 			}
 		}
 	};
@@ -144,18 +151,23 @@ namespace
 
 		if (world.HasComponent<editor::TextureAssetSaveComponent>(entity) || HasInput_Save(world))
 		{
-			auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(entity);
-			const str::Name& name = windowComponent.m_Asset.m_Name;
+			const auto& readSettings = world.ReadSingleton<edit::settings::LocalComponent>();
+			const auto& readWindow = world.ReadComponent<editor::TextureWindowComponent>(entity);
+			const str::Name& name = readWindow.m_Asset.m_Name;
 
 			eng::SaveFileSettings settings;
 			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
-			settings.m_Path = name;
+			settings.m_Path = str::Path(readSettings.m_Texture.m_Save, name);
 
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
+				auto& writeSettings = world.WriteSingleton<edit::settings::LocalComponent>();
+				writeSettings.m_Texture.m_Save = str::Path(filepath.GetParent(), "\\");
+
+				auto& writeWindow = world.WriteComponent<editor::TextureWindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				assetManager.SaveAsset(windowComponent.m_Asset, filepath);
+				assetManager.SaveAsset(writeWindow.m_Asset, filepath);
 			}
 		}
 	};
