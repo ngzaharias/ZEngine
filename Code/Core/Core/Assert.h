@@ -20,8 +20,8 @@
 { \
 	if (!(condition)) \
 	{ \
-		Z_LOG(ELog::Assert, __VA_ARGS__); \
-		assert(false); \
+		Z_LOG(ELog::Crash, __VA_ARGS__); \
+		int* ptr = nullptr; *ptr = 0; \
 	} \
 }
 
