@@ -1,6 +1,7 @@
 #include "EditorPCH.h"
 #include "Editor/Application.h"
 
+#include "Engine/ExceptionFilter.h"
 #include "Engine/FileHelpers.h"
 
 #include <filesystem>
@@ -9,7 +10,7 @@
 
 int main(int agrc, char* argv[])
 {
-	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
+	SetUnhandledExceptionFilter(eng::UnhandledExceptionFilter);
 
 	const str::Path appdataDirectory = eng::GetAppDataDirectory();
 	const str::Path assetsDirectory = eng::GetAssetsDirectory();

@@ -1,36 +1,16 @@
 #include "GamePCH.h"
 #include "Game/Application.h"
 
+#include "Engine/ExceptionFilter.h"
 #include "Engine/FileHelpers.h"
 
 #include <filesystem>
 #include <direct.h>
 #include <windows.h>
-#include <DbgHelp.h>
-
-	// https://github.com/behnamasadi/cpp_tutorials/blob/master/docs/generating_and_debugging_dump_file.md
-LONG WINAPI MyUnhandledExceptionFilter(EXCEPTION_POINTERS* pExceptionPointers)
-{
-	HANDLE hDumpFile = CreateFile(L"CrashDump.dmp", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	if (hDumpFile != INVALID_HANDLE_VALUE)
-	{
-		MINIDUMP_EXCEPTION_INFORMATION dumpInfo;
-		dumpInfo.ExceptionPointers = pExceptionPointers;
-		dumpInfo.ThreadId = GetCurrentThreadId();
-		dumpInfo.ClientPointers = TRUE;
-
-		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hDumpFile, MiniDumpNormal, &dumpInfo, NULL, NULL);
-		CloseHandle(hDumpFile);
-	}
-
-	return EXCEPTION_EXECUTE_HANDLER;
-}
 
 int main(int agrc, char* argv[])
 {
-	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
-	SetUnhandledExceptionFilter(MyUnhandledExceptionFilter);
+	SetUnhandledExceptionFilter(eng::UnhandledExceptionFilter);
 
 	const str::Path appdataDirectory = eng::GetAppDataDirectory();
 	const str::Path assetsDirectory = eng::GetAssetsDirectory();
