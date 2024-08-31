@@ -2,8 +2,12 @@
 #include "GameDebug/OverlaySystem.h"
 
 #include "Core/GameTime.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "Engine/ColourHelpers.h"
 #include "Engine/Screen.h"
+#include "Engine/VersionComponent.h"
 #include "GameDebug/FPSCounter.h"
 #include "Math/Math.h"
 #include "Math/Vector.h"
@@ -41,6 +45,12 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 	if (ImGui::Begin("Overlay", nullptr, s_Flags))
 	{
 		ImGui::NewLine();
+
+		// version
+		{
+			const auto& component = world.ReadSingleton<eng::VersionComponent>();
+			ImGui::Text(component.m_Commit.c_str());
+		}
 
 		// resolution
 		{

@@ -27,6 +27,7 @@
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/UserComponents.h"
+#include "Engine/VersionComponent.h"
 #include "Engine/VoxelComponents.h"
 
 #include <yojimbo/yojimbo.h>
@@ -178,6 +179,7 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	// singletons
 	entityWorld.RegisterSingleton<eng::level::DirectoryComponent>();
 	entityWorld.RegisterSingleton<eng::PhysicsSceneComponent>();
+	entityWorld.RegisterSingleton<eng::VersionComponent>();
 
 	// serialization
 	serializer.RegisterComponent<eng::camera::ProjectionComponent, Default<eng::camera::ProjectionComponent>>();
