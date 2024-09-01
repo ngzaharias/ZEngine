@@ -20,7 +20,7 @@ void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& exten
 	corners[4] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Min.z);
 	corners[5] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Max.z);
 	corners[6] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Max.z);
-	corners[7] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Max.z);
+	corners[7] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Min.z);
 
 	AddLine(corners[0], corners[1], colour);
 	AddLine(corners[1], corners[2], colour);
