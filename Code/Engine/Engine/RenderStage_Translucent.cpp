@@ -102,16 +102,16 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				if (!spriteComponent.m_Sprite.IsValid())
 					continue;
 
-				const eng::SpriteAsset& spriteAsset = *assetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
-				if (!spriteAsset.m_Texture2D.IsValid())
+				const eng::SpriteAsset* spriteAsset = assetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
+				if (!spriteAsset || !spriteAsset->m_Texture2D.IsValid())
 					continue;
 
 				RenderBatchID id;
 				id.m_Entity = renderEntity;
 				id.m_Depth = math::DistanceSqr(spriteTransform.m_Translate, cameraTransform.m_Translate);
-				id.m_ShaderId = spriteAsset.m_Shader;
+				id.m_ShaderId = spriteAsset->m_Shader;
 				id.m_StaticMeshId = strQuadMesh;
-				id.m_TextureId = spriteAsset.m_Texture2D;
+				id.m_TextureId = spriteAsset->m_Texture2D;
 				batchIDs.Append(id);
 			}
 		}
@@ -176,11 +176,13 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				const auto& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 
 				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[flipbookComponent.m_Index];
-				const eng::Texture2DAsset& texture2DAsset = *assetManager.LoadAsset<eng::Texture2DAsset>(flipbookAsset.m_Texture2D);
+				const eng::Texture2DAsset* texture2DAsset = assetManager.LoadAsset<eng::Texture2DAsset>(flipbookAsset.m_Texture2D);
+				if (!texture2DAsset || texture2DAsset->m_TextureId == 0)
+					continue;
 
 				const Vector2f& spritePos = flipbookFrame.m_Position;
 				const Vector2f& spriteSize = flipbookFrame.m_Size;
-				const Vector2f textureSize = Vector2f((float)texture2DAsset.m_Width, (float)texture2DAsset.m_Height);
+				const Vector2f textureSize = Vector2f((float)texture2DAsset->m_Width, (float)texture2DAsset->m_Height);
 
 				const Vector3f modelScale = flipbookTransform.m_Scale;
 				const Vector3f spriteScale = Vector3f(
@@ -213,17 +215,17 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				if (!spriteComponent.m_Sprite.IsValid())
 					continue;
 
-				const eng::SpriteAsset& spriteAsset = *assetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
-				if (!spriteAsset.m_Texture2D.IsValid())
+				const eng::SpriteAsset* spriteAsset = assetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
+				if (!spriteAsset || !spriteAsset->m_Texture2D.IsValid())
 					continue;
 
-				const eng::Texture2DAsset& texture2DAsset = *assetManager.LoadAsset<eng::Texture2DAsset>(spriteAsset.m_Texture2D);
-				if (texture2DAsset.m_TextureId == 0)
+				const eng::Texture2DAsset* texture2DAsset = assetManager.LoadAsset<eng::Texture2DAsset>(spriteAsset->m_Texture2D);
+				if (!texture2DAsset || texture2DAsset->m_TextureId == 0)
 					continue;
 
-				const Vector2f spritePos = Vector2f((float)spriteAsset.m_Position.x, (float)spriteAsset.m_Position.y);
-				const Vector2f spriteSize = Vector2f((float)spriteAsset.m_Size.x, (float)spriteAsset.m_Size.y);
-				const Vector2f textureSize = Vector2f((float)texture2DAsset.m_Width, (float)texture2DAsset.m_Height);
+				const Vector2f spritePos = Vector2f((float)spriteAsset->m_Position.x, (float)spriteAsset->m_Position.y);
+				const Vector2f spriteSize = Vector2f((float)spriteAsset->m_Size.x, (float)spriteAsset->m_Size.y);
+				const Vector2f textureSize = Vector2f((float)texture2DAsset->m_Width, (float)texture2DAsset->m_Height);
 
 				const Vector3f modelScale = spriteTransform.m_Scale;
 				const Vector3f spriteScale = Vector3f(
