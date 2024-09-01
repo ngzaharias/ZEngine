@@ -8,10 +8,10 @@ m_Objects = [
     '36d02551-b4ca-4498-8256-6ae426659cc5',
     'a2c8af82-73a2-43cb-9e34-650bb3b6b7b1'
 ]
-m_Size = { X = 260, Y = 8 }
+m_Size = { X = 520, Y = 16 }
 m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = -1.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = 441.0, Y = -413.0, Z = 0.0 }
+m_Translate = { X = 1081.0, Y = -1037.0, Z = 0.0 }

@@ -1,21 +1,21 @@
 m_Guid = '2cc219ff-ac03-4c76-afee-2b287989e871'
 m_Name = 'Rabbit'
 
+[HiddenObject]
+m_Group = '22c367e7-dfd8-4907-9f7c-837cf812b7ef'
+m_Size = { X = 256, Y = 256 }
+m_Sprite = '1502c12b-b769-452f-82a5-1b9f828671d1'
+
 [Name]
 m_Name = 'Rabbit'
 
 [Physics]
 m_Channel = 0
-m_Extents = { X = 50.0, Y = 50.0, Z = 1.0 }
+m_Extents = { X = 64, Y = 80, Z = 1 }
 m_Rigid = 1
 m_Shape = 0
-
-[HiddenObject]
-m_Group = '22c367e7-dfd8-4907-9f7c-837cf812b7ef'
-m_Size = { X = 100, Y = 100 }
-m_Sprite = '1502c12b-b769-452f-82a5-1b9f828671d1'
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = -224.0, Y = -67.0, Z = -1.0 }
+m_Translate = { X = -560.0, Y = -169.0, Z = -1.0 }

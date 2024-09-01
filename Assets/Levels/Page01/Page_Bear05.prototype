@@ -1,18 +1,18 @@
 m_Guid = '1f24efff-68f1-448a-9fbb-139a59084485'
 m_Name = 'Bear05'
 
+[HiddenObject]
+m_Group = 'ab4d37e0-a36f-400c-ba7f-56e47dbe9b70'
+m_Size = { X = 128, Y = 128 }
+m_Sprite = '0ff5e531-8733-4b1b-b0d2-5496e7bb917f'
+
 [Physics]
 m_Channel = 0
-m_Extents = { X = 25.0, Y = 25.0, Z = 1.0 }
+m_Extents = { X = 32, Y = 50, Z = 1 }
 m_Rigid = 1
 m_Shape = 0
-
-[HiddenObject]
-m_Size = { X = 50, Y = 50 }
-m_Group = 'ab4d37e0-a36f-400c-ba7f-56e47dbe9b70'
-m_Sprite = '0ff5e531-8733-4b1b-b0d2-5496e7bb917f'
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = -102.0, Y = 253.0, Z = -1.0 }
+m_Translate = { X = -449.0, Y = 765.0, Z = -1.0 }

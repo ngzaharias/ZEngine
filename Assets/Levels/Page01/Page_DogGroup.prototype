@@ -3,10 +3,10 @@ m_Name = 'DogGroup'
 
 [HiddenGroup]
 m_Objects = [ 'd13758a7-20f9-428a-9e61-276558e03af5' ]
-m_Size = { X = 180, Y = 8 }
+m_Size = { X = 360, Y = 16 }
 m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = 2.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = -484.0, Y = -416.0, Z = 0.0 }
+m_Translate = { X = -1217.0, Y = -1040.0, Z = 0.0 }

@@ -1,12 +1,9 @@
-m_Guid = "07d61522-44f0-4db5-b83d-d9c90ab9b829"
-m_Name = "Page"
-
-[Name]
-m_Name = "Page"
+m_Guid = "85934120-4ac0-4ad7-b8d7-9f225ff7f3df9"
+m_Name = "Page02"
 
 [Sprite]
 m_Size = { X = 3280, Y = 2200 }
-m_Sprite = "4fe12ae7-c8b7-484d-b595-bc366bba28d5"
+m_Sprite = "3c95eaba-30b9-43fa-e6b6-a64de8ff9043"
 
 [Transform]
 m_Translate = { X = 0.0, Y = 0.0, Z = 1.0 }

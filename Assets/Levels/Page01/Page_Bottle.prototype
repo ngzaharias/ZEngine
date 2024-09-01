@@ -1,21 +1,21 @@
 m_Guid = 'dc967fd7-7474-4c2f-9889-087c1eac867f'
 m_Name = 'Bottle'
 
+[HiddenObject]
+m_Group = '48cdf226-13f0-439d-88c5-af2bab3772b1'
+m_Size = { X = 128, Y = 128 }
+m_Sprite = '1781611e-b6d1-4811-b692-7f03f5d05389'
+
 [Name]
 m_Name = 'Bottle'
 
 [Physics]
 m_Channel = 0
-m_Extents = { X = 25.0, Y = 25.0, Z = 1.0 }
+m_Extents = { X = 20, Y = 60, Z = 1 }
 m_Rigid = 1
 m_Shape = 0
-
-[HiddenObject]
-m_Group = '48cdf226-13f0-439d-88c5-af2bab3772b1'
-m_Size = { X = 50, Y = 50 }
-m_Sprite = '1781611e-b6d1-4811-b692-7f03f5d05389'
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = 293.0, Y = 259.0, Z = -1.0 }
+m_Translate = { X = 733.0, Y = 648.0, Z = -1.0 }

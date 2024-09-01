@@ -3,10 +3,10 @@ m_Name = 'RabbitGroup'
 
 [HiddenGroup]
 m_Objects = [ '2cc219ff-ac03-4c76-afee-2b287989e871' ]
-m_Size = { X = 120, Y = 8 }
+m_Size = { X = 340, Y = 16 }
 m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = -1.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = -507.0, Y = -386.0, Z = 0.0 }
+m_Translate = { X = -1266.0, Y = -960.0, Z = 0.0 }
