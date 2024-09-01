@@ -7,10 +7,12 @@ m_Size = { X = 128, Y = 128 }
 m_Sprite = '78b8edf6-f887-4d8b-a11b-fbf573473c1c'
 
 [Physics]
+m_Rigid = { TypeId = 1 }
+[[Physics.m_Shapes]]
+TypeId = 0
+[Physics.m_Shapes.TypeVal]
 m_Channel = 0
 m_Extents = { X = 32, Y = 50, Z = 1 }
-m_Rigid = 1
-m_Shape = 0
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }

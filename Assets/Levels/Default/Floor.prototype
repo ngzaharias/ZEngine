@@ -2,8 +2,10 @@ m_Guid = "0b0237ad-9ff5-439f-86b0-bd48d26c3dba"
 m_Name = "Floor"
 
 [Physics]
-m_Rigid = 1
-m_Shape = 0
+m_Rigid = { TypeId = 1 }
+[[Physics.m_Shapes]]
+TypeId = 0
+[Physics.m_Shapes.TypeVal]
 m_Channel = 1
 m_Extents = { X = 1000.0, Y = 50.0, Z = 50.0 }
 

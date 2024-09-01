@@ -2,12 +2,14 @@ m_Guid = "6d5eddf9-9a6e-40f5-851b-5a73e7e89c26"
 m_Name = "Ball"
 
 [Physics]
-m_Rigid = 0
+m_Rigid = { TypeId = 0 }
 eENABLE_CCD = true
 eLOCK_LINEAR_Z = true
 eLOCK_ANGULAR_X = true
 eLOCK_ANGULAR_Y = true
-m_Shape = 1
+[[Physics.m_Shapes]]
+TypeId = 1
+[Physics.m_Shapes.TypeVal]
 m_Channel = 1
 m_Radius = 50.0
 

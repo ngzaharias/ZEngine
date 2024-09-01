@@ -6,14 +6,13 @@ m_Group = '22c367e7-dfd8-4907-9f7c-837cf812b7ef'
 m_Size = { X = 256, Y = 256 }
 m_Sprite = '1502c12b-b769-452f-82a5-1b9f828671d1'
 
-[Name]
-m_Name = 'Rabbit'
-
 [Physics]
+m_Rigid = { TypeId = 1 }
+[[Physics.m_Shapes]]
+TypeId = 0
+[Physics.m_Shapes.TypeVal]
 m_Channel = 0
 m_Extents = { X = 64, Y = 80, Z = 1 }
-m_Rigid = 1
-m_Shape = 0
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }

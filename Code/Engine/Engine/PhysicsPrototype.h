@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Array.h"
 #include "Core/Variant.h"
 #include "Engine/PrototypeLoader.h"
 #include "Math/Vector.h"
@@ -12,13 +13,11 @@ namespace ecs
 
 namespace eng
 {
-	class AssetManager;
-	class PhysicsManager;
 	class Visitor;
 
 	struct ShapeBox
 	{
-		Vector3f m_Extents = Vector3f(0.f);
+		Vector3f m_Extents = Vector3f::Zero;
 		int32 m_Channel = 0;
 	};
 
@@ -49,20 +48,14 @@ namespace eng
 
 	struct PhysicsPrototype final
 	{
-		Shape m_Shape = { };
 		Rigidbody m_Rigidbody = { };
+		Array<Shape> m_Shapes = { };
 	};
 
 	class PhysicsLoader final : public eng::PrototypeLoader
 	{
 	public:
-		PhysicsLoader(eng::AssetManager& assetManager, eng::PhysicsManager& physicsManager);
-
-		void Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::PhysicsPrototype& prototype) const;
+		void Add(ecs::EntityWorld& entityWorld, const ecs::Entity& entity, const eng::PhysicsPrototype& prototype) const;
 		void Load(eng::PhysicsPrototype& prototype, eng::Visitor& visitor) const;
-
-	private:
-		eng::AssetManager& m_AssetManager;
-		eng::PhysicsManager& m_PhysicsManager;
 	};
 }

@@ -9,7 +9,7 @@ m_Sprite = '5284207c-ac17-42a8-2a86-c59fb02ffc24'
 [Physics]
 m_Channel = 0
 m_Extents = { X = 256.0, Y = 256.0, Z = 1.0 }
-m_Rigid = 1
+m_Rigid = { TypeId = 1 }
 m_Shape = 0
 
 [Transform]

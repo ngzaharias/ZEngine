@@ -166,7 +166,7 @@ void eng::Application::Register()
 		m_PrototypeManager.RegisterPrototype<eng::FlipbookPrototype, eng::FlipbookLoader>(strFlipbook);
 		m_PrototypeManager.RegisterPrototype<eng::AmbientLightPrototype, eng::LightLoader>(strAmbientLight);
 		m_PrototypeManager.RegisterPrototype<eng::DirectionalLightPrototype, eng::LightLoader>(strDirectionalLight);
-		m_PrototypeManager.RegisterPrototype<eng::PhysicsPrototype, eng::PhysicsLoader>(strPhysics, m_AssetManager, m_PhysicsManager);
+		m_PrototypeManager.RegisterPrototype<eng::PhysicsPrototype, eng::PhysicsLoader>(strPhysics);
 		m_PrototypeManager.RegisterPrototype<eng::PointLightPrototype, eng::LightLoader>(strPointLight);
 		m_PrototypeManager.RegisterPrototype<eng::SpritePrototype, eng::SpriteLoader>(strSprite);
 		m_PrototypeManager.RegisterPrototype<eng::StaticMeshPrototype, eng::StaticMeshLoader>(strStaticMesh);

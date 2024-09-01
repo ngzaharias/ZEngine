@@ -6,14 +6,13 @@ m_Group = 'eaba7a09-8920-434c-8cc6-02a2dd8be89a'
 m_Size = { X = 512, Y = 512 }
 m_Sprite = '54003a9d-06d3-4972-be0c-9deeda6ec8b4'
 
-[Name]
-m_Name = 'Hand02'
-
 [Physics]
+m_Rigid = { TypeId = 1 }
+[[Physics.m_Shapes]]
+TypeId = 0
+[Physics.m_Shapes.TypeVal]
 m_Channel = 0
 m_Extents = { X = 120, Y = 160, Z = 1 }
-m_Rigid = 1
-m_Shape = 0
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }

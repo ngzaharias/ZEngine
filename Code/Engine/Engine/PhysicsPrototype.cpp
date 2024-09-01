@@ -3,6 +3,7 @@
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PhysicsMaterialAsset.h"
@@ -40,6 +41,7 @@ namespace
 	const str::StringView strRadius = "m_Radius";
 	const str::StringView strRigid = "m_Rigid";
 	const str::StringView strShape = "m_Shape";
+	const str::StringView strShapes = "m_Shapes";
 	const str::StringView strTranslate = "m_Translate";
 
 	const str::StringView strENABLE_CCD = "eENABLE_CCD";
@@ -52,51 +54,89 @@ namespace
 	const str::StringView strLOCK_LINEAR_Z = "eLOCK_LINEAR_Z";
 }
 
-eng::PhysicsLoader::PhysicsLoader(eng::AssetManager& assetManager, eng::PhysicsManager& physicsManager)
-	: m_AssetManager(assetManager)
-	, m_PhysicsManager(physicsManager)
+template<>
+void eng::Visitor::ReadCustom(eng::RigidDynamic& value) const
+{
+	Read(strENABLE_CCD, value.eENABLE_CCD, value.eENABLE_CCD);
+	Read(strKINEMATIC, value.eKINEMATIC, value.eKINEMATIC);
+	Read(strLOCK_ANGULAR_X, value.eLOCK_ANGULAR_X, value.eLOCK_ANGULAR_X);
+	Read(strLOCK_ANGULAR_Y, value.eLOCK_ANGULAR_Y, value.eLOCK_ANGULAR_Y);
+	Read(strLOCK_ANGULAR_Z, value.eLOCK_ANGULAR_Z, value.eLOCK_ANGULAR_Z);
+	Read(strLOCK_LINEAR_X, value.eLOCK_LINEAR_X, value.eLOCK_LINEAR_X);
+	Read(strLOCK_LINEAR_Y, value.eLOCK_LINEAR_Y, value.eLOCK_LINEAR_Y);
+	Read(strLOCK_LINEAR_Z, value.eLOCK_LINEAR_Z, value.eLOCK_LINEAR_Z);
+}
+
+template<>
+void eng::Visitor::ReadCustom(eng::RigidStatic& value) const
 {
 }
 
-void eng::PhysicsLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::PhysicsPrototype& prototype) const
+template<>
+void eng::Visitor::ReadCustom(eng::ShapeBox& value) const
 {
-	const auto* asset = m_AssetManager.LoadAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
+	Read(strChannel, value.m_Channel, value.m_Channel);
+	Read(strExtents, value.m_Extents, value.m_Extents);
+}
 
-	physx::PxPhysics& physics = m_PhysicsManager.GetPhysics();
+template<>
+void eng::Visitor::ReadCustom(eng::ShapeSphere& value) const
+{
+	Read(strChannel, value.m_Channel, value.m_Channel);
+	Read(strRadius, value.m_Radius, value.m_Radius);
+}
+
+void eng::PhysicsLoader::Add(ecs::EntityWorld& entityWorld, const ecs::Entity& entity, const eng::PhysicsPrototype& prototype) const
+{
+	using World = ecs::WorldView<
+		eng::AssetManager,
+		eng::PhysicsManager,
+		eng::RigidDynamicComponent,
+		eng::RigidStaticComponent>;
+	World world = entityWorld.GetWorldView<World>();
+
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	auto& physicsManager = world.WriteResource<eng::PhysicsManager>();
+	const auto* asset = assetManager.LoadAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
+
+	physx::PxPhysics& physics = physicsManager.GetPhysics();
 
 	Array<physx::PxShape*> shapes = { };
-	if (std::holds_alternative<ShapeBox>(prototype.m_Shape))
+	for (const eng::Shape& shape : prototype.m_Shapes)
 	{
-		const auto& data = std::get<ShapeBox>(prototype.m_Shape);
-
-		physx::PxBoxGeometry geometry;
-		geometry.halfExtents.x = data.m_Extents.x;
-		geometry.halfExtents.y = data.m_Extents.y;
-		geometry.halfExtents.z = data.m_Extents.z;
-
-		physx::PxFilterData filterData;
-		filterData.word0 = data.m_Channel;
-
-		if (physx::PxShape* shape = physics.createShape(geometry, *asset->m_Material))
+		if (std::holds_alternative<ShapeBox>(shape))
 		{
-			shape->setSimulationFilterData(filterData);
-			shapes.Append(shape);
+			const auto& data = std::get<ShapeBox>(shape);
+
+			physx::PxBoxGeometry geometry;
+			geometry.halfExtents.x = data.m_Extents.x;
+			geometry.halfExtents.y = data.m_Extents.y;
+			geometry.halfExtents.z = data.m_Extents.z;
+
+			physx::PxFilterData filterData;
+			filterData.word0 = data.m_Channel;
+
+			if (physx::PxShape* shape = physics.createShape(geometry, *asset->m_Material))
+			{
+				shape->setSimulationFilterData(filterData);
+				shapes.Append(shape);
+			}
 		}
-	}
-	else if (std::holds_alternative<ShapeSphere>(prototype.m_Shape))
-	{
-		const auto& data = std::get<ShapeSphere>(prototype.m_Shape);
-
-		physx::PxSphereGeometry geometry;
-		geometry.radius = data.m_Radius;
-
-		physx::PxFilterData filterData;
-		filterData.word0 = data.m_Channel;
-
-		if (physx::PxShape* shape = physics.createShape(geometry, *asset->m_Material))
+		else if (std::holds_alternative<ShapeSphere>(shape))
 		{
-			shape->setSimulationFilterData(filterData);
-			shapes.Append(shape);
+			const auto& data = std::get<ShapeSphere>(shape);
+
+			physx::PxSphereGeometry geometry;
+			geometry.radius = data.m_Radius;
+
+			physx::PxFilterData filterData;
+			filterData.word0 = data.m_Channel;
+
+			if (physx::PxShape* shape = physics.createShape(geometry, *asset->m_Material))
+			{
+				shape->setSimulationFilterData(filterData);
+				shapes.Append(shape);
+			}
 		}
 	}
 
@@ -141,55 +181,6 @@ void eng::PhysicsLoader::Add(ecs::EntityWorld& world, const ecs::Entity& entity,
 
 void eng::PhysicsLoader::Load(eng::PhysicsPrototype& prototype, eng::Visitor& visitor) const
 {
-	// #todo: array of shapes
-	// #todo: should become an asset ?
-	{
-		EShape shape;
-		visitor.Read(strShape, shape, EShape::Box);
-		switch (shape)
-		{
-		case EShape::Box:
-		{
-			ShapeBox box;
-			visitor.Read(strChannel, box.m_Channel, 0);
-			visitor.Read(strExtents, box.m_Extents, Vector3f::Zero);
-			prototype.m_Shape = box;
-		} break;
-
-		case EShape::Sphere:
-		{
-			ShapeSphere sphere;
-			visitor.Read(strChannel, sphere.m_Channel, 0);
-			visitor.Read(strRadius, sphere.m_Radius, 0.f);
-			prototype.m_Shape = sphere;
-		} break;
-		}
-	}
-
-	// #todo: should become an asset ?
-	{
-		ERigidbody rigidbody;
-		visitor.Read(strRigid, rigidbody, ERigidbody::Static);
-		switch (rigidbody)
-		{
-		case ERigidbody::Dynamic:
-		{
-			RigidDynamic dynamic;
-			visitor.Read(strENABLE_CCD, dynamic.eENABLE_CCD, false);
-			visitor.Read(strKINEMATIC, dynamic.eKINEMATIC, false);
-			visitor.Read(strLOCK_ANGULAR_X, dynamic.eLOCK_ANGULAR_X, false);
-			visitor.Read(strLOCK_ANGULAR_Y, dynamic.eLOCK_ANGULAR_Y, false);
-			visitor.Read(strLOCK_ANGULAR_Z, dynamic.eLOCK_ANGULAR_Z, false);
-			visitor.Read(strLOCK_LINEAR_X, dynamic.eLOCK_LINEAR_X, false);
-			visitor.Read(strLOCK_LINEAR_Y, dynamic.eLOCK_LINEAR_Y, false);
-			visitor.Read(strLOCK_LINEAR_Z, dynamic.eLOCK_LINEAR_Z, false);
-			prototype.m_Rigidbody = dynamic;
-		} break;
-
-		case ERigidbody::Static:
-		{
-			prototype.m_Rigidbody = RigidStatic();
-		} break;
-		}
-	}
+	visitor.Read(strRigid, prototype.m_Rigidbody, prototype.m_Rigidbody);
+	visitor.Read(strShapes, prototype.m_Shapes, prototype.m_Shapes);
 }
