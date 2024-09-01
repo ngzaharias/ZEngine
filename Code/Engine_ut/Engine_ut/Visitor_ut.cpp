@@ -1095,6 +1095,29 @@ TEST_CASE("eng::Visitor::Array<Int32>")
 	}
 }
 
+TEST_CASE("eng::Visitor::Array<Variant>")
+{
+	{
+		INFO("Write");
+		Array<Variant<bool, int32>> myArray = { 3 };
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myArray);
+
+		str::String string = visitor;
+		CHECK(string == "[[MyKey]]\nTypeId = 1\nTypeVal = 3");
+	}
+
+	{
+		INFO("Read");
+		Array<Variant<bool, int32>> myArray;
+		eng::Visitor visitor = str::StringView("[[MyKey]]\nTypeId = 1\nTypeVal = 3");
+		visitor.Read(strMyKey, myArray, {});
+
+		REQUIRE(myArray.GetCount() == 1);
+		CHECK(myArray[0] == Variant<bool, int32>{ 3 });
+	}
+}
+
 TEST_CASE("eng::Visitor::Array<Vector2f>")
 {
 	{

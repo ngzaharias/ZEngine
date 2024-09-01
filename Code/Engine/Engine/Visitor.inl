@@ -98,10 +98,18 @@ inline void eng::Visitor::Read(const int32 index, Value& value) const
 	}
 	else if constexpr (core::IsSpecialization<Value, Map>::value)
 	{
-		if (toml::Table* childNode = parentNode.at(index).as_array())
+		if (toml::Table* childNode = parentNode.at(index).as_table())
 		{
 			m_Node = childNode;
 			ReadMap(value);
+		}
+	}
+	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
+	{
+		if (toml::Table* childNode = parentNode.at(index).as_table())
+		{
+			m_Node = childNode;
+			ReadVariant(value);
 		}
 	}
 	else if constexpr (std::is_enum<Value>::value)
@@ -318,6 +326,15 @@ inline void eng::Visitor::Write(const int32 index, const Value& value)
 		toml::Table childNode;
 		m_Node = &childNode;
 		WriteMap(value);
+		parentNode.push_back(std::move(childNode));
+	}
+	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
+	// so instead we have to check the actual type rather than our friendly version.
+	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
+	{
+		toml::Table childNode;
+		m_Node = &childNode;
+		WriteVariant(value);
 		parentNode.push_back(std::move(childNode));
 	}
 	else if constexpr (std::is_enum<Value>::value)
