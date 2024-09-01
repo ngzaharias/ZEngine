@@ -8,6 +8,7 @@ namespace eng
 	/// \brief
 	struct VersionComponent final : ecs::SingletonComponent<VersionComponent>
 	{
+		str::String m_Version = "0.0.0.1";
 		str::String m_Commit = {};
 	};
 }
