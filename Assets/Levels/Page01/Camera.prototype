@@ -6,8 +6,8 @@ m_Name = "Camera"
 [Camera.m_Bounded]
 TypeId = 0
 [Camera.m_Bounded.TypeVal]
-m_Max = { X = +1640, Y = +1100 }
-m_Min = { X = -1640, Y = -1100 } 
+m_Max = { X = +1968, Y = +1320 }
+m_Min = { X = -1968, Y = -1320 } 
 
 [Camera.m_Movement]
 TypeId = 0

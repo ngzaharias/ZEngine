@@ -1,0 +1,7 @@
+m_Texture2D = '32a8850b-e5f1-4a9c-ec8a-5d9dcf268c6a'
+m_Name = 'SP_Reveal_Hand01'
+m_Type = 'Sprite'
+m_Guid = '4de8ed50-b26d-4ded-bab8-e776f556cfec'
+
+m_Position = { X = 0, Y = 0 }
+m_Size = { X = 512, Y = 512 }

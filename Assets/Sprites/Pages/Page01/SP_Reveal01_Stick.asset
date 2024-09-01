@@ -1,7 +1,0 @@
-m_Texture2D = '6a539b2f-a37a-4e22-02ab-e3d955b7f4f2'
-m_Name = 'SP_Reveal01_Stick'
-m_Type = 'Sprite'
-m_Guid = '89ff3782-a02b-4925-adfd-536501dcb3e5'
-
-m_Position = { X = 0, Y = 0 }
-m_Size = { X = 128, Y = 512 }
