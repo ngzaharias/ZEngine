@@ -1,0 +1,20 @@
+m_Guid = 'fcdc5529-80ab-4193-9af2-e87a17d69a33'
+m_Name = 'Object_Bear01'
+
+[HiddenObject]
+m_Group = 'ab4d37e0-a36f-400c-ba7f-56e47dbe9b70'
+m_Size = { X = 128, Y = 128 }
+m_Sprite = '7be11393-aed4-45ea-8c25-27b208a651be'
+
+[Physics]
+m_Rigid = { TypeId = 1 }
+[[Physics.m_Shapes]]
+TypeId = 0
+[Physics.m_Shapes.TypeVal]
+m_Channel = 0
+m_Extents = { X = 40, Y = 50, Z = 1 }
+
+[Transform]
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -730.0, Y = -647.0, Z = -1.0 }

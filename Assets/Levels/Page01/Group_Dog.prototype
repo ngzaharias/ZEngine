@@ -1,5 +1,5 @@
 m_Guid = '58af002b-d6d0-4e3b-be66-153bf807ba8a'
-m_Name = 'DogGroup'
+m_Name = 'Group_Dog'
 
 [HiddenGroup]
 m_Objects = [ 'd13758a7-20f9-428a-9e61-276558e03af5' ]

@@ -1,5 +1,5 @@
 m_Guid = '2cc219ff-ac03-4c76-afee-2b287989e871'
-m_Name = 'Rabbit'
+m_Name = 'Object_Rabbit'
 
 [HiddenObject]
 m_Group = '22c367e7-dfd8-4907-9f7c-837cf812b7ef'

@@ -1,5 +1,5 @@
 m_Guid = 'eaba7a09-8920-434c-8cc6-02a2dd8be89a'
-m_Name = 'HandGroup'
+m_Name = 'Group_Hand'
 
 [HiddenGroup]
 m_Objects = [

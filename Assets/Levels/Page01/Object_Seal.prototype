@@ -1,10 +1,10 @@
-m_Guid = '3595c797-b638-46af-8364-9ce12905477b'
-m_Name = 'Rubber'
+m_Guid = '98fcf9b9-00d5-4216-8008-335e475596b5'
+m_Name = 'Object_Seal'
 
 [HiddenObject]
-m_Group = '87cfbd9e-dfdf-46ad-96cf-5a9db651f049'
+m_Group = '5b505ef6-e5d9-4770-996d-46b859721382'
 m_Size = { X = 256, Y = 128 }
-m_Sprite = '72261805-21d7-4546-90af-db9ac42b6d2c'
+m_Sprite = 'a38981f4-3f46-4207-8145-92effe464eec'
 
 [Physics]
 m_Rigid = { TypeId = 1 }
@@ -12,9 +12,9 @@ m_Rigid = { TypeId = 1 }
 TypeId = 0
 [Physics.m_Shapes.TypeVal]
 m_Channel = 0
-m_Extents = { X = 80, Y = 25, Z = 1 }
+m_Extents = { X = 80, Y = 40, Z = 1 }
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = -1307.0, Y = -266.0, Z = -1.0 }
+m_Translate = { X = 1171.0, Y = -509.0, Z = -1.0 }

@@ -1,5 +1,5 @@
 m_Guid = 'dc967fd7-7474-4c2f-9889-087c1eac867f'
-m_Name = 'Bottle'
+m_Name = 'Object_Bottle'
 
 [HiddenObject]
 m_Group = '48cdf226-13f0-439d-88c5-af2bab3772b1'

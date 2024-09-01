@@ -1,5 +1,5 @@
 m_Guid = '87cfbd9e-dfdf-46ad-96cf-5a9db651f049'
-m_Name = 'RubberGroup'
+m_Name = 'Group_Rubber'
 
 [HiddenGroup]
 m_Objects = [ '3595c797-b638-46af-8364-9ce12905477b' ]
