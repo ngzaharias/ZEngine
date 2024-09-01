@@ -106,7 +106,7 @@ namespace
 		auto& windowComponent = world.WriteComponent<editor::TransformWindowComponent>(entity);
 
 		const ecs::Entity selected = windowComponent.m_Selected;
-		if (world.HasComponent<eng::TransformComponent>(selected))
+		if (world.IsAlive(selected) && world.HasComponent<eng::TransformComponent>(selected))
 		{
 			auto& transform = world.WriteComponent<eng::TransformComponent>(selected);
 			imgui::DragVector("m_Translate", transform.m_Translate);
