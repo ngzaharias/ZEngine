@@ -4,24 +4,24 @@
 
 namespace eng::level
 {
-	struct DirectoryComponent;
+	struct LoadedComponent;
 	struct LoadRequestComponent;
 }
 
 namespace dbg::level
 {
-	struct OpenRequestComponent;
+	struct ReloadRequestComponent;
 }
 
 namespace dbg::level
 {
-	class OpenSystem final : public ecs::System
+	class ReloadSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
 			eng::level::LoadRequestComponent,
-			const dbg::level::OpenRequestComponent,
-			const eng::level::DirectoryComponent>;
+			const eng::level::LoadedComponent,
+			const dbg::level::ReloadRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -1,9 +1,6 @@
 #pragma once
 
-#include "ECS/Component.h"
 #include "ECS/System.h"
-
-class GameTime;
 
 namespace dbg
 {
@@ -19,13 +16,9 @@ namespace dbg
 namespace dbg::level
 {
 	struct OpenRequestComponent;
+	struct ReloadRequestComponent;
 	struct SaveRequestComponent;
 	struct SaveAsRequestComponent;
-}
-
-namespace ecs
-{
-	class EntityWorld;
 }
 
 namespace editor
@@ -36,6 +29,11 @@ namespace editor
 	struct TextureWindowRequestComponent;
 	struct TrajectoryWindowRequestComponent;
 	struct TransformWindowRequestComponent;
+}
+
+namespace eng
+{
+	struct InputComponent;
 }
 
 namespace eng::settings
@@ -59,6 +57,7 @@ namespace dbg
 			dbg::FlipbookWindowRequestComponent,
 			dbg::ImGuiDemoRequestComponent,
 			dbg::level::OpenRequestComponent,
+			dbg::level::ReloadRequestComponent,
 			dbg::level::SaveRequestComponent,
 			dbg::level::SaveAsRequestComponent,
 			dbg::NetworkWindowRequestComponent,
@@ -71,7 +70,8 @@ namespace dbg
 			editor::TrajectoryWindowRequestComponent,
 			editor::TransformWindowRequestComponent,
 			eng::settings::LocalComponent,
-			gui::settings::OpenRequestComponent>;
+			gui::settings::OpenRequestComponent,
+			const eng::InputComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

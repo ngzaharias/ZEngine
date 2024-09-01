@@ -4,6 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/InputComponent.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "GameUI/SettingsComponents.h"
 
@@ -19,6 +20,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::MenuItem("Open Level", "Ctrl+O"))
 				world.AddEventComponent<dbg::level::OpenRequestComponent>();
+			if (ImGui::MenuItem("Reload Level", "Ctrl+R"))
+				world.AddEventComponent<dbg::level::ReloadRequestComponent>();
 			if (ImGui::MenuItem("Save Level", "Ctrl+S", nullptr, false))
 				world.AddEventComponent<dbg::level::SaveRequestComponent>();
 			if (ImGui::MenuItem("Save Level As...", "Ctrl+S+A", nullptr, false))
@@ -68,5 +71,16 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		}
 
 		ImGui::EndMainMenuBar();
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
+	{
+		const auto& input = world.ReadComponent<eng::InputComponent>(entity);
+		if (input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::O))
+			world.AddEventComponent<dbg::level::OpenRequestComponent>();
+		if (input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::R))
+			world.AddEventComponent<dbg::level::ReloadRequestComponent>();
+		if (input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::S))
+			world.AddEventComponent<dbg::level::SaveRequestComponent>();
 	}
 }

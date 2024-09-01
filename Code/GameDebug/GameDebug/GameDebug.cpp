@@ -9,6 +9,7 @@
 #include "GameDebug/HiddenObjectSystem.h"
 #include "GameDebug/ImGuiDemoSystem.h"
 #include "GameDebug/LevelOpenSystem.h"
+#include "GameDebug/LevelReloadSystem.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "GameDebug/MenuBarSystem.h"
 #include "GameDebug/NetworkComponents.h"
@@ -38,6 +39,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::level::OpenRequestComponent>();
+	m_ClientWorld.RegisterComponent<dbg::level::ReloadRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::level::SaveAsRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::level::SaveRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::NetworkWindowComponent>();
@@ -59,6 +61,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<dbg::hidden::ObjectSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ImGuiDemoSystem>();
 	m_ClientWorld.RegisterSystem<dbg::level::OpenSystem>();
+	m_ClientWorld.RegisterSystem<dbg::level::ReloadSystem>();
 	m_ClientWorld.RegisterSystem<dbg::MenuBarSystem>();
 	m_ClientWorld.RegisterSystem<dbg::NetworkSystem>();
 	m_ClientWorld.RegisterSystem<dbg::NodeGraphSystem>();
