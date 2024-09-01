@@ -15,19 +15,25 @@ namespace
 {
 	const str::StringView strFilename = "DebugSettings.toml";
 
+	const str::StringView strAreHiddenEnabled = "m_AreHiddenEnabled";
 	const str::StringView strAreLinesEnabled = "m_AreLinesEnabled";
+	const str::StringView strArePhysicsEnabled = "m_ArePhysicsEnabled";
 }
 
 template<>
 void eng::Visitor::ReadCustom(eng::settings::DebugComponent& value) const
 {
+	Read(strAreHiddenEnabled, value.m_AreHiddenEnabled, value.m_AreHiddenEnabled);
 	Read(strAreLinesEnabled, value.m_AreLinesEnabled, value.m_AreLinesEnabled);
+	Read(strArePhysicsEnabled, value.m_ArePhysicsEnabled, value.m_ArePhysicsEnabled);
 }
 
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::DebugComponent& value)
 {
+	Write(strAreHiddenEnabled, value.m_AreHiddenEnabled);
 	Write(strAreLinesEnabled, value.m_AreLinesEnabled);
+	Write(strArePhysicsEnabled, value.m_ArePhysicsEnabled);
 }
 
 void eng::settings::DebugSystem::Initialise(World& world)
