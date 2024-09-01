@@ -16,6 +16,7 @@
 #include "GameDebug/NodeGraphComponents.h"
 #include "GameDebug/NodeGraphSystem.h"
 #include "GameDebug/OverlaySystem.h"
+#include "GameDebug/PhysicsSystem.h"
 #include "GameDebug/ShapeComponents.h"
 #include "GameDebug/ShapeSystem.h"
 
@@ -62,6 +63,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<dbg::NetworkSystem>();
 	m_ClientWorld.RegisterSystem<dbg::NodeGraphSystem>();
 	m_ClientWorld.RegisterSystem<dbg::OverlaySystem>();
+	m_ClientWorld.RegisterSystem<dbg::PhysicsSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ShapeSystem>();
 }
 

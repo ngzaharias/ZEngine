@@ -27,9 +27,9 @@ bool eng::SpriteAssetLoader::Save(SpriteAsset& asset, eng::Visitor& visitor) con
 
 bool eng::SpriteAssetLoader::Load(SpriteAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Read(strPosition, asset.m_Position, Vector2u::Zero);
+	visitor.Read(strPosition, asset.m_Position, asset.m_Position);
 	visitor.Read(strShader, asset.m_Shader, uuidShader);
-	visitor.Read(strSize, asset.m_Size, Vector2u(1024));
+	visitor.Read(strSize, asset.m_Size, asset.m_Size);
 	visitor.Read(strTexture2D, asset.m_Texture2D, uuidTexture2D);
 	return true;
 }

@@ -5,6 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/LinesComponent.h"
+#include "Engine/SettingsComponents.h"
 #include "Engine/TransformComponent.h"
 #include "GameClient/HiddenObjectComponents.h"
 #include "Math/AABB.h"
@@ -19,7 +20,9 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
+	auto& settings = world.ReadSingleton<eng::settings::DebugComponent>();
+	if (!settings.m_AreHiddenEnabled)
+		return;
 
 	using Query = ecs::query
 		::Include<const ::hidden::ObjectComponent, const eng::TransformComponent>
@@ -33,6 +36,7 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 		const float sizeY = (float)hiddenComponent.m_Size.y * 0.5f;
 		const AABB3f s_Extents = AABB3f::FromExtents(Vector3f(sizeX, sizeY, 1.f));
 
+		auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 		linesComponent.AddAABB(transformComponent.m_Translate, s_Extents, s_ColourM);
 	}
 }

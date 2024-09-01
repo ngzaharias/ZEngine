@@ -5,7 +5,8 @@
 namespace eng
 {
 	struct LinesComponent;
-	struct TransformComponent;
+	struct RigidDynamicComponent;
+	struct RigidStaticComponent;
 }
 
 namespace eng::settings
@@ -13,21 +14,16 @@ namespace eng::settings
 	struct DebugComponent;
 }
 
-namespace hidden
+namespace dbg
 {
-	struct ObjectComponent;
-}
-
-namespace dbg::hidden
-{
-	class ObjectSystem final : public ecs::System
+	class PhysicsSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
 			eng::LinesComponent,
-			const eng::settings::DebugComponent,
-			const eng::TransformComponent,
-			const ::hidden::ObjectComponent>;
+			const eng::RigidDynamicComponent,
+			const eng::RigidStaticComponent,
+			const eng::settings::DebugComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
