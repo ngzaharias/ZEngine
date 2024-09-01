@@ -8,11 +8,27 @@ m_Sprite = '4de8ed50-b26d-4ded-bab8-e776f556cfec'
 
 [Physics]
 m_Rigid = { TypeId = 1 }
+
 [[Physics.m_Shapes]]
 TypeId = 0
 [Physics.m_Shapes.TypeVal]
 m_Channel = 0
-m_Extents = { X = 115, Y = 170, Z = 1 }
+m_Extents = { X = 115, Y = 30, Z = 1 }
+m_Translate = { X = -2, Y = 15 }
+
+[[Physics.m_Shapes]]
+TypeId = 0
+[Physics.m_Shapes.TypeVal]
+m_Channel = 0
+m_Extents = { X = 30, Y = 160, Z = 1 }
+m_Translate = { X = -85, Y = 5 }
+
+[[Physics.m_Shapes]]
+TypeId = 0
+[Physics.m_Shapes.TypeVal]
+m_Channel = 0
+m_Extents = { X = 30, Y = 160, Z = 1 }
+m_Translate = { X = 80, Y = 5 }
 
 [Transform]
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
