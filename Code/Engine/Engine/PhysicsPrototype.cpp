@@ -11,6 +11,7 @@
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Visitor.h"
+#include "Math/Quaternion.h"
 
 #include <PhysX/PxPhysics.h>
 #include <PhysX/PxRigidDynamic.h>
@@ -22,24 +23,13 @@
 
 namespace
 {
-	enum class ERigidbody
-	{
-		Dynamic,
-		Static,
-	};
-
-	enum class EShape
-	{
-		Box,
-		Sphere,
-	};
-
 	const str::Guid strDefaultMaterial = GUID("a4835493-ae5a-40ba-8083-06deb381c801");
 
 	const str::StringView strChannel = "m_Channel";
 	const str::StringView strExtents = "m_Extents";
 	const str::StringView strRadius = "m_Radius";
 	const str::StringView strRigid = "m_Rigid";
+	const str::StringView strRotate = "m_Rotate";
 	const str::StringView strShape = "m_Shape";
 	const str::StringView strShapes = "m_Shapes";
 	const str::StringView strTranslate = "m_Translate";
@@ -52,6 +42,22 @@ namespace
 	const str::StringView strLOCK_LINEAR_X = "eLOCK_LINEAR_X";
 	const str::StringView strLOCK_LINEAR_Y = "eLOCK_LINEAR_Y";
 	const str::StringView strLOCK_LINEAR_Z = "eLOCK_LINEAR_Z";
+
+	physx::PxTransform ToTransform(const Vector3f& translate, const Rotator& rotate)
+	{
+		physx::PxTransform transform;
+		transform.p.x = translate.x;
+		transform.p.y = translate.y;
+		transform.p.z = translate.z;
+
+		const Quaternion quat = Quaternion::FromRotator(rotate);
+		transform.q.x = quat.x;
+		transform.q.y = quat.y;
+		transform.q.z = quat.z;
+		transform.q.w = quat.w;
+
+		return transform;
+	}
 }
 
 template<>
@@ -75,13 +81,16 @@ void eng::Visitor::ReadCustom(eng::RigidStatic& value) const
 template<>
 void eng::Visitor::ReadCustom(eng::ShapeBox& value) const
 {
-	Read(strChannel, value.m_Channel, value.m_Channel);
 	Read(strExtents, value.m_Extents, value.m_Extents);
+	Read(strTranslate, value.m_Translate, value.m_Translate);
+	Read(strRotate, value.m_Rotate, value.m_Rotate);
+	Read(strChannel, value.m_Channel, value.m_Channel);
 }
 
 template<>
 void eng::Visitor::ReadCustom(eng::ShapeSphere& value) const
 {
+	Read(strTranslate, value.m_Translate, value.m_Translate);
 	Read(strChannel, value.m_Channel, value.m_Channel);
 	Read(strRadius, value.m_Radius, value.m_Radius);
 }
@@ -116,10 +125,13 @@ void eng::PhysicsLoader::Add(ecs::EntityWorld& entityWorld, const ecs::Entity& e
 			physx::PxFilterData filterData;
 			filterData.word0 = data.m_Channel;
 
-			if (physx::PxShape* shape = physics.createShape(geometry, *asset->m_Material))
+			if (physx::PxShape* pShape = physics.createShape(geometry, *asset->m_Material))
 			{
-				shape->setSimulationFilterData(filterData);
-				shapes.Append(shape);
+				const physx::PxTransform transform = ToTransform(data.m_Translate, data.m_Rotate);
+
+				pShape->setLocalPose(transform);
+				pShape->setSimulationFilterData(filterData);
+				shapes.Append(pShape);
 			}
 		}
 		else if (std::holds_alternative<ShapeSphere>(shape))
@@ -132,10 +144,13 @@ void eng::PhysicsLoader::Add(ecs::EntityWorld& entityWorld, const ecs::Entity& e
 			physx::PxFilterData filterData;
 			filterData.word0 = data.m_Channel;
 
-			if (physx::PxShape* shape = physics.createShape(geometry, *asset->m_Material))
+			if (physx::PxShape* pShape = physics.createShape(geometry, *asset->m_Material))
 			{
-				shape->setSimulationFilterData(filterData);
-				shapes.Append(shape);
+				const physx::PxTransform transform = ToTransform(data.m_Translate, Rotator::Zero);
+
+				pShape->setLocalPose(transform);
+				pShape->setSimulationFilterData(filterData);
+				shapes.Append(pShape);
 			}
 		}
 	}

@@ -3,6 +3,7 @@
 #include "Core/Array.h"
 #include "Core/Variant.h"
 #include "Engine/PrototypeLoader.h"
+#include "Math/Rotator.h"
 #include "Math/Vector.h"
 
 namespace ecs
@@ -17,14 +18,19 @@ namespace eng
 
 	struct ShapeBox
 	{
+		Vector3f m_Translate = Vector3f::Zero;
+		Rotator m_Rotate = Rotator::Zero;
+
 		Vector3f m_Extents = Vector3f::Zero;
 		int32 m_Channel = 0;
 	};
 
 	struct ShapeSphere
 	{
-		float m_Radius = 0.f;
+		Vector3f m_Translate = Vector3f::Zero;
+
 		int32 m_Channel = 0;
+		float m_Radius = 0.f;
 	};
 
 	struct RigidDynamic

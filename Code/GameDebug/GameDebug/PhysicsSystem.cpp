@@ -10,6 +10,7 @@
 #include "Engine/SettingsComponents.h"
 #include "Math/AABB.h"
 #include "Math/Matrix.h"
+#include "Math/OBB.h"
 #include "Math/Sphere.h"
 #include "Math/Vector.h"
 #include "Math/Quaternion.h"
@@ -50,6 +51,7 @@ namespace
 		const physx::PxTransform& shapeTransform = shape.getLocalPose();
 		const Matrix4x4 transform = ToTransform(shapeTransform) * ToTransform(actorTransform);
 		const Vector3f translate = Vector3f(transform[3][0], transform[3][1], transform[3][2]);
+		const Rotator rotate = Rotator::FromMatrix(transform);
 
 		switch (shape.getGeometryType())
 		{
@@ -59,8 +61,8 @@ namespace
 			shape.getBoxGeometry(boxGeo);
 
 			const Vector3f extents = ToVector3f(boxGeo.halfExtents);
-			const AABB3f aabb = AABB3f::FromExtents(extents);
-			linesComponent.AddAABB(translate, aabb, s_ColourM);
+			const OBB3f obb = OBB3f::FromExtents(Vector3f::Zero, rotate, extents);
+			linesComponent.AddOBB(translate, obb, s_ColourM);
 		} break;
 		case physx::PxGeometryType::eSPHERE:
 		{
