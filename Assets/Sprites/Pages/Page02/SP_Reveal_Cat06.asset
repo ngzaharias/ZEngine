@@ -1,7 +1,8 @@
-m_Guid = '5284207c-ac17-42a8-2a86-c59fb02ffc24'
+m_Guid = 'b27251cd-eed8-4fcc-8d36-c6e3d05ea839'
 m_Name = 'SP_Reveal_Cat06'
-m_Position = { X = 2020, Y = 902 }
+m_Type = 'Sprite'
+
+m_Position = { X = 0, Y = 0 }
 m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
 m_Size = { X = 256, Y = 256 }
-m_Texture2D = '77bcc069-ea63-473d-851e-8528df0c0c1a'
-m_Type = 'Sprite'
+m_Texture2D = '688802b6-b4b3-4d6f-6996-a07787048be2'

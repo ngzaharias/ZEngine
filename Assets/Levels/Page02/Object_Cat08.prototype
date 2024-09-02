@@ -1,0 +1,59 @@
+m_Guid = '1d0e736e-505d-47d2-aad9-703ffde0441f'
+m_Name = 'Object_Cat08'
+
+[HiddenObject]
+m_Group = 'e2a61925-af8d-4491-bb7b-c0e1b16f80c8'
+m_Size = { X = 256, Y = 256 }
+m_Sprite = '628b0e60-81c1-44bb-9d1c-368f79060087'
+
+[Physics]
+m_Rigid = { TypeId = 1 }
+
+[[Physics.m_Shapes]]
+TypeId = 1
+
+[Physics.m_Shapes.TypeVal]
+m_Channel = 0
+m_Radius = 60
+m_Translate = { X = 10, Y = 60 }
+
+[[Physics.m_Shapes]]
+TypeId = 0
+
+[Physics.m_Shapes.TypeVal]
+m_Channel = 0
+m_Extents = { X = 30, Y = 20, Z = 1 }
+m_Rotate = { Roll = 0 }
+m_Translate = { X = 25, Y = 0 }
+
+[[Physics.m_Shapes]]
+TypeId = 0
+
+[Physics.m_Shapes.TypeVal]
+m_Channel = 0
+m_Extents = { X = 50, Y = 25, Z = 1 }
+m_Rotate = { Roll = 0 }
+m_Translate = { X = 25, Y = -45 }
+
+[[Physics.m_Shapes]]
+TypeId = 0
+
+[Physics.m_Shapes.TypeVal]
+m_Channel = 0
+m_Extents = { X = 30, Y = 30, Z = 1 }
+m_Rotate = { Roll = 0 }
+m_Translate = { X = -50, Y = -80 }
+
+[[Physics.m_Shapes]]
+TypeId = 0
+
+[Physics.m_Shapes.TypeVal]
+m_Channel = 0
+m_Extents = { X = 30, Y = 30, Z = 1 }
+m_Rotate = { Roll = 0 }
+m_Translate = { X = -30, Y = 20 }
+
+[Transform]
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 1170.0, Y = 871.0, Z = -1.0 }

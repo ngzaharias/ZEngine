@@ -1,0 +1,24 @@
+m_Guid = 'a6b502ec-a471-4090-9b08-11cf0c1df888'
+m_Name = 'Object_Cat07'
+
+[HiddenObject]
+m_Group = 'e2a61925-af8d-4491-bb7b-c0e1b16f80c8'
+m_Size = { X = 128, Y = 256 }
+m_Sprite = '9e354f32-c294-48de-b83a-5e7a2a5cb102'
+
+[Physics]
+m_Rigid = { TypeId = 1 }
+
+[[Physics.m_Shapes]]
+TypeId = 0
+
+[Physics.m_Shapes.TypeVal]
+m_Channel = 0
+m_Extents = { X = 40, Y = 85, Z = 1 }
+m_Rotate = { Roll = -15 }
+m_Translate = { X = 0, Y = 2 }
+
+[Transform]
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 1149.0, Y = 176.0, Z = -1.0 }

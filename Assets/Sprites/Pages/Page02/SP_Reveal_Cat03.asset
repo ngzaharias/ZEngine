@@ -1,7 +1,8 @@
-m_Guid = '5284207c-ac17-42a8-2a86-c59fb02ffc24'
+m_Guid = '93b96dba-3c88-4e8f-8d92-783ba08cd1fa'
 m_Name = 'SP_Reveal_Cat03'
-m_Position = { X = 1416, Y = 1588 }
-m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
-m_Size = { X = 200, Y = 200 }
-m_Texture2D = '77bcc069-ea63-473d-851e-8528df0c0c1a'
 m_Type = 'Sprite'
+
+m_Position = { X = 0, Y = 0 }
+m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
+m_Size = { X = 256, Y = 512 }
+m_Texture2D = '3184df32-d689-40a8-5c94-328de1d4bebf'
