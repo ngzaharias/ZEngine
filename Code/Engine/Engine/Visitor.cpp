@@ -119,7 +119,7 @@ bool eng::Visitor::SaveToFile(const str::Path& filepath)
 	if (!file.is_open())
 		return false;
 
-	file << m_Root;
+	file << toml::toml_formatter{ m_Root };
 	return true;
 }
 
