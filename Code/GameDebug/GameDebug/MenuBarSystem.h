@@ -24,6 +24,7 @@ namespace dbg::level
 namespace editor
 {
 	struct FlipbookWindowRequestComponent;
+	struct PhysicsWindowRequestComponent;
 	struct SpriteWindowRequestComponent;
 	struct TableWindowRequestComponent;
 	struct TextureWindowRequestComponent;
@@ -64,6 +65,7 @@ namespace dbg
 			dbg::NodeGraphRequestComponent,
 			dbg::ShapeWindowRequestComponent,
 			editor::FlipbookWindowRequestComponent,
+			editor::PhysicsWindowRequestComponent,
 			editor::SpriteWindowRequestComponent,
 			editor::TableWindowRequestComponent,
 			editor::TextureWindowRequestComponent,

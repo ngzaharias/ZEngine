@@ -95,6 +95,48 @@ void eng::Visitor::ReadCustom(eng::ShapeSphere& value) const
 	Read(strRadius, value.m_Radius, value.m_Radius);
 }
 
+template<>
+void eng::Visitor::WriteCustom(const eng::RigidDynamic& value)
+{
+	Write(strENABLE_CCD, value.eENABLE_CCD);
+	Write(strKINEMATIC, value.eKINEMATIC);
+	Write(strLOCK_ANGULAR_X, value.eLOCK_ANGULAR_X);
+	Write(strLOCK_ANGULAR_Y, value.eLOCK_ANGULAR_Y);
+	Write(strLOCK_ANGULAR_Z, value.eLOCK_ANGULAR_Z);
+	Write(strLOCK_LINEAR_X, value.eLOCK_LINEAR_X);
+	Write(strLOCK_LINEAR_Y, value.eLOCK_LINEAR_Y);
+	Write(strLOCK_LINEAR_Z, value.eLOCK_LINEAR_Z);
+}
+
+template<>
+void eng::Visitor::WriteCustom(const eng::PhysicsPrototype& value)
+{
+	Write(strRigid, value.m_Rigidbody);
+	Write(strShapes, value.m_Shapes);
+}
+
+template<>
+void eng::Visitor::WriteCustom(const eng::RigidStatic& value)
+{
+}
+
+template<>
+void eng::Visitor::WriteCustom(const eng::ShapeBox& value)
+{
+	Write(strExtents, value.m_Extents);
+	Write(strTranslate, value.m_Translate);
+	Write(strRotate, value.m_Rotate);
+	Write(strChannel, value.m_Channel);
+}
+
+template<>
+void eng::Visitor::WriteCustom(const eng::ShapeSphere& value)
+{
+	Write(strTranslate, value.m_Translate);
+	Write(strChannel, value.m_Channel);
+	Write(strRadius, value.m_Radius);
+}
+
 void eng::PhysicsLoader::Add(ecs::EntityWorld& entityWorld, const ecs::Entity& entity, const eng::PhysicsPrototype& prototype) const
 {
 	using World = ecs::WorldView<
@@ -125,7 +167,7 @@ void eng::PhysicsLoader::Add(ecs::EntityWorld& entityWorld, const ecs::Entity& e
 			physx::PxFilterData filterData;
 			filterData.word0 = data.m_Channel;
 
-			if (physx::PxShape* pShape = physics.createShape(geometry, *asset->m_Material))
+			if (physx::PxShape* pShape = physics.createShape(geometry, *asset->m_Material, true))
 			{
 				const physx::PxTransform transform = ToTransform(data.m_Translate, data.m_Rotate);
 
@@ -144,7 +186,7 @@ void eng::PhysicsLoader::Add(ecs::EntityWorld& entityWorld, const ecs::Entity& e
 			physx::PxFilterData filterData;
 			filterData.word0 = data.m_Channel;
 
-			if (physx::PxShape* pShape = physics.createShape(geometry, *asset->m_Material))
+			if (physx::PxShape* pShape = physics.createShape(geometry, *asset->m_Material, true))
 			{
 				const physx::PxTransform transform = ToTransform(data.m_Translate, Rotator::Zero);
 

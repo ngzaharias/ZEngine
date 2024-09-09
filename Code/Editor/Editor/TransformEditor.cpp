@@ -91,7 +91,7 @@ namespace
 	{
 		auto& windowComponent = world.WriteComponent<editor::TransformWindowComponent>(entity);
 
-		using Query = ecs::query::Include<const eng::PrototypeComponent, const eng::TransformComponent>;
+		using Query = ecs::query::Include<const eng::TransformComponent>;
 		for (auto&& view : world.Query<Query>())
 		{
 			const char* name = ToName(world, view);
@@ -167,7 +167,7 @@ void editor::TransformEditor::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
-	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);
+	constexpr Vector2f s_DefaultSize = Vector2f(800, 600.f);
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::TransformWindowRequestComponent>>())
 	{
