@@ -95,6 +95,36 @@ byte str::HexToByte(char value)
 	return 0;
 }
 
+str::StringView str::Chop(const str::StringView& string, const str::StringView& substring)
+{
+	str::StringView result;
+	result = ChopLeft(string, substring);
+	result = ChopRight(result, substring);
+	return result;
+}
+
+str::StringView str::ChopLeft(const str::StringView& string, const str::StringView& substring)
+{
+	const auto a_size = string.size();
+	const auto b_size = substring.size();
+	const auto begin = 0;
+	const auto find = string.find(substring, begin);
+	if (find == begin)
+		return string.substr(b_size);
+	return string;
+}
+
+str::StringView str::ChopRight(const str::StringView& string, const str::StringView& substring)
+{
+	const auto a_size = string.size();
+	const auto b_size = substring.size();
+	const auto begin = string.size() - std::min(a_size, b_size);
+	const auto find = string.find(substring, begin);
+	if (find == begin)
+		return string.substr(0, a_size - b_size);
+	return string;
+}
+
 str::StringViews str::Split(const str::StringView& string, const str::StringView& delimiters /*= s_Delimiters*/)
 {
 	str::StringViews substrings;

@@ -28,6 +28,13 @@ namespace str
 
 	byte HexToByte(char value);
 
+	/// \brief Returns a view of the string with the substring chopped from the left and right.
+	str::StringView Chop(const str::StringView& string, const str::StringView& substring);
+	/// \brief Returns a view of the string with the substring chopped from the left.
+	str::StringView ChopLeft(const str::StringView& string, const str::StringView& substring);
+	/// \brief Returns a view of the string with the substring chopped from the right.
+	str::StringView ChopRight(const str::StringView& string, const str::StringView& substring);
+
 	str::StringViews Split(const str::StringView& string, const str::StringView& delimiters = strDelimiters);
 
 	/// \brief Trims the substring from the left and right of the string.
