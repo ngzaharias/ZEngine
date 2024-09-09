@@ -27,6 +27,7 @@ template<typename Type>
 const char* ToTypeName()
 {
 	// #note: MSVC returns "class <TYPE>", "struct <TYPE>" or "<TYPE>"
+	// will also include namespaces (including anonymous).
 	static const char* value = typeid(Type).name();
 	return value;
 }
