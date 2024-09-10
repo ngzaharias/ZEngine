@@ -3,26 +3,17 @@ m_Name = "Camera"
 
 [Camera]
 
-[Camera.m_Bounded]
-TypeId = 0
-[Camera.m_Bounded.TypeVal]
+[Camera.m_Bounded.Bound2D]
 m_Max = { X = +1968, Y = +1320 }
 m_Min = { X = -1968, Y = -1320 } 
 
-[Camera.m_Movement]
-TypeId = 0
-
-[Camera.m_Panning]
-TypeId = 0
-
-[Camera.m_Zooming]
-TypeId = 0
-[Camera.m_Zooming.TypeVal]
+[Camera.m_Movement.Move2D]
+[Camera.m_Panning.Pan3D]
+[Camera.m_Zooming.Zoom2D]
 m_Max = 2000
 m_Min = 800
 
-[Camera.m_Projection]
-TypeId = 0
+[Camera.m_Projection.Orthographic]
 
 [Transform]
 m_Translate = { X = 0.0, Y = 0.0, Z = -500.0 }

@@ -7,12 +7,10 @@ m_Size = { X = 128, Y = 256 }
 m_Sprite = '9e354f32-c294-48de-b83a-5e7a2a5cb102'
 
 [Physics]
-m_Rigid = { TypeId = 1 }
+[Physics.m_Rigid.RigidStatic]
 
 [[Physics.m_Shapes]]
-TypeId = 0
-
-[Physics.m_Shapes.TypeVal]
+[Physics.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 40, Y = 85, Z = 1 }
 m_Rotate = { Roll = -15 }

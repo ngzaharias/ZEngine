@@ -7,10 +7,9 @@ m_Size = { X = 128, Y = 128 }
 m_Sprite = '8bb1cf16-f6dc-4338-b897-f1099a8f91b4'
 
 [Physics]
-m_Rigid = { TypeId = 1 }
+[Physics.m_Rigid.RigidStatic]
 [[Physics.m_Shapes]]
-TypeId = 0
-[Physics.m_Shapes.TypeVal]
+[Physics.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 32, Y = 50, Z = 1 }
 

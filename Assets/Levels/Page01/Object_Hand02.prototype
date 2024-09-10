@@ -7,26 +7,23 @@ m_Size = { X = 512, Y = 512 }
 m_Sprite = '54003a9d-06d3-4972-be0c-9deeda6ec8b4'
 
 [Physics]
-m_Rigid = { TypeId = 1 }
+[Physics.m_Rigid.RigidStatic]
 
 [[Physics.m_Shapes]]
-TypeId = 0
-[Physics.m_Shapes.TypeVal]
+[Physics.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 80, Y = 30, Z = 1 }
 m_Translate = { X = 0, Y = -75 }
 
 [[Physics.m_Shapes]]
-TypeId = 0
-[Physics.m_Shapes.TypeVal]
+[Physics.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 30, Y = 170, Z = 1 }
 m_Rotate = { Roll = -15.5 }
 m_Translate = { X = -40, Y = 0 }
 
 [[Physics.m_Shapes]]
-TypeId = 0
-[Physics.m_Shapes.TypeVal]
+[Physics.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 30, Y = 170, Z = 1 }
 m_Rotate = { Roll = 15.5 }

@@ -2,16 +2,14 @@ m_Guid = "1574ebd9-3921-455d-9e86-e4cc2a0884ae"
 m_Name = "StaticMesh_05"
 
 [Physics]
-m_Rigid = { TypeId = 0 }
-[Physics.m_Rigid.TypeVal]
+[Physics.m_Rigid.RigidDynamic]
 eENABLE_CCD = true
 eKINEMATIC = true
 eLOCK_LINEAR_Z = true
 eLOCK_ANGULAR_X = true
 eLOCK_ANGULAR_Y = true
 [[Physics.m_Shapes]]
-TypeId = 0
-[Physics.m_Shapes.TypeVal]
+[Physics.m_Shapes.ShapeBox]
 m_Channel = 1
 m_Extents = { X = 100.0, Y = 100.0, Z = 100.0 }
 
