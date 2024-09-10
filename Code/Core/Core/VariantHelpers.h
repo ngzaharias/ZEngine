@@ -36,13 +36,17 @@ namespace core
 		using type = VariantDefaults<Variant<Types...>, indices>;
 	};
 
-	template<typename Type>
+	template<typename TElement>
 	str::StringView ToElementName()
 	{
-		static str::StringView preClass  = ToTypeName<Type>();
-		static str::StringView preStruct = str::ChopLeft(preClass, "class ");
-		static str::StringView preSpace  = str::ChopLeft(preStruct, "struct ");
-		static str::StringView value     = str::ChopLeft(preSpace, "`anonymous namespace'::");
+		static const str::StringView value = TypeName<TElement>::m_NoNamespace;
+		return value;
+	}
+
+	template<typename TElement>
+	str::StringView ToElementName(const TElement&)
+	{
+		static const str::StringView value = TypeName<TElement>::m_NoNamespace;
 		return value;
 	}
 

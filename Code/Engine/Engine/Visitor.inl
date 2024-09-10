@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/TypeName.h"
 #include "Core/TypeTraits.h"
 #include "Core/VariantHelpers.h"
 
@@ -233,21 +234,21 @@ void eng::Visitor::ReadPrimitive(const int32 index, Value& value) const
 template<typename ...Types>
 void eng::Visitor::ReadVariant(Variant<Types...>& value) const
 {
-	constexpr str::StringView strTypeId = "TypeId";
-	constexpr str::StringView strTypeVal = "TypeVal";
-
-	int32 type = 0, index = 0;
-	Read(strTypeId, type, 0);
-
 	// use a short-circuiting fold expression to assign the correct type
-	((index == type
-		? (value.template emplace<Types>(), true)
-		: (index++, false)) || ...);
+	((ReadVariantElement<Types>(value)) || ...);
+}
 
-	core::VariantMatch(value, [&](auto& element)
-		{
-			Read(strTypeVal, element, {});
-		});
+template<typename TElement, typename TVariant>
+bool eng::Visitor::ReadVariantElement(TVariant& value) const
+{
+	const str::StringView typeName = core::ToElementName<TElement>();
+
+	toml::Table& currentNode = *m_Node->as_table();
+	if (!currentNode[typeName])
+		return false;
+
+	Read(typeName, value.emplace<TElement>(), {});
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -429,13 +430,9 @@ void eng::Visitor::WritePrimitive(const int32 index, const Value& value)
 template<typename ...Types>
 void eng::Visitor::WriteVariant(const Variant<Types...>& value)
 {
-	constexpr str::StringView strTypeId = "TypeId";
-	constexpr str::StringView strTypeVal = "TypeVal";
-
-	int32 type = (int32)value.index();
-	Write(strTypeId, type);
 	core::VariantMatch(value, [&](auto& element)
 		{
-			Write(strTypeVal, element);
+			const str::StringView typeName = core::ToElementName(element);
+			Write(typeName, element);
 		});
 }

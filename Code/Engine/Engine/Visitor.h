@@ -199,6 +199,8 @@ namespace eng
 
 		template<typename ...Types>
 		void ReadVariant(Variant<Types...>& value) const;
+		template<typename TElement, typename TVariant>
+		bool ReadVariantElement(TVariant& value) const;
 
 		// Write
 		template<typename Value>

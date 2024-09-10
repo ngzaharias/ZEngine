@@ -1104,13 +1104,13 @@ TEST_CASE("eng::Visitor::Array<Variant>")
 		visitor.Write(strMyKey, myArray);
 
 		str::String string = visitor;
-		CHECK(string == "[[MyKey]]\nTypeId = 1\nTypeVal = 3");
+		CHECK(string == "[[MyKey]]\nint = 3");
 	}
 
 	{
 		INFO("Read");
 		Array<Variant<bool, int32>> myArray;
-		eng::Visitor visitor = str::StringView("[[MyKey]]\nTypeId = 1\nTypeVal = 3");
+		eng::Visitor visitor = str::StringView("[[MyKey]]\nint = 3");
 		visitor.Read(strMyKey, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
@@ -1605,13 +1605,13 @@ TEST_CASE("eng::Visitor::Variant<bool, int32>")
 		visitor.Write(strMyKey, myVariant);
 
 		str::String string = visitor;
-		CHECK(string == "[MyKey]\nTypeId = 1\nTypeVal = 3");
+		CHECK(string == "[MyKey]\nint = 3");
 	}
 
 	{
 		INFO("Read");
 		Variant<bool, int32> myVariant;
-		eng::Visitor visitor = str::StringView("MyKey = { TypeId = 1, TypeVal = 3 }");
+		eng::Visitor visitor = str::StringView("MyKey = { int = 3 }");
 		visitor.Read(strMyKey, myVariant, Variant<bool, int32>{0});
 
 		REQUIRE(std::holds_alternative<int32>(myVariant));
