@@ -1,7 +1,6 @@
 #pragma once
 
 using int32 = int32_t;
-using String = std::string;
 
 namespace _private
 {
