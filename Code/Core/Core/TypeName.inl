@@ -4,7 +4,7 @@
 #include "Core/TypeInfo.h"
 
 template<class Type>
-str::StringView TypeName<Type>::m_NoNamespace = TypeName<Type>::NoNamespace();
+const str::StringView TypeName<Type>::m_NoNamespace = TypeName<Type>::NoNamespace();
 
 template<class Type>
 str::StringView TypeName<Type>::NoNamespace()
