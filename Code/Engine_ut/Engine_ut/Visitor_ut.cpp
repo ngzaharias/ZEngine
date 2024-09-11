@@ -25,14 +25,15 @@ namespace
 	constexpr str::StringView strInt32 = "Int32";
 	constexpr str::StringView strMyKey = "MyKey";
 
-	enum class EInt8 : int8 { Min = -INT8_MAX, Max = +INT8_MAX };
-	enum class EInt16 : int16 { Min = -INT16_MAX, Max = +INT16_MAX };
-	enum class EInt32 : int32 { Min = -INT32_MAX, Max = +INT32_MAX };
-	enum class EInt64 : int64 { Min = -INT64_MAX, Max = +INT64_MAX };
+	enum class EInt8 : int8 { Min = -INT8_MAX, Max = BIT32(6) };
+	enum class EInt16 : int16 { Min = -INT16_MAX, Max = BIT32(14) };
+	enum class EInt32 : int32 { Min = -INT32_MAX, Max = BIT32(30) };
+	enum class EInt64 : int64 { Min = -INT64_MAX, Max = BIT64(62) };
 
-	enum class EUInt8 : uint8 { Min = 0, Max = UINT8_MAX };
-	enum class EUInt16 : uint16 { Min = 0, Max = UINT16_MAX };
-	enum class EUInt32 : uint32 { Min = 0, Max = UINT32_MAX };
+	enum class EUInt8 : uint8 { Min = 0, Max = BIT32(6) };
+	enum class EUInt16 : uint16 { Min = 0, Max = BIT32(14) };
+	enum class EUInt32 : uint32 { Min = 0, Max = BIT32(30) };
+	enum class EUInt64 : uint64 { Min = 0, Max = BIT64(62) };
 
 	struct Struct
 	{
@@ -384,13 +385,13 @@ TEST_CASE("eng::Visitor::Enum Int8")
 		visitor.Write(strMyKey, myEInt8);
 
 		str::String string = visitor;
-		CHECK(string == "MyKey = 127");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EInt8 myEInt8 = EInt8::Min;
-		eng::Visitor visitor = str::StringView("MyKey = 127");
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
 		visitor.Read(strMyKey, myEInt8, EInt8::Min);
 
 		CHECK(myEInt8 == EInt8::Max);
@@ -415,13 +416,13 @@ TEST_CASE("eng::Visitor::Enum Int16")
 		visitor.Write(strMyKey, myEInt16);
 
 		str::String string = visitor;
-		CHECK(string == "MyKey = 32767");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EInt16 myEInt16 = EInt16::Min;
-		eng::Visitor visitor = str::StringView("MyKey = 32767");
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
 		visitor.Read(strMyKey, myEInt16, EInt16::Min);
 
 		CHECK(myEInt16 == EInt16::Max);
@@ -446,13 +447,13 @@ TEST_CASE("eng::Visitor::Enum Int32")
 		visitor.Write(strMyKey, myEInt32);
 
 		str::String string = visitor;
-		CHECK(string == "MyKey = 2147483647");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EInt32 myEInt32 = EInt32::Min;
-		eng::Visitor visitor = str::StringView("MyKey = 2147483647");
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
 		visitor.Read(strMyKey, myEInt32, EInt32::Min);
 
 		CHECK(myEInt32 == EInt32::Max);
@@ -477,13 +478,13 @@ TEST_CASE("eng::Visitor::Enum Int64")
 		visitor.Write(strMyKey, myEInt64);
 
 		str::String string = visitor;
-		CHECK(string == "MyKey = 9223372036854775807");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EInt64 myEInt64 = EInt64::Min;
-		eng::Visitor visitor = str::StringView("MyKey = 9223372036854775807");
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
 		visitor.Read(strMyKey, myEInt64, EInt64::Min);
 
 		CHECK(myEInt64 == EInt64::Max);
@@ -508,13 +509,13 @@ TEST_CASE("eng::Visitor::Enum UInt8")
 		visitor.Write(strMyKey, myEUInt8);
 
 		str::String string = visitor;
-		CHECK(string == "MyKey = 255");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EUInt8 myEUInt8 = EUInt8::Min;
-		eng::Visitor visitor = str::StringView("MyKey = 255");
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
 		visitor.Read(strMyKey, myEUInt8, EUInt8::Min);
 
 		CHECK(myEUInt8 == EUInt8::Max);
@@ -539,13 +540,13 @@ TEST_CASE("eng::Visitor::Enum UInt16")
 		visitor.Write(strMyKey, myEUInt16);
 
 		str::String string = visitor;
-		CHECK(string == "MyKey = 65535");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EUInt16 myEUInt16 = EUInt16::Min;
-		eng::Visitor visitor = str::StringView("MyKey = 65535");
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
 		visitor.Read(strMyKey, myEUInt16, EUInt16::Min);
 
 		CHECK(myEUInt16 == EUInt16::Max);
@@ -570,13 +571,13 @@ TEST_CASE("eng::Visitor::Enum UInt32")
 		visitor.Write(strMyKey, myEUInt32);
 
 		str::String string = visitor;
-		CHECK(string == "MyKey = 4294967295");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EUInt32 myEUInt32 = EUInt32::Min;
-		eng::Visitor visitor = str::StringView("MyKey = 4294967295");
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
 		visitor.Read(strMyKey, myEUInt32, EUInt32::Min);
 
 		CHECK(myEUInt32 == EUInt32::Max);
@@ -589,6 +590,37 @@ TEST_CASE("eng::Visitor::Enum UInt32")
 		visitor.Read(strMyKey, myEUInt32, EUInt32::Max);
 
 		CHECK(myEUInt32 == EUInt32::Max);
+	}
+}
+
+TEST_CASE("eng::Visitor::Enum UInt64")
+{
+	{
+		INFO("Write");
+		EUInt64 myEUInt64 = EUInt64::Max;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myEUInt64);
+
+		str::String string = visitor;
+		CHECK(string == "MyKey = 'Max'");
+	}
+
+	{
+		INFO("Read");
+		EUInt64 myEUInt64 = EUInt64::Min;
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
+		visitor.Read(strMyKey, myEUInt64, EUInt64::Min);
+
+		CHECK(myEUInt64 == EUInt64::Max);
+	}
+
+	{
+		INFO("Read - Default");
+		EUInt64 myEUInt64 = EUInt64::Min;
+		eng::Visitor visitor = str::StringView("");
+		visitor.Read(strMyKey, myEUInt64, EUInt64::Max);
+
+		CHECK(myEUInt64 == EUInt64::Max);
 	}
 }
 
@@ -1038,13 +1070,13 @@ TEST_CASE("eng::Visitor::Array<Enum>")
 		visitor.Write(strMyKey, myArray);
 
 		str::String string = visitor;
-		CHECK(string == "MyKey = [ 2147483647 ]");
+		CHECK(string == "MyKey = [ 'Max' ]");
 	}
 
 	{
 		INFO("Read");
 		Array<EInt32> myArray;
-		eng::Visitor visitor = str::StringView("MyKey = [ 2147483647 ]");
+		eng::Visitor visitor = str::StringView("MyKey = [ 'Max' ]");
 		visitor.Read(strMyKey, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
@@ -1181,13 +1213,13 @@ TEST_CASE("eng::Visitor::Array<Array<Enum>>")
 		visitor.Write(strMyKey, myArray);
 
 		str::String string = visitor;
-		CHECK(string == "MyKey = [ [ 2147483647 ] ]");
+		CHECK(string == "MyKey = [ [ 'Max' ] ]");
 	}
 
 	{
 		INFO("Read");
 		Array<Array<EInt32>> myArray;
-		eng::Visitor visitor = str::StringView("MyKey = [ [ 2147483647 ] ]");
+		eng::Visitor visitor = str::StringView("MyKey = [ [ 'Max' ] ]");
 		visitor.Read(strMyKey, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
@@ -1286,13 +1318,13 @@ TEST_CASE("eng::Visitor::Map<Enum>")
 		visitor.Write(strMyKey, myMap);
 
 		str::String string = visitor;
-		CHECK(string == "[MyKey]\nA = 2147483647");
+		CHECK(string == "[MyKey]\nA = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		Map<str::String, EInt32> myMap;
-		eng::Visitor visitor = str::StringView("[MyKey]\nA = 2147483647");
+		eng::Visitor visitor = str::StringView("[MyKey]\nA = 'Max'");
 		visitor.Read(strMyKey, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
@@ -1386,13 +1418,13 @@ TEST_CASE("eng::Visitor::Map<Map<Enum>>")
 		visitor.Write(strMyKey, myMap);
 
 		str::String string = visitor;
-		CHECK(string == "[MyKey.A]\nB = 2147483647");
+		CHECK(string == "[MyKey.A]\nB = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		Map<str::String, Map<str::String, EInt32>> myMap;
-		eng::Visitor visitor = str::StringView("[MyKey.A]\nB = 2147483647");
+		eng::Visitor visitor = str::StringView("[MyKey.A]\nB = 'Max'");
 		visitor.Read(strMyKey, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/EnumHelpers.h"
 #include "Core/TypeName.h"
 #include "Core/TypeTraits.h"
 #include "Core/VariantHelpers.h"
@@ -142,18 +143,30 @@ template <typename TEnum>
 void eng::Visitor::ReadEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue) const
 {
 	toml::Table& currentNode = *m_Node->as_table();
-	using Value = std::underlying_type<TEnum>::type;
-	const auto result = currentNode[key].value<Value>();
-	value = result ? static_cast<TEnum>(*result) : defaultValue;
+
+	// by string
+	const auto result = currentNode[key].value<str::String>();
+	value = result ? StringToEnum<TEnum>(*result) : defaultValue;
+
+	// by value
+	// using Value = std::underlying_type<TEnum>::type;
+	//const auto result = currentNode[key].value<Value>();
+	//value = result ? static_cast<TEnum>(*result) : defaultValue;
 }
 
 template <typename TEnum>
 void eng::Visitor::ReadEnum(const int32 index, TEnum& value) const
 {
 	toml::Array& currentNode = *m_Node->as_array();
-	using Value = std::underlying_type<TEnum>::type;
-	if (const auto result = currentNode.at(index).value<Value>())
-		value = static_cast<TEnum>(*result);
+
+	// by string
+	if (const auto result = currentNode.at(index).value<str::String>())
+		value = StringToEnum<TEnum>(*result);
+
+	// by value
+	//using Value = std::underlying_type<TEnum>::type;
+	//if (const auto result = currentNode.at(index).value<Value>())
+	//	value = static_cast<TEnum>(*result);
 }
 
 template<typename Value>
@@ -366,14 +379,16 @@ template <typename TEnum>
 void eng::Visitor::WriteEnum(const str::StringView& key, const TEnum& value)
 {
 	toml::Table& currentNode = *m_Node->as_table();
-	currentNode.insert_or_assign(key, static_cast<int64>(value));
+	currentNode.insert_or_assign(key, EnumToString(value)); // by string
+	// currentNode.insert_or_assign(key, static_cast<int64>(value)); // by value
 }
 
 template <typename TEnum>
 void eng::Visitor::WriteEnum(const int32 index, const TEnum& value)
 {
 	toml::Array& currentNode = *m_Node->as_array();
-	currentNode.push_back(static_cast<int64>(value));
+	currentNode.push_back(EnumToString(value)); // by string
+	// currentNode.push_back(static_cast<int64>(value)); // by value
 }
 
 template<typename Value>

@@ -12,6 +12,12 @@ constexpr int32 EnumToCount()
 }
 
 template<typename TEnum>
+constexpr int32 EnumToIndex(const TEnum value)
+{
+	return static_cast<int32>(*magic_enum::enum_index(value));
+}
+
+template<typename TEnum>
 constexpr str::StringView EnumToString()
 {
 	return magic_enum::enum_type_name<TEnum>();
