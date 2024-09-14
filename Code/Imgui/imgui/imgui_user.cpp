@@ -5,6 +5,7 @@
 #include "Core/Path.h"
 #include "Core/String.h"
 #include "Math/AABB.h"
+#include "Math/Quaternion.h"
 #include "Math/Rotator.h"
 #include "Math/Vector.h"
 
@@ -45,6 +46,26 @@ namespace
 		const ImVec2 t = Remap(v, range_min, range_max, ImVec2(0, 1), ImVec2(1, 0));
 		return Remap(t, ImVec2(0, 0), ImVec2(1, 1), inner_bb.Min, inner_bb.Max);
 	}
+}
+
+imgui::RaiiID::RaiiID(const char* id) 
+{ 
+	ImGui::PushID(id); 
+}
+
+imgui::RaiiID::~RaiiID()
+{ 
+	ImGui::PopID(); 
+}
+
+imgui::RaiiDisable::RaiiDisable() 
+{ 
+	ImGui::BeginDisabled(); 
+}
+
+imgui::RaiiDisable::~RaiiDisable()
+{ 
+	ImGui::EndDisabled(); 
 }
 
 void imgui::AddRect(const AABB2f& value, Vector4f colour, float rounding, float thickness, ImDrawFlags flags)
@@ -147,44 +168,221 @@ bool imgui::BulletHeader(const char* label, const bool selected /*= false*/)
 	return pressed;
 }
 
-bool imgui::DragUInt(const char* label, uint32* v, float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+bool imgui::Checkbox(const char* label, bool& value)
 {
-	return ImGui::DragScalar(label, ImGuiDataType_U32, v, v_speed, &v_min, &v_max, format, flags);
+	return ImGui::Checkbox(label, &value);
 }
 
-bool imgui::DragUInt2(const char* label, uint32 v[2], float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+bool imgui::Checkbox(const char* label, const bool& value)
 {
-	return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 2, v_speed, &v_min, &v_max, format, flags);
+	RaiiDisable disable;
+	return ImGui::Checkbox(label, const_cast<bool*>(&value));
 }
 
-bool imgui::DragUInt3(const char* label, uint32 v[3], float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+bool imgui::DragFloat(const char* label, float& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
 {
-	return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 3, v_speed, &v_min, &v_max, format, flags);
+	return ImGui::DragFloat(label, &value, speed, min, max, format, flags);
 }
 
-bool imgui::DragUInt4(const char* label, uint32 v[4], float v_speed, uint32 v_min, uint32 v_max, const char* format, ImGuiSliderFlags flags)
+bool imgui::DragFloat(const char* label, const float& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
 {
-	return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 4, v_speed, &v_min, &v_max, format, flags);
+	RaiiDisable disable;
+	return ImGui::DragFloat(label, const_cast<float*>(&value), speed, min, max, format, flags);
 }
 
-bool imgui::DragRotator(const char* label, Rotator& value, float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool imgui::DragDouble(const char* label, double& value, float speed, double min, double max, const char* format, ImGuiSliderFlags flags)
 {
-	return ImGui::DragFloat3(label, &value.m_Pitch, v_speed, v_min, v_max, format, flags);
+	return ImGui::DragScalar(label, ImGuiDataType_Double, &value, speed, &min, &max, format, flags);
 }
 
-bool imgui::DragVector(const char* label, Vector2f& value, float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool imgui::DragDouble(const char* label, const double& value, float speed, double min, double max, const char* format, ImGuiSliderFlags flags)
 {
-	return ImGui::DragFloat2(label, &value.x, v_speed, v_min, v_max, format, flags);
+	RaiiDisable disable;
+	return ImGui::DragScalar(label, ImGuiDataType_Double, const_cast<double*>(&value), speed, &min, &max, format, flags);
 }
 
-bool imgui::DragVector(const char* label, Vector3f& value, float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool imgui::DragInt(const char* label, int8& value, float speed, int8 min, int8 max, const char* format, ImGuiSliderFlags flags)
 {
-	return ImGui::DragFloat3(label, &value.x, v_speed, v_min, v_max, format, flags);
+	return ImGui::DragScalar(label, ImGuiDataType_S8, &value, speed, &min, &max, format, flags);
 }
 
-bool imgui::DragVector(const char* label, Vector4f& value, float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool imgui::DragInt(const char* label, int16& value, float speed, int16 min, int16 max, const char* format, ImGuiSliderFlags flags)
 {
-	return ImGui::DragFloat4(label, &value.x, v_speed, v_min, v_max, format, flags);
+	return ImGui::DragScalar(label, ImGuiDataType_S16, &value, speed, &min, &max, format, flags);
+}
+
+bool imgui::DragInt(const char* label, int32& value, float speed, int32 min, int32 max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragInt(label, &value, speed, min, max, format, flags);
+}
+
+bool imgui::DragInt(const char* label, int64& value, float speed, int64 min, int64 max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalar(label, ImGuiDataType_S64, &value, speed, &min, &max, format, flags);
+}
+
+bool imgui::DragInt(const char* label, const int8& value, float speed, int8 min, int8 max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	return ImGui::DragScalar(label, ImGuiDataType_S8, const_cast<int8*>(&value), speed, &min, &max, format, flags);
+}
+
+bool imgui::DragInt(const char* label, const int16& value, float speed, int16 min, int16 max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	return ImGui::DragScalar(label, ImGuiDataType_S16, const_cast<int16*>(&value), speed, &min, &max, format, flags);
+}
+
+bool imgui::DragInt(const char* label, const int32& value, float speed, int32 min, int32 max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	return ImGui::DragInt(label, const_cast<int32*>(&value), speed, min, max, format, flags);
+}
+
+bool imgui::DragInt(const char* label, const int64& value, float speed, int64 min, int64 max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	return ImGui::DragScalar(label, ImGuiDataType_S64, const_cast<int64*>(&value), speed, &min, &max, format, flags);
+}
+
+bool imgui::DragUInt(const char* label, uint8& value, float speed, uint8 min, uint8 max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalar(label, ImGuiDataType_U8, &value, speed, &min, &max, format, flags);
+}
+
+bool imgui::DragUInt(const char* label, uint16& value, float speed, uint16 min, uint16 max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalar(label, ImGuiDataType_U16, &value, speed, &min, &max, format, flags);
+}
+
+bool imgui::DragUInt(const char* label, uint32& value, float speed, uint32 min, uint32 max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalar(label, ImGuiDataType_U32, &value, speed, &min, &max, format, flags);
+}
+
+bool imgui::DragUInt(const char* label, uint64& value, float speed, uint64 min, uint64 max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalar(label, ImGuiDataType_U64, &value, speed, &min, &max, format, flags);
+}
+
+bool imgui::DragUInt(const char* label, const uint8& value, float speed, uint8 min, uint8 max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	return ImGui::DragScalar(label, ImGuiDataType_U8, const_cast<uint8*>(&value), speed, &min, &max, format, flags);
+}
+
+bool imgui::DragUInt(const char* label, const uint16& value, float speed, uint16 min, uint16 max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	return ImGui::DragScalar(label, ImGuiDataType_U16, const_cast<uint16*>(&value), speed, &min, &max, format, flags);
+}
+
+bool imgui::DragUInt(const char* label, const uint32& value, float speed, uint32 min, uint32 max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	return ImGui::DragScalar(label, ImGuiDataType_U32, const_cast<uint32*>(&value), speed, &min, &max, format, flags);
+}
+
+bool imgui::DragUInt(const char* label, const uint64& value, float speed, uint64 min, uint64 max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	return ImGui::DragScalar(label, ImGuiDataType_U64, const_cast<uint64*>(&value), speed, &min, &max, format, flags);
+}
+
+bool imgui::DragQuaternion(const char* label, Quaternion& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragFloat4(label, &value.x, speed, min, max, format, flags);
+}
+
+bool imgui::DragQuaternion(const char* label, const Quaternion& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	Quaternion& v = const_cast<Quaternion&>(value);
+	return ImGui::DragFloat4(label, &v.x, speed, min, max, format, flags);
+}
+
+bool imgui::DragRotator(const char* label, Rotator& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragFloat3(label, &value.m_Pitch, speed, min, max, format, flags);
+}
+
+bool imgui::DragRotator(const char* label, const Rotator& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	Rotator& v = const_cast<Rotator&>(value);
+	return ImGui::DragFloat3(label, &v.m_Pitch, speed, min, max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, Vector2f& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragFloat2(label, &value.x, speed, min, max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, Vector2i& value, float speed, int32 min, int32 max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragInt2(label, &value.x, speed, min, max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, Vector2u& value, float speed, uint32 min, uint32 max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragScalarN(label, ImGuiDataType_U32, &value.x, 2, speed, &min, &max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, Vector3f& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragFloat3(label, &value.x, speed, min, max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, Vector3i& value, float speed, int32 min, int32 max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragInt3(label, &value.x, speed, min, max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, Vector4f& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragFloat4(label, &value.x, speed, min, max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, const Vector2f& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	Vector2f& v = const_cast<Vector2f&>(value);
+	return ImGui::DragFloat2(label, &v.x, speed, min, max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, const Vector2i& value, float speed, int32 min, int32 max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	Vector2i& v = const_cast<Vector2i&>(value);
+	return ImGui::DragInt2(label, &v.x, speed, min, max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, const Vector2u& value, float speed, uint32 min, uint32 max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	Vector2u& v = const_cast<Vector2u&>(value);
+	return ImGui::DragScalarN(label, ImGuiDataType_U32, &v.x, 2, speed, &min, &max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, const Vector3f& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	Vector3f& v = const_cast<Vector3f&>(value);
+	return ImGui::DragFloat3(label, &v.x, speed, min, max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, const Vector3i& value, float speed, int32 min, int32 max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	Vector3i& v = const_cast<Vector3i&>(value);
+	return ImGui::DragInt3(label, &v.x, speed, min, max, format, flags);
+}
+
+bool imgui::DragVector(const char* label, const Vector4f& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	Vector4f& v = const_cast<Vector4f&>(value);
+	return ImGui::DragFloat4(label, &v.x, speed, min, max, format, flags);
 }
 
 bool imgui::Guid(const char* label, str::Guid& value)
@@ -198,6 +396,13 @@ bool imgui::Guid(const char* label, str::Guid& value)
 	return false;
 }
 
+bool imgui::Guid(const char* label, const str::Guid& value)
+{
+	RaiiDisable disable;
+	str::String string = value.ToString();
+	return ImGui::InputText(label, &string);
+}
+
 bool imgui::Name(const char* label, str::Name& value)
 {
 	str::String string = str::String(value);
@@ -207,6 +412,13 @@ bool imgui::Name(const char* label, str::Name& value)
 		return true;
 	}
 	return false;
+}
+
+bool imgui::Name(const char* label, const str::Name& value)
+{
+	RaiiDisable disable;
+	str::String string = str::String(value);
+	return ImGui::InputText(label, &string);
 }
 
 bool imgui::Path(const char* label, str::Path& value)
@@ -220,9 +432,22 @@ bool imgui::Path(const char* label, str::Path& value)
 	return false;
 }
 
+bool imgui::Path(const char* label, const str::Path& value)
+{
+	RaiiDisable disable;
+	str::String string = str::String(value);
+	return ImGui::InputText(label, &string);
+}
+
 bool imgui::String(const char* label, str::String& value)
 {
 	return ImGui::InputText(label, &value);
+}
+
+bool imgui::String(const char* label, const str::String& value)
+{
+	RaiiDisable disable;
+	return ImGui::InputText(label, const_cast<std::string*>(&value));
 }
 
 void imgui::Grid(Vector2f graph_size, Vector2f spacing, Vector2f offset)
