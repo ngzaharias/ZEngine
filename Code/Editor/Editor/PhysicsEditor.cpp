@@ -19,6 +19,7 @@
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui_stdlib.h>
 #include <imgui/imgui_user.h>
+#include <imgui/Inspector.h>
 
 #include <PhysX/PxRigidDynamic.h>
 #include <PhysX/PxRigidStatic.h>
@@ -108,59 +109,8 @@ namespace
 		const ecs::Entity selected = windowComponent.m_Selected;
 		if (world.IsAlive(selected) && world.HasComponent<eng::RigidStaticComponent>(selected))
 		{
-			auto& physics = world.WriteComponent<eng::RigidStaticComponent>(selected);
-			for (physx::PxShape* shape : physics.m_Shapes)
-			{
-				physx::PxTransform transform = shape->getLocalPose();
-				Vector3f translate = ToVector3f(transform.p);
-				Rotator rotate = ToRotator(transform.q);
-
-				ImGui::PushID((void*)shape);
-
-				{
-					bool hasChanged = false;
-					hasChanged |= ImGui::DragFloat3("m_Translate", &translate.x);
-					hasChanged |= ImGui::DragFloat3("m_Rotate", &rotate.m_Pitch);
-
-					if (hasChanged)
-					{
-						transform.p.x = translate.x;
-						transform.p.y = translate.y;
-						transform.p.z = translate.z;
-
-						Quaternion quat = Quaternion::FromRotator(rotate);
-						transform.q.x = quat.x;
-						transform.q.y = quat.y;
-						transform.q.z = quat.z;
-						transform.q.w = quat.w;
-						shape->setLocalPose(transform);
-					}
-				}
-
-				switch (shape->getGeometryType())
-				{
-				case physx::PxGeometryType::eBOX:
-				{
-					physx::PxBoxGeometry geometry;
-					shape->getBoxGeometry(geometry);
-
-					if (ImGui::DragFloat3("m_Extents", &geometry.halfExtents.x))
-						shape->setGeometry(geometry);
-
-				} break;
-				case physx::PxGeometryType::eSPHERE:
-				{
-					physx::PxSphereGeometry geometry;
-					shape->getSphereGeometry(geometry);
-
-					if (ImGui::DragFloat("m_Radius", &geometry.radius))
-						shape->setGeometry(geometry);
-				} break;
-				}
-
-				ImGui::PopID();
-				ImGui::Spacing();
-			}
+			imgui::Inspector inspector;
+			inspector.Write("eng::RigidStaticComponent", world.WriteComponent<eng::RigidStaticComponent>(selected));
 		}
 	}
 
@@ -240,6 +190,70 @@ namespace
 			}
 		}
 	};
+}
+
+template<>
+bool imgui::Inspector::WriteCustom(eng::RigidStaticComponent& value)
+{
+	Write("m_Shapes", value.m_Shapes);
+	return false;
+}
+
+template<>
+bool imgui::Inspector::WriteCustom(physx::PxShape*& value)
+{
+	physx::PxTransform transform = value->getLocalPose();
+	Vector3f translate = ToVector3f(transform.p);
+	Rotator rotate = ToRotator(transform.q);
+
+	{
+		bool hasChanged = false;
+		hasChanged |= Write("m_Translate", translate);
+		hasChanged |= Write("m_Rotate", rotate);
+
+		if (hasChanged)
+		{
+			transform.p.x = translate.x;
+			transform.p.y = translate.y;
+			transform.p.z = translate.z;
+
+			Quaternion quat = Quaternion::FromRotator(rotate);
+			transform.q.x = quat.x;
+			transform.q.y = quat.y;
+			transform.q.z = quat.z;
+			transform.q.w = quat.w;
+			value->setLocalPose(transform);
+		}
+	}
+
+	switch (value->getGeometryType())
+	{
+	case physx::PxGeometryType::eBOX:
+	{
+		physx::PxBoxGeometry geometry;
+		value->getBoxGeometry(geometry);
+
+		Vector3f extents = ToVector3f(geometry.halfExtents);
+		if (Write("m_Extents", extents))
+		{
+			geometry.halfExtents.x = extents.x;
+			geometry.halfExtents.y = extents.y;
+			geometry.halfExtents.z = extents.z;
+			value->setGeometry(geometry);
+		}
+
+	} break;
+	case physx::PxGeometryType::eSPHERE:
+	{
+		physx::PxSphereGeometry geometry;
+		value->getSphereGeometry(geometry);
+
+		if (Write("m_Radius", geometry.radius))
+			value->setGeometry(geometry);
+	} break;
+	}
+
+	return false;
 }
 
 void editor::PhysicsEditor::Update(World& world, const GameTime& gameTime)
