@@ -32,7 +32,6 @@ template<> struct imgui::Inspector::IsCollapsable<str::String> : std::false_type
 template<typename Value>
 void imgui::Inspector::Read(const char* label, const Value& value)
 {
-	ImGui::TableNextRow();
 	ImGui::TableSetColumnIndex(0);
 	if constexpr (core::IsSpecialization<Value, Array>::value)
 	{
@@ -61,6 +60,7 @@ void imgui::Inspector::Read(const char* label, const Value& value)
 	{
 		ReadCustom(value);
 	}
+	ImGui::TableNextRow();
 }
 
 template<typename Value>
@@ -78,28 +78,14 @@ void imgui::Inspector::ReadEnum(const Value& value)
 {
 }
 
-template<typename Value>
-void imgui::Inspector::ReadMap(const Map<str::Guid, Value>& values)
+template<typename Key, typename Value>
+void imgui::Inspector::ReadMap(const Map<Key, Value>& values)
 {
 	for (auto&& [key, value] : values)
 	{
-		const str::String string = key.ToString();
+		const str::String string = std::format("{}", key);
 		Read(string.c_str(), value);
 	}
-}
-
-template<typename Value>
-void imgui::Inspector::ReadMap(const Map<str::Name, Value>& values)
-{
-	for (auto&& [key, value] : values)
-		Read(key.ToChar(), value);
-}
-
-template<typename Value>
-void imgui::Inspector::ReadMap(const Map<str::String, Value>& values)
-{
-	for (auto&& [key, value] : values)
-		Read(key.c_str(), value);
 }
 
 template<typename Value>
@@ -204,7 +190,7 @@ bool imgui::Inspector::WriteArray(Array<Value>& values)
 	bool result = false;
 	for (int32 i = 0; i < values.GetCount(); ++i)
 	{
-		const str::String string = std::to_string(i);
+		const str::String string = std::format("{}", i);
 		result |= Write(string.c_str(), values[i]);
 	}
 	return result;
@@ -217,33 +203,15 @@ bool imgui::Inspector::WriteEnum(Value& value)
 	return result;
 }
 
-template<typename Value>
-bool imgui::Inspector::WriteMap(Map<str::Guid, Value>& values)
+template<typename Key, typename Value>
+bool imgui::Inspector::WriteMap(Map<Key, Value>& values)
 {
 	bool result = false;
 	for (auto&& [key, value] : values)
 	{
-		const str::String string = key.ToString();
+		const str::String string = std::format("{}", key);
 		result |= Write(string.c_str(), value);
 	}
-	return result;
-}
-
-template<typename Value>
-bool imgui::Inspector::WriteMap(Map<str::Name, Value>& values)
-{
-	bool result = false;
-	for (auto&& [key, value] : values)
-		result |= Write(key.ToChar(), value);
-	return result;
-}
-
-template<typename Value>
-bool imgui::Inspector::WriteMap(Map<str::String, Value>& values)
-{
-	bool result = false;
-	for (auto&& [key, value] : values)
-		result |= Write(key.c_str(), value);
 	return result;
 }
 

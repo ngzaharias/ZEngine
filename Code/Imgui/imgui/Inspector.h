@@ -68,12 +68,8 @@ namespace imgui
 		template <typename Value>
 		void ReadEnum(const Value& value);
 
-		template<typename Value>
-		void ReadMap(const Map<str::Guid, Value>& values);
-		template<typename Value>
-		void ReadMap(const Map<str::Name, Value>& values);
-		template<typename Value>
-		void ReadMap(const Map<str::String, Value>& values);
+		template<typename Key, typename Value>
+		void ReadMap(const Map<Key, Value>& values);
 
 		template<typename Value>
 		void ReadOptional(const Optional<Value>& value);
@@ -94,12 +90,8 @@ namespace imgui
 		template <typename TEnum>
 		bool WriteEnum(TEnum& value);
 
-		template<typename Value>
-		bool WriteMap(Map<str::Guid, Value>& values);
-		template<typename Value>
-		bool WriteMap(Map<str::Name, Value>& values);
-		template<typename Value>
-		bool WriteMap(Map<str::String, Value>& values);
+		template<typename Key, typename Value>
+		bool WriteMap(Map<Key, Value>& values);
 
 		template<typename Value>
 		bool WriteOptional(Optional<Value>& value);
