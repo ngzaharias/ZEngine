@@ -32,35 +32,80 @@ template<> struct imgui::Inspector::IsCollapsable<str::String> : std::false_type
 template<typename Value>
 void imgui::Inspector::Read(const char* label, const Value& value)
 {
+	RaiiID id(label);
+	ImGui::TableNextRow();
 	ImGui::TableSetColumnIndex(0);
+
 	if constexpr (core::IsSpecialization<Value, Array>::value)
 	{
-		ReadArray(value);
+		if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			RaiiIndent indent(0);
+			ReadArray(value);
+		}
 	}
 	else if constexpr (core::IsSpecialization<Value, Map>::value)
 	{
-		ReadMap(value);
+		if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			RaiiIndent indent(0);
+			ReadMap(value);
+		}
 	}
 	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
 	// so instead we have to check the actual type rather than our friendly version.
 	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
 	{
-		ReadOptional(value);
+		ImGui::TableSetColumnIndex(2);
+		imgui::Checkbox("##enable", value.has_value());
+
+		ImGui::TableSetColumnIndex(0);
+		if constexpr (imgui::Inspector::IsCollapsable<Value::value_type>::value)
+		{
+			if (ImGui::CollapsingHeader(label))
+			{
+				RaiiIndent indent(0);
+				ReadOptional(value);
+			}
+		}
+		else
+		{
+			ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_Bullet);
+			ImGui::TableSetColumnIndex(1);
+			ReadOptional(value);
+		}
 	}
 	// same as above
 	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
 	{
-		ReadVariant(value);
+		if (ImGui::CollapsingHeader(label))
+		{
+			RaiiIndent indent(0);
+			ReadVariant(value);
+		}
 	}
 	else if constexpr (std::is_enum<Value>::value)
 	{
 		ReadEnum(value);
+		ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_Bullet);
+		ImGui::TableSetColumnIndex(1);
+		ReadEnum(value);
+	}
+	else if constexpr (imgui::Inspector::IsCollapsable<Value>::value)
+	{
+		if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			RaiiIndent indent(0);
+			ReadCustom(value);
+		}
 	}
 	else
 	{
+		ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_Bullet);
+		RaiiIndent indent(0);
+		ImGui::TableSetColumnIndex(1);
 		ReadCustom(value);
 	}
-	ImGui::TableNextRow();
 }
 
 template<typename Value>
@@ -91,6 +136,40 @@ void imgui::Inspector::ReadMap(const Map<Key, Value>& values)
 template<typename Value>
 void imgui::Inspector::ReadOptional(const Optional<Value>& value)
 {
+	ImGui::TableSetColumnIndex(1);
+	if (value)
+	{
+		if constexpr (core::IsSpecialization<Value, Array>::value)
+		{
+			ReadArray(*value);
+		}
+		else if constexpr (core::IsSpecialization<Value, Map>::value)
+		{
+			ReadMap(*value);
+		}
+		// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
+		// so instead we have to check the actual type rather than our friendly version.
+		else if constexpr (core::IsSpecialization<Value, std::optional>::value)
+		{
+			static_assert(false, "Optional<Optional<...>> is not supported!");
+		}
+		else if constexpr (core::IsSpecialization<Value, std::variant>::value)
+		{
+			ReadVariant(*value);
+		}
+		else if constexpr (std::is_enum<Value>::value)
+		{
+			ReadEnum(*value);
+		}
+		else
+		{
+			ReadCustom(*value);
+		}
+	}
+	else
+	{
+		ImGui::Text("...");
+	}
 }
 
 template<typename ...Values>
