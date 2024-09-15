@@ -115,9 +115,13 @@ namespace
 			auto& transform = world.WriteComponent<eng::TransformComponent>(selected);
 
 			imgui::Inspector inspector;
-			inspector.Write("m_Translate", transform.m_Translate);
-			inspector.Write("m_Rotate", transform.m_Rotate);
-			inspector.Write("m_Scale", transform.m_Scale);
+			if (inspector.Begin("##table"))
+			{
+				inspector.Write("m_Translate", transform.m_Translate);
+				inspector.Write("m_Rotate", transform.m_Rotate);
+				inspector.Write("m_Scale", transform.m_Scale);
+				inspector.End();
+			}
 		}
 	}
 
