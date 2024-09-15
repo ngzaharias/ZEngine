@@ -20,9 +20,10 @@ using uint64 = uint64_t;
 
 template<typename Value>
 class Array;
-
 template<typename Key, typename Value>
 class Map;
+template<typename Value>
+class Set;
 
 class Vector2f;
 class Vector2i;
@@ -72,6 +73,9 @@ namespace imgui
 		template<typename Value>
 		void ReadOptional(const Optional<Value>& value);
 
+		template<typename Value>
+		void ReadSet(const Set<Value>& values);
+
 		template<typename ...Values>
 		void ReadVariant(const Variant<Values...>& value);
 
@@ -91,6 +95,9 @@ namespace imgui
 
 		template<typename Value>
 		bool WriteOptional(Optional<Value>& value);
+
+		template<typename Value>
+		bool WriteSet(Set<Value>& value);
 
 		template<typename ...Values>
 		bool WriteVariant(Variant<Values...>& value);

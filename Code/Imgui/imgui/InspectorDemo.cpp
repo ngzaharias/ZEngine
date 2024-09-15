@@ -17,8 +17,20 @@
 #include "imgui/imgui_user.h"
 #include "imgui/Inspector.h"
 
+#define VISIT(label, value) \
+{ \
+	if (isReadOnly) { inspector.Read(label, value); } \
+	else { inspector.Write(label, value); } \
+}
+
 namespace
 {
+	enum class EEnum
+	{
+		First,
+		Second,
+	};
+
 	struct StructBullet
 	{
 		bool operator<(const StructBullet& rhs) const
@@ -54,6 +66,7 @@ namespace
 		uint16 m_UInt16 = 0;
 		uint32 m_UInt32 = 0;
 		uint64 m_UInt64 = 0;
+		EEnum m_Enum = EEnum::First;
 
 		str::Guid m_Guid = {};
 		str::Name m_Name = {};
@@ -82,6 +95,13 @@ namespace
 
 
 template<>
+void imgui::Inspector::ReadCustom(const StructBullet& value)
+{
+	Read("m_Float", value.m_Float);
+	Read("m_Int32", value.m_Int32);
+}
+
+template<>
 bool imgui::Inspector::WriteCustom(StructBullet& value)
 {
 	bool result = false;
@@ -91,12 +111,55 @@ bool imgui::Inspector::WriteCustom(StructBullet& value)
 }
 
 template<>
+void imgui::Inspector::ReadCustom(const StructCollapse& value)
+{
+	Read("m_Float", value.m_Float);
+	Read("m_Int32", value.m_Int32);
+}
+
+template<>
 bool imgui::Inspector::WriteCustom(StructCollapse& value)
 {
 	bool result = false;
 	result |= Write("m_Float", value.m_Float);
 	result |= Write("m_Int32", value.m_Int32);
 	return result;
+}
+
+template<>
+void imgui::Inspector::ReadCustom(const StructB& value)
+{
+	Read("m_Bool", value.m_Bool);
+	Read("m_Float", value.m_Float);
+	Read("m_Double", value.m_Double);
+	Read("m_Int8", value.m_Int8);
+	Read("m_Int16", value.m_Int16);
+	Read("m_Int32", value.m_Int32);
+	Read("m_Int64", value.m_Int64);
+	Read("m_UInt8", value.m_UInt8);
+	Read("m_UInt16", value.m_UInt16);
+	Read("m_UInt32", value.m_UInt32);
+	Read("m_UInt64", value.m_UInt64);
+	Read("m_Enum", value.m_Enum);
+	Read("m_Guid", value.m_Guid);
+	Read("m_Name", value.m_Name);
+	Read("m_Path", value.m_Path);
+	Read("m_String", value.m_String);
+	Read("m_Quaternion", value.m_Quaternion);
+	Read("m_Rotator", value.m_Rotator);
+	Read("m_Vector2f", value.m_Vector2f);
+	Read("m_Vector2i", value.m_Vector2i);
+	Read("m_Vector2u", value.m_Vector2u);
+	Read("m_Vector3f", value.m_Vector3f);
+	Read("m_Vector3i", value.m_Vector3i);
+	Read("m_Vector4f", value.m_Vector4f);
+	Read("m_Optional", value.m_Optional);
+	Read("m_StructBullet", value.m_StructBullet);
+	Read("m_StructCollapse", value.m_StructCollapse);
+	//Read("m_Variant", value.m_Variant);
+	Read("m_Array", value.m_Array);
+	Read("m_Map", value.m_Map);
+	Read("m_Set", value.m_Set);
 }
 
 template<>
@@ -114,6 +177,7 @@ bool imgui::Inspector::WriteCustom(StructB& value)
 	result |= Write("m_UInt16", value.m_UInt16);
 	result |= Write("m_UInt32", value.m_UInt32);
 	result |= Write("m_UInt64", value.m_UInt64);
+	result |= Write("m_Enum", value.m_Enum);
 	result |= Write("m_Guid", value.m_Guid);
 	result |= Write("m_Name", value.m_Name);
 	result |= Write("m_Path", value.m_Path);
@@ -132,7 +196,7 @@ bool imgui::Inspector::WriteCustom(StructB& value)
 	//result |= Write("m_Variant", value.m_Variant);
 	result |= Write("m_Array", value.m_Array);
 	result |= Write("m_Map", value.m_Map);
-	//result |= Write("m_Set", value.m_Set);
+	result |= Write("m_Set", value.m_Set);
 	return result;
 }
 
@@ -144,6 +208,9 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 		ImGui::End();
 		return;
 	}
+
+	static bool isReadOnly = true;
+	ImGui::Checkbox("IsReadOnly", &isReadOnly);
 
 	if (ImGui::BeginTabBar("##read/write"))
 	{
@@ -160,6 +227,7 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			static uint16 m_UInt16 = 0;
 			static uint32 m_UInt32 = 0;
 			static uint64 m_UInt64 = 0;
+			static EEnum m_Enum = EEnum::First;
 			static str::Guid m_Guid = {};
 			static str::Name m_Name = {};
 			static str::Path m_Path = {};
@@ -183,36 +251,37 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			imgui::Inspector inspector;
 			if (inspector.Begin("##table"))
 			{
-				inspector.Write("m_Bool", m_Bool);
-				inspector.Write("m_Float", m_Float);
-				inspector.Write("m_Double", m_Double);
-				inspector.Write("m_Int8", m_Int8);
-				inspector.Write("m_Int16", m_Int16);
-				inspector.Write("m_Int32", m_Int32);
-				inspector.Write("m_Int64", m_Int64);
-				inspector.Write("m_UInt8", m_UInt8);
-				inspector.Write("m_UInt16", m_UInt16);
-				inspector.Write("m_UInt32", m_UInt32);
-				inspector.Write("m_UInt64", m_UInt64);
-				inspector.Write("m_Guid", m_Guid);
-				inspector.Write("m_Name", m_Name);
-				inspector.Write("m_Path", m_Path);
-				inspector.Write("m_String", m_String);
-				inspector.Write("m_Quaternion", m_Quaternion);
-				inspector.Write("m_Rotator", m_Rotator);
-				inspector.Write("m_Vector2f", m_Vector2f);
-				inspector.Write("m_Vector2i", m_Vector2i);
-				inspector.Write("m_Vector2u", m_Vector2u);
-				inspector.Write("m_Vector3f", m_Vector3f);
-				inspector.Write("m_Vector3i", m_Vector3i);
-				inspector.Write("m_Vector4f", m_Vector4f);
-				inspector.Write("m_StructBullet", m_StructBullet);
-				inspector.Write("m_StructCollapse", m_StructCollapse);
-				inspector.Write("m_Optional", m_Optional);
-				//inspector.Write("m_Variant", m_Variant);
-				inspector.Write("m_Array", m_Array);
-				inspector.Write("m_Map", m_Map);
-				//inspector.Write("m_Set", m_Set);
+				VISIT("m_Bool", m_Bool);
+				VISIT("m_Float", m_Float);
+				VISIT("m_Double", m_Double);
+				VISIT("m_Int8", m_Int8);
+				VISIT("m_Int16", m_Int16);
+				VISIT("m_Int32", m_Int32);
+				VISIT("m_Int64", m_Int64);
+				VISIT("m_UInt8", m_UInt8);
+				VISIT("m_UInt16", m_UInt16);
+				VISIT("m_UInt32", m_UInt32);
+				VISIT("m_UInt64", m_UInt64);
+				VISIT("m_Enum", m_Enum);
+				VISIT("m_Guid", m_Guid);
+				VISIT("m_Name", m_Name);
+				VISIT("m_Path", m_Path);
+				VISIT("m_String", m_String);
+				VISIT("m_Quaternion", m_Quaternion);
+				VISIT("m_Rotator", m_Rotator);
+				VISIT("m_Vector2f", m_Vector2f);
+				VISIT("m_Vector2i", m_Vector2i);
+				VISIT("m_Vector2u", m_Vector2u);
+				VISIT("m_Vector3f", m_Vector3f);
+				VISIT("m_Vector3i", m_Vector3i);
+				VISIT("m_Vector4f", m_Vector4f);
+				VISIT("m_StructBullet", m_StructBullet);
+				VISIT("m_StructCollapse", m_StructCollapse);
+				VISIT("m_Optional", m_Optional);
+				//VISIT("m_Variant", m_Variant);
+				VISIT("m_Array", m_Array);
+				VISIT("m_Map", m_Map);
+				VISIT("m_Set", m_Set);
 				inspector.End();
 			}
 
@@ -231,6 +300,7 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			static Array<uint16> m_UInt16 = { 0 };
 			static Array<uint32> m_UInt32 = { 0 };
 			static Array<uint64> m_UInt64 = { 0 };
+			static Array<EEnum> m_Enum = { EEnum::First };
 			static Array<str::Guid> m_Guid = { {} };
 			static Array<str::Name> m_Name = { {} };
 			static Array<str::Path> m_Path = { {} };
@@ -254,35 +324,36 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			imgui::Inspector inspector;
 			if (inspector.Begin("##table"))
 			{
-				inspector.Write("m_Float", m_Float);
-				inspector.Write("m_Double", m_Double);
-				inspector.Write("m_Int8", m_Int8);
-				inspector.Write("m_Int16", m_Int16);
-				inspector.Write("m_Int32", m_Int32);
-				inspector.Write("m_Int64", m_Int64);
-				inspector.Write("m_UInt8", m_UInt8);
-				inspector.Write("m_UInt16", m_UInt16);
-				inspector.Write("m_UInt32", m_UInt32);
-				inspector.Write("m_UInt64", m_UInt64);
-				inspector.Write("m_Guid", m_Guid);
-				inspector.Write("m_Name", m_Name);
-				inspector.Write("m_Path", m_Path);
-				inspector.Write("m_String", m_String);
-				inspector.Write("m_Quaternion", m_Quaternion);
-				inspector.Write("m_Rotator", m_Rotator);
-				inspector.Write("m_Vector2f", m_Vector2f);
-				inspector.Write("m_Vector2i", m_Vector2i);
-				inspector.Write("m_Vector2u", m_Vector2u);
-				inspector.Write("m_Vector3f", m_Vector3f);
-				inspector.Write("m_Vector3i", m_Vector3i);
-				inspector.Write("m_Vector4f", m_Vector4f);
-				inspector.Write("m_StructBullet", m_StructBullet);
-				inspector.Write("m_StructCollapse", m_StructCollapse);
-				inspector.Write("m_Optional", m_Optional);
-				//inspector.Write("m_Variant", m_Variant);
-				inspector.Write("m_Array", m_Array);
-				inspector.Write("m_Map", m_Map);
-				//inspector.Write("m_Set", m_Set);
+				VISIT("m_Float", m_Float);
+				VISIT("m_Double", m_Double);
+				VISIT("m_Int8", m_Int8);
+				VISIT("m_Int16", m_Int16);
+				VISIT("m_Int32", m_Int32);
+				VISIT("m_Int64", m_Int64);
+				VISIT("m_UInt8", m_UInt8);
+				VISIT("m_UInt16", m_UInt16);
+				VISIT("m_UInt32", m_UInt32);
+				VISIT("m_UInt64", m_UInt64);
+				VISIT("m_Enum", m_Enum);
+				VISIT("m_Guid", m_Guid);
+				VISIT("m_Name", m_Name);
+				VISIT("m_Path", m_Path);
+				VISIT("m_String", m_String);
+				VISIT("m_Quaternion", m_Quaternion);
+				VISIT("m_Rotator", m_Rotator);
+				VISIT("m_Vector2f", m_Vector2f);
+				VISIT("m_Vector2i", m_Vector2i);
+				VISIT("m_Vector2u", m_Vector2u);
+				VISIT("m_Vector3f", m_Vector3f);
+				VISIT("m_Vector3i", m_Vector3i);
+				VISIT("m_Vector4f", m_Vector4f);
+				VISIT("m_StructBullet", m_StructBullet);
+				VISIT("m_StructCollapse", m_StructCollapse);
+				VISIT("m_Optional", m_Optional);
+				//VISIT("m_Variant", m_Variant);
+				VISIT("m_Array", m_Array);
+				VISIT("m_Map", m_Map);
+				VISIT("m_Set", m_Set);
 				inspector.End();
 			}
 			ImGui::EndTabItem();
@@ -301,6 +372,7 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			static Map<str::String, uint16> m_UInt16 = { { "A", 0 } };
 			static Map<str::String, uint32> m_UInt32 = { { "A", 0 } };
 			static Map<str::String, uint64> m_UInt64 = { { "A", 0 } };
+			static Map<str::String, EEnum> m_Enum = { { "A", EEnum::First } };
 			static Map<str::String, str::Guid> m_Guid = { { "A", {} } };
 			static Map<str::String, str::Name> m_Name = { { "A", {} } };
 			static Map<str::String, str::Path> m_Path = { { "A", {} } };
@@ -324,35 +396,36 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			imgui::Inspector inspector;
 			if (inspector.Begin("##table"))
 			{
-				inspector.Write("m_Float", m_Float);
-				inspector.Write("m_Double", m_Double);
-				inspector.Write("m_Int8", m_Int8);
-				inspector.Write("m_Int16", m_Int16);
-				inspector.Write("m_Int32", m_Int32);
-				inspector.Write("m_Int64", m_Int64);
-				inspector.Write("m_UInt8", m_UInt8);
-				inspector.Write("m_UInt16", m_UInt16);
-				inspector.Write("m_UInt32", m_UInt32);
-				inspector.Write("m_UInt64", m_UInt64);
-				inspector.Write("m_Guid", m_Guid);
-				inspector.Write("m_Name", m_Name);
-				inspector.Write("m_Path", m_Path);
-				inspector.Write("m_String", m_String);
-				inspector.Write("m_Quaternion", m_Quaternion);
-				inspector.Write("m_Rotator", m_Rotator);
-				inspector.Write("m_Vector2f", m_Vector2f);
-				inspector.Write("m_Vector2i", m_Vector2i);
-				inspector.Write("m_Vector2u", m_Vector2u);
-				inspector.Write("m_Vector3f", m_Vector3f);
-				inspector.Write("m_Vector3i", m_Vector3i);
-				inspector.Write("m_Vector4f", m_Vector4f);
-				inspector.Write("m_StructBullet", m_StructBullet);
-				inspector.Write("m_StructCollapse", m_StructCollapse);
-				inspector.Write("m_Optional", m_Optional);
-				//inspector.Write("m_Variant", m_Variant);
-				inspector.Write("m_Array", m_Array);
-				inspector.Write("m_Map", m_Map);
-				//inspector.Write("m_Set", m_Set);
+				VISIT("m_Float", m_Float);
+				VISIT("m_Double", m_Double);
+				VISIT("m_Int8", m_Int8);
+				VISIT("m_Int16", m_Int16);
+				VISIT("m_Int32", m_Int32);
+				VISIT("m_Int64", m_Int64);
+				VISIT("m_UInt8", m_UInt8);
+				VISIT("m_UInt16", m_UInt16);
+				VISIT("m_UInt32", m_UInt32);
+				VISIT("m_UInt64", m_UInt64);
+				VISIT("m_Enum", m_Enum);
+				VISIT("m_Guid", m_Guid);
+				VISIT("m_Name", m_Name);
+				VISIT("m_Path", m_Path);
+				VISIT("m_String", m_String);
+				VISIT("m_Quaternion", m_Quaternion);
+				VISIT("m_Rotator", m_Rotator);
+				VISIT("m_Vector2f", m_Vector2f);
+				VISIT("m_Vector2i", m_Vector2i);
+				VISIT("m_Vector2u", m_Vector2u);
+				VISIT("m_Vector3f", m_Vector3f);
+				VISIT("m_Vector3i", m_Vector3i);
+				VISIT("m_Vector4f", m_Vector4f);
+				VISIT("m_StructBullet", m_StructBullet);
+				VISIT("m_StructCollapse", m_StructCollapse);
+				VISIT("m_Optional", m_Optional);
+				//VISIT("m_Variant", m_Variant);
+				VISIT("m_Array", m_Array);
+				VISIT("m_Map", m_Map);
+				VISIT("m_Set", m_Set);
 				inspector.End();
 			}
 			ImGui::EndTabItem();
@@ -371,6 +444,7 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			static Set<uint16> m_UInt16 = { 0 };
 			static Set<uint32> m_UInt32 = { 0 };
 			static Set<uint64> m_UInt64 = { 0 };
+			static Set<EEnum> m_Enum = { EEnum::First };
 			static Set<str::Guid> m_Guid = { {} };
 			static Set<str::Name> m_Name = { {} };
 			static Set<str::Path> m_Path = { {} };
@@ -381,31 +455,24 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			imgui::Inspector inspector;
 			if (inspector.Begin("##table"))
 			{
-				//inspector.Write("m_Bool", m_Bool);
-				//inspector.Write("m_Float", m_Float);
-				//inspector.Write("m_Double", m_Double);
-				//inspector.Write("m_Int8", m_Int8);
-				//inspector.Write("m_Int16", m_Int16);
-				//inspector.Write("m_Int32", m_Int32);
-				//inspector.Write("m_Int64", m_Int64);
-				//inspector.Write("m_UInt8", m_UInt8);
-				//inspector.Write("m_UInt16", m_UInt16);
-				//inspector.Write("m_UInt32", m_UInt32);
-				//inspector.Write("m_UInt64", m_UInt64);
-				//inspector.Write("m_Guid", m_Guid);
-				//inspector.Write("m_Name", m_Name);
-				//inspector.Write("m_Path", m_Path);
-				//inspector.Write("m_String", m_String);
-				//inspector.Write("m_Quaternion", m_Quaternion);
-				//inspector.Write("m_Rotator", m_Rotator);
-				//inspector.Write("m_Vector2f", m_Vector2f);
-				//inspector.Write("m_Vector2i", m_Vector2i);
-				//inspector.Write("m_Vector2u", m_Vector2u);
-				//inspector.Write("m_Vector3f", m_Vector3f);
-				//inspector.Write("m_Vector3i", m_Vector3i);
-				//inspector.Write("m_Vector4f", m_Vector4f);
-				//inspector.Write("m_StructBullet", m_StructBullet);
-				//inspector.Write("m_StructCollapse", m_StructCollapse);
+				VISIT("m_Bool", m_Bool);
+				VISIT("m_Float", m_Float);
+				VISIT("m_Double", m_Double);
+				VISIT("m_Int8", m_Int8);
+				VISIT("m_Int16", m_Int16);
+				VISIT("m_Int32", m_Int32);
+				VISIT("m_Int64", m_Int64);
+				VISIT("m_UInt8", m_UInt8);
+				VISIT("m_UInt16", m_UInt16);
+				VISIT("m_UInt32", m_UInt32);
+				VISIT("m_UInt64", m_UInt64);
+				VISIT("m_Enum", m_Enum);
+				VISIT("m_Guid", m_Guid);
+				VISIT("m_Name", m_Name);
+				VISIT("m_Path", m_Path);
+				VISIT("m_String", m_String);
+				VISIT("m_StructBullet", m_StructBullet);
+				VISIT("m_StructCollapse", m_StructCollapse);
 				inspector.End();
 			}
 			ImGui::EndTabItem();
@@ -418,7 +485,7 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			imgui::Inspector inspector;
 			if (inspector.Begin("##table"))
 			{
-				inspector.Write("m_StructCollapse", m_StructCollapse);
+				VISIT("m_StructCollapse", m_StructCollapse);
 				inspector.End();
 			}
 			ImGui::EndTabItem();
@@ -437,6 +504,7 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			static Optional<uint16> m_UInt16 = 0;
 			static Optional<uint32> m_UInt32 = 0;
 			static Optional<uint64> m_UInt64 = 0;
+			static Optional<EEnum> m_Enum = EEnum::First;
 			static Optional<str::Guid> m_Guid = { str::Guid::Unassigned };
 			static Optional<str::Name> m_Name = { str::Name::Unassigned };
 			static Optional<str::Path> m_Path = { "" };
@@ -459,35 +527,36 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			imgui::Inspector inspector;
 			if (inspector.Begin("##table"))
 			{
-				inspector.Write("m_Bool", m_Bool);
-				inspector.Write("m_Float", m_Float);
-				inspector.Write("m_Double", m_Double);
-				inspector.Write("m_Int8", m_Int8);
-				inspector.Write("m_Int16", m_Int16);
-				inspector.Write("m_Int32", m_Int32);
-				inspector.Write("m_Int64", m_Int64);
-				inspector.Write("m_UInt8", m_UInt8);
-				inspector.Write("m_UInt16", m_UInt16);
-				inspector.Write("m_UInt32", m_UInt32);
-				inspector.Write("m_UInt64", m_UInt64);
-				inspector.Write("m_Guid", m_Guid);
-				inspector.Write("m_Name", m_Name);
-				inspector.Write("m_Path", m_Path);
-				inspector.Write("m_String", m_String);
-				inspector.Write("m_Quaternion", m_Quaternion);
-				inspector.Write("m_Rotator", m_Rotator);
-				inspector.Write("m_Vector2f", m_Vector2f);
-				inspector.Write("m_Vector2i", m_Vector2i);
-				inspector.Write("m_Vector2u", m_Vector2u);
-				inspector.Write("m_Vector3f", m_Vector3f);
-				inspector.Write("m_Vector3i", m_Vector3i);
-				inspector.Write("m_Vector4f", m_Vector4f);
-				inspector.Write("m_StructBullet", m_StructBullet);
-				inspector.Write("m_StructCollapse", m_StructCollapse);
-				//inspector.Write("m_Variant", m_Variant);
-				inspector.Write("m_Array", m_Array);
-				inspector.Write("m_Map", m_Map);
-				//inspector.Write("m_Set", m_Set);
+				VISIT("m_Bool", m_Bool);
+				VISIT("m_Float", m_Float);
+				VISIT("m_Double", m_Double);
+				VISIT("m_Int8", m_Int8);
+				VISIT("m_Int16", m_Int16);
+				VISIT("m_Int32", m_Int32);
+				VISIT("m_Int64", m_Int64);
+				VISIT("m_UInt8", m_UInt8);
+				VISIT("m_UInt16", m_UInt16);
+				VISIT("m_UInt32", m_UInt32);
+				VISIT("m_UInt64", m_UInt64);
+				VISIT("m_Enum", m_Enum);
+				VISIT("m_Guid", m_Guid);
+				VISIT("m_Name", m_Name);
+				VISIT("m_Path", m_Path);
+				VISIT("m_String", m_String);
+				VISIT("m_Quaternion", m_Quaternion);
+				VISIT("m_Rotator", m_Rotator);
+				VISIT("m_Vector2f", m_Vector2f);
+				VISIT("m_Vector2i", m_Vector2i);
+				VISIT("m_Vector2u", m_Vector2u);
+				VISIT("m_Vector3f", m_Vector3f);
+				VISIT("m_Vector3i", m_Vector3i);
+				VISIT("m_Vector4f", m_Vector4f);
+				VISIT("m_StructBullet", m_StructBullet);
+				VISIT("m_StructCollapse", m_StructCollapse);
+				//VISIT("m_Variant", m_Variant);
+				VISIT("m_Array", m_Array);
+				VISIT("m_Map", m_Map);
+				VISIT("m_Set", m_Set);
 				inspector.End();
 			}
 			ImGui::EndTabItem();
@@ -505,6 +574,7 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 		//	static Variant<bool, uint16> m_UInt16 = uint16(0);
 		//	static Variant<bool, uint32> m_UInt32 = uint32(0);
 		//	static Variant<bool, uint64> m_UInt64 = uint64(0);
+		//	static Variant<bool, EEnum> m_Enum = EEnum::First;
 		//	static Variant<bool, str::Guid> m_Guid = { str::Guid::Unassigned };
 		//	static Variant<bool, str::Name> m_Name = { str::Name::Unassigned };
 		//	static Variant<bool, str::Path> m_Path = { "" };
@@ -528,35 +598,36 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 		//	imgui::Inspector inspector;
 		//	if (inspector.Begin("##table"))
 		//	{
-		//		inspector.Write("m_Float", m_Float);
-		//		inspector.Write("m_Double", m_Double);
-		//		inspector.Write("m_Int8", m_Int8);
-		//		inspector.Write("m_Int16", m_Int16);
-		//		inspector.Write("m_Int32", m_Int32);
-		//		inspector.Write("m_Int64", m_Int64);
-		//		inspector.Write("m_UInt8", m_UInt8);
-		//		inspector.Write("m_UInt16", m_UInt16);
-		//		inspector.Write("m_UInt32", m_UInt32);
-		//		inspector.Write("m_UInt64", m_UInt64);
-		//		inspector.Write("m_Guid", m_Guid);
-		//		inspector.Write("m_Name", m_Name);
-		//		inspector.Write("m_Path", m_Path);
-		//		inspector.Write("m_String", m_String);
-		//		inspector.Write("m_Quaternion", m_Quaternion);
-		//		inspector.Write("m_Rotator", m_Rotator);
-		//		inspector.Write("m_Vector2f", m_Vector2f);
-		//		inspector.Write("m_Vector2i", m_Vector2i);
-		//		inspector.Write("m_Vector2u", m_Vector2u);
-		//		inspector.Write("m_Vector3f", m_Vector3f);
-		//		inspector.Write("m_Vector3i", m_Vector3i);
-		//		inspector.Write("m_Vector4f", m_Vector4f);
-		//		inspector.Write("m_StructBullet", m_StructBullet);
-		//		inspector.Write("m_StructCollapse", m_StructCollapse);
-		//		inspector.Write("m_Optional", m_Optional);
-		//		inspector.Write("m_Variant", m_Variant);
-		//		inspector.Write("m_Array", m_Array);
-		//		inspector.Write("m_Map", m_Map);
-		//		inspector.Write("m_Set", m_Set);
+		//		VISIT("m_Float", m_Float);
+		//		VISIT("m_Double", m_Double);
+		//		VISIT("m_Int8", m_Int8);
+		//		VISIT("m_Int16", m_Int16);
+		//		VISIT("m_Int32", m_Int32);
+		//		VISIT("m_Int64", m_Int64);
+		//		VISIT("m_UInt8", m_UInt8);
+		//		VISIT("m_UInt16", m_UInt16);
+		//		VISIT("m_UInt32", m_UInt32);
+		//		VISIT("m_UInt64", m_UInt64);
+		//		VISIT("m_Enum", m_Enum);
+		//		VISIT("m_Guid", m_Guid);
+		//		VISIT("m_Name", m_Name);
+		//		VISIT("m_Path", m_Path);
+		//		VISIT("m_String", m_String);
+		//		VISIT("m_Quaternion", m_Quaternion);
+		//		VISIT("m_Rotator", m_Rotator);
+		//		VISIT("m_Vector2f", m_Vector2f);
+		//		VISIT("m_Vector2i", m_Vector2i);
+		//		VISIT("m_Vector2u", m_Vector2u);
+		//		VISIT("m_Vector3f", m_Vector3f);
+		//		VISIT("m_Vector3i", m_Vector3i);
+		//		VISIT("m_Vector4f", m_Vector4f);
+		//		VISIT("m_StructBullet", m_StructBullet);
+		//		VISIT("m_StructCollapse", m_StructCollapse);
+		//		VISIT("m_Optional", m_Optional);
+		//		VISIT("m_Variant", m_Variant);
+		//		VISIT("m_Array", m_Array);
+		//		VISIT("m_Map", m_Map);
+		//		VISIT("m_Set", m_Set);
 		//		inspector.End();
 		//	}
 
@@ -570,3 +641,5 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 }
 
 template<> struct imgui::Inspector::IsCollapsable<StructBullet> : std::false_type {};
+
+#undef VISIT

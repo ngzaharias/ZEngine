@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Algorithms.h"
 #include "Core/EnumHelpers.h"
 #include "Core/TypeName.h"
 #include "Core/TypeTraits.h"
@@ -52,6 +53,14 @@ void imgui::Inspector::Read(const char* label, const Value& value)
 			ReadMap(value);
 		}
 	}
+	else if constexpr (core::IsSpecialization<Value, Set>::value)
+	{
+		if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			RaiiIndent indent(0);
+			ReadSet(value);
+		}
+	}
 	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
 	// so instead we have to check the actual type rather than our friendly version.
 	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
@@ -60,25 +69,27 @@ void imgui::Inspector::Read(const char* label, const Value& value)
 		imgui::Checkbox("##enable", value.has_value());
 
 		ImGui::TableSetColumnIndex(0);
-		if constexpr (imgui::Inspector::IsCollapsable<Value::value_type>::value)
-		{
-			if (ImGui::CollapsingHeader(label))
-			{
-				RaiiIndent indent(0);
-				ReadOptional(value);
-			}
-		}
-		else
+		constexpr bool isEnum = std::is_enum<Value::value_type>::value;
+		constexpr bool isCollapsable = imgui::Inspector::IsCollapsable<Value::value_type>::value;
+		if constexpr (isEnum || !isCollapsable)
 		{
 			ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_Bullet);
 			ImGui::TableSetColumnIndex(1);
 			ReadOptional(value);
 		}
+		else
+		{
+			if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				RaiiIndent indent(0);
+				ReadOptional(value);
+			}
+		}
 	}
 	// same as above
 	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
 	{
-		if (ImGui::CollapsingHeader(label))
+		if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			RaiiIndent indent(0);
 			ReadVariant(value);
@@ -86,7 +97,6 @@ void imgui::Inspector::Read(const char* label, const Value& value)
 	}
 	else if constexpr (std::is_enum<Value>::value)
 	{
-		ReadEnum(value);
 		ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_Bullet);
 		ImGui::TableSetColumnIndex(1);
 		ReadEnum(value);
@@ -121,6 +131,10 @@ void imgui::Inspector::ReadArray(const Array<Value>& values)
 template <typename Value>
 void imgui::Inspector::ReadEnum(const Value& value)
 {
+	RaiiDisable disable;
+	const str::String string = str::String(EnumToString(value));
+	if (ImGui::BeginCombo("##value", string.c_str()))
+		ImGui::EndCombo();
 }
 
 template<typename Key, typename Value>
@@ -147,6 +161,10 @@ void imgui::Inspector::ReadOptional(const Optional<Value>& value)
 		{
 			ReadMap(*value);
 		}
+		else if constexpr (core::IsSpecialization<Value, Set>::value)
+		{
+			ReadSet(*value);
+		}
 		// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
 		// so instead we have to check the actual type rather than our friendly version.
 		else if constexpr (core::IsSpecialization<Value, std::optional>::value)
@@ -169,6 +187,16 @@ void imgui::Inspector::ReadOptional(const Optional<Value>& value)
 	else
 	{
 		ImGui::Text("...");
+	}
+}
+
+template<typename Value>
+void imgui::Inspector::ReadSet(const Set<Value>& values)
+{
+	for (auto&& [index, value] : enumerate::Forward(values))
+	{
+		const str::String string = std::format("{}", index);
+		Read(string.c_str(), value);
 	}
 }
 
@@ -201,6 +229,14 @@ inline bool imgui::Inspector::Write(const char* label, Value& value)
 			result = WriteMap(value);
 		}
 	}
+	else if constexpr (core::IsSpecialization<Value, Set>::value)
+	{
+		if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			RaiiIndent indent(0);
+			result = WriteSet(value);
+		}
+	}
 	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
 	// so instead we have to check the actual type rather than our friendly version.
 	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
@@ -217,7 +253,7 @@ inline bool imgui::Inspector::Write(const char* label, Value& value)
 		ImGui::TableSetColumnIndex(0);
 		if constexpr (imgui::Inspector::IsCollapsable<Value::value_type>::value)
 		{
-			if (ImGui::CollapsingHeader(label))
+			if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				RaiiIndent indent(0);
 				result |= WriteOptional(value);
@@ -232,7 +268,7 @@ inline bool imgui::Inspector::Write(const char* label, Value& value)
 	}
 	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
 	{
-		if (ImGui::CollapsingHeader(label))
+		if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			RaiiIndent indent(0);
 			result = WriteVariant(value);
@@ -279,6 +315,23 @@ template <typename Value>
 bool imgui::Inspector::WriteEnum(Value& value)
 {
 	bool result = false;
+	const str::String preview = str::String(EnumToString(value));
+	if (ImGui::BeginCombo("##value", preview.c_str()))
+	{
+		const int32 count = EnumToCount<Value>();
+		for (int32 i = 0; i < count; ++i)
+		{
+			const Value item = IndexToEnum<Value>(i);
+			const str::String string = str::String(EnumToString(item));
+			if (ImGui::Selectable(string.c_str(), value == item))
+			{
+				result = true;
+				value = item;
+			}
+		}
+
+		ImGui::EndCombo();
+	}
 	return result;
 }
 
@@ -290,6 +343,18 @@ bool imgui::Inspector::WriteMap(Map<Key, Value>& values)
 	{
 		const str::String string = std::format("{}", key);
 		result |= Write(string.c_str(), value);
+	}
+	return result;
+}
+
+template<typename Value>
+bool imgui::Inspector::WriteSet(Set<Value>& values)
+{
+	bool result = false;
+	for (auto&& [index, value] : enumerate::Forward(values))
+	{
+		const str::String string = std::format("{}", index);
+		Read(string.c_str(), value);
 	}
 	return result;
 }
@@ -308,6 +373,10 @@ bool imgui::Inspector::WriteOptional(Optional<Value>& value)
 		else if constexpr (core::IsSpecialization<Value, Map>::value)
 		{
 			result |= WriteMap(*value);
+		}
+		else if constexpr (core::IsSpecialization<Value, Set>::value)
+		{
+			result |= WriteSet(*value);
 		}
 		// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
 		// so instead we have to check the actual type rather than our friendly version.
