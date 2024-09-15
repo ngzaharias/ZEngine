@@ -5,20 +5,35 @@
 #include "Core/TypeTraits.h"
 #include "Core/VariantHelpers.h"
 
-//////////////////////////////////////////////////////////////////////////
-// Read
+template<> struct imgui::Inspector::IsCollapsable<bool> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<float> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<double> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<int8> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<int16> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<int32> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<int64> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<uint8> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<uint16> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<uint32> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<uint64> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<Quaternion> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<Rotator> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<Vector2f> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<Vector2i> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<Vector2u> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<Vector3f> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<Vector3i> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<Vector4f> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<str::Guid> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<str::Name> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<str::Path> : std::false_type {};
+template<> struct imgui::Inspector::IsCollapsable<str::String> : std::false_type {};
 
 template<typename Value>
 void imgui::Inspector::Read(const char* label, const Value& value)
 {
-	RaiiID id(label);
-
 	ImGui::TableNextRow();
 	ImGui::TableSetColumnIndex(0);
-	if (!ImGui::CollapsingHeader(label))
-		return;
-
-	ImGui::Indent();
 	if constexpr (core::IsSpecialization<Value, Array>::value)
 	{
 		ReadArray(value);
@@ -42,13 +57,10 @@ void imgui::Inspector::Read(const char* label, const Value& value)
 	{
 		ReadEnum(value);
 	}
-	else // custom
+	else
 	{
 		ReadCustom(value);
 	}
-
-	ImGui::TableSetColumnIndex(0);
-	ImGui::Unindent();
 }
 
 template<typename Value>
@@ -61,8 +73,8 @@ void imgui::Inspector::ReadArray(const Array<Value>& values)
 	}
 }
 
-template <typename TEnum>
-void imgui::Inspector::ReadEnum(const TEnum& value)
+template <typename Value>
+void imgui::Inspector::ReadEnum(const Value& value)
 {
 }
 
@@ -90,60 +102,88 @@ void imgui::Inspector::ReadMap(const Map<str::String, Value>& values)
 		Read(key.c_str(), value);
 }
 
-template<typename Type>
-void imgui::Inspector::ReadOptional(const Optional<Type>& value)
+template<typename Value>
+void imgui::Inspector::ReadOptional(const Optional<Value>& value)
 {
 }
 
-template<typename ...Types>
-void imgui::Inspector::ReadVariant(const Variant<Types...>& value)
+template<typename ...Values>
+void imgui::Inspector::ReadVariant(const Variant<Values...>& value)
 {
 }
-
-//////////////////////////////////////////////////////////////////////////
-// Write
 
 template<typename Value>
 inline bool imgui::Inspector::Write(const char* label, Value& value)
 {
-	bool result = false;
+	RaiiID id(label);
 	ImGui::TableNextRow();
 	ImGui::TableSetColumnIndex(0);
-	if (!ImGui::CollapsingHeader(label))
-		return result;
 
-	ImGui::Indent();
-	ImGui::PushID(label);
+	bool result = false;
 	if constexpr (core::IsSpecialization<Value, Array>::value)
 	{
-		result = WriteArray(value);
+		if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			RaiiIndent indent(0);
+			result = WriteArray(value);
+		}
 	}
 	else if constexpr (core::IsSpecialization<Value, Map>::value)
 	{
-		result = WriteMap(value);
+		if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			RaiiIndent indent(0);
+			result = WriteMap(value);
+		}
 	}
 	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
 	// so instead we have to check the actual type rather than our friendly version.
 	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
 	{
-		result = WriteOptional(value);
+		if constexpr (imgui::Inspector::IsCollapsable<Value::value_type>::value)
+		{
+			if (ImGui::CollapsingHeader(label))
+			{
+				RaiiIndent indent(0);
+				result = WriteOptional(value);
+			}
+		}
+		else
+		{
+			ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_Bullet);
+			ImGui::TableSetColumnIndex(1);
+			result = WriteOptional(value);
+		}
 	}
 	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
 	{
-		result = WriteVariant(value);
+		if (ImGui::CollapsingHeader(label))
+		{
+			RaiiIndent indent(0);
+			result = WriteVariant(value);
+		}
 	}
 	else if constexpr (std::is_enum<Value>::value)
 	{
+		ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_Bullet);
+		ImGui::TableSetColumnIndex(1);
 		result = WriteEnum(value);
 	}
-	else // custom
+	else if constexpr (imgui::Inspector::IsCollapsable<Value>::value)
 	{
+		if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			RaiiIndent indent(0);
+			result = WriteCustom(value);
+		}
+	}
+	else
+	{
+		ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_Bullet);
+		RaiiIndent indent(0);
+		ImGui::TableSetColumnIndex(1);
 		result = WriteCustom(value);
 	}
-	ImGui::PopID();
-
-	ImGui::TableSetColumnIndex(0);
-	ImGui::Unindent();
 
 	return result;
 }
@@ -160,8 +200,8 @@ bool imgui::Inspector::WriteArray(Array<Value>& values)
 	return result;
 }
 
-template <typename TEnum>
-bool imgui::Inspector::WriteEnum(TEnum& value)
+template <typename Value>
+bool imgui::Inspector::WriteEnum(Value& value)
 {
 	bool result = false;
 	return result;
@@ -197,15 +237,58 @@ bool imgui::Inspector::WriteMap(Map<str::String, Value>& values)
 	return result;
 }
 
-template<typename Type>
-bool imgui::Inspector::WriteOptional(Optional<Type>& value)
+template<typename Value>
+bool imgui::Inspector::WriteOptional(Optional<Value>& value)
 {
 	bool result = false;
+	bool hasValue = value.has_value();
+	ImGui::TableSetColumnIndex(2);
+	if (ImGui::Checkbox("##enable", &hasValue))
+	{
+		result = true;
+		if (hasValue) { value.emplace(); }
+		else { value.reset(); }
+	}
+
+	ImGui::TableSetColumnIndex(1);
+	if (hasValue)
+	{
+		if constexpr (core::IsSpecialization<Value, Array>::value)
+		{
+			result |= WriteArray(*value);
+		}
+		else if constexpr (core::IsSpecialization<Value, Map>::value)
+		{
+			result |= WriteMap(*value);
+		}
+		// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
+		// so instead we have to check the actual type rather than our friendly version.
+		else if constexpr (core::IsSpecialization<Value, std::optional>::value)
+		{
+			static_assert(false, "Optional<Optional<...>> is not supported!");
+		}
+		else if constexpr (core::IsSpecialization<Value, std::variant>::value)
+		{
+			result |= WriteVariant(*value);
+		}
+		else if constexpr (std::is_enum<Value>::value)
+		{
+			result |= WriteEnum(*value);
+		}
+		else
+		{
+			result |= WriteCustom(*value);
+		}
+	}
+	else
+	{
+		ImGui::Text("...");
+	}
 	return result;
 }
 
-template<typename ...Types>
-bool imgui::Inspector::WriteVariant(Variant<Types...>& value)
+template<typename ...Values>
+bool imgui::Inspector::WriteVariant(Variant<Values...>& value)
 {
 	bool result = false;
 	return result;

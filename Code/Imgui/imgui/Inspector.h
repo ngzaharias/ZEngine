@@ -42,59 +42,31 @@ namespace imgui
 {
 	class Inspector
 	{
-	public:
-		Inspector();
-		~Inspector();
+		template<typename Value>
+		struct IsCollapsable : std::true_type {};
 
 	public:
-		// Read
+		bool Begin(const char* label);
+		void End();
+
 		template<typename Value>
 		void Read(const char* label, const Value& value);
-		void Read(const char* label, const bool& value);
-		void Read(const char* label, const float& value);
-		void Read(const char* label, const double& value);
-		void Read(const char* label, const int8& value);
-		void Read(const char* label, const int16& value);
-		void Read(const char* label, const int32& value);
-		void Read(const char* label, const int64& value);
-		void Read(const char* label, const uint8& value);
-		void Read(const char* label, const uint16& value);
-		void Read(const char* label, const uint32& value);
-		void Read(const char* label, const uint64& value);
-		void Read(const char* label, const str::Guid& value);
-		void Read(const char* label, const str::Name& value);
-		void Read(const char* label, const str::Path& value);
-		void Read(const char* label, const str::String& value);
-
-		// Write
 		template<typename Value>
 		bool Write(const char* label, Value& value);
-		bool Write(const char* label, bool& value);
-		bool Write(const char* label, float& value);
-		bool Write(const char* label, double& value);
-		bool Write(const char* label, int8& value);
-		bool Write(const char* label, int16& value);
-		bool Write(const char* label, int32& value);
-		bool Write(const char* label, int64& value);
-		bool Write(const char* label, uint8& value);
-		bool Write(const char* label, uint16& value);
-		bool Write(const char* label, uint32& value);
-		bool Write(const char* label, uint64& value);
-		bool Write(const char* label, str::Guid& value);
-		bool Write(const char* label, str::Name& value);
-		bool Write(const char* label, str::Path& value);
-		bool Write(const char* label, str::String& value);
 
 	private:
+		//////////////////////////////////////////////////////////////////////////
 		// Read
 		template<typename Value>
 		void ReadArray(const Array<Value>& values);
 
 		template<typename Value>
 		inline void ReadCustom(const Value& value);
+		template<typename Value>
+		inline void ReadInline(const Value& value);
 
-		template <typename TEnum>
-		void ReadEnum(const TEnum& value);
+		template <typename Value>
+		void ReadEnum(const Value& value);
 
 		template<typename Value>
 		void ReadMap(const Map<str::Guid, Value>& values);
@@ -103,18 +75,21 @@ namespace imgui
 		template<typename Value>
 		void ReadMap(const Map<str::String, Value>& values);
 
-		template<typename Type>
-		void ReadOptional(const Optional<Type>& value);
+		template<typename Value>
+		void ReadOptional(const Optional<Value>& value);
 
-		template<typename ...Types>
-		void ReadVariant(const Variant<Types...>& value);
+		template<typename ...Values>
+		void ReadVariant(const Variant<Values...>& value);
 
+		//////////////////////////////////////////////////////////////////////////
 		// Write
 		template<typename Value>
 		bool WriteArray(Array<Value>& values);
 
 		template<typename Value>
 		inline bool WriteCustom(Value& value);
+		template<typename Value>
+		inline bool WriteInline(Value& value);
 
 		template <typename TEnum>
 		bool WriteEnum(TEnum& value);
@@ -126,14 +101,11 @@ namespace imgui
 		template<typename Value>
 		bool WriteMap(Map<str::String, Value>& values);
 
-		template<typename Type>
-		bool WriteOptional(Optional<Type>& value);
+		template<typename Value>
+		bool WriteOptional(Optional<Value>& value);
 
-		template<typename ...Types>
-		bool WriteVariant(Variant<Types...>& value);
-
-	private:
-		bool m_IsVisible = false;
+		template<typename ...Values>
+		bool WriteVariant(Variant<Values...>& value);
 	};
 }
 
