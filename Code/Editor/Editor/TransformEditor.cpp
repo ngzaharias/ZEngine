@@ -17,6 +17,7 @@
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui_stdlib.h>
 #include <imgui/imgui_user.h>
+#include <imgui/Inspector.h>
 
 namespace
 {
@@ -89,29 +90,38 @@ namespace
 
 	void DrawEntities(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.WriteComponent<editor::TransformWindowComponent>(entity);
+		const auto& readComponent = world.ReadComponent<editor::TransformWindowComponent>(entity);
 
 		using Query = ecs::query::Include<const eng::TransformComponent>;
 		for (auto&& view : world.Query<Query>())
 		{
 			const char* name = ToName(world, view);
-			const bool isSelected = view == windowComponent.m_Selected;
+			const bool isSelected = view == readComponent.m_Selected;
 			if (ImGui::Selectable(name, isSelected))
-				windowComponent.m_Selected = view;
+			{
+				auto& writeComponent = world.WriteComponent<editor::TransformWindowComponent>(entity);
+				writeComponent.m_Selected = view;
+			}
 		}
 	}
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.WriteComponent<editor::TransformWindowComponent>(entity);
+		const auto& windowComponent = world.ReadComponent<editor::TransformWindowComponent>(entity);
 
 		const ecs::Entity selected = windowComponent.m_Selected;
 		if (world.IsAlive(selected) && world.HasComponent<eng::TransformComponent>(selected))
 		{
 			auto& transform = world.WriteComponent<eng::TransformComponent>(selected);
-			imgui::DragVector("m_Translate", transform.m_Translate);
-			imgui::DragRotator("m_Rotate", transform.m_Rotate);
-			imgui::DragVector("m_Scale", transform.m_Scale);
+
+			imgui::Inspector inspector;
+			if (inspector.Begin("##table"))
+			{
+				inspector.Write("m_Translate", transform.m_Translate);
+				inspector.Write("m_Rotate", transform.m_Rotate);
+				inspector.Write("m_Scale", transform.m_Scale);
+				inspector.End();
+			}
 		}
 	}
 
@@ -128,7 +138,7 @@ namespace
 
 		if (world.HasComponent<editor::TransformAssetSaveComponent>(entity) || HasInput_Save(world))
 		{
-			auto& windowComponent = world.WriteComponent<editor::TransformWindowComponent>(entity);
+			const auto& windowComponent = world.ReadComponent<editor::TransformWindowComponent>(entity);
 			const ecs::Entity selected = windowComponent.m_Selected;
 
 			const bool hasPrototype = world.HasComponent<eng::PrototypeComponent>(selected);

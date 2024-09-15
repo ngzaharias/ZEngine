@@ -69,9 +69,9 @@ namespace
 		ImGui::Separator();
 
 		ImGui::TextDisabled("Batch:");
-		imgui::DragUInt2("m_Iterations", &extractorComponent.m_Iterations.x, 0.05f, 1, INT16_MAX);
-		ImGui::DragFloat2("m_Initial", &extractorComponent.m_Initial.x);
-		ImGui::DragFloat2("m_Stride", &extractorComponent.m_Stride.x);
+		imgui::DragVector("m_Iterations", extractorComponent.m_Iterations, 0.05f, 1, INT16_MAX);
+		imgui::DragVector("m_Initial", extractorComponent.m_Initial);
+		imgui::DragVector("m_Stride", extractorComponent.m_Stride);
 
 		ImGui::Separator();
 

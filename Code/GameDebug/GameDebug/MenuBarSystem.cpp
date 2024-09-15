@@ -9,6 +9,12 @@
 #include "GameUI/SettingsComponents.h"
 
 #include <imgui/imgui.h>
+#include <imgui/Inspector.h>
+
+#include "Core/Guid.h"
+#include "Core/Name.h"
+#include "Core/Path.h"
+#include "Core/String.h"
 
 void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -60,6 +66,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
 			if (ImGui::MenuItem("ImGui Demo"))
 				world.AddEventComponent<dbg::ImGuiDemoRequestComponent>();
+			if (ImGui::MenuItem("Inspector Demo"))
+				world.AddEventComponent<dbg::InspectorDemoRequestComponent>();
 			if (ImGui::MenuItem("Network"))
 				world.AddEventComponent<dbg::NetworkWindowRequestComponent>();
 			if (ImGui::MenuItem("Node Graph"))

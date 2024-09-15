@@ -32,6 +32,8 @@ namespace str
 		bool operator!=(const str::Path& rhs) const;
 		bool operator!=(const str::StringView& rhs) const;
 
+		bool operator<(const str::Path& rhs) const;
+
 		void operator=(str::String&& rhs);
 		void operator=(const str::Path& rhs);
 		void operator=(const str::String& rhs);

@@ -16,6 +16,7 @@
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui_stdlib.h>
 #include <imgui/imgui_user.h>
+#include <imgui/Inspector.h>
 
 namespace
 {
@@ -82,18 +83,19 @@ namespace
 		auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(entity);
 		eng::SpriteAsset& sprite = windowComponent.m_Asset;
 
-		imgui::Guid("m_Guid", sprite.m_Guid);
-		imgui::Name("m_Name", sprite.m_Name);
+		imgui::Inspector inspector;
+		inspector.Read("m_Guid", sprite.m_Guid);
+		inspector.Read("m_Name", sprite.m_Name);
 
 		ImGui::Separator();
 
-		imgui::Guid("m_Shader", sprite.m_Shader);
-		imgui::Guid("m_Texture2D", sprite.m_Texture2D);
+		inspector.Read("m_Shader", sprite.m_Shader);
+		inspector.Read("m_Texture2D", sprite.m_Texture2D);
 
 		ImGui::Separator();
 
-		imgui::DragUInt2("m_Position", &sprite.m_Position.x);
-		imgui::DragUInt2("m_Size", &sprite.m_Size.x);
+		inspector.Read("m_Position", sprite.m_Position);
+		inspector.Read("m_Size", sprite.m_Size);
 	}
 
 	void DrawPopupOpen(World& world, const ecs::Entity& entity)

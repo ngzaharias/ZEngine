@@ -8,6 +8,7 @@
 #include "GameDebug/FrameBufferSystem.h"
 #include "GameDebug/HiddenObjectSystem.h"
 #include "GameDebug/ImGuiDemoSystem.h"
+#include "GameDebug/InspectorDemo.h"
 #include "GameDebug/LevelOpenSystem.h"
 #include "GameDebug/LevelReloadSystem.h"
 #include "GameDebug/MenuBarComponents.h"
@@ -38,6 +39,8 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::EntityWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoWindowComponent>();
+	m_ClientWorld.RegisterComponent<dbg::InspectorDemoRequestComponent>();
+	m_ClientWorld.RegisterComponent<dbg::InspectorDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::level::OpenRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::level::ReloadRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::level::SaveAsRequestComponent>();
@@ -61,6 +64,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<dbg::FrameBufferSystem>();
 	m_ClientWorld.RegisterSystem<dbg::hidden::ObjectSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ImGuiDemoSystem>();
+	m_ClientWorld.RegisterSystem<dbg::InspectorDemo>();
 	m_ClientWorld.RegisterSystem<dbg::level::OpenSystem>();
 	m_ClientWorld.RegisterSystem<dbg::level::ReloadSystem>();
 	m_ClientWorld.RegisterSystem<dbg::MenuBarSystem>();
