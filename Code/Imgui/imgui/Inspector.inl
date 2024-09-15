@@ -140,19 +140,29 @@ inline bool imgui::Inspector::Write(const char* label, Value& value)
 	// so instead we have to check the actual type rather than our friendly version.
 	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
 	{
+		bool hasValue = value.has_value();
+		ImGui::TableSetColumnIndex(2);
+		if (ImGui::Checkbox("##enable", &hasValue))
+		{
+			result = true;
+			if (hasValue) { value.emplace(); }
+			else { value.reset(); }
+		}
+
+		ImGui::TableSetColumnIndex(0);
 		if constexpr (imgui::Inspector::IsCollapsable<Value::value_type>::value)
 		{
 			if (ImGui::CollapsingHeader(label))
 			{
 				RaiiIndent indent(0);
-				result = WriteOptional(value);
+				result |= WriteOptional(value);
 			}
 		}
 		else
 		{
 			ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_Bullet);
 			ImGui::TableSetColumnIndex(1);
-			result = WriteOptional(value);
+			result |= WriteOptional(value);
 		}
 	}
 	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
@@ -241,17 +251,8 @@ template<typename Value>
 bool imgui::Inspector::WriteOptional(Optional<Value>& value)
 {
 	bool result = false;
-	bool hasValue = value.has_value();
-	ImGui::TableSetColumnIndex(2);
-	if (ImGui::Checkbox("##enable", &hasValue))
-	{
-		result = true;
-		if (hasValue) { value.emplace(); }
-		else { value.reset(); }
-	}
-
 	ImGui::TableSetColumnIndex(1);
-	if (hasValue)
+	if (value)
 	{
 		if constexpr (core::IsSpecialization<Value, Array>::value)
 		{
