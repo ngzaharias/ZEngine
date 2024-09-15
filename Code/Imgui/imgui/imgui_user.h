@@ -40,6 +40,14 @@ namespace imgui
 		~RaiiDisable();
 	};
 
+	struct RaiiIndent
+	{
+		RaiiIndent(int32 column = -1);
+		~RaiiIndent();
+	private:
+		int32 m_Column;
+	};
+
 	void AddRect(const AABB2f& value, Vector4f colour, float rounding = 0.f, float thickness = 1.f, ImDrawFlags flags = 0);
 
 	void Bullet();
@@ -79,16 +87,16 @@ namespace imgui
 	bool DragRotator(const char* label, const Rotator& value, float speed = 1.f, float min = 0.f, float max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
 
 	bool DragVector(const char* label, Vector2f& value, float speed = 1.f, float min = 0.f, float max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-	bool DragVector(const char* label, Vector2i& value, float speed = 1.f, int32 min = 0, int32 max = 0, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-	bool DragVector(const char* label, Vector2u& value, float speed = 1.f, uint32 min = 0, uint32 max = 0, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+	bool DragVector(const char* label, Vector2i& value, float speed = 1.f, int32 min = 0, int32 max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
+	bool DragVector(const char* label, Vector2u& value, float speed = 1.f, uint32 min = 0, uint32 max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
 	bool DragVector(const char* label, Vector3f& value, float speed = 1.f, float min = 0.f, float max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-	bool DragVector(const char* label, Vector3i& value, float speed = 1.f, int32 min = 0, int32 max = 0, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+	bool DragVector(const char* label, Vector3i& value, float speed = 1.f, int32 min = 0, int32 max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
 	bool DragVector(const char* label, Vector4f& value, float speed = 1.f, float min = 0.f, float max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
 	bool DragVector(const char* label, const Vector2f& value, float speed = 1.f, float min = 0.f, float max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-	bool DragVector(const char* label, const Vector2i& value, float speed = 1.f, int32 min = 0, int32 max = 0, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-	bool DragVector(const char* label, const Vector2u& value, float speed = 1.f, uint32 min = 0, uint32 max = 0, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+	bool DragVector(const char* label, const Vector2i& value, float speed = 1.f, int32 min = 0, int32 max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
+	bool DragVector(const char* label, const Vector2u& value, float speed = 1.f, uint32 min = 0, uint32 max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
 	bool DragVector(const char* label, const Vector3f& value, float speed = 1.f, float min = 0.f, float max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-	bool DragVector(const char* label, const Vector3i& value, float speed = 1.f, int32 min = 0, int32 max = 0, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+	bool DragVector(const char* label, const Vector3i& value, float speed = 1.f, int32 min = 0, int32 max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
 	bool DragVector(const char* label, const Vector4f& value, float speed = 1.f, float min = 0.f, float max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
 
 	bool Guid(const char* label, str::Guid& value);

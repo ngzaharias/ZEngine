@@ -68,6 +68,21 @@ imgui::RaiiDisable::~RaiiDisable()
 	ImGui::EndDisabled(); 
 }
 
+imgui::RaiiIndent::RaiiIndent(int32 column)
+	: m_Column(column)
+{
+	if (m_Column >= 0)
+		ImGui::TableSetColumnIndex(m_Column);
+	ImGui::Indent();
+}
+
+imgui::RaiiIndent::~RaiiIndent()
+{
+	if (m_Column >= 0)
+		ImGui::TableSetColumnIndex(m_Column);
+	ImGui::Unindent();
+}
+
 void imgui::AddRect(const AABB2f& value, Vector4f colour, float rounding, float thickness, ImDrawFlags flags)
 {
 	const Vector2f& min = value.m_Min;
