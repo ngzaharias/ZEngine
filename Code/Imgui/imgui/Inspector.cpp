@@ -51,6 +51,7 @@ void imgui::Inspector::End()
 template<>
 void imgui::Inspector::ReadCustom(const bool& value)
 {
+	imgui::Checkbox("##value", value);
 }
 
 template<>
