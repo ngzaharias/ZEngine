@@ -49,7 +49,15 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 		// version
 		{
 			const auto& component = world.ReadSingleton<eng::VersionComponent>();
-			ImGui::Text("v%s - %s", component.m_Version.c_str(), component.m_Commit.c_str());
+			if (!component.m_Commit.empty())
+			{
+				ImGui::Text("%s", component.m_Commit.c_str());
+				ImGui::Text("%s", component.m_Branch.c_str());
+			}
+			else if (!component.m_Commit.empty())
+			{
+				ImGui::Text("v%s", component.m_Version.c_str());
+			}
 		}
 
 		// resolution
