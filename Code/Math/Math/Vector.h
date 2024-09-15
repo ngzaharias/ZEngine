@@ -80,8 +80,8 @@ public:
 	constexpr explicit Vector2i(const int32 value)  noexcept : x(value), y(value) {}
 	constexpr explicit Vector2i(const int32 x, const int32 y)  noexcept : x(x), y(y) {}
 
-	constexpr bool operator==(const Vector2i& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y); }
-	constexpr bool operator!=(const Vector2i& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y); }
+	[[nodiscard]] constexpr bool operator==(const Vector2i& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y); }
+	[[nodiscard]] constexpr bool operator!=(const Vector2i& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y); }
 
 	[[nodiscard]] constexpr Vector2i operator+(const Vector2i& rhs) const noexcept { return Vector2i(x + rhs.x, y + rhs.y); }
 	[[nodiscard]] constexpr Vector2i operator-(const Vector2i& rhs) const noexcept { return Vector2i(x - rhs.x, y - rhs.y); }
@@ -114,8 +114,8 @@ public:
 	constexpr explicit Vector2u(const uint32 value) noexcept : x(value), y(value) {}
 	constexpr explicit Vector2u(const uint32 x, const uint32 y) noexcept : x(x), y(y) {}
 
-	constexpr bool operator==(const Vector2u& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y); }
-	constexpr bool operator!=(const Vector2u& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y); }
+	[[nodiscard]] constexpr bool operator==(const Vector2u& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y); }
+	[[nodiscard]] constexpr bool operator!=(const Vector2u& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y); }
 
 	static const Vector2u AxisX;
 	static const Vector2u AxisY;
@@ -144,23 +144,23 @@ public:
 	/// \brief Construct with components initialized to vector x and y, and value z.
 	constexpr explicit Vector3f(const Vector2f& value, const float z) noexcept : x(value.x), y(value.y), z(z) {}
 
-	constexpr bool operator==(const Vector3f& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z); }
-	constexpr bool operator!=(const Vector3f& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y) || (z != rhs.z); }
+	[[nodiscard]] constexpr bool operator==(const Vector3f& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z); }
+	[[nodiscard]] constexpr bool operator!=(const Vector3f& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y) || (z != rhs.z); }
 
-	constexpr Vector3f operator+(const Vector3f& rhs) const noexcept { return Vector3f(x + rhs.x, y + rhs.y, z + rhs.z); }
-	constexpr Vector3f operator-(const Vector3f& rhs) const noexcept { return Vector3f(x - rhs.x, y - rhs.y, z - rhs.z); }
+	[[nodiscard]] constexpr Vector3f operator+(const Vector3f& rhs) const noexcept { return Vector3f(x + rhs.x, y + rhs.y, z + rhs.z); }
+	[[nodiscard]] constexpr Vector3f operator-(const Vector3f& rhs) const noexcept { return Vector3f(x - rhs.x, y - rhs.y, z - rhs.z); }
 
 	constexpr Vector3f& operator+=(const Vector3f& rhs) noexcept { x += rhs.x; y += rhs.y; z += rhs.z; return *this; }
 	constexpr Vector3f& operator-=(const Vector3f& rhs) noexcept { x -= rhs.x; y -= rhs.y; z -= rhs.z; return *this; }
 
-	constexpr Vector3f operator*(const float rhs) const noexcept { return Vector3f(x * rhs, y * rhs, z * rhs); }
-	constexpr Vector3f operator/(const float rhs) const noexcept { return Vector3f(x / rhs, y / rhs, z / rhs); }
+	[[nodiscard]] constexpr Vector3f operator*(const float rhs) const noexcept { return Vector3f(x * rhs, y * rhs, z * rhs); }
+	[[nodiscard]] constexpr Vector3f operator/(const float rhs) const noexcept { return Vector3f(x / rhs, y / rhs, z / rhs); }
 
 	constexpr Vector3f& operator*=(const float rhs) noexcept { x *= rhs; y *= rhs; z *= rhs; return *this; }
 	constexpr Vector3f& operator/=(const float rhs) noexcept { x /= rhs; y /= rhs; z /= rhs; return *this; }
 
-	constexpr Vector3f operator+() const noexcept { return *this; }
-	constexpr Vector3f operator-() const noexcept { return Vector3f(-x, -y, -z); }
+	[[nodiscard]] constexpr Vector3f operator+() const noexcept { return *this; }
+	[[nodiscard]] constexpr Vector3f operator-() const noexcept { return Vector3f(-x, -y, -z); }
 
 	/// \brief Returns the length of this vector.
 	float Length() const noexcept;
@@ -222,17 +222,17 @@ public:
 	constexpr explicit Vector3i(const int32 x, const int32 y, const int32 z) noexcept : x(x), y(y), z(z) {}
 	constexpr explicit Vector3i(const Vector2i& value, const int32 z) noexcept : x(value.x), y(value.y), z(z) {}
 
-	constexpr bool operator==(const Vector3i& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z); }
-	constexpr bool operator!=(const Vector3i& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y) || (z != rhs.z); }
+	[[nodiscard]] constexpr bool operator==(const Vector3i& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z); }
+	[[nodiscard]] constexpr bool operator!=(const Vector3i& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y) || (z != rhs.z); }
 
-	constexpr Vector3i operator+(const Vector3i& rhs) const noexcept { return Vector3i(x + rhs.x, y + rhs.y, z + rhs.z); }
-	constexpr Vector3i operator-(const Vector3i& rhs) const noexcept { return Vector3i(x - rhs.x, y - rhs.y, z - rhs.z); }
+	[[nodiscard]] constexpr Vector3i operator+(const Vector3i& rhs) const noexcept { return Vector3i(x + rhs.x, y + rhs.y, z + rhs.z); }
+	[[nodiscard]] constexpr Vector3i operator-(const Vector3i& rhs) const noexcept { return Vector3i(x - rhs.x, y - rhs.y, z - rhs.z); }
 
 	constexpr Vector3i& operator+=(const Vector3i& rhs) noexcept { x += rhs.x; y += rhs.y; z += rhs.z; return *this; }
 	constexpr Vector3i& operator-=(const Vector3i& rhs) noexcept { x -= rhs.x; y -= rhs.y; z -= rhs.z; return *this; }
 
-	constexpr Vector3i operator+() const noexcept { return *this; }
-	constexpr Vector3i operator-() const noexcept { return Vector3i(-x, -y, -z); }
+	[[nodiscard]] constexpr Vector3i operator+() const noexcept { return *this; }
+	[[nodiscard]] constexpr Vector3i operator-() const noexcept { return Vector3i(-x, -y, -z); }
 
 	static const Vector3i AxisX;
 	static const Vector3i AxisY;
@@ -263,23 +263,23 @@ public:
 	/// \brief Construct with components initialized to vector x, y and z, and value w.
 	constexpr explicit Vector4f(const Vector3f& value, const float w) noexcept : x(value.x), y(value.y), z(value.z), w(w) { }
 
-	constexpr bool operator==(const Vector4f& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z) && (w == rhs.w); }
-	constexpr bool operator!=(const Vector4f& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y) || (z != rhs.z) || (w != rhs.w); }
+	[[nodiscard]] constexpr bool operator==(const Vector4f& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z) && (w == rhs.w); }
+	[[nodiscard]] constexpr bool operator!=(const Vector4f& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y) || (z != rhs.z) || (w != rhs.w); }
 
-	constexpr Vector4f operator+(const Vector4f& rhs) const noexcept { return Vector4f(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); }
-	constexpr Vector4f operator-(const Vector4f& rhs) const noexcept { return Vector4f(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w); }
+	[[nodiscard]] constexpr Vector4f operator+(const Vector4f& rhs) const noexcept { return Vector4f(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); }
+	[[nodiscard]] constexpr Vector4f operator-(const Vector4f& rhs) const noexcept { return Vector4f(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w); }
 
 	constexpr Vector4f& operator+=(const Vector4f& rhs) noexcept { x += rhs.x; y += rhs.y; z += rhs.z; w += rhs.w; return *this; }
 	constexpr Vector4f& operator-=(const Vector4f& rhs) noexcept { x -= rhs.x; y -= rhs.y; z -= rhs.z; w -= rhs.w; return *this; }
 
-	constexpr Vector4f operator*(const float rhs) const noexcept { return Vector4f(x * rhs, y * rhs, z * rhs, w * rhs); }
-	constexpr Vector4f operator/(const float rhs) const noexcept { return Vector4f(x / rhs, y / rhs, z / rhs, w / rhs); }
+	[[nodiscard]] constexpr Vector4f operator*(const float rhs) const noexcept { return Vector4f(x * rhs, y * rhs, z * rhs, w * rhs); }
+	[[nodiscard]] constexpr Vector4f operator/(const float rhs) const noexcept { return Vector4f(x / rhs, y / rhs, z / rhs, w / rhs); }
 
 	constexpr Vector4f& operator*=(const float rhs) noexcept { x *= rhs; y *= rhs; z *= rhs; w *= rhs; return *this; }
 	constexpr Vector4f& operator/=(const float rhs) noexcept { x /= rhs; y /= rhs; z /= rhs; w /= rhs; return *this; }
 
-	constexpr Vector4f operator+() const noexcept { return *this; }
-	constexpr Vector4f operator-() const noexcept { return Vector4f(-x, -y, -z, -w); }
+	[[nodiscard]] constexpr Vector4f operator+() const noexcept { return *this; }
+	[[nodiscard]] constexpr Vector4f operator-() const noexcept { return Vector4f(-x, -y, -z, -w); }
 
 	/// \brief Returns the length of this vector.
 	float Length() const noexcept;
