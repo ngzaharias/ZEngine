@@ -62,8 +62,6 @@ namespace imgui
 
 		template<typename Value>
 		inline void ReadCustom(const Value& value);
-		template<typename Value>
-		inline void ReadInline(const Value& value);
 
 		template <typename Value>
 		void ReadEnum(const Value& value);
@@ -84,8 +82,6 @@ namespace imgui
 
 		template<typename Value>
 		inline bool WriteCustom(Value& value);
-		template<typename Value>
-		inline bool WriteInline(Value& value);
 
 		template <typename TEnum>
 		bool WriteEnum(TEnum& value);
