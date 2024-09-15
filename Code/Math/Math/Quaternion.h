@@ -18,24 +18,25 @@ public:
 	constexpr Quaternion(const Vector3f& value, const float w) noexcept;
 	constexpr Quaternion(const Vector4f& value) noexcept;
 
-	constexpr bool operator==(const Quaternion& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z) && (w == rhs.w); }
-	constexpr bool operator!=(const Quaternion& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y) || (z != rhs.z) || (w != rhs.w); }
+	[[nodiscard]] constexpr bool operator==(const Quaternion& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z) && (w == rhs.w); }
+	[[nodiscard]] constexpr bool operator!=(const Quaternion& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y) || (z != rhs.z) || (w != rhs.w); }
 
-	constexpr Quaternion operator+(const Quaternion& rhs) const noexcept { return Quaternion(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); }
-	constexpr Quaternion operator-(const Quaternion& rhs) const noexcept { return Quaternion(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w); }
-	constexpr Quaternion operator*(const Quaternion& rhs) const noexcept;
+	[[nodiscard]] constexpr Quaternion operator+(const Quaternion& rhs) const noexcept { return Quaternion(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); }
+	[[nodiscard]] constexpr Quaternion operator-(const Quaternion& rhs) const noexcept { return Quaternion(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w); }
+	[[nodiscard]] constexpr Quaternion operator*(const Quaternion& rhs) const noexcept;
 
 	constexpr Quaternion& operator+=(const Quaternion& rhs) noexcept { *this = *this + rhs; return *this; }
 	constexpr Quaternion& operator-=(const Quaternion& rhs) noexcept { *this = *this - rhs; return *this; }
 	constexpr Quaternion& operator*=(const Quaternion& rhs) noexcept { *this = *this * rhs; return *this; }
 
-	constexpr Quaternion operator*(const float rhs) const noexcept { return Quaternion(x * rhs, y * rhs, z * rhs, w * rhs); }
-	constexpr Quaternion operator/(const float rhs) const noexcept { return Quaternion(x / rhs, y / rhs, z / rhs, w / rhs); }
+	[[nodiscard]] constexpr Quaternion operator*(const float rhs) const noexcept { return Quaternion(x * rhs, y * rhs, z * rhs, w * rhs); }
+	[[nodiscard]] constexpr Quaternion operator/(const float rhs) const noexcept { return Quaternion(x / rhs, y / rhs, z / rhs, w / rhs); }
 
 	constexpr Quaternion& operator*=(const float rhs) noexcept { *this = *this * rhs; return *this; }
 	constexpr Quaternion& operator/=(const float rhs) noexcept { *this = *this / rhs; return *this; }
 
-	constexpr Quaternion operator-() const noexcept { return Quaternion(-x, -y, -z, -w); }
+	[[nodiscard]] constexpr Quaternion operator+() const noexcept { return *this; }
+	[[nodiscard]] constexpr Quaternion operator-() const noexcept { return Quaternion(-x, -y, -z, -w); }
 
 	float Length() const noexcept;
 	constexpr float LengthSqr() const noexcept { return x * x + y * y + z * z + w * w; }
