@@ -35,6 +35,7 @@ bool imgui::Inspector::Begin(const char* label)
 		ImGui::TableSetupColumn("Value", s_Column1);
 		ImGui::TableSetupColumn("##Extra", s_Column2);
 		ImGui::TableHeadersRow();
+		ImGui::TableNextRow();
 		return true;
 	}
 

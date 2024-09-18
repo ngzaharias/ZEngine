@@ -31,9 +31,9 @@ namespace
 		Second,
 	};
 
-	struct StructBullet
+	struct StructSimple
 	{
-		bool operator<(const StructBullet& rhs) const
+		bool operator<(const StructSimple& rhs) const
 		{
 			return m_Int32 < rhs.m_Int32;
 		}
@@ -42,15 +42,14 @@ namespace
 		int32 m_Int32 = 0;
 	};
 
-	struct StructCollapse
+	struct StructRecursive
 	{
-		bool operator<(const StructCollapse& rhs) const
+		bool operator<(const StructRecursive& rhs) const
 		{
-			return m_Int32 < rhs.m_Int32;
+			return m_Struct < rhs.m_Struct;
 		}
 
-		float m_Float = 0.f;
-		int32 m_Int32 = 0;
+		StructSimple m_Struct = {};
 	};
 
 	struct StructB
@@ -81,9 +80,8 @@ namespace
 		Vector3f m_Vector3f = {};
 		Vector3i m_Vector3i = {};
 		Vector4f m_Vector4f = {};
-
-		StructBullet m_StructBullet = {};
-		StructCollapse m_StructCollapse = {};
+		StructSimple m_StructSimple = {};
+		StructRecursive m_StructRecursive = {};
 		Optional<int32> m_Optional = { 0 };
 		Variant<bool, int32> m_Variant = { false };
 
@@ -93,16 +91,15 @@ namespace
 	};
 }
 
-
 template<>
-void imgui::Inspector::ReadCustom(const StructBullet& value)
+void imgui::Inspector::ReadCustom(const StructSimple& value)
 {
 	Read("m_Float", value.m_Float);
 	Read("m_Int32", value.m_Int32);
 }
 
 template<>
-bool imgui::Inspector::WriteCustom(StructBullet& value)
+bool imgui::Inspector::WriteCustom(StructSimple& value)
 {
 	bool result = false;
 	result |= Write("m_Float", value.m_Float);
@@ -111,18 +108,16 @@ bool imgui::Inspector::WriteCustom(StructBullet& value)
 }
 
 template<>
-void imgui::Inspector::ReadCustom(const StructCollapse& value)
+void imgui::Inspector::ReadCustom(const StructRecursive& value)
 {
-	Read("m_Float", value.m_Float);
-	Read("m_Int32", value.m_Int32);
+	Read("m_Struct", value.m_Struct);
 }
 
 template<>
-bool imgui::Inspector::WriteCustom(StructCollapse& value)
+bool imgui::Inspector::WriteCustom(StructRecursive& value)
 {
 	bool result = false;
-	result |= Write("m_Float", value.m_Float);
-	result |= Write("m_Int32", value.m_Int32);
+	result |= Write("m_Struct", value.m_Struct);
 	return result;
 }
 
@@ -154,8 +149,8 @@ void imgui::Inspector::ReadCustom(const StructB& value)
 	Read("m_Vector3i", value.m_Vector3i);
 	Read("m_Vector4f", value.m_Vector4f);
 	Read("m_Optional", value.m_Optional);
-	Read("m_StructBullet", value.m_StructBullet);
-	Read("m_StructCollapse", value.m_StructCollapse);
+	Read("m_StructSimple", value.m_StructSimple);
+	Read("m_StructRecursive", value.m_StructRecursive);
 	//Read("m_Variant", value.m_Variant);
 	Read("m_Array", value.m_Array);
 	Read("m_Map", value.m_Map);
@@ -191,8 +186,8 @@ bool imgui::Inspector::WriteCustom(StructB& value)
 	result |= Write("m_Vector3i", value.m_Vector3i);
 	result |= Write("m_Vector4f", value.m_Vector4f);
 	result |= Write("m_Optional", value.m_Optional);
-	result |= Write("m_StructBullet", value.m_StructBullet);
-	result |= Write("m_StructCollapse", value.m_StructCollapse);
+	result |= Write("m_StructSimple", value.m_StructSimple);
+	result |= Write("m_StructRecursive", value.m_StructRecursive);
 	//result |= Write("m_Variant", value.m_Variant);
 	result |= Write("m_Array", value.m_Array);
 	result |= Write("m_Map", value.m_Map);
@@ -240,11 +235,11 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			static Vector3f m_Vector3f = {};
 			static Vector3i m_Vector3i = {};
 			static Vector4f m_Vector4f = {};
-			static StructBullet m_StructBullet = {};
-			static StructCollapse m_StructCollapse = {};
+			static StructSimple m_StructSimple = {};
+			static StructRecursive m_StructRecursive = {};
 			static Optional<int32> m_Optional = { 0 };
 			static Variant<bool, int32> m_Variant = { false };
-			static Array<int32> m_Array = { 0 };
+			static Array<int32> m_Array = { 0, 1 };
 			static Map<str::String, int32> m_Map = { { "A", 0 } };
 			static Set<int32> m_Set = { 0 };
 
@@ -275,8 +270,8 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 				VISIT("m_Vector3f", m_Vector3f);
 				VISIT("m_Vector3i", m_Vector3i);
 				VISIT("m_Vector4f", m_Vector4f);
-				VISIT("m_StructBullet", m_StructBullet);
-				VISIT("m_StructCollapse", m_StructCollapse);
+				VISIT("m_StructSimple", m_StructSimple);
+				VISIT("m_StructRecursive", m_StructRecursive);
 				VISIT("m_Optional", m_Optional);
 				//VISIT("m_Variant", m_Variant);
 				VISIT("m_Array", m_Array);
@@ -313,8 +308,8 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			static Array<Vector3f> m_Vector3f = { {} };
 			static Array<Vector3i> m_Vector3i = { {} };
 			static Array<Vector4f> m_Vector4f = { {} };
-			static Array<StructBullet> m_StructBullet = { {} };
-			static Array<StructCollapse> m_StructCollapse = { {} };
+			static Array<StructSimple> m_StructSimple = { {}, {} };
+			static Array<StructRecursive> m_StructRecursive = { {} };
 			static Array<Optional<int32>> m_Optional = { 0 };
 			static Array<Variant<bool, int32>> m_Variant = { false };
 			static Array<Array<int32>> m_Array = { { 0 } };
@@ -347,8 +342,8 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 				VISIT("m_Vector3f", m_Vector3f);
 				VISIT("m_Vector3i", m_Vector3i);
 				VISIT("m_Vector4f", m_Vector4f);
-				VISIT("m_StructBullet", m_StructBullet);
-				VISIT("m_StructCollapse", m_StructCollapse);
+				VISIT("m_StructSimple", m_StructSimple);
+				VISIT("m_StructRecursive", m_StructRecursive);
 				VISIT("m_Optional", m_Optional);
 				//VISIT("m_Variant", m_Variant);
 				VISIT("m_Array", m_Array);
@@ -385,8 +380,8 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			static Map<str::String, Vector3f> m_Vector3f = { { "A", {} } };
 			static Map<str::String, Vector3i> m_Vector3i = { { "A", {} } };
 			static Map<str::String, Vector4f> m_Vector4f = { { "A", {} } };
-			static Map<str::String, StructBullet> m_StructBullet = { { "A", {} } };
-			static Map<str::String, StructCollapse> m_StructCollapse = { { "A", {} } };
+			static Map<str::String, StructSimple> m_StructSimple = { { "A", {} } };
+			static Map<str::String, StructRecursive> m_StructRecursive = { { "A", {} } };
 			static Map<str::String, Optional<int32>> m_Optional = { { "A", 0 } };
 			static Map<str::String, Variant<bool, int32>> m_Variant = { { "A", false } };
 			static Map<str::String, Array<int32>> m_Array = { { "A", { 0 } } };
@@ -419,8 +414,8 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 				VISIT("m_Vector3f", m_Vector3f);
 				VISIT("m_Vector3i", m_Vector3i);
 				VISIT("m_Vector4f", m_Vector4f);
-				VISIT("m_StructBullet", m_StructBullet);
-				VISIT("m_StructCollapse", m_StructCollapse);
+				VISIT("m_StructSimple", m_StructSimple);
+				VISIT("m_StructRecursive", m_StructRecursive);
 				VISIT("m_Optional", m_Optional);
 				//VISIT("m_Variant", m_Variant);
 				VISIT("m_Array", m_Array);
@@ -449,8 +444,8 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			static Set<str::Name> m_Name = { {} };
 			static Set<str::Path> m_Path = { {} };
 			static Set<str::String> m_String = { {} };
-			static Set<StructBullet> m_StructBullet = { {} };
-			static Set<StructCollapse> m_StructCollapse = { {} };
+			static Set<StructSimple> m_StructSimple = { {} };
+			static Set<StructRecursive> m_StructRecursive = { {} };
 
 			imgui::Inspector inspector;
 			if (inspector.Begin("##table"))
@@ -471,8 +466,8 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 				VISIT("m_Name", m_Name);
 				VISIT("m_Path", m_Path);
 				VISIT("m_String", m_String);
-				VISIT("m_StructBullet", m_StructBullet);
-				VISIT("m_StructCollapse", m_StructCollapse);
+				VISIT("m_StructSimple", m_StructSimple);
+				VISIT("m_StructRecursive", m_StructRecursive);
 				inspector.End();
 			}
 			ImGui::EndTabItem();
@@ -480,12 +475,12 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 
 		if (ImGui::BeginTabItem("Struct"))
 		{
-			static StructB m_StructCollapse = {};
+			static StructB m_StructSimple = {};
 
 			imgui::Inspector inspector;
 			if (inspector.Begin("##table"))
 			{
-				VISIT("m_StructCollapse", m_StructCollapse);
+				VISIT("m_StructSimple", m_StructSimple);
 				inspector.End();
 			}
 			ImGui::EndTabItem();
@@ -517,8 +512,8 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 			static Optional<Vector3f> m_Vector3f = Vector3f::Zero;
 			static Optional<Vector3i> m_Vector3i = Vector3i::Zero;
 			static Optional<Vector4f> m_Vector4f = Vector4f::Zero;
-			static Optional<StructBullet> m_StructBullet = StructBullet{};
-			static Optional<StructCollapse> m_StructCollapse = StructCollapse{};
+			static Optional<StructSimple> m_StructSimple = StructSimple{};
+			static Optional<StructRecursive> m_StructRecursive = StructRecursive{};
 			static Optional<Variant<bool, int32>> m_Variant = false;
 			static Optional<Array<int32>> m_Array = Array<int32>{ 0 };
 			static Optional<Map<str::String, int32>> m_Map = Map<str::String, int32>{ { "A", 0 } };
@@ -551,8 +546,8 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 				VISIT("m_Vector3f", m_Vector3f);
 				VISIT("m_Vector3i", m_Vector3i);
 				VISIT("m_Vector4f", m_Vector4f);
-				VISIT("m_StructBullet", m_StructBullet);
-				VISIT("m_StructCollapse", m_StructCollapse);
+				VISIT("m_StructSimple", m_StructSimple);
+				VISIT("m_StructRecursive", m_StructRecursive);
 				//VISIT("m_Variant", m_Variant);
 				VISIT("m_Array", m_Array);
 				VISIT("m_Map", m_Map);
@@ -587,8 +582,8 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 		//	static Variant<bool, Vector3f> m_Vector3f = Vector3f::Zero;
 		//	static Variant<bool, Vector3i> m_Vector3i = Vector3i::Zero;
 		//	static Variant<bool, Vector4f> m_Vector4f = Vector4f::Zero;
-		//	static Variant<bool, StructBullet> m_StructBullet = StructBullet{};
-		//	static Variant<bool, StructCollapse> m_StructCollapse = StructCollapse{};
+		//	static Variant<bool, StructSimple> m_StructSimple = StructSimple{};
+		//	static Variant<bool, StructRecursive> m_StructRecursive = StructRecursive{};
 		//	static Variant<bool, Optional<int32>> m_Optional = 0;
 		//	static Variant<bool, Variant<bool, int32>> m_Variant = 0;
 		//	static Variant<bool, Array<int32>> m_Array = Array<int32>{ 0 };
@@ -621,8 +616,8 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 		//		VISIT("m_Vector3f", m_Vector3f);
 		//		VISIT("m_Vector3i", m_Vector3i);
 		//		VISIT("m_Vector4f", m_Vector4f);
-		//		VISIT("m_StructBullet", m_StructBullet);
-		//		VISIT("m_StructCollapse", m_StructCollapse);
+		//		VISIT("m_StructSimple", m_StructSimple);
+		//		VISIT("m_StructRecursive", m_StructRecursive);
 		//		VISIT("m_Optional", m_Optional);
 		//		VISIT("m_Variant", m_Variant);
 		//		VISIT("m_Array", m_Array);
@@ -639,7 +634,5 @@ void imgui::InspectorDemo(bool& isWindowOpen)
 
 	ImGui::End();
 }
-
-template<> struct imgui::Inspector::IsCollapsable<StructBullet> : std::false_type {};
 
 #undef VISIT
