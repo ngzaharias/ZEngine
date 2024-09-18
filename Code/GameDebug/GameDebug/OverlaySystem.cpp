@@ -51,8 +51,7 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 			const auto& component = world.ReadSingleton<eng::VersionComponent>();
 			if (!component.m_Commit.empty())
 			{
-				ImGui::Text("%s", component.m_Commit.c_str());
-				ImGui::Text("%s", component.m_Branch.c_str());
+				ImGui::Text("%s : %s", component.m_Commit.c_str(), component.m_Branch.c_str());
 			}
 			else if (!component.m_Commit.empty())
 			{
