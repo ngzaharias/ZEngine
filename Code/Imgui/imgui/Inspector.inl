@@ -100,7 +100,40 @@ bool imgui::Inspector::ReadHeader(const char* label, const Value& value)
 template<typename Value>
 bool imgui::Inspector::WriteHeader(const char* label, Value& value)
 {
-	if constexpr (core::IsSpecialization<Value, std::optional>::value)
+	RaiiID id(label);
+	if constexpr (core::IsSpecialization<Value, Array>::value)
+	{
+		struct Append {};
+		struct PopBack {};
+		struct RemoveAll {};
+		using Command = Optional<Variant<Append, PopBack, RemoveAll>>;
+
+		Command command = {};
+		bool isExpanded = detail::Header<Value>(label);
+		ImGui::OpenPopupOnItemClick("array##parent");
+
+		if (ImGui::BeginPopup("array##parent"))
+		{
+			if (ImGui::Selectable("Append"))
+				command = Append{};
+			if (ImGui::Selectable("PopBack"))
+				command = PopBack{};
+			if (ImGui::Selectable("RemoveAll"))
+				command = RemoveAll{};
+			ImGui::EndPopup();
+		}
+
+		if (command)
+		{
+			core::VariantMatch(*command,
+				[&value](const Append&) { value.Emplace(); },
+				[&value](const PopBack&) { if (!value.IsEmpty()) { value.Pop(); } },
+				[&value](const RemoveAll&) { value.RemoveAll(); });
+		}
+
+		return isExpanded;
+	}
+	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
 	{
 		bool hasValue = value.has_value();
 		ImGui::TableSetColumnIndex(2);
@@ -112,6 +145,8 @@ bool imgui::Inspector::WriteHeader(const char* label, Value& value)
 				value.reset();
 		}
 
+		if (hasValue)
+			return WriteHeader(label, *value);
 		return detail::Header<Value::value_type>(label);
 	}
 	else
@@ -210,16 +245,20 @@ void imgui::Inspector::ReadArray(const Array<Value>& values)
 template<typename Value>
 bool imgui::Inspector::WriteArray(Array<Value>& values)
 {
-	bool result = false;
+	struct Insert { int32 i; };
+	struct Remove { int32 i; };
+	using Command = Optional<Variant<Insert, Remove>>;
 
+	bool result = false;
+	Command command = {};
 	for (int32 i = 0; i < values.GetCount(); ++i)
 	{
 		const str::String label = std::to_string(i);
 		ImGui::TableNextRow();
 
-		RaiiID id(label.c_str());
+		RaiiID id(label);
 		bool isExpanded = WriteHeader(label.c_str(), values[i]);
-		ImGui::OpenPopupOnItemClick("##popup");
+		ImGui::OpenPopupOnItemClick("array##child");
 
 		if (isExpanded)
 		{
@@ -227,18 +266,24 @@ bool imgui::Inspector::WriteArray(Array<Value>& values)
 			ImGui::TableSetColumnIndex(1);
 			result |= WriteMember(values[i]);
 		}
+
+		if (ImGui::BeginPopup("array##child"))
+		{
+			if (ImGui::Selectable("Insert /\\"))
+				command = Insert{ i };
+			if (ImGui::Selectable("Remove ||"))
+				command = Remove{ i };
+			if (ImGui::Selectable("Insert \\/"))
+				command = Insert{ i + 1 };
+			ImGui::EndPopup();
+		}
 	}
 
-	if (ImGui::BeginPopup("##popup"))
+	if (command)
 	{
-		if (ImGui::Selectable("Append"))
-			values.Emplace();
-		if (ImGui::Selectable("PopBack"))
-			values.Pop();
-		if (ImGui::Selectable("RemoveAll"))
-			values.RemoveAll();
-
-		ImGui::EndPopup();
+		core::VariantMatch(*command,
+			[&values](const Insert& data) { values.Insert(Value{}, data.i);	},
+			[&values](const Remove& data) { values.RemoveOrderedAt(data.i); });
 	}
 
 	return result;
