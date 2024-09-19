@@ -53,6 +53,11 @@ imgui::RaiiID::RaiiID(const char* id)
 	ImGui::PushID(id); 
 }
 
+imgui::RaiiID::RaiiID(const str::String& id)
+{ 
+	ImGui::PushID(id.c_str()); 
+}
+
 imgui::RaiiID::~RaiiID()
 { 
 	ImGui::PopID(); 
