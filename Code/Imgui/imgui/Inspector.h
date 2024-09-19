@@ -43,8 +43,9 @@ namespace imgui
 {
 	class Inspector
 	{
+	public:
 		template<typename Value>
-		struct IsCollapsable : std::true_type {};
+		struct IsInline : std::false_type {};
 
 	public:
 		bool Begin(const char* label);
@@ -56,49 +57,49 @@ namespace imgui
 		bool Write(const char* label, Value& value);
 
 	private:
-		//////////////////////////////////////////////////////////////////////////
-		// Read
-		template<typename Value>
-		void ReadArray(const Array<Value>& values);
-
 		template<typename Value>
 		inline void ReadCustom(const Value& value);
-
-		template <typename Value>
-		void ReadEnum(const Value& value);
-
-		template<typename Key, typename Value>
-		void ReadMap(const Map<Key, Value>& values);
-
-		template<typename Value>
-		void ReadOptional(const Optional<Value>& value);
-
-		template<typename Value>
-		void ReadSet(const Set<Value>& values);
-
-		template<typename ...Values>
-		void ReadVariant(const Variant<Values...>& value);
-
-		//////////////////////////////////////////////////////////////////////////
-		// Write
-		template<typename Value>
-		bool WriteArray(Array<Value>& values);
-
 		template<typename Value>
 		inline bool WriteCustom(Value& value);
 
+		template<typename Value>
+		bool ReadHeader(const char* label, const Value& value);
+		template<typename Value>
+		bool WriteHeader(const char* label, Value& value);
+
+		template<typename Value>
+		void ReadMember(const Value& value);
+		template<typename Value>
+		bool WriteMember(Value& value);
+
+	private:
+		template<typename Value>
+		void ReadArray(const Array<Value>& values);
+		template<typename Value>
+		bool WriteArray(Array<Value>& values);
+
+		template <typename Value>
+		void ReadEnum(const Value& value);
 		template <typename TEnum>
 		bool WriteEnum(TEnum& value);
 
 		template<typename Key, typename Value>
+		void ReadMap(const Map<Key, Value>& values);
+		template<typename Key, typename Value>
 		bool WriteMap(Map<Key, Value>& values);
 
+		template<typename Value>
+		void ReadOptional(const Optional<Value>& value);
 		template<typename Value>
 		bool WriteOptional(Optional<Value>& value);
 
 		template<typename Value>
+		void ReadSet(const Set<Value>& values);
+		template<typename Value>
 		bool WriteSet(Set<Value>& value);
 
+		template<typename ...Values>
+		void ReadVariant(const Variant<Values...>& value);
 		template<typename ...Values>
 		bool WriteVariant(Variant<Values...>& value);
 	};

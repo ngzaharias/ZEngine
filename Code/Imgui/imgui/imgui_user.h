@@ -31,6 +31,7 @@ namespace imgui
 	struct RaiiID
 	{
 		RaiiID(const char* id);
+		RaiiID(const str::String& id);
 		~RaiiID();
 	};
 
