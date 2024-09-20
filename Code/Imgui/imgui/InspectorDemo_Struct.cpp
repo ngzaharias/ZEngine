@@ -96,7 +96,7 @@ void imgui::Inspector::ReadCustom(const Struct& value)
 	Read("m_Optional", value.m_Optional);
 	Read("m_StructSimple", value.m_StructSimple);
 	Read("m_StructRecursive", value.m_StructRecursive);
-	//Read("m_Variant", value.m_Variant);
+	Read("m_Variant", value.m_Variant);
 	Read("m_Array", value.m_Array);
 	Read("m_Map", value.m_Map);
 	Read("m_Set", value.m_Set);
@@ -133,7 +133,7 @@ bool imgui::Inspector::WriteCustom(Struct& value)
 	result |= Write("m_Optional", value.m_Optional);
 	result |= Write("m_StructSimple", value.m_StructSimple);
 	result |= Write("m_StructRecursive", value.m_StructRecursive);
-	//result |= Write("m_Variant", value.m_Variant);
+	result |= Write("m_Variant", value.m_Variant);
 	result |= Write("m_Array", value.m_Array);
 	result |= Write("m_Map", value.m_Map);
 	result |= Write("m_Set", value.m_Set);

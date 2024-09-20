@@ -88,7 +88,7 @@ void imgui::InspectorDemo_Map(bool isReading)
 			VISIT("m_StructSimple", m_StructSimple);
 			VISIT("m_StructRecursive", m_StructRecursive);
 			VISIT("m_Optional", m_Optional);
-			//VISIT("m_Variant", m_Variant);
+			VISIT("m_Variant", m_Variant);
 			VISIT("m_Array", m_Array);
 			VISIT("m_Map", m_Map);
 			VISIT("m_Set", m_Set);

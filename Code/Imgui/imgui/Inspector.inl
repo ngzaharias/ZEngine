@@ -49,6 +49,30 @@ namespace detail
 			return ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen);
 		}
 	}
+
+	template<typename Value>
+	inline bool Header(const char* label, const Value&)
+	{
+		return Header<Value>(label);
+	}
+
+	template<typename Value, typename TVariant>
+	inline bool ComboElement(TVariant& value)
+	{
+		const str::String string = str::String(core::ToElementName<Value>());
+		if (ImGui::Selectable(string.c_str()))
+		{
+			value.emplace<Value>();
+			return true;
+		}
+		return false;
+	}
+
+	template<typename ...Values>
+	inline bool ComboVariant(Variant<Values...>& value)
+	{
+		return (ComboElement<Values>(value) || ...);
+	}
 }
 
 template<typename Value>
@@ -90,6 +114,24 @@ bool imgui::Inspector::ReadHeader(const char* label, const Value& value)
 		imgui::Checkbox("##enable", hasValue);
 
 		return detail::Header<Value::value_type>(label);
+	}
+	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
+	{
+		bool isExpanded = false;
+		str::String preview = {};
+		core::VariantMatch(value, [&](const auto& element)
+			{
+				isExpanded = detail::Header(label, element);
+				preview = str::String(core::ToElementName(element));
+			});
+
+		RaiiDisable disable;
+		ImGui::TableSetColumnIndex(1);
+		ImGui::SetNextItemWidth(-1);
+		if (ImGui::BeginCombo("##variant", preview.c_str()))
+			ImGui::EndCombo();
+
+		return isExpanded;
 	}
 	else
 	{
@@ -148,6 +190,24 @@ bool imgui::Inspector::WriteHeader(const char* label, Value& value)
 		if (hasValue)
 			return WriteHeader(label, *value);
 		return detail::Header<Value::value_type>(label);
+	}
+	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
+	{
+		str::String preview = {};
+		core::VariantMatch(value, [&](const auto& element)
+			{
+				preview = str::String(core::ToElementName(element));
+			});
+
+		ImGui::TableSetColumnIndex(1);
+		ImGui::SetNextItemWidth(-1);
+		if (ImGui::BeginCombo("##variant", preview.c_str()))
+		{
+			detail::ComboVariant(value);
+			ImGui::EndCombo();
+		}
+
+		return detail::Header<Value>(label);
 	}
 	else
 	{
@@ -292,6 +352,8 @@ bool imgui::Inspector::WriteArray(Array<Value>& values)
 template <typename Value>
 void imgui::Inspector::ReadEnum(const Value& value)
 {
+	ImGui::SetNextItemWidth(-1);
+
 	RaiiDisable disable;
 	const str::String string = str::String(EnumToString(value));
 	if (ImGui::BeginCombo("##value", string.c_str()))
@@ -302,7 +364,7 @@ template <typename Value>
 bool imgui::Inspector::WriteEnum(Value& value)
 {
 	bool result = false;
-	ImGui::TableSetColumnIndex(1);
+	ImGui::SetNextItemWidth(-1);
 
 	const str::String preview = str::String(EnumToString(value));
 	if (ImGui::BeginCombo("##value", preview.c_str()))
@@ -399,11 +461,20 @@ bool imgui::Inspector::WriteSet(Set<Value>& values)
 template<typename ...Values>
 void imgui::Inspector::ReadVariant(const Variant<Values...>& value)
 {
+	core::VariantMatch(value, [&](const auto& element)
+		{
+			Read("##value", element);
+		});
 }
+
 
 template<typename ...Values>
 bool imgui::Inspector::WriteVariant(Variant<Values...>& value)
 {
 	bool result = false;
+	core::VariantMatch(value, [&](auto& element)
+		{
+			result = Write("##value", element);
+		});
 	return result;
 }

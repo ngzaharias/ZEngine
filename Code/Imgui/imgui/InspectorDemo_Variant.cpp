@@ -53,7 +53,7 @@ void imgui::InspectorDemo_Variant(bool isReading)
 		static Variant<bool, StructSimple> m_StructSimple = StructSimple{};
 		static Variant<bool, StructRecursive> m_StructRecursive = StructRecursive{};
 		static Variant<bool, Optional<int32>> m_Optional = 0;
-		static Variant<bool, Variant<bool, int32>> m_Variant = 0;
+		static Variant<bool, Variant<bool, int32>> m_Variant = int32(0);
 		static Variant<bool, Array<int32>> m_Array = Array<int32>{ 0 };
 		static Variant<bool, Map<str::String, int32>> m_Map = Map<str::String, int32>{ { "A", 0 } };
 		static Variant<bool, Set<int32>> m_Set = Set<int32>{ 0 };

@@ -54,7 +54,7 @@ void imgui::InspectorDemo_Basic(bool isReading)
 		static StructSimple m_StructSimple = {};
 		static StructRecursive m_StructRecursive = {};
 		static Optional<int32> m_Optional = { 0 };
-		static Variant<bool, int32> m_Variant = { false };
+		static Variant<bool, int32> m_Variant = int32(0);
 		static Array<int32> m_Array = { 0, 1 };
 		static Map<str::String, int32> m_Map = { { "A", 0 } };
 		static Set<int32> m_Set = { 0 };
@@ -89,7 +89,7 @@ void imgui::InspectorDemo_Basic(bool isReading)
 			VISIT("m_StructSimple", m_StructSimple);
 			VISIT("m_StructRecursive", m_StructRecursive);
 			VISIT("m_Optional", m_Optional);
-			//VISIT("m_Variant", m_Variant);
+			VISIT("m_Variant", m_Variant);
 			VISIT("m_Array", m_Array);
 			VISIT("m_Map", m_Map);
 			VISIT("m_Set", m_Set);
