@@ -50,6 +50,12 @@ namespace core
 		return value;
 	}
 
+	template<typename ...Types>
+	std::initializer_list<str::StringView> ToElementNames(const Variant<Types...>&)
+	{
+		return { core::ToElementName<Types>()... };
+	}
+
 	template<typename TVariant, typename... THandlers>
 	auto VariantMatch(TVariant&& variant, THandlers&&... handlers)
 	{
