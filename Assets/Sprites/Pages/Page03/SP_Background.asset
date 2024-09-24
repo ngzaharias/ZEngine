@@ -1,0 +1,7 @@
+m_Guid = '16fb8b12-315f-402c-bfde-025b183b92d1'
+m_Name = 'SP_Background'
+m_Position = { X = 0, Y = 0 }
+m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
+m_Size = { X = 5000, Y = 5000 }
+m_Texture2D = '7c1f315b-cace-4452-c7ab-0397413c921a'
+m_Type = 'Sprite'
