@@ -69,7 +69,7 @@ namespace
 				if (ImGui::MenuItem("Open"))
 					world.AddComponent<editor::SpriteAssetOpenComponent>(entity);
 
-				if (ImGui::MenuItem("Save") || HasInput_Save(world))
+				if (ImGui::MenuItem("Save", "Ctrl+S"))
 					world.AddComponent<editor::SpriteAssetSaveComponent>(entity);
 
 				ImGui::EndMenu();
@@ -84,18 +84,16 @@ namespace
 		eng::SpriteAsset& sprite = windowComponent.m_Asset;
 
 		imgui::Inspector inspector;
-		inspector.Read("m_Guid", sprite.m_Guid);
-		inspector.Read("m_Name", sprite.m_Name);
-
-		ImGui::Separator();
-
-		inspector.Read("m_Shader", sprite.m_Shader);
-		inspector.Read("m_Texture2D", sprite.m_Texture2D);
-
-		ImGui::Separator();
-
-		inspector.Read("m_Position", sprite.m_Position);
-		inspector.Read("m_Size", sprite.m_Size);
+		if (inspector.Begin("##inspector"))
+		{
+			inspector.Write("m_Guid", sprite.m_Guid);
+			inspector.Write("m_Name", sprite.m_Name);
+			inspector.Write("m_Shader", sprite.m_Shader);
+			inspector.Write("m_Texture2D", sprite.m_Texture2D);
+			inspector.Write("m_Position", sprite.m_Position);
+			inspector.Write("m_Size", sprite.m_Size);
+			inspector.End();
+		}
 	}
 
 	void DrawPopupOpen(World& world, const ecs::Entity& entity)
@@ -129,6 +127,9 @@ namespace
 		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
 
 		if (world.HasComponent<editor::SpriteAssetSaveComponent>(entity))
+			world.RemoveComponent<editor::SpriteAssetSaveComponent>(entity);
+
+		if (HasInput_Save(world) || world.HasComponent<editor::SpriteAssetSaveComponent>(entity))
 		{
 			auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(entity);
 			const str::Name& name = windowComponent.m_Asset.m_Name;
@@ -146,7 +147,6 @@ namespace
 				assetManager.SaveAsset(windowComponent.m_Asset, filepath);
 			}
 
-			world.RemoveComponent<editor::SpriteAssetSaveComponent>(entity);
 		}
 	};
 
