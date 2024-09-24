@@ -91,13 +91,13 @@ namespace
 		auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(entity);
 		eng::FlipbookAsset& flipbook = windowComponent.m_Asset;
 
-		imgui::Guid("m_Guid", flipbook.m_Guid);
-		imgui::Name("m_Name", flipbook.m_Name);
+		imgui::InputText("m_Guid", flipbook.m_Guid);
+		imgui::InputText("m_Name", flipbook.m_Name);
 
 		ImGui::Separator();
 
-		imgui::Guid("m_Shader", flipbook.m_Shader);
-		imgui::Guid("m_Texture2D", flipbook.m_Texture2D);
+		imgui::InputText("m_Shader", flipbook.m_Shader);
+		imgui::InputText("m_Texture2D", flipbook.m_Texture2D);
 
 		ImGui::DragFloat("m_FPS", &flipbook.m_FPS);
 		ImGui::Checkbox("m_IsLooping", &flipbook.m_IsLooping);

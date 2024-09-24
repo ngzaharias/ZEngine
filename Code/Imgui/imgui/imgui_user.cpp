@@ -48,9 +48,14 @@ namespace
 	}
 }
 
-imgui::RaiiID::RaiiID(const char* id) 
+imgui::RaiiID::RaiiID(const void* id) 
 { 
 	ImGui::PushID(id); 
+}
+
+imgui::RaiiID::RaiiID(const char* id)
+{
+	ImGui::PushID(id);
 }
 
 imgui::RaiiID::RaiiID(const str::String& id)
@@ -405,7 +410,7 @@ bool imgui::DragVector(const char* label, const Vector4f& value, float speed, fl
 	return ImGui::DragFloat4(label, &v.x, speed, min, max, format, flags);
 }
 
-bool imgui::Guid(const char* label, str::Guid& value)
+bool imgui::InputText(const char* label, str::Guid& value)
 {
 	str::String string = value.ToString();
 	if (ImGui::InputText(label, &string) && str::Guid::IsValidString(string))
@@ -416,14 +421,14 @@ bool imgui::Guid(const char* label, str::Guid& value)
 	return false;
 }
 
-bool imgui::Guid(const char* label, const str::Guid& value)
+bool imgui::InputText(const char* label, const str::Guid& value)
 {
 	RaiiDisable disable;
 	str::String string = value.ToString();
 	return ImGui::InputText(label, &string);
 }
 
-bool imgui::Name(const char* label, str::Name& value)
+bool imgui::InputText(const char* label, str::Name& value)
 {
 	str::String string = str::String(value);
 	if (ImGui::InputText(label, &string))
@@ -434,14 +439,14 @@ bool imgui::Name(const char* label, str::Name& value)
 	return false;
 }
 
-bool imgui::Name(const char* label, const str::Name& value)
+bool imgui::InputText(const char* label, const str::Name& value)
 {
 	RaiiDisable disable;
 	str::String string = str::String(value);
 	return ImGui::InputText(label, &string);
 }
 
-bool imgui::Path(const char* label, str::Path& value)
+bool imgui::InputText(const char* label, str::Path& value)
 {
 	str::String string = str::String(value);
 	if (ImGui::InputText(label, &string))
@@ -452,19 +457,19 @@ bool imgui::Path(const char* label, str::Path& value)
 	return false;
 }
 
-bool imgui::Path(const char* label, const str::Path& value)
+bool imgui::InputText(const char* label, const str::Path& value)
 {
 	RaiiDisable disable;
 	str::String string = str::String(value);
 	return ImGui::InputText(label, &string);
 }
 
-bool imgui::String(const char* label, str::String& value)
+bool imgui::InputText(const char* label, str::String& value)
 {
 	return ImGui::InputText(label, &value);
 }
 
-bool imgui::String(const char* label, const str::String& value)
+bool imgui::InputText(const char* label, const str::String& value)
 {
 	RaiiDisable disable;
 	return ImGui::InputText(label, const_cast<std::string*>(&value));
@@ -699,6 +704,31 @@ void imgui::PlotLines(const char* label, Vector2f* values, int32 values_count, V
 	}
 
 	ImGui::EndChildFrame();
+}
+
+bool imgui::Selectable(const str::String& label, bool selected, ImGuiSelectableFlags flags, const Vector2f size)
+{
+	return ImGui::Selectable(label.c_str(), selected, flags, size);
+}
+
+void imgui::Text(const str::Guid& value)
+{
+	ImGui::Text(value.ToString().c_str());
+}
+
+void imgui::Text(const str::Name& value)
+{
+	ImGui::Text(value.ToChar());
+}
+
+void imgui::Text(const str::Path& value)
+{
+	ImGui::Text(value.ToChar());
+}
+
+void imgui::Text(const str::String& value)
+{
+	ImGui::Text(value.c_str());
 }
 
 Vector4f imgui::ToColour(const int32 hexadecimal)

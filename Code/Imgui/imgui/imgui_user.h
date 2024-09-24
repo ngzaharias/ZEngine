@@ -9,6 +9,7 @@ class Quaternion;
 class Rotator;
 typedef int ImDrawFlags;
 typedef int ImGuiSliderFlags;
+typedef int ImGuiSelectableFlags;
 
 enum ImGuiPlotFlags_
 {
@@ -23,13 +24,13 @@ namespace str
 	class Guid;
 	class Name;
 	class Path;
-	using String = std::string;
 }
 
 namespace imgui
 {
 	struct RaiiID
 	{
+		RaiiID(const void* id);
 		RaiiID(const char* id);
 		RaiiID(const str::String& id);
 		~RaiiID();
@@ -100,23 +101,27 @@ namespace imgui
 	bool DragVector(const char* label, const Vector3i& value, float speed = 1.f, int32 min = 0, int32 max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
 	bool DragVector(const char* label, const Vector4f& value, float speed = 1.f, float min = 0.f, float max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
 
-	bool Guid(const char* label, str::Guid& value);
-	bool Guid(const char* label, const str::Guid& value);
-
-	bool Name(const char* label, str::Name& value);
-	bool Name(const char* label, const str::Name& value);
-
-	bool Path(const char* label, str::Path& value);
-	bool Path(const char* label, const str::Path& value);
-	
-	bool String(const char* label, str::String& value);
-	bool String(const char* label, const str::String& value);
+	bool InputText(const char* label, str::Guid& value);
+	bool InputText(const char* label, const str::Guid& value);
+	bool InputText(const char* label, str::Name& value);
+	bool InputText(const char* label, const str::Name& value);
+	bool InputText(const char* label, str::Path& value);
+	bool InputText(const char* label, const str::Path& value);
+	bool InputText(const char* label, str::String& value);
+	bool InputText(const char* label, const str::String& value);
 
 	void Grid(Vector2f graph_size, Vector2f spacing, Vector2f offset = Vector2f::Zero);
 
 	void Image(uint32 textureId, Vector2f image_size, Vector2f uv0 = Vector2f::Zero, Vector2f uv1 = Vector2f::One);
 
 	void PlotLines(const char* label, Vector2f* values, int32 values_count, Vector2f graph_size = Vector2f::Zero, ImGuiPlotFlags flags = 0);
+
+	bool Selectable(const str::String& label, bool selected = false, ImGuiSelectableFlags flags = 0, const Vector2f size = Vector2f::Zero);
+
+	void Text(const str::Guid& value);
+	void Text(const str::Name& value);
+	void Text(const str::Path& value);
+	void Text(const str::String& value);
 
 	/// \brief Converts a hexadecimal colour to a vector.
 	/// Example: 0xFF00FF00 -> { 1.f, 0.f, 1.f, 0.f }

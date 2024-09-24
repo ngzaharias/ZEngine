@@ -57,6 +57,7 @@ namespace imgui
 		bool Write(const char* label, Value& value);
 
 	private:
+	protected:
 		template<typename Value>
 		inline void ReadCustom(const Value& value);
 		template<typename Value>
@@ -72,7 +73,7 @@ namespace imgui
 		template<typename Value>
 		bool WriteMember(Value& value);
 
-	private:
+	protected:
 		template<typename Value>
 		void ReadArray(const Array<Value>& values);
 		template<typename Value>

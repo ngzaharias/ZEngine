@@ -186,28 +186,28 @@ template<>
 void imgui::Inspector::ReadCustom(const str::Guid& value)
 {
 	ImGui::SetNextItemWidth(-1);
-	imgui::Guid("##value", value);
+	imgui::InputText("##value", value);
 }
 
 template<>
 void imgui::Inspector::ReadCustom(const str::Name& value)
 {
 	ImGui::SetNextItemWidth(-1);
-	imgui::Name("##value", value);
+	imgui::InputText("##value", value);
 }
 
 template<>
 void imgui::Inspector::ReadCustom(const str::Path& value)
 {
 	ImGui::SetNextItemWidth(-1);
-	imgui::Path("##value", value);
+	imgui::InputText("##value", value);
 }
 
 template<>
 void imgui::Inspector::ReadCustom(const str::String& value)
 {
 	ImGui::SetNextItemWidth(-1);
-	imgui::String("##value", value);
+	imgui::InputText("##value", value);
 }
 
 template<>
@@ -347,26 +347,26 @@ template<>
 bool imgui::Inspector::WriteCustom(str::Guid& value)
 {
 	ImGui::SetNextItemWidth(-1);
-	return imgui::Guid("##value", value);
+	return imgui::InputText("##value", value);
 }
 
 template<>
 bool imgui::Inspector::WriteCustom(str::Name& value)
 {
 	ImGui::SetNextItemWidth(-1);
-	return imgui::Name("##value", value);
+	return imgui::InputText("##value", value);
 }
 
 template<>
 bool imgui::Inspector::WriteCustom(str::Path& value)
 {
 	ImGui::SetNextItemWidth(-1);
-	return imgui::Path("##value", value);
+	return imgui::InputText("##value", value);
 }
 
 template<>
 bool imgui::Inspector::WriteCustom(str::String& value)
 {
 	ImGui::SetNextItemWidth(-1);
-	return imgui::String("##value", value);
+	return imgui::InputText("##value", value);
 }

@@ -81,8 +81,8 @@ namespace
 		auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(entity);
 		eng::TrajectoryAsset& trajectory = windowComponent.m_Asset;
 
-		imgui::Guid("m_Guid", trajectory.m_Guid);
-		imgui::Name("m_Name", trajectory.m_Name);
+		imgui::InputText("m_Guid", trajectory.m_Guid);
+		imgui::InputText("m_Name", trajectory.m_Name);
 
 		ImGui::Separator();
 

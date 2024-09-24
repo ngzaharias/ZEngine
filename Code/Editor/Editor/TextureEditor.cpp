@@ -80,8 +80,8 @@ namespace
 		auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(entity);
 		eng::Texture2DAsset& texture = windowComponent.m_Asset;
 
-		imgui::Guid("m_Guid", texture.m_Guid);
-		imgui::Name("m_Name", texture.m_Name);
+		imgui::InputText("m_Guid", texture.m_Guid);
+		imgui::InputText("m_Name", texture.m_Name);
 	}
 
 	void DrawPopupImport(World& world, const ecs::Entity& entity)
