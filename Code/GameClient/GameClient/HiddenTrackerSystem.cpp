@@ -37,7 +37,9 @@ void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 	
 	// group complete
 	{
-		using Query = ecs::query::Updated<const hidden::GroupComponent>;
+		using Query = ecs::query
+			::Updated<hidden::GroupComponent>
+			::Exclude<eng::SpriteComponent>;
 		for (const ecs::Entity& groupEntity : world.Query<Query>())
 		{
 			const auto& groupComponent = world.ReadComponent<hidden::GroupComponent>(groupEntity);
