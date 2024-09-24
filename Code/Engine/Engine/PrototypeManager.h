@@ -1,38 +1,30 @@
 #pragma once
 
-#include "Core/Guid.h"
 #include "Core/Map.h"
 #include "Core/Name.h"
-#include "Core/Path.h"
-#include "ECS/Component.h"
-#include "ECS/Entity.h"
+#include "Engine/PrototypeComponent.h"
 
 namespace ecs
 {
 	class EntityWorld;
+	struct Entity;
 }
 
 namespace eng
 {
-	class PrototypeLoader;
 	class Visitor;
 	struct Prototype;
 }
 
 namespace eng
 {
-	struct PrototypeComponent : public ecs::Component<PrototypeComponent>
-	{
-		str::Guid m_Guid = {};
-		str::Path m_Path = { };
-	};
-
 	struct PrototypeEntry
 	{
-		using Create = void(eng::Visitor& visitor, ecs::EntityWorld& world, const ecs::Entity& entity, const eng::PrototypeLoader& loader);
+		using Save = void(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor);
+		using Load = void(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor);
 
-		Create* m_Create = nullptr;
-		eng::PrototypeLoader* m_Loader = nullptr;
+		Save* m_Save = nullptr;
+		Load* m_Load = nullptr;
 	};
 
 	class PrototypeManager final
@@ -40,17 +32,17 @@ namespace eng
 		using EntryMap = Map<str::Name, eng::PrototypeEntry>;
 
 	public:
-		PrototypeManager();
-		~PrototypeManager();
+		template<typename TPrototype>
+		void Register();
 
-		ecs::Entity CreateEntity(ecs::EntityWorld& world, const str::Path& filepath) const;
-
-		template<typename TPrototype, typename TLoader, typename... TArgs>
-		void RegisterPrototype(const str::Name& type, TArgs&&... args);
+		bool SaveEntity(ecs::EntityWorld& world, const ecs::Entity& entity, const str::Path& filepath) const;
+		bool LoadEntity(ecs::EntityWorld& world, const ecs::Entity& entity, const str::Path& filepath) const;
 
 	private:
-		template<typename TPrototype, typename TLoader>
-		static void CreateFunction(eng::Visitor& visitor, ecs::EntityWorld& world, const ecs::Entity& entity, const eng::PrototypeLoader& loader);
+		template<typename TPrototype>
+		static void SaveFunction(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor);
+		template<typename TPrototype>
+		static void LoadFunction(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor);
 
 	private:
 		EntryMap m_EntryMap = { };

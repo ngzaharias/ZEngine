@@ -1,10 +1,10 @@
 m_Guid = "547bef26-99ee-41ea-99cf-83d1f39ee548"
 m_Name = "Camera"
 
-[Camera]
-[Camera.m_Movement.Move3D]
+['eng::camera::ProjectionComponent']
+['eng::camera::Move3DComponent']
 
-[Transform]
+['eng::TransformComponent']
 m_Translate = { X = 500.0, Y = 500.0, Z = -500.0 }
 m_Rotate = { Pitch = +45.0, Yaw = -45.0, Roll = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

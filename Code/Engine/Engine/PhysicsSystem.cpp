@@ -5,8 +5,12 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/AssetManager.h"
+#include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
+#include "Engine/PhysicsHelpers.h"
 #include "Engine/PhysicsManager.h"
+#include "Engine/PhysicsMaterialAsset.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/TransformComponent.h"
@@ -20,9 +24,41 @@
 
 namespace
 {
+	const str::Guid strDefaultMaterial = GUID("a4835493-ae5a-40ba-8083-06deb381c801");
+
 	constexpr float s_Gravity = -981.f;
 	constexpr int32 s_SimulationSubsteps = 1;
 	constexpr float s_SimulationTimestep = 1.f / 60.f;
+
+	physx::PxRigidActor* CreateActor(physx::PxPhysics& physics, const eng::Rigidbody& data)
+	{
+		if (std::holds_alternative<eng::RigidDynamic>(data))
+		{
+			const auto& rigidbody = std::get<eng::RigidDynamic>(data);
+			return eng::physics::CreateRigidbody(physics, rigidbody);
+		}
+		else if (std::holds_alternative<eng::RigidStatic>(data))
+		{
+			const auto& rigidbody = std::get<eng::RigidStatic>(data);
+			return eng::physics::CreateRigidbody(physics, rigidbody);
+		}
+		return nullptr;
+	}
+
+	physx::PxShape* CreateShape(physx::PxPhysics& physics, const eng::Shape& data, const physx::PxMaterial& material)
+	{
+		if (std::holds_alternative<eng::ShapeBox>(data))
+		{
+			const auto& shape = std::get<eng::ShapeBox>(data);
+			return eng::physics::CreateShape(physics, shape, material);
+		}
+		else if (std::holds_alternative<eng::ShapeSphere>(data))
+		{
+			const auto& shape = std::get<eng::ShapeSphere>(data);
+			return eng::physics::CreateShape(physics, shape, material);
+		}
+		return nullptr;
+	}
 }
 
 namespace physx
@@ -150,50 +186,52 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 {
 	PROFILE_FUNCTION();
 
-	auto& sceneComponent = world.WriteSingleton<eng::PhysicsSceneComponent>();
-
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::RigidDynamicComponent>>())
+	Set<ecs::Entity> entities = {};
+	entities.Add(world.Query<ecs::query::Added<eng::PhysicsComponent>>());
+	entities.Add(world.Query<ecs::query::Updated<eng::PhysicsComponent>>());
+	for (const ecs::Entity& entity : entities)
 	{
-		auto& rigidComponent = world.WriteComponent<eng::RigidDynamicComponent>(entity);
-		const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(entity);
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
+		auto& physicsManager = world.WriteResource<eng::PhysicsManager>();
+		const auto* asset = assetManager.LoadAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
 
-		const Quaternion quaternion = Quaternion::FromRotator(transformComponent.m_Rotate);
+		// #hack: dirty hack to not mark the component as updated which causes an infinite loop
+		auto& physicsComponent = const_cast<eng::PhysicsComponent&>(world.ReadComponent<eng::PhysicsComponent>(entity));
+		auto& sceneComponent = world.WriteSingleton<eng::PhysicsSceneComponent>();
 
-		physx::PxVec3 translate;
-		translate.x = transformComponent.m_Translate.x;
-		translate.y = transformComponent.m_Translate.y;
-		translate.z = transformComponent.m_Translate.z;
+		physx::PxPhysics& physics = physicsManager.GetPhysics();
+		for (physx::PxShape* shape : physicsComponent.m_PxShapes)
+		{
+			physicsComponent.m_PxRigidActor->detachShape(*shape);
+			shape->release();
+		}
+		physicsComponent.m_PxShapes.RemoveAll();
 
-		physx::PxQuat rotate;
-		rotate.x = quaternion.x;
-		rotate.y = quaternion.y;
-		rotate.z = quaternion.z;
-		rotate.w = quaternion.w;
+		if (physicsComponent.m_PxRigidActor)
+		{
+			physicsComponent.m_PxRigidActor->release();
+			physicsComponent.m_PxRigidActor = nullptr;
+		}
 
-		rigidComponent.m_Actor->setGlobalPose({ translate, rotate }, false);
-		sceneComponent.m_PhysicsScene->addActor(*rigidComponent.m_Actor);
-	}
+		physx::PxTransform transform(physx::PxIdentity);
+		if (world.HasComponent<eng::TransformComponent>(entity))
+		{
+			const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(entity);
+			transform = eng::physics::ToTransform(transformComponent.m_Translate, transformComponent.m_Rotate);
+		}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::RigidStaticComponent>>())
-	{
-		auto& rigidComponent = world.WriteComponent<eng::RigidStaticComponent>(entity);
-		const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(entity);
+		physicsComponent.m_PxRigidActor = CreateActor(physics, physicsComponent.m_Rigidbody);
+		physicsComponent.m_PxRigidActor->userData = reinterpret_cast<void*>(entity.m_Value);
+		physicsComponent.m_PxRigidActor->setGlobalPose(transform);
 
-		const Quaternion quaternion = Quaternion::FromRotator(transformComponent.m_Rotate);
+		for (const eng::Shape& data : physicsComponent.m_Shapes)
+		{
+			physx::PxShape* shape = CreateShape(physics, data, *asset->m_Material);
+			physicsComponent.m_PxRigidActor->attachShape(*shape);
+			physicsComponent.m_PxShapes.Append(shape);
+		}
 
-		physx::PxVec3 translate;
-		translate.x = transformComponent.m_Translate.x;
-		translate.y = transformComponent.m_Translate.y;
-		translate.z = transformComponent.m_Translate.z;
-
-		physx::PxQuat rotate;
-		rotate.x = quaternion.x;
-		rotate.y = quaternion.y;
-		rotate.z = quaternion.z;
-		rotate.w = quaternion.w;
-
-		rigidComponent.m_Actor->setGlobalPose({ translate, rotate }, false);
-		sceneComponent.m_PhysicsScene->addActor(*rigidComponent.m_Actor);
+		sceneComponent.m_PhysicsScene->addActor(*physicsComponent.m_PxRigidActor);
 	}
 }
 
@@ -202,62 +240,46 @@ void eng::PhysicsSystem::ProcessUpdated(World& world)
 	PROFILE_FUNCTION();
 
 	using Query = ecs::query
-		::Include<eng::TransformComponent, const eng::RigidDynamicComponent>;
+		::Include<eng::PhysicsComponent, eng::TransformComponent>;
 	for (const ecs::Entity& entity : world.Query<Query>())
 	{
-		const auto& rigidComponent = world.ReadComponent<eng::RigidDynamicComponent>(entity);
-		if (!rigidComponent.m_IsKinematic)
+		const auto& physicsComponent = world.ReadComponent<eng::PhysicsComponent>(entity);
+		if (!std::holds_alternative<eng::RigidDynamic>(physicsComponent.m_Rigidbody))
+			continue;
+
+		const auto& rigidDynamic = std::get<eng::RigidDynamic>(physicsComponent.m_Rigidbody);
+		if (!rigidDynamic.eKINEMATIC)
 		{
 			auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);
-			const physx::PxVec3 translate = rigidComponent.m_Actor->getGlobalPose().p;
+			const physx::PxVec3 translate = physicsComponent.m_PxRigidActor->getGlobalPose().p;
 			transformComponent.m_Translate = Vector3f(translate.x, translate.y, translate.z);
 		}
 		else
 		{
-			const auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);
-			const Quaternion quaternion = Quaternion::FromRotator(transformComponent.m_Rotate);
+			const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(entity);
+			const physx::PxTransform transform = eng::physics::ToTransform(
+				transformComponent.m_Translate, 
+				transformComponent.m_Rotate);
 
-			physx::PxVec3 translate;
-			translate.x = transformComponent.m_Translate.x;
-			translate.y = transformComponent.m_Translate.y;
-			translate.z = transformComponent.m_Translate.z;
-
-			physx::PxQuat rotate;
-			rotate.x = quaternion.x;
-			rotate.y = quaternion.y;
-			rotate.z = quaternion.z;
-			rotate.w = quaternion.w;
-
-			const physx::PxTransform transform = { translate, rotate };
-			rigidComponent.m_Actor->setGlobalPose(transform);
+			physicsComponent.m_PxRigidActor->setGlobalPose(transform);
 		}
 	}
 }
 
 void eng::PhysicsSystem::ProcessRemoved(World& world)
 {
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::RigidDynamicComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::PhysicsComponent>>())
 	{
-		auto& rigidComponent = world.WriteComponent<eng::RigidDynamicComponent>(entity, false);
-		for (auto* shape : rigidComponent.m_Shapes)
+		auto& component = world.WriteComponent<eng::PhysicsComponent>(entity, false);
+		if (!component.m_PxRigidActor)
+			continue;
+
+		for (physx::PxShape* shape : component.m_PxShapes)
 		{
-			rigidComponent.m_Actor->detachShape(*shape);
+			component.m_PxRigidActor->detachShape(*shape);
 			shape->release();
 		}
-
-		rigidComponent.m_Actor->release();
-	}
-
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::RigidStaticComponent>>())
-	{
-		auto& rigidComponent = world.WriteComponent<eng::RigidStaticComponent>(entity, false);
-		for (auto* shape : rigidComponent.m_Shapes)
-		{
-			rigidComponent.m_Actor->detachShape(*shape);
-			shape->release();
-		}
-
-		rigidComponent.m_Actor->release();
+		component.m_PxRigidActor->release();
 	}
 }
 

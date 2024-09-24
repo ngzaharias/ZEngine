@@ -1,19 +1,19 @@
 m_Guid = '6e117fd0-dc2f-4e81-9e0b-fc7f8252869d'
 m_Name = 'Object_Bear09'
 
-[HiddenObject]
+['hidden::ObjectComponent']
 m_Group = 'ab4d37e0-a36f-400c-ba7f-56e47dbe9b70'
 m_Size = { X = 128, Y = 128 }
 m_Sprite = '0aad1366-b473-4514-97d3-2f0abcdb07eb'
 
-[Physics]
-[Physics.m_Rigid.RigidStatic]
-[[Physics.m_Shapes]]
-[Physics.m_Shapes.ShapeBox]
+['eng::PhysicsComponent']
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 32, Y = 50, Z = 1 }
 
-[Transform]
+['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = 1404.0, Y = -715.0, Z = -1.0 }

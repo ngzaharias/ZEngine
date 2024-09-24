@@ -1,19 +1,19 @@
 m_Guid = '98fcf9b9-00d5-4216-8008-335e475596b5'
 m_Name = 'Object_Seal'
 
-[HiddenObject]
+['hidden::ObjectComponent']
 m_Group = '5b505ef6-e5d9-4770-996d-46b859721382'
 m_Size = { X = 256, Y = 128 }
 m_Sprite = 'a38981f4-3f46-4207-8145-92effe464eec'
 
-[Physics]
-[Physics.m_Rigid.RigidStatic]
-[[Physics.m_Shapes]]
-[Physics.m_Shapes.ShapeBox]
+['eng::PhysicsComponent']
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 80, Y = 40, Z = 1 }
 
-[Transform]
+['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = 1171.0, Y = -509.0, Z = -1.0 }

@@ -1,19 +1,19 @@
 m_Guid = 'd13758a7-20f9-428a-9e61-276558e03af5'
 m_Name = 'Object_Dog'
 
-[HiddenObject]
+['hidden::ObjectComponent']
 m_Group = '58af002b-d6d0-4e3b-be66-153bf807ba8a'
 m_Size = { X = 128, Y = 128 }
 m_Sprite = '90845288-5360-4871-8100-af83609f539b'
 
-[Physics]
-[Physics.m_Rigid.RigidStatic]
-[[Physics.m_Shapes]]
-[Physics.m_Shapes.ShapeBox]
+['eng::PhysicsComponent']
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 60, Y = 45, Z = 1 }
 
-[Transform]
+['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = -1496.0, Y = 734.0, Z = -1.0 }

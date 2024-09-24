@@ -9,7 +9,7 @@ namespace
 	const str::StringView strChannel = "m_Channel";
 	const str::StringView strExtents = "m_Extents";
 	const str::StringView strRadius = "m_Radius";
-	const str::StringView strRigid = "m_Rigid";
+	const str::StringView strRigidbody = "m_Rigidbody";
 	const str::StringView strRotate = "m_Rotate";
 	const str::StringView strShape = "m_Shape";
 	const str::StringView strShapes = "m_Shapes";
@@ -28,14 +28,14 @@ namespace
 template<>
 void eng::Visitor::ReadCustom(eng::PhysicsComponent& value) const
 {
-	Read(strRigid, value.m_Rigidbody, value.m_Rigidbody);
+	Read(strRigidbody, value.m_Rigidbody, value.m_Rigidbody);
 	Read(strShapes, value.m_Shapes, value.m_Shapes);
 }
 
 template<>
 void eng::Visitor::WriteCustom(const eng::PhysicsComponent& value)
 {
-	Write(strRigid, value.m_Rigidbody);
+	Write(strRigidbody, value.m_Rigidbody);
 	Write(strShapes, value.m_Shapes);
 }
 

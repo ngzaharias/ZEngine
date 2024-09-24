@@ -1,7 +1,7 @@
 m_Guid = 'e2a61925-af8d-4491-bb7b-c0e1b16f80c8'
 m_Name = 'Group_Cat'
 
-[HiddenGroup]
+['hidden::GroupComponent']
 m_Objects = [
     '44e8cb85-49f4-46aa-822a-c54bfd78c7be',
     '7c0f4c9c-0338-49b3-9ef0-c46cdd6141fb',
@@ -15,7 +15,7 @@ m_Objects = [
 m_Size = { X = 360, Y = 16 }
 m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
 
-[Transform]
+['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 3.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = -850.0, Y = -964.0, Z = 0.0 }

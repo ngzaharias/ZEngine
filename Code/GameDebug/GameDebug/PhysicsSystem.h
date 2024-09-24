@@ -5,6 +5,7 @@
 namespace eng
 {
 	struct LinesComponent;
+	struct PhysicsComponent;
 	struct RigidDynamicComponent;
 	struct RigidStaticComponent;
 }
@@ -21,6 +22,7 @@ namespace dbg
 	public:
 		using World = ecs::WorldView<
 			eng::LinesComponent,
+			const eng::PhysicsComponent,
 			const eng::RigidDynamicComponent,
 			const eng::RigidStaticComponent,
 			const eng::settings::DebugComponent>;

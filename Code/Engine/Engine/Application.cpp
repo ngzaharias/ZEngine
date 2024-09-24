@@ -3,19 +3,19 @@
 
 #include "Core/GameTime.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraPrototype.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/FlipbookAsset.h"
-#include "Engine/FlipbookPrototype.h"
+#include "Engine/FlipbookComponent.h"
 #include "Engine/FontAsset.h"
 #include "Engine/GLFW/Window.h"
-#include "Engine/LightPrototypes.h"
+#include "Engine/LightComponents.h"
 #include "Engine/MusicAsset.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/NetworkManager.h"
+#include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PhysicsMaterialAsset.h"
-#include "Engine/PhysicsPrototype.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
@@ -23,14 +23,14 @@
 #include "Engine/ShaderAsset.h"
 #include "Engine/SoundAssets.h"
 #include "Engine/SpriteAsset.h"
-#include "Engine/SpritePrototype.h"
+#include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshAsset.h"
-#include "Engine/StaticMeshPrototype.h"
-#include "Engine/TextPrototype.h"
+#include "Engine/StaticMeshComponent.h"
+#include "Engine/TextComponent.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TrajectoryAsset.h"
-#include "Engine/TransformPrototype.h"
-#include "Engine/VoxelChunkPrototype.h"
+#include "Engine/TransformComponent.h"
+#include "Engine/VoxelComponents.h"
 
 #include <optick.h>
 #include <GLEW/glew.h>
@@ -50,7 +50,6 @@ namespace
 	const str::Name strFont = NAME("Font");
 	const str::Name strFlipbook = NAME("Flipbook");
 	const str::Name strMusic = NAME("Music");
-	const str::Name strPhysics = NAME("Physics");
 	const str::Name strPhysicsMaterial = NAME("PhysicsMaterial");
 	const str::Name strPointLight = NAME("PointLight");
 	const str::Name strShader = NAME("Shader");
@@ -162,17 +161,22 @@ void eng::Application::Register()
 
 	// prototypes
 	{
-		m_PrototypeManager.RegisterPrototype<eng::camera::Prototype, eng::camera::Loader>(strCamera);
-		m_PrototypeManager.RegisterPrototype<eng::FlipbookPrototype, eng::FlipbookLoader>(strFlipbook);
-		m_PrototypeManager.RegisterPrototype<eng::AmbientLightPrototype, eng::LightLoader>(strAmbientLight);
-		m_PrototypeManager.RegisterPrototype<eng::DirectionalLightPrototype, eng::LightLoader>(strDirectionalLight);
-		m_PrototypeManager.RegisterPrototype<eng::PhysicsPrototype, eng::PhysicsLoader>(strPhysics);
-		m_PrototypeManager.RegisterPrototype<eng::PointLightPrototype, eng::LightLoader>(strPointLight);
-		m_PrototypeManager.RegisterPrototype<eng::SpritePrototype, eng::SpriteLoader>(strSprite);
-		m_PrototypeManager.RegisterPrototype<eng::StaticMeshPrototype, eng::StaticMeshLoader>(strStaticMesh);
-		m_PrototypeManager.RegisterPrototype<eng::TextPrototype, eng::TextLoader>(strText);
-		m_PrototypeManager.RegisterPrototype<eng::TransformPrototype, eng::TransformLoader>(strTransform);
-		m_PrototypeManager.RegisterPrototype<eng::VoxelChunkPrototype, eng::VoxelChunkLoader>(strVoxelChunk);
+		m_PrototypeManager.Register<eng::camera::Bound2DComponent>();
+		m_PrototypeManager.Register<eng::camera::Move2DComponent>();
+		m_PrototypeManager.Register<eng::camera::Move3DComponent>();
+		m_PrototypeManager.Register<eng::camera::Pan3DComponent>();
+		m_PrototypeManager.Register<eng::camera::ProjectionComponent>();
+		m_PrototypeManager.Register<eng::camera::Zoom2DComponent>();
+		m_PrototypeManager.Register<eng::FlipbookComponent>();
+		m_PrototypeManager.Register<eng::LightAmbientComponent>();
+		m_PrototypeManager.Register<eng::LightDirectionalComponent>();
+		m_PrototypeManager.Register<eng::LightPointComponent>();
+		m_PrototypeManager.Register<eng::PhysicsComponent>();
+		m_PrototypeManager.Register<eng::SpriteComponent>();
+		m_PrototypeManager.Register<eng::StaticMeshComponent>();
+		m_PrototypeManager.Register<eng::TextComponent>();
+		m_PrototypeManager.Register<eng::TransformComponent>();
+		m_PrototypeManager.Register<voxel::ChunkComponent>();
 	}
 }
 

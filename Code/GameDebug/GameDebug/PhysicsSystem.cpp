@@ -5,6 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/LinesComponent.h"
+#include "Engine/PhysicsComponent.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/SettingsComponents.h"
@@ -84,6 +85,13 @@ void dbg::PhysicsSystem::Update(World& world, const GameTime& gameTime)
 	const auto& settings = world.ReadSingleton<const eng::settings::DebugComponent>();
 	if (!settings.m_ArePhysicsEnabled)
 		return;
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::PhysicsComponent>>())
+	{
+		const auto& component = world.ReadComponent<eng::PhysicsComponent>(entity);
+		for (const physx::PxShape* shape : component.m_PxShapes)
+			RenderShape(world, *component.m_PxRigidActor, *shape, component.m_PxRigidActor->getGlobalPose());
+	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::RigidStaticComponent>>())
 	{

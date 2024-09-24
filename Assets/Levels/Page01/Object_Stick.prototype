@@ -1,19 +1,19 @@
 m_Guid = 'f0d8d8e7-adec-4e49-a8b8-b781a2fa028f'
 m_Name = 'Object_Stick'
 
-[HiddenObject]
+['hidden::ObjectComponent']
 m_Group = '9c2b3368-04d4-4d8a-84c7-e1971b9e5860'
 m_Size = { X = 128, Y = 512 }
 m_Sprite = '89ff3782-a02b-4925-adfd-536501dcb3e5'
 
-[Physics]
-[Physics.m_Rigid.RigidStatic]
-[[Physics.m_Shapes]]
-[Physics.m_Shapes.ShapeBox]
+['eng::PhysicsComponent']
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 16, Y = 180, Z = 1 }
 
-[Transform]
+['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = -287.0, Y = 215.0, Z = -1.0 }

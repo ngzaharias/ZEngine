@@ -1,7 +1,7 @@
 m_Guid = 'eaba7a09-8920-434c-8cc6-02a2dd8be89a'
 m_Name = 'Group_Hand'
 
-[HiddenGroup]
+['hidden::GroupComponent']
 m_Objects = [
     '5f5d9b49-c0b4-4cf2-8fe7-ebbcfb87862b',
     '2a1466fb-ff1e-4b9e-a133-e779cf81fd12',
@@ -11,7 +11,7 @@ m_Objects = [
 m_Size = { X = 520, Y = 16 }
 m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
 
-[Transform]
+['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = -1.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = 1081.0, Y = -1037.0, Z = 0.0 }

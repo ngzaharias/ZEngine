@@ -1,12 +1,12 @@
 m_Guid = '58af002b-d6d0-4e3b-be66-153bf807ba8a'
 m_Name = 'Group_Dog'
 
-[HiddenGroup]
+['hidden::GroupComponent']
 m_Objects = [ 'd13758a7-20f9-428a-9e61-276558e03af5' ]
 m_Size = { X = 360, Y = 16 }
 m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
 
-[Transform]
+['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 2.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = -1217.0, Y = -1040.0, Z = 0.0 }

@@ -16,7 +16,6 @@ namespace physx
 	class PxActor;
 	class PxScene;
 	class PxTransform;
-
 	struct PxConstraintInfo;
 	struct PxContactPair;
 	struct PxContactPairHeader;
@@ -25,8 +24,9 @@ namespace physx
 
 namespace eng
 {
+	class AssetManager;
 	class PhysicsManager;
-
+	struct PhysicsComponent;
 	struct PhysicsSceneComponent;
 	struct RigidDynamicComponent;
 	struct RigidStaticComponent;
@@ -36,11 +36,13 @@ namespace eng
 	{
 	public:
 		using World = ecs::WorldView<
+			eng::AssetManager,
 			eng::PhysicsManager,
 			eng::PhysicsSceneComponent,
 			eng::RigidDynamicComponent,
 			eng::RigidStaticComponent,
-			eng::TransformComponent>;
+			eng::TransformComponent,
+			const eng::PhysicsComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

@@ -1,21 +1,21 @@
 m_Guid = "d7a1756a-37ed-4e1b-8556-cdb6593fcfe4"
 m_Name = "Camera"
 
-[Camera]
+['eng::camera::ProjectionComponent']
+m_Projection = { Orthographic = {} }
 
-[Camera.m_Bounded.Bound2D]
+['eng::camera::Bound2DComponent']
 m_Max = { X = +1968, Y = +1320 }
 m_Min = { X = -1968, Y = -1320 } 
 
-[Camera.m_Movement.Move2D]
-[Camera.m_Panning.Pan3D]
-[Camera.m_Zooming.Zoom2D]
+['eng::camera::Move2DComponent']
+['eng::camera::Pan3DComponent']
+['eng::camera::Zoom2DComponent']
 m_Max = 2000
 m_Min = 800
 
-[Camera.m_Projection.Orthographic]
 
-[Transform]
+['eng::TransformComponent']
 m_Translate = { X = 0.0, Y = 0.0, Z = -500.0 }
 m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

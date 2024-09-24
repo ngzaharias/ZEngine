@@ -117,9 +117,9 @@ void eng::level::LoadSystem::LoadLevel(World& world, const str::Name& levelName,
 		}
 		else if (filepath.GetFileExtension() == s_Extension)
 		{
-			const ecs::Entity entity = prototypeManager.CreateEntity(m_EntityWorld, filepath);
-			if (!entity.IsUnassigned())
-				world.AddComponent<eng::level::EntityComponent>(entity, levelName);
+			const ecs::Entity entity = world.CreateEntity();
+			world.AddComponent<eng::level::EntityComponent>(entity, levelName);
+			prototypeManager.LoadEntity(m_EntityWorld, entity, filepath);
 		}
 	}
 }

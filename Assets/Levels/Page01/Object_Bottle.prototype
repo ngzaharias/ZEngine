@@ -1,19 +1,19 @@
 m_Guid = 'dc967fd7-7474-4c2f-9889-087c1eac867f'
 m_Name = 'Object_Bottle'
 
-[HiddenObject]
+['hidden::ObjectComponent']
 m_Group = '48cdf226-13f0-439d-88c5-af2bab3772b1'
 m_Size = { X = 128, Y = 128 }
 m_Sprite = '1781611e-b6d1-4811-b692-7f03f5d05389'
 
-[Physics]
-[Physics.m_Rigid.RigidStatic]
-[[Physics.m_Shapes]]
-[Physics.m_Shapes.ShapeBox]
+['eng::PhysicsComponent']
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 20, Y = 60, Z = 1 }
 
-[Transform]
+['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = 733.0, Y = 648.0, Z = -1.0 }
