@@ -48,6 +48,18 @@ void eng::Visitor::Read(const str::StringView& key, Value& value, const Value& d
 			value = defaultValue;
 		}
 	}
+	else if constexpr (core::IsSpecialization<Value, Set>::value)
+	{
+		if (toml::Array* childNode = parentNode[key].as_array())
+		{
+			m_Node = childNode;
+			ReadSet(value);
+		}
+		else
+		{
+			value = defaultValue;
+		}
+	}
 	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
 	// so instead we have to check the actual type rather than our friendly version.
 	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
@@ -244,6 +256,20 @@ void eng::Visitor::ReadPrimitive(const int32 index, Value& value) const
 		value = *result;
 }
 
+template<typename Value>
+void eng::Visitor::ReadSet(Set<Value>& values) const
+{
+	toml::Array& parentNode = *m_Node->as_array();
+	const int32 count = static_cast<int32>(parentNode.size());
+	for (int32 i = 0; i < count; ++i)
+	{
+		Value value;
+		Read(i, value);
+		values.Add(value);
+	}
+	m_Node = &parentNode;
+}
+
 template<typename ...Types>
 void eng::Visitor::ReadVariant(Variant<Types...>& value) const
 {
@@ -295,6 +321,13 @@ inline void eng::Visitor::Write(const str::StringView& key, const Value& value)
 		toml::Table childNode;
 		m_Node = &childNode;
 		WriteMap(value);
+		parentNode.insert_or_assign(key, std::move(childNode));
+	}
+	else if constexpr (core::IsSpecialization<Value, Set>::value)
+	{
+		toml::Array childNode;
+		m_Node = &childNode;
+		WriteSet(value);
 		parentNode.insert_or_assign(key, std::move(childNode));
 	}
 	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
@@ -440,6 +473,17 @@ void eng::Visitor::WritePrimitive(const int32 index, const Value& value)
 {
 	toml::Array& currentNode = *m_Node->as_array();
 	currentNode.push_back(value);
+}
+
+template<typename Value>
+void eng::Visitor::WriteSet(const Set<Value>& values)
+{
+	int32 i = 0;
+	toml::Array& parentNode = *m_Node->as_array();
+	parentNode.reserve(static_cast<size_t>(values.GetCount()));
+	for (const Value& value : values)
+		Write(i++, value);
+	m_Node = &parentNode;
 }
 
 template<typename ...Types>

@@ -18,9 +18,10 @@ using uint64 = uint64_t;
 
 template<typename Value>
 class Array;
-
 template<typename Key, typename Value>
 class Map;
+template<typename Value>
+class Set;
 
 class Vector2f;
 class Vector2i;
@@ -197,6 +198,9 @@ namespace eng
 		template<typename Value>
 		void ReadPrimitive(const int32 index, Value& value) const;
 
+		template<typename Value>
+		void ReadSet(Set<Value>& values) const;
+
 		template<typename ...Types>
 		void ReadVariant(Variant<Types...>& value) const;
 		template<typename TElement, typename TVariant>
@@ -228,6 +232,9 @@ namespace eng
 		void WritePrimitive(const str::StringView& key, const Value& value);
 		template<typename Value>
 		void WritePrimitive(const int32 index, const Value& value);
+
+		template<typename Value>
+		void WriteSet(const Set<Value>& values);
 
 		template<typename ...Types>
 		void WriteVariant(const Variant<Types...>& value);
