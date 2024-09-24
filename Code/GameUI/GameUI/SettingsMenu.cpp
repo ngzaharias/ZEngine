@@ -77,6 +77,7 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 				{
 					auto& debugSettings = windowComponent.m_Debug;
 
+					ImGui::Checkbox("Are Gizmos Enabled", &debugSettings.m_AreGizmosEnabled);
 					ImGui::Checkbox("Are Hidden Enabled", &debugSettings.m_AreHiddenEnabled);
 					ImGui::Checkbox("Are Lines Enabled", &debugSettings.m_AreLinesEnabled);
 					ImGui::Checkbox("Are Physics Enabled", &debugSettings.m_ArePhysicsEnabled);

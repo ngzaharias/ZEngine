@@ -6,13 +6,17 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/LinesComponent.h"
+#include "Engine/SettingsComponents.h"
 
 void editor::GizmoSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	if (!debugSettings.m_AreGizmosEnabled)
+		return;
+
 	// render coordinate lines
-	if (false)
 	{
 		constexpr float s_Distance = 100000.f;
 		constexpr Vector4f s_AxisX = Vector4f(1.f, 0.f, 0.f, 1.f);
