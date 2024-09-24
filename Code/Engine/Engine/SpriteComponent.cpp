@@ -18,14 +18,12 @@ void eng::Visitor::ReadCustom(eng::SpriteComponent& value) const
 	Read(m_Sprite, value.m_Sprite, value.m_Sprite);
 	Read(m_Size, value.m_Size, value.m_Size);
 }
-
 template<>
 void eng::Visitor::WriteCustom(const eng::SpriteComponent& value)
 {
 	Write(m_Sprite, value.m_Sprite);
 	Write(m_Size, value.m_Size);
 }
-
 template<>
 bool imgui::Inspector::WriteCustom(eng::SpriteComponent& value)
 {

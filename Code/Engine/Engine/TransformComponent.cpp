@@ -7,9 +7,9 @@
 
 namespace
 {
-	const str::StringView strTranslate = "m_Translate";
 	const str::StringView strRotate = "m_Rotate";
 	const str::StringView strScale = "m_Scale";
+	const str::StringView strTranslate = "m_Translate";
 }
 
 template<>
@@ -19,7 +19,6 @@ void eng::Visitor::ReadCustom(eng::TransformComponent& value) const
 	Read(strRotate, value.m_Rotate, value.m_Rotate);
 	Read(strScale, value.m_Scale, value.m_Scale);
 }
-
 template<>
 void eng::Visitor::WriteCustom(const eng::TransformComponent& value)
 {
@@ -27,7 +26,6 @@ void eng::Visitor::WriteCustom(const eng::TransformComponent& value)
 	Write(strRotate, value.m_Rotate);
 	Write(strScale, value.m_Scale);
 }
-
 template<>
 bool imgui::Inspector::WriteCustom(eng::TransformComponent& value)
 {

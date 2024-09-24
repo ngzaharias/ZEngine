@@ -18,7 +18,7 @@ namespace eng
 
 	struct LightPointComponent final : public ecs::Component<LightPointComponent>
 	{
-		float m_Range = 500.f;
 		Vector3f m_Colour = Vector3f::One;
+		float m_Range = 500.f;
 	};
 }

@@ -21,7 +21,6 @@ void eng::Visitor::ReadCustom(hidden::GroupComponent& value) const
 	Read(strObjects, value.m_Objects, value.m_Objects);
 	Read(strRevealed, value.m_Revealed, value.m_Revealed);
 }
-
 template<>
 void eng::Visitor::WriteCustom(const hidden::GroupComponent& value)
 {
@@ -30,7 +29,6 @@ void eng::Visitor::WriteCustom(const hidden::GroupComponent& value)
 	Write(strObjects, value.m_Objects);
 	Write(strRevealed, value.m_Revealed);
 }
-
 template<>
 bool imgui::Inspector::WriteCustom(hidden::GroupComponent& value)
 {
@@ -49,7 +47,6 @@ void eng::Visitor::ReadCustom(hidden::ObjectComponent& value) const
 	Read(strGroup, value.m_Group, value.m_Group);
 	Read(strSprite, value.m_Sprite, value.m_Sprite);
 }
-
 template<>
 void eng::Visitor::WriteCustom(const hidden::ObjectComponent& value)
 {
@@ -57,7 +54,6 @@ void eng::Visitor::WriteCustom(const hidden::ObjectComponent& value)
 	Write(strGroup, value.m_Group);
 	Write(strSprite, value.m_Sprite);
 }
-
 template<>
 bool imgui::Inspector::WriteCustom(hidden::ObjectComponent& value)
 {
