@@ -3,9 +3,9 @@
 #include "ECS/Entity.h"
 #include "ECS/System.h"
 
-namespace eng
+namespace ecs
 {
-	struct SpriteComponent;
+	struct NameComponent;
 }
 
 namespace eng::sound
@@ -25,6 +25,7 @@ namespace hidden
 	{
 	public:
 		using World = ecs::WorldView<
+			ecs::NameComponent,
 			eng::sound::SequenceRequestComponent,
 			const hidden::ObjectComponent,
 			const hidden::RevealedComponent>;

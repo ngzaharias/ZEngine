@@ -2,6 +2,7 @@
 #include "GameClient/HiddenSoundSystem.h"
 
 #include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/SoundComponents.h"
@@ -15,6 +16,7 @@ namespace
 void hidden::SoundSystem::Initialise(World& world)
 {
 	m_SoundEntity = world.CreateEntity();
+	world.AddComponent<ecs::NameComponent>(m_SoundEntity, "Sound");
 }
 
 void hidden::SoundSystem::Shutdown(World& world)
