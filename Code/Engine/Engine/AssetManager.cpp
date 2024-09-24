@@ -35,7 +35,8 @@ void eng::AssetManager::LoadFilepath(const str::Path& filepath, const bool canSe
 			visitor.Read(strGuid, assetFile.m_Guid, {});
 			visitor.Read(strName, assetFile.m_Name, {});
 			visitor.Read(strType, assetFile.m_Type, {});
-			m_FileMap.Insert(assetFile.m_Guid, assetFile);
+			m_FileMap[assetFile.m_Guid] = assetFile;
+			m_TypeMap[assetFile.m_Type].Add(assetFile.m_Guid);
 		}
 	}
 	else if (filepath.IsDirectory())
@@ -48,4 +49,12 @@ void eng::AssetManager::LoadFilepath(const str::Path& filepath, const bool canSe
 			LoadFilepath(subpath, canSearchSubdirectories);
 		}
 	}
+}
+
+const eng::AssetFile* eng::AssetManager::GetAssetFile(const str::Guid& guid) const
+{
+	const auto find = m_FileMap.Find(guid);
+	return find != m_FileMap.end()
+		? &find->second
+		: nullptr;
 }

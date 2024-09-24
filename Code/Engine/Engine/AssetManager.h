@@ -5,6 +5,7 @@
 #include "Core/Guid.h"
 #include "Core/Map.h"
 #include "Core/Name.h"
+#include "Core/Set.h"
 #include "Core/StringHelpers.h"
 #include "Core/TypeTraits.h"
 #include "Engine/Asset.h"
@@ -47,6 +48,7 @@ namespace eng
 
 		using FileMap = Map<str::Guid, eng::AssetFile>;
 		using Registry = Map<TypeId, eng::AssetEntry>;
+		using TypeMap = Map<str::Name, Set<str::Guid>>;
 
 	public:
 		void Initialise();
@@ -66,6 +68,9 @@ namespace eng
 		void LoadFilepath(const str::Path& filepath, const bool canSearchSubdirectories);
 
 	public:
+		const eng::AssetFile* GetAssetFile(const str::Guid& guid) const;
+
+	public:
 		template<typename TAsset, typename TLoader>
 		static bool ImportFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
 
@@ -75,9 +80,10 @@ namespace eng
 		template<typename TAsset, typename TLoader>
 		static bool SaveFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
 
-	private:
+	public:
 		FileMap m_FileMap = { };
 		Registry m_Registry = { };
+		TypeMap m_TypeMap = { };
 	};
 }
 
