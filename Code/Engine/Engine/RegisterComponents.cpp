@@ -15,6 +15,7 @@
 #include "Engine/LinesComponent.h"
 #include "Engine/MusicComponents.h"
 #include "Engine/NetworkComponents.h"
+#include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/ReplicationComponents.h"
@@ -170,6 +171,7 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	entityWorld.RegisterComponent<eng::level::LoadedComponent>();
 	entityWorld.RegisterComponent<eng::level::LoadRequestComponent>();
 	entityWorld.RegisterComponent<eng::level::UnloadRequestComponent>();
+	entityWorld.RegisterComponent<eng::PhysicsComponent>();
 	entityWorld.RegisterComponent<eng::PrototypeComponent>();
 	entityWorld.RegisterComponent<eng::SpriteComponent>();
 	entityWorld.RegisterComponent<eng::TransformComponent>();
