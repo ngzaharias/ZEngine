@@ -104,6 +104,34 @@ inline bool imgui::Inspector::Write(const char* label, Value& value)
 	return false;
 }
 
+template<class TPayload>
+void imgui::Inspector::AddPayload(TPayload& payload)
+{
+	using NonConst = std::remove_const<TPayload>::type;
+	Z_PANIC(!HasPayload<NonConst>(), "Payload has already been added!");
+
+	const int32 payloadId = ToTypeIndex<NonConst, imgui::InspectorTag>();
+	m_Payload.Emplace(payloadId, (void*)&payload);
+}
+
+template<class TPayload>
+bool imgui::Inspector::HasPayload()
+{
+	using NonConst = std::remove_const<TPayload>::type;
+	const int32 payloadId = ToTypeIndex<NonConst, imgui::InspectorTag>();
+	return m_Payload.Contains(payloadId);
+}
+
+template<class TPayload>
+auto imgui::Inspector::GetPayload()->TPayload&
+{
+	using NonConst = std::remove_const<TPayload>::type;
+	Z_PANIC(HasPayload<NonConst>(), "Payload hasn't been added!");
+
+	const int32 payloadId = ToTypeIndex<NonConst, imgui::InspectorTag>();
+	return *static_cast<NonConst*>(m_Payload.Get(payloadId));
+}
+
 template<typename Value>
 bool imgui::Inspector::ReadHeader(const char* label, const Value& value)
 {

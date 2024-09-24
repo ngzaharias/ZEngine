@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Optional.h"
+#include "Core/SparseArray.h"
 #include "Core/String.h"
 #include "Core/StringView.h"
 #include "Core/Variant.h"
@@ -41,6 +42,8 @@ namespace str
 
 namespace imgui
 {
+	struct InspectorTag {};
+
 	class Inspector
 	{
 	public:
@@ -56,7 +59,16 @@ namespace imgui
 		template<typename Value>
 		bool Write(const char* label, Value& value);
 
-	private:
+	public:
+		template<class TPayload>
+		void AddPayload(TPayload& resource);
+
+		template<class TPayload>
+		bool HasPayload();
+
+		template<class TPayload>
+		auto GetPayload()->TPayload&;
+
 	protected:
 		template<typename Value>
 		inline void ReadCustom(const Value& value);
@@ -103,6 +115,9 @@ namespace imgui
 		void ReadVariant(const Variant<Values...>& value);
 		template<typename ...Values>
 		bool WriteVariant(Variant<Values...>& value);
+
+	protected:
+		SparseArray<int32, void*> m_Payload = { };
 	};
 }
 
