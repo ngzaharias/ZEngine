@@ -26,6 +26,6 @@ void dbg::InspectorDemo::Update(World& world, const GameTime& gameTime)
 		imgui::InspectorDemo(isWindowOpen);
 
 		if (!isWindowOpen)
-			world.RemoveComponent<dbg::InspectorDemoWindowComponent>(entity);
+			world.DestroyEntity(entity);
 	}
 }

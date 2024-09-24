@@ -25,6 +25,6 @@ void dbg::ImGuiDemoSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::ShowDemoWindow(&isWindowOpen);
 
 		if (!isWindowOpen)
-			world.RemoveComponent<dbg::ImGuiDemoWindowComponent>(entity);
+			world.DestroyEntity(entity);
 	}
 }
