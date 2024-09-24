@@ -10,9 +10,11 @@ class TypeName final
 public:
 	virtual ~TypeName() { m_NoNamespace; }
 	static const str::StringView m_NoNamespace;
+	static const str::StringView m_WithNamespace;
 
 private:
 	static inline str::StringView NoNamespace();
+	static inline str::StringView WithNamespace();
 };
 
 #include "Core/TypeName.inl"
