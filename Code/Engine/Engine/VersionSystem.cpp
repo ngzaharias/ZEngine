@@ -32,5 +32,7 @@ void eng::VersionSystem::Initialise(World& world)
 		while (fgets(buffer, sizeof buffer, pipe) != nullptr)
 			component.m_Commit += buffer;
 		_pclose(pipe);
+		str::TrimRight(component.m_Commit, "\n");
+		component.m_Commit = component.m_Commit.substr(0, 7);
 	}
 }
