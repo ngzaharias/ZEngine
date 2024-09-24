@@ -45,23 +45,6 @@ void eng::Visitor::ReadCustom(camera::Zoom2D& value) const
 	Read(strMin, value.m_Min, value.m_Min);
 }
 
-template<>
-void eng::Visitor::ReadCustom(camera::Orthographic& value) const
-{
-	Read(strClippingNear, value.m_ClippingNear, value.m_ClippingNear);
-	Read(strClippingFar, value.m_ClippingFar, value.m_ClippingFar);
-	Read(strSize, value.m_Size, value.m_Size);
-}
-
-template<>
-void eng::Visitor::ReadCustom(camera::Perspective& value) const
-{
-	Read(strClippingNear, value.m_ClippingNear, value.m_ClippingNear);
-	Read(strClippingFar, value.m_ClippingFar, value.m_ClippingFar);
-	Read(strFieldOfView, value.m_FieldOfView, value.m_FieldOfView);
-	Read(strFoVAxis, value.m_FoVAxis, value.m_FoVAxis);
-}
-
 void eng::camera::Loader::Add(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::camera::Prototype& prototype) const
 {
 	auto& projection = world.AddComponent<eng::camera::ProjectionComponent>(entity);
