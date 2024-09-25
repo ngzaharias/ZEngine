@@ -8,6 +8,8 @@
 #include "Engine/InputComponent.h"
 #include "Engine/GLFW/Window.h"
 
+#include <imgui/imgui.h>
+
 void eng::InputSystem::Initialise(World& world)
 {
 	const ecs::Entity entity = world.CreateEntity();
@@ -32,12 +34,19 @@ void eng::InputSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::InputComponent>>())
 	{
 		auto& component = world.WriteComponent<eng::InputComponent>(entity);
-		component.m_KeyboardPrevious = m_KeyboardPrevious;
-		component.m_KeyboardCurrent = m_KeyboardCurrent;
-		component.m_MousePrevious = m_MousePrevious;
-		component.m_MouseCurrent = m_MouseCurrent;
-		component.m_MouseDelta = mouseDelta;
-		component.m_MousePosition = mousePos;
-		component.m_ScrollDelta = scrollDelta;
+		if (!ImGui::GetIO().WantCaptureKeyboard)
+		{
+			component.m_KeyboardPrevious = m_KeyboardPrevious;
+			component.m_KeyboardCurrent = m_KeyboardCurrent;
+		}
+
+		if (!ImGui::GetIO().WantCaptureMouse)
+		{
+			component.m_MousePrevious = m_MousePrevious;
+			component.m_MouseCurrent = m_MouseCurrent;
+			component.m_MouseDelta = mouseDelta;
+			component.m_MousePosition = mousePos;
+			component.m_ScrollDelta = scrollDelta;
+		}
 	}
 }
