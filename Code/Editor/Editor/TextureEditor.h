@@ -5,7 +5,7 @@
 #include "ECS/System.h"
 #include "Engine/Texture2DAsset.h"
 
-namespace edit::settings
+namespace editor::settings
 {
 	struct LocalComponent;
 }
@@ -21,6 +21,7 @@ namespace editor
 	struct TextureWindowRequestComponent;
 
 	struct TextureAssetImportComponent : public ecs::Component<TextureAssetImportComponent> { };
+	struct TextureAssetNewComponent : public ecs::Component<TextureAssetNewComponent> { };
 	struct TextureAssetOpenComponent : public ecs::Component<TextureAssetOpenComponent> { };
 	struct TextureAssetSaveComponent : public ecs::Component<TextureAssetSaveComponent> { };
 
@@ -40,8 +41,9 @@ namespace editor
 			// resources
 			eng::AssetManager,
 			// components
-			edit::settings::LocalComponent,
+			editor::settings::LocalComponent,
 			editor::TextureAssetImportComponent,
+			editor::TextureAssetNewComponent,
 			editor::TextureAssetOpenComponent,
 			editor::TextureAssetSaveComponent,
 			editor::TextureWindowComponent,
