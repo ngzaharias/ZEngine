@@ -35,7 +35,7 @@ namespace eng
 		Vector3f m_Translate = Vector3f::Zero;
 		Rotator m_Rotate = Rotator::Zero;
 
-		Vector3f m_Extents = Vector3f::One;
+		Vector3f m_Extents = Vector3f::Zero;
 		int32 m_Channel = 0;
 	};
 
@@ -43,8 +43,8 @@ namespace eng
 	{
 		Vector3f m_Translate = Vector3f::Zero;
 
-		int32 m_Channel = 0;
 		float m_Radius = 0.f;
+		int32 m_Channel = 0;
 	};
 
 	using Shape = Variant<ShapeBox, ShapeSphere>;
