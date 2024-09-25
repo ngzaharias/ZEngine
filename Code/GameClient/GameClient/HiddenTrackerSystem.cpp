@@ -1,6 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/HiddenTrackerSystem.h"
 
+#include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -26,7 +27,7 @@ void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 			for (const ecs::Entity& groupEntity : world.Query<GroupQuery>())
 			{
 				const auto& groupComponent = world.ReadComponent<hidden::GroupComponent>(groupEntity);
-				if (groupComponent.m_Objects.Contains(objectComponent.m_Guid))
+				if (enumerate::Contains(groupComponent.m_Objects, objectComponent.m_Guid))
 				{
 					auto& component = world.WriteComponent<hidden::GroupComponent>(groupEntity);
 					component.m_Revealed.Add(objectComponent.m_Guid);
@@ -40,12 +41,17 @@ void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 		using Query = ecs::query
 			::Updated<hidden::GroupComponent>
 			::Exclude<eng::SpriteComponent>;
-		for (const ecs::Entity& groupEntity : world.Query<Query>())
+		for (const ecs::Entity& entity : world.Query<Query>())
 		{
-			const auto& groupComponent = world.ReadComponent<hidden::GroupComponent>(groupEntity);
+			if (!world.IsAlive(entity))
+				continue;
+			if (!world.HasComponent<hidden::GroupComponent>(entity))
+				continue;
+
+			const auto& groupComponent = world.ReadComponent<hidden::GroupComponent>(entity);
 			if (groupComponent.m_Objects.GetCount() == groupComponent.m_Revealed.GetCount())
 			{
-				auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(groupEntity);
+				auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(entity);
 				spriteComponent.m_Size = groupComponent.m_Size;
 				spriteComponent.m_Sprite = groupComponent.m_Sprite;
 			}
