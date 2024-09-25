@@ -32,6 +32,7 @@ namespace imgui
 	{
 		RaiiID(const void* id);
 		RaiiID(const char* id);
+		RaiiID(const int32 id);
 		RaiiID(const str::String& id);
 		~RaiiID();
 	};
