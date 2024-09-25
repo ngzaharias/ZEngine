@@ -5,6 +5,11 @@
 #include "ECS/System.h"
 #include "Engine/SpriteAsset.h"
 
+namespace editor::settings
+{
+	struct LocalComponent;
+}
+
 namespace eng
 {
 	class AssetManager;
@@ -15,6 +20,7 @@ namespace editor
 {
 	struct SpriteWindowRequestComponent;
 
+	struct SpriteAssetNewComponent : public ecs::Component<SpriteAssetNewComponent> { };
 	struct SpriteAssetOpenComponent : public ecs::Component<SpriteAssetOpenComponent> { };
 	struct SpriteAssetSaveComponent : public ecs::Component<SpriteAssetSaveComponent> { };
 
@@ -35,6 +41,8 @@ namespace editor
 			// managers
 			eng::AssetManager,
 			// components
+			editor::settings::LocalComponent,
+			editor::SpriteAssetNewComponent,
 			editor::SpriteAssetOpenComponent,
 			editor::SpriteAssetSaveComponent,
 			editor::SpriteWindowComponent,

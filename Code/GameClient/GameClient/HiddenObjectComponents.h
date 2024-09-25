@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Array.h"
 #include "Core/Guid.h"
 #include "Core/Set.h"
 #include "ECS/Component.h"
@@ -13,16 +14,17 @@ namespace hidden
 		str::Guid m_Sprite = {};
 		Vector2u m_Size = Vector2u::Zero;
 
-		Set<str::Guid> m_Objects = {};
+		Array<str::Guid> m_Objects = {};
 		Set<str::Guid> m_Revealed = {};
 	};
 
 	/// \brief Base object to mark which entities are hidden objects.
 	struct ObjectComponent : public ecs::Component<ObjectComponent>
 	{
-		Vector2u m_Size = Vector2u::Zero;
-		str::Guid m_Group = {};
 		str::Guid m_Sprite = {};
+		Vector2u m_Size = Vector2u::Zero;
+
+		str::Guid m_Group = {};
 	};
 
 	/// \brief Added to a hidden object entity when it has been revealed.

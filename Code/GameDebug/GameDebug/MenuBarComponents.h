@@ -25,11 +25,10 @@ namespace dbg::level
 
 namespace editor
 {
+	struct EntityWindowRequestComponent : ecs::EventComponent<EntityWindowRequestComponent> { };
 	struct FlipbookWindowRequestComponent : ecs::EventComponent<FlipbookWindowRequestComponent> { };
-	struct PhysicsWindowRequestComponent : ecs::EventComponent<PhysicsWindowRequestComponent> { };
 	struct SpriteWindowRequestComponent : ecs::EventComponent<SpriteWindowRequestComponent> { };
 	struct TableWindowRequestComponent : ecs::EventComponent<TableWindowRequestComponent> { };
 	struct TextureWindowRequestComponent : ecs::EventComponent<TextureWindowRequestComponent> { };
 	struct TrajectoryWindowRequestComponent : ecs::EventComponent<TrajectoryWindowRequestComponent> { };
-	struct TransformWindowRequestComponent : ecs::EventComponent<TransformWindowRequestComponent> { };
 }

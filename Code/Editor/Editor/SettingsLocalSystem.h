@@ -2,7 +2,7 @@
 
 #include "ECS/System.h"
 
-namespace edit::settings
+namespace editor::settings
 {
 	struct LocalComponent;
 
@@ -10,7 +10,7 @@ namespace edit::settings
 	{
 	public:
 		using World = ecs::WorldView<
-			edit::settings::LocalComponent>;
+			editor::settings::LocalComponent>;
 
 		void Initialise(World& world);
 

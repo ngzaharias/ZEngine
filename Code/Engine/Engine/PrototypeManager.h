@@ -29,6 +29,9 @@ namespace eng
 
 	class PrototypeManager final
 	{
+	public:
+		static constexpr const char* s_Extension = ".prototype";
+
 		using EntryMap = Map<str::Name, eng::PrototypeEntry>;
 
 	public:

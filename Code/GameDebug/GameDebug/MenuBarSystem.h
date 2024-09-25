@@ -24,13 +24,12 @@ namespace dbg::level
 
 namespace editor
 {
+	struct EntityWindowRequestComponent;
 	struct FlipbookWindowRequestComponent;
-	struct PhysicsWindowRequestComponent;
 	struct SpriteWindowRequestComponent;
 	struct TableWindowRequestComponent;
 	struct TextureWindowRequestComponent;
 	struct TrajectoryWindowRequestComponent;
-	struct TransformWindowRequestComponent;
 }
 
 namespace eng
@@ -66,13 +65,12 @@ namespace dbg
 			dbg::NetworkWindowRequestComponent,
 			dbg::NodeGraphRequestComponent,
 			dbg::ShapeWindowRequestComponent,
+			editor::EntityWindowRequestComponent,
 			editor::FlipbookWindowRequestComponent,
-			editor::PhysicsWindowRequestComponent,
 			editor::SpriteWindowRequestComponent,
 			editor::TableWindowRequestComponent,
 			editor::TextureWindowRequestComponent,
 			editor::TrajectoryWindowRequestComponent,
-			editor::TransformWindowRequestComponent,
 			eng::settings::LocalComponent,
 			gui::settings::OpenRequestComponent,
 			const eng::InputComponent>;

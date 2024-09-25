@@ -40,10 +40,10 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 		if (ImGui::BeginMenu("Editors"))
 		{
+			if (ImGui::MenuItem("Entity Editor"))
+				world.AddEventComponent<editor::EntityWindowRequestComponent>();
 			if (ImGui::MenuItem("Flipbook Editor"))
 				world.AddEventComponent<editor::FlipbookWindowRequestComponent>();
-			if (ImGui::MenuItem("Physics Editor"))
-				world.AddEventComponent<editor::PhysicsWindowRequestComponent>();
 			if (ImGui::MenuItem("Sprite Editor"))
 				world.AddEventComponent<editor::SpriteWindowRequestComponent>();
 			if (ImGui::MenuItem("Table Editor"))
@@ -52,8 +52,6 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<editor::TextureWindowRequestComponent>();
 			if (ImGui::MenuItem("Trajectory Editor"))
 				world.AddEventComponent<editor::TrajectoryWindowRequestComponent>();
-			if (ImGui::MenuItem("Transform Editor"))
-				world.AddEventComponent<editor::TransformWindowRequestComponent>();
 
 			ImGui::EndMenu();
 		}
