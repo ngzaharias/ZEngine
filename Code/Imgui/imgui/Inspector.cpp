@@ -346,8 +346,21 @@ bool imgui::Inspector::WriteCustom(Vector4f& value)
 template<>
 bool imgui::Inspector::WriteCustom(str::Guid& value)
 {
+	bool result = false;
 	ImGui::SetNextItemWidth(-1);
-	return imgui::InputText("##value", value);
+	result |= imgui::InputText("##value", value);
+	ImGui::OpenPopupOnItemClick("##guid");
+
+	if (ImGui::BeginPopup("##guid"))
+	{
+		if (ImGui::Selectable("Generate"))
+		{
+			result = true;
+			value = str::Guid::Generate();
+		}
+		ImGui::EndPopup();
+	}
+	return result;
 }
 
 template<>
