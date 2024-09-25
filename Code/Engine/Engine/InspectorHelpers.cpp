@@ -52,7 +52,9 @@ bool imgui::WriteAsset(const char* label, str::Guid& value, const eng::AssetMana
 
 		const eng::AssetFile* parent = manager.GetAssetFile(value);
 		const str::String preview = ToName(parent, value);
+		imgui::InputText("##value", value);
 
+		ImGui::SetNextItemWidth(-1);
 		if (ImGui::BeginCombo("##combo", preview.c_str(), s_ComboFlags))
 		{
 			imgui::InputText("##search", search);
@@ -91,7 +93,6 @@ bool imgui::WriteAsset(const char* label, str::Guid& value, const eng::AssetMana
 		{
 			ImGui::BeginTooltip();
 			imgui::Text(parent->m_Path);
-			imgui::Text(parent->m_Guid);
 			ImGui::EndTooltip();
 		}
 	}
