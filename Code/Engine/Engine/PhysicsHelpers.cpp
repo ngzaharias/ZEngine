@@ -76,10 +76,13 @@ physx::PxShape* eng::physics::CreateShape(physx::PxPhysics& physics, const eng::
 	transform.p = ToVector(data.m_Translate);
 	transform.q = ToQuaternion(data.m_Rotate);
 
-	physx::PxShape* shape = physics.createShape(geometry, material, true);
-	shape->setLocalPose(transform);
-	shape->setSimulationFilterData(filterData);
-	return shape;
+	if (physx::PxShape* shape = physics.createShape(geometry, material, true))
+	{
+		shape->setLocalPose(transform);
+		shape->setSimulationFilterData(filterData);
+		return shape;
+	}
+	return nullptr;
 }
 
 physx::PxShape* eng::physics::CreateShape(physx::PxPhysics& physics, const eng::ShapeSphere& data, const physx::PxMaterial& material)
@@ -92,9 +95,13 @@ physx::PxShape* eng::physics::CreateShape(physx::PxPhysics& physics, const eng::
 
 	physx::PxTransform transform;
 	transform.p = ToVector(data.m_Translate);
+	transform.q = physx::PxQuat(physx::PxIdentity);
 
-	physx::PxShape* shape = physics.createShape(geometry, material, true);
-	shape->setLocalPose(transform);
-	shape->setSimulationFilterData(filterData);
-	return shape;
+	if (physx::PxShape* shape = physics.createShape(geometry, material, true))
+	{
+		shape->setSimulationFilterData(filterData);
+		shape->setLocalPose(transform);
+		return shape;
+	}
+	return nullptr;
 }
