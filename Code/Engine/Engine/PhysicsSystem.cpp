@@ -191,6 +191,12 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 	entities.Add(world.Query<ecs::query::Updated<eng::PhysicsComponent>>());
 	for (const ecs::Entity& entity : entities)
 	{
+		if (!world.IsAlive(entity))
+			continue;
+		// #bug: A component that is Updated and Removed in the same frame are present in both queries.
+		if (!world.HasComponent<eng::PhysicsComponent>(entity))
+			continue;
+
 		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		auto& physicsManager = world.WriteResource<eng::PhysicsManager>();
 		const auto* asset = assetManager.LoadAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
@@ -226,9 +232,11 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 
 		for (const eng::Shape& data : physicsComponent.m_Shapes)
 		{
-			physx::PxShape* shape = CreateShape(physics, data, *asset->m_Material);
-			physicsComponent.m_PxRigidActor->attachShape(*shape);
-			physicsComponent.m_PxShapes.Append(shape);
+			if (physx::PxShape* shape = CreateShape(physics, data, *asset->m_Material))
+			{
+				physicsComponent.m_PxRigidActor->attachShape(*shape);
+				physicsComponent.m_PxShapes.Append(shape);
+			}
 		}
 
 		sceneComponent.m_PhysicsScene->addActor(*physicsComponent.m_PxRigidActor);
