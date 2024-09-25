@@ -1,0 +1,17 @@
+m_Guid = 'a3847948-71eb-45d6-ee8d-4d18665cab7d'
+m_Name = 'Group_Shell'
+
+['eng::PrototypeComponent']
+m_Guid = 'a3847948-71eb-45d6-ee8d-4d18665cab7d'
+m_Path = 'D:\Projects\C++\ZEngine\Assets\Levels\Page02\Group_Shell.prototype'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 1.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -1122.0, Y = -1043.0, Z = 0.0 }
+
+['hidden::GroupComponent']
+m_Objects = [ 'a4454b37-e111-454b-a203-da901e4b3ab8' ]
+m_Revealed = []
+m_Size = { X = 517, Y = 16 }
+m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'

@@ -1,0 +1,16 @@
+m_Guid = 'cb72766e-ffbf-485a-fd8e-bf9697478ea3'
+m_Name = 'Group_Fish'
+
+['eng::SpriteComponent']
+m_Size = { X = 0, Y = 0 }
+m_Sprite = '00000000-0000-0000-0000-000000000000'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
+
+['hidden::GroupComponent']
+m_Objects = [ '4c33e029-77a8-4843-83ab-b225ed701221' ]
+m_Size = { X = 0, Y = 0 }
+m_Sprite = '00000000-0000-0000-0000-000000000000'

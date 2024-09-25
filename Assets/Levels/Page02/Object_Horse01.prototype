@@ -1,0 +1,44 @@
+m_Guid = '5054e784-4350-40ac-42a4-cdbbcc04706d'
+m_Name = 'Object_Horse01'
+
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+
+[['eng::PhysicsComponent'.m_Shapes]]
+
+	['eng::PhysicsComponent'.m_Shapes.ShapeSphere]
+	m_Channel = 0
+	m_Radius = 40.0
+	m_Translate = { X = -12.0, Y = 82.0, Z = 0.0 }
+
+[['eng::PhysicsComponent'.m_Shapes]]
+
+	['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+	m_Channel = 0
+	m_Extents = { X = 22.0, Y = 57.0, Z = 1.0 }
+	m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+	m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
+
+[['eng::PhysicsComponent'.m_Shapes]]
+
+	['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+	m_Channel = 0
+	m_Extents = { X = 93.0, Y = 59.0, Z = 1.0 }
+	m_Rotate = { Pitch = 0.0, Roll = 11.0, Yaw = 0.0 }
+	m_Translate = { X = -9.0, Y = -61.0, Z = 0.0 }
+
+[['eng::PhysicsComponent'.m_Shapes]]
+
+	['eng::PhysicsComponent'.m_Shapes.ShapeSphere]
+	m_Channel = 0
+	m_Radius = 32.0
+	m_Translate = { X = -81.0, Y = -10.0, Z = 0.0 }
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -977.0, Y = 309.0, Z = 0.0 }
+
+['hidden::ObjectComponent']
+m_Group = 'fa4fe417-2627-4656-8fb1-24d94bf5d412'
+m_Size = { X = 256, Y = 256 }
+m_Sprite = 'b447b9a8-94fc-4a40-bbc8-b66fb48407a0'
