@@ -6,6 +6,7 @@
 #include "ECS/WorldView.h"
 #include "GameDebug/EntitySystem.h"
 #include "GameDebug/FrameBufferSystem.h"
+#include "GameDebug/HiddenObjectComponents.h"
 #include "GameDebug/HiddenObjectSystem.h"
 #include "GameDebug/ImGuiDemoSystem.h"
 #include "GameDebug/InspectorDemo.h"
@@ -37,6 +38,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::ClientWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::EntityWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::EntityWindowRequestComponent>();
+	m_ClientWorld.RegisterComponent<dbg::hidden::DebugComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::InspectorDemoRequestComponent>();
@@ -52,13 +54,12 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::ServerWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ShapeWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ShapeWindowRequestComponent>();
+	m_ClientWorld.RegisterComponent<editor::EntityWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowRequestComponent>();
-	m_ClientWorld.RegisterComponent<editor::PhysicsWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::SpriteWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::TableWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::TextureWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowRequestComponent>();
-	m_ClientWorld.RegisterComponent<editor::TransformWindowRequestComponent>();
 
 	m_ClientWorld.RegisterSystem<dbg::EntitySystem>(m_ClientWorld, m_ServerWorld);
 	m_ClientWorld.RegisterSystem<dbg::FrameBufferSystem>();
