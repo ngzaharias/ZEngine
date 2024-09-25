@@ -140,8 +140,7 @@ str::Path eng::SaveFileDialog(const SaveFileSettings& settings)
 	pfd::save_file saveFile = pfd::save_file(
 		settings.m_Title,
 		settings.m_Path,
-		filters,
-		pfd::opt::force_overwrite);
+		filters);
 
 	return saveFile.result();
 }

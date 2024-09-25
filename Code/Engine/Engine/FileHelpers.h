@@ -15,7 +15,7 @@ namespace eng
 
 	struct SelectFileSettings
 	{
-		str::String m_Title = "Select File(s)";
+		str::String m_Title = "Select File";
 		str::String m_Path = "";
 		Array<str::String> m_Filters = { "All Files (*.*)", "*" };
 	};
