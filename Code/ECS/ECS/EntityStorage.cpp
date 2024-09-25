@@ -9,6 +9,7 @@ bool ecs::EntityStorage::IsAlive(const ecs::Entity& entity) const
 	return m_AliveEntities.Contains(entity);
 }
 
+// #bug: A component that is Updated and Removed in the same frame are present in both queries.
 void ecs::EntityStorage::FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryRegistry& queryRegistry)
 {
 	PROFILE_FUNCTION();
