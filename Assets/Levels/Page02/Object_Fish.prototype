@@ -1,17 +1,36 @@
-m_Guid = '4c33e029-77a8-4843-83ab-b225ed701221'
+m_Guid = 'be064a41-1c22-499a-8218-962bc6a8ce22'
 m_Name = 'Object_Fish'
 
-['eng::PhysicsComponent']
-m_Shapes = []
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
 
-	['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+[['eng::PhysicsComponent'.m_Shapes]]
+
+	['eng::PhysicsComponent'.m_Shapes.ShapeSphere]
+	m_Channel = 0
+	m_Radius = 37.0
+	m_Translate = { X = 26.0, Y = 33.0, Z = 0.0 }
+
+[['eng::PhysicsComponent'.m_Shapes]]
+
+	['eng::PhysicsComponent'.m_Shapes.ShapeSphere]
+	m_Channel = 0
+	m_Radius = 37.0
+	m_Translate = { X = -16.0, Y = 15.0, Z = 0.0 }
+
+[['eng::PhysicsComponent'.m_Shapes]]
+
+	['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+	m_Channel = 0
+	m_Extents = { X = 25.0, Y = 39.0, Z = 1.0 }
+	m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+	m_Translate = { X = -19.0, Y = -43.0, Z = 0.0 }
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
+m_Translate = { X = -1365.0, Y = 412.0, Z = 0.0 }
 
 ['hidden::ObjectComponent']
-m_Group = 'cb72766e-ffbf-485a-fd8e-bf9697478ea3'
-m_Size = { X = 0, Y = 0 }
-m_Sprite = '00000000-0000-0000-0000-000000000000'
+m_Group = '00000000-0000-0000-0000-000000000000'
+m_Size = { X = 256, Y = 256 }
+m_Sprite = 'f691a401-a6bd-40b4-8942-a69c79dfa6ba'

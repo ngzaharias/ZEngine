@@ -1,0 +1,7 @@
+m_Guid = '7405900a-a33c-4578-e89e-3a6b055cfb94'
+m_Name = 'SP_Reveal_Button01'
+m_Position = { X = 0, Y = 0 }
+m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
+m_Size = { X = 87, Y = 92 }
+m_Texture2D = 'd42084f8-e7d4-43c5-0eb4-4cc490b217ab'
+m_Type = 'Sprite'

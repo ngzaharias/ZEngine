@@ -1,6 +1,6 @@
 m_Guid = 'f691a401-a6bd-40b4-8942-a69c79dfa6ba'
 m_Name = 'SP_Reveal_Fish'
-m_Position = { X = 153, Y = 1386 }
+m_Position = { X = 0, Y = 0 }
 m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
 m_Size = { X = 256, Y = 256 }
 m_Texture2D = '565e75f1-b759-4a71-49ae-a39ecf7ac50f'

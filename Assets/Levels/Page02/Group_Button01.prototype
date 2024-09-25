@@ -1,0 +1,12 @@
+m_Guid = '4e18eb41-e043-4216-5596-1c6376d01722'
+m_Name = 'Group_Button01'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 1.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 1151.0, Y = -1041.0, Z = 0.0 }
+
+['hidden::GroupComponent']
+m_Objects = [ '4a6b138e-b170-4fc5-7698-9133fe633142' ]
+m_Size = { X = 463, Y = 20 }
+m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
