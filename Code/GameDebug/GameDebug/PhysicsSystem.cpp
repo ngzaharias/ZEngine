@@ -71,7 +71,7 @@ namespace
 			shape.getSphereGeometry(sphereGeo);
 
 			const Sphere3f sphere = Sphere3f(Vector3f::Zero, sphereGeo.radius);
-			linesComponent.AddSphere(translate, sphere, s_ColourM);
+			linesComponent.AddIcosphere(translate, sphere, s_ColourM);
 			
 		} break;
 
