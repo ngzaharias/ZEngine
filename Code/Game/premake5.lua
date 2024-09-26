@@ -23,7 +23,7 @@ project "Game"
 	{ 
 		"%{wks.location}/../3rdParty/",
 		"%{wks.location}/../3rdParty/assimp/5.2.4/Include/",
-		"%{wks.location}/../3rdParty/Freetype/2.13/Include/",
+		"%{wks.location}/../3rdParty/Freetype/2.13.3/Include/",
 		"%{wks.location}/../3rdParty/glew/2.1.0/Include/",
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Include/",
 		"%{wks.location}/../3rdParty/imgui/1.87/Include/",
@@ -51,7 +51,6 @@ project "Game"
 	{
 		"%{wks.location}/../3rdParty/",
 		"%{wks.location}/../3rdParty/assimp/5.2.4/Library/",
-		"%{wks.location}/../3rdParty/Freetype/2.13/Library/",
 		"%{wks.location}/../3rdParty/glew/2.1.0/Library/",
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Library/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
@@ -71,6 +70,7 @@ project "Game"
 	filter "Debug*"
 		libdirs 
 		{
+			"%{wks.location}/../3rdParty/Freetype/2.13.3/Library/debug",
 			"%{wks.location}/../3rdParty/SFML/Library/debug/",
 			"%{wks.location}/../3rdParty/PhysX/Library/debug/",
 			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/debug/",
@@ -78,6 +78,7 @@ project "Game"
 	filter "Release*"
 		libdirs 
 		{
+			"%{wks.location}/../3rdParty/Freetype/2.13.3/Library/release",
 			"%{wks.location}/../3rdParty/SFML/Library/release/",
 			"%{wks.location}/../3rdParty/PhysX/Library/release/",
 			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/release/",
@@ -152,12 +153,14 @@ project "Game"
 	filter "Debug*"
 		postbuildcommands 
 		{
+			"{COPY} %{wks.location}/../3rdParty/Freetype/2.13.3/Binary/debug/*.dll $(OutDir)",
 			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/debug/*.dll $(OutDir)",
 			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/debug/*.dll $(OutDir)",
 		}
 	filter "Release*"
 		postbuildcommands 
 		{
+			"{COPY} %{wks.location}/../3rdParty/Freetype/2.13.3/Binary/release/*.dll $(OutDir)",
 			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/release/*.dll $(OutDir)",
 			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/release/*.dll $(OutDir)",
 		}

@@ -22,7 +22,7 @@ project "Engine"
 	{ 
 		"%{wks.location}/../3rdParty/",
 		"%{wks.location}/../3rdParty/assimp/5.2.4/Include/",
-		"%{wks.location}/../3rdParty/Freetype/2.13/Include/",
+		"%{wks.location}/../3rdParty/Freetype/2.13.3/Include/",
 		"%{wks.location}/../3rdParty/glew/2.1.0/Include/",
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Include/",
 		"%{wks.location}/../3rdParty/imgui/1.87/Include/",
