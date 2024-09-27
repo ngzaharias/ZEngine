@@ -11,18 +11,6 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::PrototypeComponent& value) const
-{
-	Read(strGuid, value.m_Guid, value.m_Guid);
-	Read(strPath, value.m_Path, value.m_Path);
-}
-template<>
-void eng::Visitor::WriteCustom(const eng::PrototypeComponent& value)
-{
-	Write(strGuid, value.m_Guid);
-	Write(strPath, value.m_Path);
-}
-template<>
 bool imgui::Inspector::WriteCustom(eng::PrototypeComponent& value)
 {
 	bool result = false;
