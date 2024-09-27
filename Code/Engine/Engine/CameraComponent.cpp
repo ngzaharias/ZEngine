@@ -23,21 +23,35 @@ void eng::Visitor::WriteCustom(const eng::camera::Bound2DComponent& value)
 	Write(strMax, value.m_Max);
 	Write(strMin, value.m_Min);
 }
+template<>
+bool imgui::Inspector::WriteCustom(eng::camera::Bound2DComponent& value)
+{
+	bool result = false;
+	result |= Write("m_Max", value.m_Max);
+	result |= Write("m_Min", value.m_Min);
+	return result;
+}
 
 template<>
 void eng::Visitor::ReadCustom(eng::camera::Move2DComponent& value) const { }
 template<>
 void eng::Visitor::WriteCustom(const eng::camera::Move2DComponent& value) { }
+template<>
+bool imgui::Inspector::WriteCustom(eng::camera::Move2DComponent& value) { return false; }
 
 template<>
 void eng::Visitor::ReadCustom(eng::camera::Move3DComponent& value) const { }
 template<>
 void eng::Visitor::WriteCustom(const eng::camera::Move3DComponent& value) { }
+template<>
+bool imgui::Inspector::WriteCustom(eng::camera::Move3DComponent& value) { return false; }
 
 template<>
 void eng::Visitor::ReadCustom(eng::camera::Pan3DComponent& value) const { }
 template<>
 void eng::Visitor::WriteCustom(const eng::camera::Pan3DComponent& value) { }
+template<>
+bool imgui::Inspector::WriteCustom(eng::camera::Pan3DComponent& value) { return false; }
 
 template<>
 void eng::Visitor::ReadCustom(eng::camera::Zoom2DComponent& value) const
@@ -46,10 +60,18 @@ void eng::Visitor::ReadCustom(eng::camera::Zoom2DComponent& value) const
 	Read(strMin, value.m_Min, value.m_Min);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::camera::Zoom2DComponent& value) 
-{ 
+void eng::Visitor::WriteCustom(const eng::camera::Zoom2DComponent& value)
+{
 	Write(strMax, value.m_Max);
 	Write(strMin, value.m_Min);
+}
+template<>
+bool imgui::Inspector::WriteCustom(eng::camera::Zoom2DComponent& value)
+{
+	bool result = false;
+	result |= Write("m_Max", value.m_Max);
+	result |= Write("m_Min", value.m_Min);
+	return result;
 }
 
 template<>
