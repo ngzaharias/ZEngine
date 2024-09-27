@@ -50,6 +50,7 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::settings::WindowComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags =
+			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_MenuBar;
 
 		auto& windowComponent = world.WriteComponent<gui::settings::WindowComponent>(entity);

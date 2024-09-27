@@ -40,8 +40,13 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 		ImGuiWindowFlags_NoScrollWithMouse |
 		ImGuiWindowFlags_NoTitleBar;
 
-	ImGui::SetNextWindowPos({ 0, 0 });
-	ImGui::SetNextWindowSize({ Screen::width, Screen::height });
+	ImGuiWindowClass windowClass;
+	windowClass.ViewportFlagsOverrideClear |= ImGuiViewportFlags_NoAutoMerge;
+	ImGui::SetNextWindowClass(&windowClass);
+
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->Pos);
+	ImGui::SetNextWindowSize(viewport->Size);
 	if (ImGui::Begin("Overlay", nullptr, s_Flags))
 	{
 		ImGui::NewLine();

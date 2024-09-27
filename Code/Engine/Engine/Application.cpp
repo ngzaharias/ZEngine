@@ -37,6 +37,10 @@
 #include <GLFW/glfw3.h>
 #include <SFML/System/Clock.hpp>
 
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
+
 #include <iostream>
 #include <random>
 #include <time.h>
@@ -129,6 +133,13 @@ void eng::Application::Execute(int argc, char* argv[])
 			m_Window->PreUpdate(gameTime);
 			if (m_Window->ShouldClose())
 				break;
+
+			{
+				PROFILE_CUSTOM("ImGui::NewFrame");
+				ImGui_ImplOpenGL3_NewFrame();
+				ImGui_ImplGlfw_NewFrame();
+				ImGui::NewFrame();
+			}
 
 			Update(gameTime);
 

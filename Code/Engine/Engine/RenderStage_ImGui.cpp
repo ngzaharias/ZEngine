@@ -27,10 +27,13 @@ void eng::RenderStage_ImGui::Initialise(ecs::EntityWorld& entityWorld)
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	io.ConfigViewportsNoAutoMerge = false;
+	io.ConfigDockingWithShift = true;
+	io.ConfigDockingTransparentPayload = true;
+	io.ConfigViewportsNoAutoMerge = true;
 	io.ConfigViewportsNoTaskBarIcon = false;
-	io.ConfigViewportsNoDecoration = false;
-	io.ConfigViewportsNoDefaultParent = true;
+	io.ConfigViewportsNoDecoration = true;
+	io.ConfigViewportsNoDefaultParent = false;
+	io.ConfigDragClickToInputText = false;
 
 	ImGui_ImplGlfw_InitForOpenGL(window.GetWindow(), true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
@@ -67,10 +70,6 @@ void eng::RenderStage_ImGui::Initialise(ecs::EntityWorld& entityWorld)
 		colours[ImGuiCol_TitleBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		colours[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 	}
-
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
 }
 
 void eng::RenderStage_ImGui::Shutdown(ecs::EntityWorld& world)
@@ -102,19 +101,11 @@ void eng::RenderStage_ImGui::Render(ecs::EntityWorld& entityWorld)
 		if (isViewportsEnabled)
 		{
 			PROFILE_CUSTOM("ImGui::UpdatePlatformWindows");
-			GLFWwindow* backup_current_context = glfwGetCurrentContext();
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(backup_current_context);
+			glfwMakeContextCurrent(window.GetWindow());
 		}
 	}
 
-	// do last
-	{
-		PROFILE_CUSTOM("ImGui::NewFrame");
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-	}
 	//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 }
