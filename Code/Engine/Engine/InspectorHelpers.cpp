@@ -14,16 +14,10 @@ namespace
 	{
 		if (!file)
 			return false;
-
 		if (substring.empty())
 			return true;
-
 		if (str::Contains_NoCase(file->m_Name, substring))
 			return true;
-
-		if (str::Contains_NoCase(file->m_Guid.ToString(), substring))
-			return true;
-
 		return false;
 	}
 
@@ -57,6 +51,8 @@ bool imgui::WriteAsset(const char* label, str::Guid& value, const eng::AssetMana
 		ImGui::SetNextItemWidth(-1);
 		if (ImGui::BeginCombo("##combo", preview.c_str(), s_ComboFlags))
 		{
+			if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) && !ImGui::IsAnyItemActive() && !ImGui::IsMouseClicked(0))
+				ImGui::SetKeyboardFocusHere(0);
 			imgui::InputText("##search", search);
 
 			static const str::Name s_Sprite = str::Name::Create("Sprite");
