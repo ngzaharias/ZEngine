@@ -118,6 +118,7 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 		ImGuiDockNodeFlags_NoWindowMenuButton;
 	constexpr ImGuiTableFlags s_InspectorFlags = 0;
 	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
@@ -132,8 +133,8 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 		auto& window = world.AddComponent<editor::EntityWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Entity Editor", identifier);
-		window.m_EntitiesLabel = ToLabel("Entities", identifier);
-		window.m_InspectorLabel = ToLabel("Inspector", identifier);
+		window.m_EntitiesLabel = ToLabel("Entities##entity", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##entity", identifier);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::EntityWindowComponent>>())
@@ -147,8 +148,8 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 		auto& windowComponent = world.WriteComponent<editor::EntityWindowComponent>(windowEntity);
 
 		bool isOpen = true;
-		//ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
-		//ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(windowComponent.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
 		{
 			if (ImGui::BeginMenuBar())

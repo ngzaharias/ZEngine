@@ -28,6 +28,7 @@ namespace
 		ImGuiDockNodeFlags_NoCloseButton |
 		ImGuiDockNodeFlags_NoWindowMenuButton;
 	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
 	str::String ToLabel(const char* label, const int32 index)
@@ -218,8 +219,8 @@ void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
 		auto& window = world.AddComponent<editor::TrajectoryWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Trajectory Editor", identifier);
-		window.m_InspectorLabel = ToLabel("Inspector", identifier);
-		window.m_PlottingLabel = ToLabel("Plotter", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##trajectory", identifier);
+		window.m_PlottingLabel = ToLabel("Plotter##trajectory", identifier);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::TrajectoryWindowComponent>>())

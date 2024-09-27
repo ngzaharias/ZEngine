@@ -27,7 +27,9 @@ void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 		ImGuiTableFlags_Resizable |
 		ImGuiTableFlags_Sortable;
 	constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
-	constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
+	constexpr ImGuiWindowFlags s_WindowFlags = 
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_NoDocking;
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::level::OpenRequestComponent>>())
 		ImGui::OpenPopup(s_Title, s_PopupFlags);

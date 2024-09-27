@@ -28,6 +28,7 @@ namespace
 		ImGuiDockNodeFlags_NoWindowMenuButton;
 	constexpr ImGuiTableFlags s_InspectorFlags = 0;
 	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
 	str::String ToLabel(const char* label, const int32 index)
@@ -220,8 +221,8 @@ void editor::TextureEditor::Update(World& world, const GameTime& gameTime)
 		auto& window = world.AddComponent<editor::TextureWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Texture Editor", identifier);
-		window.m_InspectorLabel = ToLabel("Inspector", identifier);
-		window.m_PreviewerLabel = ToLabel("Previewer", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##texture", identifier);
+		window.m_PreviewerLabel = ToLabel("Previewer##texture", identifier);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::TextureWindowComponent>>())

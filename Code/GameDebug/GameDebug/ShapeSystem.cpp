@@ -23,6 +23,7 @@ namespace
 		ImGuiDockNodeFlags_NoCloseButton |
 		ImGuiDockNodeFlags_NoWindowMenuButton;
 	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
 	str::String ToLabel(const char* label, const int32 index)
@@ -190,8 +191,8 @@ void dbg::ShapeSystem::Update(World& world, const GameTime& gameTime)
 		auto& window = world.AddComponent<dbg::ShapeWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Collision Tester", identifier);
-		window.m_InspectorLabel = ToLabel("Inspector", identifier);
-		window.m_PlottingLabel = ToLabel("Plotter", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##collision", identifier);
+		window.m_PlottingLabel = ToLabel("Plotter##collision", identifier);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const dbg::ShapeWindowComponent>>())

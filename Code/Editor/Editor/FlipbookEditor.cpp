@@ -27,6 +27,7 @@ namespace
 		ImGuiDockNodeFlags_NoWindowMenuButton;
 	constexpr ImGuiTableFlags s_InspectorFlags = 0;
 	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
 	const str::Guid uuidShader = GUID("cbbb7d3f-f44b-45fd-b9e5-a207d92262fb");
@@ -316,11 +317,11 @@ void editor::FlipbookEditor::Update(World& world, const GameTime& gameTime)
 
 		auto& window = world.AddComponent<editor::FlipbookWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
-		window.m_BatchingLabel = ToLabel("Batching", identifier);
-		window.m_DockspaceLabel = ToLabel("Flipbook Editor", identifier);
-		window.m_InspectorLabel = ToLabel("Inspector", identifier);
-		window.m_PreviewerLabel = ToLabel("Previewer", identifier);
-		window.m_TextureLabel   = ToLabel("Texture", identifier);
+		window.m_DockspaceLabel = ToLabel("Flipbook Editor##flipbook", identifier);
+		window.m_BatchingLabel  = ToLabel("Batching##flipbook", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##flipbook", identifier);
+		window.m_PreviewerLabel = ToLabel("Previewer##flipbook", identifier);
+		window.m_TextureLabel   = ToLabel("Texture##flipbook", identifier);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::FlipbookWindowComponent>>())

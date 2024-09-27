@@ -7,6 +7,8 @@ namespace dbg
 {
 	struct NetworkWindowComponent : public ecs::Component<NetworkWindowComponent>
 	{
+		int32 m_Identifier = 0;
+
 		str::String m_ClientAddress = "0.0.0.0";
 		int32 m_ClientPort = 30000;
 
