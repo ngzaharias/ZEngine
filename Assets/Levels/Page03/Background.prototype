@@ -1,0 +1,11 @@
+m_Guid = '878ab139-f1a2-4053-e39b-f294ed630753'
+m_Name = 'Background'
+
+['eng::SpriteComponent']
+m_Size = { X = 5000, Y = 5000 }
+m_Sprite = '16fb8b12-315f-402c-bfde-025b183b92d1'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 0.0, Y = 0.0, Z = 200.0 }
