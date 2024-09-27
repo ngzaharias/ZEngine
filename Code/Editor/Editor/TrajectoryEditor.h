@@ -6,6 +6,12 @@
 #include "ECS/System.h"
 #include "Engine/TrajectoryAsset.h"
 #include "Math/Vector.h"
+#include "imgui/Identifier.h"
+
+namespace ecs
+{
+	struct NameComponent;
+}
 
 namespace eng
 {
@@ -25,7 +31,8 @@ namespace editor
 	struct TrajectoryAssetSaveComponent : public ecs::Component<TrajectoryAssetSaveComponent> { };
 	struct TrajectoryWindowComponent : public ecs::Component<TrajectoryWindowComponent> 
 	{ 
-		eng::TrajectoryAsset m_Asset;
+		int32 m_Identifier = 0;
+		eng::TrajectoryAsset m_Asset = {};
 
 		str::String m_DockspaceLabel = {};
 		str::String m_InspectorLabel = {};
@@ -39,6 +46,7 @@ namespace editor
 			// managers
 			eng::AssetManager,
 			// components
+			ecs::NameComponent,
 			editor::TrajectoryAssetOpenComponent,
 			editor::TrajectoryAssetSaveComponent,
 			editor::TrajectoryWindowComponent,
@@ -46,5 +54,8 @@ namespace editor
 			const editor::TrajectoryWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		imgui::Identifier m_WindowIds = {};
 	};
 };

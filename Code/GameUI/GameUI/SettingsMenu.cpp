@@ -2,6 +2,7 @@
 #include "GameUI/SettingsMenu.h"
 
 #include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/SettingsComponents.h"
@@ -19,9 +20,9 @@ namespace
 	constexpr ImGuiWindowFlags s_WindowFlags =
 		ImGuiWindowFlags_MenuBar;
 
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 }
 
@@ -30,14 +31,14 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 	const bool hasWindow = world.HasAny<ecs::query::Include<gui::settings::WindowComponent>>();
 	if (!hasWindow && world.HasAny<ecs::query::Include<gui::settings::OpenRequestComponent>>())
 	{
-		const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
-		const auto& audioSettings = localSettings.m_Audio;
+		const int32 identifier = m_WindowIds.Borrow();
+		const ecs::Entity windowEntity = world.CreateEntity();
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Settings Menu");
 
-		const ecs::Entity entity = world.CreateEntity();
-		auto& windowComponent = world.AddComponent<gui::settings::WindowComponent>(entity);
-		windowComponent.m_Label = ToLabel("Settings Menu", entity);
-		windowComponent.m_Debug = world.ReadSingleton<eng::settings::DebugComponent>();
-		windowComponent.m_Local = world.ReadSingleton<eng::settings::LocalComponent>();
+		auto& window = world.AddComponent<gui::settings::WindowComponent>(windowEntity);
+		window.m_Label = ToLabel("Settings Menu", identifier);
+		window.m_Debug = world.ReadSingleton<eng::settings::DebugComponent>();
+		window.m_Local = world.ReadSingleton<eng::settings::LocalComponent>();
 	}
 	
 	if (hasWindow && world.HasAny<ecs::query::Include<gui::settings::CloseRequestComponent>>())

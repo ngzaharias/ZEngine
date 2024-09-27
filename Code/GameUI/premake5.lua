@@ -23,5 +23,6 @@ project "GameUI"
 		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
 		"%{wks.location}/../Code/GameUI/",
+		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",
 	}

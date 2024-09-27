@@ -2,6 +2,7 @@
 #include "Editor/TextureEditor.h"
 
 #include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Editor/SettingsComponents.h"
@@ -29,9 +30,9 @@ namespace
 	constexpr ImGuiWindowFlags s_WindowFlags =
 		ImGuiWindowFlags_MenuBar;
 
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 
 	bool HasInput(World& world, const input::EKeyboard key)
@@ -212,11 +213,20 @@ void editor::TextureEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::TextureWindowRequestComponent>>())
 	{
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
-		auto& windowComponent = world.AddComponent<editor::TextureWindowComponent>(windowEntity);
-		windowComponent.m_DockspaceLabel = ToLabel("Texture Editor", windowEntity);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
-		windowComponent.m_PreviewerLabel = ToLabel("Previewer", windowEntity);
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Texture Editor");
+
+		auto& window = world.AddComponent<editor::TextureWindowComponent>(windowEntity);
+		window.m_DockspaceLabel = ToLabel("Texture Editor", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector", identifier);
+		window.m_PreviewerLabel = ToLabel("Previewer", identifier);
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::TextureWindowComponent>>())
+	{
+		auto& window = world.ReadComponent<editor::TextureWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TextureWindowComponent>>())

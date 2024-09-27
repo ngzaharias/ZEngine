@@ -5,6 +5,12 @@
 #include "Core/Name.h"
 #include "ECS/Component.h"
 #include "ECS/System.h"
+#include "imgui/Identifier.h"
+
+namespace ecs
+{
+	struct NameComponent;
+}
 
 namespace editor
 {
@@ -28,6 +34,8 @@ namespace editor
 
 	struct TableWindowComponent : public ecs::Component<TableWindowComponent>
 	{
+		int32 m_Identifier = 0;
+
 		Map<str::Name, editor::Schema> m_TablesMap = {};
 		Array<str::Name> m_TablesOpened = {};
 
@@ -41,9 +49,13 @@ namespace editor
 	public:
 		using World = ecs::WorldView<
 			// components
+			ecs::NameComponent,
 			editor::TableWindowComponent,
 			const editor::TableWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		imgui::Identifier m_WindowIds = {};
 	};
 }

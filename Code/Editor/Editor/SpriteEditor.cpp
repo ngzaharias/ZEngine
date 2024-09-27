@@ -2,6 +2,7 @@
 #include "Editor/SpriteEditor.h"
 
 #include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Editor/SettingsComponents.h"
@@ -34,9 +35,9 @@ namespace
 	const str::Guid uuidStaticMesh = GUID("e94876a8-e4cc-4d16-84c8-5859b48a1af6");
 	const str::Guid uuidTexture2D = GUID("c6bb231c-e97f-104e-860e-b55e71988bdb");
 
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 
 	bool HasInput(World& world, const input::EKeyboard key)
@@ -247,12 +248,22 @@ void editor::SpriteEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::SpriteWindowRequestComponent>>())
 	{
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
-		auto& windowComponent = world.AddComponent<editor::SpriteWindowComponent>(windowEntity);
-		windowComponent.m_DockspaceLabel = ToLabel("Sprite Editor", windowEntity);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
-		windowComponent.m_PreviewerLabel = ToLabel("Previewer", windowEntity);
-		windowComponent.m_TextureLabel   = ToLabel("Texture", windowEntity);
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Sprite Editor");
+
+		auto& window = world.AddComponent<editor::SpriteWindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
+		window.m_DockspaceLabel = ToLabel("Sprite Editor", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector", identifier);
+		window.m_PreviewerLabel = ToLabel("Previewer", identifier);
+		window.m_TextureLabel   = ToLabel("Texture", identifier);
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::SpriteWindowComponent>>())
+	{
+		auto& window = world.ReadComponent<editor::SpriteWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::SpriteWindowComponent>>())

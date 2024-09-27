@@ -4,6 +4,7 @@
 #include "Core/Algorithms.h"
 #include "Core/Trajectory.h"
 #include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
@@ -29,14 +30,9 @@ namespace
 	constexpr ImGuiWindowFlags s_WindowFlags =
 		ImGuiWindowFlags_MenuBar;
 
-	str::String ToLabel(const char* label, const int32 windowId)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, windowId);
-	}
-
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
-	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 
 	using World = editor::TrajectoryEditor::World;
@@ -215,11 +211,14 @@ void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const editor::TrajectoryWindowRequestComponent>>())
 	{
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
-		auto& windowComponent = world.AddComponent<editor::TrajectoryWindowComponent>(windowEntity);
-		windowComponent.m_DockspaceLabel = ToLabel("Trajectory Editor", windowEntity);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
-		windowComponent.m_PlottingLabel = ToLabel("Plotter", windowEntity);
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Trajectory Editor");
+
+		auto& window = world.AddComponent<editor::TrajectoryWindowComponent>(windowEntity);
+		window.m_DockspaceLabel = ToLabel("Trajectory Editor", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector", identifier);
+		window.m_PlottingLabel = ToLabel("Plotter", identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TrajectoryWindowComponent>>())

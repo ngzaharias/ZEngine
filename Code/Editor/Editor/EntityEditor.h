@@ -4,6 +4,7 @@
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
+#include "imgui/Identifier.h"
 
 #include <vector>
 
@@ -66,6 +67,7 @@ namespace editor
 			// resources
 			const eng::AssetManager,
 			// components
+			ecs::NameComponent,
 			editor::EntitySaveComponent,
 			editor::EntityWindowComponent,
 			editor::settings::LocalComponent,
@@ -80,6 +82,6 @@ namespace editor
 
 	private:
 		ecs::EntityWorld& m_World;
-		std::vector<bool> m_Ids = {};
+		imgui::Identifier m_WindowIds = {};
 	};
 }

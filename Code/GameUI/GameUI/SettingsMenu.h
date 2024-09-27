@@ -3,6 +3,12 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
+#include "imgui/Identifier.h"
+
+namespace ecs
+{
+	struct NameComponent;
+}
 
 namespace eng::settings
 {
@@ -20,6 +26,7 @@ namespace gui::settings
 	{
 	public:
 		using World = ecs::WorldView<
+			ecs::NameComponent,
 			eng::settings::DebugComponent,
 			eng::settings::LocalComponent,
 			gui::settings::WindowComponent,
@@ -27,5 +34,8 @@ namespace gui::settings
 			const gui::settings::OpenRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		imgui::Identifier m_WindowIds = {};
 	};
 }

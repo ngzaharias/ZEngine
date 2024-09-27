@@ -2,6 +2,7 @@
 #include "Editor/FlipbookEditor.h"
 
 #include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
@@ -37,9 +38,9 @@ namespace
 		return Vector2f((float)texture.m_Width, (float)texture.m_Height) * ratio;
 	}
 
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 
 	Vector2f ToPosition(const uint32 index, const editor::FlipbookBatchingComponent& data)
@@ -308,15 +309,17 @@ void editor::FlipbookEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::FlipbookWindowRequestComponent>>())
 	{
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Flipbook Editor");
 		world.AddComponent<editor::FlipbookBatchingComponent>(windowEntity);
 
-		auto& windowComponent = world.AddComponent<editor::FlipbookWindowComponent>(windowEntity);
-		windowComponent.m_BatchingLabel = ToLabel("Batching", windowEntity);
-		windowComponent.m_DockspaceLabel = ToLabel("Flipbook Editor", windowEntity);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
-		windowComponent.m_PreviewerLabel = ToLabel("Previewer", windowEntity);
-		windowComponent.m_TextureLabel   = ToLabel("Texture", windowEntity);
+		auto& window = world.AddComponent<editor::FlipbookWindowComponent>(windowEntity);
+		window.m_BatchingLabel = ToLabel("Batching", identifier);
+		window.m_DockspaceLabel = ToLabel("Flipbook Editor", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector", identifier);
+		window.m_PreviewerLabel = ToLabel("Previewer", identifier);
+		window.m_TextureLabel   = ToLabel("Texture", identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::FlipbookWindowComponent>>())

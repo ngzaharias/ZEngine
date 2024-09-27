@@ -22,6 +22,7 @@ namespace dbg
 
 	struct ShapeWindowComponent : public ecs::Component<ShapeWindowComponent>
 	{
+		int32 m_Identifier = 0;
 		str::String m_DockspaceLabel = {};
 		str::String m_InspectorLabel = {};
 		str::String m_PlottingLabel = {};

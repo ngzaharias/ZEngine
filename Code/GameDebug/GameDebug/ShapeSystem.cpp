@@ -25,9 +25,9 @@ namespace
 	constexpr ImGuiWindowFlags s_WindowFlags =
 		ImGuiWindowFlags_MenuBar;
 
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 
 	const char* ToName(const dbg::Shape& value)
@@ -183,13 +183,14 @@ void dbg::ShapeSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::ShapeWindowRequestComponent>>())
 	{
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Collision Tester");
 
 		auto& window = world.AddComponent<dbg::ShapeWindowComponent>(windowEntity);
-		window.m_DockspaceLabel = ToLabel("Collision Tester", windowEntity);
-		window.m_InspectorLabel = ToLabel("Inspector", windowEntity);
-		window.m_PlottingLabel = ToLabel("Plotter", windowEntity);
+		window.m_DockspaceLabel = ToLabel("Collision Tester", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector", identifier);
+		window.m_PlottingLabel = ToLabel("Plotter", identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::ShapeWindowComponent>>())

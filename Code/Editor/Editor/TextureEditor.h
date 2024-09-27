@@ -4,6 +4,12 @@
 #include "ECS/Component.h"
 #include "ECS/System.h"
 #include "Engine/Texture2DAsset.h"
+#include "imgui/Identifier.h"
+
+namespace ecs
+{
+	struct NameComponent;
+}
 
 namespace editor::settings
 {
@@ -27,7 +33,8 @@ namespace editor
 
 	struct TextureWindowComponent : public ecs::Component<TextureWindowComponent>
 	{
-		eng::Texture2DAsset m_Asset;
+		int32 m_Identifier = 0;
+		eng::Texture2DAsset m_Asset = {};
 
 		str::String m_DockspaceLabel = {};
 		str::String m_InspectorLabel = {};
@@ -41,6 +48,7 @@ namespace editor
 			// resources
 			eng::AssetManager,
 			// components
+			ecs::NameComponent,
 			editor::settings::LocalComponent,
 			editor::TextureAssetImportComponent,
 			editor::TextureAssetNewComponent,
@@ -51,5 +59,8 @@ namespace editor
 			const eng::InputComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		imgui::Identifier m_WindowIds = {};
 	};
 }

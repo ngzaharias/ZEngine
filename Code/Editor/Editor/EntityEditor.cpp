@@ -41,24 +41,6 @@ namespace
 	constexpr ImGuiWindowFlags s_WindowFlags =
 		ImGuiWindowFlags_MenuBar;
 
-	int32 GetIdentifier(std::vector<bool>& ids)
-	{
-		int32 i = 0;
-		for (bool id : ids)
-		{
-			if (!id)
-			{
-				ids[i] = true;
-				return i;
-			}
-			i++;
-		}
-
-		int32 last = static_cast<int32>(ids.size());
-		ids.push_back(true);
-		return last;
-	}
-
 	ecs::Entity CreateEntity(ecs::EntityWorld& world, const ecs::Entity& windowEntity, const str::StringView name, const str::Name& level)
 	{
 		const ecs::Entity entity = world.CreateEntity();
@@ -143,20 +125,21 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::EntityWindowRequestComponent>>())
 	{
-		const int32 identifier = GetIdentifier(m_Ids);
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Entity Editor");
 
-		auto& windowComponent = world.AddComponent<editor::EntityWindowComponent>(windowEntity);
-		windowComponent.m_Identifier = identifier;
-		windowComponent.m_DockspaceLabel = ToLabel("Entity Editor", identifier);
-		windowComponent.m_EntitiesLabel = ToLabel("Entities", identifier);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", identifier);
+		auto& window = world.AddComponent<editor::EntityWindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
+		window.m_DockspaceLabel = ToLabel("Entity Editor", identifier);
+		window.m_EntitiesLabel = ToLabel("Entities", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector", identifier);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::EntityWindowComponent>>())
 	{
-		auto& windowComponent = world.ReadComponent<editor::EntityWindowComponent>(entity, false);
-		m_Ids[windowComponent.m_Identifier] = false;
+		auto& window = world.ReadComponent<editor::EntityWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::EntityWindowComponent>>())

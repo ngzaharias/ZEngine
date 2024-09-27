@@ -4,6 +4,12 @@
 #include "ECS/Component.h"
 #include "ECS/System.h"
 #include "Engine/SpriteAsset.h"
+#include "imgui/Identifier.h"
+
+namespace ecs
+{
+	struct NameComponent;
+}
 
 namespace editor::settings
 {
@@ -26,7 +32,8 @@ namespace editor
 
 	struct SpriteWindowComponent : public ecs::Component<SpriteWindowComponent>
 	{
-		eng::SpriteAsset m_Asset;
+		int32 m_Identifier = 0;
+		eng::SpriteAsset m_Asset = {};
 
 		str::String m_DockspaceLabel = {};
 		str::String m_InspectorLabel = {};
@@ -41,6 +48,7 @@ namespace editor
 			// managers
 			eng::AssetManager,
 			// components
+			ecs::NameComponent,
 			editor::settings::LocalComponent,
 			editor::SpriteAssetNewComponent,
 			editor::SpriteAssetOpenComponent,
@@ -50,5 +58,8 @@ namespace editor
 			const eng::InputComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		imgui::Identifier m_WindowIds = {};
 	};
 }
