@@ -1,0 +1,12 @@
+m_Guid = '6beb24e9-f03b-4f69-359c-df72e149d41f'
+m_Name = 'Group_All'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
+
+['hidden::GroupComponent']
+m_Objects = [ '29b7cdb2-422f-4e8b-2b82-b0a2b44cf2ed' ]
+m_Size = { X = 0, Y = 0 }
+m_Sprite = '00000000-0000-0000-0000-000000000000'
