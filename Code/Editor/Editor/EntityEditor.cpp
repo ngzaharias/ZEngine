@@ -41,7 +41,25 @@ namespace
 	constexpr ImGuiWindowFlags s_WindowFlags =
 		ImGuiWindowFlags_MenuBar;
 
-	ecs::Entity CreateEntity(ecs::EntityWorld& world, const str::StringView name, const str::Name& level)
+	int32 GetIdentifier(std::vector<bool>& ids)
+	{
+		int32 i = 0;
+		for (bool id : ids)
+		{
+			if (!id)
+			{
+				ids[i] = true;
+				return i;
+			}
+			i++;
+		}
+
+		int32 last = static_cast<int32>(ids.size());
+		ids.push_back(true);
+		return last;
+	}
+
+	ecs::Entity CreateEntity(ecs::EntityWorld& world, const ecs::Entity& windowEntity, const str::StringView name, const str::Name& level)
 	{
 		const ecs::Entity entity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(entity, name);
@@ -51,12 +69,15 @@ namespace
 		auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
 		prototypeComponent.m_Guid = str::Guid::Generate();
 
+		auto& windowComponent = world.WriteComponent<editor::EntityWindowComponent>(windowEntity);
+		windowComponent.m_Selected = entity;
+
 		return entity;
 	}
 
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 
 	bool HasInput(World& world, const input::EKeyboard key)
@@ -122,11 +143,20 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::EntityWindowRequestComponent>>())
 	{
+		const int32 identifier = GetIdentifier(m_Ids);
 		const ecs::Entity windowEntity = world.CreateEntity();
+
 		auto& windowComponent = world.AddComponent<editor::EntityWindowComponent>(windowEntity);
-		windowComponent.m_DockspaceLabel = ToLabel("Entity Editor", windowEntity);
-		windowComponent.m_EntitiesLabel  = ToLabel("Entities", windowEntity);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
+		windowComponent.m_Identifier = identifier;
+		windowComponent.m_DockspaceLabel = ToLabel("Entity Editor", identifier);
+		windowComponent.m_EntitiesLabel = ToLabel("Entities", identifier);
+		windowComponent.m_InspectorLabel = ToLabel("Inspector", identifier);
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::EntityWindowComponent>>())
+	{
+		auto& windowComponent = world.ReadComponent<editor::EntityWindowComponent>(entity, false);
+		m_Ids[windowComponent.m_Identifier] = false;
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::EntityWindowComponent>>())
@@ -158,7 +188,7 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 				ImGui::DockBuilderSetNodeSize(dockspaceId, ImGui::GetWindowSize());
 
 				ImGuiID entitiesId, inspectorId;
-				ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.6f, &entitiesId, &inspectorId);
+				ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.3f, &entitiesId, &inspectorId);
 				ImGui::DockBuilderDockWindow(windowComponent.m_EntitiesLabel.c_str(), entitiesId);
 				ImGui::DockBuilderDockWindow(windowComponent.m_InspectorLabel.c_str(), inspectorId);
 				ImGui::DockBuilderFinish(dockspaceId);
@@ -181,18 +211,18 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 				if (ImGui::BeginMenu("Create"))
 				{
 					if (ImGui::MenuItem("Entity"))
-						CreateEntity(m_World, "Entity_", levelName);
+						CreateEntity(m_World, windowEntity, "Entity_", levelName);
 
 					if (ImGui::MenuItem("Camera"))
 					{
-						const ecs::Entity entity = CreateEntity(m_World, "Camera", levelName);
+						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Camera", levelName);
 						m_World.AddComponent<eng::camera::Move3DComponent>(entity);
 						m_World.AddComponent<eng::camera::ProjectionComponent>(entity);
 					}
 
 					if (ImGui::MenuItem("Hidden Group"))
 					{
-						const ecs::Entity entity = CreateEntity(m_World, "Group_01", levelName);
+						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Group_", levelName);
 						auto& groupComponent = m_World.AddComponent<hidden::GroupComponent>(entity);
 						groupComponent.m_Objects.Emplace();
 					}
@@ -202,7 +232,7 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 						eng::ShapeBox defaultBox;
 						defaultBox.m_Extents = Vector3f(20.f, 20.f, 1.f);
 
-						const ecs::Entity entity = CreateEntity(m_World, "Object_01", levelName);
+						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Object_", levelName);
 						auto& objectComponent = m_World.AddComponent<hidden::ObjectComponent>(entity);
 						objectComponent.m_Sprite = str::Guid::Create("52ffdca6-bc1d-6423-0eda-0e2056e9662b");
 						objectComponent.m_Size = Vector2u(128);
@@ -214,7 +244,7 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 
 					if (ImGui::MenuItem("Sprite"))
 					{
-						const ecs::Entity entity = CreateEntity(m_World, "Sprite_01", levelName);
+						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Sprite_", levelName);
 						auto& spriteComponent = m_World.AddComponent<eng::SpriteComponent>(entity);
 						spriteComponent.m_Sprite = str::Guid::Create("52ffdca6-bc1d-6423-0eda-0e2056e9662b");
 						spriteComponent.m_Size = Vector2u(128);

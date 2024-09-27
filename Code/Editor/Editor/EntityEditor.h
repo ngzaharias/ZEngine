@@ -5,6 +5,8 @@
 #include "ECS/Entity.h"
 #include "ECS/System.h"
 
+#include <vector>
+
 namespace editor::settings
 {
 	struct LocalComponent;
@@ -49,6 +51,7 @@ namespace editor
 
 	struct EntityWindowComponent : public ecs::Component<EntityWindowComponent>
 	{
+		int32 m_Identifier = 0;
 		ecs::Entity m_Selected = {};
 
 		str::String m_DockspaceLabel = {};
@@ -77,5 +80,6 @@ namespace editor
 
 	private:
 		ecs::EntityWorld& m_World;
+		std::vector<bool> m_Ids = {};
 	};
 }
