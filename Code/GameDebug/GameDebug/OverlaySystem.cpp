@@ -53,9 +53,9 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 			{
 				ImGui::Text("%s : %s", component.m_Commit.c_str(), component.m_Branch.c_str());
 			}
-			else if (!component.m_Commit.empty())
+			else if (!component.m_Version.empty())
 			{
-				ImGui::Text("v%s", component.m_Version.c_str());
+				ImGui::Text("%s", component.m_Version.c_str());
 			}
 		}
 
