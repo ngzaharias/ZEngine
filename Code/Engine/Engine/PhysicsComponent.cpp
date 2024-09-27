@@ -123,9 +123,9 @@ template<>
 bool imgui::Inspector::WriteCustom(eng::ShapeBox& value)
 {
 	bool result = false;
-	result |= Write("m_Extents", value.m_Extents);
 	result |= Write("m_Translate", value.m_Translate);
 	result |= Write("m_Rotate", value.m_Rotate);
+	result |= Write("m_Extents", value.m_Extents);
 	result |= Write("m_Channel", value.m_Channel);
 	return result;
 }
@@ -151,7 +151,7 @@ bool imgui::Inspector::WriteCustom(eng::ShapeSphere& value)
 {
 	bool result = false;
 	result |= Write("m_Translate", value.m_Translate);
-	result |= Write("m_Channel", value.m_Channel);
 	result |= Write("m_Radius", value.m_Radius);
+	result |= Write("m_Channel", value.m_Channel);
 	return result;
 }
