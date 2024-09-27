@@ -41,6 +41,19 @@ namespace
 	constexpr ImGuiWindowFlags s_WindowFlags =
 		ImGuiWindowFlags_MenuBar;
 
+	ecs::Entity CreateEntity(ecs::EntityWorld& world, const str::StringView name, const str::Name& level)
+	{
+		const ecs::Entity entity = world.CreateEntity();
+		world.AddComponent<ecs::NameComponent>(entity, name);
+		world.AddComponent<eng::level::EntityComponent>(entity, level);
+		world.AddComponent<eng::TransformComponent>(entity);
+
+		auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
+		prototypeComponent.m_Guid = str::Guid::Generate();
+
+		return entity;
+	}
+
 	str::String ToLabel(const char* label, const ecs::Entity& entity)
 	{
 		return std::format("{}: {}", label, entity.GetIndex());
@@ -168,57 +181,43 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 				if (ImGui::BeginMenu("Create"))
 				{
 					if (ImGui::MenuItem("Entity"))
-					{
-						const ecs::Entity entity = m_World.CreateEntity();
-						m_World.AddComponent<ecs::NameComponent>(entity, "Entity_");
-						m_World.AddComponent<eng::level::EntityComponent>(entity, levelName);
-						m_World.AddComponent<eng::PrototypeComponent>(entity);
-						m_World.AddComponent<eng::TransformComponent>(entity);
-					}
+						CreateEntity(m_World, "Entity_", levelName);
 
 					if (ImGui::MenuItem("Camera"))
 					{
-						const ecs::Entity entity = m_World.CreateEntity();
-						m_World.AddComponent<ecs::NameComponent>(entity, "Camera_");
-						m_World.AddComponent<eng::level::EntityComponent>(entity, levelName);
-						m_World.AddComponent<eng::PrototypeComponent>(entity);
-
+						const ecs::Entity entity = CreateEntity(m_World, "Camera", levelName);
+						m_World.AddComponent<eng::camera::Move3DComponent>(entity);
 						m_World.AddComponent<eng::camera::ProjectionComponent>(entity);
-						m_World.AddComponent<eng::TransformComponent>(entity);
 					}
 
 					if (ImGui::MenuItem("Hidden Group"))
 					{
-						const ecs::Entity entity = m_World.CreateEntity();
-						m_World.AddComponent<ecs::NameComponent>(entity, "Group_");
-						m_World.AddComponent<eng::level::EntityComponent>(entity, levelName);
-						m_World.AddComponent<eng::PrototypeComponent>(entity);
-
-						m_World.AddComponent<eng::TransformComponent>(entity);
-						m_World.AddComponent<hidden::GroupComponent>(entity);
+						const ecs::Entity entity = CreateEntity(m_World, "Group_01", levelName);
+						auto& groupComponent = m_World.AddComponent<hidden::GroupComponent>(entity);
+						groupComponent.m_Objects.Emplace();
 					}
 
 					if (ImGui::MenuItem("Hidden Object"))
 					{
-						const ecs::Entity entity = m_World.CreateEntity();
-						m_World.AddComponent<ecs::NameComponent>(entity, "Object_");
-						m_World.AddComponent<eng::level::EntityComponent>(entity, levelName);
-						m_World.AddComponent<eng::PrototypeComponent>(entity);
+						eng::ShapeBox defaultBox;
+						defaultBox.m_Extents = Vector3f(20.f, 20.f, 1.f);
 
-						m_World.AddComponent<eng::PhysicsComponent>(entity);
-						m_World.AddComponent<eng::TransformComponent>(entity);
-						m_World.AddComponent<hidden::ObjectComponent>(entity);
+						const ecs::Entity entity = CreateEntity(m_World, "Object_01", levelName);
+						auto& objectComponent = m_World.AddComponent<hidden::ObjectComponent>(entity);
+						objectComponent.m_Sprite = str::Guid::Create("52ffdca6-bc1d-6423-0eda-0e2056e9662b");
+						objectComponent.m_Size = Vector2u(128);
+
+						auto& physicsComponent = m_World.AddComponent<eng::PhysicsComponent>(entity);
+						physicsComponent.m_Rigidbody = eng::RigidStatic();
+						physicsComponent.m_Shapes.Append(defaultBox);
 					}
 
 					if (ImGui::MenuItem("Sprite"))
 					{
-						const ecs::Entity entity = m_World.CreateEntity();
-						m_World.AddComponent<ecs::NameComponent>(entity, "Sprite_");
-						m_World.AddComponent<eng::level::EntityComponent>(entity, levelName);
-						m_World.AddComponent<eng::PrototypeComponent>(entity);
-
-						m_World.AddComponent<eng::SpriteComponent>(entity);
-						m_World.AddComponent<eng::TransformComponent>(entity);
+						const ecs::Entity entity = CreateEntity(m_World, "Sprite_01", levelName);
+						auto& spriteComponent = m_World.AddComponent<eng::SpriteComponent>(entity);
+						spriteComponent.m_Sprite = str::Guid::Create("52ffdca6-bc1d-6423-0eda-0e2056e9662b");
+						spriteComponent.m_Size = Vector2u(128);
 					}
 					ImGui::EndMenu();
 				}
@@ -263,7 +262,12 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 					if (ImGui::BeginMenu("Components"))
 					{
 						SelectComponent<ecs::NameComponent>(m_World, selected);
+						SelectComponent<eng::camera::Bound2DComponent>(m_World, selected);
+						SelectComponent<eng::camera::Move2DComponent>(m_World, selected);
+						SelectComponent<eng::camera::Move3DComponent>(m_World, selected);
+						SelectComponent<eng::camera::Pan3DComponent>(m_World, selected);
 						SelectComponent<eng::camera::ProjectionComponent>(m_World, selected);
+						SelectComponent<eng::camera::Zoom2DComponent>(m_World, selected);
 						SelectComponent<eng::PhysicsComponent>(m_World, selected);
 						SelectComponent<eng::PrototypeComponent>(m_World, selected);
 						SelectComponent<eng::SpriteComponent>(m_World, selected);
@@ -279,12 +283,19 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 				inspector.AddPayload(world.ReadResource<eng::AssetManager>());
 				if (inspector.Begin("##table"))
 				{
+					// always first
 					InspectComponent<ecs::NameComponent>(m_World, selected, inspector);
+					InspectComponent<eng::TransformComponent>(m_World, selected, inspector);
+
+					InspectComponent<eng::camera::Bound2DComponent>(m_World, selected, inspector);
+					InspectComponent<eng::camera::Move2DComponent>(m_World, selected, inspector);
+					InspectComponent<eng::camera::Move3DComponent>(m_World, selected, inspector);
+					InspectComponent<eng::camera::Pan3DComponent>(m_World, selected, inspector);
 					InspectComponent<eng::camera::ProjectionComponent>(m_World, selected, inspector);
+					InspectComponent<eng::camera::Zoom2DComponent>(m_World, selected, inspector);
 					InspectComponent<eng::PhysicsComponent>(m_World, selected, inspector);
 					InspectComponent<eng::PrototypeComponent>(m_World, selected, inspector);
 					InspectComponent<eng::SpriteComponent>(m_World, selected, inspector);
-					InspectComponent<eng::TransformComponent>(m_World, selected, inspector);
 					InspectComponent<hidden::GroupComponent>(m_World, selected, inspector);
 					InspectComponent<hidden::ObjectComponent>(m_World, selected, inspector);
 					inspector.End();
@@ -308,37 +319,36 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 				const auto& readWindow = world.ReadComponent<editor::EntityWindowComponent>(windowEntity);
 				const ecs::Entity selected = windowComponent.m_Selected;
 
-				str::Name name = {};
-				str::Guid guid = str::Guid::Generate();
+				const auto& readPrototype = m_World.ReadComponent<eng::PrototypeComponent>(selected);
+				const auto& readName = m_World.ReadComponent<ecs::NameComponent>(selected);
 
-				if (m_World.HasComponent<ecs::NameComponent>(selected))
+				str::Path filepath = readPrototype.m_Path;
+				if (filepath.IsEmpty())
 				{
-					const auto& component = m_World.ReadComponent<ecs::NameComponent>(selected);
-					name = str::Name::Create(component.m_Name);
+					eng::SaveFileSettings settings;
+					settings.m_Title = "Save Sprite";
+					settings.m_Filters = { "Prototypes (*.prototype)", "*.prototype" };
+					settings.m_Path = str::Path(readSettings.m_Entity.m_Save, readName.m_Name, eng::PrototypeManager::s_Extension);
+					filepath = eng::SaveFileDialog(settings);
 				}
 
-				if (m_World.HasComponent<eng::PrototypeComponent>(selected))
-				{
-					const auto& component = m_World.ReadComponent<eng::PrototypeComponent>(selected);
-					guid = component.m_Guid;
-				}
-
-				eng::SaveFileSettings settings;
-				settings.m_Title = "Save Sprite";
-				settings.m_Filters = { "Prototypes (*.prototype)", "*.prototype" };
-				settings.m_Path = str::Path(readSettings.m_Entity.m_Save, name, eng::PrototypeManager::s_Extension);
-
-				const str::Path filepath = eng::SaveFileDialog(settings);
 				if (!filepath.IsEmpty())
 				{
+					auto& writePrototype = m_World.WriteComponent<eng::PrototypeComponent>(selected);
+					writePrototype.m_Path = filepath;
 					auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
 					writeSettings.m_Entity.m_Save = filepath.GetDirectory();
 
 					eng::Visitor visitor;
-					visitor.Write("m_Guid", guid);
-					visitor.Write("m_Name", name);
+					visitor.Write("m_Guid", readPrototype.m_Guid);
+					visitor.Write("m_Name", readName.m_Name);
 
+					SaveComponent<eng::camera::Bound2DComponent>(m_World, selected, visitor);
+					SaveComponent<eng::camera::Move2DComponent>(m_World, selected, visitor);
+					SaveComponent<eng::camera::Move3DComponent>(m_World, selected, visitor);
+					SaveComponent<eng::camera::Pan3DComponent>(m_World, selected, visitor);
 					SaveComponent<eng::camera::ProjectionComponent>(m_World, selected, visitor);
+					SaveComponent<eng::camera::Zoom2DComponent>(m_World, selected, visitor);
 					SaveComponent<eng::PhysicsComponent>(m_World, selected, visitor);
 					SaveComponent<eng::SpriteComponent>(m_World, selected, visitor);
 					SaveComponent<eng::TransformComponent>(m_World, selected, visitor);
