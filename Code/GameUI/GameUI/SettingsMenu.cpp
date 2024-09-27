@@ -13,13 +13,6 @@
 
 namespace
 {
-	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
-		ImGuiDockNodeFlags_NoCloseButton |
-		ImGuiDockNodeFlags_NoWindowMenuButton;
-	constexpr ImGuiTableFlags s_InspectorFlags = 0;
-	constexpr ImGuiWindowFlags s_WindowFlags =
-		ImGuiWindowFlags_MenuBar;
-
 	str::String ToLabel(const char* label, const int32 index)
 	{
 		return std::format("{}: {}", label, index);
@@ -36,9 +29,16 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Settings Menu");
 
 		auto& window = world.AddComponent<gui::settings::WindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
 		window.m_Label = ToLabel("Settings Menu", identifier);
 		window.m_Debug = world.ReadSingleton<eng::settings::DebugComponent>();
 		window.m_Local = world.ReadSingleton<eng::settings::LocalComponent>();
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const gui::settings::WindowComponent>>())
+	{
+		auto& window = world.ReadComponent<gui::settings::WindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 	
 	if (hasWindow && world.HasAny<ecs::query::Include<gui::settings::CloseRequestComponent>>())
@@ -49,6 +49,9 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::settings::WindowComponent>>())
 	{
+		constexpr ImGuiWindowFlags s_WindowFlags =
+			ImGuiWindowFlags_MenuBar;
+
 		auto& windowComponent = world.WriteComponent<gui::settings::WindowComponent>(entity);
 
 		bool isWindowOpen = true;

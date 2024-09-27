@@ -127,6 +127,7 @@ void editor::TableEditor::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Table Editor");
 
 		auto& window = world.AddComponent<editor::TableWindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
 		window.m_WindowLabel = ToLabel("Table Editor", identifier);
 		window.m_BrowserLabel = ToLabel("Browser", identifier);
 		window.m_InspectorLabel = ToLabel("Inspector", identifier);
@@ -151,6 +152,12 @@ void editor::TableEditor::Update(World& world, const GameTime& gameTime)
 			schema.Emplace("MyNumber", EType::Number);
 			schema.Emplace("MyBoolean", EType::Boolean);
 		}
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::TableWindowComponent>>())
+	{
+		const auto& window = world.ReadComponent<editor::TableWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TableWindowComponent>>())

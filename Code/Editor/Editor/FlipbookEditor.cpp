@@ -315,11 +315,18 @@ void editor::FlipbookEditor::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<editor::FlipbookBatchingComponent>(windowEntity);
 
 		auto& window = world.AddComponent<editor::FlipbookWindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
 		window.m_BatchingLabel = ToLabel("Batching", identifier);
 		window.m_DockspaceLabel = ToLabel("Flipbook Editor", identifier);
 		window.m_InspectorLabel = ToLabel("Inspector", identifier);
 		window.m_PreviewerLabel = ToLabel("Previewer", identifier);
 		window.m_TextureLabel   = ToLabel("Texture", identifier);
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::FlipbookWindowComponent>>())
+	{
+		const auto& window = world.ReadComponent<editor::FlipbookWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::FlipbookWindowComponent>>())

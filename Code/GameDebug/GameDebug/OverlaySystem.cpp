@@ -24,6 +24,8 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	return;
+
 	constexpr auto s_Flags =
 		ImGuiWindowFlags_NoBackground |
 		ImGuiWindowFlags_NoBringToFrontOnFocus |

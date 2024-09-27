@@ -218,6 +218,7 @@ void editor::TextureEditor::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Texture Editor");
 
 		auto& window = world.AddComponent<editor::TextureWindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Texture Editor", identifier);
 		window.m_InspectorLabel = ToLabel("Inspector", identifier);
 		window.m_PreviewerLabel = ToLabel("Previewer", identifier);

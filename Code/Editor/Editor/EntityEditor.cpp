@@ -34,13 +34,6 @@ namespace
 {
 	using World = editor::EntityEditor::World;
 
-	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
-		ImGuiDockNodeFlags_NoCloseButton |
-		ImGuiDockNodeFlags_NoWindowMenuButton;
-	constexpr ImGuiTableFlags s_InspectorFlags = 0;
-	constexpr ImGuiWindowFlags s_WindowFlags =
-		ImGuiWindowFlags_MenuBar;
-
 	ecs::Entity CreateEntity(ecs::EntityWorld& world, const ecs::Entity& windowEntity, const str::StringView name, const str::Name& level)
 	{
 		const ecs::Entity entity = world.CreateEntity();
@@ -120,6 +113,13 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
+		ImGuiDockNodeFlags_NoCloseButton |
+		ImGuiDockNodeFlags_NoWindowMenuButton;
+	constexpr ImGuiTableFlags s_InspectorFlags = 0;
+	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_MenuBar;
+
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(800, 600.f);
 
@@ -138,7 +138,7 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::EntityWindowComponent>>())
 	{
-		auto& window = world.ReadComponent<editor::EntityWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<editor::EntityWindowComponent>(entity, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
@@ -147,8 +147,8 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 		auto& windowComponent = world.WriteComponent<editor::EntityWindowComponent>(windowEntity);
 
 		bool isOpen = true;
-		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
+		//ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
+		//ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(windowComponent.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
 		{
 			if (ImGui::BeginMenuBar())

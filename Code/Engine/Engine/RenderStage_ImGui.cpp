@@ -26,11 +26,11 @@ void eng::RenderStage_ImGui::Initialise(ecs::EntityWorld& entityWorld)
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	io.ConfigViewportsNoAutoMerge = false;
 	io.ConfigViewportsNoTaskBarIcon = false;
 	io.ConfigViewportsNoDecoration = false;
-	io.ConfigViewportsNoDefaultParent = false;
+	io.ConfigViewportsNoDefaultParent = true;
 
 	ImGui_ImplGlfw_InitForOpenGL(window.GetWindow(), true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
@@ -102,9 +102,10 @@ void eng::RenderStage_ImGui::Render(ecs::EntityWorld& entityWorld)
 		if (isViewportsEnabled)
 		{
 			PROFILE_CUSTOM("ImGui::UpdatePlatformWindows");
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(window.GetWindow());
+			glfwMakeContextCurrent(backup_current_context);
 		}
 	}
 

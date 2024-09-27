@@ -188,9 +188,16 @@ void dbg::ShapeSystem::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Collision Tester");
 
 		auto& window = world.AddComponent<dbg::ShapeWindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Collision Tester", identifier);
 		window.m_InspectorLabel = ToLabel("Inspector", identifier);
 		window.m_PlottingLabel = ToLabel("Plotter", identifier);
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const dbg::ShapeWindowComponent>>())
+	{
+		const auto& window = world.ReadComponent<dbg::ShapeWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::ShapeWindowComponent>>())
