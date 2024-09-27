@@ -137,11 +137,11 @@ str::Path eng::SaveFileDialog(const SaveFileSettings& settings)
 	std::vector<std::string> filters;
 	filters.insert(filters.end(), settings.m_Filters.begin(), settings.m_Filters.end());
 
-	pfd::save_file saveFile = pfd::save_file(
-		settings.m_Title,
-		settings.m_Path,
-		filters);
+	pfd::opt option = pfd::opt::none;
+	if (settings.m_Overwrite)
+		option = pfd::opt::force_overwrite;
 
+	pfd::save_file saveFile = pfd::save_file(settings.m_Title, settings.m_Path, filters, option);
 	return saveFile.result();
 }
 

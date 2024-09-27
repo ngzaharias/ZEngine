@@ -11,6 +11,8 @@ namespace eng
 		str::String m_Title = "Save File";
 		str::String m_Path = "";
 		Array<str::String> m_Filters = { "All Files (*.*)", "*" };
+
+		bool m_Overwrite = false;
 	};
 
 	struct SelectFileSettings
