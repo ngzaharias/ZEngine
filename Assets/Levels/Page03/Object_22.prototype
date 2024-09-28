@@ -1,0 +1,22 @@
+m_Guid = 'a9eb5fa8-38cc-47c7-fe9b-0afc9164a08f'
+m_Name = 'Object_22'
+
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+
+[['eng::PhysicsComponent'.m_Shapes]]
+
+	['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+	m_Channel = 0
+	m_Extents = { X = 42.0, Y = 24.0, Z = 1.0 }
+	m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+	m_Translate = { X = 8.0, Y = -3.0, Z = 0.0 }
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 393.0, Y = -916.0, Z = 0.0 }
+
+['hidden::ObjectComponent']
+m_Group = '00000000-0000-0000-0000-000000000000'
+m_Size = { X = 128, Y = 128 }
+m_Sprite = '1cc25095-0084-4e86-8623-834303b95d31'
