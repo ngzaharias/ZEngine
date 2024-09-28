@@ -9,16 +9,16 @@ namespace eng
 {
 	struct WindowConfig
 	{
-		str::StringView m_Name;
-		Vector2u m_Position; 
-		Vector2u m_Size; 
+		str::StringView m_Name = "ZEngine";
+		Vector2u m_Position = Vector2u::Zero; 
+		Vector2u m_Size = Vector2u(1920, 1080);
 	};
 
-	class IWindow
+	class Window
 	{
 	public:
-		explicit IWindow(const WindowConfig& config) { }
-		virtual ~IWindow() { }
+		explicit Window(const WindowConfig& config) { }
+		virtual ~Window() { }
 
 		virtual void Initialize() { }
 		virtual void Shutdown() { }
@@ -32,7 +32,7 @@ namespace eng
 		virtual bool ShouldClose() const { return false; }
 
 	private:
-		IWindow(const IWindow&) = delete;
-		IWindow& operator=(const IWindow&) = delete;
+		Window(const Window&) = delete;
+		Window& operator=(const Window&) = delete;
 	};
 }

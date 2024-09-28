@@ -13,7 +13,7 @@ namespace eng
 	class PrototypeManager;
 }
 
-namespace glfw
+namespace eng
 {
 	class Window;
 }
@@ -27,13 +27,11 @@ namespace clt
 {
 	struct Dependencies
 	{
+		eng::Window& m_Window;
 		eng::AssetManager& m_AssetManager;
 		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
 		eng::PrototypeManager& m_PrototypeManager;
-
-		glfw::Window& m_Window;
-
 		net::ComponentSerializer& m_Serializer;
 	};
 

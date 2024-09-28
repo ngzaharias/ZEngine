@@ -24,7 +24,7 @@
 #include "GameClient/VelocitySystem.h"
 #include "GameClient/VisualSystem.h"
 
-void clt::RegisterSystems(ecs::EntityWorld& entityWorld, const clt::SystemDependencies& dependencies)
+void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterSystem<drag::MovementSystem>();
 	entityWorld.RegisterSystem<drag::SelectionSystem>();

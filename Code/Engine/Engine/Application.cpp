@@ -32,16 +32,10 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/VoxelComponents.h"
 
-#include <optick.h>
-#include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
-#include <SFML/System/Clock.hpp>
-
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_glfw.h>
-#include <imgui/imgui_impl_opengl3.h>
 
 #include <iostream>
+#include <optick.h>
 #include <random>
 #include <time.h>
 
@@ -71,27 +65,20 @@ namespace
 }
 
 eng::Application::Application()
-	: m_AssetManager()
+	: m_Window(nullptr)
+	, m_AssetManager()
+	, m_ImguiManager()
 	, m_NetworkManager(m_ComponentSerializer)
 	, m_PhysicsManager()
 	, m_PrototypeManager()
 	, m_ComponentSerializer()
-	, m_Window(nullptr)
 {
 	srand((unsigned int)time(NULL));
-
-	{
-		eng::WindowConfig windowConfig;
-		windowConfig.m_Name = "Window A";
-		windowConfig.m_Position = Vector2u::Zero;
-		windowConfig.m_Size = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-		m_Window = new glfw::Window(windowConfig);
-	}
+	m_Window = new glfw::Window(m_WindowConfig);
 }
 
 eng::Application::~Application()
 {
-	delete m_Window;
 }
 
 void eng::Application::Execute(int argc, char* argv[])
@@ -134,14 +121,9 @@ void eng::Application::Execute(int argc, char* argv[])
 			if (m_Window->ShouldClose())
 				break;
 
-			{
-				PROFILE_CUSTOM("ImGui::NewFrame");
-				ImGui_ImplOpenGL3_NewFrame();
-				ImGui_ImplGlfw_NewFrame();
-				ImGui::NewFrame();
-			}
-
+			PreUpdate(gameTime);
 			Update(gameTime);
+			PostUpdate(gameTime);
 
 			m_Window->PostUpdate(gameTime);
 		}
@@ -197,7 +179,13 @@ void eng::Application::Initialise()
 
 	m_Window->Initialize();
 	m_AssetManager.Initialise();
+	m_ImguiManager.Initialise(*m_Window);
 	m_PhysicsManager.Initialise();
+}
+
+void eng::Application::PreUpdate(const GameTime& gameTime)
+{
+	m_ImguiManager.PreUpdate();
 }
 
 void eng::Application::Update(const GameTime& gameTime)
@@ -207,11 +195,19 @@ void eng::Application::Update(const GameTime& gameTime)
 	m_NetworkManager.Update(gameTime);
 }
 
+void eng::Application::PostUpdate(const GameTime& gameTime)
+{
+	m_ImguiManager.PostUpdate();
+}
+
 void eng::Application::Shutdown()
 {
 	PROFILE_FUNCTION();
 
 	m_PhysicsManager.Shutdown();
+	m_ImguiManager.Shutdown();
 	m_AssetManager.Shutdown();
 	m_Window->Shutdown();
+
+	delete m_Window;
 }

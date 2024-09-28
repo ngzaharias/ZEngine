@@ -21,15 +21,18 @@ void eng::InputSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& window = world.ReadResource< glfw::Window>();
+	const auto& window = world.ReadResource<eng::Window>();
 
 	m_KeyboardPrevious = std::move(m_KeyboardCurrent);
 	m_MousePrevious = std::move(m_MouseCurrent);
 
 	Vector2f mouseDelta, mousePos, scrollDelta;
-	window.GatherKeyboard(m_KeyboardCurrent);
-	window.GatherMouse(m_MouseCurrent, mouseDelta, mousePos);
-	window.GatherScroll(scrollDelta);
+	if (const glfw::Window* glfwWindow = dynamic_cast<const glfw::Window*>(&window))
+	{
+		glfwWindow->GatherKeyboard(m_KeyboardCurrent);
+		glfwWindow->GatherMouse(m_MouseCurrent, mouseDelta, mousePos);
+		glfwWindow->GatherScroll(scrollDelta);
+	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::InputComponent>>())
 	{

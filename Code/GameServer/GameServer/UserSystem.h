@@ -32,12 +32,13 @@ namespace net
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			net::ReplicationHost,
+			// Components
 			ecs::NameComponent,
 			eng::NetworkManager,
 			net::UserComponent,
 			net::UserMapComponent>;
-
-		UserSystem(net::ReplicationHost& replicationHost);
 
 		void Initialise(World& world);
 		void Shutdown(World& world);
@@ -49,10 +50,7 @@ namespace net
 		void OnClientDisconnected(const net::PeerId& peerId);
 
 	private:
-		net::ReplicationHost& m_ReplicationHost;
-
 		SinkCollection m_Connections;
-
 		Map<net::UserId, bool> m_Requests;
 	};
 }

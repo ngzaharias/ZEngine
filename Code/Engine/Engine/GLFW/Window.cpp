@@ -170,7 +170,7 @@ namespace
 }
 
 glfw::Window::Window(const eng::WindowConfig& config)
-	: eng::IWindow(config)
+	: eng::Window(config)
 {
 	constexpr bool s_IsFullscreen = false;
 

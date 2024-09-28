@@ -1,25 +1,20 @@
 #include "EnginePCH.h"
-#include "Engine/RenderStage_ImGui.h"
+#include "Engine/ImguiManager.h"
 
-#include "ECS/EntityWorld.h"
-#include "ECS/WorldView.h"
-#include "Engine/AssetManager.h"
-#include "Engine/Screen.h"
+#include "Engine/Window.h"
 #include "Engine/GLFW/Window.h"
 
-#include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
-
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <imnodes/imnodes.h>
 
-void eng::RenderStage_ImGui::Initialise(ecs::EntityWorld& entityWorld)
+void eng::ImguiManager::Initialise(const eng::Window& window)
 {
-	const auto& window = entityWorld.ReadResource< glfw::Window>();
+	PROFILE_FUNCTION();
+	m_Window = &window;
 
-	const char* glsl_version = "#version 410";
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImNodes::CreateContext();
@@ -29,14 +24,17 @@ void eng::RenderStage_ImGui::Initialise(ecs::EntityWorld& entityWorld)
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	io.ConfigDockingWithShift = true;
 	io.ConfigDockingTransparentPayload = true;
-	io.ConfigViewportsNoAutoMerge = true;
-	io.ConfigViewportsNoTaskBarIcon = false;
+	//io.ConfigViewportsNoAutoMerge = true;
+	//io.ConfigViewportsNoTaskBarIcon = true;
 	io.ConfigViewportsNoDecoration = true;
-	io.ConfigViewportsNoDefaultParent = false;
+	//io.ConfigViewportsNoDefaultParent = true;
 	io.ConfigDragClickToInputText = false;
 
-	ImGui_ImplGlfw_InitForOpenGL(window.GetWindow(), true);
-	ImGui_ImplOpenGL3_Init(glsl_version);
+	if (const glfw::Window* window = dynamic_cast<const glfw::Window*>(m_Window))
+	{
+		ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true);
+		ImGui_ImplOpenGL3_Init("#version 410");
+	}
 
 	// style
 	{
@@ -72,20 +70,32 @@ void eng::RenderStage_ImGui::Initialise(ecs::EntityWorld& entityWorld)
 	}
 }
 
-void eng::RenderStage_ImGui::Shutdown(ecs::EntityWorld& world)
+void eng::ImguiManager::Shutdown()
 {
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
+	PROFILE_FUNCTION();
+
+	if (const glfw::Window* window = dynamic_cast<const glfw::Window*>(m_Window))
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+	}
 
 	ImNodes::DestroyContext();
 	ImGui::DestroyContext();
 }
 
-void eng::RenderStage_ImGui::Render(ecs::EntityWorld& entityWorld)
+void eng::ImguiManager::PreUpdate()
 {
 	PROFILE_FUNCTION();
 
-	const auto& window = entityWorld.ReadResource< glfw::Window>();
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+}
+
+void eng::ImguiManager::PostUpdate()
+{
+	PROFILE_FUNCTION();
 
 	// render
 	{
@@ -103,7 +113,9 @@ void eng::RenderStage_ImGui::Render(ecs::EntityWorld& entityWorld)
 			PROFILE_CUSTOM("ImGui::UpdatePlatformWindows");
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(window.GetWindow());
+
+			if (const glfw::Window* window = dynamic_cast<const glfw::Window*>(m_Window))
+				glfwMakeContextCurrent(window->GetWindow());
 		}
 	}
 

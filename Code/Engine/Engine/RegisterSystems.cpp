@@ -3,23 +3,18 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "Engine/AssetManager.h"
 #include "Engine/CameraBound2DSystem.h"
 #include "Engine/CameraMove2DSystem.h"
 #include "Engine/CameraMove3DSystem.h"
 #include "Engine/CameraPanningSystem.h"
 #include "Engine/CameraZoom2DSystem.h"
 #include "Engine/FlipbookSystem.h"
-#include "Engine/GLFW/Window.h"
 #include "Engine/InputSystem.h"
 #include "Engine/LevelLoadSystem.h"
 #include "Engine/MusicSystem.h"
 #include "Engine/NetworkSystem.h"
 #include "Engine/PhysicsSystem.h"
 #include "Engine/RenderSystem.h"
-#include "Engine/ReplicationHost.h"
-#include "Engine/ReplicationPeer.h"
-#include "Engine/Screen.h"
 #include "Engine/SettingsDebugSystem.h"
 #include "Engine/SettingsLocalSystem.h"
 #include "Engine/SoundPlaySystem.h"
@@ -29,7 +24,7 @@
 #include "Engine/VoxelLoadingSystem.h"
 #include "Engine/VoxelMeshingSystem.h"
 
-void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::ClientDependencies& dependencies)
+void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterSystem<eng::camera::Bound2DSystem>();
 	entityWorld.RegisterSystem<eng::camera::Move2DSystem>();
@@ -65,11 +60,11 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld, const eng::Client
 	entityWorld.RegisterSystemPriority<eng::RenderSystem>(5000);
 }
 
-void eng::RegisterServerSystems(ecs::EntityWorld& entityWorld, const eng::ServerDependencies& dependencies)
+void eng::RegisterServerSystems(ecs::EntityWorld& entityWorld)
 {
 }
 
-void eng::RegisterSharedSystems(ecs::EntityWorld& entityWorld, const eng::SharedDependencies& dependencies)
+void eng::RegisterSharedSystems(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterSystem<eng::level::LoadSystem>(entityWorld);
 	entityWorld.RegisterSystem<eng::PhysicsSystem>();

@@ -3,7 +3,7 @@
 #ifdef Z_GLFW
 #include "Core/Set.h"
 #include "Core/String.h"
-#include "Engine/IWindow.h"
+#include "Engine/Window.h"
 #include "Math/Vector.h"
 
 struct GLFWwindow;
@@ -16,7 +16,7 @@ namespace input
 
 namespace glfw
 {
-	class Window final : public eng::IWindow
+	class Window final : public eng::Window
 	{
 	public:
 		explicit Window(const eng::WindowConfig& config);

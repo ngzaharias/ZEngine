@@ -7,7 +7,7 @@
 #include "Engine/PrototypeManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
-#include "Engine/GLFW/Window.h"
+#include "Engine/Window.h"
 #include "GameClient/HiddenObjectComponents.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
@@ -35,22 +35,22 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 
 	// resources
 	{
+		m_EntityWorld.RegisterResource(dependencies.m_Window);
 		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
-		m_EntityWorld.RegisterResource(dependencies.m_Window);
+		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
+		m_EntityWorld.RegisterResource(m_ReplicationPeer);
 	}
 
 	// engine
 	{
 		eng::RegisterClientComponents(m_EntityWorld);
-		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
+		eng::RegisterClientSystems(m_EntityWorld);
 
-		eng::ClientDependencies clientDependencies = { dependencies.m_Window };
-		eng::SharedDependencies sharedDependencies = { };
-		eng::RegisterClientSystems(m_EntityWorld, clientDependencies);
-		eng::RegisterSharedSystems(m_EntityWorld, sharedDependencies);
+		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
+		eng::RegisterSharedSystems(m_EntityWorld);
 	}
 
 	// shared
@@ -61,12 +61,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 	// client
 	{
 		clt::RegisterComponents(m_EntityWorld);
-
-		clt::SystemDependencies clientDependencies = {
-			dependencies.m_Window,
-			m_ReplicationPeer,
-			dependencies.m_Serializer };
-		clt::RegisterSystems(m_EntityWorld, clientDependencies);
+		clt::RegisterSystems(m_EntityWorld);
 	}
 }
 

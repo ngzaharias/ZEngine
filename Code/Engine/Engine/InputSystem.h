@@ -4,11 +4,6 @@
 #include "Core/Set.h"
 #include "ECS/System.h"
 
-namespace glfw
-{
-	class Window;
-}
-
 namespace ecs
 {
 	struct NameComponent;
@@ -16,15 +11,21 @@ namespace ecs
 
 namespace eng
 {
+	class Window;
 	struct InputComponent;
+}
 
+namespace eng
+{
 	class InputSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			const eng::Window,
+			// Components
 			ecs::NameComponent,
-			eng::InputComponent,
-			const glfw::Window>;
+			eng::InputComponent>;
 
 		void Initialise(World& world);
 

@@ -26,7 +26,6 @@ namespace svr
 		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
 		eng::PrototypeManager& m_PrototypeManager;
-
 		net::ComponentSerializer& m_Serializer;
 	};
 

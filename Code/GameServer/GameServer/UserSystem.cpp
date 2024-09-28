@@ -11,11 +11,6 @@
 #include "Network/Adaptor.h"
 #include "Network/Host.h"
 
-net::UserSystem::UserSystem(net::ReplicationHost& replicationHost)
-	: m_ReplicationHost(replicationHost)
-{
-}
-
 void net::UserSystem::Initialise(World& world)
 {
 	auto& networkManager = world.WriteResource<eng::NetworkManager>();
@@ -40,6 +35,8 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 	const auto& userMapComponent = world.ReadSingleton<net::UserMapComponent>();
 	for (auto&& [userId, wantsConnected] : m_Requests)
 	{
+		auto& replicationHost = world.WriteResource<net::ReplicationHost>();
+
 		const bool isConnected = userMapComponent.m_UserToEntity.Contains(userId);
 		if (wantsConnected && !isConnected)
 		{
@@ -57,8 +54,8 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 			mapComponent.m_EntityToUser.Set(userEntity, userId);
 			mapComponent.m_UserToEntity.Set(userId, userEntity);
 
-			m_ReplicationHost.RegisterPeer(userId.GetPeerId());
-			m_ReplicationHost.StartReplicateToPeer(userId.GetPeerId(), userEntity);
+			replicationHost.RegisterPeer(userId.GetPeerId());
+			replicationHost.StartReplicateToPeer(userId.GetPeerId(), userEntity);
 		}
 		else if (!wantsConnected && isConnected)
 		{
@@ -69,8 +66,8 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 			mapComponent.m_EntityToUser.Remove(userEntity);
 			mapComponent.m_UserToEntity.Remove(userId);
 
-			m_ReplicationHost.StopReplicateToPeer(userId.GetPeerId(), userEntity);
-			m_ReplicationHost.UnregisterPeer(userId.GetPeerId());
+			replicationHost.StopReplicateToPeer(userId.GetPeerId(), userEntity);
+			replicationHost.UnregisterPeer(userId.GetPeerId());
 		}
 	}
 	m_Requests.RemoveAll();

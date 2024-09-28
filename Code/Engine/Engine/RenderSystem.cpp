@@ -9,7 +9,6 @@
 #include "Engine/AssetManager.h"
 #include "Engine/FrameBufferComponent.h"
 #include "Engine/LinesComponent.h"
-#include "Engine/RenderStage_ImGui.h"
 #include "Engine/RenderStage_Lines.h"
 #include "Engine/RenderStage_Opaque.h"
 #include "Engine/RenderStage_Shadow.h"
@@ -33,7 +32,6 @@ eng::RenderSystem::RenderSystem(ecs::EntityWorld& entityWorld)
 	m_RenderStages.Append(new eng::RenderStage_Lines());
 	m_RenderStages.Append(new eng::RenderStage_Translucent());
 	m_RenderStages.Append(new eng::RenderStage_UI());
-	m_RenderStages.Append(new eng::RenderStage_ImGui());
 }
 
 eng::RenderSystem::~RenderSystem()
