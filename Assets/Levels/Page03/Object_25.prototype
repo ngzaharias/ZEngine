@@ -17,6 +17,6 @@ m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = 654.0, Y = 257.0, Z = 0.0 }
 
 ['hidden::ObjectComponent']
-m_Group = '00000000-0000-0000-0000-000000000000'
+m_Group = '6beb24e9-f03b-4f69-359c-df72e149d41f'
 m_Size = { X = 128, Y = 128 }
 m_Sprite = '7cffb440-1b57-4a08-85cb-c2cf6c6086ca'

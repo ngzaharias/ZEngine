@@ -2,9 +2,9 @@ m_Guid = '896ff3d0-c5a1-41f5-269b-461b6f5e4d52'
 m_Name = 'Camera'
 
 ['eng::TransformComponent']
-m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = -148.78759765625, Y = -470.65643310546875, Z = -500.0 }
+m_Translate = { X = 0.0, Y = 0.0, Z = -100.0 }
 
 ['eng::camera::Bound2DComponent']
 m_Max = { X = 2500.0, Y = 2500.0 }
@@ -17,8 +17,8 @@ m_Min = { X = -2500.0, Y = -2500.0 }
 ['eng::camera::ProjectionComponent'.m_Projection.Orthographic]
 m_ClippingFar = 1e+05
 m_ClippingNear = 30.0
-m_Size = 2500.0
+m_Size = 2100.0
 
 ['eng::camera::Zoom2DComponent']
 m_Max = 2500.0
-m_Min = 1000.0
+m_Min = 500.0
