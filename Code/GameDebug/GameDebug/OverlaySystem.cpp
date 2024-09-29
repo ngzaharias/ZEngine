@@ -10,9 +10,11 @@
 #include "Engine/VersionComponent.h"
 #include "GameDebug/FPSCounter.h"
 #include "Math/Math.h"
+#include "Math/Matrix.h"
 #include "Math/Vector.h"
 
 #include <imgui/imgui.h>
+#include <imguizmo/ImGuizmo.h>
 
 namespace
 {
@@ -24,7 +26,7 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	constexpr auto s_Flags =
+	constexpr ImGuiWindowFlags s_Flags =
 		ImGuiWindowFlags_NoBackground |
 		ImGuiWindowFlags_NoBringToFrontOnFocus |
 		ImGuiWindowFlags_NoCollapse |
