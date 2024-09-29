@@ -11,6 +11,13 @@ namespace editor::settings
 		str::Path m_Save = {};
 	};
 
+	struct Gizmos
+	{
+		bool m_IsEnabled = true;
+		bool m_ShowCoordinates = true;
+		bool m_ShowTransforms = true;
+	};
+
 	struct Sprite
 	{
 		str::Path m_Open = {};
@@ -27,6 +34,7 @@ namespace editor::settings
 	struct LocalComponent final : public ecs::SingletonComponent<LocalComponent>
 	{
 		Entity m_Entity = {};
+		Gizmos m_Gizmos = {};
 		Sprite m_Sprite = {};
 		Texture m_Texture = {};
 	};

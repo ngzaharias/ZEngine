@@ -56,6 +56,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::ShapeWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::EntityWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowRequestComponent>();
+	m_ClientWorld.RegisterComponent<editor::settings::WindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::SpriteWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::TableWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::TextureWindowRequestComponent>();

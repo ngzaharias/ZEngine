@@ -33,6 +33,16 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 			if (ImGui::MenuItem("Save Level As...", "Ctrl+S+A", nullptr, false))
 				world.AddEventComponent<dbg::level::SaveAsRequestComponent>();
 
+			ImGui::Separator();
+
+			if (ImGui::BeginMenu("Settings"))
+			{
+				if (ImGui::MenuItem("Editor"))
+					world.AddEventComponent<editor::settings::WindowRequestComponent>();
+				if (ImGui::MenuItem("Game"))
+					world.AddEventComponent<gui::settings::OpenRequestComponent>();
+				ImGui::EndMenu();
+			}
 			ImGui::EndMenu();
 		}
 
@@ -72,8 +82,6 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<dbg::NodeGraphRequestComponent>();
 			if (ImGui::MenuItem("Render: Frame Buffer"))
 				world.AddEventComponent<dbg::BufferWindowRequestComponent>();
-			if (ImGui::MenuItem("Settings"))
-				world.AddEventComponent<gui::settings::OpenRequestComponent>();
 
 			ImGui::EndMenu();
 		}

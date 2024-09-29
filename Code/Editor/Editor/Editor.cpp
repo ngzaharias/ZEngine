@@ -7,6 +7,7 @@
 #include "Editor/EntityEditor.h"
 #include "Editor/FlipbookEditor.h"
 #include "Editor/GizmoSystem.h"
+#include "Editor/SettingsMenu.h"
 #include "Editor/SettingsComponents.h"
 #include "Editor/SettingsLocalSystem.h"
 #include "Editor/SpriteEditor.h"
@@ -30,6 +31,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::FlipbookAssetSaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookBatchingComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowComponent>();
+	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::SpriteAssetNewComponent>();
 	m_ClientWorld.RegisterComponent<editor::SpriteAssetOpenComponent>();
 	m_ClientWorld.RegisterComponent<editor::SpriteAssetSaveComponent>();
@@ -50,6 +52,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::EntityEditor>(m_ClientWorld);
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditor>();
 	m_ClientWorld.RegisterSystem<editor::GizmoSystem>();
+	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
 	m_ClientWorld.RegisterSystem<editor::SpriteEditor>();
 	m_ClientWorld.RegisterSystem<editor::TableEditor>();
 	m_ClientWorld.RegisterSystem<editor::TextureEditor>();
