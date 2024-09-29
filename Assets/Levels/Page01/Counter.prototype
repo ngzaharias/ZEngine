@@ -1,0 +1,9 @@
+m_Guid = 'b9445f7d-99ca-47ae-7db5-8c0d228bf7aa'
+m_Name = 'Counter'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
+
+['hidden::CountComponent']
