@@ -8,11 +8,23 @@
 namespace eng
 {
 	struct LinesComponent;
+	struct TransformComponent;
+	struct VersionComponent;
 }
 
-namespace eng::settings
+namespace eng::camera
 {
-	struct DebugComponent;
+	struct  ProjectionComponent;
+}
+
+namespace editor
+{
+	struct EntityWindowComponent;
+}
+
+namespace editor::settings
+{
+	struct LocalComponent;
 }
 
 namespace editor
@@ -22,7 +34,10 @@ namespace editor
 	public:
 		using World = ecs::WorldView<
 			eng::LinesComponent,
-			const eng::settings::DebugComponent>;
+			eng::TransformComponent,
+			const editor::EntityWindowComponent,
+			const editor::settings::LocalComponent,
+			const eng::camera::ProjectionComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
