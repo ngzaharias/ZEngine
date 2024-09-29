@@ -16,7 +16,7 @@ namespace eng::level
 
 namespace hidden
 {
-	struct RevealedComponent;
+	struct RevealComponent;
 }
 
 namespace hidden
@@ -28,7 +28,7 @@ namespace hidden
 			eng::FlipbookComponent,
 			eng::level::EntityComponent,
 			eng::TransformComponent,
-			const hidden::RevealedComponent>;
+			const hidden::RevealComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

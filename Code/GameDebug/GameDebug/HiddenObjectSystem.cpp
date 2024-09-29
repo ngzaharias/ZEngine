@@ -9,8 +9,8 @@
 #include "Engine/SettingsComponents.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
-#include "GameClient/HiddenObjectComponents.h"
-#include "GameDebug/HiddenObjectComponents.h"
+#include "GameClient/HiddenObjectComponent.h"
+#include "GameDebug/HiddenObjectComponent.h"
 #include "Math/AABB.h"
 
 namespace
@@ -31,12 +31,12 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 			const ::hidden::ObjectComponent, 
 			const eng::level::EntityComponent, 
 			const eng::TransformComponent>
-			::Exclude<const dbg::hidden::DebugComponent>;
+			::Exclude<const dbg::hidden::ObjectComponent>;
 		for (const ecs::Entity& entity : world.Query<AddQuery>())
 		{
 			const auto& parentLevel = world.ReadComponent<eng::level::EntityComponent>(entity);
 
-			auto& parentDebug = world.AddComponent<dbg::hidden::DebugComponent>(entity);
+			auto& parentDebug = world.AddComponent<dbg::hidden::ObjectComponent>(entity);
 			parentDebug.m_Child = world.CreateEntity();
 
 			world.AddComponent<eng::level::EntityComponent>(parentDebug.m_Child, parentLevel.m_Name);
@@ -47,11 +47,11 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 		using UpdateQuery = ecs::query
 			::Include<
 			const ::hidden::ObjectComponent,
-			const dbg::hidden::DebugComponent,
+			const dbg::hidden::ObjectComponent,
 			const eng::TransformComponent>;
 		for (const ecs::Entity& entity : world.Query<UpdateQuery>())
 		{
-			const auto& parentDebug = world.ReadComponent<dbg::hidden::DebugComponent>(entity);
+			const auto& parentDebug = world.ReadComponent<dbg::hidden::ObjectComponent>(entity);
 			const auto& parentObject = world.ReadComponent<::hidden::ObjectComponent>(entity);
 			const auto& parentTransform = world.ReadComponent<eng::TransformComponent>(entity);
 
@@ -68,12 +68,12 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 	else
 	{
 		using Query = ecs::query
-			::Include<const ::hidden::ObjectComponent, const dbg::hidden::DebugComponent>;
+			::Include<const ::hidden::ObjectComponent, const dbg::hidden::ObjectComponent>;
 		for (const ecs::Entity& entity : world.Query<Query>())
 		{
-			const auto& debug = world.ReadComponent<dbg::hidden::DebugComponent>(entity);
-			world.RemoveComponent<dbg::hidden::DebugComponent>(entity);
-			world.DestroyEntity(debug.m_Child);
+			const auto& object = world.ReadComponent<dbg::hidden::ObjectComponent>(entity);
+			world.RemoveComponent<dbg::hidden::ObjectComponent>(entity);
+			world.DestroyEntity(object.m_Child);
 		}
 	}
 }

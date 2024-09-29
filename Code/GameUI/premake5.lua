@@ -1,6 +1,6 @@
 project "GameUI"
 	kind "StaticLib"
-	dependson { "Core", "ECS", "Engine", "Imgui", "Math" }
+	dependson { "Core", "ECS", "Engine", "GameClient", "Imgui", "Math" }
 	pchheader "GameUIPCH.h"
 	pchsource "GameUI/GameUIPCH.cpp"
 	location "%{wks.location}/GameUI"
@@ -22,6 +22,7 @@ project "GameUI"
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
+		"%{wks.location}/../Code/GameClient/",
 		"%{wks.location}/../Code/GameUI/",
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",

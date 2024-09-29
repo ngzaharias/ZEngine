@@ -17,7 +17,10 @@
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Visitor.h"
-#include "GameClient/HiddenObjectComponents.h"
+#include "GameClient/HiddenCountComponent.h"
+#include "GameClient/HiddenGroupComponent.h"
+#include "GameClient/HiddenObjectComponent.h"
+#include "GameClient/HiddenRevealComponent.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -204,6 +207,12 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 						m_World.AddComponent<eng::camera::ProjectionComponent>(entity);
 					}
 
+					if (ImGui::MenuItem("Hidden Count"))
+					{
+						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Count", levelName);
+						m_World.AddComponent<hidden::CountComponent>(entity);
+					}
+
 					if (ImGui::MenuItem("Hidden Group"))
 					{
 						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Group_", levelName);
@@ -286,8 +295,10 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 						SelectComponent<eng::PrototypeComponent>(m_World, selected);
 						SelectComponent<eng::SpriteComponent>(m_World, selected);
 						SelectComponent<eng::TransformComponent>(m_World, selected);
+						SelectComponent<hidden::CountComponent>(m_World, selected);
 						SelectComponent<hidden::GroupComponent>(m_World, selected);
 						SelectComponent<hidden::ObjectComponent>(m_World, selected);
+						SelectComponent<hidden::RevealComponent>(m_World, selected);
 						ImGui::EndMenu();
 					}
 					ImGui::EndMenuBar();
@@ -310,8 +321,10 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 					InspectComponent<eng::PhysicsComponent>(m_World, selected, inspector);
 					InspectComponent<eng::PrototypeComponent>(m_World, selected, inspector);
 					InspectComponent<eng::SpriteComponent>(m_World, selected, inspector);
+					InspectComponent<hidden::CountComponent>(m_World, selected, inspector);
 					InspectComponent<hidden::GroupComponent>(m_World, selected, inspector);
 					InspectComponent<hidden::ObjectComponent>(m_World, selected, inspector);
+					InspectComponent<hidden::RevealComponent>(m_World, selected, inspector);
 					inspector.End();
 				}
 			}
@@ -366,6 +379,7 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 					SaveComponent<eng::PhysicsComponent>(m_World, selected, visitor);
 					SaveComponent<eng::SpriteComponent>(m_World, selected, visitor);
 					SaveComponent<eng::TransformComponent>(m_World, selected, visitor);
+					SaveComponent<hidden::CountComponent>(m_World, selected, visitor);
 					SaveComponent<hidden::GroupComponent>(m_World, selected, visitor);
 					SaveComponent<hidden::ObjectComponent>(m_World, selected, visitor);
 

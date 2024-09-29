@@ -2,6 +2,7 @@
 #include "GameUI/GameUI.h"
 
 #include "ECS/EntityWorld.h"
+#include "GameUI/HiddenCountSystem.h"
 #include "GameUI/SettingsComponents.h"
 #include "GameUI/SettingsMenu.h"
 
@@ -16,6 +17,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 	m_EntityWorld.RegisterComponent<gui::settings::OpenRequestComponent>();
 	m_EntityWorld.RegisterComponent<gui::settings::WindowComponent>();
 
+	m_EntityWorld.RegisterSystem<gui::hidden::CountSystem>();
 	m_EntityWorld.RegisterSystem<gui::settings::MenuSystem>();
 }
 

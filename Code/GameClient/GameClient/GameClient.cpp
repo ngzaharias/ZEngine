@@ -8,16 +8,12 @@
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
 #include "Engine/Window.h"
-#include "GameClient/HiddenObjectComponents.h"
+#include "GameClient/HiddenCountComponent.h"
+#include "GameClient/HiddenGroupComponent.h"
+#include "GameClient/HiddenObjectComponent.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
 #include "GameShared/RegisterComponents.h"
-
-namespace
-{
-	const str::Name strHiddenObject = NAME("HiddenObject");
-	const str::Name strHiddenGroup = NAME("HiddenGroup");
-}
 
 clt::GameClient::GameClient()
 	: m_ReplicationPeer(m_EntityWorld)
@@ -29,6 +25,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 	// prototypes
 	{
 		auto& prototypeManager = dependencies.m_PrototypeManager;
+		prototypeManager.Register<hidden::CountComponent>();
 		prototypeManager.Register<hidden::GroupComponent>();
 		prototypeManager.Register<hidden::ObjectComponent>();
 	}

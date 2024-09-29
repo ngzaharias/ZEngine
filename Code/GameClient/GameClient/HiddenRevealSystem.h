@@ -26,7 +26,7 @@ namespace eng::sound
 namespace hidden
 {
 	struct ObjectComponent;
-	struct RevealedComponent;
+	struct RevealComponent;
 }
 
 namespace hidden
@@ -37,7 +37,7 @@ namespace hidden
 		using World = ecs::WorldView<
 			eng::LinesComponent,
 			eng::RigidStaticComponent,
-			hidden::RevealedComponent,
+			hidden::RevealComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,
 			const eng::PhysicsSceneComponent,

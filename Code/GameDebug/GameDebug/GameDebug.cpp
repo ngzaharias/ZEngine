@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "GameDebug/EntitySystem.h"
 #include "GameDebug/FrameBufferSystem.h"
-#include "GameDebug/HiddenObjectComponents.h"
+#include "GameDebug/HiddenObjectComponent.h"
 #include "GameDebug/HiddenObjectSystem.h"
 #include "GameDebug/ImGuiDemoSystem.h"
 #include "GameDebug/InspectorDemo.h"
@@ -38,7 +38,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::ClientWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::EntityWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::EntityWindowRequestComponent>();
-	m_ClientWorld.RegisterComponent<dbg::hidden::DebugComponent>();
+	m_ClientWorld.RegisterComponent<dbg::hidden::ObjectComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::InspectorDemoRequestComponent>();

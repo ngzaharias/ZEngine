@@ -14,7 +14,8 @@
 #include "Engine/SoundComponents.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
-#include "GameClient/HiddenObjectComponents.h"
+#include "GameClient/HiddenObjectComponent.h"
+#include "GameClient/HiddenRevealComponent.h"
 #include "Math/AABB.h"
 #include "Math/CollisionMath.h"
 #include "Math/Ray.h"
@@ -104,9 +105,9 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 				const ecs::Entity selectedEntity = reinterpret_cast<uint64>(closestHit.actor->userData);
 				if (world.HasComponent<hidden::ObjectComponent>(selectedEntity))
 				{
-					const bool isRevealed = world.HasComponent<hidden::RevealedComponent>(selectedEntity);
+					const bool isRevealed = world.HasComponent<hidden::RevealComponent>(selectedEntity);
 					if (!isRevealed && inputComponent.IsKeyPressed(input::EMouse::Left))
-						world.AddComponent<hidden::RevealedComponent>(selectedEntity);
+						world.AddComponent<hidden::RevealComponent>(selectedEntity);
 				}
 			}
 		}

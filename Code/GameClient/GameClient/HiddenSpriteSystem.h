@@ -11,7 +11,7 @@ namespace eng
 namespace hidden
 {
 	struct ObjectComponent;
-	struct RevealedComponent;
+	struct RevealComponent;
 }
 
 namespace hidden
@@ -22,7 +22,7 @@ namespace hidden
 		using World = ecs::WorldView<
 			eng::SpriteComponent,
 			const hidden::ObjectComponent,
-			const hidden::RevealedComponent>;
+			const hidden::RevealComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

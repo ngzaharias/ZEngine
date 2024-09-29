@@ -4,7 +4,7 @@
 
 namespace dbg::hidden
 {
-	struct DebugComponent : ecs::Component<DebugComponent>
+	struct ObjectComponent : ecs::Component<ObjectComponent>
 	{ 
 		ecs::Entity m_Child = {};
 	};

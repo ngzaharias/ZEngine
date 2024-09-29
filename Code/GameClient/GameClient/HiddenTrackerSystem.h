@@ -18,7 +18,7 @@ namespace hidden
 {
 	struct GroupComponent;
 	struct ObjectComponent;
-	struct RevealedComponent;
+	struct RevealComponent;
 }
 
 namespace hidden
@@ -32,7 +32,7 @@ namespace hidden
 			const eng::PrototypeComponent,
 			const hidden::GroupComponent,
 			const hidden::ObjectComponent,
-			const hidden::RevealedComponent>;
+			const hidden::RevealComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

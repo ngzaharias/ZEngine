@@ -2,6 +2,11 @@
 
 #include "ECS/System.h"
 
+namespace dbg::hidden
+{
+	struct ObjectComponent;
+}
+
 namespace eng
 {
 	struct LinesComponent;
@@ -26,13 +31,11 @@ namespace hidden
 
 namespace dbg::hidden
 {
-	struct DebugComponent;
-
 	class ObjectSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			dbg::hidden::DebugComponent,
+			dbg::hidden::ObjectComponent,
 			eng::LinesComponent,
 			eng::level::EntityComponent,
 			eng::SpriteComponent,

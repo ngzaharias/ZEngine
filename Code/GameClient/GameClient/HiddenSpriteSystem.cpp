@@ -5,17 +5,17 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/SpriteComponent.h"
-#include "GameClient/HiddenObjectComponents.h"
+#include "GameClient/HiddenObjectComponent.h"
+#include "GameClient/HiddenRevealComponent.h"
 
 void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	using Query = ecs::query
-		::Added<const hidden::RevealedComponent>
+		::Added<const hidden::RevealComponent>
 		::Include<const hidden::ObjectComponent>
 		::Exclude<const eng::SpriteComponent>;
-
 	for (const ecs::Entity& entity : world.Query<Query>())
 	{
 		const auto& hiddenComponent = world.ReadComponent<hidden::ObjectComponent>(entity);

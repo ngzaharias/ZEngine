@@ -7,7 +7,9 @@
 #include "ECS/WorldView.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/SpriteComponent.h"
-#include "GameClient/HiddenObjectComponents.h"
+#include "GameClient/HiddenGroupComponent.h"
+#include "GameClient/HiddenObjectComponent.h"
+#include "GameClient/HiddenRevealComponent.h"
 #include "GameClient/ModalComponents.h"
 
 void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
@@ -18,7 +20,7 @@ void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 	{
 		using GroupQuery = ecs::query::Include<const hidden::GroupComponent>;
 		using RevealedQuery = ecs::query
-			::Added<const hidden::RevealedComponent>
+			::Added<const hidden::RevealComponent>
 			::Include<const eng::PrototypeComponent>;
 
 		for (const ecs::Entity& objectEntity : world.Query<RevealedQuery>())
@@ -61,11 +63,11 @@ void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 	// level complete
 	{
 		using RevealedQuery = ecs::query
-			::Added<const hidden::RevealedComponent>
+			::Added<const hidden::RevealComponent>
 			::Include<const hidden::ObjectComponent>;
 		using RemainingQuery = ecs::query
 			::Include<const hidden::ObjectComponent>
-			::Exclude<const hidden::RevealedComponent>;
+			::Exclude<const hidden::RevealComponent>;
 		for (const ecs::Entity& objectEntity : world.Query<RevealedQuery>())
 		{
 			const auto& query = world.Query<RemainingQuery>();

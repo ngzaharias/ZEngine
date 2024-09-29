@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/SoundComponents.h"
-#include "GameClient/HiddenObjectComponents.h"
+#include "GameClient/HiddenRevealComponent.h"
 
 namespace
 {
@@ -28,7 +28,7 @@ void hidden::SoundSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Added<const hidden::RevealedComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Added<const hidden::RevealComponent>>())
 	{
 		auto& soundComponent = world.AddComponent<eng::sound::SequenceRequestComponent>(m_SoundEntity);
 		soundComponent.m_Handle = strSoundSequence;
