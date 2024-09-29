@@ -9,6 +9,7 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <imnodes/imnodes.h>
+#include <imguizmo/ImGuizmo.h>
 
 void eng::ImguiManager::Initialise(const eng::Window& window)
 {
@@ -91,6 +92,7 @@ void eng::ImguiManager::PreUpdate()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 }
 
 void eng::ImguiManager::PostUpdate()

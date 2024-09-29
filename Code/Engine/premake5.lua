@@ -26,6 +26,7 @@ project "Engine"
 		"%{wks.location}/../3rdParty/glew/2.1.0/Include/",
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Include/",
 		"%{wks.location}/../3rdParty/imgui/1.87/Include/",
+		"%{wks.location}/../3rdParty/imguizmo/1.83/Include/",
 		"%{wks.location}/../3rdParty/imnodes/0.5/Include/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
