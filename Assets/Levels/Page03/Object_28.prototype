@@ -18,5 +18,10 @@ m_Translate = { X = 1021.5682983398438, Y = 731.3831787109375, Z = 0.0 }
 
 ['hidden::ObjectComponent']
 m_Group = '6beb24e9f03b4f69359cdf72e149d41f'
+[['hidden::ObjectComponent'.m_Effects]]
+['hidden::ObjectComponent'.m_Effects.SetColour]
+m_Colour = { X = 1.0, Y = 0.0, Z = 1.0 }
+
+['eng::SpriteComponent']
 m_Size = { X = 128, Y = 128 }
 m_Sprite = '34dc8e2ae07a45ae93f563c231ffc1d8'
