@@ -16,7 +16,7 @@ void eng::MusicSystem::Initialise(World& world)
 	musicComponent.m_Music = new sf::Music();
 
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
-	if (const auto* musicAsset = assetManager.LoadAsset<eng::MusicAsset>(GUID("d193864e-e4f4-44e7-b6aa-bb84b95bcc5b")))
+	if (const auto* musicAsset = assetManager.LoadAsset<eng::MusicAsset>(GUID("d193864ee4f444e7b6aabb84b95bcc5b")))
 	{
 		const str::Path filepath = str::Path(str::EPath::Assets, musicAsset->m_SourceFile);
 

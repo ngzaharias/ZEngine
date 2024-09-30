@@ -1,8 +1,8 @@
-m_Guid = '19375574-eb57-4021-a64c-44698db5c802'
+m_Guid = '19375574eb574021a64c44698db5c802'
 m_Name = 'SP_Reveal_Cat04'
 m_Type = 'Sprite'
 
 m_Position = { X = 0, Y = 0 }
-m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
 m_Size = { X = 256, Y = 256 }
-m_Texture2D = '8187b153-6312-45ef-4796-36396177228f'
+m_Texture2D = '8187b153631245ef479636396177228f'

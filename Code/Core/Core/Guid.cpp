@@ -21,7 +21,7 @@ str::String str::Guid::ToString() const
 	snprintf(
 		buffer,
 		sizeof(buffer),
-		s_Hyphenated,
+		s_Compact,
 		m_Data.m_U32[0],
 		m_Data.m_U16[2],
 		m_Data.m_U16[3],
@@ -48,36 +48,28 @@ str::Guid str::Guid::Create(const str::StringView& string)
 		HexToByte(string[4]) << 12 | HexToByte(string[5]) <<  8 |
 		HexToByte(string[6]) <<  4 | HexToByte(string[7]) <<  0;
 
-	Z_ASSERT(string[8] == '-', "");
-
 	guid.m_Data.m_U16[2] = 
-		HexToByte(string[9]) << 12 | HexToByte(string[10]) <<  8 |
-		HexToByte(string[11]) << 4 | HexToByte(string[12]) <<  0;
-
-	Z_ASSERT(string[13] == '-', "");
+		HexToByte(string[8]) << 12 | HexToByte(string[9]) <<  8 |
+		HexToByte(string[10]) << 4 | HexToByte(string[11]) <<  0;
 
 	guid.m_Data.m_U16[3] =
-		HexToByte(string[14]) << 12 | HexToByte(string[15]) << 8 |
-		HexToByte(string[16]) <<  4 | HexToByte(string[17]) << 0;
-
-	Z_ASSERT(string[18] == '-', "");
+		HexToByte(string[12]) << 12 | HexToByte(string[13]) << 8 |
+		HexToByte(string[14]) <<  4 | HexToByte(string[15]) << 0;
 
 	guid.m_Data.m_U16[4] =
-		HexToByte(string[19]) << 12 | HexToByte(string[20]) << 8 |
-		HexToByte(string[21]) <<  4 | HexToByte(string[22]) << 0;
-
-	Z_ASSERT(string[23] == '-', "");
+		HexToByte(string[16]) << 12 | HexToByte(string[17]) << 8 |
+		HexToByte(string[18]) <<  4 | HexToByte(string[19]) << 0;
 
 	// #note: these last 3 are ordered in reverse on purpose
 	guid.m_Data.m_U16[7] =
+		HexToByte(string[20]) << 12 | HexToByte(string[21]) << 8 |
+		HexToByte(string[22]) <<  4 | HexToByte(string[23]) << 0;
+	guid.m_Data.m_U16[6] =
 		HexToByte(string[24]) << 12 | HexToByte(string[25]) << 8 |
 		HexToByte(string[26]) <<  4 | HexToByte(string[27]) << 0;
-	guid.m_Data.m_U16[6] =
+	guid.m_Data.m_U16[5] =
 		HexToByte(string[28]) << 12 | HexToByte(string[29]) << 8 |
 		HexToByte(string[30]) <<  4 | HexToByte(string[31]) << 0;
-	guid.m_Data.m_U16[5] =
-		HexToByte(string[32]) << 12 | HexToByte(string[33]) << 8 |
-		HexToByte(string[34]) <<  4 | HexToByte(string[35]) << 0;
 
 	return guid;
 }
@@ -92,7 +84,7 @@ str::Guid str::Guid::Generate()
 
 bool str::Guid::IsValidString(const str::StringView& string)
 {
-	if (string.length() != 36)
+	if (string.length() != 32)
 		return false;
 
 	return isxdigit(string[0])
@@ -103,22 +95,22 @@ bool str::Guid::IsValidString(const str::StringView& string)
 		&& isxdigit(string[5])
 		&& isxdigit(string[6])
 		&& isxdigit(string[7])
-		&& string[8] == '-'
+		&& isxdigit(string[8])
 		&& isxdigit(string[9])
 		&& isxdigit(string[10])
 		&& isxdigit(string[11])
 		&& isxdigit(string[12])
-		&& string[13] == '-'
+		&& isxdigit(string[13])
 		&& isxdigit(string[14])
 		&& isxdigit(string[15])
 		&& isxdigit(string[16])
 		&& isxdigit(string[17])
-		&& string[18] == '-'
+		&& isxdigit(string[18])
 		&& isxdigit(string[19])
 		&& isxdigit(string[20])
 		&& isxdigit(string[21])
 		&& isxdigit(string[22])
-		&& string[23] == '-'
+		&& isxdigit(string[23])
 		&& isxdigit(string[24])
 		&& isxdigit(string[25])
 		&& isxdigit(string[26])
@@ -126,16 +118,12 @@ bool str::Guid::IsValidString(const str::StringView& string)
 		&& isxdigit(string[28])
 		&& isxdigit(string[29])
 		&& isxdigit(string[30])
-		&& isxdigit(string[31])
-		&& isxdigit(string[32])
-		&& isxdigit(string[33])
-		&& isxdigit(string[34])
-		&& isxdigit(string[35]);
+		&& isxdigit(string[31]);
 }
 
 void str::Guid::ValidateString(const str::StringView& string)
 {
-	if (string.length() != 36)
+	if (string.length() != 32)
 	{
 		Z_LOG(ELog::Assert, "Guid string length is invalid! Expected: 36, Received: %d", string.length());
 		return;
@@ -150,22 +138,22 @@ void str::Guid::ValidateString(const str::StringView& string)
 	if (!isxdigit(string[ 5])) { positions += " 5, "; }
 	if (!isxdigit(string[ 6])) { positions += " 6, "; }
 	if (!isxdigit(string[ 7])) { positions += " 7, "; }
-	if (string[8] != '-') { positions += "8, "; }
+	if (!isxdigit(string[ 8])) { positions += " 8, "; }
 	if (!isxdigit(string[ 9])) { positions += " 9, "; }
 	if (!isxdigit(string[10])) { positions += "10, "; }
 	if (!isxdigit(string[11])) { positions += "11, "; }
 	if (!isxdigit(string[12])) { positions += "12, "; }
-	if (string[13] != '-') { positions += "13, "; }
+	if (!isxdigit(string[13])) { positions += "13, "; }
 	if (!isxdigit(string[14])) { positions += "14, "; }
 	if (!isxdigit(string[15])) { positions += "15, "; }
 	if (!isxdigit(string[16])) { positions += "16, "; }
 	if (!isxdigit(string[17])) { positions += "17, "; }
-	if (string[18] != '-') { positions += "18, "; }
+	if (!isxdigit(string[18])) { positions += "18, "; }
 	if (!isxdigit(string[19])) { positions += "19, "; }
 	if (!isxdigit(string[20])) { positions += "20, "; }
 	if (!isxdigit(string[21])) { positions += "21, "; }
 	if (!isxdigit(string[22])) { positions += "22, "; }
-	if (string[23] != '-') { positions += "23, "; }
+	if (!isxdigit(string[23])) { positions += "23, "; }
 	if (!isxdigit(string[24])) { positions += "24, "; }
 	if (!isxdigit(string[25])) { positions += "25, "; }
 	if (!isxdigit(string[26])) { positions += "26, "; }
@@ -174,10 +162,6 @@ void str::Guid::ValidateString(const str::StringView& string)
 	if (!isxdigit(string[29])) { positions += "29, "; }
 	if (!isxdigit(string[30])) { positions += "30, "; }
 	if (!isxdigit(string[31])) { positions += "31, "; }
-	if (!isxdigit(string[32])) { positions += "32, "; }
-	if (!isxdigit(string[33])) { positions += "33, "; }
-	if (!isxdigit(string[34])) { positions += "34, "; }
-	if (!isxdigit(string[35])) { positions += "35, "; }
 
 	if (!positions.empty())
 	{

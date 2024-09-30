@@ -20,8 +20,8 @@
 
 namespace
 {
-	const str::Guid strModel = GUID("e94876a8-e4cc-4d16-84c8-5859b48a1af6");
-	const str::Guid strShader = GUID("0205bbd9-a15b-459e-af0d-810ebe98b8d8");
+	const str::Guid strModel = GUID("e94876a8e4cc4d1684c85859b48a1af6");
+	const str::Guid strShader = GUID("0205bbd9a15b459eaf0d810ebe98b8d8");
 }
 
 void eng::RenderStage_UI::Initialise(ecs::EntityWorld& entityWorld)

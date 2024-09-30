@@ -1,10 +1,10 @@
-m_Guid = '87cfbd9e-dfdf-46ad-96cf-5a9db651f049'
+m_Guid = '87cfbd9edfdf46ad96cf5a9db651f049'
 m_Name = 'Group_Rubber'
 
 ['hidden::GroupComponent']
-m_Objects = [ '3595c797-b638-46af-8364-9ce12905477b' ]
+m_Objects = [ '3595c797b63846af83649ce12905477b' ]
 m_Size = { X = 320, Y = 16 }
-m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
+m_Sprite = 'cc6a81798a494d699210d41b8255b326'
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 3.0, Yaw = 0.0 }

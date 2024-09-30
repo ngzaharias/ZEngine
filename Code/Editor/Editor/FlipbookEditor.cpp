@@ -30,8 +30,8 @@ namespace
 		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
-	const str::Guid uuidShader = GUID("cbbb7d3f-f44b-45fd-b9e5-a207d92262fb");
-	const str::Guid uuidTexture2D = GUID("c6bb231c-e97f-104e-860e-b55e71988bdb");
+	const str::Guid uuidShader = GUID("cbbb7d3ff44b45fdb9e5a207d92262fb");
+	const str::Guid uuidTexture2D = GUID("c6bb231ce97f104e860eb55e71988bdb");
 
 	Vector2f ToImageSize(const ImVec2& regionSize, const eng::Texture2DAsset& texture)
 	{
@@ -144,7 +144,7 @@ namespace
 					flipbook.m_Guid = str::Guid::Generate();
 					flipbook.m_Name = str::Name::Create("FP_MyFlipbook");
 					flipbook.m_Shader = uuidShader;
-					flipbook.m_Texture2D = str::Guid::Create("f9dcfdd6-014a-c528-12e2-1e73f232b7f9");
+					flipbook.m_Texture2D = str::Guid::Create("f9dcfdd6014ac52812e21e73f232b7f9");
 
 					auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(entity);
 					windowComponent.m_Asset = flipbook;

@@ -1,12 +1,12 @@
-m_Guid = "2bde153c-851a-429c-8895-7b6b0fd482fb"
+m_Guid = "2bde153c851a429c88957b6b0fd482fb"
 m_Name = "S_HiddenReveal"
 m_Type = "SoundSequence"
 
 m_Handles = [ 
-	"18fa78b3-6f37-4680-81b4-951747f76f3a",
-	"dd00c467-9770-4b8c-a0e8-516c48a1c727",
-	"f2725a8c-248a-4e9b-9a4d-c1e8ea2aed5b",
-	"a4897e1e-d1dd-40b8-ab96-35019fafebd0",
-	"fa175547-de47-4124-97db-74cf00ca74b2",
-	"e3124932-9774-4516-a5c9-c124ce44631c"
+	"18fa78b36f37468081b4951747f76f3a",
+	"dd00c46797704b8ca0e8516c48a1c727",
+	"f2725a8c248a4e9b9a4dc1e8ea2aed5b",
+	"a4897e1ed1dd40b8ab9635019fafebd0",
+	"fa175547de47412497db74cf00ca74b2",
+	"e312493297744516a5c9c124ce44631c"
 ]

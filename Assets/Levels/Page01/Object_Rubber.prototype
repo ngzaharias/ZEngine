@@ -1,10 +1,10 @@
-m_Guid = '3595c797-b638-46af-8364-9ce12905477b'
+m_Guid = '3595c797b63846af83649ce12905477b'
 m_Name = 'Object_Rubber'
 
 ['hidden::ObjectComponent']
-m_Group = '87cfbd9e-dfdf-46ad-96cf-5a9db651f049'
+m_Group = '87cfbd9edfdf46ad96cf5a9db651f049'
 m_Size = { X = 256, Y = 128 }
-m_Sprite = '72261805-21d7-4546-90af-db9ac42b6d2c'
+m_Sprite = '7226180521d7454690afdb9ac42b6d2c'
 
 ['eng::PhysicsComponent']
 ['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]

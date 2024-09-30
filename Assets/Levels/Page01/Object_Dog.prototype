@@ -1,10 +1,10 @@
-m_Guid = 'd13758a7-20f9-428a-9e61-276558e03af5'
+m_Guid = 'd13758a720f9428a9e61276558e03af5'
 m_Name = 'Object_Dog'
 
 ['hidden::ObjectComponent']
-m_Group = '58af002b-d6d0-4e3b-be66-153bf807ba8a'
+m_Group = '58af002bd6d04e3bbe66153bf807ba8a'
 m_Size = { X = 128, Y = 128 }
-m_Sprite = '90845288-5360-4871-8100-af83609f539b'
+m_Sprite = '90845288536048718100af83609f539b'
 
 ['eng::PhysicsComponent']
 ['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]

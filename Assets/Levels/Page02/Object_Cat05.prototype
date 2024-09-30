@@ -1,10 +1,10 @@
-m_Guid = 'ad0dcb16-521d-423b-958a-cf82dfa3e46a'
+m_Guid = 'ad0dcb16521d423b958acf82dfa3e46a'
 m_Name = 'Object_Cat05'
 
 ['hidden::ObjectComponent']
-m_Group = 'e2a61925-af8d-4491-bb7b-c0e1b16f80c8'
+m_Group = 'e2a61925af8d4491bb7bc0e1b16f80c8'
 m_Size = { X = 256, Y = 256 }
-m_Sprite = '8a7faf39-3484-4de6-9a7e-e3dd51ea75cc'
+m_Sprite = '8a7faf3934844de69a7ee3dd51ea75cc'
 
 ['eng::PhysicsComponent']
 ['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]

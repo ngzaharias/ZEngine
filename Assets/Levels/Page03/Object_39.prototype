@@ -1,4 +1,4 @@
-m_Guid = 'b7461ae0-72da-4082-7c8e-f8989de83b81'
+m_Guid = 'b7461ae072da40827c8ef8989de83b81'
 m_Name = 'Object_39'
 
 ['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
@@ -17,6 +17,6 @@ m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = 1426.2965087890625, Y = -1545.4630126953125, Z = 0.0 }
 
 ['hidden::ObjectComponent']
-m_Group = '6beb24e9-f03b-4f69-359c-df72e149d41f'
+m_Group = '6beb24e9f03b4f69359cdf72e149d41f'
 m_Size = { X = 128, Y = 128 }
-m_Sprite = '424a42f6-4185-4802-9f87-0b76b6d614f0'
+m_Sprite = '424a42f6418548029f870b76b6d614f0'

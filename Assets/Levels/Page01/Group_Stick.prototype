@@ -1,10 +1,10 @@
-m_Guid = '9c2b3368-04d4-4d8a-84c7-e1971b9e5860'
+m_Guid = '9c2b336804d44d8a84c7e1971b9e5860'
 m_Name = 'Group_Stick'
 
 ['hidden::GroupComponent']
-m_Objects = [ 'f0d8d8e7-adec-4e49-a8b8-b781a2fa028f' ]
+m_Objects = [ 'f0d8d8e7adec4e49a8b8b781a2fa028f' ]
 m_Size = { X = 400, Y = 16 }
-m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
+m_Sprite = 'cc6a81798a494d699210d41b8255b326'
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = -1.0, Yaw = 0.0 }

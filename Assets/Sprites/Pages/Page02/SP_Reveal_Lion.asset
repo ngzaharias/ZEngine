@@ -1,7 +1,7 @@
-m_Guid = '08710a01-091a-4c7a-9e87-33f05649fb80'
+m_Guid = '08710a01091a4c7a9e8733f05649fb80'
 m_Name = 'SP_Reveal_Lion'
 m_Position = { X = 0, Y = 0 }
-m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
 m_Size = { X = 128, Y = 128 }
-m_Texture2D = 'a7c25c92-8280-46be-a7bb-7ea14512f6da'
+m_Texture2D = 'a7c25c92828046bea7bb7ea14512f6da'
 m_Type = 'Sprite'

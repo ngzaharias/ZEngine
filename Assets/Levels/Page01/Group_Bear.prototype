@@ -1,22 +1,22 @@
-m_Guid = 'ab4d37e0-a36f-400c-ba7f-56e47dbe9b70'
+m_Guid = 'ab4d37e0a36f400cba7f56e47dbe9b70'
 m_Name = 'Group_Bear'
 
 ['hidden::GroupComponent']
 m_Objects = [
-    'fcdc5529-80ab-4193-9af2-e87a17d69a33',
-    'db08af04-6f7e-40e2-88d2-9a6fa602c791',
-    '77988b48-b32d-4cc1-bb98-ad4284a3ff94',
-    '093460f8-0de3-4499-b77d-3fbd3e987da8',
-    '1f24efff-68f1-448a-9fbb-139a59084485',
-    '17ee61dc-747c-4396-a3eb-a488d0893e7c',
-    '196efc6b-6e48-4541-beab-265c03b4ce61',
-    '08cae3e8-6870-4647-8dfb-1b477860ea47',
-    '6e117fd0-dc2f-4e81-9e0b-fc7f8252869d',
-    '78b8edf6-f887-4d8b-a11b-fbf573473c1c',
-    '4b1be1eb-f243-491b-98cc-d7c6c2fbc1f4'
+    'fcdc552980ab41939af2e87a17d69a33',
+    'db08af046f7e40e288d29a6fa602c791',
+    '77988b48b32d4cc1bb98ad4284a3ff94',
+    '093460f80de34499b77d3fbd3e987da8',
+    '1f24efff68f1448a9fbb139a59084485',
+    '17ee61dc747c4396a3eba488d0893e7c',
+    '196efc6b6e484541beab265c03b4ce61',
+    '08cae3e8687046478dfb1b477860ea47',
+    '6e117fd0dc2f4e819e0bfc7f8252869d',
+    '78b8edf6f8874d8ba11bfbf573473c1c',
+    '4b1be1ebf243491b98ccd7c6c2fbc1f4'
 ]
 m_Size = { X = 440, Y = 16 }
-m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
+m_Sprite = 'cc6a81798a494d699210d41b8255b326'
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 2.0, Yaw = 0.0 }

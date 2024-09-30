@@ -1,19 +1,19 @@
-m_Guid = 'e2a61925-af8d-4491-bb7b-c0e1b16f80c8'
+m_Guid = 'e2a61925af8d4491bb7bc0e1b16f80c8'
 m_Name = 'Group_Cat'
 
 ['hidden::GroupComponent']
 m_Objects = [
-    '44e8cb85-49f4-46aa-822a-c54bfd78c7be',
-    '7c0f4c9c-0338-49b3-9ef0-c46cdd6141fb',
-    'dff87758-284d-45ce-8e19-d4831a9837c2',
-    '8f510448-b89e-4fa7-a4cc-630dd3320f6b',
-    'ad0dcb16-521d-423b-958a-cf82dfa3e46a',
-    'd4cae428-ebf4-4adc-92ae-d785f3aa2271',
-    'a6b502ec-a471-4090-9b08-11cf0c1df888',
-    '1d0e736e-505d-47d2-aad9-703ffde0441f'
+    '44e8cb8549f446aa822ac54bfd78c7be',
+    '7c0f4c9c033849b39ef0c46cdd6141fb',
+    'dff87758284d45ce8e19d4831a9837c2',
+    '8f510448b89e4fa7a4cc630dd3320f6b',
+    'ad0dcb16521d423b958acf82dfa3e46a',
+    'd4cae428ebf44adc92aed785f3aa2271',
+    'a6b502eca47140909b0811cf0c1df888',
+    '1d0e736e505d47d2aad9703ffde0441f'
 ]
 m_Size = { X = 360, Y = 16 }
-m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
+m_Sprite = 'cc6a81798a494d699210d41b8255b326'
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 3.0, Yaw = 0.0 }

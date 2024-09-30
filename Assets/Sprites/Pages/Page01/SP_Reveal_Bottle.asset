@@ -1,7 +1,7 @@
-m_Texture2D = '14069825-262f-480f-d187-371557e60403'
+m_Texture2D = '14069825262f480fd187371557e60403'
 m_Name = 'SP_Reveal_Bottle'
 m_Type = 'Sprite'
-m_Guid = '1781611e-b6d1-4811-b692-7f03f5d05389'
+m_Guid = '1781611eb6d14811b6927f03f5d05389'
 
 m_Position = { X = 0, Y = 0 }
 m_Size = { X = 128, Y = 128 }

@@ -1,7 +1,7 @@
-m_Guid = '7415b756-1a2c-4848-b916-9a1a33b7deae'
+m_Guid = '7415b7561a2c4848b9169a1a33b7deae'
 m_Name = 'SP_Hidden'
 m_Position = { X = 0, Y = 0 }
-m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
 m_Size = { X = 4000, Y = 4000 }
-m_Texture2D = 'f9116880-b12b-492f-3185-de7b68362cfc'
+m_Texture2D = 'f9116880b12b492f3185de7b68362cfc'
 m_Type = 'Sprite'

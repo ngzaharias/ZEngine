@@ -1,4 +1,4 @@
-m_Guid = "547bef26-99ee-41ea-99cf-83d1f39ee548"
+m_Guid = "547bef2699ee41ea99cf83d1f39ee548"
 m_Name = "Camera"
 
 ['eng::camera::ProjectionComponent']

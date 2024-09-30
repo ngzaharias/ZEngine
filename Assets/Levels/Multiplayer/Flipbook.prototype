@@ -1,9 +1,9 @@
-m_Guid = "9484117a-1b77-48d4-bbea-5570ea1bcaa0"
+m_Guid = "9484117a1b7748d4bbea5570ea1bcaa0"
 m_Name = "Flipbook"
 
 ['eng::FlipbookComponent']
 m_Size = { X = 50, Y = 50 }
-m_Flipbook = "9cf3dbdc-769e-a09a-6e4a-a0390e246666"
+m_Flipbook = "9cf3dbdc769ea09a6e4aa0390e246666"
 
 ['eng::TransformComponent']
 m_Translate = { X = 0.0, Y = 50.0, Z = 0.0 }

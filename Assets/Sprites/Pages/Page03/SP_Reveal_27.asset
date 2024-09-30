@@ -1,7 +1,7 @@
-m_Guid = '442ba9a9-ccf4-4955-b7ab-11d791f82082'
+m_Guid = '442ba9a9ccf44955b7ab11d791f82082'
 m_Name = 'SP_Reveal_27'
 m_Position = { X = 2961, Y = 1687 }
-m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
 m_Size = { X = 128, Y = 128 }
-m_Texture2D = '5111d585-69e6-4e50-61bb-a1b81d5eb290'
+m_Texture2D = '5111d58569e64e5061bba1b81d5eb290'
 m_Type = 'Sprite'

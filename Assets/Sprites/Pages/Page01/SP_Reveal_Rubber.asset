@@ -1,7 +1,7 @@
-m_Texture2D = '50f08a2e-0918-493b-4a98-5739c092ad8c'
+m_Texture2D = '50f08a2e0918493b4a985739c092ad8c'
 m_Name = 'SP_Reveal_Rubber'
 m_Type = 'Sprite'
-m_Guid = '72261805-21d7-4546-90af-db9ac42b6d2c'
+m_Guid = '7226180521d7454690afdb9ac42b6d2c'
 
 m_Position = { X = 0, Y = 0 }
 m_Size = { X = 256, Y = 128 }

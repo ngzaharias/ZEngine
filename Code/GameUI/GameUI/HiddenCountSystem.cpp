@@ -36,5 +36,3 @@ void gui::hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 	}
 }
-
-#undef SETVALUE

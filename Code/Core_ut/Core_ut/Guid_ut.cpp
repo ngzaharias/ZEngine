@@ -134,17 +134,17 @@ TEST_CASE("str::Guid. ToString.")
 {
 	{
 		str::String guid = str::Guid::Unassigned.ToString();
-		CHECK(guid == "00000000-0000-0000-0000-000000000000");
+		CHECK(guid == "00000000000000000000000000000000");
 	}
 
 	{
 		str::String guid = str::Guid({ 1, 0 }).ToString();
-		CHECK(guid == "00000001-0000-0000-0000-000000000000");
+		CHECK(guid == "00000001000000000000000000000000");
 	}
 
 	{
 		str::String guid = str::Guid({ 255, 0 }).ToString();
-		CHECK(guid == "000000ff-0000-0000-0000-000000000000");
+		CHECK(guid == "000000ff000000000000000000000000");
 	}
 }
 
@@ -154,38 +154,38 @@ TEST_CASE("str::Guid. IsValid.")
 	CHECK(str::Guid({ 1, 0 }).IsValid());
 	CHECK(str::Guid({ 255, 0 }).IsValid());
 
-	CHECK_FALSE(str::Guid::Create("00000000-0000-0000-0000-000000000000").IsValid());
-	CHECK(str::Guid::Create("01000000-0000-0000-0000-000000000000").IsValid());
-	CHECK(str::Guid::Create("FF000000-0000-0000-0000-000000000000").IsValid());
+	CHECK_FALSE(str::Guid::Create("00000000000000000000000000000000").IsValid());
+	CHECK(str::Guid::Create("01000000000000000000000000000000").IsValid());
+	CHECK(str::Guid::Create("FF000000000000000000000000000000").IsValid());
 }
 
 TEST_CASE("str::Guid. Create(str::StringView).")
 {
 	{
-		str::Guid guid = str::Guid::Create("00000000-0000-0000-0000-000000000000");
+		str::Guid guid = str::Guid::Create("00000000000000000000000000000000");
 		CHECK(guid == str::Guid::Unassigned);
 	}
 
 	{
-		str::Guid guid = str::Guid::Create("00000001-0000-0000-0000-000000000000");
+		str::Guid guid = str::Guid::Create("00000001000000000000000000000000");
 		CHECK(guid.m_Data.m_U8[0] == 1);
 	}
 
 	{
-		str::Guid guid = str::Guid::Create("000000ff-0000-0000-0000-000000000000");
+		str::Guid guid = str::Guid::Create("000000ff000000000000000000000000");
 		CHECK(guid.m_Data.m_U8[0] == 255);
 	}
 
 	INFO("String case doesn't change the value.");
 	{
-		str::Guid guidA = str::Guid::Create("000000ff-0000-0000-0000-000000000000");
-		str::Guid guidB = str::Guid::Create("000000FF-0000-0000-0000-000000000000");
+		str::Guid guidA = str::Guid::Create("000000ff000000000000000000000000");
+		str::Guid guidB = str::Guid::Create("000000FF000000000000000000000000");
 		CHECK(guidA == guidB);
 	}
 
 	INFO("Values outside 0-9 and A-F are set to 0.");
 	{
-		str::Guid guid = str::Guid::Create("0G0H0I0J-0000-0000-0000-000000000000");
+		str::Guid guid = str::Guid::Create("0G0H0I0J000000000000000000000000");
 		CHECK(guid.m_Data.m_U8[0] == 0);
 		CHECK(guid.m_Data.m_U8[1] == 0);
 		CHECK(guid.m_Data.m_U8[2] == 0);

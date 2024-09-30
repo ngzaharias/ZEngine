@@ -10,7 +10,7 @@
 
 namespace
 {
-	const str::Guid strSoundSequence = GUID("2bde153c-851a-429c-8895-7b6b0fd482fb");
+	const str::Guid strSoundSequence = GUID("2bde153c851a429c88957b6b0fd482fb");
 }
 
 void hidden::SoundSystem::Initialise(World& world)

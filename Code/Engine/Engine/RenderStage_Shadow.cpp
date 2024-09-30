@@ -22,7 +22,7 @@
 
 namespace
 {
-	const str::Guid strDepthShader = GUID("5ab1ac45-783b-4a54-aa98-92f6e36bc639");
+	const str::Guid strDepthShader = GUID("5ab1ac45783b4a54aa9892f6e36bc639");
 
 	struct Sort
 	{

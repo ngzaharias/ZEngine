@@ -1,4 +1,4 @@
-m_Guid = "2b843796-3385-4158-89c1-6c5ba899b5b6"
+m_Guid = "2b8437963385415889c16c5ba899b5b6"
 m_Name = "PointLight_02"
 
 ['eng::LightPointComponent']
@@ -6,7 +6,7 @@ m_Colour = { X = 0.0, Y = 1.0, Z = 0.0 }
 m_Range = 1000.0
 
 ['eng::StaticMeshComponent']
-m_StaticMesh = "d0284c56-3e6a-49a2-9a80-25ff2731a3de"
+m_StaticMesh = "d0284c563e6a49a29a8025ff2731a3de"
 
 ['eng::TransformComponent']
 m_Translate = { X = -300.0, Y = -200.0, Z = 700.0 }

@@ -22,7 +22,7 @@
 
 namespace
 {
-	const str::Guid strStaticMesh = str::Guid::Create("d0284c56-3e6a-49a2-9a80-25ff2731a3de");
+	const str::Guid strStaticMesh = str::Guid::Create("d0284c563e6a49a29a8025ff2731a3de");
 
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
 		ImGuiDockNodeFlags_NoCloseButton |

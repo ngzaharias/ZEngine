@@ -24,7 +24,7 @@
 
 namespace
 {
-	const str::Guid strDefaultMaterial = GUID("a4835493-ae5a-40ba-8083-06deb381c801");
+	const str::Guid strDefaultMaterial = GUID("a4835493ae5a40ba808306deb381c801");
 
 	constexpr float s_Gravity = -981.f;
 	constexpr int32 s_SimulationSubsteps = 1;

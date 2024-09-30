@@ -1,7 +1,7 @@
-m_Texture2D = '514668ca-e079-4b24-15b5-90361c0ab28e'
+m_Texture2D = '514668cae0794b2415b590361c0ab28e'
 m_Name = 'SP_Reveal_Rabbit'
 m_Type = 'Sprite'
-m_Guid = '1502c12b-b769-452f-82a5-1b9f828671d1'
+m_Guid = '1502c12bb769452f82a51b9f828671d1'
 
 m_Position = { X = 0, Y = 0 }
 m_Size = { X = 256, Y = 256}

@@ -1,7 +1,7 @@
-m_Guid = '546cff41-95e7-4280-9c17-4d2aa52d4c2c'
+m_Guid = '546cff4195e742809c174d2aa52d4c2c'
 m_Name = 'SP_Background'
 m_Type = 'Sprite'
 
 m_Position = { X = 0, Y = 0 }
 m_Size = { X = 3937, Y = 2644 }
-m_Texture2D = '52d8be40-2964-4a99-9391-a2119535a9d6'
+m_Texture2D = '52d8be4029644a999391a2119535a9d6'

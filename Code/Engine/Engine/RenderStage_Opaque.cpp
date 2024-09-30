@@ -22,9 +22,9 @@
 
 namespace
 {
-	const str::Guid strDebugDepthShader = GUID("2f0111d0-8959-4da7-a244-2b80f21b318f");
-	const str::Guid strPhongShader = GUID("ba38d79a-2027-4095-b6b4-5ceca225cb3e");
-	const str::Guid strUnlitShader = GUID("a926fe41-31fa-440b-8dd7-2086d3258b75");
+	const str::Guid strDebugDepthShader = GUID("2f0111d089594da7a2442b80f21b318f");
+	const str::Guid strPhongShader = GUID("ba38d79a20274095b6b45ceca225cb3e");
+	const str::Guid strUnlitShader = GUID("a926fe4131fa440b8dd72086d3258b75");
 
 	struct Sort
 	{

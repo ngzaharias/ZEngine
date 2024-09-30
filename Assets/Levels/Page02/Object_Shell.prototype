@@ -1,4 +1,4 @@
-m_Guid = 'a4454b37-e111-454b-a203-da901e4b3ab8'
+m_Guid = 'a4454b37e111454ba203da901e4b3ab8'
 m_Name = 'Object_Shell'
 
 ['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
@@ -28,7 +28,7 @@ m_Name = 'Object_Shell'
 	m_Translate = { X = 64.0, Y = 73.0, Z = 0.0 }
 
 ['eng::PrototypeComponent']
-m_Guid = 'a4454b37-e111-454b-a203-da901e4b3ab8'
+m_Guid = 'a4454b37e111454ba203da901e4b3ab8'
 m_Path = 'D:\Projects\C++\ZEngine\Assets\Levels\Page02\Object_Shell.prototype'
 
 ['eng::TransformComponent']
@@ -37,6 +37,6 @@ m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = -929.0, Y = -194.0, Z = 0.0 }
 
 ['hidden::ObjectComponent']
-m_Group = 'a3847948-71eb-45d6-ee8d-4d18665cab7d'
+m_Group = 'a384794871eb45d6ee8d4d18665cab7d'
 m_Size = { X = 256, Y = 256 }
-m_Sprite = '2ab82772-c00c-400f-83d6-9b0f1c86deff'
+m_Sprite = '2ab82772c00c400f83d69b0f1c86deff'

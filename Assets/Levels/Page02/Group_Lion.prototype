@@ -1,4 +1,4 @@
-m_Guid = 'b60eab31-f37f-41dc-6185-1e2e6e9c7c8d'
+m_Guid = 'b60eab31f37f41dc61851e2e6e9c7c8d'
 m_Name = 'Group_Lion'
 
 ['eng::TransformComponent']
@@ -7,6 +7,6 @@ m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = -1241.0, Y = -968.0, Z = 0.0 }
 
 ['hidden::GroupComponent']
-m_Objects = [ 'db07283c-a2ff-4fca-c9aa-96ba17eed3ad' ]
+m_Objects = [ 'db07283ca2ff4fcac9aa96ba17eed3ad' ]
 m_Size = { X = 150, Y = 20 }
-m_Sprite = 'cc6a8179-8a49-4d69-9210-d41b8255b326'
+m_Sprite = 'cc6a81798a494d699210d41b8255b326'

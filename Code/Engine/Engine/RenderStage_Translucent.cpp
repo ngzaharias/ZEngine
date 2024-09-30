@@ -42,7 +42,7 @@ namespace
 		}
 	};
 
-	const str::Guid strQuadMesh = str::Guid::Create("e94876a8-e4cc-4d16-84c8-5859b48a1af6");
+	const str::Guid strQuadMesh = str::Guid::Create("e94876a8e4cc4d1684c85859b48a1af6");
 }
 
 void eng::RenderStage_Translucent::Initialise(ecs::EntityWorld& entityWorld)

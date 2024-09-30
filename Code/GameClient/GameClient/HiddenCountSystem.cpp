@@ -33,5 +33,3 @@ void hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 }
-
-#undef SETVALUE

@@ -12,8 +12,8 @@ namespace
 	const str::StringView strTexture2D = "m_Texture2D";
 
 	// defaults
-	const str::Guid uuidShader = GUID("cbbb7d3f-f44b-45fd-b9e5-a207d92262fb");
-	const str::Guid uuidTexture2D = GUID("c6bb231c-e97f-104e-860e-b55e71988bdb");
+	const str::Guid uuidShader = GUID("cbbb7d3ff44b45fdb9e5a207d92262fb");
+	const str::Guid uuidTexture2D = GUID("c6bb231ce97f104e860eb55e71988bdb");
 }
 
 bool eng::SpriteAssetLoader::Save(SpriteAsset& asset, eng::Visitor& visitor) const

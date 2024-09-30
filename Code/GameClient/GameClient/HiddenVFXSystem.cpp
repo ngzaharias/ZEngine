@@ -12,7 +12,7 @@
 
 namespace
 {
-	const str::Guid strFlipbook = GUID("2df41b8a-e3d9-4787-4c9d-99cb2dbccf0a");
+	const str::Guid strFlipbook = GUID("2df41b8ae3d947874c9d99cb2dbccf0a");
 }
 
 void hidden::VFXSystem::Update(World& world, const GameTime& gameTime)

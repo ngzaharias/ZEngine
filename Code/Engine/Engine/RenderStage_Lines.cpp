@@ -19,7 +19,7 @@
 
 namespace
 {
-	const str::Guid strLinesShader = GUID("dad72cc0-7659-496b-83b1-c5a85a4b3695");
+	const str::Guid strLinesShader = GUID("dad72cc07659496b83b1c5a85a4b3695");
 }
 
 void eng::RenderStage_Lines::Initialise(ecs::EntityWorld& entityWorld)

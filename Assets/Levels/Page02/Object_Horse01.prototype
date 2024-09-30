@@ -1,4 +1,4 @@
-m_Guid = '5054e784-4350-40ac-42a4-cdbbcc04706d'
+m_Guid = '5054e784435040ac42a4cdbbcc04706d'
 m_Name = 'Object_Horse01'
 
 ['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
@@ -39,6 +39,6 @@ m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = -977.0, Y = 309.0, Z = 0.0 }
 
 ['hidden::ObjectComponent']
-m_Group = 'fa4fe417-2627-4656-8fb1-24d94bf5d412'
+m_Group = 'fa4fe417262746568fb124d94bf5d412'
 m_Size = { X = 256, Y = 256 }
-m_Sprite = 'b447b9a8-94fc-4a40-bbc8-b66fb48407a0'
+m_Sprite = 'b447b9a894fc4a40bbc8b66fb48407a0'

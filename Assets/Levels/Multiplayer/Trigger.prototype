@@ -1,4 +1,4 @@
-m_Guid = "e1a05691-3c6a-4aef-9f40-906c2596209e"
+m_Guid = "e1a056913c6a4aef9f40906c2596209e"
 m_Name = "Trigger"
 
 ['eng::PhysicsComponent']
@@ -10,7 +10,7 @@ m_Extents = { X = 1000.0, Y = 50.0, Z = 50.0 }
 
 ['eng::SpriteComponent']
 m_Size = { X = 1920, Y = 10 }
-m_Sprite = "207ae71c-279f-b145-e0d4-3b1d4ccd6f77"
+m_Sprite = "207ae71c279fb145e0d43b1d4ccd6f77"
 
 ['eng::TransformComponent']
 m_Translate = { X = 0.0, Y = 0.0, Z = 10.0 }

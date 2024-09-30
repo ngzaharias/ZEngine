@@ -21,9 +21,9 @@ m_Frames = [
     { m_Position = { X = 1152.0, Y = 0.0 }, m_Size = { X = 64.0, Y = 64.0 } },
     { m_Position = { X = 1216.0, Y = 0.0 }, m_Size = { X = 64.0, Y = 64.0 } }
 ]
-m_Guid = '2df41b8a-e3d9-4787-4c9d-99cb2dbccf0a'
+m_Guid = '2df41b8ae3d947874c9d99cb2dbccf0a'
 m_IsLooping = true
 m_Name = 'FP_Rainbow22'
-m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
-m_Texture2D = 'f772f7df-ea33-4ef8-b690-10f5a1ccd146'
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Texture2D = 'f772f7dfea334ef8b69010f5a1ccd146'
 m_Type = 'Flipbook'

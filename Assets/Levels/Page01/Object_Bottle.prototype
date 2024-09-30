@@ -1,10 +1,10 @@
-m_Guid = 'dc967fd7-7474-4c2f-9889-087c1eac867f'
+m_Guid = 'dc967fd774744c2f9889087c1eac867f'
 m_Name = 'Object_Bottle'
 
 ['hidden::ObjectComponent']
-m_Group = '48cdf226-13f0-439d-88c5-af2bab3772b1'
+m_Group = '48cdf22613f0439d88c5af2bab3772b1'
 m_Size = { X = 128, Y = 128 }
-m_Sprite = '1781611e-b6d1-4811-b692-7f03f5d05389'
+m_Sprite = '1781611eb6d14811b6927f03f5d05389'
 
 ['eng::PhysicsComponent']
 ['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]

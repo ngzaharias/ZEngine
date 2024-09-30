@@ -17,8 +17,8 @@
 
 namespace
 {
-	const str::Guid& strGuidA = GUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
-	const str::Guid& strGuidB = GUID("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+	const str::Guid& strGuidA = GUID("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+	const str::Guid& strGuidB = GUID("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
 
 	constexpr str::StringView strBool = "Bool";
 	constexpr str::StringView strFloat = "Float";
@@ -633,13 +633,13 @@ TEST_CASE("eng::Visitor::Guid")
 		visitor.Write(strMyKey, myGuid);
 
 		str::String string = visitor;
-		CHECK(string == "MyKey = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'");
+		CHECK(string == "MyKey = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'");
 	}
 
 	{
 		INFO("Read");
 		str::Guid myGuid = strGuidB;
-		eng::Visitor visitor = str::StringView("MyKey = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'");
+		eng::Visitor visitor = str::StringView("MyKey = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'");
 		visitor.Read(strMyKey, myGuid, strGuidB);
 
 		CHECK(myGuid == strGuidA);

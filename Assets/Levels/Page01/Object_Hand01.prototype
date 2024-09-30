@@ -1,10 +1,10 @@
-m_Guid = '5f5d9b49-c0b4-4cf2-8fe7-ebbcfb87862b'
+m_Guid = '5f5d9b49c0b44cf28fe7ebbcfb87862b'
 m_Name = 'Object_Hand01'
 
 ['hidden::ObjectComponent']
-m_Group = 'eaba7a09-8920-434c-8cc6-02a2dd8be89a'
+m_Group = 'eaba7a098920434c8cc602a2dd8be89a'
 m_Size = { X = 512, Y = 512 }
-m_Sprite = '4de8ed50-b26d-4ded-bab8-e776f556cfec'
+m_Sprite = '4de8ed50b26d4dedbab8e776f556cfec'
 
 ['eng::PhysicsComponent']
 ['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]

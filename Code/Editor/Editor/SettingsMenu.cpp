@@ -74,5 +74,3 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 			world.DestroyEntity(entity);
 	}
 }
-
-#undef SETVALUE

@@ -1,9 +1,9 @@
-m_Guid = "653612a7-8106-430d-95dd-daefacfc42d4"
+m_Guid = "653612a78106430d95dddaefacfc42d4"
 m_Name = "Page02"
 
 ['eng::SpriteComponent']
 m_Size = { X = 3280, Y = 2200 }
-m_Sprite = "3c95eaba-30b9-43fa-e6b6-a64de8ff9043"
+m_Sprite = "3c95eaba30b943fae6b6a64de8ff9043"
 
 ['eng::TransformComponent']
 m_Translate = { X = 0.0, Y = 0.0, Z = 1.0 }

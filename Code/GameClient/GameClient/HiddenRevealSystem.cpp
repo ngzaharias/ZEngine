@@ -30,7 +30,7 @@ namespace
 	constexpr Vector4f s_ColourM = Vector4f(1.f, 0.f, 1.f, 1.f);
 	constexpr Vector4f s_ColourW = Vector4f(1.f, 1.f, 1.f, 1.f);
 
-	const str::Guid strSoundSequence = GUID("2bde153c-851a-429c-8895-7b6b0fd482fb");
+	const str::Guid strSoundSequence = GUID("2bde153c851a429c88957b6b0fd482fb");
 
 	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
 	{

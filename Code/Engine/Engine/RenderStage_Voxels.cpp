@@ -20,9 +20,9 @@
 
 namespace
 {
-	const str::Guid strVoxelMesh = GUID("37cb9789-ccec-4a51-9297-fd6472e53d7a");
-	const str::Guid strVoxelShader = GUID("fffaa79e-28e0-44d9-b515-daef50fc27d2");
-	const str::Guid strVoxelTexture = GUID("f87d23dd-5e7b-4d6d-bff8-8b0eb676f80c");
+	const str::Guid strVoxelMesh = GUID("37cb9789ccec4a519297fd6472e53d7a");
+	const str::Guid strVoxelShader = GUID("fffaa79e28e044d9b515daef50fc27d2");
+	const str::Guid strVoxelTexture = GUID("f87d23dd5e7b4d6dbff88b0eb676f80c");
 }
 
 void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)

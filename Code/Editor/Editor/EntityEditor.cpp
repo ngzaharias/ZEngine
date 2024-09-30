@@ -227,7 +227,7 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 
 						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Object_", levelName);
 						auto& objectComponent = m_World.AddComponent<hidden::ObjectComponent>(entity);
-						objectComponent.m_Sprite = str::Guid::Create("52ffdca6-bc1d-6423-0eda-0e2056e9662b");
+						objectComponent.m_Sprite = str::Guid::Create("52ffdca6bc1d64230eda0e2056e9662b");
 						objectComponent.m_Size = Vector2u(128);
 
 						auto& physicsComponent = m_World.AddComponent<eng::PhysicsComponent>(entity);
@@ -239,7 +239,7 @@ void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
 					{
 						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Sprite_", levelName);
 						auto& spriteComponent = m_World.AddComponent<eng::SpriteComponent>(entity);
-						spriteComponent.m_Sprite = str::Guid::Create("52ffdca6-bc1d-6423-0eda-0e2056e9662b");
+						spriteComponent.m_Sprite = str::Guid::Create("52ffdca6bc1d64230eda0e2056e9662b");
 						spriteComponent.m_Size = Vector2u(128);
 					}
 					ImGui::EndMenu();
