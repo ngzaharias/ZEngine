@@ -8,21 +8,24 @@
 
 namespace
 {
-	const str::StringView m_Size = "m_Size";
-	const str::StringView m_Sprite = "m_Sprite";
+	const str::StringView strColour = "m_Colour";
+	const str::StringView strSize = "m_Size";
+	const str::StringView strSprite = "m_Sprite";
 }
 
 template<>
 void eng::Visitor::ReadCustom(eng::SpriteComponent& value) const
 {
-	Read(m_Sprite, value.m_Sprite, value.m_Sprite);
-	Read(m_Size, value.m_Size, value.m_Size);
+	Read(strSprite, value.m_Sprite, value.m_Sprite);
+	Read(strColour, value.m_Colour, value.m_Colour);
+	Read(strSize, value.m_Size, value.m_Size);
 }
 template<>
 void eng::Visitor::WriteCustom(const eng::SpriteComponent& value)
 {
-	Write(m_Sprite, value.m_Sprite);
-	Write(m_Size, value.m_Size);
+	Write(strSprite, value.m_Sprite);
+	Write(strColour, value.m_Colour);
+	Write(strSize, value.m_Size);
 }
 template<>
 bool imgui::Inspector::WriteCustom(eng::SpriteComponent& value)
@@ -37,6 +40,7 @@ bool imgui::Inspector::WriteCustom(eng::SpriteComponent& value)
 		const auto& manager = GetPayload<eng::AssetManager>();
 		result |= WriteAsset("m_Sprite", value.m_Sprite, manager);
 	}
+	result |= Write("m_Colour", value.m_Colour);
 	result |= Write("m_Size", value.m_Size);
 	return result;
 }

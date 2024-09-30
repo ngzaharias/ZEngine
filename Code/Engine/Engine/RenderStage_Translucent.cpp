@@ -200,9 +200,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					spriteSize.x / textureSize.x,
 					spriteSize.y / textureSize.y);
 
-				const Vector4f& colour = colour::From(id.m_Entity);
-
-				batchData.m_Colours.Emplace(colour.x, colour.y, colour.z);
+				batchData.m_Colours.Append(Vector3f::One);
 				batchData.m_Models.Append(model);
 				batchData.m_TexParams.Emplace(
 					texcoordOffset.x, texcoordOffset.y,
@@ -243,9 +241,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					spriteSize.x / textureSize.x,
 					spriteSize.y / textureSize.y);
 
-				const Vector4f& colour = colour::From(id.m_Entity);
-
-				batchData.m_Colours.Emplace(colour.x, colour.y, colour.z);
+				batchData.m_Colours.Append(spriteComponent.m_Colour);
 				batchData.m_Models.Append(model);
 				batchData.m_TexParams.Emplace(
 					texcoordOffset.x, texcoordOffset.y,
