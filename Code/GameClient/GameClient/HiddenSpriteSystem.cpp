@@ -1,6 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/HiddenSpriteSystem.h"
 
+#include "Core/VariantHelpers.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -14,13 +15,22 @@ void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 
 	using Query = ecs::query
 		::Added<const hidden::RevealComponent>
-		::Include<const hidden::ObjectComponent>
-		::Exclude<const eng::SpriteComponent>;
+		::Include<const eng::SpriteComponent, const hidden::ObjectComponent>;
 	for (const ecs::Entity& entity : world.Query<Query>())
 	{
-		const auto& hiddenComponent = world.ReadComponent<hidden::ObjectComponent>(entity);
-		auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(entity);
-		spriteComponent.m_Size = hiddenComponent.m_Size;
-		spriteComponent.m_Sprite = hiddenComponent.m_Sprite;
+		const auto& object = world.ReadComponent<hidden::ObjectComponent>(entity);
+		for (const hidden::Effect& effect : object.m_Effects)
+		{
+			auto& sprite = world.WriteComponent<eng::SpriteComponent>(entity);
+			core::VariantMatch(effect,
+				[&](const hidden::SetColour& data)
+				{
+					sprite.m_Colour = data.m_Colour;
+				},
+				[&](const hidden::SetSprite& data)
+				{
+					sprite.m_Sprite = data.m_Sprite;
+				});
+		}
 	}
 }
