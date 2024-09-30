@@ -33,6 +33,9 @@ m_Name = 'Object_Horse01'
 	m_Radius = 32.0
 	m_Translate = { X = -81.0, Y = -10.0, Z = 0.0 }
 
+['eng::SpriteComponent']
+m_Size = { X = 256, Y = 256 }
+
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
@@ -40,5 +43,7 @@ m_Translate = { X = -977.0, Y = 309.0, Z = 0.0 }
 
 ['hidden::ObjectComponent']
 m_Group = 'fa4fe417262746568fb124d94bf5d412'
-m_Size = { X = 256, Y = 256 }
+
+[['hidden::ObjectComponent'.m_Effects]]
+['hidden::ObjectComponent'.m_Effects.SetSprite]
 m_Sprite = 'b447b9a894fc4a40bbc8b66fb48407a0'

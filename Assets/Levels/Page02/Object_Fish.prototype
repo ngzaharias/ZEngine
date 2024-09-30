@@ -25,12 +25,17 @@ m_Name = 'Object_Fish'
 	m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 	m_Translate = { X = -19.0, Y = -43.0, Z = 0.0 }
 
+['eng::SpriteComponent']
+m_Size = { X = 256, Y = 256 }
+
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = -1365.0, Y = 412.0, Z = 0.0 }
 
 ['hidden::ObjectComponent']
-m_Group = '00000000000000000000000000000000'
-m_Size = { X = 256, Y = 256 }
+m_Group = 'cb72766effbf485afd8ebf9697478ea3'
+
+[['hidden::ObjectComponent'.m_Effects]]
+['hidden::ObjectComponent'.m_Effects.SetSprite]
 m_Sprite = 'f691a401a6bd40b48942a69c79dfa6ba'

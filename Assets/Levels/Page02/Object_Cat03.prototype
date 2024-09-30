@@ -3,7 +3,9 @@ m_Name = 'Object_Cat03'
 
 ['hidden::ObjectComponent']
 m_Group = 'e2a61925af8d4491bb7bc0e1b16f80c8'
-m_Size = { X = 256, Y = 512 }
+
+[['hidden::ObjectComponent'.m_Effects]]
+['hidden::ObjectComponent'.m_Effects.SetSprite]
 m_Sprite = '93b96dba3c884e8f8d92783ba08cd1fa'
 
 ['eng::PhysicsComponent']
@@ -28,6 +30,9 @@ m_Channel = 0
 m_Extents = { X = 60, Y = 30, Z = 1 }
 m_Rotate = { Roll = -22 }
 m_Translate = { X = -30, Y = -70 }
+
+['eng::SpriteComponent']
+m_Size = { X = 256, Y = 512 }
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }

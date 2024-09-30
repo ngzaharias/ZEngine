@@ -12,9 +12,7 @@ m_Name = 'Object_Bear01'
 	m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
 
 ['eng::SpriteComponent']
-m_Shader = '00000000000000000000000000000000'
 m_Size = { X = 128, Y = 128 }
-m_Sprite = '00000000000000000000000000000000'
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
@@ -24,7 +22,6 @@ m_Translate = { X = -730.0, Y = -647.0, Z = -1.0 }
 ['hidden::ObjectComponent']
 m_Group = 'ab4d37e0a36f400cba7f56e47dbe9b70'
 
-	[['hidden::ObjectComponent'.m_Effects]]
-
-		['hidden::ObjectComponent'.m_Effects.SetSprite]
-		m_Sprite = '7be11393aed445ea8c2527b208a651be'
+[['hidden::ObjectComponent'.m_Effects]]
+['hidden::ObjectComponent'.m_Effects.SetSprite]
+m_Sprite = '7be11393aed445ea8c2527b208a651be'
