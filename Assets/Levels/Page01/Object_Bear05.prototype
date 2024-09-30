@@ -3,8 +3,12 @@ m_Name = 'Object_Bear05'
 
 ['hidden::ObjectComponent']
 m_Group = 'ab4d37e0a36f400cba7f56e47dbe9b70'
-m_Size = { X = 128, Y = 128 }
-m_Sprite = '0ff5e53187334b1bb0d25496e7bb917f'
+
+
+	[['hidden::ObjectComponent'.m_Effects]]
+
+		['hidden::ObjectComponent'.m_Effects.SetSprite]
+		m_Sprite = '0ff5e53187334b1bb0d25496e7bb917f'
 
 ['eng::PhysicsComponent']
 ['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
@@ -12,6 +16,9 @@ m_Sprite = '0ff5e53187334b1bb0d25496e7bb917f'
 ['eng::PhysicsComponent'.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 32, Y = 50, Z = 1 }
+
+['eng::SpriteComponent']
+m_Size = { X = 128, Y = 128 }
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }

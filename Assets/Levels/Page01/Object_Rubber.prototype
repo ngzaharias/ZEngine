@@ -3,8 +3,12 @@ m_Name = 'Object_Rubber'
 
 ['hidden::ObjectComponent']
 m_Group = '87cfbd9edfdf46ad96cf5a9db651f049'
-m_Size = { X = 256, Y = 128 }
-m_Sprite = '7226180521d7454690afdb9ac42b6d2c'
+
+
+	[['hidden::ObjectComponent'.m_Effects]]
+
+		['hidden::ObjectComponent'.m_Effects.SetSprite]
+		m_Sprite = '7226180521d7454690afdb9ac42b6d2c'
 
 ['eng::PhysicsComponent']
 ['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
@@ -12,6 +16,9 @@ m_Sprite = '7226180521d7454690afdb9ac42b6d2c'
 ['eng::PhysicsComponent'.m_Shapes.ShapeBox]
 m_Channel = 0
 m_Extents = { X = 80, Y = 25, Z = 1 }
+
+['eng::SpriteComponent']
+m_Size = { X = 256, Y = 128 }
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }

@@ -3,8 +3,12 @@ m_Name = 'Object_Hand04'
 
 ['hidden::ObjectComponent']
 m_Group = 'eaba7a098920434c8cc602a2dd8be89a'
-m_Size = { X = 512, Y = 512 }
-m_Sprite = '8976dccf128b4d12a1a331f9f2fc9372'
+
+
+	[['hidden::ObjectComponent'.m_Effects]]
+
+		['hidden::ObjectComponent'.m_Effects.SetSprite]
+		m_Sprite = '8976dccf128b4d12a1a331f9f2fc9372'
 
 ['eng::PhysicsComponent']
 ['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
@@ -26,6 +30,9 @@ m_Translate = { X = 75, Y = -10 }
 m_Channel = 0
 m_Extents = { X = 100, Y = 30, Z = 1 }
 m_Translate = { X = 0, Y = 125 }
+
+['eng::SpriteComponent']
+m_Size = { X = 512, Y = 512 }
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
