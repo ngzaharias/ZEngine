@@ -5,13 +5,13 @@
 
 namespace eng
 {
-	struct RigidStaticComponent;
+	struct PhysicsComponent;
 }
 
 namespace hidden
 {
 	struct ObjectComponent;
-	struct RevealedComponent;
+	struct RevealComponent;
 }
 
 namespace hidden
@@ -20,9 +20,9 @@ namespace hidden
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::RigidStaticComponent,
+			eng::PhysicsComponent,
 			const hidden::ObjectComponent,
-			const hidden::RevealedComponent>;
+			const hidden::RevealComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

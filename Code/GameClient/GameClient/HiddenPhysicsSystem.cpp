@@ -4,19 +4,20 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/RigidStaticComponent.h"
-#include "GameClient/HiddenObjectComponents.h"
+#include "Engine/PhysicsComponent.h"
+#include "GameClient/HiddenObjectComponent.h"
+#include "GameClient/HiddenRevealComponent.h"
 
 void hidden::PhysicsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	using Query = ecs::query
-		::Added<const hidden::RevealedComponent>
-		::Include<const eng::RigidStaticComponent>;
+		::Added<const hidden::RevealComponent>
+		::Include<const eng::PhysicsComponent>;
 
 	for (const ecs::Entity& entity : world.Query<Query>())
 	{
-		world.RemoveComponent<eng::RigidStaticComponent>(entity);
+		world.RemoveComponent<eng::PhysicsComponent>(entity);
 	}
 }

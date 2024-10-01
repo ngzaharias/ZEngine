@@ -1,7 +1,7 @@
 project "Game"
 
-	kind "ConsoleApp"
-	--kind "WindowedApp"
+	--kind "ConsoleApp"
+	kind "WindowedApp"
 	filter "*_Editor"
 		kind "StaticLib"
 	filter {} -- disable the filter
