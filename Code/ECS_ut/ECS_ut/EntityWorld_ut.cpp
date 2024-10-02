@@ -170,24 +170,17 @@ TEST_CASE("ecs::EntityWorld. Update multiple systems.")
 TEST_CASE("ecs::EntityWorld. CreateEntity.")
 {
 	ecs::EntityWorld entityWorld;
-	CHECK(entityWorld.CreateEntity() == ecs::Entity(0));
 	CHECK(entityWorld.CreateEntity() == ecs::Entity(1));
 	CHECK(entityWorld.CreateEntity() == ecs::Entity(2));
 	CHECK(entityWorld.CreateEntity() == ecs::Entity(3));
 	CHECK(entityWorld.CreateEntity() == ecs::Entity(4));
+	CHECK(entityWorld.CreateEntity() == ecs::Entity(5));
 }
 
 TEST_CASE("ecs::EntityWorld. DestroyEntity.")
 {
 	ecs::EntityWorld entityWorld;
 	ecs::Entity entity = entityWorld.CreateEntity();
-	entityWorld.Update({});
-
-	CHECK(entity.GetIndex() == 0);
-	CHECK(entity.GetVersion() == 0);
-
-	entityWorld.DestroyEntity(entity);
-	entity = entityWorld.CreateEntity();
 	entityWorld.Update({});
 
 	CHECK(entity.GetIndex() == 1);
@@ -200,8 +193,15 @@ TEST_CASE("ecs::EntityWorld. DestroyEntity.")
 	CHECK(entity.GetIndex() == 2);
 	CHECK(entity.GetVersion() == 0);
 
+	entityWorld.DestroyEntity(entity);
 	entity = entityWorld.CreateEntity();
-	CHECK(entity.GetIndex() == 0);
+	entityWorld.Update({});
+
+	CHECK(entity.GetIndex() == 3);
+	CHECK(entity.GetVersion() == 0);
+
+	entity = entityWorld.CreateEntity();
+	CHECK(entity.GetIndex() == 1);
 	CHECK(entity.GetVersion() == 1);
 }
 
