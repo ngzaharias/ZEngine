@@ -1,69 +1,22 @@
 #include <Catch2/catch.hpp>
 
+#include "Core/GameTime.h"
 #include "Core/TypeList.h"
 #include "ECS/Component.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "ECS/QueryRegistry.h"
 
-class GameTime {};
-
 namespace
 {
-	struct ComponentA : public ecs::Component<ComponentA> 
-	{ 
-		ComponentA() = default;
-		ComponentA(bool val) : m_Bool(val) { }
-		bool m_Bool = false; 
-	};
+	struct ComponentA : public ecs::Component<ComponentA> {};
+	struct ComponentB : public ecs::Component<ComponentB> {};
 
-	struct ComponentB : public ecs::Component<ComponentB> 
-	{ 
-		ComponentB() = default;
-		ComponentB(int32 val) : m_Int32(val) { }
-		int32 m_Int32 = 0;
-	};
-
-	struct ComponentC : public ecs::Component<ComponentC>
-	{
-		ComponentC() = default;
-		ComponentC(float val) : m_Float(val) { }
-		float m_Float = 0.f;
-	};
-
-	struct SingletonA : public ecs::SingletonComponent<SingletonA>
-	{
-		SingletonA() = default;
-		SingletonA(bool val) : m_Bool(val) { }
-		bool m_Bool = false;
-	};
-
-	struct SingletonB : public ecs::SingletonComponent<SingletonB>
-	{
-		SingletonB() = default;
-		SingletonB(int32 val) : m_Int32(val) { }
-		int32 m_Int32 = 0;
-	};
-
-	struct SingletonC : public ecs::SingletonComponent<SingletonC>
-	{
-		SingletonC() = default;
-		SingletonC(float val) : m_Float(val) { }
-		float m_Float = 0.f;
-	};
+	struct SingletonA : public ecs::SingletonComponent<SingletonA> {};
+	struct SingletonB : public ecs::SingletonComponent<SingletonB> {};
 
 	class ResourceA { };
 	class ResourceB { };
-
-	using WorldView = ecs::WorldView<
-		ComponentA,
-		const ComponentB,
-		const ComponentC,
-		SingletonA,
-		const SingletonB,
-		const SingletonC,
-		const ResourceA, 
-		const ResourceB>;
 
 	struct RAIIHelper
 	{
@@ -71,39 +24,15 @@ namespace
 		{
 			m_EntityWorld.RegisterComponent<ComponentA>();
 			m_EntityWorld.RegisterComponent<ComponentB>();
-			m_EntityWorld.RegisterComponent<ComponentC>();
 			m_EntityWorld.RegisterSingleton<SingletonA>();
 			m_EntityWorld.RegisterSingleton<SingletonB>();
-			m_EntityWorld.RegisterSingleton<SingletonC>();
-		}
-
-		ecs::EntityWorld m_EntityWorld;
-	};
-
-	struct QueryHelper
-	{
-		QueryHelper()
-		{
-			m_EntityWorld.RegisterComponent<ComponentA>();
-			m_EntityWorld.RegisterComponent<ComponentB>();
-			m_EntityWorld.RegisterComponent<ComponentC>();
-			m_EntityWorld.RegisterSingleton<SingletonA>();
-			m_EntityWorld.RegisterSingleton<SingletonB>();
-			m_EntityWorld.RegisterSingleton<SingletonC>();
+			m_EntityWorld.RegisterResource<ResourceA>(m_ResourceA);
+			m_EntityWorld.RegisterResource<ResourceB>(m_ResourceB);
 			m_EntityWorld.Initialise();
 
-			WorldView worldView = m_EntityWorld.GetWorldView<WorldView>();
-
-			m_EntityA = worldView.CreateEntity();
-			m_EntityB = worldView.CreateEntity();
-			m_EntityC = worldView.CreateEntity();
-			m_EntityAB = worldView.CreateEntity();
-
-			worldView.AddComponent<ComponentA>(m_EntityA);
-			worldView.AddComponent<ComponentB>(m_EntityB);
-			worldView.AddComponent<ComponentC>(m_EntityC);
-			worldView.AddComponent<ComponentA>(m_EntityAB);
-			worldView.AddComponent<ComponentB>(m_EntityAB);
+			m_EntityA = m_EntityWorld.CreateEntity();
+			m_EntityB = m_EntityWorld.CreateEntity();
+			m_EntityC = m_EntityWorld.CreateEntity();
 			m_EntityWorld.Update({});
 		}
 
@@ -111,14 +40,16 @@ namespace
 		ecs::Entity m_EntityA = {};
 		ecs::Entity m_EntityB = {};
 		ecs::Entity m_EntityC = {};
-		ecs::Entity m_EntityAB = {};
+		ResourceA m_ResourceA = {};
+		ResourceB m_ResourceB = {};
 	};
 }
 
 TEST_CASE("ecs::WorldView. CreateEntity.")
 {
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
+	using WorldView = ecs::WorldView<>;
+
+	ecs::EntityWorld entityWorld;
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 
 	CHECK(worldView.CreateEntity() == ecs::Entity(1));
@@ -130,8 +61,9 @@ TEST_CASE("ecs::WorldView. CreateEntity.")
 
 TEST_CASE("ecs::WorldView. DestroyEntity.")
 {
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
+	using WorldView = ecs::WorldView<>;
+
+	ecs::EntityWorld entityWorld;
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 
 	ecs::Entity entity = worldView.CreateEntity();
@@ -161,8 +93,9 @@ TEST_CASE("ecs::WorldView. DestroyEntity.")
 
 TEST_CASE("ecs::WorldView. IsAlive.")
 {
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
+	using WorldView = ecs::WorldView<>;
+
+	ecs::EntityWorld entityWorld;
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 
 	ecs::Entity entity;
@@ -177,62 +110,12 @@ TEST_CASE("ecs::WorldView. IsAlive.")
 	CHECK(!worldView.IsAlive(entity));
 }
 
-TEST_CASE("ecs::WorldView. HasComponent.")
+TEST_CASE("ecs::WorldView. AddComponent.")
 {
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
 
-	ecs::Entity entity = worldView.CreateEntity();
-	CHECK(!worldView.HasComponent<ComponentA>(entity));
-	CHECK(!worldView.HasComponent<ComponentB>(entity));
-
-	worldView.AddComponent<ComponentA>(entity);
-	worldView.AddComponent<ComponentB>(entity);
-	entityWorld.Update({});
-
-	CHECK(worldView.HasComponent<ComponentA>(entity));
-	CHECK(worldView.HasComponent<ComponentB>(entity));
-}
-
-TEST_CASE("ecs::WorldView. GetComponent.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-
-	//CHECK_THROWS(worldView.WriteComponent<ComponentA>(entity));
-	//CHECK_THROWS(worldView.WriteComponent<ComponentB>(entity));
-
-	ecs::Entity entity = worldView.CreateEntity();
-	worldView.AddComponent<ComponentA>(entity);
-	worldView.AddComponent<ComponentB>(entity);
-	entityWorld.Update({});
-
-	CHECK_NOTHROW(worldView.WriteComponent<ComponentA>(entity));
-	CHECK_NOTHROW(worldView.WriteComponent<ComponentB>(entity));
-}
-
-TEST_CASE("ecs::WorldView. GetSingleton.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	entityWorld.Initialise();
-
-	//CHECK_THROWS(worldView.WriteSingleton<SingletonA>());
-	//CHECK_THROWS(worldView.WriteSingleton<SingletonB>());
-
-	entityWorld.Update({});
-
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-	CHECK_NOTHROW(worldView.WriteSingleton<SingletonA>());
-	CHECK_NOTHROW(worldView.WriteSingleton<SingletonB>());
-}
-
-TEST_CASE("ecs::WorldView. AddComponent - Single.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 	ecs::Entity entity = worldView.CreateEntity();
 
@@ -243,256 +126,312 @@ TEST_CASE("ecs::WorldView. AddComponent - Single.")
 	CHECK(!worldView.HasComponent<ComponentB>(entity));
 }
 
-TEST_CASE("ecs::WorldView. AddComponent - Double.")
+TEST_CASE("ecs::WorldView. RemoveComponent.")
 {
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-	ecs::Entity entity = worldView.CreateEntity();
+	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
 
-	worldView.AddComponent<ComponentA>(entity);
-	entityWorld.Update({});
-	CHECK(worldView.HasComponent<ComponentA>(entity));
-
-	//entityWorld.AddComponent<ComponentA>(entity);
-	//CHECK_THROWS(entityWorld.Update({}));
-}
-
-TEST_CASE("ecs::WorldView. AddComponent - Vardic.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-	ecs::Entity entity = worldView.CreateEntity();
-
-	const auto& componentA = worldView.AddComponent<ComponentA>(entity, true);
-	const auto& componentB = worldView.AddComponent<ComponentB>(entity, -1337);
-	CHECK(componentA.m_Bool == true);
-	CHECK(componentB.m_Int32 == -1337);
-}
-
-TEST_CASE("ecs::WorldView. RemoveComponent - Single.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-
-	ecs::Entity entity = worldView.CreateEntity();
-	worldView.AddComponent<ComponentA>(entity);
-	worldView.AddComponent<ComponentB>(entity);
-	entityWorld.Update({});
-
-	CHECK_NOTHROW(worldView.RemoveComponent<ComponentA>(entity));
-	entityWorld.Update({});
-
-	CHECK(!worldView.HasComponent<ComponentA>(entity));
-	CHECK(worldView.HasComponent<ComponentB>(entity));
-}
-
-TEST_CASE("ecs::WorldView. RemoveComponent - Double.")
-{
-	RAIIHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-
-	ecs::Entity entity = worldView.CreateEntity();
-	worldView.AddComponent<ComponentA>(entity);
-	worldView.AddComponent<ComponentB>(entity);
-	entityWorld.Update({});
-
-	CHECK_NOTHROW(worldView.RemoveComponent<ComponentA>(entity));
-	entityWorld.Update({});
-
-	CHECK(!worldView.HasComponent<ComponentA>(entity));
-	CHECK(worldView.HasComponent<ComponentB>(entity));
-
-	//worldView.RemoveComponent<ComponentA>(entity);
-	//CHECK_THROWS(entityWorld.Update({}));
-}
-
-TEST_CASE("ecs::WorldView. Query - Added.")
-{
-	QueryHelper raiihelper;
-	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-
-	{
-		INFO("Query is active on the next frame.");
-		CHECK(worldView.Query<ecs::query::Added<ComponentA>>().GetCount() == 2);
-		CHECK(worldView.Query<ecs::query::Added<ComponentB>>().GetCount() == 2);
-		CHECK(worldView.Query<ecs::query::Added<ComponentC>>().GetCount() == 1);
-		CHECK(worldView.Query<ecs::query::Added<ComponentA, ComponentB>>().GetCount() == 1);
-	}
-
-	{
-		INFO("Query is cleared on the frame after.");
-		entityWorld.Update({});
-
-		CHECK(worldView.Query<ecs::query::Added<ComponentA>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Added<ComponentB>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Added<ComponentC>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Added<ComponentA, ComponentB>>().IsEmpty());
-	}
-}
-
-TEST_CASE("ecs::WorldView. Query - Removed.")
-{
-	QueryHelper raii;
+	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	ecs::Entity entity = worldView.CreateEntity();
+	worldView.AddComponent<ComponentA>(entity);
+	worldView.AddComponent<ComponentB>(entity);
+	entityWorld.Update({});
+
+	CHECK_NOTHROW(worldView.RemoveComponent<ComponentA>(entity));
+	entityWorld.Update({});
+
+	CHECK(!worldView.HasComponent<ComponentA>(entity));
+	CHECK(worldView.HasComponent<ComponentB>(entity));
+}
+
+TEST_CASE("ecs::WorldView. HasComponent.")
+{
+	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	CHECK(!worldView.HasComponent<ComponentA>(raii.m_EntityA));
+	CHECK(!worldView.HasComponent<ComponentB>(raii.m_EntityA));
+
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	worldView.AddComponent<ComponentB>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	CHECK(worldView.HasComponent<ComponentA>(raii.m_EntityA));
+	CHECK(worldView.HasComponent<ComponentB>(raii.m_EntityA));
+}
+
+TEST_CASE("ecs::WorldView. ReadComponent.")
+{
+	using WorldView = ecs::WorldView<const ComponentA, const ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	worldView.AddComponent<ComponentB>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	CHECK_NOTHROW(worldView.ReadComponent<ComponentA>(raii.m_EntityA));
+	CHECK_NOTHROW(worldView.ReadComponent<ComponentB>(raii.m_EntityA));
+}
+
+TEST_CASE("ecs::WorldView. WriteComponent.")
+{
+	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	worldView.AddComponent<ComponentB>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	CHECK_NOTHROW(worldView.WriteComponent<ComponentA>(raii.m_EntityA));
+	CHECK_NOTHROW(worldView.WriteComponent<ComponentB>(raii.m_EntityA));
+}
+
+TEST_CASE("ecs::WorldView. ReadSingleton.")
+{
+	using WorldView = ecs::WorldView<const SingletonA, const SingletonB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	CHECK_NOTHROW(worldView.ReadSingleton<SingletonA>());
+	CHECK_NOTHROW(worldView.ReadSingleton<SingletonB>());
+}
+
+TEST_CASE("ecs::WorldView. WriteSingleton.")
+{
+	using WorldView = ecs::WorldView<SingletonA, SingletonB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	CHECK_NOTHROW(worldView.WriteSingleton<SingletonA>());
+	CHECK_NOTHROW(worldView.WriteSingleton<SingletonB>());
+}
+
+TEST_CASE("ecs::WorldView. ReadResource.")
+{
+	using WorldView = ecs::WorldView<const ResourceA, const ResourceB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	CHECK_NOTHROW(worldView.ReadResource<ResourceA>());
+	CHECK_NOTHROW(worldView.ReadResource<ResourceB>());
+}
+
+TEST_CASE("ecs::WorldView. WriteResource.")
+{
+	using WorldView = ecs::WorldView<ResourceA, ResourceB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	CHECK_NOTHROW(worldView.WriteResource<ResourceA>());
+	CHECK_NOTHROW(worldView.WriteResource<ResourceB>());
+}
+
+TEST_CASE("ecs::WorldView. Components that are added to an entity are present in the added query.")
+{
+	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	worldView.AddComponent<ComponentB>(raii.m_EntityB);
+	worldView.AddComponent<ComponentA>(raii.m_EntityC);
+	worldView.AddComponent<ComponentB>(raii.m_EntityC);
+	entityWorld.Update({});
+
+	// Query is active on the next frame.
+	CHECK(worldView.Query<ecs::query::Added<ComponentA>>().GetCount() == 2);
+	CHECK(worldView.Query<ecs::query::Added<ComponentB>>().GetCount() == 2);
+	CHECK(worldView.Query<ecs::query::Added<ComponentA, ComponentB>>().GetCount() == 1);
+
+	// Query is cleared on the frame after.
+	entityWorld.Update({});
+
+	CHECK(worldView.Query<ecs::query::Added<ComponentA>>().IsEmpty());
+	CHECK(worldView.Query<ecs::query::Added<ComponentB>>().IsEmpty());
+	CHECK(worldView.Query<ecs::query::Added<ComponentA, ComponentB>>().IsEmpty());
+}
+
+TEST_CASE("ecs::WorldView. Components that are removed from an entity are present in the removed query.")
+{
+	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	worldView.AddComponent<ComponentB>(raii.m_EntityB);
+	worldView.AddComponent<ComponentA>(raii.m_EntityC);
+	worldView.AddComponent<ComponentB>(raii.m_EntityC);
+	entityWorld.Update({});
 
 	worldView.RemoveComponent<ComponentA>(raii.m_EntityA);
 	worldView.RemoveComponent<ComponentB>(raii.m_EntityB);
-	worldView.RemoveComponent<ComponentC>(raii.m_EntityC);
-	worldView.RemoveComponent<ComponentA>(raii.m_EntityAB);
-	worldView.RemoveComponent<ComponentB>(raii.m_EntityAB);
+	worldView.RemoveComponent<ComponentA>(raii.m_EntityC);
+	worldView.RemoveComponent<ComponentB>(raii.m_EntityC);
 	entityWorld.Update({});
 
-	{
-		INFO("Query is active on the next frame.");
-		CHECK(worldView.Query<ecs::query::Removed<ComponentA>>().GetCount() == 2);
-		CHECK(worldView.Query<ecs::query::Removed<ComponentB>>().GetCount() == 2);
-		CHECK(worldView.Query<ecs::query::Removed<ComponentC>>().GetCount() == 1);
-		CHECK(worldView.Query<ecs::query::Removed<ComponentA, ComponentB>>().GetCount() == 1);
-	}
+	// Query is active on the next frame.
+	CHECK(worldView.Query<ecs::query::Removed<ComponentA>>().GetCount() == 2);
+	CHECK(worldView.Query<ecs::query::Removed<ComponentB>>().GetCount() == 2);
+	CHECK(worldView.Query<ecs::query::Removed<ComponentA, ComponentB>>().GetCount() == 1);
 
 	entityWorld.Update({});
 
-	{
-		INFO("Query is cleared on the frame after.");
-		CHECK(worldView.Query<ecs::query::Removed<ComponentA>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Removed<ComponentB>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Removed<ComponentC>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Removed<ComponentA, ComponentB>>().IsEmpty());
-	}
+	// Query is cleared on the frame after.
+	CHECK(worldView.Query<ecs::query::Removed<ComponentA>>().IsEmpty());
+	CHECK(worldView.Query<ecs::query::Removed<ComponentB>>().IsEmpty());
+	CHECK(worldView.Query<ecs::query::Removed<ComponentA, ComponentB>>().IsEmpty());
 }
 
-TEST_CASE("ecs::WorldView. Query - Updated.")
+TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using ReadComponent.")
 {
-	QueryHelper raii;
+	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 
-	{
-		INFO("Non-const calls to GetComponent are added to the Updated Query.");
-		worldView.WriteComponent<ComponentA>(raii.m_EntityA);
-		worldView.WriteComponent<ComponentB>(raii.m_EntityB);
-		worldView.WriteComponent<ComponentC>(raii.m_EntityC);
-		worldView.WriteComponent<ComponentA>(raii.m_EntityAB);
-		worldView.WriteComponent<ComponentB>(raii.m_EntityAB);
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	worldView.AddComponent<ComponentB>(raii.m_EntityB);
+	worldView.AddComponent<ComponentA>(raii.m_EntityC);
+	worldView.AddComponent<ComponentB>(raii.m_EntityC);
+	entityWorld.Update({});
 
-		INFO("Query is active on the next frame.");
-		entityWorld.Update({});
-		CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().GetCount() == 2);
-		CHECK(worldView.Query<ecs::query::Updated<ComponentB>>().GetCount() == 2);
-		CHECK(worldView.Query<ecs::query::Updated<ComponentC>>().GetCount() == 1);
-		CHECK(worldView.Query<ecs::query::Updated<ComponentA, ComponentB>>().GetCount() == 1);
+	worldView.ReadComponent<ComponentA>(raii.m_EntityA);
+	worldView.ReadComponent<ComponentB>(raii.m_EntityB);
+	worldView.ReadComponent<ComponentA>(raii.m_EntityC);
+	worldView.ReadComponent<ComponentB>(raii.m_EntityC);
+	entityWorld.Update({});
 
-		INFO("Query is cleared on the frame after.");
-		entityWorld.Update({});
-		CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Updated<ComponentB>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Updated<ComponentC>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Updated<ComponentA, ComponentB>>().IsEmpty());
-	}
-
-	{
-		INFO("Const calls to GetComponent are not added to the Updated Query.");
-		worldView.ReadComponent<ComponentA>(raii.m_EntityA);
-		worldView.ReadComponent<ComponentB>(raii.m_EntityB);
-		worldView.ReadComponent<ComponentC>(raii.m_EntityC);
-		worldView.ReadComponent<ComponentA>(raii.m_EntityAB);
-		worldView.ReadComponent<ComponentB>(raii.m_EntityAB);
-
-		entityWorld.Update({});
-		CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Updated<ComponentB>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Updated<ComponentC>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Updated<ComponentA, ComponentB>>().IsEmpty());
-	}
+	CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().IsEmpty());
+	CHECK(worldView.Query<ecs::query::Updated<ComponentB>>().IsEmpty());
+	CHECK(worldView.Query<ecs::query::Updated<ComponentA, ComponentB>>().IsEmpty());
 }
 
-TEST_CASE("ecs::WorldView. Query - Include.")
+TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using WriteComponent.")
 {
-	QueryHelper raii;
+	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 
-	{
-		CHECK(worldView.Query<ecs::query::Include<ComponentA>>().GetCount() == 2);
-		CHECK(worldView.Query<ecs::query::Include<ComponentB>>().GetCount() == 2);
-		CHECK(worldView.Query<ecs::query::Include<ComponentC>>().GetCount() == 1);
-		CHECK(worldView.Query<ecs::query::Include<ComponentA, ComponentB>>().GetCount() == 1);
-	}
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	worldView.AddComponent<ComponentB>(raii.m_EntityB);
+	worldView.AddComponent<ComponentA>(raii.m_EntityC);
+	worldView.AddComponent<ComponentB>(raii.m_EntityC);
+	entityWorld.Update({});
 
-	{
-		INFO("Query is cleared when component is removed.");
-		worldView.RemoveComponent<ComponentA>(raii.m_EntityA);
-		worldView.RemoveComponent<ComponentB>(raii.m_EntityB);
-		worldView.RemoveComponent<ComponentC>(raii.m_EntityC);
-		worldView.RemoveComponent<ComponentA>(raii.m_EntityAB);
-		worldView.RemoveComponent<ComponentB>(raii.m_EntityAB);
-		entityWorld.Update({});
+	worldView.WriteComponent<ComponentA>(raii.m_EntityA);
+	worldView.WriteComponent<ComponentB>(raii.m_EntityB);
+	worldView.WriteComponent<ComponentA>(raii.m_EntityC);
+	worldView.WriteComponent<ComponentB>(raii.m_EntityC);
+	entityWorld.Update({});
 
-		CHECK(worldView.Query<ecs::query::Include<ComponentA>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Include<ComponentB>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Include<ComponentC>>().IsEmpty());
-		CHECK(worldView.Query<ecs::query::Include<ComponentA, ComponentB>>().IsEmpty());
-	}
-}
-
-TEST_CASE("ecs::WorldView. Query - Exclude.")
-{
-	QueryHelper raii;
-	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-
-	// #note: singleton component needs to be included
-	CHECK(worldView.Query<ecs::query::Exclude<ComponentA>>().GetCount() == 3);
-	CHECK(worldView.Query<ecs::query::Exclude<ComponentB>>().GetCount() == 3);
-	CHECK(worldView.Query<ecs::query::Exclude<ComponentC>>().GetCount() == 4);
-	CHECK(worldView.Query<ecs::query::Exclude<ComponentA, ComponentB>>().GetCount() == 2);
-
-	{
-		INFO("Query is cleared when component is added.");
-		worldView.AddComponent<ComponentA>(raii.m_EntityB);
-		worldView.AddComponent<ComponentA>(raii.m_EntityC);
-		worldView.AddComponent<ComponentB>(raii.m_EntityA);
-		worldView.AddComponent<ComponentB>(raii.m_EntityC);
-		worldView.AddComponent<ComponentC>(raii.m_EntityA);
-		worldView.AddComponent<ComponentC>(raii.m_EntityB);
-		worldView.AddComponent<ComponentC>(raii.m_EntityAB);
-		entityWorld.Update({});
-
-		CHECK(worldView.Query<ecs::query::Exclude<ComponentA>>().GetCount() == 1);
-		CHECK(worldView.Query<ecs::query::Exclude<ComponentB>>().GetCount() == 1);
-		CHECK(worldView.Query<ecs::query::Exclude<ComponentC>>().GetCount() == 1);
-		CHECK(worldView.Query<ecs::query::Exclude<ComponentA, ComponentB>>().GetCount() == 1);
-	}
-}
-
-TEST_CASE("ecs::WorldView. Query - Include + Exclude.")
-{
-	QueryHelper raii;
-	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
-
-	CHECK(worldView.Query<ecs::query::Include<ComponentA>::Exclude<ComponentB>>().GetCount() == 1);
-	CHECK(worldView.Query<ecs::query::Include<ComponentB>::Exclude<ComponentA>>().GetCount() == 1);
-}
-
-
-TEST_CASE("ecs::WorldView. Query - Updated + Removed.")
-{
-	QueryHelper raii;
-	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	// Query is active on the next frame.
+	CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().GetCount() == 2);
+	CHECK(worldView.Query<ecs::query::Updated<ComponentB>>().GetCount() == 2);
+	CHECK(worldView.Query<ecs::query::Updated<ComponentA, ComponentB>>().GetCount() == 1);
 
 	entityWorld.Update({});
-	{
-		worldView.WriteComponent<ComponentA>(raii.m_EntityA);
-		worldView.RemoveComponent<ComponentA>(raii.m_EntityA);
-	}
+
+	// Query is cleared on the frame after.
+	CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().IsEmpty());
+	CHECK(worldView.Query<ecs::query::Updated<ComponentB>>().IsEmpty());
+	CHECK(worldView.Query<ecs::query::Updated<ComponentA, ComponentB>>().IsEmpty());
+}
+
+TEST_CASE("ecs::WorldView. Components that are added to an entity are present in the include query.")
+{
+	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	worldView.AddComponent<ComponentB>(raii.m_EntityB);
+	worldView.AddComponent<ComponentA>(raii.m_EntityC);
+	worldView.AddComponent<ComponentB>(raii.m_EntityC);
+	entityWorld.Update({});
+
+	CHECK(worldView.Query<ecs::query::Include<ComponentA>>().GetCount() == 2);
+	CHECK(worldView.Query<ecs::query::Include<ComponentB>>().GetCount() == 2);
+	CHECK(worldView.Query<ecs::query::Include<ComponentA, ComponentB>>().GetCount() == 1);
+
+	// Query is cleared when component is removed.
+	worldView.RemoveComponent<ComponentA>(raii.m_EntityA);
+	worldView.RemoveComponent<ComponentB>(raii.m_EntityB);
+	worldView.RemoveComponent<ComponentA>(raii.m_EntityC);
+	worldView.RemoveComponent<ComponentB>(raii.m_EntityC);
+	entityWorld.Update({});
+
+	CHECK(worldView.Query<ecs::query::Include<ComponentA>>().IsEmpty());
+	CHECK(worldView.Query<ecs::query::Include<ComponentB>>().IsEmpty());
+	CHECK(worldView.Query<ecs::query::Include<ComponentA, ComponentB>>().IsEmpty());
+}
+
+TEST_CASE("ecs::WorldView. Components that are removed from an entity are present in the exclude query.")
+{
+	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	// #note: singleton component count towards being excluded
+	CHECK(worldView.Query<ecs::query::Exclude<ComponentA>>().GetCount() == 4);
+	CHECK(worldView.Query<ecs::query::Exclude<ComponentB>>().GetCount() == 4);
+	CHECK(worldView.Query<ecs::query::Exclude<ComponentA, ComponentB>>().GetCount() == 4);
+
+	// Query is cleared when component is added.
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	worldView.AddComponent<ComponentB>(raii.m_EntityB);
+	worldView.AddComponent<ComponentA>(raii.m_EntityC);
+	worldView.AddComponent<ComponentB>(raii.m_EntityC);
+	entityWorld.Update({});
+
+	CHECK(worldView.Query<ecs::query::Exclude<ComponentA>>().GetCount() == 2);
+	CHECK(worldView.Query<ecs::query::Exclude<ComponentB>>().GetCount() == 2);
+	CHECK(worldView.Query<ecs::query::Exclude<ComponentA, ComponentB>>().GetCount() == 1);
+}
+
+TEST_CASE("ecs::WorldView. Components that are updated and removed in the same frame are only present in the removed query.")
+{
+	using WorldView = ecs::WorldView<ComponentA>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	worldView.WriteComponent<ComponentA>(raii.m_EntityA);
+	worldView.RemoveComponent<ComponentA>(raii.m_EntityA);
+
 	entityWorld.Update({});
 
 	CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().GetCount() == 0);

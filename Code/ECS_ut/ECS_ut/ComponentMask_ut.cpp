@@ -10,87 +10,55 @@ namespace
 {
 	struct ComponentA : public ecs::Component<ComponentA> { };
 	struct ComponentB : public ecs::Component<ComponentB> { };
-	struct ComponentC : public ecs::Component<ComponentC> { };
+
+	const int32 s_ComponentAId = ToTypeIndex<ComponentA, ecs::ComponentTag>();
+	const int32 s_ComponentBId = ToTypeIndex<ComponentB, ecs::ComponentTag>();
 }
 
-TEST_CASE("ecs::ComponentMask. No Components.")
+TEST_CASE("ecs::ComponentMask. No components.")
 {
-	const int32 componentA = ToTypeIndex<ComponentA, ecs::ComponentTag>();
-	const int32 componentB = ToTypeIndex<ComponentB, ecs::ComponentTag>();
-	const int32 componentC = ToTypeIndex<ComponentC, ecs::ComponentTag>();
-
 	auto componentMask = ecs::ToComponentMask<>();
-	CHECK(componentMask.Has(componentA) == false);
-	CHECK(componentMask.Has(componentB) == false);
-	CHECK(componentMask.Has(componentC) == false);
+	CHECK(componentMask.Has(s_ComponentAId) == false);
+	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::ComponentMask. Single Component.")
+TEST_CASE("ecs::ComponentMask. Single component.")
 {
-	const int32 componentA = ToTypeIndex<ComponentA, ecs::ComponentTag>();
-	const int32 componentB = ToTypeIndex<ComponentB, ecs::ComponentTag>();
-	const int32 componentC = ToTypeIndex<ComponentC, ecs::ComponentTag>();
-
 	auto componentMask = ecs::ToComponentMask<ComponentA>();
-	CHECK(componentMask.Has(componentA) == true);
-	CHECK(componentMask.Has(componentB) == false);
-	CHECK(componentMask.Has(componentC) == false);
+	CHECK(componentMask.Has(s_ComponentAId) == true);
+	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::ComponentMask. Multiple Components.")
+TEST_CASE("ecs::ComponentMask. Multiple components.")
 {
-	const int32 componentA = ToTypeIndex<ComponentA, ecs::ComponentTag>();
-	const int32 componentB = ToTypeIndex<ComponentB, ecs::ComponentTag>();
-	const int32 componentC = ToTypeIndex<ComponentC, ecs::ComponentTag>();
-
 	auto componentMask = ecs::ToComponentMask<ComponentA, ComponentB>();
-	CHECK(componentMask.Has(componentA) == true);
-	CHECK(componentMask.Has(componentB) == true);
-	CHECK(componentMask.Has(componentC) == false);
+	CHECK(componentMask.Has(s_ComponentAId) == true);
+	CHECK(componentMask.Has(s_ComponentBId) == true);
 }
 
-TEST_CASE("ecs::ComponentMask. No Component TypeList.")
+TEST_CASE("ecs::ComponentMask. TypeList with no components.")
 {
-	const int32 componentA = ToTypeIndex<ComponentA, ecs::ComponentTag>();
-	const int32 componentB = ToTypeIndex<ComponentB, ecs::ComponentTag>();
-	const int32 componentC = ToTypeIndex<ComponentC, ecs::ComponentTag>();
-
 	auto componentMask = ecs::ToComponentMask(TypeList<>{});
-	CHECK(componentMask.Has(componentA) == false);
-	CHECK(componentMask.Has(componentB) == false);
-	CHECK(componentMask.Has(componentC) == false);
+	CHECK(componentMask.Has(s_ComponentAId) == false);
+	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::ComponentMask. Single Component TypeList.")
+TEST_CASE("ecs::ComponentMask. TypeList with one component.")
 {
-	const int32 componentA = ToTypeIndex<ComponentA, ecs::ComponentTag>();
-	const int32 componentB = ToTypeIndex<ComponentB, ecs::ComponentTag>();
-	const int32 componentC = ToTypeIndex<ComponentC, ecs::ComponentTag>();
-
 	auto componentMask = ecs::ToComponentMask(TypeList<ComponentA>{});
-	CHECK(componentMask.Has(componentA) == true);
-	CHECK(componentMask.Has(componentB) == false);
-	CHECK(componentMask.Has(componentC) == false);
+	CHECK(componentMask.Has(s_ComponentAId) == true);
+	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::ComponentMask. Multiple Component TypeList.")
+TEST_CASE("ecs::ComponentMask. TypeList with multiple components.")
 {
-	const int32 componentA = ToTypeIndex<ComponentA, ecs::ComponentTag>();
-	const int32 componentB = ToTypeIndex<ComponentB, ecs::ComponentTag>();
-	const int32 componentC = ToTypeIndex<ComponentC, ecs::ComponentTag>();
-
 	auto componentMask = ecs::ToComponentMask(TypeList<ComponentA, ComponentB>{});
-	CHECK(componentMask.Has(componentA) == true);
-	CHECK(componentMask.Has(componentB) == true);
-	CHECK(componentMask.Has(componentC) == false);
+	CHECK(componentMask.Has(s_ComponentAId) == true);
+	CHECK(componentMask.Has(s_ComponentBId) == true);
 }
 
-TEST_CASE("ecs::ComponentMask. Non-const == Const.")
+TEST_CASE("ecs::ComponentMask. Const and non-const result in the same mask.")
 {
-	const int32 componentA = ToTypeIndex<ComponentA, ecs::ComponentTag>();
-	const int32 componentB = ToTypeIndex<ComponentB, ecs::ComponentTag>();
-	const int32 componentC = ToTypeIndex<ComponentC, ecs::ComponentTag>();
-
 	auto componentMaskA = ecs::ToComponentMask<ComponentA>();
 	auto componentMaskB = ecs::ToComponentMask<const ComponentA>();
 	CHECK(componentMaskA.HasAll(componentMaskB));
