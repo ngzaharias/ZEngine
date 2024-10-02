@@ -18,48 +18,51 @@ class SparseArray final
 public:
 	static constexpr int32 s_Unassigned = -1;
 
-	/// \brief
+	/// \brief Returns true if the key is found in the sparse.
 	bool Contains(const Key& key) const;
 
 	/// \brief Checks if the container is empty.
 	bool IsEmpty() const;
 
-	/// \brief
+	/// \brief Gets the number of elements the values array is sized for.
 	int32 GetCapacity() const;
-	/// \brief
+	/// \brief Gets the number of elements in the values array.
 	int32 GetCount() const;
-	/// \brief
+	/// \brief Gets the index from the key.
 	int32 GetIndex(const Key& key) const;
 
-	/// \brief
+	/// \brief Reserves the dense and values array to at least X size without appending elements.
+	void Reserve(const int32 count);
+
+	/// \brief Gets an element from the container if one exists with that key.
+	/// An exception std::out_of_range is thrown if none exists.
 	Value& Get(const Key& key);
-	/// \brief
+	/// \brief Gets an element from the container if one exists with that key.
+	/// An exception std::out_of_range is thrown if none exists.
 	const Value& Get(const Key& key) const;
 
-	Array<Key>& GetKeys();
+	/// \brief Returns the dense array.
 	const Array<Key>& GetKeys() const;
 
+	/// \brief Returns the values array.
 	Array<Value>& GetValues();
+	/// \brief Returns the values array.
 	const Array<Value>& GetValues() const;
 
-	/// \brief
+	/// \brief Sets a new element in the container that is constructed in-place.
 	template<typename... Args>
 	Value& Emplace(const Key& key, Args&& ...args);
 
-	/// \brief
+	/// \brief Sets a new element in the container using move operator.
 	Value& Set(const Key& key, Value&& value);
+	/// \brief Sets a new element in the container.
 	Value& Set(const Key& key, const Value& value);
 
-	/// \brief
+	/// \brief Removes a specified element from the container if one exists with that key.
 	void Remove(const Key& key);
-	/// \brief
+
+	/// \brief Removes all elements from the container.
 	void RemoveAll();
-
-	/// \brief
-	void Reserve(const int32 count);
-
-	/// \brief
-	void Shrink();
 
 public:
 	struct Pair

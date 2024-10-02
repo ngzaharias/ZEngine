@@ -11,7 +11,7 @@ namespace
 	public:
 		bool operator==(const MyStruct& rhs) const { return m_Index == rhs.m_Index; }
 		int32 GetIndex() const { return m_Index; };
-		int32 m_Index = 0;
+		int32 m_Index = -1;
 	};
 }
 
@@ -60,9 +60,28 @@ TEST_CASE("SparseArray. GetCount.")
 	CHECK(myArray.GetCount() == 4);
 }
 
-TEST_CASE("SparseArray. GetIndex.")
+TEST_CASE("SparseArray. GetIndex for integral types returns its value.")
 {
-	CHECK(false);
+	SparseArray<int32, float> myArray;
+	myArray.Set(0, 0.f);
+	myArray.Set(1, 0.f);
+	myArray.Set(9, 0.f);
+
+	CHECK(myArray.GetIndex(0) == 0);
+	CHECK(myArray.GetIndex(1) == 1);
+	CHECK(myArray.GetIndex(9) == 9);
+}
+
+TEST_CASE("SparseArray. GetIndex for custom types uses its GetIndex method.")
+{
+	SparseArray<MyStruct, float> myArray;
+	myArray.Set(MyStruct{ 0 }, 0.f);
+	myArray.Set(MyStruct{ 1 }, 0.f);
+	myArray.Set(MyStruct{ 9 }, 0.f);
+
+	CHECK(myArray.GetIndex(MyStruct{ 0 }) == 0);
+	CHECK(myArray.GetIndex(MyStruct{ 1 }) == 1);
+	CHECK(myArray.GetIndex(MyStruct{ 9 }) == 9);
 }
 
 TEST_CASE("SparseArray. Get.")
@@ -187,7 +206,6 @@ TEST_CASE("SparseArray. Removing from the end should just pop the last item in t
 TEST_CASE("SparseArray. RemoveAll.")
 {
 	SparseArray<int32, float> myArray;
-
 	myArray.Set(0, 1.f);
 	myArray.Set(3, 2.f);
 	myArray.Set(10, 3.f);
@@ -200,12 +218,10 @@ TEST_CASE("SparseArray. RemoveAll.")
 
 TEST_CASE("SparseArray. Reserve.")
 {
-	CHECK(false);
-}
+	SparseArray<int32, float> myArray;
+	myArray.Reserve(10);
 
-TEST_CASE("SparseArray. Shrink.")
-{
-	CHECK(false);
+	CHECK(myArray.GetCapacity() == 10);
 }
 
 TEST_CASE("SparseArray. Key: Custom.")
