@@ -121,10 +121,11 @@ TEST_CASE("ecs::WorldView. CreateEntity.")
 	ecs::EntityWorld& entityWorld = raiihelper.m_EntityWorld;
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 
-	CHECK(worldView.CreateEntity() == ecs::Entity(0));
 	CHECK(worldView.CreateEntity() == ecs::Entity(1));
 	CHECK(worldView.CreateEntity() == ecs::Entity(2));
 	CHECK(worldView.CreateEntity() == ecs::Entity(3));
+	CHECK(worldView.CreateEntity() == ecs::Entity(4));
+	CHECK(worldView.CreateEntity() == ecs::Entity(5));
 }
 
 TEST_CASE("ecs::WorldView. DestroyEntity.")
@@ -134,13 +135,6 @@ TEST_CASE("ecs::WorldView. DestroyEntity.")
 	WorldView worldView = entityWorld.GetWorldView<WorldView>();
 
 	ecs::Entity entity = worldView.CreateEntity();
-	entityWorld.Update({});
-
-	CHECK(entity.GetIndex() == 0);
-	CHECK(entity.GetVersion() == 0);
-
-	worldView.DestroyEntity(entity);
-	entity = worldView.CreateEntity();
 	entityWorld.Update({});
 
 	CHECK(entity.GetIndex() == 1);
@@ -153,8 +147,15 @@ TEST_CASE("ecs::WorldView. DestroyEntity.")
 	CHECK(entity.GetIndex() == 2);
 	CHECK(entity.GetVersion() == 0);
 
+	worldView.DestroyEntity(entity);
 	entity = worldView.CreateEntity();
-	CHECK(entity.GetIndex() == 0);
+	entityWorld.Update({});
+
+	CHECK(entity.GetIndex() == 3);
+	CHECK(entity.GetVersion() == 0);
+
+	entity = worldView.CreateEntity();
+	CHECK(entity.GetIndex() == 1);
 	CHECK(entity.GetVersion() == 1);
 }
 
@@ -478,4 +479,22 @@ TEST_CASE("ecs::WorldView. Query - Include + Exclude.")
 
 	CHECK(worldView.Query<ecs::query::Include<ComponentA>::Exclude<ComponentB>>().GetCount() == 1);
 	CHECK(worldView.Query<ecs::query::Include<ComponentB>::Exclude<ComponentA>>().GetCount() == 1);
+}
+
+
+TEST_CASE("ecs::WorldView. Query - Updated + Removed.")
+{
+	QueryHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	entityWorld.Update({});
+	{
+		worldView.WriteComponent<ComponentA>(raii.m_EntityA);
+		worldView.RemoveComponent<ComponentA>(raii.m_EntityA);
+	}
+	entityWorld.Update({});
+
+	CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().GetCount() == 0);
+	CHECK(worldView.Query<ecs::query::Removed<ComponentA>>().GetCount() == 1);
 }
