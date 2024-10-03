@@ -114,7 +114,8 @@ auto ecs::EntityWorld::WriteComponent(const ecs::Entity& entity, const bool aliv
 	Z_PANIC(IsRegistered<NonConst>(), "Component isn't registered!");
 	Z_PANIC(HasComponent<NonConst>(entity, alive), "Entity doesn't have this component!");
 
-	m_FrameBuffer.UpdateComponent<NonConst>(entity);
+	if (alive)
+		m_FrameBuffer.UpdateComponent<NonConst>(entity);
 	return m_EntityStorage.GetComponent<NonConst>(entity, alive);
 }
 

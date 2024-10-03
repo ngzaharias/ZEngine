@@ -454,6 +454,27 @@ TEST_CASE("ecs::WorldView. Components that are updated and removed in the same f
 	CHECK(worldView.Query<ecs::query::Removed<ComponentA>>().GetCount() == 1);
 }
 
+TEST_CASE("ecs::WorldView. Components that are updated the frame after a component was removed isn't present in either query.")
+{
+	using WorldView = ecs::WorldView<ComponentA>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	worldView.RemoveComponent<ComponentA>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	worldView.WriteComponent<ComponentA>(raii.m_EntityA, false);
+	entityWorld.Update({});
+
+	CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().GetCount() == 0);
+	CHECK(worldView.Query<ecs::query::Removed<ComponentA>>().GetCount() == 0);
+}
+
 TEST_CASE("ecs::WorldView. Components that are updated and its entity is destroyed in the same frame are only present in the removed query.")
 {
 	using WorldView = ecs::WorldView<ComponentA>;
@@ -472,4 +493,28 @@ TEST_CASE("ecs::WorldView. Components that are updated and its entity is destroy
 
 	CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().GetCount() == 0);
 	CHECK(worldView.Query<ecs::query::Removed<ComponentA>>().GetCount() == 1);
+}
+
+TEST_CASE("ecs::WorldView. Components that are updated the frame after an entity is destroyed aren't present in any query.")
+{
+	using WorldView = ecs::WorldView<ComponentA>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	worldView.DestroyEntity(raii.m_EntityA);
+	entityWorld.Update({});
+
+	worldView.WriteComponent<ComponentA>(raii.m_EntityA, false);
+	entityWorld.Update({});
+
+	CHECK(worldView.Query<ecs::query::Added<ComponentA>>().GetCount() == 0);
+	CHECK(worldView.Query<ecs::query::Removed<ComponentA>>().GetCount() == 0);
+	CHECK(worldView.Query<ecs::query::Updated<ComponentA>>().GetCount() == 0);
+	CHECK(worldView.Query<ecs::query::Include<ComponentA>>().GetCount() == 0);
+	CHECK(worldView.Query<ecs::query::Exclude<ComponentA>>().GetCount() == 3);
 }
