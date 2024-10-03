@@ -45,11 +45,6 @@ void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 			::Exclude<eng::SpriteComponent>;
 		for (const ecs::Entity& entity : world.Query<Query>())
 		{
-			if (!world.IsAlive(entity))
-				continue;
-			if (!world.HasComponent<hidden::GroupComponent>(entity))
-				continue;
-
 			const auto& groupComponent = world.ReadComponent<hidden::GroupComponent>(entity);
 			if (groupComponent.m_Objects.GetCount() == groupComponent.m_Revealed.GetCount())
 			{
