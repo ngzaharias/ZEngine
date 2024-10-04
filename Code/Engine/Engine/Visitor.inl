@@ -60,8 +60,6 @@ void eng::Visitor::Read(const str::StringView& key, Value& value, const Value& d
 			value = defaultValue;
 		}
 	}
-	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
-	// so instead we have to check the actual type rather than our friendly version.
 	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
 	{
 		ReadOptional(key, value, defaultValue);
@@ -330,8 +328,6 @@ inline void eng::Visitor::Write(const str::StringView& key, const Value& value)
 		WriteSet(value);
 		parentNode.insert_or_assign(key, std::move(childNode));
 	}
-	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
-	// so instead we have to check the actual type rather than our friendly version.
 	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
 	{
 		WriteOptional(key, value);
@@ -375,8 +371,6 @@ inline void eng::Visitor::Write(const int32 index, const Value& value)
 		WriteMap(value);
 		parentNode.push_back(std::move(childNode));
 	}
-	// #todo: unsure why, but checking for specialization doesn't work if the type is wrapped with the `using` alias
-	// so instead we have to check the actual type rather than our friendly version.
 	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
 	{
 		toml::Table childNode;
