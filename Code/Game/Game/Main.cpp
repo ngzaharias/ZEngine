@@ -27,9 +27,10 @@ int main(int agrc, char* argv[])
 
 	std::filesystem::create_directories(appdataDirectory.ToChar());
 
-	// #todo: handle result
 	const int chdirResult = _chdir(immediateDirectory.ToChar());
 	Z_PANIC(chdirResult == 0, "Failed to swap to immediate directory [{}]", immediateDirectory.ToChar());
+	if (chdirResult != 0)
+		return -1;
 
 	core::LogInitialise();
 
