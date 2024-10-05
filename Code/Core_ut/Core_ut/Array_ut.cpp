@@ -309,7 +309,6 @@ TEST_CASE("Array. RemoveAt middle.")
 
 TEST_CASE("Array. RemoveAt last.")
 {
-
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveAt(4);
 
@@ -351,6 +350,42 @@ TEST_CASE("Array. RemoveOrderedAt last.")
 
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveOrderedAt(4);
+
+	REQUIRE(myArray.GetCount() == 4);
+	CHECK(myArray[0] == 1);
+	CHECK(myArray[1] == 2);
+	CHECK(myArray[2] == 3);
+	CHECK(myArray[3] == 4);
+}
+
+TEST_CASE("Array. RemoveOrderedAt first by iterator.")
+{
+	Array<int32> myArray = { 1, 2, 3, 4, 5 };
+	myArray.RemoveOrderedAt(myArray.begin());
+
+	REQUIRE(myArray.GetCount() == 4);
+	CHECK(myArray[0] == 2);
+	CHECK(myArray[1] == 3);
+	CHECK(myArray[2] == 4);
+	CHECK(myArray[3] == 5);
+}
+
+TEST_CASE("Array. RemoveOrderedAt middle by iterator.")
+{
+	Array<int32> myArray = { 1, 2, 3, 4, 5 };
+	myArray.RemoveOrderedAt(myArray.begin() + 2);
+
+	REQUIRE(myArray.GetCount() == 4);
+	CHECK(myArray[0] == 1);
+	CHECK(myArray[1] == 2);
+	CHECK(myArray[2] == 4);
+	CHECK(myArray[3] == 5);
+}
+
+TEST_CASE("Array. RemoveOrderedAt last by iterator.")
+{
+	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
+	myArray.RemoveOrderedAt(myArray.begin() + 4);
 
 	REQUIRE(myArray.GetCount() == 4);
 	CHECK(myArray[0] == 1);

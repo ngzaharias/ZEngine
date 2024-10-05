@@ -266,6 +266,12 @@ void Array<Type>::RemoveOrderedAt(const int32 startIndex, const int32 endIndex)
 }
 
 template<typename Type>
+void Array<Type>::RemoveOrderedAt(const iterator itr)
+{
+	m_Values.erase(itr);
+}
+
+template<typename Type>
 void Array<Type>::RemoveLast()
 {
 	m_Values.pop_back();
