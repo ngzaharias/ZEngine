@@ -58,7 +58,7 @@ namespace net
 		net::Config& m_Config;
 		yojimbo::Client* m_Client = nullptr;
 
-		Array<int32> m_Connections = { };
+		DelegateCollection m_Collection = { };
 	};
 }
 

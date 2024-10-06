@@ -16,7 +16,7 @@ void net::UserSystem::Initialise(World& world)
 	auto& networkManager = world.WriteResource<eng::NetworkManager>();
 	auto& adaptor = networkManager.GetAdaptor();
 
-	m_Connections =
+	m_Collection =
 	{
 		adaptor.m_OnServerClientConnected.Connect(*this, &net::UserSystem::OnClientConnected),
 		adaptor.m_OnServerClientDisconnected.Connect(*this, &net::UserSystem::OnClientDisconnected),
@@ -25,12 +25,7 @@ void net::UserSystem::Initialise(World& world)
 
 void net::UserSystem::Shutdown(World& world)
 {
-	auto& networkManager = world.WriteResource<eng::NetworkManager>();
-	auto& adaptor = networkManager.GetAdaptor();
-
-	adaptor.m_OnServerClientConnected.Disconnect(m_Connections[0]);
-	adaptor.m_OnServerClientDisconnected.Disconnect(m_Connections[1]);
-	m_Connections.RemoveAll();
+	m_Collection.Disconnect();
 }
 
 void net::UserSystem::Update(World& world, const GameTime& gameTime)

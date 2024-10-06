@@ -55,7 +55,7 @@ namespace net
 		net::Config& m_Config;
 		yojimbo::Server* m_Server = nullptr;
 
-		Array<int32> m_Connections = { };
+		DelegateCollection m_Collection = { };
 		Set<net::PeerId> m_PeersConnected = { };
 		Set<net::PeerId> m_PeersDisconnected = { };
 		int32 m_MaxPeers = 64;

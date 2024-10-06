@@ -36,21 +36,19 @@ void net::Host::Startup(const str::String& ipAddress, const int32 port, const fl
 	m_Server->GetAddress().ToString(addressString, sizeof(addressString));
 	Z_LOG(ELog::Network, "Host: Server address is {}", addressString);
 
-	m_Connections = 
+	m_Collection =
 	{
 		m_Adaptor.m_OnServerClientConnected.Connect(*this, &net::Host::OnClientConnected),
-		m_Adaptor.m_OnServerClientDisconnected.Connect(*this, &net::Host::OnClientDisconnected) 
+		m_Adaptor.m_OnServerClientDisconnected.Connect(*this, &net::Host::OnClientDisconnected)
 	};
 }
 
 void net::Host::Shutdown()
 {
+	m_Collection.Disconnect();
+
 	if (IsRunning())
 	{
-		m_Adaptor.m_OnServerClientConnected.Disconnect(m_Connections[0]);
-		m_Adaptor.m_OnServerClientDisconnected.Disconnect(m_Connections[1]);
-		m_Connections.RemoveAll();
-
 		m_Server->Stop();
 
 		delete m_Server;

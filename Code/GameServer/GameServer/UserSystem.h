@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Array.h"
+#include "Core/Delegate.h"
 #include "Core/Map.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
@@ -50,7 +51,7 @@ namespace net
 		void OnClientDisconnected(const net::PeerId& peerId);
 
 	private:
-		Array<int32> m_Connections;
+		DelegateCollection m_Collection = { };
 		Map<net::UserId, bool> m_Requests;
 	};
 }

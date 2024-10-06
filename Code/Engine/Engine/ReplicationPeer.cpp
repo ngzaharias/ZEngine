@@ -21,26 +21,26 @@ net::ReplicationPeer::ReplicationPeer(ecs::EntityWorld& entityWorld)
 
 void net::ReplicationPeer::Initialise()
 {
-	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
-	auto& adaptor = networkManager.GetAdaptor();
-	auto& peer = networkManager.GetPeer();
+	//auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
+	//auto& adaptor = networkManager.GetAdaptor();
+	//auto& peer = networkManager.GetPeer();
 
-	m_Connections =
-	{
-		adaptor.m_OnServerClientDisconnected.Connect(*this, &net::ReplicationPeer::OnClientDisconnected),
-		peer.m_OnProcessMessage.Connect(*this, &net::ReplicationPeer::OnProcessMessage),
-	};
+	//m_Connections =
+	//{
+	//	adaptor.m_OnServerClientDisconnected.Connect(*this, &net::ReplicationPeer::OnClientDisconnected),
+	//	peer.m_OnProcessMessage.Connect(*this, &net::ReplicationPeer::OnProcessMessage),
+	//};
 }
 
 void net::ReplicationPeer::Shutdown()
 {
-	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
-	auto& adaptor = networkManager.GetAdaptor();
-	auto& peer = networkManager.GetPeer();
+	//auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
+	//auto& adaptor = networkManager.GetAdaptor();
+	//auto& peer = networkManager.GetPeer();
 
-	adaptor.m_OnServerClientDisconnected.Disconnect(m_Connections[0]);
-	peer.m_OnProcessMessage.Disconnect(m_Connections[1]);
-	m_Connections.RemoveAll();
+	//adaptor.m_OnServerClientDisconnected.Disconnect(m_Connections[0]);
+	//peer.m_OnProcessMessage.Disconnect(m_Connections[1]);
+	//m_Connections.RemoveAll();
 }
 
 void net::ReplicationPeer::Update(const GameTime& gameTime)

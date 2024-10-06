@@ -25,18 +25,19 @@ void net::Peer::Startup(const str::String& ipAddress, const int32 port, const fl
 	yojimbo::Address address(ipAddress.c_str(), port);
 	m_Client = new yojimbo::Client(yojimbo::GetDefaultAllocator(), address, m_Config, m_Adaptor, time);
 
-	m_Connections.Append(m_Adaptor.m_OnServerClientConnected.Connect(*this, &net::Peer::OnClientConnected));
-	m_Connections.Append(m_Adaptor.m_OnServerClientDisconnected.Connect(*this, &net::Peer::OnClientDisconnected));
+	m_Collection =
+	{
+		m_Adaptor.m_OnServerClientConnected.Connect(*this, &net::Peer::OnClientConnected),
+		m_Adaptor.m_OnServerClientDisconnected.Connect(*this, &net::Peer::OnClientDisconnected),
+	};
 }
 
 void net::Peer::Shutdown()
 {
+	m_Collection.Disconnect();
+
 	if (IsRunning())
 	{
-		m_Adaptor.m_OnServerClientConnected.Disconnect(m_Connections[0]);
-		m_Adaptor.m_OnServerClientDisconnected.Disconnect(m_Connections[1]);
-		m_Connections.RemoveAll();
-
 		if (IsConnected() || IsConnecting())
 			Disconnect();
 
