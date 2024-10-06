@@ -72,8 +72,6 @@ workspace "ZEngine"
 	include "Code/Math/premake5.lua"
 	include "Code/Network/premake5.lua"
 
-	group "gen"
-		include "Code/Kodgen/premake5.lua"
 	group "ut"
 		include "Code/Core_ut/premake5.lua"
 		include "Code/ECS_ut/premake5.lua"
