@@ -1,8 +1,7 @@
 #pragma once
 
+#include "Core/Delegate.h"
 #include "ECS/System.h"
-
-#include <entt/signal/sigh.hpp>
 
 #include <PhysX/PxSimulationEventCallback.h>
 
@@ -65,8 +64,8 @@ namespace eng
 		void onWake(physx::PxActor** actors, physx::PxU32 count) override;
 
 	public:
-		entt::sigh<void(const ecs::Entity&, const ecs::Entity&)> m_OnCollideSignal;
-		entt::sigh<void(const ecs::Entity&, const ecs::Entity&)> m_OnOverlapSignal;
+		Delegate<void(const ecs::Entity&, const ecs::Entity&)> m_OnCollideSignal;
+		Delegate<void(const ecs::Entity&, const ecs::Entity&)> m_OnOverlapSignal;
 
 	public:
 		float m_DeltaTimeAccumulated = 0.f;

@@ -1,9 +1,9 @@
 #pragma once
 
+#include "Core/Array.h"
 #include "Core/Map.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
-#include "Engine/SinkCollection.h"
 #include "Network/UserId.h"
 
 namespace ecs
@@ -50,7 +50,7 @@ namespace net
 		void OnClientDisconnected(const net::PeerId& peerId);
 
 	private:
-		SinkCollection m_Connections;
+		Array<int32> m_Connections;
 		Map<net::UserId, bool> m_Requests;
 	};
 }

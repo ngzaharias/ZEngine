@@ -287,7 +287,7 @@ void eng::PhysicsSystem::ProcessRemoved(World& world)
 
 void eng::PhysicsSystem::OnContact(const ecs::Entity& entityA, const ecs::Entity& entityB)
 {
-	m_OnCollideSignal.publish(entityA, entityB);
+	m_OnCollideSignal.Publish(entityA, entityB);
 }
 
 void eng::PhysicsSystem::onConstraintBreak(physx::PxConstraintInfo* constraints, physx::PxU32 count)

@@ -27,14 +27,20 @@ void net::ReplicationPeer::Initialise()
 
 	m_Connections =
 	{
-		entt::sink(adaptor.m_OnServerClientDisconnected).connect<&net::ReplicationPeer::OnClientDisconnected>(this),
-		entt::sink(peer.m_OnProcessMessage).connect<&net::ReplicationPeer::OnProcessMessage>(this),
+		adaptor.m_OnServerClientDisconnected.Connect(*this, &net::ReplicationPeer::OnClientDisconnected),
+		peer.m_OnProcessMessage.Connect(*this, &net::ReplicationPeer::OnProcessMessage),
 	};
 }
 
 void net::ReplicationPeer::Shutdown()
 {
-	m_Connections.Disconnect();
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
+	auto& adaptor = networkManager.GetAdaptor();
+	auto& peer = networkManager.GetPeer();
+
+	adaptor.m_OnServerClientDisconnected.Disconnect(m_Connections[0]);
+	peer.m_OnProcessMessage.Disconnect(m_Connections[1]);
+	m_Connections.RemoveAll();
 }
 
 void net::ReplicationPeer::Update(const GameTime& gameTime)

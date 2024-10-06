@@ -18,14 +18,19 @@ void net::UserSystem::Initialise(World& world)
 
 	m_Connections =
 	{
-		entt::sink(adaptor.m_OnServerClientConnected).connect<&net::UserSystem::OnClientConnected>(this),
-		entt::sink(adaptor.m_OnServerClientDisconnected).connect<&net::UserSystem::OnClientDisconnected>(this),
+		adaptor.m_OnServerClientConnected.Connect(*this, &net::UserSystem::OnClientConnected),
+		adaptor.m_OnServerClientDisconnected.Connect(*this, &net::UserSystem::OnClientDisconnected),
 	};
 }
 
 void net::UserSystem::Shutdown(World& world)
 {
-	m_Connections.Disconnect();
+	auto& networkManager = world.WriteResource<eng::NetworkManager>();
+	auto& adaptor = networkManager.GetAdaptor();
+
+	adaptor.m_OnServerClientConnected.Disconnect(m_Connections[0]);
+	adaptor.m_OnServerClientDisconnected.Disconnect(m_Connections[1]);
+	m_Connections.RemoveAll();
 }
 
 void net::UserSystem::Update(World& world, const GameTime& gameTime)
