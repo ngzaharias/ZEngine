@@ -12,7 +12,7 @@ template<typename... Args>
 template<typename Object>
 int32 Delegate<void(Args...)>::Connect(Object& object, void (Object::* method)(Args...))
 {
-	return Connect([&object, &method](Args... args)
+	return Connect([&object, method](Args... args)
 		{
 			(object.*method)(args...);
 		});
@@ -22,7 +22,7 @@ template<typename... Args>
 template<typename Object>
 int32 Delegate<void(Args...)>::Connect(const Object& object, void (Object::* method)(Args...) const)
 {
-	return Connect([&object, &method](Args... args)
+	return Connect([&object, method](Args... args)
 		{
 			(object.*method)(args...);
 		});
