@@ -88,7 +88,6 @@ TEST_CASE("Array. operator[] const.")
 
 TEST_CASE("Array. operator Slice<T>.")
 {
-
 	const Array<int32> myArray = { 1, 2, 3 };
 	Slice<const int32> mySlice = myArray;
 	CHECK(mySlice.GetCount() == 3);
@@ -99,7 +98,6 @@ TEST_CASE("Array. operator Slice<T>.")
 
 TEST_CASE("Array. operator Slice<T> const.")
 {
-
 	Array<int32> myArray = { 1, 2, 3 };
 	Slice<int32> mySlice = myArray;
 	CHECK(mySlice.GetCount() == 3);
@@ -147,6 +145,7 @@ TEST_CASE("Array. GetCount.")
 
 TEST_CASE("Array. GetData.")
 {
+	CHECK(false);
 }
 
 TEST_CASE("Array. Resize.")
@@ -281,9 +280,8 @@ TEST_CASE("Array. Insert move value.")
 	CHECK(myArray[2].m_Int32 == 1);
 }
 
-TEST_CASE("Array. RemoveAt first.")
+TEST_CASE("Array. RemoveAt first by index.")
 {
-
 	Array<int32> myArray = { 1, 2, 3, 4, 5 };
 	myArray.RemoveAt(0);
 
@@ -294,9 +292,8 @@ TEST_CASE("Array. RemoveAt first.")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array. RemoveAt middle.")
+TEST_CASE("Array. RemoveAt middle by index.")
 {
-
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveAt(2);
 
@@ -307,7 +304,7 @@ TEST_CASE("Array. RemoveAt middle.")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array. RemoveAt last.")
+TEST_CASE("Array. RemoveAt last by index.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveAt(4);
@@ -319,9 +316,44 @@ TEST_CASE("Array. RemoveAt last.")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array. RemoveOrderedAt first.")
+TEST_CASE("Array. RemoveAt first by iterator.")
 {
+	Array<int32> myArray = { 1, 2, 3, 4, 5 };
+	myArray.RemoveAt(myArray.begin());
 
+	REQUIRE(myArray.GetCount() == 4);
+	CHECK(myArray[0] == 5);
+	CHECK(myArray[1] == 2);
+	CHECK(myArray[2] == 3);
+	CHECK(myArray[3] == 4);
+}
+
+TEST_CASE("Array. RemoveAt middle by iterator.")
+{
+	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
+	myArray.RemoveAt(myArray.begin() + 2);
+
+	REQUIRE(myArray.GetCount() == 4);
+	CHECK(myArray[0] == 1);
+	CHECK(myArray[1] == 2);
+	CHECK(myArray[2] == 5);
+	CHECK(myArray[3] == 4);
+}
+
+TEST_CASE("Array. RemoveAt last by iterator.")
+{
+	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
+	myArray.RemoveAt(myArray.begin() + 4);
+
+	REQUIRE(myArray.GetCount() == 4);
+	CHECK(myArray[0] == 1);
+	CHECK(myArray[1] == 2);
+	CHECK(myArray[2] == 3);
+	CHECK(myArray[3] == 4);
+}
+
+TEST_CASE("Array. RemoveOrderedAt first by index.")
+{
 	Array<int32> myArray = { 1, 2, 3, 4, 5 };
 	myArray.RemoveOrderedAt(0);
 
@@ -332,9 +364,8 @@ TEST_CASE("Array. RemoveOrderedAt first.")
 	CHECK(myArray[3] == 5);
 }
 
-TEST_CASE("Array. RemoveOrderedAt middle.")
+TEST_CASE("Array. RemoveOrderedAt middle by index.")
 {
-
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveOrderedAt(2);
 
@@ -345,9 +376,8 @@ TEST_CASE("Array. RemoveOrderedAt middle.")
 	CHECK(myArray[3] == 5);
 }
 
-TEST_CASE("Array. RemoveOrderedAt last.")
+TEST_CASE("Array. RemoveOrderedAt last by index.")
 {
-
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveOrderedAt(4);
 
