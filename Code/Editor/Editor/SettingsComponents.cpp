@@ -85,7 +85,6 @@ void eng::Visitor::WriteCustom(const editor::settings::Sprite& value)
 	Write(strSave, value.m_Save);
 }
 
-
 template<>
 void eng::Visitor::ReadCustom(editor::settings::Texture& value) const
 {

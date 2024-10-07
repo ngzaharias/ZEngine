@@ -5,6 +5,7 @@
 namespace eng
 {
 	struct InputComponent;
+	struct TransformComponent;
 }
 
 namespace eng::settings
@@ -22,6 +23,7 @@ namespace eng::camera
 	public:
 		using World = ecs::WorldView<
 			eng::camera::ProjectionComponent,
+			eng::TransformComponent,
 			const eng::camera::Zoom2DComponent,
 			const eng::InputComponent,
 			const eng::settings::LocalComponent>;

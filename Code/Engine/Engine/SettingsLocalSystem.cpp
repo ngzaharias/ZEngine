@@ -13,7 +13,7 @@
 
 namespace
 {
-	const str::StringView strFilename = "Settings.toml";
+	const str::StringView strFilename = "GameSettings.toml";
 }
 
 void eng::settings::LocalSystem::Initialise(World& world)

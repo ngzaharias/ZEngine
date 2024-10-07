@@ -10,6 +10,7 @@
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
+#include <imgui/Inspector.h>
 
 namespace
 {
@@ -62,30 +63,23 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 			{
 				if (ImGui::BeginTabItem("Local"))
 				{
-					auto& localSettings = windowComponent.m_Local;
-					auto& audioSettings = localSettings.m_Audio;
-					auto& cameraSettings = localSettings.m_Camera;
-
-					ImGui::TextDisabled("Audio");
-					ImGui::SliderInt("Effect Volume", &audioSettings.m_EffectVolume, 0, 100);
-					ImGui::SliderInt("Music Volume", &audioSettings.m_MusicVolume, 0, 100);
-
-					ImGui::TextDisabled("Camera");
-					ImGui::DragFloat("Translate Speed", &cameraSettings.m_TranslateSpeed);
-					ImGui::DragFloat3("Rotate Speed", &cameraSettings.m_RotateSpeed.m_Pitch);
-					ImGui::DragFloat("Zoom Speed", &cameraSettings.m_ZoomSpeed);
-
+					imgui::Inspector inspector;
+					if (inspector.Begin("##settingsmenu"))
+					{
+						inspector.Write(windowComponent.m_Local);
+						inspector.End();
+					}
 					ImGui::EndTabItem();
 				}
 
 				if (ImGui::BeginTabItem("Debug"))
 				{
-					auto& debugSettings = windowComponent.m_Debug;
-
-					ImGui::Checkbox("Are Hidden Enabled", &debugSettings.m_AreHiddenEnabled);
-					ImGui::Checkbox("Are Lines Enabled", &debugSettings.m_AreLinesEnabled);
-					ImGui::Checkbox("Are Physics Enabled", &debugSettings.m_ArePhysicsEnabled);
-
+					imgui::Inspector inspector;
+					if (inspector.Begin("##settingsmenu"))
+					{
+						inspector.Write(windowComponent.m_Debug);
+						inspector.End();
+					}
 					ImGui::EndTabItem();
 				}
 				ImGui::EndTabBar();

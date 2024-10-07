@@ -15,7 +15,7 @@ namespace eng::settings
 	{
 		Rotator m_RotateSpeed = Rotator(0.2f);
 		float m_TranslateSpeed = 1000.f;
-		float m_ZoomSpeed = 3000.f;
+		float m_ZoomAmount = 100.f;
 	};
 
 	/// \brief Debug settings that is only used in non-gold builds.

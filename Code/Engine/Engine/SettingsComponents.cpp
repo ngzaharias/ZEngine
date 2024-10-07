@@ -2,6 +2,7 @@
 #include "Engine/SettingsComponents.h"
 
 #include "Engine/Visitor.h"
+#include "imgui/Inspector.h"
 
 namespace
 {
@@ -14,7 +15,7 @@ namespace
 	const str::StringView strMusicVolume = "m_MusicVolume";
 	const str::StringView strRotateSpeed = "m_RotateSpeed";
 	const str::StringView strTranslateSpeed = "m_TranslateSpeed";
-	const str::StringView strZoomSpeed = "m_ZoomSpeed";
+	const str::StringView strZoomAmount = "m_ZoomAmount";
 }
 
 template<>
@@ -31,6 +32,15 @@ void eng::Visitor::WriteCustom(const eng::settings::DebugComponent& value)
 	Write(strAreLinesEnabled, value.m_AreLinesEnabled);
 	Write(strArePhysicsEnabled, value.m_ArePhysicsEnabled);
 }
+template<>
+bool imgui::Inspector::WriteCustom(eng::settings::DebugComponent& value)
+{
+	bool result = false;
+	result |= Write("m_AreHiddenEnabled", value.m_AreHiddenEnabled);
+	result |= Write("m_AreLinesEnabled", value.m_AreLinesEnabled);
+	result |= Write("m_ArePhysicsEnabled", value.m_ArePhysicsEnabled);
+	return result;
+}
 
 template<>
 void eng::Visitor::ReadCustom(eng::settings::LocalComponent& value) const
@@ -43,6 +53,14 @@ void eng::Visitor::WriteCustom(const eng::settings::LocalComponent& value)
 {
 	Write(strAudio, value.m_Audio);
 	Write(strCamera, value.m_Camera);
+}
+template<>
+bool imgui::Inspector::WriteCustom(eng::settings::LocalComponent& value)
+{
+	bool result = false;
+	result |= Write("m_Audio", value.m_Audio);
+	result |= Write("m_Camera", value.m_Camera);
+	return result;
 }
 
 template<>
@@ -57,18 +75,35 @@ void eng::Visitor::WriteCustom(const eng::settings::Audio& value)
 	Write(strEffectVolume, value.m_EffectVolume);
 	Write(strMusicVolume, value.m_MusicVolume);
 }
+template<>
+bool imgui::Inspector::WriteCustom(eng::settings::Audio& value)
+{
+	bool result = false;
+	result |= Write("m_EffectVolume", value.m_EffectVolume);
+	result |= Write("m_MusicVolume", value.m_MusicVolume);
+	return result;
+}
 
 template<>
 void eng::Visitor::ReadCustom(eng::settings::Camera& value) const
 {
 	Read(strTranslateSpeed, value.m_TranslateSpeed, value.m_TranslateSpeed);
 	Read(strRotateSpeed, value.m_RotateSpeed, value.m_RotateSpeed);
-	Read(strZoomSpeed, value.m_ZoomSpeed, value.m_ZoomSpeed);
+	Read(strZoomAmount, value.m_ZoomAmount, value.m_ZoomAmount);
 }
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::Camera& value)
 {
 	Write(strTranslateSpeed, value.m_TranslateSpeed);
 	Write(strRotateSpeed, value.m_RotateSpeed);
-	Write(strZoomSpeed, value.m_ZoomSpeed);
+	Write(strZoomAmount, value.m_ZoomAmount);
+}
+template<>
+bool imgui::Inspector::WriteCustom(eng::settings::Camera& value)
+{
+	bool result = false;
+	result |= Write("m_RotateSpeed", value.m_RotateSpeed);
+	result |= Write("m_TranslateSpeed", value.m_TranslateSpeed);
+	result |= Write("m_ZoomAmount", value.m_ZoomAmount);
+	return result;
 }
