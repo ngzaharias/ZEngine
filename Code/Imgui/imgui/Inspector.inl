@@ -76,6 +76,14 @@ namespace detail
 }
 
 template<typename Value>
+void imgui::Inspector::Read(const Value& value)
+{
+	ImGui::TableNextRow();
+	ImGui::TableSetColumnIndex(1);
+	ReadMember(value);
+}
+
+template<typename Value>
 void imgui::Inspector::Read(const char* label, const Value& value)
 {
 	ImGui::TableNextRow();
@@ -87,6 +95,14 @@ void imgui::Inspector::Read(const char* label, const Value& value)
 		ImGui::TableSetColumnIndex(1);
 		ReadMember(value);
 	}
+}
+
+template<typename Value>
+inline bool imgui::Inspector::Write(Value& value)
+{
+	ImGui::TableNextRow();
+	ImGui::TableSetColumnIndex(1);
+	return WriteMember(value);
 }
 
 template<typename Value>

@@ -55,7 +55,11 @@ namespace imgui
 		void End();
 
 		template<typename Value>
+		void Read(const Value& value);
+		template<typename Value>
 		void Read(const char* label, const Value& value);
+		template<typename Value>
+		bool Write(Value& value);
 		template<typename Value>
 		bool Write(const char* label, Value& value);
 
