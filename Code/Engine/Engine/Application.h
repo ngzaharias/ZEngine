@@ -5,6 +5,7 @@
 #include "Engine/ImguiManager.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
+#include "Engine/PlatformManager.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/ReplicationHost.h"
 #include "Engine/ReplicationPeer.h"
@@ -45,6 +46,7 @@ namespace eng
 		eng::ImguiManager m_ImguiManager;
 		eng::NetworkManager m_NetworkManager;
 		eng::PhysicsManager m_PhysicsManager;
+		eng::PlatformManager m_PlatformManager;
 		eng::PrototypeManager m_PrototypeManager;
 		net::ComponentSerializer m_ComponentSerializer;
 	};

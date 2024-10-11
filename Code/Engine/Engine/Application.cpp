@@ -70,6 +70,7 @@ eng::Application::Application()
 	, m_ImguiManager()
 	, m_NetworkManager(m_ComponentSerializer)
 	, m_PhysicsManager()
+	, m_PlatformManager()
 	, m_PrototypeManager()
 	, m_ComponentSerializer()
 {
@@ -83,8 +84,6 @@ eng::Application::~Application()
 
 void eng::Application::Execute(int argc, char* argv[])
 {
-	bool isWaitingForProfiler = false;
-
 	InitializeYojimbo();
 	yojimbo_log_level(YOJIMBO_LOG_LEVEL_INFO);
 
@@ -95,6 +94,7 @@ void eng::Application::Execute(int argc, char* argv[])
 
 	double currTime = 0.0;
 	double lastTime = 0.0;
+	bool isWaitingForProfiler = false;
 	while (true)
 	{
 		PROFILE_TICK("MainThread");
@@ -181,10 +181,12 @@ void eng::Application::Initialise()
 	m_AssetManager.Initialise();
 	m_ImguiManager.Initialise(*m_Window);
 	m_PhysicsManager.Initialise();
+	m_PlatformManager.Initialise();
 }
 
 void eng::Application::PreUpdate(const GameTime& gameTime)
 {
+	m_PlatformManager.Update(gameTime);
 	m_ImguiManager.PreUpdate();
 }
 
@@ -204,6 +206,7 @@ void eng::Application::Shutdown()
 {
 	PROFILE_FUNCTION();
 
+	m_PlatformManager.Shutdown();
 	m_PhysicsManager.Shutdown();
 	m_ImguiManager.Shutdown();
 	m_AssetManager.Shutdown();

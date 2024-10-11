@@ -54,6 +54,7 @@ project "Game"
 		"%{wks.location}/../3rdParty/glew/2.1.0/Library/",
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Library/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
+		"%{wks.location}/../3rdParty/SteamworksSDK/Library/",
 		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/ECS/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Engine/%{cfg.buildcfg}_%{cfg.platform}/",
@@ -114,6 +115,8 @@ project "Game"
 		"PhysXFoundation_64.lib",
 		"PhysXPvdSDK_static_64.lib",
 
+		"steam_api64.lib",
+
 		"yojimbo.lib",
 
 		"Dbghelp.lib",
@@ -148,6 +151,8 @@ project "Game"
 		"{COPY} %{wks.location}/../3rdParty/assimp/5.2.4/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/glew/2.1.0/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/optick/1.3.1/Binary/*.dll $(OutDir)",
+		"{COPY} %{wks.location}/../3rdParty/SteamworksSDK/Binary/*.dll $(OutDir)",
+		"{COPY} %{wks.location}/../steam_appid.txt $(OutDir)",
 	}
 
 	filter "Debug*"
