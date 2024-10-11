@@ -1,9 +1,6 @@
 #pragma once
 
-#pragma warning(push)
-#pragma warning(disable: 4996)
-#include <SteamworksSDK/Include/steam_api.h>
-#pragma warning(pop)
+#include <SteamBinding/Manager.h>
 
 class GameTime;
 
@@ -18,13 +15,6 @@ namespace eng
 		void Update(const GameTime& gameTime);
 
 	private:
-		void GetNumberOfCurrentPlayers();
-		void OnGetNumberOfCurrentPlayers(NumberOfCurrentPlayers_t* pCallback, bool bIOFailure);
-		CCallResult<PlatformManager, NumberOfCurrentPlayers_t > m_NumberOfCurrentPlayersCallResult;
-
-		STEAM_CALLBACK(PlatformManager, OnGameOverlayActivated, GameOverlayActivated_t);
-
-	private:
-		bool m_IsConnected = false;
+		steam::Manager m_SteamManager;
 	};
 }

@@ -5,7 +5,20 @@ project "Editor"
 		kind "ConsoleApp"
 	filter {} -- disable the filter
 
-	dependson { "Core", "ECS", "Engine", "Game", "GameClient", "GameDebug", "GameServer", "GameShared", "Imgui", "Math", "Network" }
+	dependson  { 
+		"Core", 
+		"ECS", 
+		"Engine", 
+		"Game", 
+		"GameClient", 
+		"GameDebug", 
+		"GameServer", 
+		"GameShared", 
+		"Imgui", 
+		"Math", 
+		"Network", 
+		"SteamBinding" }
+
 	pchheader "EditorPCH.h"
 	pchsource "Editor/EditorPCH.cpp"
 	location "%{wks.location}/Editor"
@@ -32,6 +45,7 @@ project "Editor"
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../3rdParty/PhysX/Include/",
 		"%{wks.location}/../3rdParty/SFML/Include/",
+		"%{wks.location}/../3rdParty/SteamworksSDK/Include/",
 		"%{wks.location}/../3rdParty/yojimbo/1.2.1/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
@@ -46,6 +60,7 @@ project "Editor"
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
+		"%{wks.location}/../Code/SteamBinding/",
 	}
 
 	libdirs 
@@ -68,6 +83,7 @@ project "Editor"
 		"%{wks.location}/Build/Imgui/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Math/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Network/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/SteamBinding/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
 
 	filter "Debug*"
@@ -102,6 +118,7 @@ project "Editor"
 		"Imgui.lib",
 		"Math.lib",
 		"Network.lib",
+		"SteamBinding.lib",
 
 		"assimp.lib",
 

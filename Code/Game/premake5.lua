@@ -6,7 +6,7 @@ project "Game"
 		kind "StaticLib"
 	filter {} -- disable the filter
 
-	dependson { "Core", "Engine", "GameClient", "GameDebug", "GameServer", "GameShared", "Imgui", "Math", "Network" }
+	dependson { "Core", "Engine", "GameClient", "GameDebug", "GameServer", "GameShared", "Imgui", "Math", "Network", "SteamBinding" }
 	pchheader "GamePCH.h"
 	pchsource "Game/GamePCH.cpp"
 	location "%{wks.location}/Game"
@@ -32,6 +32,7 @@ project "Game"
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../3rdParty/PhysX/Include/",
 		"%{wks.location}/../3rdParty/SFML/Include/",
+		"%{wks.location}/../3rdParty/SteamworksSDK/Include/",
 		"%{wks.location}/../3rdParty/yojimbo/1.2.1/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
@@ -45,6 +46,7 @@ project "Game"
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
+		"%{wks.location}/../Code/SteamBinding/",
 	}
 
 	libdirs 
@@ -66,6 +68,7 @@ project "Game"
 		"%{wks.location}/Build/Imgui/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Math/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Network/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/SteamBinding/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
 
 	filter "Debug*"
@@ -99,6 +102,7 @@ project "Game"
 		"Imgui.lib",
 		"Math.lib",
 		"Network.lib",
+		"SteamBinding.lib",
 
 		"assimp.lib",
 
@@ -145,24 +149,24 @@ project "Game"
 		}
 	filter {} -- disable the filter
 
-	postbuildcommands 
-	{ 
-		"{COPY} %{wks.location}/../3rdParty/*.dll $(OutDir)",
-		"{COPY} %{wks.location}/../3rdParty/assimp/5.2.4/Binary/*.dll $(OutDir)",
-		"{COPY} %{wks.location}/../3rdParty/glew/2.1.0/Binary/*.dll $(OutDir)",
-		"{COPY} %{wks.location}/../3rdParty/optick/1.3.1/Binary/*.dll $(OutDir)",
-		"{COPY} %{wks.location}/../3rdParty/SteamworksSDK/Binary/*.dll $(OutDir)",
-		"{COPY} %{wks.location}/../steam_appid.txt $(OutDir)",
-	}
-
-	filter "Debug*"
+	filter { "kind:*App" }
+		postbuildcommands 
+		{ 
+			"{COPY} %{wks.location}/../3rdParty/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/assimp/5.2.4/Binary/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/glew/2.1.0/Binary/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/optick/1.3.1/Binary/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/SteamworksSDK/Binary/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../steam_appid.txt $(OutDir)",
+		}
+	filter { "kind:*App", "Debug*" }
 		postbuildcommands 
 		{
 			"{COPY} %{wks.location}/../3rdParty/Freetype/2.13.3/Binary/debug/*.dll $(OutDir)",
 			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/debug/*.dll $(OutDir)",
 			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/debug/*.dll $(OutDir)",
 		}
-	filter "Release*"
+	filter { "kind:*App", "Release*" }
 		postbuildcommands 
 		{
 			"{COPY} %{wks.location}/../3rdParty/Freetype/2.13.3/Binary/release/*.dll $(OutDir)",
