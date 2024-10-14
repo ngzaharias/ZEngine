@@ -1,12 +1,15 @@
 #include "GameClientPCH.h"
 #include "GameClient/GameClient.h"
 
+#include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
+#include "Engine/PlatformManager.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
+#include "Engine/TableHeadmaster.h"
 #include "Engine/Window.h"
 #include "GameClient/HiddenCountComponent.h"
 #include "GameClient/HiddenGroupComponent.h"
@@ -36,9 +39,15 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
+		m_EntityWorld.RegisterResource(dependencies.m_PlatformManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
+		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
 		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
 		m_EntityWorld.RegisterResource(m_ReplicationPeer);
+
+		// tables
+		auto& headmaster = dependencies.m_TableHeadmaster;
+		m_EntityWorld.RegisterResource(headmaster.GetManager<eng::AchievementTable>());
 	}
 
 	// engine

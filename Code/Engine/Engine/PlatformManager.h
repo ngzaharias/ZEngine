@@ -1,8 +1,16 @@
 #pragma once
 
-#include <SteamBinding/Manager.h>
-
 class GameTime;
+
+namespace eng
+{
+	struct Achievement;
+}
+
+namespace steam
+{
+	class Manager;
+}
 
 namespace eng
 {
@@ -14,7 +22,9 @@ namespace eng
 
 		void Update(const GameTime& gameTime);
 
+		bool UnlockAchievement(const eng::Achievement& achievement);
+
 	private:
-		steam::Manager m_SteamManager;
+		steam::Manager* m_SteamManager = nullptr;
 	};
 }

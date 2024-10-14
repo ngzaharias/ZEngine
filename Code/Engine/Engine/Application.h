@@ -9,6 +9,7 @@
 #include "Engine/PrototypeManager.h"
 #include "Engine/ReplicationHost.h"
 #include "Engine/ReplicationPeer.h"
+#include "Engine/TableHeadmaster.h"
 #include "Engine/Window.h"
 
 class GameTime;
@@ -48,6 +49,8 @@ namespace eng
 		eng::PhysicsManager m_PhysicsManager;
 		eng::PlatformManager m_PlatformManager;
 		eng::PrototypeManager m_PrototypeManager;
+		eng::TableHeadmaster m_TableHeadmaster;
+
 		net::ComponentSerializer m_ComponentSerializer;
 	};
 }

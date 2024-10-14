@@ -24,7 +24,9 @@ void game::Application::Register()
 		m_AssetManager, 
 		m_NetworkManager,
 		m_PhysicsManager,
+		m_PlatformManager,
 		m_PrototypeManager,
+		m_TableHeadmaster,
 		m_ComponentSerializer };
 
 	svr::Dependencies serverDependencies = {

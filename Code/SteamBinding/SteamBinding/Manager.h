@@ -7,6 +7,11 @@
 
 namespace steam
 {
+	class Achievements;
+}
+
+namespace steam
+{
 	class Manager final
 	{
 	public:
@@ -15,7 +20,10 @@ namespace steam
 
 		void Update();
 
+		bool UnlockAchievement(const char* achievementId);
+
 	private:
+		steam::Achievements* m_Achievements = nullptr;
 		bool m_IsConnected = false;
 	};
 }

@@ -5,6 +5,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/ReplicationHost.h"
 #include "GameClient/AccelerationSystem.h"
+#include "GameClient/AchievementSystem.h"
 #include "GameClient/DragMovementSystem.h"
 #include "GameClient/DragSelectionSystem.h"
 #include "GameClient/GameStateSystem.h"
@@ -27,6 +28,7 @@
 
 void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 {
+	entityWorld.RegisterSystem<clt::AchievementSystem>();
 	entityWorld.RegisterSystem<drag::MovementSystem>();
 	entityWorld.RegisterSystem<drag::SelectionSystem>();
 	entityWorld.RegisterSystem<gamestate::NetworkHostSystem>();

@@ -2,6 +2,7 @@
 #include "Engine/Application.h"
 
 #include "Core/GameTime.h"
+#include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/FileHelpers.h"
@@ -171,6 +172,11 @@ void eng::Application::Register()
 		m_PrototypeManager.Register<eng::TransformComponent>();
 		m_PrototypeManager.Register<voxel::ChunkComponent>();
 	}
+
+	// tables
+	{
+		m_TableHeadmaster.Register<eng::AchievementTable>("Achievements");
+	}
 }
 
 void eng::Application::Initialise()
@@ -182,6 +188,7 @@ void eng::Application::Initialise()
 	m_ImguiManager.Initialise(*m_Window);
 	m_PhysicsManager.Initialise();
 	m_PlatformManager.Initialise();
+	m_TableHeadmaster.Initialise(str::Path(str::EPath::Assets, "Tables"));
 }
 
 void eng::Application::PreUpdate(const GameTime& gameTime)
@@ -206,6 +213,7 @@ void eng::Application::Shutdown()
 {
 	PROFILE_FUNCTION();
 
+	m_TableHeadmaster.Shutdown();
 	m_PlatformManager.Shutdown();
 	m_PhysicsManager.Shutdown();
 	m_ImguiManager.Shutdown();

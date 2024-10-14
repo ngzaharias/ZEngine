@@ -1,14 +1,14 @@
 #include "EnginePCH.h"
 #include "Engine/PlatformManager.h"
 
-namespace
-{
-	constexpr uint32 s_AppId = 3208630;
-}
+#include "Core/Name.h"
+#include "Engine/AchievementTable.h"
+#include "SteamBinding/Manager.h"
 
 void eng::PlatformManager::Initialise()
 {
-	if (m_SteamManager.Initialise())
+	m_SteamManager = new steam::Manager();
+	if (m_SteamManager->Initialise())
 	{
 		Z_LOG(ELog::Debug, "Platform: Initialise - Steamworks.");
 	}
@@ -20,13 +20,21 @@ void eng::PlatformManager::Initialise()
 
 void eng::PlatformManager::Shutdown()
 {
-	if (m_SteamManager.Shutdown())
+	if (m_SteamManager->Shutdown())
 	{
 		Z_LOG(ELog::Debug, "Platform: Shutdown - Steamworks.");
 	}
+
+	delete m_SteamManager;
+	m_SteamManager = nullptr;
 }
 
 void eng::PlatformManager::Update(const GameTime& gameTime)
 {
-	m_SteamManager.Update();
+	m_SteamManager->Update();
+}
+
+bool eng::PlatformManager::UnlockAchievement(const eng::Achievement& achievement)
+{
+	return m_SteamManager->UnlockAchievement(achievement.m_Identifier.ToChar());
 }
