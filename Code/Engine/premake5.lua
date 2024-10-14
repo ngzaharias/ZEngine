@@ -32,7 +32,6 @@ project "Engine"
 		"%{wks.location}/../3rdParty/PhysX/Include/",
 		"%{wks.location}/../3rdParty/SFML/Include/",
 		"%{wks.location}/../3rdParty/SteamworksSDK/Include/",
-		"%{wks.location}/../3rdParty/tinyxml2/9.0.0/",
 		"%{wks.location}/../3rdParty/yojimbo/1.2.1/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
@@ -43,7 +42,7 @@ project "Engine"
 		"%{wks.location}/../Code/SteamBinding/",
 	}
 
-	dependson 
+	links 
 	{ 
 		"Core", 
 		"Imgui", 
@@ -51,5 +50,3 @@ project "Engine"
 		"Network", 
 		"SteamBinding",
 	}
-
-	-- #todo: https://github.com/Meoo/premake-export

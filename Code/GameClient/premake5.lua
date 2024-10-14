@@ -31,7 +31,7 @@ project "GameClient"
 		"%{wks.location}/../Code/Network/",
 	}
 
-	dependson 
+	links 
 	{ 
 		"Core", 
 		"ECS", 

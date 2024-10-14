@@ -1,6 +1,5 @@
 project "SteamBinding"
 	kind "StaticLib"
-	dependson { }
 	location "%{wks.location}/SteamBinding"
 	
 	vpaths 
