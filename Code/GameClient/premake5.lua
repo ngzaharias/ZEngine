@@ -1,6 +1,5 @@
 project "GameClient"
 	kind "StaticLib"
-	dependson { "Core", "ECS", "Engine", "GameShared", "Imgui", "Math", "Network" }
 	pchheader "GameClientPCH.h"
 	pchsource "GameClient/GameClientPCH.cpp"
 	location "%{wks.location}/GameClient"
@@ -30,4 +29,15 @@ project "GameClient"
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
+	}
+
+	dependson 
+	{ 
+		"Core", 
+		"ECS", 
+		"Engine", 
+		"GameShared", 
+		"Imgui", 
+		"Math", 
+		"Network",
 	}

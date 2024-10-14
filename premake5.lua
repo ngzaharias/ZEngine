@@ -11,6 +11,7 @@ workspace "ZEngine"
 	buildoptions { "/Zc:__cplusplus" }
 	platforms { "x64" }
 	startproject "Game"
+	inheritdependencies "On"
 
 	targetdir "%{wks.location}/Build/%{prj.name}/%{cfg.buildcfg}_%{cfg.platform}/"
 	objdir "%{wks.location}/Intermediate/%{prj.name}/%{cfg.buildcfg}_%{cfg.platform}/"

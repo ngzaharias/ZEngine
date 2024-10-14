@@ -1,6 +1,5 @@
 project "GameClient_ut"
 	kind "ConsoleApp"
-	dependson { "Core", "ECS", "Engine", "GameClient", "Math" }
 	location "%{wks.location}/GameClient_ut"
 
 	defines { "Z_UNIT_TEST" }
@@ -22,21 +21,16 @@ project "GameClient_ut"
 	includedirs 
 	{ 
 		"%{wks.location}/../3rdParty/",
-		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
-		"%{wks.location}/../3rdParty/SFML/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
 		"%{wks.location}/../Code/GameClient/",
+		"%{wks.location}/../Code/Math/",
 	}
 
 	libdirs 
 	{ 
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
-		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/ECS/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/Engine/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/GameClient/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
 
 	filter "Debug*"
@@ -53,10 +47,12 @@ project "GameClient_ut"
 	
 	links 
 	{ 
-		"Core.lib",
-		"ECS.lib",
-		"Engine.lib",
-		"GameClient.lib",
+		"Core",
+		"ECS",
+		"Engine",
+		"GameClient",
+		"Math",
+
 		"OptickCore.lib",
 	}
 

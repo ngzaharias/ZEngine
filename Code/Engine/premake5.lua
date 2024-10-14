@@ -1,6 +1,5 @@
 project "Engine"
 	kind "StaticLib"
-	dependson { "Core", "Imgui", "Math", "Network", "SteamBinding" }
 	pchheader "EnginePCH.h"
 	pchsource "Engine/EnginePCH.cpp"
 	location "%{wks.location}/Engine"
@@ -42,6 +41,15 @@ project "Engine"
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
 		"%{wks.location}/../Code/SteamBinding/",
+	}
+
+	dependson 
+	{ 
+		"Core", 
+		"Imgui", 
+		"Math", 
+		"Network", 
+		"SteamBinding",
 	}
 
 	-- #todo: https://github.com/Meoo/premake-export

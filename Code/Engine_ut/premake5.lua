@@ -1,6 +1,5 @@
 project "Engine_ut"
 	kind "ConsoleApp"
-	dependson { "Core", "ECS", "Engine", "Math" }
 	location "%{wks.location}/Engine_ut"
 
 	defines { "Z_UNIT_TEST" }
@@ -23,24 +22,15 @@ project "Engine_ut"
 	{ 
 		"%{wks.location}/../3rdParty/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
-		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
-		"%{wks.location}/../3rdParty/SFML/Include/",
 		"%{wks.location}/../Code/Core/",
-		"%{wks.location}/../Code/ECS/",
-		"%{wks.location}/../Code/Engine/",
 		"%{wks.location}/../Code/Math/",
-		"%{wks.location}/../Code/SteamBinding/",
+		"%{wks.location}/../Code/Engine/",
 	}
 
 	libdirs 
 	{ 
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
 		"%{wks.location}/../3rdParty/SteamworksSDK/Library/",
-		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/ECS/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/Engine/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/Math/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/SteamBinding/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
 
 	filter "Debug*"
@@ -57,14 +47,13 @@ project "Engine_ut"
 	
 	links 
 	{ 
-		"Core.lib",
-		"ECS.lib",
-		"Engine.lib",
-		"Math.lib",
-		"SteamBinding.lib",
+		"Core",
+		"ECS",
+		"Engine",
+		"Math",
+		"SteamBinding",
 
 		"OptickCore.lib",
-
 		"steam_api64.lib",
 	}
 

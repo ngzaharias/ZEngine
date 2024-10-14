@@ -1,12 +1,13 @@
 project "Imgui"
 	kind "StaticLib"
-	dependson { "Core", "Math" }
 	location "%{wks.location}/Imgui"
+
 	files 
 	{ 
 		"%{prj.location}/**.h",
 		"%{prj.location}/**.inl",
 		"%{prj.location}/**.cpp",
+
 		"%{wks.location}/../3rdParty/imgui/1.87/Include/imgui/*.h",
 		"%{wks.location}/../3rdParty/imgui/1.87/Include/imgui/*.inl",
 		"%{wks.location}/../3rdParty/imgui/1.87/Include/imgui/*.cpp",
@@ -54,3 +55,10 @@ project "Imgui"
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",
 	}
+
+	links 
+	{ 
+		"Core", 
+		"Math",
+	}
+

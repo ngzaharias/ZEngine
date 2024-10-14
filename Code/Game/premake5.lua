@@ -6,7 +6,6 @@ project "Game"
 		kind "StaticLib"
 	filter {} -- disable the filter
 
-	dependson { "Core", "Engine", "GameClient", "GameDebug", "GameServer", "GameShared", "Imgui", "Math", "Network", "SteamBinding" }
 	pchheader "GamePCH.h"
 	pchsource "Game/GamePCH.cpp"
 	location "%{wks.location}/Game"
@@ -57,18 +56,6 @@ project "Game"
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Library/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
 		"%{wks.location}/../3rdParty/SteamworksSDK/Library/",
-		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/ECS/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/Engine/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/GameClient/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/GameDebug/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/GameServer/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/GameShared/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/GameUI/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/Imgui/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/Math/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/Network/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/SteamBinding/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
 
 	filter "Debug*"
@@ -91,36 +78,30 @@ project "Game"
 
 	links 
 	{ 
-		"Core.lib",
-		"ECS.lib",
-		"Engine.lib",
-		"GameClient.lib",
-		"GameDebug.lib",
-		"GameServer.lib",
-		"GameShared.lib",
-		"GameUI.lib",
-		"Imgui.lib",
-		"Math.lib",
-		"Network.lib",
-		"SteamBinding.lib",
+		"Core",
+		"ECS",
+		"Engine",
+		"GameClient",
+		"GameDebug",
+		"GameServer",
+		"GameShared",
+		"GameUI",
+		"Imgui",
+		"Math",
+		"Network",
+		"SteamBinding",
 
 		"assimp.lib",
-
 		"freetype.lib",
-
 		"glew32.lib",
 		"glfw3.lib",
-
 		"OptickCore.lib",
-
 		"PhysX_64.lib",
 		"PhysXCommon_64.lib",
 		"PhysXExtensions_static_64.lib",
 		"PhysXFoundation_64.lib",
 		"PhysXPvdSDK_static_64.lib",
-
 		"steam_api64.lib",
-
 		"yojimbo.lib",
 
 		"Dbghelp.lib",

@@ -1,6 +1,5 @@
 project "GameShared"
 	kind "StaticLib"
-	dependson { "Core", "ECS", "Engine", "Math", "Network" }
 	pchheader "GameSharedPCH.h"
 	pchsource "GameShared/GameSharedPCH.cpp"
 	location "%{wks.location}/GameShared"
@@ -24,4 +23,13 @@ project "GameShared"
 		"%{wks.location}/../Code/GameShared/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
+	}
+
+	links 
+	{ 
+		"Core", 
+		"ECS", 
+		"Engine", 
+		"Math", 
+		"Network",
 	}
