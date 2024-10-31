@@ -76,8 +76,8 @@ void eng::ImguiManager::Shutdown()
 		ImGui_ImplGlfw_Shutdown();
 	}
 
-	//ImNodes::DestroyContext();
-	//ImGui::DestroyContext();
+	ImNodes::DestroyContext();
+	ImGui::DestroyContext();
 }
 
 void eng::ImguiManager::PreUpdate()
@@ -94,12 +94,12 @@ void eng::ImguiManager::PostUpdate()
 {
 	PROFILE_FUNCTION();
 
-	//// render
-	//{
-	//	PROFILE_CUSTOM("ImGui::Render");
-	//	ImGui::Render();
-	//	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	//}
+	// render
+	{
+		PROFILE_CUSTOM("ImGui::Render");
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
 
 	// viewports
 	{

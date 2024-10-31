@@ -63,7 +63,7 @@ project "Editor"
 		libdirs 
 		{
 			"%{wks.location}/../3rdParty/Freetype/2.13.3/Library/debug",
-			"%{wks.location}/../3rdParty/SFML/Library/debug/",
+			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/debug/",
 			"%{wks.location}/../3rdParty/PhysX/Library/debug/",
 			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/debug/",
 		}
@@ -71,7 +71,7 @@ project "Editor"
 		libdirs 
 		{
 			"%{wks.location}/../3rdParty/Freetype/2.13.3/Library/release",
-			"%{wks.location}/../3rdParty/SFML/Library/release/",
+			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/release/",
 			"%{wks.location}/../3rdParty/PhysX/Library/release/",
 			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/release/",
 		}

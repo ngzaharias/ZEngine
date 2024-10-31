@@ -108,8 +108,10 @@ void eng::Application::Execute(int argc, char* argv[])
 			isWaitingForProfiler = false;
 		}
 
-		sf::Time elapsed = clock.restart();
-		gameTime.m_DeltaTime = elapsed.asSeconds();
+		lastTime = currTime;
+		currTime = glfwGetTime();
+
+		gameTime.m_DeltaTime = static_cast<float>(currTime - lastTime);
 		gameTime.m_TotalTime += gameTime.m_DeltaTime;
 		gameTime.m_Frame++;
 

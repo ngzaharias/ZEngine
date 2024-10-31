@@ -36,7 +36,6 @@ void eng::RenderStage_Lines::Shutdown(ecs::EntityWorld& entityWorld)
 void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
-	return;
 
 	World world = entityWorld.GetWorldView<World>();
 	auto& assetManager = world.WriteResource<eng::AssetManager>();

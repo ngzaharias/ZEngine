@@ -53,11 +53,13 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 			auto& localSettings = windowComponent.m_Local;
 			auto& gizmoSettings = localSettings.m_Gizmos;
 
-			imgui::Inspector inspector;
-			if (inspector.Begin("##local"))
 			{
-				inspector.Write("Gizmos", gizmoSettings);
-				inspector.End();
+				imgui::Inspector inspector;
+				if (inspector.Begin("##local"))
+				{
+					inspector.Write("Gizmos", gizmoSettings);
+					inspector.End();
+				}
 			}
 
 			if (ImGui::Button("Apply"))
