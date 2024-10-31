@@ -1,14 +1,16 @@
 #include "GamePCH.h"
 #include "Game/Application.h"
 
+#include "Engine/ExceptionFilter.h"
 #include "Engine/FileHelpers.h"
 
+#include <filesystem>
 #include <direct.h>
 #include <windows.h>
 
 int main(int agrc, char* argv[])
 {
-	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
+	SetUnhandledExceptionFilter(eng::UnhandledExceptionFilter);
 
 	const str::Path appdataDirectory = eng::GetAppDataDirectory();
 	const str::Path assetsDirectory = eng::GetAssetsDirectory();
@@ -19,12 +21,16 @@ int main(int agrc, char* argv[])
 
 	str::SetPath(str::EPath::AppData, appdataDirectory);
 	str::SetPath(str::EPath::Assets, assetsDirectory);
+	str::SetPath(str::EPath::Config, configDirectory);
 	str::SetPath(str::EPath::Executable, executableFilepath);
 	str::SetPath(str::EPath::WorkingDir, workingDirectory);
 
-	// #todo: handle result
+	std::filesystem::create_directories(appdataDirectory.ToChar());
+
 	const int chdirResult = _chdir(immediateDirectory.ToChar());
 	Z_PANIC(chdirResult == 0, "Failed to swap to immediate directory [{}]", immediateDirectory.ToChar());
+	if (chdirResult != 0)
+		return -1;
 
 	core::LogInitialise();
 

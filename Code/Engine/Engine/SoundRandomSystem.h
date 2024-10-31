@@ -27,9 +27,6 @@ namespace eng::sound
 			eng::sound::RandomBufferComponent,
 			const eng::sound::RandomRequestComponent>;
 
-		void Initialise(World& world);
-		void Shutdown(World& world);
-
 		void Update(World& world, const GameTime& gameTime);
 	};
 };

@@ -1,6 +1,5 @@
 project "Core_ut"
 	kind "ConsoleApp"
-	dependson { "Core", "Math" }
 	location "%{wks.location}/Core_ut"
 
 	defines { "Z_UNIT_TEST" }
@@ -27,14 +26,9 @@ project "Core_ut"
 		"%{wks.location}/../Code/Math/",
 	}
 
-	libdirs 
-	{ 
-		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/Math/%{cfg.buildcfg}_%{cfg.platform}/" 
-	}
-	
 	links 
 	{ 
-		"Core.lib",
-		"Math.lib" 
+		"Core", 
+		"Math",
 	}
+

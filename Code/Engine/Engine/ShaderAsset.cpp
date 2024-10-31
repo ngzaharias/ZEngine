@@ -47,21 +47,21 @@ namespace
 }
 
 template<>
-void eng::Visitor::VisitCustom<Programs>(Programs& value)
+void eng::Visitor::ReadCustom(Programs& value) const
 {
-	Visit(strFragment, value.m_Fragment, {});
-	Visit(strVertex, value.m_Vertex, {});
+	Read(strFragment, value.m_Fragment, {});
+	Read(strVertex, value.m_Vertex, {});
 }
 
 void eng::ShaderAssetLoader::Bindings(const uint32 programId, ShaderAsset& asset)
 {
-	auto ATTRIBUTE = [&programId](const char* name, Nullable<uint32>& out_Value)
+	auto ATTRIBUTE = [&programId](const char* name, Optional<uint32>& out_Value)
 	{
 		const int32 location = glGetAttribLocation(programId, name);
 		if (location != -1) out_Value = location;
 	};
 
-	auto UNIFORM = [&programId](const char* name, Nullable<uint32>& out_Value)
+	auto UNIFORM = [&programId](const char* name, Optional<uint32>& out_Value)
 	{
 		const int32 location = glGetUniformLocation(programId, name);
 		if (location != -1) out_Value = location;
@@ -143,7 +143,7 @@ uint32 eng::ShaderAssetLoader::Compile(uint32 shaderType, const str::StringView&
 bool eng::ShaderAssetLoader::Load(ShaderAsset& asset, eng::Visitor& visitor) const
 {
 	Programs programs;
-	visitor.Visit(strPrograms, programs, {});
+	visitor.Read(strPrograms, programs, {});
 
 	asset.m_ProgramId = glCreateProgram();
 

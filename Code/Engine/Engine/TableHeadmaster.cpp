@@ -16,7 +16,7 @@ void eng::TableHeadmaster::Initialise(const str::Path& folderPath)
 
 		eng::Visitor visitor;
 		if (visitor.LoadFromFile(filepath))
-			entry.m_Manager->Visit(visitor);
+			entry.m_Manager->Read(visitor);
 	}
 }
 

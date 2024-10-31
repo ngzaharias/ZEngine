@@ -11,6 +11,15 @@ class OBB3f;
 class Rotator;
 class Sphere3f;
 
+namespace eng::camera
+{
+	struct Orthographic;
+	struct Perspective;
+	using Projection = Variant<
+		Orthographic,
+		Perspective>;
+}
+
 namespace eng
 {
 	struct LineVertex
@@ -29,12 +38,11 @@ namespace eng
 		/// \brief Adds a circle.
 		void AddCircle(const Vector3f& translate, const Circle2f& circle, const Vector4f& colour);
 
-		/// \brief Adds a frustum using a projection.
-		void AddFrustum(const Vector3f& translate, const Rotator& rotate, const camera::Projection& projection, const Vector4f& colour);
-		/// \brief Adds a frustum using a orthographic projection.
-		void AddFrustum(const Vector3f& translate, const Rotator& rotate, const camera::Orthographic& projection, const Vector4f& colour);
-		/// \brief Adds a frustum using a perspective projection.
-		void AddFrustum(const Vector3f& translate, const Rotator& rotate, const camera::Perspective& projection, const Vector4f& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Vector4f& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Vector4f& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Vector4f& colour);
+
+		void AddIcosphere(const Vector3f& translate, const Sphere3f& sphere, const Vector4f& colour);
 
 		/// \brief Adds a flat top hexagon.
 		void AddHexagon(const Vector3f& translate, const float radius, const Vector4f& colour);

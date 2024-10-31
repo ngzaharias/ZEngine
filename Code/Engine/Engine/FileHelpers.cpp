@@ -18,7 +18,7 @@ str::Path eng::GetAppDataDirectory()
 	wcstombs_s(count, cDirectory, wDirectory, MAX_PATH);
 
 	str::String string = cDirectory;
-	return str::Path(std::move(string), "\\");
+	return str::Path(std::move(string), "\\ZEngine\\");
 #endif
 }
 
@@ -137,16 +137,15 @@ str::Path eng::SaveFileDialog(const SaveFileSettings& settings)
 	std::vector<std::string> filters;
 	filters.insert(filters.end(), settings.m_Filters.begin(), settings.m_Filters.end());
 
-	pfd::save_file saveFile = pfd::save_file(
-		settings.m_Title,
-		settings.m_Path,
-		filters,
-		pfd::opt::force_overwrite);
+	pfd::opt option = pfd::opt::none;
+	if (settings.m_Overwrite)
+		option = pfd::opt::force_overwrite;
 
+	pfd::save_file saveFile = pfd::save_file(settings.m_Title, settings.m_Path, filters, option);
 	return saveFile.result();
 }
 
-Array<str::Path> eng::SelectFileDialog(const SelectFileSettings& settings)
+str::Path eng::SelectFileDialog(const SelectFileSettings& settings)
 {
 	std::vector<std::string> filters;
 	filters.insert(filters.end(), settings.m_Filters.begin(), settings.m_Filters.end());
@@ -155,7 +154,24 @@ Array<str::Path> eng::SelectFileDialog(const SelectFileSettings& settings)
 		settings.m_Title,
 		settings.m_Path,
 		filters,
-		settings.m_IsMultiSelect ? pfd::opt::multiselect : pfd::opt::none);
+		pfd::opt::none);
+
+	str::Path path;
+	for (const auto& name : openFile.result())
+		path = name;
+	return path;
+}
+
+Array<str::Path> eng::SelectFilesDialog(const SelectFilesSettings& settings)
+{
+	std::vector<std::string> filters;
+	filters.insert(filters.end(), settings.m_Filters.begin(), settings.m_Filters.end());
+
+	pfd::open_file openFile = pfd::open_file(
+		settings.m_Title,
+		settings.m_Path,
+		filters,
+		pfd::opt::multiselect);
 
 	Array<str::Path> filepaths;
 	for (const auto& name : openFile.result())

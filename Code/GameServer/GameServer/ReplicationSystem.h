@@ -5,22 +5,20 @@
 namespace net
 {
 	class ReplicationHost;
+	struct HostReplicationComponent;
 }
 
 namespace net
 {
-	struct HostReplicationComponent;
-
 	class ReplicationSystem : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<net::HostReplicationComponent>;
-
-		ReplicationSystem(net::ReplicationHost& replicationHost);
+		using World = ecs::WorldView<
+			// Resources
+			net::ReplicationHost,
+			// Components
+			net::HostReplicationComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
-
-	private:
-		net::ReplicationHost& m_ReplicationHost;
 	};
 }

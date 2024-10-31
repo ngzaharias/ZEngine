@@ -22,9 +22,9 @@
 
 namespace
 {
-	const str::Guid strDebugDepthShader = GUID("2f0111d0-8959-4da7-a244-2b80f21b318f");
-	const str::Guid strPhongShader = GUID("ba38d79a-2027-4095-b6b4-5ceca225cb3e");
-	const str::Guid strUnlitShader = GUID("a926fe41-31fa-440b-8dd7-2086d3258b75");
+	const str::Guid strDebugDepthShader = GUID("2f0111d089594da7a2442b80f21b318f");
+	const str::Guid strPhongShader = GUID("ba38d79a20274095b6b45ceca225cb3e");
+	const str::Guid strUnlitShader = GUID("a926fe4131fa440b8dd72086d3258b75");
 
 	struct Sort
 	{
@@ -46,15 +46,6 @@ namespace
 	};
 }
 
-eng::RenderStage_Opaque::RenderStage_Opaque(eng::AssetManager& assetManager)
-	: RenderStage(assetManager)
-{
-}
-
-eng::RenderStage_Opaque::~RenderStage_Opaque()
-{
-}
-
 void eng::RenderStage_Opaque::Initialise(ecs::EntityWorld& entityWorld)
 {
 	glGenBuffers(1, &m_ColourBuffer);
@@ -73,14 +64,9 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	using World = ecs::WorldView<
-		const eng::CameraComponent,
-		const eng::LightAmbientComponent,
-		const eng::LightDirectionalComponent,
-		const eng::LightPointComponent,
-		const eng::StaticMeshComponent,
-		const eng::TransformComponent>;
+
 	World world = entityWorld.GetWorldView<World>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -96,10 +82,10 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 		glFrontFace(GL_CW);
 	}
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.GetComponent<const eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
@@ -111,8 +97,8 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 		{
 			for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::StaticMeshComponent, const eng::TransformComponent>>())
 			{
-				const auto& meshComponent = world.GetComponent<const eng::StaticMeshComponent>(renderEntity);
-				const auto& meshTransform = world.GetComponent<const eng::TransformComponent>(renderEntity);
+				const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(renderEntity);
+				const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
 				if (!meshComponent.m_StaticMesh.IsValid())
 					continue;
@@ -140,7 +126,7 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 		{
 			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::LightAmbientComponent>>())
 			{
-				const auto& lightComponent = world.GetComponent<const eng::LightAmbientComponent>(entity);
+				const auto& lightComponent = world.ReadComponent<eng::LightAmbientComponent>(entity);
 				stageData.m_LightAmbient_Colour.Append(lightComponent.m_Colour);
 			}
 		}
@@ -149,8 +135,8 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 		{
 			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::LightDirectionalComponent, const eng::TransformComponent>>())
 			{
-				const auto& lightComponent = world.GetComponent<const eng::LightDirectionalComponent>(entity);
-				const auto& lightTransform = world.GetComponent<const eng::TransformComponent>(entity);
+				const auto& lightComponent = world.ReadComponent<eng::LightDirectionalComponent>(entity);
+				const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(entity);
 				const Matrix3x3 rotation = Matrix3x3::FromRotate(lightTransform.m_Rotate);
 
 				stageData.m_LightDirectional_Colour.Append(lightComponent.m_Colour);
@@ -162,8 +148,8 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 		{
 			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::LightPointComponent, const eng::TransformComponent>>())
 			{
-				const auto& lightComponent = world.GetComponent<const eng::LightPointComponent>(entity);
-				const auto& lightTransform = world.GetComponent<const eng::TransformComponent>(entity);
+				const auto& lightComponent = world.ReadComponent<eng::LightPointComponent>(entity);
+				const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(entity);
 
 				stageData.m_LightPoint_Range.Append(lightComponent.m_Range);
 				stageData.m_LightPoint_Colour.Append(lightComponent.m_Colour);
@@ -180,15 +166,15 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 			if (!isSameBatch)
 			{
-				RenderBatch(entityWorld, batchID, batchData, stageData);
+				RenderBatch(world, batchID, batchData, stageData);
 				batchData.m_Colours.RemoveAll();
 				batchData.m_Models.RemoveAll();
 				batchData.m_TexParams.RemoveAll();
 			}
 
-			const auto& meshComponent = world.GetComponent<const eng::StaticMeshComponent>(id.m_Entity);
-			const auto& meshTransform = world.GetComponent<const eng::TransformComponent>(id.m_Entity);
-			const auto& meshAsset = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
+			const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(id.m_Entity);
+			const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
+			const auto& meshAsset = *assetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
 
 			const Matrix4x4 model = meshTransform.ToTransform();
 
@@ -202,16 +188,17 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 			batchID = id;
 		}
 
-		RenderBatch(entityWorld, batchID, batchData, stageData);
+		RenderBatch(world, batchID, batchData, stageData);
 	}
 }
 
-void eng::RenderStage_Opaque::RenderBatch(ecs::EntityWorld& entityWorld, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData)
+void eng::RenderStage_Opaque::RenderBatch(World& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData)
 {
 	PROFILE_FUNCTION();
 
-	const auto& mesh = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto& shader = *m_AssetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
 
 	glUseProgram(shader.m_ProgramId);
 
@@ -337,7 +324,7 @@ void eng::RenderStage_Opaque::RenderBatch(ecs::EntityWorld& entityWorld, const R
 
 			if (shader.u_Texture_ShadowMap)
 			{
-				auto& component = entityWorld.GetSingleton<eng::FrameBufferComponent>();
+				auto& component = world.WriteSingleton<eng::FrameBufferComponent>();
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, component.m_ShadowTexture);
 			}

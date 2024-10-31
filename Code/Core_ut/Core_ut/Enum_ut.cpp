@@ -19,6 +19,15 @@ TEST_CASE("enum::EnumToCount. Get number of values in the enum.")
 	CHECK(EnumToCount<EnumA>() == 5);
 }
 
+TEST_CASE("enum::EnumToIndex. Convert enum value to index integer.")
+{
+	CHECK(EnumToIndex(EnumA::First) == 0);
+	CHECK(EnumToIndex(EnumA::Second) == 1);
+	CHECK(EnumToIndex(EnumA::Third) == 2);
+	CHECK(EnumToIndex(EnumA::Fifty) == 3);
+	CHECK(EnumToIndex(EnumA::Leet) == 4);
+}
+
 TEST_CASE("enum::EnumToString. Convert enum type to string.")
 {
 	CHECK(EnumToString<EnumA>() == "EnumA");

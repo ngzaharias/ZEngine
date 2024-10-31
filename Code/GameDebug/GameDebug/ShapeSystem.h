@@ -2,6 +2,7 @@
 
 #include "ECS/Component.h"
 #include "ECS/System.h"
+#include "imgui/Identifier.h"
 
 namespace ecs
 {
@@ -22,5 +23,8 @@ namespace dbg
 			const dbg::ShapeWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		imgui::Identifier m_WindowIds = {};
 	};
 }

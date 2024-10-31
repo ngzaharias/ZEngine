@@ -8,28 +8,18 @@
 #include "Engine/SoundAssets.h"
 #include "Engine/SoundComponents.h"
 
-void eng::sound::SequenceSystem::Initialise(World& world)
-{
-	world.AddSingleton<eng::sound::SequenceBufferComponent>();
-}
-
-void eng::sound::SequenceSystem::Shutdown(World& world)
-{
-	world.RemoveSingleton<eng::sound::SequenceBufferComponent>();
-}
-
 void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.GetResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
-	auto& bufferComponent = world.GetSingleton<eng::sound::SequenceBufferComponent>();
+	auto& bufferComponent = world.WriteSingleton<eng::sound::SequenceBufferComponent>();
 	bufferComponent.m_Requests.RemoveAll();
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SequenceRequestComponent>>())
 	{
-		const auto& requestComponent = world.GetComponent<const eng::sound::SequenceRequestComponent>(entity);
+		const auto& requestComponent = world.ReadComponent<eng::sound::SequenceRequestComponent>(entity);
 		if (!requestComponent.m_Handle.IsValid())
 			continue;
 
@@ -40,7 +30,7 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 		const int32 count = sequenceAsset->m_Handles.GetCount();
 
 		auto& sequenceComponent = world.HasComponent<eng::sound::SequenceComponent>(entity)
-			? world.GetComponent<eng::sound::SequenceComponent>(entity)
+			? world.WriteComponent<eng::sound::SequenceComponent>(entity)
 			: world.AddComponent<eng::sound::SequenceComponent>(entity);
 		if (sequenceComponent.m_Handle != requestComponent.m_Handle)
 		{

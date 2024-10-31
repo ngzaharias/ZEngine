@@ -2,13 +2,19 @@
 #include "GameDebug/OverlaySystem.h"
 
 #include "Core/GameTime.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "Engine/ColourHelpers.h"
 #include "Engine/Screen.h"
+#include "Engine/VersionComponent.h"
 #include "GameDebug/FPSCounter.h"
 #include "Math/Math.h"
+#include "Math/Matrix.h"
 #include "Math/Vector.h"
 
 #include <imgui/imgui.h>
+#include <imguizmo/ImGuizmo.h>
 
 namespace
 {
@@ -20,7 +26,7 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	constexpr auto s_Flags =
+	constexpr ImGuiWindowFlags s_Flags =
 		ImGuiWindowFlags_NoBackground |
 		ImGuiWindowFlags_NoBringToFrontOnFocus |
 		ImGuiWindowFlags_NoCollapse |
@@ -36,11 +42,29 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 		ImGuiWindowFlags_NoScrollWithMouse |
 		ImGuiWindowFlags_NoTitleBar;
 
-	ImGui::SetNextWindowPos({ 0, 0 });
-	ImGui::SetNextWindowSize({ Screen::width, Screen::height });
+	ImGuiWindowClass windowClass;
+	windowClass.ViewportFlagsOverrideClear |= ImGuiViewportFlags_NoAutoMerge;
+	ImGui::SetNextWindowClass(&windowClass);
+
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->Pos);
+	ImGui::SetNextWindowSize(viewport->Size);
 	if (ImGui::Begin("Overlay", nullptr, s_Flags))
 	{
 		ImGui::NewLine();
+
+		// version
+		{
+			const auto& component = world.ReadSingleton<eng::VersionComponent>();
+			if (!component.m_Commit.empty())
+			{
+				ImGui::Text("%s : %s", component.m_Commit.c_str(), component.m_Branch.c_str());
+			}
+			else if (!component.m_Version.empty())
+			{
+				ImGui::Text("%s", component.m_Version.c_str());
+			}
+		}
 
 		// resolution
 		{

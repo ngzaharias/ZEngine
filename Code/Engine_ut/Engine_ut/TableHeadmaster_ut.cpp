@@ -24,10 +24,10 @@ namespace eng
 		int32& m_Value;
 	};
 
-	const str::Guid strGuid1 = str::Guid::Create("38f8294f-bc66-4644-a48a-951a4595deb4");
-	const str::Guid strGuid2 = str::Guid::Create("99b96b9a-87dd-4e5c-b511-93fffbfbe051");
-	const str::Guid strGuid3 = str::Guid::Create("e27cf062-e71e-4179-9ea3-7ddcc57e447f");
-	const str::Guid strGuid4 = str::Guid::Create("8b348b28-85f2-4664-a9df-ec564a276e61");
+	const str::Guid strGuid1 = str::Guid::Create("38f8294fbc664644a48a951a4595deb4");
+	const str::Guid strGuid2 = str::Guid::Create("99b96b9a87dd4e5cb51193fffbfbe051");
+	const str::Guid strGuid3 = str::Guid::Create("e27cf062e71e41799ea37ddcc57e447f");
+	const str::Guid strGuid4 = str::Guid::Create("8b348b2885f24664a9dfec564a276e61");
 
 	const str::Name strName1 = str::Name::Create("First");
 	const str::Name strName2 = str::Name::Create("Second");
@@ -41,9 +41,9 @@ namespace eng
 }
 
 template<>
-void eng::Visitor::VisitCustom<eng::MyObject>(eng::MyObject& value)
+void eng::Visitor::ReadCustom(eng::MyObject& value) const
 {
-	Visit("m_Int32", value.m_Int32, 0);
+	Read("m_Int32", value.m_Int32, 0);
 }
 
 namespace eng

@@ -23,11 +23,12 @@ namespace
 		ImGuiDockNodeFlags_NoCloseButton |
 		ImGuiDockNodeFlags_NoWindowMenuButton;
 	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 
 	const char* ToName(const dbg::Shape& value)
@@ -36,7 +37,6 @@ namespace
 			[](const AABB2f&) { return "AABB2f"; },
 			[](const Circle2f&) { return "Circle2f"; },
 			[](const Line2f&) { return "Line2f"; },
-			[](const OBB2f&) { return "OBB2f"; },
 			[](const Ray2f&) { return "Ray2f"; },
 			[](const Segment2f&) { return "Segment2f"; },
 			[](const Triangle2f&) { return "Triangle2f"; });
@@ -44,11 +44,10 @@ namespace
 
 	bool IsColliding(const dbg::Shape& a, const dbg::Shape& b)
 	{
-		return false;
-		//return std::visit([](const auto& a, const auto& b) -> bool
-		//	{
-		//		return math::IsOverlapping(a, b);
-		//	}, a, b);
+		return std::visit([](const auto& a, const auto& b) -> bool
+			{
+				return math::IsOverlapping(a, b);
+			}, a, b);
 	}
 
 	void InspectShape(dbg::Shape& value)
@@ -64,8 +63,6 @@ namespace
 				value = Circle2f(Vector2f::Zero, 1.f);
 			if (ImGui::Selectable("Line2f"))
 				value = Line2f(-Vector2f::One, +Vector2f::One);
-			if (ImGui::Selectable("OBB2f"))
-				value = OBB2f(Vector2f(-1.f, -1.f), Vector2f(-1.f, +1.f), Vector2f(+1.f, +1.f), Vector2f(+1.f, -1.f));
 			if (ImGui::Selectable("Ray2f"))
 				value = Ray2f(Vector2f::Zero, Vector2f::One);
 			if (ImGui::Selectable("Segment2f"))
@@ -90,13 +87,6 @@ namespace
 		{
 			imgui::DragVector("m_PointA", data.m_PointA, 0.1f);
 			imgui::DragVector("m_PointB", data.m_PointB, 0.1f);
-		},
-		[](OBB2f& data)
-		{
-			imgui::DragVector("m_PointA", data.m_Points[0], 0.1f);
-			imgui::DragVector("m_PointB", data.m_Points[1], 0.1f);
-			imgui::DragVector("m_PointC", data.m_Points[2], 0.1f);
-			imgui::DragVector("m_PointD", data.m_Points[3], 0.1f);
 		},
 		[](Ray2f& data)
 		{
@@ -134,7 +124,7 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& window = world.GetComponent<dbg::ShapeWindowComponent>(entity);
+		auto& window = world.WriteComponent<dbg::ShapeWindowComponent>(entity);
 
 		if (ImGui::CollapsingHeader("Shape A"))
 		{
@@ -153,7 +143,7 @@ namespace
 
 	void DrawPlotter(World& world, const ecs::Entity& entity)
 	{
-		auto& window = world.GetComponent<dbg::ShapeWindowComponent>(entity);
+		auto& window = world.WriteComponent<dbg::ShapeWindowComponent>(entity);
 
 		const ImGuiGraphFlags flags = ImGuiGraphFlags_Grid | ImGuiGraphFlags_TextX | ImGuiGraphFlags_TextY;
 		const Vector2f size = ImGui::GetContentRegionAvail();
@@ -183,18 +173,26 @@ void dbg::ShapeSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::ShapeWindowRequestComponent>>())
 	{
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Collision Tester");
 
 		auto& window = world.AddComponent<dbg::ShapeWindowComponent>(windowEntity);
-		window.m_DockspaceLabel = ToLabel("Collision Tester", windowEntity);
-		window.m_InspectorLabel = ToLabel("Inspector", windowEntity);
-		window.m_PlottingLabel = ToLabel("Plotter", windowEntity);
+		window.m_Identifier = identifier;
+		window.m_DockspaceLabel = ToLabel("Collision Tester", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##collision", identifier);
+		window.m_PlottingLabel = ToLabel("Plotter##collision", identifier);
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const dbg::ShapeWindowComponent>>())
+	{
+		const auto& window = world.ReadComponent<dbg::ShapeWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::ShapeWindowComponent>>())
 	{
-		auto& window = world.GetComponent<dbg::ShapeWindowComponent>(windowEntity);
+		auto& window = world.WriteComponent<dbg::ShapeWindowComponent>(windowEntity);
 
 		bool isWindowOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);

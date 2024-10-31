@@ -1,4 +1,4 @@
-m_Guid = "cbbb7d3f-f44b-45fd-b9e5-a207d92262fb"
+m_Guid = "cbbb7d3ff44b45fdb9e5a207d92262fb"
 m_Name = "SH_Sprite"
 m_Type = "Shader"
 
@@ -45,7 +45,9 @@ uniform sampler2D u_Texture;
 
 void main()
 {
-	//f_Colour = vec4(v_TexCoords, 1.f, 1.f);
 	f_Colour = texture(u_Texture, v_TexCoords);
+	f_Colour *= v_Colour;
+	if (f_Colour.a <= 0)
+		discard;
 }
 """

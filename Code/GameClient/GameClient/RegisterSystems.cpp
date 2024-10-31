@@ -5,10 +5,18 @@
 #include "ECS/WorldView.h"
 #include "Engine/ReplicationHost.h"
 #include "GameClient/AccelerationSystem.h"
+#include "GameClient/AchievementSystem.h"
 #include "GameClient/DragMovementSystem.h"
 #include "GameClient/DragSelectionSystem.h"
 #include "GameClient/GameStateSystem.h"
 #include "GameClient/HexamapGridSystem.h"
+#include "GameClient/HiddenCountSystem.h"
+#include "GameClient/HiddenPhysicsSystem.h"
+#include "GameClient/HiddenRevealSystem.h"
+#include "GameClient/HiddenSoundSystem.h"
+#include "GameClient/HiddenSpriteSystem.h"
+#include "GameClient/HiddenTrackerSystem.h"
+#include "GameClient/HiddenVFXSystem.h"
 #include "GameClient/ModalStateSystem.h"
 #include "GameClient/NetworkHostSystem.h"
 #include "GameClient/NetworkJoinSystem.h"
@@ -19,8 +27,9 @@
 #include "GameClient/VelocitySystem.h"
 #include "GameClient/VisualSystem.h"
 
-void clt::RegisterSystems(ecs::EntityWorld& entityWorld, const clt::SystemDependencies& dependencies)
+void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 {
+	entityWorld.RegisterSystem<clt::AchievementSystem>();
 	entityWorld.RegisterSystem<drag::MovementSystem>();
 	entityWorld.RegisterSystem<drag::SelectionSystem>();
 	entityWorld.RegisterSystem<gamestate::NetworkHostSystem>();
@@ -29,6 +38,13 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld, const clt::SystemDepend
 	entityWorld.RegisterSystem<gamestate::StateSystem>();
 	entityWorld.RegisterSystem<gui::modal::StateSystem>();
 	entityWorld.RegisterSystem<hexamap::GridSystem>();
+	entityWorld.RegisterSystem<hidden::CountSystem>();
+	entityWorld.RegisterSystem<hidden::PhysicsSystem>();
+	entityWorld.RegisterSystem<hidden::RevealSystem>();
+	entityWorld.RegisterSystem<hidden::SoundSystem>();
+	entityWorld.RegisterSystem<hidden::SpriteSystem>();
+	entityWorld.RegisterSystem<hidden::TrackerSystem>();
+	entityWorld.RegisterSystem<hidden::VFXSystem>();
 	entityWorld.RegisterSystem<movement::AccelerationSystem>();
 	entityWorld.RegisterSystem<movement::VelocitySystem>();
 	entityWorld.RegisterSystem<projectile::SpawnSystem>();

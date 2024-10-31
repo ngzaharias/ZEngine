@@ -1,8 +1,5 @@
 #pragma once
 
-#define BIT32(value) (1<<value)
-#define BIT64(value) (static_cast<uint64>(1)<<(value))
-
 namespace voxel
 {
 	constexpr float	s_BlockSize1D = 100.f;
@@ -43,6 +40,3 @@ namespace voxel
 		EType m_Type = EType::None;
 	};
 }
-
-#undef BIT32
-#undef BIT64

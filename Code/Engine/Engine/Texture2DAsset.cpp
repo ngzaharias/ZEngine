@@ -58,7 +58,7 @@ bool eng::Texture2DAssetLoader::Import(eng::Texture2DAsset& asset, const str::Pa
 
 bool eng::Texture2DAssetLoader::Load(eng::Texture2DAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strSourceFile, asset.m_SourceFile, {});
+	visitor.Read(strSourceFile, asset.m_SourceFile, {});
 
 	// #todo: error message
 	// #todo: fallback to default asset
@@ -72,6 +72,6 @@ bool eng::Texture2DAssetLoader::Load(eng::Texture2DAsset& asset, eng::Visitor& v
 
 bool eng::Texture2DAssetLoader::Save(eng::Texture2DAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strSourceFile, asset.m_SourceFile, {});
+	visitor.Write(strSourceFile, asset.m_SourceFile);
 	return true;
 }

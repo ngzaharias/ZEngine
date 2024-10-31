@@ -25,7 +25,6 @@ bool SparseArray<Key, Value>::Contains(const Key& key) const
 	if (valueIndex == s_Unassigned)
 		return false;
 
-	Z_PANIC(m_Dense[valueIndex] == key, "");
 	return true;
 }
 
@@ -68,6 +67,13 @@ int32 SparseArray<Key, Value>::GetIndex(const Key& key) const
 }
 
 template<typename Key, typename Value>
+void SparseArray<Key, Value>::Reserve(const int32 count)
+{
+	m_Dense.Reserve(count);
+	m_Values.Reserve(count);
+}
+
+template<typename Key, typename Value>
 Value& SparseArray<Key, Value>::Get(const Key& key)
 {
 	const int32 sparseIndex = GetIndex(key);
@@ -79,12 +85,6 @@ const Value& SparseArray<Key, Value>::Get(const Key& key) const
 {
 	const int32 sparseIndex = GetIndex(key);
 	return m_Values[m_Sparse[sparseIndex]];
-}
-
-template<typename Key, typename Value>
-Array<Key>& SparseArray<Key, Value>::GetKeys()
-{
-	return m_Dense;
 }
 
 template<typename Key, typename Value>
@@ -235,20 +235,6 @@ void SparseArray<Key, Value>::RemoveAll()
 	m_Dense.RemoveAll();
 	m_Sparse.RemoveAll();
 	m_Values.RemoveAll();
-}
-
-template<typename Key, typename Value>
-void SparseArray<Key, Value>::Reserve(const int32 count)
-{
-	m_Dense.Reserve(count);
-	m_Values.Reserve(count);
-}
-
-template<typename Key, typename Value>
-void SparseArray<Key, Value>::Shrink()
-{
-	m_Dense.Resize(m_Dense.size());
-	m_Values.Resize(m_Values.size());
 }
 
 //////////////////////////////////////////////////////////////////////////

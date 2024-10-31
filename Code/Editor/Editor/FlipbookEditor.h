@@ -1,9 +1,14 @@
 #pragma once
 
-#include "Core/Nullable.h"
 #include "ECS/Component.h"
 #include "ECS/System.h"
 #include "Engine/FlipbookAsset.h"
+#include "imgui/Identifier.h"
+
+namespace ecs
+{
+	struct NameComponent;
+}
 
 namespace eng
 {
@@ -37,7 +42,8 @@ namespace editor
 
 	struct FlipbookWindowComponent : public ecs::Component<FlipbookWindowComponent>
 	{
-		eng::FlipbookAsset m_Asset;
+		int32 m_Identifier = 0;
+		eng::FlipbookAsset m_Asset = {};
 
 		str::String m_BatchingLabel = {};
 		str::String m_DockspaceLabel = {};
@@ -53,6 +59,7 @@ namespace editor
 			// managers
 			eng::AssetManager,
 			// components
+			ecs::NameComponent,
 			editor::FlipbookAssetOpenComponent,
 			editor::FlipbookAssetSaveComponent,
 			editor::FlipbookBatchingComponent,
@@ -60,5 +67,8 @@ namespace editor
 			const editor::FlipbookWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		imgui::Identifier m_WindowIds = {};
 	};
 }

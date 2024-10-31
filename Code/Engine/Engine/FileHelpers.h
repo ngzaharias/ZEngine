@@ -11,14 +11,22 @@ namespace eng
 		str::String m_Title = "Save File";
 		str::String m_Path = "";
 		Array<str::String> m_Filters = { "All Files (*.*)", "*" };
+
+		bool m_Overwrite = false;
 	};
 
 	struct SelectFileSettings
 	{
+		str::String m_Title = "Select File";
+		str::String m_Path = "";
+		Array<str::String> m_Filters = { "All Files (*.*)", "*" };
+	};
+
+	struct SelectFilesSettings
+	{
 		str::String m_Title = "Select File(s)";
 		str::String m_Path = "";
 		Array<str::String> m_Filters = { "All Files (*.*)", "*" };
-		bool m_IsMultiSelect = false;
 	};
 
 	struct SelectFolderSettings
@@ -38,6 +46,7 @@ namespace eng
 	bool LoadFileAsChar(const str::Path& filepath, Array<char>& out_Array);
 
 	str::Path SaveFileDialog(const SaveFileSettings& settings);
-	Array<str::Path> SelectFileDialog(const SelectFileSettings& settings);
+	str::Path SelectFileDialog(const SelectFileSettings& settings);
+	Array<str::Path> SelectFilesDialog(const SelectFilesSettings& settings);
 	str::Path SelectFolderDialog(const SelectFolderSettings& settings);
 }

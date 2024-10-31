@@ -95,15 +95,20 @@ public:
 	/// \brief Removes the last element from the container and returns a copy of it.
 	auto Pop()->Type;
 
+
 	/// \brief Removes the X element from the container, but doesn't preserve the order of the elements.
 	void RemoveAt(const int32 index);
 	/// \brief Removes the X until Y elements from the container, but doesn't preserve the order of the elements.
 	void RemoveAt(const int32 startIndex, const int32 endIndex);
+	/// \brief Removes the element from the container, but doesn't preserve the order of the elements.
+	void RemoveAt(const iterator itr);
 
 	/// \brief Removes the X element from the container whilst preserving the order of the elements.
 	void RemoveOrderedAt(const int32 index);
 	/// \brief Removes the X until Y elements from the container whilst preserving the order of the elements.
 	void RemoveOrderedAt(const int32 startIndex, const int32 endIndex);
+	/// \brief Removes the element from the container whilst preserving the order of the elements.
+	void RemoveOrderedAt(const iterator itr);
 
 	/// \brief Removes the last element from the container.
 	void RemoveLast();

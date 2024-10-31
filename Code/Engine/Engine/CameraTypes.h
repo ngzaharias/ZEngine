@@ -1,12 +1,14 @@
 #pragma once
 
 #include "Core/Variant.h"
+#include "Math/Math.h"
+#include "Math/Vector.h"
 
-namespace camera
+namespace eng::camera
 {
 	enum class EAxis
 	{
-		Horizontal,
+		Horizontal = 0,
 		Vertical,
 	};
 

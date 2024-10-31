@@ -1,24 +1,6 @@
 #pragma once
 
-#include "ECS/Component.h"
 #include "ECS/System.h"
-
-class GameTime;
-
-namespace ecs
-{
-	class EntityWorld;
-}
-
-namespace editor
-{
-	struct FlipbookWindowRequestComponent;
-	struct SpriteWindowRequestComponent;
-	struct TableWindowRequestComponent;
-	struct TextureWindowRequestComponent;
-	struct TrajectoryWindowRequestComponent;
-	struct TransformWindowRequestComponent;
-}
 
 namespace dbg
 {
@@ -26,16 +8,49 @@ namespace dbg
 	struct EntityWindowRequestComponent;
 	struct FlipbookWindowRequestComponent;
 	struct ImGuiDemoRequestComponent;
+	struct ImNodesDemoRequestComponent;
+	struct InspectorDemoRequestComponent;
 	struct NetworkWindowRequestComponent;
-	struct NodeGraphRequestComponent;
 	struct ShapeWindowRequestComponent;
 }
 
 namespace dbg::level
 {
 	struct OpenRequestComponent;
+	struct ReloadRequestComponent;
 	struct SaveRequestComponent;
 	struct SaveAsRequestComponent;
+}
+
+namespace editor
+{
+	struct EntityWindowRequestComponent;
+	struct FlipbookWindowRequestComponent;
+	struct SettingsWindowRequestComponent;
+	struct SpriteWindowRequestComponent;
+	struct TableWindowRequestComponent;
+	struct TextureWindowRequestComponent;
+	struct TrajectoryWindowRequestComponent;
+}
+
+namespace editor::settings
+{
+	struct WindowRequestComponent;
+}
+
+namespace eng
+{
+	struct InputComponent;
+}
+
+namespace eng::settings
+{
+	struct LocalComponent;
+}
+
+namespace gui::settings
+{
+	struct OpenRequestComponent;
 }
 
 namespace dbg
@@ -48,18 +63,24 @@ namespace dbg
 			dbg::EntityWindowRequestComponent,
 			dbg::FlipbookWindowRequestComponent,
 			dbg::ImGuiDemoRequestComponent,
+			dbg::ImNodesDemoRequestComponent,
+			dbg::InspectorDemoRequestComponent,
 			dbg::level::OpenRequestComponent,
+			dbg::level::ReloadRequestComponent,
 			dbg::level::SaveRequestComponent,
 			dbg::level::SaveAsRequestComponent,
 			dbg::NetworkWindowRequestComponent,
-			dbg::NodeGraphRequestComponent,
 			dbg::ShapeWindowRequestComponent,
+			editor::EntityWindowRequestComponent,
 			editor::FlipbookWindowRequestComponent,
+			editor::settings::WindowRequestComponent,
 			editor::SpriteWindowRequestComponent,
 			editor::TableWindowRequestComponent,
 			editor::TextureWindowRequestComponent,
 			editor::TrajectoryWindowRequestComponent,
-			editor::TransformWindowRequestComponent>;
+			eng::settings::LocalComponent,
+			gui::settings::OpenRequestComponent,
+			const eng::InputComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

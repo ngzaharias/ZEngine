@@ -1,0 +1,12 @@
+m_Guid = '87cfbd9edfdf46ad96cf5a9db651f049'
+m_Name = 'Group_Rubber'
+
+['hidden::GroupComponent']
+m_Objects = [ '3595c797b63846af83649ce12905477b' ]
+m_Size = { X = 320, Y = 16 }
+m_Sprite = 'cc6a81798a494d699210d41b8255b326'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 3.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 833.0, Y = -967.0, Z = 0.0 }

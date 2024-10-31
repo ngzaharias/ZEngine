@@ -8,7 +8,8 @@ namespace eng
 {
 	struct SpriteComponent : public ecs::Component<SpriteComponent>
 	{
-		Vector2u m_Size = Vector2u::Zero;
 		str::Guid m_Sprite = { };
+		Vector3f m_Colour = Vector3f::One;
+		Vector2u m_Size = Vector2u::Zero;
 	};
 }

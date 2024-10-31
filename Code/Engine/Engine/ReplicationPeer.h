@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Core/Array.h"
 #include "Core/Map.h"
 #include "ECS/Entity.h"
-#include "Engine/SinkCollection.h"
 #include "Network/Entity.h"
 
 class GameTime;
@@ -50,7 +50,7 @@ namespace net
 	private:
 		ecs::EntityWorld& m_EntityWorld;
 
-		SinkCollection m_Connections;
+		Array<int32> m_Connections;
 		Map<ecs::Entity, net::Entity> m_PeerToHost;
 		Map<net::Entity, ecs::Entity> m_HostToPeer;
 		bool m_HasDisconnected = false;

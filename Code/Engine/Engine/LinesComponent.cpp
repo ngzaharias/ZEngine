@@ -9,6 +9,187 @@
 #include "Math/OBB.h"
 #include "Math/Sphere.h"
 
+namespace
+{
+	constexpr Vector3f s_Icosphere[] = {
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(0.353f, 0.866f, -0.353f),
+			Vector3f(0.353f, 0.866f, -0.353f),
+			Vector3f(0.612f, 0.500f, -0.612f),
+			Vector3f(0.612f, 0.500f, -0.612f),
+			Vector3f(0.707f, 0.0f, -0.707f),
+			Vector3f(0.707f, 0.0f, -0.707f),
+			Vector3f(0.612f, -0.499f, -0.612f),
+			Vector3f(0.612f, -0.499f, -0.612f),
+			Vector3f(0.353f, -0.866f, -0.353f),
+			Vector3f(0.0f, 0.866f, -0.499f),
+			Vector3f(0.353f, 0.866f, -0.353f),
+			Vector3f(0.0f, -0.499f, -0.866f),
+			Vector3f(0.612f, -0.499f, -0.612f),
+			Vector3f(0.499f, 0.866f, 0.0f),
+			Vector3f(0.866f, 0.500f, 0.0f),
+			Vector3f(0.866f, 0.500f, 0.0f),
+			Vector3f(0.999f, 0.0f, 0.0f),
+			Vector3f(0.999f, 0.0f, 0.0f),
+			Vector3f(0.866f, -0.499f, 0.0f),
+			Vector3f(0.866f, -0.499f, 0.0f),
+			Vector3f(0.499f, -0.866f, 0.0f),
+			Vector3f(0.499f, -0.866f, 0.0f),
+			Vector3f(0.353f, -0.866f, -0.353f),
+			Vector3f(0.612f, -0.499f, -0.612f),
+			Vector3f(0.866f, -0.499f, 0.0f),
+			Vector3f(0.999f, 0.0f, 0.0f),
+			Vector3f(0.707f, 0.0f, -0.707f),
+			Vector3f(0.612f, 0.500f, -0.612f),
+			Vector3f(0.866f, 0.500f, 0.0f),
+			Vector3f(0.499f, 0.866f, 0.0f),
+			Vector3f(0.353f, 0.866f, -0.353f),
+			Vector3f(0.353f, 0.866f, 0.353f),
+			Vector3f(0.612f, 0.5f, 0.612f),
+			Vector3f(0.612f, 0.5f, 0.612f),
+			Vector3f(0.707f, 0.0f, 0.707f),
+			Vector3f(0.707f, 0.0f, 0.707f),
+			Vector3f(0.612f, -0.5f, 0.612f),
+			Vector3f(0.612f, -0.5f, 0.612f),
+			Vector3f(0.353f, -0.866f, 0.353f),
+			Vector3f(0.353f, -0.866f, 0.353f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.353f, -0.866f, 0.353f),
+			Vector3f(0.499f, -0.866f, 0.0f),
+			Vector3f(0.866f, -0.499f, 0.0f),
+			Vector3f(0.612f, -0.5f, 0.612f),
+			Vector3f(0.707f, 0.0f, 0.707f),
+			Vector3f(0.999f, 0.0f, 0.0f),
+			Vector3f(0.866f, 0.500f, 0.0f),
+			Vector3f(0.612f, 0.5f, 0.612f),
+			Vector3f(0.353f, 0.866f, 0.353f),
+			Vector3f(0.499f, 0.866f, 0.0f),
+			Vector3f(0.0f, 0.866f, 0.499f),
+			Vector3f(0.0f, 0.499f, 0.866f),
+			Vector3f(0.0f, 0.499f, 0.866f),
+			Vector3f(0.0f, 0.0f, 0.999f),
+			Vector3f(0.0f, 0.0f, 0.999f),
+			Vector3f(0.0f, -0.5f, 0.866f),
+			Vector3f(0.0f, -0.5f, 0.866f),
+			Vector3f(0.0f, -0.866f, 0.499f),
+			Vector3f(0.0f, 0.0f, 0.999f),
+			Vector3f(0.707f, 0.0f, 0.707f),
+			Vector3f(0.612f, 0.5f, 0.612f),
+			Vector3f(0.0f, 0.499f, 0.866f),
+			Vector3f(0.0f, 0.866f, 0.499f),
+			Vector3f(0.353f, 0.866f, 0.353f),
+			Vector3f(0.353f, -0.866f, 0.353f),
+			Vector3f(0.0f, -0.866f, 0.499f),
+			Vector3f(0.0f, -0.5f, 0.866f),
+			Vector3f(0.612f, -0.5f, 0.612f),
+			Vector3f(-0.353f, 0.866f, 0.353f),
+			Vector3f(-0.612f, 0.5f, 0.612f),
+			Vector3f(-0.612f, 0.5f, 0.612f),
+			Vector3f(-0.707f, 0.0f, 0.707f),
+			Vector3f(-0.707f, 0.0f, 0.707f),
+			Vector3f(-0.612f, -0.5f, 0.612f),
+			Vector3f(-0.612f, -0.5f, 0.612f),
+			Vector3f(-0.353f, -0.866f, 0.353f),
+			Vector3f(-0.353f, 0.866f, 0.353f),
+			Vector3f(0.0f, 0.866f, 0.499f),
+			Vector3f(0.0f, -0.866f, 0.499f),
+			Vector3f(-0.353f, -0.866f, 0.353f),
+			Vector3f(-0.612f, -0.5f, 0.612f),
+			Vector3f(0.0f, -0.5f, 0.866f),
+			Vector3f(0.0f, 0.0f, 0.999f),
+			Vector3f(-0.707f, 0.0f, 0.707f),
+			Vector3f(-0.612f, 0.5f, 0.612f),
+			Vector3f(0.0f, 0.499f, 0.866f),
+			Vector3f(-0.499f, 0.866f, 0.0f),
+			Vector3f(-0.866f, 0.500f, 0.0f),
+			Vector3f(-0.866f, 0.500f, 0.0f),
+			Vector3f(-0.999f, 0.0f, 0.0f),
+			Vector3f(-0.999f, 0.0f, 0.0f),
+			Vector3f(-0.866f, -0.499f, 0.0f),
+			Vector3f(-0.866f, -0.499f, 0.0f),
+			Vector3f(-0.499f, -0.866f, 0.0f),
+			Vector3f(-0.353f, -0.866f, 0.353f),
+			Vector3f(-0.499f, -0.866f, 0.0f),
+			Vector3f(-0.866f, -0.499f, 0.0f),
+			Vector3f(-0.612f, -0.5f, 0.612f),
+			Vector3f(-0.707f, 0.0f, 0.707f),
+			Vector3f(-0.999f, 0.0f, 0.0f),
+			Vector3f(-0.866f, 0.500f, 0.0f),
+			Vector3f(-0.612f, 0.5f, 0.612f),
+			Vector3f(-0.353f, 0.866f, 0.353f),
+			Vector3f(-0.499f, 0.866f, 0.0f),
+			Vector3f(-0.353f, 0.866f, -0.353f),
+			Vector3f(-0.612f, 0.500f, -0.612f),
+			Vector3f(-0.612f, 0.500f, -0.612f),
+			Vector3f(-0.707f, 0.0f, -0.707f),
+			Vector3f(-0.707f, 0.0f, -0.707f),
+			Vector3f(-0.612f, -0.499f, -0.612f),
+			Vector3f(-0.612f, -0.499f, -0.612f),
+			Vector3f(-0.353f, -0.866f, -0.353f),
+			Vector3f(-0.499f, -0.866f, 0.0f),
+			Vector3f(-0.353f, -0.866f, -0.353f),
+			Vector3f(-0.612f, -0.499f, -0.612f),
+			Vector3f(-0.866f, -0.499f, 0.0f),
+			Vector3f(-0.999f, 0.0f, 0.0f),
+			Vector3f(-0.707f, 0.0f, -0.707f),
+			Vector3f(-0.612f, 0.500f, -0.612f),
+			Vector3f(-0.866f, 0.500f, 0.0f),
+			Vector3f(-0.499f, 0.866f, 0.0f),
+			Vector3f(-0.353f, 0.866f, -0.353f),
+			Vector3f(0.0f, 0.500f, -0.866f),
+			Vector3f(0.0f, 0.0f, -0.999f),
+			Vector3f(-0.353f, -0.866f, -0.353f),
+			Vector3f(0.0f, -0.866f, -0.499f),
+			Vector3f(-0.707f, 0.0f, -0.707f),
+			Vector3f(0.0f, 0.0f, -0.999f),
+			Vector3f(0.0f, 0.500f, -0.866f),
+			Vector3f(-0.612f, 0.500f, -0.612f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(0.0f, 0.866f, -0.499f),
+			Vector3f(0.0f, 0.866f, -0.499f),
+			Vector3f(0.0f, 0.500f, -0.866f),
+			Vector3f(0.0f, 0.0f, -0.999f),
+			Vector3f(0.0f, -0.499f, -0.866f),
+			Vector3f(0.0f, -0.499f, -0.866f),
+			Vector3f(0.0f, -0.866f, -0.499f),
+			Vector3f(0.0f, -0.866f, -0.499f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.353f, -0.866f, -0.353f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.612f, 0.500f, -0.612f),
+			Vector3f(0.0f, 0.500f, -0.866f),
+			Vector3f(0.353f, -0.866f, -0.353f),
+			Vector3f(0.0f, -0.866f, -0.499f),
+			Vector3f(0.707f, 0.0f, -0.707f),
+			Vector3f(0.0f, 0.0f, -0.999f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(0.499f, 0.866f, 0.0f),
+			Vector3f(0.499f, -0.866f, 0.0f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(0.353f, 0.866f, 0.353f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(0.0f, 0.866f, 0.499f),
+			Vector3f(0.0f, -0.866f, 0.499f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(-0.353f, 0.866f, 0.353f),
+			Vector3f(-0.353f, -0.866f, 0.353f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(-0.499f, 0.866f, 0.0f),
+			Vector3f(-0.499f, -0.866f, 0.0f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(-0.353f, 0.866f, -0.353f),
+			Vector3f(-0.353f, -0.866f, -0.353f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.0f, -0.499f, -0.866f),
+			Vector3f(-0.612f, -0.499f, -0.612f),
+			Vector3f(-0.353f, 0.866f, -0.353f),
+			Vector3f(0.0f, 0.866f, -0.499f) };
+}
+
 void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& extents, const Vector4f& colour)
 {
 	Vector3f corners[8];
@@ -20,7 +201,7 @@ void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& exten
 	corners[4] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Min.z);
 	corners[5] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Max.z);
 	corners[6] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Max.z);
-	corners[7] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Max.z);
+	corners[7] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Min.z);
 
 	AddLine(corners[0], corners[1], colour);
 	AddLine(corners[1], corners[2], colour);
@@ -93,25 +274,28 @@ void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& c
 	AddLine(corners[5], corners[2], colour);
 }
 
-void eng::LinesComponent::AddFrustum(const Vector3f& translate, const Rotator& rotate, const camera::Projection& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Vector4f& colour)
 {
 	std::visit([&](auto projection) { AddFrustum(translate, rotate, projection, colour); }, projection);
 }
 
-void eng::LinesComponent::AddFrustum(const Vector3f& translate, const Rotator& rotate, const camera::Orthographic& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Vector4f& colour)
 {
-	const float halfSize = projection.m_Size * 0.5f;
+	// #todo: pass in width & height
+	const float aspect = Screen::width / Screen::height;
+	const float widthH = projection.m_Size * aspect * 0.5f;
+	const float heightH = projection.m_Size * 0.5f;
 
 	Vector3f corners[8];
-	corners[0] = Vector3f(-halfSize, +halfSize, projection.m_ClippingNear);
-	corners[1] = Vector3f(+halfSize, +halfSize, projection.m_ClippingNear);
-	corners[2] = Vector3f(-halfSize, -halfSize, projection.m_ClippingNear);
-	corners[3] = Vector3f(+halfSize, -halfSize, projection.m_ClippingNear);
+	corners[0] = Vector3f(-widthH, +heightH, projection.m_ClippingNear);
+	corners[1] = Vector3f(+widthH, +heightH, projection.m_ClippingNear);
+	corners[2] = Vector3f(-widthH, -heightH, projection.m_ClippingNear);
+	corners[3] = Vector3f(+widthH, -heightH, projection.m_ClippingNear);
 
-	corners[4] = Vector3f(-halfSize, +halfSize, projection.m_ClippingFar);
-	corners[5] = Vector3f(+halfSize, +halfSize, projection.m_ClippingFar);
-	corners[6] = Vector3f(-halfSize, -halfSize, projection.m_ClippingFar);
-	corners[7] = Vector3f(+halfSize, -halfSize, projection.m_ClippingFar);
+	corners[4] = Vector3f(-widthH, +heightH, projection.m_ClippingFar);
+	corners[5] = Vector3f(+widthH, +heightH, projection.m_ClippingFar);
+	corners[6] = Vector3f(-widthH, -heightH, projection.m_ClippingFar);
+	corners[7] = Vector3f(+widthH, -heightH, projection.m_ClippingFar);
 
 	Matrix4x4 transform = Matrix4x4::FromRotate(rotate);
 	transform.SetTranslate(translate);
@@ -135,8 +319,9 @@ void eng::LinesComponent::AddFrustum(const Vector3f& translate, const Rotator& r
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddFrustum(const Vector3f& translate, const Rotator& rotate, const camera::Perspective& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Vector4f& colour)
 {
+	// #todo: pass in width & height
 	const float ratio = Screen::width / Screen::height;
 	const float fovy = math::ToRadians(projection.m_FieldOfView);
 
@@ -196,6 +381,22 @@ void eng::LinesComponent::AddHexagon(const Vector3f& translate, const float radi
 	AddLine(translate + s_DirectionNE * radius, translate + s_DirectionE  * radius, colour);
 }
 
+void eng::LinesComponent::AddIcosphere(const Vector3f& translate, const Sphere3f& sphere, const Vector4f& colour)
+{
+	const Matrix4x4 transform = Matrix4x4::FromTransform(
+		translate + sphere.m_Position,
+		Quaternion::Identity,
+		sphere.m_Radius);
+
+	const uint64 count = sizeof(s_Icosphere) / sizeof(Vector3f);
+	for (uint64 i = 0, j = 1; j < count; ++i, ++j)
+	{
+		const Vector3f pointA = s_Icosphere[i] * transform;
+		const Vector3f pointB = s_Icosphere[j] * transform;
+		AddLine(pointA, pointB, colour);
+	}
+}
+
 void eng::LinesComponent::AddLine(const Vector3f& pointA, const Vector3f& pointB, const Vector4f& colour)
 {
 	m_Vertices.Append({ pointA, colour });
@@ -218,7 +419,7 @@ void eng::LinesComponent::AddOBB(const Vector3f& translate, const OBB3f& obb, co
 	AddLine(translate + obb.m_Points[1], translate + obb.m_Points[5], colour);
 	AddLine(translate + obb.m_Points[2], translate + obb.m_Points[6], colour);
 	AddLine(translate + obb.m_Points[3], translate + obb.m_Points[7], colour);
-}
+}	
 
 void eng::LinesComponent::AddSphere(const Vector3f& translate, const Sphere3f& sphere, const Vector4f& colour)
 {

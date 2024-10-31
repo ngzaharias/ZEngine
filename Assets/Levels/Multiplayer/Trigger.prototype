@@ -1,18 +1,18 @@
-m_Guid = "e1a05691-3c6a-4aef-9f40-906c2596209e"
+m_Guid = "e1a056913c6a4aef9f40906c2596209e"
 m_Name = "Trigger"
 
-[Physics]
-[Physics.Static]
-[Physics.Shape]
-[Physics.Shape.Box]
-m_Channel = 0
+['eng::PhysicsComponent']
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+m_Channel = 1
 m_Extents = { X = 1000.0, Y = 50.0, Z = 50.0 }
 
-[Sprite]
+['eng::SpriteComponent']
 m_Size = { X = 1920, Y = 10 }
-m_Sprite = "207ae71c-279f-b145-e0d4-3b1d4ccd6f77"
+m_Sprite = "207ae71c279fb145e0d43b1d4ccd6f77"
 
-[Transform]
+['eng::TransformComponent']
 m_Translate = { X = 0.0, Y = 0.0, Z = 10.0 }
 m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

@@ -27,7 +27,9 @@ void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 		ImGuiTableFlags_Resizable |
 		ImGuiTableFlags_Sortable;
 	constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
-	constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
+	constexpr ImGuiWindowFlags s_WindowFlags = 
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_NoDocking;
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::level::OpenRequestComponent>>())
 		ImGui::OpenPopup(s_Title, s_PopupFlags);
@@ -47,7 +49,7 @@ void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 			const float width = ImGui::GetContentRegionAvail().x / count;
 			const float height = 64.f;
 
-			const auto& directoryComponent = world.GetSingleton<eng::level::DirectoryComponent>();
+			const auto& directoryComponent = world.WriteSingleton<eng::level::DirectoryComponent>();
 			for (auto&& [name, path] : directoryComponent.m_Levels)
 			{
 				ImGui::TableNextColumn();

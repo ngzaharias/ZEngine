@@ -1,12 +1,19 @@
 #include "GameClientPCH.h"
 #include "GameClient/GameClient.h"
 
+#include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
+#include "Engine/PlatformManager.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
+#include "Engine/TableHeadmaster.h"
+#include "Engine/Window.h"
+#include "GameClient/HiddenCountComponent.h"
+#include "GameClient/HiddenGroupComponent.h"
+#include "GameClient/HiddenObjectComponent.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
 #include "GameShared/RegisterComponents.h"
@@ -18,23 +25,38 @@ clt::GameClient::GameClient()
 
 void clt::GameClient::Register(const Dependencies& dependencies)
 {
-	// managers
+	// prototypes
 	{
-		m_EntityWorld.AddResource(dependencies.m_AssetManager);
-		m_EntityWorld.AddResource(dependencies.m_NetworkManager);
-		m_EntityWorld.AddResource(dependencies.m_PhysicsManager);
-		m_EntityWorld.AddResource(dependencies.m_PrototypeManager);
+		auto& prototypeManager = dependencies.m_PrototypeManager;
+		prototypeManager.Register<hidden::CountComponent>();
+		prototypeManager.Register<hidden::GroupComponent>();
+		prototypeManager.Register<hidden::ObjectComponent>();
+	}
+
+	// resources
+	{
+		m_EntityWorld.RegisterResource(dependencies.m_Window);
+		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
+		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
+		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
+		m_EntityWorld.RegisterResource(dependencies.m_PlatformManager);
+		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
+		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
+		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
+		m_EntityWorld.RegisterResource(m_ReplicationPeer);
+
+		// tables
+		auto& headmaster = dependencies.m_TableHeadmaster;
+		m_EntityWorld.RegisterResource(headmaster.GetManager<eng::AchievementTable>());
 	}
 
 	// engine
 	{
 		eng::RegisterClientComponents(m_EntityWorld);
-		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
+		eng::RegisterClientSystems(m_EntityWorld);
 
-		eng::ClientDependencies clientDependencies = { dependencies.m_Window };
-		eng::SharedDependencies sharedDependencies = { };
-		eng::RegisterClientSystems(m_EntityWorld, clientDependencies);
-		eng::RegisterSharedSystems(m_EntityWorld, sharedDependencies);
+		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
+		eng::RegisterSharedSystems(m_EntityWorld);
 	}
 
 	// shared
@@ -45,12 +67,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 	// client
 	{
 		clt::RegisterComponents(m_EntityWorld);
-
-		clt::SystemDependencies clientDependencies = {
-			dependencies.m_Window,
-			m_ReplicationPeer,
-			dependencies.m_Serializer };
-		clt::RegisterSystems(m_EntityWorld, clientDependencies);
+		clt::RegisterSystems(m_EntityWorld);
 	}
 }
 

@@ -1,9 +1,10 @@
 #pragma once
 
+#include "Core/Array.h"
+#include "Core/Delegate.h"
 #include "Core/Map.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
-#include "Engine/SinkCollection.h"
 #include "Network/UserId.h"
 
 namespace ecs
@@ -32,12 +33,13 @@ namespace net
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			net::ReplicationHost,
+			// Components
 			ecs::NameComponent,
 			eng::NetworkManager,
 			net::UserComponent,
 			net::UserMapComponent>;
-
-		UserSystem(net::ReplicationHost& replicationHost);
 
 		void Initialise(World& world);
 		void Shutdown(World& world);
@@ -49,10 +51,7 @@ namespace net
 		void OnClientDisconnected(const net::PeerId& peerId);
 
 	private:
-		net::ReplicationHost& m_ReplicationHost;
-
-		SinkCollection m_Connections;
-
+		DelegateCollection m_Collection = { };
 		Map<net::UserId, bool> m_Requests;
 	};
 }

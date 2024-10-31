@@ -1,14 +1,14 @@
-m_Guid = "f4ae5d73-b7c8-48df-96d4-318e5c5d3225"
+m_Guid = "f4ae5d73b7c848df96d4318e5c5d3225"
 m_Name = "PointLight_03"
 
-[PointLight]
-m_Range = 250.0
+['eng::LightPointComponent']
 m_Colour = { X = 0.0, Y = 0.0, Z = 1.0 }
+m_Range = 250.0
 
-[StaticMesh]
-m_StaticMesh = "d0284c56-3e6a-49a2-9a80-25ff2731a3de"
+['eng::StaticMeshComponent']
+m_StaticMesh = "d0284c563e6a49a29a8025ff2731a3de"
 
-[Transform]
+['eng::TransformComponent']
 m_Translate = { X = -150.0, Y = 150.0, Z = -150.0 }
 m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
 m_Scale = { X = 0.1, Y = 0.1, Z = 0.1 }

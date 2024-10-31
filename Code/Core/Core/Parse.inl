@@ -6,7 +6,7 @@
 #pragma warning( disable : 4348 )
 
 template <typename Type, typename std::enable_if_t<std::is_same<Type, bool>::value, Type>::type*>
-Nullable<Type> str::Parse(const StringView& string)
+Optional<Type> str::Parse(const StringView& string)
 {
 	if (str::Compare_NoCase(string, "true"))
 		return true;
@@ -16,16 +16,16 @@ Nullable<Type> str::Parse(const StringView& string)
 }
 
 template <typename Type, typename std::enable_if_t<std::is_enum<Type>::value, Type>::type*>
-Nullable<Type> str::ParseEnum(const str::StringView& string)
+Optional<Type> str::ParseEnum(const str::StringView& string)
 {
 	const auto result = str::Parse<int32>(string);
 	return result 
 		? static_cast<Type>(*result) 
-		: Nullable<Type>();
+		: Optional<Type>();
 }
 
 template <typename Type, typename std::enable_if<std::is_floating_point<Type>::value, Type>::type*>
-Nullable<Type> str::Parse(const StringView& string)
+Optional<Type> str::Parse(const StringView& string)
 {
 	// #note: std::from_chars doesn't handle '+'
 	const int32 offset = !string.empty() && string.at(0) == '+' ? 1 : 0;
@@ -44,7 +44,7 @@ Nullable<Type> str::Parse(const StringView& string)
 }
 
 template <typename Type, typename std::enable_if<std::is_integral<Type>::value, Type>::type*>
-Nullable<Type> str::Parse(const StringView& string, const int32 base /*= 10*/)
+Optional<Type> str::Parse(const StringView& string, const int32 base /*= 10*/)
 {
 	// #note: std::from_chars doesn't handle '+'
 	const int32 offset = !string.empty() && string.at(0) == '+' ? 1 : 0;

@@ -1,13 +1,6 @@
 #pragma once
 
-#include "ECS/Component.h"
-#include "ECS/Entity.h"
 #include "ECS/System.h"
-
-namespace ecs
-{
-	class EntityWorld;
-}
 
 namespace eng::level
 {
@@ -17,7 +10,6 @@ namespace eng::level
 
 namespace dbg::level
 {
-	struct DirectoryComponent;
 	struct OpenRequestComponent;
 }
 

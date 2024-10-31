@@ -22,7 +22,7 @@
 
 namespace
 {
-	const str::Guid strDepthShader = GUID("5ab1ac45-783b-4a54-aa98-92f6e36bc639");
+	const str::Guid strDepthShader = GUID("5ab1ac45783b4a54aa9892f6e36bc639");
 
 	struct Sort
 	{
@@ -33,73 +33,56 @@ namespace
 	};
 }
 
-eng::RenderStage_Shadow::RenderStage_Shadow(eng::AssetManager& assetManager)
-	: RenderStage(assetManager)
-{
-}
-
 void eng::RenderStage_Shadow::Initialise(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.AddSingleton<eng::FrameBufferComponent>();
+	World world = entityWorld.GetWorldView<World>();
+
+	// texture and buffer
+	{
+		auto& bufferComponent = world.WriteSingleton<eng::FrameBufferComponent>();
+		bufferComponent.m_ShadowSize = Vector2u(1024, 1024);
+
+		glGenFramebuffers(1, &bufferComponent.m_ShadowBuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, bufferComponent.m_ShadowBuffer);
+
+		glGenTextures(1, &bufferComponent.m_ShadowTexture);
+		glBindTexture(GL_TEXTURE_2D, bufferComponent.m_ShadowTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, bufferComponent.m_ShadowSize.x, bufferComponent.m_ShadowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, bufferComponent.m_ShadowTexture, 0);
+
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	// instance attributes
+	{
+		glGenBuffers(1, &m_ModelBuffer);
+	}
 }
 
 void eng::RenderStage_Shadow::Shutdown(ecs::EntityWorld& entityWorld)
 {
-	auto& bufferComponent = entityWorld.GetSingleton<eng::FrameBufferComponent>();
+	auto& bufferComponent = entityWorld.WriteSingleton<eng::FrameBufferComponent>();
 
 	glDeleteFramebuffers(1, &bufferComponent.m_ShadowBuffer);
 	glDeleteTextures(1, &bufferComponent.m_ShadowTexture);
 	glDeleteBuffers(1, &m_ModelBuffer);
-
-	entityWorld.RemoveSingleton<eng::FrameBufferComponent>();
 }
 
 void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	using World = ecs::WorldView<
-		eng::FrameBufferComponent,
-		const eng::CameraComponent,
-		const eng::TransformComponent,
-		const eng::LightDirectionalComponent,
-		const eng::StaticMeshComponent>;
 	World world = entityWorld.GetWorldView<World>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
-	// initialise
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::FrameBufferComponent>>())
-	{
-		// texture and buffer
-		{
-			auto& bufferComponent = world.GetSingleton<eng::FrameBufferComponent>();
-			bufferComponent.m_ShadowSize = Vector2u(1024, 1024);
-
-			glGenFramebuffers(1, &bufferComponent.m_ShadowBuffer);
-			glBindFramebuffer(GL_FRAMEBUFFER, bufferComponent.m_ShadowBuffer);
-
-			glGenTextures(1, &bufferComponent.m_ShadowTexture);
-			glBindTexture(GL_TEXTURE_2D, bufferComponent.m_ShadowTexture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, bufferComponent.m_ShadowSize.x, bufferComponent.m_ShadowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, bufferComponent.m_ShadowTexture, 0);
-
-			glDrawBuffer(GL_NONE);
-			glReadBuffer(GL_NONE);
-
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		}
-
-		// instance attributes
-		{
-			glGenBuffers(1, &m_ModelBuffer);
-		}
-	}
-
-
-	auto& bufferComponent = entityWorld.GetSingleton<eng::FrameBufferComponent>();
+	const auto& bufferComponent = entityWorld.ReadSingleton<eng::FrameBufferComponent>();
 
 	{
 		glViewport(0, 0, bufferComponent.m_ShadowSize.x, bufferComponent.m_ShadowSize.y);
@@ -121,16 +104,16 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraTransform = world.GetComponent<const eng::TransformComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 		const Matrix3x3 cameraRotate = Matrix3x3::FromRotate(cameraTransform.m_Rotate);
 		const Vector3f cameraFoward = Vector3f::AxisZ * cameraRotate;
 
 		for (const ecs::Entity& lightEntity : world.Query<ecs::query::Include<const eng::LightDirectionalComponent, const eng::TransformComponent>>())
 		{
-			const auto& lightComponent = world.GetComponent<const eng::LightDirectionalComponent>(lightEntity);
-			const auto& lightTransform = world.GetComponent<const eng::TransformComponent>(lightEntity);
+			const auto& lightComponent = world.ReadComponent<eng::LightDirectionalComponent>(lightEntity);
+			const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(lightEntity);
 
 			camera::Orthographic orthographic;
 
@@ -150,7 +133,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 			{
 				for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::StaticMeshComponent, const eng::TransformComponent>>())
 				{
-					const auto& meshComponent = world.GetComponent<const eng::StaticMeshComponent>(renderEntity);
+					const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(renderEntity);
 					if (!meshComponent.m_StaticMesh.IsValid())
 						continue;
 
@@ -178,13 +161,13 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 
 				if (!isSameBatch)
 				{
-					RenderBatch(entityWorld, batchID, batchData, stageData);
+					RenderBatch(world, batchID, batchData, stageData);
 					batchData.m_Models.RemoveAll();
 				}
 
-				const auto& meshComponent = world.GetComponent<const eng::StaticMeshComponent>(id.m_Entity);
-				const auto& meshTransform = world.GetComponent<const eng::TransformComponent>(id.m_Entity);
-				const auto& meshAsset = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
+				const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(id.m_Entity);
+				const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
+				const auto& meshAsset = *assetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
 
 				const Matrix4x4 model = meshTransform.ToTransform();
 				batchData.m_Models.Append(model);
@@ -193,19 +176,20 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 				batchID = id;
 			}
 
-			RenderBatch(entityWorld, batchID, batchData, stageData);
+			RenderBatch(world, batchID, batchData, stageData);
 		}
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void eng::RenderStage_Shadow::RenderBatch(ecs::EntityWorld& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData)
+void eng::RenderStage_Shadow::RenderBatch(World& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData)
 {
 	PROFILE_FUNCTION();
 
-	const auto& mesh = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto& shader = *m_AssetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
 
 	glUseProgram(shader.m_ProgramId);
 

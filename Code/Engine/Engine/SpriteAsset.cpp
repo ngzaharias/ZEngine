@@ -12,24 +12,24 @@ namespace
 	const str::StringView strTexture2D = "m_Texture2D";
 
 	// defaults
-	const str::Guid uuidShader = GUID("cbbb7d3f-f44b-45fd-b9e5-a207d92262fb");
-	const str::Guid uuidTexture2D = GUID("c6bb231c-e97f-104e-860e-b55e71988bdb");
+	const str::Guid uuidShader = GUID("cbbb7d3ff44b45fdb9e5a207d92262fb");
+	const str::Guid uuidTexture2D = GUID("c6bb231ce97f104e860eb55e71988bdb");
 }
 
 bool eng::SpriteAssetLoader::Save(SpriteAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strShader, asset.m_Shader, uuidShader);
-	visitor.Visit(strTexture2D, asset.m_Texture2D, uuidTexture2D);
-	visitor.Visit(strPosition, asset.m_Position, Vector2u::Zero);
-	visitor.Visit(strSize, asset.m_Size, Vector2u(1024));
+	visitor.Write(strPosition, asset.m_Position);
+	visitor.Write(strShader, asset.m_Shader);
+	visitor.Write(strSize, asset.m_Size);
+	visitor.Write(strTexture2D, asset.m_Texture2D);
 	return true;
 }
 
 bool eng::SpriteAssetLoader::Load(SpriteAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strShader, asset.m_Shader, uuidShader);
-	visitor.Visit(strTexture2D, asset.m_Texture2D, uuidTexture2D);
-	visitor.Visit(strPosition, asset.m_Position, Vector2u::Zero);
-	visitor.Visit(strSize, asset.m_Size, Vector2u(1024));
+	visitor.Read(strPosition, asset.m_Position, asset.m_Position);
+	visitor.Read(strShader, asset.m_Shader, uuidShader);
+	visitor.Read(strSize, asset.m_Size, asset.m_Size);
+	visitor.Read(strTexture2D, asset.m_Texture2D, uuidTexture2D);
 	return true;
 }

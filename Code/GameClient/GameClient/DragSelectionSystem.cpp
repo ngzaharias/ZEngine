@@ -29,13 +29,13 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& sceneComponent = world.GetSingleton<const eng::PhysicsSceneComponent>();
-	auto& linesComponent = world.GetSingleton<eng::LinesComponent>();
+	const auto& sceneComponent = world.ReadSingleton<eng::PhysicsSceneComponent>();
+	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.GetComponent<const eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Quaternion cameraRotate = Quaternion::FromRotator(cameraTransform.m_Rotate);
 		const Vector3f& cameraTranslate = cameraTransform.m_Translate;
@@ -44,12 +44,12 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 		const Vector3f cameraForward = Vector3f::AxisZ * cameraRotate;
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
+		const Matrix4x4 cameraProj = eng::camera::GetProjection(screenSize, cameraComponent.m_Projection);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform();
 
 		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& inputComponent = world.GetComponent<const eng::InputComponent>(inputEntity);
+			const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
 			const Vector3f cameraPoint = cameraTranslate + cameraForward * 30.f;
 
 			// camera
@@ -64,7 +64,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 
 			// mouse
 			const float distance = 100000.f;
-			const Vector3f mousePosition = camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
+			const Vector3f mousePosition = eng::camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
 			const Vector3f mouseForward = (mousePosition - cameraTranslate).Normalized();
 
 			const physx::PxVec3 position = { 
@@ -90,7 +90,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 				{
 					constexpr float s_Extents = 100.1f;
 
-					const auto& transformComponent = world.GetComponent<const eng::TransformComponent>(selectedEntity);
+					const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(selectedEntity);
 					linesComponent.AddAABB(transformComponent.m_Translate, s_Extents, s_ColourM);
 
 					if (inputComponent.IsKeyPressed(input::EMouse::Left))
@@ -113,8 +113,8 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& dragEntity : world.Query<ecs::query::Include<const drag::SelectionComponent>>())
 	{
-		const auto& dragComponent = world.GetComponent<const drag::SelectionComponent>(dragEntity);
-		const auto& inputComponent = world.GetComponent<const eng::InputComponent>(dragComponent.m_InputEntity);
+		const auto& dragComponent = world.ReadComponent<drag::SelectionComponent>(dragEntity);
+		const auto& inputComponent = world.ReadComponent<eng::InputComponent>(dragComponent.m_InputEntity);
 
 		if (!inputComponent.IsKeyHeld(input::EMouse::Left))
 			world.DestroyEntity(dragEntity);

@@ -1,22 +1,36 @@
 #pragma once
 
+#include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
 
-namespace ecs
+namespace eng::camera
 {
-	class EntityWorld;
-	struct Entity;
+	struct ProjectionComponent;
 }
 
 namespace eng
 {
 	class AssetManager;
+	struct FrameBufferComponent;
+	struct LightAmbientComponent;
+	struct LightDirectionalComponent;
+	struct LightPointComponent;
+	struct StaticMeshComponent;
+	struct TransformComponent;
 
 	class RenderStage_Opaque final : public eng::RenderStage
 	{
 	public:
-		RenderStage_Opaque(eng::AssetManager& assetManager);
-		~RenderStage_Opaque() override;
+		using World = ecs::WorldView<
+			eng::AssetManager,
+			eng::FrameBufferComponent,
+			const eng::camera::ProjectionComponent,
+			const eng::LightAmbientComponent,
+			const eng::LightDirectionalComponent,
+			const eng::LightPointComponent,
+			const eng::StaticMeshComponent,
+			const eng::TransformComponent>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;
@@ -24,7 +38,7 @@ namespace eng
 		void Render(ecs::EntityWorld& entityWorld) override;
 
 	private:
-		void RenderBatch(ecs::EntityWorld& entityWorld, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData);
+		void RenderBatch(World& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData);
 
 	private:
 		uint32 m_ColourBuffer = 0;

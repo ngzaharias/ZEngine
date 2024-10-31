@@ -15,13 +15,13 @@ namespace dbg
 		AABB2f,
 		Circle2f,
 		Line2f,
-		OBB2f,
 		Ray2f,
 		Segment2f,
 		Triangle2f>;
 
 	struct ShapeWindowComponent : public ecs::Component<ShapeWindowComponent>
 	{
+		int32 m_Identifier = 0;
 		str::String m_DockspaceLabel = {};
 		str::String m_InspectorLabel = {};
 		str::String m_PlottingLabel = {};

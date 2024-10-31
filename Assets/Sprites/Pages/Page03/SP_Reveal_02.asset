@@ -1,0 +1,7 @@
+m_Guid = 'a71895f35e834f85a4338d878f2ae27d'
+m_Name = 'SP_Reveal_02'
+m_Position = { X = 357, Y = 0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 128, Y = 128 }
+m_Texture2D = '5111d58569e64e5061bba1b81d5eb290'
+m_Type = 'Sprite'

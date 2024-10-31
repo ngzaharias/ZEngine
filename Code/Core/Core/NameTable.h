@@ -17,8 +17,6 @@ namespace str
 		NameTable();
 		~NameTable();
 
-		str::Hash Register(const char* string);
-		str::Hash Register(const str::String& string);
 		str::Hash Register(const str::StringView& string);
 
 		const str::String& Retrieve(const str::Hash& hash) const;

@@ -1,10 +1,10 @@
-m_Guid = "3367a37c-5bbb-4785-aeae-6d49a71f9f7a"
+m_Guid = "3367a37c5bbb4785aeae6d49a71f9f7a"
 m_Name = "StaticMesh_Gizmo_01"
 
-[StaticMesh]
-m_StaticMesh = "a9fa2b12-8edb-43b6-b19c-1630fcb725af"
+['eng::StaticMeshComponent']
+m_StaticMesh = "a9fa2b128edb43b6b19c1630fcb725af"
 
-[Transform]
+['eng::TransformComponent']
 m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
 m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

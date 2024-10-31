@@ -12,12 +12,12 @@ namespace
 
 bool eng::TrajectoryAssetLoader::Save(TrajectoryAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strPoints, asset.m_Points, {});
+	visitor.Write(strPoints, asset.m_Points);
 	return true;
 }
 
 bool eng::TrajectoryAssetLoader::Load(TrajectoryAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strPoints, asset.m_Points, {});
+	visitor.Read(strPoints, asset.m_Points, {});
 	return true;
 }

@@ -2,18 +2,21 @@
 #include "Engine/Application.h"
 
 #include "Core/GameTime.h"
+#include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraPrototype.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/FlipbookAsset.h"
-#include "Engine/FlipbookPrototype.h"
+#include "Engine/FlipbookComponent.h"
 #include "Engine/FontAsset.h"
-#include "Engine/LightPrototypes.h"
+#include "Engine/GLFW/Window.h"
+#include "Engine/LightComponents.h"
+#include "Engine/MusicAsset.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/NetworkManager.h"
+#include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PhysicsMaterialAsset.h"
-#include "Engine/PhysicsPrototype.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
@@ -22,21 +25,19 @@
 #include "Engine/ShaderAsset.h"
 #include "Engine/SoundAssets.h"
 #include "Engine/SpriteAsset.h"
-#include "Engine/SpritePrototype.h"
+#include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshAsset.h"
-#include "Engine/StaticMeshPrototype.h"
-#include "Engine/TextPrototype.h"
+#include "Engine/StaticMeshComponent.h"
+#include "Engine/TextComponent.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TrajectoryAsset.h"
-#include "Engine/TransformPrototype.h"
-#include "Engine/VoxelChunkPrototype.h"
+#include "Engine/TransformComponent.h"
+#include "Engine/VoxelComponents.h"
 
-#include <optick.h>
-#include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
-#include <SFML/System/Clock.hpp>
 
 #include <iostream>
+#include <optick.h>
 #include <random>
 #include <time.h>
 
@@ -48,7 +49,7 @@ namespace
 	const str::Name strExample = NAME("Example");
 	const str::Name strFont = NAME("Font");
 	const str::Name strFlipbook = NAME("Flipbook");
-	const str::Name strPhysics = NAME("Physics");
+	const str::Name strMusic = NAME("Music");
 	const str::Name strPhysicsMaterial = NAME("PhysicsMaterial");
 	const str::Name strPointLight = NAME("PointLight");
 	const str::Name strShader = NAME("Shader");
@@ -66,32 +67,25 @@ namespace
 }
 
 eng::Application::Application()
-	: m_AssetManager()
+	: m_Window(nullptr)
+	, m_AssetManager()
+	, m_ImguiManager()
 	, m_NetworkManager(m_ComponentSerializer)
 	, m_PhysicsManager()
+	, m_PlatformManager()
 	, m_PrototypeManager()
 	, m_ComponentSerializer()
-	, m_Window(nullptr)
 {
 	srand((unsigned int)time(NULL));
-
-	{
-		eng::WindowConfig windowConfig;
-		windowConfig.m_Name = "Window A";
-		windowConfig.m_Size = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-		m_Window = new sfml::Window(windowConfig);
-	}
+	m_Window = new glfw::Window(m_WindowConfig);
 }
 
 eng::Application::~Application()
 {
-	delete m_Window;
 }
 
 void eng::Application::Execute(int argc, char* argv[])
 {
-	bool isWaitingForProfiler = false;
-
 	InitializeYojimbo();
 	yojimbo_log_level(YOJIMBO_LOG_LEVEL_INFO);
 
@@ -100,7 +94,9 @@ void eng::Application::Execute(int argc, char* argv[])
 
 	GameTime gameTime;
 
-	sf::Clock clock;
+	double currTime = 0.0;
+	double lastTime = 0.0;
+	bool isWaitingForProfiler = false;
 	while (true)
 	{
 		PROFILE_TICK("MainThread");
@@ -125,7 +121,9 @@ void eng::Application::Execute(int argc, char* argv[])
 			if (m_Window->ShouldClose())
 				break;
 
+			PreUpdate(gameTime);
 			Update(gameTime);
+			PostUpdate(gameTime);
 
 			m_Window->PostUpdate(gameTime);
 		}
@@ -142,6 +140,7 @@ void eng::Application::Register()
 	{
 		m_AssetManager.RegisterAsset<eng::FlipbookAsset, eng::FlipbookAssetLoader>(strFlipbook);
 		m_AssetManager.RegisterAsset<eng::FontAsset, eng::FontAssetLoader>(strFont);
+		m_AssetManager.RegisterAsset<eng::MusicAsset, eng::MusicAssetLoader>(strMusic);
 		m_AssetManager.RegisterAsset<eng::PhysicsMaterialAsset, eng::PhysicsMaterialAssetLoader>(strPhysicsMaterial, m_PhysicsManager);
 		m_AssetManager.RegisterAsset<eng::ShaderAsset, eng::ShaderAssetLoader>(strShader);
 		m_AssetManager.RegisterAsset<eng::sound::RandomAsset, eng::sound::AssetLoader>(strSoundRandom);
@@ -155,17 +154,27 @@ void eng::Application::Register()
 
 	// prototypes
 	{
-		m_PrototypeManager.RegisterPrototype<eng::CameraPrototype, eng::CameraLoader>(strCamera);
-		m_PrototypeManager.RegisterPrototype<eng::FlipbookPrototype, eng::FlipbookLoader>(strFlipbook);
-		m_PrototypeManager.RegisterPrototype<eng::AmbientLightPrototype, eng::LightLoader>(strAmbientLight);
-		m_PrototypeManager.RegisterPrototype<eng::DirectionalLightPrototype, eng::LightLoader>(strDirectionalLight);
-		m_PrototypeManager.RegisterPrototype<eng::PhysicsPrototype, eng::PhysicsLoader>(strPhysics, m_AssetManager, m_PhysicsManager);
-		m_PrototypeManager.RegisterPrototype<eng::PointLightPrototype, eng::LightLoader>(strPointLight);
-		m_PrototypeManager.RegisterPrototype<eng::SpritePrototype, eng::SpriteLoader>(strSprite);
-		m_PrototypeManager.RegisterPrototype<eng::StaticMeshPrototype, eng::StaticMeshLoader>(strStaticMesh);
-		m_PrototypeManager.RegisterPrototype<eng::TextPrototype, eng::TextLoader>(strText);
-		m_PrototypeManager.RegisterPrototype<eng::TransformPrototype, eng::TransformLoader>(strTransform);
-		m_PrototypeManager.RegisterPrototype<eng::VoxelChunkPrototype, eng::VoxelChunkLoader>(strVoxelChunk);
+		m_PrototypeManager.Register<eng::camera::Bound2DComponent>();
+		m_PrototypeManager.Register<eng::camera::Move2DComponent>();
+		m_PrototypeManager.Register<eng::camera::Move3DComponent>();
+		m_PrototypeManager.Register<eng::camera::Pan3DComponent>();
+		m_PrototypeManager.Register<eng::camera::ProjectionComponent>();
+		m_PrototypeManager.Register<eng::camera::Zoom2DComponent>();
+		m_PrototypeManager.Register<eng::FlipbookComponent>();
+		m_PrototypeManager.Register<eng::LightAmbientComponent>();
+		m_PrototypeManager.Register<eng::LightDirectionalComponent>();
+		m_PrototypeManager.Register<eng::LightPointComponent>();
+		m_PrototypeManager.Register<eng::PhysicsComponent>();
+		m_PrototypeManager.Register<eng::SpriteComponent>();
+		m_PrototypeManager.Register<eng::StaticMeshComponent>();
+		m_PrototypeManager.Register<eng::TextComponent>();
+		m_PrototypeManager.Register<eng::TransformComponent>();
+		m_PrototypeManager.Register<voxel::ChunkComponent>();
+	}
+
+	// tables
+	{
+		m_TableHeadmaster.Register<eng::AchievementTable>("Achievements");
 	}
 }
 
@@ -175,7 +184,16 @@ void eng::Application::Initialise()
 
 	m_Window->Initialize();
 	m_AssetManager.Initialise();
+	m_ImguiManager.Initialise(*m_Window);
 	m_PhysicsManager.Initialise();
+	m_PlatformManager.Initialise();
+	m_TableHeadmaster.Initialise(str::Path(str::EPath::Assets, "Tables"));
+}
+
+void eng::Application::PreUpdate(const GameTime& gameTime)
+{
+	m_PlatformManager.Update(gameTime);
+	m_ImguiManager.PreUpdate();
 }
 
 void eng::Application::Update(const GameTime& gameTime)
@@ -185,11 +203,21 @@ void eng::Application::Update(const GameTime& gameTime)
 	m_NetworkManager.Update(gameTime);
 }
 
+void eng::Application::PostUpdate(const GameTime& gameTime)
+{
+	m_ImguiManager.PostUpdate();
+}
+
 void eng::Application::Shutdown()
 {
 	PROFILE_FUNCTION();
 
+	m_TableHeadmaster.Shutdown();
+	m_PlatformManager.Shutdown();
 	m_PhysicsManager.Shutdown();
+	m_ImguiManager.Shutdown();
 	m_AssetManager.Shutdown();
 	m_Window->Shutdown();
+
+	delete m_Window;
 }

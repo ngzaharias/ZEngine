@@ -1,6 +1,5 @@
 project "Core"
 	kind "StaticLib"
-	dependson { "Math" }
 	location "%{wks.location}/Core"
 	
 	vpaths 
@@ -19,4 +18,9 @@ project "Core"
 		"%{wks.location}/../3rdParty/spdlog/1.10.0/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/Math/",
+	}
+
+	links 
+	{ 
+		"Math",
 	}

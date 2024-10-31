@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/StringHelpers.h"
+#include "Core/StringView.h"
+#include "Core/TypeInfo.h"
 #include "Core/Variant.h"
 
 namespace core
@@ -32,6 +35,26 @@ namespace core
 		using indices = std::make_index_sequence<sizeof...(Types)>;
 		using type = VariantDefaults<Variant<Types...>, indices>;
 	};
+
+	template<typename TElement>
+	str::StringView ToElementName()
+	{
+		static const str::StringView value = TypeName<TElement>::m_NoNamespace;
+		return value;
+	}
+
+	template<typename TElement>
+	str::StringView ToElementName(const TElement&)
+	{
+		static const str::StringView value = TypeName<TElement>::m_NoNamespace;
+		return value;
+	}
+
+	template<typename ...Types>
+	std::initializer_list<str::StringView> ToElementNames(const Variant<Types...>&)
+	{
+		return { core::ToElementName<Types>()... };
+	}
 
 	template<typename TVariant, typename... THandlers>
 	auto VariantMatch(TVariant&& variant, THandlers&&... handlers)

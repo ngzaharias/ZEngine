@@ -8,10 +8,7 @@
 #include "Engine/InputComponent.h"
 #include "Engine/SFML/Window.h"
 
-eng::InputSystem::InputSystem(sfml::Window& window)
-	: m_Window(window)
-{
-}
+#include <imgui/imgui.h>
 
 void eng::InputSystem::Initialise(World& world)
 {
@@ -24,21 +21,35 @@ void eng::InputSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& window = world.ReadResource<eng::Window>();
+
 	m_KeyboardPrevious = std::move(m_KeyboardCurrent);
 	m_MousePrevious = std::move(m_MouseCurrent);
 
-	Vector2f glfwMouseDelta, glfwMousePos;
-	//m_Window.GatherKeyboard(m_KeyboardCurrent);
-	//m_Window.GatherMouse(m_MouseCurrent, glfwMouseDelta, glfwMousePos);
+	Vector2f mouseDelta, mousePos, scrollDelta;
+	if (const glfw::Window* glfwWindow = dynamic_cast<const glfw::Window*>(&window))
+	{
+		glfwWindow->GatherKeyboard(m_KeyboardCurrent);
+		glfwWindow->GatherMouse(m_MouseCurrent, mouseDelta, mousePos);
+		glfwWindow->GatherScroll(scrollDelta);
+	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::InputComponent>>())
 	{
-		auto& component = world.GetComponent<eng::InputComponent>(entity);
-		component.m_KeyboardPrevious = m_KeyboardPrevious;
-		component.m_KeyboardCurrent = m_KeyboardCurrent;
-		component.m_MousePrevious = m_MousePrevious;
-		component.m_MouseCurrent = m_MouseCurrent;
-		component.m_MouseDelta = glfwMouseDelta;
-		component.m_MousePosition = glfwMousePos;
+		auto& component = world.WriteComponent<eng::InputComponent>(entity);
+		if (!ImGui::GetIO().WantCaptureKeyboard)
+		{
+			component.m_KeyboardPrevious = m_KeyboardPrevious;
+			component.m_KeyboardCurrent = m_KeyboardCurrent;
+		}
+
+		if (!ImGui::GetIO().WantCaptureMouse)
+		{
+			component.m_MousePrevious = m_MousePrevious;
+			component.m_MouseCurrent = m_MouseCurrent;
+			component.m_MouseDelta = mouseDelta;
+			component.m_MousePosition = mousePos;
+			component.m_ScrollDelta = scrollDelta;
+		}
 	}
 }

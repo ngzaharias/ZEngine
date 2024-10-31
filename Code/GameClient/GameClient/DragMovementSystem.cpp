@@ -30,21 +30,21 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& linesComponent = world.GetSingleton<eng::LinesComponent>();
+	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 
 	for (const ecs::Entity& dragEntity : world.Query<ecs::query::Include<const drag::SelectionComponent>>())
 	{
-		const auto& dragComponent = world.GetComponent<const drag::SelectionComponent>(dragEntity);
-		const auto& inputComponent = world.GetComponent<const eng::InputComponent>(dragComponent.m_InputEntity);
+		const auto& dragComponent = world.ReadComponent<drag::SelectionComponent>(dragEntity);
+		const auto& inputComponent = world.ReadComponent<eng::InputComponent>(dragComponent.m_InputEntity);
 
-		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(dragComponent.m_CameraEntity);
-		const auto& cameraTransform = world.GetComponent<const eng::TransformComponent>(dragComponent.m_CameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(dragComponent.m_CameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(dragComponent.m_CameraEntity);
 
 		const Quaternion cameraRotate = Quaternion::FromRotator(cameraTransform.m_Rotate);
 		const Vector3f& cameraTranslate = cameraTransform.m_Translate;
 		const Matrix4x4 cameraView = cameraTransform.ToTransform();
 
-		const Vector3f mousePosition = camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
+		const Vector3f mousePosition = eng::camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
 		const Vector3f mouseForward = (mousePosition - cameraTranslate).Normalized();
 
 		// debug
@@ -70,7 +70,7 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 			Vector3f intersectPos;
 			if (math::Intersection(ray, dragComponent.m_TranslatePlane, intersectPos))
 			{
-				auto& selectedTransform = world.GetComponent<eng::TransformComponent>(dragComponent.m_SelectedEntity);
+				auto& selectedTransform = world.WriteComponent<eng::TransformComponent>(dragComponent.m_SelectedEntity);
 				selectedTransform.m_Translate = intersectPos + dragComponent.m_TranslateOffset;
 			}
 		}

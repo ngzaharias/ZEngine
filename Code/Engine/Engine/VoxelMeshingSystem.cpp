@@ -166,8 +166,8 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : entitiesToUpdate)
 	{
-		const auto& chunkComponent = world.GetComponent<const voxel::ChunkComponent>(entity);
-		auto& meshComponent = world.GetComponent<eng::DynamicMeshComponent>(entity);
+		const auto& chunkComponent = world.ReadComponent<voxel::ChunkComponent>(entity);
+		auto& meshComponent = world.WriteComponent<eng::DynamicMeshComponent>(entity);
 
 		for (auto&& [i, block] : enumerate::Forward(chunkComponent.m_Data))
 		{

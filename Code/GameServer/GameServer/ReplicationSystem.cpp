@@ -7,11 +7,6 @@
 #include "Engine/ReplicationComponents.h"
 #include "Engine/ReplicationHost.h"
 
-net::ReplicationSystem::ReplicationSystem(net::ReplicationHost& replicationHost)
-	: m_ReplicationHost(replicationHost)
-{
-}
-
 void net::ReplicationSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();

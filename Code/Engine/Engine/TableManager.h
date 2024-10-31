@@ -13,7 +13,7 @@ namespace eng
 		ITableManager() {}
 		virtual ~ITableManager() {}
 
-		virtual void Visit(eng::Visitor& visitor) = 0;
+		virtual void Read(eng::Visitor& visitor) = 0;
 	};
 
 	/// \brief
@@ -28,7 +28,7 @@ namespace eng
 
 		const ObjectMap& GetObjectMap() const { return m_ObjectMap; }
 
-		void Visit(eng::Visitor& visitor) override;
+		void Read(eng::Visitor& visitor) override;
 
 	private:
 		ObjectMap m_ObjectMap = {};

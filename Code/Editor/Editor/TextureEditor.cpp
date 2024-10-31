@@ -2,8 +2,10 @@
 #include "Editor/TextureEditor.h"
 
 #include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Editor/SettingsComponents.h"
 #include "Editor/TextureHelpers.h"
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
@@ -26,29 +28,20 @@ namespace
 		ImGuiDockNodeFlags_NoWindowMenuButton;
 	constexpr ImGuiTableFlags s_InspectorFlags = 0;
 	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 
-	bool HasInput_Import(World& world)
+	bool HasInput(World& world, const input::EKeyboard key)
 	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& input = world.GetComponent<const eng::InputComponent>(entity);
-			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::I);
-		}
-		return false;
-	}
-
-	bool HasInput_Save(World& world)
-	{
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
-		{
-			const auto& input = world.GetComponent<const eng::InputComponent>(entity);
-			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::S);
+			const auto& input = world.ReadComponent<eng::InputComponent>(entity);
+			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(key);
 		}
 		return false;
 	}
@@ -59,10 +52,13 @@ namespace
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::MenuItem("New", "Ctrl + N"))
+					world.AddComponent<editor::TextureAssetNewComponent>(entity);
+
 				if (ImGui::MenuItem("Import", "Ctrl + I"))
 					world.AddComponent<editor::TextureAssetImportComponent>(entity);
 
-				if (ImGui::MenuItem("Open"))
+				if (ImGui::MenuItem("Open", "Ctrl + O"))
 					world.AddComponent<editor::TextureAssetOpenComponent>(entity);
 
 				if (ImGui::MenuItem("Save", "Ctrl + S"))
@@ -76,14 +72,14 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TextureWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(entity);
 		eng::Texture2DAsset& texture = windowComponent.m_Asset;
 
-		imgui::Guid("m_Guid", texture.m_Guid);
-		imgui::Name("m_Name", texture.m_Name);
+		imgui::InputText("m_Guid", texture.m_Guid);
+		imgui::InputText("m_Name", texture.m_Name);
 	}
 
-	void DrawPopupImport(World& world, const ecs::Entity& entity)
+	void Asset_Import(World& world, const ecs::Entity& entity)
 	{
 		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
 		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
@@ -92,48 +88,76 @@ namespace
 		if (world.HasComponent<editor::TextureAssetImportComponent>(entity))
 			world.RemoveComponent<editor::TextureAssetImportComponent>(entity);
 
-		if (world.HasComponent<editor::TextureAssetImportComponent>(entity) || HasInput_Import(world))
+		if (HasInput(world, input::EKeyboard::I) || world.HasComponent<editor::TextureAssetImportComponent>(entity))
 		{
+			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+
 			eng::SelectFileSettings settings;
-			settings.m_Title = "Select File";
-			settings.m_Filters.Append({ "PNG (*.png)", "*.png" });
+			settings.m_Title = "Import Texture";
+			settings.m_Filters = { "PNG (*.png)", "*.png" };
+			settings.m_Path = readSettings.m_Texture.m_Import;
 
-			const Array<str::Path> filepaths = eng::SelectFileDialog(settings);
-			if (!filepaths.IsEmpty())
+			const str::Path filepath = eng::SelectFileDialog(settings);
+			if (!filepath.IsEmpty())
 			{
-				auto& windowComponent = world.GetComponent<editor::TextureWindowComponent>(entity);
+				auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
+				writeSettings.m_Texture.m_Import = filepath.GetDirectory();
 
-				auto& assetManager = world.GetResource<eng::AssetManager>();
-				assetManager.ImportAsset(windowComponent.m_Asset, filepaths.GetFirst());
+				auto& writeWindow = world.WriteComponent<editor::TextureWindowComponent>(entity);
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
+				assetManager.ImportAsset(writeWindow.m_Asset, filepath);
 			}
 		}
 	};
 
-	void DrawPopupOpen(World& world, const ecs::Entity& entity)
+	void Asset_New(World& world, const ecs::Entity& entity)
+	{
+		if (world.HasComponent<editor::TextureAssetNewComponent>(entity))
+			world.RemoveComponent<editor::TextureAssetNewComponent>(entity);
+
+		if (HasInput(world, input::EKeyboard::N) || world.HasComponent<editor::TextureAssetNewComponent>(entity))
+		{
+			auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(entity);
+			windowComponent.m_Asset = {};
+
+			eng::Texture2DAsset& sprite = windowComponent.m_Asset;
+			sprite.m_Guid = str::Guid::Generate();
+			sprite.m_Name = str::Name::Create("T_Texture");
+		}
+	}
+
+	void Asset_Open(World& world, const ecs::Entity& entity)
 	{
 		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
 		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
 		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
 
 		if (world.HasComponent<editor::TextureAssetOpenComponent>(entity))
-		{
-			ImGui::OpenPopup("Open Texture");
-
 			world.RemoveComponent<editor::TextureAssetOpenComponent>(entity);
-		}
 
-		if (ImGui::BeginPopupModal("Open Texture", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+		if (HasInput(world, input::EKeyboard::O) || world.HasComponent<editor::TextureAssetOpenComponent>(entity))
 		{
-			if (ImGui::Button("OK", ImVec2(120, 0)))
-				ImGui::CloseCurrentPopup();
-			ImGui::SameLine();
-			if (ImGui::Button("Cancel", ImVec2(120, 0)))
-				ImGui::CloseCurrentPopup();
-			ImGui::EndPopup();
+			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+
+			eng::SelectFileSettings settings;
+			settings.m_Title = "Open Texture";
+			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
+			settings.m_Path = readSettings.m_Texture.m_Open;
+
+			const str::Path filepath = eng::SelectFileDialog(settings);
+			if (!filepath.IsEmpty())
+			{
+				auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
+				writeSettings.m_Texture.m_Open = filepath.GetDirectory();
+
+				auto& writeWindow = world.WriteComponent<editor::TextureWindowComponent>(entity);
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
+				assetManager.LoadAsset(writeWindow.m_Asset, filepath);
+			}
 		}
 	};
 
-	void DrawPopupSave(World& world, const ecs::Entity& entity)
+	void Asset_Save(World& world, const ecs::Entity& entity)
 	{
 		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
 		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
@@ -142,28 +166,36 @@ namespace
 		if (world.HasComponent<editor::TextureAssetSaveComponent>(entity))
 			world.RemoveComponent<editor::TextureAssetSaveComponent>(entity);
 
-		if (world.HasComponent<editor::TextureAssetSaveComponent>(entity) || HasInput_Save(world))
+		if (HasInput(world, input::EKeyboard::S) || world.HasComponent<editor::TextureAssetSaveComponent>(entity))
 		{
-			auto& windowComponent = world.GetComponent<editor::TextureWindowComponent>(entity);
-			const str::Name& name = windowComponent.m_Asset.m_Name;
+			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+			const auto& readWindow = world.ReadComponent<editor::TextureWindowComponent>(entity);
 
 			eng::SaveFileSettings settings;
+			settings.m_Title = "Save Texture";
 			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
-			settings.m_Path = name;
+			settings.m_Path = str::Path(
+				readSettings.m_Texture.m_Save, 
+				readWindow.m_Asset.m_Name, 
+				eng::AssetManager::s_Extension);
 
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& assetManager = world.GetResource<eng::AssetManager>();
-				assetManager.SaveAsset(windowComponent.m_Asset, filepath);
+				auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
+				writeSettings.m_Texture.m_Save = str::Path(filepath.GetParent(), "\\");
+
+				auto& writeWindow = world.WriteComponent<editor::TextureWindowComponent>(entity);
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
+				assetManager.SaveAsset(writeWindow.m_Asset, filepath);
 			}
 		}
 	};
 
 	void DrawPreviewer(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TextureWindowComponent>(entity);
-		eng::Texture2DAsset& texture = windowComponent.m_Asset;
+		const auto& windowComponent = world.ReadComponent<editor::TextureWindowComponent>(entity);
+		const eng::Texture2DAsset& texture = windowComponent.m_Asset;
 
 		const Vector2f textureSize = Vector2f((float)texture.m_Width, (float)texture.m_Height);
 		const Vector2f regionSize = ImGui::GetContentRegionAvail();
@@ -182,16 +214,26 @@ void editor::TextureEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::TextureWindowRequestComponent>>())
 	{
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
-		auto& windowComponent = world.AddComponent<editor::TextureWindowComponent>(windowEntity);
-		windowComponent.m_DockspaceLabel = ToLabel("Texture Editor", windowEntity);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
-		windowComponent.m_PreviewerLabel = ToLabel("Previewer", windowEntity);
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Texture Editor");
+
+		auto& window = world.AddComponent<editor::TextureWindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
+		window.m_DockspaceLabel = ToLabel("Texture Editor", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##texture", identifier);
+		window.m_PreviewerLabel = ToLabel("Previewer##texture", identifier);
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::TextureWindowComponent>>())
+	{
+		auto& window = world.ReadComponent<editor::TextureWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TextureWindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<editor::TextureWindowComponent>(windowEntity);
+		auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
@@ -225,9 +267,10 @@ void editor::TextureEditor::Update(World& world, const GameTime& gameTime)
 			DrawPreviewer(world, windowEntity);
 		ImGui::End();
 
-		DrawPopupImport(world, windowEntity);
-		DrawPopupOpen(world, windowEntity);
-		DrawPopupSave(world, windowEntity);
+		Asset_Import(world, windowEntity);
+		Asset_New(world, windowEntity);
+		Asset_Open(world, windowEntity);
+		Asset_Save(world, windowEntity);
 
 		if (!isOpen)
 			world.DestroyEntity(windowEntity);

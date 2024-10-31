@@ -20,26 +20,17 @@
 
 namespace
 {
-	const str::Guid strVoxelMesh = GUID("37cb9789-ccec-4a51-9297-fd6472e53d7a");
-	const str::Guid strVoxelShader = GUID("fffaa79e-28e0-44d9-b515-daef50fc27d2");
-	const str::Guid strVoxelTexture = GUID("f87d23dd-5e7b-4d6d-bff8-8b0eb676f80c");
-}
-
-eng::RenderStage_Voxels::RenderStage_Voxels(eng::AssetManager& assetManager)
-	: RenderStage(assetManager)
-{
+	const str::Guid strVoxelMesh = GUID("37cb9789ccec4a519297fd6472e53d7a");
+	const str::Guid strVoxelShader = GUID("fffaa79e28e044d9b515daef50fc27d2");
+	const str::Guid strVoxelTexture = GUID("f87d23dd5e7b4d6dbff88b0eb676f80c");
 }
 
 void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	using World = ecs::WorldView<
-		const eng::CameraComponent,
-		const eng::TransformComponent,
-		const eng::DynamicMeshComponent,
-		const voxel::ChunkComponent>;
 	World world = entityWorld.GetWorldView<World>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -55,25 +46,25 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 		glFrontFace(GL_CW);
 	}
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.GetComponent<const eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
-		const auto& shader = *m_AssetManager.LoadAsset<eng::ShaderAsset>(strVoxelShader);
-		const auto& texture = *m_AssetManager.LoadAsset<eng::Texture2DAsset>(strVoxelTexture);
+		const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(strVoxelShader);
+		const auto& texture = *assetManager.LoadAsset<eng::Texture2DAsset>(strVoxelTexture);
 
 		glUseProgram(shader.m_ProgramId);
 
 		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<const eng::DynamicMeshComponent, const eng::TransformComponent>>())
 		{
-			const auto& voxelComponent = world.GetComponent<const voxel::ChunkComponent>(voxelEntity);
-			const auto& voxelDynamicMesh = world.GetComponent<const eng::DynamicMeshComponent>(voxelEntity);
-			const auto& voxelTransform = world.GetComponent<const eng::TransformComponent>(voxelEntity);
+			const auto& voxelComponent = world.ReadComponent<voxel::ChunkComponent>(voxelEntity);
+			const auto& voxelDynamicMesh = world.ReadComponent<eng::DynamicMeshComponent>(voxelEntity);
+			const auto& voxelTransform = world.ReadComponent<eng::TransformComponent>(voxelEntity);
 
 			const Matrix4x4 voxelModel = voxelTransform.ToTransform();
 

@@ -80,6 +80,8 @@ void ecs::EntityStorage::FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryR
 			}
 
 			componentMask &= ~changes.m_Removed;
+			changes.m_Added &= ~changes.m_Removed;
+			changes.m_Updated &= ~changes.m_Removed;
 		}
 
 		// update queries

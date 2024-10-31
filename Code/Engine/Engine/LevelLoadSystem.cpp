@@ -25,7 +25,7 @@ eng::level::LoadSystem::LoadSystem(ecs::EntityWorld& entityWorld)
 
 void eng::level::LoadSystem::Initialise(World& world)
 {
-	auto& directoryComponent = world.AddSingleton<eng::level::DirectoryComponent>();
+	auto& directoryComponent = world.WriteSingleton<eng::level::DirectoryComponent>();
 
 	str::Path subpath;
 	const str::Path path = str::Path(str::EPath::Assets, strLevels.ToChar());
@@ -40,27 +40,22 @@ void eng::level::LoadSystem::Initialise(World& world)
 	}
 }
 
-void eng::level::LoadSystem::Shutdown(World& world)
-{
-	world.RemoveSingleton<eng::level::DirectoryComponent>();
-}
-
 void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& directoryComponent = world.GetSingleton<eng::level::DirectoryComponent>();
+	const auto& directoryComponent = world.WriteSingleton<eng::level::DirectoryComponent>();
 
 	// load requests
 	{
 		for (const ecs::Entity& requestEntity : world.Query<ecs::query::Include<const eng::level::LoadRequestComponent>>())
 		{
-			const auto& requestComponent = world.GetComponent<const eng::level::LoadRequestComponent>(requestEntity);
+			const auto& requestComponent = world.ReadComponent<eng::level::LoadRequestComponent>(requestEntity);
 
 			// unload current levels
 			for (const ecs::Entity& loadedEntity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 			{
-				const auto& loadedComponent = world.GetComponent<const eng::level::LoadedComponent>(loadedEntity);
+				const auto& loadedComponent = world.ReadComponent<eng::level::LoadedComponent>(loadedEntity);
 				UnloadLevel(world, loadedComponent.m_Name);
 			}
 
@@ -77,11 +72,11 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 	{
 		for (const ecs::Entity& requestEntity : world.Query<ecs::query::Include<const eng::level::UnloadRequestComponent>>())
 		{
-			const auto& requestComponent = world.GetComponent<const eng::level::UnloadRequestComponent>(requestEntity);
+			const auto& requestComponent = world.ReadComponent<eng::level::UnloadRequestComponent>(requestEntity);
 
 			for (const ecs::Entity& loadedEntity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 			{
-				const auto& loadedComponent = world.GetComponent<const eng::level::LoadedComponent>(loadedEntity);
+				const auto& loadedComponent = world.ReadComponent<eng::level::LoadedComponent>(loadedEntity);
 				if (requestComponent.m_Name == loadedComponent.m_Name)
 					UnloadLevel(world, loadedComponent.m_Name);
 			}
@@ -93,7 +88,7 @@ void eng::level::LoadSystem::LoadLevel(World& world, const str::Name& levelName,
 {
 	constexpr const char* s_Extension = ".prototype";
 
-	auto& prototypeManager = world.GetResource<eng::PrototypeManager>();
+	const auto& prototypeManager = world.ReadResource<eng::PrototypeManager>();
 
 	{
 		const ecs::Entity levelEntity = world.CreateEntity();
@@ -122,9 +117,9 @@ void eng::level::LoadSystem::LoadLevel(World& world, const str::Name& levelName,
 		}
 		else if (filepath.GetFileExtension() == s_Extension)
 		{
-			const ecs::Entity entity = prototypeManager.CreateEntity(m_EntityWorld, filepath);
-			if (!entity.IsUnassigned())
-				world.AddComponent<eng::level::EntityComponent>(entity, levelName);
+			const ecs::Entity entity = world.CreateEntity();
+			world.AddComponent<eng::level::EntityComponent>(entity, levelName);
+			prototypeManager.LoadEntity(m_EntityWorld, entity, filepath);
 		}
 	}
 }
@@ -133,14 +128,14 @@ void eng::level::LoadSystem::UnloadLevel(World& world, const str::Name& levelNam
 {
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::EntityComponent>>())
 	{
-		const auto& component = world.GetComponent<const eng::level::EntityComponent>(entity);
+		const auto& component = world.ReadComponent<eng::level::EntityComponent>(entity);
 		if (component.m_Name == levelName)
 			world.DestroyEntity(entity);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 	{
-		const auto& component = world.GetComponent<const eng::level::LoadedComponent>(entity);
+		const auto& component = world.ReadComponent<eng::level::LoadedComponent>(entity);
 		if (component.m_Name == levelName)
 			world.DestroyEntity(entity);
 	}

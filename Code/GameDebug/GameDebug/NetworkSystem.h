@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "imgui/Identifier.h"
 
 namespace gamestate
 {
@@ -27,5 +28,8 @@ namespace dbg
 			const dbg::NetworkWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		imgui::Identifier m_WindowIds = {};
 	};
 }

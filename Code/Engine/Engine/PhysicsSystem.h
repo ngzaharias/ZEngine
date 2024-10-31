@@ -1,8 +1,7 @@
 #pragma once
 
+#include "Core/Delegate.h"
 #include "ECS/System.h"
-
-#include <entt/signal/sigh.hpp>
 
 #include <PhysX/PxSimulationEventCallback.h>
 
@@ -16,7 +15,6 @@ namespace physx
 	class PxActor;
 	class PxScene;
 	class PxTransform;
-
 	struct PxConstraintInfo;
 	struct PxContactPair;
 	struct PxContactPairHeader;
@@ -25,8 +23,9 @@ namespace physx
 
 namespace eng
 {
+	class AssetManager;
 	class PhysicsManager;
-
+	struct PhysicsComponent;
 	struct PhysicsSceneComponent;
 	struct RigidDynamicComponent;
 	struct RigidStaticComponent;
@@ -36,11 +35,13 @@ namespace eng
 	{
 	public:
 		using World = ecs::WorldView<
+			eng::AssetManager,
 			eng::PhysicsManager,
 			eng::PhysicsSceneComponent,
 			eng::RigidDynamicComponent,
 			eng::RigidStaticComponent,
-			eng::TransformComponent>;
+			eng::TransformComponent,
+			const eng::PhysicsComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);
@@ -63,8 +64,8 @@ namespace eng
 		void onWake(physx::PxActor** actors, physx::PxU32 count) override;
 
 	public:
-		entt::sigh<void(const ecs::Entity&, const ecs::Entity&)> m_OnCollideSignal;
-		entt::sigh<void(const ecs::Entity&, const ecs::Entity&)> m_OnOverlapSignal;
+		Delegate<void(const ecs::Entity&, const ecs::Entity&)> m_OnCollideSignal;
+		Delegate<void(const ecs::Entity&, const ecs::Entity&)> m_OnOverlapSignal;
 
 	public:
 		float m_DeltaTimeAccumulated = 0.f;

@@ -11,40 +11,34 @@
 #include "Network/Adaptor.h"
 #include "Network/Host.h"
 
-net::UserSystem::UserSystem(net::ReplicationHost& replicationHost)
-	: m_ReplicationHost(replicationHost)
-{
-}
-
 void net::UserSystem::Initialise(World& world)
 {
-	auto& networkManager = world.GetResource<eng::NetworkManager>();
+	auto& networkManager = world.WriteResource<eng::NetworkManager>();
 	auto& adaptor = networkManager.GetAdaptor();
 
-	world.AddSingleton<net::UserMapComponent>();
-
-	m_Connections =
+	m_Collection =
 	{
-		entt::sink(adaptor.m_OnServerClientConnected).connect<&net::UserSystem::OnClientConnected>(this),
-		entt::sink(adaptor.m_OnServerClientDisconnected).connect<&net::UserSystem::OnClientDisconnected>(this),
+		adaptor.m_OnServerClientConnected.Connect(*this, &net::UserSystem::OnClientConnected),
+		adaptor.m_OnServerClientDisconnected.Connect(*this, &net::UserSystem::OnClientDisconnected),
 	};
 }
 
 void net::UserSystem::Shutdown(World& world)
 {
-	world.RemoveSingleton<net::UserMapComponent>();
-	m_Connections.Disconnect();
+	m_Collection.Disconnect();
 }
 
 void net::UserSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& userMapComponent = world.GetSingleton<const net::UserMapComponent>();
-	for (auto&& [userId, hasConnected] : m_Requests)
+	const auto& userMapComponent = world.ReadSingleton<net::UserMapComponent>();
+	for (auto&& [userId, wantsConnected] : m_Requests)
 	{
+		auto& replicationHost = world.WriteResource<net::ReplicationHost>();
+
 		const bool isConnected = userMapComponent.m_UserToEntity.Contains(userId);
-		if (hasConnected && !isConnected)
+		if (wantsConnected && !isConnected)
 		{
 			const ecs::Entity userEntity = world.CreateEntity();
 			auto& nameComponent = world.AddComponent<ecs::NameComponent>(userEntity);
@@ -56,24 +50,24 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 			auto& userComponent = world.AddComponent<net::UserComponent>(userEntity);
 			userComponent.m_UserId = userId;
 
-			auto& mapComponent = world.GetSingleton<net::UserMapComponent>();
+			auto& mapComponent = world.WriteSingleton<net::UserMapComponent>();
 			mapComponent.m_EntityToUser.Set(userEntity, userId);
 			mapComponent.m_UserToEntity.Set(userId, userEntity);
 
-			m_ReplicationHost.RegisterPeer(userId.GetPeerId());
-			m_ReplicationHost.StartReplicateToPeer(userId.GetPeerId(), userEntity);
+			replicationHost.RegisterPeer(userId.GetPeerId());
+			replicationHost.StartReplicateToPeer(userId.GetPeerId(), userEntity);
 		}
-		else if (!hasConnected && isConnected)
+		else if (!wantsConnected && isConnected)
 		{
 			const ecs::Entity userEntity = userMapComponent.m_UserToEntity.Get(userId);
 			world.DestroyEntity(userEntity);
 
-			auto& mapComponent = world.GetSingleton<net::UserMapComponent>();
+			auto& mapComponent = world.WriteSingleton<net::UserMapComponent>();
 			mapComponent.m_EntityToUser.Remove(userEntity);
 			mapComponent.m_UserToEntity.Remove(userId);
 
-			m_ReplicationHost.StopReplicateToPeer(userId.GetPeerId(), userEntity);
-			m_ReplicationHost.UnregisterPeer(userId.GetPeerId());
+			replicationHost.StopReplicateToPeer(userId.GetPeerId(), userEntity);
+			replicationHost.UnregisterPeer(userId.GetPeerId());
 		}
 	}
 	m_Requests.RemoveAll();

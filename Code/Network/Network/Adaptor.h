@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Core/Delegate.h"
 #include "Core/Types.h"
 
-#include <entt/signal/sigh.hpp>
 #include <yojimbo/yojimbo.h>
 
 namespace yojimbo
@@ -24,7 +24,7 @@ namespace net
 		void OnServerClientDisconnected(int32 clientIndex) override;
 
 	public:
-		entt::sigh<void(const net::PeerId&)> m_OnServerClientConnected;
-		entt::sigh<void(const net::PeerId&)> m_OnServerClientDisconnected;
+		Delegate<void(const net::PeerId&)> m_OnServerClientConnected;
+		Delegate<void(const net::PeerId&)> m_OnServerClientDisconnected;
 	};
 }

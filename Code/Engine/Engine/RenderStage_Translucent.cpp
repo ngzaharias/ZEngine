@@ -42,16 +42,7 @@ namespace
 		}
 	};
 
-	const str::Guid strQuadMesh = str::Guid::Create("e94876a8-e4cc-4d16-84c8-5859b48a1af6");
-}
-
-eng::RenderStage_Translucent::RenderStage_Translucent(eng::AssetManager& m_AssetManager)
-	: RenderStage(m_AssetManager)
-{
-}
-
-eng::RenderStage_Translucent::~RenderStage_Translucent()
-{
+	const str::Guid strQuadMesh = str::Guid::Create("e94876a8e4cc4d1684c85859b48a1af6");
 }
 
 void eng::RenderStage_Translucent::Initialise(ecs::EntityWorld& entityWorld)
@@ -72,12 +63,8 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	using World = ecs::WorldView<
-		const eng::CameraComponent,
-		const eng::FlipbookComponent,
-		const eng::SpriteComponent,
-		const eng::TransformComponent>;
 	World world = entityWorld.GetWorldView<World>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -94,10 +81,10 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 		glFrontFace(GL_CW);
 	}
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.GetComponent<const eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
@@ -109,22 +96,22 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 		{
 			for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::SpriteComponent, const eng::TransformComponent>>())
 			{
-				const auto& spriteComponent = world.GetComponent<const eng::SpriteComponent>(renderEntity);
-				const auto& spriteTransform = world.GetComponent<const eng::TransformComponent>(renderEntity);
+				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(renderEntity);
+				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
 				if (!spriteComponent.m_Sprite.IsValid())
 					continue;
 
-				const eng::SpriteAsset& spriteAsset = *m_AssetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
-				if (!spriteAsset.m_Texture2D.IsValid())
+				const eng::SpriteAsset* spriteAsset = assetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
+				if (!spriteAsset || !spriteAsset->m_Texture2D.IsValid())
 					continue;
 
 				RenderBatchID id;
 				id.m_Entity = renderEntity;
 				id.m_Depth = math::DistanceSqr(spriteTransform.m_Translate, cameraTransform.m_Translate);
-				id.m_ShaderId = spriteAsset.m_Shader;
+				id.m_ShaderId = spriteAsset->m_Shader;
 				id.m_StaticMeshId = strQuadMesh;
-				id.m_TextureId = spriteAsset.m_Texture2D;
+				id.m_TextureId = spriteAsset->m_Texture2D;
 				batchIDs.Append(id);
 			}
 		}
@@ -133,20 +120,19 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 		{
 			for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::FlipbookComponent, const eng::TransformComponent>>())
 			{
-				const auto& flipbookComponent = world.GetComponent<const eng::FlipbookComponent>(renderEntity);
-				const auto& flipbookTransform = world.GetComponent<const eng::TransformComponent>(renderEntity);
+				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(renderEntity);
+				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
 				if (!flipbookComponent.m_Flipbook.IsValid())
 					continue;
 
-				const eng::FlipbookAsset& flipbookAsset = *m_AssetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
+				const eng::FlipbookAsset& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 				if (flipbookAsset.m_Frames.IsEmpty())
 					continue;
+				if (flipbookComponent.m_Index >= flipbookAsset.m_Frames.GetCount())
+					continue;
 
-				const int32 frameMax = flipbookAsset.m_Frames.GetCount() - 1;
-				const int32 frameIndex = std::clamp(flipbookComponent.m_Index, 0, frameMax);
-
-				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[frameIndex];
+				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[flipbookComponent.m_Index];
 				if (!flipbookAsset.m_Texture2D.IsValid())
 					continue;
 
@@ -177,7 +163,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 			if (!isSameBatch)
 			{
-				RenderBatch(batchID, batchData, stageData);
+				RenderBatch(world, batchID, batchData, stageData);
 				batchData.m_Colours.RemoveAll();
 				batchData.m_Models.RemoveAll();
 				batchData.m_TexParams.RemoveAll();
@@ -185,21 +171,27 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 			if (world.HasComponent<eng::FlipbookComponent>(id.m_Entity))
 			{
-				const auto& flipbookComponent = world.GetComponent<const eng::FlipbookComponent>(id.m_Entity);
-				const auto& flipbookTransform = world.GetComponent<const eng::TransformComponent>(id.m_Entity);
-				const auto& flipbookAsset = *m_AssetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
+				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(id.m_Entity);
+				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
+				const auto& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 
-				const int32 frameMax = flipbookAsset.m_Frames.GetCount() - 1;
-				const int32 frameIndex = std::clamp(flipbookComponent.m_Index, 0, frameMax);
-
-				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[frameIndex];
-				const eng::Texture2DAsset& texture2DAsset = *m_AssetManager.LoadAsset<eng::Texture2DAsset>(flipbookAsset.m_Texture2D);
+				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[flipbookComponent.m_Index];
+				const eng::Texture2DAsset* texture2DAsset = assetManager.LoadAsset<eng::Texture2DAsset>(flipbookAsset.m_Texture2D);
+				if (!texture2DAsset || texture2DAsset->m_TextureId == 0)
+					continue;
 
 				const Vector2f& spritePos = flipbookFrame.m_Position;
 				const Vector2f& spriteSize = flipbookFrame.m_Size;
-				const Vector2f textureSize = Vector2f((float)texture2DAsset.m_Width, (float)texture2DAsset.m_Height);
+				const Vector2f textureSize = Vector2f((float)texture2DAsset->m_Width, (float)texture2DAsset->m_Height);
 
-				const Matrix4x4 model = flipbookTransform.ToTransform();
+				const Vector3f modelScale = flipbookTransform.m_Scale;
+				const Vector3f spriteScale = Vector3f(
+					(float)flipbookComponent.m_Size.x / 100.f * 0.5f,
+					(float)flipbookComponent.m_Size.y / 100.f * 0.5f,
+					1.f);
+
+				Matrix4x4 model = flipbookTransform.ToTransform();
+				model.SetScale(math::Multiply(modelScale, spriteScale));
 
 				const Vector2f texcoordOffset = Vector2f(
 					spritePos.x / textureSize.x,
@@ -208,9 +200,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					spriteSize.x / textureSize.x,
 					spriteSize.y / textureSize.y);
 
-				const Vector4f& colour = colour::From(id.m_Entity);
-
-				batchData.m_Colours.Emplace(colour.x, colour.y, colour.z);
+				batchData.m_Colours.Append(Vector3f::One);
 				batchData.m_Models.Append(model);
 				batchData.m_TexParams.Emplace(
 					texcoordOffset.x, texcoordOffset.y,
@@ -218,27 +208,27 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 			}
 			else if (world.HasComponent<eng::SpriteComponent>(id.m_Entity))
 			{
-				const auto& spriteComponent = world.GetComponent<const eng::SpriteComponent>(id.m_Entity);
-				const auto& spriteTransform = world.GetComponent<const eng::TransformComponent>(id.m_Entity);
+				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(id.m_Entity);
+				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
 				if (!spriteComponent.m_Sprite.IsValid())
 					continue;
 
-				const eng::SpriteAsset& spriteAsset = *m_AssetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
-				if (!spriteAsset.m_Texture2D.IsValid())
+				const eng::SpriteAsset* spriteAsset = assetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
+				if (!spriteAsset || !spriteAsset->m_Texture2D.IsValid())
 					continue;
 
-				const eng::Texture2DAsset& texture2DAsset = *m_AssetManager.LoadAsset<eng::Texture2DAsset>(spriteAsset.m_Texture2D);
-				if (texture2DAsset.m_TextureId == 0)
+				const eng::Texture2DAsset* texture2DAsset = assetManager.LoadAsset<eng::Texture2DAsset>(spriteAsset->m_Texture2D);
+				if (!texture2DAsset || texture2DAsset->m_TextureId == 0)
 					continue;
 
-				const Vector2f spritePos = Vector2f((float)spriteAsset.m_Position.x, (float)spriteAsset.m_Position.y);
-				const Vector2f spriteSize = Vector2f((float)spriteAsset.m_Size.x, (float)spriteAsset.m_Size.y);
-				const Vector2f textureSize = Vector2f((float)texture2DAsset.m_Width, (float)texture2DAsset.m_Height);
+				const Vector2f spritePos = Vector2f((float)spriteAsset->m_Position.x, (float)spriteAsset->m_Position.y);
+				const Vector2f spriteSize = Vector2f((float)spriteAsset->m_Size.x, (float)spriteAsset->m_Size.y);
+				const Vector2f textureSize = Vector2f((float)texture2DAsset->m_Width, (float)texture2DAsset->m_Height);
 
 				const Vector3f modelScale = spriteTransform.m_Scale;
 				const Vector3f spriteScale = Vector3f(
-					(float)spriteComponent.m_Size.x / 100.f,
-					(float)spriteComponent.m_Size.y / 100.f,
+					(float)spriteComponent.m_Size.x / 100.f * 0.5f,
+					(float)spriteComponent.m_Size.y / 100.f * 0.5f,
 					1.f);
 
 				Matrix4x4 model = spriteTransform.ToTransform();
@@ -251,9 +241,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					spriteSize.x / textureSize.x,
 					spriteSize.y / textureSize.y);
 
-				const Vector4f& colour = colour::From(id.m_Entity);
-
-				batchData.m_Colours.Emplace(colour.x, colour.y, colour.z);
+				batchData.m_Colours.Append(spriteComponent.m_Colour);
 				batchData.m_Models.Append(model);
 				batchData.m_TexParams.Emplace(
 					texcoordOffset.x, texcoordOffset.y,
@@ -264,17 +252,18 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 			batchID = id;
 		}
 
-		RenderBatch(batchID, batchData, stageData);
+		RenderBatch(world, batchID, batchData, stageData);
 	}
 }
 
-void eng::RenderStage_Translucent::RenderBatch(const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData)
+void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData)
 {
 	PROFILE_FUNCTION();
 
-	const auto& mesh = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto& shader = *m_AssetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
-	const auto& texture = *m_AssetManager.LoadAsset<eng::Texture2DAsset>(batchID.m_TextureId);
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	const auto& texture = *assetManager.LoadAsset<eng::Texture2DAsset>(batchID.m_TextureId);
 
 	glUseProgram(shader.m_ProgramId);
 

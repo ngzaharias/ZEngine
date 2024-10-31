@@ -170,7 +170,7 @@ namespace
 }
 
 glfw::Window::Window(const eng::WindowConfig& config)
-	: eng::IWindow(config)
+	: eng::Window(config)
 {
 	constexpr bool s_IsFullscreen = false;
 
@@ -194,7 +194,8 @@ glfw::Window::Window(const eng::WindowConfig& config)
 
 	glfwMakeContextCurrent(m_Window);
 	glfwSetWindowUserPointer(m_Window, this);
-	glfwSetFramebufferSizeCallback(m_Window, FramebufferResizeCallback);
+	glfwSetFramebufferSizeCallback(m_Window, Callback_FramebufferResized);
+	glfwSetScrollCallback(m_Window, Callback_ScrollChanged);
 
 	// V-Sync
 	glfwSwapInterval(0);
@@ -253,6 +254,7 @@ void glfw::Window::PostUpdate(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	glfwSwapBuffers(m_Window);
+	m_ScrollDelta = Vector2f::Zero;
 }
 
 bool glfw::Window::ShouldClose() const
@@ -281,7 +283,12 @@ void glfw::Window::GatherMouse(Set<input::EMouse>& out_Keys, Vector2f& out_Delta
 	out_Position = m_MousePos;
 }
 
-void glfw::Window::FramebufferResizeCallback(GLFWwindow* glfwWindow, int width, int height)
+void glfw::Window::GatherScroll(Vector2f& out_Delta) const
+{
+	out_Delta = m_ScrollDelta;
+}
+
+void glfw::Window::Callback_FramebufferResized(GLFWwindow* glfwWindow, int width, int height)
 {
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
 	window->m_HasResized = true;
@@ -292,6 +299,13 @@ void glfw::Window::FramebufferResizeCallback(GLFWwindow* glfwWindow, int width, 
 
 	glViewport(0, 0, width, height);
 	//glScissor(0, 0, width, height);
+}
+
+void glfw::Window::Callback_ScrollChanged(GLFWwindow* glfwWindow, double xOffset, double yOffset)
+{
+	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
+	window->m_ScrollDelta.x = static_cast<float>(xOffset);
+	window->m_ScrollDelta.y = static_cast<float>(yOffset);
 }
 
 #endif

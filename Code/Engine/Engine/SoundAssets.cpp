@@ -14,19 +14,19 @@ namespace
 
 bool eng::sound::AssetLoader::Load(eng::sound::RandomAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strHandles, asset.m_Handles, {});
+	visitor.Read(strHandles, asset.m_Handles, {});
 	return true;
 }
 
 bool eng::sound::AssetLoader::Load(eng::sound::SequenceAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strHandles, asset.m_Handles, {});
+	visitor.Read(strHandles, asset.m_Handles, {});
 	return true;
 }
 
 bool eng::sound::AssetLoader::Load(eng::sound::SingleAsset& asset, eng::Visitor& visitor) const
 {
-	visitor.Visit(strSourceFile, asset.m_SourceFile, {});
+	visitor.Read(strSourceFile, asset.m_SourceFile, {});
 
 	// #todo: error message
 	// #todo: fallback to default asset

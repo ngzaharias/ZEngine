@@ -6,6 +6,14 @@
 
 #include <cassert>
 
+namespace core
+{
+	inline void ThrowUnhandledException()
+	{
+		int* ptr = nullptr; *ptr = 0;
+	}
+}
+
 /// \brief Logs a message to file and output window (if attached to visual studio).
 #define Z_ASSERT(condition, ...) \
 { \
@@ -20,8 +28,8 @@
 { \
 	if (!(condition)) \
 	{ \
-		Z_LOG(ELog::Assert, __VA_ARGS__); \
-		assert(false); \
+		Z_LOG(ELog::Crash, __VA_ARGS__); \
+		core::ThrowUnhandledException(); \
 	} \
 }
 

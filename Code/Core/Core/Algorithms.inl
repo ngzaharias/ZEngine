@@ -4,6 +4,7 @@
 #include "Core/TypeTraits.h"
 
 #include <algorithm>
+#include <iterator>
 
 namespace detail
 {

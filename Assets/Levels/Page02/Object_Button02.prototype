@@ -1,0 +1,26 @@
+m_Guid = '33eab127e58843961b890edcf487f650'
+m_Name = 'Object_Button02'
+
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+
+[['eng::PhysicsComponent'.m_Shapes]]
+
+	['eng::PhysicsComponent'.m_Shapes.ShapeSphere]
+	m_Channel = 0
+	m_Radius = 53.0
+	m_Translate = { X = 4.0, Y = -5.0, Z = 0.0 }
+
+['eng::SpriteComponent']
+m_Size = { X = 256, Y = 256 }
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 1103.0, Y = -493.0, Z = 0.0 }
+
+['hidden::ObjectComponent']
+m_Group = '2baafe49380a47410ea0d3f65568487f'
+
+[['hidden::ObjectComponent'.m_Effects]]
+['hidden::ObjectComponent'.m_Effects.SetSprite]
+m_Sprite = '130b9402ea36450cba89addf9f4db7d9'

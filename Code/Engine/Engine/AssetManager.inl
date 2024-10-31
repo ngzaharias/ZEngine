@@ -38,24 +38,59 @@ void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 }
 
 template<class TAsset>
-bool eng::AssetManager::ImportAsset(TAsset& asset, const str::Path& filepath)
+bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
 {
+	PROFILE_FUNCTION();
+
 	constexpr TypeId typeId = ToTypeId<TAsset>();
 	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
 
 	auto& entry = m_Registry[typeId];
 	auto& loader = *entry.m_Loader;
 
-	asset.m_Guid = str::Guid::Generate();
-	asset.m_Name = NAME(filepath.GetFileNameNoExtension());
+	if (!asset.m_Guid.IsValid())
+		asset.m_Guid = str::Guid::Generate();
+
+	str::Path path = filepath;
+	if (!path.HasExtension())
+		path += s_Extension;
+
 	asset.m_Type = entry.m_Type;
 
-	if (!entry.m_Import || !entry.m_Import(&asset, loader, filepath))
+	if (asset.m_Name.IsEmpty())
+		asset.m_Name = NAME(filepath.GetFileNameNoExtension());
+
+	if (!entry.m_Save || !entry.m_Save(&asset, loader, path))
 	{
-		Z_LOG(ELog::Assert, "Failed to import asset! Path[{}]", filepath.ToChar());
+		Z_LOG(ELog::Assert, "Asset failed to save! Path[{}]", filepath.ToChar());
 		return false;
 	}
 
+	eng::AssetFile& file = m_FileMap[asset.m_Guid];
+	file.m_Guid = asset.m_Guid;
+	file.m_Name = asset.m_Name;
+	file.m_Type = asset.m_Type;
+	return true;
+}
+
+template<class TAsset>
+bool eng::AssetManager::LoadAsset(TAsset& asset, const str::Path& filepath)
+{
+	PROFILE_FUNCTION();
+
+	constexpr TypeId typeId = ToTypeId<TAsset>();
+	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
+
+	auto& entry = m_Registry[typeId];
+	auto& loader = *entry.m_Loader;
+
+	if (!entry.m_Load(&asset, loader, filepath))
+	{
+		Z_LOG(ELog::Assert, "Asset failed to load! Path[{}]", filepath.ToChar());
+		return false;
+	}
+
+	asset.m_Type = entry.m_Type;
 	return true;
 }
 
@@ -79,9 +114,6 @@ const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 	const eng::AssetFile& file = m_FileMap.Get(guid);
 
 	TAsset* asset = new TAsset();
-	asset->m_Guid = guid;
-	asset->m_Type = file.m_Type;
-
 	if (!entry.m_Load(asset, loader, file.m_Path))
 	{
 		Z_LOG(ELog::Assert, "Asset failed to load! Path[{}]", file.m_Path.ToChar());
@@ -89,48 +121,68 @@ const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 		return nullptr;
 	}
 
+	asset->m_Guid = guid;
+	asset->m_Type = entry.m_Type;
+
 	cache[guid] = asset;
 	return asset;
 }
 
 template<class TAsset>
-bool eng::AssetManager::SaveAsset(TAsset& asset, str::Path filepath)
+bool eng::AssetManager::ImportAsset(TAsset& asset, const str::Path& filepath)
 {
-	PROFILE_FUNCTION();
-
 	constexpr TypeId typeId = ToTypeId<TAsset>();
 	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
 
 	auto& entry = m_Registry[typeId];
 	auto& loader = *entry.m_Loader;
 
-	if (!asset.m_Guid.IsValid())
-		asset.m_Guid = str::Guid::Generate();
-
-	if (!filepath.HasExtension())
-		filepath += s_Extension;
-	if (filepath.GetFileExtension() != s_Extension)
-	{
-		Z_LOG(ELog::Assert, "Invalid asset extension! Path[{}]", filepath.ToChar());
-		return false;
-	}
-
+	asset.m_Guid = str::Guid::Generate();
+	asset.m_Name = NAME(filepath.GetFileNameNoExtension());
 	asset.m_Type = entry.m_Type;
 
-	if (asset.m_Name.IsEmpty())
-		asset.m_Name = NAME(filepath.GetFileNameNoExtension());
-
-	if (!entry.m_Save || !entry.m_Save(&asset, loader, filepath))
+	if (!entry.m_Import || !entry.m_Import(&asset, loader, filepath))
 	{
-		Z_LOG(ELog::Assert, "Asset failed to save! Path[{}]", filepath.ToChar());
+		Z_LOG(ELog::Assert, "Failed to import asset! Path[{}]", filepath.ToChar());
 		return false;
 	}
-
-	eng::AssetFile& file = m_FileMap[asset.m_Guid];
-	file.m_Guid = asset.m_Guid;
-	file.m_Name = asset.m_Name;
-	file.m_Type = asset.m_Type;
 	return true;
+}
+
+template<typename TAsset, typename TLoader>
+bool eng::AssetManager::SaveFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath)
+{
+	Z_PANIC(!filepath.IsEmpty(), "Invalid filepath! Path[{}]", filepath.ToChar());
+
+	eng::Visitor visitor;
+	visitor.Write("m_Guid", asset->m_Guid);
+	visitor.Write("m_Name", asset->m_Name);
+	visitor.Write("m_Type", asset->m_Type);
+
+	const TLoader* tLoader = static_cast<const TLoader*>(&loader);
+	TAsset* tAsset = static_cast<TAsset*>(asset);
+
+	if (!tLoader->Save(*tAsset, visitor))
+		return false;
+
+	return visitor.SaveToFile(filepath);
+}
+
+template<typename TAsset, typename TLoader>
+bool eng::AssetManager::LoadFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath)
+{
+	Z_PANIC(!filepath.IsEmpty(), "Invalid filepath! Path[{}]", filepath.ToChar());
+
+	eng::Visitor visitor;
+	visitor.LoadFromFile(filepath);
+	visitor.Read("m_Guid", asset->m_Guid, asset->m_Guid);
+	visitor.Read("m_Name", asset->m_Name, asset->m_Name);
+	visitor.Read("m_Type", asset->m_Type, asset->m_Type);
+
+	const TLoader* tLoader = static_cast<const TLoader*>(&loader);
+	TAsset* tAsset = static_cast<TAsset*>(asset);
+
+	return tLoader->Load(*tAsset, visitor);
 }
 
 template<typename TAsset, typename TLoader>
@@ -141,39 +193,4 @@ bool eng::AssetManager::ImportFunction(eng::Asset* asset, const eng::AssetLoader
 	const TLoader* tLoader = static_cast<const TLoader*>(&loader);
 	TAsset* tAsset = static_cast<TAsset*>(asset);
 	return tLoader->Import(*tAsset, filepath);
-}
-
-template<typename TAsset, typename TLoader>
-bool eng::AssetManager::LoadFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath)
-{
-	Z_PANIC(!filepath.IsEmpty(), "Invalid filepath! Path[{}]", filepath.ToChar());
-
-	eng::Visitor visitor;
-	visitor.LoadFromFile(filepath);
-	visitor.Visit("m_Name", asset->m_Name, {});
-
-	const TLoader* tLoader = static_cast<const TLoader*>(&loader);
-	TAsset* tAsset = static_cast<TAsset*>(asset);
-
-	return tLoader->Load(*tAsset, visitor);
-}
-
-template<typename TAsset, typename TLoader>
-bool eng::AssetManager::SaveFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath)
-{
-	Z_PANIC(!filepath.IsEmpty(), "Invalid filepath! Path[{}]", filepath.ToChar());
-
-	eng::Visitor visitor;
-	visitor.SetMode(eng::Visitor::Write);
-	visitor.Visit("m_Guid", asset->m_Guid, {});
-	visitor.Visit("m_Name", asset->m_Name, {});
-	visitor.Visit("m_Type", asset->m_Type, {});
-
-	const TLoader* tLoader = static_cast<const TLoader*>(&loader);
-	TAsset* tAsset = static_cast<TAsset*>(asset);
-
-	if (!tLoader->Save(*tAsset, visitor))
-		return false;
-
-	return visitor.SaveToFile(filepath);
 }

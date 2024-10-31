@@ -6,6 +6,7 @@
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
+#include "imgui/Identifier.h"
 
 namespace ecs
 {
@@ -19,6 +20,7 @@ namespace dbg
 
 	struct EntityWindowComponent : public ecs::Component<EntityWindowComponent> 
 	{ 
+		int32 m_Identifier = 0;
 		ecs::Entity m_ClientEntity = { };
 		ecs::Entity m_ServerEntity = { };
 	};
@@ -38,5 +40,6 @@ namespace dbg
 	private:
 		ecs::EntityWorld& m_ClientWorld;
 		ecs::EntityWorld& m_ServerWorld;
+		imgui::Identifier m_WindowIds = {};
 	};
 };

@@ -2,8 +2,10 @@
 #include "Editor/SpriteEditor.h"
 
 #include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Editor/SettingsComponents.h"
 #include "Editor/TextureHelpers.h"
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
@@ -16,6 +18,7 @@
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui_stdlib.h>
 #include <imgui/imgui_user.h>
+#include <imgui/Inspector.h>
 
 namespace
 {
@@ -26,23 +29,24 @@ namespace
 		ImGuiDockNodeFlags_NoWindowMenuButton;
 	constexpr ImGuiTableFlags s_InspectorFlags = 0;
 	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
-	const str::Guid uuidShader = GUID("cbbb7d3f-f44b-45fd-b9e5-a207d92262fb");
-	const str::Guid uuidStaticMesh = GUID("e94876a8-e4cc-4d16-84c8-5859b48a1af6");
-	const str::Guid uuidTexture2D = GUID("c6bb231c-e97f-104e-860e-b55e71988bdb");
+	const str::Guid uuidShader = GUID("cbbb7d3ff44b45fdb9e5a207d92262fb");
+	const str::Guid uuidStaticMesh = GUID("e94876a8e4cc4d1684c85859b48a1af6");
+	const str::Guid uuidTexture2D = GUID("c6bb231ce97f104e860eb55e71988bdb");
 
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 
-	bool HasInput_Save(World& world)
+	bool HasInput(World& world, const input::EKeyboard key)
 	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& input = world.GetComponent<const eng::InputComponent>(entity);
-			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::S);
+			const auto& input = world.ReadComponent<eng::InputComponent>(entity);
+			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(key);
 		}
 		return false;
 	}
@@ -53,22 +57,13 @@ namespace
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("New"))
-				{
-					auto& windowComponent = world.GetComponent<editor::SpriteWindowComponent>(entity);
-					windowComponent.m_Asset = {};
+				if (ImGui::MenuItem("New", "Ctrl+N"))
+					world.AddComponent<editor::SpriteAssetNewComponent>(entity);
 
-					eng::SpriteAsset& sprite = windowComponent.m_Asset;
-					sprite.m_Name = str::Name::Create("SP_Sprite");
-					sprite.m_Shader = uuidShader;
-					sprite.m_Texture2D = uuidTexture2D;
-					sprite.m_Size = Vector2u(128);
-				}
-
-				if (ImGui::MenuItem("Open"))
+				if (ImGui::MenuItem("Open", "Ctrl+O"))
 					world.AddComponent<editor::SpriteAssetOpenComponent>(entity);
 
-				if (ImGui::MenuItem("Save") || HasInput_Save(world))
+				if (ImGui::MenuItem("Save", "Ctrl+S"))
 					world.AddComponent<editor::SpriteAssetSaveComponent>(entity);
 
 				ImGui::EndMenu();
@@ -79,83 +74,116 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::SpriteWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(entity);
 		eng::SpriteAsset& sprite = windowComponent.m_Asset;
 
-		imgui::Guid("m_Guid", sprite.m_Guid);
-		imgui::Name("m_Name", sprite.m_Name);
-
-		ImGui::Separator();
-
-		imgui::Guid("m_Shader", sprite.m_Shader);
-		imgui::Guid("m_Texture2D", sprite.m_Texture2D);
-
-		ImGui::Separator();
-
-		imgui::DragUInt2("m_Position", &sprite.m_Position.x);
-		imgui::DragUInt2("m_Size", &sprite.m_Size.x);
+		imgui::Inspector inspector;
+		if (inspector.Begin("##inspector"))
+		{
+			inspector.Write("m_Guid", sprite.m_Guid);
+			inspector.Write("m_Name", sprite.m_Name);
+			inspector.Write("m_Shader", sprite.m_Shader);
+			inspector.Write("m_Texture2D", sprite.m_Texture2D);
+			inspector.Write("m_Position", sprite.m_Position);
+			inspector.Write("m_Size", sprite.m_Size);
+			inspector.End();
+		}
 	}
 
-	void DrawPopupOpen(World& world, const ecs::Entity& entity)
+	void Asset_New(World& world, const ecs::Entity& entity)
+	{
+		if (world.HasComponent<editor::SpriteAssetNewComponent>(entity))
+			world.RemoveComponent<editor::SpriteAssetNewComponent>(entity);
+
+		if (HasInput(world, input::EKeyboard::N) || world.HasComponent<editor::SpriteAssetNewComponent>(entity))
+		{
+			auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+			windowComponent.m_Asset = {};
+
+			eng::SpriteAsset& sprite = windowComponent.m_Asset;
+			sprite.m_Guid = str::Guid::Generate();
+			sprite.m_Name = str::Name::Create("SP_Sprite");
+			sprite.m_Shader = uuidShader;
+			sprite.m_Texture2D = uuidTexture2D;
+			sprite.m_Size = Vector2u(128);
+		}
+	}
+
+	void Asset_Open(World& world, const ecs::Entity& entity)
 	{
 		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
 		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
 		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
 
 		if (world.HasComponent<editor::SpriteAssetOpenComponent>(entity))
-		{
-			ImGui::OpenPopup("Open Sprite");
-
 			world.RemoveComponent<editor::SpriteAssetOpenComponent>(entity);
-		}
 
-		if (ImGui::BeginPopupModal("Open Sprite", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+		if (HasInput(world, input::EKeyboard::O) || world.HasComponent<editor::SpriteAssetOpenComponent>(entity))
 		{
-			if (ImGui::Button("OK", ImVec2(120, 0))) 
-				ImGui::CloseCurrentPopup();
-			ImGui::SameLine();
-			if (ImGui::Button("Cancel", ImVec2(120, 0))) 
-				ImGui::CloseCurrentPopup();
-			ImGui::EndPopup();
+			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+
+			eng::SelectFileSettings settings;
+			settings.m_Title = "Open Sprite";
+			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
+			settings.m_Path = readSettings.m_Sprite.m_Open;
+
+			const str::Path filepath = eng::SelectFileDialog(settings);
+			if (!filepath.IsEmpty())
+			{
+				auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
+				writeSettings.m_Sprite.m_Open = filepath.GetDirectory();
+
+				auto& writeWindow = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
+				assetManager.LoadAsset(writeWindow.m_Asset, filepath);
+			}
 		}
 	};
 
-	void DrawPopupSave(World& world, const ecs::Entity& entity)
+	void Asset_Save(World& world, const ecs::Entity& entity)
 	{
 		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
 		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
 		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
 
 		if (world.HasComponent<editor::SpriteAssetSaveComponent>(entity))
+			world.RemoveComponent<editor::SpriteAssetSaveComponent>(entity);
+
+		if (HasInput(world, input::EKeyboard::S) || world.HasComponent<editor::SpriteAssetSaveComponent>(entity))
 		{
-			auto& windowComponent = world.GetComponent<editor::SpriteWindowComponent>(entity);
-			const str::Name& name = windowComponent.m_Asset.m_Name;
+			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+			const auto& readWindow = world.ReadComponent<editor::SpriteWindowComponent>(entity);
+			const str::Name& name = readWindow.m_Asset.m_Name;
 
 			eng::SaveFileSettings settings;
 			settings.m_Title = "Save Sprite";
 			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
-			//settings.m_Path = str::GetPath(str::EPath::Assets);
-			settings.m_Path = name;
+			settings.m_Path = str::Path(
+				readSettings.m_Sprite.m_Save,
+				readWindow.m_Asset.m_Name,
+				eng::AssetManager::s_Extension);
 
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& assetManager = world.GetResource<eng::AssetManager>();
-				assetManager.SaveAsset(windowComponent.m_Asset, filepath);
-			}
+				auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
+				writeSettings.m_Sprite.m_Save = filepath.GetDirectory();
 
-			world.RemoveComponent<editor::SpriteAssetSaveComponent>(entity);
+				auto& writeWindow = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
+				assetManager.SaveAsset(writeWindow.m_Asset, filepath);
+			}
 		}
 	};
 
 	void DrawPreviewer(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::SpriteWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(entity);
 		eng::SpriteAsset& sprite = windowComponent.m_Asset;
 		if (!sprite.m_Texture2D.IsValid())
 			return;
 
-		auto& assetManager = world.GetResource<eng::AssetManager>();
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		const auto* textureAsset = assetManager.LoadAsset<eng::Texture2DAsset>(sprite.m_Texture2D);
 		if (!textureAsset)
 			return;
@@ -176,12 +204,12 @@ namespace
 
 	void DrawTexture(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::SpriteWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(entity);
 		eng::SpriteAsset& sprite = windowComponent.m_Asset;
 		if (!sprite.m_Texture2D.IsValid())
 			return;
 
-		auto& assetManager = world.GetResource<eng::AssetManager>();
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		const auto* textureAsset = assetManager.LoadAsset<eng::Texture2DAsset>(sprite.m_Texture2D);
 		if (!textureAsset)
 			return;
@@ -221,17 +249,27 @@ void editor::SpriteEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::SpriteWindowRequestComponent>>())
 	{
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
-		auto& windowComponent = world.AddComponent<editor::SpriteWindowComponent>(windowEntity);
-		windowComponent.m_DockspaceLabel = ToLabel("Sprite Editor", windowEntity);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
-		windowComponent.m_PreviewerLabel = ToLabel("Previewer", windowEntity);
-		windowComponent.m_TextureLabel   = ToLabel("Texture", windowEntity);
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Sprite Editor");
+
+		auto& window = world.AddComponent<editor::SpriteWindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
+		window.m_DockspaceLabel = ToLabel("Sprite Editor", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##sprite", identifier);
+		window.m_PreviewerLabel = ToLabel("Previewer##sprite", identifier);
+		window.m_TextureLabel   = ToLabel("Texture##sprite", identifier);
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::SpriteWindowComponent>>())
+	{
+		auto& window = world.ReadComponent<editor::SpriteWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::SpriteWindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<editor::SpriteWindowComponent>(windowEntity);
+		auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
@@ -271,8 +309,9 @@ void editor::SpriteEditor::Update(World& world, const GameTime& gameTime)
 			DrawPreviewer(world, windowEntity);
 		ImGui::End();
 
-		DrawPopupOpen(world, windowEntity);
-		DrawPopupSave(world, windowEntity);
+		Asset_New(world, windowEntity);
+		Asset_Open(world, windowEntity);
+		Asset_Save(world, windowEntity);
 
 		if (!isOpen)
 			world.DestroyEntity(windowEntity);

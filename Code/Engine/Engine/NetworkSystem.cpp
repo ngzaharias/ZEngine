@@ -37,28 +37,18 @@ namespace
 	}
 }
 
-void network::NetworkSystem::Initialise(World& world)
-{
-	world.AddSingleton<network::StateComponent>();
-}
-
-void network::NetworkSystem::Shutdown(World& world)
-{
-	world.RemoveSingleton<network::StateComponent>();
-}
-
-void network::NetworkSystem::Update(World& world, const GameTime& gameTime)
+void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& networkManager = world.GetResource<eng::NetworkManager>();
+	auto& networkManager = world.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 	auto& peer = networkManager.GetPeer();
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const network::RequestComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::network::RequestComponent>>())
 	{
-		const auto& eventComponent = world.GetComponent<const network::RequestComponent>(entity);
-		auto& stateComponent = world.GetSingleton<network::StateComponent>();
+		const auto& eventComponent = world.ReadComponent<eng::network::RequestComponent>(entity);
+		auto& stateComponent = world.WriteSingleton<eng::network::StateComponent>();
 
 		if (IsClient(stateComponent.m_Mode))
 			peer.Shutdown();
@@ -66,9 +56,9 @@ void network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 		if (IsServer(stateComponent.m_Mode))
 			host.Shutdown();
 
-		if (std::holds_alternative<network::Startup>(eventComponent.m_Request))
+		if (std::holds_alternative<eng::network::Startup>(eventComponent.m_Request))
 		{
-			const auto& request = std::get<network::Startup>(eventComponent.m_Request);
+			const auto& request = std::get<eng::network::Startup>(eventComponent.m_Request);
 
 			// update new values
 			stateComponent.m_Mode = request.m_Mode;
@@ -87,6 +77,6 @@ void network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 			}
 		}
 
-		world.AddEventComponent<network::RequestFinishedComponent>();
+		world.AddEventComponent<eng::network::RequestFinishedComponent>();
 	}
 }

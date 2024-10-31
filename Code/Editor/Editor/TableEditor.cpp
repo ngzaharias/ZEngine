@@ -3,6 +3,7 @@
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "GameDebug/MenuBarComponents.h"
@@ -20,11 +21,12 @@ namespace
 		ImGuiDockNodeFlags_NoCloseButton |
 		ImGuiDockNodeFlags_NoWindowMenuButton;
 	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 
 	void DrawMenuBar(World& world, const ecs::Entity& entity)
@@ -49,7 +51,7 @@ namespace
 		{
 			ImGui::Indent();
 
-			auto& windowComponent = world.GetComponent<editor::TableWindowComponent>(entity);
+			auto& windowComponent = world.WriteComponent<editor::TableWindowComponent>(entity);
 			for (auto&& [name, schema] : windowComponent.m_TablesMap)
 			{
 				if (ImGui::Selectable(name.ToChar()))
@@ -62,7 +64,7 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TableWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::TableWindowComponent>(entity);
 
 		Array<int32> toRemove;
 		if (ImGui::BeginTabBar("##tables"))
@@ -121,16 +123,20 @@ void editor::TableEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::TableWindowRequestComponent>>())
 	{
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
-		auto& windowComponent = world.AddComponent<editor::TableWindowComponent>(windowEntity);
-		windowComponent.m_WindowLabel = ToLabel("Table Editor", windowEntity);
-		windowComponent.m_BrowserLabel = ToLabel("Browser", windowEntity);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Table Editor");
+
+		auto& window = world.AddComponent<editor::TableWindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
+		window.m_WindowLabel = ToLabel("Table Editor", identifier);
+		window.m_BrowserLabel = ToLabel("Browser##table", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##table", identifier);
 
 		// Simple
 		{
 			str::Name tableName = NAME("Simple");
-			editor::Schema& schema = windowComponent.m_TablesMap[tableName];
+			editor::Schema& schema = window.m_TablesMap[tableName];
 			schema.Emplace("Guid", EType::Guid);
 			schema.Emplace("MyNumber", EType::Number);
 			schema.Emplace("MyBoolean", EType::Boolean);
@@ -139,7 +145,7 @@ void editor::TableEditor::Update(World& world, const GameTime& gameTime)
 		// Complex
 		{
 			str::Name tableName = NAME("Complex");
-			editor::Schema& schema = windowComponent.m_TablesMap[tableName];
+			editor::Schema& schema = window.m_TablesMap[tableName];
 			schema.Emplace("Guid", EType::Guid);
 			schema.Emplace("Name", EType::String);
 			schema.Emplace("DisplayName", EType::String);
@@ -149,9 +155,15 @@ void editor::TableEditor::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::TableWindowComponent>>())
+	{
+		const auto& window = world.ReadComponent<editor::TableWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
+	}
+
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TableWindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<editor::TableWindowComponent>(windowEntity);
+		auto& windowComponent = world.WriteComponent<editor::TableWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);

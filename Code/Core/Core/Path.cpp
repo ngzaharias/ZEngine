@@ -54,6 +54,11 @@ bool str::Path::operator!=(const str::StringView& rhs) const
 	return m_Value != rhs;
 }
 
+bool str::Path::operator<(const str::Path& rhs) const
+{
+	return m_Value < rhs.m_Value;
+}
+
 void str::Path::operator=(str::String&& rhs)
 {
 	m_Value = std::move(rhs);

@@ -15,7 +15,6 @@ namespace
 {
 	struct ComponentA : public ecs::Component<ComponentA> { };
 	struct ComponentB : public ecs::Component<ComponentB> { };
-	struct ComponentC : public ecs::Component<ComponentC> { };
 }
 
 TEST_CASE("ecs::QueryRegistry. Include only ComponentA.")
@@ -32,7 +31,7 @@ TEST_CASE("ecs::QueryRegistry. Include both ComponentA and ComponentC.")
 	ecs::QueryRegistry queryRegistry;
 	queryRegistry.Initialise();
 
-	using Query = ecs::query::Include<ComponentA, ComponentC>;
+	using Query = ecs::query::Include<ComponentA, ComponentB>;
 	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
 }
 
@@ -45,22 +44,22 @@ TEST_CASE("ecs::QueryRegistry. Exclude only ComponentA.")
 	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
 }
 
-TEST_CASE("ecs::QueryRegistry. Exclude both ComponentA and ComponentC.")
+TEST_CASE("ecs::QueryRegistry. Exclude both ComponentA and ComponentB.")
 {
 	ecs::QueryRegistry queryRegistry;
 	queryRegistry.Initialise();
 
-	using Query = ecs::query::Exclude<ComponentA, ComponentC>;
+	using Query = ecs::query::Exclude<ComponentA, ComponentB>;
 	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
 }
 
-TEST_CASE("ecs::QueryRegistry. Include ComponentA and Exclude ComponentC.")
+TEST_CASE("ecs::QueryRegistry. Include ComponentA and Exclude ComponentB.")
 {
 	ecs::QueryRegistry queryRegistry;
 	queryRegistry.Initialise();
 
 	using Query = ecs::query
 		::Include<ComponentA>
-		::Exclude<ComponentC>;
+		::Exclude<ComponentB>;
 	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
 }

@@ -12,16 +12,23 @@ namespace detail
 	using HasUpdateMethod = decltype(std::declval<TSystem&>().Update(std::declval<TWorld&>(), std::declval<const GameTime&>()));
 }
 
+template<class TSystem>
+bool ecs::SystemRegistry::IsRegistered() const
+{
+	using NonConst = std::remove_const<TSystem>::type;
+	const ecs::SystemId systemId = ToTypeIndex<NonConst, ecs::SystemTag>();
+	return m_Entries.Contains(systemId);
+}
+
 template<class TSystem, typename... TArgs>
 void ecs::SystemRegistry::Register(TArgs&&... args)
 {
-	static_assert(std::is_convertible<TSystem*, ecs::System*>::value, "System must inherit from ecs::System using the [public] keyword!");
-	static_assert(std::is_base_of<ecs::System, TSystem>::value, "Type doesn't inherit from ecs::System.");
-	Z_PANIC(!IsRegistered<TSystem>(), "System has already been registered!");
-
 	using NonConst = std::remove_const<TSystem>::type;
-	const ecs::SystemId systemId = ToTypeIndex<NonConst, ecs::SystemTag>();
+	static_assert(std::is_convertible<NonConst*, ecs::System*>::value, "System must inherit from ecs::System using the [public] keyword!");
+	static_assert(std::is_base_of<ecs::System, NonConst>::value, "Type doesn't inherit from ecs::System.");
+	Z_PANIC(!IsRegistered<NonConst>(), "System has already been registered!");
 
+	const ecs::SystemId systemId = ToTypeIndex<NonConst, ecs::SystemTag>();
 	ecs::SystemEntry& entry = m_Entries.Emplace(systemId);
 	entry.m_System = new TSystem(std::forward<TArgs>(args)...);
 	entry.m_Priority = systemId;
@@ -35,26 +42,19 @@ void ecs::SystemRegistry::Register(TArgs&&... args)
 template<class TSystem>
 void ecs::SystemRegistry::RegisterPriority(const int32 priority)
 {
-	Z_PANIC(IsRegistered<TSystem>(), "System hasn't been registered!");
-
-	const ecs::SystemId systemId = ToTypeIndex<TSystem, ecs::SystemTag>();
-	m_Entries.Get(systemId).m_Priority = priority;
-}
-
-template<class TSystem>
-bool ecs::SystemRegistry::IsRegistered() const
-{
 	using NonConst = std::remove_const<TSystem>::type;
+	Z_PANIC(IsRegistered<NonConst>(), "System hasn't been registered!");
+
 	const ecs::SystemId systemId = ToTypeIndex<NonConst, ecs::SystemTag>();
-	return m_Entries.Contains(systemId);
+	m_Entries.Get(systemId).m_Priority = priority;
 }
 
 template<class TSystem>
 TSystem& ecs::SystemRegistry::GetSystem()
 {
-	Z_PANIC(IsRegistered<TSystem>(), "System hasn't been registered!");
-
 	using NonConst = std::remove_const<TSystem>::type;
+	Z_PANIC(IsRegistered<NonConst>(), "System hasn't been registered!");
+
 	const ecs::SystemId systemId = ToTypeIndex<NonConst, ecs::SystemTag>();
 	const ecs::SystemEntry& entry = m_Entries.Get(systemId);
 	return *static_cast<TSystem*>(entry.m_System);

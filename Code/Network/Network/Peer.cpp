@@ -25,12 +25,17 @@ void net::Peer::Startup(const str::String& ipAddress, const int32 port, const fl
 	yojimbo::Address address(ipAddress.c_str(), port);
 	m_Client = new yojimbo::Client(yojimbo::GetDefaultAllocator(), address, m_Config, m_Adaptor, time);
 
-	m_Connections.Append(entt::sink(m_Adaptor.m_OnServerClientConnected).connect<&net::Peer::OnClientConnected>(this));
-	m_Connections.Append(entt::sink(m_Adaptor.m_OnServerClientDisconnected).connect<&net::Peer::OnClientDisconnected>(this));
+	m_Collection =
+	{
+		m_Adaptor.m_OnServerClientConnected.Connect(*this, &net::Peer::OnClientConnected),
+		m_Adaptor.m_OnServerClientDisconnected.Connect(*this, &net::Peer::OnClientDisconnected),
+	};
 }
 
 void net::Peer::Shutdown()
 {
+	m_Collection.Disconnect();
+
 	if (IsRunning())
 	{
 		if (IsConnected() || IsConnecting())
@@ -79,7 +84,7 @@ void net::Peer::Update(const GameTime& gameTime)
 					// #todo: delete
 					ProcessMessage(message);
 
-					m_OnProcessMessage.publish(message);
+					m_OnProcessMessage.Publish(message);
 					m_Client->ReleaseMessage(message);
 					message = m_Client->ReceiveMessage(channel);
 				}

@@ -1,6 +1,9 @@
 #include "imgui/imgui_graph.h"
 
+#ifndef IMGUI_DEFINE_MATH_OPERATORS
 #define IMGUI_DEFINE_MATH_OPERATORS
+#endif
+
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 #include "imgui/imgui_user.h"
@@ -167,7 +170,7 @@ bool imgui::BeginGraph(const char* label, Vector2f graph_size, ImGuiGraphFlags f
 
 	const ImRect frame_bb(parent_window->DC.CursorPos, parent_window->DC.CursorPos + graph_size);
 	const ImRect inner_bb(frame_bb.Min + padding, frame_bb.Max - padding);
-	if (!ImGui::BeginChildFrame(id, graph_size, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
+	if (!ImGui::BeginChild(id, graph_size, ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
 	{
 		ImGui::EndChild();
 		return false;
@@ -291,7 +294,7 @@ void imgui::EndGraph()
 	if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 		storage->SetInt(ID_DragIdx, 0);
 
-	ImGui::EndChildFrame();
+	ImGui::EndChild();
 }
 
 void imgui::GraphShape(AABB2f& value, float rounding, float thickness, ImDrawFlags flags)

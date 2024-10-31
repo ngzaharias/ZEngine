@@ -10,7 +10,6 @@ namespace ecs
 	{
 		NameComponent() = default;
 		NameComponent(const str::StringView& value) : m_Name(value) { }
-
-		str::String m_Name = { };
+		str::String m_Name = "<unknown>";
 	};
 }

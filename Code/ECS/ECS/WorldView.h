@@ -31,49 +31,44 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Component
 
-		template<class TComponent>
-		bool HasComponent(const Entity& entity, const bool alive = true) const;
-
-		template<class TComponent>
-		auto GetComponent(const Entity& entity, const bool alive = true)->TComponent&;
-
 		template<class TComponent, typename... TArgs>
 		auto AddComponent(const Entity& entity, TArgs&&... args)->decltype(auto);
-		template<class TComponent, typename... TArgs>
-		auto AddEventComponent(TArgs&&... args)->decltype(auto);
 
 		template<class TComponent>
 		void RemoveComponent(const Entity& entity);
 
+		template<class TComponent>
+		bool HasComponent(const Entity& entity, const bool alive = true) const;
+
+		template<class TComponent>
+		auto ReadComponent(const Entity& entity, const bool alive = true)->const TComponent&;
+
+		template<class TComponent>
+		auto WriteComponent(const Entity& entity, const bool alive = true)->TComponent&;
+
 		//////////////////////////////////////////////////////////////////////////
-		// Component - Singleton
-
-		template<class TComponent>
-		bool HasSingleton(const bool alive = true) const;
-
-		template<class TComponent>
-		auto GetSingleton(const bool alive = true)->TComponent&;
+		// Component - Event
 
 		template<class TComponent, typename... TArgs>
-		auto AddSingleton(TArgs&&... args)->decltype(auto);
+		auto AddEventComponent(TArgs&&... args)->decltype(auto);
+
+		//////////////////////////////////////////////////////////////////////////
+		// Singleton
 
 		template<class TComponent>
-		void RemoveSingleton();
+		auto ReadSingleton()->const TComponent&;
+
+		template<class TComponent>
+		auto WriteSingleton()->TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Resource
 
 		template<class TResource>
-		bool HasResource();
+		auto ReadResource()->const TResource&;
 
 		template<class TResource>
-		auto GetResource()->TResource&;
-
-		template<class TResource>
-		void AddResource(TResource& resource);
-
-		template<class TResource>
-		void RemoveResource();
+		auto WriteResource()->TResource&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Query

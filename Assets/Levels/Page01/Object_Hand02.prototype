@@ -1,0 +1,42 @@
+m_Guid = '2a1466fbff1e4b9ea133e779cf81fd12'
+m_Name = 'Object_Hand02'
+
+['hidden::ObjectComponent']
+m_Group = 'eaba7a098920434c8cc602a2dd8be89a'
+
+
+	[['hidden::ObjectComponent'.m_Effects]]
+
+		['hidden::ObjectComponent'.m_Effects.SetSprite]
+		m_Sprite = '54003a9d06d34972be0c9deeda6ec8b4'
+
+['eng::PhysicsComponent']
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+m_Channel = 0
+m_Extents = { X = 80, Y = 30, Z = 1 }
+m_Translate = { X = 0, Y = -75 }
+
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+m_Channel = 0
+m_Extents = { X = 30, Y = 170, Z = 1 }
+m_Rotate = { Roll = -15.5 }
+m_Translate = { X = -40, Y = 0 }
+
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+m_Channel = 0
+m_Extents = { X = 30, Y = 170, Z = 1 }
+m_Rotate = { Roll = 15.5 }
+m_Translate = { X = 40, Y = 0 }
+
+['eng::SpriteComponent']
+m_Size = { X = 512, Y = 512 }
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -50.0, Y = -642.0, Z = -1.0 }

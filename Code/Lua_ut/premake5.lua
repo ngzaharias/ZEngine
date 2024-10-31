@@ -1,6 +1,5 @@
 project "Lua_ut"
 	kind "ConsoleApp"
-	dependson { }
 	location "%{wks.location}/Lua_ut"
 
 	defines { "Z_UNIT_TEST" }
@@ -23,7 +22,6 @@ project "Lua_ut"
 	{ 
 		"%{wks.location}/../3rdParty/",
 		"%{wks.location}/../3rdParty/lua/5.4.6/Include/",
-		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 	}
 
 	libdirs 
@@ -34,8 +32,8 @@ project "Lua_ut"
 
 	links 
 	{ 
-		"OptickCore.lib",
 		"liblua54.lib",
+		"OptickCore.lib",
 	}
 
 	postbuildcommands 

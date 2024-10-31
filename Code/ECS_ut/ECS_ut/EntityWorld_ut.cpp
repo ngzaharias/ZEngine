@@ -10,6 +10,9 @@ class GameTime { };
 
 namespace
 {
+	bool m_IsSystemAShutdown = false;
+	bool m_IsSystemBShutdown = false;
+
 	struct ComponentA : public ecs::Component<ComponentA>
 	{
 		ComponentA() = default;
@@ -32,13 +35,12 @@ namespace
 	public:
 		using World = ecs::WorldView<>;
 
-		void Initialise() override { m_IsInitialised = true; }
-		void Shutdown() override { m_IsShutdown = true; }
+		void Initialise() override { m_IsInitialised = true; m_IsSystemAShutdown = false; }
+		void Shutdown() override { m_IsSystemAShutdown = true; }
 		void Update(World& entityWorld, const GameTime& gameTime) { m_IsUpdated = true; }
 
 	public:
 		bool m_IsInitialised = false;
-		bool m_IsShutdown = false;
 		bool m_IsUpdated = false;
 	};
 
@@ -47,13 +49,12 @@ namespace
 	public:
 		using World = ecs::WorldView<>;
 
-		void Initialise() override { m_IsInitialised = true; }
-		void Shutdown() override { m_IsShutdown = true; }
+		void Initialise() override { m_IsInitialised = true; m_IsSystemBShutdown = false; }
+		void Shutdown() override { m_IsSystemBShutdown = true; }
 		void Update(World& entityWorld, const GameTime& gameTime) { m_IsUpdated = true; }
 
 	public:
 		bool m_IsInitialised = false;
-		bool m_IsShutdown = false;
 		bool m_IsUpdated = false;
 	};
 }
@@ -109,11 +110,11 @@ TEST_CASE("ecs::EntityWorld. Destroy a single system.")
 	entityWorld.Initialise();
 
 	const auto& system = entityWorld.GetSystem<SystemA>();
-	CHECK(!system.m_IsShutdown);
+	CHECK(!m_IsSystemAShutdown);
 
 	entityWorld.Shutdown();
 
-	CHECK(system.m_IsShutdown);
+	CHECK(m_IsSystemAShutdown);
 }
 
 TEST_CASE("ecs::EntityWorld. Destroy multiple systems.")
@@ -125,13 +126,13 @@ TEST_CASE("ecs::EntityWorld. Destroy multiple systems.")
 
 	const auto& systemA = entityWorld.GetSystem<SystemA>();
 	const auto& systemB = entityWorld.GetSystem<SystemB>();
-	CHECK(!systemA.m_IsShutdown);
-	CHECK(!systemB.m_IsShutdown);
+	CHECK(!m_IsSystemAShutdown);
+	CHECK(!m_IsSystemBShutdown);
 
 	entityWorld.Shutdown();
 
-	CHECK(systemA.m_IsShutdown);
-	CHECK(systemB.m_IsShutdown);
+	CHECK(m_IsSystemAShutdown);
+	CHECK(m_IsSystemBShutdown);
 }
 
 TEST_CASE("ecs::EntityWorld. Update single system.")
@@ -169,24 +170,17 @@ TEST_CASE("ecs::EntityWorld. Update multiple systems.")
 TEST_CASE("ecs::EntityWorld. CreateEntity.")
 {
 	ecs::EntityWorld entityWorld;
-	CHECK(entityWorld.CreateEntity() == ecs::Entity(0));
 	CHECK(entityWorld.CreateEntity() == ecs::Entity(1));
 	CHECK(entityWorld.CreateEntity() == ecs::Entity(2));
 	CHECK(entityWorld.CreateEntity() == ecs::Entity(3));
 	CHECK(entityWorld.CreateEntity() == ecs::Entity(4));
+	CHECK(entityWorld.CreateEntity() == ecs::Entity(5));
 }
 
 TEST_CASE("ecs::EntityWorld. DestroyEntity.")
 {
 	ecs::EntityWorld entityWorld;
 	ecs::Entity entity = entityWorld.CreateEntity();
-	entityWorld.Update({});
-
-	CHECK(entity.GetIndex() == 0);
-	CHECK(entity.GetVersion() == 0);
-
-	entityWorld.DestroyEntity(entity);
-	entity = entityWorld.CreateEntity();
 	entityWorld.Update({});
 
 	CHECK(entity.GetIndex() == 1);
@@ -199,8 +193,15 @@ TEST_CASE("ecs::EntityWorld. DestroyEntity.")
 	CHECK(entity.GetIndex() == 2);
 	CHECK(entity.GetVersion() == 0);
 
+	entityWorld.DestroyEntity(entity);
 	entity = entityWorld.CreateEntity();
-	CHECK(entity.GetIndex() == 0);
+	entityWorld.Update({});
+
+	CHECK(entity.GetIndex() == 3);
+	CHECK(entity.GetVersion() == 0);
+
+	entity = entityWorld.CreateEntity();
+	CHECK(entity.GetIndex() == 1);
 	CHECK(entity.GetVersion() == 1);
 }
 
@@ -245,15 +246,15 @@ TEST_CASE("ecs::EntityWorld. GetComponent.")
 	entityWorld.RegisterComponent<ComponentB>();
 	ecs::Entity entity = entityWorld.CreateEntity();
 
-	//CHECK_THROWS(entityWorld.GetComponent<ComponentA>(entity));
-	//CHECK_THROWS(entityWorld.GetComponent<ComponentB>(entity));
+	//CHECK_THROWS(entityWorld.WriteComponent<ComponentA>(entity));
+	//CHECK_THROWS(entityWorld.WriteComponent<ComponentB>(entity));
 
 	entityWorld.AddComponent<ComponentA>(entity);
 	entityWorld.AddComponent<ComponentB>(entity);
 	entityWorld.Update({});
 
-	CHECK_NOTHROW(entityWorld.GetComponent<ComponentA>(entity));
-	CHECK_NOTHROW(entityWorld.GetComponent<ComponentB>(entity));
+	CHECK_NOTHROW(entityWorld.WriteComponent<ComponentA>(entity));
+	CHECK_NOTHROW(entityWorld.WriteComponent<ComponentB>(entity));
 }
 
 TEST_CASE("ecs::EntityWorld. Add a single component.")

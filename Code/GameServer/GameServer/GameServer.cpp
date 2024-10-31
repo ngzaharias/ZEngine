@@ -20,21 +20,21 @@ void svr::GameServer::Register(const Dependencies& dependencies)
 {
 	// managers
 	{
-		m_EntityWorld.AddResource(dependencies.m_AssetManager);
-		m_EntityWorld.AddResource(dependencies.m_NetworkManager);
-		m_EntityWorld.AddResource(dependencies.m_PhysicsManager);
-		m_EntityWorld.AddResource(dependencies.m_PrototypeManager);
+		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
+		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
+		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
+		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
+		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
+		m_EntityWorld.RegisterResource(m_ReplicationHost);
 	}
 
 	// engine
 	{
 		eng::RegisterServerComponents(m_EntityWorld);
-		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
+		eng::RegisterServerSystems(m_EntityWorld);
 
-		eng::ServerDependencies serverDependencies = { };
-		eng::SharedDependencies sharedDependencies = { };
-		eng::RegisterServerSystems(m_EntityWorld, serverDependencies);
-		eng::RegisterSharedSystems(m_EntityWorld, sharedDependencies);
+		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
+		eng::RegisterSharedSystems(m_EntityWorld);
 	}
 
 	// shared
@@ -45,10 +45,7 @@ void svr::GameServer::Register(const Dependencies& dependencies)
 	// server
 	{
 		svr::RegisterComponents(m_EntityWorld);
-
-		svr::SystemDependencies serverDependencies = {
-			m_ReplicationHost };
-		svr::RegisterSystems(m_EntityWorld, serverDependencies);
+		svr::RegisterSystems(m_EntityWorld);
 	}
 }
 

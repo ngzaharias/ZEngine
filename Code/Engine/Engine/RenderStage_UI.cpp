@@ -20,17 +20,8 @@
 
 namespace
 {
-	const str::Guid strModel = GUID("e94876a8-e4cc-4d16-84c8-5859b48a1af6");
-	const str::Guid strShader = GUID("0205bbd9-a15b-459e-af0d-810ebe98b8d8");
-}
-
-eng::RenderStage_UI::RenderStage_UI(eng::AssetManager& assetManager)
-	: RenderStage(assetManager)
-{
-}
-
-eng::RenderStage_UI::~RenderStage_UI()
-{
+	const str::Guid strModel = GUID("e94876a8e4cc4d1684c85859b48a1af6");
+	const str::Guid strShader = GUID("0205bbd9a15b459eaf0d810ebe98b8d8");
 }
 
 void eng::RenderStage_UI::Initialise(ecs::EntityWorld& entityWorld)
@@ -87,14 +78,10 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	using World = ecs::WorldView<
-		const eng::CameraComponent,
-		const eng::TextComponent,
-		const eng::TransformComponent>;
 	World world = entityWorld.GetWorldView<World>();
-
-	const auto& mesh = *m_AssetManager.LoadAsset<eng::StaticMeshAsset>(strModel);
-	const auto& shader = *m_AssetManager.LoadAsset<eng::ShaderAsset>(strShader);
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(strModel);
+	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(strShader);
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -111,10 +98,10 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 		glFrontFace(GL_CW);
 	}
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.GetComponent<const eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
@@ -125,12 +112,12 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 
 		for (const ecs::Entity& textEntity : world.Query<ecs::query::Include<const eng::TransformComponent, const eng::TextComponent>>())
 		{
-			const auto& textComponent = world.GetComponent<const eng::TextComponent>(textEntity);
-			const auto& textTransform = world.GetComponent<const eng::TransformComponent>(textEntity);
+			const auto& textComponent = world.ReadComponent<eng::TextComponent>(textEntity);
+			const auto& textTransform = world.ReadComponent<eng::TransformComponent>(textEntity);
 			const auto& binding = mesh.m_Binding;
 
 			int32 instanceCount = static_cast<int32>(textComponent.m_Text.size());
-			const eng::FontAsset& fontAsset = *m_AssetManager.LoadAsset<eng::FontAsset>(textComponent.m_Font);
+			const eng::FontAsset& fontAsset = *assetManager.LoadAsset<eng::FontAsset>(textComponent.m_Font);
 			if (fontAsset.m_TextureId == 0)
 				continue;
 

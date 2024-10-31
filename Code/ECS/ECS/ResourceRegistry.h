@@ -9,24 +9,21 @@ namespace ecs
 
 	struct ResourceEntry
 	{
-		void* m_Resource = nullptr;
 		str::String m_Name = { };
+		void* m_Resource = nullptr;
 	};
 
 	class ResourceRegistry
 	{
 	public:
 		template<class TResource>
-		bool Has() const;
+		bool IsRegistered() const;
+
+		template<class TResource>
+		void Register(TResource& resource);
 
 		template<class TResource>
 		TResource& Get();
-
-		template<class TResource>
-		void Add(TResource& resource);
-
-		template<class TResource>
-		void Remove(TResource& resource);
 
 	private:
 		SparseArray<ecs::ResourceId, ecs::ResourceEntry> m_Entries = { };
