@@ -8,6 +8,7 @@ namespace dbg
 	struct ClientWindowRequestComponent : ecs::EventComponent<ClientWindowRequestComponent> { };
 	struct EntityWindowRequestComponent : ecs::EventComponent<EntityWindowRequestComponent> { };
 	struct ImGuiDemoRequestComponent : ecs::EventComponent<ImGuiDemoRequestComponent> { };
+	struct ImNodesDemoRequestComponent : ecs::EventComponent<ImNodesDemoRequestComponent> { };
 	struct InspectorDemoRequestComponent : ecs::EventComponent<InspectorDemoRequestComponent> { };
 	struct NetworkWindowRequestComponent : ecs::EventComponent<NetworkWindowRequestComponent> { };
 	struct NodeGraphRequestComponent : ecs::EventComponent<NodeGraphRequestComponent> { };

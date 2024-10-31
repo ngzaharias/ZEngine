@@ -9,6 +9,7 @@
 #include "GameDebug/HiddenObjectComponent.h"
 #include "GameDebug/HiddenObjectSystem.h"
 #include "GameDebug/ImGuiDemoSystem.h"
+#include "GameDebug/ImNodesDemoSystem.h"
 #include "GameDebug/InspectorDemo.h"
 #include "GameDebug/LevelOpenSystem.h"
 #include "GameDebug/LevelReloadSystem.h"
@@ -41,6 +42,8 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::hidden::ObjectComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoWindowComponent>();
+	m_ClientWorld.RegisterComponent<dbg::ImNodesDemoRequestComponent>();
+	m_ClientWorld.RegisterComponent<dbg::ImNodesDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::InspectorDemoRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::InspectorDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::level::OpenRequestComponent>();
@@ -66,6 +69,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<dbg::FrameBufferSystem>();
 	m_ClientWorld.RegisterSystem<dbg::hidden::ObjectSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ImGuiDemoSystem>();
+	m_ClientWorld.RegisterSystem<dbg::ImNodesDemoSystem>();
 	m_ClientWorld.RegisterSystem<dbg::InspectorDemo>();
 	m_ClientWorld.RegisterSystem<dbg::level::OpenSystem>();
 	m_ClientWorld.RegisterSystem<dbg::level::ReloadSystem>();

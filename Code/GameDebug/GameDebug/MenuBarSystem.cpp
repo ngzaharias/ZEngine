@@ -74,6 +74,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
 			if (ImGui::MenuItem("ImGui Demo"))
 				world.AddEventComponent<dbg::ImGuiDemoRequestComponent>();
+			if (ImGui::MenuItem("ImNodes Demo"))
+				world.AddEventComponent<dbg::ImNodesDemoRequestComponent>();
 			if (ImGui::MenuItem("Inspector Demo"))
 				world.AddEventComponent<dbg::InspectorDemoRequestComponent>();
 			if (ImGui::MenuItem("Network"))

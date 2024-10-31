@@ -8,6 +8,7 @@ namespace dbg
 	struct EntityWindowRequestComponent;
 	struct FlipbookWindowRequestComponent;
 	struct ImGuiDemoRequestComponent;
+	struct ImNodesDemoRequestComponent;
 	struct InspectorDemoRequestComponent;
 	struct NetworkWindowRequestComponent;
 	struct NodeGraphRequestComponent;
@@ -63,6 +64,7 @@ namespace dbg
 			dbg::EntityWindowRequestComponent,
 			dbg::FlipbookWindowRequestComponent,
 			dbg::ImGuiDemoRequestComponent,
+			dbg::ImNodesDemoRequestComponent,
 			dbg::InspectorDemoRequestComponent,
 			dbg::level::OpenRequestComponent,
 			dbg::level::ReloadRequestComponent,
