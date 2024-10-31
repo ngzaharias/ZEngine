@@ -30,7 +30,7 @@ project "Engine"
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../3rdParty/PhysX/Include/",
-		"%{wks.location}/../3rdParty/SFML/Include/",
+		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",
 		"%{wks.location}/../3rdParty/SteamworksSDK/Include/",
 		"%{wks.location}/../3rdParty/yojimbo/1.2.1/Include/",
 		"%{wks.location}/../Code/Core/",

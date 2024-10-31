@@ -21,7 +21,6 @@
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
 #include "Engine/Screen.h"
-#include "Engine/SFML/Window.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/SoundAssets.h"
 #include "Engine/SpriteAsset.h"

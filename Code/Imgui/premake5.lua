@@ -49,7 +49,7 @@ project "Imgui"
 		"%{wks.location}/../3rdParty/imguizmo/1.83/Include/",
 		"%{wks.location}/../3rdParty/imnodes/0.5/Include/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
-		"%{wks.location}/../3rdParty/SFML/Include/",
+		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",
