@@ -8,9 +8,9 @@ project "Imgui"
 		"%{prj.location}/**.inl",
 		"%{prj.location}/**.cpp",
 
-		"%{wks.location}/../3rdParty/imgui/1.87/Include/imgui/*.h",
-		"%{wks.location}/../3rdParty/imgui/1.87/Include/imgui/*.inl",
-		"%{wks.location}/../3rdParty/imgui/1.87/Include/imgui/*.cpp",
+		"%{wks.location}/../3rdParty/imgui/1.91/Include/imgui/*.h",
+		"%{wks.location}/../3rdParty/imgui/1.91/Include/imgui/*.inl",
+		"%{wks.location}/../3rdParty/imgui/1.91/Include/imgui/*.cpp",
 		"%{wks.location}/../3rdParty/imnodes/0.5/Include/imnodes/*.h",
 		"%{wks.location}/../3rdParty/imnodes/0.5/Include/imnodes/*.inl",
 		"%{wks.location}/../3rdParty/imnodes/0.5/Include/imnodes/*.cpp",
@@ -27,9 +27,9 @@ project "Imgui"
 			"Imgui/**.cpp", 
 			} },
 		{ ["imgui/*"] = {  
-			"../../3rdParty/imgui/1.87/Include/imgui/*.h",
-			"../../3rdParty/imgui/1.87/Include/imgui/*.inl",
-			"../../3rdParty/imgui/1.87/Include/imgui/*.cpp",
+			"../../3rdParty/imgui/1.91/Include/imgui/*.h",
+			"../../3rdParty/imgui/1.91/Include/imgui/*.inl",
+			"../../3rdParty/imgui/1.91/Include/imgui/*.cpp",
 			} },
 		{ ["imguizmo/*"] = {  
 			"../../3rdParty/imguizmo/1.83/Include/imguizmo/*.h",
@@ -46,7 +46,7 @@ project "Imgui"
 	includedirs 
 	{ 
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Include/",
-		"%{wks.location}/../3rdParty/imgui/1.87/Include/",
+		"%{wks.location}/../3rdParty/imgui/1.91/Include/",
 		"%{wks.location}/../3rdParty/imguizmo/1.83/Include/",
 		"%{wks.location}/../3rdParty/imnodes/0.5/Include/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",

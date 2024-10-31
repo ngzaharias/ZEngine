@@ -1,5 +1,9 @@
 #include "imgui/imgui_user.h"
 
+#ifndef IMGUI_DEFINE_MATH_OPERATORS
+#define IMGUI_DEFINE_MATH_OPERATORS
+#endif
+
 #include "Core/Guid.h"
 #include "Core/Name.h"
 #include "Core/Path.h"
@@ -9,7 +13,6 @@
 #include "Math/Rotator.h"
 #include "Math/Vector.h"
 
-#define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 #include "imgui/imgui_stdlib.h"
@@ -156,8 +159,8 @@ bool imgui::BulletHeader(const char* label, const bool selected /*= false*/)
 	frame_bb.Min.y = window->DC.CursorPos.y;
 	frame_bb.Max.x = window->WorkRect.Max.x;
 	frame_bb.Max.y = window->DC.CursorPos.y + frame_height;
-	frame_bb.Min.x -= IM_FLOOR(window->WindowPadding.x * 0.5f - 1.0f);
-	frame_bb.Max.x += IM_FLOOR(window->WindowPadding.x * 0.5f);
+	frame_bb.Min.x -= IM_TRUNC(window->WindowPadding.x * 0.5f - 1.0f);
+	frame_bb.Max.x += IM_TRUNC(window->WindowPadding.x * 0.5f);
 
 	const float text_offset_x = g.FontSize + (padding.x * 3);
 	const float text_offset_y = ImMax(padding.y, window->DC.CurrLineTextBaseOffset);
@@ -177,7 +180,7 @@ bool imgui::BulletHeader(const char* label, const bool selected /*= false*/)
 
 	// Render
 	const ImU32 text_col = ImGui::GetColorU32(ImGuiCol_Text);
-	ImGuiNavHighlightFlags nav_highlight_flags = ImGuiNavHighlightFlags_TypeThin;
+	ImGuiNavRenderCursorFlags nav_render_flags = ImGuiNavRenderCursorFlags_Compact;
 	{
 		const auto bg_flag = 
 			(hovered && held) ? ImGuiCol_HeaderActive :
@@ -186,7 +189,7 @@ bool imgui::BulletHeader(const char* label, const bool selected /*= false*/)
 
 		const ImU32 bg_col = ImGui::GetColorU32(bg_flag);
 		ImGui::RenderFrame(frame_bb.Min, frame_bb.Max, bg_col, true, style.FrameRounding);
-		ImGui::RenderNavHighlight(frame_bb, id, nav_highlight_flags);
+		ImGui::RenderNavCursor(frame_bb, id, nav_render_flags);
 
 		if (selected || pressed)
 			ImGui::RenderArrow(window->DrawList, ImVec2(text_pos.x - text_offset_x + padding.x, text_pos.y + 1.6f), text_col, ImGuiDir_Right, 0.8f);
@@ -514,7 +517,7 @@ void imgui::Grid(Vector2f graph_size, Vector2f spacing, Vector2f offset)
 
 void imgui::Image(uint32 textureId, Vector2f image_size, Vector2f uv0, Vector2f uv1)
 {
-	const ImTextureID castedId = (void*)(intptr_t)textureId;
+	const ImTextureID castedId = (intptr_t)textureId;
 	ImGui::Image(castedId, image_size, { uv0.x, uv1.y }, { uv1.x, uv0.y });
 }
 
@@ -549,7 +552,7 @@ void imgui::PlotLines(const char* label, Vector2f* values, int32 values_count, V
 
 	const ImRect frame_bb(parent_window->DC.CursorPos, parent_window->DC.CursorPos + graph_size);
 	const ImRect inner_bb(frame_bb.Min + padding, frame_bb.Max - padding);
-	if (!ImGui::BeginChildFrame(id, graph_size, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
+	if (!ImGui::BeginChild(id, graph_size, ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
 	{
 		ImGui::EndChild();
 		return;
@@ -567,7 +570,7 @@ void imgui::PlotLines(const char* label, Vector2f* values, int32 values_count, V
 	spacing.x = storage->GetFloat(ID_SpacingX, spacing.x);
 	spacing.y = storage->GetFloat(ID_SpacingY, spacing.y);
 
-	if (ImGui::IsMouseDragging(ImGuiMouseButton_Right) && ImGui::ItemHoverable(frame_bb, id))
+	if (ImGui::IsMouseDragging(ImGuiMouseButton_Right) && ImGui::ItemHoverable(frame_bb, id, 0))
 	{
 		const ImVec2 delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
 		ImGui::ResetMouseDragDelta(ImGuiMouseButton_Right);
@@ -575,7 +578,7 @@ void imgui::PlotLines(const char* label, Vector2f* values, int32 values_count, V
 		position.y += delta.y * spacing.y * 0.01f;
 	}
 
-	if (ImGui::GetIO().MouseWheel != 0 && ImGui::ItemHoverable(frame_bb, id))
+	if (ImGui::GetIO().MouseWheel != 0 && ImGui::ItemHoverable(frame_bb, id, 0))
 	{
 		spacing *= math::Remap(ImGui::GetIO().MouseWheel, -1.f, 1.f, 2.f, 0.5f);
 	}
@@ -643,7 +646,7 @@ void imgui::PlotLines(const char* label, Vector2f* values, int32 values_count, V
 		int idx_hovered = -1;
 		float idx_closest = FLT_MAX;
 
-		const bool isActive = ImGui::ItemHoverable(frame_bb, id);
+		const bool isActive = ImGui::ItemHoverable(frame_bb, id, 0);
 		const ImU32 col_base = ImGui::GetColorU32(ImGuiCol_PlotLines);
 		const ImU32 col_hovered = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
 
@@ -709,7 +712,7 @@ void imgui::PlotLines(const char* label, Vector2f* values, int32 values_count, V
 		}
 	}
 
-	ImGui::EndChildFrame();
+	ImGui::EndChild();
 }
 
 bool imgui::Selectable(const str::String& label, bool selected, ImGuiSelectableFlags flags, const Vector2f size)

@@ -132,7 +132,7 @@ void dbg::EntitySystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::BeginTabBar(""))
 			{
-				ImGui::PushStyleColor(ImGuiCol_TabActive, { 0.f, 0.f, 1.f, 1.f });
+				ImGui::PushStyleColor(ImGuiCol_TabSelected, { 0.f, 0.f, 1.f, 1.f });
 				ImGui::PushStyleColor(ImGuiCol_TabHovered, { 0.f, 0.f, 1.f, 1.f });
 				if (ImGui::BeginTabItem("Client"))
 				{
@@ -141,7 +141,7 @@ void dbg::EntitySystem::Update(World& world, const GameTime& gameTime)
 				}
 				ImGui::PopStyleColor(2);
 
-				ImGui::PushStyleColor(ImGuiCol_TabActive, { 1.f, 0.f, 0.f, 1.f });
+				ImGui::PushStyleColor(ImGuiCol_TabSelected, { 1.f, 0.f, 0.f, 1.f });
 				ImGui::PushStyleColor(ImGuiCol_TabHovered, { 1.f, 0.f, 0.f, 1.f });
 				if (ImGui::BeginTabItem("Server"))
 				{
