@@ -72,16 +72,14 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<dbg::EntityWindowRequestComponent>();
 			if (ImGui::MenuItem("Debug: Shapes"))
 				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
-			if (ImGui::MenuItem("ImGui Demo"))
+			if (ImGui::MenuItem("Demo: ImGui"))
 				world.AddEventComponent<dbg::ImGuiDemoRequestComponent>();
-			if (ImGui::MenuItem("ImNodes Demo"))
+			if (ImGui::MenuItem("Demo: ImNodes"))
 				world.AddEventComponent<dbg::ImNodesDemoRequestComponent>();
-			if (ImGui::MenuItem("Inspector Demo"))
+			if (ImGui::MenuItem("Demo: Inspector"))
 				world.AddEventComponent<dbg::InspectorDemoRequestComponent>();
 			if (ImGui::MenuItem("Network"))
 				world.AddEventComponent<dbg::NetworkWindowRequestComponent>();
-			if (ImGui::MenuItem("Node Graph"))
-				world.AddEventComponent<dbg::NodeGraphRequestComponent>();
 			if (ImGui::MenuItem("Render: Frame Buffer"))
 				world.AddEventComponent<dbg::BufferWindowRequestComponent>();
 

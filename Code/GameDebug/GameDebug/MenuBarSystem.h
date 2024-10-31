@@ -11,7 +11,6 @@ namespace dbg
 	struct ImNodesDemoRequestComponent;
 	struct InspectorDemoRequestComponent;
 	struct NetworkWindowRequestComponent;
-	struct NodeGraphRequestComponent;
 	struct ShapeWindowRequestComponent;
 }
 
@@ -71,7 +70,6 @@ namespace dbg
 			dbg::level::SaveRequestComponent,
 			dbg::level::SaveAsRequestComponent,
 			dbg::NetworkWindowRequestComponent,
-			dbg::NodeGraphRequestComponent,
 			dbg::ShapeWindowRequestComponent,
 			editor::EntityWindowRequestComponent,
 			editor::FlipbookWindowRequestComponent,

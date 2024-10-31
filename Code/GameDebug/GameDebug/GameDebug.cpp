@@ -17,8 +17,6 @@
 #include "GameDebug/MenuBarSystem.h"
 #include "GameDebug/NetworkComponents.h"
 #include "GameDebug/NetworkSystem.h"
-#include "GameDebug/NodeGraphComponents.h"
-#include "GameDebug/NodeGraphSystem.h"
 #include "GameDebug/OverlaySystem.h"
 #include "GameDebug/PhysicsSystem.h"
 #include "GameDebug/ShapeComponents.h"
@@ -52,8 +50,6 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::level::SaveRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::NetworkWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::NetworkWindowRequestComponent>();
-	m_ClientWorld.RegisterComponent<dbg::NodeGraphComponent>();
-	m_ClientWorld.RegisterComponent<dbg::NodeGraphRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ServerWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ShapeWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ShapeWindowRequestComponent>();
@@ -75,7 +71,6 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<dbg::level::ReloadSystem>();
 	m_ClientWorld.RegisterSystem<dbg::MenuBarSystem>();
 	m_ClientWorld.RegisterSystem<dbg::NetworkSystem>();
-	m_ClientWorld.RegisterSystem<dbg::NodeGraphSystem>();
 	m_ClientWorld.RegisterSystem<dbg::OverlaySystem>();
 	m_ClientWorld.RegisterSystem<dbg::PhysicsSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ShapeSystem>();

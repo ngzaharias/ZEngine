@@ -37,7 +37,6 @@ namespace
 			[](const AABB2f&) { return "AABB2f"; },
 			[](const Circle2f&) { return "Circle2f"; },
 			[](const Line2f&) { return "Line2f"; },
-			[](const OBB2f&) { return "OBB2f"; },
 			[](const Ray2f&) { return "Ray2f"; },
 			[](const Segment2f&) { return "Segment2f"; },
 			[](const Triangle2f&) { return "Triangle2f"; });
@@ -45,11 +44,10 @@ namespace
 
 	bool IsColliding(const dbg::Shape& a, const dbg::Shape& b)
 	{
-		return false;
-		//return std::visit([](const auto& a, const auto& b) -> bool
-		//	{
-		//		return math::IsOverlapping(a, b);
-		//	}, a, b);
+		return std::visit([](const auto& a, const auto& b) -> bool
+			{
+				return math::IsOverlapping(a, b);
+			}, a, b);
 	}
 
 	void InspectShape(dbg::Shape& value)
@@ -65,8 +63,6 @@ namespace
 				value = Circle2f(Vector2f::Zero, 1.f);
 			if (ImGui::Selectable("Line2f"))
 				value = Line2f(-Vector2f::One, +Vector2f::One);
-			if (ImGui::Selectable("OBB2f"))
-				value = OBB2f(Vector2f(-1.f, -1.f), Vector2f(-1.f, +1.f), Vector2f(+1.f, +1.f), Vector2f(+1.f, -1.f));
 			if (ImGui::Selectable("Ray2f"))
 				value = Ray2f(Vector2f::Zero, Vector2f::One);
 			if (ImGui::Selectable("Segment2f"))
@@ -91,13 +87,6 @@ namespace
 		{
 			imgui::DragVector("m_PointA", data.m_PointA, 0.1f);
 			imgui::DragVector("m_PointB", data.m_PointB, 0.1f);
-		},
-		[](OBB2f& data)
-		{
-			imgui::DragVector("m_PointA", data.m_Points[0], 0.1f);
-			imgui::DragVector("m_PointB", data.m_Points[1], 0.1f);
-			imgui::DragVector("m_PointC", data.m_Points[2], 0.1f);
-			imgui::DragVector("m_PointD", data.m_Points[3], 0.1f);
 		},
 		[](Ray2f& data)
 		{

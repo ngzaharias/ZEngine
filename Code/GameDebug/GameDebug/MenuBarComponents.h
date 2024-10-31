@@ -11,7 +11,6 @@ namespace dbg
 	struct ImNodesDemoRequestComponent : ecs::EventComponent<ImNodesDemoRequestComponent> { };
 	struct InspectorDemoRequestComponent : ecs::EventComponent<InspectorDemoRequestComponent> { };
 	struct NetworkWindowRequestComponent : ecs::EventComponent<NetworkWindowRequestComponent> { };
-	struct NodeGraphRequestComponent : ecs::EventComponent<NodeGraphRequestComponent> { };
 	struct ServerWindowRequestComponent : ecs::EventComponent<ServerWindowRequestComponent> { };
 	struct ShapeWindowRequestComponent : ecs::EventComponent<ShapeWindowRequestComponent> { };
 }
