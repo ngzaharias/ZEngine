@@ -20,7 +20,7 @@ void hexamap::GridSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& linesComponent = world.GetSingleton<eng::LinesComponent>();
+	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 
 	int32 count = 3;
 	float sizeA = 500.f;
@@ -41,13 +41,13 @@ void hexamap::GridSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 	{
-		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent>>())
+		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent>>())
 		{
-			const auto& camera = world.GetComponent<const eng::CameraComponent>(cameraEntity);
-			const auto& transform = world.GetComponent<const eng::TransformComponent>(cameraEntity);
-			const auto& input = world.GetComponent<const eng::InputComponent>(inputEntity);
+			const auto& camera = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+			const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+			const auto& input = world.ReadComponent<eng::InputComponent>(inputEntity);
 
-			Vector3f position = camera::ScreenToWorld(
+			Vector3f position = eng::camera::ScreenToWorld(
 				input.m_MousePosition,
 				camera.m_Projection,
 				transform.ToTransform());

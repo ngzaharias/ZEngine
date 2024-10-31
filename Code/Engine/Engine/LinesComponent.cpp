@@ -276,7 +276,7 @@ void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& c
 
 void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Vector4f& colour)
 {
-	std::visit([&](auto projection) { AddFrustum(translate, rotate, projection, colour); }, projection);
+	std::visit([&](auto projection) { AddFrustrum(translate, rotate, projection, colour); }, projection);
 }
 
 void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Vector4f& colour)

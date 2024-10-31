@@ -15,7 +15,6 @@
 #include "Engine/RenderStage_Translucent.h"
 #include "Engine/RenderStage_UI.h"
 #include "Engine/RenderStage_Voxels.h"
-#include "Engine/SFML/Window.h"
 
 #include <GLFW/glfw3.h>
 

@@ -1,3 +1,5 @@
+git pull --recurse-submodules
+
 # ZEngine
 ## 3rdParty
 - [assimp](https://github.com/assimp/assimp)

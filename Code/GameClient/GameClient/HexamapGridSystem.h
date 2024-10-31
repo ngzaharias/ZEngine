@@ -4,10 +4,14 @@
 
 namespace eng
 {
-	struct CameraComponent;
 	struct InputComponent;
 	struct LinesComponent;
 	struct TransformComponent;
+}
+
+namespace eng::camera
+{
+	struct ProjectionComponent;
 }
 
 namespace hexamap
@@ -17,7 +21,7 @@ namespace hexamap
 	public:
 		using World = ecs::WorldView<
 			eng::LinesComponent,
-			const eng::CameraComponent,
+			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,
 			const eng::TransformComponent>;
 

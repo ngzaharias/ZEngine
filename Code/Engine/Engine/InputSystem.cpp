@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputComponent.h"
-#include "Engine/SFML/Window.h"
+#include "Engine/GLFW/Window.h"
 
 #include <imgui/imgui.h>
 
