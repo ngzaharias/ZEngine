@@ -186,8 +186,8 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 				const Vector3f modelScale = flipbookTransform.m_Scale;
 				const Vector3f spriteScale = Vector3f(
-					(float)flipbookComponent.m_Size.x / 100.f * 0.5f,
-					(float)flipbookComponent.m_Size.y / 100.f * 0.5f,
+					(float)flipbookComponent.m_Size.x / 100.f,
+					(float)flipbookComponent.m_Size.y / 100.f,
 					1.f);
 
 				Matrix4x4 model = flipbookTransform.ToTransform();
@@ -227,8 +227,8 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 				const Vector3f modelScale = spriteTransform.m_Scale;
 				const Vector3f spriteScale = Vector3f(
-					(float)spriteComponent.m_Size.x / 100.f * 0.5f,
-					(float)spriteComponent.m_Size.y / 100.f * 0.5f,
+					(float)spriteComponent.m_Size.x / 100.f,
+					(float)spriteComponent.m_Size.y / 100.f,
 					1.f);
 
 				Matrix4x4 model = spriteTransform.ToTransform();
