@@ -39,28 +39,12 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 
 		const Quaternion cameraRotate = Quaternion::FromRotator(cameraTransform.m_Rotate);
 		const Vector3f& cameraTranslate = cameraTransform.m_Translate;
-		const Vector3f cameraRight = Vector3f::AxisX * cameraRotate;
-		const Vector3f cameraUpward = Vector3f::AxisY * cameraRotate;
 		const Vector3f cameraForward = Vector3f::AxisZ * cameraRotate;
 
-		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-		const Matrix4x4 cameraProj = eng::camera::GetProjection(screenSize, cameraComponent.m_Projection);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform();
-
 		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
 			const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
-			const Vector3f cameraPoint = cameraTranslate + cameraForward * 30.f;
-
-			// camera
-			linesComponent.AddLine(
-				cameraPoint - cameraRight * 0.1f,
-				cameraPoint + cameraRight * 0.1f,
-				s_ColourW);
-			linesComponent.AddLine(
-				cameraPoint - cameraUpward * 0.1f,
-				cameraPoint + cameraUpward * 0.1f,
-				s_ColourW);
 
 			// mouse
 			const float distance = 100000.f;

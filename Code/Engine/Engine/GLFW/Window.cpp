@@ -227,7 +227,7 @@ void glfw::Window::PreUpdate(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	{
-		constexpr Vector4f s_ClearColour = Vector4f(0.117f, 0.117f, 0.117f, 1.f);
+		constexpr Vector4f s_ClearColour = Vector4f(0.24f, 0.24f, 0.24f, 1.f);
 
 		glClearDepthf(1.f);
 		glClearColor(s_ClearColour.x, s_ClearColour.y, s_ClearColour.z, s_ClearColour.w);

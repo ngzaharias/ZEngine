@@ -9,7 +9,6 @@
 #include "GameClient/DragMovementSystem.h"
 #include "GameClient/DragSelectionSystem.h"
 #include "GameClient/GameStateSystem.h"
-#include "GameClient/HexamapGridSystem.h"
 #include "GameClient/HiddenCountSystem.h"
 #include "GameClient/HiddenPhysicsSystem.h"
 #include "GameClient/HiddenRevealSystem.h"
@@ -37,7 +36,6 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<gamestate::NetworkStopSystem>();
 	entityWorld.RegisterSystem<gamestate::StateSystem>();
 	entityWorld.RegisterSystem<gui::modal::StateSystem>();
-	entityWorld.RegisterSystem<hexamap::GridSystem>();
 	entityWorld.RegisterSystem<hidden::CountSystem>();
 	entityWorld.RegisterSystem<hidden::PhysicsSystem>();
 	entityWorld.RegisterSystem<hidden::RevealSystem>();

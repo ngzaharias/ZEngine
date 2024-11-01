@@ -45,7 +45,7 @@ namespace eng
 		void AddIcosphere(const Vector3f& translate, const Sphere3f& sphere, const Vector4f& colour);
 
 		/// \brief Adds a flat top hexagon.
-		void AddHexagon(const Vector3f& translate, const float radius, const Vector4f& colour);
+		void AddHexagonH(const Vector3f& translate, const float radius, const Vector4f& colour);
 
 		/// \brief Adds a line.
 		void AddLine(const Vector3f& pointA, const Vector3f& pointB, const Vector4f& colour);

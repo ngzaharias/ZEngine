@@ -31,11 +31,10 @@ namespace editor::settings
 
 namespace editor
 {
-	class GizmoSystem final : public ecs::System
+	class GizmoTransform final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::LinesComponent,
 			eng::PhysicsComponent,
 			eng::TransformComponent,
 			const editor::EntityWindowComponent,

@@ -6,13 +6,10 @@
 #include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/LinesComponent.h"
 #include "Engine/InputComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/Screen.h"
-#include "Engine/SoundComponents.h"
-#include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "GameClient/HiddenObjectComponent.h"
 #include "GameClient/HiddenRevealComponent.h"
@@ -49,42 +46,24 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const auto& sceneComponent = world.ReadSingleton<eng::PhysicsSceneComponent>();
-	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
-
-		const Quaternion cameraRotate = Quaternion::FromRotator(cameraTransform.m_Rotate);
-		const Vector3f& cameraTranslate = cameraTransform.m_Translate;
-		const Vector3f cameraRight = Vector3f::AxisX * cameraRotate;
-		const Vector3f cameraUpward = Vector3f::AxisY * cameraRotate;
-		const Vector3f cameraForward = Vector3f::AxisZ * cameraRotate;
+		const auto& camera = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-		const Matrix4x4 cameraProj = eng::camera::GetProjection(screenSize, cameraComponent.m_Projection);
-		const Matrix4x4 cameraView = cameraTransform.ToTransform();
+		const Matrix4x4 cameraProj = eng::camera::GetProjection(screenSize, camera.m_Projection);
+		const Matrix4x4 cameraView = transform.ToTransform();
 
 		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
 			const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
-			const Vector3f cameraPoint = cameraTranslate + cameraForward * 30.f;
-
-			// camera
-			linesComponent.AddLine(
-				cameraPoint - cameraRight * 0.1f,
-				cameraPoint + cameraRight * 0.1f,
-				s_ColourW);
-			linesComponent.AddLine(
-				cameraPoint - cameraUpward * 0.1f,
-				cameraPoint + cameraUpward * 0.1f,
-				s_ColourW);
 
 			// mouse
 			constexpr float s_Distance = 100000.f;
-			const Vector3f mousePosition = eng::camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
-			const Vector3f mouseDirection = ToMouseDirection(mousePosition, cameraComponent, cameraTransform);
+			const Vector3f mousePosition = eng::camera::ScreenToWorld(inputComponent.m_MousePosition, camera.m_Projection, cameraView);
+			const Vector3f mouseDirection = ToMouseDirection(mousePosition, camera, transform);
 
 			const physx::PxVec3 position = { 
 				mousePosition.x,

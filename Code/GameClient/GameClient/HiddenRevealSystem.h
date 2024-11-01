@@ -6,21 +6,14 @@
 namespace eng
 {
 	struct InputComponent;
-	struct LinesComponent;
 	struct PhysicsSceneComponent;
 	struct RigidStaticComponent;
-	struct SpriteComponent;
 	struct TransformComponent;
 }
 
 namespace eng::camera
 {
 	struct ProjectionComponent;
-}
-
-namespace eng::sound
-{
-	struct SequenceRequestComponent;
 }
 
 namespace hidden
@@ -35,7 +28,6 @@ namespace hidden
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::LinesComponent,
 			eng::RigidStaticComponent,
 			hidden::RevealComponent,
 			const eng::camera::ProjectionComponent,

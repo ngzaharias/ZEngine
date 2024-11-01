@@ -9,11 +9,8 @@ namespace
 	const str::StringView strEntity = "m_Entity";
 	const str::StringView strGizmos = "m_Gizmos";
 	const str::StringView strImport = "m_Import";
-	const str::StringView strIsEnabled = "m_IsEnabled";
 	const str::StringView strOpen = "m_Open";
 	const str::StringView strSave = "m_Save";
-	const str::StringView strShowCoordinates = "m_ShowCoordinates";
-	const str::StringView strShowTransforms = "m_ShowTransforms";
 	const str::StringView strSprite = "m_Sprite";
 	const str::StringView strTexture = "m_Texture";
 }
@@ -46,30 +43,6 @@ void eng::Visitor::WriteCustom(const editor::settings::Entity& value)
 {
 	Write(strOpen, value.m_Open);
 	Write(strSave, value.m_Save);
-}
-
-template<>
-void eng::Visitor::ReadCustom(editor::settings::Gizmos& value) const
-{
-	Read(strIsEnabled, value.m_IsEnabled, value.m_IsEnabled);
-	Read(strShowCoordinates, value.m_ShowCoordinates, value.m_ShowCoordinates);
-	Read(strShowTransforms, value.m_ShowTransforms, value.m_ShowTransforms);
-}
-template<>
-void eng::Visitor::WriteCustom(const editor::settings::Gizmos& value)
-{
-	Write(strIsEnabled, value.m_IsEnabled);
-	Write(strShowCoordinates, value.m_ShowCoordinates);
-	Write(strShowTransforms, value.m_ShowTransforms);
-}
-template<>
-bool imgui::Inspector::WriteCustom(editor::settings::Gizmos& value)
-{
-	bool result = false;
-	result |= Write("IsEnabled", value.m_IsEnabled);
-	result |= Write("ShowCoordinates", value.m_ShowCoordinates);
-	result |= Write("ShowTransforms", value.m_ShowTransforms);
-	return result;
 }
 
 template<>

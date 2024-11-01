@@ -364,14 +364,14 @@ void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddHexagon(const Vector3f& translate, const float radius, const Vector4f& colour)
+void eng::LinesComponent::AddHexagonH(const Vector3f& translate, const float radius, const Vector4f& colour)
 {
-	constexpr Vector3f s_DirectionE  = Vector3f(+1.f, 0.f, 0.f);
-	constexpr Vector3f s_DirectionSE = Vector3f(+0.500000656f, -0.866025090f, 0.f);
-	constexpr Vector3f s_DirectionSW = Vector3f(-0.499999702f, -0.866025627f, 0.f);
-	constexpr Vector3f s_DirectionW  = Vector3f(-1.f, 0.f, 0.f);
-	constexpr Vector3f s_DirectionNW = Vector3f(-0.500000656f, +0.866025090f, 0.f);
-	constexpr Vector3f s_DirectionNE = Vector3f(+0.499999702f, +0.866025627f, 0.f);
+	constexpr Vector3f s_DirectionE  = Vector2f(+1.f, 0.f).X0Y();
+	constexpr Vector3f s_DirectionSE = Vector2f(+0.500000656f, -0.866025090f).X0Y();
+	constexpr Vector3f s_DirectionSW = Vector2f(-0.499999702f, -0.866025627f).X0Y();
+	constexpr Vector3f s_DirectionW  = Vector2f(-1.f, 0.f).X0Y();
+	constexpr Vector3f s_DirectionNW = Vector2f(-0.500000656f, +0.866025090f).X0Y();
+	constexpr Vector3f s_DirectionNE = Vector2f(+0.499999702f, +0.866025627f).X0Y();
 
 	AddLine(translate + s_DirectionE  * radius, translate + s_DirectionSE * radius, colour);
 	AddLine(translate + s_DirectionSE * radius, translate + s_DirectionSW * radius, colour);

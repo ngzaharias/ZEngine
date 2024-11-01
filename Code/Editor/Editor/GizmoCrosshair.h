@@ -1,28 +1,35 @@
 #pragma once
 
+#include "Core/String.h"
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
 #include "ECS/System.h"
 
 namespace eng
 {
-	struct InputComponent;
 	struct LinesComponent;
 	struct TransformComponent;
 }
 
 namespace eng::camera
 {
-	struct ProjectionComponent;
+	struct  ProjectionComponent;
 }
 
-namespace hexamap
+namespace editor::settings
 {
-	class GridSystem : public ecs::System
+	struct LocalComponent;
+}
+
+namespace editor
+{
+	class GizmoCrosshair final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
 			eng::LinesComponent,
+			const editor::settings::LocalComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::InputComponent,
 			const eng::TransformComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

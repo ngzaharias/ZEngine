@@ -2,6 +2,7 @@
 
 #include "Core/Path.h"
 #include "ECS/Component.h"
+#include "Editor/GizmoSettings.h"
 
 namespace editor::settings
 {
@@ -9,13 +10,6 @@ namespace editor::settings
 	{
 		str::Path m_Open = {};
 		str::Path m_Save = {};
-	};
-
-	struct Gizmos
-	{
-		bool m_IsEnabled = true;
-		bool m_ShowCoordinates = true;
-		bool m_ShowTransforms = true;
 	};
 
 	struct Sprite
