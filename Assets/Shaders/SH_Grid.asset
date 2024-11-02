@@ -1,0 +1,71 @@
+m_Guid = "f681f1dfc59e40f7864f01d1efbe1d84"
+m_Name = "SH_Grid"
+m_Type = "Shader"
+
+[Programs]
+
+m_Vertex = """
+#version 330 core
+
+in vec3 a_Vertex;
+in vec2 a_TexCoords;
+
+uniform mat4 u_CameraProj;
+uniform mat4 u_CameraView;
+uniform mat4 u_Transform;
+
+out vec4 v_WorldPos;
+out vec2 v_TexCoords;
+
+void main()
+{
+	mat4 transform = u_CameraProj * u_CameraView * u_Transform;
+	gl_Position = transform * vec4(a_Vertex, 1.f);
+	v_WorldPos = u_Transform * vec4(a_Vertex, 1.f);
+	v_TexCoords = a_TexCoords;
+}
+"""
+
+m_Fragment = """
+#version 330 core
+
+#define M_1_SQRTPI 0.5641895835477563
+#define DISC_RADIUS (M_1_SQRTPI * 1.05)
+#define GRID_LINE_SMOOTH_START (0.5 + DISC_RADIUS)
+#define GRID_LINE_SMOOTH_END (0.5 - DISC_RADIUS)
+#define GRID_LINE_STEP(dist) smoothstep(GRID_LINE_SMOOTH_START, GRID_LINE_SMOOTH_END, dist)
+
+in vec4 v_WorldPos;
+in vec2 v_TexCoords;
+
+out vec4 f_Colour;
+
+#define width 1
+
+float get_grid(vec2 co, vec2 fwidthCos, vec2 grid_scale)
+{
+  vec2 half_size = grid_scale / 2.0;
+  /* Triangular wave pattern, amplitude is [0, half_size]. */
+  vec2 grid_domain = abs(mod(co + half_size, grid_scale) - half_size);
+  /* Modulate by the absolute rate of change of the coordinates
+   * (make line have the same width under perspective). */
+  grid_domain /= fwidthCos;
+  /* Collapse waves. */
+  float line_dist = min(grid_domain.x, grid_domain.y);
+  return GRID_LINE_STEP(line_dist - width);
+}
+
+void main()
+{
+	vec2 dFdxPos = dFdx(v_WorldPos.xz);
+	vec2 dFdyPos = dFdy(v_WorldPos.xz);
+	vec2 fwidthPos = abs(dFdxPos) + abs(dFdyPos);
+
+	float value = get_grid(v_WorldPos.xz, fwidthPos, vec2(100)); 
+	if (value < 1)
+		discard;
+
+	f_Colour.rgb = vec3(value);
+	f_Colour.a = 1;
+}
+"""
