@@ -7,12 +7,12 @@ m_Type = "Shader"
 m_Vertex = """
 #version 330 core
 
-in vec3 a_Vertex;
-in vec2 a_TexCoords;
-
 uniform mat4 u_CameraProj;
 uniform mat4 u_CameraView;
 uniform mat4 u_Transform;
+
+in vec3 a_Vertex;
+in vec2 a_TexCoords;
 
 out vec4 v_WorldPos;
 out vec2 v_TexCoords;
@@ -35,6 +35,8 @@ m_Fragment = """
 #define GRID_LINE_SMOOTH_END (0.5 - DISC_RADIUS)
 #define GRID_LINE_STEP(dist) smoothstep(GRID_LINE_SMOOTH_START, GRID_LINE_SMOOTH_END, dist)
 
+uniform mat4 u_CameraView;
+
 in vec4 v_WorldPos;
 in vec2 v_TexCoords;
 
@@ -45,23 +47,19 @@ out vec4 f_Colour;
 float get_grid(vec2 co, vec2 fwidthCos, vec2 grid_scale)
 {
   vec2 half_size = grid_scale / 2.0;
-  /* Triangular wave pattern, amplitude is [0, half_size]. */
   vec2 grid_domain = abs(mod(co + half_size, grid_scale) - half_size);
-  /* Modulate by the absolute rate of change of the coordinates
-   * (make line have the same width under perspective). */
   grid_domain /= fwidthCos;
-  /* Collapse waves. */
   float line_dist = min(grid_domain.x, grid_domain.y);
   return GRID_LINE_STEP(line_dist - width);
 }
 
 void main()
 {
-	vec2 dFdxPos = dFdx(v_WorldPos.xz);
-	vec2 dFdyPos = dFdy(v_WorldPos.xz);
-	vec2 fwidthPos = abs(dFdxPos) + abs(dFdyPos);
+	vec3 dFdxPos = dFdx(v_WorldPos.xyz);
+	vec3 dFdyPos = dFdy(v_WorldPos.xyz);
+	vec3 fwidthPos = abs(dFdxPos) + abs(dFdyPos);
 
-	float value = get_grid(v_WorldPos.xz, fwidthPos, vec2(100)); 
+	float value = get_grid(v_WorldPos.xz, fwidthPos.xz, vec2(100)); 
 	if (value < 1)
 		discard;
 
