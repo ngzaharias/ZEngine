@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Math/Vector.h"
+
 namespace editor::settings
 {
 	struct Gizmos
@@ -22,6 +24,10 @@ namespace editor::settings
 			bool m_IsEnabled = true;
 			bool m_ShowMajor = true;
 			bool m_ShowMinor = false;
+
+			float m_MajorScale = 100.f;
+			float m_MajorWidth = 0.01f;
+			Vector3f m_MajorColour = Vector3f(1.f, 0.f, 0.f);
 		};
 
 		struct Transform

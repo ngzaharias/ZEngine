@@ -53,22 +53,20 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 			auto& localSettings = windowComponent.m_Local;
 			auto& gizmoSettings = localSettings.m_Gizmos;
 
+			bool wasModified = false;
 			{
 				imgui::Inspector inspector;
 				if (inspector.Begin("##local"))
 				{
-					inspector.Write("Gizmos", gizmoSettings);
+					wasModified |= inspector.Write("Gizmos", gizmoSettings);
 					inspector.End();
 				}
 			}
 
-			if (ImGui::Button("Apply"))
+			if (wasModified)
 			{
-				world.WriteSingleton<editor::settings::LocalComponent>() = windowComponent.m_Local;
+				world.WriteSingleton<editor::settings::LocalComponent>() = localSettings;
 			}
-			ImGui::SameLine();
-			if (ImGui::Button("Close"))
-				isWindowOpen = false;
 		}
 		ImGui::End();
 

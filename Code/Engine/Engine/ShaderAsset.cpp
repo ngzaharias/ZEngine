@@ -42,6 +42,7 @@ namespace
 	struct Programs
 	{
 		str::String m_Fragment = { };
+		str::String m_Geometry = { };
 		str::String m_Vertex = { };
 	};
 }
@@ -147,18 +148,25 @@ bool eng::ShaderAssetLoader::Load(ShaderAsset& asset, eng::Visitor& visitor) con
 
 	asset.m_ProgramId = glCreateProgram();
 
-	uint32 vertexShaderId = 0;
-	if (!programs.m_Vertex.empty())
-	{
-		vertexShaderId = Compile(GL_VERTEX_SHADER, programs.m_Vertex);
-		glAttachShader(asset.m_ProgramId, vertexShaderId);
-	}
-
 	uint32 fragmentShaderId = 0;
 	if (!programs.m_Fragment.empty())
 	{
 		fragmentShaderId = Compile(GL_FRAGMENT_SHADER, programs.m_Fragment);
 		glAttachShader(asset.m_ProgramId, fragmentShaderId);
+	}
+
+	uint32 geometryShaderId = 0;
+	if (!programs.m_Geometry.empty())
+	{
+		geometryShaderId = Compile(GL_GEOMETRY_SHADER, programs.m_Geometry);
+		glAttachShader(asset.m_ProgramId, geometryShaderId);
+	}
+
+	uint32 vertexShaderId = 0;
+	if (!programs.m_Vertex.empty())
+	{
+		vertexShaderId = Compile(GL_VERTEX_SHADER, programs.m_Vertex);
+		glAttachShader(asset.m_ProgramId, vertexShaderId);
 	}
 
 	glLinkProgram(asset.m_ProgramId);

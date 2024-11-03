@@ -10,6 +10,7 @@
 #include "Editor/GizmoCrosshair.h"
 #include "Editor/GizmoGrid.h"
 #include "Editor/GizmoTransform.h"
+#include "Editor/RenderStage_Grid.h"
 #include "Editor/SettingsMenu.h"
 #include "Editor/SettingsComponents.h"
 #include "Editor/SettingsLocalSystem.h"
@@ -17,6 +18,7 @@
 #include "Editor/TableEditor.h"
 #include "Editor/TextureEditor.h"
 #include "Editor/TrajectoryEditor.h"
+#include "Engine/RenderSystem.h"
 
 editor::Editor::Editor(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
 	: m_ClientWorld(clientWorld)
@@ -66,6 +68,12 @@ void editor::Editor::Register()
 
 	// needs to run before the render system but after the camera systems
 	m_ClientWorld.RegisterSystemPriority<editor::GizmoCrosshair>(4999);
+
+	// #todo: find a different place for this
+	{
+		auto& renderSystem = m_ClientWorld.GetSystem<eng::RenderSystem>();
+		renderSystem.RegisterStage<editor::RenderStage_Grid>();
+	}
 }
 
 void editor::Editor::Initialise()

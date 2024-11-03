@@ -60,7 +60,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 			glDepthMask(GL_TRUE);
 		}
 
-		const uint32 lineCount = readComponent.m_Vertices.GetCount();
+		const uint32 vertexCount = readComponent.m_Vertices.GetCount();
 		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 		{
 			const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
@@ -82,7 +82,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 			glUniformMatrix4fv(transformId, 1, GL_FALSE, &transform[0][0]);
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-			glBufferData(GL_ARRAY_BUFFER, lineCount * sizeof(LineVertex), &readComponent.m_Vertices[0], GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(LineVertex), &readComponent.m_Vertices[0], GL_DYNAMIC_DRAW);
 
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (void*)s_PointOffset);
@@ -92,7 +92,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (void*)s_ColourOffset);
 			glVertexAttribDivisor(1, GL_FALSE);
 
-			glDrawArrays(GL_LINES, 0, lineCount);
+			glDrawArrays(GL_LINES, 0, vertexCount);
 		}
 
 		auto& writeComponent = world.WriteSingleton<eng::LinesComponent>();

@@ -19,6 +19,13 @@ namespace eng
 		AssetLoader() = default;
 		virtual ~AssetLoader() = default;
 
+		void ClearCache()
+		{
+			for (auto&& [guid, asset] : m_Cache)
+				delete asset;
+			m_Cache.RemoveAll();
+		}
+
 	protected:
 		eng::AssetManager* m_AssetManager = nullptr;
 

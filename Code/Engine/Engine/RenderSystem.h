@@ -27,8 +27,13 @@ namespace eng
 
 		void Update(World& world, const GameTime& gameTime);
 
+		template<typename TRenderStage, typename... TArgs>
+		void RegisterStage(TArgs&&... args);
+
 	private:
 		ecs::EntityWorld& m_EntityWorld;
 		Array<RenderStage*> m_RenderStages;
 	};
 };
+
+#include "RenderSystem.inl"

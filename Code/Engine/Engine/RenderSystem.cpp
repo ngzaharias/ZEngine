@@ -25,12 +25,12 @@
 eng::RenderSystem::RenderSystem(ecs::EntityWorld& entityWorld)
 	: m_EntityWorld(entityWorld)
 {
-	m_RenderStages.Append(new eng::RenderStage_Shadow());
-	m_RenderStages.Append(new eng::RenderStage_Voxels());
-	m_RenderStages.Append(new eng::RenderStage_Opaque());
-	m_RenderStages.Append(new eng::RenderStage_Lines());
-	m_RenderStages.Append(new eng::RenderStage_Translucent());
-	m_RenderStages.Append(new eng::RenderStage_UI());
+	RegisterStage<eng::RenderStage_Shadow>();
+	RegisterStage<eng::RenderStage_Voxels>();
+	RegisterStage<eng::RenderStage_Opaque>();
+	RegisterStage<eng::RenderStage_Lines>();
+	RegisterStage<eng::RenderStage_Translucent>();
+	RegisterStage<eng::RenderStage_UI>();
 }
 
 eng::RenderSystem::~RenderSystem()
@@ -59,3 +59,4 @@ void eng::RenderSystem::Update(World& world, const GameTime& gameTime)
 	for (auto&& stage : m_RenderStages)
 		stage->Render(m_EntityWorld);
 }
+

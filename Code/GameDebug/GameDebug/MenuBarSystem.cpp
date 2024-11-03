@@ -4,6 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/AssetManager.h"
 #include "Engine/InputComponent.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "GameUI/SettingsComponents.h"
@@ -32,17 +33,24 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<dbg::level::SaveRequestComponent>();
 			if (ImGui::MenuItem("Save Level As...", "Ctrl+S+A", nullptr, false))
 				world.AddEventComponent<dbg::level::SaveAsRequestComponent>();
-
+			
 			ImGui::Separator();
 
-			if (ImGui::BeginMenu("Settings"))
+			if (ImGui::MenuItem("Reload Assets"))
 			{
-				if (ImGui::MenuItem("Editor"))
-					world.AddEventComponent<editor::settings::WindowRequestComponent>();
-				if (ImGui::MenuItem("Game"))
-					world.AddEventComponent<gui::settings::OpenRequestComponent>();
-				ImGui::EndMenu();
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
+				assetManager.ReloadAssets();
 			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Settings"))
+		{
+			if (ImGui::MenuItem("Editor"))
+				world.AddEventComponent<editor::settings::WindowRequestComponent>();
+			if (ImGui::MenuItem("Game"))
+				world.AddEventComponent<gui::settings::OpenRequestComponent>();
 			ImGui::EndMenu();
 		}
 

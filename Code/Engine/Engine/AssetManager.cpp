@@ -2,6 +2,7 @@
 #include "Engine/AssetManager.h"
 
 #include "Core/StringHelpers.h"
+#include "Engine/AssetLoader.h"
 
 #include <filesystem>
 
@@ -57,4 +58,13 @@ const eng::AssetFile* eng::AssetManager::GetAssetFile(const str::Guid& guid) con
 	return find != m_FileMap.end()
 		? &find->second
 		: nullptr;
+}
+
+void eng::AssetManager::ReloadAssets()
+{
+	// #temp: easy way of reloading assets is to just clear the cache
+	for (auto&& [typeId, entry] : m_Registry)
+	{
+		entry.m_Loader->ClearCache();
+	}
 }

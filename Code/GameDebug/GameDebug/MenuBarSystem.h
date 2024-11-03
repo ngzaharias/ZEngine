@@ -40,6 +40,7 @@ namespace editor::settings
 
 namespace eng
 {
+	class AssetManager;
 	struct InputComponent;
 }
 
@@ -78,6 +79,7 @@ namespace dbg
 			editor::TableWindowRequestComponent,
 			editor::TextureWindowRequestComponent,
 			editor::TrajectoryWindowRequestComponent,
+			eng::AssetManager,
 			eng::settings::LocalComponent,
 			gui::settings::OpenRequestComponent,
 			const eng::InputComponent>;

@@ -30,6 +30,8 @@ void editor::GizmoGrid::Update(World& world, const GameTime& gameTime)
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
 		return;
 
+	return;
+
 	if (settings.m_ShowMajor)
 	{
 		auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();

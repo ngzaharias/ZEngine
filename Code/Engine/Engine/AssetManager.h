@@ -73,6 +73,8 @@ namespace eng
 	public:
 		const eng::AssetFile* GetAssetFile(const str::Guid& guid) const;
 
+		void ReloadAssets();
+
 	public:
 		template<typename TAsset, typename TLoader>
 		static bool SaveFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
