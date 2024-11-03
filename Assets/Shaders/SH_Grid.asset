@@ -29,6 +29,10 @@ void main()
 m_Fragment = """
 #version 330 core
 
+uniform float u_MajorScale;
+uniform float u_MajorWidth;
+uniform vec3 u_MajorColour;
+
 in vec4 v_WorldPos;
 in vec2 v_TexCoords;
 
@@ -48,11 +52,11 @@ float PristineGrid(vec2 uv, vec2 lineWidth)
 
 void main()
 {
-	float scale = 100;
-	float lineWidth = 0.01;
-	float grid = PristineGrid(v_WorldPos.xz / scale, vec2(lineWidth));
+	float majorAlpha = PristineGrid(v_WorldPos.xz / u_MajorScale, vec2(u_MajorWidth));
+	if (majorAlpha <= 0)
+		discard;
 
-	f_Colour.rgb = vec3(1);
-	f_Colour.a = grid;
+	f_Colour.rgb = u_MajorColour;
+	f_Colour.a = majorAlpha;
 }
 """
