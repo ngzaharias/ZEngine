@@ -15,7 +15,9 @@
 #include "Engine/RenderStage_Translucent.h"
 #include "Engine/RenderStage_UI.h"
 #include "Engine/RenderStage_Voxels.h"
+#include "Engine/SettingsComponents.h"
 
+#include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
 
 // http://realtimecollisiondetection.net/blog/?p=86
@@ -55,6 +57,19 @@ void eng::RenderSystem::Shutdown(World& world)
 void eng::RenderSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	const auto& settings = world.ReadSingleton<eng::settings::LocalComponent>();
+	const auto& graphics = settings.m_Graphics;
+
+	{
+		const Vector3f& colour = graphics.m_ClearColour;
+		glClearDepthf(1.f);
+		glClearColor(colour.x, colour.y, colour.z, 1.f);
+
+		// the depth mask must be enabled BEFORE clearing the depth buffer
+		glDepthMask(GL_TRUE);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
 
 	for (auto&& stage : m_RenderStages)
 		stage->Render(m_EntityWorld);

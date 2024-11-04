@@ -66,7 +66,10 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 					imgui::Inspector inspector;
 					if (inspector.Begin("##settingsmenu"))
 					{
-						inspector.Write(windowComponent.m_Local);
+						if (inspector.Write(windowComponent.m_Local))
+						{
+							world.WriteSingleton<eng::settings::LocalComponent>() = windowComponent.m_Local;
+						}
 						inspector.End();
 					}
 					ImGui::EndTabItem();
@@ -77,22 +80,16 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 					imgui::Inspector inspector;
 					if (inspector.Begin("##settingsmenu"))
 					{
-						inspector.Write(windowComponent.m_Debug);
+						if (inspector.Write(windowComponent.m_Debug))
+						{
+							world.WriteSingleton<eng::settings::DebugComponent>() = windowComponent.m_Debug;
+						}
 						inspector.End();
 					}
 					ImGui::EndTabItem();
 				}
 				ImGui::EndTabBar();
 			}
-
-			if (ImGui::Button("Apply"))
-			{
-				world.WriteSingleton<eng::settings::DebugComponent>() = windowComponent.m_Debug;
-				world.WriteSingleton<eng::settings::LocalComponent>() = windowComponent.m_Local;
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Close"))
-				isWindowOpen = false;
 		}
 		ImGui::End();
 

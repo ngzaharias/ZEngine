@@ -9,15 +9,18 @@ namespace eng
 {
 	struct WindowConfig
 	{
-		str::StringView m_Name = "ZEngine";
+		str::String m_Name = "ZEngine";
 		Vector2u m_Position = Vector2u::Zero; 
 		Vector2u m_Size = Vector2u(1920, 1080);
+		bool m_IsFullscreen = false;
+		bool m_IsVSyncEnabled = false;
 	};
 
 	class Window
 	{
 	public:
-		explicit Window(const WindowConfig& config) { }
+		explicit Window(const WindowConfig& config) 
+			: m_Config(config) { }
 		virtual ~Window() { }
 
 		virtual void Initialize() { }
@@ -34,5 +37,8 @@ namespace eng
 	private:
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
+
+	protected:
+		eng::WindowConfig m_Config = {};
 	};
 }

@@ -11,7 +11,9 @@ namespace
 	const str::StringView strArePhysicsEnabled = "m_ArePhysicsEnabled";
 	const str::StringView strAudio = "m_Audio";
 	const str::StringView strCamera = "m_Camera";
+	const str::StringView strClearColour = "m_ClearColour";
 	const str::StringView strEffectVolume = "m_EffectVolume";
+	const str::StringView strGraphics = "m_Graphics";
 	const str::StringView strMusicVolume = "m_MusicVolume";
 	const str::StringView strRotateSpeed = "m_RotateSpeed";
 	const str::StringView strTranslateSpeed = "m_TranslateSpeed";
@@ -47,12 +49,14 @@ void eng::Visitor::ReadCustom(eng::settings::LocalComponent& value) const
 {
 	Read(strAudio, value.m_Audio, value.m_Audio);
 	Read(strCamera, value.m_Camera, value.m_Camera);
+	Read(strGraphics, value.m_Graphics, value.m_Graphics);
 }
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::LocalComponent& value)
 {
 	Write(strAudio, value.m_Audio);
 	Write(strCamera, value.m_Camera);
+	Write(strGraphics, value.m_Graphics);
 }
 template<>
 bool imgui::Inspector::WriteCustom(eng::settings::LocalComponent& value)
@@ -60,6 +64,7 @@ bool imgui::Inspector::WriteCustom(eng::settings::LocalComponent& value)
 	bool result = false;
 	result |= Write("m_Audio", value.m_Audio);
 	result |= Write("m_Camera", value.m_Camera);
+	result |= Write("m_Graphics", value.m_Graphics);
 	return result;
 }
 
@@ -105,5 +110,23 @@ bool imgui::Inspector::WriteCustom(eng::settings::Camera& value)
 	result |= Write("m_RotateSpeed", value.m_RotateSpeed);
 	result |= Write("m_TranslateSpeed", value.m_TranslateSpeed);
 	result |= Write("m_ZoomAmount", value.m_ZoomAmount);
+	return result;
+}
+
+template<>
+void eng::Visitor::ReadCustom(eng::settings::Graphics& value) const
+{
+	Read(strClearColour, value.m_ClearColour, value.m_ClearColour);
+}
+template<>
+void eng::Visitor::WriteCustom(const eng::settings::Graphics& value)
+{
+	Write(strClearColour, value.m_ClearColour);
+}
+template<>
+bool imgui::Inspector::WriteCustom(eng::settings::Graphics& value)
+{
+	bool result = false;
+	result |= Write("m_ClearColour", value.m_ClearColour);
 	return result;
 }

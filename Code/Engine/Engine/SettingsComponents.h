@@ -2,6 +2,7 @@
 
 #include "ECS/Component.h"
 #include "Math/Rotator.h"
+#include "Math/Vector.h"
 
 namespace eng::settings
 {
@@ -18,6 +19,11 @@ namespace eng::settings
 		float m_ZoomAmount = 100.f;
 	};
 
+	struct Graphics
+	{
+		Vector3f m_ClearColour = Vector3f(0.24f);
+	};
+
 	/// \brief Debug settings that is only used in non-gold builds.
 	struct DebugComponent : public ecs::SingletonComponent<DebugComponent>
 	{
@@ -31,6 +37,7 @@ namespace eng::settings
 	{
 		Audio m_Audio = {};
 		Camera m_Camera = {};
+		Graphics m_Graphics = {};
 	};
 
 	/// \brief Shared settings broadcast from the host to all users that is saved to the savegame.

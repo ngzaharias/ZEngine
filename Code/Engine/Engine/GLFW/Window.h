@@ -28,12 +28,11 @@ namespace glfw
 		void PreUpdate(const GameTime& gameTime) override;
 		void PostUpdate(const GameTime& gameTime) override;
 
-		Vector2u GetSize() const override { return m_Size; }
+		Vector2u GetSize() const override { return m_Config.m_Size; }
 		GLFWwindow* GetWindow() const { return m_Window; }
 
 		bool HasResized() const override { return m_HasResized; }
 		void SetResized(bool value) { m_HasResized = value; }
-
 		bool ShouldClose() const override;
 
 		void GatherKeyboard(Set<input::EKeyboard>& out_Keys) const;
@@ -45,9 +44,6 @@ namespace glfw
 		static void Callback_ScrollChanged(GLFWwindow* glfwWindow, double xOffset, double yOffset);
 
 	private:
-		str::String m_Name = { };
-		Vector2u m_Size = { };
-
 		Vector2f m_MousePos = Vector2f::Zero;
 		Vector2f m_MouseDelta = Vector2f::Zero;
 		Vector2f m_ScrollDelta = Vector2f::Zero;

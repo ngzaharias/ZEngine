@@ -8,16 +8,20 @@ namespace sfml
 	class Window;
 }
 
+namespace eng::settings
+{
+	struct LocalComponent;
+}
+
 namespace eng
 {
 	class RenderStage;
-	struct FrameBufferComponent;
-	struct LinesComponent;
 
 	class RenderSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<>;
+		using World = ecs::WorldView<
+			const eng::settings::LocalComponent>;
 
 		RenderSystem(ecs::EntityWorld& entityWorld);
 		~RenderSystem();

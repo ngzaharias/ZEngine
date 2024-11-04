@@ -172,11 +172,6 @@ namespace
 glfw::Window::Window(const eng::WindowConfig& config)
 	: eng::Window(config)
 {
-	constexpr bool s_IsFullscreen = false;
-
-	m_Name = config.m_Name;
-	m_Size = config.m_Size;
-
 	glfwSetErrorCallback(glfw_error_callback);
 
 	glfwInit();
@@ -186,11 +181,12 @@ glfw::Window::Window(const eng::WindowConfig& config)
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWmonitor* fullscreen = nullptr;
-	if (s_IsFullscreen)
-		fullscreen = glfwGetPrimaryMonitor();
+	GLFWmonitor* fullscreenMonitor = nullptr;
+	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+	if (config.m_IsFullscreen)
+		fullscreenMonitor = primaryMonitor;
 
-	m_Window = glfwCreateWindow(config.m_Size.x, config.m_Size.y, m_Name.c_str(), fullscreen, nullptr);
+	m_Window = glfwCreateWindow(config.m_Size.x, config.m_Size.y, config.m_Name.c_str(), fullscreenMonitor, nullptr);
 
 	glfwMakeContextCurrent(m_Window);
 	glfwSetWindowUserPointer(m_Window, this);
@@ -198,7 +194,7 @@ glfw::Window::Window(const eng::WindowConfig& config)
 	glfwSetScrollCallback(m_Window, Callback_ScrollChanged);
 
 	// V-Sync
-	glfwSwapInterval(0);
+	glfwSwapInterval(config.m_IsVSyncEnabled);
 
 	auto error = glewInit();
 	if (error != GLEW_OK)
@@ -225,17 +221,6 @@ void glfw::Window::Shutdown()
 void glfw::Window::PreUpdate(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
-
-	{
-		constexpr Vector4f s_ClearColour = Vector4f(0.24f, 0.24f, 0.24f, 1.f);
-
-		glClearDepthf(1.f);
-		glClearColor(s_ClearColour.x, s_ClearColour.y, s_ClearColour.z, s_ClearColour.w);
-
-		// the depth mask must be enabled BEFORE clearing the depth buffer
-		glDepthMask(GL_TRUE);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
 
 	glfwPollEvents();
 
@@ -292,10 +277,10 @@ void glfw::Window::Callback_FramebufferResized(GLFWwindow* glfwWindow, int width
 {
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
 	window->m_HasResized = true;
-	window->m_Size.x = static_cast<uint32>(width);
-	window->m_Size.y = static_cast<uint32>(height);
-	Screen::width = static_cast<float>(window->m_Size.x);
-	Screen::height = static_cast<float>(window->m_Size.y);
+	window->m_Config.m_Size.x = static_cast<uint32>(width);
+	window->m_Config.m_Size.y = static_cast<uint32>(height);
+	Screen::width = static_cast<float>(width);
+	Screen::height = static_cast<float>(height);
 
 	glViewport(0, 0, width, height);
 	//glScissor(0, 0, width, height);
