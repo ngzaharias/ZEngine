@@ -73,9 +73,8 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
-
-	const auto* shader = assetManager.LoadAsset<eng::ShaderAsset>(strShader);
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strShader);
 	if (!shader)
 		return;
 

@@ -38,12 +38,12 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
 	if (!debugSettings.m_AreLinesEnabled)
 		return;
 
-	const auto* linesShader = assetManager.LoadAsset<eng::ShaderAsset>(strLinesShader);
+	const auto* linesShader = assetManager.FetchAsset<eng::ShaderAsset>(strLinesShader);
 	if (!linesShader)
 		return;
 

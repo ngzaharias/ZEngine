@@ -10,13 +10,18 @@
 #include "Engine/MusicComponents.h"
 #include "Engine/SettingsComponents.h"
 
+namespace
+{
+	const str::Guid strAsset = GUID("d193864ee4f444e7b6aabb84b95bcc5b");
+}
+
 void eng::MusicSystem::Initialise(World& world)
 {
 	auto& musicComponent = world.WriteSingleton<eng::MusicComponent>();
 	musicComponent.m_Music = new sf::Music();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
-	if (const auto* musicAsset = assetManager.LoadAsset<eng::MusicAsset>(GUID("d193864ee4f444e7b6aabb84b95bcc5b")))
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	if (const auto* musicAsset = assetManager.FetchAsset<eng::MusicAsset>(strAsset))
 	{
 		const str::Path filepath = str::Path(str::EPath::Assets, musicAsset->m_SourceFile);
 

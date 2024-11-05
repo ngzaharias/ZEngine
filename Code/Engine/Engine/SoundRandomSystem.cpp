@@ -13,7 +13,7 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 
 	auto& bufferComponent = world.WriteSingleton<eng::sound::RandomBufferComponent>();
 	bufferComponent.m_Requests.RemoveAll();
@@ -24,7 +24,7 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 		if (!requestComponent.m_Handle.IsValid())
 			continue;
 
-		const auto* randomAsset = assetManager.LoadAsset<eng::sound::RandomAsset>(requestComponent.m_Handle);
+		const auto* randomAsset = assetManager.FetchAsset<eng::sound::RandomAsset>(requestComponent.m_Handle);
 		if (!randomAsset)
 			continue;
 

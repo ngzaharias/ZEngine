@@ -49,19 +49,19 @@ TEST_CASE("eng::AssetManager. Test.")
 	RAIIHelper raiihelper;
 	eng::AssetManager& assetManager = raiihelper.m_Manager;
 
-	CHECK(!assetManager.GetAsset<MyAsset>(strGuid));
+	CHECK(!assetManager.FetchAsset<MyAsset>(strGuid));
 	assetManager.RequestAsset<MyAsset>(strGuid);
-	CHECK(assetManager.GetAsset<MyAsset>(strGuid));
+	CHECK(assetManager.FetchAsset<MyAsset>(strGuid));
 	assetManager.ReleaseAsset<MyAsset>(strGuid);
-	CHECK(!assetManager.GetAsset<MyAsset>(strGuid));
+	CHECK(!assetManager.FetchAsset<MyAsset>(strGuid));
 
-	CHECK(!assetManager.GetAsset<MyAsset>(strGuid));
+	CHECK(!assetManager.FetchAsset<MyAsset>(strGuid));
 	assetManager.RequestAsset<MyAsset>(strGuid);
-	CHECK(assetManager.GetAsset<MyAsset>(strGuid));
+	CHECK(assetManager.FetchAsset<MyAsset>(strGuid));
 	assetManager.RequestAsset<MyAsset>(strGuid);
-	CHECK(assetManager.GetAsset<MyAsset>(strGuid));
+	CHECK(assetManager.FetchAsset<MyAsset>(strGuid));
 	assetManager.ReleaseAsset<MyAsset>(strGuid);
-	CHECK(assetManager.GetAsset<MyAsset>(strGuid));
+	CHECK(assetManager.FetchAsset<MyAsset>(strGuid));
 	assetManager.ReleaseAsset<MyAsset>(strGuid);
-	CHECK(!assetManager.GetAsset<MyAsset>(strGuid));
+	CHECK(!assetManager.FetchAsset<MyAsset>(strGuid));
 }

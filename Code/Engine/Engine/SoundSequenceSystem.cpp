@@ -12,7 +12,7 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 
 	auto& bufferComponent = world.WriteSingleton<eng::sound::SequenceBufferComponent>();
 	bufferComponent.m_Requests.RemoveAll();
@@ -23,7 +23,7 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 		if (!requestComponent.m_Handle.IsValid())
 			continue;
 
-		const auto* sequenceAsset = assetManager.LoadAsset<eng::sound::SequenceAsset>(requestComponent.m_Handle);
+		const auto* sequenceAsset = assetManager.FetchAsset<eng::sound::SequenceAsset>(requestComponent.m_Handle);
 		if (!sequenceAsset)
 			continue;
 

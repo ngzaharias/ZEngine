@@ -186,14 +186,17 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 {
 	PROFILE_FUNCTION();
 
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	const auto* materialAsset = assetManager.FetchAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
+	if (!materialAsset)
+		return;
+
 	Set<ecs::Entity> entities = {};
 	entities.Add(world.Query<ecs::query::Added<eng::PhysicsComponent>>());
 	entities.Add(world.Query<ecs::query::Updated<eng::PhysicsComponent>>());
 	for (const ecs::Entity& entity : entities)
 	{
-		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		auto& physicsManager = world.WriteResource<eng::PhysicsManager>();
-		const auto* asset = assetManager.LoadAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
 
 		// #hack: dirty hack to not mark the component as updated which causes an infinite loop
 		auto& physicsComponent = const_cast<eng::PhysicsComponent&>(world.ReadComponent<eng::PhysicsComponent>(entity));
@@ -226,7 +229,7 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 
 		for (const eng::Shape& data : physicsComponent.m_Shapes)
 		{
-			if (physx::PxShape* shape = CreateShape(physics, data, *asset->m_Material))
+			if (physx::PxShape* shape = CreateShape(physics, data, *materialAsset->m_Material))
 			{
 				physicsComponent.m_PxRigidActor->attachShape(*shape);
 				physicsComponent.m_PxShapes.Append(shape);

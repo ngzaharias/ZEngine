@@ -19,7 +19,7 @@ void eng::FlipbookSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::FlipbookComponent>>())
 	{
@@ -36,12 +36,12 @@ void eng::FlipbookSystem::Update(World& world, const GameTime& gameTime)
 		if (!flipbookComponent.m_IsPlaying)
 			continue;
 
-		const auto& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
-		if (flipbookAsset.m_Frames.IsEmpty())
+		const auto* flipbookAsset = assetManager.FetchAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
+		if (!flipbookAsset || flipbookAsset->m_Frames.IsEmpty())
 			continue;
 
-		const int32 indexCount = flipbookAsset.m_Frames.GetCount();
-		const float timeMax = indexCount / flipbookAsset.m_FPS;
+		const int32 indexCount = flipbookAsset->m_Frames.GetCount();
+		const float timeMax = indexCount / flipbookAsset->m_FPS;
 		const float time = gameTime.m_TotalTime - flipbookComponent.m_TimeStart;
 
 		if (indexCount >= 1)
