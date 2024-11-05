@@ -158,7 +158,7 @@ bool eng::AssetManager::ImportAsset(TAsset& asset, const str::Path& filepath)
 }
 
 template<class TAsset>
-void eng::AssetManager::IncreaseRef(const str::Guid& guid)
+void eng::AssetManager::RequestAsset(const str::Guid& guid)
 {
 	eng::AssetRef& ref = m_RefMap[guid];
 	if (ref.m_Count++ == 0)
@@ -168,7 +168,7 @@ void eng::AssetManager::IncreaseRef(const str::Guid& guid)
 }
 
 template<class TAsset>
-void eng::AssetManager::DecreaseRef(const str::Guid& guid)
+void eng::AssetManager::ReleaseAsset(const str::Guid& guid)
 {
 	eng::AssetRef& ref = m_RefMap[guid];
 	if (--ref.m_Count == 0)

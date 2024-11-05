@@ -77,6 +77,11 @@ namespace eng
 		template<class TAsset>
 		bool ImportAsset(TAsset& asset, const str::Path& filepath);
 
+		template<class TAsset>
+		void RequestAsset(const str::Guid& guid);
+		template<class TAsset>
+		void ReleaseAsset(const str::Guid& guid);
+
 		// #temp: need to find a better way of discovering assets, AddEntry perhaps ?
 		void LoadFilepath(const str::Path& filepath, const bool canSearchSubdirectories);
 
@@ -84,11 +89,6 @@ namespace eng
 		const eng::AssetFile* GetAssetFile(const str::Guid& guid) const;
 
 		void ReloadAssets();
-
-		template<class TAsset>
-		void IncreaseRef(const str::Guid& guid);
-		template<class TAsset>
-		void DecreaseRef(const str::Guid& guid);
 
 	public:
 		template<typename TAsset, typename TLoader>
