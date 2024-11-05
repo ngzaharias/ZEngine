@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Profiler.h"
+
 namespace _private
 {
 	template<typename TAsset, typename TLoader>
@@ -18,7 +20,7 @@ void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 	static_assert(std::is_base_of<eng::AssetLoader, TLoader>::value, "Loader isn't a base of eng::AssetLoader!");
 
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_PANIC(!enumerate::Contains(m_Registry, typeId), "Asset has already been registered! Type[{}] ", ToTypeName<TAsset>());
+	Z_PANIC(!enumerate::Contains(m_Registry, typeId), "Asset has already been registered! Type [{}] ", ToTypeName<TAsset>());
 
 	eng::AssetEntry& entry = m_Registry[typeId];
 	entry.m_Type = type;
@@ -38,12 +40,21 @@ void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 }
 
 template<class TAsset>
+const TAsset* eng::AssetManager::GetAsset(const str::Guid& guid)
+{
+	const auto find = m_RefMap.Find(guid);
+	if (find != m_RefMap.end())
+		return static_cast<const TAsset*>(find->second.m_Asset);
+	return nullptr;
+}
+
+template<class TAsset>
 bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
 {
 	PROFILE_FUNCTION();
 
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
+	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type [{}] ", ToTypeName<TAsset>());
 
 	auto& entry = m_Registry[typeId];
 	auto& loader = *entry.m_Loader;
@@ -62,7 +73,7 @@ bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
 
 	if (!entry.m_Save || !entry.m_Save(&asset, loader, path))
 	{
-		Z_LOG(ELog::Assert, "Asset failed to save! Path[{}]", filepath.ToChar());
+		Z_LOG(ELog::Assert, "Asset failed to save! Path [{}]", filepath.ToChar());
 		return false;
 	}
 
@@ -79,14 +90,14 @@ bool eng::AssetManager::LoadAsset(TAsset& asset, const str::Path& filepath)
 	PROFILE_FUNCTION();
 
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
+	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type [{}] ", ToTypeName<TAsset>());
 
 	auto& entry = m_Registry[typeId];
 	auto& loader = *entry.m_Loader;
 
 	if (!entry.m_Load(&asset, loader, filepath))
 	{
-		Z_LOG(ELog::Assert, "Asset failed to load! Path[{}]", filepath.ToChar());
+		Z_LOG(ELog::Assert, "Asset failed to load! Path [{}]", filepath.ToChar());
 		return false;
 	}
 
@@ -100,31 +111,28 @@ const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 	PROFILE_FUNCTION();
 
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
+	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type [{}] ", ToTypeName<TAsset>());
 
 	auto& entry = m_Registry[typeId];
 	auto& loader = *entry.m_Loader;
-	auto& cache = loader.m_Cache;
 
-	const auto find = cache.Find(guid);
-	if (find != cache.end())
-		return static_cast<const TAsset*>(find->second);
+	const auto find = m_RefMap.Find(guid);
+	if (find != m_RefMap.end() && find->second.m_Asset)
+		return static_cast<const TAsset*>(find->second.m_Asset);
 
-	Z_PANIC(enumerate::Contains(m_FileMap, guid), "Asset doesn't exist! Guid[{}]", guid.ToString().c_str());
+	Z_PANIC(enumerate::Contains(m_FileMap, guid), "Asset doesn't exist! Guid [{}]", guid.ToString().c_str());
 	const eng::AssetFile& file = m_FileMap.Get(guid);
 
 	TAsset* asset = new TAsset();
 	if (!entry.m_Load(asset, loader, file.m_Path))
 	{
-		Z_LOG(ELog::Assert, "Asset failed to load! Path[{}]", file.m_Path.ToChar());
+		Z_LOG(ELog::Assert, "Asset failed to load! Path [{}]", file.m_Path.ToChar());
 		delete asset;
 		return nullptr;
 	}
 
 	asset->m_Guid = guid;
 	asset->m_Type = entry.m_Type;
-
-	cache[guid] = asset;
 	return asset;
 }
 
@@ -132,7 +140,7 @@ template<class TAsset>
 bool eng::AssetManager::ImportAsset(TAsset& asset, const str::Path& filepath)
 {
 	constexpr TypeId typeId = ToTypeId<TAsset>();
-	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type[{}] ", ToTypeName<TAsset>());
+	Z_PANIC(enumerate::Contains(m_Registry, typeId), "Asset hasn't been registered! Type [{}] ", ToTypeName<TAsset>());
 
 	auto& entry = m_Registry[typeId];
 	auto& loader = *entry.m_Loader;
@@ -143,16 +151,42 @@ bool eng::AssetManager::ImportAsset(TAsset& asset, const str::Path& filepath)
 
 	if (!entry.m_Import || !entry.m_Import(&asset, loader, filepath))
 	{
-		Z_LOG(ELog::Assert, "Failed to import asset! Path[{}]", filepath.ToChar());
+		Z_LOG(ELog::Assert, "Failed to import asset! Path [{}]", filepath.ToChar());
 		return false;
 	}
 	return true;
 }
 
+template<class TAsset>
+void eng::AssetManager::IncreaseRef(const str::Guid& guid)
+{
+	eng::AssetRef& ref = m_RefMap[guid];
+	if (ref.m_Count++ == 0)
+	{
+		ref.m_Asset = LoadAsset<TAsset>(guid);
+	}
+}
+
+template<class TAsset>
+void eng::AssetManager::DecreaseRef(const str::Guid& guid)
+{
+	eng::AssetRef& ref = m_RefMap[guid];
+	if (--ref.m_Count == 0)
+	{
+		delete ref.m_Asset;
+		ref.m_Asset = nullptr;
+		m_RefMap.Remove(guid);
+	}
+	else
+	{
+		Z_PANIC(ref.m_Count >= 0, "Reference count dropped below 0! Guid [{}]", guid.ToString());
+	}
+}
+
 template<typename TAsset, typename TLoader>
 bool eng::AssetManager::SaveFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath)
 {
-	Z_PANIC(!filepath.IsEmpty(), "Invalid filepath! Path[{}]", filepath.ToChar());
+	Z_PANIC(!filepath.IsEmpty(), "Invalid filepath! Path [{}]", filepath.ToChar());
 
 	eng::Visitor visitor;
 	visitor.Write("m_Guid", asset->m_Guid);
@@ -171,7 +205,7 @@ bool eng::AssetManager::SaveFunction(eng::Asset* asset, const eng::AssetLoader& 
 template<typename TAsset, typename TLoader>
 bool eng::AssetManager::LoadFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath)
 {
-	Z_PANIC(!filepath.IsEmpty(), "Invalid filepath! Path[{}]", filepath.ToChar());
+	Z_PANIC(!filepath.IsEmpty(), "Invalid filepath! Path [{}]", filepath.ToChar());
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
@@ -188,7 +222,7 @@ bool eng::AssetManager::LoadFunction(eng::Asset* asset, const eng::AssetLoader& 
 template<typename TAsset, typename TLoader>
 bool eng::AssetManager::ImportFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath)
 {
-	Z_PANIC(!filepath.IsEmpty(), "Invalid filepath! Path[{}]", filepath.ToChar());
+	Z_PANIC(!filepath.IsEmpty(), "Invalid filepath! Path [{}]", filepath.ToChar());
 
 	const TLoader* tLoader = static_cast<const TLoader*>(&loader);
 	TAsset* tAsset = static_cast<TAsset*>(asset);

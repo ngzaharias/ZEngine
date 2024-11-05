@@ -42,12 +42,20 @@ namespace eng
 		Import* m_Import = nullptr;
 	};
 
+	struct AssetRef
+	{
+		const eng::Asset* m_Asset = nullptr;
+
+		int32 m_Count = 0;
+	};
+
 	class AssetManager final
 	{
 	public:
 		static constexpr const char* s_Extension = ".asset";
 
 		using FileMap = Map<str::Guid, eng::AssetFile>;
+		using RefMap = Map<str::Guid, AssetRef>;
 		using Registry = Map<TypeId, eng::AssetEntry>;
 		using TypeMap = Map<str::Name, Set<str::Guid>>;
 
@@ -58,6 +66,8 @@ namespace eng
 		template<typename TAsset, typename TLoader, typename... TArgs>
 		void RegisterAsset(const str::Name& type, TArgs&&... args);
 
+		template<class TAsset>
+		const TAsset* GetAsset(const str::Guid& guid);
 		template<class TAsset>
 		bool SaveAsset(TAsset& asset, const str::Path& filepath);
 		template<class TAsset>
@@ -75,6 +85,11 @@ namespace eng
 
 		void ReloadAssets();
 
+		template<class TAsset>
+		void IncreaseRef(const str::Guid& guid);
+		template<class TAsset>
+		void DecreaseRef(const str::Guid& guid);
+
 	public:
 		template<typename TAsset, typename TLoader>
 		static bool SaveFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
@@ -85,6 +100,7 @@ namespace eng
 
 	public:
 		FileMap m_FileMap = { };
+		RefMap m_RefMap = { };
 		Registry m_Registry = { };
 		TypeMap m_TypeMap = { };
 	};
