@@ -52,7 +52,7 @@ void eng::RenderStage_Translucent::Initialise(ecs::EntityWorld& entityWorld)
 	glGenBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::ShaderAsset>(strQuadMesh);
+	assetManager.RequestAsset<eng::StaticMeshAsset>(strQuadMesh);
 }
 
 void eng::RenderStage_Translucent::Shutdown(ecs::EntityWorld& entityWorld)
@@ -62,7 +62,7 @@ void eng::RenderStage_Translucent::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strQuadMesh);
+	assetManager.ReleaseAsset<eng::StaticMeshAsset>(strQuadMesh);
 }
 
 void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
