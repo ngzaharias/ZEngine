@@ -142,8 +142,11 @@ void eng::AssetManager::ReleaseAsset(const str::Guid& guid)
 	eng::AssetRef& ref = m_RefMap[guid];
 	if (--ref.m_Count == 0)
 	{
-		delete ref.m_Asset;
-		ref.m_Asset = nullptr;
+		if (ref.m_Asset)
+		{
+			delete ref.m_Asset;
+			ref.m_Asset = nullptr;
+		}
 		m_RefMap.Remove(guid);
 	}
 	else
