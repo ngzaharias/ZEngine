@@ -3,6 +3,7 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
+#include "Engine/AssetLoadSystem.h"
 #include "Engine/CameraBound2DSystem.h"
 #include "Engine/CameraMove2DSystem.h"
 #include "Engine/CameraMove3DSystem.h"
@@ -26,6 +27,7 @@
 
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 {
+	entityWorld.RegisterSystem<eng::AssetLoadSystem>();
 	entityWorld.RegisterSystem<eng::camera::Bound2DSystem>();
 	entityWorld.RegisterSystem<eng::camera::Move2DSystem>();
 	entityWorld.RegisterSystem<eng::camera::Move3DSystem>();

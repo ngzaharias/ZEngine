@@ -24,6 +24,8 @@
 
 namespace
 {
+	const str::Guid strQuadMesh = str::Guid::Create("e94876a8e4cc4d1684c85859b48a1af6");
+
 	struct Sort
 	{
 		bool operator()(const eng::RenderBatchID& a, const eng::RenderBatchID& b)
@@ -41,8 +43,6 @@ namespace
 			return a.m_StaticMeshId < b.m_StaticMeshId;
 		}
 	};
-
-	const str::Guid strQuadMesh = str::Guid::Create("e94876a8e4cc4d1684c85859b48a1af6");
 }
 
 void eng::RenderStage_Translucent::Initialise(ecs::EntityWorld& entityWorld)
@@ -50,6 +50,9 @@ void eng::RenderStage_Translucent::Initialise(ecs::EntityWorld& entityWorld)
 	glGenBuffers(1, &m_ColourBuffer);
 	glGenBuffers(1, &m_ModelBuffer);
 	glGenBuffers(1, &m_TexParamBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.RequestAsset<eng::ShaderAsset>(strQuadMesh);
 }
 
 void eng::RenderStage_Translucent::Shutdown(ecs::EntityWorld& entityWorld)
@@ -57,6 +60,9 @@ void eng::RenderStage_Translucent::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_ColourBuffer);
 	glDeleteBuffers(1, &m_ModelBuffer);
 	glDeleteBuffers(1, &m_TexParamBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strQuadMesh);
 }
 
 void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)

@@ -27,10 +27,18 @@ void eng::RenderStage_Lines::Initialise(ecs::EntityWorld& entityWorld)
 	glGenVertexArrays(1, &m_AttributeObject);
 	glBindVertexArray(m_AttributeObject);
 	glGenBuffers(1, &m_VertexBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.RequestAsset<eng::ShaderAsset>(strLinesShader);
 }
 
 void eng::RenderStage_Lines::Shutdown(ecs::EntityWorld& entityWorld)
 {
+	glDeleteVertexArrays(1, &m_AttributeObject);
+	glDeleteBuffers(1, &m_VertexBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strLinesShader);
 }
 
 void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)

@@ -51,6 +51,11 @@ void eng::RenderStage_Opaque::Initialise(ecs::EntityWorld& entityWorld)
 	glGenBuffers(1, &m_ColourBuffer);
 	glGenBuffers(1, &m_ModelBuffer);
 	glGenBuffers(1, &m_TexParamBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.RequestAsset<eng::ShaderAsset>(strDebugDepthShader);
+	assetManager.RequestAsset<eng::ShaderAsset>(strPhongShader);
+	assetManager.RequestAsset<eng::ShaderAsset>(strUnlitShader);
 }
 
 void eng::RenderStage_Opaque::Shutdown(ecs::EntityWorld& entityWorld)
@@ -58,6 +63,11 @@ void eng::RenderStage_Opaque::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_ColourBuffer);
 	glDeleteBuffers(1, &m_ModelBuffer);
 	glDeleteBuffers(1, &m_TexParamBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strDebugDepthShader);
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strPhongShader);
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strUnlitShader);
 }
 
 void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
