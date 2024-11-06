@@ -3,7 +3,6 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "Engine/AssetLoadSystem.h"
 #include "Engine/CameraBound2DSystem.h"
 #include "Engine/CameraMove2DSystem.h"
 #include "Engine/CameraMove3DSystem.h"
@@ -21,20 +20,21 @@
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SoundRandomSystem.h"
 #include "Engine/SoundSequenceSystem.h"
+#include "Engine/SpriteSystem.h"
+#include "Engine/StaticMeshSystem.h"
 #include "Engine/VersionSystem.h"
 #include "Engine/VoxelLoadingSystem.h"
 #include "Engine/VoxelMeshingSystem.h"
 
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.RegisterSystem<eng::AssetLoadSystem>();
 	entityWorld.RegisterSystem<eng::camera::Bound2DSystem>();
 	entityWorld.RegisterSystem<eng::camera::Move2DSystem>();
 	entityWorld.RegisterSystem<eng::camera::Move3DSystem>();
 	entityWorld.RegisterSystem<eng::camera::PanningSystem>();
 	entityWorld.RegisterSystem<eng::camera::Zoom2DSystem>();
-	entityWorld.RegisterSystem<eng::InputSystem>();
 	entityWorld.RegisterSystem<eng::FlipbookSystem>();
+	entityWorld.RegisterSystem<eng::InputSystem>();
 	entityWorld.RegisterSystem<eng::MusicSystem>();
 	entityWorld.RegisterSystem<eng::network::NetworkSystem>();
 	entityWorld.RegisterSystem<eng::RenderSystem>(entityWorld);
@@ -43,6 +43,8 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::sound::PlaySystem>();
 	entityWorld.RegisterSystem<eng::sound::RandomSystem>();
 	entityWorld.RegisterSystem<eng::sound::SequenceSystem>();
+	entityWorld.RegisterSystem<eng::SpriteSystem>();
+	entityWorld.RegisterSystem<eng::StaticMeshSystem>();
 	entityWorld.RegisterSystem<eng::VersionSystem>();
 	entityWorld.RegisterSystem<voxel::LoadingSystem>();
 	entityWorld.RegisterSystem<voxel::MeshingSystem>();

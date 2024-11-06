@@ -35,31 +35,19 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 			::Exclude<const dbg::hidden::ObjectComponent>;
 		for (const ecs::Entity& entity : world.Query<AddQuery>())
 		{
-			const auto& parentLevel = world.ReadComponent<eng::level::EntityComponent>(entity);
-
 			auto& parentDebug = world.AddComponent<dbg::hidden::ObjectComponent>(entity);
 			parentDebug.m_Child = world.CreateEntity();
 
-			world.AddComponent<eng::level::EntityComponent>(parentDebug.m_Child, parentLevel.m_Name);
-			world.AddComponent<eng::SpriteComponent>(parentDebug.m_Child);
-			world.AddComponent<eng::TransformComponent>(parentDebug.m_Child);
-		}
+			auto& childLevel = world.AddComponent<eng::level::EntityComponent>(parentDebug.m_Child);
+			childLevel = world.ReadComponent<eng::level::EntityComponent>(entity);
 
-		using UpdateQuery = ecs::query
-			::Include<
-			const ::hidden::ObjectComponent,
-			const dbg::hidden::ObjectComponent,
-			const eng::SpriteComponent,
-			const eng::TransformComponent>;
-		for (const ecs::Entity& entity : world.Query<UpdateQuery>())
-		{
-			const auto& parentDebug = world.ReadComponent<dbg::hidden::ObjectComponent>(entity);
+			auto& childSprite = world.AddComponent<eng::SpriteComponent>(parentDebug.m_Child);
+			childSprite = world.ReadComponent<eng::SpriteComponent>(entity);
+
+			auto& childTransform = world.AddComponent<eng::TransformComponent>(parentDebug.m_Child);
+			childTransform = world.ReadComponent<eng::TransformComponent>(entity);
+
 			const auto& parentObject = world.ReadComponent<::hidden::ObjectComponent>(entity);
-			const auto& parentSprite = world.ReadComponent<eng::SpriteComponent>(entity);
-			const auto& parentTransform = world.ReadComponent<eng::TransformComponent>(entity);
-
-			auto& childSprite = world.WriteComponent<eng::SpriteComponent>(parentDebug.m_Child);
-			childSprite = parentSprite;
 			for (const ::hidden::Effect& effect : parentObject.m_Effects)
 			{
 				core::VariantMatch(effect,
@@ -72,6 +60,41 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 						childSprite.m_Sprite = data.m_Sprite;
 					});
 			}
+		}
+
+		using SpriteQuery = ecs::query
+			::Include<const ::hidden::ObjectComponent, const dbg::hidden::ObjectComponent>
+			::Updated<const eng::SpriteComponent>;
+		for (const ecs::Entity& entity : world.Query<SpriteQuery>())
+		{
+			const auto& parentDebug = world.ReadComponent<dbg::hidden::ObjectComponent>(entity);
+			const auto& parentObject = world.ReadComponent<::hidden::ObjectComponent>(entity);
+			const auto& parentSprite = world.ReadComponent<eng::SpriteComponent>(entity);
+
+			auto& request = world.AddEventComponent<eng::SpriteRequestComponent>();
+			request.m_Entity = parentDebug.m_Child;
+
+			for (const ::hidden::Effect& effect : parentObject.m_Effects)
+			{
+				core::VariantMatch(effect,
+					[&](const ::hidden::SetColour& data)
+					{
+						request.m_Colour = data.m_Colour;
+					},
+					[&](const ::hidden::SetSprite& data)
+					{
+						request.m_Sprite = data.m_Sprite;
+					});
+			}
+		}
+
+		using TransformQuery = ecs::query
+			::Include<const dbg::hidden::ObjectComponent>
+			::Updated<eng::TransformComponent>;
+		for (const ecs::Entity& entity : world.Query<TransformQuery>())
+		{
+			const auto& parentDebug = world.ReadComponent<dbg::hidden::ObjectComponent>(entity);
+			const auto& parentTransform = world.ReadComponent<eng::TransformComponent>(entity);
 
 			auto& childTransform = world.WriteComponent<eng::TransformComponent>(parentDebug.m_Child);
 			childTransform.m_Translate = parentTransform.m_Translate - Vector3f(0.f, 0.f, 1.f);

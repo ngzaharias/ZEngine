@@ -9,6 +9,8 @@
 #include "Engine/AssetManager.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/FlipbookAsset.h"
+#include "Engine/ShaderAsset.h"
+#include "Engine/Texture2DAsset.h"
 
 namespace
 {
@@ -19,12 +21,24 @@ void eng::FlipbookSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::FlipbookComponent>>())
 	{
-		auto& flipbookComponent = world.WriteComponent<eng::FlipbookComponent>(entity);
-		flipbookComponent.m_TimeStart = gameTime.m_TotalTime;
+		auto& component = world.WriteComponent<eng::FlipbookComponent>(entity);
+		component.m_TimeStart = gameTime.m_TotalTime;
+
+		if (component.m_Flipbook.IsValid())
+		{
+			assetManager.RequestAsset<eng::FlipbookAsset>(component.m_Flipbook);
+			if (const auto* flipbook = assetManager.FetchAsset<eng::FlipbookAsset>(component.m_Flipbook))
+			{
+				if (flipbook->m_Shader.IsValid())
+					assetManager.RequestAsset<eng::ShaderAsset>(flipbook->m_Shader);
+				if (flipbook->m_Texture2D.IsValid())
+					assetManager.RequestAsset<eng::Texture2DAsset>(flipbook->m_Texture2D);
+			}
+		}
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::FlipbookComponent>>())
@@ -52,5 +66,21 @@ void eng::FlipbookSystem::Update(World& world, const GameTime& gameTime)
 			if (flipbookComponent.m_IsLooping)
 				flipbookComponent.m_Index %= indexCount;
 		}
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const eng::FlipbookComponent>>())
+	{
+		const auto& component = world.ReadComponent<eng::FlipbookComponent>(entity, false);
+		if (!component.m_Flipbook.IsValid())
+			continue;
+
+		if (const auto* flipbook = assetManager.FetchAsset<eng::FlipbookAsset>(component.m_Flipbook))
+		{
+			if (flipbook->m_Shader.IsValid())
+				assetManager.ReleaseAsset<eng::ShaderAsset>(flipbook->m_Shader);
+			if (flipbook->m_Texture2D.IsValid())
+				assetManager.ReleaseAsset<eng::Texture2DAsset>(flipbook->m_Texture2D);
+		}
+		assetManager.ReleaseAsset<eng::FlipbookAsset>(component.m_Flipbook);
 	}
 }
