@@ -71,19 +71,17 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 			const auto& parentObject = world.ReadComponent<::hidden::ObjectComponent>(entity);
 			const auto& parentSprite = world.ReadComponent<eng::SpriteComponent>(entity);
 
-			auto& request = world.AddEventComponent<eng::SpriteRequestComponent>();
-			request.m_Entity = parentDebug.m_Child;
-
+			auto& childSprite = world.WriteComponent<eng::SpriteComponent>(parentDebug.m_Child);
 			for (const ::hidden::Effect& effect : parentObject.m_Effects)
 			{
 				core::VariantMatch(effect,
 					[&](const ::hidden::SetColour& data)
 					{
-						request.m_Colour = data.m_Colour;
+						childSprite.m_Colour = data.m_Colour;
 					},
 					[&](const ::hidden::SetSprite& data)
 					{
-						request.m_Sprite = data.m_Sprite;
+						childSprite.m_Sprite = data.m_Sprite;
 					});
 			}
 		}

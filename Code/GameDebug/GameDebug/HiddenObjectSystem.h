@@ -11,7 +11,6 @@ namespace eng
 {
 	struct LinesComponent;
 	struct SpriteComponent;
-	struct SpriteRequestComponent;
 	struct TransformComponent;
 }
 
@@ -40,7 +39,6 @@ namespace dbg::hidden
 			eng::LinesComponent,
 			eng::level::EntityComponent,
 			eng::SpriteComponent,
-			eng::SpriteRequestComponent,
 			eng::TransformComponent,
 			const eng::settings::DebugComponent,
 			const ::hidden::ObjectComponent>;

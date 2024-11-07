@@ -6,7 +6,7 @@ namespace eng
 {
 	class AssetManager;
 	struct SpriteComponent;
-	struct SpriteRequestComponent;
+	struct SpriteAssetComponent;
 }
 
 namespace eng
@@ -17,7 +17,7 @@ namespace eng
 		using World = ecs::WorldView<
 			eng::AssetManager,
 			eng::SpriteComponent,
-			const eng::SpriteRequestComponent>;
+			const eng::SpriteAssetComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

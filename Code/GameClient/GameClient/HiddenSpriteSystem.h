@@ -5,7 +5,7 @@
 
 namespace eng
 {
-	struct SpriteRequestComponent;
+	struct SpriteComponent;
 }
 
 namespace hidden
@@ -20,7 +20,7 @@ namespace hidden
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::SpriteRequestComponent,
+			eng::SpriteComponent,
 			const hidden::ObjectComponent,
 			const hidden::RevealComponent>;
 

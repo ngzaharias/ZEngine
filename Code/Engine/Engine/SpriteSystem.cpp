@@ -12,34 +12,35 @@
 
 namespace
 {
-	void LoadAsset(eng::AssetManager& assetManager, const str::Guid& guid)
+	void LoadAsset(eng::AssetManager& assetManager, eng::SpriteAssetComponent& component, const str::Guid& guid)
 	{
 		if (!guid.IsValid())
 			return;
 
 		assetManager.RequestAsset<eng::SpriteAsset>(guid);
-		if (const auto* sprite = assetManager.FetchAsset<eng::SpriteAsset>(guid))
+		if (const auto* asset = assetManager.FetchAsset<eng::SpriteAsset>(guid))
 		{
-			if (sprite->m_Shader.IsValid())
-				assetManager.RequestAsset<eng::ShaderAsset>(sprite->m_Shader);
-			if (sprite->m_Texture2D.IsValid())
-				assetManager.RequestAsset<eng::Texture2DAsset>(sprite->m_Texture2D);
+			if (asset->m_Shader.IsValid())
+				assetManager.RequestAsset<eng::ShaderAsset>(asset->m_Shader);
+			if (asset->m_Texture2D.IsValid())
+				assetManager.RequestAsset<eng::Texture2DAsset>(asset->m_Texture2D);
+
+			component.m_Asset = asset;
 		}
 	}
 
-	void UnloadAsset(eng::AssetManager& assetManager, const str::Guid& guid)
+	void UnloadAsset(eng::AssetManager& assetManager, eng::SpriteAssetComponent& component)
 	{
-		if (!guid.IsValid())
-			return;
-
-		if (const auto* sprite = assetManager.FetchAsset<eng::SpriteAsset>(guid))
+		if (const eng::SpriteAsset* asset = component.m_Asset)
 		{
-			if (sprite->m_Shader.IsValid())
-				assetManager.ReleaseAsset<eng::ShaderAsset>(sprite->m_Shader);
-			if (sprite->m_Texture2D.IsValid())
-				assetManager.ReleaseAsset<eng::Texture2DAsset>(sprite->m_Texture2D);
+			if (asset->m_Shader.IsValid())
+				assetManager.ReleaseAsset<eng::ShaderAsset>(asset->m_Shader);
+			if (asset->m_Texture2D.IsValid())
+				assetManager.ReleaseAsset<eng::Texture2DAsset>(asset->m_Texture2D);
+			assetManager.ReleaseAsset<eng::SpriteAsset>(asset->m_Guid);
+
+			component.m_Asset = nullptr;
 		}
-		assetManager.ReleaseAsset<eng::SpriteAsset>(guid);
 	}
 }
 
@@ -49,38 +50,39 @@ void eng::SpriteSystem::Update(World& world, const GameTime& gameTime)
 
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::SpriteComponent>>())
+	using AddedQuery = ecs::query
+		::Added<eng::SpriteComponent>
+		::Exclude<eng::SpriteAssetComponent>;
+	for (const ecs::Entity& entity : world.Query<AddedQuery>())
 	{
-		const auto& component = world.ReadComponent<eng::SpriteComponent>(entity);
-		LoadAsset(assetManager, component.m_Sprite);
+		const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(entity);
+		auto& assetComponent = world.AddComponent<eng::SpriteAssetComponent>(entity);
+		LoadAsset(assetManager, assetComponent, spriteComponent.m_Sprite);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::SpriteRequestComponent>>())
+	using UpdatedQuery = ecs::query
+		::Updated<eng::SpriteComponent>
+		::Include<eng::SpriteAssetComponent>;
+	for (const ecs::Entity& entity : world.Query<UpdatedQuery>())
 	{
-		const auto& request = world.ReadComponent<eng::SpriteRequestComponent>(entity);
-		if (!world.IsAlive(request.m_Entity))
-			continue;
-		if (!world.HasComponent<eng::SpriteComponent>(request.m_Entity))
-			continue;
+		const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(entity);
+		auto& assetComponent = world.WriteComponent<eng::SpriteAssetComponent>(entity);
 
-		auto& component = world.WriteComponent<eng::SpriteComponent>(request.m_Entity);
-		if (request.m_Sprite)
+		const str::Guid source = assetComponent.m_Asset ? assetComponent.m_Asset->m_Guid : str::Guid::Unassigned;
+		const str::Guid target = spriteComponent.m_Sprite;
+		if (source != target)
 		{
-			UnloadAsset(assetManager, component.m_Sprite);
-			component.m_Sprite = *request.m_Sprite;
-			LoadAsset(assetManager, component.m_Sprite);
+			UnloadAsset(assetManager, assetComponent);
+			LoadAsset(assetManager, assetComponent, spriteComponent.m_Sprite);
 		}
-
-		if (request.m_Colour)
-			component.m_Colour = *request.m_Colour;
-
-		if (request.m_Size)
-			component.m_Size = *request.m_Size;
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const eng::SpriteComponent>>())
+	using RemovedQuery = ecs::query
+		::Removed<eng::SpriteComponent>
+		::Include<eng::SpriteAssetComponent>;
+	for (const ecs::Entity& entity : world.Query<RemovedQuery>())
 	{
-		const auto& component = world.ReadComponent<eng::SpriteComponent>(entity, false);
-		UnloadAsset(assetManager, component.m_Sprite);
+		auto& assetComponent = world.WriteComponent<eng::SpriteAssetComponent>(entity);
+		UnloadAsset(assetManager, assetComponent);
 	}
 }
