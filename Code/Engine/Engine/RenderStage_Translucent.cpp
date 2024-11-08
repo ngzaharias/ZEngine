@@ -104,6 +104,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				eng::SpriteAssetComponent,
 				eng::SpriteComponent,
 				eng::TransformComponent>;
+
 			for (const ecs::Entity& renderEntity : world.Query<Query>())
 			{
 				const auto& assetComponent = world.ReadComponent<eng::SpriteAssetComponent>(renderEntity);

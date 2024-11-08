@@ -138,7 +138,7 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::sound::SequenceRequestComponent>();
 	entityWorld.RegisterComponent<eng::sound::SingleRequestComponent>();
 	entityWorld.RegisterComponent<eng::SpriteAssetComponent>();
-	entityWorld.RegisterComponent<eng::StaticMeshComponent>();
+	entityWorld.RegisterComponent<eng::StaticMeshAssetComponent>();
 	entityWorld.RegisterComponent<eng::TextComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkChangedEventComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkComponent>();
@@ -176,6 +176,7 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	entityWorld.RegisterComponent<eng::PhysicsComponent>();
 	entityWorld.RegisterComponent<eng::PrototypeComponent>();
 	entityWorld.RegisterComponent<eng::SpriteComponent>();
+	entityWorld.RegisterComponent<eng::StaticMeshComponent>();
 	entityWorld.RegisterComponent<eng::TransformComponent>();
 	entityWorld.RegisterComponent<net::ReplicationComponent>();
 	entityWorld.RegisterComponent<net::UserComponent>();

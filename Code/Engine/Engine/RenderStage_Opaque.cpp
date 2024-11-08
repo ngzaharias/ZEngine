@@ -76,7 +76,6 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 
 	World world = entityWorld.GetWorldView<World>();
-	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -105,12 +104,19 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 		// static mesh
 		{
-			for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::StaticMeshComponent, const eng::TransformComponent>>())
+			using Query = ecs::query
+				::Include<
+				eng::StaticMeshAssetComponent,
+				eng::StaticMeshComponent,
+				eng::TransformComponent>;
+
+			for (const ecs::Entity& renderEntity : world.Query<Query>())
 			{
+				const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(renderEntity);
 				const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(renderEntity);
 				const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
-				if (!meshComponent.m_StaticMesh.IsValid())
+				if (!assetComponent.m_Asset)
 					continue;
 
 				RenderBatchID& id = batchIDs.Emplace();
@@ -182,9 +188,10 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 				batchData.m_TexParams.RemoveAll();
 			}
 
+			const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(id.m_Entity);
 			const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(id.m_Entity);
 			const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-			const auto* meshAsset = assetManager.FetchAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
+			const auto* meshAsset = assetComponent.m_Asset;
 			if (!meshAsset)
 				continue;
 

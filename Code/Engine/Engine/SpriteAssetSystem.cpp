@@ -64,7 +64,7 @@ void eng::SpriteAssetSystem::Update(World& world, const GameTime& gameTime)
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	using AddedQuery = ecs::query
-		::Added<eng::SpriteComponent>
+		::Include<eng::SpriteComponent>
 		::Exclude<eng::SpriteAssetComponent>;
 	for (const ecs::Entity& entity : world.Query<AddedQuery>())
 	{
@@ -91,11 +91,13 @@ void eng::SpriteAssetSystem::Update(World& world, const GameTime& gameTime)
 	}
 
 	using RemovedQuery = ecs::query
-		::Removed<eng::SpriteComponent>
+		::Exclude<eng::SpriteComponent>
 		::Include<eng::SpriteAssetComponent>;
 	for (const ecs::Entity& entity : world.Query<RemovedQuery>())
 	{
 		auto& assetComponent = world.WriteComponent<eng::SpriteAssetComponent>(entity);
 		UnloadAsset(assetManager, assetComponent);
+
+		world.RemoveComponent<eng::SpriteAssetComponent>(entity);
 	}
 }

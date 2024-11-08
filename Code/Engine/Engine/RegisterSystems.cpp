@@ -22,7 +22,7 @@
 #include "Engine/SoundRandomSystem.h"
 #include "Engine/SoundSequenceSystem.h"
 #include "Engine/SpriteAssetSystem.h"
-#include "Engine/StaticMeshSystem.h"
+#include "Engine/StaticMeshAssetSystem.h"
 #include "Engine/VersionSystem.h"
 #include "Engine/VoxelLoadingSystem.h"
 #include "Engine/VoxelMeshingSystem.h"
@@ -46,7 +46,7 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::sound::RandomSystem>();
 	entityWorld.RegisterSystem<eng::sound::SequenceSystem>();
 	entityWorld.RegisterSystem<eng::SpriteAssetSystem>();
-	entityWorld.RegisterSystem<eng::StaticMeshSystem>();
+	entityWorld.RegisterSystem<eng::StaticMeshAssetSystem>();
 	entityWorld.RegisterSystem<eng::VersionSystem>();
 	entityWorld.RegisterSystem<voxel::LoadingSystem>();
 	entityWorld.RegisterSystem<voxel::MeshingSystem>();

@@ -64,7 +64,7 @@ void eng::FlipbookAssetSystem::Update(World& world, const GameTime& gameTime)
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	using AddedQuery = ecs::query
-		::Added<eng::FlipbookComponent>
+		::Include<eng::FlipbookComponent>
 		::Exclude<eng::FlipbookAssetComponent>;
 	for (const ecs::Entity& entity : world.Query<AddedQuery>())
 	{
@@ -91,11 +91,13 @@ void eng::FlipbookAssetSystem::Update(World& world, const GameTime& gameTime)
 	}
 
 	using RemovedQuery = ecs::query
-		::Removed<eng::FlipbookComponent>
+		::Exclude<eng::FlipbookComponent>
 		::Include<eng::FlipbookAssetComponent>;
 	for (const ecs::Entity& entity : world.Query<RemovedQuery>())
 	{
 		auto& assetComponent = world.WriteComponent<eng::FlipbookAssetComponent>(entity);
 		UnloadAsset(assetManager, assetComponent);
+
+		world.RemoveComponent<eng::FlipbookAssetComponent>(entity);
 	}
 }
