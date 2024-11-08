@@ -11,7 +11,7 @@ call ren .\Steam\Game.exe WithMyLittleEye.exe
 call del .\Steam\asserts.txt
 call del .\Steam\crashes.txt
 call del .\Steam\debug.txt
-call del .\Steam\imgui.txt
+call del .\Steam\imgui.ini
 call del .\Steam\steam_appid.txt
 
 call "C:\Program Files\7-Zip\7z.exe" a -o{..\} -sdel Steam.zip .\Steam\*
