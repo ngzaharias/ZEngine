@@ -66,7 +66,6 @@ namespace eng
 		template<typename TAsset, typename TLoader, typename... TArgs>
 		void RegisterAsset(const str::Name& type, TArgs&&... args);
 
-
 		template<class TAsset>
 		bool SaveAsset(TAsset& asset, const str::Path& filepath);
 		template<class TAsset>
@@ -76,8 +75,6 @@ namespace eng
 
 		template<class TAsset>
 		const TAsset* FetchAsset(const str::Guid& guid) const;
-		template<class TAsset>
-		const TAsset* LoadAsset(const str::Guid& guid);
 		template<class TAsset>
 		void RequestAsset(const str::Guid& guid);
 		template<class TAsset>
@@ -90,6 +87,10 @@ namespace eng
 		const eng::AssetFile* GetAssetFile(const str::Guid& guid) const;
 
 		void ReloadAssets();
+
+	private:
+		template<class TAsset>
+		const TAsset* LoadAsset(const str::Guid& guid);
 
 	public:
 		template<typename TAsset, typename TLoader>
