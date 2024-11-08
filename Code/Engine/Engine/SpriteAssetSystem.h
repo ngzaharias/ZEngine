@@ -11,7 +11,7 @@ namespace eng
 
 namespace eng
 {
-	class SpriteSystem final : public ecs::System
+	class SpriteAssetSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<

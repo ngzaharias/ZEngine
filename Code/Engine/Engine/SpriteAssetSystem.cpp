@@ -1,5 +1,5 @@
 #include "EnginePCH.h"
-#include "Engine/SpriteSystem.h"
+#include "Engine/SpriteAssetSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -57,7 +57,7 @@ namespace
 	}
 }
 
-void eng::SpriteSystem::Update(World& world, const GameTime& gameTime)
+void eng::SpriteAssetSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 

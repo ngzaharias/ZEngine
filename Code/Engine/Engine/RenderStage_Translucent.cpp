@@ -70,7 +70,6 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -102,8 +101,8 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 		{
 			using Query = ecs::query
 				::Include<
-				eng::SpriteComponent,
 				eng::SpriteAssetComponent,
+				eng::SpriteComponent,
 				eng::TransformComponent>;
 			for (const ecs::Entity& renderEntity : world.Query<Query>())
 			{
@@ -128,15 +127,19 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 		// flipbook
 		{
-			for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::FlipbookComponent, const eng::TransformComponent>>())
+			using Query = ecs::query
+				::Include<
+				eng::FlipbookAssetComponent,
+				eng::FlipbookComponent,
+				eng::TransformComponent>;
+
+			for (const ecs::Entity& renderEntity : world.Query<Query>())
 			{
+				const auto& assetComponent = world.ReadComponent<eng::FlipbookAssetComponent>(renderEntity);
 				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(renderEntity);
 				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
-				if (!flipbookComponent.m_Flipbook.IsValid())
-					continue;
-
-				const auto* flipbookAsset = assetManager.FetchAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
+				const auto* flipbookAsset = assetComponent.m_Flipbook;
 				if (!flipbookAsset || flipbookAsset->m_Frames.IsEmpty())
 					continue;
 				if (flipbookComponent.m_Index >= flipbookAsset->m_Frames.GetCount())
@@ -179,15 +182,15 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				batchData.m_TexParams.RemoveAll();
 			}
 
-			if (world.HasComponent<eng::FlipbookComponent>(id.m_Entity))
+			if (world.HasComponent<eng::FlipbookComponent>(id.m_Entity) && world.HasComponent<eng::FlipbookAssetComponent>(id.m_Entity))
 			{
+				const auto& assetComponent = world.ReadComponent<eng::FlipbookAssetComponent>(id.m_Entity);
 				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(id.m_Entity);
 				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-				const auto* flipbookAsset = assetManager.FetchAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
-				if (!flipbookAsset)
-					continue;
-				const auto* texture2DAsset = assetManager.FetchAsset<eng::Texture2DAsset>(flipbookAsset->m_Texture2D);
-				if (!texture2DAsset || texture2DAsset->m_TextureId == 0)
+
+				const auto* flipbookAsset = assetComponent.m_Flipbook;
+				const auto* texture2DAsset = assetComponent.m_Texture2D;
+				if (!flipbookAsset || !texture2DAsset)
 					continue;
 
 				const eng::FlipbookFrame& flipbookFrame = flipbookAsset->m_Frames[flipbookComponent.m_Index];

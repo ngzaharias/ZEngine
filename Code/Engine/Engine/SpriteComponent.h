@@ -20,7 +20,7 @@ namespace eng
 		Vector2u m_Size = Vector2u::Zero;
 	};
 
-	// \brief Attached to the same entity as SpriteComponent and holds a reference to the currently loaded asset.
+	// \brief Attached to the same entity as SpriteComponent and holds a reference to the currently loaded assets.
 	struct SpriteAssetComponent : public ecs::Component<SpriteAssetComponent>
 	{
 		const eng::ShaderAsset* m_Shader = nullptr;
