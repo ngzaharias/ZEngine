@@ -100,16 +100,20 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 		// sprite
 		{
-			for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::SpriteComponent, const eng::TransformComponent>>())
+			using Query = ecs::query
+				::Include<
+				eng::SpriteComponent,
+				eng::SpriteAssetComponent,
+				eng::TransformComponent>;
+			for (const ecs::Entity& renderEntity : world.Query<Query>())
 			{
+				const auto& assetComponent = world.ReadComponent<eng::SpriteAssetComponent>(renderEntity);
 				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(renderEntity);
 				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
-				if (!spriteComponent.m_Sprite.IsValid())
-					continue;
-
-				const eng::SpriteAsset* spriteAsset = assetManager.FetchAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
-				if (!spriteAsset || !spriteAsset->m_Texture2D.IsValid())
+				const eng::SpriteAsset* spriteAsset = assetComponent.m_Sprite;
+				const eng::Texture2DAsset* texture2DAsset = assetComponent.m_Texture2D;
+				if (!spriteAsset)
 					continue;
 
 				RenderBatchID id;
@@ -213,19 +217,15 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					texcoordOffset.x, texcoordOffset.y,
 					texcoordScale.x, texcoordScale.y);
 			}
-			else if (world.HasComponent<eng::SpriteComponent>(id.m_Entity))
+			else if (world.HasComponent<eng::SpriteComponent>(id.m_Entity) && world.HasComponent<eng::SpriteAssetComponent>(id.m_Entity))
 			{
+				const auto& assetComponent = world.ReadComponent<eng::SpriteAssetComponent>(id.m_Entity);
 				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(id.m_Entity);
 				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-				if (!spriteComponent.m_Sprite.IsValid())
-					continue;
 
-				const eng::SpriteAsset* spriteAsset = assetManager.FetchAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
-				if (!spriteAsset || !spriteAsset->m_Texture2D.IsValid())
-					continue;
-
-				const eng::Texture2DAsset* texture2DAsset = assetManager.FetchAsset<eng::Texture2DAsset>(spriteAsset->m_Texture2D);
-				if (!texture2DAsset || texture2DAsset->m_TextureId == 0)
+				const eng::SpriteAsset* spriteAsset = assetComponent.m_Sprite;
+				const eng::Texture2DAsset* texture2DAsset = assetComponent.m_Texture2D;
+				if (!spriteAsset || !texture2DAsset)
 					continue;
 
 				const Vector2f spritePos = Vector2f((float)spriteAsset->m_Position.x, (float)spriteAsset->m_Position.y);
@@ -272,6 +272,8 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(batchID.m_ShaderId);
 	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(batchID.m_TextureId);
 	if (!mesh || !shader || !texture)
+		return;
+	if (texture->m_TextureId == 0)
 		return;
 
 	glUseProgram(shader->m_ProgramId);

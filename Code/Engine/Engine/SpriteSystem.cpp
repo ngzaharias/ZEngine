@@ -18,28 +18,41 @@ namespace
 			return;
 
 		assetManager.RequestAsset<eng::SpriteAsset>(guid);
-		if (const auto* asset = assetManager.FetchAsset<eng::SpriteAsset>(guid))
+		if (const auto* sprite = assetManager.FetchAsset<eng::SpriteAsset>(guid))
 		{
-			if (asset->m_Shader.IsValid())
-				assetManager.RequestAsset<eng::ShaderAsset>(asset->m_Shader);
-			if (asset->m_Texture2D.IsValid())
-				assetManager.RequestAsset<eng::Texture2DAsset>(asset->m_Texture2D);
+			component.m_Sprite = sprite;
+			if (sprite->m_Shader.IsValid())
+			{
+				assetManager.RequestAsset<eng::ShaderAsset>(sprite->m_Shader);
+				component.m_Shader = assetManager.FetchAsset<eng::ShaderAsset>(sprite->m_Shader);
+			}
 
-			component.m_Asset = asset;
+			if (sprite->m_Texture2D.IsValid())
+			{
+				assetManager.RequestAsset<eng::Texture2DAsset>(sprite->m_Texture2D);
+				component.m_Texture2D = assetManager.FetchAsset<eng::Texture2DAsset>(sprite->m_Texture2D);
+			}
 		}
 	}
 
 	void UnloadAsset(eng::AssetManager& assetManager, eng::SpriteAssetComponent& component)
 	{
-		if (const eng::SpriteAsset* asset = component.m_Asset)
+		if (component.m_Shader)
 		{
-			if (asset->m_Shader.IsValid())
-				assetManager.ReleaseAsset<eng::ShaderAsset>(asset->m_Shader);
-			if (asset->m_Texture2D.IsValid())
-				assetManager.ReleaseAsset<eng::Texture2DAsset>(asset->m_Texture2D);
-			assetManager.ReleaseAsset<eng::SpriteAsset>(asset->m_Guid);
+			assetManager.ReleaseAsset<eng::ShaderAsset>(component.m_Shader->m_Guid);
+			component.m_Shader = nullptr;
+		}
 
-			component.m_Asset = nullptr;
+		if (component.m_Sprite)
+		{
+			assetManager.ReleaseAsset<eng::SpriteAsset>(component.m_Sprite->m_Guid);
+			component.m_Sprite = nullptr;
+		}
+
+		if (component.m_Texture2D)
+		{
+			assetManager.ReleaseAsset<eng::Texture2DAsset>(component.m_Texture2D->m_Guid);
+			component.m_Texture2D = nullptr;
 		}
 	}
 }
@@ -68,8 +81,8 @@ void eng::SpriteSystem::Update(World& world, const GameTime& gameTime)
 		const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(entity);
 		auto& assetComponent = world.WriteComponent<eng::SpriteAssetComponent>(entity);
 
-		const str::Guid source = assetComponent.m_Asset ? assetComponent.m_Asset->m_Guid : str::Guid::Unassigned;
-		const str::Guid target = spriteComponent.m_Sprite;
+		const str::Guid& source = assetComponent.m_Sprite ? assetComponent.m_Sprite->m_Guid : str::Guid::Unassigned;
+		const str::Guid& target = spriteComponent.m_Sprite;
 		if (source != target)
 		{
 			UnloadAsset(assetManager, assetComponent);

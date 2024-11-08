@@ -8,7 +8,9 @@
 
 namespace eng
 {
+	struct ShaderAsset;
 	struct SpriteAsset;
+	struct Texture2DAsset;
 
 	// \brief 
 	struct SpriteComponent : public ecs::Component<SpriteComponent>
@@ -21,6 +23,8 @@ namespace eng
 	// \brief Attached to the same entity as SpriteComponent and holds a reference to the currently loaded asset.
 	struct SpriteAssetComponent : public ecs::Component<SpriteAssetComponent>
 	{
-		const eng::SpriteAsset* m_Asset = nullptr;
+		const eng::ShaderAsset* m_Shader = nullptr;
+		const eng::SpriteAsset* m_Sprite = nullptr;
+		const eng::Texture2DAsset* m_Texture2D = nullptr;
 	};
 }

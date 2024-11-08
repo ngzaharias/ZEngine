@@ -13,6 +13,7 @@ namespace eng
 {
 	class AssetManager;
 	struct FlipbookComponent;
+	struct SpriteAssetComponent;
 	struct SpriteComponent;
 	struct TransformComponent;
 
@@ -23,6 +24,7 @@ namespace eng
 			eng::AssetManager,
 			const eng::camera::ProjectionComponent,
 			const eng::FlipbookComponent,
+			const eng::SpriteAssetComponent,
 			const eng::SpriteComponent,
 			const eng::TransformComponent>;
 
