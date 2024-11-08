@@ -12,7 +12,6 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	auto& bufferComponent = world.WriteSingleton<eng::sound::SequenceBufferComponent>();
 	bufferComponent.m_Requests.RemoveAll();
@@ -23,29 +22,32 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 		if (!requestComponent.m_Handle.IsValid())
 			continue;
 
-		const auto* sequenceAsset = assetManager.LoadAsset<eng::sound::SequenceAsset>(requestComponent.m_Handle);
-		if (!sequenceAsset)
-			continue;
-
-		const int32 count = sequenceAsset->m_Handles.GetCount();
-
-		auto& sequenceComponent = world.HasComponent<eng::sound::SequenceComponent>(entity)
-			? world.WriteComponent<eng::sound::SequenceComponent>(entity)
-			: world.AddComponent<eng::sound::SequenceComponent>(entity);
-		if (sequenceComponent.m_Handle != requestComponent.m_Handle)
+		// #temp: request and fetch in the same frame
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
+		assetManager.RequestAsset<eng::sound::RandomAsset>(requestComponent.m_Handle);
+		if (const auto* sequenceAsset = assetManager.FetchAsset<eng::sound::SequenceAsset>(requestComponent.m_Handle))
 		{
-			sequenceComponent.m_Index = 0;
-		}
-		else
-		{
-			sequenceComponent.m_Index = sequenceComponent.m_Index + 1;
-			sequenceComponent.m_Index = sequenceComponent.m_Index % count;
-		}
+			const int32 count = sequenceAsset->m_Handles.GetCount();
 
-		sequenceComponent.m_Handle = requestComponent.m_Handle;
+			auto& sequenceComponent = world.HasComponent<eng::sound::SequenceComponent>(entity)
+				? world.WriteComponent<eng::sound::SequenceComponent>(entity)
+				: world.AddComponent<eng::sound::SequenceComponent>(entity);
+			if (sequenceComponent.m_Handle != requestComponent.m_Handle)
+			{
+				sequenceComponent.m_Index = 0;
+			}
+			else
+			{
+				sequenceComponent.m_Index = sequenceComponent.m_Index + 1;
+				sequenceComponent.m_Index = sequenceComponent.m_Index % count;
+			}
 
-		str::Guid& singleHandle = bufferComponent.m_Requests.Emplace();
-		singleHandle = sequenceAsset->m_Handles[sequenceComponent.m_Index];
+			sequenceComponent.m_Handle = requestComponent.m_Handle;
+
+			str::Guid& singleHandle = bufferComponent.m_Requests.Emplace();
+			singleHandle = sequenceAsset->m_Handles[sequenceComponent.m_Index];
+		}
+		assetManager.ReleaseAsset<eng::sound::SingleAsset>(requestComponent.m_Handle);
 	}
 }
 

@@ -41,26 +41,28 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 		requests.Append(bufferComponent.m_Requests);
 	}
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	for (const str::Guid& request : requests)
 	{
 		if (!request.IsValid())
 			continue;
 
-		const auto* soundAsset = assetManager.LoadAsset<eng::sound::SingleAsset>(request);
-		if (!soundAsset)
-			continue;
+		// #temp: request and fetch in the same frame
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
+		assetManager.RequestAsset<eng::sound::SingleAsset>(request);
+		if (const auto* soundAsset = assetManager.FetchAsset<eng::sound::SingleAsset>(request))
+		{
+			const ecs::Entity entity = world.CreateEntity();
 
-		const ecs::Entity entity = world.CreateEntity();
+			auto& nameComponent = world.AddComponent<ecs::NameComponent>(entity);
+			nameComponent.m_Name = soundAsset->m_Name;
 
-		auto& nameComponent = world.AddComponent<ecs::NameComponent>(entity);
-		nameComponent.m_Name = soundAsset->m_Name;
-
-		auto& soundComponent = world.AddComponent<eng::sound::ObjectComponent>(entity);
-		soundComponent.m_Sound = new sf::Sound();
-		soundComponent.m_Sound->setBuffer(soundAsset->m_SoundBuffer);
-		soundComponent.m_Sound->setVolume(static_cast<float>(audioSettings.m_EffectVolume));
-		soundComponent.m_Sound->play();
+			auto& soundComponent = world.AddComponent<eng::sound::ObjectComponent>(entity);
+			soundComponent.m_Sound = new sf::Sound();
+			soundComponent.m_Sound->setBuffer(soundAsset->m_SoundBuffer);
+			soundComponent.m_Sound->setVolume(static_cast<float>(audioSettings.m_EffectVolume));
+			soundComponent.m_Sound->play();
+		}
+		assetManager.ReleaseAsset<eng::sound::SingleAsset>(request);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::sound::ObjectComponent>>())

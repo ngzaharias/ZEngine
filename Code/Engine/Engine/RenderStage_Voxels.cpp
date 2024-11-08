@@ -20,9 +20,22 @@
 
 namespace
 {
-	const str::Guid strVoxelMesh = GUID("37cb9789ccec4a519297fd6472e53d7a");
 	const str::Guid strVoxelShader = GUID("fffaa79e28e044d9b515daef50fc27d2");
 	const str::Guid strVoxelTexture = GUID("f87d23dd5e7b4d6dbff88b0eb676f80c");
+}
+
+void eng::RenderStage_Voxels::Initialise(ecs::EntityWorld& entityWorld)
+{
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.RequestAsset<eng::ShaderAsset>(strVoxelShader);
+	assetManager.RequestAsset<eng::Texture2DAsset>(strVoxelTexture);
+}
+
+void eng::RenderStage_Voxels::Shutdown(ecs::EntityWorld& entityWorld)
+{
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strVoxelShader);
+	assetManager.ReleaseAsset<eng::Texture2DAsset>(strVoxelTexture);
 }
 
 void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
@@ -30,7 +43,11 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strVoxelShader);
+	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(strVoxelTexture);
+	if (!shader || !texture)
+		return;
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -55,10 +72,7 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
-		const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(strVoxelShader);
-		const auto& texture = *assetManager.LoadAsset<eng::Texture2DAsset>(strVoxelTexture);
-
-		glUseProgram(shader.m_ProgramId);
+		glUseProgram(shader->m_ProgramId);
 
 		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<const eng::DynamicMeshComponent, const eng::TransformComponent>>())
 		{
@@ -73,47 +87,47 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 			glBindVertexArray(binding.m_AttributeObject);
 
 			// vertices
-			if (shader.a_Vertex)
+			if (shader->a_Vertex)
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, binding.m_VertexBuffer);
 
-				const uint32 location = *shader.a_Vertex;
+				const uint32 location = *shader->a_Vertex;
 				glEnableVertexAttribArray(location);
 				glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), 0);
 				glVertexAttribDivisor(location, GL_FALSE);
 			}
 
 			// texcoords
-			if (shader.a_TexCoords)
+			if (shader->a_TexCoords)
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, binding.m_TexCoordBuffer);
 
-				const uint32 location = *shader.a_TexCoords;
+				const uint32 location = *shader->a_TexCoords;
 				glEnableVertexAttribArray(location);
 				glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2f), 0);
 				glVertexAttribDivisor(location, GL_FALSE);
 			}
 
-			if (shader.u_CameraProj)
+			if (shader->u_CameraProj)
 			{
-				const uint32 location = *shader.u_CameraProj;
+				const uint32 location = *shader->u_CameraProj;
 				glUniformMatrix4fv(location, 1, false, &cameraProj.m_Data[0][0]);
 			}
 
-			if (shader.u_CameraView)
+			if (shader->u_CameraView)
 			{
-				const uint32 location = *shader.u_CameraView;
+				const uint32 location = *shader->u_CameraView;
 				glUniformMatrix4fv(location, 1, false, &cameraView.m_Data[0][0]);
 			}
 
-			if (shader.u_Transform)
+			if (shader->u_Transform)
 			{
-				const uint32 location = *shader.u_Transform;
+				const uint32 location = *shader->u_Transform;
 				glUniformMatrix4fv(location, 1, false, &voxelModel.m_Data[0][0]);
 			}
 
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texture.m_TextureId);
+			glBindTexture(GL_TEXTURE_2D, texture->m_TextureId);
 			glDrawArrays(GL_TRIANGLES, 0, voxelDynamicMesh.m_Vertices.GetCount());
 
 #ifdef ASSERT_RENDER

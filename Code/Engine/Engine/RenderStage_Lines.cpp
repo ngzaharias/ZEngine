@@ -27,10 +27,18 @@ void eng::RenderStage_Lines::Initialise(ecs::EntityWorld& entityWorld)
 	glGenVertexArrays(1, &m_AttributeObject);
 	glBindVertexArray(m_AttributeObject);
 	glGenBuffers(1, &m_VertexBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.RequestAsset<eng::ShaderAsset>(strLinesShader);
 }
 
 void eng::RenderStage_Lines::Shutdown(ecs::EntityWorld& entityWorld)
 {
+	glDeleteVertexArrays(1, &m_AttributeObject);
+	glDeleteBuffers(1, &m_VertexBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strLinesShader);
 }
 
 void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
@@ -38,12 +46,12 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
 	if (!debugSettings.m_AreLinesEnabled)
 		return;
 
-	const auto* linesShader = assetManager.LoadAsset<eng::ShaderAsset>(strLinesShader);
+	const auto* linesShader = assetManager.FetchAsset<eng::ShaderAsset>(strLinesShader);
 	if (!linesShader)
 		return;
 

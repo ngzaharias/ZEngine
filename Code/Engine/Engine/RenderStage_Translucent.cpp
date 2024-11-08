@@ -24,6 +24,8 @@
 
 namespace
 {
+	const str::Guid strQuadMesh = str::Guid::Create("e94876a8e4cc4d1684c85859b48a1af6");
+
 	struct Sort
 	{
 		bool operator()(const eng::RenderBatchID& a, const eng::RenderBatchID& b)
@@ -41,8 +43,6 @@ namespace
 			return a.m_StaticMeshId < b.m_StaticMeshId;
 		}
 	};
-
-	const str::Guid strQuadMesh = str::Guid::Create("e94876a8e4cc4d1684c85859b48a1af6");
 }
 
 void eng::RenderStage_Translucent::Initialise(ecs::EntityWorld& entityWorld)
@@ -50,6 +50,9 @@ void eng::RenderStage_Translucent::Initialise(ecs::EntityWorld& entityWorld)
 	glGenBuffers(1, &m_ColourBuffer);
 	glGenBuffers(1, &m_ModelBuffer);
 	glGenBuffers(1, &m_TexParamBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.RequestAsset<eng::StaticMeshAsset>(strQuadMesh);
 }
 
 void eng::RenderStage_Translucent::Shutdown(ecs::EntityWorld& entityWorld)
@@ -57,6 +60,9 @@ void eng::RenderStage_Translucent::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_ColourBuffer);
 	glDeleteBuffers(1, &m_ModelBuffer);
 	glDeleteBuffers(1, &m_TexParamBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.ReleaseAsset<eng::StaticMeshAsset>(strQuadMesh);
 }
 
 void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
@@ -64,7 +70,6 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -94,16 +99,21 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 		// sprite
 		{
-			for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::SpriteComponent, const eng::TransformComponent>>())
+			using Query = ecs::query
+				::Include<
+				eng::SpriteAssetComponent,
+				eng::SpriteComponent,
+				eng::TransformComponent>;
+
+			for (const ecs::Entity& renderEntity : world.Query<Query>())
 			{
+				const auto& assetComponent = world.ReadComponent<eng::SpriteAssetComponent>(renderEntity);
 				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(renderEntity);
 				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
-				if (!spriteComponent.m_Sprite.IsValid())
-					continue;
-
-				const eng::SpriteAsset* spriteAsset = assetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
-				if (!spriteAsset || !spriteAsset->m_Texture2D.IsValid())
+				const eng::SpriteAsset* spriteAsset = assetComponent.m_Sprite;
+				const eng::Texture2DAsset* texture2DAsset = assetComponent.m_Texture2D;
+				if (!spriteAsset)
 					continue;
 
 				RenderBatchID id;
@@ -118,30 +128,34 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 		// flipbook
 		{
-			for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::FlipbookComponent, const eng::TransformComponent>>())
+			using Query = ecs::query
+				::Include<
+				eng::FlipbookAssetComponent,
+				eng::FlipbookComponent,
+				eng::TransformComponent>;
+
+			for (const ecs::Entity& renderEntity : world.Query<Query>())
 			{
+				const auto& assetComponent = world.ReadComponent<eng::FlipbookAssetComponent>(renderEntity);
 				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(renderEntity);
 				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
-				if (!flipbookComponent.m_Flipbook.IsValid())
+				const auto* flipbookAsset = assetComponent.m_Flipbook;
+				if (!flipbookAsset || flipbookAsset->m_Frames.IsEmpty())
+					continue;
+				if (flipbookComponent.m_Index >= flipbookAsset->m_Frames.GetCount())
 					continue;
 
-				const eng::FlipbookAsset& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
-				if (flipbookAsset.m_Frames.IsEmpty())
-					continue;
-				if (flipbookComponent.m_Index >= flipbookAsset.m_Frames.GetCount())
-					continue;
-
-				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[flipbookComponent.m_Index];
-				if (!flipbookAsset.m_Texture2D.IsValid())
+				const eng::FlipbookFrame& flipbookFrame = flipbookAsset->m_Frames[flipbookComponent.m_Index];
+				if (!flipbookAsset->m_Texture2D.IsValid())
 					continue;
 
 				RenderBatchID& id = batchIDs.Emplace();
 				id.m_Entity = renderEntity;
 				id.m_Depth = math::DistanceSqr(flipbookTransform.m_Translate, cameraTransform.m_Translate);
-				id.m_ShaderId = flipbookAsset.m_Shader;
+				id.m_ShaderId = flipbookAsset->m_Shader;
 				id.m_StaticMeshId = strQuadMesh;
-				id.m_TextureId = flipbookAsset.m_Texture2D;
+				id.m_TextureId = flipbookAsset->m_Texture2D;
 			}
 		}
 
@@ -169,17 +183,18 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				batchData.m_TexParams.RemoveAll();
 			}
 
-			if (world.HasComponent<eng::FlipbookComponent>(id.m_Entity))
+			if (world.HasComponent<eng::FlipbookComponent>(id.m_Entity) && world.HasComponent<eng::FlipbookAssetComponent>(id.m_Entity))
 			{
+				const auto& assetComponent = world.ReadComponent<eng::FlipbookAssetComponent>(id.m_Entity);
 				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(id.m_Entity);
 				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-				const auto& flipbookAsset = *assetManager.LoadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 
-				const eng::FlipbookFrame& flipbookFrame = flipbookAsset.m_Frames[flipbookComponent.m_Index];
-				const eng::Texture2DAsset* texture2DAsset = assetManager.LoadAsset<eng::Texture2DAsset>(flipbookAsset.m_Texture2D);
-				if (!texture2DAsset || texture2DAsset->m_TextureId == 0)
+				const auto* flipbookAsset = assetComponent.m_Flipbook;
+				const auto* texture2DAsset = assetComponent.m_Texture2D;
+				if (!flipbookAsset || !texture2DAsset)
 					continue;
 
+				const eng::FlipbookFrame& flipbookFrame = flipbookAsset->m_Frames[flipbookComponent.m_Index];
 				const Vector2f& spritePos = flipbookFrame.m_Position;
 				const Vector2f& spriteSize = flipbookFrame.m_Size;
 				const Vector2f textureSize = Vector2f((float)texture2DAsset->m_Width, (float)texture2DAsset->m_Height);
@@ -206,19 +221,15 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					texcoordOffset.x, texcoordOffset.y,
 					texcoordScale.x, texcoordScale.y);
 			}
-			else if (world.HasComponent<eng::SpriteComponent>(id.m_Entity))
+			else if (world.HasComponent<eng::SpriteComponent>(id.m_Entity) && world.HasComponent<eng::SpriteAssetComponent>(id.m_Entity))
 			{
+				const auto& assetComponent = world.ReadComponent<eng::SpriteAssetComponent>(id.m_Entity);
 				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(id.m_Entity);
 				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-				if (!spriteComponent.m_Sprite.IsValid())
-					continue;
 
-				const eng::SpriteAsset* spriteAsset = assetManager.LoadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
-				if (!spriteAsset || !spriteAsset->m_Texture2D.IsValid())
-					continue;
-
-				const eng::Texture2DAsset* texture2DAsset = assetManager.LoadAsset<eng::Texture2DAsset>(spriteAsset->m_Texture2D);
-				if (!texture2DAsset || texture2DAsset->m_TextureId == 0)
+				const eng::SpriteAsset* spriteAsset = assetComponent.m_Sprite;
+				const eng::Texture2DAsset* texture2DAsset = assetComponent.m_Texture2D;
+				if (!spriteAsset || !texture2DAsset)
 					continue;
 
 				const Vector2f spritePos = Vector2f((float)spriteAsset->m_Position.x, (float)spriteAsset->m_Position.y);
@@ -260,85 +271,89 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
-	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
-	const auto& texture = *assetManager.LoadAsset<eng::Texture2DAsset>(batchID.m_TextureId);
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(batchID.m_TextureId);
+	if (!mesh || !shader || !texture)
+		return;
+	if (texture->m_TextureId == 0)
+		return;
 
-	glUseProgram(shader.m_ProgramId);
+	glUseProgram(shader->m_ProgramId);
 
 	{
 		const int32 i = 0;
 		const int32 instanceCount = batchData.m_Models.GetCount();
-		const auto& binding = mesh.m_Binding;
+		const auto& binding = mesh->m_Binding;
 
 		glBindVertexArray(binding.m_AttributeObject);
 
 		// vertices
 		// indices
-		if (shader.a_Vertex)
+		if (shader->a_Vertex)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, binding.m_VertexBuffer);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, binding.m_IndexBuffer);
 
-			const uint32 location = *shader.a_Vertex;
+			const uint32 location = *shader->a_Vertex;
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), 0);
 			glVertexAttribDivisor(location, GL_FALSE);
 		}
 
 		// normals
-		if (shader.a_Normal)
+		if (shader->a_Normal)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, binding.m_NormalBuffer);
 
-			const uint32 location = *shader.a_Normal;
+			const uint32 location = *shader->a_Normal;
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), 0);
 			glVertexAttribDivisor(location, GL_FALSE);
 		}
 
 		// texcoords
-		if (shader.a_TexCoords)
+		if (shader->a_TexCoords)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, binding.m_TexCoordBuffer);
 
-			const uint32 location = *shader.a_TexCoords;
+			const uint32 location = *shader->a_TexCoords;
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2f), 0);
 			glVertexAttribDivisor(location, GL_FALSE);
 		}
 
 		// texparams
-		if (shader.i_TexParams)
+		if (shader->i_TexParams)
 		{
 			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_TexParamBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(Vector4f) * instanceCount, &batchData.m_TexParams[i], GL_DYNAMIC_DRAW);
 
-			const uint32 location = *shader.i_TexParams;
+			const uint32 location = *shader->i_TexParams;
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, sizeof(Vector4f), (void*)(0));
 			glVertexAttribDivisor(location, GL_TRUE);
 		}
 
 		// colours
-		if (shader.i_Colour)
+		if (shader->i_Colour)
 		{
 			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_ColourBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * instanceCount, &batchData.m_Colours[i], GL_DYNAMIC_DRAW);
 
-			const uint32 location = *shader.i_Colour;
+			const uint32 location = *shader->i_Colour;
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), (void*)(0));
 			glVertexAttribDivisor(location, GL_TRUE);
 		}
 
 		// models
-		if (shader.i_Model)
+		if (shader->i_Model)
 		{
 			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
 			// #todo: glMapBuffer ?
@@ -346,7 +361,7 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 			glBindBuffer(GL_ARRAY_BUFFER, m_ModelBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(Matrix4x4) * instanceCount, &batchData.m_Models[i], GL_DYNAMIC_DRAW);
 
-			const uint32 location = *shader.i_Model;
+			const uint32 location = *shader->i_Model;
 			glEnableVertexAttribArray(location + 0);
 			glEnableVertexAttribArray(location + 1);
 			glEnableVertexAttribArray(location + 2);
@@ -361,20 +376,20 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 			glVertexAttribDivisor(location + 3, GL_TRUE);
 		}
 
-		if (shader.u_CameraProj)
+		if (shader->u_CameraProj)
 		{
-			const uint32 location = *shader.u_CameraProj;
+			const uint32 location = *shader->u_CameraProj;
 			glUniformMatrix4fv(location, 1, false, &stageData.m_CameraProj.m_Data[0][0]);
 		}
 
-		if (shader.u_CameraView)
+		if (shader->u_CameraView)
 		{
-			const uint32 location = *shader.u_CameraView;
+			const uint32 location = *shader->u_CameraView;
 			glUniformMatrix4fv(location, 1, false, &stageData.m_CameraView.m_Data[0][0]);
 		}
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture.m_TextureId);
-		glDrawElementsInstanced(GL_TRIANGLES, mesh.m_Indices.GetCount(), GL_UNSIGNED_INT, 0, instanceCount);
+		glBindTexture(GL_TEXTURE_2D, texture->m_TextureId);
+		glDrawElementsInstanced(GL_TRIANGLES, mesh->m_Indices.GetCount(), GL_UNSIGNED_INT, 0, instanceCount);
 	}
 }

@@ -30,6 +30,9 @@ namespace eng
 			const eng::DynamicMeshComponent,
 			const voxel::ChunkComponent>;
 
+		void Initialise(ecs::EntityWorld& world) override;
+		void Shutdown(ecs::EntityWorld& world) override;
+
 		void Render(ecs::EntityWorld& entityWorld) override;
 	};
 }

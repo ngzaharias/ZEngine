@@ -80,9 +80,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
-
-	const auto& bufferComponent = entityWorld.ReadSingleton<eng::FrameBufferComponent>();
+	const auto& bufferComponent = world.ReadSingleton<eng::FrameBufferComponent>();
 
 	{
 		glViewport(0, 0, bufferComponent.m_ShadowSize.x, bufferComponent.m_ShadowSize.y);
@@ -131,16 +129,22 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 
 			// static mesh
 			{
-				for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::StaticMeshComponent, const eng::TransformComponent>>())
+				using Query = ecs::query
+					::Include<
+					eng::StaticMeshAssetComponent,
+					eng::StaticMeshComponent,
+					eng::TransformComponent>;
+
+				for (const ecs::Entity& renderEntity : world.Query<Query>())
 				{
-					const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(renderEntity);
-					if (!meshComponent.m_StaticMesh.IsValid())
+					const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(renderEntity);
+					if (!assetComponent.m_Asset)
 						continue;
 
 					RenderBatchID& id = batchIDs.Emplace();
 					id.m_Entity = renderEntity;
 					id.m_ShaderId = strDepthShader;
-					id.m_StaticMeshId = meshComponent.m_StaticMesh;
+					id.m_StaticMeshId = assetComponent.m_Asset->m_Guid;
 				}
 			}
 
@@ -165,9 +169,13 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 					batchData.m_Models.RemoveAll();
 				}
 
+				const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(id.m_Entity);
 				const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(id.m_Entity);
 				const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-				const auto& meshAsset = *assetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
+
+				const eng::StaticMeshAsset* meshAsset = assetComponent.m_Asset;
+				if (!meshAsset)
+					continue;
 
 				const Matrix4x4 model = meshTransform.ToTransform();
 				batchData.m_Models.Append(model);
@@ -187,39 +195,41 @@ void eng::RenderStage_Shadow::RenderBatch(World& world, const RenderBatchID& bat
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
-	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	if (!mesh || !shader)
+		return;
 
-	glUseProgram(shader.m_ProgramId);
+	glUseProgram(shader->m_ProgramId);
 
 	{
 		const int32 i = 0;
 		const int32 instanceCount = batchData.m_Models.GetCount();
-		const auto& binding = mesh.m_Binding;
+		const auto& binding = mesh->m_Binding;
 
 		glBindVertexArray(binding.m_AttributeObject);
 
 		// vertices
 		// indices
-		if (shader.a_Vertex)
+		if (shader->a_Vertex)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, binding.m_VertexBuffer);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, binding.m_IndexBuffer);
 
-			const uint32 location = *shader.a_Vertex;
+			const uint32 location = *shader->a_Vertex;
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), 0);
 			glVertexAttribDivisor(location, GL_FALSE);
 		}
 
 		// models
-		if (shader.i_Model)
+		if (shader->i_Model)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_ModelBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(Matrix4x4) * instanceCount, &batchData.m_Models[i], GL_DYNAMIC_DRAW);
 
-			const uint32 location = *shader.i_Model;
+			const uint32 location = *shader->i_Model;
 			glEnableVertexAttribArray(location + 0);
 			glEnableVertexAttribArray(location + 1);
 			glEnableVertexAttribArray(location + 2);
@@ -234,18 +244,18 @@ void eng::RenderStage_Shadow::RenderBatch(World& world, const RenderBatchID& bat
 			glVertexAttribDivisor(location + 3, GL_TRUE);
 		}
 
-		if (shader.u_CameraProj)
+		if (shader->u_CameraProj)
 		{
-			const uint32 location = *shader.u_CameraProj;
+			const uint32 location = *shader->u_CameraProj;
 			glUniformMatrix4fv(location, 1, false, &stageData.m_CameraProj.m_Data[0][0]);
 		}
 
-		if (shader.u_CameraView)
+		if (shader->u_CameraView)
 		{
-			const uint32 location = *shader.u_CameraView;
+			const uint32 location = *shader->u_CameraView;
 			glUniformMatrix4fv(location, 1, false, &stageData.m_CameraView.m_Data[0][0]);
 		}
 
-		glDrawElementsInstanced(GL_TRIANGLES, mesh.m_Indices.GetCount(), GL_UNSIGNED_INT, 0, instanceCount);
+		glDrawElementsInstanced(GL_TRIANGLES, mesh->m_Indices.GetCount(), GL_UNSIGNED_INT, 0, instanceCount);
 	}
 }

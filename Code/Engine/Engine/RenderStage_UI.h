@@ -17,6 +17,7 @@ namespace eng::camera
 namespace eng
 {
 	class AssetManager;
+	struct TextAssetComponent;
 	struct TextComponent;
 	struct TransformComponent;
 
@@ -26,6 +27,7 @@ namespace eng
 		using World = ecs::WorldView<
 			eng::AssetManager,
 			const eng::camera::ProjectionComponent,
+			const eng::TextAssetComponent,
 			const eng::TextComponent,
 			const eng::TransformComponent>;
 

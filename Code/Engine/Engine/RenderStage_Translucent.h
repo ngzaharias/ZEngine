@@ -12,7 +12,9 @@ namespace eng::camera
 namespace eng
 {
 	class AssetManager;
+	struct FlipbookAssetComponent;
 	struct FlipbookComponent;
+	struct SpriteAssetComponent;
 	struct SpriteComponent;
 	struct TransformComponent;
 
@@ -22,7 +24,9 @@ namespace eng
 		using World = ecs::WorldView<
 			eng::AssetManager,
 			const eng::camera::ProjectionComponent,
+			const eng::FlipbookAssetComponent,
 			const eng::FlipbookComponent,
+			const eng::SpriteAssetComponent,
 			const eng::SpriteComponent,
 			const eng::TransformComponent>;
 

@@ -63,8 +63,8 @@ const eng::AssetFile* eng::AssetManager::GetAssetFile(const str::Guid& guid) con
 void eng::AssetManager::ReloadAssets()
 {
 	// #temp: easy way of reloading assets is to just clear the cache
-	for (auto&& [typeId, entry] : m_Registry)
-	{
-		entry.m_Loader->ClearCache();
-	}
+	//for (auto&& [typeId, entry] : m_Registry)
+	//{
+	//	entry.m_Loader->ClearCache();
+	//}
 }
