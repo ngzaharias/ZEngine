@@ -13,8 +13,6 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
-
 	auto& bufferComponent = world.WriteSingleton<eng::sound::RandomBufferComponent>();
 	bufferComponent.m_Requests.RemoveAll();
 
@@ -24,20 +22,23 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 		if (!requestComponent.m_Handle.IsValid())
 			continue;
 
-		const auto* randomAsset = assetManager.LoadAsset<eng::sound::RandomAsset>(requestComponent.m_Handle);
-		if (!randomAsset)
-			continue;
+		// #temp: request and fetch in the same frame
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
+		assetManager.RequestAsset<eng::sound::RandomAsset>(requestComponent.m_Handle);
+		if (const auto* randomAsset = assetManager.FetchAsset<eng::sound::RandomAsset>(requestComponent.m_Handle))
+		{
+			const int32 count = randomAsset->m_Handles.GetCount();
 
-		const int32 count = randomAsset->m_Handles.GetCount();
+			auto& sequenceComponent = world.HasComponent<eng::sound::RandomComponent>(entity)
+				? world.WriteComponent<eng::sound::RandomComponent>(entity)
+				: world.AddComponent<eng::sound::RandomComponent>(entity);
+			sequenceComponent.m_Index = random::Range(0, count - 1);
+			sequenceComponent.m_Handle = requestComponent.m_Handle;
 
-		auto& sequenceComponent = world.HasComponent<eng::sound::RandomComponent>(entity)
-			? world.WriteComponent<eng::sound::RandomComponent>(entity)
-			: world.AddComponent<eng::sound::RandomComponent>(entity);
-		sequenceComponent.m_Index = random::Range(0, count - 1);
-		sequenceComponent.m_Handle = requestComponent.m_Handle;
-
-		str::Guid& singleHandle = bufferComponent.m_Requests.Emplace();
-		singleHandle = randomAsset->m_Handles[sequenceComponent.m_Index];
+			str::Guid& singleHandle = bufferComponent.m_Requests.Emplace();
+			singleHandle = randomAsset->m_Handles[sequenceComponent.m_Index];
+		}
+		assetManager.ReleaseAsset<eng::sound::SingleAsset>(requestComponent.m_Handle);
 	}
 }
 

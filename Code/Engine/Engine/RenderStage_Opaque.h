@@ -16,6 +16,7 @@ namespace eng
 	struct LightAmbientComponent;
 	struct LightDirectionalComponent;
 	struct LightPointComponent;
+	struct StaticMeshAssetComponent;
 	struct StaticMeshComponent;
 	struct TransformComponent;
 
@@ -29,6 +30,7 @@ namespace eng
 			const eng::LightAmbientComponent,
 			const eng::LightDirectionalComponent,
 			const eng::LightPointComponent,
+			const eng::StaticMeshAssetComponent,
 			const eng::StaticMeshComponent,
 			const eng::TransformComponent>;
 

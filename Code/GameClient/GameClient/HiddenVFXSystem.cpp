@@ -36,5 +36,6 @@ void hidden::VFXSystem::Update(World& world, const GameTime& gameTime)
 		vfxFlipbook.m_Flipbook = strFlipbook;
 		vfxFlipbook.m_Size = Vector2u(32, 32);
 		vfxFlipbook.m_IsLooping = false;
+		vfxFlipbook.m_TimeStart = gameTime.m_TotalTime;
 	}
 }

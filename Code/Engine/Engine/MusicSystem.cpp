@@ -10,13 +10,21 @@
 #include "Engine/MusicComponents.h"
 #include "Engine/SettingsComponents.h"
 
+namespace
+{
+	const str::Guid strAsset = GUID("d193864ee4f444e7b6aabb84b95bcc5b");
+}
+
 void eng::MusicSystem::Initialise(World& world)
 {
 	auto& musicComponent = world.WriteSingleton<eng::MusicComponent>();
 	musicComponent.m_Music = new sf::Music();
 
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
-	if (const auto* musicAsset = assetManager.LoadAsset<eng::MusicAsset>(GUID("d193864ee4f444e7b6aabb84b95bcc5b")))
+
+	// #todo: trigger music from somewhere else
+	assetManager.RequestAsset<eng::MusicAsset>(strAsset);
+	if (const auto* musicAsset = assetManager.FetchAsset<eng::MusicAsset>(strAsset))
 	{
 		const str::Path filepath = str::Path(str::EPath::Assets, musicAsset->m_SourceFile);
 
@@ -31,6 +39,9 @@ void eng::MusicSystem::Shutdown(World& world)
 {
 	auto& component = world.WriteSingleton<eng::MusicComponent>();
 	delete component.m_Music;
+
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
+	assetManager.ReleaseAsset<eng::MusicAsset>(strAsset);
 }
 
 void eng::MusicSystem::Update(World& world, const GameTime& gameTime)

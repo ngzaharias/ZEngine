@@ -19,9 +19,10 @@ void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<Query>())
 	{
 		const auto& object = world.ReadComponent<hidden::ObjectComponent>(entity);
+		auto& sprite = world.WriteComponent<eng::SpriteComponent>(entity);
+
 		for (const hidden::Effect& effect : object.m_Effects)
 		{
-			auto& sprite = world.WriteComponent<eng::SpriteComponent>(entity);
 			core::VariantMatch(effect,
 				[&](const hidden::SetColour& data)
 				{

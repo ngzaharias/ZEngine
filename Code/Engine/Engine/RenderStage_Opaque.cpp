@@ -51,6 +51,11 @@ void eng::RenderStage_Opaque::Initialise(ecs::EntityWorld& entityWorld)
 	glGenBuffers(1, &m_ColourBuffer);
 	glGenBuffers(1, &m_ModelBuffer);
 	glGenBuffers(1, &m_TexParamBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.RequestAsset<eng::ShaderAsset>(strDebugDepthShader);
+	assetManager.RequestAsset<eng::ShaderAsset>(strPhongShader);
+	assetManager.RequestAsset<eng::ShaderAsset>(strUnlitShader);
 }
 
 void eng::RenderStage_Opaque::Shutdown(ecs::EntityWorld& entityWorld)
@@ -58,6 +63,11 @@ void eng::RenderStage_Opaque::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_ColourBuffer);
 	glDeleteBuffers(1, &m_ModelBuffer);
 	glDeleteBuffers(1, &m_TexParamBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strDebugDepthShader);
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strPhongShader);
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strUnlitShader);
 }
 
 void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
@@ -66,7 +76,6 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 
 	World world = entityWorld.GetWorldView<World>();
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -95,12 +104,19 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 		// static mesh
 		{
-			for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::StaticMeshComponent, const eng::TransformComponent>>())
+			using Query = ecs::query
+				::Include<
+				eng::StaticMeshAssetComponent,
+				eng::StaticMeshComponent,
+				eng::TransformComponent>;
+
+			for (const ecs::Entity& renderEntity : world.Query<Query>())
 			{
+				const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(renderEntity);
 				const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(renderEntity);
 				const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
-				if (!meshComponent.m_StaticMesh.IsValid())
+				if (!assetComponent.m_Asset)
 					continue;
 
 				RenderBatchID& id = batchIDs.Emplace();
@@ -172,9 +188,12 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 				batchData.m_TexParams.RemoveAll();
 			}
 
+			const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(id.m_Entity);
 			const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(id.m_Entity);
 			const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-			const auto& meshAsset = *assetManager.LoadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
+			const auto* meshAsset = assetComponent.m_Asset;
+			if (!meshAsset)
+				continue;
 
 			const Matrix4x4 model = meshTransform.ToTransform();
 
@@ -196,84 +215,86 @@ void eng::RenderStage_Opaque::RenderBatch(World& world, const RenderBatchID& bat
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
-	const auto& mesh = *assetManager.LoadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto& shader = *assetManager.LoadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	if (!mesh || !shader)
+		return;
 
-	glUseProgram(shader.m_ProgramId);
+	glUseProgram(shader->m_ProgramId);
 
 	{
 		const int32 i = 0;
 		const int32 instanceCount = batchData.m_Models.GetCount();
-		const auto& binding = mesh.m_Binding;
+		const auto& binding = mesh->m_Binding;
 
 		glBindVertexArray(binding.m_AttributeObject);
 
 		// vertices
 		// indices
-		if (shader.a_Vertex)
+		if (shader->a_Vertex)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, binding.m_VertexBuffer);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, binding.m_IndexBuffer);
 
-			const uint32 location = *shader.a_Vertex;
+			const uint32 location = *shader->a_Vertex;
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), 0);
 			glVertexAttribDivisor(location, GL_FALSE);
 		}
 
 		// normals
-		if (shader.a_Normal)
+		if (shader->a_Normal)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, binding.m_NormalBuffer);
 
-			const uint32 location = *shader.a_Normal;
+			const uint32 location = *shader->a_Normal;
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), 0);
 			glVertexAttribDivisor(location, GL_FALSE);
 		}
 
 		// texcoords
-		if (shader.a_TexCoords)
+		if (shader->a_TexCoords)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, binding.m_TexCoordBuffer);
 
-			const uint32 location = *shader.a_TexCoords;
+			const uint32 location = *shader->a_TexCoords;
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2f), 0);
 			glVertexAttribDivisor(location, GL_FALSE);
 		}
 
 		// texparams
-		if (shader.i_TexParams)
+		if (shader->i_TexParams)
 		{
 			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_TexParamBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(Vector4f) * instanceCount, &batchData.m_TexParams[i], GL_DYNAMIC_DRAW);
 
-			const uint32 location = *shader.i_TexParams;
+			const uint32 location = *shader->i_TexParams;
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, sizeof(Vector4f), (void*)(0));
 			glVertexAttribDivisor(location, GL_TRUE);
 		}
 
 		// colours
-		if (shader.i_Colour)
+		if (shader->i_Colour)
 		{
 			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_ColourBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * instanceCount, &batchData.m_Colours[i], GL_DYNAMIC_DRAW);
 
-			const uint32 location = *shader.i_Colour;
+			const uint32 location = *shader->i_Colour;
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), (void*)(0));
 			glVertexAttribDivisor(location, GL_TRUE);
 		}
 
 		// models
-		if (shader.i_Model)
+		if (shader->i_Model)
 		{
 			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
 			// #todo: glMapBuffer ?
@@ -281,7 +302,7 @@ void eng::RenderStage_Opaque::RenderBatch(World& world, const RenderBatchID& bat
 			glBindBuffer(GL_ARRAY_BUFFER, m_ModelBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(Matrix4x4) * instanceCount, &batchData.m_Models[i], GL_DYNAMIC_DRAW);
 
-			const uint32 location = *shader.i_Model;
+			const uint32 location = *shader->i_Model;
 			glEnableVertexAttribArray(location + 0);
 			glEnableVertexAttribArray(location + 1);
 			glEnableVertexAttribArray(location + 2);
@@ -298,31 +319,31 @@ void eng::RenderStage_Opaque::RenderBatch(World& world, const RenderBatchID& bat
 
 		// Ambient
 		{
-			if (shader.u_LightAmbient_Colour && !stageData.m_LightAmbient_Colour.IsEmpty())
+			if (shader->u_LightAmbient_Colour && !stageData.m_LightAmbient_Colour.IsEmpty())
 			{
 				const int32 size = stageData.m_LightAmbient_Colour.GetCount();
-				const uint32 location = *shader.u_LightAmbient_Colour;
+				const uint32 location = *shader->u_LightAmbient_Colour;
 				glUniform3fv(location, size, &stageData.m_LightAmbient_Colour[0].x);
 			}
 		}
 
 		// Directional
 		{
-			if (shader.u_LightDirectional_Colour && !stageData.m_LightDirectional_Colour.IsEmpty())
+			if (shader->u_LightDirectional_Colour && !stageData.m_LightDirectional_Colour.IsEmpty())
 			{
 				const int32 size = stageData.m_LightDirectional_Colour.GetCount();
-				const uint32 location = *shader.u_LightDirectional_Colour;
+				const uint32 location = *shader->u_LightDirectional_Colour;
 				glUniform3fv(location, size, &stageData.m_LightDirectional_Colour[0].x);
 			}
 
-			if (shader.u_LightDirectional_Direction && !stageData.m_LightDirectional_Direction.IsEmpty())
+			if (shader->u_LightDirectional_Direction && !stageData.m_LightDirectional_Direction.IsEmpty())
 			{
 				const int32 size = stageData.m_LightDirectional_Direction.GetCount();
-				const uint32 location = *shader.u_LightDirectional_Direction;
+				const uint32 location = *shader->u_LightDirectional_Direction;
 				glUniform3fv(location, size, &stageData.m_LightDirectional_Direction[0].x);
 			}
 
-			if (shader.u_Texture_ShadowMap)
+			if (shader->u_Texture_ShadowMap)
 			{
 				auto& component = world.WriteSingleton<eng::FrameBufferComponent>();
 				glActiveTexture(GL_TEXTURE0);
@@ -332,42 +353,42 @@ void eng::RenderStage_Opaque::RenderBatch(World& world, const RenderBatchID& bat
 
 		// Point
 		{
-			if (shader.u_LightPoint_Range && !stageData.m_LightPoint_Range.IsEmpty())
+			if (shader->u_LightPoint_Range && !stageData.m_LightPoint_Range.IsEmpty())
 			{
 				const int32 size = stageData.m_LightPoint_Range.GetCount();
-				const uint32 location = *shader.u_LightPoint_Range;
+				const uint32 location = *shader->u_LightPoint_Range;
 				glUniform1fv(location, size, &stageData.m_LightPoint_Range[0]);
 			}
 
-			if (shader.u_LightPoint_Colour && !stageData.m_LightPoint_Colour.IsEmpty())
+			if (shader->u_LightPoint_Colour && !stageData.m_LightPoint_Colour.IsEmpty())
 			{
 				const int32 size = stageData.m_LightPoint_Colour.GetCount();
-				const uint32 location = *shader.u_LightPoint_Colour;
+				const uint32 location = *shader->u_LightPoint_Colour;
 				glUniform3fv(location, size, &stageData.m_LightPoint_Colour[0].x);
 			}
 
-			if (shader.u_LightPoint_Position && !stageData.m_LightPoint_Position.IsEmpty())
+			if (shader->u_LightPoint_Position && !stageData.m_LightPoint_Position.IsEmpty())
 			{
 				const int32 size = stageData.m_LightPoint_Position.GetCount();
-				const uint32 location = *shader.u_LightPoint_Position;
+				const uint32 location = *shader->u_LightPoint_Position;
 				glUniform3fv(location, size, &stageData.m_LightPoint_Position[0].x);
 			}
 		}
 
-		if (shader.u_CameraProj)
+		if (shader->u_CameraProj)
 		{
-			const uint32 location = *shader.u_CameraProj;
+			const uint32 location = *shader->u_CameraProj;
 			glUniformMatrix4fv(location, 1, false, &stageData.m_CameraProj.m_Data[0][0]);
 		}
 
-		if (shader.u_CameraView)
+		if (shader->u_CameraView)
 		{
-			const uint32 location = *shader.u_CameraView;
+			const uint32 location = *shader->u_CameraView;
 			glUniformMatrix4fv(location, 1, false, &stageData.m_CameraView.m_Data[0][0]);
 		}
 
 		//glActiveTexture(GL_TEXTURE0);
 		//glBindTexture(GL_TEXTURE_2D, texture.m_TextureId);
-		glDrawElementsInstanced(GL_TRIANGLES, mesh.m_Indices.GetCount(), GL_UNSIGNED_INT, 0, instanceCount);
+		glDrawElementsInstanced(GL_TRIANGLES, mesh->m_Indices.GetCount(), GL_UNSIGNED_INT, 0, instanceCount);
 	}
 }

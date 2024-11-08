@@ -5,12 +5,15 @@
 namespace eng
 {
 	class AssetManager;
+	struct FlipbookAssetComponent;
 	struct FlipbookComponent;
 
-	class FlipbookSystem : public ecs::System
+	class FlipbookPlaySystem : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<eng::AssetManager, eng::FlipbookComponent>;
+		using World = ecs::WorldView<
+			eng::FlipbookComponent,
+			const eng::FlipbookAssetComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

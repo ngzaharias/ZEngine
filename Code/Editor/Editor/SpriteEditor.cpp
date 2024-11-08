@@ -183,8 +183,8 @@ namespace
 		if (!sprite.m_Texture2D.IsValid())
 			return;
 
-		auto& assetManager = world.WriteResource<eng::AssetManager>();
-		const auto* textureAsset = assetManager.LoadAsset<eng::Texture2DAsset>(sprite.m_Texture2D);
+		const auto& assetManager = world.ReadResource<eng::AssetManager>();
+		const auto* textureAsset = assetManager.FetchAsset<eng::Texture2DAsset>(sprite.m_Texture2D);
 		if (!textureAsset)
 			return;
 
@@ -209,8 +209,8 @@ namespace
 		if (!sprite.m_Texture2D.IsValid())
 			return;
 
-		auto& assetManager = world.WriteResource<eng::AssetManager>();
-		const auto* textureAsset = assetManager.LoadAsset<eng::Texture2DAsset>(sprite.m_Texture2D);
+		const auto& assetManager = world.ReadResource<eng::AssetManager>();
+		const auto* textureAsset = assetManager.FetchAsset<eng::Texture2DAsset>(sprite.m_Texture2D);
 		if (!textureAsset)
 			return;
 
