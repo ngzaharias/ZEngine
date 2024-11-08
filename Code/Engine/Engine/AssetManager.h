@@ -77,6 +77,8 @@ namespace eng
 		template<class TAsset>
 		const TAsset* FetchAsset(const str::Guid& guid) const;
 		template<class TAsset>
+		const TAsset* LoadAsset(const str::Guid& guid);
+		template<class TAsset>
 		void RequestAsset(const str::Guid& guid);
 		template<class TAsset>
 		void ReleaseAsset(const str::Guid& guid);
@@ -96,10 +98,6 @@ namespace eng
 		static bool LoadFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
 		template<typename TAsset, typename TLoader>
 		static bool ImportFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
-
-	private:
-		template<class TAsset>
-		const TAsset* LoadAsset(const str::Guid& guid);
 
 	public:
 		FileMap m_FileMap = { };

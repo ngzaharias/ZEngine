@@ -80,9 +80,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-
-	const auto& bufferComponent = entityWorld.ReadSingleton<eng::FrameBufferComponent>();
+	const auto& bufferComponent = world.ReadSingleton<eng::FrameBufferComponent>();
 
 	{
 		glViewport(0, 0, bufferComponent.m_ShadowSize.x, bufferComponent.m_ShadowSize.y);
@@ -131,16 +129,22 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 
 			// static mesh
 			{
-				for (const ecs::Entity& renderEntity : world.Query<ecs::query::Include<const eng::StaticMeshComponent, const eng::TransformComponent>>())
+				using Query = ecs::query
+					::Include<
+					eng::StaticMeshAssetComponent,
+					eng::StaticMeshComponent,
+					eng::TransformComponent>;
+
+				for (const ecs::Entity& renderEntity : world.Query<Query>())
 				{
-					const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(renderEntity);
-					if (!meshComponent.m_StaticMesh.IsValid())
+					const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(renderEntity);
+					if (!assetComponent.m_Asset)
 						continue;
 
 					RenderBatchID& id = batchIDs.Emplace();
 					id.m_Entity = renderEntity;
 					id.m_ShaderId = strDepthShader;
-					id.m_StaticMeshId = meshComponent.m_StaticMesh;
+					id.m_StaticMeshId = assetComponent.m_Asset->m_Guid;
 				}
 			}
 
@@ -165,9 +169,11 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 					batchData.m_Models.RemoveAll();
 				}
 
+				const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(id.m_Entity);
 				const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(id.m_Entity);
 				const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-				const auto* meshAsset = assetManager.FetchAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
+
+				const eng::StaticMeshAsset* meshAsset = assetComponent.m_Asset;
 				if (!meshAsset)
 					continue;
 

@@ -41,13 +41,14 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 		requests.Append(bufferComponent.m_Requests);
 	}
 
-	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	for (const str::Guid& request : requests)
 	{
 		if (!request.IsValid())
 			continue;
 
-		const auto* soundAsset = assetManager.FetchAsset<eng::sound::SingleAsset>(request);
+		// #hack: 
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
+		const auto* soundAsset = assetManager.LoadAsset<eng::sound::SingleAsset>(request);
 		if (!soundAsset)
 			continue;
 

@@ -64,14 +64,22 @@ void eng::RenderStage_UI::Initialise(ecs::EntityWorld& entityWorld)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2f), (void*)0);
 	glVertexAttribDivisor(1, GL_FALSE);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.RequestAsset<eng::StaticMeshAsset>(strModel);
+	assetManager.RequestAsset<eng::ShaderAsset>(strShader);
 }
 
-void eng::RenderStage_UI::Shutdown(ecs::EntityWorld& world)
+void eng::RenderStage_UI::Shutdown(ecs::EntityWorld& entityWorld)
 {
 	glDeleteBuffers(1, &m_ModelBuffer);
 	glDeleteBuffers(1, &m_TexCoordBuffer);
 	glDeleteBuffers(1, &m_TexDepthBuffer);
 	glDeleteBuffers(1, &m_VertexBuffer);
+
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.ReleaseAsset<eng::StaticMeshAsset>(strModel);
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strShader);
 }
 
 void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
@@ -112,14 +120,21 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 		glUseProgram(shader->m_ProgramId);
 		glBindVertexArray(m_AttributeObject);
 
-		for (const ecs::Entity& textEntity : world.Query<ecs::query::Include<const eng::TransformComponent, const eng::TextComponent>>())
+		using Query = ecs::query
+			::Include<
+			eng::TextAssetComponent,
+			eng::TextComponent,
+			eng::TransformComponent>;
+
+		for (const ecs::Entity& textEntity : world.Query<Query>())
 		{
+			const auto& assetComponent = world.ReadComponent<eng::TextAssetComponent>(textEntity);
 			const auto& textComponent = world.ReadComponent<eng::TextComponent>(textEntity);
 			const auto& textTransform = world.ReadComponent<eng::TransformComponent>(textEntity);
 			const auto& binding = mesh->m_Binding;
 
 			int32 instanceCount = static_cast<int32>(textComponent.m_Text.size());
-			const auto* fontAsset = assetManager.FetchAsset<eng::FontAsset>(textComponent.m_Font);
+			const auto* fontAsset = assetComponent.m_Font;
 			if (!fontAsset || fontAsset->m_TextureId == 0)
 				continue;
 

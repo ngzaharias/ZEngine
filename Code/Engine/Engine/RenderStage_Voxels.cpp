@@ -20,9 +20,22 @@
 
 namespace
 {
-	const str::Guid strVoxelMesh = GUID("37cb9789ccec4a519297fd6472e53d7a");
 	const str::Guid strVoxelShader = GUID("fffaa79e28e044d9b515daef50fc27d2");
 	const str::Guid strVoxelTexture = GUID("f87d23dd5e7b4d6dbff88b0eb676f80c");
+}
+
+void eng::RenderStage_Voxels::Initialise(ecs::EntityWorld& entityWorld)
+{
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.RequestAsset<eng::ShaderAsset>(strVoxelShader);
+	assetManager.RequestAsset<eng::Texture2DAsset>(strVoxelTexture);
+}
+
+void eng::RenderStage_Voxels::Shutdown(ecs::EntityWorld& entityWorld)
+{
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strVoxelShader);
+	assetManager.ReleaseAsset<eng::Texture2DAsset>(strVoxelTexture);
 }
 
 void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
