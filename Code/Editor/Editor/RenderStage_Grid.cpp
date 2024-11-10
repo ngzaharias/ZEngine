@@ -78,15 +78,15 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strShader);
-	if (!shader)
-		return;
-
 	const auto& localSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 	const auto& gizmos = localSettings.m_Gizmos;
 	const auto& settings = gizmos.m_FloorGrid;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
+		return;
+
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strShader);
+	if (!shader)
 		return;
 
 	{
