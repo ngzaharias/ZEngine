@@ -8,7 +8,6 @@
 #include "Editor/FlipbookEditor.h"
 #include "Editor/GizmoAxes.h"
 #include "Editor/GizmoCrosshair.h"
-#include "Editor/GizmoGrid.h"
 #include "Editor/GizmoTransform.h"
 #include "Editor/RenderStage_Grid.h"
 #include "Editor/SettingsMenu.h"
@@ -57,7 +56,6 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditor>();
 	m_ClientWorld.RegisterSystem<editor::GizmoAxes>();
 	m_ClientWorld.RegisterSystem<editor::GizmoCrosshair>();
-	m_ClientWorld.RegisterSystem<editor::GizmoGrid>();
 	m_ClientWorld.RegisterSystem<editor::GizmoTransform>();
 	m_ClientWorld.RegisterSystem<editor::settings::LocalSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
