@@ -130,6 +130,58 @@ inline auto enumerate::Length(const float stride, const float length)
 	return Range(0.f, length, stride);
 }
 
+inline auto enumerate::Vector(const Vector2i& value)
+{
+	struct Iterator
+	{
+		Iterator(const Vector2i& range, const int32 index)
+			: m_Range(range)
+			, m_Index(index)
+		{ }
+
+		auto operator*() -> Vector2i
+		{
+			return Vector2i(
+				m_Index % m_Range.x,
+				(m_Index / m_Range.x) % m_Range.y);
+		}
+
+		auto operator++() -> Iterator&
+		{
+			m_Index++;
+			return *this;
+		}
+
+		bool operator!=(const Iterator& other) const
+		{
+			return m_Index != other.m_Index;
+		}
+
+		const Vector2i& m_Range = Vector2i(UINT32_MAX);
+		int32 m_Index = UINT32_MAX;
+	};
+
+	struct Range
+	{
+		Range(const Vector2i& value) : m_Range(value) {	}
+
+		auto begin() -> Iterator
+		{
+			return Iterator{ m_Range, 0 };
+		}
+
+		auto end() -> Iterator
+		{
+			const int32 count = m_Range.x * m_Range.y;
+			return Iterator{ m_Range, count };
+		}
+
+		const Vector2i& m_Range;
+	};
+
+	return Range(value);
+}
+
 inline auto enumerate::Vector(const Vector3i& value)
 {
 	struct Iterator
@@ -181,6 +233,61 @@ inline auto enumerate::Vector(const Vector3i& value)
 	};
 
 	return Range(value);
+}
+
+inline auto enumerate::Vector(const Vector2i& min, const Vector2i& max)
+{
+	struct Iterator
+	{
+		Iterator(const Vector2i& min, const Vector2i& max, const Vector2i& range, const int32 index)
+			: m_Min(min), m_Max(max), m_Range(range), m_Index(index) { }
+
+		auto operator*() -> Vector2i
+		{
+			return m_Min + Vector2i(
+				m_Index % m_Range.x,
+				(m_Index / m_Range.x) % m_Range.y);
+		}
+
+		auto operator++() -> Iterator&
+		{
+			m_Index++;
+			return *this;
+		}
+
+		bool operator!=(const Iterator& other) const
+		{
+			return m_Index != other.m_Index;
+		}
+
+		const Vector2i& m_Min;
+		const Vector2i& m_Max;
+		const Vector2i& m_Range;
+		int32 m_Index;
+	};
+
+	struct Range
+	{
+		Range(const Vector2i& min, const Vector2i& max) 
+			: m_Min(min), m_Max(max), m_Range(m_Max - m_Min + Vector2i::One) { }
+
+		auto begin() -> Iterator
+		{
+			return Iterator{ m_Min, m_Max, m_Range, 0 };
+		}
+
+		auto end() -> Iterator
+		{
+			const int32 count = m_Range.x * m_Range.y;
+			return Iterator{ m_Min, m_Max, m_Range, count };
+		}
+
+		const Vector2i& m_Min;
+		const Vector2i& m_Max;
+		const Vector2i m_Range;
+	};
+
+	return Range(min, max);
 }
 
 inline auto enumerate::Vector(const Vector3i& min, const Vector3i& max)
