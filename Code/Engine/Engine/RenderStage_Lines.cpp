@@ -61,7 +61,8 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 		{
 			glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
 
-			glDisable(GL_BLEND);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
