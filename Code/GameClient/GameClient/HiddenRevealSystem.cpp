@@ -53,7 +53,6 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 		const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-		const Matrix4x4 cameraProj = eng::camera::GetProjection(screenSize, camera.m_Projection);
 		const Matrix4x4 cameraView = transform.ToTransform();
 
 		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
