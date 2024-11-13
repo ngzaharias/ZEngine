@@ -27,7 +27,7 @@ namespace editor::settings
 
 			float m_MajorScale = 100.f;
 			float m_MajorWidth = 0.01f;
-			Vector3f m_MajorColour = Vector3f(1.f, 0.f, 0.f);
+			Vector3f m_MajorColour = Vector3f(0.4f);
 		};
 
 		struct Transform
