@@ -122,6 +122,12 @@ bool math::IsOverlapping(const AABB2f& a, const AABB2f& b)
 		&& (a.m_Min.y <= b.m_Max.y && a.m_Max.y >= b.m_Min.y);
 }
 
+bool math::IsOverlapping(const AABB2i& a, const AABB2i& b)
+{
+	return (a.m_Min.x <= b.m_Max.x && a.m_Max.x >= b.m_Min.x)
+		&& (a.m_Min.y <= b.m_Max.y && a.m_Max.y >= b.m_Min.y);
+}
+
 bool math::IsOverlapping(const AABB2f& a, const Circle2f& b)
 {
 	const Vector2f half = (a.m_Max - a.m_Min) * 0.5f;
@@ -250,6 +256,12 @@ bool math::IsOverlapping(const AABB2f& a, const Triangle2f& b)
 }
 
 bool math::IsOverlapping(const AABB2f& a, const Vector2f& b)
+{
+	return b.x >= a.m_Min.x && b.x <= a.m_Max.x
+		&& b.y >= a.m_Min.y && b.y <= a.m_Max.y;
+}
+
+bool math::IsOverlapping(const AABB2i& a, const Vector2i& b)
 {
 	return b.x >= a.m_Min.x && b.x <= a.m_Max.x
 		&& b.y >= a.m_Min.y && b.y <= a.m_Max.y;
@@ -537,4 +549,24 @@ bool math::IsOverlapping(const Vector2f& a, const Circle2f& b)
 bool math::IsOverlapping(const Vector2f& a, const Triangle2f& b)
 {
 	return math::IsOverlapping(b, a);
+}
+
+AABB2f math::OverlappingArea(const AABB2f& a, const AABB2f& b)
+{
+	AABB2f c;
+	c.m_Min.x = math::Max(a.m_Min.x, b.m_Min.x);
+	c.m_Max.x = math::Min(a.m_Max.x, b.m_Max.x);
+	c.m_Min.y = math::Max(a.m_Min.y, b.m_Min.y);
+	c.m_Max.y = math::Min(a.m_Max.y, b.m_Max.y);
+	return c;
+}
+
+AABB2i math::OverlappingArea(const AABB2i& a, const AABB2i& b)
+{
+	AABB2i c;
+	c.m_Min.x = math::Max(a.m_Min.x, b.m_Min.x);
+	c.m_Max.x = math::Min(a.m_Max.x, b.m_Max.x);
+	c.m_Min.y = math::Max(a.m_Min.y, b.m_Min.y);
+	c.m_Max.y = math::Min(a.m_Max.y, b.m_Max.y);
+	return c;
 }

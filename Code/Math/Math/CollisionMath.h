@@ -3,6 +3,7 @@
 #include "Math/Vector.h"
 
 class AABB2f;
+class AABB2i;
 class AABB3f;
 class Circle2f;
 class Line2f;
@@ -67,6 +68,8 @@ namespace math
 
 	/// \brief Returns true if AABB A is overlapping AABB B.
 	bool IsOverlapping(const AABB2f& a, const AABB2f& b);
+	/// \brief Returns true if AABB A is overlapping AABB B.
+	bool IsOverlapping(const AABB2i& a, const AABB2i& b);
 	/// \brief Returns true if a AABB is overlapping a Circle.
 	bool IsOverlapping(const AABB2f& a, const Circle2f& b);
 	/// \brief Returns true if a AABB is overlapping a Line.
@@ -81,6 +84,7 @@ namespace math
 	bool IsOverlapping(const AABB2f& a, const Triangle2f& b);
 	/// \brief Returns true if a AABB is overlapping a Point.
 	bool IsOverlapping(const AABB2f& a, const Vector2f& b);
+	bool IsOverlapping(const AABB2i& a, const Vector2i& b);
 
 	/// \brief Returns true if a Circle is overlapping a AABB.
 	bool IsOverlapping(const Circle2f& a, const AABB2f& b);
@@ -242,6 +246,12 @@ namespace math
 	bool IsOverlapping(const Sphere3f& a, const Ray3f& b);
 	bool IsOverlapping(const Sphere3f& a, const Segment3f& b);
 	bool IsOverlapping(const Sphere3f& a, const Sphere3f& b);
+
+	//////////////////////////////////////////////////////////////////////////
+	// 2D
+
+	AABB2f OverlappingArea(const AABB2f& a, const AABB2f& b);
+	AABB2i OverlappingArea(const AABB2i& a, const AABB2i& b);
 
 	//////////////////////////////////////////////////////////////////////////
 	// 2D
