@@ -8,7 +8,7 @@ namespace editor::settings
 	{
 		struct CoordAxes
 		{
-			bool m_IsEnabled = true;
+			bool m_IsEnabled = false;
 			bool m_ShowX = true;
 			bool m_ShowY = false;
 			bool m_ShowZ = true;
@@ -21,7 +21,7 @@ namespace editor::settings
 
 		struct FloorGrid
 		{
-			bool m_IsEnabled = true;
+			bool m_IsEnabled = false;
 			bool m_ShowMajor = true;
 			bool m_ShowMinor = false;
 
