@@ -6,23 +6,27 @@
 
 namespace
 {
-	const str::StringView strAreHiddenEnabled = "m_AreHiddenEnabled";
+	const str::StringView strIsHexmapEnabled = "m_IsHexmapEnabled";
+	const str::StringView strIsHiddenEnabled = "m_IsHiddenEnabled";
 }
 
 template<>
 void eng::Visitor::ReadCustom(clt::settings::DebugComponent& value) const
 {
-	Read(strAreHiddenEnabled, value.m_AreHiddenEnabled, value.m_AreHiddenEnabled);
+	Read(strIsHexmapEnabled, value.m_IsHexmapEnabled, value.m_IsHexmapEnabled);
+	Read(strIsHiddenEnabled, value.m_IsHiddenEnabled, value.m_IsHiddenEnabled);
 }
 template<>
 void eng::Visitor::WriteCustom(const clt::settings::DebugComponent& value)
 {
-	Write(strAreHiddenEnabled, value.m_AreHiddenEnabled);
+	Write(strIsHexmapEnabled, value.m_IsHexmapEnabled);
+	Write(strIsHiddenEnabled, value.m_IsHiddenEnabled);
 }
 template<>
 bool imgui::Inspector::WriteCustom(clt::settings::DebugComponent& value)
 {
 	bool result = false;
-	result |= Write("m_AreHiddenEnabled", value.m_AreHiddenEnabled);
+	result |= Write("m_IsHexmapEnabled", value.m_IsHexmapEnabled);
+	result |= Write("m_IsHiddenEnabled", value.m_IsHiddenEnabled);
 	return result;
 }

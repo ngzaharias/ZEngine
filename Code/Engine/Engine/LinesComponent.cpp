@@ -364,7 +364,7 @@ void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddHexagonH(const Vector3f& translate, const float radius, const Vector4f& colour)
+void eng::LinesComponent::AddHexagon(const Vector3f& translate, const float radius, const Vector4f& colour)
 {
 	constexpr Vector3f s_DirectionE  = Vector2f(+1.f, 0.f).X0Y();
 	constexpr Vector3f s_DirectionSE = Vector2f(+0.5f, -0.866025f).X0Y();
@@ -379,23 +379,6 @@ void eng::LinesComponent::AddHexagonH(const Vector3f& translate, const float rad
 	AddLine(translate + s_DirectionW  * radius, translate + s_DirectionNW * radius, colour);
 	AddLine(translate + s_DirectionNW * radius, translate + s_DirectionNE * radius, colour);
 	AddLine(translate + s_DirectionNE * radius, translate + s_DirectionE  * radius, colour);
-}
-
-void eng::LinesComponent::AddHexagonV(const Vector3f& translate, const float radius, const Vector4f& colour)
-{
-	constexpr Vector3f s_DirectionN  = Vector2f(+0.f, +1.f).X0Y();
-	constexpr Vector3f s_DirectionNE = Vector2f(+0.866025f, +0.5f).X0Y();
-	constexpr Vector3f s_DirectionSE = Vector2f(+0.866025f, -0.5f).X0Y();
-	constexpr Vector3f s_DirectionS  = Vector2f(+0.f, -1.f).X0Y();
-	constexpr Vector3f s_DirectionSW = Vector2f(-0.866025f, -0.5f).X0Y();
-	constexpr Vector3f s_DirectionNW = Vector2f(-0.866025f, +0.5f).X0Y();
-
-	AddLine(translate + s_DirectionN  * radius, translate + s_DirectionNE * radius, colour);
-	AddLine(translate + s_DirectionNE * radius, translate + s_DirectionSE * radius, colour);
-	AddLine(translate + s_DirectionSE * radius, translate + s_DirectionS  * radius, colour);
-	AddLine(translate + s_DirectionS  * radius, translate + s_DirectionSW * radius, colour);
-	AddLine(translate + s_DirectionSW * radius, translate + s_DirectionNW * radius, colour);
-	AddLine(translate + s_DirectionNW * radius, translate + s_DirectionN  * radius, colour);
 }
 
 void eng::LinesComponent::AddIcosphere(const Vector3f& translate, const Sphere3f& sphere, const Vector4f& colour)

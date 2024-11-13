@@ -26,7 +26,7 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const auto& settings = world.ReadSingleton<clt::settings::DebugComponent>();
-	if (settings.m_AreHiddenEnabled)
+	if (settings.m_IsHiddenEnabled)
 	{
 		using AddQuery = ecs::query
 			::Include<
