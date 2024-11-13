@@ -269,7 +269,7 @@ inline auto enumerate::Vector(const Vector2i& min, const Vector2i& max)
 	struct Range
 	{
 		Range(const Vector2i& min, const Vector2i& max) 
-			: m_Min(min), m_Max(max), m_Range(m_Max - m_Min + Vector2i::One) { }
+			: m_Min(min), m_Max(max), m_Range(m_Max - m_Min) { }
 
 		auto begin() -> Iterator
 		{
