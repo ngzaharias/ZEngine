@@ -7,12 +7,14 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputComponent.h"
+#include "Engine/LinesComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
 #include "GameClient/HiddenObjectComponent.h"
 #include "GameClient/HiddenRevealComponent.h"
+#include "GameClient/SettingsComponents.h"
 #include "Math/AABB.h"
 #include "Math/CollisionMath.h"
 #include "Math/Ray.h"
@@ -45,6 +47,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& settings = world.ReadSingleton<clt::settings::DebugComponent>();
 	const auto& sceneComponent = world.ReadSingleton<eng::PhysicsSceneComponent>();
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
@@ -86,6 +89,20 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 					const bool isRevealed = world.HasComponent<hidden::RevealComponent>(selectedEntity);
 					if (!isRevealed && inputComponent.IsKeyPressed(input::EMouse::Left))
 						world.AddComponent<hidden::RevealComponent>(selectedEntity);
+				}
+
+				if (settings.m_IsHiddenInputEnabled)
+				{
+					auto& lines = world.WriteSingleton<eng::LinesComponent>();
+					lines.AddSphere(hitPosition, Sphere3f(10.f), Vector4f(1.f, 0.f, 0.f, 1.f));
+				}
+			}
+			else
+			{
+				if (settings.m_IsHiddenInputEnabled)
+				{
+					auto& lines = world.WriteSingleton<eng::LinesComponent>();
+					lines.AddSphere(mousePosition + mouseDirection * 100.f, Sphere3f(10.f), Vector4f(0.f, 1.f, 0.f, 1.f));
 				}
 			}
 		}

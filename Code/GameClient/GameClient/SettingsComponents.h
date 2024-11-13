@@ -8,6 +8,7 @@ namespace clt::settings
 	struct DebugComponent : public ecs::SingletonComponent<DebugComponent>
 	{
 		bool m_IsHexmapEnabled = false;
-		bool m_IsHiddenEnabled = false;
+		bool m_IsHiddenInputEnabled = false;
+		bool m_IsHiddenObjectEnabled = false;
 	};
 }

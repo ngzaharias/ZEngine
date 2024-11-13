@@ -3,8 +3,14 @@
 #include "ECS/Entity.h"
 #include "ECS/System.h"
 
+namespace clt::settings
+{
+	struct DebugComponent;
+}
+
 namespace eng
 {
+	struct LinesComponent;
 	struct InputComponent;
 	struct PhysicsSceneComponent;
 	struct RigidStaticComponent;
@@ -28,8 +34,10 @@ namespace hidden
 	{
 	public:
 		using World = ecs::WorldView<
+			eng::LinesComponent,
 			eng::RigidStaticComponent,
 			hidden::RevealComponent,
+			const clt::settings::DebugComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,
 			const eng::PhysicsSceneComponent,
