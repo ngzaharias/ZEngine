@@ -14,8 +14,7 @@ bool imgui::Inspector::Begin(const char* label)
 	const ImGuiTableFlags flags =
 		ImGuiTableFlags_SizingFixedFit |
 		ImGuiTableFlags_BordersInnerV |
-		ImGuiTableFlags_Resizable |
-		ImGuiTableFlags_ScrollY;
+		ImGuiTableFlags_Resizable;
 
 	// 1 column for the label
 	// 1 column for the data
