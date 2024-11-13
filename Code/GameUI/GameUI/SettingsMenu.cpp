@@ -6,6 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/SettingsComponents.h"
+#include "GameClient/SettingsComponents.h"
 #include "GameUI/SettingsComponents.h"
 
 #include <imgui/imgui.h>
@@ -32,7 +33,8 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		auto& window = world.AddComponent<gui::settings::WindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_Label = ToLabel("Settings Menu", identifier);
-		window.m_Debug = world.ReadSingleton<eng::settings::DebugComponent>();
+		window.m_DebugClient = world.ReadSingleton<clt::settings::DebugComponent>();
+		window.m_DebugEngine = world.ReadSingleton<eng::settings::DebugComponent>();
 		window.m_Local = world.ReadSingleton<eng::settings::LocalComponent>();
 	}
 
@@ -80,10 +82,11 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 					imgui::Inspector inspector;
 					if (inspector.Begin("##settingsmenu"))
 					{
-						if (inspector.Write(windowComponent.m_Debug))
-						{
-							world.WriteSingleton<eng::settings::DebugComponent>() = windowComponent.m_Debug;
-						}
+						if (inspector.Write(windowComponent.m_DebugClient))
+							world.WriteSingleton<clt::settings::DebugComponent>() = windowComponent.m_DebugClient;
+						ImGui::Spacing();
+						if (inspector.Write(windowComponent.m_DebugEngine))
+							world.WriteSingleton<eng::settings::DebugComponent>() = windowComponent.m_DebugEngine;
 						inspector.End();
 					}
 					ImGui::EndTabItem();

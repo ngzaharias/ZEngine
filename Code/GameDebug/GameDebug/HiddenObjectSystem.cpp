@@ -11,6 +11,7 @@
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "GameClient/HiddenObjectComponent.h"
+#include "GameClient/SettingsComponents.h"
 #include "GameDebug/HiddenObjectComponent.h"
 #include "Math/AABB.h"
 
@@ -24,7 +25,7 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& settings = world.ReadSingleton<eng::settings::DebugComponent>();
+	const auto& settings = world.ReadSingleton<clt::settings::DebugComponent>();
 	if (settings.m_AreHiddenEnabled)
 	{
 		using AddQuery = ecs::query

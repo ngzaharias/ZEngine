@@ -5,6 +5,11 @@
 #include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
+namespace clt::settings
+{
+	struct DebugComponent;
+}
+
 namespace ecs
 {
 	struct NameComponent;
@@ -26,6 +31,7 @@ namespace gui::settings
 	{
 	public:
 		using World = ecs::WorldView<
+			clt::settings::DebugComponent,
 			ecs::NameComponent,
 			eng::settings::DebugComponent,
 			eng::settings::LocalComponent,

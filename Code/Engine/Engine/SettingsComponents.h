@@ -27,7 +27,6 @@ namespace eng::settings
 	/// \brief Debug settings that is only used in non-gold builds.
 	struct DebugComponent : public ecs::SingletonComponent<DebugComponent>
 	{
-		bool m_AreHiddenEnabled = false;
 		bool m_AreLinesEnabled = false;
 		bool m_ArePhysicsEnabled = false;
 	};

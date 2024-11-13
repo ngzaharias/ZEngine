@@ -6,7 +6,6 @@
 
 namespace
 {
-	const str::StringView strAreHiddenEnabled = "m_AreHiddenEnabled";
 	const str::StringView strAreLinesEnabled = "m_AreLinesEnabled";
 	const str::StringView strArePhysicsEnabled = "m_ArePhysicsEnabled";
 	const str::StringView strAudio = "m_Audio";
@@ -23,14 +22,12 @@ namespace
 template<>
 void eng::Visitor::ReadCustom(eng::settings::DebugComponent& value) const
 {
-	Read(strAreHiddenEnabled, value.m_AreHiddenEnabled, value.m_AreHiddenEnabled);
 	Read(strAreLinesEnabled, value.m_AreLinesEnabled, value.m_AreLinesEnabled);
 	Read(strArePhysicsEnabled, value.m_ArePhysicsEnabled, value.m_ArePhysicsEnabled);
 }
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::DebugComponent& value)
 {
-	Write(strAreHiddenEnabled, value.m_AreHiddenEnabled);
 	Write(strAreLinesEnabled, value.m_AreLinesEnabled);
 	Write(strArePhysicsEnabled, value.m_ArePhysicsEnabled);
 }
@@ -38,7 +35,6 @@ template<>
 bool imgui::Inspector::WriteCustom(eng::settings::DebugComponent& value)
 {
 	bool result = false;
-	result |= Write("m_AreHiddenEnabled", value.m_AreHiddenEnabled);
 	result |= Write("m_AreLinesEnabled", value.m_AreLinesEnabled);
 	result |= Write("m_ArePhysicsEnabled", value.m_ArePhysicsEnabled);
 	return result;

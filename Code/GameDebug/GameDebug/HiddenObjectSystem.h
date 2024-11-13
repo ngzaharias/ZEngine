@@ -2,6 +2,11 @@
 
 #include "ECS/System.h"
 
+namespace clt::settings
+{
+	struct DebugComponent;
+}
+
 namespace dbg::hidden
 {
 	struct ObjectComponent;
@@ -17,11 +22,6 @@ namespace eng
 namespace eng::level
 {
 	struct EntityComponent;
-}
-
-namespace eng::settings
-{
-	struct DebugComponent;
 }
 
 namespace hidden
@@ -40,7 +40,7 @@ namespace dbg::hidden
 			eng::level::EntityComponent,
 			eng::SpriteComponent,
 			eng::TransformComponent,
-			const eng::settings::DebugComponent,
+			const clt::settings::DebugComponent,
 			const ::hidden::ObjectComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

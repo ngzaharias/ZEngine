@@ -30,6 +30,7 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<projectile::SpawnComponent>();
 	entityWorld.RegisterComponent<projectile::TrajectoryComponent>();
 
+	entityWorld.RegisterSingleton<clt::settings::DebugComponent>();
 	entityWorld.RegisterSingleton<gamestate::NetworkJoinComponent>();
 	entityWorld.RegisterSingleton<gamestate::StateComponent>();
 	entityWorld.RegisterSingleton<projectile::ChangesComponent>();
