@@ -16,7 +16,6 @@
 #include "Engine/NetworkSystem.h"
 #include "Engine/PhysicsSystem.h"
 #include "Engine/RenderSystem.h"
-#include "Engine/SettingsDebugSystem.h"
 #include "Engine/SettingsLocalSystem.h"
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SoundRandomSystem.h"
@@ -41,7 +40,6 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::MusicSystem>();
 	entityWorld.RegisterSystem<eng::network::NetworkSystem>();
 	entityWorld.RegisterSystem<eng::RenderSystem>(entityWorld);
-	entityWorld.RegisterSystem<eng::settings::DebugSystem>();
 	entityWorld.RegisterSystem<eng::settings::LocalSystem>();
 	entityWorld.RegisterSystem<eng::sound::PlaySystem>();
 	entityWorld.RegisterSystem<eng::sound::RandomSystem>();
