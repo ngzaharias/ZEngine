@@ -30,14 +30,14 @@ inline hexagon::Axial hexagon::ToAxial(const Offset& value)
 	return Axial(q, r);
 }
 
-inline hexagon::Axial hexagon::ToAxial(const Vector2f& worldPos, const float cellSize /*= 1.f*/)
+inline hexagon::Axial hexagon::ToAxial(const Vector2f& worldPos, const float radius /*= 1.f*/)
 {
 	constexpr float f2d3 = 2.f / 3.f;
 	constexpr float sqrt3 = SQUARE_ROOT_THREE;
 	constexpr float sqrt3d3 = SQUARE_ROOT_THREE / 3.f;
 
-	const float q = (f2d3 * worldPos.x) / cellSize;
-	const float r = (-worldPos.x / 3.f + sqrt3d3 * worldPos.y) / cellSize;
+	const float q = (f2d3 * worldPos.x) / radius;
+	const float r = (-worldPos.x / 3.f + sqrt3d3 * worldPos.y) / radius;
 	return _private::Round(Vector2f(q, r));
 }
 
@@ -48,35 +48,35 @@ inline hexagon::Offset hexagon::ToOffset(const Axial& value)
 	return Offset(col, row);
 }
 
-inline hexagon::Offset hexagon::ToOffset(const Vector2f& worldPos, const float cellSize /*= 1.f*/)
+inline hexagon::Offset hexagon::ToOffset(const Vector2f& worldPos, const float radius /*= 1.f*/)
 {
 	constexpr float f2d3 = 2.f / 3.f;
 	constexpr float sqrt3 = SQUARE_ROOT_THREE;
 	constexpr float sqrt3d3 = SQUARE_ROOT_THREE / 3.f;
 
-	const float q = (f2d3 * worldPos.x) / cellSize;
-	const float r = (-worldPos.x / 3.f + sqrt3d3 * worldPos.y) / cellSize;
+	const float q = (f2d3 * worldPos.x) / radius;
+	const float r = (-worldPos.x / 3.f + sqrt3d3 * worldPos.y) / radius;
 	const Axial gridPos = _private::Round(Vector2f(q, r));
 	return ToOffset(gridPos);
 }
 
-inline Vector2f hexagon::ToWorldPos(const Axial& gridPos, const float cellSize /*= 1.f*/)
+inline Vector2f hexagon::ToWorldPos(const Axial& gridPos, const float radius /*= 1.f*/)
 {
 	constexpr float f3d2 = 3.f / 2.f;
 	constexpr float sqrt3 = SQUARE_ROOT_THREE;
 	constexpr float sqrt3d2 = SQUARE_ROOT_THREE / 2.f;
 
-	const float x = (sqrt3 * gridPos.q + sqrt3d2 * gridPos.r) * cellSize;
-	const float y = (f3d2 * gridPos.r) * cellSize;
+	const float x = (sqrt3 * gridPos.q + sqrt3d2 * gridPos.r) * radius;
+	const float y = (f3d2 * gridPos.r) * radius;
 	return Vector2f(x, y);
 }
 
-inline Vector2f hexagon::ToWorldPos(const Offset& gridPos, const float cellSize /*= 1.f*/)
+inline Vector2f hexagon::ToWorldPos(const Offset& gridPos, const float radius /*= 1.f*/)
 {
 	// odd-q
 	constexpr float sqrt3 = SQUARE_ROOT_THREE;
 
-	const float x = cellSize * 3.f / 2.f * gridPos.col;
-	const float y = cellSize * sqrt3 * (gridPos.row + 0.5f * (gridPos.col & 1));
+	const float x = radius * 3.f / 2.f * gridPos.col;
+	const float y = radius * sqrt3 * (gridPos.row + 0.5f * (gridPos.col & 1));
 	return Vector2f(x, y);
 }
