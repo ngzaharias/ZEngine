@@ -63,7 +63,7 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 		glFrontFace(GL_CW);
 	}
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, eng::TransformComponent>>())
 	{
 		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
@@ -74,7 +74,7 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 
 		glUseProgram(shader->m_ProgramId);
 
-		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<const eng::DynamicMeshComponent, const eng::TransformComponent>>())
+		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<eng::DynamicMeshComponent, eng::TransformComponent, voxel::ChunkComponent>>())
 		{
 			const auto& voxelComponent = world.ReadComponent<voxel::ChunkComponent>(voxelEntity);
 			const auto& voxelDynamicMesh = world.ReadComponent<eng::DynamicMeshComponent>(voxelEntity);

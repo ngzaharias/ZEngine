@@ -11,7 +11,7 @@ namespace hexmap
 		float GetRadiusMax() const { return m_Radius * m_Ratio; }
 
 		float m_Level = 0.f;
-		int32 m_Ratio = 8;
+		int32 m_Ratio = 6;
 		float m_Radius = 100.f;
 
 		AABB2f m_Zone = {};

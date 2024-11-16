@@ -8,6 +8,7 @@
 #include "Engine/ColourHelpers.h"
 #include "Engine/InputComponent.h"
 #include "Engine/LinesComponent.h"
+#include "Engine/StaticMeshComponent.h"
 #include "Engine/TransformComponent.h"
 #include "GameClient/HexmapChartComponent.h"
 #include "GameClient/HexmapFragmentComponent.h"
@@ -20,6 +21,12 @@
 #include "Math/Matrix.h"
 #include "Math/Sphere.h"
 #include "Math/Vector.h"
+
+namespace
+{
+	const str::Guid strSpriteA = str::Guid::Create("686c500eca54494785f189dc49016a4c");
+	const str::Guid strSpriteB = str::Guid::Create("173e2734a8454e13abec1cd18d00caf2");
+}
 
 void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -52,16 +59,22 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 			if (!math::IsOverlapping(request.m_ZoneNew, hexSize))
 				continue;
 
+			const float ratio = static_cast<float>(chart.m_Ratio);
 			const ecs::Entity entity = world.CreateEntity();
 			auto& fragment = world.AddComponent<hexmap::FragmentComponent>(entity);
 			fragment.m_Level = math::Floor<int32>(chart.m_Level);
 			fragment.m_Position = gridPos;
-			fragment.m_Range.m_Min = -Vector2i(chart.m_Ratio / 2);
-			fragment.m_Range.m_Max = +Vector2i(chart.m_Ratio / 2);
+			fragment.m_Radius = chart.GetRadiusMin();
 
-			const int32 width = fragment.m_Range.m_Max.x - fragment.m_Range.m_Min.x;
-			const int32 height = fragment.m_Range.m_Max.y - fragment.m_Range.m_Min.y;
-			const int32 count = width * height;
+			// #temp:
+			fragment.m_Sprite = (j % 5) == 0 ? strSpriteA : strSpriteB;
+
+			const Vector2i rangeMin = -Vector2i(math::Floor<int32>(ratio * 0.5f));
+			const Vector2i rangeMax = +Vector2i(math::Ceiling<int32>(ratio * 0.5f));
+			fragment.m_Dimensions.x = rangeMax.x - rangeMin.x;
+			fragment.m_Dimensions.y = rangeMax.y - rangeMin.y;
+
+			const int32 count = fragment.m_Dimensions.x * fragment.m_Dimensions.y;
 			fragment.m_Data.Resize(count);
 			for (int32 i = 0; i < count; ++i)
 				fragment.m_Data[i] = j;
@@ -71,6 +84,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 
 			auto& transform = world.AddComponent<eng::TransformComponent>(entity);
 			transform.m_Translate = hexagon::ToWorldPos(gridPos, radiusMax).X0Y();
+			transform.m_Rotate = Rotator(90.f, 0.f, 0.f);
 
 			j++;
 		}
@@ -106,30 +120,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 		{
 			const hexagon::Offset gridPos = hexagon::Offset{ itr.x, itr.y };
 			const Vector3f worldPos = hexagon::ToWorldPos(gridPos, radiusMax).X0Y();
-			lines.AddHexagon(worldPos, radiusMax, Vector4f(1.f));
-		}
-	}
-
-	// #temp: draw minor
-	{
-		const float radiusMin = chart.GetRadiusMin();
-		const float radiusMax = chart.GetRadiusMax();
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::FragmentComponent>>())
-		{
-			const auto& fragment = world.ReadComponent<hexmap::FragmentComponent>(entity);
-			const auto& transform = world.ReadComponent<eng::TransformComponent>(entity);
-
-			int32 i = 0;
-			const int32 count = fragment.m_Data.GetCount();
-			for (const Vector2i& itr : enumerate::Vector(fragment.m_Range.m_Min, fragment.m_Range.m_Max))
-			{
-				const hexagon::Offset gridPos = { itr.x, itr.y };
-				const Vector4f& colour = colour::From(fragment.m_Data[i]);
-
-				const Vector2f localPos = hexagon::ToWorldPos(gridPos, radiusMin);
-				lines.AddHexagon(transform.m_Translate + localPos.X0Y(), radiusMin, colour);
-				i++;
-			}
+			lines.AddHexagon(worldPos + Vector3f::AxisY, radiusMax, Vector4f(1.f));
 		}
 	}
 }

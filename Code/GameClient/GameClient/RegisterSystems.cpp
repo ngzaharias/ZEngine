@@ -4,11 +4,13 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/ReplicationHost.h"
+#include "Engine/RenderSystem.h"
 #include "GameClient/AccelerationSystem.h"
 #include "GameClient/AchievementSystem.h"
 #include "GameClient/DragMovementSystem.h"
 #include "GameClient/DragSelectionSystem.h"
 #include "GameClient/GameStateSystem.h"
+#include "GameClient/HexmapAssetSystem.h"
 #include "GameClient/HexmapChartSystem.h"
 #include "GameClient/HexmapLoadSystem.h"
 #include "GameClient/HiddenCountSystem.h"
@@ -24,6 +26,7 @@
 #include "GameClient/NetworkStopSystem.h"
 #include "GameClient/ProjectileSpawnSystem.h"
 #include "GameClient/ProjectileTrajectorySystem.h"
+#include "GameClient/RenderStage_Hexmap.h"
 #include "GameClient/TransformSystem.h"
 #include "GameClient/VelocitySystem.h"
 #include "GameClient/VisualSystem.h"
@@ -38,6 +41,7 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<gamestate::NetworkStopSystem>();
 	entityWorld.RegisterSystem<gamestate::StateSystem>();
 	entityWorld.RegisterSystem<gui::modal::StateSystem>();
+	entityWorld.RegisterSystem<hexmap::AssetSystem>();
 	entityWorld.RegisterSystem<hexmap::ChartSystem>();
 	entityWorld.RegisterSystem<hexmap::LoadSystem>();
 	entityWorld.RegisterSystem<hidden::CountSystem>();
@@ -53,4 +57,6 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<projectile::TrajectorySystem>();
 	entityWorld.RegisterSystem<transform::TransformSystem>();
 	entityWorld.RegisterSystem<visual::VisualSystem>();
+
+	entityWorld.GetSystem<eng::RenderSystem>().RegisterStage<hexmap::RenderStage>();
 }

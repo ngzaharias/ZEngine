@@ -4,6 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "GameClient/DragComponents.h"
 #include "GameClient/GameStateComponents.h"
+#include "GameClient/HexmapAssetComponent.h"
 #include "GameClient/HexmapChartComponent.h"
 #include "GameClient/HexmapFragmentComponent.h"
 #include "GameClient/HexmapRequestComponent.h"
@@ -23,6 +24,7 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<gamestate::RequestComponent>();
 	entityWorld.RegisterComponent<gamestate::StateFinishedComponent>();
 	entityWorld.RegisterComponent<gui::modal::MessageComponent>();
+	entityWorld.RegisterComponent<hexmap::AssetComponent>();
 	entityWorld.RegisterComponent<hexmap::FragmentComponent>();
 	entityWorld.RegisterComponent<hexmap::RequestComponent>();
 	entityWorld.RegisterComponent<hidden::CountComponent>();

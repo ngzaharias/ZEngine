@@ -42,10 +42,13 @@ void eng::PrototypeManager::LoadFunction(ecs::EntityWorld& world, const ecs::Ent
 	using NonConst = std::remove_const<TPrototype>::type;
 	if constexpr (std::is_base_of<ecs::Component<NonConst>, NonConst>::value)
 	{
-		auto& component = world.HasComponent<NonConst>(entity)
-			? world.WriteComponent<NonConst>(entity)
-			: world.AddComponent<NonConst>(entity);
-		visitor.Read(component);
+		if (world.IsRegistered<NonConst>())
+		{
+			auto& component = world.HasComponent<NonConst>(entity)
+				? world.WriteComponent<NonConst>(entity)
+				: world.AddComponent<NonConst>(entity);
+			visitor.Read(component);
+		}
 	}
 	else
 	{

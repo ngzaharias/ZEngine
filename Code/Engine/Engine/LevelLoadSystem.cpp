@@ -38,6 +38,11 @@ void eng::level::LoadSystem::Initialise(World& world)
 			directoryComponent.m_Levels.Emplace(name, subpath);
 		}
 	}
+
+	{
+		auto& request = world.AddEventComponent<eng::level::LoadRequestComponent>();
+		request.m_Name = NAME("Hexmap");
+	}
 }
 
 void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)

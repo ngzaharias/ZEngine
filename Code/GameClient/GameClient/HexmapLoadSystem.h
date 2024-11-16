@@ -15,6 +15,7 @@ namespace ecs
 namespace eng
 {
 	struct LinesComponent;
+	struct StaticMeshComponent;
 	struct TransformComponent;
 }
 
@@ -33,6 +34,7 @@ namespace hexmap
 		using World = ecs::WorldView<
 			ecs::NameComponent,
 			eng::LinesComponent,
+			eng::StaticMeshComponent,
 			eng::TransformComponent,
 			hexmap::FragmentComponent,
 			const clt::settings::DebugComponent,
