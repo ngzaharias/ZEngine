@@ -369,12 +369,27 @@ inline constexpr Vector2i math::ToGridPos(const Vector2f& worldPos, const float 
 		math::Floor<int32>(worldPos.y / cellSize));
 }
 
+inline constexpr Vector2i math::ToGridPos(const Vector2f& worldPos, const Vector2f& cellSize /*= Vector2f::One*/)
+{
+	return Vector2i(
+		math::Floor<int32>(worldPos.x / cellSize.x),
+		math::Floor<int32>(worldPos.y / cellSize.y));
+}
+
 inline constexpr Vector3i math::ToGridPos(const Vector3f& worldPos, const float cellSize /*= 1.f*/)
 {
 	return Vector3i(
 		math::Floor<int32>(worldPos.x / cellSize),
 		math::Floor<int32>(worldPos.y / cellSize),
 		math::Floor<int32>(worldPos.z / cellSize));
+}
+
+inline constexpr Vector3i math::ToGridPos(const Vector3f& worldPos, const Vector3f& cellSize /*= Vector3f::One*/)
+{
+	return Vector3i(
+		math::Floor<int32>(worldPos.x / cellSize.x),
+		math::Floor<int32>(worldPos.y / cellSize.y),
+		math::Floor<int32>(worldPos.z / cellSize.z));
 }
 
 inline constexpr Vector2f math::ToWorldPos(const Vector2i& gridPos, const float cellSize /*= 1.f*/)
@@ -385,6 +400,13 @@ inline constexpr Vector2f math::ToWorldPos(const Vector2i& gridPos, const float 
 		gridPos.y * cellSize + half);
 }
 
+inline constexpr Vector2f math::ToWorldPos(const Vector2i& gridPos, const Vector2f& cellSize /*= Vector2f::One*/)
+{
+	return Vector2f(
+		gridPos.x * cellSize.x + cellSize.x * 0.5f,
+		gridPos.y * cellSize.y + cellSize.y * 0.5f);
+}
+
 inline constexpr Vector3f math::ToWorldPos(const Vector3i& gridPos, const float cellSize /*= 1.f*/)
 {
 	const float half = cellSize * 0.5f;
@@ -392,4 +414,12 @@ inline constexpr Vector3f math::ToWorldPos(const Vector3i& gridPos, const float 
 		gridPos.x * cellSize + half,
 		gridPos.y * cellSize + half,
 		gridPos.z * cellSize + half);
+}
+
+inline constexpr Vector3f math::ToWorldPos(const Vector3i& gridPos, const Vector3f& cellSize /*= Vector3f::One*/)
+{
+	return Vector3f(
+		gridPos.x * cellSize.x + cellSize.x * 0.5f,
+		gridPos.y * cellSize.y + cellSize.y * 0.5f,
+		gridPos.z * cellSize.z + cellSize.z * 0.5f);
 }
