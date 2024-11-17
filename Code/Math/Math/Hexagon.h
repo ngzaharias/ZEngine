@@ -12,6 +12,13 @@ namespace hexagon
 
 	struct Offset
 	{
+		bool operator<(const Offset& rhs) const 
+		{ 
+			return col != rhs.col 
+				? col < rhs.col
+				: row < rhs.row;
+		}
+
 		operator Vector2i() { return Vector2i(col, row); }
 		operator Vector2i() const { return Vector2i(col, row); }
 
