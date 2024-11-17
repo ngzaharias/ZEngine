@@ -190,18 +190,18 @@ namespace
 			Vector3f(0.0f, 0.866f, -0.499f) };
 }
 
-void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& extents, const Vector4f& colour)
+void eng::LinesComponent::AddAABB(const Vector3f& translate, const float extents, const Vector4f& colour)
 {
 	Vector3f corners[8];
-	corners[0] = translate + Vector3f(extents.m_Min.x, extents.m_Min.y, extents.m_Min.z);
-	corners[1] = translate + Vector3f(extents.m_Min.x, extents.m_Min.y, extents.m_Max.z);
-	corners[2] = translate + Vector3f(extents.m_Max.x, extents.m_Min.y, extents.m_Max.z);
-	corners[3] = translate + Vector3f(extents.m_Max.x, extents.m_Min.y, extents.m_Min.z);
+	corners[0] = translate + Vector3f(-extents, -extents, -extents);
+	corners[1] = translate + Vector3f(-extents, -extents, +extents);
+	corners[2] = translate + Vector3f(+extents, -extents, +extents);
+	corners[3] = translate + Vector3f(+extents, -extents, -extents);
 
-	corners[4] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Min.z);
-	corners[5] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Max.z);
-	corners[6] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Max.z);
-	corners[7] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Min.z);
+	corners[4] = translate + Vector3f(-extents, +extents, -extents);
+	corners[5] = translate + Vector3f(-extents, +extents, +extents);
+	corners[6] = translate + Vector3f(+extents, +extents, +extents);
+	corners[7] = translate + Vector3f(+extents, +extents, -extents);
 
 	AddLine(corners[0], corners[1], colour);
 	AddLine(corners[1], corners[2], colour);
@@ -219,18 +219,47 @@ void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& exten
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddAABB(const Vector3f& translate, const float extents, const Vector4f& colour)
+void eng::LinesComponent::AddAABB(const Vector3f& translate, const Vector3f& extents, const Vector4f& colour)
 {
 	Vector3f corners[8];
-	corners[0] = translate + Vector3f(-extents, -extents, -extents);
-	corners[1] = translate + Vector3f(-extents, -extents, +extents);
-	corners[2] = translate + Vector3f(+extents, -extents, +extents);
-	corners[3] = translate + Vector3f(+extents, -extents, -extents);
+	corners[0] = translate + Vector3f(-extents.x, -extents.y, -extents.z);
+	corners[1] = translate + Vector3f(-extents.x, -extents.y, +extents.z);
+	corners[2] = translate + Vector3f(+extents.x, -extents.y, +extents.z);
+	corners[3] = translate + Vector3f(+extents.x, -extents.y, -extents.z);
 
-	corners[4] = translate + Vector3f(-extents, +extents, -extents);
-	corners[5] = translate + Vector3f(-extents, +extents, +extents);
-	corners[6] = translate + Vector3f(+extents, +extents, +extents);
-	corners[7] = translate + Vector3f(+extents, +extents, -extents);
+	corners[4] = translate + Vector3f(-extents.x, +extents.y, -extents.z);
+	corners[5] = translate + Vector3f(-extents.x, +extents.y, +extents.z);
+	corners[6] = translate + Vector3f(+extents.x, +extents.y, +extents.z);
+	corners[7] = translate + Vector3f(+extents.x, +extents.y, -extents.z);
+
+	AddLine(corners[0], corners[1], colour);
+	AddLine(corners[1], corners[2], colour);
+	AddLine(corners[2], corners[3], colour);
+	AddLine(corners[3], corners[0], colour);
+
+	AddLine(corners[4], corners[5], colour);
+	AddLine(corners[5], corners[6], colour);
+	AddLine(corners[6], corners[7], colour);
+	AddLine(corners[7], corners[4], colour);
+
+	AddLine(corners[0], corners[4], colour);
+	AddLine(corners[1], corners[5], colour);
+	AddLine(corners[2], corners[6], colour);
+	AddLine(corners[3], corners[7], colour);
+}
+
+void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& extents, const Vector4f& colour)
+{
+	Vector3f corners[8];
+	corners[0] = translate + Vector3f(extents.m_Min.x, extents.m_Min.y, extents.m_Min.z);
+	corners[1] = translate + Vector3f(extents.m_Min.x, extents.m_Min.y, extents.m_Max.z);
+	corners[2] = translate + Vector3f(extents.m_Max.x, extents.m_Min.y, extents.m_Max.z);
+	corners[3] = translate + Vector3f(extents.m_Max.x, extents.m_Min.y, extents.m_Min.z);
+
+	corners[4] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Min.z);
+	corners[5] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Max.z);
+	corners[6] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Max.z);
+	corners[7] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Min.z);
 
 	AddLine(corners[0], corners[1], colour);
 	AddLine(corners[1], corners[2], colour);
