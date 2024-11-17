@@ -25,6 +25,7 @@ namespace hexmap
 {
 	struct AssetComponent;
 	struct FragmentComponent;
+	struct SettingsComponent;
 
 	class RenderStage final : public eng::RenderStage
 	{
@@ -34,7 +35,8 @@ namespace hexmap
 			const eng::camera::ProjectionComponent,
 			const eng::TransformComponent,
 			const hexmap::AssetComponent,
-			const hexmap::FragmentComponent>;
+			const hexmap::FragmentComponent,
+			const hexmap::SettingsComponent>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

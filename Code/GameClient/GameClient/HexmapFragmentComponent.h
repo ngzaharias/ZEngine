@@ -9,16 +9,10 @@ namespace hexmap
 {
 	struct FragmentComponent : ecs::Component<FragmentComponent>
 	{
-		int32 GetHeight() const { return m_Dimensions.y; }
-		int32 GetWidth() const { return m_Dimensions.x; }
-
-		int32 m_Level = 0;
-		float m_Radius = 100.f;
-		Vector2i m_Position = {};
-
-		str::Guid m_Sprite = {}; // #temp:
-
-		Vector2i m_Dimensions = {};
+		hexagon::Offset m_HexPos = {};
 		Array<int32> m_Data = {};
+
+		// #temp
+		str::Guid m_Sprite = {}; 
 	};
 }

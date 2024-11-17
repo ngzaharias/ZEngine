@@ -18,6 +18,7 @@
 #include "GameClient/HexmapAssetComponent.h"
 #include "GameClient/HexmapChartComponent.h"
 #include "GameClient/HexmapFragmentComponent.h"
+#include "GameClient/HexmapSettingsComponent.h"
 #include "Math/HexagonHelpers.h"
 
 #include <GLEW/glew.h>
@@ -72,6 +73,7 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	const auto& settings = world.ReadSingleton<hexmap::SettingsComponent>();
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -170,10 +172,10 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 				const Vector2f spriteSize = Vector2f((float)spriteAsset->m_Size.x, (float)spriteAsset->m_Size.y);
 				const Vector2f textureSize = Vector2f((float)texture2DAsset->m_Width, (float)texture2DAsset->m_Height);
 
-				const Vector3f modelScale = transform.m_Scale * 2.f;
+				const Vector3f modelScale = transform.m_Scale;
 				const Vector3f fragmentScale = Vector3f(
-					fragment.m_Radius / 100.f,
-					fragment.m_Radius / 100.f,
+					settings.m_TileRadius / 100.f * 2.f,
+					settings.m_TileRadius / 100.f * 2.f,
 					1.f);
 
 				Matrix4x4 model = transform.ToTransform();
@@ -186,15 +188,15 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 					spriteSize.x / textureSize.x,
 					spriteSize.y / textureSize.y);
 
-				const int32 width = fragment.GetWidth();
-				const int32 height = fragment.GetHeight();
+				const int32 width = settings.m_TileCount;
+				const int32 height = settings.m_TileCount;
 				const int32 count = fragment.m_Data.GetCount();
 				for (int32 i = 0; i < count; ++i)
 				{
 					const int32 x = i % width - width / 2;
 					const int32 y = i / width - height / 2;
 					const hexagon::Offset gridPos = { x, y };
-					const Vector2f localPos = hexagon::ToWorldPos(gridPos, fragment.m_Radius);
+					const Vector2f localPos = hexagon::ToWorldPos(gridPos, settings.m_TileRadius);
 
 					model.SetTranslate(transform.m_Translate + localPos.X0Y());
 

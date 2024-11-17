@@ -24,6 +24,7 @@ namespace hexmap
 	struct ChartComponent;
 	struct FragmentComponent;
 	struct RequestComponent;
+	struct SettingsComponent;
 }
 
 namespace hexmap
@@ -39,7 +40,8 @@ namespace hexmap
 			hexmap::FragmentComponent,
 			const clt::settings::DebugComponent,
 			const hexmap::ChartComponent,
-			const hexmap::RequestComponent>;
+			const hexmap::RequestComponent,
+			const hexmap::SettingsComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -1,6 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/HexmapChartSystem.h"
 
+#include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -11,7 +12,9 @@
 #include "Engine/TransformComponent.h"
 #include "GameClient/HexmapChartComponent.h"
 #include "GameClient/HexmapRequestComponent.h"
+#include "GameClient/HexmapSettingsComponent.h"
 #include "Math/AABB.h"
+#include "Math/Algorithms.h"
 #include "Math/CollisionMath.h"
 #include "Math/Hexagon.h"
 #include "Math/HexagonHelpers.h"
@@ -20,7 +23,7 @@
 
 namespace
 {
-	AABB2f GetCameraZone(const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform, const float size)
+	AABB2f GetCameraZone(const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
 	{
 		constexpr Plane3f plane = Plane3f(Vector3f::AxisY, Vector3f::Zero);
 
@@ -59,13 +62,6 @@ namespace
 	}
 }
 
-void hexmap::ChartSystem::Initialise(World& world)
-{
-	auto& chart = world.WriteSingleton<hexmap::ChartComponent>();
-	chart.m_Zone.m_Min = Vector2f(KINDA_LARGE_FLOAT);
-	chart.m_Zone.m_Max = Vector2f(KINDA_LARGE_FLOAT);
-}
-
 void hexmap::ChartSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
@@ -89,20 +85,42 @@ void hexmap::ChartSystem::Update(World& world, const GameTime& gameTime)
 	if (hasChanged || cameraAdded || cameraChanged || transformAdded || transformChanged)
 	{
 		auto& chart = world.WriteSingleton<hexmap::ChartComponent>();
+		auto& settings = world.ReadSingleton<hexmap::SettingsComponent>();
 
-		const AABB2f zoneOld = chart.m_Zone;
+		AABB2f zone = {};
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, eng::TransformComponent>>())
 		{
 			const auto& camera = world.ReadComponent<eng::camera::ProjectionComponent>(entity);
 			const auto& transform = world.ReadComponent<eng::TransformComponent>(entity);
-			chart.m_Zone = GetCameraZone(camera, transform, chart.GetRadiusMax());
+			zone = GetCameraZone(camera, transform);
 		}
 
-		if (zoneOld.m_Min != chart.m_Zone.m_Min || zoneOld.m_Max != chart.m_Zone.m_Max)
+		Set<hexagon::Offset> load;
+		Set<hexagon::Offset> unload;
+		Set<hexagon::Offset> inrange;
+
+		const float fragmentRadius = settings.GetFragmentRadius();
+		const Vector2f fragmentExtents = Vector2f(fragmentRadius);
+		const Vector2i min = hexagon::ToOffset(zone.m_Min, fragmentRadius);
+		const Vector2i max = hexagon::ToOffset(zone.m_Max, fragmentRadius);
+		for (const Vector2i& gridPos : enumerate::Vector(min, max + Vector2i::One))
+		{
+			const hexagon::Offset hexPos = { gridPos.x, gridPos.y };
+			const Vector2f worldPos = hexagon::ToWorldPos(hexPos, fragmentRadius);
+			const AABB2f fragmentAABB = AABB2f::FromExtents(worldPos, fragmentExtents);
+
+			if (math::IsOverlapping(zone, fragmentAABB))
+				inrange.Add(hexPos);
+		}
+
+		enumerate::Difference(inrange, chart.m_Loaded, load);
+		enumerate::Difference(chart.m_Loaded, inrange, unload);
+		if (!load.IsEmpty() || !unload.IsEmpty())
 		{
 			auto& request = world.AddEventComponent<hexmap::RequestComponent>();
-			request.m_ZoneOld = zoneOld;
-			request.m_ZoneNew = chart.m_Zone;
+			request.m_Load = std::move(load);
+			request.m_Unload = std::move(unload);
 		}
+		chart.m_Loaded = std::move(inrange);
 	}
 }

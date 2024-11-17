@@ -13,6 +13,7 @@
 #include "GameClient/HexmapChartComponent.h"
 #include "GameClient/HexmapFragmentComponent.h"
 #include "GameClient/HexmapRequestComponent.h"
+#include "GameClient/HexmapSettingsComponent.h"
 #include "GameClient/SettingsComponents.h"
 #include "Math/Algorithms.h"
 #include "Math/CollisionMath.h"
@@ -32,11 +33,12 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& settings = world.ReadSingleton<clt::settings::DebugComponent>();
-	if (!settings.m_IsHexmapEnabled)
+	const auto& debugSettings = world.ReadSingleton<clt::settings::DebugComponent>();
+	if (!debugSettings.m_IsHexmapEnabled)
 		return;
 
 	const auto& chart = world.ReadSingleton<hexmap::ChartComponent>();
+	const auto& settings = world.ReadSingleton<hexmap::SettingsComponent>();
 	auto& lines = world.WriteSingleton<eng::LinesComponent>();
 
 	// load
@@ -44,83 +46,50 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const auto& request = world.ReadComponent<hexmap::RequestComponent>(requestEntity);
 
-		int32 j = 0;
-		const float radiusMin = chart.GetRadiusMin();
-		const float radiusMax = chart.GetRadiusMax();
-		const Vector2i min = hexagon::ToOffset(chart.m_Zone.m_Min, radiusMax);
-		const Vector2i max = hexagon::ToOffset(chart.m_Zone.m_Max, radiusMax);
-		for (const Vector2i& itr : enumerate::Vector(min - Vector2i(1), max + Vector2i(2)))
+		const float fragmentRadius = settings.GetFragmentRadius();
+		for (const hexagon::Offset& hexPos : request.m_Load)
 		{
-			const hexagon::Offset gridPos = hexagon::Offset{ itr.x, itr.y };
-			const Vector2f worldPos = hexagon::ToWorldPos(gridPos, radiusMax);
-			const AABB2f hexSize = AABB2f::FromExtents(worldPos, Vector2f(radiusMax));
-			if (math::IsOverlapping(request.m_ZoneOld, hexSize))
-				continue;
-			if (!math::IsOverlapping(request.m_ZoneNew, hexSize))
-				continue;
-
-			const float ratio = static_cast<float>(chart.m_Ratio);
 			const ecs::Entity entity = world.CreateEntity();
 			auto& fragment = world.AddComponent<hexmap::FragmentComponent>(entity);
-			fragment.m_Level = math::Floor<int32>(chart.m_Level);
-			fragment.m_Position = gridPos;
-			fragment.m_Radius = chart.GetRadiusMin();
+			fragment.m_HexPos = hexPos;
 
 			// #temp:
-			fragment.m_Sprite = (j % 5) == 0 ? strSpriteA : strSpriteB;
+			fragment.m_Sprite = (hexPos.row % 2) == 0 ? strSpriteA : strSpriteB;
 
-			const Vector2i rangeMin = -Vector2i(math::Floor<int32>(ratio * 0.5f));
-			const Vector2i rangeMax = +Vector2i(math::Ceiling<int32>(ratio * 0.5f));
-			fragment.m_Dimensions.x = rangeMax.x - rangeMin.x;
-			fragment.m_Dimensions.y = rangeMax.y - rangeMin.y;
-
-			const int32 count = fragment.m_Dimensions.x * fragment.m_Dimensions.y;
+			const int32 count = settings.m_TileCount * settings.m_TileCount;
 			fragment.m_Data.Resize(count);
 			for (int32 i = 0; i < count; ++i)
-				fragment.m_Data[i] = j;
+				fragment.m_Data[i] = 0;
 
 			auto& name = world.AddComponent<ecs::NameComponent>(entity);
-			name.m_Name = std::format("Fragment: {}, {}", itr.x, itr.y);
+			name.m_Name = std::format("Fragment: {}, {}", hexPos.row, hexPos.col);
 
 			auto& transform = world.AddComponent<eng::TransformComponent>(entity);
-			transform.m_Translate = hexagon::ToWorldPos(gridPos, radiusMax).X0Y();
+			transform.m_Translate = hexagon::ToWorldPos(hexPos, fragmentRadius).X0Y();
 			transform.m_Rotate = Rotator(90.f, 0.f, 0.f);
-
-			j++;
 		}
-	}
 
-	// unload
-	if (world.HasAny<ecs::query::Updated<hexmap::ChartComponent>>())
-	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::FragmentComponent>>())
 		{
-			const auto& transform = world.ReadComponent<eng::TransformComponent>(entity);
-
-			const float radiusMin = chart.GetRadiusMin();
-			const float radiusMax = chart.GetRadiusMax();
-			const AABB2f hexSize = AABB2f::FromExtents(transform.m_Translate.XZ(), Vector2f(radiusMax));
-			if (!math::IsOverlapping(chart.m_Zone, hexSize))
+			const auto& fragment = world.ReadComponent<hexmap::FragmentComponent>(entity);
+			if (request.m_Unload.Contains(fragment.m_HexPos))
 				world.DestroyEntity(entity);
 		}
-
 	}
 
-	// #temp: draw major
+	// #temp: draw extents
 	{
-		const float radiusMin = chart.GetRadiusMin();
-		const float radiusMax = chart.GetRadiusMax();
+		const float fragmentRadius = settings.GetFragmentRadius();
+		const Vector2f fragmentExtents = Vector2f(fragmentRadius);
 
-		const Vector2f worldMin = math::Min(chart.m_Zone.m_Min, chart.m_Zone.m_Max);
-		const Vector2f worldMax = math::Max(chart.m_Zone.m_Min, chart.m_Zone.m_Max);
-
-		const Vector2i gridMin = hexagon::ToOffset(worldMin, radiusMax);
-		const Vector2i gridMax = hexagon::ToOffset(worldMax, radiusMax);
-		for (const Vector2i& itr : enumerate::Vector(gridMin - Vector2i(1), gridMax + Vector2i(2)))
+		for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::FragmentComponent>>())
 		{
-			const hexagon::Offset gridPos = hexagon::Offset{ itr.x, itr.y };
-			const Vector3f worldPos = hexagon::ToWorldPos(gridPos, radiusMax).X0Y();
-			lines.AddHexagon(worldPos + Vector3f::AxisY, radiusMax, Vector4f(1.f));
+			const auto& fragment = world.ReadComponent<hexmap::FragmentComponent>(entity);
+			const auto& transform = world.ReadComponent<eng::TransformComponent>(entity);
+
+			const AABB3f fragmentAABB = AABB3f::FromExtents(fragmentExtents.X0Y());
+			lines.AddAABB(transform.m_Translate, fragmentAABB, Vector4f(1.f));
+			lines.AddSphere(transform.m_Translate, 100.f, Vector4f(1.f));
 		}
 	}
 }

@@ -17,6 +17,7 @@ namespace hexmap
 {
 	struct ChartComponent;
 	struct RequestComponent;
+	struct SettingsComponent;
 }
 
 namespace hexmap
@@ -29,9 +30,8 @@ namespace hexmap
 			hexmap::RequestComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,
-			const eng::TransformComponent>;
-
-		void Initialise(World& world);
+			const eng::TransformComponent,
+			const hexmap::SettingsComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

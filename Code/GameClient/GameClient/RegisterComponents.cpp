@@ -8,6 +8,7 @@
 #include "GameClient/HexmapChartComponent.h"
 #include "GameClient/HexmapFragmentComponent.h"
 #include "GameClient/HexmapRequestComponent.h"
+#include "GameClient/HexmapSettingsComponent.h"
 #include "GameClient/HiddenCountComponent.h"
 #include "GameClient/HiddenGroupComponent.h"
 #include "GameClient/HiddenObjectComponent.h"
@@ -42,5 +43,6 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSingleton<gamestate::NetworkJoinComponent>();
 	entityWorld.RegisterSingleton<gamestate::StateComponent>();
 	entityWorld.RegisterSingleton<hexmap::ChartComponent>();
+	entityWorld.RegisterSingleton<hexmap::SettingsComponent>();
 	entityWorld.RegisterSingleton<projectile::ChangesComponent>();
 }
