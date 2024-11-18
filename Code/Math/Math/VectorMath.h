@@ -62,8 +62,10 @@ namespace math
 
 	/// \brief Divides the two vectors component-wise.
 	inline constexpr Vector2f Divide(const Vector2f& a, const Vector2f& b) noexcept;
+	inline constexpr Vector2i Divide(const Vector2i& a, const Vector2i& b) noexcept;
 	/// \brief Divides the two vectors component-wise.
 	inline constexpr Vector3f Divide(const Vector3f& a, const Vector3f& b) noexcept;
+	inline constexpr Vector3i Divide(const Vector3i& a, const Vector3i& b) noexcept;
 
 	/// \brief Dot Product of two vectors.
 	inline constexpr float Dot(const Vector2f& a, const Vector2f& b) noexcept;
@@ -82,8 +84,10 @@ namespace math
 
 	/// \brief Multiplies the two vectors component-wise.
 	inline constexpr Vector2f Multiply(const Vector2f& a, const Vector2f& b) noexcept;
+	inline constexpr Vector2i Multiply(const Vector2i& a, const Vector2i& b) noexcept;
 	/// \brief Multiplies the two vectors component-wise.
 	inline constexpr Vector3f Multiply(const Vector3f& a, const Vector3f& b) noexcept;
+	inline constexpr Vector3i Multiply(const Vector3i& a, const Vector3i& b) noexcept;
 
 	/// \brief Returns the vector perpendicular (clockwise) to the original vector.
 	inline constexpr Vector2f Perpendicular(const Vector2f& vector) noexcept;

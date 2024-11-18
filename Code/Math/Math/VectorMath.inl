@@ -138,9 +138,19 @@ inline constexpr Vector2f math::Divide(const Vector2f& a, const Vector2f& b) noe
 	return Vector2f(a.x / b.x, a.y / b.y);
 }
 
+inline constexpr Vector2i math::Divide(const Vector2i& a, const Vector2i& b) noexcept
+{
+	return Vector2i(a.x / b.x, a.y / b.y);
+}
+
 inline constexpr Vector3f math::Divide(const Vector3f& a, const Vector3f& b) noexcept
 {
 	return Vector3f(a.x / b.x, a.y / b.y, a.z / b.z);
+}
+
+inline constexpr Vector3i math::Divide(const Vector3i& a, const Vector3i& b) noexcept
+{
+	return Vector3i(a.x / b.x, a.y / b.y, a.z / b.z);
 }
 
 inline constexpr float math::Dot(const Vector2f& a, const Vector2f& b) noexcept
@@ -188,9 +198,19 @@ inline constexpr Vector2f math::Multiply(const Vector2f& a, const Vector2f& b) n
 	return Vector2f(a.x * b.x, a.y * b.y);
 }
 
+inline constexpr Vector2i math::Multiply(const Vector2i& a, const Vector2i& b) noexcept
+{
+	return Vector2i(a.x * b.x, a.y * b.y);
+}
+
 inline constexpr Vector3f math::Multiply(const Vector3f& a, const Vector3f& b) noexcept
 {
 	return Vector3f(a.x * b.x, a.y * b.y, a.z * b.z);
+}
+
+inline constexpr Vector3i math::Multiply(const Vector3i& a, const Vector3i& b) noexcept
+{
+	return Vector3i(a.x * b.x, a.y * b.y, a.z * b.z);
 }
 
 inline constexpr Vector2f math::Perpendicular(const Vector2f& vector) noexcept
