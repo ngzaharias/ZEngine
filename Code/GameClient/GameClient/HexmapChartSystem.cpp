@@ -77,10 +77,7 @@ void hexmap::ChartSystem::Update(World& world, const GameTime& gameTime)
 
 		hasChanged = true;
 		auto& chart = world.WriteSingleton<hexmap::ChartComponent>();
-		if (input.m_ScrollDelta.y < 0.f)
-			chart.m_Level--;
-		if (input.m_ScrollDelta.y > 0.f)
-			chart.m_Level++;
+		chart.m_Level -= input.m_ScrollDelta.y * 0.1f;
 	}
 
 	const bool cameraAdded = world.HasAny<ecs::query::Added<eng::camera::ProjectionComponent>::Include<eng::TransformComponent>>();
@@ -90,10 +87,18 @@ void hexmap::ChartSystem::Update(World& world, const GameTime& gameTime)
 	if (hasChanged || cameraAdded || cameraChanged || transformAdded || transformChanged)
 	{
 		auto& chart = world.WriteSingleton<hexmap::ChartComponent>();
+		const int32 level = math::Floor<int32>(chart.m_Level);
 
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, eng::TransformComponent>>())
 		{
-			const auto& camera = world.ReadComponent<eng::camera::ProjectionComponent>(entity);
+			auto& camera = world.WriteComponent<eng::camera::ProjectionComponent>(entity);
+			if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
+			{
+				const float t = chart.m_Level - math::Floor(chart.m_Level);
+				auto& projection = std::get<eng::camera::Orthographic>(camera.m_Projection);
+				projection.m_Size = math::Lerp(1000.f, 12000.f, t);
+			}
+
 			const auto& transform = world.ReadComponent<eng::TransformComponent>(entity);
 			chart.m_Frustrum = GetCameraZone(camera, transform);
 		}
@@ -118,7 +123,7 @@ void hexmap::ChartSystem::Update(World& world, const GameTime& gameTime)
 			fragmentAABB.m_Max += worldPos;
 
 			if (math::IsOverlapping(chart.m_Frustrum, fragmentAABB))
-				inrange.Add({ chart.m_Level, hexPos });
+				inrange.Add({ level, hexPos });
 		}
 
 		enumerate::Difference(inrange, chart.m_Loaded, load);

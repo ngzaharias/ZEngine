@@ -25,8 +25,6 @@
 
 namespace
 {
-	constexpr float s_HexagonRatio = SQUARE_ROOT_THREE / 2.f;
-
 	const str::Guid strSpriteA = str::Guid::Create("686c500eca54494785f189dc49016a4c");
 	const str::Guid strSpriteB = str::Guid::Create("173e2734a8454e13abec1cd18d00caf2");
 }
@@ -35,38 +33,6 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& lines = world.WriteSingleton<eng::LinesComponent>();
-
-	//for (int32 x = 0; x < 3; ++x)
-	//{
-	//	for (int32 y = 0; y < 3; ++y)
-	//	{
-	//		constexpr float tileRadius = 100.f;
-	//		constexpr Vector2f tileRatio = Vector2f(1.f, s_HexagonRatio);
-	//		constexpr Vector2f tileSize = math::Multiply(Vector2f(tileRadius * 2.f), tileRatio);
-	//		constexpr Vector2i tileCount = Vector2i(5, 3);
-
-	//		constexpr Vector2f tileOffset = math::Multiply(Vector2f(tileRadius), tileRatio);
-
-	//		const hexagon::Offset fragmentHex = { tileCount.x * x, tileCount.y * y };
-	//		const Vector2f fragmentSize = hexagon::ToAABB(tileCount, tileRadius).m_Max;
-	//		const Vector2f fragmentPos = hexagon::ToWorldPos(fragmentHex, tileRadius);
-	//		const Vector2f fragmentMin = fragmentPos;
-	//		const Vector2f fragmentMax = fragmentPos + fragmentSize;
-
-	//		const AABB3f fragmentAABB = AABB3f(fragmentMin.X0Y(), fragmentMax.X0Y());
-	//		lines.AddAABB(Vector3f::Zero, fragmentAABB, Vector4f(1.f, 0.f, 0.f, 1.f));
-
-	//		for (const Vector2i& gridPos : enumerate::Vector(tileCount))
-	//		{
-	//			const hexagon::Offset tileHex = { gridPos.x, gridPos.y };
-	//			const Vector2f tilePos = tileOffset + hexagon::ToWorldPos(tileHex, tileRadius);
-	//			const Vector3f worldPos = (fragmentPos + tilePos).X0Y();
-
-	//			lines.AddHexagon(worldPos, tileRadius, Vector4f(0.f, 1.f, 0.f, 1.f));
-	//		}
-	//	}
-	//}
 
 	const auto& debugSettings = world.ReadSingleton<clt::settings::DebugComponent>();
 	if (!debugSettings.m_IsHexmapEnabled)
@@ -115,6 +81,8 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 
 	// #temp: level + 1
 	{
+		auto& lines = world.WriteSingleton<eng::LinesComponent>();
+
 		const float radiusMajor = chart.m_TileRadius * settings.m_TileRatio;
 		const Vector2i min = hexagon::ToOffset(chart.m_Frustrum.m_Min, radiusMajor);
 		const Vector2i max = hexagon::ToOffset(chart.m_Frustrum.m_Max, radiusMajor);
@@ -125,18 +93,4 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 			lines.AddHexagon(worldPos.X0Y(), radiusMajor, Vector4f(1.f));
 		}
 	}
-
-	//// #temp: extents
-	//{
-	//	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::FragmentComponent>>())
-	//	{
-	//		const auto& fragment = world.ReadComponent<hexmap::FragmentComponent>(entity);
-	//		const auto& transform = world.ReadComponent<eng::TransformComponent>(entity);
-
-	//		const AABB2f fragmentAABB = hexagon::ToAABB(settings.m_TileCount, settings.m_TileRadius);
-	//		const AABB3f worldAABB = AABB3f(fragmentAABB.m_Min.X0Y(), fragmentAABB.m_Max.X0Y());
-	//		lines.AddAABB(transform.m_Translate, worldAABB, Vector4f(1.f));
-	//		lines.AddSphere(transform.m_Translate, 100.f, Vector4f(1.f));
-	//	}
-	//}
 }

@@ -21,7 +21,7 @@ namespace hexmap
 
 	struct ChartComponent : ecs::SingletonComponent<ChartComponent>
 	{
-		int32 m_Level = 0;
+		float m_Level = 0.5f;
 		AABB2f m_Frustrum = {};
 		float m_TileRadius = 100.f;
 
