@@ -174,8 +174,8 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 
 				const Vector3f modelScale = transform.m_Scale;
 				const Vector3f fragmentScale = Vector3f(
-					settings.m_TileRadius / 100.f * 2.f,
-					settings.m_TileRadius / 100.f * 2.f,
+					fragment.m_TileRadius / 100.f * 2.f,
+					fragment.m_TileRadius / 100.f * 2.f,
 					1.f);
 
 				Matrix4x4 model = transform.ToTransform();
@@ -188,15 +188,15 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 					spriteSize.x / textureSize.x,
 					spriteSize.y / textureSize.y);
 
-				const int32 width = settings.m_TileCount;
-				const int32 height = settings.m_TileCount;
+				const int32 width = settings.m_TileCount.x;
+				const int32 height = settings.m_TileCount.y;
 				const int32 count = fragment.m_Data.GetCount();
 				for (int32 i = 0; i < count; ++i)
 				{
-					const int32 x = i % width - width / 2;
-					const int32 y = i / width - height / 2;
+					const int32 x = i % width; // - width / 2;
+					const int32 y = i / width; // - height / 2;
 					const hexagon::Offset gridPos = { x, y };
-					const Vector2f localPos = hexagon::ToWorldPos(gridPos, settings.m_TileRadius);
+					const Vector2f localPos = hexagon::ToWorldPos(gridPos, fragment.m_TileRadius);
 
 					model.SetTranslate(transform.m_Translate + localPos.X0Y());
 

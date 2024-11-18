@@ -3,12 +3,13 @@
 #include "Core/Set.h"
 #include "ECS/Component.h"
 #include "Math/Hexagon.h"
+#include "GameClient/HexmapChartComponent.h"
 
 namespace hexmap
 {
 	struct RequestComponent : ecs::EventComponent<RequestComponent>
 	{
-		Set<hexagon::Offset> m_Load;
-		Set<hexagon::Offset> m_Unload;
+		Set<Hexagon> m_Load;
+		Set<Hexagon> m_Unload;
 	};
 }

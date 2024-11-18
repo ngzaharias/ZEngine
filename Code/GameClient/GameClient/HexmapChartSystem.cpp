@@ -66,6 +66,8 @@ void hexmap::ChartSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& settings = world.ReadSingleton<hexmap::SettingsComponent>();
+
 	bool hasChanged = false;
 	for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<eng::InputComponent>>())
 	{
@@ -75,7 +77,10 @@ void hexmap::ChartSystem::Update(World& world, const GameTime& gameTime)
 
 		hasChanged = true;
 		auto& chart = world.WriteSingleton<hexmap::ChartComponent>();
-		chart.m_Level += input.m_ScrollDelta.y * 0.1f;
+		if (input.m_ScrollDelta.y < 0.f)
+			chart.m_Level--;
+		if (input.m_ScrollDelta.y > 0.f)
+			chart.m_Level++;
 	}
 
 	const bool cameraAdded = world.HasAny<ecs::query::Added<eng::camera::ProjectionComponent>::Include<eng::TransformComponent>>();
@@ -85,32 +90,35 @@ void hexmap::ChartSystem::Update(World& world, const GameTime& gameTime)
 	if (hasChanged || cameraAdded || cameraChanged || transformAdded || transformChanged)
 	{
 		auto& chart = world.WriteSingleton<hexmap::ChartComponent>();
-		auto& settings = world.ReadSingleton<hexmap::SettingsComponent>();
 
-		AABB2f zone = {};
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, eng::TransformComponent>>())
 		{
 			const auto& camera = world.ReadComponent<eng::camera::ProjectionComponent>(entity);
 			const auto& transform = world.ReadComponent<eng::TransformComponent>(entity);
-			zone = GetCameraZone(camera, transform);
+			chart.m_Frustrum = GetCameraZone(camera, transform);
 		}
 
-		Set<hexagon::Offset> load;
-		Set<hexagon::Offset> unload;
-		Set<hexagon::Offset> inrange;
+		Set<Hexagon> load;
+		Set<Hexagon> unload;
+		Set<Hexagon> inrange;
 
-		const float fragmentRadius = settings.GetFragmentRadius();
-		const Vector2f fragmentExtents = Vector2f(fragmentRadius);
-		const Vector2i min = hexagon::ToOffset(zone.m_Min, fragmentRadius);
-		const Vector2i max = hexagon::ToOffset(zone.m_Max, fragmentRadius);
-		for (const Vector2i& gridPos : enumerate::Vector(min, max + Vector2i::One))
+		Vector2i min = hexagon::ToOffset(chart.m_Frustrum.m_Min, chart.m_TileRadius);
+		Vector2i max = hexagon::ToOffset(chart.m_Frustrum.m_Max, chart.m_TileRadius);
+		min = math::Divide(min, settings.m_TileCount) - Vector2i(2);
+		max = math::Divide(max, settings.m_TileCount) + Vector2i(2);
+
+		for (const Vector2i& gridMajor : enumerate::Vector(min, max))
 		{
-			const hexagon::Offset hexPos = { gridPos.x, gridPos.y };
-			const Vector2f worldPos = hexagon::ToWorldPos(hexPos, fragmentRadius);
-			const AABB2f fragmentAABB = AABB2f::FromExtents(worldPos, fragmentExtents);
+			const Vector2i gridMinor = math::Multiply(gridMajor, settings.m_TileCount);
+			const hexagon::Offset hexPos = { gridMinor.x, gridMinor.y };
+			const Vector2f worldPos = hexagon::ToWorldPos(hexPos, chart.m_TileRadius);
+			
+			AABB2f fragmentAABB = hexagon::ToAABB(settings.m_TileCount, chart.m_TileRadius);
+			fragmentAABB.m_Min += worldPos;
+			fragmentAABB.m_Max += worldPos;
 
-			if (math::IsOverlapping(zone, fragmentAABB))
-				inrange.Add(hexPos);
+			if (math::IsOverlapping(chart.m_Frustrum, fragmentAABB))
+				inrange.Add({ chart.m_Level, hexPos });
 		}
 
 		enumerate::Difference(inrange, chart.m_Loaded, load);

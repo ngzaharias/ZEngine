@@ -9,7 +9,10 @@ namespace hexmap
 {
 	struct FragmentComponent : ecs::Component<FragmentComponent>
 	{
+		int32 m_Level = 0;
+		float m_TileRadius = 100.f;
 		hexagon::Offset m_HexPos = {};
+
 		Array<int32> m_Data = {};
 
 		// #temp
