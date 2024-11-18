@@ -1,10 +1,14 @@
 #pragma once
 
+#include "Math/AABB.h"
 #include "Math/Hexagon.h"
 #include "Math/Vector.h"
 
 namespace hexagon
 {
+	inline AABB2f ToAABB(const Vector2i& count, const float radius);
+	inline Vector2f ToSize(const Vector2i& count, const float radius);
+
 	/// \brief Convert an axial position to an offset position.
 	inline Axial ToAxial(const Offset& value);
 

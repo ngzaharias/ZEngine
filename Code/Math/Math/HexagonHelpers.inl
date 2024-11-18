@@ -22,6 +22,31 @@ namespace _private
 	}
 }
 
+inline AABB2f hexagon::ToAABB(const Vector2i& count, const float radius)
+{
+	constexpr float sqrt3d2 = SQUARE_ROOT_THREE / 2.f;
+
+	const Vector2f min = -Vector2f(radius, radius * sqrt3d2);
+	const Vector2f max = min + ToSize(count, radius);
+	return AABB2f(min, max);
+}
+
+inline Vector2f hexagon::ToSize(const Vector2i& count, const float radius)
+{
+	constexpr float f3d2 = 3.f / 2.f;
+	constexpr float sqrt3d2 = SQUARE_ROOT_THREE / 2.f;
+
+	const float height = radius * sqrt3d2;
+	const float sizex = radius * 2.f;
+	const float sizey = height * 2.f;
+	const float spacingx = radius * f3d2;
+
+	Vector2f result;
+	result.x = sizex * (count.x > 0) + spacingx * math::Max(0, count.x - 1);
+	result.y = sizey * count.y + (count.x > 1) * height;
+	return result;
+}
+
 inline hexagon::Axial hexagon::ToAxial(const Offset& value)
 {
 	// odd-q
