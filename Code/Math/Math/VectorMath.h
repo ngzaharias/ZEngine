@@ -126,6 +126,9 @@ namespace math
 	/// \brief Calculate the sign of three points of a triangle.
 	inline constexpr float Sign(const Vector2f& a, const Vector2f& b, const Vector2f& c) noexcept;
 
+	inline constexpr int32 To1Dimension(const Vector2i& value, const int32 stride);
+	inline constexpr Vector2i To2Dimension(const int32 value, const int32 stride);
+
 	/// \brief Convert a world position to a grid position.
 	/// Input in the range of >= 0.f and < 1.f will all map to the same value.
 	inline constexpr Vector2i ToGridPos(const Vector2f& worldPos, const float cellSize = 1.f);

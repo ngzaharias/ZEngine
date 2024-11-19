@@ -382,6 +382,16 @@ inline constexpr float math::Sign(const Vector2f& a, const Vector2f& b, const Ve
 	return (a.x - c.x) * (b.y - c.y) - (b.x - c.x) * (a.y - c.y);
 }
 
+inline constexpr int32 math::To1Dimension(const Vector2i& value, const int32 stride)
+{
+	return value.x + value.y * stride;
+}
+
+inline constexpr Vector2i math::To2Dimension(const int32 value, const int32 stride)
+{
+	return Vector2i(value % stride, value / stride);
+}
+
 inline constexpr Vector2i math::ToGridPos(const Vector2f& worldPos, const float cellSize /*= 1.f*/)
 {
 	return Vector2i(
