@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Math/Vector.h"
+
 class Colour
 {
 public:
