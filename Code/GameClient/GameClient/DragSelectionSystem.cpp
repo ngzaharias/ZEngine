@@ -1,6 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/DragSelectionSystem.h"
 
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
@@ -18,12 +19,6 @@
 
 #include <PhysX/PxRigidActor.h>
 #include <PhysX/PxScene.h>
-
-namespace
-{
-	constexpr Vector4f s_ColourM = Vector4f(1.f, 0.f, 1.f, 1.f);
-	constexpr Vector4f s_ColourW = Vector4f(1.f, 1.f, 1.f, 1.f);
-}
 
 void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -75,7 +70,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 					constexpr float s_Extents = 100.1f;
 
 					const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(selectedEntity);
-					linesComponent.AddAABB(transformComponent.m_Translate, s_Extents, s_ColourM);
+					linesComponent.AddAABB(transformComponent.m_Translate, s_Extents, Colour::Magenta);
 
 					if (inputComponent.IsKeyPressed(input::EMouse::Left))
 					{

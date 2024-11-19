@@ -1,6 +1,7 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/PhysicsSystem.h"
 
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -24,8 +25,6 @@
 
 namespace
 {
-	constexpr Vector4f s_ColourM = Vector4f(1.f, 0.f, 1.f, 1.f);
-
 	Vector3f ToVector3f(const physx::PxVec3& value)
 	{
 		return Vector3f(value.x, value.y, value.z);
@@ -63,7 +62,7 @@ namespace
 
 			const Vector3f extents = ToVector3f(boxGeo.halfExtents);
 			const OBB3f obb = OBB3f::FromExtents(Vector3f::Zero, rotate, extents);
-			linesComponent.AddOBB(translate, obb, s_ColourM);
+			linesComponent.AddOBB(translate, obb, Colour::Magenta);
 		} break;
 		case physx::PxGeometryType::eSPHERE:
 		{
@@ -71,7 +70,7 @@ namespace
 			shape.getSphereGeometry(sphereGeo);
 
 			const Sphere3f sphere = Sphere3f(Vector3f::Zero, sphereGeo.radius);
-			linesComponent.AddIcosphere(translate, sphere, s_ColourM);
+			linesComponent.AddIcosphere(translate, sphere, Colour::Magenta);
 			
 		} break;
 

@@ -1,6 +1,7 @@
 #include "EditorPCH.h"
 #include "Editor/GizmoAxes.h"
 
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -18,9 +19,9 @@ void editor::GizmoAxes::Update(World& world, const GameTime& gameTime)
 		return;
 
 	constexpr float s_Distance = 100000.f;
-	constexpr Vector4f s_ColourX = Vector4f(0.58f, 0.23f, 0.29f, 1.f);
-	constexpr Vector4f s_ColourY = Vector4f(0.38f, 0.52f, 0.16f, 1.f);
-	constexpr Vector4f s_ColourZ = Vector4f(0.21f, 0.4f, 0.61f, 1.f);
+	constexpr Colour s_ColourX = Colour(0.58f, 0.23f, 0.29f);
+	constexpr Colour s_ColourY = Colour(0.38f, 0.52f, 0.16f);
+	constexpr Colour s_ColourZ = Colour(0.21f, 0.4f, 0.61f);
 
 	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 	if (settings.m_ShowX)

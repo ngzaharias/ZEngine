@@ -90,7 +90,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 		{
 			const hexagon::Offset hexPos = { gridMajor.x, gridMajor.y };
 			const Vector2f worldPos = hexagon::ToWorldPos(hexPos, radiusMajor);
-			lines.AddHexagon(worldPos.X0Y(), radiusMajor, Vector4f(1.f));
+			lines.AddHexagon(worldPos.X0Y(), radiusMajor, Colour::Black);
 		}
 	}
 }

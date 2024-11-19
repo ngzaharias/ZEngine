@@ -1,6 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/HiddenRevealSystem.h"
 
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -26,9 +27,6 @@
 
 namespace
 {
-	constexpr Vector4f s_ColourM = Vector4f(1.f, 0.f, 1.f, 1.f);
-	constexpr Vector4f s_ColourW = Vector4f(1.f, 1.f, 1.f, 1.f);
-
 	const str::Guid strSoundSequence = GUID("2bde153c851a429c88957b6b0fd482fb");
 
 	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
@@ -94,7 +92,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 				if (settings.m_IsHiddenInputEnabled)
 				{
 					auto& lines = world.WriteSingleton<eng::LinesComponent>();
-					lines.AddSphere(hitPosition, Sphere3f(10.f), Vector4f(1.f, 0.f, 0.f, 1.f));
+					lines.AddSphere(hitPosition, Sphere3f(10.f), Colour::Red);
 				}
 			}
 			else
@@ -102,7 +100,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 				if (settings.m_IsHiddenInputEnabled)
 				{
 					auto& lines = world.WriteSingleton<eng::LinesComponent>();
-					lines.AddSphere(mousePosition + mouseDirection * 100.f, Sphere3f(10.f), Vector4f(0.f, 1.f, 0.f, 1.f));
+					lines.AddSphere(mousePosition + mouseDirection * 100.f, Sphere3f(10.f), Colour::Green);
 				}
 			}
 		}

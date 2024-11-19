@@ -1,6 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/DragMovementSystem.h"
 
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
@@ -20,11 +21,6 @@
 
 #include <PhysX/PxRigidActor.h>
 #include <PhysX/PxScene.h>
-
-namespace
-{
-	constexpr Vector4f s_ColourW = Vector4f(1.f, 1.f, 1.f, 1.f);
-}
 
 void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -59,7 +55,7 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 			const Rotator rotator = Rotator(pitch, yaw, 0.f);
 
 			const OBB3f obb = OBB3f::FromExtents(rotator, Vector3f(500.f, 500.f, 0.f));
-			linesComponent.AddOBB(planeTranslate, obb, s_ColourW);
+			linesComponent.AddOBB(planeTranslate, obb, Colour::White);
 		}
 
 		{

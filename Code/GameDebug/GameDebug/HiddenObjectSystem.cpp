@@ -15,12 +15,6 @@
 #include "GameDebug/HiddenObjectComponent.h"
 #include "Math/AABB.h"
 
-namespace
-{
-	constexpr Vector4f s_ColourM = Vector4f(1.f, 0.f, 1.f, 1.f);
-	constexpr Vector4f s_ColourW = Vector4f(1.f, 1.f, 1.f, 1.f);
-}
-
 void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();

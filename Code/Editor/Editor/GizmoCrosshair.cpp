@@ -1,6 +1,7 @@
 #include "EditorPCH.h"
 #include "Editor/GizmoCrosshair.h"
 
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -36,10 +37,10 @@ void editor::GizmoCrosshair::Update(World& world, const GameTime& gameTime)
 		linesComponent.AddLine(
 			position - right * 0.1f,
 			position + right * 0.1f,
-			Vector4f(1.f));
+			Colour::White);
 		linesComponent.AddLine(
 			position - upward * 0.1f,
 			position + upward * 0.1f,
-			Vector4f(1.f));
+			Colour::White);
 	}
 }

@@ -190,7 +190,7 @@ namespace
 			Vector3f(0.0f, 0.866f, -0.499f) };
 }
 
-void eng::LinesComponent::AddAABB(const Vector3f& translate, const float extents, const Vector4f& colour)
+void eng::LinesComponent::AddAABB(const Vector3f& translate, const float extents, const Colour& colour)
 {
 	Vector3f corners[8];
 	corners[0] = translate + Vector3f(-extents, -extents, -extents);
@@ -219,7 +219,7 @@ void eng::LinesComponent::AddAABB(const Vector3f& translate, const float extents
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddAABB(const Vector3f& translate, const Vector3f& extents, const Vector4f& colour)
+void eng::LinesComponent::AddAABB(const Vector3f& translate, const Vector3f& extents, const Colour& colour)
 {
 	Vector3f corners[8];
 	corners[0] = translate + Vector3f(-extents.x, -extents.y, -extents.z);
@@ -248,7 +248,7 @@ void eng::LinesComponent::AddAABB(const Vector3f& translate, const Vector3f& ext
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& extents, const Vector4f& colour)
+void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& extents, const Colour& colour)
 {
 	Vector3f corners[8];
 	corners[0] = translate + Vector3f(extents.m_Min.x, extents.m_Min.y, extents.m_Min.z);
@@ -277,7 +277,7 @@ void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& exten
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& circle, const Vector4f& colour)
+void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& circle, const Colour& colour)
 {
 	Vector3f corners[8];
 	corners[0] = translate + circle.m_Position.X0Y() + Vector3f(-circle.m_Radius, 0.f, 0.f);
@@ -303,12 +303,12 @@ void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& c
 	AddLine(corners[5], corners[2], colour);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Colour& colour)
 {
 	std::visit([&](auto projection) { AddFrustrum(translate, rotate, projection, colour); }, projection);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Colour& colour)
 {
 	// #todo: pass in width & height
 	const float aspect = Screen::width / Screen::height;
@@ -348,7 +348,7 @@ void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Colour& colour)
 {
 	// #todo: pass in width & height
 	const float ratio = Screen::width / Screen::height;
@@ -393,24 +393,24 @@ void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddHexagon(const Vector3f& translate, const float radius, const Vector4f& colour)
+void eng::LinesComponent::AddHexagon(const Vector3f& translate, const float radius, const Colour& colour)
 {
-	constexpr Vector3f s_DirectionE  = Vector2f(+1.f, 0.f).X0Y();
+	constexpr Vector3f s_DirectionE = Vector2f(+1.f, 0.f).X0Y();
 	constexpr Vector3f s_DirectionSE = Vector2f(+0.5f, -0.866025f).X0Y();
 	constexpr Vector3f s_DirectionSW = Vector2f(-0.5f, -0.866025f).X0Y();
-	constexpr Vector3f s_DirectionW  = Vector2f(-1.f, 0.f).X0Y();
+	constexpr Vector3f s_DirectionW = Vector2f(-1.f, 0.f).X0Y();
 	constexpr Vector3f s_DirectionNW = Vector2f(-0.5f, +0.866025f).X0Y();
 	constexpr Vector3f s_DirectionNE = Vector2f(+0.5f, +0.866025f).X0Y();
 
-	AddLine(translate + s_DirectionE  * radius, translate + s_DirectionSE * radius, colour);
+	AddLine(translate + s_DirectionE * radius, translate + s_DirectionSE * radius, colour);
 	AddLine(translate + s_DirectionSE * radius, translate + s_DirectionSW * radius, colour);
-	AddLine(translate + s_DirectionSW * radius, translate + s_DirectionW  * radius, colour);
-	AddLine(translate + s_DirectionW  * radius, translate + s_DirectionNW * radius, colour);
+	AddLine(translate + s_DirectionSW * radius, translate + s_DirectionW * radius, colour);
+	AddLine(translate + s_DirectionW * radius, translate + s_DirectionNW * radius, colour);
 	AddLine(translate + s_DirectionNW * radius, translate + s_DirectionNE * radius, colour);
-	AddLine(translate + s_DirectionNE * radius, translate + s_DirectionE  * radius, colour);
+	AddLine(translate + s_DirectionNE * radius, translate + s_DirectionE * radius, colour);
 }
 
-void eng::LinesComponent::AddIcosphere(const Vector3f& translate, const Sphere3f& sphere, const Vector4f& colour)
+void eng::LinesComponent::AddIcosphere(const Vector3f& translate, const Sphere3f& sphere, const Colour& colour)
 {
 	const Matrix4x4 transform = Matrix4x4::FromTransform(
 		translate + sphere.m_Position,
@@ -426,13 +426,13 @@ void eng::LinesComponent::AddIcosphere(const Vector3f& translate, const Sphere3f
 	}
 }
 
-void eng::LinesComponent::AddLine(const Vector3f& pointA, const Vector3f& pointB, const Vector4f& colour)
+void eng::LinesComponent::AddLine(const Vector3f& pointA, const Vector3f& pointB, const Colour& colour)
 {
 	m_Vertices.Append({ pointA, colour });
 	m_Vertices.Append({ pointB, colour });
 }
 
-void eng::LinesComponent::AddOBB(const Vector3f& translate, const OBB3f& obb, const Vector4f& colour)
+void eng::LinesComponent::AddOBB(const Vector3f& translate, const OBB3f& obb, const Colour& colour)
 {
 	AddLine(translate + obb.m_Points[0], translate + obb.m_Points[1], colour);
 	AddLine(translate + obb.m_Points[1], translate + obb.m_Points[2], colour);
@@ -448,9 +448,9 @@ void eng::LinesComponent::AddOBB(const Vector3f& translate, const OBB3f& obb, co
 	AddLine(translate + obb.m_Points[1], translate + obb.m_Points[5], colour);
 	AddLine(translate + obb.m_Points[2], translate + obb.m_Points[6], colour);
 	AddLine(translate + obb.m_Points[3], translate + obb.m_Points[7], colour);
-}	
+}
 
-void eng::LinesComponent::AddSphere(const Vector3f& translate, const Sphere3f& sphere, const Vector4f& colour)
+void eng::LinesComponent::AddSphere(const Vector3f& translate, const Sphere3f& sphere, const Colour& colour)
 {
 	Vector3f corners[8];
 	corners[0] = translate + sphere.m_Position + Vector3f(-sphere.m_Radius, 0.f, 0.f);
