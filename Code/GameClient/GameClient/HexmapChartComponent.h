@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/GUID.h"
 #include "ECS/Component.h"
 #include "Math/AABB.h"
 #include "Math/Hexagon.h"
@@ -21,7 +22,8 @@ namespace hexmap
 
 	struct ChartComponent : ecs::SingletonComponent<ChartComponent>
 	{
-		float m_Level = 0.5f;
+		int32 m_Level = 0;
+		float m_Zoom = 0.5f;
 		AABB2f m_Frustrum = {};
 		float m_TileRadius = 100.f;
 

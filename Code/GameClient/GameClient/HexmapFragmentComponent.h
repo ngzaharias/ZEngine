@@ -13,6 +13,7 @@ namespace hexmap
 		float m_TileRadius = 100.f;
 		hexagon::Offset m_HexPos = {};
 
+		Vector2i m_TileCount = {};
 		Array<int32> m_Data = {};
 
 		// #temp

@@ -24,6 +24,7 @@ namespace eng
 namespace hexmap
 {
 	struct AssetComponent;
+	struct ChartComponent;
 	struct FragmentComponent;
 	struct SettingsComponent;
 
@@ -35,6 +36,7 @@ namespace hexmap
 			const eng::camera::ProjectionComponent,
 			const eng::TransformComponent,
 			const hexmap::AssetComponent,
+			const hexmap::ChartComponent,
 			const hexmap::FragmentComponent,
 			const hexmap::SettingsComponent>;
 
@@ -42,9 +44,6 @@ namespace hexmap
 		void Shutdown(ecs::EntityWorld& entityWorld) override;
 
 		void Render(ecs::EntityWorld& entityWorld) override;
-
-	private:
-		void RenderBatch(World& world, const eng::RenderBatchID& batchID, const eng::RenderBatchData& batchData, const eng::RenderStageData& stageData);
 
 	private:
 		uint32 m_ColourBuffer = 0;

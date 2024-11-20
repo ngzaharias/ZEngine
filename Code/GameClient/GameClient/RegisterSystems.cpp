@@ -13,6 +13,7 @@
 #include "GameClient/HexmapAssetSystem.h"
 #include "GameClient/HexmapChartSystem.h"
 #include "GameClient/HexmapLoadSystem.h"
+#include "GameClient/HexmapModifySystem.h"
 #include "GameClient/HiddenCountSystem.h"
 #include "GameClient/HiddenPhysicsSystem.h"
 #include "GameClient/HiddenRevealSystem.h"
@@ -44,6 +45,7 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<hexmap::AssetSystem>();
 	entityWorld.RegisterSystem<hexmap::ChartSystem>();
 	entityWorld.RegisterSystem<hexmap::LoadSystem>();
+	entityWorld.RegisterSystem<hexmap::ModifySystem>();
 	entityWorld.RegisterSystem<hidden::CountSystem>();
 	entityWorld.RegisterSystem<hidden::PhysicsSystem>();
 	entityWorld.RegisterSystem<hidden::RevealSystem>();

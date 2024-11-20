@@ -1,6 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/HexmapLoadSystem.h"
 
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
@@ -40,6 +41,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 
 	const auto& chart = world.ReadSingleton<hexmap::ChartComponent>();
 	const auto& settings = world.ReadSingleton<hexmap::SettingsComponent>();
+	const float zoom = chart.m_Zoom;
 
 	// load
 	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<hexmap::RequestComponent>>())
@@ -53,6 +55,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 			fragment.m_Level = hex.m_Level;
 			fragment.m_TileRadius = chart.m_TileRadius;
 			fragment.m_HexPos = hex.m_Offset;
+			fragment.m_TileCount = settings.m_TileCount;
 
 			// #temp:
 			fragment.m_Sprite = ((hex.m_Offset.row ^ hex.m_Offset.col ^ hex.m_Level) % 3) == 0 ? strSpriteA : strSpriteB;
@@ -79,6 +82,22 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
+	// #temp: level - 1
+	if (false)
+	{
+		auto& lines = world.WriteSingleton<eng::LinesComponent>();
+
+		const float radiusMinor = chart.m_TileRadius / settings.m_TileRatio;
+		const Vector2i min = hexagon::ToOffset(chart.m_Frustrum.m_Min, radiusMinor);
+		const Vector2i max = hexagon::ToOffset(chart.m_Frustrum.m_Max, radiusMinor);
+		for (const Vector2i& gridMinor : enumerate::Vector(min, max))
+		{
+			const hexagon::Offset hexPos = { gridMinor.x, gridMinor.y };
+			const Vector2f worldPos = hexagon::ToWorldPos(hexPos, radiusMinor);
+			lines.AddHexagon(worldPos.X0Y(), radiusMinor, Colour::Black);
+		}
+	}
+
 	// #temp: level + 1
 	{
 		auto& lines = world.WriteSingleton<eng::LinesComponent>();
@@ -86,7 +105,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 		const float radiusMajor = chart.m_TileRadius * settings.m_TileRatio;
 		const Vector2i min = hexagon::ToOffset(chart.m_Frustrum.m_Min, radiusMajor);
 		const Vector2i max = hexagon::ToOffset(chart.m_Frustrum.m_Max, radiusMajor);
-		for (const Vector2i& gridMajor : enumerate::Vector(min, max))
+		for (const Vector2i& gridMajor : enumerate::Vector(min, max + Vector2i::One))
 		{
 			const hexagon::Offset hexPos = { gridMajor.x, gridMajor.y };
 			const Vector2f worldPos = hexagon::ToWorldPos(hexPos, radiusMajor);

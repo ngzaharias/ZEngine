@@ -26,7 +26,11 @@
 
 namespace
 {
+	constexpr Vector2f s_SpriteSize = Vector2f(238.f, 207.f);
+
 	const str::Guid strMesh = str::Guid::Create("ecf9330f287d40fea37789491c3c32a3");
+	const str::Guid strShader = str::Guid::Create("94eb696e6c1841309a2071df1f0f1823");
+	const str::Guid strTexture = str::Guid::Create("3c8610fc623e4496951dcefeaf0495ab");
 
 	struct Sort
 	{
@@ -55,6 +59,8 @@ void hexmap::RenderStage::Initialise(ecs::EntityWorld& entityWorld)
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
 	assetManager.RequestAsset<eng::StaticMeshAsset>(strMesh);
+	assetManager.RequestAsset<eng::ShaderAsset>(strShader);
+	assetManager.RequestAsset<eng::Texture2DAsset>(strTexture);
 }
 
 void hexmap::RenderStage::Shutdown(ecs::EntityWorld& entityWorld)
@@ -65,6 +71,8 @@ void hexmap::RenderStage::Shutdown(ecs::EntityWorld& entityWorld)
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
 	assetManager.ReleaseAsset<eng::StaticMeshAsset>(strMesh);
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strShader);
+	assetManager.ReleaseAsset<eng::Texture2DAsset>(strTexture);
 }
 
 void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
@@ -73,7 +81,15 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto& settings = world.ReadSingleton<hexmap::SettingsComponent>();
+	const auto& chart = world.ReadSingleton<hexmap::ChartComponent>();
+
+	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(strMesh);
+	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strShader);
+	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(strTexture);
+	if (!mesh || !shader || !texture)
+		return;
+	if (texture->m_TextureId == 0)
+		return;
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -99,88 +115,51 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 		const Matrix4x4 cameraProj = eng::camera::GetProjection(screenSize, cameraComponent.m_Projection);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
-		Array<eng::RenderBatchID> batchIDs;
+		Array<Matrix4x4> m_Models;
+		Array<Vector4f>  m_TexParams;
+		Array<Vector3f>  m_Colours;
 
-		// fragment
+		using Query = ecs::query
+			::Include<
+			hexmap::AssetComponent,
+			hexmap::FragmentComponent,
+			eng::TransformComponent>;
+
+		for (const ecs::Entity& renderEntity : world.Query<Query>())
 		{
-			using Query = ecs::query
-				::Include<
-				hexmap::AssetComponent,
-				hexmap::FragmentComponent,
-				eng::TransformComponent>;
+			const auto& fragment = world.ReadComponent<hexmap::FragmentComponent>(renderEntity);
+			if (fragment.m_Level != chart.m_Level)
+				continue;
 
-			for (const ecs::Entity& renderEntity : world.Query<Query>())
+			const auto& transform = world.ReadComponent<eng::TransformComponent>(renderEntity);
+
+			const Vector2f spriteSize = s_SpriteSize;
+			const Vector2f textureSize = Vector2f((float)texture->m_Width, (float)texture->m_Height);
+
+			const Vector3f modelScale = transform.m_Scale;
+			const Vector3f fragmentScale = Vector3f(
+				fragment.m_TileRadius / 100.f * 2.f,
+				fragment.m_TileRadius / 100.f * 2.f,
+				1.f);
+
+			Matrix4x4 model = transform.ToTransform();
+			model.SetScale(math::Multiply(modelScale, fragmentScale));
+
+			const int32 width = fragment.m_TileCount.x;
+			const int32 height = fragment.m_TileCount.y;
+			const int32 count = fragment.m_Data.GetCount();
+			for (int32 i = 0; i < count; ++i)
 			{
-				const auto& assetComponent = world.ReadComponent<hexmap::AssetComponent>(renderEntity);
-				const auto& fragmentComponent = world.ReadComponent<hexmap::FragmentComponent>(renderEntity);
-				const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(renderEntity);
+				const int32 index = fragment.m_Data[i] % 3;
+				const int32 indey = fragment.m_Data[i] / 3;
 
-				const eng::SpriteAsset* spriteAsset = assetComponent.m_Sprite;
-				const eng::Texture2DAsset* texture2DAsset = assetComponent.m_Texture2D;
-				if (!spriteAsset)
-					continue;
+				const Vector2i gridPos = math::To2Dimension(i, width);
+				const hexagon::Offset hexPos = { gridPos.x, gridPos.y };
+				const Vector2f localPos = hexagon::ToWorldPos(hexPos, fragment.m_TileRadius);
 
-				eng::RenderBatchID id;
-				id.m_Entity = renderEntity;
-				id.m_Depth = math::DistanceSqr(transformComponent.m_Translate, cameraTransform.m_Translate);
-				id.m_ShaderId = spriteAsset->m_Shader;
-				id.m_StaticMeshId = strMesh;
-				id.m_TextureId = spriteAsset->m_Texture2D;
-				batchIDs.Append(id);
-			}
-		}
+				model.SetTranslate(transform.m_Translate + localPos.X0Y());
 
-		if (batchIDs.IsEmpty())
-			continue;
-
-		std::sort(batchIDs.begin(), batchIDs.end(), Sort());
-
-		eng::RenderBatchID batchID = batchIDs.GetFirst();
-		eng::RenderBatchData batchData;
-		eng::RenderStageData stageData = { cameraProj, cameraView };
-
-		for (const eng::RenderBatchID& id : batchIDs)
-		{
-			const bool isSameBatch =
-				id.m_ShaderId == batchID.m_ShaderId &&
-				id.m_TextureId == batchID.m_TextureId &&
-				id.m_StaticMeshId == batchID.m_StaticMeshId;
-
-			if (!isSameBatch)
-			{
-				RenderBatch(world, batchID, batchData, stageData);
-				batchData.m_Colours.RemoveAll();
-				batchData.m_Models.RemoveAll();
-				batchData.m_TexParams.RemoveAll();
-			}
-
-			if (world.HasComponent<hexmap::FragmentComponent>(id.m_Entity))
-			{
-				const auto& fragment = world.ReadComponent<hexmap::FragmentComponent>(id.m_Entity);
-				const auto& transform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-
-				const auto& assetComponent = world.ReadComponent<hexmap::AssetComponent>(id.m_Entity);
-				const auto& fragmentComponent = world.ReadComponent<hexmap::FragmentComponent>(id.m_Entity);
-				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-
-				const eng::SpriteAsset* spriteAsset = assetComponent.m_Sprite;
-				const eng::Texture2DAsset* texture2DAsset = assetComponent.m_Texture2D;
-				if (!spriteAsset || !texture2DAsset)
-					continue;
-
-				const Vector2f spritePos = Vector2f((float)spriteAsset->m_Position.x, (float)spriteAsset->m_Position.y);
-				const Vector2f spriteSize = Vector2f((float)spriteAsset->m_Size.x, (float)spriteAsset->m_Size.y);
-				const Vector2f textureSize = Vector2f((float)texture2DAsset->m_Width, (float)texture2DAsset->m_Height);
-
-				const Vector3f modelScale = transform.m_Scale;
-				const Vector3f fragmentScale = Vector3f(
-					fragment.m_TileRadius / 100.f * 2.f,
-					fragment.m_TileRadius / 100.f * 2.f,
-					1.f);
-
-				Matrix4x4 model = transform.ToTransform();
-				model.SetScale(math::Multiply(modelScale, fragmentScale));
-
+				const Vector2f spritePos = Vector2f(spriteSize.x * index, spriteSize.y * indey);
 				const Vector2f texcoordOffset = Vector2f(
 					spritePos.x / textureSize.x,
 					spritePos.y / textureSize.y);
@@ -188,157 +167,126 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 					spriteSize.x / textureSize.x,
 					spriteSize.y / textureSize.y);
 
-				const int32 width = settings.m_TileCount.x;
-				const int32 height = settings.m_TileCount.y;
-				const int32 count = fragment.m_Data.GetCount();
-				for (int32 i = 0; i < count; ++i)
-				{
-					const int32 x = i % width; // - width / 2;
-					const int32 y = i / width; // - height / 2;
-					const hexagon::Offset gridPos = { x, y };
-					const Vector2f localPos = hexagon::ToWorldPos(gridPos, fragment.m_TileRadius);
+				m_Colours.Append(Vector3f(1.f));
+				m_Models.Append(model);
+				m_TexParams.Emplace(
+					texcoordOffset.x, texcoordOffset.y,
+					texcoordScale.x, texcoordScale.y);
+			}
+		}
 
-					model.SetTranslate(transform.m_Translate + localPos.X0Y());
+		glUseProgram(shader->m_ProgramId);
 
-					batchData.m_Colours.Append(Vector3f(1.f));
-					batchData.m_Models.Append(model);
-					batchData.m_TexParams.Emplace(
-						texcoordOffset.x, texcoordOffset.y,
-						texcoordScale.x, texcoordScale.y);
-				}
+		if (!m_Models.IsEmpty())
+		{
+			const int32 i = 0;
+			const int32 instanceCount = m_Models.GetCount();
+			const auto& binding = mesh->m_Binding;
+
+			glBindVertexArray(binding.m_AttributeObject);
+
+			// vertices
+			// indices
+			if (shader->a_Vertex)
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, binding.m_VertexBuffer);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, binding.m_IndexBuffer);
+
+				const uint32 location = *shader->a_Vertex;
+				glEnableVertexAttribArray(location);
+				glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), 0);
+				glVertexAttribDivisor(location, GL_FALSE);
 			}
 
-			// do last
-			batchID = id;
+			// normals
+			if (shader->a_Normal)
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, binding.m_NormalBuffer);
+
+				const uint32 location = *shader->a_Normal;
+				glEnableVertexAttribArray(location);
+				glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), 0);
+				glVertexAttribDivisor(location, GL_FALSE);
+			}
+
+			// texcoords
+			if (shader->a_TexCoords)
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, binding.m_TexCoordBuffer);
+
+				const uint32 location = *shader->a_TexCoords;
+				glEnableVertexAttribArray(location);
+				glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2f), 0);
+				glVertexAttribDivisor(location, GL_FALSE);
+			}
+
+			// texparams
+			if (shader->i_TexParams)
+			{
+				// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
+
+				glBindBuffer(GL_ARRAY_BUFFER, m_TexParamBuffer);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(Vector4f) * instanceCount, &m_TexParams[i], GL_DYNAMIC_DRAW);
+
+				const uint32 location = *shader->i_TexParams;
+				glEnableVertexAttribArray(location);
+				glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, sizeof(Vector4f), (void*)(0));
+				glVertexAttribDivisor(location, GL_TRUE);
+			}
+
+			// colours
+			if (shader->i_Colour)
+			{
+				// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
+
+				glBindBuffer(GL_ARRAY_BUFFER, m_ColourBuffer);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * instanceCount, &m_Colours[i], GL_DYNAMIC_DRAW);
+
+				const uint32 location = *shader->i_Colour;
+				glEnableVertexAttribArray(location);
+				glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), (void*)(0));
+				glVertexAttribDivisor(location, GL_TRUE);
+			}
+
+			// models
+			if (shader->i_Model)
+			{
+				// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
+				// #todo: glMapBuffer ?
+
+				glBindBuffer(GL_ARRAY_BUFFER, m_ModelBuffer);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(Matrix4x4) * instanceCount, &m_Models[i], GL_DYNAMIC_DRAW);
+
+				const uint32 location = *shader->i_Model;
+				glEnableVertexAttribArray(location + 0);
+				glEnableVertexAttribArray(location + 1);
+				glEnableVertexAttribArray(location + 2);
+				glEnableVertexAttribArray(location + 3);
+				glVertexAttribPointer(location + 0, 4, GL_FLOAT, GL_FALSE, sizeof(Matrix4x4), (void*)(sizeof(Vector4f) * 0));
+				glVertexAttribPointer(location + 1, 4, GL_FLOAT, GL_FALSE, sizeof(Matrix4x4), (void*)(sizeof(Vector4f) * 1));
+				glVertexAttribPointer(location + 2, 4, GL_FLOAT, GL_FALSE, sizeof(Matrix4x4), (void*)(sizeof(Vector4f) * 2));
+				glVertexAttribPointer(location + 3, 4, GL_FLOAT, GL_FALSE, sizeof(Matrix4x4), (void*)(sizeof(Vector4f) * 3));
+				glVertexAttribDivisor(location + 0, GL_TRUE);
+				glVertexAttribDivisor(location + 1, GL_TRUE);
+				glVertexAttribDivisor(location + 2, GL_TRUE);
+				glVertexAttribDivisor(location + 3, GL_TRUE);
+			}
+
+			if (shader->u_CameraProj)
+			{
+				const uint32 location = *shader->u_CameraProj;
+				glUniformMatrix4fv(location, 1, false, &cameraProj.m_Data[0][0]);
+			}
+
+			if (shader->u_CameraView)
+			{
+				const uint32 location = *shader->u_CameraView;
+				glUniformMatrix4fv(location, 1, false, &cameraView.m_Data[0][0]);
+			}
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texture->m_TextureId);
+			glDrawElementsInstanced(GL_TRIANGLES, mesh->m_Indices.GetCount(), GL_UNSIGNED_INT, 0, instanceCount);
 		}
-
-		RenderBatch(world, batchID, batchData, stageData);
-	}
-}
-
-void hexmap::RenderStage::RenderBatch(World& world, const eng::RenderBatchID& batchID, const eng::RenderBatchData& batchData, const eng::RenderStageData& stageData)
-{
-	PROFILE_FUNCTION();
-
-	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(batchID.m_ShaderId);
-	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(batchID.m_TextureId);
-	if (!mesh || !shader || !texture)
-		return;
-	if (texture->m_TextureId == 0)
-		return;
-
-	glUseProgram(shader->m_ProgramId);
-
-	{
-		const int32 i = 0;
-		const int32 instanceCount = batchData.m_Models.GetCount();
-		const auto& binding = mesh->m_Binding;
-
-		glBindVertexArray(binding.m_AttributeObject);
-
-		// vertices
-		// indices
-		if (shader->a_Vertex)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, binding.m_VertexBuffer);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, binding.m_IndexBuffer);
-
-			const uint32 location = *shader->a_Vertex;
-			glEnableVertexAttribArray(location);
-			glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), 0);
-			glVertexAttribDivisor(location, GL_FALSE);
-		}
-
-		// normals
-		if (shader->a_Normal)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, binding.m_NormalBuffer);
-
-			const uint32 location = *shader->a_Normal;
-			glEnableVertexAttribArray(location);
-			glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), 0);
-			glVertexAttribDivisor(location, GL_FALSE);
-		}
-
-		// texcoords
-		if (shader->a_TexCoords)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, binding.m_TexCoordBuffer);
-
-			const uint32 location = *shader->a_TexCoords;
-			glEnableVertexAttribArray(location);
-			glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2f), 0);
-			glVertexAttribDivisor(location, GL_FALSE);
-		}
-
-		// texparams
-		if (shader->i_TexParams)
-		{
-			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
-
-			glBindBuffer(GL_ARRAY_BUFFER, m_TexParamBuffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(Vector4f) * instanceCount, &batchData.m_TexParams[i], GL_DYNAMIC_DRAW);
-
-			const uint32 location = *shader->i_TexParams;
-			glEnableVertexAttribArray(location);
-			glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, sizeof(Vector4f), (void*)(0));
-			glVertexAttribDivisor(location, GL_TRUE);
-		}
-
-		// colours
-		if (shader->i_Colour)
-		{
-			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
-
-			glBindBuffer(GL_ARRAY_BUFFER, m_ColourBuffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * instanceCount, &batchData.m_Colours[i], GL_DYNAMIC_DRAW);
-
-			const uint32 location = *shader->i_Colour;
-			glEnableVertexAttribArray(location);
-			glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), (void*)(0));
-			glVertexAttribDivisor(location, GL_TRUE);
-		}
-
-		// models
-		if (shader->i_Model)
-		{
-			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
-			// #todo: glMapBuffer ?
-
-			glBindBuffer(GL_ARRAY_BUFFER, m_ModelBuffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(Matrix4x4) * instanceCount, &batchData.m_Models[i], GL_DYNAMIC_DRAW);
-
-			const uint32 location = *shader->i_Model;
-			glEnableVertexAttribArray(location + 0);
-			glEnableVertexAttribArray(location + 1);
-			glEnableVertexAttribArray(location + 2);
-			glEnableVertexAttribArray(location + 3);
-			glVertexAttribPointer(location + 0, 4, GL_FLOAT, GL_FALSE, sizeof(Matrix4x4), (void*)(sizeof(Vector4f) * 0));
-			glVertexAttribPointer(location + 1, 4, GL_FLOAT, GL_FALSE, sizeof(Matrix4x4), (void*)(sizeof(Vector4f) * 1));
-			glVertexAttribPointer(location + 2, 4, GL_FLOAT, GL_FALSE, sizeof(Matrix4x4), (void*)(sizeof(Vector4f) * 2));
-			glVertexAttribPointer(location + 3, 4, GL_FLOAT, GL_FALSE, sizeof(Matrix4x4), (void*)(sizeof(Vector4f) * 3));
-			glVertexAttribDivisor(location + 0, GL_TRUE);
-			glVertexAttribDivisor(location + 1, GL_TRUE);
-			glVertexAttribDivisor(location + 2, GL_TRUE);
-			glVertexAttribDivisor(location + 3, GL_TRUE);
-		}
-
-		if (shader->u_CameraProj)
-		{
-			const uint32 location = *shader->u_CameraProj;
-			glUniformMatrix4fv(location, 1, false, &stageData.m_CameraProj.m_Data[0][0]);
-		}
-
-		if (shader->u_CameraView)
-		{
-			const uint32 location = *shader->u_CameraView;
-			glUniformMatrix4fv(location, 1, false, &stageData.m_CameraView.m_Data[0][0]);
-		}
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture->m_TextureId);
-		glDrawElementsInstanced(GL_TRIANGLES, mesh->m_Indices.GetCount(), GL_UNSIGNED_INT, 0, instanceCount);
 	}
 }
