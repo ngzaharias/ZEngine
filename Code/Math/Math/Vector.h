@@ -80,6 +80,10 @@ public:
 	constexpr explicit Vector2i(const int32 value)  noexcept : x(value), y(value) {}
 	constexpr explicit Vector2i(const int32 x, const int32 y)  noexcept : x(x), y(y) {}
 
+	[[nodiscard]] constexpr bool operator<(const Vector2i& rhs) const noexcept { return (x != rhs.x) ? (x < rhs.x) : (y < rhs.y); }
+	[[nodiscard]] constexpr bool operator<=(const Vector2i& rhs) const noexcept { return (x != rhs.x) ? (x <= rhs.x) : (y <= rhs.y); }
+	[[nodiscard]] constexpr bool operator>(const Vector2i& rhs) const noexcept { return (x != rhs.x) ? (x > rhs.x) : (y > rhs.y); }
+	[[nodiscard]] constexpr bool operator>=(const Vector2i& rhs) const noexcept { return (x != rhs.x) ? (x >= rhs.x) : (y >= rhs.y); }
 	[[nodiscard]] constexpr bool operator==(const Vector2i& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y); }
 	[[nodiscard]] constexpr bool operator!=(const Vector2i& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y); }
 
