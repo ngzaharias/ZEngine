@@ -21,6 +21,19 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	struct LayerInfo
+	{
+		bool operator<(const LayerInfo& rhs) const 
+		{
+			if (m_Depth != rhs.m_Depth)
+				return m_Depth < rhs.m_Depth;
+			return m_LayerPos < rhs.m_LayerPos;
+		}
+
+		int32 m_Depth = 0;
+		LayerPos m_LayerPos = {};
+	};
+
 	// load
 	using RootQuery = ecs::query
 		::Updated<hexmap::RootComponent>
@@ -33,24 +46,25 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 		const HexPos hexMin = hexagon::ToOffset(root.m_Zone.m_Min, root.m_HexRadius);
 		const HexPos hexMax = hexagon::ToOffset(root.m_Zone.m_Max, root.m_HexRadius);
 
-		Set<LayerPos> inRange;
+		Set<LayerInfo> inRange;
 		const LayerPos layerMin = ToLayerPos(hexMin, root.m_HexCount) - LayerPos(1);
 		const LayerPos layerMax = ToLayerPos(hexMax, root.m_HexCount) + LayerPos(1);
 		for (const Vector2i& gridPos : enumerate::Vector(layerMin, layerMax))
 		{
 			const LayerPos layerPos = LayerPos(gridPos);
-			inRange.Add(layerPos);
+			inRange.Add({ root.m_Depth, layerPos });
 		}
 
-		Set<LayerPos> loaded;
+		Set<LayerInfo> loaded;
 		for (const ecs::Entity& layerEntity : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::LayerComponent>>())
 		{
 			const auto& transform = world.ReadComponent<eng::TransformComponent>(layerEntity);
 			const auto& layer = world.ReadComponent<hexmap::LayerComponent>(layerEntity);
 
-			if (inRange.Contains(layer.m_Origin))
+			LayerInfo info = { layer.m_Depth, layer.m_Origin };
+			if (inRange.Contains(info))
 			{
-				loaded.Add(layer.m_Origin);
+				loaded.Add(info);
 			}
 			else
 			{
@@ -58,18 +72,18 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 			}
 		}
 
-		Set<LayerPos> toCreate;
+		Set<LayerInfo> toCreate;
 		enumerate::Difference(inRange, loaded, toCreate);
-		for (const LayerPos& layerPos : toCreate)
+		for (const LayerInfo& info : toCreate)
 		{
 			const int32 depth = root.m_Depth;
-			const HexPos hexPos = ToHexPos(layerPos, root.m_HexCount);
+			const HexPos hexPos = ToHexPos(info.m_LayerPos, root.m_HexCount);
 			const Vector3f worldPos = hexagon::ToWorldPos(hexPos, root.m_HexRadius).X0Y();
 
 			const ecs::Entity entity = world.CreateEntity();
 			auto& layer = world.AddComponent<hexmap::LayerComponent>(entity);
-			layer.m_Depth = depth;
-			layer.m_Origin = layerPos;
+			layer.m_Depth = info.m_Depth;
+			layer.m_Origin = info.m_LayerPos;
 			layer.m_Root = rootEntity;
 			layer.m_HexCount = root.m_HexCount;
 
@@ -79,7 +93,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 				layer.m_HexData[i] = { 0 };
 
 			auto& name = world.AddComponent<ecs::NameComponent>(entity);
-			name.m_Name = std::format("Fragment: {} - {}, {}", depth, layerPos.x, layerPos.y);
+			name.m_Name = std::format("Fragment: {} - {}, {}", depth, info.m_LayerPos.x, info.m_LayerPos.y);
 
 			auto& transform = world.AddComponent<eng::TransformComponent>(entity);
 			transform.m_Translate = worldPos;
