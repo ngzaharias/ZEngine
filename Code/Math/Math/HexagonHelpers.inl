@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Math/Hexagon.h"
 #include "Math/Math.h"
 #include "Math/Vector.h"
 
