@@ -15,23 +15,19 @@ namespace eng::camera
 
 namespace hexmap
 {
-	struct ChartComponent;
-	struct RequestComponent;
-	struct SettingsComponent;
+	struct RootComponent;
 }
 
 namespace hexmap
 {
-	class ChartSystem final : public ecs::System
+	class RootSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			hexmap::ChartComponent,
-			hexmap::RequestComponent,
+			hexmap::RootComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,
-			const eng::TransformComponent,
-			const hexmap::SettingsComponent>;
+			const eng::TransformComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

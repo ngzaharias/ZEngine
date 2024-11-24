@@ -15,9 +15,8 @@ namespace eng::camera
 
 namespace hexmap
 {
-	struct ChartComponent;
-	struct FragmentComponent;
-	struct SettingsComponent;
+	struct LayerComponent;
+	struct RootComponent;
 }
 
 namespace hexmap
@@ -26,12 +25,11 @@ namespace hexmap
 	{
 	public:
 		using World = ecs::WorldView<
-			hexmap::FragmentComponent,
+			hexmap::LayerComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,
 			const eng::TransformComponent,
-			const hexmap::ChartComponent,
-			const hexmap::SettingsComponent>;
+			const hexmap::RootComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

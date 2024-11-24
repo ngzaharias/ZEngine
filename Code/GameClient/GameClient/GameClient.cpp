@@ -11,6 +11,7 @@
 #include "Engine/RegisterSystems.h"
 #include "Engine/TableHeadmaster.h"
 #include "Engine/Window.h"
+#include "GameClient/HexmapRootComponent.h"
 #include "GameClient/HiddenCountComponent.h"
 #include "GameClient/HiddenGroupComponent.h"
 #include "GameClient/HiddenObjectComponent.h"
@@ -28,6 +29,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 	// prototypes
 	{
 		auto& prototypeManager = dependencies.m_PrototypeManager;
+		prototypeManager.Register<hexmap::RootComponent>();
 		prototypeManager.Register<hidden::CountComponent>();
 		prototypeManager.Register<hidden::GroupComponent>();
 		prototypeManager.Register<hidden::ObjectComponent>();

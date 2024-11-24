@@ -9,9 +9,9 @@
 #include "Engine/InputComponent.h"
 #include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
-#include "GameClient/HexmapChartComponent.h"
-#include "GameClient/HexmapFragmentComponent.h"
-#include "GameClient/HexmapSettingsComponent.h"
+#include "GameClient/HexmapHelpers.h"
+#include "GameClient/HexmapLayerComponent.h"
+#include "GameClient/HexmapRootComponent.h"
 #include "Math/CollisionMath.h"
 #include "Math/Hexagon.h"
 #include "Math/HexagonHelpers.h"
@@ -37,9 +37,6 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	static int32 value = 2;
-
-	const auto& chart = world.ReadSingleton<hexmap::ChartComponent>();
-	const auto& settings = world.ReadSingleton<hexmap::SettingsComponent>();
 
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::ProjectionComponent>;
 	using InputQuery = ecs::query::Include<const eng::InputComponent>;
@@ -82,25 +79,26 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 			Vector3f intersectPos;
 			if (math::Intersection(ray, plane, intersectPos))
 			{
-				const Vector2i hexPos = hexagon::ToOffset(intersectPos.XZ(), chart.m_TileRadius);
-				for (const ecs::Entity& fragmentEntity : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::FragmentComponent>>())
+				for (const ecs::Entity& layerEntity : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::LayerComponent>>())
 				{
-					const auto& fragment = world.ReadComponent<hexmap::FragmentComponent>(fragmentEntity);
-					if (fragment.m_Level != chart.m_Level)
+					const auto& layer = world.ReadComponent<hexmap::LayerComponent>(layerEntity);
+					const auto& root = world.ReadComponent<hexmap::RootComponent>(layer.m_Root);
+					if (layer.m_Depth != root.m_Depth)
 						continue;
 
-					const Vector2i min = fragment.m_HexPos;
-					const Vector2i max = min + settings.m_TileCount;
+					const HexPos hexPos = hexagon::ToOffset(intersectPos.XZ(), root.m_HexRadius);
+					const HexPos min = ToHexPos(layer.m_Origin, layer.m_HexCount);
+					const HexPos max = min + layer.m_HexCount;
 					if (hexPos.x < min.x || hexPos.x >= max.x)
 						continue;
 					if (hexPos.y < min.y || hexPos.y >= max.y)
 						continue;
 
 					const Vector2i localPos = hexPos - min;
-					const int32 index = math::To1Dimension(localPos, settings.m_TileCount.x);
+					const int32 index = math::To1Dimension(localPos, root.m_HexCount.x);
 
-					auto& write = world.WriteComponent<hexmap::FragmentComponent>(fragmentEntity);
-					write.m_Data[index] = value;
+					auto& write = world.WriteComponent<hexmap::LayerComponent>(layerEntity);
+					write.m_HexData[index] = { value };
 				}
 			}
 		}

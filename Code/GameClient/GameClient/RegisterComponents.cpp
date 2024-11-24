@@ -4,11 +4,8 @@
 #include "ECS/EntityWorld.h"
 #include "GameClient/DragComponents.h"
 #include "GameClient/GameStateComponents.h"
-#include "GameClient/HexmapAssetComponent.h"
-#include "GameClient/HexmapChartComponent.h"
-#include "GameClient/HexmapFragmentComponent.h"
-#include "GameClient/HexmapRequestComponent.h"
-#include "GameClient/HexmapSettingsComponent.h"
+#include "GameClient/HexmapLayerComponent.h"
+#include "GameClient/HexmapRootComponent.h"
 #include "GameClient/HiddenCountComponent.h"
 #include "GameClient/HiddenGroupComponent.h"
 #include "GameClient/HiddenObjectComponent.h"
@@ -25,9 +22,8 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<gamestate::RequestComponent>();
 	entityWorld.RegisterComponent<gamestate::StateFinishedComponent>();
 	entityWorld.RegisterComponent<gui::modal::MessageComponent>();
-	entityWorld.RegisterComponent<hexmap::AssetComponent>();
-	entityWorld.RegisterComponent<hexmap::FragmentComponent>();
-	entityWorld.RegisterComponent<hexmap::RequestComponent>();
+	entityWorld.RegisterComponent<hexmap::LayerComponent>();
+	entityWorld.RegisterComponent<hexmap::RootComponent>();
 	entityWorld.RegisterComponent<hidden::CountComponent>();
 	entityWorld.RegisterComponent<hidden::GroupComponent>();
 	entityWorld.RegisterComponent<hidden::ObjectComponent>();
@@ -42,7 +38,5 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSingleton<clt::settings::DebugComponent>();
 	entityWorld.RegisterSingleton<gamestate::NetworkJoinComponent>();
 	entityWorld.RegisterSingleton<gamestate::StateComponent>();
-	entityWorld.RegisterSingleton<hexmap::ChartComponent>();
-	entityWorld.RegisterSingleton<hexmap::SettingsComponent>();
 	entityWorld.RegisterSingleton<projectile::ChangesComponent>();
 }

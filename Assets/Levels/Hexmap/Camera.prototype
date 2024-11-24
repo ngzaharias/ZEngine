@@ -2,7 +2,7 @@ m_Guid = "652d9dc149cc45e7a63bca75e8426d7d"
 m_Name = "Camera"
 
 ['eng::camera::ProjectionComponent']
-m_Projection = { Orthographic = {} }
+m_Projection = { Perspective = {} }
 
 ['eng::camera::Move3DComponent']
 ['eng::camera::Pan3DComponent']

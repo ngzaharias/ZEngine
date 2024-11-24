@@ -15,10 +15,8 @@
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TransformComponent.h"
-#include "GameClient/HexmapAssetComponent.h"
-#include "GameClient/HexmapChartComponent.h"
-#include "GameClient/HexmapFragmentComponent.h"
-#include "GameClient/HexmapSettingsComponent.h"
+#include "GameClient/HexmapLayerComponent.h"
+#include "GameClient/HexmapRootComponent.h"
 #include "Math/HexagonHelpers.h"
 
 #include <GLEW/glew.h>
@@ -81,8 +79,6 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto& chart = world.ReadSingleton<hexmap::ChartComponent>();
-
 	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(strMesh);
 	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strShader);
 	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(strTexture);
@@ -121,14 +117,17 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 
 		using Query = ecs::query
 			::Include<
-			hexmap::AssetComponent,
-			hexmap::FragmentComponent,
+			hexmap::LayerComponent,
 			eng::TransformComponent>;
 
 		for (const ecs::Entity& renderEntity : world.Query<Query>())
 		{
-			const auto& fragment = world.ReadComponent<hexmap::FragmentComponent>(renderEntity);
-			if (fragment.m_Level != chart.m_Level)
+			const auto& layer = world.ReadComponent<hexmap::LayerComponent>(renderEntity);
+			if (!world.IsAlive(layer.m_Root))
+				continue;
+
+			const auto& root = world.ReadComponent<hexmap::RootComponent>(layer.m_Root);
+			if (layer.m_Depth != root.m_Depth)
 				continue;
 
 			const auto& transform = world.ReadComponent<eng::TransformComponent>(renderEntity);
@@ -138,24 +137,24 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 
 			const Vector3f modelScale = transform.m_Scale;
 			const Vector3f fragmentScale = Vector3f(
-				fragment.m_TileRadius / 100.f * 2.f,
-				fragment.m_TileRadius / 100.f * 2.f,
+				root.m_HexRadius / 100.f * 2.f,
+				root.m_HexRadius / 100.f * 2.f,
 				1.f);
 
 			Matrix4x4 model = transform.ToTransform();
 			model.SetScale(math::Multiply(modelScale, fragmentScale));
 
-			const int32 width = fragment.m_TileCount.x;
-			const int32 height = fragment.m_TileCount.y;
-			const int32 count = fragment.m_Data.GetCount();
+			const int32 width = root.m_HexCount.x;
+			const int32 height = root.m_HexCount.y;
+			const int32 count = layer.m_HexData.GetCount();
 			for (int32 i = 0; i < count; ++i)
 			{
-				const int32 index = fragment.m_Data[i] % 3;
-				const int32 indey = fragment.m_Data[i] / 3;
+				const int32 index = layer.m_HexData[i].m_Index % 3;
+				const int32 indey = layer.m_HexData[i].m_Index / 3;
 
 				const Vector2i gridPos = math::To2Dimension(i, width);
 				const hexagon::Offset hexPos = { gridPos.x, gridPos.y };
-				const Vector2f localPos = hexagon::ToWorldPos(hexPos, fragment.m_TileRadius);
+				const Vector2f localPos = hexagon::ToWorldPos(hexPos, root.m_HexRadius);
 
 				model.SetTranslate(transform.m_Translate + localPos.X0Y());
 

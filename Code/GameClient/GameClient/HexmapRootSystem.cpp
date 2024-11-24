@@ -1,5 +1,5 @@
 #include "GameClientPCH.h"
-#include "GameClient/HexmapChartSystem.h"
+#include "GameClient/HexmapRootSystem.h"
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
@@ -10,9 +10,7 @@
 #include "Engine/InputComponent.h"
 #include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
-#include "GameClient/HexmapChartComponent.h"
-#include "GameClient/HexmapRequestComponent.h"
-#include "GameClient/HexmapSettingsComponent.h"
+#include "GameClient/HexmapRootComponent.h"
 #include "Math/AABB.h"
 #include "Math/Algorithms.h"
 #include "Math/CollisionMath.h"
@@ -62,11 +60,9 @@ namespace
 	}
 }
 
-void hexmap::ChartSystem::Update(World& world, const GameTime& gameTime)
+void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
-
-	const auto& settings = world.ReadSingleton<hexmap::SettingsComponent>();
 
 	bool hasChanged = false;
 	for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<eng::InputComponent>>())
@@ -75,18 +71,20 @@ void hexmap::ChartSystem::Update(World& world, const GameTime& gameTime)
 		if (input.m_ScrollDelta.y == 0)
 			continue;
 
-		hasChanged = true;
-		auto& chart = world.WriteSingleton<hexmap::ChartComponent>();
-		chart.m_Zoom -= input.m_ScrollDelta.y * 0.1f;
-		if (chart.m_Zoom > 1.f)
+		for (const ecs::Entity& rootEntity : world.Query<ecs::query::Include<hexmap::RootComponent>>())
 		{
-			chart.m_Level++;
-			chart.m_Zoom = 0.f;
-		}
-		if (chart.m_Zoom < 0.f)
-		{
-			chart.m_Level--;
-			chart.m_Zoom = 1.f;
+			auto& root = world.WriteComponent<hexmap::RootComponent>(rootEntity);
+			root.m_Zoom -= input.m_ScrollDelta.y * 0.1f;
+			if (root.m_Zoom > 1.f)
+			{
+				root.m_Depth++;
+				root.m_Zoom = 0.f;
+			}
+			if (root.m_Zoom < 0.f)
+			{
+				root.m_Depth--;
+				root.m_Zoom = 1.f;
+			}
 		}
 	}
 
@@ -96,53 +94,23 @@ void hexmap::ChartSystem::Update(World& world, const GameTime& gameTime)
 	const bool transformChanged = world.HasAny<ecs::query::Updated<eng::TransformComponent>::Include<eng::camera::ProjectionComponent>>();
 	if (hasChanged || cameraAdded || cameraChanged || transformAdded || transformChanged)
 	{
-		auto& chart = world.WriteSingleton<hexmap::ChartComponent>();
-
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, eng::TransformComponent>>())
+		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, eng::TransformComponent>>())
 		{
-			auto& camera = world.WriteComponent<eng::camera::ProjectionComponent>(entity);
-			if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
+			for (const ecs::Entity& rootEntity : world.Query<ecs::query::Include<hexmap::RootComponent>>())
 			{
-				constexpr float zoomMin = 1000.f;
-				auto& projection = std::get<eng::camera::Orthographic>(camera.m_Projection);
-				projection.m_Size = math::Lerp(zoomMin, zoomMin * settings.m_TileRatio, chart.m_Zoom);
+				const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+				auto& camera = world.WriteComponent<eng::camera::ProjectionComponent>(cameraEntity);
+				auto& root = world.WriteComponent<hexmap::RootComponent>(rootEntity);
+
+				if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
+				{
+					constexpr float zoomMin = 1000.f;
+					auto& projection = std::get<eng::camera::Orthographic>(camera.m_Projection);
+					projection.m_Size = math::Lerp(zoomMin, zoomMin * root.m_HexRatio, root.m_Zoom);
+				}
+
+				root.m_Zone = GetCameraZone(camera, transform);
 			}
-
-			const auto& transform = world.ReadComponent<eng::TransformComponent>(entity);
-			chart.m_Frustrum = GetCameraZone(camera, transform);
 		}
-
-		Set<Hexagon> load;
-		Set<Hexagon> unload;
-		Set<Hexagon> inrange;
-
-		Vector2i min = hexagon::ToOffset(chart.m_Frustrum.m_Min, chart.m_TileRadius);
-		Vector2i max = hexagon::ToOffset(chart.m_Frustrum.m_Max, chart.m_TileRadius);
-		min = math::Divide(min, settings.m_TileCount) - Vector2i(2);
-		max = math::Divide(max, settings.m_TileCount) + Vector2i(2);
-
-		for (const Vector2i& gridMajor : enumerate::Vector(min, max))
-		{
-			const Vector2i gridMinor = math::Multiply(gridMajor, settings.m_TileCount);
-			const hexagon::Offset hexPos = { gridMinor.x, gridMinor.y };
-			const Vector2f worldPos = hexagon::ToWorldPos(hexPos, chart.m_TileRadius);
-			
-			AABB2f fragmentAABB = hexagon::ToAABB(settings.m_TileCount, chart.m_TileRadius);
-			fragmentAABB.m_Min += worldPos;
-			fragmentAABB.m_Max += worldPos;
-
-			if (math::IsOverlapping(chart.m_Frustrum, fragmentAABB))
-				inrange.Add({ chart.m_Level, hexPos });
-		}
-
-		enumerate::Difference(inrange, chart.m_Loaded, load);
-		enumerate::Difference(chart.m_Loaded, inrange, unload);
-		if (!load.IsEmpty() || !unload.IsEmpty())
-		{
-			auto& request = world.AddEventComponent<hexmap::RequestComponent>();
-			request.m_Load = std::move(load);
-			request.m_Unload = std::move(unload);
-		}
-		chart.m_Loaded = std::move(inrange);
 	}
 }

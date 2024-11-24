@@ -21,10 +21,13 @@ namespace eng
 
 namespace hexmap
 {
-	struct ChartComponent;
-	struct FragmentComponent;
-	struct RequestComponent;
-	struct SettingsComponent;
+	struct LayerComponent;
+	struct RootComponent;
+}
+
+namespace eng::level
+{
+	struct EntityComponent;
 }
 
 namespace hexmap
@@ -34,14 +37,13 @@ namespace hexmap
 	public:
 		using World = ecs::WorldView<
 			ecs::NameComponent,
+			eng::level::EntityComponent,
 			eng::LinesComponent,
 			eng::StaticMeshComponent,
 			eng::TransformComponent,
-			hexmap::FragmentComponent,
+			hexmap::LayerComponent,
 			const clt::settings::DebugComponent,
-			const hexmap::ChartComponent,
-			const hexmap::RequestComponent,
-			const hexmap::SettingsComponent>;
+			const hexmap::RootComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

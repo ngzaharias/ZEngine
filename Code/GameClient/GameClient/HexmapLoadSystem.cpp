@@ -1,115 +1,122 @@
 #include "GameClientPCH.h"
 #include "GameClient/HexmapLoadSystem.h"
 
+#include "Core/Algorithms.h"
 #include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/ColourHelpers.h"
-#include "Engine/InputComponent.h"
-#include "Engine/LinesComponent.h"
-#include "Engine/StaticMeshComponent.h"
+#include "Engine/LevelComponents.h"
 #include "Engine/TransformComponent.h"
-#include "GameClient/HexmapChartComponent.h"
-#include "GameClient/HexmapFragmentComponent.h"
-#include "GameClient/HexmapRequestComponent.h"
-#include "GameClient/HexmapSettingsComponent.h"
-#include "GameClient/SettingsComponents.h"
+#include "GameClient/HexmapHelpers.h"
+#include "GameClient/HexmapLayerComponent.h"
+#include "GameClient/HexmapRootComponent.h"
 #include "Math/Algorithms.h"
 #include "Math/CollisionMath.h"
+#include "Math/Hexagon.h"
 #include "Math/HexagonHelpers.h"
-#include "Math/Math.h"
-#include "Math/Matrix.h"
-#include "Math/Sphere.h"
-#include "Math/Vector.h"
-
-namespace
-{
-	const str::Guid strSpriteA = str::Guid::Create("686c500eca54494785f189dc49016a4c");
-	const str::Guid strSpriteB = str::Guid::Create("173e2734a8454e13abec1cd18d00caf2");
-}
 
 void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-
-	const auto& debugSettings = world.ReadSingleton<clt::settings::DebugComponent>();
-	if (!debugSettings.m_IsHexmapEnabled)
-		return;
-
-	const auto& chart = world.ReadSingleton<hexmap::ChartComponent>();
-	const auto& settings = world.ReadSingleton<hexmap::SettingsComponent>();
-	const float zoom = chart.m_Zoom;
-
 	// load
-	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<hexmap::RequestComponent>>())
+	using RootQuery = ecs::query
+		::Updated<hexmap::RootComponent>
+		::Include<eng::level::EntityComponent>;
+	for (const ecs::Entity& rootEntity : world.Query<ecs::query::Updated<hexmap::RootComponent>>())
 	{
-		const auto& request = world.ReadComponent<hexmap::RequestComponent>(requestEntity);
+		const auto& root = world.ReadComponent<hexmap::RootComponent>(rootEntity);
+		const auto& level = world.ReadComponent<eng::level::EntityComponent>(rootEntity);
 
-		for (const Hexagon& hex : request.m_Load)
+		const HexPos hexMin = hexagon::ToOffset(root.m_Zone.m_Min, root.m_HexRadius);
+		const HexPos hexMax = hexagon::ToOffset(root.m_Zone.m_Max, root.m_HexRadius);
+
+		Set<LayerPos> inRange;
+		const LayerPos layerMin = ToLayerPos(hexMin, root.m_HexCount) - LayerPos(1);
+		const LayerPos layerMax = ToLayerPos(hexMax, root.m_HexCount) + LayerPos(1);
+		for (const Vector2i& gridPos : enumerate::Vector(layerMin, layerMax))
 		{
+			const LayerPos layerPos = LayerPos(gridPos);
+			inRange.Add(layerPos);
+		}
+
+		Set<LayerPos> loaded;
+		for (const ecs::Entity& layerEntity : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::LayerComponent>>())
+		{
+			const auto& transform = world.ReadComponent<eng::TransformComponent>(layerEntity);
+			const auto& layer = world.ReadComponent<hexmap::LayerComponent>(layerEntity);
+
+			if (inRange.Contains(layer.m_Origin))
+			{
+				loaded.Add(layer.m_Origin);
+			}
+			else
+			{
+				world.DestroyEntity(layerEntity);
+			}
+		}
+
+		Set<LayerPos> toCreate;
+		enumerate::Difference(inRange, loaded, toCreate);
+		for (const LayerPos& layerPos : toCreate)
+		{
+			const int32 depth = root.m_Depth;
+			const HexPos hexPos = ToHexPos(layerPos, root.m_HexCount);
+			const Vector3f worldPos = hexagon::ToWorldPos(hexPos, root.m_HexRadius).X0Y();
+
 			const ecs::Entity entity = world.CreateEntity();
-			auto& fragment = world.AddComponent<hexmap::FragmentComponent>(entity);
-			fragment.m_Level = hex.m_Level;
-			fragment.m_TileRadius = chart.m_TileRadius;
-			fragment.m_HexPos = hex.m_Offset;
-			fragment.m_TileCount = settings.m_TileCount;
+			auto& layer = world.AddComponent<hexmap::LayerComponent>(entity);
+			layer.m_Depth = depth;
+			layer.m_Origin = layerPos;
+			layer.m_Root = rootEntity;
+			layer.m_HexCount = root.m_HexCount;
 
-			// #temp:
-			fragment.m_Sprite = ((hex.m_Offset.row ^ hex.m_Offset.col ^ hex.m_Level) % 3) == 0 ? strSpriteA : strSpriteB;
-
-			const int32 count = settings.m_TileCount.x * settings.m_TileCount.y;
-			fragment.m_Data.Resize(count);
+			const int32 count = root.m_HexCount.x * root.m_HexCount.y;
+			layer.m_HexData.Resize(count);
 			for (int32 i = 0; i < count; ++i)
-				fragment.m_Data[i] = 0;
+				layer.m_HexData[i] = { 0 };
 
 			auto& name = world.AddComponent<ecs::NameComponent>(entity);
-			name.m_Name = std::format("Fragment: {}, {}", hex.m_Offset.row, hex.m_Offset.col);
+			name.m_Name = std::format("Fragment: {} - {}, {}", depth, layerPos.x, layerPos.y);
 
 			auto& transform = world.AddComponent<eng::TransformComponent>(entity);
-			transform.m_Translate = hexagon::ToWorldPos(hex.m_Offset, chart.m_TileRadius).X0Y();
+			transform.m_Translate = worldPos;
 			transform.m_Rotate = Rotator(90.f, 0.f, 0.f);
-		}
 
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::FragmentComponent>>())
-		{
-			const auto& fragment = world.ReadComponent<hexmap::FragmentComponent>(entity);
-			const Hexagon hex = { fragment.m_Level, fragment.m_HexPos };
-			if (request.m_Unload.Contains(hex))
-				world.DestroyEntity(entity);
+			world.AddComponent<eng::level::EntityComponent>(entity, level.m_Name);
 		}
 	}
 
-	// #temp: level - 1
-	if (false)
-	{
-		auto& lines = world.WriteSingleton<eng::LinesComponent>();
+	//// #temp: level - 1
+	//if (false)
+	//{
+	//	auto& lines = world.WriteSingleton<eng::LinesComponent>();
 
-		const float radiusMinor = chart.m_TileRadius / settings.m_TileRatio;
-		const Vector2i min = hexagon::ToOffset(chart.m_Frustrum.m_Min, radiusMinor);
-		const Vector2i max = hexagon::ToOffset(chart.m_Frustrum.m_Max, radiusMinor);
-		for (const Vector2i& gridMinor : enumerate::Vector(min, max))
-		{
-			const hexagon::Offset hexPos = { gridMinor.x, gridMinor.y };
-			const Vector2f worldPos = hexagon::ToWorldPos(hexPos, radiusMinor);
-			lines.AddHexagon(worldPos.X0Y(), radiusMinor, Colour::Black);
-		}
-	}
+	//	const float radiusMinor = chart.m_HexRadius / settings.m_TileRatio;
+	//	const Vector2i min = hexagon::ToOffset(chart.m_Frustrum.m_Min, radiusMinor);
+	//	const Vector2i max = hexagon::ToOffset(chart.m_Frustrum.m_Max, radiusMinor);
+	//	for (const Vector2i& gridMinor : enumerate::Vector(min, max))
+	//	{
+	//		const hexagon::Offset hexPos = { gridMinor.x, gridMinor.y };
+	//		const Vector2f worldPos = hexagon::ToWorldPos(hexPos, radiusMinor);
+	//		lines.AddHexagon(worldPos.X0Y(), radiusMinor, Colour::Black);
+	//	}
+	//}
 
-	// #temp: level + 1
-	{
-		auto& lines = world.WriteSingleton<eng::LinesComponent>();
+	//// #temp: level + 1
+	//{
+	//	auto& lines = world.WriteSingleton<eng::LinesComponent>();
 
-		const float radiusMajor = chart.m_TileRadius * settings.m_TileRatio;
-		const Vector2i min = hexagon::ToOffset(chart.m_Frustrum.m_Min, radiusMajor);
-		const Vector2i max = hexagon::ToOffset(chart.m_Frustrum.m_Max, radiusMajor);
-		for (const Vector2i& gridMajor : enumerate::Vector(min, max + Vector2i::One))
-		{
-			const hexagon::Offset hexPos = { gridMajor.x, gridMajor.y };
-			const Vector2f worldPos = hexagon::ToWorldPos(hexPos, radiusMajor);
-			lines.AddHexagon(worldPos.X0Y(), radiusMajor, Colour::Black);
-		}
-	}
+	//	const float radiusMajor = chart.m_HexRadius * settings.m_TileRatio;
+	//	const Vector2i min = hexagon::ToOffset(chart.m_Frustrum.m_Min, radiusMajor);
+	//	const Vector2i max = hexagon::ToOffset(chart.m_Frustrum.m_Max, radiusMajor);
+	//	for (const Vector2i& gridMajor : enumerate::Vector(min, max + Vector2i::One))
+	//	{
+	//		const hexagon::Offset hexPos = { gridMajor.x, gridMajor.y };
+	//		const Vector2f worldPos = hexagon::ToWorldPos(hexPos, radiusMajor);
+	//		lines.AddHexagon(worldPos.X0Y(), radiusMajor, Colour::Black);
+	//	}
+	//}
 }

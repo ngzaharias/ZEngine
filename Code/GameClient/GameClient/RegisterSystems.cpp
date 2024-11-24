@@ -10,10 +10,9 @@
 #include "GameClient/DragMovementSystem.h"
 #include "GameClient/DragSelectionSystem.h"
 #include "GameClient/GameStateSystem.h"
-#include "GameClient/HexmapAssetSystem.h"
-#include "GameClient/HexmapChartSystem.h"
 #include "GameClient/HexmapLoadSystem.h"
 #include "GameClient/HexmapModifySystem.h"
+#include "GameClient/HexmapRootSystem.h"
 #include "GameClient/HiddenCountSystem.h"
 #include "GameClient/HiddenPhysicsSystem.h"
 #include "GameClient/HiddenRevealSystem.h"
@@ -42,10 +41,9 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<gamestate::NetworkStopSystem>();
 	entityWorld.RegisterSystem<gamestate::StateSystem>();
 	entityWorld.RegisterSystem<gui::modal::StateSystem>();
-	entityWorld.RegisterSystem<hexmap::AssetSystem>();
-	entityWorld.RegisterSystem<hexmap::ChartSystem>();
 	entityWorld.RegisterSystem<hexmap::LoadSystem>();
 	entityWorld.RegisterSystem<hexmap::ModifySystem>();
+	entityWorld.RegisterSystem<hexmap::RootSystem>();
 	entityWorld.RegisterSystem<hidden::CountSystem>();
 	entityWorld.RegisterSystem<hidden::PhysicsSystem>();
 	entityWorld.RegisterSystem<hidden::RevealSystem>();
