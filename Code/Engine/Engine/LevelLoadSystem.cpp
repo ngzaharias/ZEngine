@@ -41,7 +41,7 @@ void eng::level::LoadSystem::Initialise(World& world)
 
 	{
 		auto& request = world.AddEventComponent<eng::level::LoadRequestComponent>();
-		request.m_Name = NAME("Hexmap");
+		request.m_Name = NAME("Empty");
 	}
 }
 
