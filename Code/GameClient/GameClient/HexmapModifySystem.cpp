@@ -83,8 +83,6 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 				{
 					const auto& layer = world.ReadComponent<hexmap::LayerComponent>(layerEntity);
 					const auto& root = world.ReadComponent<hexmap::RootComponent>(layer.m_Root);
-					if (layer.m_Depth != root.m_Depth)
-						continue;
 
 					const HexPos hexPos = hexagon::ToOffset(intersectPos.XZ(), root.m_HexRadius);
 					const HexPos min = ToHexPos(layer.m_Origin, layer.m_HexCount);

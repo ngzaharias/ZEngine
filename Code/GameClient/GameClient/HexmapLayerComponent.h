@@ -11,7 +11,6 @@ namespace hexmap
 	/// \brief 
 	struct LayerComponent : ecs::Component<LayerComponent>
 	{
-		int32 m_Depth = 0;
 		LayerPos m_Origin = {};
 		ecs::Entity m_Root = {};
 

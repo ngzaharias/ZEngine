@@ -127,9 +127,6 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 				continue;
 
 			const auto& root = world.ReadComponent<hexmap::RootComponent>(layer.m_Root);
-			if (layer.m_Depth != root.m_Depth)
-				continue;
-
 			const auto& transform = world.ReadComponent<eng::TransformComponent>(renderEntity);
 
 			const Vector2f spriteSize = s_SpriteSize;

@@ -25,9 +25,6 @@ namespace
 	{
 		constexpr Plane3f plane = Plane3f(Vector3f::AxisY, Vector3f::Zero);
 
-		const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
-		const Vector3f cameraForward = Vector3f::AxisZ * cameraRotate;
-
 		const Vector2f screenCentre = Vector2f(Screen::width, Screen::height) * 0.5f;
 		const Vector2f pixelPosA = screenCentre - screenCentre;
 		const Vector2f pixelPosB = screenCentre + screenCentre;
@@ -36,8 +33,8 @@ namespace
 		const Vector3f worldPosA = eng::camera::ScreenToWorld(pixelPosA, camera.m_Projection, cameraView);
 		const Vector3f worldPosB = eng::camera::ScreenToWorld(pixelPosB, camera.m_Projection, cameraView);
 
-		Vector3f forwardA = cameraForward;
-		Vector3f forwardB = cameraForward;
+		Vector3f forwardA = -Vector3f::AxisY;
+		Vector3f forwardB = -Vector3f::AxisY;
 		if (!std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
 		{
 			forwardA = (worldPosA - transform.m_Translate).Normalized();
@@ -75,16 +72,7 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 		{
 			auto& root = world.WriteComponent<hexmap::RootComponent>(rootEntity);
 			root.m_Zoom -= input.m_ScrollDelta.y * 0.1f;
-			if (root.m_Zoom > 1.f)
-			{
-				root.m_Depth++;
-				root.m_Zoom = 0.f;
-			}
-			if (root.m_Zoom < 0.f)
-			{
-				root.m_Depth--;
-				root.m_Zoom = 1.f;
-			}
+			root.m_Zoom = math::Clamp(root.m_Zoom, 0.f, 1.f);
 		}
 	}
 
@@ -105,8 +93,10 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 				if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
 				{
 					constexpr float zoomMin = 1000.f;
+					constexpr float zoomMax = 6000.f;
+
 					auto& projection = std::get<eng::camera::Orthographic>(camera.m_Projection);
-					projection.m_Size = math::Lerp(zoomMin, zoomMin * root.m_HexRatio, root.m_Zoom);
+					projection.m_Size = math::Lerp(zoomMin, zoomMax, root.m_Zoom);
 				}
 
 				root.m_Zone = GetCameraZone(camera, transform);
