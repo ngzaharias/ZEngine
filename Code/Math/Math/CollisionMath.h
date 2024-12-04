@@ -59,6 +59,7 @@ namespace math
 	//////////////////////////////////////////////////////////////////////////
 	// 3D
 
+	bool Intersection(const AABB3f& a, const Segment3f& b, Vector3f& out_IntersectPos);
 	bool Intersection(const Line3f& a, const Plane3f& b, Vector3f& out_IntersectPos);
 	bool Intersection(const Ray3f& a, const Plane3f& b, Vector3f& out_IntersectPos);
 	bool Intersection(const Segment3f& a, const Plane3f& b, Vector3f& out_IntersectPos);

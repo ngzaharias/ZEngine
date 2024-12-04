@@ -16,6 +16,10 @@
 #include "Engine/NetworkSystem.h"
 #include "Engine/PhysicsSystem.h"
 #include "Engine/RenderSystem.h"
+#include "Engine/ReplicationHost.h"
+#include "Engine/ReplicationPeer.h"
+#include "Engine/Screen.h"
+#include "Engine/SoundPlaySystem.h"
 #include "Engine/SettingsLocalSystem.h"
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SoundRandomSystem.h"
@@ -24,8 +28,8 @@
 #include "Engine/StaticMeshAssetSystem.h"
 #include "Engine/TextAssetSystem.h"
 #include "Engine/VersionSystem.h"
-#include "Engine/VoxelLoadingSystem.h"
 #include "Engine/VoxelMeshingSystem.h"
+#include "Engine/VoxelModifySystem.h"
 
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 {
@@ -48,8 +52,8 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::StaticMeshAssetSystem>();
 	entityWorld.RegisterSystem<eng::TextAssetSystem>();
 	entityWorld.RegisterSystem<eng::VersionSystem>();
-	entityWorld.RegisterSystem<voxel::LoadingSystem>();
 	entityWorld.RegisterSystem<voxel::MeshingSystem>();
+	entityWorld.RegisterSystem<voxel::ModifySystem>();
 
 	// RandomSystem and SequenceSystem systems need to run before PlaySystem
 	entityWorld.RegisterSystemPriority<eng::sound::RandomSystem>(4000);

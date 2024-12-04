@@ -143,6 +143,7 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<voxel::ChunkChangedEventComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkLoadedEventComponent>();
+	entityWorld.RegisterComponent<voxel::ModifyComponent>();
 
 	entityWorld.RegisterSingleton<eng::FrameBufferComponent>();
 	entityWorld.RegisterSingleton<eng::LinesComponent>();
@@ -152,6 +153,7 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSingleton<eng::settings::LocalComponent>();
 	entityWorld.RegisterSingleton<eng::sound::RandomBufferComponent>();
 	entityWorld.RegisterSingleton<eng::sound::SequenceBufferComponent>();
+	entityWorld.RegisterSingleton<voxel::ModifySettingsComponent>();
 }
 
 void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
