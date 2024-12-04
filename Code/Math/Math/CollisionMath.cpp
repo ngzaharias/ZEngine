@@ -26,6 +26,28 @@ namespace
 		return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x);
 	}
 
+	bool InBox(const AABB3f& aabb, const Vector3f& intersectPos, const int axis)
+	{
+		if (axis == 1 && intersectPos.z > aabb.m_Min.z && intersectPos.z < aabb.m_Max.z && intersectPos.y > aabb.m_Min.y && intersectPos.y < aabb.m_Max.y)
+			return true;
+		if (axis == 2 && intersectPos.z > aabb.m_Min.z && intersectPos.z < aabb.m_Max.z && intersectPos.x > aabb.m_Min.x && intersectPos.x < aabb.m_Max.x)
+			return true;
+		if (axis == 3 && intersectPos.x > aabb.m_Min.x && intersectPos.x < aabb.m_Max.x && intersectPos.y > aabb.m_Min.y && intersectPos.y < aabb.m_Max.y)
+			return true;
+		return false;
+	}
+
+	bool GetIntersection(const float dst1, const float dst2, const Segment3f& segment, Vector3f& out_IntersectPos)
+	{
+		if (dst1 * dst2 >= 0.0f)
+			return false;
+		if (dst1 == dst2)
+			return false;
+
+		out_IntersectPos = segment.m_PointA + (segment.m_PointB - segment.m_PointA) * (-dst1 / (dst2 - dst1));
+		return true;
+	}
+
 	Vector2f GetInterval(const Array3& points, const Vector2f& axis)
 	{
 		const float d1 = math::Dot(axis, points[0]);
@@ -71,6 +93,47 @@ namespace
 		const Vector2f i2 = GetInterval(b, axis);
 		return i1.x > i2.y || i2.x > i1.y;
 	}
+}
+
+// returns true if line (L1, L2) intersects with the box (B1, B2)
+// returns intersection point in Hit
+//int CheckLineBox(CVec3 B1, CVec3 B2, CVec3 L1, CVec3 L2, CVec3& Hit)
+bool math::Intersection(const AABB3f& a, const Segment3f& b, Vector3f& out_IntersectPos)
+{
+	if (b.m_PointB.x < a.m_Min.x && b.m_PointA.x < a.m_Min.x)
+		return false;
+	if (b.m_PointB.x > a.m_Max.x && b.m_PointA.x > a.m_Max.x)
+		return false;
+	if (b.m_PointB.y < a.m_Min.y && b.m_PointA.y < a.m_Min.y)
+		return false;
+	if (b.m_PointB.y > a.m_Max.y && b.m_PointA.y > a.m_Max.y)
+		return false;
+	if (b.m_PointB.z < a.m_Min.z && b.m_PointA.z < a.m_Min.z)
+		return false;
+	if (b.m_PointB.z > a.m_Max.z && b.m_PointA.z > a.m_Max.z)
+		return false;
+	if (b.m_PointA.x > a.m_Min.x && b.m_PointA.x < a.m_Max.x &&
+		b.m_PointA.y > a.m_Min.y && b.m_PointA.y < a.m_Max.y &&
+		b.m_PointA.z > a.m_Min.z && b.m_PointA.z < a.m_Max.z)
+	{
+		out_IntersectPos = b.m_PointA;
+		return true;
+	}
+
+	if (GetIntersection(b.m_PointA.x - a.m_Min.x, b.m_PointB.x - a.m_Min.x, b, out_IntersectPos) && InBox(a, out_IntersectPos, 1))
+		return true;
+	if (GetIntersection(b.m_PointA.y - a.m_Min.y, b.m_PointB.y - a.m_Min.y, b, out_IntersectPos) && InBox(a, out_IntersectPos, 2))
+		return true;
+	if (GetIntersection(b.m_PointA.z - a.m_Min.z, b.m_PointB.z - a.m_Min.z, b, out_IntersectPos) && InBox(a, out_IntersectPos, 3))
+		return true;
+	if (GetIntersection(b.m_PointA.x - a.m_Max.x, b.m_PointB.x - a.m_Max.x, b, out_IntersectPos) && InBox(a, out_IntersectPos, 1))
+		return true;
+	if (GetIntersection(b.m_PointA.y - a.m_Max.y, b.m_PointB.y - a.m_Max.y, b, out_IntersectPos) && InBox(a, out_IntersectPos, 2))
+		return true;
+	if (GetIntersection(b.m_PointA.z - a.m_Max.z, b.m_PointB.z - a.m_Max.z, b, out_IntersectPos) && InBox(a, out_IntersectPos, 3))
+		return true;
+
+	return false;
 }
 
 bool math::Intersection(const Line3f& a, const Plane3f& b, Vector3f& out_IntersectPos)
