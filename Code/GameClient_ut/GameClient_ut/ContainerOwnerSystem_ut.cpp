@@ -1,15 +1,13 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/GameTime.h>
-#include <Core/Types.h>
-
-#include <ECS/UTHelpers.h>
-#include <ECS/WorldView.h>
-
-#include <GameClient/ContainerComponents.h>
-#include <GameClient/ContainerMemberSystem.h>
-#include <GameClient/ContainerOwnerSystem.h>
-#include <GameClient/ContainerStorageSystem.h>
+#include "Core/GameTime.h"
+#include "Core/Types.h"
+#include "ECS/UTHelpers.h"
+#include "ECS/WorldView.h"
+#include "GameClient/ContainerComponents.h"
+#include "GameClient/ContainerMemberSystem.h"
+#include "GameClient/ContainerOwnerSystem.h"
+#include "GameClient/ContainerStorageSystem.h"
 
 namespace
 {
@@ -25,12 +23,12 @@ namespace
 			m_EntityWorld.RegisterComponent<container::MemberRemoveRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberRemoveResultComponent>();
 			m_EntityWorld.RegisterComponent<container::OwnerComponent>();
-			m_EntityWorld.RegisterComponent<container::StorageChangesComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageCreateRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageCreateResultComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyResultComponent>();
+			m_EntityWorld.RegisterSingleton<container::StorageChangesComponent>();
 			m_EntityWorld.RegisterSystem<container::StorageSystem>();
 			m_EntityWorld.RegisterSystem<container::MemberSystem>();
 			m_EntityWorld.RegisterSystem<container::OwnerSystem>();
@@ -47,7 +45,7 @@ namespace
 		requestComponent.m_Type = type;
 		world.Update(2);
 
-		const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestEntity);
+		const auto& resultComponent = world.ReadComponent<container::StorageCreateResultComponent>(requestEntity);
 		return resultComponent.m_Storage;
 	}
 
@@ -67,7 +65,7 @@ TEST_CASE("container::OwnerSystem::Owner Added")
 	const ecs::Entity deadEntity = world.CreateEntity();
 	const ecs::Entity ownerEntity = world.CreateEntity();
 	world.Update();
-	world.DestoryEntity(deadEntity);
+	world.DestroyEntity(deadEntity);
 	world.Update();
 
 	SECTION("Unassigned Owner Entity")
@@ -75,7 +73,7 @@ TEST_CASE("container::OwnerSystem::Owner Added")
 		const ecs::Entity storageEntity = CreateStorage(world, ecs::Entity::Unassigned, 0);
 		world.Update();
 
-		const auto& storageComponent = world.GetComponent<const container::StorageComponent>(storageEntity);
+		const auto& storageComponent = world.ReadComponent<container::StorageComponent>(storageEntity);
 		CHECK(storageComponent.m_Owner == ecs::Entity::Unassigned);
 	}
 
@@ -84,7 +82,7 @@ TEST_CASE("container::OwnerSystem::Owner Added")
 		const ecs::Entity storageEntity = CreateStorage(world, deadEntity, 0);
 		world.Update();
 
-		const auto& storageComponent = world.GetComponent<const container::StorageComponent>(storageEntity);
+		const auto& storageComponent = world.ReadComponent<container::StorageComponent>(storageEntity);
 		CHECK(storageComponent.m_Owner == deadEntity);
 	}
 
@@ -93,11 +91,11 @@ TEST_CASE("container::OwnerSystem::Owner Added")
 		const ecs::Entity storageEntity = CreateStorage(world, ownerEntity, 0);
 		world.Update();
 
-		const auto& storageComponent = world.GetComponent<const container::StorageComponent>(storageEntity);
+		const auto& storageComponent = world.ReadComponent<container::StorageComponent>(storageEntity);
 		CHECK(storageComponent.m_Owner == ownerEntity);
 
 		REQUIRE(world.HasComponent<container::OwnerComponent>(ownerEntity));
-		const auto& ownerComponent = world.GetComponent<const container::OwnerComponent>(ownerEntity);
+		const auto& ownerComponent = world.ReadComponent<container::OwnerComponent>(ownerEntity);
 		CHECK(ownerComponent.m_Storages.GetCount() == 1);
 		CHECK(ownerComponent.m_Storages.Contains(0));
 		CHECK(ownerComponent.m_Storages.Get(0) == storageEntity);
@@ -115,10 +113,10 @@ TEST_CASE("container::OwnerSystem::Owner Added")
 		requestBComponent.m_Type = 1;
 		world.Update(2);
 
-		const auto& resultAComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestAEntity);
-		const auto& resultBComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestBEntity);
-		const auto& storageAComponent = world.GetComponent<const container::StorageComponent>(resultAComponent.m_Storage);
-		const auto& storageBComponent = world.GetComponent<const container::StorageComponent>(resultBComponent.m_Storage);
+		const auto& resultAComponent = world.ReadComponent<container::StorageCreateResultComponent>(requestAEntity);
+		const auto& resultBComponent = world.ReadComponent<container::StorageCreateResultComponent>(requestBEntity);
+		const auto& storageAComponent = world.ReadComponent<container::StorageComponent>(resultAComponent.m_Storage);
+		const auto& storageBComponent = world.ReadComponent<container::StorageComponent>(resultBComponent.m_Storage);
 		CHECK(storageAComponent.m_Owner == ownerEntity);
 		CHECK(storageBComponent.m_Owner == ownerEntity);
 	}
@@ -128,10 +126,10 @@ TEST_CASE("container::OwnerSystem::Owner Added")
 		const ecs::Entity storageAEntity = CreateStorage(world, ownerEntity, 0);
 		const ecs::Entity storageBEntity = CreateStorage(world, ownerEntity, 1);
 
-		const auto& storageAComponent = world.GetComponent<const container::StorageComponent>(storageAEntity);
+		const auto& storageAComponent = world.ReadComponent<container::StorageComponent>(storageAEntity);
 		CHECK(storageAComponent.m_Owner == ownerEntity);
 
-		const auto& storageBComponent = world.GetComponent<const container::StorageComponent>(storageBEntity);
+		const auto& storageBComponent = world.ReadComponent<container::StorageComponent>(storageBEntity);
 		CHECK(storageBComponent.m_Owner == ownerEntity);
 	}
 }
@@ -163,7 +161,7 @@ TEST_CASE("container::OwnerSystem::Owner Removed")
 		DestroyStorage(world, storageAEntity);
 
 		REQUIRE(world.HasComponent<container::OwnerComponent>(ownerEntity));
-		const auto& ownerComponent = world.GetComponent<const container::OwnerComponent>(ownerEntity);
+		const auto& ownerComponent = world.ReadComponent<container::OwnerComponent>(ownerEntity);
 		CHECK(ownerComponent.m_Storages.GetCount() == 1);
 		CHECK(ownerComponent.m_Storages.Contains(1));
 		CHECK(ownerComponent.m_Storages.Get(1) == storageBEntity);
@@ -202,12 +200,12 @@ TEST_CASE("container::OwnerSystem::Owner Removed")
 		world.Update(2);
 
 		REQUIRE(world.HasComponent<container::StorageCreateResultComponent>(requestBEntity));
-		const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestBEntity);
+		const auto& resultComponent = world.ReadComponent<container::StorageCreateResultComponent>(requestBEntity);
 		REQUIRE(resultComponent.m_Error == container::EError::None);
 
 		const ecs::Entity storageBEntity = resultComponent.m_Storage;
 		REQUIRE(world.HasComponent<container::OwnerComponent>(ownerEntity));
-		const auto& ownerComponent = world.GetComponent<const container::OwnerComponent>(ownerEntity);
+		const auto& ownerComponent = world.ReadComponent<container::OwnerComponent>(ownerEntity);
 		CHECK(ownerComponent.m_Storages.GetCount() == 1);
 		CHECK(ownerComponent.m_Storages.Contains(1));
 		CHECK(ownerComponent.m_Storages.Get(1) == storageBEntity);
@@ -238,12 +236,12 @@ TEST_CASE("container::OwnerSystem::Owner Removed")
 		world.Update(2);
 
 		REQUIRE(world.HasComponent<container::StorageCreateResultComponent>(requestBEntity));
-		const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestBEntity);
+		const auto& resultComponent = world.ReadComponent<container::StorageCreateResultComponent>(requestBEntity);
 		REQUIRE(resultComponent.m_Error == container::EError::None);
 
 		const ecs::Entity storageBEntity = resultComponent.m_Storage;
 		REQUIRE(world.HasComponent<container::OwnerComponent>(ownerEntity));
-		const auto& ownerComponent = world.GetComponent<const container::OwnerComponent>(ownerEntity);
+		const auto& ownerComponent = world.ReadComponent<container::OwnerComponent>(ownerEntity);
 		CHECK(ownerComponent.m_Storages.GetCount() == 1);
 		CHECK(ownerComponent.m_Storages.Contains(1));
 		CHECK(ownerComponent.m_Storages.Get(1) == storageBEntity);

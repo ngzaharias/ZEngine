@@ -1,21 +1,26 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/ContainerSystem.h"
 
-#include <Core/String.h>
-#include <Core/Vector.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <GameClient/ContainerComponents.h>
-
-#include <imgui/imgui.h>
-
+#include "Core/String.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "GameClient/ContainerComponents.h"
 #include "GameDebug/MenuBarComponents.h"
+#include "Math/Vector.h"
+
+#include "imgui/imgui.h"
 
 namespace
 {
+	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse;
+
+	str::String ToLabel(const char* label, const int32 index)
+	{
+		return std::format("{}: {}", label, index);
+	}
+
 	str::String ToString(const ecs::Entity& entity)
 	{
 		if (entity.IsUnassigned())
@@ -40,24 +45,37 @@ void dbg::ContainerSystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(100.f, 350.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(300.f, 200.f);
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const dbg::ContainerWindowRequestComponent>>())
-		world.AddComponent<dbg::ContainerWindowComponent>(world.CreateEntity());
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<dbg::ContainerWindowRequestComponent>>())
+	{
+		const int32 identifier = m_WindowIds.Borrow();
+		const ecs::Entity windowEntity = world.CreateEntity();
+
+		auto& window = world.AddComponent<dbg::ContainerWindowComponent>(windowEntity);
+		window.m_Label = ToLabel("Container Debugger", identifier);
+		window.m_Identifier = identifier;
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const dbg::ContainerWindowComponent>>())
+	{
+		const auto& window = world.ReadComponent<dbg::ContainerWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
+	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::ContainerWindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<dbg::ContainerWindowComponent>(windowEntity);
-		const ecs::Entity& storageSelected = windowComponent.m_Storage;
+		auto& window = world.WriteComponent<dbg::ContainerWindowComponent>(windowEntity);
+		const ecs::Entity& storageSelected = window.m_Storage;
 
 		if (world.HasComponent<container::StorageCreateResultComponent>(windowEntity))
 		{
-			const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(windowEntity);
-			windowComponent.m_Storage = resultComponent.m_Storage;
+			const auto& resultComponent = world.ReadComponent<container::StorageCreateResultComponent>(windowEntity);
+			window.m_Storage = resultComponent.m_Storage;
 			world.RemoveComponent<container::StorageCreateRequestComponent>(windowEntity);
 		}
 
 		if (world.HasComponent<container::StorageDestroyResultComponent>(windowEntity))
 		{
-			windowComponent.m_Storage = ecs::Entity::Unassigned;
+			window.m_Storage = ecs::Entity::Unassigned;
 			world.RemoveComponent<container::StorageDestroyRequestComponent>(windowEntity);
 		}
 
@@ -66,12 +84,10 @@ void dbg::ContainerSystem::Update(World& world, const GameTime& gameTime)
 		if (world.HasComponent<container::MemberMoveResultComponent>(windowEntity))
 			world.RemoveComponent<container::MemberMoveRequestComponent>(windowEntity);
 
-		bool isOpen = true;
+		bool isWindowOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
-
-		const str::String label = "Container Debugger##" + ToString(windowEntity);
-		if (ImGui::Begin(label.c_str(), &isOpen))
+		if (ImGui::Begin(window.m_Label.c_str(), &isWindowOpen, s_WindowFlags))
 		{
 			if (ImGui::Button("Create Storage"))
 				world.AddComponent<container::StorageCreateRequestComponent>(windowEntity);
@@ -79,14 +95,14 @@ void dbg::ContainerSystem::Update(World& world, const GameTime& gameTime)
 			if (ImGui::Button("Destroy Storage"))
 			{
 				auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(windowEntity);
-				requestComponent.m_Storage = windowComponent.m_Storage;
+				requestComponent.m_Storage = window.m_Storage;
 			}
 
 			if (ImGui::Button("Create Member"))
 			{
 				const ecs::Entity memberEntity = world.CreateEntity();
 				auto& requestComponent = world.AddComponent<container::MemberAddRequestComponent>(windowEntity);
-				requestComponent.m_Storage = windowComponent.m_Storage;
+				requestComponent.m_Storage = window.m_Storage;
 				requestComponent.m_Member = memberEntity;
 			}
 			ImGui::SameLine();
@@ -96,23 +112,23 @@ void dbg::ContainerSystem::Update(World& world, const GameTime& gameTime)
 
 			ImGui::Separator();
 
-			const str::String previewLabel = ToString(windowComponent.m_Storage);
+			const str::String previewLabel = ToString(window.m_Storage);
 			if (ImGui::BeginCombo("##storage", previewLabel.c_str()))
 			{
 				if (ImGui::Selectable("Unassigned"))
-					windowComponent.m_Storage = ecs::Entity::Unassigned;
-				for (const ecs::Entity& storageEntity : world.Query<ecs::query::Include<const container::StorageComponent>>())
+					window.m_Storage = ecs::Entity::Unassigned;
+				for (const ecs::Entity& storageEntity : world.Query<ecs::query::Include<container::StorageComponent>>())
 				{
 					const str::String storageLabel = ToString(storageEntity);
 					if (ImGui::Selectable(storageLabel.c_str()))
-						windowComponent.m_Storage = storageEntity;
+						window.m_Storage = storageEntity;
 				}
 				ImGui::EndCombo();
 			}
 
 			if (world.HasComponent<container::StorageComponent>(storageSelected))
 			{
-				const auto& storageComponent = world.GetComponent<const container::StorageComponent>(storageSelected);
+				const auto& storageComponent = world.ReadComponent<container::StorageComponent>(storageSelected);
 
 				constexpr int32 s_Columns = 5;
 				constexpr int32 s_Rows = 5;
@@ -163,8 +179,10 @@ void dbg::ContainerSystem::Update(World& world, const GameTime& gameTime)
 					ImGui::PopID();
 				}
 			}
-
 			ImGui::End();
+
+			if (!isWindowOpen)
+				world.DestroyEntity(windowEntity);
 		}
 	}
 }

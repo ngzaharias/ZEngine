@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Array.h>
-
-#include <ECS/Entity.h>
-#include <ECS/System.h>
+#include "Core/Array.h"
+#include "ECS/Entity.h"
+#include "ECS/System.h"
 
 namespace container
 {
@@ -42,9 +41,6 @@ namespace container
 			const container::OwnerComponent,
 			const container::StorageCreateRequestComponent,
 			const container::StorageDestroyRequestComponent>;
-
-		void Initialise(World& world);
-		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 

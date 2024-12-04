@@ -1,15 +1,13 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/GameTime.h>
-#include <Core/Types.h>
-
-#include <ECS/UTHelpers.h>
-#include <ECS/WorldView.h>
-
-#include <GameClient/ContainerComponents.h>
-#include <GameClient/ContainerMemberSystem.h>
-#include <GameClient/ContainerOwnerSystem.h>
-#include <GameClient/ContainerStorageSystem.h>
+#include "Core/GameTime.h"
+#include "Core/Types.h"
+#include "ECS/UTHelpers.h"
+#include "ECS/WorldView.h"
+#include "GameClient/ContainerComponents.h"
+#include "GameClient/ContainerMemberSystem.h"
+#include "GameClient/ContainerOwnerSystem.h"
+#include "GameClient/ContainerStorageSystem.h"
 
 namespace
 {
@@ -25,12 +23,12 @@ namespace
 			m_EntityWorld.RegisterComponent<container::MemberRemoveRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::MemberRemoveResultComponent>();
 			m_EntityWorld.RegisterComponent<container::OwnerComponent>();
-			m_EntityWorld.RegisterComponent<container::StorageChangesComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageCreateRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageCreateResultComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyResultComponent>();
+			m_EntityWorld.RegisterSingleton<container::StorageChangesComponent>();
 			m_EntityWorld.RegisterSystem<container::StorageSystem>();
 			m_EntityWorld.RegisterSystem<container::MemberSystem>();
 			m_EntityWorld.RegisterSystem<container::OwnerSystem>();
@@ -61,7 +59,7 @@ namespace
 		world.AddComponent<container::StorageCreateRequestComponent>(requestEntity);
 		world.Update(2);
 
-		const auto& resultComponent = world.GetComponent<const container::StorageCreateResultComponent>(requestEntity);
+		const auto& resultComponent = world.ReadComponent<container::StorageCreateResultComponent>(requestEntity);
 		return resultComponent.m_Storage;
 	}
 }
@@ -77,7 +75,7 @@ TEST_CASE("container::MemberSystem::Member Add")
 	const ecs::Entity requestBEntity = world.CreateEntity();
 	const ecs::Entity storageEntity = CreateStorage(world);
 	world.Update();
-	world.DestoryEntity(deadEntity);
+	world.DestroyEntity(deadEntity);
 	world.Update();
 
 	SECTION("Member is Unassigned Entity")
@@ -233,14 +231,14 @@ TEST_CASE("container::MemberSystem::Member Remove")
 	const ecs::Entity storageEntity = CreateStorage(world);
 	const ecs::Entity memberEntity = CreateMember(world, storageEntity);
 	world.Update();
-	world.DestoryEntity(deadEntity);
+	world.DestroyEntity(deadEntity);
 	world.Update();
 
 	{
 		REQUIRE(world.HasComponent<container::MemberComponent>(memberEntity));
 		REQUIRE(world.HasComponent<container::StorageComponent>(storageEntity));
-		const auto& memberComponent = world.GetComponent<const container::MemberComponent>(memberEntity);
-		const auto& storageComponent = world.GetComponent<const container::StorageComponent>(storageEntity);
+		const auto& memberComponent = world.ReadComponent<container::MemberComponent>(memberEntity);
+		const auto& storageComponent = world.ReadComponent<container::StorageComponent>(storageEntity);
 		REQUIRE(storageComponent.m_Members.Contains(memberEntity));
 	}
 
@@ -273,7 +271,7 @@ TEST_CASE("container::MemberSystem::Member Remove")
 	SECTION("Member was Destroyed in Previous Frame")
 	{
 		// remove member
-		world.DestoryEntity(memberEntity);
+		world.DestroyEntity(memberEntity);
 		world.Update();
 
 		// request remove
@@ -383,7 +381,7 @@ TEST_CASE("container::MemberSystem::Member Remove")
 			requestComponent.m_Storage = storageEntity;
 		}
 
-		world.DestoryEntity(memberEntity);
+		world.DestroyEntity(memberEntity);
 		world.Update(2);
 		CHECK(!world.HasComponent<container::MemberComponent>(memberEntity));
 	}

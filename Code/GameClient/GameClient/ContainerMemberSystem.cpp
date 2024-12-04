@@ -1,13 +1,11 @@
 #include "GameClientPCH.h"
 #include "GameClient/ContainerMemberSystem.h"
 
-#include <Core/Algorithms.h>
-#include <Core/Nullable.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
+#include "Core/Algorithms.h"
+#include "Core/Optional.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "GameClient/ContainerComponents.h"
 
 void container::MemberSystem::Update(World& world, const GameTime& gameTime)
@@ -19,7 +17,7 @@ void container::MemberSystem::Update(World& world, const GameTime& gameTime)
 
 void container::MemberSystem::ProcessAddRequests(World& world)
 {
-	const auto& changesComponent = world.GetSingleton<const container::StorageChangesComponent>();
+	const auto& changesComponent = world.ReadSingleton<container::StorageChangesComponent>();
 	for (const MemberAdded& data : changesComponent.m_MemberAdded)
 	{
 		auto& memberComponent = world.AddComponent<container::MemberComponent>(data.m_Member);
@@ -33,17 +31,17 @@ void container::MemberSystem::ProcessAddRequests(World& world)
 
 void container::MemberSystem::ProcessMoveRequests(World& world)
 {
-	const auto& changesComponent = world.GetSingleton<const container::StorageChangesComponent>();
+	const auto& changesComponent = world.ReadSingleton<container::StorageChangesComponent>();
 	for (const MemberMoved& data : changesComponent.m_MemberMoved)
 	{
-		auto& memberComponent = world.GetComponent<container::MemberComponent>(data.m_Member);
+		auto& memberComponent = world.WriteComponent<container::MemberComponent>(data.m_Member);
 		memberComponent.m_Storage = data.m_Storage;
 	}
 }
 
 void container::MemberSystem::ProcessRemoveRequests(World& world)
 {
-	const auto& changesComponent = world.GetSingleton<const container::StorageChangesComponent>();
+	const auto& changesComponent = world.ReadSingleton<container::StorageChangesComponent>();
 
 	// gather remove requests to handle duplicates
 	Set<ecs::Entity> removeRequests;
@@ -52,7 +50,7 @@ void container::MemberSystem::ProcessRemoveRequests(World& world)
 
 	for (const StorageChange& data : changesComponent.m_StorageDestroyed)
 	{
-		const auto& storageComponent = world.GetComponent<const container::StorageComponent>(data.m_Storage);
+		const auto& storageComponent = world.ReadComponent<container::StorageComponent>(data.m_Storage);
 		for (const ecs::Entity& memberEntity : storageComponent.m_Members)
 			removeRequests.Add(memberEntity);
 	}

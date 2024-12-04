@@ -1,13 +1,11 @@
 #include "GameClientPCH.h"
 #include "GameClient/ContainerOwnerSystem.h"
 
-#include <Core/Algorithms.h>
-#include <Core/Nullable.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
+#include "Core/Algorithms.h"
+#include "Core/Optional.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "GameClient/ContainerComponents.h"
 
 void container::OwnerSystem::Update(World& world, const GameTime& gameTime)
@@ -17,7 +15,7 @@ void container::OwnerSystem::Update(World& world, const GameTime& gameTime)
 
 void container::OwnerSystem::ProcessStorageChanges(World& world)
 {
-	const auto& storageChangesComponent = world.GetSingleton<const container::StorageChangesComponent>();
+	const auto& storageChangesComponent = world.ReadSingleton<container::StorageChangesComponent>();
 
 	Map<ecs::Entity, Array<const StorageChange*>> requests;
 	for (const StorageChange& data : storageChangesComponent.m_StorageCreated)
@@ -29,7 +27,7 @@ void container::OwnerSystem::ProcessStorageChanges(World& world)
 			continue;
 
 		auto& ownerComponent = world.HasComponent<container::OwnerComponent>(ownerEntity)
-			? world.GetComponent<container::OwnerComponent>(ownerEntity)
+			? world.WriteComponent<container::OwnerComponent>(ownerEntity)
 			: world.AddComponent<container::OwnerComponent>(ownerEntity);
 
 		for (const StorageChange* data : createRequests)
@@ -44,7 +42,7 @@ void container::OwnerSystem::ProcessStorageChanges(World& world)
 		if (data.m_Owner.IsUnassigned())
 			continue;
 
-		auto& ownerComponent = world.GetComponent<container::OwnerComponent>(data.m_Owner);
+		auto& ownerComponent = world.WriteComponent<container::OwnerComponent>(data.m_Owner);
 		ownerComponent.m_Storages.Remove(data.m_Type);
 
 		if (ownerComponent.m_Storages.IsEmpty())

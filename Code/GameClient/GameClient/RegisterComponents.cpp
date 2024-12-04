@@ -26,7 +26,6 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<container::MemberRemoveRequestComponent>();
 	entityWorld.RegisterComponent<container::MemberRemoveResultComponent>();
 	entityWorld.RegisterComponent<container::OwnerComponent>();
-	entityWorld.RegisterComponent<container::StorageChangesComponent>();
 	entityWorld.RegisterComponent<container::StorageComponent>();
 	entityWorld.RegisterComponent<container::StorageCreateRequestComponent>();
 	entityWorld.RegisterComponent<container::StorageCreateResultComponent>();
@@ -50,6 +49,7 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<projectile::SpawnComponent>();
 	entityWorld.RegisterComponent<projectile::TrajectoryComponent>();
 
+	entityWorld.RegisterSingleton<container::StorageChangesComponent>();
 	entityWorld.RegisterSingleton<clt::settings::DebugComponent>();
 	entityWorld.RegisterSingleton<gamestate::NetworkJoinComponent>();
 	entityWorld.RegisterSingleton<gamestate::StateComponent>();
