@@ -2,13 +2,13 @@
 #include "Engine/VoxelMeshingSystem.h"
 
 #include "Core/Algorithms.h"
-#include "Core/VectorMath.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VoxelComponents.h"
+#include "Math/VectorMath.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -150,12 +150,12 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 	Set<ecs::Entity> entitiesToUpdate;
 	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Include<const voxel::ModifyComponent>>())
 	{
-		const auto& modifyComponent = world.GetComponent<const voxel::ModifyComponent>(requestEntity);
+		const auto& modifyComponent = world.ReadComponent<voxel::ModifyComponent>(requestEntity);
 		for (const voxel::Modify& request : modifyComponent.m_Changes)
 		{
 			for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
 			{
-				const auto& transform = world.GetComponent<const eng::TransformComponent>(voxelEntity);
+				const auto& transform = world.ReadComponent<eng::TransformComponent>(voxelEntity);
 
 				const Vector3i requestPos = math::ToGridPos(request.m_WorldPos - transform.m_Translate, voxel::s_ChunkSize1D);
 				if (requestPos != Vector3i::Zero)
@@ -164,7 +164,7 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 				const Vector3f worldPos = request.m_WorldPos - transform.m_Translate;
 				const Vector3i innerPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
 				const int32 innerIndex = ToInnerIndex(innerPos);
-				auto& chunk = world.GetComponent<voxel::ChunkComponent>(voxelEntity);
+				auto& chunk = world.WriteComponent<voxel::ChunkComponent>(voxelEntity);
 				chunk.m_Data[innerIndex] = request.m_Data;
 
 				entitiesToUpdate.Add(voxelEntity);

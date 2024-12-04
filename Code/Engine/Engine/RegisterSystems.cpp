@@ -19,7 +19,7 @@
 #include "Engine/ReplicationHost.h"
 #include "Engine/ReplicationPeer.h"
 #include "Engine/Screen.h"
-#include "Engine/SoundSystem.h"
+#include "Engine/SoundPlaySystem.h"
 #include "Engine/SettingsLocalSystem.h"
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SoundRandomSystem.h"
@@ -28,21 +28,11 @@
 #include "Engine/StaticMeshAssetSystem.h"
 #include "Engine/TextAssetSystem.h"
 #include "Engine/VersionSystem.h"
-#include "Engine/VoxelLoadingSystem.h"
 #include "Engine/VoxelMeshingSystem.h"
 #include "Engine/VoxelModifySystem.h"
 
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.RegisterSystem<eng::SoundSystem>();
-	entityWorld.RegisterSystem<eng::CameraSystem>();
-	entityWorld.RegisterSystem<eng::InputSystem>(
-		dependencies.m_Window);
-	entityWorld.RegisterSystem<network::NetworkSystem>();
-	entityWorld.RegisterSystem<eng::FlipbookSystem>();
-	entityWorld.RegisterSystem<eng::RenderSystem>(
-		entityWorld,
-		dependencies.m_Window);
 	entityWorld.RegisterSystem<eng::camera::Bound2DSystem>();
 	entityWorld.RegisterSystem<eng::camera::Move2DSystem>();
 	entityWorld.RegisterSystem<eng::camera::Move3DSystem>();
@@ -62,7 +52,6 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::StaticMeshAssetSystem>();
 	entityWorld.RegisterSystem<eng::TextAssetSystem>();
 	entityWorld.RegisterSystem<eng::VersionSystem>();
-	entityWorld.RegisterSystem<voxel::LoadingSystem>();
 	entityWorld.RegisterSystem<voxel::MeshingSystem>();
 	entityWorld.RegisterSystem<voxel::ModifySystem>();
 
