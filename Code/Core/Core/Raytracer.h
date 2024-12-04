@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/Types.h>
-#include <Core/Vector.h>
+#include "Core/Types.h"
+#include "Math/Vector.h"
 
 namespace path
 {
@@ -30,8 +30,8 @@ namespace path
 		};
 
 	public:
-		auto begin()->Iterator;
-		auto end()->Iterator;
+		auto begin() const -> Iterator;
+		auto end() const -> Iterator;
 
 	public:
 		Vector3f m_Source = Vector3f::Zero;

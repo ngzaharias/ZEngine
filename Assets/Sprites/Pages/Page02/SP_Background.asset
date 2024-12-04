@@ -1,0 +1,7 @@
+m_Guid = '546cff4195e742809c174d2aa52d4c2c'
+m_Name = 'SP_Background'
+m_Type = 'Sprite'
+
+m_Position = { X = 0, Y = 0 }
+m_Size = { X = 3937, Y = 2644 }
+m_Texture2D = '52d8be4029644a999391a2119535a9d6'

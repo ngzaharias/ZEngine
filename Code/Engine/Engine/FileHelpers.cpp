@@ -18,11 +18,11 @@ str::Path eng::GetAppDataDirectory()
 	wcstombs_s(count, cDirectory, wDirectory, MAX_PATH);
 
 	str::String string = cDirectory;
-	return str::Path(std::move(string), "\\");
+	return str::Path(std::move(string), "\\ZEngine\\");
 #endif
 }
 
-str::Path eng::GetAssetDirectory()
+str::Path eng::GetAssetsDirectory()
 {
 #ifdef _WIN32
 	const std::filesystem::path directory = std::filesystem::current_path();
@@ -39,6 +39,34 @@ str::Path eng::GetAssetDirectory()
 	}
 
 	return {};
+#endif
+}
+
+str::Path eng::GetConfigDirectory()
+{
+#ifdef _WIN32
+	const std::filesystem::path directory = std::filesystem::current_path();
+
+	str::Path path = directory.string();
+	while (!path.IsEmpty())
+	{
+		path += "\\Config";
+		if (std::filesystem::is_directory(path.ToChar()))
+			return str::Path(path, "\\");
+
+		path = path.GetParent();
+		path = path.GetParent();
+	}
+
+	return {};
+#endif
+}
+
+str::Path eng::GetCurrentFilepath()
+{
+#ifdef _WIN32
+	const std::filesystem::path directory = std::filesystem::current_path();
+	return directory.string();
 #endif
 }
 
@@ -68,7 +96,7 @@ str::Path eng::GetWorkingDirectory()
 	wcstombs_s(count, cDirectory, wDirectory, MAX_PATH);
 
 	str::String string = cDirectory;
-	return str::Path(std::move(string), "\\");
+	return str::Path(std::move(string));
 #endif
 }
 
@@ -109,25 +137,41 @@ str::Path eng::SaveFileDialog(const SaveFileSettings& settings)
 	std::vector<std::string> filters;
 	filters.insert(filters.end(), settings.m_Filters.begin(), settings.m_Filters.end());
 
-	pfd::save_file saveFile = pfd::save_file(
-		settings.m_Title,
-		settings.m_Directory,
-		filters,
-		pfd::opt::force_overwrite);
+	pfd::opt option = pfd::opt::none;
+	if (settings.m_Overwrite)
+		option = pfd::opt::force_overwrite;
 
+	pfd::save_file saveFile = pfd::save_file(settings.m_Title, settings.m_Path, filters, option);
 	return saveFile.result();
 }
 
-Array<str::Path> eng::SelectFileDialog(const SelectFileSettings& settings)
+str::Path eng::SelectFileDialog(const SelectFileSettings& settings)
 {
 	std::vector<std::string> filters;
 	filters.insert(filters.end(), settings.m_Filters.begin(), settings.m_Filters.end());
 
 	pfd::open_file openFile = pfd::open_file(
 		settings.m_Title,
-		settings.m_Directory,
+		settings.m_Path,
 		filters,
-		settings.m_IsMultiSelect ? pfd::opt::multiselect : pfd::opt::none);
+		pfd::opt::none);
+
+	str::Path path;
+	for (const auto& name : openFile.result())
+		path = name;
+	return path;
+}
+
+Array<str::Path> eng::SelectFilesDialog(const SelectFilesSettings& settings)
+{
+	std::vector<std::string> filters;
+	filters.insert(filters.end(), settings.m_Filters.begin(), settings.m_Filters.end());
+
+	pfd::open_file openFile = pfd::open_file(
+		settings.m_Title,
+		settings.m_Path,
+		filters,
+		pfd::opt::multiselect);
 
 	Array<str::Path> filepaths;
 	for (const auto& name : openFile.result())
@@ -139,7 +183,7 @@ str::Path eng::SelectFolderDialog(const SelectFolderSettings& settings)
 {
 	pfd::select_folder selectFile = pfd::select_folder(
 		settings.m_Title, 
-		settings.m_Directory);
+		settings.m_Path);
 
 	return selectFile.result();
 }

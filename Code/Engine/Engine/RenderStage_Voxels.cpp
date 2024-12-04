@@ -1,15 +1,10 @@
 #include "EnginePCH.h"
 #include "Engine/RenderStage_Voxels.h"
 
-#include <Core/Algorithms.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <GLEW/glew.h>
-#include <GLFW/glfw3.h>
-
+#include "Core/Algorithms.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
@@ -20,28 +15,39 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/VoxelComponents.h"
 
+#include <GLEW/glew.h>
+#include <GLFW/glfw3.h>
+
 namespace
 {
-	const str::Guid strVoxelMesh = GUID("37cb9789-ccec-4a51-9297-fd6472e53d7a");
-	const str::Guid strVoxelShader = GUID("fffaa79e-28e0-44d9-b515-daef50fc27d2");
-	const str::Guid strVoxelTexture = GUID("f87d23dd-5e7b-4d6d-bff8-8b0eb676f80c");
+	const str::Guid strVoxelShader = GUID("fffaa79e28e044d9b515daef50fc27d2");
+	const str::Guid strVoxelTexture = GUID("f87d23dd5e7b4d6dbff88b0eb676f80c");
 }
 
-eng::RenderStage_Voxels::RenderStage_Voxels(eng::AssetManager& assetManager)
-	: RenderStage(assetManager)
+void eng::RenderStage_Voxels::Initialise(ecs::EntityWorld& entityWorld)
 {
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.RequestAsset<eng::ShaderAsset>(strVoxelShader);
+	assetManager.RequestAsset<eng::Texture2DAsset>(strVoxelTexture);
+}
+
+void eng::RenderStage_Voxels::Shutdown(ecs::EntityWorld& entityWorld)
+{
+	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	assetManager.ReleaseAsset<eng::ShaderAsset>(strVoxelShader);
+	assetManager.ReleaseAsset<eng::Texture2DAsset>(strVoxelTexture);
 }
 
 void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	using World = ecs::WorldView<
-		const eng::CameraComponent,
-		const eng::TransformComponent,
-		const eng::DynamicMeshComponent,
-		const voxel::ChunkComponent>;
 	World world = entityWorld.GetWorldView<World>();
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strVoxelShader);
+	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(strVoxelTexture);
+	if (!shader || !texture)
+		return;
 
 	{
 		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
@@ -57,84 +63,75 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 		glFrontFace(GL_CW);
 	}
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::CameraComponent, const eng::TransformComponent>>())
+	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.GetComponent<const eng::CameraComponent>(cameraEntity);
-		const auto& cameraTransform = world.GetComponent<const eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
-		const Matrix4x4 cameraView = Matrix4x4::FromTransform(
-			cameraTransform.m_Translate,
-			Quaternion::FromRotator(cameraTransform.m_Rotate),
-			cameraTransform.m_Scale).Inversed();
+		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
-		const auto& shader = *m_AssetManager.LoadAsset<eng::ShaderAsset>(strVoxelShader);
-		const auto& texture = *m_AssetManager.LoadAsset<eng::Texture2DAsset>(strVoxelTexture);
+		glUseProgram(shader->m_ProgramId);
 
-		glUseProgram(shader.m_ProgramId);
-
-		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<const eng::DynamicMeshComponent, const eng::TransformComponent>>())
+		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<eng::DynamicMeshComponent, eng::TransformComponent, voxel::ChunkComponent>>())
 		{
-			const auto& voxelComponent = world.GetComponent<const voxel::ChunkComponent>(voxelEntity);
-			const auto& voxelDynamicMesh = world.GetComponent<const eng::DynamicMeshComponent>(voxelEntity);
-			const auto& voxelTransform = world.GetComponent<const eng::TransformComponent>(voxelEntity);
+			const auto& voxelComponent = world.ReadComponent<voxel::ChunkComponent>(voxelEntity);
+			const auto& voxelDynamicMesh = world.ReadComponent<eng::DynamicMeshComponent>(voxelEntity);
+			const auto& voxelTransform = world.ReadComponent<eng::TransformComponent>(voxelEntity);
 
-			const Matrix4x4 voxelModel = Matrix4x4::FromTransform(
-				voxelTransform.m_Translate,
-				Quaternion::FromRotator(voxelTransform.m_Rotate),
-				voxelTransform.m_Scale);
+			const Matrix4x4 voxelModel = voxelTransform.ToTransform();
 
 			const auto& binding = voxelDynamicMesh.m_Binding;
 
 			glBindVertexArray(binding.m_AttributeObject);
 
 			// vertices
-			if (shader.a_Vertex)
+			if (shader->a_Vertex)
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, binding.m_VertexBuffer);
 
-				const uint32 location = *shader.a_Vertex;
+				const uint32 location = *shader->a_Vertex;
 				glEnableVertexAttribArray(location);
 				glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), 0);
 				glVertexAttribDivisor(location, GL_FALSE);
 			}
 
 			// texcoords
-			if (shader.a_TexCoords)
+			if (shader->a_TexCoords)
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, binding.m_TexCoordBuffer);
 
-				const uint32 location = *shader.a_TexCoords;
+				const uint32 location = *shader->a_TexCoords;
 				glEnableVertexAttribArray(location);
 				glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2f), 0);
 				glVertexAttribDivisor(location, GL_FALSE);
 			}
 
-			if (shader.u_CameraProj)
+			if (shader->u_CameraProj)
 			{
-				const uint32 location = *shader.u_CameraProj;
+				const uint32 location = *shader->u_CameraProj;
 				glUniformMatrix4fv(location, 1, false, &cameraProj.m_Data[0][0]);
 			}
 
-			if (shader.u_CameraView)
+			if (shader->u_CameraView)
 			{
-				const uint32 location = *shader.u_CameraView;
+				const uint32 location = *shader->u_CameraView;
 				glUniformMatrix4fv(location, 1, false, &cameraView.m_Data[0][0]);
 			}
 
-			if (shader.u_Transform)
+			if (shader->u_Transform)
 			{
-				const uint32 location = *shader.u_Transform;
+				const uint32 location = *shader->u_Transform;
 				glUniformMatrix4fv(location, 1, false, &voxelModel.m_Data[0][0]);
 			}
 
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texture.m_TextureId);
+			glBindTexture(GL_TEXTURE_2D, texture->m_TextureId);
 			glDrawArrays(GL_TRIANGLES, 0, voxelDynamicMesh.m_Vertices.GetCount());
 
 #ifdef ASSERT_RENDER
-			Z_ASSERT_CRASH(voxelModel.IsValid(), "Invalid matrix for entity model!");
+			Z_PANIC(voxelModel.IsValid(), "Invalid matrix for entity model!");
 #endif
 		}
 	}

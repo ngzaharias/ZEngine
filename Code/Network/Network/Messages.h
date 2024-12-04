@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/EnumHelpers.h>
-#include <Core/MemBuffer.h>
-#include <Core/Types.h>
-
-#include <Network/Entity.h>
+#include "Core/EnumHelpers.h"
+#include "Core/MemBuffer.h"
+#include "Core/Types.h"
+#include "Network/Entity.h"
 
 #include <yojimbo/yojimbo.h>
 

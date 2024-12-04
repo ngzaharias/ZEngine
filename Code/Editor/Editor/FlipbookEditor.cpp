@@ -1,17 +1,15 @@
 #include "EditorPCH.h"
 #include "Editor/FlipbookEditor.h"
 
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/AssetManager.h>
-#include <Engine/FileHelpers.h>
-#include <Engine/FlipbookComponent.h>
-#include <Engine/NameComponent.h>
-#include <Engine/Texture2DAsset.h>
-
-#include <GameDebug/MenuBarComponents.h>
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/AssetManager.h"
+#include "Engine/FileHelpers.h"
+#include "Engine/Texture2DAsset.h"
+#include "GameDebug/MenuBarComponents.h"
+#include "Math/AABB.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -29,33 +27,39 @@ namespace
 		ImGuiDockNodeFlags_NoWindowMenuButton;
 	constexpr ImGuiTableFlags s_InspectorFlags = 0;
 	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
-	const str::Guid uuidShader = GUID("cbbb7d3f-f44b-45fd-b9e5-a207d92262fb");
-	const str::Guid uuidStaticMesh = GUID("e94876a8-e4cc-4d16-84c8-5859b48a1af6");
-	const str::Guid uuidTexture2D = GUID("c6bb231c-e97f-104e-860e-b55e71988bdb");
+	const str::Guid uuidShader = GUID("cbbb7d3ff44b45fdb9e5a207d92262fb");
+	const str::Guid uuidTexture2D = GUID("c6bb231ce97f104e860eb55e71988bdb");
 
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
+	Vector2f ToImageSize(const ImVec2& regionSize, const eng::Texture2DAsset& texture)
 	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		const float ratio = std::min(regionSize.x / (float)texture.m_Width, regionSize.y / (float)texture.m_Height);
+		return Vector2f((float)texture.m_Width, (float)texture.m_Height) * ratio;
 	}
 
-	Vector2f ToPosition(const uint32 index, const editor::FlipbookExtractorComponent& data)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		const uint32 x = (index % data.m_Dimensions.x);
-		const uint32 y = (index / data.m_Dimensions.x) % data.m_Dimensions.y;
+		return std::format("{}: {}", label, index);
+	}
+
+	Vector2f ToPosition(const uint32 index, const editor::FlipbookBatchingComponent& data)
+	{
+		const uint32 x = (index % data.m_Iterations.x);
+		const uint32 y = (index / data.m_Iterations.x) % data.m_Iterations.y;
 		return Vector2f(
 			data.m_Initial.x + (data.m_Stride.x * x), 
 			data.m_Initial.y + (data.m_Stride.y * y));
 	}
 
-	void DrawExtractor(World& world, const ecs::Entity& entity)
+	void DrawBatcher(World& world, const ecs::Entity& entity)
 	{
-		auto& extractorComponent = world.GetComponent<editor::FlipbookExtractorComponent>(entity);
+		auto& extractorComponent = world.WriteComponent<editor::FlipbookBatchingComponent>(entity);
 
 		if (ImGui::Button("Extract"))
 		{
-			auto& windowComponent = world.GetComponent<editor::FlipbookWindowComponent>(entity);
+			auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(entity);
 			for (int32 i = 0; i < extractorComponent.m_Count; ++i)
 			{
 				eng::FlipbookFrame& frame = windowComponent.m_Asset.m_Frames.Emplace();
@@ -67,15 +71,15 @@ namespace
 		ImGui::Separator();
 
 		ImGui::TextDisabled("Batch:");
-		imgui::DragUInt2("m_Dimensions", &extractorComponent.m_Dimensions.x, 0.05f, 1, INT16_MAX);
-		ImGui::DragFloat2("m_Initial", &extractorComponent.m_Initial.x);
-		ImGui::DragFloat2("m_Stride", &extractorComponent.m_Stride.x);
+		imgui::DragVector("m_Iterations", extractorComponent.m_Iterations, 0.05f, 1, INT16_MAX);
+		imgui::DragVector("m_Initial", extractorComponent.m_Initial);
+		imgui::DragVector("m_Stride", extractorComponent.m_Stride);
 
 		ImGui::Separator();
 
-		ImGui::TextDisabled("Sprite:");
-		const int32 countMax = extractorComponent.m_Dimensions.x * extractorComponent.m_Dimensions.y;
+		ImGui::TextDisabled("Frames:");
 		ImGui::DragFloat2("m_Size", &extractorComponent.m_Size.x);
+		const int32 countMax = extractorComponent.m_Iterations.x * extractorComponent.m_Iterations.y;
 		ImGui::SliderInt("m_Count", &extractorComponent.m_Count, 0, countMax);
 
 		ImGui::Separator();
@@ -86,18 +90,16 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::FlipbookWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(entity);
 		eng::FlipbookAsset& flipbook = windowComponent.m_Asset;
 
-		imgui::Guid("m_Guid", flipbook.m_Guid);
-		imgui::Name("m_Name", flipbook.m_Name);
-		imgui::Path("m_Path", flipbook.m_Path);
+		imgui::InputText("m_Guid", flipbook.m_Guid);
+		imgui::InputText("m_Name", flipbook.m_Name);
 
 		ImGui::Separator();
 
-		imgui::Guid("m_Shader", flipbook.m_Shader);
-		imgui::Guid("m_StaticMesh", flipbook.m_StaticMesh);
-		imgui::Guid("m_Texture2D", flipbook.m_Texture2D);
+		imgui::InputText("m_Shader", flipbook.m_Shader);
+		imgui::InputText("m_Texture2D", flipbook.m_Texture2D);
 
 		ImGui::DragFloat("m_FPS", &flipbook.m_FPS);
 		ImGui::Checkbox("m_IsLooping", &flipbook.m_IsLooping);
@@ -142,10 +144,9 @@ namespace
 					flipbook.m_Guid = str::Guid::Generate();
 					flipbook.m_Name = str::Name::Create("FP_MyFlipbook");
 					flipbook.m_Shader = uuidShader;
-					flipbook.m_StaticMesh = uuidStaticMesh;
-					flipbook.m_Texture2D = str::Guid::Create("f9dcfdd6-014a-c528-12e2-1e73f232b7f9");
+					flipbook.m_Texture2D = str::Guid::Create("f9dcfdd6014ac52812e21e73f232b7f9");
 
-					auto& windowComponent = world.GetComponent<editor::FlipbookWindowComponent>(entity);
+					auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(entity);
 					windowComponent.m_Asset = flipbook;
 				}
 
@@ -169,6 +170,24 @@ namespace
 
 		if (world.HasComponent<editor::FlipbookAssetOpenComponent>(entity))
 		{
+			auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(entity);
+			const str::Name& name = windowComponent.m_Asset.m_Name;
+
+			eng::SelectFileSettings settings;
+			settings.m_Title = "Open Flipbook";
+			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
+			settings.m_Path = str::GetPath(str::EPath::Assets);
+			settings.m_Path += name;
+
+			const str::Path filepath = eng::SelectFileDialog(settings);
+			if (!filepath.IsEmpty())
+			{
+				eng::Visitor visitor;
+				visitor.LoadFromFile(filepath);
+				eng::FlipbookAssetLoader loader;
+				loader.Load(windowComponent.m_Asset, visitor);
+			}
+
 			world.RemoveComponent<editor::FlipbookAssetOpenComponent>(entity);
 		}
 	};
@@ -181,17 +200,20 @@ namespace
 
 		if (world.HasComponent<editor::FlipbookAssetSaveComponent>(entity))
 		{
-			auto& windowComponent = world.GetComponent<editor::FlipbookWindowComponent>(entity);
+			auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(entity);
+			const str::Name& name = windowComponent.m_Asset.m_Name;
 
 			eng::SaveFileSettings settings;
 			settings.m_Title = "Save Flipbook";
 			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
-			settings.m_Directory = str::GetPath(str::EPath::Assets);
+			settings.m_Path = str::GetPath(str::EPath::Assets);
+			settings.m_Path += name;
+
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& assetBrowser = world.GetManager<eng::AssetManager>();
-				assetBrowser.SaveAsset(windowComponent.m_Asset, filepath);
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
+				assetManager.SaveAsset(windowComponent.m_Asset, filepath);
 			}
 
 			world.RemoveComponent<editor::FlipbookAssetSaveComponent>(entity);
@@ -200,19 +222,17 @@ namespace
 
 	void DrawPreviewer(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::FlipbookWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(entity);
 		eng::FlipbookAsset& flipbook = windowComponent.m_Asset;
 		if (!flipbook.m_Texture2D.IsValid())
 			return;
 
-		auto& assetBrowser = world.GetManager<eng::AssetManager>();
-		const auto* textureAsset = assetBrowser.LoadAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
+		const auto& assetManager = world.ReadResource<eng::AssetManager>();
+		const auto* textureAsset = assetManager.FetchAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
 		if (!textureAsset)
 			return;
 
-		const ImVec2 regionSize = ImGui::GetContentRegionAvail();
-		const Vector2f imageSize = Vector2f((float)regionSize.x, (float)regionSize.y);
-
+		const Vector2f imageSize = ToImageSize(ImGui::GetContentRegionAvail(), *textureAsset);
 		if (flipbook.m_Frames.IsEmpty())
 		{
 			imgui::Image(textureAsset->m_TextureId, imageSize);
@@ -232,25 +252,24 @@ namespace
 
 	void DrawTexture(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::FlipbookWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(entity);
 		eng::FlipbookAsset& flipbook = windowComponent.m_Asset;
 		if (!flipbook.m_Texture2D.IsValid())
 			return;
 
-		auto& assetBrowser = world.GetManager<eng::AssetManager>();
-		const auto* textureAsset = assetBrowser.LoadAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
+		const auto& assetManager = world.ReadResource<eng::AssetManager>();
+		const auto* textureAsset = assetManager.FetchAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
 		if (!textureAsset)
 			return;
 
 		const ImVec2 regionSize = ImGui::GetContentRegionAvail();
+		const Vector2f imageSize = ToImageSize(regionSize, *textureAsset);
 		const ImVec2 regionMin = ImGui::GetCursorScreenPos();
-		const ImVec2 regionMax = ImVec2(regionMin.x + regionSize.x, regionMin.y + regionSize.y);
+		const ImVec2 regionMax = ImVec2(regionMin.x + imageSize.x, regionMin.y + imageSize.y);
 
-		const ImTextureID textureId = (void*)(intptr_t)textureAsset->m_TextureId;
-		ImGui::Image(textureId, regionSize, { 0, 1 }, { 1, 0 });
+		imgui::Image(textureAsset->m_TextureId, imageSize);
 
 		// draw frames of the flipbook
-		ImDrawList* draw_list = ImGui::GetWindowDrawList();
 		for (const eng::FlipbookFrame& frame : flipbook.m_Frames)
 		{
 			Vector2f min = frame.m_Position;
@@ -260,11 +279,11 @@ namespace
 			max.x = math::Remap(max.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
 			max.y = math::Remap(max.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
 
-			imgui::AddRect(min, max, Vector4f(1.0f, 1.0f, 0.4f, 1.0f));
+			imgui::AddRect({ min, max }, Vector4f(1.0f, 1.0f, 0.4f, 1.0f));
 		}
 
 		// draw frames to be extracted
-		const auto& extractorComponent = world.GetComponent<const editor::FlipbookExtractorComponent>(entity);
+		const auto& extractorComponent = world.ReadComponent<editor::FlipbookBatchingComponent>(entity);
 		if (extractorComponent.m_IsPreviewing)
 		{
 			for (int32 i = 0; i < extractorComponent.m_Count; ++i)
@@ -276,7 +295,7 @@ namespace
 				max.x = math::Remap(max.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
 				max.y = math::Remap(max.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
 
-				imgui::AddRect(min, max, Vector4f(1.0f, 0.4f, 0.0f, 1.0f));
+				imgui::AddRect({ min, max }, Vector4f(1.0f, 0.4f, 0.0f, 1.0f));
 			}
 		}
 	};
@@ -291,20 +310,29 @@ void editor::FlipbookEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::FlipbookWindowRequestComponent>>())
 	{
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
-		world.AddComponent<editor::FlipbookExtractorComponent>(windowEntity);
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Flipbook Editor");
+		world.AddComponent<editor::FlipbookBatchingComponent>(windowEntity);
 
-		auto& windowComponent = world.AddComponent<editor::FlipbookWindowComponent>(windowEntity);
-		windowComponent.m_DockspaceLabel = ToLabel("Flipbook Editor", windowEntity);
-		windowComponent.m_ExtractorLabel = ToLabel("Extractor", windowEntity);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
-		windowComponent.m_PreviewerLabel = ToLabel("Previewer", windowEntity);
-		windowComponent.m_TextureLabel   = ToLabel("Texture", windowEntity);
+		auto& window = world.AddComponent<editor::FlipbookWindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
+		window.m_DockspaceLabel = ToLabel("Flipbook Editor##flipbook", identifier);
+		window.m_BatchingLabel  = ToLabel("Batching##flipbook", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##flipbook", identifier);
+		window.m_PreviewerLabel = ToLabel("Previewer##flipbook", identifier);
+		window.m_TextureLabel   = ToLabel("Texture##flipbook", identifier);
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::FlipbookWindowComponent>>())
+	{
+		const auto& window = world.ReadComponent<editor::FlipbookWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::FlipbookWindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<editor::FlipbookWindowComponent>(windowEntity);
+		auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
@@ -324,7 +352,7 @@ void editor::FlipbookEditor::Update(World& world, const GameTime& gameTime)
 				ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.6f, &textureId, &inspectorId);
 				ImGui::DockBuilderSplitNode(inspectorId, ImGuiDir_Up, 0.6f, &inspectorId, &previewerId);
 				ImGui::DockBuilderDockWindow(windowComponent.m_TextureLabel.c_str(), textureId);
-				ImGui::DockBuilderDockWindow(windowComponent.m_ExtractorLabel.c_str(), inspectorId);
+				ImGui::DockBuilderDockWindow(windowComponent.m_BatchingLabel.c_str(), inspectorId);
 				ImGui::DockBuilderDockWindow(windowComponent.m_InspectorLabel.c_str(), inspectorId);
 				ImGui::DockBuilderDockWindow(windowComponent.m_PreviewerLabel.c_str(), previewerId);
 				ImGui::DockBuilderFinish(dockspaceId);
@@ -333,12 +361,12 @@ void editor::FlipbookEditor::Update(World& world, const GameTime& gameTime)
 		}
 		ImGui::End();
 
-		if (ImGui::Begin(windowComponent.m_TextureLabel.c_str()))
-			DrawTexture(world, windowEntity);
+		if (ImGui::Begin(windowComponent.m_BatchingLabel.c_str()))
+			DrawBatcher(world, windowEntity);
 		ImGui::End();
 
-		if (ImGui::Begin(windowComponent.m_ExtractorLabel.c_str()))
-			DrawExtractor(world, windowEntity);
+		if (ImGui::Begin(windowComponent.m_TextureLabel.c_str()))
+			DrawTexture(world, windowEntity);
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_InspectorLabel.c_str()))

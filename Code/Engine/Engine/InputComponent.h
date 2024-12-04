@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/Input.h>
-#include <Core/Set.h>
-#include <Core/Vector.h>
-
-#include <ECS/Component.h>
+#include "Core/Input.h"
+#include "Core/Set.h"
+#include "ECS/Component.h"
+#include "Math/Vector.h"
 
 namespace eng
 {
@@ -24,5 +23,6 @@ namespace eng
 		Set<input::EMouse> m_MouseCurrent;
 		Vector2f m_MouseDelta;
 		Vector2f m_MousePosition;
+		Vector2f m_ScrollDelta;
 	};
 }

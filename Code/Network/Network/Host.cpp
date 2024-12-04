@@ -1,8 +1,7 @@
 #include "Network/Host.h"
 
-#include <Core/Assert.h>
-#include <Core/GameTime.h>
-
+#include "Core/Assert.h"
+#include "Core/GameTime.h"
 #include "Network/Adaptor.h"
 #include "Network/Config.h"
 #include "Network/UserId.h"
@@ -37,18 +36,19 @@ void net::Host::Startup(const str::String& ipAddress, const int32 port, const fl
 	m_Server->GetAddress().ToString(addressString, sizeof(addressString));
 	Z_LOG(ELog::Network, "Host: Server address is {}", addressString);
 
-	m_Connections.Append(entt::sink(m_Adaptor.m_OnServerClientConnected).connect<&net::Host::OnClientConnected>(this));
-	m_Connections.Append(entt::sink(m_Adaptor.m_OnServerClientDisconnected).connect<&net::Host::OnClientDisconnected>(this));
+	m_Collection =
+	{
+		m_Adaptor.m_OnServerClientConnected.Connect(*this, &net::Host::OnClientConnected),
+		m_Adaptor.m_OnServerClientDisconnected.Connect(*this, &net::Host::OnClientDisconnected)
+	};
 }
 
 void net::Host::Shutdown()
 {
+	m_Collection.Disconnect();
+
 	if (IsRunning())
 	{
-		for (entt::connection& connection : m_Connections)
-			connection.release();
-		m_Connections.RemoveAll();
-
 		m_Server->Stop();
 
 		delete m_Server;
@@ -74,7 +74,7 @@ void net::Host::Update(const GameTime& gameTime)
 					// #todo: delete
 					ProcessMessage(peerId, message);
 
-					m_OnProcessMessage.publish(peerId, message);
+					m_OnProcessMessage.Publish(peerId, message);
 					m_Server->ReleaseMessage(peerId.m_Value, message);
 					message = m_Server->ReceiveMessage(peerId.m_Value, channel);
 				}

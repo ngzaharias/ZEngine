@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Core/Tuple.h>
-#include <Core/TypeTraits.h>
-#include <Core/Vector.h>
+#include "Core/Tuple.h"
+#include "Core/TypeTraits.h"
 
 #include <algorithm>
+#include <iterator>
 
 namespace detail
 {
@@ -19,7 +19,7 @@ namespace detail
 }
 
 template<typename Range, typename Type>
-bool core::Contains(const Range& range, const Type& item)
+bool enumerate::Contains(const Range& range, const Type& item)
 {
 	if constexpr (core::IsDetected<detail::HasContainsMethod, Range, Type>::value)
 	{
@@ -40,13 +40,13 @@ bool core::Contains(const Range& range, const Type& item)
 }
 
 template<typename Range, typename Predicate>
-bool core::ContainsIf(const Range& range, const Predicate& predicate)
+bool enumerate::ContainsIf(const Range& range, const Predicate& predicate)
 {
 	return std::find_if(range.cbegin(), range.cend(), predicate) != range.cend();
 }
 
 template<typename Range>
-void core::Difference(const Range& inputA, const Range& inputB, Range& output)
+void enumerate::Difference(const Range& inputA, const Range& inputB, Range& output)
 {
 	std::set_difference(
 		inputA.cbegin(),
@@ -57,7 +57,7 @@ void core::Difference(const Range& inputA, const Range& inputB, Range& output)
 }
 
 template<typename Range>
-void core::Intersection(const Range& inputA, const Range& inputB, Range& output)
+void enumerate::Intersection(const Range& inputA, const Range& inputB, Range& output)
 {
 	std::set_intersection(
 		inputA.cbegin(),
@@ -200,109 +200,4 @@ auto enumerate::Reverse(Range&& value)
 	};
 
 	return Wrapper{ std::forward<Range>(value) };
-}
-
-inline auto enumerate::Length(const float stride, const float length)
-{
-	struct ItrEnd { };
-	struct ItrBegin
-	{
-		auto operator*() -> float
-		{
-			return m_Distance;
-		}
-
-		auto operator++() -> ItrBegin&
-		{
-			const bool isLastIteration = m_Distance >= m_Length;
-			m_Distance += m_Stride;
-			if (!isLastIteration)
-				m_Distance = math::Min(m_Distance, m_Length);
-			return *this;
-		}
-
-		bool operator!=(const ItrEnd& rhs) const
-		{
-			return m_Distance <= m_Length;
-		}
-
-		float m_Distance = 0.f;
-		float m_Length = 0.f;
-		float m_Stride = 1.f;
-	};
-
-	struct Range
-	{
-		Range(const float distance, const float length, const float stride)
-			: m_Distance(distance), m_Length(length), m_Stride(stride) { }
-
-		auto begin() -> ItrBegin
-		{
-			return ItrBegin{ m_Distance, m_Length, m_Stride };
-		}
-
-		auto end() -> ItrEnd
-		{
-			return ItrEnd();
-		}
-
-		float m_Distance = 0.f;
-		float m_Length = 0.f;
-		float m_Stride = 1.f;
-	};
-
-	return Range(0.f, length, stride);
-}
-
-inline auto enumerate::Vector(const Vector3i& value)
-{
-	struct Iterator
-	{
-		Iterator(const Vector3i& range, const int32 index)
-			: m_Range(range)
-			, m_Index(index)
-		{ }
-
-		auto operator*() -> Vector3i
-		{
-			return Vector3i(
-				m_Index % m_Range.x,
-				(m_Index / m_Range.x) % m_Range.y,
-				(m_Index / (m_Range.x * m_Range.y)) % m_Range.z);
-		}
-
-		auto operator++() -> Iterator&
-		{
-			m_Index++;
-			return *this;
-		}
-
-		bool operator!=(const Iterator& other) const
-		{
-			return m_Index != other.m_Index;
-		}
-
-		const Vector3i& m_Range = Vector3i(UINT32_MAX);
-		int32 m_Index = UINT32_MAX;
-	};
-
-	struct Range
-	{
-		Range(const Vector3i& value) : m_Range(value) {	}
-
-		auto begin() -> Iterator
-		{
-			return Iterator{ m_Range, 0 };
-		}
-
-		auto end() -> Iterator
-		{
-			const int32 count = m_Range.x * m_Range.y * m_Range.z;
-			return Iterator{ m_Range, count };
-		}
-
-		const Vector3i& m_Range;
-	};
-
-	return Range(value);
 }

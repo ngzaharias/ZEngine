@@ -3,41 +3,194 @@
 
 #include "Engine/CameraHelpers.h"
 #include "Engine/Screen.h"
+#include "Math/AABB.h"
+#include "Math/Circle.h"
+#include "Math/Matrix.h"
+#include "Math/OBB.h"
+#include "Math/Sphere.h"
 
-#include <Core/AABB.h>
-#include <Core/Matrix.h>
-#include <Core/OBB.h>
-
-void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB& extents, const Vector4f& colour)
+namespace
 {
-	Vector3f corners[8];
-	corners[0] = translate + Vector3f(extents.m_Min.x, extents.m_Min.y, extents.m_Min.z);
-	corners[1] = translate + Vector3f(extents.m_Min.x, extents.m_Min.y, extents.m_Max.z);
-	corners[2] = translate + Vector3f(extents.m_Max.x, extents.m_Min.y, extents.m_Max.z);
-	corners[3] = translate + Vector3f(extents.m_Max.x, extents.m_Min.y, extents.m_Min.z);
-
-	corners[4] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Min.z);
-	corners[5] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Max.z);
-	corners[6] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Max.z);
-	corners[7] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Max.z);
-
-	AddLine(corners[0], corners[1], colour);
-	AddLine(corners[1], corners[2], colour);
-	AddLine(corners[2], corners[3], colour);
-	AddLine(corners[3], corners[0], colour);
-
-	AddLine(corners[4], corners[5], colour);
-	AddLine(corners[5], corners[6], colour);
-	AddLine(corners[6], corners[7], colour);
-	AddLine(corners[7], corners[4], colour);
-
-	AddLine(corners[0], corners[4], colour);
-	AddLine(corners[1], corners[5], colour);
-	AddLine(corners[2], corners[6], colour);
-	AddLine(corners[3], corners[7], colour);
+	constexpr Vector3f s_Icosphere[] = {
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(0.353f, 0.866f, -0.353f),
+			Vector3f(0.353f, 0.866f, -0.353f),
+			Vector3f(0.612f, 0.500f, -0.612f),
+			Vector3f(0.612f, 0.500f, -0.612f),
+			Vector3f(0.707f, 0.0f, -0.707f),
+			Vector3f(0.707f, 0.0f, -0.707f),
+			Vector3f(0.612f, -0.499f, -0.612f),
+			Vector3f(0.612f, -0.499f, -0.612f),
+			Vector3f(0.353f, -0.866f, -0.353f),
+			Vector3f(0.0f, 0.866f, -0.499f),
+			Vector3f(0.353f, 0.866f, -0.353f),
+			Vector3f(0.0f, -0.499f, -0.866f),
+			Vector3f(0.612f, -0.499f, -0.612f),
+			Vector3f(0.499f, 0.866f, 0.0f),
+			Vector3f(0.866f, 0.500f, 0.0f),
+			Vector3f(0.866f, 0.500f, 0.0f),
+			Vector3f(0.999f, 0.0f, 0.0f),
+			Vector3f(0.999f, 0.0f, 0.0f),
+			Vector3f(0.866f, -0.499f, 0.0f),
+			Vector3f(0.866f, -0.499f, 0.0f),
+			Vector3f(0.499f, -0.866f, 0.0f),
+			Vector3f(0.499f, -0.866f, 0.0f),
+			Vector3f(0.353f, -0.866f, -0.353f),
+			Vector3f(0.612f, -0.499f, -0.612f),
+			Vector3f(0.866f, -0.499f, 0.0f),
+			Vector3f(0.999f, 0.0f, 0.0f),
+			Vector3f(0.707f, 0.0f, -0.707f),
+			Vector3f(0.612f, 0.500f, -0.612f),
+			Vector3f(0.866f, 0.500f, 0.0f),
+			Vector3f(0.499f, 0.866f, 0.0f),
+			Vector3f(0.353f, 0.866f, -0.353f),
+			Vector3f(0.353f, 0.866f, 0.353f),
+			Vector3f(0.612f, 0.5f, 0.612f),
+			Vector3f(0.612f, 0.5f, 0.612f),
+			Vector3f(0.707f, 0.0f, 0.707f),
+			Vector3f(0.707f, 0.0f, 0.707f),
+			Vector3f(0.612f, -0.5f, 0.612f),
+			Vector3f(0.612f, -0.5f, 0.612f),
+			Vector3f(0.353f, -0.866f, 0.353f),
+			Vector3f(0.353f, -0.866f, 0.353f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.353f, -0.866f, 0.353f),
+			Vector3f(0.499f, -0.866f, 0.0f),
+			Vector3f(0.866f, -0.499f, 0.0f),
+			Vector3f(0.612f, -0.5f, 0.612f),
+			Vector3f(0.707f, 0.0f, 0.707f),
+			Vector3f(0.999f, 0.0f, 0.0f),
+			Vector3f(0.866f, 0.500f, 0.0f),
+			Vector3f(0.612f, 0.5f, 0.612f),
+			Vector3f(0.353f, 0.866f, 0.353f),
+			Vector3f(0.499f, 0.866f, 0.0f),
+			Vector3f(0.0f, 0.866f, 0.499f),
+			Vector3f(0.0f, 0.499f, 0.866f),
+			Vector3f(0.0f, 0.499f, 0.866f),
+			Vector3f(0.0f, 0.0f, 0.999f),
+			Vector3f(0.0f, 0.0f, 0.999f),
+			Vector3f(0.0f, -0.5f, 0.866f),
+			Vector3f(0.0f, -0.5f, 0.866f),
+			Vector3f(0.0f, -0.866f, 0.499f),
+			Vector3f(0.0f, 0.0f, 0.999f),
+			Vector3f(0.707f, 0.0f, 0.707f),
+			Vector3f(0.612f, 0.5f, 0.612f),
+			Vector3f(0.0f, 0.499f, 0.866f),
+			Vector3f(0.0f, 0.866f, 0.499f),
+			Vector3f(0.353f, 0.866f, 0.353f),
+			Vector3f(0.353f, -0.866f, 0.353f),
+			Vector3f(0.0f, -0.866f, 0.499f),
+			Vector3f(0.0f, -0.5f, 0.866f),
+			Vector3f(0.612f, -0.5f, 0.612f),
+			Vector3f(-0.353f, 0.866f, 0.353f),
+			Vector3f(-0.612f, 0.5f, 0.612f),
+			Vector3f(-0.612f, 0.5f, 0.612f),
+			Vector3f(-0.707f, 0.0f, 0.707f),
+			Vector3f(-0.707f, 0.0f, 0.707f),
+			Vector3f(-0.612f, -0.5f, 0.612f),
+			Vector3f(-0.612f, -0.5f, 0.612f),
+			Vector3f(-0.353f, -0.866f, 0.353f),
+			Vector3f(-0.353f, 0.866f, 0.353f),
+			Vector3f(0.0f, 0.866f, 0.499f),
+			Vector3f(0.0f, -0.866f, 0.499f),
+			Vector3f(-0.353f, -0.866f, 0.353f),
+			Vector3f(-0.612f, -0.5f, 0.612f),
+			Vector3f(0.0f, -0.5f, 0.866f),
+			Vector3f(0.0f, 0.0f, 0.999f),
+			Vector3f(-0.707f, 0.0f, 0.707f),
+			Vector3f(-0.612f, 0.5f, 0.612f),
+			Vector3f(0.0f, 0.499f, 0.866f),
+			Vector3f(-0.499f, 0.866f, 0.0f),
+			Vector3f(-0.866f, 0.500f, 0.0f),
+			Vector3f(-0.866f, 0.500f, 0.0f),
+			Vector3f(-0.999f, 0.0f, 0.0f),
+			Vector3f(-0.999f, 0.0f, 0.0f),
+			Vector3f(-0.866f, -0.499f, 0.0f),
+			Vector3f(-0.866f, -0.499f, 0.0f),
+			Vector3f(-0.499f, -0.866f, 0.0f),
+			Vector3f(-0.353f, -0.866f, 0.353f),
+			Vector3f(-0.499f, -0.866f, 0.0f),
+			Vector3f(-0.866f, -0.499f, 0.0f),
+			Vector3f(-0.612f, -0.5f, 0.612f),
+			Vector3f(-0.707f, 0.0f, 0.707f),
+			Vector3f(-0.999f, 0.0f, 0.0f),
+			Vector3f(-0.866f, 0.500f, 0.0f),
+			Vector3f(-0.612f, 0.5f, 0.612f),
+			Vector3f(-0.353f, 0.866f, 0.353f),
+			Vector3f(-0.499f, 0.866f, 0.0f),
+			Vector3f(-0.353f, 0.866f, -0.353f),
+			Vector3f(-0.612f, 0.500f, -0.612f),
+			Vector3f(-0.612f, 0.500f, -0.612f),
+			Vector3f(-0.707f, 0.0f, -0.707f),
+			Vector3f(-0.707f, 0.0f, -0.707f),
+			Vector3f(-0.612f, -0.499f, -0.612f),
+			Vector3f(-0.612f, -0.499f, -0.612f),
+			Vector3f(-0.353f, -0.866f, -0.353f),
+			Vector3f(-0.499f, -0.866f, 0.0f),
+			Vector3f(-0.353f, -0.866f, -0.353f),
+			Vector3f(-0.612f, -0.499f, -0.612f),
+			Vector3f(-0.866f, -0.499f, 0.0f),
+			Vector3f(-0.999f, 0.0f, 0.0f),
+			Vector3f(-0.707f, 0.0f, -0.707f),
+			Vector3f(-0.612f, 0.500f, -0.612f),
+			Vector3f(-0.866f, 0.500f, 0.0f),
+			Vector3f(-0.499f, 0.866f, 0.0f),
+			Vector3f(-0.353f, 0.866f, -0.353f),
+			Vector3f(0.0f, 0.500f, -0.866f),
+			Vector3f(0.0f, 0.0f, -0.999f),
+			Vector3f(-0.353f, -0.866f, -0.353f),
+			Vector3f(0.0f, -0.866f, -0.499f),
+			Vector3f(-0.707f, 0.0f, -0.707f),
+			Vector3f(0.0f, 0.0f, -0.999f),
+			Vector3f(0.0f, 0.500f, -0.866f),
+			Vector3f(-0.612f, 0.500f, -0.612f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(0.0f, 0.866f, -0.499f),
+			Vector3f(0.0f, 0.866f, -0.499f),
+			Vector3f(0.0f, 0.500f, -0.866f),
+			Vector3f(0.0f, 0.0f, -0.999f),
+			Vector3f(0.0f, -0.499f, -0.866f),
+			Vector3f(0.0f, -0.499f, -0.866f),
+			Vector3f(0.0f, -0.866f, -0.499f),
+			Vector3f(0.0f, -0.866f, -0.499f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.353f, -0.866f, -0.353f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.612f, 0.500f, -0.612f),
+			Vector3f(0.0f, 0.500f, -0.866f),
+			Vector3f(0.353f, -0.866f, -0.353f),
+			Vector3f(0.0f, -0.866f, -0.499f),
+			Vector3f(0.707f, 0.0f, -0.707f),
+			Vector3f(0.0f, 0.0f, -0.999f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(0.499f, 0.866f, 0.0f),
+			Vector3f(0.499f, -0.866f, 0.0f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(0.353f, 0.866f, 0.353f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(0.0f, 0.866f, 0.499f),
+			Vector3f(0.0f, -0.866f, 0.499f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(-0.353f, 0.866f, 0.353f),
+			Vector3f(-0.353f, -0.866f, 0.353f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(-0.499f, 0.866f, 0.0f),
+			Vector3f(-0.499f, -0.866f, 0.0f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.0f, 1.000f, 0.0f),
+			Vector3f(-0.353f, 0.866f, -0.353f),
+			Vector3f(-0.353f, -0.866f, -0.353f),
+			Vector3f(0.0f, -0.999f, 0.0f),
+			Vector3f(0.0f, -0.499f, -0.866f),
+			Vector3f(-0.612f, -0.499f, -0.612f),
+			Vector3f(-0.353f, 0.866f, -0.353f),
+			Vector3f(0.0f, 0.866f, -0.499f) };
 }
 
-void eng::LinesComponent::AddAABB(const Vector3f& translate, const float extents, const Vector4f& colour)
+void eng::LinesComponent::AddAABB(const Vector3f& translate, const float extents, const Colour& colour)
 {
 	Vector3f corners[8];
 	corners[0] = translate + Vector3f(-extents, -extents, -extents);
@@ -66,25 +219,112 @@ void eng::LinesComponent::AddAABB(const Vector3f& translate, const float extents
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Projection& projection, const Vector4f& colour)
+void eng::LinesComponent::AddAABB(const Vector3f& translate, const Vector3f& extents, const Colour& colour)
+{
+	Vector3f corners[8];
+	corners[0] = translate + Vector3f(-extents.x, -extents.y, -extents.z);
+	corners[1] = translate + Vector3f(-extents.x, -extents.y, +extents.z);
+	corners[2] = translate + Vector3f(+extents.x, -extents.y, +extents.z);
+	corners[3] = translate + Vector3f(+extents.x, -extents.y, -extents.z);
+
+	corners[4] = translate + Vector3f(-extents.x, +extents.y, -extents.z);
+	corners[5] = translate + Vector3f(-extents.x, +extents.y, +extents.z);
+	corners[6] = translate + Vector3f(+extents.x, +extents.y, +extents.z);
+	corners[7] = translate + Vector3f(+extents.x, +extents.y, -extents.z);
+
+	AddLine(corners[0], corners[1], colour);
+	AddLine(corners[1], corners[2], colour);
+	AddLine(corners[2], corners[3], colour);
+	AddLine(corners[3], corners[0], colour);
+
+	AddLine(corners[4], corners[5], colour);
+	AddLine(corners[5], corners[6], colour);
+	AddLine(corners[6], corners[7], colour);
+	AddLine(corners[7], corners[4], colour);
+
+	AddLine(corners[0], corners[4], colour);
+	AddLine(corners[1], corners[5], colour);
+	AddLine(corners[2], corners[6], colour);
+	AddLine(corners[3], corners[7], colour);
+}
+
+void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& extents, const Colour& colour)
+{
+	Vector3f corners[8];
+	corners[0] = translate + Vector3f(extents.m_Min.x, extents.m_Min.y, extents.m_Min.z);
+	corners[1] = translate + Vector3f(extents.m_Min.x, extents.m_Min.y, extents.m_Max.z);
+	corners[2] = translate + Vector3f(extents.m_Max.x, extents.m_Min.y, extents.m_Max.z);
+	corners[3] = translate + Vector3f(extents.m_Max.x, extents.m_Min.y, extents.m_Min.z);
+
+	corners[4] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Min.z);
+	corners[5] = translate + Vector3f(extents.m_Min.x, extents.m_Max.y, extents.m_Max.z);
+	corners[6] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Max.z);
+	corners[7] = translate + Vector3f(extents.m_Max.x, extents.m_Max.y, extents.m_Min.z);
+
+	AddLine(corners[0], corners[1], colour);
+	AddLine(corners[1], corners[2], colour);
+	AddLine(corners[2], corners[3], colour);
+	AddLine(corners[3], corners[0], colour);
+
+	AddLine(corners[4], corners[5], colour);
+	AddLine(corners[5], corners[6], colour);
+	AddLine(corners[6], corners[7], colour);
+	AddLine(corners[7], corners[4], colour);
+
+	AddLine(corners[0], corners[4], colour);
+	AddLine(corners[1], corners[5], colour);
+	AddLine(corners[2], corners[6], colour);
+	AddLine(corners[3], corners[7], colour);
+}
+
+void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& circle, const Colour& colour)
+{
+	Vector3f corners[8];
+	corners[0] = translate + circle.m_Position.X0Y() + Vector3f(-circle.m_Radius, 0.f, 0.f);
+	corners[1] = translate + circle.m_Position.X0Y() + Vector3f(+circle.m_Radius, 0.f, 0.f);
+	corners[2] = translate + circle.m_Position.X0Y() + Vector3f(0.f, -circle.m_Radius, 0.f);
+	corners[3] = translate + circle.m_Position.X0Y() + Vector3f(0.f, +circle.m_Radius, 0.f);
+	corners[4] = translate + circle.m_Position.X0Y() + Vector3f(0.f, 0.f, -circle.m_Radius);
+	corners[5] = translate + circle.m_Position.X0Y() + Vector3f(0.f, 0.f, +circle.m_Radius);
+
+	AddLine(corners[0], corners[2], colour);
+	AddLine(corners[2], corners[1], colour);
+	AddLine(corners[1], corners[3], colour);
+	AddLine(corners[3], corners[0], colour);
+
+	AddLine(corners[0], corners[4], colour);
+	AddLine(corners[4], corners[1], colour);
+	AddLine(corners[1], corners[5], colour);
+	AddLine(corners[5], corners[0], colour);
+
+	AddLine(corners[2], corners[4], colour);
+	AddLine(corners[4], corners[3], colour);
+	AddLine(corners[3], corners[5], colour);
+	AddLine(corners[5], corners[2], colour);
+}
+
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Colour& colour)
 {
 	std::visit([&](auto projection) { AddFrustrum(translate, rotate, projection, colour); }, projection);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Orthographic& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Colour& colour)
 {
-	const float halfSize = projection.m_Size * 0.5f;
+	// #todo: pass in width & height
+	const float aspect = Screen::width / Screen::height;
+	const float widthH = projection.m_Size * aspect * 0.5f;
+	const float heightH = projection.m_Size * 0.5f;
 
 	Vector3f corners[8];
-	corners[0] = Vector3f(-halfSize, +halfSize, projection.m_ClippingNear);
-	corners[1] = Vector3f(+halfSize, +halfSize, projection.m_ClippingNear);
-	corners[2] = Vector3f(-halfSize, -halfSize, projection.m_ClippingNear);
-	corners[3] = Vector3f(+halfSize, -halfSize, projection.m_ClippingNear);
+	corners[0] = Vector3f(-widthH, +heightH, projection.m_ClippingNear);
+	corners[1] = Vector3f(+widthH, +heightH, projection.m_ClippingNear);
+	corners[2] = Vector3f(-widthH, -heightH, projection.m_ClippingNear);
+	corners[3] = Vector3f(+widthH, -heightH, projection.m_ClippingNear);
 
-	corners[4] = Vector3f(-halfSize, +halfSize, projection.m_ClippingFar);
-	corners[5] = Vector3f(+halfSize, +halfSize, projection.m_ClippingFar);
-	corners[6] = Vector3f(-halfSize, -halfSize, projection.m_ClippingFar);
-	corners[7] = Vector3f(+halfSize, -halfSize, projection.m_ClippingFar);
+	corners[4] = Vector3f(-widthH, +heightH, projection.m_ClippingFar);
+	corners[5] = Vector3f(+widthH, +heightH, projection.m_ClippingFar);
+	corners[6] = Vector3f(-widthH, -heightH, projection.m_ClippingFar);
+	corners[7] = Vector3f(+widthH, -heightH, projection.m_ClippingFar);
 
 	Matrix4x4 transform = Matrix4x4::FromRotate(rotate);
 	transform.SetTranslate(translate);
@@ -108,8 +348,9 @@ void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Perspective& projection, const Vector4f& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Colour& colour)
 {
+	// #todo: pass in width & height
 	const float ratio = Screen::width / Screen::height;
 	const float fovy = math::ToRadians(projection.m_FieldOfView);
 
@@ -152,13 +393,46 @@ void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddLine(const Vector3f& pointA, const Vector3f& pointB, const Vector4f& colour)
+void eng::LinesComponent::AddHexagon(const Vector3f& translate, const float radius, const Colour& colour)
+{
+	constexpr Vector3f s_DirectionE = Vector2f(+1.f, 0.f).X0Y();
+	constexpr Vector3f s_DirectionSE = Vector2f(+0.5f, -0.866025f).X0Y();
+	constexpr Vector3f s_DirectionSW = Vector2f(-0.5f, -0.866025f).X0Y();
+	constexpr Vector3f s_DirectionW = Vector2f(-1.f, 0.f).X0Y();
+	constexpr Vector3f s_DirectionNW = Vector2f(-0.5f, +0.866025f).X0Y();
+	constexpr Vector3f s_DirectionNE = Vector2f(+0.5f, +0.866025f).X0Y();
+
+	AddLine(translate + s_DirectionE * radius, translate + s_DirectionSE * radius, colour);
+	AddLine(translate + s_DirectionSE * radius, translate + s_DirectionSW * radius, colour);
+	AddLine(translate + s_DirectionSW * radius, translate + s_DirectionW * radius, colour);
+	AddLine(translate + s_DirectionW * radius, translate + s_DirectionNW * radius, colour);
+	AddLine(translate + s_DirectionNW * radius, translate + s_DirectionNE * radius, colour);
+	AddLine(translate + s_DirectionNE * radius, translate + s_DirectionE * radius, colour);
+}
+
+void eng::LinesComponent::AddIcosphere(const Vector3f& translate, const Sphere3f& sphere, const Colour& colour)
+{
+	const Matrix4x4 transform = Matrix4x4::FromTransform(
+		translate + sphere.m_Position,
+		Quaternion::Identity,
+		sphere.m_Radius);
+
+	const uint64 count = sizeof(s_Icosphere) / sizeof(Vector3f);
+	for (uint64 i = 0, j = 1; j < count; ++i, ++j)
+	{
+		const Vector3f pointA = s_Icosphere[i] * transform;
+		const Vector3f pointB = s_Icosphere[j] * transform;
+		AddLine(pointA, pointB, colour);
+	}
+}
+
+void eng::LinesComponent::AddLine(const Vector3f& pointA, const Vector3f& pointB, const Colour& colour)
 {
 	m_Vertices.Append({ pointA, colour });
 	m_Vertices.Append({ pointB, colour });
 }
 
-void eng::LinesComponent::AddOBB(const Vector3f& translate, const OBB& obb, const Vector4f& colour)
+void eng::LinesComponent::AddOBB(const Vector3f& translate, const OBB3f& obb, const Colour& colour)
 {
 	AddLine(translate + obb.m_Points[0], translate + obb.m_Points[1], colour);
 	AddLine(translate + obb.m_Points[1], translate + obb.m_Points[2], colour);
@@ -176,15 +450,15 @@ void eng::LinesComponent::AddOBB(const Vector3f& translate, const OBB& obb, cons
 	AddLine(translate + obb.m_Points[3], translate + obb.m_Points[7], colour);
 }
 
-void eng::LinesComponent::AddSphere(const Vector3f& translate, const float radius, const Vector4f& colour)
+void eng::LinesComponent::AddSphere(const Vector3f& translate, const Sphere3f& sphere, const Colour& colour)
 {
 	Vector3f corners[8];
-	corners[0] = translate + Vector3f(-radius, 0.f, 0.f);
-	corners[1] = translate + Vector3f(+radius, 0.f, 0.f);
-	corners[2] = translate + Vector3f(0.f, -radius, 0.f);
-	corners[3] = translate + Vector3f(0.f, +radius, 0.f);
-	corners[4] = translate + Vector3f(0.f, 0.f, -radius);
-	corners[5] = translate + Vector3f(0.f, 0.f, +radius);
+	corners[0] = translate + sphere.m_Position + Vector3f(-sphere.m_Radius, 0.f, 0.f);
+	corners[1] = translate + sphere.m_Position + Vector3f(+sphere.m_Radius, 0.f, 0.f);
+	corners[2] = translate + sphere.m_Position + Vector3f(0.f, -sphere.m_Radius, 0.f);
+	corners[3] = translate + sphere.m_Position + Vector3f(0.f, +sphere.m_Radius, 0.f);
+	corners[4] = translate + sphere.m_Position + Vector3f(0.f, 0.f, -sphere.m_Radius);
+	corners[5] = translate + sphere.m_Position + Vector3f(0.f, 0.f, +sphere.m_Radius);
 
 	AddLine(corners[0], corners[2], colour);
 	AddLine(corners[2], corners[1], colour);

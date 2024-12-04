@@ -1,7 +1,6 @@
 #include "ECS/EntityStorage.h"
 
-#include <Core/Profiler.h>
-
+#include "Core/Profiler.h"
 #include "ECS/FrameBuffer.h"
 #include "ECS/QueryRegistry.h"
 
@@ -81,6 +80,8 @@ void ecs::EntityStorage::FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryR
 			}
 
 			componentMask &= ~changes.m_Removed;
+			changes.m_Added &= ~changes.m_Removed;
+			changes.m_Updated &= ~changes.m_Removed;
 		}
 
 		// update queries

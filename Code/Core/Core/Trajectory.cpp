@@ -1,8 +1,8 @@
 #include "Core/Trajectory.h"
 
-#include "Core/Math.h"
 #include "Core/VariantHelpers.h"
-#include "Core/VectorHelpers.h"
+#include "Math/Math.h"
+#include "Math/VectorMath.h"
 
 // http://www.planetclegg.com/projects/WarpingTextToSplines.html
 // https://gamedev.stackexchange.com/questions/5373/moving-ships-between-two-planets-along-a-bezier-missing-some-equations-for-acce/5427#5427
@@ -119,7 +119,7 @@ path::Trajectory::Trajectory(const Settings& settings)
 				prevPosition = nextPosition;
 				nextPosition = Bezier(data.m_PointA, data.m_Control, data.m_PointB, interpolate);
 
-				distance += Vector3f::Distance(prevPosition, nextPosition);
+				distance += math::Distance(prevPosition, nextPosition);
 				m_Mappings[i] = distance;
 
 				interpolate += interval;
@@ -136,7 +136,7 @@ path::Trajectory::Trajectory(const Settings& settings)
 				prevPosition = nextPosition;
 				nextPosition = Bezier(data.m_PointA, data.m_ControlA, data.m_ControlB, data.m_PointB, interpolate);
 
-				distance += Vector3f::Distance(prevPosition, nextPosition);
+				distance += math::Distance(prevPosition, nextPosition);
 				m_Mappings[i] = distance;
 
 				interpolate += interval;

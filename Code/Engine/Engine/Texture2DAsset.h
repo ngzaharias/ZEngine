@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Engine/Asset.h>
-#include <Engine/AssetLoader.h>
+#include "Engine/Asset.h"
+#include "Engine/AssetLoader.h"
 
 namespace eng
 {
@@ -24,6 +24,8 @@ namespace eng
 	class Texture2DAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Load(Texture2DAsset* asset, eng::Visitor& visitor) const;
+		bool Import(eng::Texture2DAsset& asset, const str::Path& filepath) const;
+		bool Load(eng::Texture2DAsset& asset, eng::Visitor& visitor) const;
+		bool Save(eng::Texture2DAsset& asset, eng::Visitor& visitor) const;
 	};
 }

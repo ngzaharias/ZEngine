@@ -1,13 +1,11 @@
-m_Guid = "7bab1e9f-5a18-411e-8f3e-7392a201e831"
+m_Guid = "7bab1e9f5a18411e8f3e7392a201e831"
 m_Name = "Sprite_02"
 
-[Name]
-
-[Sprite]
+['eng::SpriteComponent']
 m_Size = { X = 50, Y = 50 }
-m_Sprite = "00a51d6c-15ca-4ea9-bdb8-b4b11edffa63"
+m_Sprite = "00a51d6c15ca4ea9bdb8b4b11edffa63"
 
-[Transform]
+['eng::TransformComponent']
 m_Translate = { X = 0.0, Y = 400.0, Z = 0.0 }
 m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

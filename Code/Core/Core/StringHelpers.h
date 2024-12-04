@@ -1,9 +1,10 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/String.h>
-#include <Core/StringView.h>
-#include <Core/Types.h>
+#include "Core/Array.h"
+#include "Core/String.h"
+#include "Core/StringView.h"
+#include "Core/Tuple.h"
+#include "Core/Types.h"
 
 namespace str
 {
@@ -28,6 +29,7 @@ namespace str
 
 	byte HexToByte(char value);
 
+	/// \brief Splits a string into multiple substrings using the provided delimiters.
 	str::StringViews Split(const str::StringView& string, const str::StringView& delimiters = strDelimiters);
 
 	/// \brief Trims the substring from the left and right of the string.

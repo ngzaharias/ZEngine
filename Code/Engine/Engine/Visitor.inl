@@ -1,247 +1,491 @@
 #pragma once
 
-#include <Core/TypeTraits.h>
+#include "Core/EnumHelpers.h"
+#include "Core/TypeName.h"
+#include "Core/TypeTraits.h"
+#include "Core/VariantHelpers.h"
+
+//////////////////////////////////////////////////////////////////////////
+// Read
 
 template<typename Value>
-void eng::Visitor::Visit(const str::StringView& key, Value& value, const Value& defaultValue)
+inline void eng::Visitor::Read(Value& value) const
 {
-	toml::Table& parentNode = *m_Node->as_table();
-	if constexpr (core::IsSpecialization<Value, Array>::value)
-	{
-		if (IsReading())
-		{
-			if (toml::Array* childNode = parentNode[key].as_array())
-			{
-				m_Node = childNode;
-				VisitArray(value);
-			}
-			else
-			{
-				value = defaultValue;
-			}
-		}
-		else
-		{
-			toml::Array childNode;
-			m_Node = &childNode;
-			VisitArray(value);
-			parentNode.insert_or_assign(key, std::move(childNode));
-		}
-	}
-	else if constexpr (core::IsSpecialization<Value, Map>::value)
-	{
-		if (IsReading())
-		{
-			if (toml::Table* childNode = parentNode[key].as_table())
-			{
-				m_Node = childNode;
-				VisitMap(value);
-			}
-			else
-			{
-				value = defaultValue;
-			}
-		}
-		else
-		{
-			toml::Table childNode;
-			m_Node = &childNode;
-			VisitMap(value);
-			parentNode.insert_or_assign(key, std::move(childNode));
-		}
-	}
-	else if constexpr (std::is_enum<Value>::value)
-	{
-		VisitEnum(key, value, defaultValue);
-	}
-	else // custom
-	{
-		if (IsReading())
-		{
-			if (toml::Table* childNode = parentNode[key].as_table())
-			{
-				m_Node = childNode;
-				VisitCustom(value);
-			}
-			else
-			{
-				value = defaultValue;
-			}
-		}
-		else
-		{
-			toml::Table childNode;
-			m_Node = &childNode;
-			VisitCustom(value);
-			parentNode.insert_or_assign(key, std::move(childNode));
-		}
-	}
-	m_Node = &parentNode;
-}
-
-template<typename Value>
-void eng::Visitor::Visit(const int32 index, Value& value)
-{
-	toml::Array& parentNode = *m_Node->as_array();
-	if constexpr (core::IsSpecialization<Value, Array>::value)
-	{
-		if (IsReading())
-		{
-			if (toml::Array* childNode = parentNode.at(index).as_array())
-			{
-				m_Node = childNode;
-				VisitArray(value);
-			}
-		}
-		else
-		{
-			toml::Array childNode;
-			m_Node = &childNode;
-			VisitArray(value);
-			parentNode.push_back(std::move(childNode));
-		}
-	}
-	else if constexpr (core::IsSpecialization<Value, Map>::value)
-	{
-		if (IsReading())
-		{
-			if (toml::Table* childNode = parentNode.at(index).as_array())
-			{
-				m_Node = childNode;
-				VisitMap(value);
-			}
-		}
-		else
-		{
-			toml::Table childNode;
-			m_Node = &childNode;
-			VisitMap(value);
-			parentNode.push_back(std::move(childNode));
-		}
-	}
-	else if constexpr (std::is_enum<Value>::value)
-	{
-		VisitEnum(index, value);
-	}
-	else // custom
-	{
-		if (IsReading())
-		{
-			if (toml::Table* childNode = parentNode.at(index).as_table())
-			{
-				m_Node = childNode;
-				VisitCustom(value);
-			}
-		}
-		else
-		{
-			toml::Table childNode;
-			m_Node = &childNode;
-			VisitCustom(value);
-			parentNode.push_back(std::move(childNode));
-		}
-	}
-	m_Node = &parentNode;
-}
-
-template<typename Value>
-void eng::Visitor::VisitArray(Array<Value>& values)
-{
-	toml::Array& parentNode = *m_Node->as_array();
-	if (IsReading())
-	{
-		values.Resize(static_cast<int32>(parentNode.size()));
-		for (int32 i = 0; i < values.GetCount(); ++i)
-			Visit(i, values[i]);
-	}
-	else
-	{
-		parentNode.reserve(static_cast<size_t>(values.GetCount()));
-		for (int32 i = 0; i < values.GetCount(); ++i)
-			Visit(i, values[i]);
-	}
-	m_Node = &parentNode;
+	ReadCustom<Value>(value);
 }
 
 template<typename Key, typename Value>
-void eng::Visitor::VisitMap(Map<Key, Value>& values)
+inline void eng::Visitor::Read(Map<Key, Value>& values) const
+{
+	ReadMap(values);
+}
+
+template<typename Value>
+void eng::Visitor::Read(const str::StringView& key, Value& value, const Value& defaultValue) const
 {
 	toml::Table& parentNode = *m_Node->as_table();
-	if (IsReading())
+	if constexpr (core::IsSpecialization<Value, Array>::value)
 	{
-		for (auto& node : parentNode)
+		if (toml::Array* childNode = parentNode[key].as_array())
 		{
-			const Key key = Key(node.first.str());
-			auto& value = values[key];
-			Visit(key, value, value);
+			m_Node = childNode;
+			ReadArray(value);
+		}
+		else
+		{
+			value = defaultValue;
 		}
 	}
-	else
+	else if constexpr (core::IsSpecialization<Value, Map>::value)
 	{
-		for (auto&& [key, value] : values)
-			Visit(key, value, value);
+		if (toml::Table* childNode = parentNode[key].as_table())
+		{
+			m_Node = childNode;
+			ReadMap(value);
+		}
+		else
+		{
+			value = defaultValue;
+		}
+	}
+	else if constexpr (core::IsSpecialization<Value, Set>::value)
+	{
+		if (toml::Array* childNode = parentNode[key].as_array())
+		{
+			m_Node = childNode;
+			ReadSet(value);
+		}
+		else
+		{
+			value = defaultValue;
+		}
+	}
+	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
+	{
+		ReadOptional(key, value, defaultValue);
+	}
+	// same as above
+	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
+	{
+		if (toml::Table* childNode = parentNode[key].as_table())
+		{
+			m_Node = childNode;
+			ReadVariant(value);
+		}
+		else
+		{
+			value = defaultValue;
+		}
+	}
+	else if constexpr (std::is_enum<Value>::value)
+	{
+		ReadEnum(key, value, defaultValue);
+	}
+	else // custom
+	{
+		if (toml::Table* childNode = parentNode[key].as_table())
+		{
+			m_Node = childNode;
+			ReadCustom(value);
+		}
+		else
+		{
+			value = defaultValue;
+		}
 	}
 	m_Node = &parentNode;
 }
 
-template <typename TEnum>
-void eng::Visitor::VisitEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue)
+template<typename Value>
+inline void eng::Visitor::Read(const int32 index, Value& value) const
 {
-	toml::Table& currentNode = *m_Node->as_table();
-	if (IsReading())
+	toml::Array& parentNode = *m_Node->as_array();
+	if constexpr (core::IsSpecialization<Value, Array>::value)
 	{
-		using Value = std::underlying_type<TEnum>::type;
-		const auto result = currentNode[key].value<Value>();
-		value = result ? static_cast<TEnum>(*result) : defaultValue;
+		if (toml::Array* childNode = parentNode.at(index).as_array())
+		{
+			m_Node = childNode;
+			ReadArray(value);
+		}
 	}
-	else
+	else if constexpr (core::IsSpecialization<Value, Map>::value)
 	{
-		currentNode.insert_or_assign(key, static_cast<int64>(value));
+		if (toml::Table* childNode = parentNode.at(index).as_table())
+		{
+			m_Node = childNode;
+			ReadMap(value);
+		}
 	}
+	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
+	{
+		if (toml::Table* childNode = parentNode.at(index).as_table())
+		{
+			m_Node = childNode;
+			ReadVariant(value);
+		}
+	}
+	else if constexpr (std::is_enum<Value>::value)
+	{
+		ReadEnum(index, value);
+	}
+	else // custom
+	{
+		if (toml::Table* childNode = parentNode.at(index).as_table())
+		{
+			m_Node = childNode;
+			ReadCustom(value);
+		}
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Value>
+void eng::Visitor::ReadArray(Array<Value>& values) const
+{
+	toml::Array& parentNode = *m_Node->as_array();
+	values.Resize(static_cast<int32>(parentNode.size()));
+	for (int32 i = 0; i < values.GetCount(); ++i)
+		Read(i, values[i]);
+	m_Node = &parentNode;
 }
 
 template <typename TEnum>
-void eng::Visitor::VisitEnum(const int32 index, TEnum& value)
+void eng::Visitor::ReadEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue) const
+{
+	toml::Table& currentNode = *m_Node->as_table();
+
+	// by string
+	const auto result = currentNode[key].value<str::String>();
+	value = result ? StringToEnum<TEnum>(*result) : defaultValue;
+
+	// by value
+	// using Value = std::underlying_type<TEnum>::type;
+	//const auto result = currentNode[key].value<Value>();
+	//value = result ? static_cast<TEnum>(*result) : defaultValue;
+}
+
+template <typename TEnum>
+void eng::Visitor::ReadEnum(const int32 index, TEnum& value) const
 {
 	toml::Array& currentNode = *m_Node->as_array();
-	if (IsReading())
+
+	// by string
+	if (const auto result = currentNode.at(index).value<str::String>())
+		value = StringToEnum<TEnum>(*result);
+
+	// by value
+	//using Value = std::underlying_type<TEnum>::type;
+	//if (const auto result = currentNode.at(index).value<Value>())
+	//	value = static_cast<TEnum>(*result);
+}
+
+template<typename Value>
+void eng::Visitor::ReadMap(Map<str::Guid, Value>& values) const
+{
+	toml::Table& parentNode = *m_Node->as_table();
+	for (auto& node : parentNode)
 	{
-		using Value = std::underlying_type<TEnum>::type;
-		if (const auto result = currentNode.at(index).value<Value>())
-			value = static_cast<TEnum>(*result);
+		const str::String key = str::String(node.first.str());
+		if (str::Guid::IsValidString(key))
+		{
+			const str::Guid guid = str::Guid::Create(key);
+			auto& value = values[guid];
+			Read(key, value, value);
+		}
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Value>
+void eng::Visitor::ReadMap(Map<str::Name, Value>& values) const
+{
+	toml::Table& parentNode = *m_Node->as_table();
+	for (auto& node : parentNode)
+	{
+		const str::String key = str::String(node.first.str());
+		const str::Name name = str::Name::Create(key);
+		auto& value = values[name];
+		Read(key, value, value);
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Value>
+void eng::Visitor::ReadMap(Map<str::String, Value>& values) const
+{
+	toml::Table& parentNode = *m_Node->as_table();
+	for (auto& node : parentNode)
+	{
+		const str::String key = str::String(node.first.str());
+		auto& value = values[key];
+		Read(key, value, value);
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Type>
+void eng::Visitor::ReadOptional(const str::StringView& key, Optional<Type>& value, const Optional<Type>& defaultValue) const
+{
+	toml::Table& currentNode = *m_Node->as_table();
+	if (currentNode.contains(key))
+	{
+		value.emplace();
+		Read(key, *value, {});
 	}
 	else
 	{
-		currentNode.push_back(static_cast<int64>(value));
+		value = defaultValue;
 	}
 }
 
 template<typename Value>
-void eng::Visitor::VisitPrimitive(const str::StringView& key, Value& value, const Value defaultValue)
+void eng::Visitor::ReadPrimitive(const str::StringView& key, Value& value, const Value defaultValue) const
 {
 	toml::Table& currentNode = *m_Node->as_table();
-	if (IsReading())
-	{
-		const auto result = currentNode[key].value<Value>();
-		value = result ? *result : defaultValue;
-	}
-	else
-	{
-		currentNode.insert_or_assign(key, value);
-	}
+	const auto result = currentNode[key].value<Value>();
+	value = result ? *result : defaultValue;
 }
 
 template<typename Value>
-void eng::Visitor::VisitPrimitive(const int32 index, Value& value)
+void eng::Visitor::ReadPrimitive(const int32 index, Value& value) const
 {
 	toml::Array& currentNode = *m_Node->as_array();
-	if (IsReading())
+	if (const auto result = currentNode.at(index).value<Value>())
+		value = *result;
+}
+
+template<typename Value>
+void eng::Visitor::ReadSet(Set<Value>& values) const
+{
+	toml::Array& parentNode = *m_Node->as_array();
+	const int32 count = static_cast<int32>(parentNode.size());
+	for (int32 i = 0; i < count; ++i)
 	{
-		if (const auto result = currentNode.at(index).value<Value>())
-			value = *result;
+		Value value;
+		Read(i, value);
+		values.Add(value);
 	}
-	else
+	m_Node = &parentNode;
+}
+
+template<typename ...Types>
+void eng::Visitor::ReadVariant(Variant<Types...>& value) const
+{
+	// use a short-circuiting fold expression to assign the correct type
+	((ReadVariantElement<Types>(value)) || ...);
+}
+
+template<typename TElement, typename TVariant>
+bool eng::Visitor::ReadVariantElement(TVariant& value) const
+{
+	const str::StringView typeName = core::ToElementName<TElement>();
+
+	toml::Table& currentNode = *m_Node->as_table();
+	if (!currentNode[typeName])
+		return false;
+
+	Read(typeName, value.emplace<TElement>(), {});
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Write
+
+template<typename Value>
+inline void eng::Visitor::Write(const Value& value)
+{
+	WriteCustom<Value>(value);
+}
+
+template<typename Key, typename Value>
+inline void eng::Visitor::Write(const Map<Key, Value>& values)
+{
+	WriteMap(values);
+}
+
+template<typename Value>
+inline void eng::Visitor::Write(const str::StringView& key, const Value& value)
+{
+	toml::Table& parentNode = *m_Node->as_table();
+	if constexpr (core::IsSpecialization<Value, Array>::value)
 	{
-		currentNode.push_back(value);
+		toml::Array childNode;
+		m_Node = &childNode;
+		WriteArray(value);
+		parentNode.insert_or_assign(key, std::move(childNode));
 	}
+	else if constexpr (core::IsSpecialization<Value, Map>::value)
+	{
+		toml::Table childNode;
+		m_Node = &childNode;
+		WriteMap(value);
+		parentNode.insert_or_assign(key, std::move(childNode));
+	}
+	else if constexpr (core::IsSpecialization<Value, Set>::value)
+	{
+		toml::Array childNode;
+		m_Node = &childNode;
+		WriteSet(value);
+		parentNode.insert_or_assign(key, std::move(childNode));
+	}
+	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
+	{
+		WriteOptional(key, value);
+	}
+	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
+	{
+		toml::Table childNode;
+		m_Node = &childNode;
+		WriteVariant(value);
+		parentNode.insert_or_assign(key, std::move(childNode));
+	}
+	else if constexpr (std::is_enum<Value>::value)
+	{
+		WriteEnum(key, value);
+	}
+	else // custom
+	{
+		toml::Table childNode;
+		m_Node = &childNode;
+		WriteCustom(value);
+		parentNode.insert_or_assign(key, std::move(childNode));
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Value>
+inline void eng::Visitor::Write(const int32 index, const Value& value)
+{
+	toml::Array& parentNode = *m_Node->as_array();
+	if constexpr (core::IsSpecialization<Value, Array>::value)
+	{
+		toml::Array childNode;
+		m_Node = &childNode;
+		WriteArray(value);
+		parentNode.push_back(std::move(childNode));
+	}
+	else if constexpr (core::IsSpecialization<Value, Map>::value)
+	{
+		toml::Table childNode;
+		m_Node = &childNode;
+		WriteMap(value);
+		parentNode.push_back(std::move(childNode));
+	}
+	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
+	{
+		toml::Table childNode;
+		m_Node = &childNode;
+		WriteVariant(value);
+		parentNode.push_back(std::move(childNode));
+	}
+	else if constexpr (std::is_enum<Value>::value)
+	{
+		WriteEnum(index, value);
+	}
+	else // custom
+	{
+		toml::Table childNode;
+		m_Node = &childNode;
+		WriteCustom(value);
+		parentNode.push_back(std::move(childNode));
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Value>
+void eng::Visitor::WriteArray(const Array<Value>& values)
+{
+	toml::Array& parentNode = *m_Node->as_array();
+	parentNode.reserve(static_cast<size_t>(values.GetCount()));
+	for (int32 i = 0; i < values.GetCount(); ++i)
+		Write(i, values[i]);
+	m_Node = &parentNode;
+}
+
+template <typename TEnum>
+void eng::Visitor::WriteEnum(const str::StringView& key, const TEnum& value)
+{
+	toml::Table& currentNode = *m_Node->as_table();
+	currentNode.insert_or_assign(key, EnumToString(value)); // by string
+	// currentNode.insert_or_assign(key, static_cast<int64>(value)); // by value
+}
+
+template <typename TEnum>
+void eng::Visitor::WriteEnum(const int32 index, const TEnum& value)
+{
+	toml::Array& currentNode = *m_Node->as_array();
+	currentNode.push_back(EnumToString(value)); // by string
+	// currentNode.push_back(static_cast<int64>(value)); // by value
+}
+
+template<typename Value>
+void eng::Visitor::WriteMap(const Map<str::Guid, Value>& values)
+{
+	toml::Table& parentNode = *m_Node->as_table();
+	for (auto&& [guid, value] : values)
+	{
+		const str::String key = guid.ToString();
+		Write(key, value, value);
+	}
+	m_Node = &parentNode;
+}
+
+template<typename Value>
+void eng::Visitor::WriteMap(const Map<str::Name, Value>& values)
+{
+	toml::Table& parentNode = *m_Node->as_table();
+	for (auto&& [key, value] : values)
+		Write(key, value, value);
+	m_Node = &parentNode;
+}
+
+template<typename Value>
+void eng::Visitor::WriteMap(const Map<str::String, Value>& values)
+{
+	toml::Table& parentNode = *m_Node->as_table();
+	for (auto&& [key, value] : values)
+		Write(key, value);
+	m_Node = &parentNode;
+}
+
+template<typename Type>
+void eng::Visitor::WriteOptional(const str::StringView& key, const Optional<Type>& value)
+{
+	if (value)
+		Write(key, *value);
+}
+
+template<typename Value>
+void eng::Visitor::WritePrimitive(const str::StringView& key, const Value& value)
+{
+	toml::Table& currentNode = *m_Node->as_table();
+	currentNode.insert_or_assign(key, value);
+}
+
+template<typename Value>
+void eng::Visitor::WritePrimitive(const int32 index, const Value& value)
+{
+	toml::Array& currentNode = *m_Node->as_array();
+	currentNode.push_back(value);
+}
+
+template<typename Value>
+void eng::Visitor::WriteSet(const Set<Value>& values)
+{
+	int32 i = 0;
+	toml::Array& parentNode = *m_Node->as_array();
+	parentNode.reserve(static_cast<size_t>(values.GetCount()));
+	for (const Value& value : values)
+		Write(i++, value);
+	m_Node = &parentNode;
+}
+
+template<typename ...Types>
+void eng::Visitor::WriteVariant(const Variant<Types...>& value)
+{
+	core::VariantMatch(value, [&](auto& element)
+		{
+			const str::StringView typeName = core::ToElementName(element);
+			Write(typeName, element);
+		});
 }

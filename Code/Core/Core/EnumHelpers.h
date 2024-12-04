@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/StringView.h>
-#include <Core/Types.h>
+#include "Core/StringView.h"
+#include "Core/Types.h"
 
 #include <magic_enum/magic_enum.hpp>
 
@@ -9,6 +9,12 @@ template<typename TEnum>
 constexpr int32 EnumToCount()
 {
 	return static_cast<int32>(magic_enum::enum_count<TEnum>());
+}
+
+template<typename TEnum>
+constexpr int32 EnumToIndex(const TEnum value)
+{
+	return static_cast<int32>(*magic_enum::enum_index(value));
 }
 
 template<typename TEnum>

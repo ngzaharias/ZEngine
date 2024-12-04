@@ -1,19 +1,16 @@
 #include "EnginePCH.h"
 #include "Engine/ReplicationPeer.h"
 
+#include "Core/Algorithms.h"
+#include "ECS/EntityWorld.h"
 #include "Engine/ComponentSerializer.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/ReplicationComponents.h"
-
-#include <Core/Algorithms.h>
-
-#include <ECS/EntityWorld.h>
-
-#include <Network/Adaptor.h>
-#include <Network/Messages.h>
-#include <Network/Peer.h>
-#include <Network/PeerId.h>
+#include "Network/Adaptor.h"
+#include "Network/Messages.h"
+#include "Network/Peer.h"
+#include "Network/PeerId.h"
 
 #include <yojimbo/yojimbo.h>
 
@@ -24,20 +21,26 @@ net::ReplicationPeer::ReplicationPeer(ecs::EntityWorld& entityWorld)
 
 void net::ReplicationPeer::Initialise()
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
-	auto& adaptor = networkManager.GetAdaptor();
-	auto& peer = networkManager.GetPeer();
+	//auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
+	//auto& adaptor = networkManager.GetAdaptor();
+	//auto& peer = networkManager.GetPeer();
 
-	m_Connections =
-	{
-		entt::sink(adaptor.m_OnServerClientDisconnected).connect<&net::ReplicationPeer::OnClientDisconnected>(this),
-		entt::sink(peer.m_OnProcessMessage).connect<&net::ReplicationPeer::OnProcessMessage>(this),
-	};
+	//m_Connections =
+	//{
+	//	adaptor.m_OnServerClientDisconnected.Connect(*this, &net::ReplicationPeer::OnClientDisconnected),
+	//	peer.m_OnProcessMessage.Connect(*this, &net::ReplicationPeer::OnProcessMessage),
+	//};
 }
 
 void net::ReplicationPeer::Shutdown()
 {
-	m_Connections.Disconnect();
+	//auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
+	//auto& adaptor = networkManager.GetAdaptor();
+	//auto& peer = networkManager.GetPeer();
+
+	//adaptor.m_OnServerClientDisconnected.Disconnect(m_Connections[0]);
+	//peer.m_OnProcessMessage.Disconnect(m_Connections[1]);
+	//m_Connections.RemoveAll();
 }
 
 void net::ReplicationPeer::Update(const GameTime& gameTime)
@@ -89,7 +92,7 @@ void net::ReplicationPeer::OnProcessMessage(const yojimbo::Message* message)
 void net::ReplicationPeer::OnCreateEntity(const net::CreateEntityMessage* message)
 {
 	Z_LOG(ELog::Network, "Peer: CreateEntityMessage");
-	Z_ASSERT(!core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] has already been added on peer!", message->m_Entity.m_Value);
+	Z_ASSERT(!enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] has already been added on peer!", message->m_Entity.m_Value);
 
 	const net::Entity hostHandle = message->m_Entity;
 	const ecs::Entity peerHandle = m_EntityWorld.CreateEntity();
@@ -101,7 +104,7 @@ void net::ReplicationPeer::OnCreateEntity(const net::CreateEntityMessage* messag
 void net::ReplicationPeer::OnDestroyEntity(const net::DestroyEntityMessage* message)
 {
 	Z_LOG(ELog::Network, "Peer: DestroyEntityMessage");
-	Z_ASSERT(core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
+	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
 	const net::Entity& hostHandle = message->m_Entity;
 	const ecs::Entity& peerHandle = m_HostToPeer[hostHandle];
@@ -114,10 +117,10 @@ void net::ReplicationPeer::OnDestroyEntity(const net::DestroyEntityMessage* mess
 void net::ReplicationPeer::OnAddComponent(const net::AddComponentMessage* message)
 {
 	Z_LOG(ELog::Network, "Peer: AddComponentMessage");
-	Z_ASSERT(core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
+	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
-	auto& serializer = networkManager.GetSerializer();
+	const auto& networkManager = m_EntityWorld.ReadResource<eng::NetworkManager>();
+	const auto& serializer = networkManager.GetSerializer();
 
 	const ecs::Entity& peerHandle = m_HostToPeer[message->m_Entity];
 	const auto& entry = serializer.m_Entries[message->m_ComponentId];
@@ -127,10 +130,10 @@ void net::ReplicationPeer::OnAddComponent(const net::AddComponentMessage* messag
 void net::ReplicationPeer::OnUpdateComponent(const net::UpdateComponentMessage* message)
 {
 	Z_LOG(ELog::Network, "Peer: UpdateComponentMessage");
-	Z_ASSERT(core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
+	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
-	auto& serializer = networkManager.GetSerializer();
+	const auto& networkManager = m_EntityWorld.ReadResource<eng::NetworkManager>();
+	const auto& serializer = networkManager.GetSerializer();
 
 	const ecs::Entity& peerHandle = m_HostToPeer[message->m_Entity];
 	const auto& entry = serializer.m_Entries[message->m_ComponentId];
@@ -140,10 +143,10 @@ void net::ReplicationPeer::OnUpdateComponent(const net::UpdateComponentMessage* 
 void net::ReplicationPeer::OnRemoveComponent(const net::RemoveComponentMessage* message)
 {
 	Z_LOG(ELog::Network, "Peer: RemoveComponentMessage");
-	Z_ASSERT(core::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
+	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
-	auto& serializer = networkManager.GetSerializer();
+	const auto& networkManager = m_EntityWorld.ReadResource<eng::NetworkManager>();
+	const auto& serializer = networkManager.GetSerializer();
 
 	const ecs::Entity& peerHandle = m_HostToPeer[message->m_Entity];
 	const auto& entry = serializer.m_Entries[message->m_ComponentId];

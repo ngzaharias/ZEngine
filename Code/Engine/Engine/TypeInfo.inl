@@ -1,15 +1,15 @@
 #pragma once
 
-#include <entt/core/type_info.hpp>
+#include "Core/Hash.h"
 
 template<typename Type>
 constexpr TypeId ToTypeId()
 {
-	return entt::type_info<Type>::id();
+	return str::ToHash(__FUNCSIG__);
 }
 
 template<typename Type>
 constexpr TypeId ToTypeId(const Type& value)
 {
-	return entt::type_info<Type>::id();
+	return str::ToHash(__FUNCSIG__);
 }

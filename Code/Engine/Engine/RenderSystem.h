@@ -1,34 +1,29 @@
 #pragma once
 
-#include <Core/Array.h>
+#include "Core/Array.h"
+#include "ECS/System.h"
 
-#include <ECS/Entity.h>
-#include <ECS/System.h>
-
-namespace glfw
+namespace sfml
 {
 	class Window;
 }
 
+namespace eng::settings
+{
+	struct LocalComponent;
+}
+
 namespace eng
 {
-	class AssetManager;
 	class RenderStage;
-
-	struct FrameBufferComponent;
-	struct LinesComponent;
 
 	class RenderSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::AssetManager,
-			eng::FrameBufferComponent,
-			eng::LinesComponent>;
+			const eng::settings::LocalComponent>;
 
-		RenderSystem(
-			ecs::EntityWorld& entityWorld,
-			glfw::Window& window);
+		RenderSystem(ecs::EntityWorld& entityWorld);
 		~RenderSystem();
 
 		void Initialise(World& world);
@@ -36,10 +31,13 @@ namespace eng
 
 		void Update(World& world, const GameTime& gameTime);
 
+		template<typename TRenderStage, typename... TArgs>
+		void RegisterStage(TArgs&&... args);
+
 	private:
 		ecs::EntityWorld& m_EntityWorld;
-		glfw::Window& m_Window;
-
 		Array<RenderStage*> m_RenderStages;
 	};
 };
+
+#include "RenderSystem.inl"

@@ -1,17 +1,15 @@
 #include "EnginePCH.h"
 #include "Engine/VoxelMeshingSystem.h"
 
-#include <Core/Algorithms.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
+#include "Core/Algorithms.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/DynamicMeshComponent.h"
+#include "Engine/VoxelComponents.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
-
-#include "Engine/DynamicMeshComponent.h"
-#include "Engine/VoxelComponents.h"
 
 namespace
 {
@@ -168,8 +166,8 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : entitiesToUpdate)
 	{
-		const auto& chunkComponent = world.GetComponent<const voxel::ChunkComponent>(entity);
-		auto& meshComponent = world.GetComponent<eng::DynamicMeshComponent>(entity);
+		const auto& chunkComponent = world.ReadComponent<voxel::ChunkComponent>(entity);
+		auto& meshComponent = world.WriteComponent<eng::DynamicMeshComponent>(entity);
 
 		for (auto&& [i, block] : enumerate::Forward(chunkComponent.m_Data))
 		{

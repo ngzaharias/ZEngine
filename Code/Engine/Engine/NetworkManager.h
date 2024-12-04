@@ -1,19 +1,16 @@
 #pragma once
 
-#include <ECS/Manager.h>
-
-#include <Engine/ComponentSerializer.h>
-
-#include <Network/Adaptor.h>
-#include <Network/Config.h>
-#include <Network/Host.h>
-#include <Network/Peer.h>
+#include "Engine/ComponentSerializer.h"
+#include "Network/Adaptor.h"
+#include "Network/Config.h"
+#include "Network/Host.h"
+#include "Network/Peer.h"
 
 class GameTime;
 
 namespace eng
 {
-	class NetworkManager : public ecs::Manager
+	class NetworkManager final
 	{
 	public:
 		NetworkManager(net::ComponentSerializer& serializer);
@@ -30,6 +27,7 @@ namespace eng
 		const net::Peer& GetPeer() const { return m_Peer; }
 
 		net::ComponentSerializer& GetSerializer() { return m_Serializer; }
+		const net::ComponentSerializer& GetSerializer() const { return m_Serializer; }
 
 	private:
 		net::ComponentSerializer& m_Serializer;

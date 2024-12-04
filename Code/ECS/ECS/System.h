@@ -1,8 +1,8 @@
 #pragma once
 
-class GameTime;
+#include "ECS/Forward.h"
 
-#include <ECS/Forward.h>
+class GameTime;
 
 namespace ecs
 {

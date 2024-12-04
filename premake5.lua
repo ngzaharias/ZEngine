@@ -1,3 +1,6 @@
+package.path = package.path .. ";./Code/_Premake/?.lua"
+require "SmartArguments"
+
 workspace "ZEngine"
 	location "Solution"
 	architecture "x86_64"
@@ -8,9 +11,11 @@ workspace "ZEngine"
 	buildoptions { "/Zc:__cplusplus" }
 	platforms { "x64" }
 	startproject "Game"
+	inheritdependencies "On"
 
 	targetdir "%{wks.location}/Build/%{prj.name}/%{cfg.buildcfg}_%{cfg.platform}/"
 	objdir "%{wks.location}/Intermediate/%{prj.name}/%{cfg.buildcfg}_%{cfg.platform}/"
+	debugdir "%{wks.location}/Build/%{prj.name}/%{cfg.buildcfg}_%{cfg.platform}/"
 
 	defines { "_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING", "_SILENCE_CXX20_CISO646_REMOVED_WARNING" }
 	disablewarnings { "26812" }
@@ -63,16 +68,21 @@ workspace "ZEngine"
 	include "Code/GameDebug/premake5.lua"
 	include "Code/GameServer/premake5.lua"
 	include "Code/GameShared/premake5.lua"
+	include "Code/GameUI/premake5.lua"
 	include "Code/Imgui/premake5.lua"
+	include "Code/Math/premake5.lua"
 	include "Code/Network/premake5.lua"
 
-	group "gen"
-		include "Code/Kodgen/premake5.lua"
+	group "bind"
+		include "Code/SteamBinding/premake5.lua"
+	group ""
 	group "ut"
 		include "Code/Core_ut/premake5.lua"
 		include "Code/ECS_ut/premake5.lua"
 		include "Code/Engine_ut/premake5.lua"
 		include "Code/GameClient_ut/premake5.lua"
+		include "Code/Lua_ut/premake5.lua"
+		include "Code/Math_ut/premake5.lua"
 	group ""
 
 project "ZERO_CHECK"

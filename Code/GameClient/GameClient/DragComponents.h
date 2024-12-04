@@ -1,12 +1,13 @@
 #pragma once
 
-#include <Core/Plane.h>
-
-#include <ECS/Component.h>
-#include <ECS/Entity.h>
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
+#include "Math/Plane.h"
 
 namespace drag
 {
+	struct IsSelectableComponent : public ecs::Component<IsSelectableComponent> {};
+
 	struct SelectionComponent : public ecs::Component<SelectionComponent>
 	{
 		ecs::Entity m_CameraEntity = { };
@@ -14,6 +15,6 @@ namespace drag
 		ecs::Entity m_SelectedEntity = { };
 
 		Vector3f m_TranslateOffset = { };
-		Plane m_TranslatePlane = { };
+		Plane3f m_TranslatePlane = { };
 	};
 }

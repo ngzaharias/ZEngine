@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ECS/Component.h>
-
-#include <Engine/VoxelTypes.h>
+#include "Core/Array.h"
+#include "ECS/Component.h"
+#include "Engine/VoxelTypes.h"
 
 namespace voxel
 {

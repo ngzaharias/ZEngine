@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/Vector.h>
+#include "Math/Vector.h"
 
 namespace ecs
 {
@@ -14,7 +14,10 @@ namespace colour
 	Vector3f ToHSV(const Vector3f& rgb);
 	Vector3f ToRGB(const Vector3f& hsv);
 
+	const Vector4f& From(const void* value);
 	const Vector4f& From(const int32 value);
 	const Vector4f& From(const uint32 value);
 	const Vector4f& From(const ecs::Entity& value);
+
+	const Vector4f& Generate();
 }

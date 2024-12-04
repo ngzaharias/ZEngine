@@ -1,34 +1,44 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Path.h>
-#include <Core/String.h>
+#include "Core/Array.h"
+#include "Core/Path.h"
+#include "Core/String.h"
 
 namespace eng
 {
 	struct SaveFileSettings
 	{
 		str::String m_Title = "Save File";
-		str::String m_Directory = "";
+		str::String m_Path = "";
 		Array<str::String> m_Filters = { "All Files (*.*)", "*" };
+
+		bool m_Overwrite = false;
 	};
 
 	struct SelectFileSettings
 	{
-		str::String m_Title = "Select File(s)";
-		str::String m_Directory = "";
+		str::String m_Title = "Select File";
+		str::String m_Path = "";
 		Array<str::String> m_Filters = { "All Files (*.*)", "*" };
-		bool m_IsMultiSelect = false;
+	};
+
+	struct SelectFilesSettings
+	{
+		str::String m_Title = "Select File(s)";
+		str::String m_Path = "";
+		Array<str::String> m_Filters = { "All Files (*.*)", "*" };
 	};
 
 	struct SelectFolderSettings
 	{
 		str::String m_Title = "Select Folder";
-		str::String m_Directory = "";
+		str::String m_Path = "";
 	};
 
 	str::Path GetAppDataDirectory();
-	str::Path GetAssetDirectory();
+	str::Path GetAssetsDirectory();
+	str::Path GetConfigDirectory();
+	str::Path GetCurrentFilepath();
 	str::Path GetExecutableFilepath();
 	str::Path GetWorkingDirectory();
 
@@ -36,6 +46,7 @@ namespace eng
 	bool LoadFileAsChar(const str::Path& filepath, Array<char>& out_Array);
 
 	str::Path SaveFileDialog(const SaveFileSettings& settings);
-	Array<str::Path> SelectFileDialog(const SelectFileSettings& settings);
+	str::Path SelectFileDialog(const SelectFileSettings& settings);
+	Array<str::Path> SelectFilesDialog(const SelectFilesSettings& settings);
 	str::Path SelectFolderDialog(const SelectFolderSettings& settings);
 }
