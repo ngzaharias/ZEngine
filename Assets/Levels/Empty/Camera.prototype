@@ -5,6 +5,6 @@ m_Name = "Camera"
 ['eng::camera::Move3DComponent']
 
 ['eng::TransformComponent']
-m_Translate = { X = 500.0, Y = 500.0, Z = -500.0 }
-m_Rotate = { Pitch = +45.0, Yaw = -45.0, Roll = 0.0 }
+m_Translate = { X = 360.0, Y = 617.0, Z = -505.0 }
+m_Rotate = { Pitch = +45.0, Yaw = -35.0, Roll = 0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
