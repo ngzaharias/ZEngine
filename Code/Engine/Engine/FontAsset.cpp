@@ -1,17 +1,16 @@
 #include "EnginePCH.h"
 #include "Engine/FontAsset.h"
 
+#include "Core/Algorithms.h"
 #include "Engine/AssetManager.h"
 #include "Engine/TomlHelpers.h"
 #include "Engine/Visitor.h"
 
-#include <Core/Algorithms.h>
-
+#include <ft2build.h>
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
 
-#include <ft2build.h>
 #include FT_FREETYPE_H
 
 // https://medium.com/@calebfaith/implementing-msdf-font-in-opengl-ea09a9ab7e00
@@ -43,25 +42,34 @@ namespace
 }
 
 template<>
-void eng::Visitor::VisitCustom<::Character>(::Character& value)
+void eng::Visitor::ReadCustom(::Character& value) const
 {
-	SetInline();
-	Visit(strAdvanceX, value.m_AdvanceX, 200);
-	Visit(strAdvanceY, value.m_AdvanceY, 0);
-	Visit(strCharacter, value.m_Character, {});
-	Visit(strSourceFile, value.m_SourceFile, {});
+	Read(strAdvanceX, value.m_AdvanceX, 200u);
+	Read(strAdvanceY, value.m_AdvanceY, 0u);
+	Read(strCharacter, value.m_Character, {});
+	Read(strSourceFile, value.m_SourceFile, {});
 }
 
-bool eng::FontAssetLoader::Save(FontAsset* asset, eng::Visitor& visitor) const
+template<>
+void eng::Visitor::WriteCustom(const ::Character& value)
 {
-	visitor.Visit(strWidth, asset->m_Width, 0);
-	visitor.Visit(strHeight, asset->m_Height, 0);
-	visitor.Visit(strPixelRange, asset->m_PixelRange, 0);
+	SetInline();
+	Write(strAdvanceX, value.m_AdvanceX);
+	Write(strAdvanceY, value.m_AdvanceY);
+	Write(strCharacter, value.m_Character);
+	Write(strSourceFile, value.m_SourceFile);
+}
 
-	if (!asset->m_Glyphs.IsEmpty())
+bool eng::FontAssetLoader::Save(FontAsset& asset, eng::Visitor& visitor) const
+{
+	visitor.Write(strWidth, asset.m_Width);
+	visitor.Write(strHeight, asset.m_Height);
+	visitor.Write(strPixelRange, asset.m_PixelRange);
+
+	if (!asset.m_Glyphs.IsEmpty())
 	{
 		Array<Character> characters;
-		for (auto&& [charcode, glyph] : asset->m_Glyphs)
+		for (auto&& [charcode, glyph] : asset.m_Glyphs)
 		{
 			::Character& character = characters.Emplace();
 			character.m_AdvanceX = glyph.m_AdvanceX;
@@ -69,29 +77,29 @@ bool eng::FontAssetLoader::Save(FontAsset* asset, eng::Visitor& visitor) const
 			character.m_Character = str::String(1, charcode);
 			character.m_SourceFile = glyph.m_SourceFile;
 		}
-		visitor.Visit(strCharacters, characters, {});
+		visitor.Write(strCharacters, characters);
 	}
 
 	return true;
 }
 
-bool eng::FontAssetLoader::Load(FontAsset* asset, eng::Visitor& visitor) const
+bool eng::FontAssetLoader::Load(FontAsset& asset, eng::Visitor& visitor) const
 {
 	// #todo: assert file exists
 	// #todo: fallback to default on failure
 
-	visitor.Visit(strWidth, asset->m_Width, 0);
-	visitor.Visit(strHeight, asset->m_Height, 0);
-	visitor.Visit(strPixelRange, asset->m_PixelRange, 0);
+	visitor.Read(strWidth, asset.m_Width, 0);
+	visitor.Read(strHeight, asset.m_Height, 0);
+	visitor.Read(strPixelRange, asset.m_PixelRange, 0);
 
 	Array<Character> characters;
-	visitor.Visit(strCharacters, characters, {});
+	visitor.Read(strCharacters, characters, {});
 	if (!characters.IsEmpty())
 	{
 		const int32 count = characters.GetCount();
-		glGenTextures(1, &asset->m_TextureId);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, asset->m_TextureId);
-		glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, asset->m_Width, asset->m_Height, count);
+		glGenTextures(1, &asset.m_TextureId);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, asset.m_TextureId);
+		glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, asset.m_Width, asset.m_Height, count);
 
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP);
@@ -101,7 +109,7 @@ bool eng::FontAssetLoader::Load(FontAsset* asset, eng::Visitor& visitor) const
 		for (auto&& [depth, character] : enumerate::Forward(characters))
 		{
 			eng::Charcode charcode = character.m_Character[0];
-			eng::Glyph& glyph = asset->m_Glyphs.Emplace(charcode);
+			eng::Glyph& glyph = asset.m_Glyphs.Emplace(charcode);
 			glyph.m_AdvanceX = character.m_AdvanceX;
 			glyph.m_AdvanceY = character.m_AdvanceY;
 			glyph.m_Depth = static_cast<float>(depth);
@@ -113,7 +121,7 @@ bool eng::FontAssetLoader::Load(FontAsset* asset, eng::Visitor& visitor) const
 				int32 width, height, channels;
 				stbi_set_flip_vertically_on_load(true);
 				unsigned char* data = stbi_load(filepath.ToChar(), &width, &height, &channels, STBI_rgb_alpha);
-				Z_ASSERT_CRASH(data, "STB Image: Failed to load file [{}]!", filepath.ToChar());
+				Z_PANIC(data, "STB Image: Failed to load file [{}]!", filepath.ToChar());
 
 				const int32 mipmap = 0;
 				const int32 offsetX = 0, offsetY = 0, offsetZ = static_cast<int32>(glyph.m_Depth);
@@ -121,7 +129,7 @@ bool eng::FontAssetLoader::Load(FontAsset* asset, eng::Visitor& visitor) const
 					GL_TEXTURE_2D_ARRAY,
 					mipmap,
 					offsetX, offsetY, offsetZ,
-					asset->m_Width, asset->m_Height, 1,
+					asset.m_Width, asset.m_Height, 1,
 					GL_RGBA,
 					GL_UNSIGNED_BYTE,
 					data);
@@ -134,7 +142,7 @@ bool eng::FontAssetLoader::Load(FontAsset* asset, eng::Visitor& visitor) const
 	return true;
 }
 
-bool eng::FontAssetLoader::Import(FontAsset* asset, const str::Path& filepath) const
+bool eng::FontAssetLoader::Import(FontAsset& asset, const str::Path& filepath) const
 {
 	FT_Library library;
 	if (const FT_Error error = FT_Init_FreeType(&library))
@@ -171,7 +179,7 @@ bool eng::FontAssetLoader::Import(FontAsset* asset, const str::Path& filepath) c
 				continue;
 
 			eng::Charcode key = static_cast<char>(charcode);
-			eng::Glyph& glyph = asset->m_Glyphs.Emplace(key);
+			eng::Glyph& glyph = asset.m_Glyphs.Emplace(key);
 			glyph.m_AdvanceX = face->glyph->advance.x;
 			glyph.m_AdvanceY = face->glyph->advance.y;
 			glyph.m_SourceFile = filepath;

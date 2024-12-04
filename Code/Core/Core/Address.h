@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/String.h>
-#include <Core/StringView.h>
-#include <Core/Types.h>
+#include "Core/Array.h"
+#include "Core/String.h"
+#include "Core/StringView.h"
+#include "Core/Types.h"
 
 namespace str
 {

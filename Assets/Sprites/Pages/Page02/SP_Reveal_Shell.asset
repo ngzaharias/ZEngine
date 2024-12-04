@@ -1,0 +1,7 @@
+m_Guid = '2ab82772c00c400f83d69b0f1c86deff'
+m_Name = 'SP_Reveal_Shell'
+m_Position = { X = 0, Y = 0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 256, Y = 256 }
+m_Texture2D = 'b1b4204ce6c1452048b494113fd4d2b2'
+m_Type = 'Sprite'

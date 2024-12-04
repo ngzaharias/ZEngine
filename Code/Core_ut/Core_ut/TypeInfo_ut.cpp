@@ -1,6 +1,6 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/TypeInfo.h>
+#include "Core/TypeInfo.h"
 
 namespace first
 {
@@ -20,7 +20,7 @@ namespace second
 	};
 }
 
-TEST_CASE("TypeIndex")
+TEST_CASE("TypeIndex. ToTypeIndex.")
 {
 	struct A {}; struct B {}; struct C {}; struct TagA {};
 	struct D {}; struct E {}; struct F {}; struct TagB {};

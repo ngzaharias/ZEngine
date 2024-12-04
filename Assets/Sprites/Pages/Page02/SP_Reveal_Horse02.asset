@@ -1,0 +1,7 @@
+m_Guid = '9912cdbd5ed949e19560c59395da9a55'
+m_Name = 'SP_Reveal_Horse02'
+m_Position = { X = 0, Y = 0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 512, Y = 512 }
+m_Texture2D = '2d4691d38143431a7c84135ca6f31b4e'
+m_Type = 'Sprite'

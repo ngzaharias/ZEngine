@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Core/Hash.h>
-#include <Core/String.h>
-#include <Core/StringView.h>
+#include "Core/Hash.h"
+#include "Core/String.h"
+#include "Core/StringView.h"
 
 #define NAME(string) str::Name::Create(string)
 

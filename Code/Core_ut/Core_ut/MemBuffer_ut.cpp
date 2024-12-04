@@ -1,10 +1,10 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Guid.h>
-#include <Core/MemBuffer.h>
-#include <Core/Vector.h>
+#include "Core/Guid.h"
+#include "Core/MemBuffer.h"
+#include "Math/Vector.h"
 
-TEST_CASE("MemBuffer")
+TEST_CASE("MemBuffer. Read/Write.")
 {
 	MemBuffer buffer;
 	const str::Guid guid = str::Guid::Generate();

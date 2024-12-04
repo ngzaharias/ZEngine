@@ -1,0 +1,7 @@
+m_Guid = '173e2734a8454e13abec1cd18d00caf2'
+m_Name = 'SP_Hex_Dirt'
+m_Position = { X = 0, Y = 0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 238, Y = 207 }
+m_Texture2D = '88b2f8226f7e48d6b91366a134e65288'
+m_Type = 'Sprite'

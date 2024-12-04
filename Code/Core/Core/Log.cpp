@@ -18,6 +18,7 @@ namespace
 {
 	static bool s_HasInitialised = false;
 	std::shared_ptr<spdlog::logger> m_AssertLogger;
+	std::shared_ptr<spdlog::logger> m_CrashLogger;
 	std::shared_ptr<spdlog::logger> m_DebugLogger;
 }
 
@@ -29,6 +30,9 @@ void core::LogInitialise()
 
 		m_AssertLogger = spdlog::basic_logger_mt("assert", "asserts.txt");
 		m_AssertLogger->set_level(spdlog::level::critical);
+
+		m_CrashLogger = spdlog::basic_logger_mt("crash", "crashes.txt");
+		m_CrashLogger->set_level(spdlog::level::critical);
 
 		m_DebugLogger = spdlog::basic_logger_mt("debug", "debug.txt");
 		m_DebugLogger->set_level(spdlog::level::info);
@@ -42,6 +46,7 @@ void core::LogShutdown()
 		s_HasInitialised = false;
 
 		m_AssertLogger->flush();
+		m_CrashLogger->flush();
 		m_DebugLogger->flush();
 	}
 }
@@ -61,7 +66,12 @@ void core::LogMessage(const ELog channel, const char* message)
 	case ELog::Assert:
 		m_AssertLogger->critical(message);
 		break;
-	case ELog::Debug:
+	case ELog::Crash:
+		m_CrashLogger->critical(message);
+		m_CrashLogger->flush();
+		break;
+
+	default:
 		m_DebugLogger->info(message);
 		break;
 	}

@@ -1,11 +1,10 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Vector.h>
-
-#include <Engine/Asset.h>
-#include <Engine/AssetLoader.h>
-#include <Engine/SpriteAsset.h>
+#include "Core/Array.h"
+#include "Engine/Asset.h"
+#include "Engine/AssetLoader.h"
+#include "Engine/SpriteAsset.h"
+#include "Math/Vector.h"
 
 namespace eng
 {
@@ -23,7 +22,6 @@ namespace eng
 	struct FlipbookAsset : public eng::Asset
 	{
 		str::Guid m_Shader = { };
-		str::Guid m_StaticMesh = { };
 		str::Guid m_Texture2D = { };
 		float m_FPS = 30.f;
 		bool m_IsLooping = true;
@@ -34,7 +32,7 @@ namespace eng
 	class FlipbookAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Save(FlipbookAsset* asset, eng::Visitor& visitor) const;
-		bool Load(FlipbookAsset* asset, eng::Visitor& visitor) const;
+		bool Save(FlipbookAsset& asset, eng::Visitor& visitor) const;
+		bool Load(FlipbookAsset& asset, eng::Visitor& visitor) const;
 	};
 }

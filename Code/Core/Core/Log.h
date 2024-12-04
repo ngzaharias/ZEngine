@@ -3,6 +3,7 @@
 enum class ELog
 {
 	Assert,
+	Crash,
 	Debug,
 	Network,
 };

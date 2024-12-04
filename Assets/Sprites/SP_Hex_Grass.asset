@@ -1,0 +1,7 @@
+m_Guid = '686c500eca54494785f189dc49016a4c'
+m_Name = 'SP_Hex_Grass'
+m_Position = { X = 0, Y = 0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 238, Y = 207 }
+m_Texture2D = '8bf2a93c638b43e6a94ac4c62c144401'
+m_Type = 'Sprite'

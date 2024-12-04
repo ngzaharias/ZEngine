@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/Path.h>
-#include <Core/SparseArray.h>
-
-#include <Engine/Asset.h>
-#include <Engine/AssetLoader.h>
+#include "Core/Path.h"
+#include "Core/SparseArray.h"
+#include "Engine/Asset.h"
+#include "Engine/AssetLoader.h"
 
 namespace eng
 {
@@ -36,8 +35,8 @@ namespace eng
 	class FontAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Save(FontAsset* asset, eng::Visitor& visitor) const;
-		bool Load(FontAsset* asset, eng::Visitor& visitor) const;
-		bool Import(FontAsset* asset, const str::Path& filepath) const;
+		bool Save(FontAsset& asset, eng::Visitor& visitor) const;
+		bool Load(FontAsset& asset, eng::Visitor& visitor) const;
+		bool Import(FontAsset& asset, const str::Path& filepath) const;
 	};
 }

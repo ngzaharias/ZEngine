@@ -1,9 +1,9 @@
 #include "EnginePCH.h"
 #include "Engine/ColourHelpers.h"
 
-#include <type_traits>
+#include "ECS/Entity.h"
 
-#include <ECS/Entity.h>
+#include <type_traits>
 
 namespace
 {

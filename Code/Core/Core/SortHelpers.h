@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/StringView.h>
-#include <Core/Types.h>
+#include "Core/StringView.h"
+#include "Core/Types.h"
 
 namespace sort
 {

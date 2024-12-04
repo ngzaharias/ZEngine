@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ECS/EntityWorld.h>
-
-#include <Engine/ReplicationPeer.h>
+#include "ECS/EntityWorld.h"
+#include "Engine/ReplicationPeer.h"
 
 class GameTime;
 
@@ -11,10 +10,12 @@ namespace eng
 	class AssetManager;
 	class NetworkManager;
 	class PhysicsManager;
+	class PlatformManager;
 	class PrototypeManager;
+	class TableHeadmaster;
 }
 
-namespace glfw
+namespace eng
 {
 	class Window;
 }
@@ -28,13 +29,13 @@ namespace clt
 {
 	struct Dependencies
 	{
+		eng::Window& m_Window;
 		eng::AssetManager& m_AssetManager;
 		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
+		eng::PlatformManager& m_PlatformManager;
 		eng::PrototypeManager& m_PrototypeManager;
-
-		glfw::Window& m_Window;
-
+		eng::TableHeadmaster& m_TableHeadmaster;
 		net::ComponentSerializer& m_Serializer;
 	};
 

@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/Guid.h>
-#include <Core/Name.h>
-#include <Core/Path.h>
-
-#include <Engine/TypeInfo.h>
+#include "Core/Guid.h"
+#include "Core/Name.h"
+#include "Core/Path.h"
+#include "Engine/TypeInfo.h"
 
 namespace eng
 {
@@ -15,7 +14,6 @@ namespace eng
 
 		str::Guid m_Guid = { };
 		str::Name m_Name = { };
-		str::Path m_Path = { };
 		str::Name m_Type = { };
 	};
 }

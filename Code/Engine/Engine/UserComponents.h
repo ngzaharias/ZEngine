@@ -1,11 +1,9 @@
 #pragma once
 
-#include <Core/Map.h>
-
-#include <ECS/Component.h>
-#include <ECS/Entity.h>
-
-#include <Network/UserId.h>
+#include "Core/Map.h"
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
+#include "Network/UserId.h"
 
 namespace net
 {

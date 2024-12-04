@@ -42,6 +42,6 @@ auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const bool aliv
 	ecs::IComponentStorage* istorage = alive
 		? m_AliveComponents.Get(componentId)
 		: m_DeadComponents.Get(componentId);
-	Storage* storage = dynamic_cast<Storage*>(istorage);
+	Storage* storage = static_cast<Storage*>(istorage);
 	return storage->Get(entity);
 }

@@ -1,71 +1,8 @@
 m_Fps = 30.0
-m_Frames = [
-    { m_Position = { X = 0.0, Y = 700.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 100.0, Y = 700.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 200.0, Y = 700.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 300.0, Y = 700.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 400.0, Y = 700.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 500.0, Y = 700.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 600.0, Y = 700.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 700.0, Y = 700.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 0.0, Y = 600.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 100.0, Y = 600.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 200.0, Y = 600.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 300.0, Y = 600.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 400.0, Y = 600.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 500.0, Y = 600.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 600.0, Y = 600.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 700.0, Y = 600.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 0.0, Y = 500.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 100.0, Y = 500.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 200.0, Y = 500.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 300.0, Y = 500.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 400.0, Y = 500.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 500.0, Y = 500.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 600.0, Y = 500.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 700.0, Y = 500.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 0.0, Y = 400.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 100.0, Y = 400.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 200.0, Y = 400.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 300.0, Y = 400.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 400.0, Y = 400.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 500.0, Y = 400.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 600.0, Y = 400.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 700.0, Y = 400.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 0.0, Y = 300.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 100.0, Y = 300.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 200.0, Y = 300.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 300.0, Y = 300.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 400.0, Y = 300.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 500.0, Y = 300.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 600.0, Y = 300.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 700.0, Y = 300.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 0.0, Y = 200.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 100.0, Y = 200.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 200.0, Y = 200.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 300.0, Y = 200.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 400.0, Y = 200.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 500.0, Y = 200.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 600.0, Y = 200.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 700.0, Y = 200.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 0.0, Y = 100.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 100.0, Y = 100.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 200.0, Y = 100.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 300.0, Y = 100.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 400.0, Y = 100.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 500.0, Y = 100.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 600.0, Y = 100.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 700.0, Y = 100.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 0.0, Y = 0.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 100.0, Y = 0.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 200.0, Y = 0.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 300.0, Y = 0.0 }, m_Size = { X = 100.0, Y = 100.0 } },
-    { m_Position = { X = 400.0, Y = 0.0 }, m_Size = { X = 100.0, Y = 100.0 } }
-]
-m_Guid = '239b0280-0e10-4847-c693-1fd49f118810'
+m_Frames = []
+m_Guid = '5f1dfe6e32a64b1b4c89ed022a2f8793'
 m_IsLooping = true
-m_Name = 'FP_Magic8'
-m_Shader = 'cbbb7d3f-f44b-45fd-b9e5-a207d92262fb'
-m_StaticMesh = 'e94876a8-e4cc-4d16-84c8-5859b48a1af6'
-m_Texture2D = 'f9dcfdd6-014a-c528-12e2-1e73f232b7f9'
+m_Name = 'FB_Magic8'
+m_Shader = '00000000000000000000000000000000'
+m_Texture2D = '00000000000000000000000000000000'
 m_Type = 'Flipbook'

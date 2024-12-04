@@ -1,6 +1,5 @@
 project "Network"
 	kind "StaticLib"
-	dependson { "Core" }
 	location "%{wks.location}/Network"
 
 	vpaths 
@@ -18,4 +17,10 @@ project "Network"
 		"%{wks.location}/../3rdParty/yojimbo/1.2.1/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/Network/",
+	}
+
+	links 
+	{ 
+		"Core", 
+		"Math",
 	}

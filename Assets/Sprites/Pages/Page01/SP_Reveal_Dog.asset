@@ -1,0 +1,7 @@
+m_Texture2D = '29f0ae413daa4aedb9a8b662f572cbd0'
+m_Name = 'SP_Reveal_Dog'
+m_Type = 'Sprite'
+m_Guid = '90845288536048718100af83609f539b'
+
+m_Position = { X = 0, Y = 0 }
+m_Size = { X = 128, Y = 128 }

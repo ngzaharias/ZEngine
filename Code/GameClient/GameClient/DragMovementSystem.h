@@ -1,14 +1,18 @@
 #pragma once
 
-#include <ECS/System.h>
+#include "ECS/System.h"
 
 namespace eng
 {
-	struct CameraComponent;
 	struct InputComponent;
 	struct LinesComponent;
 	struct NameComponent;
 	struct TransformComponent;
+}
+
+namespace eng::camera
+{
+	struct ProjectionComponent;
 }
 
 namespace drag
@@ -22,7 +26,7 @@ namespace drag
 			eng::LinesComponent,
 			eng::TransformComponent,
 			const drag::SelectionComponent,
-			const eng::CameraComponent,
+			const eng::camera::ProjectionComponent,
 			const eng::InputComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

@@ -9497,14 +9497,14 @@ TOML_NAMESPACE_START
 
 		TOML_NODISCARD_CTOR
 		explicit toml_formatter(const toml::node& source, format_flags flags = default_flags) noexcept
-			: base{ &source, nullptr, constants, { flags, "    "sv } }
+			: base{ &source, nullptr, constants, { flags, "\t"sv } }
 		{}
 
 #if TOML_DOXYGEN || (TOML_ENABLE_PARSER && !TOML_EXCEPTIONS)
 
 		TOML_NODISCARD_CTOR
 		explicit toml_formatter(const toml::parse_result& result, format_flags flags = default_flags) noexcept
-			: base{ nullptr, &result, constants, { flags, "    "sv } }
+			: base{ nullptr, &result, constants, { flags, "\t"sv } }
 		{}
 
 #endif

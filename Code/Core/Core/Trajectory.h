@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Bezier3.h>
-#include <Core/Bezier4.h>
-#include <Core/StaticArray.h>
-#include <Core/Variant.h>
+#include "Core/Array.h"
+#include "Core/StaticArray.h"
+#include "Core/Variant.h"
+#include "Math/Bezier3.h"
+#include "Math/Bezier4.h"
 
 namespace path
 {

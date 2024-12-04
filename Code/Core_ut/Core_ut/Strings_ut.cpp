@@ -1,8 +1,8 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Address.h>
+#include "Core/Address.h"
 
-TEST_CASE("str::Address")
+TEST_CASE("str::Address. Push/Pop.")
 {
 	str::Address address;
 	CHECK(address.GetFull() == "");

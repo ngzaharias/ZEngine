@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ECS/System.h>
+#include "ECS/System.h"
 
 namespace projectile
 {
@@ -20,9 +20,6 @@ namespace projectile
 			projectile::SpawnComponent,
 			const projectile::CreateRequestComponent,
 			const projectile::TrajectoryComponent>;
-
-		void Initialise(World& world);
-		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 

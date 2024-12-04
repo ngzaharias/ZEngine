@@ -1,0 +1,12 @@
+m_Guid = 'f116d0c4ff8e49ebdb8e06b7bd7c9ad3'
+m_Name = 'Group_Horse02'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 3.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 1034.0, Y = -964.0, Z = 0.0 }
+
+['hidden::GroupComponent']
+m_Objects = [ '65a1bbc398a74f2e0fb43e691a733204' ]
+m_Size = { X = 377, Y = 20 }
+m_Sprite = 'cc6a81798a494d699210d41b8255b326'

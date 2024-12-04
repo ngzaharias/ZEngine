@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/Variant.h>
-#include <Core/Vector.h>
-
-#include <ECS/Component.h>
+#include "Core/Variant.h"
+#include "ECS/Component.h"
+#include "Math/Vector.h"
 
 namespace eng
 {
@@ -19,7 +18,7 @@ namespace eng
 
 	struct LightPointComponent final : public ecs::Component<LightPointComponent>
 	{
-		float m_Range = 500.f;
 		Vector3f m_Colour = Vector3f::One;
+		float m_Range = 500.f;
 	};
 }

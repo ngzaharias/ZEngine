@@ -1,8 +1,8 @@
 #include "Core/Trajectory.h"
 
-#include "Core/Math.h"
 #include "Core/VariantHelpers.h"
-#include "Core/VectorMath.h"
+#include "Math/Math.h"
+#include "Math/VectorMath.h"
 
 // http://www.planetclegg.com/projects/WarpingTextToSplines.html
 // https://gamedev.stackexchange.com/questions/5373/moving-ships-between-two-planets-along-a-bezier-missing-some-equations-for-acce/5427#5427

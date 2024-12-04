@@ -1,6 +1,5 @@
 project "ECS_ut"
 	kind "ConsoleApp"
-	dependson { "Core", "ECS" }
 	location "%{wks.location}/ECS_ut"
 
 	defines { "Z_UNIT_TEST" }
@@ -22,7 +21,6 @@ project "ECS_ut"
 	includedirs 
 	{ 
 		"%{wks.location}/../3rdParty/",
-		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
 	}
@@ -30,14 +28,12 @@ project "ECS_ut"
 	libdirs 
 	{ 
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
-		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/ECS/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
 	
 	links 
 	{ 
-		"Core.lib",
-		"ECS.lib",
+		"Core",
+		"ECS",
 		"OptickCore.lib",
 	}
 

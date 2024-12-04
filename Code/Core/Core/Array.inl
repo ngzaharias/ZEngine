@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/Assert.h>
+#include "Core/Assert.h"
 
 #include <iterator>
 
@@ -79,14 +79,14 @@ auto Array<Type>::operator=(std::initializer_list<Type>&& rhs)->Array&
 template<typename Type>
 auto Array<Type>::operator [](const int32 index)->Type&
 {
-	Z_ASSERT_CRASH(index >= 0 && index < GetCount(), "Index out of bounds!");
+	Z_PANIC(index >= 0 && index < GetCount(), "Index out of bounds!");
 	return m_Values[index];
 }
 
 template<typename Type>
 auto Array<Type>::operator [](const int32 index) const -> const Type&
 {
-	Z_ASSERT_CRASH(index >= 0 && index < GetCount(), "Index out of bounds!");
+	Z_PANIC(index >= 0 && index < GetCount(), "Index out of bounds!");
 	return m_Values[index];
 }
 
@@ -254,6 +254,14 @@ void Array<Type>::RemoveAt(const int32 startIndex, const int32 endIndex)
 }
 
 template<typename Type>
+void Array<Type>::RemoveAt(const iterator itr)
+{
+	if (m_Values.size() != 1)
+		std::iter_swap(itr, m_Values.end() - 1);
+	m_Values.pop_back();
+}
+
+template<typename Type>
 void Array<Type>::RemoveOrderedAt(const int32 index)
 {
 	m_Values.erase(m_Values.begin() + index);
@@ -263,6 +271,12 @@ template<typename Type>
 void Array<Type>::RemoveOrderedAt(const int32 startIndex, const int32 endIndex)
 {
 	m_Values.erase(m_Values.begin() + startIndex, m_Values.begin() + endIndex);
+}
+
+template<typename Type>
+void Array<Type>::RemoveOrderedAt(const iterator itr)
+{
+	m_Values.erase(itr);
 }
 
 template<typename Type>

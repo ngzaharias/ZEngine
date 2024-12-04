@@ -1,14 +1,12 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/FrameBufferSystem.h"
 
-#include <Core/String.h>
-#include <Core/Vector.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/FrameBufferComponent.h>
+#include "Core/String.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/FrameBufferComponent.h"
+#include "Math/Vector.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_user.h>
@@ -32,7 +30,7 @@ void dbg::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(label.c_str(), &isOpen))
 		{
-			const auto& component = world.GetSingleton<const eng::FrameBufferComponent>();
+			const auto& component = world.ReadSingleton<eng::FrameBufferComponent>();
 
 			const ImVec2 regionSize = ImGui::GetContentRegionAvail();
 			imgui::Image(component.m_ShadowTexture, Vector2f(regionSize.x, regionSize.y));

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Hash.h>
-#include <Core/Map.h>
-#include <Core/String.h>
-#include <Core/StringView.h>
+#include "Core/Array.h"
+#include "Core/Hash.h"
+#include "Core/Map.h"
+#include "Core/String.h"
+#include "Core/StringView.h"
 
 namespace str
 {
@@ -17,8 +17,6 @@ namespace str
 		NameTable();
 		~NameTable();
 
-		str::Hash Register(const char* string);
-		str::Hash Register(const str::String& string);
 		str::Hash Register(const str::StringView& string);
 
 		const str::String& Retrieve(const str::Hash& hash) const;

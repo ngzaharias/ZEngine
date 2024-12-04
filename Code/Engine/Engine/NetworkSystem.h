@@ -1,10 +1,7 @@
 #pragma once
 
-#include <Core/Array.h>
-
-#include <ECS/System.h>
-
-#include <entt/signal/sigh.hpp>
+#include "Core/Array.h"
+#include "ECS/System.h"
 
 namespace eng
 {
@@ -16,7 +13,7 @@ namespace net
 	struct PeerId;
 }
 
-namespace network
+namespace eng::network
 {
 	struct RequestComponent;
 	struct RequestFinishedComponent;
@@ -27,21 +24,13 @@ namespace network
 	public:
 		using World = ecs::WorldView<
 			eng::NetworkManager,
-			network::RequestFinishedComponent,
-			network::StateComponent,
-			const network::RequestComponent>;
+			eng::network::RequestFinishedComponent,
+			eng::network::StateComponent,
+			const eng::network::RequestComponent>;
 
-		void Initialise(World& world);
-		void Shutdown(World& world);
 		void Update(World& world, const GameTime& gameTime);
 
 	private:
-		void OnClientConnected(const net::PeerId& peerId);
-		void OnClientDisconnected(const net::PeerId& peerId);
-
-	private:
-		Array<entt::connection> m_Connections = { };
-
 		bool m_HasConnected = false;
 		bool m_HasDisconnected = false;
 	};

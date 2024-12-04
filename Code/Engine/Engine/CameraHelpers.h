@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/Matrix.h>
+#include "Engine/CameraTypes.h"
+#include "Math/Matrix.h"
 
-#include <Engine/CameraTypes.h>
-
-namespace camera
+namespace eng::camera
 {
 	Matrix4x4 GetProjection(const Vector2u& windowSize, const Projection& value);
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Engine/Asset.h>
-#include <Engine/AssetLoader.h>
+#include "Engine/Asset.h"
+#include "Engine/AssetLoader.h"
 
 namespace eng
 {
@@ -30,7 +30,7 @@ namespace eng
 	public:
 		PhysicsMaterialAssetLoader(eng::PhysicsManager& physicsManager);
 
-		bool Load(PhysicsMaterialAsset* asset, eng::Visitor& visitor) const;
+		bool Load(PhysicsMaterialAsset& asset, eng::Visitor& visitor) const;
 
 	protected:
 		eng::PhysicsManager& m_PhysicsManager;

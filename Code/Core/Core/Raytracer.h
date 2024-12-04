@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/Types.h>
-#include <Core/Vector.h>
+#include "Core/Types.h"
+#include "Math/Vector.h"
 
 namespace path
 {

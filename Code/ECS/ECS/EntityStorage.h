@@ -1,12 +1,11 @@
 #pragma once
 
-#include <Core/Map.h>
-#include <Core/SparseArray.h>
-
-#include <ECS/Component.h>
-#include <ECS/ComponentMask.h>
-#include <ECS/ComponentStorage.h>
-#include <ECS/Entity.h>
+#include "Core/Map.h"
+#include "Core/SparseArray.h"
+#include "ECS/Component.h"
+#include "ECS/ComponentMask.h"
+#include "ECS/ComponentStorage.h"
+#include "ECS/Entity.h"
 
 namespace ecs
 {
@@ -33,6 +32,7 @@ namespace ecs
 
 		template<class TComponent>
 		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
+
 		template<class TComponent>
 		auto GetComponent(const ecs::Entity& entity, const bool alive = true)->TComponent&;
 

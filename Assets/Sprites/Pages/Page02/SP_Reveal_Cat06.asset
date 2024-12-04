@@ -1,0 +1,8 @@
+m_Guid = 'b27251cdeed84fcc8d36c6e3d05ea839'
+m_Name = 'SP_Reveal_Cat06'
+m_Type = 'Sprite'
+
+m_Position = { X = 0, Y = 0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 256, Y = 256 }
+m_Texture2D = '688802b6b4b34d6f6996a07787048be2'

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ECS/Component.h>
-#include <ECS/System.h>
+#include "ECS/Component.h"
+#include "ECS/System.h"
 
 namespace ecs
 {
@@ -12,13 +12,13 @@ namespace dbg
 {
 	struct ImGuiDemoRequestComponent;
 
-	struct ImGuiDemoComponent : public ecs::SingletonComponent<ImGuiDemoComponent> { };
+	struct ImGuiDemoWindowComponent : public ecs::Component<ImGuiDemoWindowComponent> { };
 
 	class ImGuiDemoSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			dbg::ImGuiDemoComponent,
+			dbg::ImGuiDemoWindowComponent,
 			const dbg::ImGuiDemoRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

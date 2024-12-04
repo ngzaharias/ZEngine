@@ -1,27 +1,35 @@
 #pragma once
 
-#include <Engine/RenderStage.h>
-
-namespace ecs
-{
-	class EntityWorld;
-	struct Entity;
-}
+#include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
+#include "Engine/RenderStage.h"
 
 namespace glfw
 {
 	class Window;
 }
 
+namespace eng::camera
+{
+	struct ProjectionComponent;
+}
+
 namespace eng
 {
 	class AssetManager;
+	struct TextAssetComponent;
+	struct TextComponent;
+	struct TransformComponent;
 
 	class RenderStage_UI final : public eng::RenderStage
 	{
 	public:
-		RenderStage_UI(eng::AssetManager& assetManager);
-		~RenderStage_UI() override;
+		using World = ecs::WorldView<
+			eng::AssetManager,
+			const eng::camera::ProjectionComponent,
+			const eng::TextAssetComponent,
+			const eng::TextComponent,
+			const eng::TransformComponent>;
 
 		void Initialise(ecs::EntityWorld& world) override;
 		void Shutdown(ecs::EntityWorld& world) override;

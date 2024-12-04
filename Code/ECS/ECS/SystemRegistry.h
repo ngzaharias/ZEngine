@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Core/SparseArray.h>
-
-#include <ECS/System.h>
-#include <ECS/SystemEntry.h>
+#include "Core/SparseArray.h"
+#include "ECS/System.h"
+#include "ECS/SystemEntry.h"
 
 class GameTime;
 
@@ -15,20 +14,19 @@ namespace ecs
 	class SystemRegistry
 	{
 	public:
-		SystemRegistry(ecs::EntityWorld& entityWorld);
+		void Initialise(ecs::EntityWorld& entityWorld);
+		void Shutdown(ecs::EntityWorld& entityWorld);
 
-		void Initialise();
-		void Shutdown();
-
-		void Update(const GameTime& gameTime);
-
-		template<class TSystem, typename... TArgs>
-		void Register(TArgs&&... args);
-		template<class TSystem>
-		void RegisterPriority(const int32 priority);
+		void Update(ecs::EntityWorld& entityWorld, const GameTime& gameTime);
 
 		template<class TSystem>
 		bool IsRegistered() const;
+
+		template<class TSystem, typename... TArgs>
+		void Register(TArgs&&... args);
+
+		template<class TSystem>
+		void RegisterPriority(const int32 priority);
 
 		template<class TSystem>
 		TSystem& GetSystem();
@@ -42,8 +40,6 @@ namespace ecs
 		static void UpdateFunction(ecs::EntityWorld& entityWorld, ecs::System& system, const GameTime& gameTime);
 
 	private:
-		ecs::EntityWorld& m_EntityWorld;
-
 		Array<ecs::SystemEntry*> m_Priorities = { };
 		SparseArray<ecs::SystemId, ecs::SystemEntry> m_Entries = { };
 	};

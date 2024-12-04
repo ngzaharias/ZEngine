@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/String.h>
+#include "Core/String.h"
 
 namespace ecs
 {
@@ -8,7 +8,6 @@ namespace ecs
 
 	struct ComponentEntry
 	{
-		ecs::ComponentId m_ComponentId = INT32_MAX;
-		str::String m_DebugName = { };
+		str::String m_Name = { };
 	};
 }

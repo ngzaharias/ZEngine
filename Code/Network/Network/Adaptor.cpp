@@ -13,12 +13,12 @@ yojimbo::MessageFactory* net::Adaptor::CreateMessageFactory(yojimbo::Allocator& 
 
 void net::Adaptor::OnServerClientConnected(int32 clientIndex)
 {
-	net::PeerId peerId = net::PeerId(clientIndex);
-	m_OnServerClientConnected.publish(peerId);
+	const net::PeerId peerId = net::PeerId(clientIndex);
+	m_OnServerClientConnected.Publish(peerId);
 }
 
 void net::Adaptor::OnServerClientDisconnected(int32 clientIndex) 
 {
-	net::PeerId peerId = net::PeerId(clientIndex);
-	m_OnServerClientDisconnected.publish(peerId);
+	const net::PeerId peerId = net::PeerId(clientIndex);
+	m_OnServerClientDisconnected.Publish(peerId);
 }

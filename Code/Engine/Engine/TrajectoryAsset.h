@@ -1,11 +1,10 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Vector.h>
-
-#include <Engine/Asset.h>
-#include <Engine/AssetLoader.h>
-#include <Engine/SpriteAsset.h>
+#include "Core/Array.h"
+#include "Engine/Asset.h"
+#include "Engine/AssetLoader.h"
+#include "Engine/SpriteAsset.h"
+#include "Math/Vector.h"
 
 namespace eng
 {
@@ -22,7 +21,7 @@ namespace eng
 	class TrajectoryAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Save(TrajectoryAsset* asset, eng::Visitor& visitor) const;
-		bool Load(TrajectoryAsset* asset, eng::Visitor& visitor) const;
+		bool Save(TrajectoryAsset& asset, eng::Visitor& visitor) const;
+		bool Load(TrajectoryAsset& asset, eng::Visitor& visitor) const;
 	};
 }

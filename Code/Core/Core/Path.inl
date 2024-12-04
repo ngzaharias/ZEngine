@@ -11,5 +11,5 @@ template<typename... TStringViews>
 str::Path::Path(const str::Path& value, const TStringViews& ...args)
 {
 	*this = value;
-	this->operator+=(args...);
+	(this->operator+=(args),...);
 }

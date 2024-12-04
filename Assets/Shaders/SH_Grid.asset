@@ -1,0 +1,62 @@
+m_Guid = "f681f1dfc59e40f7864f01d1efbe1d84"
+m_Name = "SH_Grid"
+m_Type = "Shader"
+
+[Programs]
+
+m_Vertex = """
+#version 330 core
+
+uniform mat4 u_CameraProj;
+uniform mat4 u_CameraView;
+uniform mat4 u_Transform;
+
+in vec3 a_Vertex;
+in vec2 a_TexCoords;
+
+out vec4 v_WorldPos;
+out vec2 v_TexCoords;
+
+void main()
+{
+	mat4 transform = u_CameraProj * u_CameraView * u_Transform;
+	gl_Position = transform * vec4(a_Vertex, 1.f);
+	v_WorldPos = u_Transform * vec4(a_Vertex, 1.f);
+	v_TexCoords = a_TexCoords;
+}
+"""
+
+m_Fragment = """
+#version 330 core
+
+uniform float u_MajorScale;
+uniform float u_MajorWidth;
+uniform vec3 u_MajorColour;
+
+in vec4 v_WorldPos;
+in vec2 v_TexCoords;
+
+out vec4 f_Colour;
+
+float PristineGrid(vec2 uv, vec2 lineWidth)
+{
+	vec2 uvDeriv  = fwidth(uv);
+	vec2 drawWidth = max(lineWidth, uvDeriv);
+	vec2 lineAA = uvDeriv * 1.5;
+	vec2 gridUV = 1.0 - abs(fract(uv) * 2.0 - 1.0);
+	vec2 grid2 = smoothstep(drawWidth  + lineAA, drawWidth  - lineAA, gridUV); 
+	grid2 *= clamp(lineWidth / drawWidth, 0.0, 1.0);
+	grid2 = mix(grid2, lineWidth, clamp(uvDeriv * 2.0 - 1.0, 0.0, 1.0));
+	return mix(grid2.x, 1.0, grid2.y);
+}
+
+void main()
+{
+	float majorAlpha = PristineGrid(v_WorldPos.xz / u_MajorScale, vec2(u_MajorWidth));
+	if (majorAlpha <= 0)
+		discard;
+
+	f_Colour.rgb = u_MajorColour;
+	f_Colour.a = majorAlpha;
+}
+"""

@@ -1,0 +1,26 @@
+m_Guid = 'd13758a720f9428a9e61276558e03af5'
+m_Name = 'Object_Dog'
+
+['hidden::ObjectComponent']
+m_Group = '58af002bd6d04e3bbe66153bf807ba8a'
+
+
+	[['hidden::ObjectComponent'.m_Effects]]
+
+		['hidden::ObjectComponent'.m_Effects.SetSprite]
+		m_Sprite = '90845288536048718100af83609f539b'
+
+['eng::PhysicsComponent']
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+m_Channel = 0
+m_Extents = { X = 60, Y = 45, Z = 1 }
+
+['eng::SpriteComponent']
+m_Size = { X = 128, Y = 128 }
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -1496.0, Y = 734.0, Z = -1.0 }

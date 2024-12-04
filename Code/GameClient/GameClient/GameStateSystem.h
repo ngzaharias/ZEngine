@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ECS/System.h>
+#include "ECS/System.h"
 
 namespace gamestate
 {
@@ -16,9 +16,6 @@ namespace gamestate
 			gamestate::StateComponent,
 			const gamestate::RequestComponent,
 			const gamestate::StateFinishedComponent>;
-
-		void Initialise(World& world);
-		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

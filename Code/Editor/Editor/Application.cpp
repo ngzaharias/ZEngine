@@ -1,9 +1,8 @@
 #include "EditorPCH.h"
 #include "Editor/Application.h"
 
-#include <GameClient/GameClient.h>
-
-#include <GameServer/GameServer.h>
+#include "GameClient/GameClient.h"
+#include "GameServer/GameServer.h"
 
 editor::Application::Application()
 	: m_Editor(m_GameClient.m_EntityWorld, m_GameServer.m_EntityWorld)

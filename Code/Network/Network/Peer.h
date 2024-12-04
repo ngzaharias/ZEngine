@@ -1,13 +1,11 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/String.h>
-#include <Core/Types.h>
-
-#include <Network/Messages.h>
-#include <Network/PeerId.h>
-
-#include <entt/signal/sigh.hpp>
+#include "Core/Array.h"
+#include "Core/Delegate.h"
+#include "Core/String.h"
+#include "Core/Types.h"
+#include "Network/Messages.h"
+#include "Network/PeerId.h"
 
 class GameTime;
 
@@ -53,14 +51,14 @@ namespace net
 		void OnClientDisconnected(const net::PeerId& peerId);
 
 	public:
-		entt::sigh<void(const yojimbo::Message* message)> m_OnProcessMessage;
+		Delegate<void(const yojimbo::Message* message)> m_OnProcessMessage;
 
 	protected:
 		net::Adaptor& m_Adaptor;
 		net::Config& m_Config;
 		yojimbo::Client* m_Client = nullptr;
 
-		Array<entt::connection> m_Connections = { };
+		DelegateCollection m_Collection = { };
 	};
 }
 

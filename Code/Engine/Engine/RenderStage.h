@@ -1,11 +1,10 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Guid.h>
-#include <Core/Matrix.h>
-#include <Core/Vector.h>
-
-#include <ECS/Entity.h>
+#include "Core/Array.h"
+#include "Core/Guid.h"
+#include "ECS/Entity.h"
+#include "Math/Matrix.h"
+#include "Math/Vector.h"
 
 //#define ASSERT_RENDER
 
@@ -16,8 +15,6 @@ namespace ecs
 
 namespace eng
 {
-	class AssetManager;
-
 	struct RenderBatchID
 	{
 		ecs::Entity m_Entity = { };
@@ -53,17 +50,11 @@ namespace eng
 	class RenderStage
 	{
 	public:
-		RenderStage(eng::AssetManager& assetManager)
-			: m_AssetManager(assetManager)
-		{ }
 		virtual ~RenderStage() { }
 
 		virtual void Initialise(ecs::EntityWorld& world) { }
 		virtual void Shutdown(ecs::EntityWorld& world) { }
 
 		virtual void Render(ecs::EntityWorld& world) = 0;
-
-	protected:
-		eng::AssetManager& m_AssetManager;
 	};
 }

@@ -1,21 +1,15 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Name.h>
-
-#include <ECS/Component.h>
-#include <ECS/Entity.h>
-
-#include <Network/Config.h>
-
+#include "Core/Array.h"
+#include "Core/Name.h"
+#include "ECS/Component.h"
+#include "ECS/Entity.h"
 #include "GameClient/GameStateTypes.h"
+#include "Network/Config.h"
 
 namespace gamestate
 {
-	/// \brief Present for the duration of starting up a host.
-	struct NetworkHostComponent : public ecs::SingletonComponent<NetworkHostComponent> { };
-
-	/// \brief Present for the duration of connecting as a peer.
+	/// \brief Holds the state for joining a server.
 	struct NetworkJoinComponent : public ecs::SingletonComponent<NetworkJoinComponent> 
 	{ 
 		enum class EResult
@@ -36,9 +30,6 @@ namespace gamestate
 		EResult m_Result = EResult::Failure;
 		EState m_State = EState::None;
 	};
-
-	/// \brief Present for the duration of stopping as a host/peer.
-	struct NetworkStopComponent : public ecs::SingletonComponent<NetworkStopComponent> { };
 
 	/// \brief Holds a single gamestate request.
 	struct RequestComponent : public ecs::EventComponent<RequestComponent>

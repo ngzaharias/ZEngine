@@ -1,0 +1,25 @@
+m_Guid = '093460f80de34499b77d3fbd3e987da8'
+m_Name = 'Object_Bear04'
+
+['hidden::ObjectComponent']
+m_Group = 'ab4d37e0a36f400cba7f56e47dbe9b70'
+
+
+	[['hidden::ObjectComponent'.m_Effects]]
+
+		['hidden::ObjectComponent'.m_Effects.SetSprite]
+		m_Sprite = '39000c9121dc4987a4d6aeaff41ea6ab'
+
+['eng::PhysicsComponent']
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+m_Extents = { X = 32, Y = 50, Z = 1 }
+
+['eng::SpriteComponent']
+m_Size = { X = 128, Y = 128 }
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -254.0, Y = 635.0, Z = -1.0 }

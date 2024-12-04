@@ -1,12 +1,10 @@
 #pragma once
 
-#include <Core/Variant.h>
+#include "Core/Variant.h"
+#include "ECS/Component.h"
+#include "Network/Types.h"
 
-#include <ECS/Component.h>
-
-#include <Network/Types.h>
-
-namespace network
+namespace eng::network
 {
 	struct Shutdown { };
 
