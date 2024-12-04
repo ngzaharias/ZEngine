@@ -1,22 +1,34 @@
 #pragma once
 
-#include <Engine/RenderStage.h>
+#include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
+#include "Engine/RenderStage.h"
 
-namespace ecs
+namespace eng::camera
 {
-	class EntityWorld;
-	struct Entity;
+	struct ProjectionComponent;
 }
 
 namespace eng
 {
 	class AssetManager;
+	struct FlipbookAssetComponent;
+	struct FlipbookComponent;
+	struct SpriteAssetComponent;
+	struct SpriteComponent;
+	struct TransformComponent;
 
 	class RenderStage_Translucent final : public eng::RenderStage
 	{
 	public:
-		RenderStage_Translucent(eng::AssetManager& assetManager);
-		~RenderStage_Translucent() override;
+		using World = ecs::WorldView<
+			eng::AssetManager,
+			const eng::camera::ProjectionComponent,
+			const eng::FlipbookAssetComponent,
+			const eng::FlipbookComponent,
+			const eng::SpriteAssetComponent,
+			const eng::SpriteComponent,
+			const eng::TransformComponent>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;
@@ -24,7 +36,7 @@ namespace eng
 		void Render(ecs::EntityWorld& entityWorld) override;
 
 	private:
-		void RenderBatch(const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData);
+		void RenderBatch(World& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData);
 
 	private:
 		uint32 m_ColourBuffer = 0;

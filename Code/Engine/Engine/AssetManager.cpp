@@ -1,14 +1,16 @@
 #include "EnginePCH.h"
 #include "Engine/AssetManager.h"
 
-#include <Core/StringHelpers.h>
+#include "Core/StringHelpers.h"
+#include "Engine/AssetLoader.h"
 
 #include <filesystem>
 
 namespace
 {
-	const str::Name strGuid = NAME("m_Guid");
-	const str::Name strType = NAME("m_Type");
+	const str::StringView strGuid = "m_Guid";
+	const str::StringView strName = "m_Name";
+	const str::StringView strType = "m_Type";
 }
 
 void eng::AssetManager::Initialise()
@@ -29,11 +31,13 @@ void eng::AssetManager::LoadFilepath(const str::Path& filepath, const bool canSe
 		eng::Visitor visitor;
 		if (visitor.LoadFromFile(filepath))
 		{
-			str::Guid guid;
-			str::Name type;
-			visitor.Visit(strGuid, guid, {});
-			visitor.Visit(strType, type, {});
-			m_FileMap.Insert(guid, eng::AssetFile(guid, filepath, type));
+			eng::AssetFile assetFile;
+			assetFile.m_Path = filepath;
+			visitor.Read(strGuid, assetFile.m_Guid, {});
+			visitor.Read(strName, assetFile.m_Name, {});
+			visitor.Read(strType, assetFile.m_Type, {});
+			m_FileMap[assetFile.m_Guid] = assetFile;
+			m_TypeMap[assetFile.m_Type].Add(assetFile.m_Guid);
 		}
 	}
 	else if (filepath.IsDirectory())
@@ -46,4 +50,21 @@ void eng::AssetManager::LoadFilepath(const str::Path& filepath, const bool canSe
 			LoadFilepath(subpath, canSearchSubdirectories);
 		}
 	}
+}
+
+const eng::AssetFile* eng::AssetManager::GetAssetFile(const str::Guid& guid) const
+{
+	const auto find = m_FileMap.Find(guid);
+	return find != m_FileMap.end()
+		? &find->second
+		: nullptr;
+}
+
+void eng::AssetManager::ReloadAssets()
+{
+	// #temp: easy way of reloading assets is to just clear the cache
+	//for (auto&& [typeId, entry] : m_Registry)
+	//{
+	//	entry.m_Loader->ClearCache();
+	//}
 }

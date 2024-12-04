@@ -1,38 +1,67 @@
 #pragma once
 
-#include <Core/Array.h>
-#include <Core/Vector.h>
+#include "Core/Array.h"
+#include "Core/Colour.h"
+#include "ECS/Component.h"
+#include "Engine/CameraTypes.h"
+#include "Math/Vector.h"
 
-#include <ECS/Component.h>
-
-#include <Engine/CameraTypes.h>
-
-class AABB;
-class OBB;
+class AABB3f;
+class Circle2f;
+class OBB3f;
 class Rotator;
+class Sphere3f;
+
+namespace eng::camera
+{
+	struct Orthographic;
+	struct Perspective;
+	using Projection = Variant<
+		Orthographic,
+		Perspective>;
+}
 
 namespace eng
 {
 	struct LineVertex
 	{
 		Vector3f m_Point = { };
-		Vector4f m_Colour = { };
+		Colour m_Colour = { };
 	};
 
 	struct LinesComponent final : public ecs::SingletonComponent<LinesComponent>
 	{
-		void AddAABB(const Vector3f& translate, const AABB& abb, const Vector4f& colour);
-		void AddAABB(const Vector3f& translate, const float extents, const Vector4f& colour);
+		/// \brief Adds an axis-aligned bounding box.
+		void AddAABB(const Vector3f& translate, const float extents, const Colour& colour);
+		/// \brief Adds an axis-aligned bounding box.
+		void AddAABB(const Vector3f& translate, const Vector3f& extents, const Colour& colour);
+		/// \brief Adds an axis-aligned bounding box.
+		void AddAABB(const Vector3f& translate, const AABB3f& abb, const Colour& colour);
 
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Projection& projection, const Vector4f& colour);
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Orthographic& projection, const Vector4f& colour);
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const camera::Perspective& projection, const Vector4f& colour);
+		/// \brief Adds a circle.
+		void AddCircle(const Vector3f& translate, const Circle2f& circle, const Colour& colour);
 
-		void AddLine(const Vector3f& pointA, const Vector3f& pointB, const Vector4f& colour);
+		/// \brief Adds a frustum.
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Colour& colour);
+		/// \brief Adds a frustum.
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Colour& colour);
+		/// \brief Adds a frustum.
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Colour& colour);
 
-		void AddOBB(const Vector3f& translate, const OBB& obb, const Vector4f& colour);
+		/// \brief Adds an icosphere.
+		void AddIcosphere(const Vector3f& translate, const Sphere3f& sphere, const Colour& colour);
 
-		void AddSphere(const Vector3f& translate, const float radius, const Vector4f& colour);
+		/// \brief Adds a flat top hexagon.
+		void AddHexagon(const Vector3f& translate, const float radius, const Colour& colour);
+
+		/// \brief Adds a line.
+		void AddLine(const Vector3f& pointA, const Vector3f& pointB, const Colour& colour);
+
+		/// \brief Adds a orientated bounding box.
+		void AddOBB(const Vector3f& translate, const OBB3f& obb, const Colour& colour);
+
+		/// \brief Adds a sphere.
+		void AddSphere(const Vector3f& translate, const Sphere3f& sphere, const Colour& colour);
 
 		Array<LineVertex> m_Vertices = { };
 	};

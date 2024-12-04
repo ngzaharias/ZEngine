@@ -1,6 +1,6 @@
 #include "Core/Raytracer.h"
 
-#include "Core/VectorMath.h"
+#include "Math/VectorMath.h"
 
 #include <limits>
 #include <utility>

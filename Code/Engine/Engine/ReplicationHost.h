@@ -1,15 +1,11 @@
 #pragma once
 
-#include <Core/Map.h>
-#include <Core/Set.h>
-#include <Core/SparseArray.h>
-
-#include <ECS/Entity.h>
-#include <ECS/Manager.h>
-
-#include <Engine/TypeInfo.h>
-
-#include <Network/PeerId.h>
+#include "Core/Map.h"
+#include "Core/Set.h"
+#include "Core/SparseArray.h"
+#include "ECS/Entity.h"
+#include "Engine/TypeInfo.h"
+#include "Network/PeerId.h"
 
 class GameTime;
 

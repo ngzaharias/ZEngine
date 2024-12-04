@@ -1,6 +1,5 @@
 project "Engine_ut"
 	kind "ConsoleApp"
-	dependson { "Core", "ECS", "Engine" }
 	location "%{wks.location}/Engine_ut"
 
 	defines { "Z_UNIT_TEST" }
@@ -22,39 +21,41 @@ project "Engine_ut"
 	includedirs 
 	{ 
 		"%{wks.location}/../3rdParty/",
+		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
-		"%{wks.location}/../3rdParty/SFML/Include/",
 		"%{wks.location}/../Code/Core/",
-		"%{wks.location}/../Code/ECS/",
+		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Engine/",
 	}
 
 	libdirs 
 	{ 
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
-		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/ECS/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/Engine/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/../3rdParty/SteamworksSDK/Library/",
 	}
 
 	filter "Debug*"
 		libdirs 
 		{
-			"%{wks.location}/../3rdParty/SFML/Library/debug/",
+			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/debug/",
 		}
 	filter "Release*"
 		libdirs 
 		{
-			"%{wks.location}/../3rdParty/SFML/Library/release/",
+			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/release/",
 		}
 	filter {} -- disable the filter
 	
 	links 
 	{ 
-		"Core.lib",
-		"ECS.lib",
-		"Engine.lib",
+		"Core",
+		"ECS",
+		"Engine",
+		"Math",
+		"SteamBinding",
+
 		"OptickCore.lib",
+		"steam_api64.lib",
 	}
 
 	filter "Debug*"
@@ -75,18 +76,19 @@ project "Engine_ut"
 		"{COPY} %{wks.location}/../3rdParty/assimp/5.2.4/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/glew/2.1.0/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/optick/1.3.1/Binary/*.dll $(OutDir)",
+		"{COPY} %{wks.location}/../3rdParty/SteamworksSDK/Binary/*.dll $(OutDir)",
 	}
 
 	filter "Debug*"
 		postbuildcommands 
 		{
 			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/debug/*.dll $(OutDir)",
-			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/debug/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/SFML/2.6.1/Binary/debug/*.dll $(OutDir)",
 		}
 	filter "Release*"
 		postbuildcommands 
 		{
 			"{COPY} %{wks.location}/../3rdParty/PhysX/Binary/release/*.dll $(OutDir)",
-			"{COPY} %{wks.location}/../3rdParty/SFML/Binary/release/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../3rdParty/SFML/2.6.1/Binary/release/*.dll $(OutDir)",
 		}
 	filter {} -- disable the filter

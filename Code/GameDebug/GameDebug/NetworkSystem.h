@@ -1,13 +1,14 @@
 #pragma once
 
-#include <ECS/System.h>
+#include "ECS/System.h"
+#include "imgui/Identifier.h"
 
 namespace gamestate
 {
 	struct RequestComponent;
 }
 
-namespace eng
+namespace ecs
 {
 	struct NameComponent;
 }
@@ -22,10 +23,13 @@ namespace dbg
 	public:
 		using World = ecs::WorldView<
 			dbg::NetworkWindowComponent,
-			eng::NameComponent,
+			ecs::NameComponent,
 			gamestate::RequestComponent,
 			const dbg::NetworkWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		imgui::Identifier m_WindowIds = {};
 	};
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 using int32 = int32_t;
-using String = std::string;
 
 namespace _private
 {
@@ -27,6 +26,7 @@ template<typename Type>
 const char* ToTypeName()
 {
 	// #note: MSVC returns "class <TYPE>", "struct <TYPE>" or "<TYPE>"
+	// will also include namespaces (including anonymous).
 	static const char* value = typeid(Type).name();
 	return value;
 }

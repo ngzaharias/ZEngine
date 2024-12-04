@@ -1,6 +1,6 @@
 #include "UTHelpers.h"
 
-#include <Core/GameTime.h>
+#include "Core/GameTime.h"
 
 ut::RAIIHelper::RAIIHelper()
 {
@@ -11,6 +11,7 @@ ut::RAIIHelper::~RAIIHelper()
 	for (const ecs::Entity& entity : m_Entities)
 		m_EntityWorld.DestroyEntity(entity);
 	m_EntityWorld.Update({});
+	m_EntityWorld.Shutdown();
 }
 
 void ut::RAIIHelper::Initialise()

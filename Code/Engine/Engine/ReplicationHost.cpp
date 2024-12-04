@@ -1,16 +1,13 @@
 #include "EnginePCH.h"
 #include "Engine/ReplicationHost.h"
 
+#include "Core/Algorithms.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/ReplicationComponents.h"
-
-#include <Core/Algorithms.h>
-
-#include <Engine/ComponentSerializer.h>
-#include <Engine/NetworkComponents.h>
-
-#include <Network/Host.h>
-#include <Network/Messages.h>
+#include "Engine/ComponentSerializer.h"
+#include "Engine/NetworkComponents.h"
+#include "Network/Host.h"
+#include "Network/Messages.h"
 
 #include <yojimbo/yojimbo.h>
 
@@ -48,8 +45,8 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
-	auto& serializer = networkManager.GetSerializer();
+	const auto& networkManager = m_EntityWorld.ReadResource<eng::NetworkManager>();
+	const auto& serializer = networkManager.GetSerializer();
 	const int32 serializeCount = serializer.m_Entries.GetCount();
 
 	for (auto&& [peerId, replicationData] : m_PeerReplicationData)
@@ -70,7 +67,7 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 			{
 				if (!componentMask.Has(worldId))
 					continue;
-				
+
 				const auto find = serializer.m_WorldToLocal.Find(worldId);
 				if (find == serializer.m_WorldToLocal.end())
 					continue;
@@ -99,7 +96,7 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 			{
 				// #note: components added on the same frame it started replicating
 				// will show up in the added query, so they need to ignored
-				if (core::Contains(toCreate, entity))
+				if (enumerate::Contains(toCreate, entity))
 					continue;
 				if (!IsReplicated(peerId, entity))
 					continue;
@@ -117,7 +114,7 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 
 			for (const ecs::Entity& entity : toUpdate)
 			{
-				if (core::Contains(toRemove, entity))
+				if (enumerate::Contains(toRemove, entity))
 					continue;
 				if (!IsReplicated(peerId, entity))
 					continue;
@@ -133,7 +130,7 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 
 void net::ReplicationHost::RegisterPeer(const PeerId& peerId)
 {
-	Z_ASSERT_CRASH(!IsRegistered(peerId), "Peer is already registered!");
+	Z_PANIC(!IsRegistered(peerId), "Peer is already registered!");
 
 	PeerReplicationData peerReplicationData;
 	peerReplicationData.m_PeerId = peerId;
@@ -142,13 +139,13 @@ void net::ReplicationHost::RegisterPeer(const PeerId& peerId)
 
 void net::ReplicationHost::UnregisterPeer(const PeerId& peerId)
 {
-	Z_ASSERT_CRASH(IsRegistered(peerId), "Peer isn't registered!");
+	Z_PANIC(IsRegistered(peerId), "Peer isn't registered!");
 	m_PeerReplicationData.Remove(peerId);
 }
 
 void net::ReplicationHost::StartReplicateToPeer(const PeerId& peerId, const ecs::Entity& entity)
 {
-	Z_ASSERT_CRASH(IsRegistered(peerId), "Peer isn't registered!");
+	Z_PANIC(IsRegistered(peerId), "Peer isn't registered!");
 
 	auto& peerReplicationData = m_PeerReplicationData.Get(peerId);
 	if (peerReplicationData.m_EntitiesToDestroy.Contains(entity))
@@ -157,21 +154,21 @@ void net::ReplicationHost::StartReplicateToPeer(const PeerId& peerId, const ecs:
 	}
 	else
 	{
-		Z_ASSERT_CRASH(!IsReplicated(peerId, entity), "Trying to start replication of an entity that is already replicated!");
+		Z_PANIC(!IsReplicated(peerId, entity), "Trying to start replication of an entity that is already replicated!");
 		peerReplicationData.m_EntitiesToCreate.Add(entity);
 		peerReplicationData.m_EntitiesReplicated.Add(entity);
 
 		// #todo: will crash when replicated to two peers in the same frame
 		auto& peerComponent = !m_EntityWorld.HasComponent<net::ReplicationComponent>(entity)
 			? m_EntityWorld.AddComponent<net::ReplicationComponent>(entity)
-			: m_EntityWorld.GetComponent<net::ReplicationComponent>(entity);
+			: m_EntityWorld.WriteComponent<net::ReplicationComponent>(entity);
 		peerComponent.m_Peers.Add(peerId);
 	}
 }
 
 void net::ReplicationHost::StopReplicateToPeer(const PeerId& peerId, const ecs::Entity& entity)
 {
-	Z_ASSERT_CRASH(IsRegistered(peerId), "Peer isn't registered!");
+	Z_PANIC(IsRegistered(peerId), "Peer isn't registered!");
 
 	auto& peerReplicationData = m_PeerReplicationData.Get(peerId);
 	if (peerReplicationData.m_EntitiesToCreate.Contains(entity))
@@ -180,10 +177,10 @@ void net::ReplicationHost::StopReplicateToPeer(const PeerId& peerId, const ecs::
 	}
 	else
 	{
-		Z_ASSERT_CRASH(IsReplicated(peerId, entity), "Trying to stop replication of an entity that isn't replicated!");
+		Z_PANIC(IsReplicated(peerId, entity), "Trying to stop replication of an entity that isn't replicated!");
 		peerReplicationData.m_EntitiesToDestroy.Add(entity);
 
-		auto& peerComponent = m_EntityWorld.GetComponent<net::ReplicationComponent>(entity);
+		auto& peerComponent = m_EntityWorld.WriteComponent<net::ReplicationComponent>(entity);
 		peerComponent.m_Peers.Remove(peerId);
 		if (peerComponent.m_Peers.IsEmpty())
 			m_EntityWorld.RemoveComponent<net::ReplicationComponent>(entity);
@@ -197,7 +194,7 @@ bool net::ReplicationHost::IsRegistered(const PeerId& peerId)
 
 bool net::ReplicationHost::IsReplicated(const PeerId& peerId, const ecs::Entity& entity)
 {
-	Z_ASSERT_CRASH(IsRegistered(peerId), "Peer isn't registered!");
+	Z_PANIC(IsRegistered(peerId), "Peer isn't registered!");
 
 	const auto& peerReplicationData = m_PeerReplicationData.Get(peerId);
 	return peerReplicationData.m_EntitiesReplicated.Contains(entity);
@@ -205,7 +202,7 @@ bool net::ReplicationHost::IsReplicated(const PeerId& peerId, const ecs::Entity&
 
 void net::ReplicationHost::CreateEntity(const net::PeerId& peerId, const ecs::Entity& entity)
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<CreateEntityMessage>(peerId, EMessage::CreateEntity);
@@ -215,7 +212,7 @@ void net::ReplicationHost::CreateEntity(const net::PeerId& peerId, const ecs::En
 
 void net::ReplicationHost::DestroyEntity(const net::PeerId& peerId, const ecs::Entity& entity)
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<DestroyEntityMessage>(peerId, EMessage::DestroyEntity);
@@ -226,7 +223,7 @@ void net::ReplicationHost::DestroyEntity(const net::PeerId& peerId, const ecs::E
 
 void net::ReplicationHost::AddComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<AddComponentMessage>(peerId, EMessage::AddComponent);
@@ -239,7 +236,7 @@ void net::ReplicationHost::AddComponent(const net::PeerId& peerId, const ecs::En
 
 void net::ReplicationHost::RemoveComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<RemoveComponentMessage>(peerId, EMessage::RemoveComponent);
@@ -251,7 +248,7 @@ void net::ReplicationHost::RemoveComponent(const net::PeerId& peerId, const ecs:
 
 void net::ReplicationHost::UpdateComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.GetManager<eng::NetworkManager>();
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
 	auto& host = networkManager.GetHost();
 
 	auto* message = host.CreateMessage<UpdateComponentMessage>(peerId, EMessage::UpdateComponent);

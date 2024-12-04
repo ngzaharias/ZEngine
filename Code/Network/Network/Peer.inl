@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/EnumHelpers.h>
+#include "Core/EnumHelpers.h"
 
 template<typename TMessage>
 TMessage* net::Peer::CreateMessage(const EMessage type)

@@ -1,0 +1,5 @@
+m_Guid = "e94876a8e4cc4d1684c85859b48a1af7"
+m_Name = "SM_Suzanne_100cm"
+m_Type = "StaticMesh"
+
+m_SourceFile = "..\\AssetsRaw\\Meshes\\Suzanne_100cm.fbx"

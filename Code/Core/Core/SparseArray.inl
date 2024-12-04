@@ -25,7 +25,6 @@ bool SparseArray<Key, Value>::Contains(const Key& key) const
 	if (valueIndex == s_Unassigned)
 		return false;
 
-	Z_ASSERT_CRASH(m_Dense[valueIndex] == key, "");
 	return true;
 }
 
@@ -68,6 +67,13 @@ int32 SparseArray<Key, Value>::GetIndex(const Key& key) const
 }
 
 template<typename Key, typename Value>
+void SparseArray<Key, Value>::Reserve(const int32 count)
+{
+	m_Dense.Reserve(count);
+	m_Values.Reserve(count);
+}
+
+template<typename Key, typename Value>
 Value& SparseArray<Key, Value>::Get(const Key& key)
 {
 	const int32 sparseIndex = GetIndex(key);
@@ -79,12 +85,6 @@ const Value& SparseArray<Key, Value>::Get(const Key& key) const
 {
 	const int32 sparseIndex = GetIndex(key);
 	return m_Values[m_Sparse[sparseIndex]];
-}
-
-template<typename Key, typename Value>
-Array<Key>& SparseArray<Key, Value>::GetKeys()
-{
-	return m_Dense;
 }
 
 template<typename Key, typename Value>
@@ -122,7 +122,7 @@ Value& SparseArray<Key, Value>::Emplace(const Key& key, Args&& ...args)
 	else
 	{
 		const int32 sparseIndex = GetIndex(key);
-		Z_ASSERT_CRASH(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
+		Z_PANIC(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
 
 		const int32 sparseCount = m_Sparse.GetCount();
 		if (sparseIndex >= sparseCount)
@@ -151,7 +151,7 @@ Value& SparseArray<Key, Value>::Set(const Key& key, Value&& value)
 	else
 	{
 		const int32 sparseIndex = GetIndex(key);
-		Z_ASSERT_CRASH(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
+		Z_PANIC(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
 
 		const int32 sparseCount = m_Sparse.GetCount();
 		if (sparseIndex >= sparseCount)
@@ -180,7 +180,7 @@ Value& SparseArray<Key, Value>::Set(const Key& key, const Value& value)
 	else
 	{
 		const int32 sparseIndex = GetIndex(key);
-		Z_ASSERT_CRASH(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
+		Z_PANIC(sparseIndex >= 0, "Keys cannot have an index with a negative value!");
 
 		const int32 sparseCount = m_Sparse.GetCount();
 		if (sparseIndex >= sparseCount)
@@ -199,7 +199,7 @@ void SparseArray<Key, Value>::Remove(const Key& key)
 {
 	static_assert(std::is_move_assignable<Value>::value, "SparseArray 'Value' type is not move-assignable.");
 
-	Z_ASSERT_CRASH(Contains(key), "");
+	Z_PANIC(Contains(key), "");
 
 	const int32 sparseIndex = GetIndex(key);
 	const int32 valueIndex = m_Sparse[sparseIndex];
@@ -235,20 +235,6 @@ void SparseArray<Key, Value>::RemoveAll()
 	m_Dense.RemoveAll();
 	m_Sparse.RemoveAll();
 	m_Values.RemoveAll();
-}
-
-template<typename Key, typename Value>
-void SparseArray<Key, Value>::Reserve(const int32 count)
-{
-	m_Dense.Reserve(count);
-	m_Values.Reserve(count);
-}
-
-template<typename Key, typename Value>
-void SparseArray<Key, Value>::Shrink()
-{
-	m_Dense.Resize(m_Dense.size());
-	m_Values.Resize(m_Values.size());
 }
 
 //////////////////////////////////////////////////////////////////////////

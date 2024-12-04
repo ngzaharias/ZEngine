@@ -1,11 +1,10 @@
 #include "EnginePCH.h"
 #include "Engine/ShaderAsset.h"
 
+#include "Core/Parse.h"
 #include "Engine/AssetManager.h"
 #include "Engine/TomlHelpers.h"
 #include "Engine/Visitor.h"
-
-#include <Core/Parse.h>
 
 #include <GLEW/glew.h>
 
@@ -43,26 +42,27 @@ namespace
 	struct Programs
 	{
 		str::String m_Fragment = { };
+		str::String m_Geometry = { };
 		str::String m_Vertex = { };
 	};
 }
 
 template<>
-void eng::Visitor::VisitCustom<Programs>(Programs& value)
+void eng::Visitor::ReadCustom(Programs& value) const
 {
-	Visit(strFragment, value.m_Fragment, {});
-	Visit(strVertex, value.m_Vertex, {});
+	Read(strFragment, value.m_Fragment, {});
+	Read(strVertex, value.m_Vertex, {});
 }
 
 void eng::ShaderAssetLoader::Bindings(const uint32 programId, ShaderAsset& asset)
 {
-	auto ATTRIBUTE = [&programId](const char* name, Nullable<uint32>& out_Value)
+	auto ATTRIBUTE = [&programId](const char* name, Optional<uint32>& out_Value)
 	{
 		const int32 location = glGetAttribLocation(programId, name);
 		if (location != -1) out_Value = location;
 	};
 
-	auto UNIFORM = [&programId](const char* name, Nullable<uint32>& out_Value)
+	auto UNIFORM = [&programId](const char* name, Optional<uint32>& out_Value)
 	{
 		const int32 location = glGetUniformLocation(programId, name);
 		if (location != -1) out_Value = location;
@@ -135,41 +135,48 @@ uint32 eng::ShaderAssetLoader::Compile(uint32 shaderType, const str::StringView&
 		Z_LOG(ELog::Debug, "Compilation error in shader: {}", strInfoLog);
 		delete[] strInfoLog;
 
-		Z_ASSERT_CRASH(false, "Failed to compile shader!");
+		Z_PANIC(false, "Failed to compile shader!");
 	}
 
 	return shaderId;
 }
 
-bool eng::ShaderAssetLoader::Load(ShaderAsset* asset, eng::Visitor& visitor) const
+bool eng::ShaderAssetLoader::Load(ShaderAsset& asset, eng::Visitor& visitor) const
 {
 	Programs programs;
-	visitor.Visit(strPrograms, programs, {});
+	visitor.Read(strPrograms, programs, {});
 
-	asset->m_ProgramId = glCreateProgram();
-
-	uint32 vertexShaderId = 0;
-	if (!programs.m_Vertex.empty())
-	{
-		vertexShaderId = Compile(GL_VERTEX_SHADER, programs.m_Vertex);
-		glAttachShader(asset->m_ProgramId, vertexShaderId);
-	}
+	asset.m_ProgramId = glCreateProgram();
 
 	uint32 fragmentShaderId = 0;
 	if (!programs.m_Fragment.empty())
 	{
 		fragmentShaderId = Compile(GL_FRAGMENT_SHADER, programs.m_Fragment);
-		glAttachShader(asset->m_ProgramId, fragmentShaderId);
+		glAttachShader(asset.m_ProgramId, fragmentShaderId);
 	}
 
-	glLinkProgram(asset->m_ProgramId);
-	glValidateProgram(asset->m_ProgramId);
+	uint32 geometryShaderId = 0;
+	if (!programs.m_Geometry.empty())
+	{
+		geometryShaderId = Compile(GL_GEOMETRY_SHADER, programs.m_Geometry);
+		glAttachShader(asset.m_ProgramId, geometryShaderId);
+	}
+
+	uint32 vertexShaderId = 0;
+	if (!programs.m_Vertex.empty())
+	{
+		vertexShaderId = Compile(GL_VERTEX_SHADER, programs.m_Vertex);
+		glAttachShader(asset.m_ProgramId, vertexShaderId);
+	}
+
+	glLinkProgram(asset.m_ProgramId);
+	glValidateProgram(asset.m_ProgramId);
 
 	if (vertexShaderId)
 		glDeleteShader(vertexShaderId);
 	if (fragmentShaderId)
 		glDeleteShader(fragmentShaderId);
 
-	Bindings(asset->m_ProgramId, *asset);
+	Bindings(asset.m_ProgramId, asset);
 	return true;
 }

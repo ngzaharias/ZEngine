@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Core/Map.h>
-#include <Core/Set.h>
-
-#include <ECS/Entity.h>
-#include <ECS/QueryMask.h>
+#include "Core/Map.h"
+#include "Core/Set.h"
+#include "ECS/Entity.h"
+#include "ECS/QueryMask.h"
 
 using int32 = int32_t;
 

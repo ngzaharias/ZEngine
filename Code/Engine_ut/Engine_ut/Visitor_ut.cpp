@@ -1,81 +1,39 @@
 #include <Catch2/catch.hpp>
 
-#include <Core/Array.h>
-#include <Core/Guid.h>
-#include <Core/Map.h>
-#include <Core/Name.h>
-#include <Core/Path.h>
-#include <Core/Quaternion.h>
-#include <Core/Rotator.h>
-#include <Core/String.h>
-#include <Core/Vector.h>
-
-#include <Engine/Visitor.h>
+#include "Core/Array.h"
+#include "Core/Guid.h"
+#include "Core/Map.h"
+#include "Core/Name.h"
+#include "Core/Optional.h"
+#include "Core/Path.h"
+#include "Core/String.h"
+#include "Core/Variant.h"
+#include "Engine/Visitor.h"
+#include "Math/Quaternion.h"
+#include "Math/Rotator.h"
+#include "Math/Vector.h"
 
 #include <format>
 
 namespace
 {
-	const str::Guid& strGuidA = GUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
-	const str::Guid& strGuidB = GUID("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+	const str::Guid& strGuidA = GUID("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+	const str::Guid& strGuidB = GUID("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
 
-	const str::Name strBool = NAME("Bool");
-	const str::Name strFloat = NAME("Float");
-	const str::Name strDouble = NAME("Double");
-	const str::Name strInt8 = NAME("Int8");
-	const str::Name strInt16 = NAME("Int16");
-	const str::Name strInt32 = NAME("Int32");
-	const str::Name strInt64 = NAME("Int64");
-	const str::Name strUInt8 = NAME("UInt8");
-	const str::Name strUInt16 = NAME("UInt16");
-	const str::Name strUInt32 = NAME("UInt32");
+	constexpr str::StringView strBool = "Bool";
+	constexpr str::StringView strFloat = "Float";
+	constexpr str::StringView strInt32 = "Int32";
+	constexpr str::StringView strMyKey = "MyKey";
 
-	const str::Name strEnumInt8 = NAME("EnumInt8");
-	const str::Name strEnumInt16 = NAME("EnumInt16");
-	const str::Name strEnumInt32 = NAME("EnumInt32");
-	const str::Name strEnumInt64 = NAME("EnumInt64");
-	const str::Name strEnumUInt8 = NAME("EnumUInt8");
-	const str::Name strEnumUInt16 = NAME("EnumUInt16");
-	const str::Name strEnumUInt32 = NAME("EnumUInt32");
+	enum class EInt8 : int8 { Min = -INT8_MAX, Max = BIT32(6) };
+	enum class EInt16 : int16 { Min = -INT16_MAX, Max = BIT32(14) };
+	enum class EInt32 : int32 { Min = -INT32_MAX, Max = BIT32(30) };
+	enum class EInt64 : int64 { Min = -INT64_MAX, Max = BIT64(62) };
 
-	const str::Name strGuid = NAME("Guid");
-	const str::Name strName = NAME("Name");
-	const str::Name strPath = NAME("Path");
-	const str::Name strString = NAME("String");
-
-	const str::Name strStruct = NAME("Struct");
-
-	const str::Name strQuaternion = NAME("Quaternion");
-	const str::Name strRotator = NAME("Rotator");
-	const str::Name strVector2f = NAME("Vector2f");
-	const str::Name strVector2i = NAME("Vector2i");
-	const str::Name strVector2u = NAME("Vector2u");
-	const str::Name strVector3f = NAME("Vector3f");
-	const str::Name strVector3i = NAME("Vector3i");
-	const str::Name strVector4f = NAME("Vector4f");
-
-	const str::Name strArrayEnum = NAME("Array<Enum>");
-	const str::Name strArrayInt32 = NAME("Array<Int32>");
-	const str::Name strArrayVector2f = NAME("Array<Vector2f>");
-	const str::Name strArrayArrayEnum = NAME("Array<Array<Enum>>");
-	const str::Name strArrayArrayInt32 = NAME("Array<Array<Int32>>");
-	const str::Name strArrayArrayVector2f = NAME("Array<Array<Vector2f>>");
-
-	const str::Name strMapEnum = NAME("Map<Enum>");
-	const str::Name strMapInt32 = NAME("Map<Int32>");
-	const str::Name strMapVector2f = NAME("Map<Vector2f>");
-	const str::Name strMapMapEnum = NAME("Map<Map<Enum>>");
-	const str::Name strMapMapInt32 = NAME("Map<Map<Int32>>");
-	const str::Name strMapMapVector2f = NAME("Map<Map<Vector2f>>");
-
-	enum class EInt8 : int8 { Min = -INT8_MAX, Max = +INT8_MAX };
-	enum class EInt16 : int16 { Min = -INT16_MAX, Max = +INT16_MAX };
-	enum class EInt32 : int32 { Min = -INT32_MAX, Max = +INT32_MAX };
-	enum class EInt64 : int64 { Min = -INT64_MAX, Max = +INT64_MAX };
-
-	enum class EUInt8 : uint8 { Min = 0, Max = UINT8_MAX };
-	enum class EUInt16 : uint16 { Min = 0, Max = UINT16_MAX };
-	enum class EUInt32 : uint32 { Min = 0, Max = UINT32_MAX };
+	enum class EUInt8 : uint8 { Min = 0, Max = BIT32(6) };
+	enum class EUInt16 : uint16 { Min = 0, Max = BIT32(14) };
+	enum class EUInt32 : uint32 { Min = 0, Max = BIT32(30) };
+	enum class EUInt64 : uint64 { Min = 0, Max = BIT64(62) };
 
 	struct Struct
 	{
@@ -86,11 +44,19 @@ namespace
 }
 
 template<>
-void eng::Visitor::VisitCustom<Struct>(Struct& value)
+void eng::Visitor::ReadCustom(Struct& value) const
 {
-	Visit(strBool, value.m_Bool, 0);
-	Visit(strFloat, value.m_Float, 0);
-	Visit(strInt32, value.m_Int32, 0);
+	Read(strBool, value.m_Bool, false);
+	Read(strFloat, value.m_Float, 0.f);
+	Read(strInt32, value.m_Int32, 0);
+}
+
+template<>
+void eng::Visitor::WriteCustom(const Struct& value)
+{
+	Write(strBool, value.m_Bool);
+	Write(strFloat, value.m_Float);
+	Write(strInt32, value.m_Int32);
 }
 
 CATCH_REGISTER_ENUM(EInt8, EInt8::Min, EInt8::Max);
@@ -106,19 +72,17 @@ TEST_CASE("eng::Visitor::Bool")
 		INFO("Write");
 		bool myBool = true;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strBool, myBool, false);
+		visitor.Write(strMyKey, myBool);
 
 		str::String string = visitor;
-		CHECK(string == "Bool = true");
+		CHECK(string == "MyKey = true");
 	}
 
 	{
 		INFO("Read");
 		bool myBool = false;
-		eng::Visitor visitor = str::StringView("Bool = true");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strBool, myBool, false);
+		eng::Visitor visitor = str::StringView("MyKey = true");
+		visitor.Read(strMyKey, myBool, false);
 
 		CHECK(myBool == true);
 	}
@@ -127,8 +91,7 @@ TEST_CASE("eng::Visitor::Bool")
 		INFO("Read - Default");
 		bool myBool = false;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strBool, myBool, true);
+		visitor.Read(strMyKey, myBool, true);
 
 		CHECK(myBool == true);
 	}
@@ -140,19 +103,17 @@ TEST_CASE("eng::Visitor::Float")
 		INFO("Write");
 		float myFloat = 2.f;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strFloat, myFloat, 1.f);
+		visitor.Write(strMyKey, myFloat);
 
 		str::String string = visitor;
-		CHECK(string == "Float = 2.0");
+		CHECK(string == "MyKey = 2.0");
 	}
 
 	{
 		INFO("Read");
 		float myFloat = 1.f;
-		eng::Visitor visitor = str::StringView("Float = 2.0");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strFloat, myFloat, 1.f);
+		eng::Visitor visitor = str::StringView("MyKey = 2.0");
+		visitor.Read(strMyKey, myFloat, 1.f);
 
 		CHECK(myFloat == 2.f);
 	}
@@ -161,8 +122,7 @@ TEST_CASE("eng::Visitor::Float")
 		INFO("Read - Default");
 		float myFloat = 1.f;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strFloat, myFloat, 2.f);
+		visitor.Read(strMyKey, myFloat, 2.f);
 
 		CHECK(myFloat == 2.f);
 	}
@@ -174,19 +134,17 @@ TEST_CASE("eng::Visitor::Double")
 		INFO("Write");
 		double myDouble = 2.0;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strDouble, myDouble, 1.0);
+		visitor.Write(strMyKey, myDouble);
 
 		str::String string = visitor;
-		CHECK(string == "Double = 2.0");
+		CHECK(string == "MyKey = 2.0");
 	}
 
 	{
 		INFO("Read");
 		double myDouble = 1.0;
-		eng::Visitor visitor = str::StringView("Double = 2.0");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strDouble, myDouble, 1.0);
+		eng::Visitor visitor = str::StringView("MyKey = 2.0");
+		visitor.Read(strMyKey, myDouble, 1.0);
 
 		CHECK(myDouble == 2.0);
 	}
@@ -195,8 +153,7 @@ TEST_CASE("eng::Visitor::Double")
 		INFO("Read - Default");
 		double myDouble = 1.0;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strDouble, myDouble, 2.0);
+		visitor.Read(strMyKey, myDouble, 2.0);
 
 		CHECK(myDouble == 2.0);
 	}
@@ -208,19 +165,17 @@ TEST_CASE("eng::Visitor::Int8")
 		INFO("Write");
 		int8 myInt8 = 2;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strInt8, myInt8, 1);
+		visitor.Write(strMyKey, myInt8);
 
 		str::String string = visitor;
-		CHECK(string == "Int8 = 2");
+		CHECK(string == "MyKey = 2");
 	}
 
 	{
 		INFO("Read");
 		int8 myInt8 = 1;
-		eng::Visitor visitor = str::StringView("Int8 = 2");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strInt8, myInt8, 1);
+		eng::Visitor visitor = str::StringView("MyKey = 2");
+		visitor.Read(strMyKey, myInt8, int8(1));
 
 		CHECK(myInt8 == 2);
 	}
@@ -229,8 +184,7 @@ TEST_CASE("eng::Visitor::Int8")
 		INFO("Read - Default");
 		int8 myInt8 = 1;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strInt8, myInt8, 2);
+		visitor.Read(strMyKey, myInt8, int8(2));
 
 		CHECK(myInt8 == 2);
 	}
@@ -242,19 +196,17 @@ TEST_CASE("eng::Visitor::Int16")
 		INFO("Write");
 		int16 myInt16 = 2;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strInt16, myInt16, 1);
+		visitor.Write(strMyKey, myInt16);
 
 		str::String string = visitor;
-		CHECK(string == "Int16 = 2");
+		CHECK(string == "MyKey = 2");
 	}
 
 	{
 		INFO("Read");
 		int16 myInt16 = 1;
-		eng::Visitor visitor = str::StringView("Int16 = 2");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strInt16, myInt16, 1);
+		eng::Visitor visitor = str::StringView("MyKey = 2");
+		visitor.Read(strMyKey, myInt16, int16(1));
 
 		CHECK(myInt16 == 2);
 	}
@@ -263,8 +215,7 @@ TEST_CASE("eng::Visitor::Int16")
 		INFO("Read - Default");
 		int16 myInt16 = 1;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strInt16, myInt16, 2);
+		visitor.Read(strMyKey, myInt16, int16(2));
 
 		CHECK(myInt16 == 2);
 	}
@@ -276,19 +227,17 @@ TEST_CASE("eng::Visitor::Int32")
 		INFO("Write");
 		int32 myInt32 = 2;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strInt32, myInt32, 1);
+		visitor.Write(strMyKey, myInt32);
 
 		str::String string = visitor;
-		CHECK(string == "Int32 = 2");
+		CHECK(string == "MyKey = 2");
 	}
 
 	{
 		INFO("Read");
 		int32 myInt32 = 1;
-		eng::Visitor visitor = str::StringView("Int32 = 2");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strInt32, myInt32, 1);
+		eng::Visitor visitor = str::StringView("MyKey = 2");
+		visitor.Read(strMyKey, myInt32, 1);
 
 		CHECK(myInt32 == 2);
 	}
@@ -297,8 +246,7 @@ TEST_CASE("eng::Visitor::Int32")
 		INFO("Read - Default");
 		int32 myInt32 = 1;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strInt32, myInt32, 2);
+		visitor.Read(strMyKey, myInt32, 2);
 
 		CHECK(myInt32 == 2);
 	}
@@ -310,19 +258,17 @@ TEST_CASE("eng::Visitor::Int64")
 		INFO("Write");
 		int64 myInt64 = 2;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strInt64, myInt64, 1);
+		visitor.Write(strMyKey, myInt64);
 
 		str::String string = visitor;
-		CHECK(string == "Int64 = 2");
+		CHECK(string == "MyKey = 2");
 	}
 
 	{
 		INFO("Read");
 		int64 myInt64 = 1;
-		eng::Visitor visitor = str::StringView("Int64 = 2");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strInt64, myInt64, 1);
+		eng::Visitor visitor = str::StringView("MyKey = 2");
+		visitor.Read(strMyKey, myInt64, int64(1));
 
 		CHECK(myInt64 == 2);
 	}
@@ -331,8 +277,7 @@ TEST_CASE("eng::Visitor::Int64")
 		INFO("Read - Default");
 		int64 myInt64 = 1;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strInt64, myInt64, 2);
+		visitor.Read(strMyKey, myInt64, int64(2));
 
 		CHECK(myInt64 == 2);
 	}
@@ -344,19 +289,17 @@ TEST_CASE("eng::Visitor::UInt8")
 		INFO("Write");
 		uint8 myUInt8 = 2;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strUInt8, myUInt8, 1);
+		visitor.Write(strMyKey, myUInt8);
 
 		str::String string = visitor;
-		CHECK(string == "UInt8 = 2");
+		CHECK(string == "MyKey = 2");
 	}
 
 	{
 		INFO("Read");
 		uint8 myUInt8 = 1;
-		eng::Visitor visitor = str::StringView("UInt8 = 2");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strUInt8, myUInt8, 1);
+		eng::Visitor visitor = str::StringView("MyKey = 2");
+		visitor.Read(strMyKey, myUInt8, uint8(1));
 
 		CHECK(myUInt8 == 2);
 	}
@@ -365,8 +308,7 @@ TEST_CASE("eng::Visitor::UInt8")
 		INFO("Read - Default");
 		uint8 myUInt8 = 1;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strUInt8, myUInt8, 2);
+		visitor.Read(strMyKey, myUInt8, uint8(2));
 
 		CHECK(myUInt8 == 2);
 	}
@@ -378,19 +320,17 @@ TEST_CASE("eng::Visitor::UInt16")
 		INFO("Write");
 		uint16 myUInt16 = 2;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strUInt16, myUInt16, 1);
+		visitor.Write(strMyKey, myUInt16);
 
 		str::String string = visitor;
-		CHECK(string == "UInt16 = 2");
+		CHECK(string == "MyKey = 2");
 	}
 
 	{
 		INFO("Read");
 		uint16 myUInt16 = 1;
-		eng::Visitor visitor = str::StringView("UInt16 = 2");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strUInt16, myUInt16, 1);
+		eng::Visitor visitor = str::StringView("MyKey = 2");
+		visitor.Read(strMyKey, myUInt16, uint16(1));
 
 		CHECK(myUInt16 == 2);
 	}
@@ -399,8 +339,7 @@ TEST_CASE("eng::Visitor::UInt16")
 		INFO("Read - Default");
 		uint16 myUInt16 = 1;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strUInt16, myUInt16, 2);
+		visitor.Read(strMyKey, myUInt16, uint16(2));
 
 		CHECK(myUInt16 == 2);
 	}
@@ -412,19 +351,17 @@ TEST_CASE("eng::Visitor::UInt32")
 		INFO("Write");
 		uint32 myUInt32 = 2;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strUInt32, myUInt32, 1);
+		visitor.Write(strMyKey, myUInt32);
 
 		str::String string = visitor;
-		CHECK(string == "UInt32 = 2");
+		CHECK(string == "MyKey = 2");
 	}
 
 	{
 		INFO("Read");
 		uint32 myUInt32 = 1;
-		eng::Visitor visitor = str::StringView("UInt32 = 2");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strUInt32, myUInt32, 1);
+		eng::Visitor visitor = str::StringView("MyKey = 2");
+		visitor.Read(strMyKey, myUInt32, 1u);
 
 		CHECK(myUInt32 == 2);
 	}
@@ -433,8 +370,7 @@ TEST_CASE("eng::Visitor::UInt32")
 		INFO("Read - Default");
 		uint32 myUInt32 = 1;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strUInt32, myUInt32, 2);
+		visitor.Read(strMyKey, myUInt32, 2u);
 
 		CHECK(myUInt32 == 2);
 	}
@@ -446,19 +382,17 @@ TEST_CASE("eng::Visitor::Enum Int8")
 		INFO("Write");
 		EInt8 myEInt8 = EInt8::Max;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strEnumInt8, myEInt8, EInt8::Min);
+		visitor.Write(strMyKey, myEInt8);
 
 		str::String string = visitor;
-		CHECK(string == "EnumInt8 = 127");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EInt8 myEInt8 = EInt8::Min;
-		eng::Visitor visitor = str::StringView("EnumInt8 = 127");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt8, myEInt8, EInt8::Min);
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
+		visitor.Read(strMyKey, myEInt8, EInt8::Min);
 
 		CHECK(myEInt8 == EInt8::Max);
 	}
@@ -467,8 +401,7 @@ TEST_CASE("eng::Visitor::Enum Int8")
 		INFO("Read - Default");
 		EInt8 myEInt8 = EInt8::Min;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt8, myEInt8, EInt8::Max);
+		visitor.Read(strMyKey, myEInt8, EInt8::Max);
 
 		CHECK(myEInt8 == EInt8::Max);
 	}
@@ -480,19 +413,17 @@ TEST_CASE("eng::Visitor::Enum Int16")
 		INFO("Write");
 		EInt16 myEInt16 = EInt16::Max;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strEnumInt16, myEInt16, EInt16::Min);
+		visitor.Write(strMyKey, myEInt16);
 
 		str::String string = visitor;
-		CHECK(string == "EnumInt16 = 32767");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EInt16 myEInt16 = EInt16::Min;
-		eng::Visitor visitor = str::StringView("EnumInt16 = 32767");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt16, myEInt16, EInt16::Min);
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
+		visitor.Read(strMyKey, myEInt16, EInt16::Min);
 
 		CHECK(myEInt16 == EInt16::Max);
 	}
@@ -501,8 +432,7 @@ TEST_CASE("eng::Visitor::Enum Int16")
 		INFO("Read - Default");
 		EInt16 myEInt16 = EInt16::Min;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt16, myEInt16, EInt16::Max);
+		visitor.Read(strMyKey, myEInt16, EInt16::Max);
 
 		CHECK(myEInt16 == EInt16::Max);
 	}
@@ -514,19 +444,17 @@ TEST_CASE("eng::Visitor::Enum Int32")
 		INFO("Write");
 		EInt32 myEInt32 = EInt32::Max;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strEnumInt32, myEInt32, EInt32::Min);
+		visitor.Write(strMyKey, myEInt32);
 
 		str::String string = visitor;
-		CHECK(string == "EnumInt32 = 2147483647");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EInt32 myEInt32 = EInt32::Min;
-		eng::Visitor visitor = str::StringView("EnumInt32 = 2147483647");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt32, myEInt32, EInt32::Min);
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
+		visitor.Read(strMyKey, myEInt32, EInt32::Min);
 
 		CHECK(myEInt32 == EInt32::Max);
 	}
@@ -535,8 +463,7 @@ TEST_CASE("eng::Visitor::Enum Int32")
 		INFO("Read - Default");
 		EInt32 myEInt32 = EInt32::Min;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt32, myEInt32, EInt32::Max);
+		visitor.Read(strMyKey, myEInt32, EInt32::Max);
 
 		CHECK(myEInt32 == EInt32::Max);
 	}
@@ -548,19 +475,17 @@ TEST_CASE("eng::Visitor::Enum Int64")
 		INFO("Write");
 		EInt64 myEInt64 = EInt64::Max;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strEnumInt64, myEInt64, EInt64::Min);
+		visitor.Write(strMyKey, myEInt64);
 
 		str::String string = visitor;
-		CHECK(string == "EnumInt64 = 9223372036854775807");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EInt64 myEInt64 = EInt64::Min;
-		eng::Visitor visitor = str::StringView("EnumInt64 = 9223372036854775807");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt64, myEInt64, EInt64::Min);
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
+		visitor.Read(strMyKey, myEInt64, EInt64::Min);
 
 		CHECK(myEInt64 == EInt64::Max);
 	}
@@ -569,8 +494,7 @@ TEST_CASE("eng::Visitor::Enum Int64")
 		INFO("Read - Default");
 		EInt64 myEInt64 = EInt64::Min;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt64, myEInt64, EInt64::Max);
+		visitor.Read(strMyKey, myEInt64, EInt64::Max);
 
 		CHECK(myEInt64 == EInt64::Max);
 	}
@@ -582,19 +506,17 @@ TEST_CASE("eng::Visitor::Enum UInt8")
 		INFO("Write");
 		EUInt8 myEUInt8 = EUInt8::Max;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strEnumUInt8, myEUInt8, EUInt8::Min);
+		visitor.Write(strMyKey, myEUInt8);
 
 		str::String string = visitor;
-		CHECK(string == "EnumUInt8 = 255");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EUInt8 myEUInt8 = EUInt8::Min;
-		eng::Visitor visitor = str::StringView("EnumUInt8 = 255");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumUInt8, myEUInt8, EUInt8::Min);
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
+		visitor.Read(strMyKey, myEUInt8, EUInt8::Min);
 
 		CHECK(myEUInt8 == EUInt8::Max);
 	}
@@ -603,8 +525,7 @@ TEST_CASE("eng::Visitor::Enum UInt8")
 		INFO("Read - Default");
 		EUInt8 myEUInt8 = EUInt8::Min;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumUInt8, myEUInt8, EUInt8::Max);
+		visitor.Read(strMyKey, myEUInt8, EUInt8::Max);
 
 		CHECK(myEUInt8 == EUInt8::Max);
 	}
@@ -616,19 +537,17 @@ TEST_CASE("eng::Visitor::Enum UInt16")
 		INFO("Write");
 		EUInt16 myEUInt16 = EUInt16::Max;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strEnumInt16, myEUInt16, EUInt16::Min);
+		visitor.Write(strMyKey, myEUInt16);
 
 		str::String string = visitor;
-		CHECK(string == "EnumInt16 = 65535");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EUInt16 myEUInt16 = EUInt16::Min;
-		eng::Visitor visitor = str::StringView("EnumInt16 = 65535");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt16, myEUInt16, EUInt16::Min);
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
+		visitor.Read(strMyKey, myEUInt16, EUInt16::Min);
 
 		CHECK(myEUInt16 == EUInt16::Max);
 	}
@@ -637,8 +556,7 @@ TEST_CASE("eng::Visitor::Enum UInt16")
 		INFO("Read - Default");
 		EUInt16 myEUInt16 = EUInt16::Min;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt16, myEUInt16, EUInt16::Max);
+		visitor.Read(strMyKey, myEUInt16, EUInt16::Max);
 
 		CHECK(myEUInt16 == EUInt16::Max);
 	}
@@ -650,19 +568,17 @@ TEST_CASE("eng::Visitor::Enum UInt32")
 		INFO("Write");
 		EUInt32 myEUInt32 = EUInt32::Max;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strEnumInt32, myEUInt32, EUInt32::Min);
+		visitor.Write(strMyKey, myEUInt32);
 
 		str::String string = visitor;
-		CHECK(string == "EnumInt32 = 4294967295");
+		CHECK(string == "MyKey = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		EUInt32 myEUInt32 = EUInt32::Min;
-		eng::Visitor visitor = str::StringView("EnumInt32 = 4294967295");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt32, myEUInt32, EUInt32::Min);
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
+		visitor.Read(strMyKey, myEUInt32, EUInt32::Min);
 
 		CHECK(myEUInt32 == EUInt32::Max);
 	}
@@ -671,10 +587,40 @@ TEST_CASE("eng::Visitor::Enum UInt32")
 		INFO("Read - Default");
 		EUInt32 myEUInt32 = EUInt32::Min;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strEnumInt32, myEUInt32, EUInt32::Max);
+		visitor.Read(strMyKey, myEUInt32, EUInt32::Max);
 
 		CHECK(myEUInt32 == EUInt32::Max);
+	}
+}
+
+TEST_CASE("eng::Visitor::Enum UInt64")
+{
+	{
+		INFO("Write");
+		EUInt64 myEUInt64 = EUInt64::Max;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myEUInt64);
+
+		str::String string = visitor;
+		CHECK(string == "MyKey = 'Max'");
+	}
+
+	{
+		INFO("Read");
+		EUInt64 myEUInt64 = EUInt64::Min;
+		eng::Visitor visitor = str::StringView("MyKey = 'Max'");
+		visitor.Read(strMyKey, myEUInt64, EUInt64::Min);
+
+		CHECK(myEUInt64 == EUInt64::Max);
+	}
+
+	{
+		INFO("Read - Default");
+		EUInt64 myEUInt64 = EUInt64::Min;
+		eng::Visitor visitor = str::StringView("");
+		visitor.Read(strMyKey, myEUInt64, EUInt64::Max);
+
+		CHECK(myEUInt64 == EUInt64::Max);
 	}
 }
 
@@ -684,19 +630,17 @@ TEST_CASE("eng::Visitor::Guid")
 		INFO("Write");
 		str::Guid myGuid = strGuidA;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strGuid, myGuid, strGuidB);
+		visitor.Write(strMyKey, myGuid);
 
 		str::String string = visitor;
-		CHECK(string == "Guid = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'");
+		CHECK(string == "MyKey = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'");
 	}
 
 	{
 		INFO("Read");
 		str::Guid myGuid = strGuidB;
-		eng::Visitor visitor = str::StringView("Guid = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strGuid, myGuid, strGuidB);
+		eng::Visitor visitor = str::StringView("MyKey = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'");
+		visitor.Read(strMyKey, myGuid, strGuidB);
 
 		CHECK(myGuid == strGuidA);
 	}
@@ -705,8 +649,7 @@ TEST_CASE("eng::Visitor::Guid")
 		INFO("Read - Default");
 		str::Guid myGuid = strGuidB;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strGuid, myGuid, strGuidA);
+		visitor.Read(strMyKey, myGuid, strGuidA);
 
 		CHECK(myGuid == strGuidA);
 	}
@@ -718,19 +661,17 @@ TEST_CASE("eng::Visitor::Path")
 		INFO("Write");
 		str::Path myPath = str::Path("PathA");
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strPath, myPath, str::Path("PathB"));
+		visitor.Write(strMyKey, myPath);
 
 		str::String string = visitor;
-		CHECK(string == "Path = 'PathA'");
+		CHECK(string == "MyKey = 'PathA'");
 	}
 
 	{
 		INFO("Read");
 		str::Path myPath = str::Path("PathB");
-		eng::Visitor visitor = str::StringView("Path = 'PathA'");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strPath, myPath, str::Path("PathB"));
+		eng::Visitor visitor = str::StringView("MyKey = 'PathA'");
+		visitor.Read(strMyKey, myPath, str::Path("PathB"));
 
 		CHECK(myPath == str::Path("PathA"));
 	}
@@ -739,8 +680,7 @@ TEST_CASE("eng::Visitor::Path")
 		INFO("Read - Default");
 		str::Path myPath = str::Path("PathB");
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strPath, myPath, str::Path("PathA"));
+		visitor.Read(strMyKey, myPath, str::Path("PathA"));
 
 		CHECK(myPath == str::Path("PathA"));
 	}
@@ -752,19 +692,17 @@ TEST_CASE("eng::Visitor::Name")
 		INFO("Write");
 		str::Name myName = NAME("NameA");
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strName, myName, NAME("NameB"));
+		visitor.Write(strMyKey, myName);
 
 		str::String string = visitor;
-		CHECK(string == "Name = 'NameA'");
+		CHECK(string == "MyKey = 'NameA'");
 	}
 
 	{
 		INFO("Read");
 		str::Name myName = NAME("NameB");
-		eng::Visitor visitor = str::StringView("Name = 'NameA'");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strName, myName, NAME("NameB"));
+		eng::Visitor visitor = str::StringView("MyKey = 'NameA'");
+		visitor.Read(strMyKey, myName, NAME("NameB"));
 
 		CHECK(myName == NAME("NameA"));
 	}
@@ -773,8 +711,7 @@ TEST_CASE("eng::Visitor::Name")
 		INFO("Read - Default");
 		str::Name myName = NAME("NameB");
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strName, myName, NAME("NameA"));
+		visitor.Read(strMyKey, myName, NAME("NameA"));
 
 		CHECK(myName == NAME("NameA"));
 	}
@@ -786,19 +723,17 @@ TEST_CASE("eng::Visitor::String")
 		INFO("Write");
 		str::String myString = "StringA";
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strString, myString, "StringB");
+		visitor.Write(strMyKey, myString);
 
 		str::String string = visitor;
-		CHECK(string == "String = 'StringA'");
+		CHECK(string == "MyKey = 'StringA'");
 	}
 
 	{
 		INFO("Read");
 		str::String myString = "StringB";
-		eng::Visitor visitor = str::StringView("String = 'StringA'");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strString, myString, "StringB");
+		eng::Visitor visitor = str::StringView("MyKey = 'StringA'");
+		visitor.Read(strMyKey, myString, str::String("StringB"));
 
 		CHECK(myString == "StringA");
 	}
@@ -807,8 +742,7 @@ TEST_CASE("eng::Visitor::String")
 		INFO("Read - Default");
 		str::String myString = "StringB";
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strString, myString, "StringA");
+		visitor.Read(strMyKey, myString, str::String("StringA"));
 
 		CHECK(myString == "StringA");
 	}
@@ -820,19 +754,17 @@ TEST_CASE("eng::Visitor::Struct")
 		INFO("Write");
 		Struct myStruct = { true, 2.f, 2 };
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strStruct, myStruct, {});
+		visitor.Write(strMyKey, myStruct);
 
 		str::String string = visitor;
-		CHECK(string == "[Struct]\nBool = true\nFloat = 2.0\nInt32 = 2");
+		CHECK(string == "[MyKey]\nBool = true\nFloat = 2.0\nInt32 = 2");
 	}
 
 	{
 		INFO("Read");
 		Struct myStruct;
-		eng::Visitor visitor = str::StringView("[Struct]\n Bool = true\n Float = 2.0\n Int32 = 2");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strStruct, myStruct, {});
+		eng::Visitor visitor = str::StringView("[MyKey]\n Bool = true\n Float = 2.0\n Int32 = 2");
+		visitor.Read(strMyKey, myStruct, {});
 
 		CHECK(myStruct.m_Bool == true);
 		CHECK(myStruct.m_Float == 2.f);
@@ -842,9 +774,8 @@ TEST_CASE("eng::Visitor::Struct")
 	{
 		INFO("Read - Inline");
 		Struct myStruct;
-		eng::Visitor visitor = str::StringView("Struct = { Bool = true, Float = 2.0, Int32 = 2 }");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strStruct, myStruct, {});
+		eng::Visitor visitor = str::StringView("MyKey = { Bool = true, Float = 2.0, Int32 = 2 }");
+		visitor.Read(strMyKey, myStruct, {});
 
 		CHECK(myStruct.m_Bool == true);
 		CHECK(myStruct.m_Float == 2.f);
@@ -855,8 +786,7 @@ TEST_CASE("eng::Visitor::Struct")
 		INFO("Read - Default");
 		Struct myStruct;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strStruct, myStruct, { true, 2.f, 2 });
+		visitor.Read(strMyKey, myStruct, { true, 2.f, 2 });
 
 		CHECK(myStruct.m_Bool == true);
 		CHECK(myStruct.m_Float == 2.f);
@@ -870,19 +800,17 @@ TEST_CASE("eng::Visitor::Quaternion")
 		INFO("Write");
 		Quaternion myQuaternion = Quaternion(1.f, 2.f, 3.f, 4.f);
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strQuaternion, myQuaternion, Quaternion::Identity);
+		visitor.Write(strMyKey, myQuaternion);
 
 		str::String string = visitor;
-		CHECK(string == "Quaternion = { W = 4.0, X = 1.0, Y = 2.0, Z = 3.0 }");
+		CHECK(string == "MyKey = { W = 4.0, X = 1.0, Y = 2.0, Z = 3.0 }");
 	}
 
 	{
 		INFO("Read");
 		Quaternion myQuaternion = Quaternion::Identity;
-		eng::Visitor visitor = str::StringView("Quaternion = { W = 4.0, X = 1.0, Y = 2.0, Z = 3.0 }");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strQuaternion, myQuaternion, Quaternion::Identity);
+		eng::Visitor visitor = str::StringView("MyKey = { W = 4.0, X = 1.0, Y = 2.0, Z = 3.0 }");
+		visitor.Read(strMyKey, myQuaternion, Quaternion::Identity);
 
 		CHECK(myQuaternion == Quaternion(1.f, 2.f, 3.f, 4.f));
 	}
@@ -891,8 +819,7 @@ TEST_CASE("eng::Visitor::Quaternion")
 		INFO("Read - Default");
 		Quaternion myQuaternion = Quaternion::Identity;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strQuaternion, myQuaternion, Quaternion(1.f, 2.f, 3.f, 4.f));
+		visitor.Read(strMyKey, myQuaternion, Quaternion(1.f, 2.f, 3.f, 4.f));
 
 		CHECK(myQuaternion == Quaternion(1.f, 2.f, 3.f, 4.f));
 	}
@@ -904,19 +831,17 @@ TEST_CASE("eng::Visitor::Rotator")
 		INFO("Write");
 		Rotator myRotator = Rotator(1.f, 2.f, 3.f);
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strRotator, myRotator, Rotator(1.f));
+		visitor.Write(strMyKey, myRotator);
 
 		str::String string = visitor;
-		CHECK(string == "Rotator = { Pitch = 1.0, Roll = 3.0, Yaw = 2.0 }");
+		CHECK(string == "MyKey = { Pitch = 1.0, Roll = 3.0, Yaw = 2.0 }");
 	}
 
 	{
 		INFO("Read");
 		Rotator myRotator = Rotator::Zero;
-		eng::Visitor visitor = str::StringView("[Rotator]\nPitch = 1.0\nYaw = 2.0\nRoll = 3.0");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strRotator, myRotator, Rotator(1.f));
+		eng::Visitor visitor = str::StringView("[MyKey]\nPitch = 1.0\nYaw = 2.0\nRoll = 3.0");
+		visitor.Read(strMyKey, myRotator, Rotator(1.f));
 
 		CHECK(myRotator == Rotator(1.f, 2.f, 3.f));
 	}
@@ -924,9 +849,8 @@ TEST_CASE("eng::Visitor::Rotator")
 	{
 		INFO("Read - Inline");
 		Rotator myRotator = Rotator::Zero;
-		eng::Visitor visitor = str::StringView("Rotator = { Pitch = 1.0, Yaw = 2.0, Roll = 3.0 }");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strRotator, myRotator, Rotator::Zero);
+		eng::Visitor visitor = str::StringView("MyKey = { Pitch = 1.0, Yaw = 2.0, Roll = 3.0 }");
+		visitor.Read(strMyKey, myRotator, Rotator::Zero);
 
 		CHECK(myRotator == Rotator(1.f, 2.f, 3.f));
 	}
@@ -935,8 +859,7 @@ TEST_CASE("eng::Visitor::Rotator")
 		INFO("Read - Default");
 		Rotator myRotator = Rotator(1.f);
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strRotator, myRotator, Rotator(1.f, 2.f, 3.f));
+		visitor.Read(strMyKey, myRotator, Rotator(1.f, 2.f, 3.f));
 
 		CHECK(myRotator == Rotator(1.f, 2.f, 3.f));
 	}
@@ -949,19 +872,17 @@ TEST_CASE("eng::Visitor::Vector2f")
 		INFO("Write");
 		Vector2f myVector2f = Vector2f(2.f);
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strVector2f, myVector2f, Vector2f(1.f));
+		visitor.Write(strMyKey, myVector2f);
 
 		str::String string = visitor;
-		CHECK(string == "Vector2f = { X = 2.0, Y = 2.0 }");
+		CHECK(string == "MyKey = { X = 2.0, Y = 2.0 }");
 	}
 
 	{
 		INFO("Read");
 		Vector2f myVector2f = Vector2f(1.f);
-		eng::Visitor visitor = str::StringView("[Vector2f]\n X = 2.0\n Y = 2.0");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector2f, myVector2f, Vector2f(1.f));
+		eng::Visitor visitor = str::StringView("[MyKey]\n X = 2.0\n Y = 2.0");
+		visitor.Read(strMyKey, myVector2f, Vector2f(1.f));
 
 		CHECK(myVector2f == Vector2f(2.f));
 	}
@@ -969,9 +890,8 @@ TEST_CASE("eng::Visitor::Vector2f")
 	{
 		INFO("Read - Inline");
 		Vector2f myVector2f = Vector2f(1.f);
-		eng::Visitor visitor = str::StringView("Vector2f = { X = 2.0, Y = 2.0 }");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector2f, myVector2f, Vector2f(1.f));
+		eng::Visitor visitor = str::StringView("MyKey = { X = 2.0, Y = 2.0 }");
+		visitor.Read(strMyKey, myVector2f, Vector2f(1.f));
 
 		CHECK(myVector2f == Vector2f(2.f));
 	}
@@ -980,8 +900,7 @@ TEST_CASE("eng::Visitor::Vector2f")
 		INFO("Read - Default");
 		Vector2f myVector2f = Vector2f(1.f);
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector2f, myVector2f, Vector2f(2.f));
+		visitor.Read(strMyKey, myVector2f, Vector2f(2.f));
 
 		CHECK(myVector2f == Vector2f(2.f));
 	}
@@ -993,19 +912,17 @@ TEST_CASE("eng::Visitor::Vector2i")
 		INFO("Write");
 		Vector2i myVector2i = Vector2i(2);
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strVector2i, myVector2i, Vector2i(1));
+		visitor.Write(strMyKey, myVector2i);
 
 		str::String string = visitor;
-		CHECK(string == "Vector2i = { X = 2, Y = 2 }");
+		CHECK(string == "MyKey = { X = 2, Y = 2 }");
 	}
 
 	{
 		INFO("Read");
 		Vector2i myVector2i = Vector2i(1);
-		eng::Visitor visitor = str::StringView("Vector2i = { X = 2, Y = 2 }");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector2i, myVector2i, Vector2i(1));
+		eng::Visitor visitor = str::StringView("MyKey = { X = 2, Y = 2 }");
+		visitor.Read(strMyKey, myVector2i, Vector2i(1));
 
 		CHECK(myVector2i == Vector2i(2));
 	}
@@ -1014,8 +931,7 @@ TEST_CASE("eng::Visitor::Vector2i")
 		INFO("Read - Default");
 		Vector2i myVector2i = Vector2i(1);
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector2i, myVector2i, Vector2i(2));
+		visitor.Read(strMyKey, myVector2i, Vector2i(2));
 
 		CHECK(myVector2i == Vector2i(2));
 	}
@@ -1027,19 +943,17 @@ TEST_CASE("eng::Visitor::Vector2u")
 		INFO("Write");
 		Vector2u myVector2u = Vector2u(2);
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strVector2u, myVector2u, Vector2u(1));
+		visitor.Write(strMyKey, myVector2u);
 
 		str::String string = visitor;
-		CHECK(string == "Vector2u = { X = 2, Y = 2 }");
+		CHECK(string == "MyKey = { X = 2, Y = 2 }");
 	}
 
 	{
 		INFO("Read");
 		Vector2u myVector2u = Vector2u(1);
-		eng::Visitor visitor = str::StringView("Vector2u = { X = 2, Y = 2 }");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector2u, myVector2u, Vector2u(1));
+		eng::Visitor visitor = str::StringView("MyKey = { X = 2, Y = 2 }");
+		visitor.Read(strMyKey, myVector2u, Vector2u(1));
 
 		CHECK(myVector2u == Vector2u(2));
 	}
@@ -1048,8 +962,7 @@ TEST_CASE("eng::Visitor::Vector2u")
 		INFO("Read - Default");
 		Vector2u myVector2u = Vector2u(1);
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector2u, myVector2u, Vector2u(2));
+		visitor.Read(strMyKey, myVector2u, Vector2u(2));
 
 		CHECK(myVector2u == Vector2u(2));
 	}
@@ -1061,19 +974,17 @@ TEST_CASE("eng::Visitor::Vector3f")
 		INFO("Write");
 		Vector3f myVector3f = Vector3f(2.f);
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strVector3f, myVector3f, Vector3f(1.f));
+		visitor.Write(strMyKey, myVector3f);
 
 		str::String string = visitor;
-		CHECK(string == "Vector3f = { X = 2.0, Y = 2.0, Z = 2.0 }");
+		CHECK(string == "MyKey = { X = 2.0, Y = 2.0, Z = 2.0 }");
 	}
 
 	{
 		INFO("Read");
 		Vector3f myVector3f = Vector3f(1.f);
-		eng::Visitor visitor = str::StringView("Vector3f = { X = 2.0, Y = 2.0, Z = 2.0 }");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector3f, myVector3f, Vector3f(1.f));
+		eng::Visitor visitor = str::StringView("MyKey = { X = 2.0, Y = 2.0, Z = 2.0 }");
+		visitor.Read(strMyKey, myVector3f, Vector3f(1.f));
 
 		CHECK(myVector3f == Vector3f(2.f));
 	}
@@ -1082,8 +993,7 @@ TEST_CASE("eng::Visitor::Vector3f")
 		INFO("Read - Default");
 		Vector3f myVector3f = Vector3f(1.f);
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector3f, myVector3f, Vector3f(2.f));
+		visitor.Read(strMyKey, myVector3f, Vector3f(2.f));
 
 		CHECK(myVector3f == Vector3f(2.f));
 	}
@@ -1095,19 +1005,17 @@ TEST_CASE("eng::Visitor::Vector3i")
 		INFO("Write");
 		Vector3i myVector3i = Vector3i(2);
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strVector3i, myVector3i, Vector3i(1));
+		visitor.Write(strMyKey, myVector3i);
 
 		str::String string = visitor;
-		CHECK(string == "Vector3i = { X = 2, Y = 2, Z = 2 }");
+		CHECK(string == "MyKey = { X = 2, Y = 2, Z = 2 }");
 	}
 
 	{
 		INFO("Read");
 		Vector3i myVector3i = Vector3i(1);
-		eng::Visitor visitor = str::StringView("Vector3i = { X = 2, Y = 2, Z = 2 }");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector3i, myVector3i, Vector3i(1));
+		eng::Visitor visitor = str::StringView("MyKey = { X = 2, Y = 2, Z = 2 }");
+		visitor.Read(strMyKey, myVector3i, Vector3i(1));
 
 		CHECK(myVector3i == Vector3i(2));
 	}
@@ -1116,8 +1024,7 @@ TEST_CASE("eng::Visitor::Vector3i")
 		INFO("Read - Default");
 		Vector3i myVector3i = Vector3i(1);
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector3i, myVector3i, Vector3i(2));
+		visitor.Read(strMyKey, myVector3i, Vector3i(2));
 
 		CHECK(myVector3i == Vector3i(2));
 	}
@@ -1129,19 +1036,17 @@ TEST_CASE("eng::Visitor::Vector4f")
 		INFO("Write");
 		Vector4f myVector4f = Vector4f(2.f);
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strVector4f, myVector4f, Vector4f(1.f));
+		visitor.Write(strMyKey, myVector4f);
 
 		str::String string = visitor;
-		CHECK(string == "Vector4f = { W = 2.0, X = 2.0, Y = 2.0, Z = 2.0 }");
+		CHECK(string == "MyKey = { W = 2.0, X = 2.0, Y = 2.0, Z = 2.0 }");
 	}
 
 	{
 		INFO("Read");
 		Vector4f myVector4f = Vector4f(1.f);
-		eng::Visitor visitor = str::StringView("Vector4f = { W = 2.0, X = 2.0, Y = 2.0, Z = 2.0 }");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector4f, myVector4f, Vector4f(1.f));
+		eng::Visitor visitor = str::StringView("MyKey = { W = 2.0, X = 2.0, Y = 2.0, Z = 2.0 }");
+		visitor.Read(strMyKey, myVector4f, Vector4f(1.f));
 
 		CHECK(myVector4f == Vector4f(2.f));
 	}
@@ -1150,8 +1055,7 @@ TEST_CASE("eng::Visitor::Vector4f")
 		INFO("Read - Default");
 		Vector4f myVector4f = Vector4f(1.f);
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strVector4f, myVector4f, Vector4f(2.f));
+		visitor.Read(strMyKey, myVector4f, Vector4f(2.f));
 
 		CHECK(myVector4f == Vector4f(2.f));
 	}
@@ -1163,19 +1067,17 @@ TEST_CASE("eng::Visitor::Array<Enum>")
 		INFO("Write");
 		Array<EInt32> myArray = { EInt32::Max };
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayEnum, myArray, { });
+		visitor.Write(strMyKey, myArray);
 
 		str::String string = visitor;
-		CHECK(string == "'Array<Enum>' = [ 2147483647 ]");
+		CHECK(string == "MyKey = [ 'Max' ]");
 	}
 
 	{
 		INFO("Read");
 		Array<EInt32> myArray;
-		eng::Visitor visitor = str::StringView("'Array<Enum>' = [ 2147483647 ]");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayEnum, myArray, { });
+		eng::Visitor visitor = str::StringView("MyKey = [ 'Max' ]");
+		visitor.Read(strMyKey, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		CHECK(myArray[0] == EInt32::Max);
@@ -1185,8 +1087,7 @@ TEST_CASE("eng::Visitor::Array<Enum>")
 		INFO("Read - Default");
 		Array<EInt32> myArray;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayEnum, myArray, { EInt32::Max });
+		visitor.Read(strMyKey, myArray, { EInt32::Max });
 
 		REQUIRE(myArray.GetCount() == 1);
 		CHECK(myArray[0] == EInt32::Max);
@@ -1199,19 +1100,17 @@ TEST_CASE("eng::Visitor::Array<Int32>")
 		INFO("Write");
 		Array<int32> myArray = { 2 };
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayInt32, myArray, { });
+		visitor.Write(strMyKey, myArray);
 
 		str::String string = visitor;
-		CHECK(string == "'Array<Int32>' = [ 2 ]");
+		CHECK(string == "MyKey = [ 2 ]");
 	}
 
 	{
 		INFO("Read");
 		Array<int32> myArray;
-		eng::Visitor visitor = str::StringView("'Array<Int32>' = [ 2 ]");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayInt32, myArray, { });
+		eng::Visitor visitor = str::StringView("MyKey = [ 2 ]");
+		visitor.Read(strMyKey, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		CHECK(myArray[0] == 2);
@@ -1221,11 +1120,33 @@ TEST_CASE("eng::Visitor::Array<Int32>")
 		INFO("Read - Default");
 		Array<int32> myArray;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayInt32, myArray, { 2 });
+		visitor.Read(strMyKey, myArray, { 2 });
 
 		REQUIRE(myArray.GetCount() == 1);
 		CHECK(myArray[0] == 2);
+	}
+}
+
+TEST_CASE("eng::Visitor::Array<Variant>")
+{
+	{
+		INFO("Write");
+		Array<Variant<bool, int32>> myArray = { 3 };
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myArray);
+
+		str::String string = visitor;
+		CHECK(string == "[[MyKey]]\nint = 3");
+	}
+
+	{
+		INFO("Read");
+		Array<Variant<bool, int32>> myArray;
+		eng::Visitor visitor = str::StringView("[[MyKey]]\nint = 3");
+		visitor.Read(strMyKey, myArray, {});
+
+		REQUIRE(myArray.GetCount() == 1);
+		CHECK(myArray[0] == Variant<bool, int32>{ 3 });
 	}
 }
 
@@ -1235,19 +1156,17 @@ TEST_CASE("eng::Visitor::Array<Vector2f>")
 		INFO("Write");
 		Array<Vector2f> myArray = { Vector2f::One };
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayVector2f, myArray, { });
+		visitor.Write(strMyKey, myArray);
 
 		str::String string = visitor;
-		CHECK(string == "'Array<Vector2f>' = [ { X = 1.0, Y = 1.0 } ]");
+		CHECK(string == "MyKey = [ { X = 1.0, Y = 1.0 } ]");
 	}
 
 	{
 		INFO("Read");
 		Array<Vector2f> myArray;
-		eng::Visitor visitor = str::StringView("[['Array<Vector2f>']]\n X = 1.0\n Y = 1.0");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayVector2f, myArray, { });
+		eng::Visitor visitor = str::StringView("[[MyKey]]\n X = 1.0\n Y = 1.0");
+		visitor.Read(strMyKey, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		CHECK(myArray[0] == Vector2f::One);
@@ -1256,9 +1175,8 @@ TEST_CASE("eng::Visitor::Array<Vector2f>")
 	{
 		INFO("Read - Inline");
 		Array<Vector2f> myArray;
-		eng::Visitor visitor = str::StringView("'Array<Vector2f>' = [ { X = 1.0, Y = 1.0 } ]");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayVector2f, myArray, { });
+		eng::Visitor visitor = str::StringView("MyKey = [ { X = 1.0, Y = 1.0 } ]");
+		visitor.Read(strMyKey, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		CHECK(myArray[0] == Vector2f::One);
@@ -1267,9 +1185,8 @@ TEST_CASE("eng::Visitor::Array<Vector2f>")
 	{
 		INFO("Read - Multiline");
 		Array<Vector2f> myArray;
-		eng::Visitor visitor = str::StringView("[['Array<Vector2f>']]\n X = 1.0\n Y = 1.0\n [['Array<Vector2f>']]\n X = 2.0\n Y = 2.0");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayVector2f, myArray, { });
+		eng::Visitor visitor = str::StringView("[[MyKey]]\n X = 1.0\n Y = 1.0\n [[MyKey]]\n X = 2.0\n Y = 2.0");
+		visitor.Read(strMyKey, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 2);
 		CHECK(myArray[0] == Vector2f(1.f));
@@ -1280,8 +1197,7 @@ TEST_CASE("eng::Visitor::Array<Vector2f>")
 		INFO("Read - Default");
 		Array<Vector2f> myArray;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayVector2f, myArray, { Vector2f::One });
+		visitor.Read(strMyKey, myArray, { Vector2f::One });
 
 		REQUIRE(myArray.GetCount() == 1);
 		CHECK(myArray[0] == Vector2f::One);
@@ -1294,19 +1210,17 @@ TEST_CASE("eng::Visitor::Array<Array<Enum>>")
 		INFO("Write");
 		Array<Array<EInt32>> myArray = { { EInt32::Max } };
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayArrayEnum, myArray, { });
+		visitor.Write(strMyKey, myArray);
 
 		str::String string = visitor;
-		CHECK(string == "'Array<Array<Enum>>' = [ [ 2147483647 ] ]");
+		CHECK(string == "MyKey = [ [ 'Max' ] ]");
 	}
 
 	{
 		INFO("Read");
 		Array<Array<EInt32>> myArray;
-		eng::Visitor visitor = str::StringView("'Array<Array<Enum>>' = [ [ 2147483647 ] ]");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayArrayEnum, myArray, { });
+		eng::Visitor visitor = str::StringView("MyKey = [ [ 'Max' ] ]");
+		visitor.Read(strMyKey, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		REQUIRE(myArray[0].GetCount() == 1);
@@ -1317,8 +1231,7 @@ TEST_CASE("eng::Visitor::Array<Array<Enum>>")
 		INFO("Read - Default");
 		Array<Array<EInt32>> myArray;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayArrayEnum, myArray, { { EInt32::Max } });
+		visitor.Read(strMyKey, myArray, { { EInt32::Max } });
 
 		REQUIRE(myArray.GetCount() == 1);
 		REQUIRE(myArray[0].GetCount() == 1);
@@ -1332,19 +1245,17 @@ TEST_CASE("eng::Visitor::Array<Array<Int32>>")
 		INFO("Write");
 		Array<Array<int32>> myArray = { { 2 } };
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayArrayInt32, myArray, { });
+		visitor.Write(strMyKey, myArray);
 
 		str::String string = visitor;
-		CHECK(string == "'Array<Array<Int32>>' = [ [ 2 ] ]");
+		CHECK(string == "MyKey = [ [ 2 ] ]");
 	}
 
 	{
 		INFO("Read - Inline");
 		Array<Array<int32>> myArray;
-		eng::Visitor visitor = str::StringView("'Array<Array<Int32>>' = [ [ 2 ] ]");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayArrayInt32, myArray, { });
+		eng::Visitor visitor = str::StringView("MyKey = [ [ 2 ] ]");
+		visitor.Read(strMyKey, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		REQUIRE(myArray[0].GetCount() == 1);
@@ -1355,8 +1266,7 @@ TEST_CASE("eng::Visitor::Array<Array<Int32>>")
 		INFO("Read - Default");
 		Array<Array<int32>> myArray;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayArrayInt32, myArray, { { 2 } });
+		visitor.Read(strMyKey, myArray, { { 2 } });
 
 		REQUIRE(myArray.GetCount() == 1);
 		REQUIRE(myArray[0].GetCount() == 1);
@@ -1370,19 +1280,17 @@ TEST_CASE("eng::Visitor::Array<Array<Vector2f>>")
 		INFO("Write");
 		Array<Array<Vector2f>> myArray = { { Vector2f::One } };
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strArrayArrayVector2f, myArray, { });
+		visitor.Write(strMyKey, myArray);
 
 		str::String string = visitor;
-		CHECK(string == "'Array<Array<Vector2f>>' = [ [ { X = 1.0, Y = 1.0 } ] ]");
+		CHECK(string == "MyKey = [ [ { X = 1.0, Y = 1.0 } ] ]");
 	}
 
 	{
 		INFO("Read");
 		Array<Array<Vector2f>> myArray;
-		eng::Visitor visitor = str::StringView("'Array<Array<Vector2f>>' = [ [ { X = 1.0, Y = 1.0 } ] ]");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayArrayVector2f, myArray, { });
+		eng::Visitor visitor = str::StringView("MyKey = [ [ { X = 1.0, Y = 1.0 } ] ]");
+		visitor.Read(strMyKey, myArray, {});
 
 		REQUIRE(myArray.GetCount() == 1);
 		REQUIRE(myArray[0].GetCount() == 1);
@@ -1393,8 +1301,7 @@ TEST_CASE("eng::Visitor::Array<Array<Vector2f>>")
 		INFO("Read - Default");
 		Array<Array<Vector2f>> myArray;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strArrayArrayVector2f, myArray, { { Vector2f::One } });
+		visitor.Read(strMyKey, myArray, { { Vector2f::One } });
 
 		REQUIRE(myArray.GetCount() == 1);
 		REQUIRE(myArray[0].GetCount() == 1);
@@ -1408,19 +1315,17 @@ TEST_CASE("eng::Visitor::Map<Enum>")
 		INFO("Write");
 		Map<str::String, EInt32> myMap = { { "A", EInt32::Max } };
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapEnum, myMap, { });
+		visitor.Write(strMyKey, myMap);
 
 		str::String string = visitor;
-		CHECK(string == "['Map<Enum>']\nA = 2147483647");
+		CHECK(string == "[MyKey]\nA = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		Map<str::String, EInt32> myMap;
-		eng::Visitor visitor = str::StringView("['Map<Enum>']\nA = 2147483647");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapEnum, myMap, { });
+		eng::Visitor visitor = str::StringView("[MyKey]\nA = 'Max'");
+		visitor.Read(strMyKey, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		CHECK(myMap["A"] == EInt32::Max);
@@ -1430,8 +1335,7 @@ TEST_CASE("eng::Visitor::Map<Enum>")
 		INFO("Read - Default");
 		Map<str::String, EInt32> myMap;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapEnum, myMap, { { "A", EInt32::Max } });
+		visitor.Read(strMyKey, myMap, { { "A", EInt32::Max } });
 
 		REQUIRE(myMap.GetCount() == 1);
 		CHECK(myMap["A"] == EInt32::Max);
@@ -1444,19 +1348,17 @@ TEST_CASE("eng::Visitor::Map<Int32>")
 		INFO("Write");
 		Map<str::String, int32> myMap = { { "A", 2 } };
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapInt32, myMap, { });
+		visitor.Write(strMyKey, myMap);
 
 		str::String string = visitor;
-		CHECK(string == "['Map<Int32>']\nA = 2");
+		CHECK(string == "[MyKey]\nA = 2");
 	}
 
 	{
 		INFO("Read");
 		Map<str::String, int32> myMap;
-		eng::Visitor visitor = str::StringView("['Map<Int32>']\nA = 2");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapInt32, myMap, { });
+		eng::Visitor visitor = str::StringView("[MyKey]\nA = 2");
+		visitor.Read(strMyKey, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		CHECK(myMap["A"] == 2);
@@ -1466,8 +1368,7 @@ TEST_CASE("eng::Visitor::Map<Int32>")
 		INFO("Read - Default");
 		Map<str::String, int32> myMap;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapInt32, myMap, { { "A", 2 } });
+		visitor.Read(strMyKey, myMap, { { "A", 2 } });
 
 		REQUIRE(myMap.GetCount() == 1);
 		CHECK(myMap["A"] == 2);
@@ -1480,19 +1381,17 @@ TEST_CASE("eng::Visitor::Map<Vector2f>")
 		INFO("Write");
 		Map<str::String, Vector2f> myMap = { { "A", Vector2f::One } };
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapVector2f, myMap, { });
+		visitor.Write(strMyKey, myMap);
 
 		str::String string = visitor;
-		CHECK(string == "['Map<Vector2f>']\nA = { X = 1.0, Y = 1.0 }");
+		CHECK(string == "[MyKey]\nA = { X = 1.0, Y = 1.0 }");
 	}
 
 	{
 		INFO("Read");
 		Map<str::String, Vector2f> myMap;
-		eng::Visitor visitor = str::StringView("['Map<Vector2f>']\nA = { X = 1.0, Y = 1.0 }");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapVector2f, myMap, { });
+		eng::Visitor visitor = str::StringView("[MyKey]\nA = { X = 1.0, Y = 1.0 }");
+		visitor.Read(strMyKey, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		CHECK(myMap["A"] == Vector2f::One);
@@ -1502,8 +1401,7 @@ TEST_CASE("eng::Visitor::Map<Vector2f>")
 		INFO("Read - Default");
 		Map<str::String, Vector2f> myMap;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapVector2f, myMap, { { "A", Vector2f::One } });
+		visitor.Read(strMyKey, myMap, { { "A", Vector2f::One } });
 
 		REQUIRE(myMap.GetCount() == 1);
 		CHECK(myMap["A"] == Vector2f::One);
@@ -1517,19 +1415,17 @@ TEST_CASE("eng::Visitor::Map<Map<Enum>>")
 		Map<str::String, Map<str::String, EInt32>> myMap;
 		myMap["A"]["B"] = EInt32::Max;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapMapEnum, myMap, { });
+		visitor.Write(strMyKey, myMap);
 
 		str::String string = visitor;
-		CHECK(string == "['Map<Map<Enum>>'.A]\nB = 2147483647");
+		CHECK(string == "[MyKey.A]\nB = 'Max'");
 	}
 
 	{
 		INFO("Read");
 		Map<str::String, Map<str::String, EInt32>> myMap;
-		eng::Visitor visitor = str::StringView("['Map<Map<Enum>>'.A]\nB = 2147483647");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapMapEnum, myMap, { });
+		eng::Visitor visitor = str::StringView("[MyKey.A]\nB = 'Max'");
+		visitor.Read(strMyKey, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		REQUIRE(myMap["A"].GetCount() == 1);
@@ -1540,12 +1436,11 @@ TEST_CASE("eng::Visitor::Map<Map<Enum>>")
 		INFO("Read - Default");
 		Map<str::String, Map<str::String, EInt32>> myMap;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
 
 		{
 			Map<str::String, Map<str::String, EInt32>> myDefault;
 			myDefault["A"]["B"] = EInt32::Max;
-			visitor.Visit(strMapMapEnum, myMap, myDefault);
+			visitor.Read(strMyKey, myMap, myDefault);
 		}
 
 		REQUIRE(myMap.GetCount() == 1);
@@ -1561,19 +1456,17 @@ TEST_CASE("eng::Visitor::Map<Map<Int32>>")
 		Map<str::String, Map<str::String, int32>> myMap;
 		myMap["A"]["B"] = 2;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapMapInt32, myMap, { });
+		visitor.Write(strMyKey, myMap);
 
 		str::String string = visitor;
-		CHECK(string == "['Map<Map<Int32>>'.A]\nB = 2");
+		CHECK(string == "[MyKey.A]\nB = 2");
 	}
 
 	{
 		INFO("Read");
 		Map<str::String, Map<str::String, int32>> myMap;
-		eng::Visitor visitor = str::StringView("['Map<Map<Int32>>'.A]\nB = 2");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapMapInt32, myMap, { });
+		eng::Visitor visitor = str::StringView("[MyKey.A]\nB = 2");
+		visitor.Read(strMyKey, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		REQUIRE(myMap["A"].GetCount() == 1);
@@ -1584,12 +1477,11 @@ TEST_CASE("eng::Visitor::Map<Map<Int32>>")
 		INFO("Read - Default");
 		Map<str::String, Map<str::String, int32>> myMap;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
 
 		{
 			Map<str::String, Map<str::String, int32>> myDefault;
 			myDefault["A"]["B"] = 2;
-			visitor.Visit(strMapMapInt32, myMap, myDefault);
+			visitor.Read(strMyKey, myMap, myDefault);
 		}
 
 		REQUIRE(myMap.GetCount() == 1);
@@ -1605,19 +1497,17 @@ TEST_CASE("eng::Visitor::Map<Map<Vector2f>>")
 		Map<str::String, Map<str::String, Vector2f>> myMap;
 		myMap["A"]["B"] = Vector2f::One;
 		eng::Visitor visitor;
-		visitor.SetMode(eng::Visitor::Write);
-		visitor.Visit(strMapMapVector2f, myMap, { });
+		visitor.Write(strMyKey, myMap);
 
 		str::String string = visitor;
-		CHECK(string == "['Map<Map<Vector2f>>'.A]\nB = { X = 1.0, Y = 1.0 }");
+		CHECK(string == "[MyKey.A]\nB = { X = 1.0, Y = 1.0 }");
 	}
 
 	{
 		INFO("Read");
 		Map<str::String, Map<str::String, Vector2f>> myMap;
-		eng::Visitor visitor = str::StringView("['Map<Map<Vector2f>>'.A]\nB = { X = 1.0, Y = 1.0 }");
-		visitor.SetMode(eng::Visitor::Read);
-		visitor.Visit(strMapMapVector2f, myMap, { });
+		eng::Visitor visitor = str::StringView("[MyKey.A]\nB = { X = 1.0, Y = 1.0 }");
+		visitor.Read(strMyKey, myMap, {});
 
 		REQUIRE(myMap.GetCount() == 1);
 		REQUIRE(myMap["A"].GetCount() == 1);
@@ -1628,16 +1518,159 @@ TEST_CASE("eng::Visitor::Map<Map<Vector2f>>")
 		INFO("Read - Default");
 		Map<str::String, Map<str::String, Vector2f>> myMap;
 		eng::Visitor visitor = str::StringView("");
-		visitor.SetMode(eng::Visitor::Read);
 
 		{
 			Map<str::String, Map<str::String, Vector2f>> myDefault;
 			myDefault["A"]["B"] = Vector2f::One;
-			visitor.Visit(strMapMapVector2f, myMap, myDefault);
+			visitor.Read(strMyKey, myMap, myDefault);
 		}
 
 		REQUIRE(myMap.GetCount() == 1);
 		REQUIRE(myMap["A"].GetCount() == 1);
 		CHECK(myMap["A"]["B"] == Vector2f::One);
+	}
+}
+
+TEST_CASE("eng::Visitor::Optional<int32>")
+{
+	{
+		INFO("Write. With Value.");
+		Optional<int32> myOptional = 3;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myOptional);
+
+		str::String string = visitor;
+		CHECK(string == "MyKey = 3");
+	}
+
+	{
+		INFO("Write. Without Value.");
+		Optional<int32> myOptional = std::nullopt;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myOptional);
+
+		str::String string = visitor;
+		CHECK(string.empty());
+	}
+
+	{
+		INFO("Read");
+		Optional<int32> myOptional;
+		eng::Visitor visitor = str::StringView("MyKey = 3");
+		visitor.Read(strMyKey, myOptional, { 0 });
+
+		REQUIRE(myOptional);
+		CHECK(*myOptional == 3);
+	}
+
+	{
+		INFO("Read - Default");
+		Optional<int32> myOptional;
+		eng::Visitor visitor = str::StringView("");
+		visitor.Read(strMyKey, myOptional, { 3 });
+
+		REQUIRE(myOptional);
+		CHECK(*myOptional == 3);
+	}
+}
+
+TEST_CASE("eng::Visitor::Optional<Optional<int32>>")
+{
+	{
+		INFO("Write. With Value.");
+		Optional<Optional<int32>> myOptional = 3;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myOptional);
+
+		str::String string = visitor;
+		CHECK(string == "MyKey = 3");
+	}
+
+	{
+		INFO("Write. With outer value.");
+		Optional<int32> myInner = std::nullopt;
+		Optional<Optional<int32>> myOuter = myInner;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myOuter);
+
+		str::String string = visitor;
+		CHECK(string.empty());
+	}
+
+	{
+		INFO("Write. Without Value.");
+		Optional<Optional<int32>> myOptional = std::nullopt;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myOptional);
+
+		str::String string = visitor;
+		CHECK(string.empty());
+	}
+
+	{
+		INFO("Read");
+		Optional<Optional<int32>> myOptional;
+		eng::Visitor visitor = str::StringView("MyKey = 3");
+		visitor.Read(strMyKey, myOptional, { 0 });
+
+		REQUIRE(myOptional);
+		CHECK(*myOptional == 3);
+	}
+
+	{
+		INFO("Read - Default");
+		Optional<Optional<int32>> myOptional;
+		eng::Visitor visitor = str::StringView("");
+		visitor.Read(strMyKey, myOptional, { 3 });
+
+		REQUIRE(myOptional);
+		CHECK(*myOptional == 3);
+	}
+}
+
+TEST_CASE("eng::Visitor::Variant<bool, int32>")
+{
+	{
+		INFO("Write");
+		Variant<bool, int32> myVariant = 3;
+		eng::Visitor visitor;
+		visitor.Write(strMyKey, myVariant);
+
+		str::String string = visitor;
+		CHECK(string == "[MyKey]\nint = 3");
+	}
+
+	{
+		INFO("Read");
+		Variant<bool, int32> myVariant;
+		eng::Visitor visitor = str::StringView("MyKey = { int = 3 }");
+		visitor.Read(strMyKey, myVariant, Variant<bool, int32>{0});
+
+		REQUIRE(std::holds_alternative<int32>(myVariant));
+		CHECK(std::get<int32>(myVariant) == 3);
+	}
+
+	{
+		INFO("Read - Default");
+		Variant<bool, int32> myVariant;
+		eng::Visitor visitor = str::StringView("");
+		visitor.Read(strMyKey, myVariant, Variant<bool, int32>{3});
+
+		REQUIRE(std::holds_alternative<int32>(myVariant));
+		CHECK(std::get<int32>(myVariant) == 3);
+	}
+}
+
+TEST_CASE("eng::Visitor::Iterator Range-based for loop")
+{
+	eng::Visitor visitor = str::StringView("First = {Bool = true}\nSecond = {Number = 1}");
+
+	int32 index = 0;
+	Array<str::StringView> results = { "First", "Bool", "Second", "Number" };
+	for (const str::StringView& keyA : visitor)
+	{
+		CHECK(keyA == results[index++]);
+		for (const str::StringView& keyB : visitor)
+			CHECK(keyB == results[index++]);
 	}
 }

@@ -1,42 +1,32 @@
 #include "ECS/EntityWorld.h"
 
-#include <Core/Profiler.h>
-
-#include "ECS/Manager.h"
+#include "Core/Profiler.h"
+#include "ECS/NameComponent.h"
 #include "ECS/System.h"
 
 ecs::EntityWorld::EntityWorld()
 	: m_FrameBuffer()
 	, m_EntityStorage()
 	, m_QueryRegistry()
-	, m_ManagerRegistry()
-	, m_SystemRegistry(*this)
+	, m_SystemRegistry()
 {
-}
-
-ecs::EntityWorld::~EntityWorld()
-{
-}
-
-bool ecs::EntityWorld::IsInitialised() const
-{
-	return m_IsInitialised;
+	m_SingletonEntity = CreateEntity();
+	RegisterComponent<ecs::NameComponent>();
+	AddComponent<ecs::NameComponent>(m_SingletonEntity, "Singleton");
 }
 
 void ecs::EntityWorld::Initialise()
 {
 	PROFILE_FUNCTION();
 
+	// flush the singletons
+	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
+
 	m_IsInitialised = true;
-	m_SingletonEntity = CreateEntity();
-
 	m_QueryRegistry.Initialise();
+	m_SystemRegistry.Initialise(*this);
 
-	m_ManagerRegistry.Initialise();
-
-	// do after managers
-	m_SystemRegistry.Initialise();
-
+	// flush the initialise
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
 }
 
@@ -44,19 +34,14 @@ void ecs::EntityWorld::Shutdown()
 {
 	PROFILE_FUNCTION();
 
-	// do before managers
-	m_SystemRegistry.Shutdown();
-
-	m_ManagerRegistry.Shutdown();
-
-	DestroyEntity(m_SingletonEntity);
+	m_SystemRegistry.Shutdown(*this);
 }
 
 void ecs::EntityWorld::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	m_SystemRegistry.Update(gameTime);
+	m_SystemRegistry.Update(*this, gameTime);
 
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
 
@@ -64,4 +49,9 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 	for (const ecs::Entity& entity : m_EventEntities)
 		DestroyEntity(entity);
 	m_EventEntities.RemoveAll();
+}
+
+bool ecs::EntityWorld::IsInitialised() const
+{
+	return m_IsInitialised;
 }

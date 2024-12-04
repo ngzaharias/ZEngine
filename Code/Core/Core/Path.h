@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/String.h>
-#include <Core/StringView.h>
+#include "Core/String.h"
+#include "Core/StringView.h"
 
 namespace str
 {
@@ -9,6 +9,7 @@ namespace str
 	{
 		AppData,
 		Assets,
+		Config,
 		Executable,
 		WorkingDir,
 	};
@@ -30,6 +31,8 @@ namespace str
 		bool operator==(const str::StringView& rhs) const;
 		bool operator!=(const str::Path& rhs) const;
 		bool operator!=(const str::StringView& rhs) const;
+
+		bool operator<(const str::Path& rhs) const;
 
 		void operator=(str::String&& rhs);
 		void operator=(const str::Path& rhs);

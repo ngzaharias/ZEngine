@@ -1,0 +1,7 @@
+m_Texture2D = '6a539b2fa37a4e2202abe3d955b7f4f2'
+m_Name = 'SP_Reveal_Stick'
+m_Type = 'Sprite'
+m_Guid = '89ff3782a02b4925adfd536501dcb3e5'
+
+m_Position = { X = 0, Y = 0 }
+m_Size = { X = 128, Y = 512 }

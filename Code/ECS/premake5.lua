@@ -1,6 +1,5 @@
 project "ECS"
 	kind "StaticLib"
-	dependson { "Core" }
 	location "%{wks.location}/ECS"
 
 	vpaths 
@@ -17,4 +16,9 @@ project "ECS"
 		"%{wks.location}/../3rdParty/spdlog/1.10.0/Include/",
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
+	}
+
+	links 
+	{ 
+		"Core", 
 	}

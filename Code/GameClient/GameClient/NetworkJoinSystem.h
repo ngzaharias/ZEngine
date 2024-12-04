@@ -1,11 +1,21 @@
 #pragma once
 
-#include <ECS/System.h>
+#include "ECS/System.h"
 
 namespace eng
 {
 	class NetworkManager;
-	struct LevelLoadRequestComponent;
+}
+
+namespace eng::level
+{
+	struct LoadRequestComponent;
+}
+
+namespace eng::network
+{
+	struct RequestComponent;
+	struct RequestFinishedComponent;
 }
 
 namespace gui::modal
@@ -18,12 +28,6 @@ namespace net
 	struct UserComponent;
 }
 
-namespace network
-{
-	struct RequestComponent;
-	struct RequestFinishedComponent;
-}
-
 namespace gamestate
 {
 	struct NetworkJoinComponent;
@@ -34,15 +38,15 @@ namespace gamestate
 	{
 	public:
 		using World = ecs::WorldView<
+			eng::level::LoadRequestComponent,
 			eng::NetworkManager,
-			eng::LevelLoadRequestComponent,
-			gui::modal::MessageComponent,
+			eng::network::RequestComponent,
 			gamestate::NetworkJoinComponent,
 			gamestate::StateFinishedComponent,
-			network::RequestComponent,
+			gui::modal::MessageComponent,
+			const eng::network::RequestFinishedComponent,
 			const gamestate::StateComponent,
-			const net::UserComponent,
-			const network::RequestFinishedComponent>;
+			const net::UserComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

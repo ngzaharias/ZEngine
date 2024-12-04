@@ -1,34 +1,37 @@
 #pragma once
 
-#include <Core/Input.h>
-#include <Core/Set.h>
+#include "Core/Input.h"
+#include "Core/Set.h"
+#include "ECS/System.h"
 
-#include <ECS/System.h>
-
-namespace glfw
+namespace ecs
 {
-	class Window;
+	struct NameComponent;
 }
 
 namespace eng
 {
+	class Window;
 	struct InputComponent;
-	struct NameComponent;
+}
 
+namespace eng
+{
 	class InputSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<eng::NameComponent, eng::InputComponent>;
-
-		InputSystem(glfw::Window& window);
+		using World = ecs::WorldView<
+			// Resources
+			const eng::Window,
+			// Components
+			ecs::NameComponent,
+			eng::InputComponent>;
 
 		void Initialise(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 
 	private:
-		glfw::Window& m_Window;
-
 		Set<input::EKeyboard> m_KeyboardPrevious;
 		Set<input::EKeyboard> m_KeyboardCurrent;
 		Set<input::EMouse> m_MousePrevious;

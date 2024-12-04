@@ -1,49 +1,57 @@
 #pragma once
 
-template<typename TPrototype, typename TLoader, typename... TArgs>
-void eng::PrototypeManager::RegisterPrototype(const str::Name& type, TArgs&&... args)
+#include "Core/TypeName.h"
+#include "ECS/Component.h"
+#include "ECS/EntityWorld.h"
+#include "Engine/Visitor.h"
+
+#include <type_traits>
+
+template<typename TPrototype>
+void eng::PrototypeManager::Register()
 {
-	static_assert(std::is_convertible<TPrototype*, eng::Prototype*>::value, "Prototype must inherit from eng::Prototype using the [public] keyword!");
-	static_assert(std::is_base_of<eng::Prototype, TPrototype>::value, "Prototype isn't a base of eng::Prototype!");
+	const str::Name typeName = str::Name::Create(TypeName<TPrototype>::m_WithNamespace);
+	Z_PANIC(!m_EntryMap.Contains(typeName), "Type is already registered!");
 
-	static_assert(std::is_convertible<TLoader*, eng::PrototypeLoader*>::value, "Loader must inherit from eng::PrototypeLoader using the [public] keyword!");
-	static_assert(std::is_base_of<eng::PrototypeLoader, TLoader>::value, "Loader isn't a base of eng::PrototypeLoader!");
-
-	constexpr TypeId typeId = ToTypeId<TPrototype>();
-	Z_ASSERT_CRASH(!core::Contains(m_EntryMap, typeId), "Type is already registered!");
-
-	eng::PrototypeEntry& entry = m_EntryMap[typeId];
-	entry.m_Type = type;
-	entry.m_Loader = new TLoader(std::forward<TArgs>(args)...);
-	entry.m_Loader->m_AssetManager = &m_AssetManager;
-	entry.m_Loader->m_PrototypeManager = this;
-
-	entry.m_Add = &AddFunction<TPrototype, TLoader>;
-	entry.m_Load = &LoadFunction<TPrototype, TLoader>;
-	entry.m_New = &NewFunction<TPrototype>;
-
-	Z_ASSERT_CRASH(!core::Contains(m_TypeMap, type), "Type is already registered!");
-	m_TypeMap[type] = typeId;
+	eng::PrototypeEntry& entry = m_EntryMap[typeName];
+	entry.m_Save = &SaveFunction<TPrototype>;
+	entry.m_Load = &LoadFunction<TPrototype>;
 }
 
 template<typename TPrototype>
-eng::Prototype* eng::PrototypeManager::NewFunction()
+void eng::PrototypeManager::SaveFunction(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor)
 {
-	return new TPrototype();
+	using NonConst = std::remove_const<TPrototype>::type;
+	if constexpr (std::is_base_of<ecs::Component<NonConst>, NonConst>::value)
+	{
+		if (world.HasComponent<NonConst>(entity))
+		{
+			const auto& component = world.ReadComponent<NonConst>(entity);
+			visitor.Write(component);
+		}
+	}
+	else
+	{
+		static_assert(false, "Unsupported Type!");
+	}
 }
 
-template<typename TPrototype, typename TLoader>
-void eng::PrototypeManager::LoadFunction(eng::Prototype* prototype, const eng::PrototypeLoader* loader, eng::Visitor& visitor)
+template<typename TPrototype>
+void eng::PrototypeManager::LoadFunction(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor)
 {
-	const TLoader* tLoader = dynamic_cast<const TLoader*>(loader);
-	TPrototype* tPrototype = dynamic_cast<TPrototype*>(prototype);
-	tLoader->Load(*tPrototype, visitor);
-}
-
-template<typename TPrototype, typename TLoader>
-void eng::PrototypeManager::AddFunction(ecs::EntityWorld& world, const ecs::Entity& entity, const eng::Prototype* prototype, const eng::PrototypeLoader* loader)
-{
-	const TLoader* tLoader = dynamic_cast<const TLoader*>(loader);
-	const TPrototype* tPrototype = dynamic_cast<const TPrototype*>(prototype);
-	tLoader->Add(world, entity, *tPrototype);
+	using NonConst = std::remove_const<TPrototype>::type;
+	if constexpr (std::is_base_of<ecs::Component<NonConst>, NonConst>::value)
+	{
+		if (world.IsRegistered<NonConst>())
+		{
+			auto& component = world.HasComponent<NonConst>(entity)
+				? world.WriteComponent<NonConst>(entity)
+				: world.AddComponent<NonConst>(entity);
+			visitor.Read(component);
+		}
+	}
+	else
+	{
+		static_assert(false, "Unsupported Type!");
+	}
 }

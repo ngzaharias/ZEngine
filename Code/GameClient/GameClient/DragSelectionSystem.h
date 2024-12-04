@@ -1,19 +1,28 @@
 #pragma once
 
-#include <ECS/System.h>
+#include "ECS/System.h"
+
+namespace ecs
+{
+	struct NameComponent;
+}
 
 namespace eng
 {
-	struct CameraComponent;
 	struct InputComponent;
 	struct LinesComponent;
-	struct NameComponent;
 	struct PhysicsSceneComponent;
 	struct TransformComponent;
 }
 
+namespace eng::camera
+{
+	struct ProjectionComponent;
+}
+
 namespace drag
 {
+	struct IsSelectableComponent;
 	struct SelectionComponent;
 
 	class SelectionSystem final : public ecs::System
@@ -21,9 +30,10 @@ namespace drag
 	public:
 		using World = ecs::WorldView<
 			drag::SelectionComponent,
-			eng::NameComponent,
+			ecs::NameComponent,
 			eng::LinesComponent,
-			const eng::CameraComponent,
+			const drag::IsSelectableComponent,
+			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,
 			const eng::PhysicsSceneComponent,
 			const eng::TransformComponent>;

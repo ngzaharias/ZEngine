@@ -1,46 +1,39 @@
 #include "EditorPCH.h"
 #include "Editor/TrajectoryEditor.h"
 
-#include <Core/Algorithms.h>
-#include <Core/Math.h>
-#include <Core/Trajectory.h>
-#include <Core/Vector.h>
-#include <Core/VectorMath.h>
-
-#include <ECS/EntityWorld.h>
-#include <ECS/QueryTypes.h>
-#include <ECS/WorldView.h>
-
-#include <Engine/AssetManager.h>
-#include <Engine/FileHelpers.h>
-#include <Engine/TrajectoryAsset.h>
-
-#include <GameClient/ProjectileComponents.h>
+#include "Core/Algorithms.h"
+#include "Core/Trajectory.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/AssetManager.h"
+#include "Engine/FileHelpers.h"
+#include "Engine/TrajectoryAsset.h"
+#include "GameClient/ProjectileComponents.h"
+#include "GameDebug/MenuBarComponents.h"
+#include "Math/Math.h"
+#include "Math/Vector.h"
+#include "Math/VectorMath.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui_user.h>
 
-#include "GameDebug/MenuBarComponents.h"
-
 namespace
 {
-	const str::Guid strStaticMesh = str::Guid::Create("d0284c56-3e6a-49a2-9a80-25ff2731a3de");
+	const str::Guid strStaticMesh = str::Guid::Create("d0284c563e6a49a29a8025ff2731a3de");
 
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
 		ImGuiDockNodeFlags_NoCloseButton |
 		ImGuiDockNodeFlags_NoWindowMenuButton;
 	constexpr ImGuiWindowFlags s_WindowFlags =
+		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
 
-	str::String ToLabel(const char* label, const int32 windowId)
+	str::String ToLabel(const char* label, const int32 index)
 	{
-		return std::format("{}: {}", label, windowId);
-	}
-
-	str::String ToLabel(const char* label, const ecs::Entity& entity)
-	{
-		return std::format("{}: {}", label, entity.GetIndex());
+		return std::format("{}: {}", label, index);
 	}
 
 	using World = editor::TrajectoryEditor::World;
@@ -64,7 +57,7 @@ namespace
 					trajectory.m_Points.Append(Vector2f(0.1f, 0.7f));
 					trajectory.m_Points.Append(Vector2f(0.f, 1.f));
 
-					auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+					auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(entity);
 					windowComponent.m_Asset = trajectory;
 				}
 
@@ -82,12 +75,11 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(entity);
 		eng::TrajectoryAsset& trajectory = windowComponent.m_Asset;
 
-		imgui::Guid("m_Guid", trajectory.m_Guid);
-		imgui::Name("m_Name", trajectory.m_Name);
-		imgui::Path("m_Path", trajectory.m_Path);
+		imgui::InputText("m_Guid", trajectory.m_Guid);
+		imgui::InputText("m_Name", trajectory.m_Name);
 
 		ImGui::Separator();
 
@@ -144,7 +136,7 @@ namespace
 
 	void DrawPlotter(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+		auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(entity);
 		eng::TrajectoryAsset& trajectory = windowComponent.m_Asset;
 
 		Array<Vector2f>& values = trajectory.m_Points;
@@ -165,7 +157,7 @@ namespace
 			}
 		}
 
-		const ImGuiGraphFlags flags = ImGuiGraphFlags_Grid | ImGuiGraphFlags_TextX | ImGuiGraphFlags_TextY;
+		const ImGuiPlotFlags flags = ImGuiPlotFlags_Grid | ImGuiPlotFlags_TextX | ImGuiPlotFlags_TextY;
 		const Vector2f size = ImGui::GetContentRegionAvail();
 		imgui::PlotLines("##plotter", values.GetData(), values.GetCount(), size, flags);
 	}
@@ -190,17 +182,20 @@ namespace
 
 		if (world.HasComponent<editor::TrajectoryAssetSaveComponent>(entity))
 		{
-			auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(entity);
+			auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(entity);
+			const str::Name& name = windowComponent.m_Asset.m_Name;
 
 			eng::SaveFileSettings settings;
 			settings.m_Title = "Save Trajectory";
 			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
-			settings.m_Directory = str::GetPath(str::EPath::Assets);
+			settings.m_Path = str::GetPath(str::EPath::Assets);
+			settings.m_Path += name;
+
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& assetBrowser = world.GetManager<eng::AssetManager>();
-				assetBrowser.SaveAsset(windowComponent.m_Asset, filepath);
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
+				assetManager.SaveAsset(windowComponent.m_Asset, filepath);
 			}
 
 			world.RemoveComponent<editor::TrajectoryAssetSaveComponent>(entity);
@@ -217,16 +212,26 @@ void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const editor::TrajectoryWindowRequestComponent>>())
 	{
+		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
-		auto& windowComponent = world.AddComponent<editor::TrajectoryWindowComponent>(windowEntity);
-		windowComponent.m_DockspaceLabel = ToLabel("Trajectory Editor", windowEntity);
-		windowComponent.m_InspectorLabel = ToLabel("Inspector", windowEntity);
-		windowComponent.m_PlottingLabel = ToLabel("Plotter", windowEntity);
+		world.AddComponent<ecs::NameComponent>(windowEntity, "Trajectory Editor");
+
+		auto& window = world.AddComponent<editor::TrajectoryWindowComponent>(windowEntity);
+		window.m_Identifier = identifier;
+		window.m_DockspaceLabel = ToLabel("Trajectory Editor", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##trajectory", identifier);
+		window.m_PlottingLabel = ToLabel("Plotter##trajectory", identifier);
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::TrajectoryWindowComponent>>())
+	{
+		const auto& window = world.ReadComponent<editor::TrajectoryWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
 	}
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TrajectoryWindowComponent>>())
 	{
-		auto& windowComponent = world.GetComponent<editor::TrajectoryWindowComponent>(windowEntity);
+		auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
