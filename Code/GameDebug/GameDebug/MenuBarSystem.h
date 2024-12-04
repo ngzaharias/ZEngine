@@ -5,6 +5,7 @@
 namespace dbg
 {
 	struct BufferWindowRequestComponent;
+	struct ContainerWindowRequestComponent;
 	struct EntityWindowRequestComponent;
 	struct FlipbookWindowRequestComponent;
 	struct ImGuiDemoRequestComponent;
@@ -61,6 +62,7 @@ namespace dbg
 	public:
 		using World = ecs::WorldView<
 			dbg::BufferWindowRequestComponent,
+			dbg::ContainerWindowRequestComponent,
 			dbg::EntityWindowRequestComponent,
 			dbg::FlipbookWindowRequestComponent,
 			dbg::ImGuiDemoRequestComponent,
