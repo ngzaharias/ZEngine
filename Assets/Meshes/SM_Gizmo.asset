@@ -2,4 +2,4 @@ m_Guid = "a9fa2b128edb43b6b19c1630fcb725af"
 m_Name = "SM_Default_Gizmo"
 m_Type = "StaticMesh"
 
-m_SourceFile = "..\\AssetsRaw\\Meshes\\Gizmo.fbx"
+m_SourceFile = ".\\Meshes\\Gizmo.fbx"

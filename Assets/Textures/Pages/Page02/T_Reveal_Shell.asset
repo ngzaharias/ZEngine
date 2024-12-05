@@ -1,4 +1,4 @@
 m_Guid = 'b1b4204ce6c1452048b494113fd4d2b2'
 m_Name = 'T_Reveal_Shell'
-m_SourceFile = '..\AssetsRaw\Textures\Pages\Page02\T_Reveal_Shell.png'
+m_SourceFile = '.\\Textures\\Pages\\Page02\\T_Reveal_Shell.png'
 m_Type = 'Texture2D'

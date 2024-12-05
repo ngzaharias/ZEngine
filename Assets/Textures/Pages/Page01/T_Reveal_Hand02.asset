@@ -1,4 +1,4 @@
 m_Guid = 'f1ab25c6e130409d0bbaa57acdab0d9a'
 m_Name = 'T_Reveal_Hand02'
-m_SourceFile = '..\AssetsRaw\Textures\Pages\Page01\T_Reveal_Hand02.png'
+m_SourceFile = '.\\Textures\\Pages\\Page01\\T_Reveal_Hand02.png'
 m_Type = 'Texture2D'

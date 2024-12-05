@@ -2,4 +2,4 @@ m_Guid = "91ffda2bd755ce4235c37010aaf5ec5a"
 m_Name = "T_Midnight"
 m_Type = "Texture2D"
 
-m_SourceFile = "..\\AssetsRaw\\Textures\\Flipbooks\\T_Midnight.png"
+m_SourceFile = ".\\Textures\\Flipbooks\\T_Midnight.png"

@@ -2,4 +2,4 @@ m_Guid = "c6bb231ce97f104e860eb55e71988bdb"
 m_Name = "T_Default_Light"
 m_Type = "Texture2D"
 
-m_SourceFile = "..\\AssetsRaw\\Textures\\T_Default_Light.png"
+m_SourceFile = ".\\Textures\\T_Default_Light.png"

@@ -2,4 +2,4 @@ m_Guid = "f9dcfdd6014ac52812e21e73f232b7f9"
 m_Name = "T_Magic8"
 m_Type = "Texture2D"
 
-m_SourceFile = "..\\AssetsRaw\\Textures\\Flipbooks\\T_Magic8.png"
+m_SourceFile = ".\\Textures\\Flipbooks\\T_Magic8.png"

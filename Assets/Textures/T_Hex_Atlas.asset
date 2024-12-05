@@ -1,4 +1,4 @@
 m_Guid = '3c8610fc623e4496951dcefeaf0495ab'
 m_Name = 'T_Hex_Atlas'
-m_SourceFile = '..\AssetsRaw\Textures\T_Hex_Atlas.png'
+m_SourceFile = '.\\Textures\\T_Hex_Atlas.png'
 m_Type = 'Texture2D'

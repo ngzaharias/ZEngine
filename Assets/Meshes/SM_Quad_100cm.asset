@@ -2,4 +2,4 @@ m_Guid = "e94876a8e4cc4d1684c85859b48a1af6"
 m_Name = "SM_Quad_100cm"
 m_Type = "StaticMesh"
 
-m_SourceFile = "..\\AssetsRaw\\Meshes\\Quad_100cm.fbx"
+m_SourceFile = ".\\Meshes\\Quad_100cm.fbx"

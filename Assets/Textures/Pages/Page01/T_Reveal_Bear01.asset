@@ -1,4 +1,4 @@
 m_Guid = 'd095ad15fa6f476a4ba56466f1a690c4'
 m_Name = 'T_Reveal_Bear01'
-m_SourceFile = '..\AssetsRaw\Textures\Pages\Page01\T_Reveal_Bear01.png'
+m_SourceFile = '.\\Textures\\Pages\\Page01\\T_Reveal_Bear01.png'
 m_Type = 'Texture2D'

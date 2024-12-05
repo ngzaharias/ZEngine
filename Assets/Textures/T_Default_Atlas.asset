@@ -2,4 +2,4 @@ m_Guid = "f87d23dd5e7b4d6dbff88b0eb676f80c"
 m_Name = "T_Default_Atlas"
 m_Type = "Texture2D"
 
-m_SourceFile = "..\\AssetsRaw\\Textures\\T_Default_Atlas.png"
+m_SourceFile = ".\\Textures\\T_Default_Atlas.png"

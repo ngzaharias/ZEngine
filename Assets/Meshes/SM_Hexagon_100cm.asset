@@ -2,4 +2,4 @@ m_Guid = "ecf9330f287d40fea37789491c3c32a3"
 m_Name = "SM_Hexagon_100cm"
 m_Type = "StaticMesh"
 
-m_SourceFile = "..\\AssetsRaw\\Meshes\\Hexagon_100cm.fbx"
+m_SourceFile = ".\\Meshes\\Hexagon_100cm.fbx"
