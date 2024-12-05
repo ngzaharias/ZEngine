@@ -28,7 +28,7 @@ void eng::level::LoadSystem::Initialise(World& world)
 	auto& directoryComponent = world.WriteSingleton<eng::level::DirectoryComponent>();
 
 	str::Path subpath;
-	const str::Path path = str::Path(str::EPath::Assets, strLevels.ToChar());
+	const str::Path path = str::Path(str::EPath::Levels);
 	for (const auto& entry : std::filesystem::directory_iterator(path.ToChar()))
 	{
 		subpath = std::move(entry.path().string());

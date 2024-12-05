@@ -16,6 +16,7 @@ int main(int agrc, char* argv[])
 	const str::Path assetsDirectory = eng::GetAssetsDirectory();
 	const str::Path configDirectory = eng::GetConfigDirectory();
 	const str::Path executableFilepath = eng::GetExecutableFilepath();
+	const str::Path levelsDirectory = eng::GetLevelsDirectory();
 	const str::Path workingDirectory = eng::GetWorkingDirectory();
 	const str::Path immediateDirectory = executableFilepath.GetDirectory();
 
@@ -23,6 +24,7 @@ int main(int agrc, char* argv[])
 	str::SetPath(str::EPath::Assets, assetsDirectory);
 	str::SetPath(str::EPath::Config, configDirectory);
 	str::SetPath(str::EPath::Executable, executableFilepath);
+	str::SetPath(str::EPath::Levels, levelsDirectory);
 	str::SetPath(str::EPath::WorkingDir, workingDirectory);
 
 	std::filesystem::create_directories(appdataDirectory.ToChar());

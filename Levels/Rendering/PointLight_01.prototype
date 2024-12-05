@@ -1,0 +1,14 @@
+m_Guid = "1cad6729cb7748de8a1cdac76ac2772c"
+m_Name = "PointLight_01"
+
+['eng::LightPointComponent']
+m_Colour = { X = 1.0, Y = 0.0, Z = 0.0 }
+m_Range = 500.0
+
+['eng::StaticMeshComponent']
+m_StaticMesh = "d0284c563e6a49a29a8025ff2731a3de"
+
+['eng::TransformComponent']
+m_Translate = { X = 500.0, Y = 200.0, Z = 100.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 0.1, Y = 0.1, Z = 0.1 }

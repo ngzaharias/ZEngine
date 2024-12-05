@@ -11,6 +11,7 @@ namespace str
 		Assets,
 		Config,
 		Executable,
+		Levels,
 		WorkingDir,
 	};
 
@@ -22,6 +23,7 @@ namespace str
 		Path(const char* value);
 		Path(const str::String& value);
 		Path(const str::StringView& value);
+		Path(const str::EPath type);
 		template<typename... TStringViews>
 		Path(const str::EPath type, const TStringViews& ...args);
 		template<typename... TStringViews>

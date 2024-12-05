@@ -34,6 +34,12 @@ str::Path::Path(const str::StringView& value)
 {
 }
 
+str::Path::Path(const str::EPath type)
+	: m_Value()
+{
+	*this = GetPath(type);
+}
+
 bool str::Path::operator==(const str::Path& rhs) const
 {
 	return m_Value == rhs.m_Value;

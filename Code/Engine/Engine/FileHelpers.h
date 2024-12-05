@@ -40,6 +40,7 @@ namespace eng
 	str::Path GetConfigDirectory();
 	str::Path GetCurrentFilepath();
 	str::Path GetExecutableFilepath();
+	str::Path GetLevelsDirectory();
 	str::Path GetWorkingDirectory();
 
 	bool LoadFileAsBinary(const str::Path& filepath, str::String& out_String);

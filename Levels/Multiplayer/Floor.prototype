@@ -1,0 +1,18 @@
+m_Guid = "0b0237ad9ff5439f86b0bd48d26c3dba"
+m_Name = "Floor"
+
+['eng::PhysicsComponent']
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+[['eng::PhysicsComponent'.m_Shapes]]
+['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+m_Channel = 1
+m_Extents = { X = 1000.0, Y = 50.0, Z = 50.0 }
+
+['eng::SpriteComponent']
+m_Size = { X = 1920, Y = 10 }
+m_Sprite = "52ffdca6bc1d64230eda0e2056e9662b"
+
+['eng::TransformComponent']
+m_Translate = { X = 0.0, Y = -400.0, Z = 0.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
