@@ -1,0 +1,7 @@
+m_Guid = '6218a1e29f7549fb5f8c59b9d1b218c1'
+m_Name = 'SP_Rune_36'
+m_Position = { X = 270.0, Y = 0.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 54.0, Y = 60.0 }
+m_Texture2D = '9abe5e917060492763b9ae5d15a5f452'
+m_Type = 'Sprite'
