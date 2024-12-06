@@ -18,6 +18,10 @@ public:
 	/// \brief Construct with components initialized to values x and y.
 	constexpr explicit Vector2f(const float x, const float y) noexcept : x(x), y(y) {}
 
+	[[nodiscard]] constexpr bool operator<(const Vector2f& rhs) const noexcept { return (x != rhs.x) ? (x < rhs.x) : (y < rhs.y); }
+	[[nodiscard]] constexpr bool operator<=(const Vector2f& rhs) const noexcept { return (x != rhs.x) ? (x <= rhs.x) : (y <= rhs.y); }
+	[[nodiscard]] constexpr bool operator>(const Vector2f& rhs) const noexcept { return (x != rhs.x) ? (x > rhs.x) : (y > rhs.y); }
+	[[nodiscard]] constexpr bool operator>=(const Vector2f& rhs) const noexcept { return (x != rhs.x) ? (x >= rhs.x) : (y >= rhs.y); }
 	[[nodiscard]] constexpr bool operator==(const Vector2f& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y); }
 	[[nodiscard]] constexpr bool operator!=(const Vector2f& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y); }
 
@@ -118,8 +122,18 @@ public:
 	constexpr explicit Vector2u(const uint32 value) noexcept : x(value), y(value) {}
 	constexpr explicit Vector2u(const uint32 x, const uint32 y) noexcept : x(x), y(y) {}
 
+	[[nodiscard]] constexpr bool operator<(const Vector2u& rhs) const noexcept { return (x != rhs.x) ? (x < rhs.x) : (y < rhs.y); }
+	[[nodiscard]] constexpr bool operator<=(const Vector2u& rhs) const noexcept { return (x != rhs.x) ? (x <= rhs.x) : (y <= rhs.y); }
+	[[nodiscard]] constexpr bool operator>(const Vector2u& rhs) const noexcept { return (x != rhs.x) ? (x > rhs.x) : (y > rhs.y); }
+	[[nodiscard]] constexpr bool operator>=(const Vector2u& rhs) const noexcept { return (x != rhs.x) ? (x >= rhs.x) : (y >= rhs.y); }
 	[[nodiscard]] constexpr bool operator==(const Vector2u& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y); }
 	[[nodiscard]] constexpr bool operator!=(const Vector2u& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y); }
+
+	[[nodiscard]] constexpr Vector2u operator+(const Vector2u& rhs) const noexcept { return Vector2u(x + rhs.x, y + rhs.y); }
+	[[nodiscard]] constexpr Vector2u operator-(const Vector2u& rhs) const noexcept { return Vector2u(x - rhs.x, y - rhs.y); }
+
+	constexpr Vector2u& operator+=(const Vector2u& rhs) noexcept { x += rhs.x; y += rhs.y; return *this; }
+	constexpr Vector2u& operator-=(const Vector2u& rhs) noexcept { x -= rhs.x; y -= rhs.y; return *this; }
 
 	static const Vector2u AxisX;
 	static const Vector2u AxisY;
@@ -148,6 +162,10 @@ public:
 	/// \brief Construct with components initialized to vector x and y, and value z.
 	constexpr explicit Vector3f(const Vector2f& value, const float z) noexcept : x(value.x), y(value.y), z(z) {}
 
+	[[nodiscard]] constexpr bool operator<(const Vector3f& rhs) const noexcept { return (x != rhs.x) ? (x < rhs.x) : (y != rhs.y) ? (y < rhs.y) : (z < rhs.z); }
+	[[nodiscard]] constexpr bool operator<=(const Vector3f& rhs) const noexcept { return (x != rhs.x) ? (x <= rhs.x) : (y != rhs.y) ? (y <= rhs.y) : (z <= rhs.z); }
+	[[nodiscard]] constexpr bool operator>(const Vector3f& rhs) const noexcept { return (x != rhs.x) ? (x > rhs.x) : (y != rhs.y) ? (y > rhs.y) : (z > rhs.z); }
+	[[nodiscard]] constexpr bool operator>=(const Vector3f& rhs) const noexcept { return (x != rhs.x) ? (x >= rhs.x) : (y != rhs.y) ? (y >= rhs.y) : (z >= rhs.z); }
 	[[nodiscard]] constexpr bool operator==(const Vector3f& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z); }
 	[[nodiscard]] constexpr bool operator!=(const Vector3f& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y) || (z != rhs.z); }
 
@@ -226,6 +244,10 @@ public:
 	constexpr explicit Vector3i(const int32 x, const int32 y, const int32 z) noexcept : x(x), y(y), z(z) {}
 	constexpr explicit Vector3i(const Vector2i& value, const int32 z) noexcept : x(value.x), y(value.y), z(z) {}
 
+	[[nodiscard]] constexpr bool operator<(const Vector3i& rhs) const noexcept { return (x != rhs.x) ? (x < rhs.x) : (y != rhs.y) ? (y < rhs.y) : (z < rhs.z); }
+	[[nodiscard]] constexpr bool operator<=(const Vector3i& rhs) const noexcept { return (x != rhs.x) ? (x <= rhs.x) : (y != rhs.y) ? (y <= rhs.y) : (z <= rhs.z); }
+	[[nodiscard]] constexpr bool operator>(const Vector3i& rhs) const noexcept { return (x != rhs.x) ? (x > rhs.x) : (y != rhs.y) ? (y > rhs.y) : (z > rhs.z); }
+	[[nodiscard]] constexpr bool operator>=(const Vector3i& rhs) const noexcept { return (x != rhs.x) ? (x >= rhs.x) : (y != rhs.y) ? (y >= rhs.y) : (z >= rhs.z); }
 	[[nodiscard]] constexpr bool operator==(const Vector3i& rhs) const noexcept { return (x == rhs.x) && (y == rhs.y) && (z == rhs.z); }
 	[[nodiscard]] constexpr bool operator!=(const Vector3i& rhs) const noexcept { return (x != rhs.x) || (y != rhs.y) || (z != rhs.z); }
 
