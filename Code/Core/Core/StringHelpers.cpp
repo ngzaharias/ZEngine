@@ -158,3 +158,11 @@ void str::ToUpper(str::String& string)
 {
 	std::transform(string.begin(), string.end(), string.begin(), ::toupper);
 }
+
+str::String str::ToString(const int32 index, const int32 padding)
+{
+	str::String string;
+	string = std::format("{}", index);
+	string = str::String(padding - std::min((size_t)padding, string.length()), '0') + string;
+	return string;
+}
