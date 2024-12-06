@@ -14,6 +14,7 @@ namespace editor::settings
 
 	struct Sprite
 	{
+		str::Path m_Extract = {};
 		str::Path m_Open = {};
 		str::Path m_Save = {};
 	};

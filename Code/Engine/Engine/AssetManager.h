@@ -44,9 +44,8 @@ namespace eng
 
 	struct AssetRef
 	{
-		const eng::Asset* m_Asset = nullptr;
-
 		int32 m_Count = 0;
+		const eng::Asset* m_Asset = nullptr;
 	};
 
 	class AssetManager final
@@ -62,6 +61,8 @@ namespace eng
 	public:
 		void Initialise();
 		void Shutdown();
+
+		bool HasAsset(const str::Guid& guid);
 
 		template<typename TAsset, typename TLoader, typename... TArgs>
 		void RegisterAsset(const str::Name& type, TArgs&&... args);

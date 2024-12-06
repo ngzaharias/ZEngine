@@ -9,6 +9,7 @@
 #include "Editor/TextureHelpers.h"
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
+#include "Engine/ShaderAsset.h"
 #include "Engine/InputComponent.h"
 #include "Engine/Texture2DAsset.h"
 #include "GameDebug/MenuBarComponents.h"
@@ -39,6 +40,15 @@ namespace
 	str::String ToLabel(const char* label, const int32 index)
 	{
 		return std::format("{}: {}", label, index);
+	}
+
+	Vector2f ToPosition(const uint32 index, const editor::SpriteBatchingComponent& data)
+	{
+		const uint32 x = (index % data.m_Iterations.x);
+		const uint32 y = (index / data.m_Iterations.x) % data.m_Iterations.y;
+		return Vector2f(
+			data.m_Initial.x + (data.m_Stride.x * x),
+			data.m_Initial.y + (data.m_Stride.y * y));
 	}
 
 	bool HasInput(World& world, const input::EKeyboard key)
@@ -72,10 +82,86 @@ namespace
 		}
 	};
 
+	void DrawBatcher(World& world, const ecs::Entity& entity)
+	{
+		auto& batch = world.WriteComponent<editor::SpriteBatchingComponent>(entity);
+
+		ImGui::TextDisabled("Display:");
+		ImGui::Checkbox("m_IsPreviewing", &batch.m_IsPreviewing);
+
+		ImGui::Separator();
+
+		ImGui::TextDisabled("Options:");
+		if (ImGui::Button("Extract"))
+		{
+			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+			const auto& readWindow = world.ReadComponent<editor::SpriteWindowComponent>(entity);
+
+			eng::SelectFolderSettings settings;
+			settings.m_Title = "Save Sprites";
+			settings.m_Path = readSettings.m_Sprite.m_Extract;
+
+			const str::Path folderpath = eng::SelectFolderDialog(settings);
+			if (!folderpath.IsEmpty())
+			{
+				auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
+				writeSettings.m_Sprite.m_Extract = folderpath;
+
+				auto& writeWindow = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
+
+				str::String name;
+				str::Path filepath;
+				eng::SpriteAsset& asset = writeWindow.m_Asset;
+
+				const int32 digits = math::ToDigits(batch.m_Count);
+				for (int32 i = 0; i < batch.m_Count; ++i)
+				{
+					name = batch.m_Format + str::ToString(i + 1, digits);
+					filepath = str::Path(folderpath, "/", name);
+
+					asset.m_Guid = str::Guid::Generate();
+					asset.m_Name = str::Name::Create(name);
+					asset.m_Position = ToPosition(i, batch);
+
+					assetManager.SaveAsset(asset, filepath);
+				}
+			}
+		}
+
+		{
+			const int32 countMax = batch.m_Iterations.x * batch.m_Iterations.y;
+			imgui::DragVector("m_Iterations", batch.m_Iterations, 0.05f, 1, INT16_MAX);
+			imgui::DragVector("m_Initial", batch.m_Initial);
+			imgui::DragVector("m_Stride", batch.m_Stride);
+			ImGui::SliderInt("m_Count", &batch.m_Count, 0, countMax);
+		}
+
+		ImGui::Separator();
+
+		{
+			ImGui::TextDisabled("Names:");
+			imgui::InputText("Format", batch.m_Format);
+
+			str::String name;
+			const int32 digits = math::ToDigits(batch.m_Count);
+			for (int32 i = 0; i < batch.m_Count; ++i)
+			{
+				// #todo: 
+				//name = std::vformat(batch.m_Format, std::make_format_args(index));
+				name = batch.m_Format + str::ToString(i + 1, digits);
+
+				imgui::Text(name);
+			}
+		}
+	}
+
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(entity);
-		eng::SpriteAsset& sprite = windowComponent.m_Asset;
+		auto& window = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+		eng::SpriteAsset& sprite = window.m_Asset;
+
+		str::Guid spritePrev = sprite.m_Guid;
 
 		imgui::Inspector inspector;
 		if (inspector.Begin("##inspector"))
@@ -88,6 +174,9 @@ namespace
 			inspector.Write("m_Size", sprite.m_Size);
 			inspector.End();
 		}
+
+		if (ImGui::CollapsingHeader("Batcher"))
+			DrawBatcher(world, entity);
 	}
 
 	void Asset_New(World& world, const ecs::Entity& entity)
@@ -97,15 +186,15 @@ namespace
 
 		if (HasInput(world, input::EKeyboard::N) || world.HasComponent<editor::SpriteAssetNewComponent>(entity))
 		{
-			auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(entity);
-			windowComponent.m_Asset = {};
+			auto& window = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+			window.m_Asset = {};
 
-			eng::SpriteAsset& sprite = windowComponent.m_Asset;
+			eng::SpriteAsset& sprite = window.m_Asset;
 			sprite.m_Guid = str::Guid::Generate();
 			sprite.m_Name = str::Name::Create("SP_Sprite");
 			sprite.m_Shader = uuidShader;
 			sprite.m_Texture2D = uuidTexture2D;
-			sprite.m_Size = Vector2u(128);
+			sprite.m_Size = Vector2f(128.f);
 		}
 	}
 
@@ -178,8 +267,8 @@ namespace
 
 	void DrawPreviewer(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(entity);
-		eng::SpriteAsset& sprite = windowComponent.m_Asset;
+		auto& window = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+		eng::SpriteAsset& sprite = window.m_Asset;
 		if (!sprite.m_Texture2D.IsValid())
 			return;
 
@@ -204,8 +293,8 @@ namespace
 
 	void DrawTexture(World& world, const ecs::Entity& entity)
 	{
-		auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(entity);
-		eng::SpriteAsset& sprite = windowComponent.m_Asset;
+		auto& window = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+		eng::SpriteAsset& sprite = window.m_Asset;
 		if (!sprite.m_Texture2D.IsValid())
 			return;
 
@@ -217,14 +306,15 @@ namespace
 		const Vector2f textureSize = Vector2f((float)textureAsset->m_Width, (float)textureAsset->m_Height);
 		const ImVec2 regionSize = ImGui::GetContentRegionAvail();
 		const Vector2f imageSize = editor::FitImageToRegion(textureSize, regionSize);
+		const ImVec2 regionMin = ImGui::GetCursorScreenPos();
+		const ImVec2 regionMax = ImVec2(regionMin.x + imageSize.x, regionMin.y + imageSize.y);
+
+		imgui::Image(textureAsset->m_TextureId, imageSize);
 
 		// draw rect
 		{
 			const Vector2f spritePos = Vector2f((float)sprite.m_Position.x, (float)sprite.m_Position.y);
 			const Vector2f spriteSize = Vector2f((float)sprite.m_Size.x, (float)sprite.m_Size.y);
-
-			const ImVec2 regionMin = ImGui::GetCursorScreenPos();
-			const ImVec2 regionMax = ImVec2(regionMin.x + imageSize.x, regionMin.y + imageSize.y);
 
 			Vector2f min = spritePos;
 			Vector2f max = min + spriteSize;
@@ -236,7 +326,22 @@ namespace
 			imgui::AddRect({ min, max }, Vector4f(1.0f, 1.0f, 0.4f, 1.0f));
 		}
 
-		imgui::Image(textureAsset->m_TextureId, imageSize);
+		// draw sprites to be extracted
+		const auto& batch = world.ReadComponent<editor::SpriteBatchingComponent>(entity);
+		if (batch.m_IsPreviewing)
+		{
+			for (int32 i = 0; i < batch.m_Count; ++i)
+			{
+				Vector2f min = ToPosition(i, batch);
+				Vector2f max = min + window.m_Asset.m_Size;
+				min.x = math::Remap(min.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
+				min.y = math::Remap(min.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
+				max.x = math::Remap(max.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
+				max.y = math::Remap(max.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
+
+				imgui::AddRect({ min, max }, Vector4f(1.0f, 0.4f, 0.0f, 1.0f));
+			}
+		}
 	};
 }
 
@@ -252,10 +357,11 @@ void editor::SpriteEditor::Update(World& world, const GameTime& gameTime)
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Sprite Editor");
+		world.AddComponent<editor::SpriteBatchingComponent>(windowEntity);
 
 		auto& window = world.AddComponent<editor::SpriteWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
-		window.m_DockspaceLabel = ToLabel("Sprite Editor", identifier);
+		window.m_DockspaceLabel = ToLabel("Sprite Editor##sprite", identifier);
 		window.m_InspectorLabel = ToLabel("Inspector##sprite", identifier);
 		window.m_PreviewerLabel = ToLabel("Previewer##sprite", identifier);
 		window.m_TextureLabel   = ToLabel("Texture##sprite", identifier);
@@ -269,16 +375,16 @@ void editor::SpriteEditor::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::SpriteWindowComponent>>())
 	{
-		auto& windowComponent = world.WriteComponent<editor::SpriteWindowComponent>(windowEntity);
+		auto& window = world.WriteComponent<editor::SpriteWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
-		if (ImGui::Begin(windowComponent.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
+		if (ImGui::Begin(window.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
 		{
 			DrawMenuBar(world, windowEntity);
 
-			const ImGuiID dockspaceId = ImGui::GetID(windowComponent.m_DockspaceLabel.c_str());
+			const ImGuiID dockspaceId = ImGui::GetID(window.m_DockspaceLabel.c_str());
 			if (!ImGui::DockBuilderGetNode(dockspaceId))
 			{
 				ImGui::DockBuilderRemoveNode(dockspaceId);
@@ -288,24 +394,24 @@ void editor::SpriteEditor::Update(World& world, const GameTime& gameTime)
 				ImGuiID textureId, inspectorId, previewerId;
 				ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.6f, &textureId, &inspectorId);
 				ImGui::DockBuilderSplitNode(inspectorId, ImGuiDir_Up, 0.6f, &inspectorId, &previewerId);
-				ImGui::DockBuilderDockWindow(windowComponent.m_TextureLabel.c_str(), textureId);
-				ImGui::DockBuilderDockWindow(windowComponent.m_InspectorLabel.c_str(), inspectorId);
-				ImGui::DockBuilderDockWindow(windowComponent.m_PreviewerLabel.c_str(), previewerId);
+				ImGui::DockBuilderDockWindow(window.m_TextureLabel.c_str(), textureId);
+				ImGui::DockBuilderDockWindow(window.m_InspectorLabel.c_str(), inspectorId);
+				ImGui::DockBuilderDockWindow(window.m_PreviewerLabel.c_str(), previewerId);
 				ImGui::DockBuilderFinish(dockspaceId);
 			}
 			ImGui::DockSpace(dockspaceId, ImVec2(0, 0), s_DockNodeFlags);
 		}
 		ImGui::End();
 
-		if (ImGui::Begin(windowComponent.m_TextureLabel.c_str()))
+		if (ImGui::Begin(window.m_TextureLabel.c_str()))
 			DrawTexture(world, windowEntity);
 		ImGui::End();
 
-		if (ImGui::Begin(windowComponent.m_InspectorLabel.c_str()))
+		if (ImGui::Begin(window.m_InspectorLabel.c_str()))
 			DrawInspector(world, windowEntity);
 		ImGui::End();
 
-		if (ImGui::Begin(windowComponent.m_PreviewerLabel.c_str()))
+		if (ImGui::Begin(window.m_PreviewerLabel.c_str()))
 			DrawPreviewer(world, windowEntity);
 		ImGui::End();
 
@@ -315,5 +421,29 @@ void editor::SpriteEditor::Update(World& world, const GameTime& gameTime)
 
 		if (!isOpen)
 			world.DestroyEntity(windowEntity);
+
+		if (window.m_Asset.m_Shader != window.m_ShaderLoaded)
+		{
+			auto& assetManager = world.WriteResource<eng::AssetManager>();
+			if (assetManager.HasAsset(window.m_ShaderLoaded))
+				assetManager.ReleaseAsset<eng::ShaderAsset>(window.m_ShaderLoaded);
+
+			window.m_ShaderLoaded = window.m_Asset.m_Shader;
+
+			if (assetManager.HasAsset(window.m_ShaderLoaded))
+				assetManager.RequestAsset<eng::ShaderAsset>(window.m_ShaderLoaded);
+		}
+
+		if (window.m_Asset.m_Texture2D != window.m_TextureLoaded)
+		{
+			auto& assetManager = world.WriteResource<eng::AssetManager>();
+			if (assetManager.HasAsset(window.m_TextureLoaded))
+				assetManager.ReleaseAsset<eng::Texture2DAsset>(window.m_TextureLoaded);
+
+			window.m_TextureLoaded = window.m_Asset.m_Texture2D;
+
+			if (assetManager.HasAsset(window.m_TextureLoaded))
+				assetManager.RequestAsset<eng::Texture2DAsset>(window.m_TextureLoaded);
+		}
 	}
 }

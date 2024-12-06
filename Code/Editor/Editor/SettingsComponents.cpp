@@ -7,6 +7,7 @@
 namespace
 {
 	const str::StringView strEntity = "m_Entity";
+	const str::StringView strExtract = "m_Extract";
 	const str::StringView strGizmos = "m_Gizmos";
 	const str::StringView strImport = "m_Import";
 	const str::StringView strOpen = "m_Open";
@@ -48,12 +49,14 @@ void eng::Visitor::WriteCustom(const editor::settings::Entity& value)
 template<>
 void eng::Visitor::ReadCustom(editor::settings::Sprite& value) const
 {
+	Read(strExtract, value.m_Extract, value.m_Extract);
 	Read(strOpen, value.m_Open, value.m_Open);
 	Read(strSave, value.m_Save, value.m_Save);
 }
 template<>
 void eng::Visitor::WriteCustom(const editor::settings::Sprite& value)
 {
+	Write(strExtract, value.m_Extract);
 	Write(strOpen, value.m_Open);
 	Write(strSave, value.m_Save);
 }

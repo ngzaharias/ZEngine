@@ -23,6 +23,11 @@ void eng::AssetManager::Shutdown()
 {
 }
 
+bool eng::AssetManager::HasAsset(const str::Guid& guid)
+{
+	return enumerate::Contains(m_FileMap, guid);
+}
+
 void eng::AssetManager::LoadFilepath(const str::Path& filepath, const bool canSearchSubdirectories)
 {
 	if (filepath.GetFileExtension() == s_Extension)

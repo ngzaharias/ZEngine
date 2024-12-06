@@ -39,6 +39,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::SpriteAssetNewComponent>();
 	m_ClientWorld.RegisterComponent<editor::SpriteAssetOpenComponent>();
 	m_ClientWorld.RegisterComponent<editor::SpriteAssetSaveComponent>();
+	m_ClientWorld.RegisterComponent<editor::SpriteBatchingComponent>();
 	m_ClientWorld.RegisterComponent<editor::SpriteWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::TableWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::TextureAssetImportComponent>();
