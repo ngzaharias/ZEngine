@@ -16,8 +16,8 @@ namespace eng
 	{
 		str::Guid m_Shader = { };
 		str::Guid m_Texture2D = { };
-		Vector2u m_Position = Vector2u::Zero;
-		Vector2u m_Size = Vector2u::Zero;
+		Vector2f m_Position = Vector2f::Zero;
+		Vector2f m_Size = Vector2f::Zero;
 	};
 
 	class SpriteAssetLoader final : public eng::AssetLoader
