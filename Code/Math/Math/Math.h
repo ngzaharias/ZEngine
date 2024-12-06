@@ -130,6 +130,12 @@ namespace math
 		return radians * 57.2958f;
 	}
 
+	/// \brief Returns the number of digits in an integer.
+	inline constexpr int32 ToDigits(int32 value) noexcept
+	{
+		return value > 0 ? (int32)log10((double)value) + 1 : 1;
+	}
+
 	/// \brief Converts a an euler angle to a radian.
 	inline constexpr float ToRadians(float degrees) noexcept
 	{
