@@ -1,0 +1,7 @@
+m_Guid = '0a0f4df33640467a868e5ec0aa8504f0'
+m_Name = 'SP_Sprite_10'
+m_Position = { X = 162.0, Y = 240.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 54.0, Y = 60.0 }
+m_Texture2D = '9abe5e917060492763b9ae5d15a5f452'
+m_Type = 'Sprite'
