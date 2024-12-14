@@ -3,7 +3,7 @@
 
 #include "Core/Name.h"
 #include "Engine/AchievementTable.h"
-#include "SteamBinding/Manager.h"
+#include "Steam/Manager.h"
 
 void eng::PlatformManager::Initialise()
 {

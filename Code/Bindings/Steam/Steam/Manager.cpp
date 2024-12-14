@@ -1,6 +1,6 @@
-#include "SteamBinding/Manager.h"
+#include "Steam/Manager.h"
 
-#include "SteamBinding/Achievements.h"
+#include "Steam/Achievements.h"
 
 bool steam::Manager::Initialise()
 {

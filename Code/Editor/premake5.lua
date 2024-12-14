@@ -46,7 +46,7 @@ project "Editor"
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
-		"%{wks.location}/../Code/SteamBinding/",
+		"%{wks.location}/../Code/Bindings/Steam/",
 	}
 
 	libdirs 
@@ -91,7 +91,7 @@ project "Editor"
 		"Imgui",
 		"Math",
 		"Network",
-		"SteamBinding",
+		"Steam",
 
 		"assimp.lib",
 		"freetype.lib",

@@ -52,7 +52,7 @@ project "Engine_ut"
 		"ECS",
 		"Engine",
 		"Math",
-		"SteamBinding",
+		"Steam",
 
 		"OptickCore.lib",
 		"steam_api64.lib",

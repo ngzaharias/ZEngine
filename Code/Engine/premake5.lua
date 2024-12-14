@@ -39,7 +39,7 @@ project "Engine"
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
-		"%{wks.location}/../Code/SteamBinding/",
+		"%{wks.location}/../Code/Bindings/Steam/",
 	}
 
 	links 
@@ -48,5 +48,5 @@ project "Engine"
 		"Imgui", 
 		"Math", 
 		"Network", 
-		"SteamBinding",
+		"Steam",
 	}

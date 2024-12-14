@@ -1,4 +1,4 @@
-#include "SteamBinding/Achievements.h"
+#include "Steam/Achievements.h"
 
 steam::Achievements::Achievements()
 	: m_CallbackUserStatsReceived(this, &Achievements::OnUserStatsReceived)
