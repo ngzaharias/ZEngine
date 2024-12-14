@@ -1,0 +1,12 @@
+m_Guid = 'd373e56de7944d1f0bbb02a34f3d5146'
+m_Name = 'Rune_01'
+
+['eng::SpriteComponent']
+m_Colour = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Size = { X = 54, Y = 60 }
+m_Sprite = '7ef6b5be62f7473d56b9553afca28640'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }

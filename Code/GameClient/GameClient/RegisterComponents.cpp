@@ -5,16 +5,19 @@
 #include "GameClient/ContainerComponents.h"
 #include "GameClient/DragComponents.h"
 #include "GameClient/GameStateComponents.h"
-#include "GameClient/HexmapLayerComponent.h"
-#include "GameClient/HexmapRootComponent.h"
-#include "GameClient/HiddenCountComponent.h"
-#include "GameClient/HiddenGroupComponent.h"
-#include "GameClient/HiddenObjectComponent.h"
-#include "GameClient/HiddenRevealComponent.h"
 #include "GameClient/ModalComponents.h"
 #include "GameClient/MovementComponents.h"
 #include "GameClient/ProjectileComponents.h"
 #include "GameClient/SettingsComponents.h"
+#include "Hexmap/HexmapLayerComponent.h"
+#include "Hexmap/HexmapRootComponent.h"
+#include "Hidden/HiddenCountComponent.h"
+#include "Hidden/HiddenGroupComponent.h"
+#include "Hidden/HiddenObjectComponent.h"
+#include "Hidden/HiddenRevealComponent.h"
+#include "Hidden/HiddenSettingsComponents.h"
+#include "Tabletop/TabletopCardComponent.h"
+#include "Tabletop/TabletopDeckComponent.h"
 
 void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 {
@@ -48,10 +51,13 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<projectile::CreateResultComponent>();
 	entityWorld.RegisterComponent<projectile::SpawnComponent>();
 	entityWorld.RegisterComponent<projectile::TrajectoryComponent>();
+	entityWorld.RegisterComponent<tabletop::CardComponent>();
+	entityWorld.RegisterComponent<tabletop::DeckComponent>();
 
 	entityWorld.RegisterSingleton<container::StorageChangesComponent>();
 	entityWorld.RegisterSingleton<clt::settings::DebugComponent>();
 	entityWorld.RegisterSingleton<gamestate::NetworkJoinComponent>();
 	entityWorld.RegisterSingleton<gamestate::StateComponent>();
+	entityWorld.RegisterSingleton<hidden::settings::DebugComponent>();
 	entityWorld.RegisterSingleton<projectile::ChangesComponent>();
 }

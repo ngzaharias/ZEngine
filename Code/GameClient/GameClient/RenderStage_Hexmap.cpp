@@ -15,8 +15,8 @@
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TransformComponent.h"
-#include "GameClient/HexmapLayerComponent.h"
-#include "GameClient/HexmapRootComponent.h"
+#include "Hexmap/HexmapLayerComponent.h"
+#include "Hexmap/HexmapRootComponent.h"
 #include "Math/HexagonHelpers.h"
 
 #include <GLEW/glew.h>

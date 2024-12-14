@@ -2,11 +2,12 @@
 
 #include "ECS/Component.h"
 
-namespace clt::settings
+namespace hidden::settings
 {
 	/// \brief Debug settings that is only used in non-gold builds.
 	struct DebugComponent : public ecs::SingletonComponent<DebugComponent>
 	{
-		bool m_IsHexmapEnabled = false;
+		bool m_IsInputEnabled = false;
+		bool m_IsObjectEnabled = false;
 	};
 }

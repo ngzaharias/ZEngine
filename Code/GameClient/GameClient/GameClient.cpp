@@ -11,13 +11,15 @@
 #include "Engine/RegisterSystems.h"
 #include "Engine/TableHeadmaster.h"
 #include "Engine/Window.h"
-#include "GameClient/HexmapRootComponent.h"
-#include "GameClient/HiddenCountComponent.h"
-#include "GameClient/HiddenGroupComponent.h"
-#include "GameClient/HiddenObjectComponent.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
 #include "GameShared/RegisterComponents.h"
+#include "Hexmap/HexmapRootComponent.h"
+#include "Hidden/HiddenCountComponent.h"
+#include "Hidden/HiddenGroupComponent.h"
+#include "Hidden/HiddenObjectComponent.h"
+#include "Tabletop/TabletopCardComponent.h"
+#include "Tabletop/TabletopDeckComponent.h"
 
 clt::GameClient::GameClient()
 	: m_ReplicationPeer(m_EntityWorld)
@@ -33,6 +35,8 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 		prototypeManager.Register<hidden::CountComponent>();
 		prototypeManager.Register<hidden::GroupComponent>();
 		prototypeManager.Register<hidden::ObjectComponent>();
+		prototypeManager.Register<tabletop::CardComponent>();
+		prototypeManager.Register<tabletop::DeckComponent>();
 	}
 
 	// resources

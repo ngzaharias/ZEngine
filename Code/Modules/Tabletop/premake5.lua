@@ -1,15 +1,15 @@
-project "GameUI"
+project "Tabletop"
 	kind "StaticLib"
-	pchheader "GameUIPCH.h"
-	pchsource "GameUI/GameUIPCH.cpp"
-	location "%{wks.location}/GameUI"
-
+	pchheader "TabletopPCH.h"
+	pchsource "Tabletop/TabletopPCH.cpp"
+	location "%{wks.location}/Modules/Tabletop"
+	
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"GameUI/**.h", 
-			"GameUI/**.cpp", 
-			"GameUI/**.inl" } },
+			"Tabletop/**.h", 
+			"Tabletop/**.cpp", 
+			"Tabletop/**.inl" } },
 	}
 
 	includedirs 
@@ -21,11 +21,9 @@ project "GameUI"
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
-		"%{wks.location}/../Code/GameClient/",
-		"%{wks.location}/../Code/GameUI/",
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",
-		"%{wks.location}/../Code/Modules/Hidden/",
+		"%{wks.location}/../Code/Modules/Tabletop/",
 	}
 
 	links 
@@ -33,7 +31,6 @@ project "GameUI"
 		"Core", 
 		"ECS", 
 		"Engine", 
-		"GameClient", 
 		"Imgui", 
-		"Math",
+		"Math", 
 	}

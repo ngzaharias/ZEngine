@@ -12,6 +12,11 @@ namespace eng::settings
 	struct DebugComponent;
 }
 
+namespace hidden::settings
+{
+	struct DebugComponent;
+}
+
 namespace dbg::settings
 {
 	class DebugSystem final : public ecs::System
@@ -19,7 +24,8 @@ namespace dbg::settings
 	public:
 		using World = ecs::WorldView<
 			clt::settings::DebugComponent,
-			eng::settings::DebugComponent>;
+			eng::settings::DebugComponent,
+			::hidden::settings::DebugComponent>;
 
 		void Initialise(World& world);
 

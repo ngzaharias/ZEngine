@@ -17,10 +17,10 @@
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Visitor.h"
-#include "GameClient/HiddenCountComponent.h"
-#include "GameClient/HiddenGroupComponent.h"
-#include "GameClient/HiddenObjectComponent.h"
-#include "GameClient/HiddenRevealComponent.h"
+#include "Hidden/HiddenCountComponent.h"
+#include "Hidden/HiddenGroupComponent.h"
+#include "Hidden/HiddenObjectComponent.h"
+#include "Hidden/HiddenRevealComponent.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>

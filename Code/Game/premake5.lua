@@ -46,6 +46,9 @@ project "Game"
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
 		"%{wks.location}/../Code/Bindings/Steam/",
+		"%{wks.location}/../Code/Modules/Hexmap/",
+		"%{wks.location}/../Code/Modules/Hidden/",
+		"%{wks.location}/../Code/Modules/Tabletop/",
 	}
 
 	libdirs 

@@ -1,15 +1,15 @@
-project "GameUI"
+project "Hexmap"
 	kind "StaticLib"
-	pchheader "GameUIPCH.h"
-	pchsource "GameUI/GameUIPCH.cpp"
-	location "%{wks.location}/GameUI"
-
+	pchheader "HexmapPCH.h"
+	pchsource "Hexmap/HexmapPCH.cpp"
+	location "%{wks.location}/Modules/Hexmap"
+	
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"GameUI/**.h", 
-			"GameUI/**.cpp", 
-			"GameUI/**.inl" } },
+			"Hexmap/**.h", 
+			"Hexmap/**.cpp", 
+			"Hexmap/**.inl" } },
 	}
 
 	includedirs 
@@ -21,11 +21,9 @@ project "GameUI"
 		"%{wks.location}/../Code/Core/",
 		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
-		"%{wks.location}/../Code/GameClient/",
-		"%{wks.location}/../Code/GameUI/",
 		"%{wks.location}/../Code/Imgui/",
 		"%{wks.location}/../Code/Math/",
-		"%{wks.location}/../Code/Modules/Hidden/",
+		"%{wks.location}/../Code/Modules/Hexmap/",
 	}
 
 	links 
@@ -33,7 +31,6 @@ project "GameUI"
 		"Core", 
 		"ECS", 
 		"Engine", 
-		"GameClient", 
 		"Imgui", 
-		"Math",
+		"Math", 
 	}

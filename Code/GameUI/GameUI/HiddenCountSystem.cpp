@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/HiddenCountComponent.h"
+#include "Hidden/HiddenCountComponent.h"
 
 #include <imgui/imgui.h>
 

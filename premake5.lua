@@ -56,6 +56,11 @@ workspace "ZEngine"
 		"%{wks.location}/../Code/Bindings/%{prj.name}/%{prj.name}/**.inl",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/premake5.*",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/*.natvis",
+		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.h",
+		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.cpp",
+		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.inl",
+		"%{wks.location}/../Code/Modules/%{prj.name}/premake5.*",
+		"%{wks.location}/../Code/Modules/%{prj.name}/*.natvis",
 	}
 
 	vpaths 
@@ -80,6 +85,10 @@ workspace "ZEngine"
 
 	group "Bindings"
 		include "Code/Bindings/Steam/premake5.lua"
+	group "Modules"
+		include "Code/Modules/Hexmap/premake5.lua"
+		include "Code/Modules/Hidden/premake5.lua"
+		include "Code/Modules/Tabletop/premake5.lua"
 	group "ut"
 		include "Code/Core_ut/premake5.lua"
 		include "Code/ECS_ut/premake5.lua"
