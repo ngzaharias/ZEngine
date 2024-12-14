@@ -63,8 +63,8 @@ namespace str
 	void ToUpper(str::String& string);
 
 	/// \brief Converts an integer to a string with leading zeros.
-	/// Index:	 7
-	/// Padding: 3
+	/// Index:	7
+	/// Width:  3
 	/// Result: "007"
-	str::String ToString(const int32 index, const int32 padding);
+	str::String ToString(const int32 index, const int32 width);
 }
