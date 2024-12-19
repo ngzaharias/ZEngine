@@ -125,6 +125,13 @@ void imgui::Inspector::ReadCustom(const uint64& value)
 }
 
 template<>
+void imgui::Inspector::ReadCustom(const Colour& value)
+{
+	ImGui::SetNextItemWidth(-1);
+	imgui::DragColour("##value", value);
+}
+
+template<>
 void imgui::Inspector::ReadCustom(const Quaternion& value)
 {
 	ImGui::SetNextItemWidth(-1);
@@ -283,6 +290,13 @@ bool imgui::Inspector::WriteCustom(uint64& value)
 {
 	ImGui::SetNextItemWidth(-1);
 	return imgui::DragUInt("##value", value);
+}
+
+template<>
+bool imgui::Inspector::WriteCustom(Colour& value)
+{
+	ImGui::SetNextItemWidth(-1);
+	return imgui::DragColour("##value", value);
 }
 
 template<>

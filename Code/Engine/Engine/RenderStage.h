@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Array.h"
+#include "Core/Colour.h"
 #include "Core/Guid.h"
 #include "ECS/Entity.h"
 #include "Math/Matrix.h"
@@ -29,7 +30,7 @@ namespace eng
 	{
 		Array<Matrix4x4> m_Models;
 		Array<Vector4f>  m_TexParams;
-		Array<Vector3f>  m_Colours;
+		Array<Colour>    m_Colours;
 	};
 
 	struct RenderStageData

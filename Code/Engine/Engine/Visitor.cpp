@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/Visitor.h"
 
+#include "Core/Colour.h"
 #include "Core/Guid.h"
 #include "Core/Name.h"
 #include "Core/Path.h"
@@ -301,6 +302,15 @@ void eng::Visitor::Read(const int32 index, str::String& value) const
 // Read - Non-Fundamentals
 
 template<>
+void eng::Visitor::ReadCustom(Colour& value) const
+{
+	Read("R", value.r, 1.f);
+	Read("G", value.g, 1.f);
+	Read("B", value.b, 1.f);
+	Read("A", value.a, 1.f);
+}
+
+template<>
 void eng::Visitor::ReadCustom(Quaternion& value) const
 {
 	Read("X", value.x, 0.f);
@@ -519,6 +529,16 @@ void eng::Visitor::Write(const int32 index, const str::String& value)
 
 //////////////////////////////////////////////////////////////////////////
 // Write - Non-Fundamentals
+
+template<>
+void eng::Visitor::WriteCustom(const Colour& value)
+{
+	SetInline();
+	Write("R", value.r);
+	Write("G", value.g);
+	Write("B", value.b);
+	Write("A", value.a);
+}
 
 template<>
 void eng::Visitor::WriteCustom(const Quaternion& value)

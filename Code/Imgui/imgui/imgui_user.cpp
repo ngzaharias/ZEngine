@@ -4,6 +4,7 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #endif
 
+#include "Core/Colour.h"
 #include "Core/Guid.h"
 #include "Core/Name.h"
 #include "Core/Path.h"
@@ -211,6 +212,18 @@ bool imgui::Checkbox(const char* label, const bool& value)
 {
 	RaiiDisable disable;
 	return ImGui::Checkbox(label, const_cast<bool*>(&value));
+}
+
+bool imgui::DragColour(const char* label, Colour& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	return ImGui::DragFloat4(label, &value.r, speed, min, max, format, flags);
+}
+
+bool imgui::DragColour(const char* label, const Colour& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)
+{
+	RaiiDisable disable;
+	Colour& v = const_cast<Colour&>(value);
+	return ImGui::DragFloat4(label, &v.r, speed, min, max, format, flags);
 }
 
 bool imgui::DragFloat(const char* label, float& value, float speed, float min, float max, const char* format, ImGuiSliderFlags flags)

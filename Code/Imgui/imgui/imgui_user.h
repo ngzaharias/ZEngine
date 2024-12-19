@@ -5,6 +5,7 @@
 #include "Math/Vector.h"
 
 class AABB2f;
+class Colour;
 class Quaternion;
 class Rotator;
 typedef int ImDrawFlags;
@@ -58,6 +59,9 @@ namespace imgui
 	
 	bool Checkbox(const char* label, bool& value);
 	bool Checkbox(const char* label, const bool& value);
+
+	bool DragColour(const char* label, Colour& value, float speed = 1.f, float min = 0.f, float max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+	bool DragColour(const char* label, const Colour& value, float speed = 1.f, float min = 0.f, float max = 0.f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
 
 	bool DragFloat(const char* label, float& value, float speed = 1.f, float min = 0, float max = 0, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
 	bool DragFloat(const char* label, const float& value, float speed = 1.f, float min = 0, float max = 0, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
