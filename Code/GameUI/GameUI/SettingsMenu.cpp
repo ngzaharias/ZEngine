@@ -8,6 +8,7 @@
 #include "Engine/SettingsComponents.h"
 #include "GameClient/SettingsComponents.h"
 #include "GameUI/SettingsComponents.h"
+#include "Hidden/HiddenSettingsComponents.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -35,6 +36,7 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		window.m_Label = ToLabel("Settings Menu", identifier);
 		window.m_DebugClient = world.ReadSingleton<clt::settings::DebugComponent>();
 		window.m_DebugEngine = world.ReadSingleton<eng::settings::DebugComponent>();
+		window.m_DebugHidden = world.ReadSingleton<hidden::settings::DebugComponent>();
 		window.m_Local = world.ReadSingleton<eng::settings::LocalComponent>();
 	}
 
@@ -56,10 +58,10 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_MenuBar;
 
-		auto& windowComponent = world.WriteComponent<gui::settings::WindowComponent>(entity);
+		auto& window = world.WriteComponent<gui::settings::WindowComponent>(entity);
 
 		bool isWindowOpen = true;
-		if (ImGui::Begin(windowComponent.m_Label.c_str(), &isWindowOpen, s_WindowFlags))
+		if (ImGui::Begin(window.m_Label.c_str(), &isWindowOpen, s_WindowFlags))
 		{
 			if (ImGui::BeginTabBar("##tabs"))
 			{
@@ -68,9 +70,9 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 					imgui::Inspector inspector;
 					if (inspector.Begin("##settingsmenu"))
 					{
-						if (inspector.Write(windowComponent.m_Local))
+						if (inspector.Write(window.m_Local))
 						{
-							world.WriteSingleton<eng::settings::LocalComponent>() = windowComponent.m_Local;
+							world.WriteSingleton<eng::settings::LocalComponent>() = window.m_Local;
 						}
 						inspector.End();
 					}
@@ -82,11 +84,14 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 					imgui::Inspector inspector;
 					if (inspector.Begin("##settingsmenu"))
 					{
-						if (inspector.Write(windowComponent.m_DebugClient))
-							world.WriteSingleton<clt::settings::DebugComponent>() = windowComponent.m_DebugClient;
+						if (inspector.Write(window.m_DebugClient))
+							world.WriteSingleton<clt::settings::DebugComponent>() = window.m_DebugClient;
 						ImGui::Spacing();
-						if (inspector.Write(windowComponent.m_DebugEngine))
-							world.WriteSingleton<eng::settings::DebugComponent>() = windowComponent.m_DebugEngine;
+						if (inspector.Write(window.m_DebugEngine))
+							world.WriteSingleton<eng::settings::DebugComponent>() = window.m_DebugEngine;
+						ImGui::Spacing();
+						if (inspector.Write(window.m_DebugHidden))
+							world.WriteSingleton<hidden::settings::DebugComponent>() = window.m_DebugHidden;
 						inspector.End();
 					}
 					ImGui::EndTabItem();

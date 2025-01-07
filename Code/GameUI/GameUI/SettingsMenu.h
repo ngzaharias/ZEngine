@@ -26,16 +26,25 @@ namespace gui::settings
 	struct CloseRequestComponent;
 	struct OpenRequestComponent;
 	struct WindowComponent;
+}
 
+namespace hidden::settings
+{
+	struct DebugComponent;
+}
+
+namespace gui::settings
+{
 	class MenuSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			clt::settings::DebugComponent,
 			ecs::NameComponent,
-			eng::settings::DebugComponent,
-			eng::settings::LocalComponent,
 			gui::settings::WindowComponent,
+			::clt::settings::DebugComponent,
+			::eng::settings::DebugComponent,
+			::eng::settings::LocalComponent,
+			::hidden::settings::DebugComponent,
 			const gui::settings::CloseRequestComponent,
 			const gui::settings::OpenRequestComponent>;
 

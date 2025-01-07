@@ -4,6 +4,7 @@
 #include "ECS/Component.h"
 #include "Engine/SettingsComponents.h"
 #include "GameClient/SettingsComponents.h"
+#include "Hidden/HiddenSettingsComponents.h"
 
 namespace gui::settings
 {
@@ -15,8 +16,9 @@ namespace gui::settings
 		int32 m_Identifier = 0;
 		str::String m_Label = {};
 
-		clt::settings::DebugComponent m_DebugClient;
-		eng::settings::DebugComponent m_DebugEngine;
-		eng::settings::LocalComponent m_Local;
+		::clt::settings::DebugComponent m_DebugClient;
+		::eng::settings::DebugComponent m_DebugEngine;
+		::hidden::settings::DebugComponent m_DebugHidden;
+		::eng::settings::LocalComponent m_Local;
 	};
 }
