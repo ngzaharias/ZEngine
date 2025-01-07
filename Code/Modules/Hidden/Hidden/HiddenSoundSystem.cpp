@@ -16,7 +16,7 @@ namespace
 void hidden::SoundSystem::Initialise(World& world)
 {
 	m_SoundEntity = world.CreateEntity();
-	world.AddComponent<ecs::NameComponent>(m_SoundEntity, "Sound");
+	world.AddComponent<ecs::NameComponent>(m_SoundEntity, "Hidden Sound");
 }
 
 void hidden::SoundSystem::Shutdown(World& world)
@@ -28,10 +28,10 @@ void hidden::SoundSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Added<const hidden::RevealComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const hidden::RevealComponent>>())
 	{
 		auto& soundComponent = world.AddComponent<eng::sound::SequenceRequestComponent>(m_SoundEntity);
-		soundComponent.m_Handle = strSoundSequence;
+		soundComponent.m_Asset = strSoundSequence;
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::sound::SequenceRequestComponent>>())

@@ -19,13 +19,13 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::RandomRequestComponent>>())
 	{
 		const auto& requestComponent = world.ReadComponent<eng::sound::RandomRequestComponent>(entity);
-		if (!requestComponent.m_Handle.IsValid())
+		if (!requestComponent.m_Asset.IsValid())
 			continue;
 
 		// #temp: request and fetch in the same frame
 		auto& assetManager = world.WriteResource<eng::AssetManager>();
-		assetManager.RequestAsset<eng::sound::RandomAsset>(requestComponent.m_Handle);
-		if (const auto* randomAsset = assetManager.FetchAsset<eng::sound::RandomAsset>(requestComponent.m_Handle))
+		assetManager.RequestAsset<eng::sound::RandomAsset>(requestComponent.m_Asset);
+		if (const auto* randomAsset = assetManager.FetchAsset<eng::sound::RandomAsset>(requestComponent.m_Asset))
 		{
 			const int32 count = randomAsset->m_Handles.GetCount();
 
@@ -33,12 +33,12 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 				? world.WriteComponent<eng::sound::RandomComponent>(entity)
 				: world.AddComponent<eng::sound::RandomComponent>(entity);
 			sequenceComponent.m_Index = random::Range(0, count - 1);
-			sequenceComponent.m_Handle = requestComponent.m_Handle;
+			sequenceComponent.m_Asset = requestComponent.m_Asset;
 
 			str::Guid& singleHandle = bufferComponent.m_Requests.Emplace();
 			singleHandle = randomAsset->m_Handles[sequenceComponent.m_Index];
 		}
-		assetManager.ReleaseAsset<eng::sound::SingleAsset>(requestComponent.m_Handle);
+		assetManager.ReleaseAsset<eng::sound::RandomAsset>(requestComponent.m_Asset);
 	}
 }
 

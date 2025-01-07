@@ -26,7 +26,7 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SingleRequestComponent>>())
 	{
 		const auto& requestComponent = world.ReadComponent<eng::sound::SingleRequestComponent>(entity);
-		requests.Append(requestComponent.m_Handle);
+		requests.Append(requestComponent.m_Asset);
 	}
 
 	// Random Buffer
@@ -46,36 +46,38 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 		if (!request.IsValid())
 			continue;
 
-		// #temp: request and fetch in the same frame
 		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		assetManager.RequestAsset<eng::sound::SingleAsset>(request);
 		if (const auto* soundAsset = assetManager.FetchAsset<eng::sound::SingleAsset>(request))
 		{
 			const ecs::Entity entity = world.CreateEntity();
 
-			auto& nameComponent = world.AddComponent<ecs::NameComponent>(entity);
-			nameComponent.m_Name = soundAsset->m_Name;
+			auto& name = world.AddComponent<ecs::NameComponent>(entity);
+			name.m_Name = soundAsset->m_Name;
 
-			auto& soundComponent = world.AddComponent<eng::sound::ObjectComponent>(entity);
-			soundComponent.m_Sound = new sf::Sound();
-			soundComponent.m_Sound->setBuffer(soundAsset->m_SoundBuffer);
-			soundComponent.m_Sound->setVolume(static_cast<float>(audioSettings.m_EffectVolume));
-			soundComponent.m_Sound->play();
+			auto& object = world.AddComponent<eng::sound::ObjectComponent>(entity);
+			object.m_Sound = new sf::Sound();
+			object.m_Sound->setBuffer(soundAsset->m_SoundBuffer);
+			object.m_Sound->setVolume(static_cast<float>(audioSettings.m_EffectVolume));
+			object.m_Sound->play();
+			object.m_Asset = request;
 		}
-		assetManager.ReleaseAsset<eng::sound::SingleAsset>(request);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::sound::ObjectComponent>>())
 	{
-		const auto& component = world.ReadComponent<eng::sound::ObjectComponent>(entity);
-		if (component.m_Sound->getStatus() == sf::Sound::Stopped)
+		const auto& object = world.ReadComponent<eng::sound::ObjectComponent>(entity);
+		if (object.m_Sound->getStatus() == sf::Sound::Stopped)
 			world.DestroyEntity(entity);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::sound::ObjectComponent>>())
 	{
-		auto& component = world.WriteComponent<eng::sound::ObjectComponent>(entity, false);
-		delete component.m_Sound;
+		auto& object = world.WriteComponent<eng::sound::ObjectComponent>(entity, false);
+		delete object.m_Sound;
+
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
+		assetManager.ReleaseAsset<eng::sound::SingleAsset>(object.m_Asset);
 	}
 }
 

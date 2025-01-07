@@ -25,6 +25,7 @@ namespace eng::sound
 
 	struct SingleAsset : public eng::Asset
 	{
+		// Buffers cannot be moved/deleted once they have started otherwise they will stop immediately.
 		sf::SoundBuffer m_SoundBuffer = { };
 		str::Path m_SourceFile = { };
 	};

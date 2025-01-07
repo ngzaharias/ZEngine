@@ -9,13 +9,14 @@ namespace eng::sound
 {
 	struct ObjectComponent : public ecs::Component<ObjectComponent>
 	{
-		// Sounds cannot be moved in memory once they have started otherwise they will stop immediately.
+		// Sounds cannot be moved/deleted once they have started otherwise they will stop immediately.
 		sf::Sound* m_Sound = nullptr;
+		str::Guid m_Asset = {};
 	};
 
 	struct RandomComponent : public ecs::Component<RandomComponent>
 	{
-		str::Guid m_Handle = {};
+		str::Guid m_Asset = {};
 		int32 m_Index = 0;
 	};
 
@@ -26,12 +27,12 @@ namespace eng::sound
 
 	struct RandomRequestComponent : public ecs::Component<RandomRequestComponent>
 	{
-		str::Guid m_Handle = {};
+		str::Guid m_Asset = {};
 	};
 
 	struct SequenceComponent : public ecs::Component<SequenceComponent>
 	{
-		str::Guid m_Handle = {};
+		str::Guid m_Asset = {};
 		int32 m_Index = -1;
 	};
 
@@ -42,11 +43,11 @@ namespace eng::sound
 
 	struct SequenceRequestComponent : public ecs::Component<SequenceRequestComponent>
 	{
-		str::Guid m_Handle = {};
+		str::Guid m_Asset = {};
 	};
 
 	struct SingleRequestComponent : public ecs::Component<SingleRequestComponent>
 	{
-		str::Guid m_Handle = {};
+		str::Guid m_Asset = {};
 	};
 }
