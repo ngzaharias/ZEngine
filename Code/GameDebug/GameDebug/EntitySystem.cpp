@@ -2,6 +2,7 @@
 #include "GameDebug/EntitySystem.h"
 
 #include "Core/Algorithms.h"
+#include "Core/Colour.h"
 #include "Core/Map.h"
 #include "Core/Name.h"
 #include "Core/String.h"
@@ -13,11 +14,25 @@
 #include "Math/Vector.h"
 
 #include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
 #include <imgui/imgui_user.h>
 
 namespace
 {
 	str::String s_ScratchString = { };
+
+	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
+		ImGuiDockNodeFlags_NoCloseButton |
+		ImGuiDockNodeFlags_NoWindowMenuButton;
+	constexpr ImGuiTableFlags s_EntitiesFlags = 0;
+	constexpr ImGuiWindowFlags s_ComponentsFlags =
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_MenuBar;
+
+	str::String ToLabel(const char* label, const int32 index)
+	{
+		return std::format("{}: {}", label, index);
+	}
 
 	void DebugEntity(ecs::EntityWorld& entityWorld, const ecs::Entity& entity, ecs::Entity& inout_Selected)
 	{
@@ -36,8 +51,20 @@ namespace
 			inout_Selected = isSelected ? ecs::Entity::Unassigned : entity;
 	}
 
+	void DebugEntities(ecs::EntityWorld& entityWorld, ecs::Entity& inout_Selected)
+	{
+		const auto& entities = entityWorld.m_EntityStorage.m_AliveEntities;
+		for (const auto& [debugEntity, componentMask] : entities)
+			DebugEntity(entityWorld, debugEntity, inout_Selected);
+	}
+
 	void DebugComponents(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
+		if (entity.IsUnassigned())
+			return;
+		if (!world.IsAlive(entity))
+			return;
+
 		const char* name = nullptr;
 		if (world.HasComponent<ecs::NameComponent>(entity))
 		{
@@ -56,41 +83,6 @@ namespace
 
 			const ecs::ComponentEntry& entry = world.m_ComponentRegistry.GetEntry(i);
 			imgui::BulletHeader(entry.m_Name.c_str());
-		}
-	}
-
-	void DebugWorld(ecs::EntityWorld& entityWorld, ecs::Entity& inout_Selected)
-	{
-		const auto flags =
-			ImGuiTableFlags_Resizable |
-			ImGuiTableFlags_BordersInnerV |
-			ImGuiTableFlags_ScrollY;
-		if (ImGui::BeginTable("table", 2, flags))
-		{
-			ImGui::TableSetupColumn("Entity");
-			ImGui::TableSetupColumn("Component");
-			ImGui::TableHeadersRow();
-			ImGui::TableNextRow();
-
-			// entity
-			ImGui::TableSetColumnIndex(0);
-			{
-				ImGui::Text("Index, Version  Name");
-				ImGui::Separator();
-
-				const auto& entities = entityWorld.m_EntityStorage.m_AliveEntities;
-				for (const auto& [debugEntity, componentMask] : entities)
-					DebugEntity(entityWorld, debugEntity, inout_Selected);
-			}
-
-			// components
-			ImGui::TableSetColumnIndex(1);
-			{
-				if (!inout_Selected.IsUnassigned() && entityWorld.IsAlive(inout_Selected))
-					DebugComponents(entityWorld, inout_Selected);
-			}
-
-			ImGui::EndTable();
 		}
 	}
 }
@@ -118,44 +110,84 @@ void dbg::EntitySystem::Update(World& world, const GameTime& gameTime)
 
 		auto& window = world.AddComponent<dbg::EntityWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
+		window.m_DockspaceLabel = ToLabel("Entity Debugger##entity", identifier);
+		window.m_EntitiesLabel = ToLabel("Entities##entity", identifier);
+		window.m_ComponentsLabel = ToLabel("Components##entity", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<dbg::EntityWindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const dbg::EntityWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<dbg::EntityWindowComponent>(entity);
-		const str::String label = std::format("Entity Debugger : {}", window.m_Identifier);
+		auto& window = world.ReadComponent<dbg::EntityWindowComponent>(entity, false);
+		m_WindowIds.Release(window.m_Identifier);
+	}
+
+	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::EntityWindowComponent>>())
+	{
+		auto& window = world.WriteComponent<dbg::EntityWindowComponent>(windowEntity);
 
 		bool isOpen = true;
+		bool isClient = true;
 		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
-		if (ImGui::Begin(label.c_str(), &isOpen, s_WindowFlags))
+		if (ImGui::Begin(window.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
 		{
 			if (ImGui::BeginTabBar(""))
 			{
-				ImGui::PushStyleColor(ImGuiCol_TabSelected, { 0.f, 0.f, 1.f, 1.f });
+				ImGui::PushStyleColor(ImGuiCol_TabSelected, Colour::Blue);
 				ImGui::PushStyleColor(ImGuiCol_TabHovered, { 0.f, 0.f, 1.f, 1.f });
 				if (ImGui::BeginTabItem("Client"))
 				{
-					DebugWorld(m_ClientWorld, window.m_ClientEntity);
+					isClient = true;
 					ImGui::EndTabItem();
 				}
 				ImGui::PopStyleColor(2);
 
-				ImGui::PushStyleColor(ImGuiCol_TabSelected, { 1.f, 0.f, 0.f, 1.f });
+				ImGui::PushStyleColor(ImGuiCol_TabSelected, Colour::Red);
 				ImGui::PushStyleColor(ImGuiCol_TabHovered, { 1.f, 0.f, 0.f, 1.f });
 				if (ImGui::BeginTabItem("Server"))
 				{
-					DebugWorld(m_ServerWorld, window.m_ServerEntity);
+					isClient = false;
 					ImGui::EndTabItem();
 				}
 				ImGui::PopStyleColor(2);
 
 				ImGui::EndTabBar();
 			}
+
+			const ImGuiID dockspaceId = ImGui::GetID(window.m_DockspaceLabel.c_str());
+			if (!ImGui::DockBuilderGetNode(dockspaceId))
+			{
+				ImGui::DockBuilderRemoveNode(dockspaceId);
+				ImGui::DockBuilderAddNode(dockspaceId, ImGuiDockNodeFlags_DockSpace);
+				ImGui::DockBuilderSetNodeSize(dockspaceId, ImGui::GetWindowSize());
+
+				ImGuiID entitiesId, componentsId;
+				ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.6f, &entitiesId, &componentsId);
+				ImGui::DockBuilderDockWindow(window.m_EntitiesLabel.c_str(), entitiesId);
+				ImGui::DockBuilderDockWindow(window.m_ComponentsLabel.c_str(), componentsId);
+				ImGui::DockBuilderFinish(dockspaceId);
+			}
+			ImGui::DockSpace(dockspaceId, ImVec2(0, 0), s_DockNodeFlags);
+		}
+		ImGui::End();
+
+		if (ImGui::Begin(window.m_EntitiesLabel.c_str()))
+		{
+			isClient
+				? DebugEntities(m_ClientWorld, window.m_ClientEntity)
+				: DebugEntities(m_ServerWorld, window.m_ServerEntity);
+		}
+		ImGui::End();
+
+		if (ImGui::Begin(window.m_ComponentsLabel.c_str()))
+		{
+			isClient
+				? DebugComponents(m_ClientWorld, window.m_ClientEntity)
+				: DebugComponents(m_ServerWorld, window.m_ServerEntity);
 		}
 		ImGui::End();
 
 		if (!isOpen)
-			world.DestroyEntity(entity);
+			world.DestroyEntity(windowEntity);
 	}
 }
