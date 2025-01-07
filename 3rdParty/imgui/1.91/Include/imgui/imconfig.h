@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include "Core/Colour.h"
 #include "Math/Vector.h"
 
 //---- Define assertion handler. Defaults to calling assert().
@@ -101,12 +102,13 @@
 //---- Define constructor and implicit cast operators to convert back<>forth between your math types and ImVec2/ImVec4.
 // This will be inlined as part of ImVec2 and ImVec4 class declarations.
 
-#define IM_VEC2_CLASS_EXTRA                                                     \
-        constexpr ImVec2(const Vector2f& f) : x(f.x), y(f.y) {}                   \
+#define IM_VEC2_CLASS_EXTRA \
+        constexpr ImVec2(const Vector2f& f) : x(f.x), y(f.y) {} \
         operator Vector2f() const { return Vector2f(x,y); }
 
-#define IM_VEC4_CLASS_EXTRA                                                     \
-        constexpr ImVec4(const Vector4f& f) : x(f.x), y(f.y), z(f.z), w(f.w) {}   \
+#define IM_VEC4_CLASS_EXTRA \
+        constexpr ImVec4(const Colour& f) : x(f.r), y(f.g), z(f.b), w(f.a) {} \
+        constexpr ImVec4(const Vector4f& f) : x(f.x), y(f.y), z(f.z), w(f.w) {} \
         operator Vector4f() const { return Vector4f(x,y,z,w); }
 
 //---- ...Or use Dear ImGui's own very basic math operators.
