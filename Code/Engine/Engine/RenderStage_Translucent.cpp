@@ -344,11 +344,11 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_ColourBuffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * instanceCount, &batchData.m_Colours[i], GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(Colour) * instanceCount, &batchData.m_Colours[i], GL_DYNAMIC_DRAW);
 
 			const uint32 location = *shader->i_Colour;
 			glEnableVertexAttribArray(location);
-			glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f), (void*)(0));
+			glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, sizeof(Colour), (void*)(0));
 			glVertexAttribDivisor(location, GL_TRUE);
 		}
 
