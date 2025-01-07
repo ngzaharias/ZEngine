@@ -3,12 +3,14 @@
 
 #include "Core/GameTime.h"
 #include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/LevelComponents.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
+#include "Hidden/HiddenVFXComponent.h"
 
 namespace
 {
@@ -21,21 +23,34 @@ void hidden::VFXSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& objectEntity : world.Query<ecs::query::Added<const hidden::RevealComponent>>())
 	{
+		const auto& objectName = world.ReadComponent<ecs::NameComponent>(objectEntity);
 		const auto& objectLevel = world.ReadComponent<eng::level::EntityComponent>(objectEntity);
 		const auto& objectTransform = world.ReadComponent<eng::TransformComponent>(objectEntity);
 
 		const ecs::Entity vfxEntity = world.CreateEntity();
-		auto& vfxLevel = world.AddComponent<eng::level::EntityComponent>(vfxEntity);
-		vfxLevel.m_Name = objectLevel.m_Name;
+		world.AddComponent<hidden::VFXComponent>(vfxEntity);
 
-		auto& vfxTransform = world.AddComponent<eng::TransformComponent>(vfxEntity);
-		vfxTransform.m_Translate = objectTransform.m_Translate;
-		vfxTransform.m_Translate.z = -100.f;
+		auto& name = world.AddComponent<ecs::NameComponent>(vfxEntity);
+		name.m_Name = std::format("{} {}", objectName.m_Name, "VFX");
 
-		auto& vfxFlipbook = world.AddComponent<eng::FlipbookComponent>(vfxEntity);
-		vfxFlipbook.m_Flipbook = strFlipbook;
-		vfxFlipbook.m_Size = Vector2u(32, 32);
-		vfxFlipbook.m_IsLooping = false;
-		vfxFlipbook.m_TimeStart = gameTime.m_TotalTime;
+		auto& level = world.AddComponent<eng::level::EntityComponent>(vfxEntity);
+		level.m_Name = objectLevel.m_Name;
+
+		auto& transform = world.AddComponent<eng::TransformComponent>(vfxEntity);
+		transform.m_Translate = objectTransform.m_Translate;
+		transform.m_Translate.z = -100.f;
+
+		auto& flipbook = world.AddComponent<eng::FlipbookComponent>(vfxEntity);
+		flipbook.m_Flipbook = strFlipbook;
+		flipbook.m_Size = Vector2u(32, 32);
+		flipbook.m_IsLooping = false;
+		flipbook.m_TimeStart = gameTime.m_TotalTime;
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::FlipbookComponent, const hidden::VFXComponent>>())
+	{
+		const auto& flipbook = world.ReadComponent<eng::FlipbookComponent>(entity);
+		if (gameTime.m_TotalTime - flipbook.m_TimeStart > 10.f)
+			world.DestroyEntity(entity);
 	}
 }
