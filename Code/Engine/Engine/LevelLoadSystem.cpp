@@ -38,18 +38,13 @@ void eng::level::LoadSystem::Initialise(World& world)
 			directoryComponent.m_Levels.Emplace(name, subpath);
 		}
 	}
-
-	{
-		auto& request = world.AddEventComponent<eng::level::LoadRequestComponent>();
-		request.m_Name = NAME("Empty");
-	}
 }
 
 void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& directoryComponent = world.WriteSingleton<eng::level::DirectoryComponent>();
+	const auto& directoryComponent = world.ReadSingleton<eng::level::DirectoryComponent>();
 
 	// load requests
 	{

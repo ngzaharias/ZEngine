@@ -116,7 +116,7 @@ str::Path eng::GetWorkingDirectory()
 	wcstombs_s(count, cDirectory, wDirectory, MAX_PATH);
 
 	str::String string = cDirectory;
-	return str::Path(std::move(string));
+	return str::Path(std::move(string), "\\");
 #endif
 }
 

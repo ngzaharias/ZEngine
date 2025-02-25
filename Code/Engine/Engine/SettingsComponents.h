@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Name.h"
 #include "ECS/Component.h"
 #include "Math/Rotator.h"
 #include "Math/Vector.h"
@@ -29,6 +30,13 @@ namespace eng::settings
 	{
 		bool m_AreLinesEnabled = false;
 		bool m_ArePhysicsEnabled = false;
+	};
+
+	/// \brief Launch settings for the game.
+	struct LaunchComponent : public ecs::SingletonComponent<LaunchComponent>
+	{
+		// the level that is loaded when the game first launches
+		str::Name m_Level = {};
 	};
 
 	/// \brief Shared settings for all local users that is saved to a config file.

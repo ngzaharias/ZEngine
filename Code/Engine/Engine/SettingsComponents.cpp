@@ -13,6 +13,7 @@ namespace
 	const str::StringView strClearColour = "m_ClearColour";
 	const str::StringView strEffectVolume = "m_EffectVolume";
 	const str::StringView strGraphics = "m_Graphics";
+	const str::StringView strLevel = "m_Level";
 	const str::StringView strMusicVolume = "m_MusicVolume";
 	const str::StringView strRotateSpeed = "m_RotateSpeed";
 	const str::StringView strTranslateSpeed = "m_TranslateSpeed";
@@ -38,6 +39,17 @@ bool imgui::Inspector::WriteCustom(eng::settings::DebugComponent& value)
 	result |= Write("m_AreLinesEnabled", value.m_AreLinesEnabled);
 	result |= Write("m_ArePhysicsEnabled", value.m_ArePhysicsEnabled);
 	return result;
+}
+
+template<>
+void eng::Visitor::ReadCustom(eng::settings::LaunchComponent& value) const
+{
+	Read(strLevel, value.m_Level, value.m_Level);
+}
+template<>
+void eng::Visitor::WriteCustom(const eng::settings::LaunchComponent& value)
+{
+	Write(strLevel, value.m_Level);
 }
 
 template<>
