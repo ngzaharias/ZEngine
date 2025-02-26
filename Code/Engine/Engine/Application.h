@@ -39,6 +39,8 @@ namespace eng
 		virtual void Update(const GameTime& gameTime);
 		virtual void PostUpdate(const GameTime& gameTime);
 
+		virtual bool ShouldClose();
+
 	protected:
 		eng::Window* m_Window;
 		eng::WindowConfig m_WindowConfig;

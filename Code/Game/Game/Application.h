@@ -10,6 +10,8 @@ namespace game
 {
 	class Application : public eng::Application
 	{
+		using base = eng::Application;
+
 	public:
 		Application();
 		~Application() override;
@@ -21,6 +23,8 @@ namespace game
 		void Shutdown() override;
 
 		void Update(const GameTime& gameTime) override;
+
+		bool ShouldClose() override;
 
 	protected:
 		clt::GameClient m_GameClient;

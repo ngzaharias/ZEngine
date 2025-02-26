@@ -119,14 +119,15 @@ void eng::Application::Execute(int argc, char* argv[])
 			PROFILE_CUSTOM("eng::Application::Execute");
 
 			m_Window->PreUpdate(gameTime);
-			if (m_Window->ShouldClose())
-				break;
 
 			PreUpdate(gameTime);
 			Update(gameTime);
 			PostUpdate(gameTime);
 
 			m_Window->PostUpdate(gameTime);
+
+			if (ShouldClose())
+				break;
 		}
 	}
 
@@ -221,4 +222,9 @@ void eng::Application::Shutdown()
 	m_Window->Shutdown();
 
 	delete m_Window;
+}
+
+bool eng::Application::ShouldClose()
+{
+	return m_Window->ShouldClose();
 }

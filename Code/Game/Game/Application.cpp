@@ -1,6 +1,11 @@
 #include "GamePCH.h"
 #include "Game/Application.h"
 
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
+#include "Engine/ApplicationComponents.h"
+
 game::Application::Application()
 	: eng::Application()
 	, m_GameClient()
@@ -86,4 +91,14 @@ void game::Application::Update(const GameTime& gameTime)
 	m_GameServer.Update(gameTime);
 	m_GameUI.Update(gameTime);
 	m_GameDebug.Update(gameTime);
+}
+
+bool game::Application::ShouldClose()
+{
+	if (base::ShouldClose())
+		return true;
+
+	using World = ecs::WorldView<eng::application::CloseRequestComponent>;
+	World world = m_GameClient.m_EntityWorld.GetWorldView<World>();
+	return world.HasAny<ecs::query::Include<eng::application::CloseRequestComponent>>();
 }
