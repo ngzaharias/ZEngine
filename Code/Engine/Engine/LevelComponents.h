@@ -28,7 +28,7 @@ namespace eng::level
 		str::Path m_Path = {};
 	};
 
-	/// \brief Used to request to load a specific level.
+	/// \brief Request to load a specific level.
 	struct LoadRequestComponent : public ecs::EventComponent<LoadRequestComponent>
 	{
 		LoadRequestComponent() = default;
@@ -36,7 +36,7 @@ namespace eng::level
 		str::Name m_Name = {};
 	}; 
 
-	/// \brief Used to request to unload a specific level.
+	/// \brief Request to unload a specific level.
 	struct UnloadRequestComponent : public ecs::EventComponent<UnloadRequestComponent>
 	{
 		UnloadRequestComponent() = default;
