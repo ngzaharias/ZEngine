@@ -41,7 +41,8 @@ void game::Application::Register()
 		m_PrototypeManager,
 		m_ComponentSerializer};
 
-	gui::Dependencies guiDependencies = {};
+	gui::Dependencies guiDependencies = {
+		m_PrototypeManager };
 
 	m_GameClient.Register(clientDependencies);
 	m_GameServer.Register(serverDependencies);

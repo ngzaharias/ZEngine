@@ -1,0 +1,5 @@
+m_Guid = "f97253d382ac44a9bb0841d46937da7d"
+m_Name = "Main Menu"
+
+['gui::main_menu::WindowComponent']
+m_NewGame = "Page03"

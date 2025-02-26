@@ -7,10 +7,16 @@ namespace ecs
 	class EntityWorld;
 }
 
+namespace eng
+{
+	class PrototypeManager;
+}
+
 namespace gui
 {
 	struct Dependencies
 	{
+		eng::PrototypeManager& m_PrototypeManager;
 	};
 
 	class GameUI final
