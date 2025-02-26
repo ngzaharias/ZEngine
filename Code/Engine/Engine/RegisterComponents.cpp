@@ -4,6 +4,7 @@
 #include "Core/MemBuffer.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
+#include "Engine/ApplicationComponents.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/ComponentSerializer.h"
 #include "Engine/DynamicMeshComponent.h"
@@ -121,6 +122,7 @@ namespace
 
 void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 {
+	entityWorld.RegisterComponent<eng::application::CloseRequestComponent>();
 	entityWorld.RegisterComponent<eng::DynamicMeshComponent>();
 	entityWorld.RegisterComponent<eng::FlipbookAssetComponent>();
 	entityWorld.RegisterComponent<eng::InputComponent>();
