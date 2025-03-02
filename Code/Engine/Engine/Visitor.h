@@ -74,7 +74,7 @@ namespace eng
 		Visitor& operator=(const str::Path& rhs) noexcept;
 		Visitor& operator=(const str::StringView& rhs) noexcept;
 
-		operator str::String() noexcept;
+		operator str::String() const noexcept;
 
 		/// \brief Marks that the current object being visited should be streamed as inline.
 		void SetInline();

@@ -96,7 +96,7 @@ eng::Visitor& eng::Visitor::operator=(const str::StringView& rhs) noexcept
 	return *this;
 }
 
-eng::Visitor::operator str::String() noexcept
+eng::Visitor::operator str::String() const noexcept
 {
 	//std::stringstream stream;
 	//stream << m_Root;
