@@ -32,7 +32,7 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 		{
 			const auto& input = world.ReadComponent<eng::InputComponent>(inputEntity);
 
-			if (input.IsKeyHeld(input::EMouse::Middle))
+			if (input.IsKeyHeld(input::EMouse::Left))
 			{
 				const Vector3f worldPosA = eng::camera::ScreenToWorld(
 					Vector2f::Zero,
