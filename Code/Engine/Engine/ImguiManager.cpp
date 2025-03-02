@@ -30,6 +30,7 @@ void eng::ImguiManager::Initialise(const eng::Window& window)
 	io.ConfigViewportsNoDecoration = true;
 	//io.ConfigViewportsNoDefaultParent = true;
 	io.ConfigDragClickToInputText = false;
+	io.FontGlobalScale = 1.f;
 
 	if (const glfw::Window* window = dynamic_cast<const glfw::Window*>(m_Window))
 	{
