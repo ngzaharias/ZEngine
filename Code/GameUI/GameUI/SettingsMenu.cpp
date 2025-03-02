@@ -16,10 +16,8 @@
 
 namespace
 {
-	str::String ToLabel(const char* label, const int32 index)
-	{
-		return std::format("{}: {}", label, index);
-	}
+	constexpr Vector2f s_DefaultSize = Vector2f(600.f, 0.f);
+	constexpr Vector2f s_OffsetPos = Vector2f(0.f, -150.f);
 }
 
 void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
@@ -27,23 +25,16 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 	const bool hasWindow = world.HasAny<ecs::query::Include<gui::settings::WindowComponent>>();
 	if (!hasWindow && world.HasAny<ecs::query::Include<gui::settings::OpenRequestComponent>>())
 	{
-		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Settings Menu");
 
 		auto& window = world.AddComponent<gui::settings::WindowComponent>(windowEntity);
-		window.m_Identifier = identifier;
-		window.m_Label = ToLabel("Settings Menu", identifier);
 		window.m_DebugClient = world.ReadSingleton<clt::settings::DebugComponent>();
 		window.m_DebugEngine = world.ReadSingleton<eng::settings::DebugComponent>();
 		window.m_DebugHidden = world.ReadSingleton<hidden::settings::DebugComponent>();
 		window.m_Local = world.ReadSingleton<eng::settings::LocalComponent>();
-	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const gui::settings::WindowComponent>>())
-	{
-		auto& window = world.ReadComponent<gui::settings::WindowComponent>(entity, false);
-		m_WindowIds.Release(window.m_Identifier);
+		ImGui::OpenPopup("Settings");
 	}
 	
 	if (hasWindow && world.HasAny<ecs::query::Include<gui::settings::CloseRequestComponent>>())
@@ -56,12 +47,22 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags =
 			ImGuiWindowFlags_NoCollapse |
-			ImGuiWindowFlags_MenuBar;
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoSavedSettings |
+			ImGuiWindowFlags_NoDocking;
 
 		auto& window = world.WriteComponent<gui::settings::WindowComponent>(entity);
 
+		const Vector2f viewportPos = ImGui::GetWindowViewport()->Pos;
+		const Vector2f viewportSize = ImGui::GetWindowViewport()->Size;
+		const Vector2f viewportCentre = viewportPos + (viewportSize * 0.5f);
+
+		ImGui::SetNextWindowPos(viewportCentre - (s_DefaultSize * 0.5f) + s_OffsetPos);
+		ImGui::SetNextWindowSize(s_DefaultSize);
+
 		bool isWindowOpen = true;
-		if (ImGui::Begin(window.m_Label.c_str(), &isWindowOpen, s_WindowFlags))
+		if (ImGui::BeginPopupModal("Settings", &isWindowOpen, s_WindowFlags))
 		{
 			if (ImGui::BeginTabBar("##tabs"))
 			{
@@ -98,8 +99,8 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 				}
 				ImGui::EndTabBar();
 			}
+			ImGui::EndPopup();
 		}
-		ImGui::End();
 
 		if (!isWindowOpen)
 			world.DestroyEntity(entity);

@@ -49,8 +49,5 @@ namespace gui::settings
 			const gui::settings::OpenRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
-
-	private:
-		imgui::Identifier m_WindowIds = {};
 	};
 }
