@@ -13,9 +13,6 @@ namespace gui::settings
 
 	struct WindowComponent final : public ecs::Component<WindowComponent>
 	{
-		int32 m_Identifier = 0;
-		str::String m_Label = {};
-
 		::clt::settings::DebugComponent m_DebugClient;
 		::eng::settings::DebugComponent m_DebugEngine;
 		::hidden::settings::DebugComponent m_DebugHidden;
