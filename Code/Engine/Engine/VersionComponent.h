@@ -10,6 +10,6 @@ namespace eng
 	{
 		str::String m_Branch = {};
 		str::String m_Commit = {};
-		str::String m_Version = "alpha-0.0.7";
+		str::String m_Version = "alpha-0.0.8";
 	};
 }
