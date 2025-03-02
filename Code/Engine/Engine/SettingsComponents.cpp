@@ -15,6 +15,7 @@ namespace
 	const str::StringView strGraphics = "m_Graphics";
 	const str::StringView strLevel = "m_Level";
 	const str::StringView strMusicVolume = "m_MusicVolume";
+	const str::StringView strResolution = "m_Resolution";
 	const str::StringView strRotateSpeed = "m_RotateSpeed";
 	const str::StringView strTranslateSpeed = "m_TranslateSpeed";
 	const str::StringView strZoomAmount = "m_ZoomAmount";
@@ -94,21 +95,23 @@ bool imgui::Inspector::WriteCustom(eng::settings::Audio& value)
 	bool result = false;
 	result |= Write("m_EffectVolume", value.m_EffectVolume);
 	result |= Write("m_MusicVolume", value.m_MusicVolume);
+	value.m_EffectVolume = math::Clamp(value.m_EffectVolume, 0, 100);
+	value.m_MusicVolume = math::Clamp(value.m_MusicVolume, 0, 100);
 	return result;
 }
 
 template<>
 void eng::Visitor::ReadCustom(eng::settings::Camera& value) const
 {
-	Read(strTranslateSpeed, value.m_TranslateSpeed, value.m_TranslateSpeed);
 	Read(strRotateSpeed, value.m_RotateSpeed, value.m_RotateSpeed);
+	Read(strTranslateSpeed, value.m_TranslateSpeed, value.m_TranslateSpeed);
 	Read(strZoomAmount, value.m_ZoomAmount, value.m_ZoomAmount);
 }
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::Camera& value)
 {
-	Write(strTranslateSpeed, value.m_TranslateSpeed);
 	Write(strRotateSpeed, value.m_RotateSpeed);
+	Write(strTranslateSpeed, value.m_TranslateSpeed);
 	Write(strZoomAmount, value.m_ZoomAmount);
 }
 template<>
@@ -124,17 +127,17 @@ bool imgui::Inspector::WriteCustom(eng::settings::Camera& value)
 template<>
 void eng::Visitor::ReadCustom(eng::settings::Graphics& value) const
 {
-	Read(strClearColour, value.m_ClearColour, value.m_ClearColour);
+	Read(strResolution, value.m_Resolution, value.m_Resolution);
 }
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::Graphics& value)
 {
-	Write(strClearColour, value.m_ClearColour);
+	Write(strResolution, value.m_Resolution);
 }
 template<>
 bool imgui::Inspector::WriteCustom(eng::settings::Graphics& value)
 {
 	bool result = false;
-	result |= Write("m_ClearColour", value.m_ClearColour);
+	result |= Write("m_Resolution", value.m_Resolution);
 	return result;
 }

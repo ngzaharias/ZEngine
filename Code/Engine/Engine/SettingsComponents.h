@@ -23,6 +23,7 @@ namespace eng::settings
 	struct Graphics
 	{
 		Vector3f m_ClearColour = Vector3f(0.24f);
+		Vector2u m_Resolution = Vector2u(1920, 1080);
 	};
 
 	/// \brief Debug settings that is only used in non-gold builds.
