@@ -28,7 +28,7 @@ namespace glfw
 		void PreUpdate(const GameTime& gameTime) override;
 		void PostUpdate(const GameTime& gameTime) override;
 
-		Vector2u GetSize() const override { return m_Config.m_Size; }
+		Vector2u GetResolution() const override { return m_Config.m_Resolution; }
 		GLFWwindow* GetWindow() const { return m_Window; }
 
 		bool HasResized() const override { return m_HasResized; }

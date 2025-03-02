@@ -186,7 +186,12 @@ glfw::Window::Window(const eng::WindowConfig& config)
 	if (config.m_IsFullscreen)
 		fullscreenMonitor = primaryMonitor;
 
-	m_Window = glfwCreateWindow(config.m_Size.x, config.m_Size.y, config.m_Name.c_str(), fullscreenMonitor, nullptr);
+	m_Window = glfwCreateWindow(
+		config.m_Resolution.x, 
+		config.m_Resolution.y, 
+		config.m_Name.c_str(), 
+		fullscreenMonitor,
+		nullptr);
 
 	glfwMakeContextCurrent(m_Window);
 	glfwSetWindowUserPointer(m_Window, this);
@@ -277,8 +282,8 @@ void glfw::Window::Callback_FramebufferResized(GLFWwindow* glfwWindow, int width
 {
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
 	window->m_HasResized = true;
-	window->m_Config.m_Size.x = static_cast<uint32>(width);
-	window->m_Config.m_Size.y = static_cast<uint32>(height);
+	window->m_Config.m_Resolution.x = static_cast<uint32>(width);
+	window->m_Config.m_Resolution.y = static_cast<uint32>(height);
 	Screen::width = static_cast<float>(width);
 	Screen::height = static_cast<float>(height);
 
