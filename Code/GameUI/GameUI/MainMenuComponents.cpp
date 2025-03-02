@@ -2,7 +2,6 @@
 #include "GameUI/MainMenuComponents.h"
 
 #include "Engine/Visitor.h"
-#include "imgui/Inspector.h"
 
 namespace
 {

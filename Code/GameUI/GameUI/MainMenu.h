@@ -19,6 +19,11 @@ namespace gui::main_menu
 	struct WindowComponent;
 }
 
+namespace gui::settings
+{
+	struct OpenRequestComponent;
+}
+
 namespace gui::main_menu
 {
 	class MainMenu final : public ecs::System
@@ -27,6 +32,7 @@ namespace gui::main_menu
 		using World = ecs::WorldView<
 			eng::application::CloseRequestComponent,
 			eng::level::LoadRequestComponent,
+			gui::settings::OpenRequestComponent,
 			const gui::main_menu::WindowComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
