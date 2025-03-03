@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/SettingsMenu.h"
+#include "Editor/SettingsMenuSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"

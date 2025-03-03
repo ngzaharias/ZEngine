@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/TrajectoryEditor.h"
+#include "Editor/TrajectoryEditorSystem.h"
 
 #include "Core/Algorithms.h"
 #include "Core/Trajectory.h"
@@ -36,7 +36,7 @@ namespace
 		return std::format("{}: {}", label, index);
 	}
 
-	using World = editor::TrajectoryEditor::World;
+	using World = editor::TrajectoryEditorSystem::World;
 
 	void DrawMenuBar(World& world, const ecs::Entity& entity)
 	{
@@ -203,7 +203,7 @@ namespace
 	};
 }
 
-void editor::TrajectoryEditor::Update(World& world, const GameTime& gameTime)
+void editor::TrajectoryEditorSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 

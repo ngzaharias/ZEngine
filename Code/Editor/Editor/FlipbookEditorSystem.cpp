@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/FlipbookEditor.h"
+#include "Editor/FlipbookEditorSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
@@ -18,7 +18,7 @@
 
 namespace
 {
-	using World = editor::FlipbookEditor::World;
+	using World = editor::FlipbookEditorSystem::World;
 
 	constexpr float s_TimeMaxEpsilon = 0.000001f;
 
@@ -301,7 +301,7 @@ namespace
 	};
 }
 
-void editor::FlipbookEditor::Update(World& world, const GameTime& gameTime)
+void editor::FlipbookEditorSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 

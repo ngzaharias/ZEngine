@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/EntityEditor.h"
+#include "Editor/EntityEditorSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
@@ -35,7 +35,7 @@ bool imgui::Inspector::WriteCustom(ecs::NameComponent& value)
 
 namespace
 {
-	using World = editor::EntityEditor::World;
+	using World = editor::EntityEditorSystem::World;
 
 	ecs::Entity CreateEntity(ecs::EntityWorld& world, const ecs::Entity& windowEntity, const str::StringView name, const str::Name& level)
 	{
@@ -107,12 +107,12 @@ namespace
 	}
 }
 
-editor::EntityEditor::EntityEditor(ecs::EntityWorld& world)
+editor::EntityEditorSystem::EntityEditorSystem(ecs::EntityWorld& world)
 	: m_World(world)
 {
 }
 
-void editor::EntityEditor::Update(World& world, const GameTime& gameTime)
+void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 

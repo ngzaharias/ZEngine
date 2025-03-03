@@ -60,7 +60,7 @@ namespace editor
 		str::String m_InspectorLabel = {};
 	};
 
-	class EntityEditor final : public ecs::System
+	class EntityEditorSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
@@ -76,7 +76,7 @@ namespace editor
 			const eng::level::EntityComponent,
 			const eng::PrototypeComponent>;
 
-		EntityEditor(ecs::EntityWorld& world);
+		EntityEditorSystem(ecs::EntityWorld& world);
 
 		void Update(World& world, const GameTime& gameTime);
 

@@ -39,7 +39,7 @@ namespace editor
 		str::String m_PlottingLabel = {};
 	};
 
-	class TrajectoryEditor final : public ecs::System
+	class TrajectoryEditorSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<

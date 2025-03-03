@@ -52,7 +52,7 @@ namespace editor
 		str::String m_TextureLabel = {};
 	};
 
-	class FlipbookEditor final : public ecs::System
+	class FlipbookEditorSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<

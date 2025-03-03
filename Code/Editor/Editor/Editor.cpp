@@ -4,19 +4,19 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/EntityEditor.h"
-#include "Editor/FlipbookEditor.h"
+#include "Editor/EntityEditorSystem.h"
+#include "Editor/FlipbookEditorSystem.h"
 #include "Editor/GizmoAxesSystem.h"
 #include "Editor/GizmoCrosshairSystem.h"
 #include "Editor/GizmoTransformSystem.h"
 #include "Editor/RenderStage_Grid.h"
-#include "Editor/SettingsMenu.h"
+#include "Editor/SettingsMenuSystem.h"
 #include "Editor/SettingsComponents.h"
 #include "Editor/SettingsLocalSystem.h"
-#include "Editor/SpriteEditor.h"
-#include "Editor/TableEditor.h"
-#include "Editor/TextureEditor.h"
-#include "Editor/TrajectoryEditor.h"
+#include "Editor/SpriteEditorSystem.h"
+#include "Editor/TableEditorSystem.h"
+#include "Editor/TextureEditorSystem.h"
+#include "Editor/TrajectoryEditorSystem.h"
 #include "Engine/RenderSystem.h"
 
 editor::Editor::Editor(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
@@ -53,17 +53,17 @@ void editor::Editor::Register()
 
 	m_ClientWorld.RegisterSingleton<editor::settings::LocalComponent>();
 
-	m_ClientWorld.RegisterSystem<editor::EntityEditor>(m_ClientWorld);
-	m_ClientWorld.RegisterSystem<editor::FlipbookEditor>();
+	m_ClientWorld.RegisterSystem<editor::EntityEditorSystem>(m_ClientWorld);
+	m_ClientWorld.RegisterSystem<editor::FlipbookEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::AxesSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::LocalSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
-	m_ClientWorld.RegisterSystem<editor::SpriteEditor>();
-	m_ClientWorld.RegisterSystem<editor::TableEditor>();
-	m_ClientWorld.RegisterSystem<editor::TextureEditor>();
-	m_ClientWorld.RegisterSystem<editor::TrajectoryEditor>();
+	m_ClientWorld.RegisterSystem<editor::SpriteEditorSystem>();
+	m_ClientWorld.RegisterSystem<editor::TableEditorSystem>();
+	m_ClientWorld.RegisterSystem<editor::TextureEditorSystem>();
+	m_ClientWorld.RegisterSystem<editor::TrajectoryEditorSystem>();
 
 	// needs to run before the render system but after the camera systems
 	m_ClientWorld.RegisterSystemPriority<editor::gizmo::CrosshairSystem>(4999);

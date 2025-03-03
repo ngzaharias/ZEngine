@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/TextureEditor.h"
+#include "Editor/TextureEditorSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
@@ -21,7 +21,7 @@
 
 namespace
 {
-	using World = editor::TextureEditor::World;
+	using World = editor::TextureEditorSystem::World;
 
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
 		ImGuiDockNodeFlags_NoCloseButton |
@@ -205,7 +205,7 @@ namespace
 	};
 }
 
-void editor::TextureEditor::Update(World& world, const GameTime& gameTime)
+void editor::TextureEditorSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 

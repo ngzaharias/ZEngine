@@ -63,7 +63,7 @@ namespace editor
 		str::Guid m_TextureLoaded = {};
 	};
 
-	class SpriteEditor final : public ecs::System
+	class SpriteEditorSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<

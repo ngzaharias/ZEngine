@@ -44,7 +44,7 @@ namespace editor
 		str::String m_InspectorLabel = {};
 	};
 
-	class TableEditor final : public ecs::System
+	class TableEditorSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<

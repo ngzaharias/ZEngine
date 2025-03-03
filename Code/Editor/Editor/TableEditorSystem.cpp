@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/TableEditor.h"
+#include "Editor/TableEditorSystem.h"
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
@@ -15,7 +15,7 @@
 
 namespace
 {
-	using World = editor::TableEditor::World;
+	using World = editor::TableEditorSystem::World;
 
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
 		ImGuiDockNodeFlags_NoCloseButton |
@@ -114,7 +114,7 @@ namespace
 	}
 }
 
-void editor::TableEditor::Update(World& world, const GameTime& gameTime)
+void editor::TableEditorSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 

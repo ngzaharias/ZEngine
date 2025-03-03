@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/SpriteEditor.h"
+#include "Editor/SpriteEditorSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
@@ -23,7 +23,7 @@
 
 namespace
 {
-	using World = editor::SpriteEditor::World;
+	using World = editor::SpriteEditorSystem::World;
 
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
 		ImGuiDockNodeFlags_NoCloseButton |
@@ -345,7 +345,7 @@ namespace
 	};
 }
 
-void editor::SpriteEditor::Update(World& world, const GameTime& gameTime)
+void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 

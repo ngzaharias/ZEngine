@@ -41,7 +41,7 @@ namespace editor
 		str::String m_PreviewerLabel = {};
 	};
 
-	class TextureEditor final : public ecs::System
+	class TextureEditorSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
