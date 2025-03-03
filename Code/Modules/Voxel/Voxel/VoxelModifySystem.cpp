@@ -1,5 +1,5 @@
-#include "EnginePCH.h"
-#include "Engine/VoxelModifySystem.h"
+#include "VoxelPCH.h"
+#include "Voxel/VoxelModifySystem.h"
 
 #include "Core/Algorithms.h"
 #include "Core/Guid.h"
@@ -14,7 +14,7 @@
 #include "Engine/Screen.h"
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
-#include "Engine/VoxelComponents.h"
+#include "Voxel/VoxelComponents.h"
 #include "Math/AABB.h"
 #include "Math/Algorithms.h"
 #include "Math/CollisionMath.h"

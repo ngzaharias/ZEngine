@@ -50,6 +50,7 @@ project "Editor"
 		"%{wks.location}/../Code/Modules/Hexmap/",
 		"%{wks.location}/../Code/Modules/Hidden/",
 		"%{wks.location}/../Code/Modules/Tabletop/",
+		"%{wks.location}/../Code/Modules/Voxel/",
 	}
 
 	libdirs 
@@ -95,6 +96,11 @@ project "Editor"
 		"Math",
 		"Network",
 		"Steam",
+
+		"Hexmap",
+		"Hidden",
+		"Tabletop",
+		"Voxel",
 
 		"assimp.lib",
 		"freetype.lib",

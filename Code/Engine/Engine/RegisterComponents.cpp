@@ -30,7 +30,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/UserComponents.h"
 #include "Engine/VersionComponent.h"
-#include "Engine/VoxelComponents.h"
+#include "Voxel/VoxelComponents.h"
 
 #include <yojimbo/yojimbo.h>
 

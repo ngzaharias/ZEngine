@@ -31,7 +31,7 @@
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TrajectoryAsset.h"
 #include "Engine/TransformComponent.h"
-#include "Engine/VoxelComponents.h"
+#include "Voxel/VoxelComponents.h"
 
 #include <GLFW/glfw3.h>
 

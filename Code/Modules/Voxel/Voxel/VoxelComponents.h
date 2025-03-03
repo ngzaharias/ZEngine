@@ -2,7 +2,7 @@
 
 #include "Core/Array.h"
 #include "ECS/Component.h"
-#include "Engine/VoxelTypes.h"
+#include "Voxel/VoxelTypes.h"
 #include "Math/Vector.h"
 
 namespace voxel

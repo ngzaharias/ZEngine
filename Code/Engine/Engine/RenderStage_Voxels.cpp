@@ -13,7 +13,7 @@
 #include "Engine/ShaderAsset.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TransformComponent.h"
-#include "Engine/VoxelComponents.h"
+#include "Voxel/VoxelComponents.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>

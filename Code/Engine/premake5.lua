@@ -40,6 +40,7 @@ project "Engine"
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
 		"%{wks.location}/../Code/Bindings/Steam/",
+		"%{wks.location}/../Code/Modules/Voxel/",
 	}
 
 	links 

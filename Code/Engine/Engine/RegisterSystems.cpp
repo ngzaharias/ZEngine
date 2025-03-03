@@ -29,8 +29,8 @@
 #include "Engine/StaticMeshAssetSystem.h"
 #include "Engine/TextAssetSystem.h"
 #include "Engine/VersionSystem.h"
-#include "Engine/VoxelMeshingSystem.h"
-#include "Engine/VoxelModifySystem.h"
+#include "Voxel/VoxelMeshingSystem.h"
+#include "Voxel/VoxelModifySystem.h"
 
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 {

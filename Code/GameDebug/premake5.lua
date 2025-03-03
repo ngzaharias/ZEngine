@@ -37,6 +37,7 @@ project "GameDebug"
 		"%{wks.location}/../Code/Modules/Hexmap/",
 		"%{wks.location}/../Code/Modules/Hidden/",
 		"%{wks.location}/../Code/Modules/Tabletop/",
+		"%{wks.location}/../Code/Modules/Voxel/",
 	}
 
 	links 
@@ -54,4 +55,5 @@ project "GameDebug"
 		"Hexmap",
 		"Hidden",
 		"Tabletop",
+		"Voxel",
 	}

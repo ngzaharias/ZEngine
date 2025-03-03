@@ -1,5 +1,5 @@
-#include "EnginePCH.h"
-#include "Engine/VoxelMeshingSystem.h"
+#include "VoxelPCH.h"
+#include "Voxel/VoxelMeshingSystem.h"
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
@@ -7,7 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/TransformComponent.h"
-#include "Engine/VoxelComponents.h"
+#include "Voxel/VoxelComponents.h"
 #include "Math/VectorMath.h"
 
 #include <GLEW/glew.h>
