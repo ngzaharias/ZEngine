@@ -81,7 +81,6 @@ namespace
 			inout_Vertices[i] += offset;
 	}
 
-
 	int32 ToInnerIndex(const Vector3i& innerPos)
 	{
 		constexpr int32 s_Count1D = voxel::s_BlockCount1D;
