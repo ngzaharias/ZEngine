@@ -37,7 +37,7 @@ namespace gui::settings
 
 namespace gui::game_menu
 {
-	class GameMenu final : public ecs::System
+	class MenuSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<

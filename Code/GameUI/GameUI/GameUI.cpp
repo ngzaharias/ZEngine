@@ -3,16 +3,16 @@
 
 #include "ECS/EntityWorld.h"
 #include "Engine/PrototypeManager.h"
-#include "GameUI/GameMenu.h"
+#include "GameUI/GameMenuSystem.h"
 #include "GameUI/GameMenuComponents.h"
 #include "GameUI/HiddenCountSystem.h"
 #include "GameUI/HiddenLevelSystem.h"
 #include "GameUI/InputBindingsSystem.h"
 #include "GameUI/InputComponents.h"
-#include "GameUI/MainMenu.h"
+#include "GameUI/MainMenuSystem.h"
 #include "GameUI/MainMenuComponents.h"
 #include "GameUI/SettingsComponents.h"
-#include "GameUI/SettingsMenu.h"
+#include "GameUI/SettingsMenuSystem.h"
 
 gui::GameUI::GameUI(ecs::EntityWorld& entityWorld)
 	: m_EntityWorld(entityWorld)
@@ -29,11 +29,11 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 	m_EntityWorld.RegisterComponent<gui::settings::OpenRequestComponent>();
 	m_EntityWorld.RegisterComponent<gui::settings::WindowComponent>();
 
-	m_EntityWorld.RegisterSystem<gui::game_menu::GameMenu>();
-	m_EntityWorld.RegisterSystem<gui::input::BindingsSystem>();
-	m_EntityWorld.RegisterSystem<gui::main_menu::MainMenu>();
+	m_EntityWorld.RegisterSystem<gui::game_menu::MenuSystem>();
 	m_EntityWorld.RegisterSystem<gui::hidden::CountSystem>();
 	m_EntityWorld.RegisterSystem<gui::hidden::LevelSystem>();
+	m_EntityWorld.RegisterSystem<gui::input::BindingsSystem>();
+	m_EntityWorld.RegisterSystem<gui::main_menu::MenuSystem>();
 	m_EntityWorld.RegisterSystem<gui::settings::MenuSystem>();
 
 	dependencies.m_PrototypeManager.Register<gui::input::BindingsComponent>();

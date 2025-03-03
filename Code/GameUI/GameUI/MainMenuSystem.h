@@ -26,7 +26,7 @@ namespace gui::settings
 
 namespace gui::main_menu
 {
-	class MainMenu final : public ecs::System
+	class MenuSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<

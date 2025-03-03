@@ -1,5 +1,5 @@
 #include "GameUIPCH.h"
-#include "GameUI/SettingsMenu.h"
+#include "GameUI/SettingsMenuSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"

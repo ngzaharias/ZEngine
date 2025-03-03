@@ -14,7 +14,7 @@ namespace dbg
 
 	struct InspectorDemoWindowComponent : public ecs::Component<InspectorDemoWindowComponent> { };
 
-	class InspectorDemo final : public ecs::System
+	class InspectorDemoSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<

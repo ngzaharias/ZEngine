@@ -11,7 +11,7 @@
 #include "GameDebug/HiddenObjectSystem.h"
 #include "GameDebug/ImGuiDemoSystem.h"
 #include "GameDebug/ImNodesDemoSystem.h"
-#include "GameDebug/InspectorDemo.h"
+#include "GameDebug/InspectorDemoSystem.h"
 #include "GameDebug/LevelOpenSystem.h"
 #include "GameDebug/LevelReloadSystem.h"
 #include "GameDebug/MenuBarComponents.h"
@@ -71,7 +71,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<dbg::hidden::ObjectSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ImGuiDemoSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ImNodesDemoSystem>();
-	m_ClientWorld.RegisterSystem<dbg::InspectorDemo>();
+	m_ClientWorld.RegisterSystem<dbg::InspectorDemoSystem>();
 	m_ClientWorld.RegisterSystem<dbg::level::OpenSystem>();
 	m_ClientWorld.RegisterSystem<dbg::level::ReloadSystem>();
 	m_ClientWorld.RegisterSystem<dbg::MenuBarSystem>();

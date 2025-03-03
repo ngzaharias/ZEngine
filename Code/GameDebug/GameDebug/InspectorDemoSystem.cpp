@@ -1,5 +1,5 @@
 #include "GameDebugPCH.h"
-#include "GameDebug/InspectorDemo.h"
+#include "GameDebug/InspectorDemoSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -10,7 +10,7 @@
 #include <imgui/imgui.h>
 #include <imgui/InspectorDemo.h>
 
-void dbg::InspectorDemo::Update(World& world, const GameTime& gameTime)
+void dbg::InspectorDemoSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
