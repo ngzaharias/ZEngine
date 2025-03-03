@@ -15,9 +15,9 @@ namespace editor::settings
 	struct LocalComponent;
 }
 
-namespace editor
+namespace editor::gizmo
 {
-	class GizmoAxes final : public ecs::System
+	class AxesSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<

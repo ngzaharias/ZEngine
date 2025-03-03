@@ -6,9 +6,9 @@
 #include "ECS/WorldView.h"
 #include "Editor/EntityEditor.h"
 #include "Editor/FlipbookEditor.h"
-#include "Editor/GizmoAxes.h"
-#include "Editor/GizmoCrosshair.h"
-#include "Editor/GizmoTransform.h"
+#include "Editor/GizmoAxesSystem.h"
+#include "Editor/GizmoCrosshairSystem.h"
+#include "Editor/GizmoTransformSystem.h"
 #include "Editor/RenderStage_Grid.h"
 #include "Editor/SettingsMenu.h"
 #include "Editor/SettingsComponents.h"
@@ -55,9 +55,9 @@ void editor::Editor::Register()
 
 	m_ClientWorld.RegisterSystem<editor::EntityEditor>(m_ClientWorld);
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditor>();
-	m_ClientWorld.RegisterSystem<editor::GizmoAxes>();
-	m_ClientWorld.RegisterSystem<editor::GizmoCrosshair>();
-	m_ClientWorld.RegisterSystem<editor::GizmoTransform>();
+	m_ClientWorld.RegisterSystem<editor::gizmo::AxesSystem>();
+	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
+	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::LocalSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
 	m_ClientWorld.RegisterSystem<editor::SpriteEditor>();
@@ -66,7 +66,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::TrajectoryEditor>();
 
 	// needs to run before the render system but after the camera systems
-	m_ClientWorld.RegisterSystemPriority<editor::GizmoCrosshair>(4999);
+	m_ClientWorld.RegisterSystemPriority<editor::gizmo::CrosshairSystem>(4999);
 
 	// #todo: find a different place for this
 	{

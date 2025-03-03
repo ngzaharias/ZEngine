@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/GizmoAxes.h"
+#include "Editor/GizmoAxesSystem.h"
 
 #include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
@@ -8,7 +8,15 @@
 #include "Editor/SettingsComponents.h"
 #include "Engine/LinesComponent.h"
 
-void editor::GizmoAxes::Update(World& world, const GameTime& gameTime)
+namespace
+{
+	constexpr float s_Distance = 100000.f;
+	constexpr Colour s_ColourX = Colour(0.58f, 0.23f, 0.29f);
+	constexpr Colour s_ColourY = Colour(0.38f, 0.52f, 0.16f);
+	constexpr Colour s_ColourZ = Colour(0.21f, 0.4f, 0.61f);
+}
+
+void editor::gizmo::AxesSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -17,11 +25,6 @@ void editor::GizmoAxes::Update(World& world, const GameTime& gameTime)
 	const auto& settings = gizmos.m_CoordAxes;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
 		return;
-
-	constexpr float s_Distance = 100000.f;
-	constexpr Colour s_ColourX = Colour(0.58f, 0.23f, 0.29f);
-	constexpr Colour s_ColourY = Colour(0.38f, 0.52f, 0.16f);
-	constexpr Colour s_ColourZ = Colour(0.21f, 0.4f, 0.61f);
 
 	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 	if (settings.m_ShowX)

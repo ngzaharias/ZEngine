@@ -7,11 +7,8 @@
 
 namespace eng
 {
-	struct InputComponent;
 	struct LinesComponent;
-	struct PhysicsComponent;
 	struct TransformComponent;
-	struct VersionComponent;
 }
 
 namespace eng::camera
@@ -19,28 +16,21 @@ namespace eng::camera
 	struct  ProjectionComponent;
 }
 
-namespace editor
-{
-	struct EntityWindowComponent;
-}
-
 namespace editor::settings
 {
 	struct LocalComponent;
 }
 
-namespace editor
+namespace editor::gizmo
 {
-	class GizmoTransform final : public ecs::System
+	class CrosshairSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::PhysicsComponent,
-			eng::TransformComponent,
-			const editor::EntityWindowComponent,
+			eng::LinesComponent,
 			const editor::settings::LocalComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::InputComponent>;
+			const eng::TransformComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

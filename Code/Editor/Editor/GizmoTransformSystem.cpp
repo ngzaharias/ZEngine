@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/GizmoTransform.h"
+#include "Editor/GizmoTransformSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -51,7 +51,7 @@ namespace
 		ImGuiWindowFlags_NoTitleBar;
 }
 
-void editor::GizmoTransform::Update(World& world, const GameTime& gameTime)
+void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 

@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/GizmoCrosshair.h"
+#include "Editor/GizmoCrosshairSystem.h"
 
 #include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
@@ -11,7 +11,7 @@
 #include "Engine/TransformComponent.h"
 #include "Math/Quaternion.h"
 
-void editor::GizmoCrosshair::Update(World& world, const GameTime& gameTime)
+void editor::gizmo::CrosshairSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
