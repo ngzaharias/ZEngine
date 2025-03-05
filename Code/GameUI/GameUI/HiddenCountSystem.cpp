@@ -6,7 +6,8 @@
 #include "ECS/WorldView.h"
 #include "Hidden/HiddenCountComponent.h"
 
-#include <imgui/imgui.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_user.h"
 
 void gui::hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 {

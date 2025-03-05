@@ -9,6 +9,7 @@ class Colour;
 class Quaternion;
 class Rotator;
 typedef int ImDrawFlags;
+typedef int ImGuiCond;
 typedef int ImGuiSliderFlags;
 typedef int ImGuiSelectableFlags;
 
@@ -127,6 +128,12 @@ namespace imgui
 	void Text(const str::Name& value);
 	void Text(const str::Path& value);
 	void Text(const str::String& value);
+
+	void SetNextWindowPos(const Vector2f& pos);
+	void SetNextWindowPos(const Vector2f& pos, const ImGuiCond cond);
+	void SetNextWindowPos(const Vector2f& pos, const Vector2f& pivot);
+	void SetNextWindowPos(const Vector2f& pos, const ImGuiCond cond, const Vector2f& pivot);
+	void SetNextWindowSize(const Vector2f& size, ImGuiCond cond = 0);
 
 	/// \brief Converts a hexadecimal colour to a vector.
 	/// Example: 0xFF00FF00 -> { 1.f, 0.f, 1.f, 0.f }

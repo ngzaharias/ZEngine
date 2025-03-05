@@ -9,8 +9,9 @@
 #include "GameDebug/MenuBarComponents.h"
 #include "GameUI/SettingsComponents.h"
 
-#include <imgui/imgui.h>
-#include <imgui/Inspector.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_user.h"
+#include "imgui/Inspector.h"
 
 #include "Core/Guid.h"
 #include "Core/Name.h"

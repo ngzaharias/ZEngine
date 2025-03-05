@@ -10,14 +10,14 @@
 #include "GameUI/SettingsComponents.h"
 #include "Hidden/HiddenSettingsComponents.h"
 
-#include <imgui/imgui.h>
-#include <imgui/imgui_internal.h>
-#include <imgui/Inspector.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_internal.h"
+#include "imgui/imgui_user.h"
+#include "imgui/Inspector.h"
 
 namespace
 {
 	constexpr Vector2f s_DefaultSize = Vector2f(600.f, 0.f);
-	constexpr Vector2f s_OffsetPos = Vector2f(0.f, -150.f);
 }
 
 void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
@@ -54,12 +54,11 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 		auto& window = world.WriteComponent<gui::settings::WindowComponent>(entity);
 
-		const Vector2f viewportPos = ImGui::GetWindowViewport()->Pos;
 		const Vector2f viewportSize = ImGui::GetWindowViewport()->Size;
-		const Vector2f viewportCentre = viewportPos + (viewportSize * 0.5f);
+		const Vector2f viewportCentre = (viewportSize * 0.5f);
 
-		ImGui::SetNextWindowPos(viewportCentre - (s_DefaultSize * 0.5f) + s_OffsetPos);
-		ImGui::SetNextWindowSize(s_DefaultSize);
+		imgui::SetNextWindowPos(viewportCentre, Vector2f(0.5f));
+		imgui::SetNextWindowSize(s_DefaultSize);
 
 		bool isWindowOpen = true;
 		if (ImGui::BeginPopupModal("Settings", &isWindowOpen, s_WindowFlags))

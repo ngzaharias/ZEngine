@@ -8,8 +8,8 @@
 #include "Engine/FrameBufferComponent.h"
 #include "Math/Vector.h"
 
-#include <imgui/imgui.h>
-#include <imgui/imgui_user.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_user.h"
 
 void dbg::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -26,8 +26,8 @@ void dbg::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
 		const str::String label = "Render: Frame Buffer##" + std::to_string(entity.GetIndex());
 
 		bool isOpen = true;
-		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
+		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
+		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(label.c_str(), &isOpen))
 		{
 			const auto& component = world.ReadSingleton<eng::FrameBufferComponent>();

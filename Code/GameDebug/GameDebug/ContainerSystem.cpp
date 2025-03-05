@@ -10,6 +10,7 @@
 #include "Math/Vector.h"
 
 #include "imgui/imgui.h"
+#include "imgui/imgui_user.h"
 
 namespace
 {
@@ -85,8 +86,8 @@ void dbg::ContainerSystem::Update(World& world, const GameTime& gameTime)
 			world.RemoveComponent<container::MemberMoveRequestComponent>(windowEntity);
 
 		bool isWindowOpen = true;
-		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
+		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
+		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(window.m_Label.c_str(), &isWindowOpen, s_WindowFlags))
 		{
 			if (ImGui::Button("Create Storage"))

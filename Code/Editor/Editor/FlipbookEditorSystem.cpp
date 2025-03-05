@@ -11,10 +11,10 @@
 #include "GameDebug/MenuBarComponents.h"
 #include "Math/AABB.h"
 
-#include <imgui/imgui.h>
-#include <imgui/imgui_internal.h>
-#include <imgui/imgui_stdlib.h>
-#include <imgui/imgui_user.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_internal.h"
+#include "imgui/imgui_stdlib.h"
+#include "imgui/imgui_user.h"
 
 namespace
 {
@@ -335,8 +335,8 @@ void editor::FlipbookEditorSystem::Update(World& world, const GameTime& gameTime
 		auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(windowEntity);
 
 		bool isOpen = true;
-		ImGui::SetNextWindowPos({ s_DefaultPos.x, s_DefaultPos.y }, ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize({ s_DefaultSize.x, s_DefaultSize.y }, ImGuiCond_FirstUseEver);
+		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
+		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(windowComponent.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
 		{
 			DrawMenuBar(world, windowEntity);

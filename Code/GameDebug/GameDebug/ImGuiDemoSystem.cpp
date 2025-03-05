@@ -7,7 +7,8 @@
 #include "GameDebug/MenuBarComponents.h"
 #include "Math/Vector.h"
 
-#include <imgui/imgui.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_user.h"
 
 void dbg::ImGuiDemoSystem::Update(World& world, const GameTime& gameTime)
 {

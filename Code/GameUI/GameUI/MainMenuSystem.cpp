@@ -10,8 +10,9 @@
 #include "GameUI/MainMenuComponents.h"
 #include "GameUI/SettingsComponents.h"
 
-#include <imgui/imgui.h>
-#include <imgui/imgui_internal.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_internal.h"
+#include "imgui/imgui_user.h"
 
 namespace
 {
@@ -31,12 +32,11 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 		auto& window = world.WriteComponent<gui::main_menu::WindowComponent>(entity);
 
-		const Vector2f viewportPos = ImGui::GetWindowViewport()->Pos;
 		const Vector2f viewportSize = ImGui::GetWindowViewport()->Size;
-		const Vector2f viewportCentre = viewportPos + (viewportSize * 0.5f);
+		const Vector2f viewportCentre = (viewportSize * 0.5f);
 
-		ImGui::SetNextWindowPos(viewportCentre - (s_DefaultSize * 0.5f) + s_OffsetPos);
-		ImGui::SetNextWindowSize(s_DefaultSize);
+		imgui::SetNextWindowPos(viewportCentre, Vector2f(0.5f));
+		imgui::SetNextWindowSize(s_DefaultSize);
 		if (ImGui::Begin("Main Menu", nullptr, s_WindowFlags))
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));

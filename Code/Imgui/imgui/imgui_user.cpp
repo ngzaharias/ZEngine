@@ -733,6 +733,35 @@ bool imgui::Selectable(const str::String& label, bool selected, ImGuiSelectableF
 	return ImGui::Selectable(label.c_str(), selected, flags, size);
 }
 
+void imgui::SetNextWindowPos(const Vector2f& pos)
+{
+	const Vector2f viewportPos = ImGui::GetWindowViewport()->Pos;
+	return ImGui::SetNextWindowPos(viewportPos + pos, 0, Vector2f::Zero);
+}
+
+void imgui::SetNextWindowPos(const Vector2f& pos, const ImGuiCond cond)
+{
+	const Vector2f viewportPos = ImGui::GetWindowViewport()->Pos;
+	return ImGui::SetNextWindowPos(viewportPos + pos, cond, Vector2f::Zero);
+}
+
+void imgui::SetNextWindowPos(const Vector2f& pos, const Vector2f& pivot)
+{
+	const Vector2f viewportPos = ImGui::GetWindowViewport()->Pos;
+	return ImGui::SetNextWindowPos(viewportPos + pos, 0, pivot);
+}
+
+void imgui::SetNextWindowPos(const Vector2f& pos, const ImGuiCond cond, const Vector2f& pivot)
+{
+	const Vector2f viewportPos = ImGui::GetWindowViewport()->Pos;
+	return ImGui::SetNextWindowPos(viewportPos + pos, cond, pivot);
+}
+
+void imgui::SetNextWindowSize(const Vector2f& size, ImGuiCond cond)
+{
+	return ImGui::SetNextWindowSize(size, cond);
+}
+
 void imgui::Text(const str::Guid& value)
 {
 	ImGui::Text(value.ToString().c_str());

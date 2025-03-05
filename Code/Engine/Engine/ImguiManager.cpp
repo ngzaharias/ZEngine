@@ -5,11 +5,11 @@
 #include "Engine/GLFW/Window.h"
 
 #include <GLFW/glfw3.h>
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_glfw.h>
-#include <imgui/imgui_impl_opengl3.h>
-#include <imnodes/imnodes.h>
-#include <imguizmo/ImGuizmo.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imnodes/imnodes.h"
+#include "imguizmo/ImGuizmo.h"
 
 void eng::ImguiManager::Initialise(const eng::Window& window)
 {
