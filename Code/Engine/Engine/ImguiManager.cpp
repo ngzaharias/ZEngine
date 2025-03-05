@@ -64,6 +64,9 @@ void eng::ImguiManager::Initialise(const eng::Window& window)
 		colours[ImGuiCol_TitleBg] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		colours[ImGuiCol_TitleBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		colours[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+
+		// Modal
+		colours[ImGuiCol_ModalWindowDimBg] = ImVec4{ 0.f, 0.f, 0.f, 0.5f };
 	}
 }
 
