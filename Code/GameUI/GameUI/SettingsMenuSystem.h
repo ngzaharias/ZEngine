@@ -40,10 +40,10 @@ namespace gui::settings
 	public:
 		using World = ecs::WorldView<
 			ecs::NameComponent,
-			gui::settings::WindowComponent,
 			::clt::settings::DebugComponent,
 			::eng::settings::DebugComponent,
 			::eng::settings::LocalComponent,
+			::gui::settings::WindowComponent,
 			::hidden::settings::DebugComponent,
 			const gui::settings::CloseRequestComponent,
 			const gui::settings::OpenRequestComponent>;
