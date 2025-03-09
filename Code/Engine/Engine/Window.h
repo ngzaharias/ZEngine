@@ -29,8 +29,6 @@ namespace eng
 		virtual void PreUpdate(const GameTime& gameTime) { }
 		virtual void PostUpdate(const GameTime& gameTime) { }
 
-		virtual Vector2u GetResolution() const = 0;
-
 		virtual bool HasResized() const { return false; }
 		virtual bool ShouldClose() const { return false; }
 
