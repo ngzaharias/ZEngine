@@ -29,6 +29,7 @@
 #include "Engine/StaticMeshAssetSystem.h"
 #include "Engine/TextAssetSystem.h"
 #include "Engine/VersionSystem.h"
+#include "Engine/WindowSystem.h"
 #include "Voxel/VoxelMeshingSystem.h"
 #include "Voxel/VoxelModifySystem.h"
 
@@ -54,6 +55,7 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::StaticMeshAssetSystem>();
 	entityWorld.RegisterSystem<eng::TextAssetSystem>();
 	entityWorld.RegisterSystem<eng::VersionSystem>();
+	entityWorld.RegisterSystem<eng::WindowSystem>();
 	entityWorld.RegisterSystem<voxel::MeshingSystem>();
 	entityWorld.RegisterSystem<voxel::ModifySystem>();
 
