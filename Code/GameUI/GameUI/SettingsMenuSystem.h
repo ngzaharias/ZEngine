@@ -19,6 +19,7 @@ namespace eng::settings
 {
 	struct DebugComponent;
 	struct LocalComponent;
+	struct GraphicsComponent;
 }
 
 namespace gui::settings
@@ -43,6 +44,7 @@ namespace gui::settings
 			::clt::settings::DebugComponent,
 			::eng::settings::DebugComponent,
 			::eng::settings::LocalComponent,
+			::eng::settings::GraphicsComponent,
 			::gui::settings::WindowComponent,
 			::hidden::settings::DebugComponent,
 			const gui::settings::CloseRequestComponent,

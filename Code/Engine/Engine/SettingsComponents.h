@@ -7,6 +7,13 @@
 
 namespace eng::settings
 {
+	enum class EMode
+	{
+		Borderless,
+		Fullscreen,
+		Windowed,
+	};
+
 	struct Audio
 	{
 		int32 m_EffectVolume = 50;
@@ -18,12 +25,6 @@ namespace eng::settings
 		Rotator m_RotateSpeed = Rotator(0.2f);
 		float m_TranslateSpeed = 1000.f;
 		float m_ZoomAmount = 100.f;
-	};
-
-	struct Graphics
-	{
-		Vector3f m_ClearColour = Vector3f(0.24f);
-		Vector2u m_Resolution = Vector2u(1920, 1080);
 	};
 
 	/// \brief Debug settings that is only used in non-gold builds.
@@ -45,7 +46,14 @@ namespace eng::settings
 	{
 		Audio m_Audio = {};
 		Camera m_Camera = {};
-		Graphics m_Graphics = {};
+	};
+
+	/// \brief Shared settings for all local users that is saved to a config file.
+	struct GraphicsComponent : public ecs::SingletonComponent<GraphicsComponent>
+	{
+		Vector3f m_ClearColour = Vector3f(0.24f);
+		Vector2u m_Resolution = Vector2u(1920, 1080);
+		EMode m_Mode = EMode::Fullscreen;
 	};
 
 	/// \brief Shared settings broadcast from the host to all users that is saved to the savegame.

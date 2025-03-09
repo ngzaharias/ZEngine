@@ -58,11 +58,10 @@ void eng::RenderSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& settings = world.ReadSingleton<eng::settings::LocalComponent>();
-	const auto& graphics = settings.m_Graphics;
+	const auto& settings = world.ReadSingleton<eng::settings::GraphicsComponent>();
 
 	{
-		const Vector3f& colour = graphics.m_ClearColour;
+		const Vector3f& colour = settings.m_ClearColour;
 		glClearDepthf(1.f);
 		glClearColor(colour.x, colour.y, colour.z, 1.f);
 

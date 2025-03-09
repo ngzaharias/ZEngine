@@ -10,7 +10,7 @@ namespace sfml
 
 namespace eng::settings
 {
-	struct LocalComponent;
+	struct GraphicsComponent;
 }
 
 namespace eng
@@ -21,7 +21,7 @@ namespace eng
 	{
 	public:
 		using World = ecs::WorldView<
-			const eng::settings::LocalComponent>;
+			const eng::settings::GraphicsComponent>;
 
 		RenderSystem(ecs::EntityWorld& entityWorld);
 		~RenderSystem();
