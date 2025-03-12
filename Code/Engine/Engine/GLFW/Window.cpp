@@ -162,65 +162,27 @@ namespace
 		}
 		return input::EMouse::Unknown;
 	}
-
-	static void glfw_error_callback(int error, const char* description)
-	{
-		fprintf(stderr, "Glfw Error %d: %s\n", error, description);
-	}
 }
 
 glfw::Window::Window(const eng::WindowConfig& config)
 	: eng::Window(config)
 {
-	glfwSetErrorCallback(glfw_error_callback);
-
-	glfwInit();
-	glfwWindowHint(GLFW_SAMPLES, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	GLFWmonitor* fullscreenMonitor = nullptr;
-	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
-	if (config.m_IsFullscreen)
-		fullscreenMonitor = primaryMonitor;
-
 	m_Window = glfwCreateWindow(
 		config.m_Resolution.x, 
 		config.m_Resolution.y, 
 		config.m_Name.c_str(), 
-		fullscreenMonitor,
+		nullptr,
 		nullptr);
 
-	glfwMakeContextCurrent(m_Window);
 	glfwSetWindowUserPointer(m_Window, this);
 	glfwSetFramebufferSizeCallback(m_Window, Callback_FramebufferResized);
 	glfwSetScrollCallback(m_Window, Callback_ScrollChanged);
-
-	// V-Sync
-	glfwSwapInterval(config.m_IsVSyncEnabled);
-
-	auto error = glewInit();
-	if (error != GLEW_OK)
-	{
-		auto message = glewGetErrorString(error);
-		printf("Error: %s\n", message);
-	}
 }
 
 glfw::Window::~Window()
 {
 	glfwDestroyWindow(m_Window);
 	glfwTerminate();
-}
-
-void glfw::Window::Initialize()
-{
-}
-
-void glfw::Window::Shutdown()
-{
 }
 
 void glfw::Window::PreUpdate(const GameTime& gameTime)

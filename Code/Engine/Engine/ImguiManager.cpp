@@ -11,10 +11,19 @@
 #include "imnodes/imnodes.h"
 #include "imguizmo/ImGuizmo.h"
 
-void eng::ImguiManager::Initialise(const eng::Window& window)
+namespace
+{
+	bool AreViewportsEnabled()
+	{
+		const ImGuiIO& io = ImGui::GetIO();
+		return (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) != 0;
+	}
+}
+
+void eng::ImguiManager::Initialise(const eng::Window* window)
 {
 	PROFILE_FUNCTION();
-	m_Window = &window;
+	m_Window = window;
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -32,9 +41,9 @@ void eng::ImguiManager::Initialise(const eng::Window& window)
 	io.ConfigDragClickToInputText = false;
 	io.FontGlobalScale = 1.f;
 
-	if (const glfw::Window* window = dynamic_cast<const glfw::Window*>(m_Window))
+	if (const auto* glfwWindow = dynamic_cast<const glfw::Window*>(window))
 	{
-		ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true);
+		ImGui_ImplGlfw_InitForOpenGL(glfwWindow->GetWindow(), true);
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
 
@@ -74,7 +83,7 @@ void eng::ImguiManager::Shutdown()
 {
 	PROFILE_FUNCTION();
 
-	if (const glfw::Window* window = dynamic_cast<const glfw::Window*>(m_Window))
+	if (const auto* glfwWindow = dynamic_cast<const glfw::Window*>(m_Window))
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
@@ -106,18 +115,14 @@ void eng::ImguiManager::PostUpdate()
 	}
 
 	// viewports
+	if (AreViewportsEnabled())
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		const bool isViewportsEnabled = (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) != 0;
-		if (isViewportsEnabled)
-		{
-			PROFILE_CUSTOM("ImGui::UpdatePlatformWindows");
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
+		PROFILE_CUSTOM("ImGui::UpdatePlatformWindows");
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
 
-			if (const glfw::Window* window = dynamic_cast<const glfw::Window*>(m_Window))
-				glfwMakeContextCurrent(window->GetWindow());
-		}
+		if (const auto* glfwWindow = dynamic_cast<const glfw::Window*>(m_Window))
+			glfwMakeContextCurrent(glfwWindow->GetWindow());
 	}
 
 	//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());

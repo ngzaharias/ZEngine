@@ -155,10 +155,10 @@ bool imgui::Inspector::WriteCustom(eng::settings::GraphicsComponent& value)
 		m_Scratch = EnumToString(value.m_Mode);
 		if (ImGui::BeginCombo("##mode", m_Scratch.c_str()))
 		{
-			constexpr int32 count = EnumToCount<eng::settings::EMode>();
+			constexpr int32 count = EnumToCount<eng::EWindowMode>();
 			for (int32 i = 0; i < count; ++i)
 			{
-				const auto mode = IndexToEnum<eng::settings::EMode>(i);
+				const auto mode = IndexToEnum<eng::EWindowMode>(i);
 				m_Scratch = EnumToString(mode);
 				if (ImGui::Selectable(m_Scratch.c_str()))
 				{

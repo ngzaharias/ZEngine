@@ -2,18 +2,12 @@
 
 #include "Core/Name.h"
 #include "ECS/Component.h"
+#include "Engine/WindowModeEnum.h"
 #include "Math/Rotator.h"
 #include "Math/Vector.h"
 
 namespace eng::settings
 {
-	enum class EMode
-	{
-		Borderless,
-		Fullscreen,
-		Windowed,
-	};
-
 	struct Audio
 	{
 		int32 m_EffectVolume = 50;
@@ -52,8 +46,8 @@ namespace eng::settings
 	struct GraphicsComponent : public ecs::SingletonComponent<GraphicsComponent>
 	{
 		Vector3f m_ClearColour = Vector3f(0.24f);
-		Vector2u m_Resolution = Vector2u(1920, 1080);
-		EMode m_Mode = EMode::Fullscreen;
+		Vector2u m_Resolution = Vector2u::Zero;
+		eng::EWindowMode m_Mode = eng::EWindowMode::Fullscreen;
 	};
 
 	/// \brief Shared settings broadcast from the host to all users that is saved to the savegame.

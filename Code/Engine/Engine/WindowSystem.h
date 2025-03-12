@@ -4,7 +4,7 @@
 
 namespace eng
 {
-	class Window;
+	class WindowManager;
 }
 
 namespace eng::settings
@@ -19,7 +19,7 @@ namespace eng
 	public:
 		using World = ecs::WorldView<
 			// Resources
-			eng::Window,
+			eng::WindowManager,
 			// Components
 			const eng::settings::GraphicsComponent>;
 

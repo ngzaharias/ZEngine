@@ -6,7 +6,8 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputComponent.h"
-#include "Engine/GLFW/Window.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 
 #include "imgui/imgui.h"
 
@@ -21,18 +22,18 @@ void eng::InputSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& window = world.ReadResource<eng::Window>();
+	const auto& manager = world.ReadResource<eng::WindowManager>();
+	const eng::Window* window = manager.GetPrimary();
 
-	m_KeyboardPrevious = std::move(m_KeyboardCurrent);
-	m_MousePrevious = std::move(m_MouseCurrent);
+	std::swap(m_KeyboardPrevious, m_KeyboardCurrent);
+	std::swap(m_MousePrevious, m_MouseCurrent);
+	m_KeyboardCurrent.RemoveAll();
+	m_MouseCurrent.RemoveAll();
 
 	Vector2f mouseDelta, mousePos, scrollDelta;
-	if (const glfw::Window* glfwWindow = dynamic_cast<const glfw::Window*>(&window))
-	{
-		glfwWindow->GatherKeyboard(m_KeyboardCurrent);
-		glfwWindow->GatherMouse(m_MouseCurrent, mouseDelta, mousePos);
-		glfwWindow->GatherScroll(scrollDelta);
-	}
+	window->GatherKeyboard(m_KeyboardCurrent);
+	window->GatherMouse(m_MouseCurrent, mouseDelta, mousePos);
+	window->GatherScroll(scrollDelta);
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::InputComponent>>())
 	{

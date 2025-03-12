@@ -10,7 +10,7 @@
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
 #include "Engine/TableHeadmaster.h"
-#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
 #include "GameShared/RegisterComponents.h"
@@ -41,13 +41,13 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 
 	// resources
 	{
-		m_EntityWorld.RegisterResource(dependencies.m_Window);
 		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PlatformManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
 		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
+		m_EntityWorld.RegisterResource(dependencies.m_WindowManager);
 		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
 		m_EntityWorld.RegisterResource(m_ReplicationPeer);
 

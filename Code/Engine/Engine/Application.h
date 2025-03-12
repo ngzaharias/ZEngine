@@ -10,7 +10,7 @@
 #include "Engine/ReplicationHost.h"
 #include "Engine/ReplicationPeer.h"
 #include "Engine/TableHeadmaster.h"
-#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 
 class GameTime;
 
@@ -42,9 +42,6 @@ namespace eng
 		virtual bool ShouldClose();
 
 	protected:
-		eng::Window* m_Window;
-		eng::WindowConfig m_WindowConfig;
-
 		eng::AssetManager m_AssetManager;
 		eng::ImguiManager m_ImguiManager;
 		eng::NetworkManager m_NetworkManager;
@@ -52,6 +49,7 @@ namespace eng
 		eng::PlatformManager m_PlatformManager;
 		eng::PrototypeManager m_PrototypeManager;
 		eng::TableHeadmaster m_TableHeadmaster;
+		eng::WindowManager m_WindowManager;
 
 		net::ComponentSerializer m_ComponentSerializer;
 	};

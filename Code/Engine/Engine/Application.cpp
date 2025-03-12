@@ -9,7 +9,6 @@
 #include "Engine/FlipbookAsset.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/FontAsset.h"
-#include "Engine/GLFW/Window.h"
 #include "Engine/LightComponents.h"
 #include "Engine/MusicAsset.h"
 #include "Engine/NetworkComponents.h"
@@ -31,6 +30,7 @@
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TrajectoryAsset.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
 #include "Voxel/VoxelComponents.h"
 
 #include <GLFW/glfw3.h>
@@ -66,17 +66,16 @@ namespace
 }
 
 eng::Application::Application()
-	: m_Window(nullptr)
-	, m_AssetManager()
+	: m_AssetManager()
 	, m_ImguiManager()
 	, m_NetworkManager(m_ComponentSerializer)
 	, m_PhysicsManager()
 	, m_PlatformManager()
 	, m_PrototypeManager()
+	, m_WindowManager()
 	, m_ComponentSerializer()
 {
 	srand((unsigned int)time(NULL));
-	m_Window = new glfw::Window(m_WindowConfig);
 }
 
 eng::Application::~Application()
@@ -118,13 +117,9 @@ void eng::Application::Execute(int argc, char* argv[])
 		{
 			PROFILE_CUSTOM("eng::Application::Execute");
 
-			m_Window->PreUpdate(gameTime);
-
 			PreUpdate(gameTime);
 			Update(gameTime);
 			PostUpdate(gameTime);
-
-			m_Window->PostUpdate(gameTime);
 
 			if (ShouldClose())
 				break;
@@ -184,9 +179,13 @@ void eng::Application::Initialise()
 {
 	PROFILE_FUNCTION();
 
-	m_Window->Initialize();
+	// do first
+	eng::WindowConfig config;
+	config.m_Resolution = Vector2u(1920, 1080);
+	m_WindowManager.Initialise(config);
+
 	m_AssetManager.Initialise();
-	m_ImguiManager.Initialise(*m_Window);
+	m_ImguiManager.Initialise(m_WindowManager.GetPrimary());
 	m_PhysicsManager.Initialise();
 	m_PlatformManager.Initialise();
 	m_TableHeadmaster.Initialise(str::Path(str::EPath::Assets, "Tables"));
@@ -194,6 +193,9 @@ void eng::Application::Initialise()
 
 void eng::Application::PreUpdate(const GameTime& gameTime)
 {
+	// do first
+	m_WindowManager.PreUpdate(gameTime);
+
 	m_PlatformManager.Update(gameTime);
 	m_ImguiManager.PreUpdate();
 }
@@ -208,6 +210,9 @@ void eng::Application::Update(const GameTime& gameTime)
 void eng::Application::PostUpdate(const GameTime& gameTime)
 {
 	m_ImguiManager.PostUpdate();
+
+	// do last
+	m_WindowManager.PostUpdate(gameTime);
 }
 
 void eng::Application::Shutdown()
@@ -219,12 +224,13 @@ void eng::Application::Shutdown()
 	m_PhysicsManager.Shutdown();
 	m_ImguiManager.Shutdown();
 	m_AssetManager.Shutdown();
-	m_Window->Shutdown();
 
-	delete m_Window;
+	// do last
+	m_WindowManager.Shutdown();
 }
 
 bool eng::Application::ShouldClose()
 {
-	return m_Window->ShouldClose();
+	const eng::Window* window = m_WindowManager.GetPrimary();
+	return window->ShouldClose();
 }

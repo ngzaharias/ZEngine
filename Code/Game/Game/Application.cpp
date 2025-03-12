@@ -25,13 +25,13 @@ void game::Application::Register()
 	eng::Application::Register();
 
 	clt::Dependencies clientDependencies = {
-		*m_Window,
 		m_AssetManager, 
 		m_NetworkManager,
 		m_PhysicsManager,
 		m_PlatformManager,
 		m_PrototypeManager,
 		m_TableHeadmaster,
+		m_WindowManager,
 		m_ComponentSerializer };
 
 	svr::Dependencies serverDependencies = {

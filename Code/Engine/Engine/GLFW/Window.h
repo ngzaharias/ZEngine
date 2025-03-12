@@ -1,8 +1,8 @@
 #pragma once
 
 #ifdef Z_GLFW
+#include "Core/Input.h"
 #include "Core/Set.h"
-#include "Core/String.h"
 #include "Engine/Window.h"
 #include "Math/Vector.h"
 
@@ -22,9 +22,6 @@ namespace glfw
 		explicit Window(const eng::WindowConfig& config);
 		~Window() override;
 
-		void Initialize() override;
-		void Shutdown() override;
-
 		void PreUpdate(const GameTime& gameTime) override;
 		void PostUpdate(const GameTime& gameTime) override;
 
@@ -33,9 +30,9 @@ namespace glfw
 		bool HasResized() const override { return m_HasResized; }
 		bool ShouldClose() const override;
 
-		void GatherKeyboard(Set<input::EKeyboard>& out_Keys) const;
-		void GatherMouse(Set<input::EMouse>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const;
-		void GatherScroll(Vector2f& out_Delta) const;
+		void GatherKeyboard(Set<input::EKeyboard>& out_Keys) const override;
+		void GatherMouse(Set<input::EMouse>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const override;
+		void GatherScroll(Vector2f& out_Delta) const override;
 
 	private:
 		static void Callback_FramebufferResized(GLFWwindow* glfwWindow, int width, int height);

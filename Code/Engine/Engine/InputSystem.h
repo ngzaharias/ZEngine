@@ -11,7 +11,7 @@ namespace ecs
 
 namespace eng
 {
-	class Window;
+	class WindowManager;
 	struct InputComponent;
 }
 
@@ -22,7 +22,7 @@ namespace eng
 	public:
 		using World = ecs::WorldView<
 			// Resources
-			const eng::Window,
+			const eng::WindowManager,
 			// Components
 			ecs::NameComponent,
 			eng::InputComponent>;
