@@ -34,6 +34,8 @@ namespace glfw
 		void GatherMouse(Set<input::EMouse>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const override;
 		void GatherScroll(Vector2f& out_Delta) const override;
 
+		void Refresh() override;
+
 	private:
 		static void Callback_FramebufferResized(GLFWwindow* glfwWindow, int width, int height);
 		static void Callback_ScrollChanged(GLFWwindow* glfwWindow, double xOffset, double yOffset);

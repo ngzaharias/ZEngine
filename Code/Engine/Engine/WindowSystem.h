@@ -21,10 +21,9 @@ namespace eng
 			// Resources
 			eng::WindowManager,
 			// Components
-			const eng::settings::GraphicsComponent>;
+			eng::settings::GraphicsComponent>;
 
 		void Initialise(World& world);
-		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

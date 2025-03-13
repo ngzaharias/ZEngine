@@ -24,7 +24,7 @@ namespace eng
 		auto Create(const eng::WindowConfig& config) -> const eng::Window*;
 		bool Destroy(const eng::Window* value);
 
-		const eng::Window* GetPrimary() const { return m_Windows[0]; }
+		eng::Window* GetWindow(const int32 index) { return m_Windows[index]; }
 		const eng::Window* GetWindow(const int32 index) const { return m_Windows[index]; }
 
 	private:

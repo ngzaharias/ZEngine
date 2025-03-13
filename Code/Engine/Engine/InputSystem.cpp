@@ -23,7 +23,7 @@ void eng::InputSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const auto& manager = world.ReadResource<eng::WindowManager>();
-	const eng::Window* window = manager.GetPrimary();
+	const eng::Window* window = manager.GetWindow(0);
 
 	std::swap(m_KeyboardPrevious, m_KeyboardCurrent);
 	std::swap(m_MousePrevious, m_MouseCurrent);

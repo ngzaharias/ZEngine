@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/SettingsLocalSystem.h"
 
+#include "Core/Path.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"

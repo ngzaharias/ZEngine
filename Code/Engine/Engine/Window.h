@@ -10,6 +10,11 @@ class GameTime;
 
 namespace eng
 {
+	enum class EWindowMode;
+}
+
+namespace eng
+{
 	class Window
 	{
 	public:
@@ -26,6 +31,11 @@ namespace eng
 		virtual void GatherKeyboard(Set<input::EKeyboard>& out_Keys) const {}
 		virtual void GatherMouse(Set<input::EMouse>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const {}
 		virtual void GatherScroll(Vector2f& out_Delta) const {}
+
+		virtual void SetMode(const eng::EWindowMode value) { m_Config.m_Mode = value; }
+		virtual void SetResolution(const Vector2u& value) { m_Config.m_Resolution = value; }
+
+		virtual void Refresh() {}
 
 	private:
 		Window(const Window&) = delete;

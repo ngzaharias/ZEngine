@@ -181,11 +181,12 @@ void eng::Application::Initialise()
 
 	// do first
 	eng::WindowConfig config;
+	config.m_Mode = eng::EWindowMode::Windowed;
 	config.m_Resolution = Vector2u(1920, 1080);
 	m_WindowManager.Initialise(config);
 
 	m_AssetManager.Initialise();
-	m_ImguiManager.Initialise(m_WindowManager.GetPrimary());
+	m_ImguiManager.Initialise(m_WindowManager.GetWindow(0));
 	m_PhysicsManager.Initialise();
 	m_PlatformManager.Initialise();
 	m_TableHeadmaster.Initialise(str::Path(str::EPath::Assets, "Tables"));
@@ -231,6 +232,6 @@ void eng::Application::Shutdown()
 
 bool eng::Application::ShouldClose()
 {
-	const eng::Window* window = m_WindowManager.GetPrimary();
+	const eng::Window* window = m_WindowManager.GetWindow(0);
 	return window->ShouldClose();
 }

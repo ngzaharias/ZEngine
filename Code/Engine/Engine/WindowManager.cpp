@@ -30,10 +30,11 @@ void eng::WindowManager::Initialise(const eng::WindowConfig& config)
 	if (m_Windows.IsEmpty())
 		return;
 
-	if (auto* window = reinterpret_cast<glfw::Window*>(m_Windows[0]))
-		glfwMakeContextCurrent(window->GetWindow());
+#ifdef Z_GLFW
+	if (auto* glfwWindow = reinterpret_cast<glfw::Window*>(m_Windows[0]))
+		glfwMakeContextCurrent(glfwWindow->GetWindow());
 
-	// #note: glfwMakeContextCurrent must be called before initialising glew 
+	// #note: glfwMakeContextCurrent must be called before initializing 
 	const auto error = glewInit();
 	if (error != GLEW_OK)
 	{
@@ -41,11 +42,24 @@ void eng::WindowManager::Initialise(const eng::WindowConfig& config)
 		printf("Error: %s\n", message);
 		return;
 	}
+
+	// #todo: gather available resolutions and refresh rate
+	//GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	//int32 modeCount = 0;
+	//const GLFWvidmode* modes = glfwGetVideoModes(monitor, &modeCount);
+	//for (int32 i = 0; i < modeCount; ++i)
+	//{
+	//	const GLFWvidmode& mode = modes[i];
+	//	Z_LOG(ELog::Debug, "{}x{} ({})", mode.width, mode.height, mode.refreshRate);
+	//}
+#endif
 }
 
 void eng::WindowManager::Shutdown()
 {
-	Destroy(GetPrimary());
+	for (eng::Window* window : m_Windows)
+		delete window;
+	m_Windows.RemoveAll();
 }
 
 void eng::WindowManager::PreUpdate(const GameTime& gameTime)
@@ -67,16 +81,15 @@ void eng::WindowManager::PostUpdate(const GameTime& gameTime)
 auto eng::WindowManager::Create(const WindowConfig& config) -> const eng::Window*
 {
 #ifdef Z_GLFW
-	glfw::Window* window = new glfw::Window(config);
-	if (window->GetWindow())
+	glfw::Window* glfwWindow = new glfw::Window(config);
+	if (!glfwWindow->GetWindow())
 	{
-		m_Windows.Append(window);
-		return window;
+		delete glfwWindow;
+		return nullptr;
 	}
-	else
-	{
-		delete window;
-	}
+
+	m_Windows.Append(glfwWindow);
+	return glfwWindow;
 #endif
 	
 	return nullptr;
@@ -84,12 +97,14 @@ auto eng::WindowManager::Create(const WindowConfig& config) -> const eng::Window
 
 bool eng::WindowManager::Destroy(const eng::Window* value)
 {
-	for (const auto& [i, window] : enumerate::Forward(m_Windows))
+	// #hack: don't remove elements from the list
+	for (auto&& [i, window] : enumerate::Forward(m_Windows))
 	{
 		if (value != window)
 			continue;
 
-		m_Windows.RemoveAt(i);
+		delete window;
+		window = nullptr;
 		return true;
 	}
 	return false;

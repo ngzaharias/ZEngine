@@ -177,6 +177,8 @@ glfw::Window::Window(const eng::WindowConfig& config)
 	glfwSetWindowUserPointer(m_Window, this);
 	glfwSetFramebufferSizeCallback(m_Window, Callback_FramebufferResized);
 	glfwSetScrollCallback(m_Window, Callback_ScrollChanged);
+
+	Refresh();
 }
 
 glfw::Window::~Window()
@@ -238,6 +240,34 @@ void glfw::Window::GatherMouse(Set<input::EMouse>& out_Keys, Vector2f& out_Delta
 void glfw::Window::GatherScroll(Vector2f& out_Delta) const
 {
 	out_Delta = m_ScrollDelta;
+}
+
+void glfw::Window::Refresh()
+{
+	switch (m_Config.m_Mode)
+	{
+	case eng::EWindowMode::Fullscreen:
+	{
+		GLFWmonitor* glfwMonitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* glfwMode = glfwGetVideoMode(glfwMonitor);
+
+		// #bug: setting the monitor with a resolution that doesn't 
+		// match causes the window to become unresponsive
+		glfwSetWindowMonitor(m_Window, glfwMonitor, 0, 0, glfwMode->width, glfwMode->height, glfwMode->refreshRate);
+	} break;
+
+	case eng::EWindowMode::Windowed:
+	{
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+		const Vector2u& resolution = m_Config.m_Resolution;
+		const Vector2i position = Vector2i(
+			mode->width / 2 - resolution.x / 2,
+			mode->height / 2 - resolution.y / 2);
+
+		glfwSetWindowMonitor(m_Window, nullptr, position.x, position.y, resolution.x, resolution.y, mode->refreshRate);
+	} break;
+	}
 }
 
 void glfw::Window::Callback_FramebufferResized(GLFWwindow* glfwWindow, int width, int height)
