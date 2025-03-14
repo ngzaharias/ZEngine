@@ -32,8 +32,17 @@ namespace eng
 		virtual void GatherMouse(Set<input::EMouse>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const {}
 		virtual void GatherScroll(Vector2f& out_Delta) const {}
 
-		virtual void SetMode(const eng::EWindowMode value) { m_Config.m_Mode = value; }
-		virtual void SetResolution(const Vector2u& value) { m_Config.m_Resolution = value; }
+		virtual void SetMode(const eng::EWindowMode value) 
+		{ 
+			m_IsDirty = value != m_Config.m_Mode;
+			m_Config.m_Mode = value; 
+		}
+
+		virtual void SetResolution(const Vector2u& value) 
+		{ 
+			m_IsDirty = value != m_Config.m_Resolution;
+			m_Config.m_Resolution = value;
+		}
 
 		virtual void Refresh() {}
 
@@ -43,5 +52,6 @@ namespace eng
 
 	protected:
 		eng::WindowConfig m_Config = {};
+		bool m_IsDirty = false;
 	};
 }

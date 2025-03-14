@@ -17,6 +17,5 @@ namespace gui::settings
 		::eng::settings::DebugComponent m_DebugEngine;
 		::hidden::settings::DebugComponent m_DebugHidden;
 		::eng::settings::LocalComponent m_Local;
-		::eng::settings::GraphicsComponent m_Graphics;
 	};
 }

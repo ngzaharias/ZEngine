@@ -174,6 +174,7 @@ glfw::Window::Window(const eng::WindowConfig& config)
 		nullptr,
 		nullptr);
 
+	glfwSetWindowAttrib(m_Window, GLFW_FLOATING, GLFW_FALSE);
 	glfwSetWindowUserPointer(m_Window, this);
 	glfwSetFramebufferSizeCallback(m_Window, Callback_FramebufferResized);
 	glfwSetScrollCallback(m_Window, Callback_ScrollChanged);

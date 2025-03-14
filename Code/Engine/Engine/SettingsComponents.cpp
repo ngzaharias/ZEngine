@@ -17,10 +17,12 @@ namespace
 	const str::StringView strLevel = "m_Level";
 	const str::StringView strMode = "m_Mode";
 	const str::StringView strMusicVolume = "m_MusicVolume";
+	const str::StringView strRefreshRate = "m_RefreshRate";
 	const str::StringView strResolution = "m_Resolution";
 	const str::StringView strRotateSpeed = "m_RotateSpeed";
 	const str::StringView strTranslateSpeed = "m_TranslateSpeed";
 	const str::StringView strZoomAmount = "m_ZoomAmount";
+	const str::StringView strWindow = "m_Window";
 
 	constexpr Vector2u s_Resolutions[] = {
 		Vector2u(800, 600),
@@ -68,12 +70,14 @@ void eng::Visitor::ReadCustom(eng::settings::LocalComponent& value) const
 {
 	Read(strAudio, value.m_Audio, value.m_Audio);
 	Read(strCamera, value.m_Camera, value.m_Camera);
+	Read(strWindow, value.m_Window, value.m_Window);
 }
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::LocalComponent& value)
 {
 	Write(strAudio, value.m_Audio);
 	Write(strCamera, value.m_Camera);
+	Write(strWindow, value.m_Window);
 }
 template<>
 bool imgui::Inspector::WriteCustom(eng::settings::LocalComponent& value)
@@ -81,6 +85,7 @@ bool imgui::Inspector::WriteCustom(eng::settings::LocalComponent& value)
 	bool result = false;
 	result |= Write("m_Audio", value.m_Audio);
 	result |= Write("m_Camera", value.m_Camera);
+	result |= Write("m_Window", value.m_Window);
 	return result;
 }
 
@@ -132,22 +137,25 @@ bool imgui::Inspector::WriteCustom(eng::settings::Camera& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::settings::GraphicsComponent& value) const
+void eng::Visitor::ReadCustom(eng::settings::Window& value) const
 {
 	Read(strMode, value.m_Mode, value.m_Mode);
 	Read(strResolution, value.m_Resolution, value.m_Resolution);
+	Read(strRefreshRate, value.m_RefreshRate, value.m_RefreshRate);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::settings::GraphicsComponent& value)
+void eng::Visitor::WriteCustom(const eng::settings::Window& value)
 {
 	Write(strMode, value.m_Mode);
 	Write(strResolution, value.m_Resolution);
+	Write(strRefreshRate, value.m_RefreshRate);
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::settings::GraphicsComponent& value)
+bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 {
 	bool result = false;
 
+	ImGui::TableNextRow();
 	if (WriteHeader("m_Mode", value.m_Mode))
 	{
 		ImGui::TableSetColumnIndex(1);
@@ -169,8 +177,8 @@ bool imgui::Inspector::WriteCustom(eng::settings::GraphicsComponent& value)
 			ImGui::EndCombo();
 		}
 	}
-	ImGui::TableNextRow();
 
+	ImGui::TableNextRow();
 	if (WriteHeader("m_Resolution", value.m_Resolution))
 	{
 		ImGui::TableSetColumnIndex(1);
@@ -192,7 +200,9 @@ bool imgui::Inspector::WriteCustom(eng::settings::GraphicsComponent& value)
 			ImGui::EndCombo();
 		}
 	}
+
 	ImGui::TableNextRow();
+	Write("m_RefreshRate", value.m_RefreshRate);
 
 	return result;
 }

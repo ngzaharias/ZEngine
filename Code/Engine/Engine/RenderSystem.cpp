@@ -24,6 +24,11 @@
 // https://blog.molecular-matters.com/2014/11/06/stateless-layered-multi-threaded-rendering-part-1/
 // https://gamedevelopment.tutsplus.com/articles/gamma-correction-and-why-it-matters--gamedev-14466
 
+namespace
+{
+	constexpr Colour s_ClearColour = Colour(0.24f);
+}
+
 eng::RenderSystem::RenderSystem(ecs::EntityWorld& entityWorld)
 	: m_EntityWorld(entityWorld)
 {
@@ -58,12 +63,10 @@ void eng::RenderSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& settings = world.ReadSingleton<eng::settings::GraphicsComponent>();
-
 	{
-		const Vector3f& colour = settings.m_ClearColour;
+		const Colour& colour = s_ClearColour;
 		glClearDepthf(1.f);
-		glClearColor(colour.x, colour.y, colour.z, 1.f);
+		glClearColor(colour.r, colour.g, colour.b, 1.f);
 
 		// the depth mask must be enabled BEFORE clearing the depth buffer
 		glDepthMask(GL_TRUE);

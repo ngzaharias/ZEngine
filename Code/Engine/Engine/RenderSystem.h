@@ -3,16 +3,6 @@
 #include "Core/Array.h"
 #include "ECS/System.h"
 
-namespace sfml
-{
-	class Window;
-}
-
-namespace eng::settings
-{
-	struct GraphicsComponent;
-}
-
 namespace eng
 {
 	class RenderStage;
@@ -20,8 +10,7 @@ namespace eng
 	class RenderSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			const eng::settings::GraphicsComponent>;
+		using World = ecs::WorldView<>;
 
 		RenderSystem(ecs::EntityWorld& entityWorld);
 		~RenderSystem();

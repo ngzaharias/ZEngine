@@ -9,7 +9,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct GraphicsComponent;
+	struct LocalComponent;
 }
 
 namespace eng
@@ -21,7 +21,7 @@ namespace eng
 			// Resources
 			eng::WindowManager,
 			// Components
-			eng::settings::GraphicsComponent>;
+			eng::settings::LocalComponent>;
 
 		void Initialise(World& world);
 

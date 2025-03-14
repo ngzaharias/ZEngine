@@ -59,6 +59,10 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<voxel::MeshingSystem>();
 	entityWorld.RegisterSystem<voxel::ModifySystem>();
 
+	// LocalSystem system needs to run before WindowSystem
+	entityWorld.RegisterSystemPriority<eng::settings::LocalSystem>(1);
+	entityWorld.RegisterSystemPriority<eng::WindowSystem>(2);
+
 	// RandomSystem and SequenceSystem systems need to run before PlaySystem
 	entityWorld.RegisterSystemPriority<eng::sound::RandomSystem>(4000);
 	entityWorld.RegisterSystemPriority<eng::sound::SequenceSystem>(4000);

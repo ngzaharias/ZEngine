@@ -78,19 +78,6 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 					ImGui::EndTabItem();
 				}
 
-				if (ImGui::BeginTabItem("Graphics"))
-				{
-					imgui::Inspector inspector;
-					if (inspector.Begin("##settingsmenu"))
-					{
-						window.m_Graphics = world.ReadSingleton<eng::settings::GraphicsComponent>();
-						if (inspector.Write(window.m_Graphics))
-							world.WriteSingleton<eng::settings::GraphicsComponent>() = window.m_Graphics;
-						inspector.End();
-					}
-					ImGui::EndTabItem();
-				}
-
 				if (ImGui::BeginTabItem("Debug"))
 				{
 					imgui::Inspector inspector;

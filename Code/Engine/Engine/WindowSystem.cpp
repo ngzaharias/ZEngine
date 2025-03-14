@@ -6,30 +6,18 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/SettingsComponents.h"
-#include "Engine/GLFW/Window.h"
+#include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Engine/Visitor.h"
-
-#include <GLFW/glfw3.h>
-
-namespace
-{
-	const str::StringView strFilename = "GraphicsSettings.toml";
-}
 
 void eng::WindowSystem::Initialise(World& world)
 {
-	const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
-	auto& settings = world.WriteSingleton<eng::settings::GraphicsComponent>();
-
-	eng::Visitor visitor;
-	visitor.LoadFromFile(filepath);
-	visitor.Read(settings);
+	const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
+	const auto& windowSettings = localSettings.m_Window;
 
 	auto& manager = world.WriteResource<eng::WindowManager>();
 	eng::Window* window = manager.GetWindow(0);
-	window->SetMode(settings.m_Mode);
-	window->SetResolution(settings.m_Resolution);
+	window->SetMode(windowSettings.m_Mode);
+	window->SetResolution(windowSettings.m_Resolution);
 	window->Refresh();
 }
 
@@ -37,19 +25,15 @@ void eng::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Updated<eng::settings::GraphicsComponent>>())
+	if (world.HasAny<ecs::query::Updated<eng::settings::LocalComponent>>())
 	{
-		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
-		const auto& settings = world.ReadSingleton<eng::settings::GraphicsComponent>();
+		const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
+		const auto& windowSettings = localSettings.m_Window;
 
 		auto& manager = world.WriteResource<eng::WindowManager>();
 		eng::Window* window = manager.GetWindow(0);
-		window->SetMode(settings.m_Mode);
-		window->SetResolution(settings.m_Resolution);
+		window->SetMode(windowSettings.m_Mode);
+		window->SetResolution(windowSettings.m_Resolution);
 		window->Refresh();
-
-		eng::Visitor visitor;
-		visitor.Write(settings);
-		visitor.SaveToFile(filepath);
 	}
 }

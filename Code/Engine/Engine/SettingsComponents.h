@@ -21,6 +21,13 @@ namespace eng::settings
 		float m_ZoomAmount = 100.f;
 	};
 
+	struct Window
+	{
+		eng::EWindowMode m_Mode = eng::EWindowMode::Fullscreen;
+		Vector2u m_Resolution = Vector2u::Zero;
+		int32 m_RefreshRate = 0;
+	};
+
 	/// \brief Debug settings that is only used in non-gold builds.
 	struct DebugComponent : public ecs::SingletonComponent<DebugComponent>
 	{
@@ -40,14 +47,7 @@ namespace eng::settings
 	{
 		Audio m_Audio = {};
 		Camera m_Camera = {};
-	};
-
-	/// \brief Shared settings for all local users that is saved to a config file.
-	struct GraphicsComponent : public ecs::SingletonComponent<GraphicsComponent>
-	{
-		Vector3f m_ClearColour = Vector3f(0.24f);
-		Vector2u m_Resolution = Vector2u::Zero;
-		eng::EWindowMode m_Mode = eng::EWindowMode::Fullscreen;
+		Window m_Window = {};
 	};
 
 	/// \brief Shared settings broadcast from the host to all users that is saved to the savegame.

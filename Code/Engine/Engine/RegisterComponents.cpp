@@ -152,7 +152,6 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSingleton<eng::MusicComponent>();
 	entityWorld.RegisterSingleton<eng::network::StateComponent>();
 	entityWorld.RegisterSingleton<eng::settings::DebugComponent>();
-	entityWorld.RegisterSingleton<eng::settings::GraphicsComponent>();
 	entityWorld.RegisterSingleton<eng::settings::LaunchComponent>();
 	entityWorld.RegisterSingleton<eng::settings::LocalComponent>();
 	entityWorld.RegisterSingleton<eng::sound::RandomBufferComponent>();
