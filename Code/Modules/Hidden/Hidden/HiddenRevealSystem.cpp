@@ -13,6 +13,8 @@
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
 #include "Hidden/HiddenSettingsComponents.h"
@@ -45,6 +47,11 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const eng::Window* window = windowManager.GetWindow(0);
+	if (!window)
+		return;
+
 	const auto& settings = world.ReadSingleton<hidden::settings::DebugComponent>();
 	const auto& physics = world.ReadSingleton<eng::PhysicsSceneComponent>();
 
@@ -53,7 +60,6 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 		const auto& camera = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
-		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 		const Matrix4x4 cameraView = transform.ToTransform();
 
 		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())

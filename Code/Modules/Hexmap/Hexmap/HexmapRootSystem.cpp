@@ -10,6 +10,8 @@
 #include "Engine/InputComponent.h"
 #include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "Hexmap/HexmapRootComponent.h"
 #include "Math/AABB.h"
 #include "Math/Algorithms.h"
@@ -60,6 +62,11 @@ namespace
 void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const eng::Window* window = windowManager.GetWindow(0);
+	if (!window)
+		return;
 
 	bool hasChanged = false;
 	for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<eng::InputComponent>>())

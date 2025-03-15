@@ -10,6 +10,8 @@
 #include "Engine/Screen.h"
 #include "Engine/SettingsComponents.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "Math/Common.h"
 #include "Math/Math.h"
 
@@ -17,9 +19,15 @@ void eng::camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const eng::Window* window = windowManager.GetWindow(0);
+	if (!window)
+		return;
+
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Bound2DComponent, const eng::camera::ProjectionComponent>;
 	using InputQuery = ecs::query::Include<const eng::InputComponent>;
 
+	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
 		const auto& bound2d = world.ReadComponent<eng::camera::Bound2DComponent>(cameraEntity);
@@ -34,7 +42,7 @@ void eng::camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 			{
 				const auto& orthographic = std::get<eng::camera::Orthographic>(projection.m_Projection);
 
-				const float aspect = Screen::width / Screen::height;
+				const float aspect = (float)resolution.x / (float)resolution.y;
 				const Vector2f rangeMin = bound2d.m_Min;
 				const Vector2f rangeMax = bound2d.m_Max;
 				const Vector2f rangeHalf = (rangeMax - rangeMin) * 0.5f;

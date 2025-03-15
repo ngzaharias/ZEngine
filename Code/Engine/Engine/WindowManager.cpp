@@ -46,7 +46,6 @@ void eng::WindowManager::Initialise(const eng::WindowConfig& config)
 	// #todo: gather available resolutions and refresh rate
 	if (GLFWmonitor* monitor = glfwGetPrimaryMonitor())
 	{
-
 		Set<int32> refreshRates = {};
 		Set<Vector2u> resolutions = {};
 

@@ -4,6 +4,17 @@
 #include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
 
+namespace eng
+{
+	class AssetManager;
+	class WindowManager;
+	struct FlipbookAssetComponent;
+	struct FlipbookComponent;
+	struct SpriteAssetComponent;
+	struct SpriteComponent;
+	struct TransformComponent;
+}
+
 namespace eng::camera
 {
 	struct ProjectionComponent;
@@ -11,18 +22,14 @@ namespace eng::camera
 
 namespace eng
 {
-	class AssetManager;
-	struct FlipbookAssetComponent;
-	struct FlipbookComponent;
-	struct SpriteAssetComponent;
-	struct SpriteComponent;
-	struct TransformComponent;
-
 	class RenderStage_Translucent final : public eng::RenderStage
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
 			eng::AssetManager,
+			const eng::WindowManager,
+			// Components
 			const eng::camera::ProjectionComponent,
 			const eng::FlipbookAssetComponent,
 			const eng::FlipbookComponent,

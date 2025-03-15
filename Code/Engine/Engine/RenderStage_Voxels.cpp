@@ -13,6 +13,8 @@
 #include "Engine/ShaderAsset.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "Voxel/VoxelComponents.h"
 
 #include <GLEW/glew.h>
@@ -49,27 +51,30 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 	if (!shader || !texture)
 		return;
 
-	{
-		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
+	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const eng::Window* window = windowManager.GetWindow(0);
+	if (!window)
+		return;
 
-		glDisable(GL_BLEND);
+	const Vector2u& resolution = window->GetResolution();
+	glViewport(0, 0, resolution.x, resolution.y);
 
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-		glDepthMask(GL_TRUE);
+	glDisable(GL_BLEND);
 
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		glFrontFace(GL_CW);
-	}
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glDepthMask(GL_TRUE);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CW);
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, eng::TransformComponent>>())
 	{
 		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
-		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-		const Matrix4x4 cameraProj = camera::GetProjection(screenSize, cameraComponent.m_Projection);
+		const Matrix4x4 cameraProj = camera::GetProjection(resolution, cameraComponent.m_Projection);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 		glUseProgram(shader->m_ProgramId);

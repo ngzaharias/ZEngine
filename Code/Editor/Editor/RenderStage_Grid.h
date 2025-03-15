@@ -12,6 +12,7 @@ namespace editor::settings
 namespace eng
 {
 	class AssetManager;
+	class WindowManager;
 	struct TransformComponent;
 }
 
@@ -29,7 +30,10 @@ namespace editor
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
 			eng::AssetManager,
+			const eng::WindowManager,
+			// Components
 			const editor::settings::LocalComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::TransformComponent>;

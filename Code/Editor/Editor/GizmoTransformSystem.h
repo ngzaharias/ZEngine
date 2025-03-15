@@ -7,6 +7,7 @@
 
 namespace eng
 {
+	class WindowManager;
 	struct InputComponent;
 	struct LinesComponent;
 	struct PhysicsComponent;
@@ -35,6 +36,9 @@ namespace editor::gizmo
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			const eng::WindowManager,
+			// Components
 			eng::PhysicsComponent,
 			eng::TransformComponent,
 			const editor::EntityWindowComponent,

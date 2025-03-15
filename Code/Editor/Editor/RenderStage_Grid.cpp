@@ -14,6 +14,8 @@
 #include "Engine/ShaderAsset.h"
 #include "Engine/SettingsComponents.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -89,8 +91,15 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 	if (!shader)
 		return;
 
+	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const eng::Window* window = windowManager.GetWindow(0);
+	if (!window)
+		return;
+
+
 	{
-		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
+		const Vector2u& resolution = window->GetResolution();
+		glViewport(0, 0, resolution.x, resolution.y);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -110,8 +119,8 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 
 		const Vector3f translate = cameraTransform.m_Translate.X0Z();
 
-		const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-		const Matrix4x4 cameraProj = eng::camera::GetProjection(screenSize, cameraComponent.m_Projection);
+		const Vector2u& resolution = window->GetResolution();
+		const Matrix4x4 cameraProj = eng::camera::GetProjection(resolution, cameraComponent.m_Projection);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 		const Matrix4x4 modelTran = Matrix4x4::FromTranslate(translate);
 

@@ -10,6 +10,7 @@ namespace clt::settings
 
 namespace eng
 {
+	class WindowManager;
 	struct LinesComponent;
 	struct InputComponent;
 	struct PhysicsSceneComponent;
@@ -38,7 +39,10 @@ namespace hidden
 	class RevealSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView <
+			// Resources
+			const eng::WindowManager,
+			// Components
 			eng::LinesComponent,
 			eng::RigidStaticComponent,
 			hidden::RevealComponent,

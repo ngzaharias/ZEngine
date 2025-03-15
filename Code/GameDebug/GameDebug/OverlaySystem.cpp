@@ -6,8 +6,9 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/ColourHelpers.h"
-#include "Engine/Screen.h"
 #include "Engine/VersionComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "GameDebug/FPSCounter.h"
 #include "Math/Math.h"
 #include "Math/Matrix.h"
@@ -69,7 +70,12 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 
 		// resolution
 		{
-			ImGui::Text("%.0fx%.0f", Screen::width, Screen::height);
+			const auto& windowManager = world.ReadResource<eng::WindowManager>();
+			if (const eng::Window* window = windowManager.GetWindow(0))
+			{
+				const Vector2u& resolution = window->GetResolution();
+				ImGui::Text("%dx%d", resolution.x, resolution.y);
+			}
 		}
 
 		// fps

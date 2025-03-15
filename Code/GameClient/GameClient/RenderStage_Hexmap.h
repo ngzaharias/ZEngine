@@ -10,15 +10,16 @@ namespace ecs
 	class WorldView;
 }
 
-namespace eng::camera
-{
-	struct ProjectionComponent;
-}
-
 namespace eng
 {
 	class AssetManager;
+	class WindowManager;
 	struct TransformComponent;
+}
+
+namespace eng::camera
+{
+	struct ProjectionComponent;
 }
 
 namespace hexmap
@@ -31,7 +32,10 @@ namespace hexmap
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
 			eng::AssetManager,
+			const eng::WindowManager,
+			// Components
 			const eng::camera::ProjectionComponent,
 			const eng::TransformComponent,
 			const hexmap::AssetComponent,

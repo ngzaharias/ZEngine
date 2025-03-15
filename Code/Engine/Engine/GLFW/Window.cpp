@@ -274,7 +274,6 @@ void glfw::Window::Refresh()
 void glfw::Window::Callback_FramebufferResized(GLFWwindow* glfwWindow, int width, int height)
 {
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
-	window->m_HasResized = true;
 	window->m_Config.m_Resolution.x = static_cast<uint32>(width);
 	window->m_Config.m_Resolution.y = static_cast<uint32>(height);
 	Screen::width = static_cast<float>(width);

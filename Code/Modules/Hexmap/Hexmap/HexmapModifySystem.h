@@ -4,6 +4,7 @@
 
 namespace eng
 {
+	class WindowManager;
 	struct InputComponent;
 	struct TransformComponent;
 }
@@ -25,6 +26,9 @@ namespace hexmap
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			const eng::WindowManager,
+			// Components
 			hexmap::LayerComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::InputComponent,

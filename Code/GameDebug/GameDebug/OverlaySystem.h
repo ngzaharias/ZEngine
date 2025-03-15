@@ -6,7 +6,8 @@
 
 namespace eng
 {
-	struct  VersionComponent;
+	class WindowManager;
+	struct VersionComponent;
 }
 
 namespace dbg
@@ -15,6 +16,9 @@ namespace dbg
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			const eng::WindowManager,
+			// Components
 			const eng::VersionComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

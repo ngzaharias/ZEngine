@@ -27,7 +27,6 @@ namespace glfw
 
 		GLFWwindow* GetWindow() const { return m_Window; }
 
-		bool HasResized() const override { return m_HasResized; }
 		bool ShouldClose() const override;
 
 		void GatherKeyboard(Set<input::EKeyboard>& out_Keys) const override;
@@ -46,7 +45,6 @@ namespace glfw
 		Vector2f m_ScrollDelta = Vector2f::Zero;
 
 		GLFWwindow* m_Window = nullptr;
-		bool m_HasResized = false;
 	};
 }
 

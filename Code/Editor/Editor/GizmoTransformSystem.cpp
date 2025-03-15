@@ -12,6 +12,8 @@
 #include "Engine/Screen.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -62,6 +64,11 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
 		return;
 
+	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const eng::Window* window = windowManager.GetWindow(0);
+	if (!window)
+		return;
+
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::InputComponent>>())
 	{
 		const auto& input = world.ReadComponent<eng::InputComponent>(entity);
@@ -101,18 +108,14 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 			break;
 		}
 
+		const Vector2u& resolution = window->GetResolution();
 		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent>>())
 		{
 			const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
-			const Vector2u screenSize = Vector2u(
-				static_cast<uint32>(Screen::width),
-				static_cast<uint32>(Screen::height));
-
-			Matrix4x4 cameraProj = eng::camera::GetProjection(screenSize, cameraProjection.m_Projection);
-			Matrix4x4 cameraView = cameraTransform.ToTransform();
-			cameraView.Inverse();
+			const Matrix4x4 cameraProj = eng::camera::GetProjection(resolution, cameraProjection.m_Projection);
+			const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 			const bool isOrthographic = std::holds_alternative<eng::camera::Orthographic>(cameraProjection.m_Projection);
 			ImGuizmo::SetOrthographic(isOrthographic);

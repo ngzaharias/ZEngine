@@ -4,6 +4,14 @@
 #include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
 
+namespace eng
+{
+	class AssetManager;
+	class WindowManager;
+	struct LinesComponent;
+	struct TransformComponent;
+}
+
 namespace eng::camera
 {
 	struct ProjectionComponent;
@@ -16,15 +24,14 @@ namespace eng::settings
 
 namespace eng
 {
-	class AssetManager;
-	struct LinesComponent;
-	struct TransformComponent;
-
 	class RenderStage_Lines final : public eng::RenderStage
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
 			eng::AssetManager,
+			const eng::WindowManager,
+			// Components
 			eng::LinesComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::settings::DebugComponent,

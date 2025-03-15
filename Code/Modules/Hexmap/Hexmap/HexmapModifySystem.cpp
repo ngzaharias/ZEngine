@@ -9,6 +9,8 @@
 #include "Engine/InputComponent.h"
 #include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "Hexmap/HexmapHelpers.h"
 #include "Hexmap/HexmapLayerComponent.h"
 #include "Hexmap/HexmapRootComponent.h"
@@ -36,11 +38,17 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const eng::Window* window = windowManager.GetWindow(0);
+	if (!window)
+		return;
+
 	static int32 value = 2;
 
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::ProjectionComponent>;
 	using InputQuery = ecs::query::Include<const eng::InputComponent>;
 
+	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& inputEntity : world.Query<InputQuery>())
 	{
 		const auto& input = world.ReadComponent<eng::InputComponent>(inputEntity);
@@ -67,9 +75,7 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 			const auto& camera = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 			const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
-			const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
 			const Matrix4x4 cameraView = transform.ToTransform();
-
 			const Vector3f mousePosition = eng::camera::ScreenToWorld(input.m_MousePosition, camera.m_Projection, cameraView);
 			const Vector3f mouseDirection = ToMouseDirection(mousePosition, camera, transform);
 

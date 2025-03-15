@@ -15,6 +15,8 @@
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "Hexmap/HexmapLayerComponent.h"
 #include "Hexmap/HexmapRootComponent.h"
 #include "Math/HexagonHelpers.h"
@@ -87,20 +89,24 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 	if (texture->m_TextureId == 0)
 		return;
 
-	{
-		glViewport(0, 0, static_cast<int32>(Screen::width), static_cast<int32>(Screen::height));
+	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const eng::Window* window = windowManager.GetWindow(0);
+	if (!window)
+		return;
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	const Vector2u& resolution = window->GetResolution();
+	glViewport(0, 0, resolution.x, resolution.y);
 
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-		glDepthMask(GL_TRUE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		glFrontFace(GL_CW);
-	}
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glDepthMask(GL_TRUE);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CW);
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{

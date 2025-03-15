@@ -4,14 +4,10 @@
 #include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
 
-namespace eng::camera
-{
-	struct ProjectionComponent;
-}
-
 namespace eng
 {
 	class AssetManager;
+	class WindowManager;
 	struct FrameBufferComponent;
 	struct LightAmbientComponent;
 	struct LightDirectionalComponent;
@@ -19,12 +15,23 @@ namespace eng
 	struct StaticMeshAssetComponent;
 	struct StaticMeshComponent;
 	struct TransformComponent;
+}
 
+namespace eng::camera
+{
+	struct ProjectionComponent;
+}
+
+namespace eng
+{
 	class RenderStage_Opaque final : public eng::RenderStage
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView <
+			// Resources
 			eng::AssetManager,
+			const eng::WindowManager,
+			// Components
 			eng::FrameBufferComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::LightAmbientComponent,
