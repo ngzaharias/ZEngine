@@ -18,7 +18,6 @@
 #include "Engine/RenderSystem.h"
 #include "Engine/ReplicationHost.h"
 #include "Engine/ReplicationPeer.h"
-#include "Engine/Screen.h"
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SettingsLaunchSystem.h"
 #include "Engine/SettingsLocalSystem.h"

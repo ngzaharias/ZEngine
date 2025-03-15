@@ -11,6 +11,8 @@
 #include "Engine/InputComponent.h"
 #include "Engine/SettingsComponents.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "Math/Math.h"
 
 namespace
@@ -32,12 +34,18 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const eng::Window* window = windowManager.GetWindow(0);
+	if (!window)
+		return;
+
 	using CameraQuery = ecs::query::Include<eng::camera::ProjectionComponent, const eng::camera::Zoom2DComponent>;
 	using InputQuery = ecs::query::Include<const eng::InputComponent>;
 
 	const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
 	const auto& cameraSettings = localSettings.m_Camera;
 
+	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
 		const auto& readZoom = world.ReadComponent<eng::camera::Zoom2DComponent>(cameraEntity);
@@ -64,14 +72,16 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 					const Vector3f preZoom = camera::ScreenToWorld(
 						input.m_MousePosition,
 						readProjection.m_Projection,
-						readTransform.ToTransform());
+						readTransform.ToTransform(),
+						resolution);
 
 					writeOrthographic.m_Size = size;
 
 					const Vector3f postZoom = camera::ScreenToWorld(
 						input.m_MousePosition,
 						readProjection.m_Projection,
-						readTransform.ToTransform());
+						readTransform.ToTransform(),
+						resolution);
 
 					// we calculate the delta on the mouse pos and add it back onto the translate
 					writeTransform.m_Translate += preZoom - postZoom;

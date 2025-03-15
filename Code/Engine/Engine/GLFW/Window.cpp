@@ -1,6 +1,5 @@
 #include "EnginePCH.h"
 #include "Engine/GLFW/Window.h"
-#include "Engine/Screen.h"
 
 #ifdef Z_GLFW
 #include "Core/Input.h"
@@ -276,8 +275,6 @@ void glfw::Window::Callback_FramebufferResized(GLFWwindow* glfwWindow, int width
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
 	window->m_Config.m_Resolution.x = static_cast<uint32>(width);
 	window->m_Config.m_Resolution.y = static_cast<uint32>(height);
-	Screen::width = static_cast<float>(width);
-	Screen::height = static_cast<float>(height);
 
 	glViewport(0, 0, width, height);
 	//glScissor(0, 0, width, height);

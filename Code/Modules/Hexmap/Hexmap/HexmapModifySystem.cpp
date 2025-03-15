@@ -7,7 +7,6 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputComponent.h"
-#include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -76,7 +75,7 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 			const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 			const Matrix4x4 cameraView = transform.ToTransform();
-			const Vector3f mousePosition = eng::camera::ScreenToWorld(input.m_MousePosition, camera.m_Projection, cameraView);
+			const Vector3f mousePosition = eng::camera::ScreenToWorld(input.m_MousePosition, camera.m_Projection, cameraView, resolution);
 			const Vector3f mouseDirection = ToMouseDirection(mousePosition, camera, transform);
 
 			const Ray3f ray = Ray3f(mousePosition, mouseDirection);

@@ -11,7 +11,6 @@
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputComponent.h"
 #include "Engine/LinesComponent.h"
-#include "Engine/Screen.h"
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Voxel/VoxelComponents.h"

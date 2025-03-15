@@ -4,6 +4,7 @@
 
 namespace eng
 {
+	class WindowManager;
 	struct InputComponent;
 	struct TransformComponent;
 }
@@ -22,6 +23,9 @@ namespace eng::camera
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			const eng::WindowManager,
+			// Components
 			eng::camera::ProjectionComponent,
 			eng::TransformComponent,
 			const eng::camera::Zoom2DComponent,

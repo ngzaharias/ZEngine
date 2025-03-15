@@ -11,6 +11,7 @@ class Circle2f;
 class OBB3f;
 class Rotator;
 class Sphere3f;
+class Vector2u;
 
 namespace eng::camera
 {
@@ -42,11 +43,11 @@ namespace eng
 		void AddCircle(const Vector3f& translate, const Circle2f& circle, const Colour& colour);
 
 		/// \brief Adds a frustum.
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Colour& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Vector2u& size, const Colour& colour);
 		/// \brief Adds a frustum.
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Colour& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Vector2u& size, const Colour& colour);
 		/// \brief Adds a frustum.
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Colour& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Vector2u& size, const Colour& colour);
 
 		/// \brief Adds an icosphere.
 		void AddIcosphere(const Vector3f& translate, const Sphere3f& sphere, const Colour& colour);

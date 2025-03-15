@@ -2,7 +2,6 @@
 #include "Engine/CameraHelpers.h"
 
 #include "Core/Assert.h"
-#include "Engine/Screen.h"
 #include "Math/Math.h"
 
 #include <algorithm>
@@ -79,20 +78,19 @@ Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Perspecti
 #endif
 }
 
-Vector3f eng::camera::ScreenToWorld(const Vector2f& pixelPos, const Projection& projection, const Matrix4x4& transform)
+Vector3f eng::camera::ScreenToWorld(const Vector2f& pixelPos, const Projection& projection, const Matrix4x4& transform, const Vector2u& windowSize)
 {
-	return ScreenToWorld(pixelPos, 0.f, projection, transform);
+	return ScreenToWorld(pixelPos, 0.f, projection, transform, windowSize);
 }
 
-Vector3f eng::camera::ScreenToWorld(const Vector2f& pixelPos, const float depth, const Projection& projection, const Matrix4x4& transform)
+Vector3f eng::camera::ScreenToWorld(const Vector2f& pixelPos, const float depth, const Projection& projection, const Matrix4x4& transform, const Vector2u& windowSize)
 {
-	const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-	const Matrix4x4 inverseProj = GetProjection(screenSize, projection).Inversed();
+	const Matrix4x4 inverseProj = GetProjection(windowSize, projection).Inversed();
 
 	// pixel -> screen
 	Vector3f screenPos;
-	screenPos.x = +math::Remap(pixelPos.x, 0.f, Screen::width, -1.f, 1.f);
-	screenPos.y = -math::Remap(pixelPos.y, 0.f, Screen::height, -1.f, 1.f);
+	screenPos.x = +math::Remap(pixelPos.x, 0.f, (float)windowSize.x, -1.f, 1.f);
+	screenPos.y = -math::Remap(pixelPos.y, 0.f, (float)windowSize.y, -1.f, 1.f);
 	screenPos.z = depth;
 
 	// screen -> homogeneous
@@ -109,12 +107,11 @@ Vector3f eng::camera::ScreenToWorld(const Vector2f& pixelPos, const float depth,
 	return localPos * transform;
 }
 
-Vector2f eng::camera::WorldToScreen(const Vector3f& worldPos, const Projection& projection, const Matrix4x4& transform)
+Vector2f eng::camera::WorldToScreen(const Vector3f& worldPos, const Projection& projection, const Matrix4x4& transform, const Vector2u& windowSize)
 {
 	Z_PANIC(false, "Incomplete function!");
 
-	const Vector2u screenSize = Vector2u(static_cast<uint32>(Screen::width), static_cast<uint32>(Screen::height));
-	const Matrix4x4 cameraProj = GetProjection(screenSize, projection);
+	const Matrix4x4 cameraProj = GetProjection(windowSize, projection);
 
 	Vector3f localPos = worldPos;
 	localPos = localPos * transform.Inversed();

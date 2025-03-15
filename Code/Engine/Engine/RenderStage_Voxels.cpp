@@ -9,7 +9,6 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/DynamicMeshComponent.h"
-#include "Engine/Screen.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TransformComponent.h"

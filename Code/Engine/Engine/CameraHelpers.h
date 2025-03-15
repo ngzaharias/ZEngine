@@ -12,11 +12,11 @@ namespace eng::camera
 	Matrix4x4 GetProjection(const Vector2u& windowSize, const Perspective& value);
 
 	/// \brief Converts a screen position to a world position using a projection and transform matrix.
-	Vector3f ScreenToWorld(const Vector2f& pixelPos, const Projection& projection, const Matrix4x4& transform);
+	Vector3f ScreenToWorld(const Vector2f& pixelPos, const Projection& projection, const Matrix4x4& transform, const Vector2u& windowSize);
 
 	/// \brief Converts a screen position to a world position using a projection and transform matrix.
-	Vector3f ScreenToWorld(const Vector2f& pixelPos, const float depth, const Projection& projection, const Matrix4x4& transform);
+	Vector3f ScreenToWorld(const Vector2f& pixelPos, const float depth, const Projection& projection, const Matrix4x4& transform, const Vector2u& windowSize);
 
 	/// \brief Converts a world position to a screen position using a projection and transform matrix.
-	Vector2f WorldToScreen(const Vector3f& worldPos, const Projection& projection, const Matrix4x4& transform);
+	Vector2f WorldToScreen(const Vector3f& worldPos, const Projection& projection, const Matrix4x4& transform, const Vector2u& windowSize);
 }

@@ -4,6 +4,7 @@
 
 namespace eng
 {
+	class WindowManager;
 	struct InputComponent;
 	struct LinesComponent;
 	struct NameComponent;
@@ -23,6 +24,9 @@ namespace drag
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			const eng::WindowManager,
+			// Components
 			eng::LinesComponent,
 			eng::TransformComponent,
 			const drag::SelectionComponent,

@@ -11,7 +11,6 @@
 #include "Engine/LinesComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/RigidStaticComponent.h"
-#include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -55,6 +54,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 	const auto& settings = world.ReadSingleton<hidden::settings::DebugComponent>();
 	const auto& physics = world.ReadSingleton<eng::PhysicsSceneComponent>();
 
+	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
 		const auto& camera = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
@@ -68,7 +68,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 
 			// mouse
 			constexpr float s_Distance = 100000.f;
-			const Vector3f mousePosition = eng::camera::ScreenToWorld(inputComponent.m_MousePosition, camera.m_Projection, cameraView);
+			const Vector3f mousePosition = eng::camera::ScreenToWorld(inputComponent.m_MousePosition, camera.m_Projection, cameraView, resolution);
 			const Vector3f mouseDirection = ToMouseDirection(mousePosition, camera, transform);
 
 			const physx::PxVec3 position = { 

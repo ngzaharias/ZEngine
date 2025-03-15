@@ -303,15 +303,15 @@ void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& c
 	AddLine(corners[5], corners[2], colour);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Colour& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Vector2u& size, const Colour& colour)
 {
-	std::visit([&](auto projection) { AddFrustrum(translate, rotate, projection, colour); }, projection);
+	std::visit([&](auto projection) { AddFrustrum(translate, rotate, projection, size, colour); }, projection);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Colour& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Vector2u& size, const Colour& colour)
 {
 	// #todo: pass in width & height
-	const float aspect = Screen::width / Screen::height;
+	const float aspect = (float)size.x / (float)size.y;
 	const float widthH = projection.m_Size * aspect * 0.5f;
 	const float heightH = projection.m_Size * 0.5f;
 
@@ -348,10 +348,10 @@ void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Colour& colour)
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Vector2u& size, const Colour& colour)
 {
 	// #todo: pass in width & height
-	const float ratio = Screen::width / Screen::height;
+	const float ratio = (float)size.x / (float)size.y;
 	const float fovy = math::ToRadians(projection.m_FieldOfView);
 
 	const float nearHeight = 2.f * tan(fovy * 0.5f) * projection.m_ClippingNear;

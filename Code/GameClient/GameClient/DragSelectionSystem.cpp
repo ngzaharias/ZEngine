@@ -11,8 +11,9 @@
 #include "Engine/LinesComponent.h"
 #include "Engine/InputComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
-#include "Engine/Screen.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "GameClient/DragComponents.h"
 #include "Math/CollisionMath.h"
 #include "Math/Ray.h"
@@ -24,9 +25,15 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const eng::Window* window = windowManager.GetWindow(0);
+	if (!window)
+		return;
+
 	const auto& sceneComponent = world.ReadSingleton<eng::PhysicsSceneComponent>();
 	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 
+	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
 		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
@@ -42,8 +49,12 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 			const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
 
 			// mouse
-			const float distance = 100000.f;
-			const Vector3f mousePosition = eng::camera::ScreenToWorld(inputComponent.m_MousePosition, cameraComponent.m_Projection, cameraView);
+			constexpr float distance = 100000.f;
+			const Vector3f mousePosition = eng::camera::ScreenToWorld(
+				inputComponent.m_MousePosition, 
+				cameraComponent.m_Projection, 
+				cameraView, 
+				resolution);
 			const Vector3f mouseForward = (mousePosition - cameraTranslate).Normalized();
 
 			const physx::PxVec3 position = { 

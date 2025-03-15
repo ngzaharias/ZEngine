@@ -19,7 +19,6 @@
 #include "Engine/PrototypeManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
-#include "Engine/Screen.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/SoundAssets.h"
 #include "Engine/SpriteAsset.h"
