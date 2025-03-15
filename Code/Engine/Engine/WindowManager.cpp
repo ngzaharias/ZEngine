@@ -44,14 +44,28 @@ void eng::WindowManager::Initialise(const eng::WindowConfig& config)
 	}
 
 	// #todo: gather available resolutions and refresh rate
-	//GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	//int32 modeCount = 0;
-	//const GLFWvidmode* modes = glfwGetVideoModes(monitor, &modeCount);
-	//for (int32 i = 0; i < modeCount; ++i)
-	//{
-	//	const GLFWvidmode& mode = modes[i];
-	//	Z_LOG(ELog::Debug, "{}x{} ({})", mode.width, mode.height, mode.refreshRate);
-	//}
+	if (GLFWmonitor* monitor = glfwGetPrimaryMonitor())
+	{
+
+		Set<int32> refreshRates = {};
+		Set<Vector2u> resolutions = {};
+
+		int32 modeCount = 0;
+		const GLFWvidmode* modes = glfwGetVideoModes(monitor, &modeCount);
+		for (int32 i = 0; i < modeCount; ++i)
+		{
+			const GLFWvidmode& mode = modes[i];
+			refreshRates.Add(mode.refreshRate);
+			resolutions.Add(Vector2u(mode.width, mode.height));
+		}
+
+		m_Modes.Append(eng::EWindowMode::Fullscreen);
+		m_Modes.Append(eng::EWindowMode::Windowed);
+		for (const int32 value : refreshRates)
+			m_RefreshRates.Append(value);
+		for (const Vector2u& value : resolutions)
+			m_Resolutions.Append(value);
+	}
 #endif
 }
 

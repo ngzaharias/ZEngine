@@ -6,6 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/SettingsComponents.h"
+#include "Engine/WindowManager.h"
 #include "GameClient/SettingsComponents.h"
 #include "GameUI/SettingsComponents.h"
 #include "Hidden/HiddenSettingsComponents.h"
@@ -68,6 +69,7 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 				if (ImGui::BeginTabItem("Gameplay"))
 				{
 					imgui::Inspector inspector;
+					inspector.AddPayload(world.ReadResource<eng::WindowManager>());
 					if (inspector.Begin("##settingsmenu"))
 					{
 						window.m_Local = world.ReadSingleton<eng::settings::LocalComponent>();

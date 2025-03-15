@@ -3,6 +3,7 @@
 
 #include "Core/Array.h"
 #include "Engine/Visitor.h"
+#include "Engine/WindowManager.h"
 #include "imgui/Inspector.h"
 
 namespace
@@ -23,12 +24,6 @@ namespace
 	const str::StringView strTranslateSpeed = "m_TranslateSpeed";
 	const str::StringView strZoomAmount = "m_ZoomAmount";
 	const str::StringView strWindow = "m_Window";
-
-	constexpr Vector2u s_Resolutions[] = {
-		Vector2u(800, 600),
-		Vector2u(1600, 1024),
-		Vector2u(1920, 1080),
-		Vector2u(2560, 1440) };
 
 	static str::String m_Scratch = {};
 }
@@ -155,6 +150,8 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 {
 	bool result = false;
 
+	const auto& windowManager = GetPayload<const eng::WindowManager>();
+
 	ImGui::TableNextRow();
 	if (WriteHeader("m_Mode", value.m_Mode))
 	{
@@ -163,10 +160,8 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 		m_Scratch = EnumToString(value.m_Mode);
 		if (ImGui::BeginCombo("##mode", m_Scratch.c_str()))
 		{
-			constexpr int32 count = EnumToCount<eng::EWindowMode>();
-			for (int32 i = 0; i < count; ++i)
+			for (const eng::EWindowMode mode : windowManager.GetModes())
 			{
-				const auto mode = IndexToEnum<eng::EWindowMode>(i);
 				m_Scratch = EnumToString(mode);
 				if (ImGui::Selectable(m_Scratch.c_str()))
 				{
@@ -186,10 +181,8 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 		m_Scratch = std::format("{}x{}", value.m_Resolution.x, value.m_Resolution.y);
 		if (ImGui::BeginCombo("##resolution", m_Scratch.c_str()))
 		{
-			constexpr int32 count = std::extent<decltype(s_Resolutions)>::value;
-			for (int32 i = 0; i < count; ++i)
+			for (const Vector2u& resolution : windowManager.GetResolutions())
 			{
-				const Vector2u& resolution = s_Resolutions[i];
 				m_Scratch = std::format("{}x{}", resolution.x, resolution.y);
 				if (ImGui::Selectable(m_Scratch.c_str()))
 				{
@@ -202,7 +195,25 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 	}
 
 	ImGui::TableNextRow();
-	Write("m_RefreshRate", value.m_RefreshRate);
+	if (WriteHeader("m_RefreshRate", value.m_RefreshRate))
+	{
+		ImGui::TableSetColumnIndex(1);
+
+		m_Scratch = std::format("{}", value.m_RefreshRate);
+		if (ImGui::BeginCombo("##refreshrate", m_Scratch.c_str()))
+		{
+			for (const int32 refreshRate : windowManager.GetRefreshRates())
+			{
+				m_Scratch = std::format("{}", refreshRate);
+				if (ImGui::Selectable(m_Scratch.c_str()))
+				{
+					result = true;
+					value.m_RefreshRate = refreshRate;
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
 
 	return result;
 }

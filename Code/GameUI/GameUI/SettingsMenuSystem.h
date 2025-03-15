@@ -15,6 +15,11 @@ namespace ecs
 	struct NameComponent;
 }
 
+namespace eng
+{
+	class WindowManager;
+}
+
 namespace eng::settings
 {
 	struct DebugComponent;
@@ -40,6 +45,9 @@ namespace gui::settings
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			eng::WindowManager,
+			// Components
 			ecs::NameComponent,
 			::clt::settings::DebugComponent,
 			::eng::settings::DebugComponent,
