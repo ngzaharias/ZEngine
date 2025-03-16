@@ -5,6 +5,17 @@
 #include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
+namespace clt::settings
+{
+	struct DebugComponent;
+}
+
+namespace dbg::settings
+{
+	struct RequestComponent;
+	struct WindowComponent;
+}
+
 namespace ecs
 {
 	struct NameComponent;
@@ -17,17 +28,15 @@ namespace eng
 
 namespace eng::settings
 {
-	struct LocalComponent;
+	struct DebugComponent;
 }
 
-namespace gui::settings
+namespace hidden::settings
 {
-	struct CloseRequestComponent;
-	struct OpenRequestComponent;
-	struct WindowComponent;
+	struct DebugComponent;
 }
 
-namespace gui::settings
+namespace dbg::settings
 {
 	class MenuSystem final : public ecs::System
 	{
@@ -37,10 +46,11 @@ namespace gui::settings
 			eng::WindowManager,
 			// Components
 			ecs::NameComponent,
-			eng::settings::LocalComponent,
-			gui::settings::WindowComponent,
-			const gui::settings::CloseRequestComponent,
-			const gui::settings::OpenRequestComponent>;
+			clt::settings::DebugComponent,
+			dbg::settings::WindowComponent,
+			eng::settings::DebugComponent,
+			::hidden::settings::DebugComponent,
+			const dbg::settings::RequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

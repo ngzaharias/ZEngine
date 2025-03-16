@@ -2,7 +2,6 @@
 #include "Engine/LinesComponent.h"
 
 #include "Engine/CameraHelpers.h"
-#include "Engine/Screen.h"
 #include "Math/AABB.h"
 #include "Math/Circle.h"
 #include "Math/Matrix.h"

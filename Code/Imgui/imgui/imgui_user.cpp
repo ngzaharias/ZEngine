@@ -751,7 +751,7 @@ void imgui::SetNextWindowPos(const Vector2f& pos, const Vector2f& pivot)
 	return ImGui::SetNextWindowPos(viewportPos + pos, 0, pivot);
 }
 
-void imgui::SetNextWindowPos(const Vector2f& pos, const ImGuiCond cond, const Vector2f& pivot)
+void imgui::SetNextWindowPos(const Vector2f& pos, const Vector2f& pivot, const ImGuiCond cond)
 {
 	const Vector2f viewportPos = ImGui::GetWindowViewport()->Pos;
 	return ImGui::SetNextWindowPos(viewportPos + pos, cond, pivot);

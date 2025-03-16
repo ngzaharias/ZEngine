@@ -23,6 +23,7 @@ namespace
 	const str::StringView strRotateSpeed = "m_RotateSpeed";
 	const str::StringView strTranslateSpeed = "m_TranslateSpeed";
 	const str::StringView strZoomAmount = "m_ZoomAmount";
+	const str::StringView strZoomSpeed = "m_ZoomSpeed";
 	const str::StringView strWindow = "m_Window";
 
 	static str::String m_Scratch = {};
@@ -113,6 +114,7 @@ void eng::Visitor::ReadCustom(eng::settings::Camera& value) const
 	Read(strRotateSpeed, value.m_RotateSpeed, value.m_RotateSpeed);
 	Read(strTranslateSpeed, value.m_TranslateSpeed, value.m_TranslateSpeed);
 	Read(strZoomAmount, value.m_ZoomAmount, value.m_ZoomAmount);
+	Read(strZoomSpeed, value.m_ZoomSpeed, value.m_ZoomSpeed);
 }
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::Camera& value)
@@ -120,6 +122,7 @@ void eng::Visitor::WriteCustom(const eng::settings::Camera& value)
 	Write(strRotateSpeed, value.m_RotateSpeed);
 	Write(strTranslateSpeed, value.m_TranslateSpeed);
 	Write(strZoomAmount, value.m_ZoomAmount);
+	Write(strZoomSpeed, value.m_ZoomSpeed);
 }
 template<>
 bool imgui::Inspector::WriteCustom(eng::settings::Camera& value)
@@ -128,6 +131,7 @@ bool imgui::Inspector::WriteCustom(eng::settings::Camera& value)
 	result |= Write("m_RotateSpeed", value.m_RotateSpeed);
 	result |= Write("m_TranslateSpeed", value.m_TranslateSpeed);
 	result |= Write("m_ZoomAmount", value.m_ZoomAmount);
+	result |= Write("m_ZoomSpeed", value.m_ZoomSpeed);
 	return result;
 }
 

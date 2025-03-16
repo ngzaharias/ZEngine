@@ -7,6 +7,7 @@
 #include "Engine/AssetManager.h"
 #include "Engine/InputComponent.h"
 #include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/SettingsComponents.h"
 #include "GameUI/SettingsComponents.h"
 
 #include "imgui/imgui.h"
@@ -48,6 +49,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 		if (ImGui::BeginMenu("Settings"))
 		{
+			if (ImGui::MenuItem("Debug"))
+				world.AddEventComponent<dbg::settings::WindowRequestComponent>();
 			if (ImGui::MenuItem("Editor"))
 				world.AddEventComponent<editor::settings::WindowRequestComponent>();
 			if (ImGui::MenuItem("Game"))

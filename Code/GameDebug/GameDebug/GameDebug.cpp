@@ -20,7 +20,9 @@
 #include "GameDebug/NetworkSystem.h"
 #include "GameDebug/OverlaySystem.h"
 #include "GameDebug/PhysicsSystem.h"
+#include "GameDebug/SettingsComponents.h"
 #include "GameDebug/SettingsDebugSystem.h"
+#include "GameDebug/SettingsMenuSystem.h"
 #include "GameDebug/ShapeComponents.h"
 #include "GameDebug/ShapeSystem.h"
 
@@ -57,6 +59,8 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::ServerWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ShapeWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ShapeWindowRequestComponent>();
+	m_ClientWorld.RegisterComponent<dbg::settings::WindowComponent>();
+	m_ClientWorld.RegisterComponent<dbg::settings::WindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::EntityWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::settings::WindowRequestComponent>();
@@ -79,6 +83,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<dbg::OverlaySystem>();
 	m_ClientWorld.RegisterSystem<dbg::PhysicsSystem>();
 	m_ClientWorld.RegisterSystem<dbg::settings::DebugSystem>();
+	m_ClientWorld.RegisterSystem<dbg::settings::MenuSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ShapeSystem>();
 }
 

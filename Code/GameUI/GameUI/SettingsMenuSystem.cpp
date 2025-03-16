@@ -28,14 +28,9 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Settings Menu");
+		world.AddComponent<gui::settings::WindowComponent>(windowEntity);
 
-		auto& window = world.AddComponent<gui::settings::WindowComponent>(windowEntity);
-		window.m_DebugClient = world.ReadSingleton<clt::settings::DebugComponent>();
-		window.m_DebugEngine = world.ReadSingleton<eng::settings::DebugComponent>();
-		window.m_DebugHidden = world.ReadSingleton<hidden::settings::DebugComponent>();
-		window.m_Local = world.ReadSingleton<eng::settings::LocalComponent>();
-
-		ImGui::OpenPopup("Settings");
+		ImGui::OpenPopup("Settings Menu##gameui");
 	}
 	
 	if (hasWindow && world.HasAny<ecs::query::Include<gui::settings::CloseRequestComponent>>())
@@ -62,37 +57,51 @@ void gui::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		imgui::SetNextWindowSize(s_DefaultSize);
 
 		bool isWindowOpen = true;
-		if (ImGui::BeginPopupModal("Settings", &isWindowOpen, s_WindowFlags))
+		if (ImGui::BeginPopupModal("Settings Menu##gameui", &isWindowOpen, s_WindowFlags))
 		{
 			if (ImGui::BeginTabBar("##tabs"))
 			{
-				if (ImGui::BeginTabItem("Gameplay"))
+				imgui::Inspector inspector;
+				inspector.AddPayload(world.ReadResource<eng::WindowManager>());
+
+				auto copyLocal = world.ReadSingleton<eng::settings::LocalComponent>();
+				if (ImGui::BeginTabItem("Audio"))
 				{
-					imgui::Inspector inspector;
-					inspector.AddPayload(world.ReadResource<eng::WindowManager>());
 					if (inspector.Begin("##settingsmenu"))
 					{
-						window.m_Local = world.ReadSingleton<eng::settings::LocalComponent>();
-						if (inspector.Write(window.m_Local))
-							world.WriteSingleton<eng::settings::LocalComponent>() = window.m_Local;
+						if (inspector.Write(copyLocal.m_Audio))
+						{
+							auto& writeLocal = world.WriteSingleton<eng::settings::LocalComponent>();
+							writeLocal.m_Audio = copyLocal.m_Audio;
+						}
 						inspector.End();
 					}
 					ImGui::EndTabItem();
 				}
 
-				if (ImGui::BeginTabItem("Debug"))
+				if (ImGui::BeginTabItem("Gameplay"))
 				{
-					imgui::Inspector inspector;
 					if (inspector.Begin("##settingsmenu"))
 					{
-						if (inspector.Write(window.m_DebugClient))
-							world.WriteSingleton<clt::settings::DebugComponent>() = window.m_DebugClient;
-						ImGui::Spacing();
-						if (inspector.Write(window.m_DebugEngine))
-							world.WriteSingleton<eng::settings::DebugComponent>() = window.m_DebugEngine;
-						ImGui::Spacing();
-						if (inspector.Write(window.m_DebugHidden))
-							world.WriteSingleton<hidden::settings::DebugComponent>() = window.m_DebugHidden;
+						if (inspector.Write("Camera", copyLocal.m_Camera))
+						{
+							auto& writeLocal = world.WriteSingleton<eng::settings::LocalComponent>();
+							writeLocal.m_Camera = copyLocal.m_Camera;
+						}
+						inspector.End();
+					}
+					ImGui::EndTabItem();
+				}
+
+				if (ImGui::BeginTabItem("Graphics"))
+				{
+					if (inspector.Begin("##settingsmenu"))
+					{
+						if (inspector.Write(copyLocal.m_Window))
+						{
+							auto& writeLocal = world.WriteSingleton<eng::settings::LocalComponent>();
+							writeLocal.m_Window = copyLocal.m_Window;
+						}
 						inspector.End();
 					}
 					ImGui::EndTabItem();

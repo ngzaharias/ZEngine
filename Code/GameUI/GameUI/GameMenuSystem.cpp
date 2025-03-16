@@ -7,6 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/ApplicationComponents.h"
 #include "Engine/LevelComponents.h"
+#include "Engine/SettingsComponents.h"
 #include "GameUI/GameMenuComponents.h"
 #include "GameUI/SettingsComponents.h"
 

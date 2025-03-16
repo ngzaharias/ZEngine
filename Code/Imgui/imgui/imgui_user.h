@@ -132,7 +132,7 @@ namespace imgui
 	void SetNextWindowPos(const Vector2f& pos);
 	void SetNextWindowPos(const Vector2f& pos, const ImGuiCond cond);
 	void SetNextWindowPos(const Vector2f& pos, const Vector2f& pivot);
-	void SetNextWindowPos(const Vector2f& pos, const ImGuiCond cond, const Vector2f& pivot);
+	void SetNextWindowPos(const Vector2f& pos, const Vector2f& pivot, const ImGuiCond cond);
 	void SetNextWindowSize(const Vector2f& size, ImGuiCond cond = 0);
 
 	/// \brief Converts a hexadecimal colour to a vector.

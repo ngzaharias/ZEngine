@@ -23,6 +23,11 @@ namespace dbg::level
 	struct SaveAsRequestComponent;
 }
 
+namespace dbg::settings
+{
+	struct WindowRequestComponent;
+}
+
 namespace editor
 {
 	struct EntityWindowRequestComponent;
@@ -73,6 +78,7 @@ namespace dbg
 			dbg::level::SaveRequestComponent,
 			dbg::level::SaveAsRequestComponent,
 			dbg::NetworkWindowRequestComponent,
+			dbg::settings::WindowRequestComponent,
 			dbg::ShapeWindowRequestComponent,
 			editor::EntityWindowRequestComponent,
 			editor::FlipbookWindowRequestComponent,

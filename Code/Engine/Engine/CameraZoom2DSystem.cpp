@@ -13,6 +13,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "Math/Common.h"
 #include "Math/Math.h"
 
 namespace
@@ -54,40 +55,51 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 
 		if (std::holds_alternative<eng::camera::Orthographic>(readProjection.m_Projection))
 		{
-			const auto& readOrthographic = std::get<eng::camera::Orthographic>(readProjection.m_Projection);
+			const auto& readOrtho = std::get<eng::camera::Orthographic>(readProjection.m_Projection);
 			for (const ecs::Entity& inputEntity : world.Query<InputQuery>())
 			{
 				const auto& input = world.ReadComponent<eng::InputComponent>(inputEntity);
-
-				float size = readOrthographic.m_Size;
-				size -= input.m_ScrollDelta.y * cameraSettings.m_ZoomAmount;
-				size = math::Clamp(size, readZoom.m_Min, readZoom.m_Max);
-
-				if (size != readOrthographic.m_Size)
+				if (input.m_ScrollDelta.y != 0)
 				{
-					auto& writeProjection = world.WriteComponent<eng::camera::ProjectionComponent>(cameraEntity);
-					auto& writeOrthographic = std::get<eng::camera::Orthographic>(writeProjection.m_Projection);
-					auto& writeTransform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
+					float size = readOrtho.m_Size;
+					size -= input.m_ScrollDelta.y * cameraSettings.m_ZoomAmount;
+					size = math::Clamp(size, readZoom.m_Min, readZoom.m_Max);
 
+					auto& writeZoom = world.WriteComponent<eng::camera::Zoom2DComponent>(cameraEntity);
+					writeZoom.m_Target = { size, input.m_MousePosition };
+				}
+
+				if (readZoom.m_Target)
+				{
+					auto& writeProj = world.WriteComponent<eng::camera::ProjectionComponent>(cameraEntity);
+					auto& writeOrtho = std::get<eng::camera::Orthographic>(writeProj.m_Projection);
+
+					const auto& target = *readZoom.m_Target;
 					const Vector3f preZoom = camera::ScreenToWorld(
-						input.m_MousePosition,
+						target.m_Position,
 						readProjection.m_Projection,
 						readTransform.ToTransform(),
 						resolution);
 
-					writeOrthographic.m_Size = size;
+					writeOrtho.m_Size = damper_exact(writeOrtho.m_Size, target.m_Size, cameraSettings.m_ZoomSpeed, gameTime.m_DeltaTime);
 
 					const Vector3f postZoom = camera::ScreenToWorld(
-						input.m_MousePosition,
+						target.m_Position,
 						readProjection.m_Projection,
 						readTransform.ToTransform(),
 						resolution);
 
 					// we calculate the delta on the mouse pos and add it back onto the translate
+					auto& writeTransform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
 					writeTransform.m_Translate += preZoom - postZoom;
 				}
-			}
 
+				if (readZoom.m_Target && IsNearly(readOrtho.m_Size, readZoom.m_Target->m_Size))
+				{
+					auto& writeZoom = world.WriteComponent<eng::camera::Zoom2DComponent>(cameraEntity);
+					writeZoom.m_Target = {};
+				}
+			}
 		}
 	}
 }
