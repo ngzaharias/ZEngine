@@ -16,7 +16,7 @@ namespace
 
 void eng::settings::LaunchSystem::Initialise(World& world)
 {
-	const str::Path filepath = str::Path(str::EPath::WorkingDir, strFilename);
+	const str::Path filepath = str::Path(str::EPath::Levels, strFilename);
 	auto& settings = world.WriteSingleton<eng::settings::LaunchComponent>();
 
 	eng::Visitor visitor;
