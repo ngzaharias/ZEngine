@@ -14,21 +14,7 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "Math/Math.h"
-
-namespace
-{
-	constexpr float s_NaturalLog2 = 0.69314718056f;
-
-	float fast_negexp(float x)
-	{
-		return 1.0f / (1.0f + x + 0.48f * x * x + 0.235f * x * x * x);
-	}
-
-	float damper_exact(float x, float g, float halflife, float dt, float eps = 1e-5f)
-	{
-		return math::Lerp(x, g, 1.0f - fast_negexp((s_NaturalLog2 * dt) / (halflife + eps)));
-	}
-}
+#include "Math/SpringMath.h"
 
 void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -80,7 +66,7 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 						readTransform.ToTransform(),
 						resolution);
 
-					writeOrtho.m_Size = damper_exact(writeOrtho.m_Size, target.m_Size, cameraSettings.m_ZoomSpeed, gameTime.m_DeltaTime);
+					writeOrtho.m_Size = math::DamperExact(writeOrtho.m_Size, target.m_Size, cameraSettings.m_ZoomSpeed, gameTime.m_DeltaTime);
 
 					const Vector3f postZoom = camera::ScreenToWorld(
 						target.m_Position,
