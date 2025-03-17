@@ -11,10 +11,10 @@
 #include "Engine/InputComponent.h"
 #include "Engine/SettingsComponents.h"
 #include "Engine/TransformComponent.h"
-#include "Math/Common.h"
 #include "Math/Math.h"
 #include "Math/Quaternion.h"
 #include "Math/Rotator.h"
+#include "Math/VectorMath.h"
 
 void eng::camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -56,7 +56,7 @@ void eng::camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 			Vector3f translate = readTransform.m_Translate;
 			translate += (direction * speed) * rotation;
 
-			if (!IsNearly(readTransform.m_Translate, translate))
+			if (!math::IsNearly(readTransform.m_Translate, translate))
 			{
 				auto& writeTransform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
 				writeTransform.m_Translate = translate;

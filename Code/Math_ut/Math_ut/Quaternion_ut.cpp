@@ -1,9 +1,11 @@
 #include <Catch2/catch.hpp>
 
-#include "Math/Common.h"
 #include "Math/Math.h"
 #include "Math/Matrix.h"
 #include "Math/Quaternion.h"
+#include "Math/QuaternionMath.h"
+#include "Math/Vector.h"
+#include "Math/VectorMath.h"
 
 TEST_CASE("Quaternion. Quaternion(float, float, float, float).")
 {
@@ -70,71 +72,71 @@ TEST_CASE("Quaternion. operator*(Quaternion).")
 	{
 		INFO("X-Axis");
 		const Vector3f vectorA = Vector3f::AxisX * Quaternion::FromRotator(Rotator(90.f, 0.f, 0.f));
-		CHECK(IsNearly(vectorA, Vector3f::AxisX));
+		CHECK(math::IsNearly(vectorA, Vector3f::AxisX));
 
 		const Vector3f vectorB = Vector3f::AxisX * Quaternion::FromRotator(Rotator(-90.f, 0.f, 0.f));
-		CHECK(IsNearly(vectorB, Vector3f::AxisX));
+		CHECK(math::IsNearly(vectorB, Vector3f::AxisX));
 
 		const Vector3f vectorC = Vector3f::AxisY * Quaternion::FromRotator(Rotator(90.f, 0.f, 0.f));
-		CHECK(IsNearly(vectorC, Vector3f::AxisZ));
+		CHECK(math::IsNearly(vectorC, Vector3f::AxisZ));
 
 		const Vector3f vectorD = Vector3f::AxisY * Quaternion::FromRotator(Rotator(-90.f, 0.f, 0.f));
-		CHECK(IsNearly(vectorD, -Vector3f::AxisZ));
+		CHECK(math::IsNearly(vectorD, -Vector3f::AxisZ));
 
 		const Vector3f vectorE = Vector3f::AxisZ * Quaternion::FromRotator(Rotator(90.f, 0.f, 0.f));
-		CHECK(IsNearly(vectorE, -Vector3f::AxisY));
+		CHECK(math::IsNearly(vectorE, -Vector3f::AxisY));
 
 		const Vector3f vectorF = Vector3f::AxisZ * Quaternion::FromRotator(Rotator(-90.f, 0.f, 0.f));
-		CHECK(IsNearly(vectorF, Vector3f::AxisY));
+		CHECK(math::IsNearly(vectorF, Vector3f::AxisY));
 	}
 
 	{
 		INFO("Y-Axis");
 		const Vector3f vectorA = Vector3f::AxisX * Quaternion::FromRotator(Rotator(0.f, 90.f, 0.f));
-		CHECK(IsNearly(vectorA, -Vector3f::AxisZ));
+		CHECK(math::IsNearly(vectorA, -Vector3f::AxisZ));
 
 		const Vector3f vectorB = Vector3f::AxisX * Quaternion::FromRotator(Rotator(0.f, -90.f, 0.f));
-		CHECK(IsNearly(vectorB, Vector3f::AxisZ));
+		CHECK(math::IsNearly(vectorB, Vector3f::AxisZ));
 
 		const Vector3f vectorC = Vector3f::AxisY * Quaternion::FromRotator(Rotator(0.f, 90.f, 0.f));
-		CHECK(IsNearly(vectorC, Vector3f::AxisY));
+		CHECK(math::IsNearly(vectorC, Vector3f::AxisY));
 
 		const Vector3f vectorD = Vector3f::AxisY * Quaternion::FromRotator(Rotator(0.f, -90.f, 0.f));
-		CHECK(IsNearly(vectorD, Vector3f::AxisY));
+		CHECK(math::IsNearly(vectorD, Vector3f::AxisY));
 
 		const Vector3f vectorE = Vector3f::AxisZ * Quaternion::FromRotator(Rotator(0.f, 90.f, 0.f));
-		CHECK(IsNearly(vectorE, Vector3f::AxisX));
+		CHECK(math::IsNearly(vectorE, Vector3f::AxisX));
 
 		const Vector3f vectorF = Vector3f::AxisZ * Quaternion::FromRotator(Rotator(0.f, -90.f, 0.f));
-		CHECK(IsNearly(vectorF, -Vector3f::AxisX));
+		CHECK(math::IsNearly(vectorF, -Vector3f::AxisX));
 	}
 
 	{
 		INFO("Z-Axis");
 		const Vector3f vectorA = Vector3f::AxisX * Quaternion::FromRotator(Rotator(0.f, 0.f, 90.f));
-		CHECK(IsNearly(vectorA, Vector3f::AxisY));
+		CHECK(math::IsNearly(vectorA, Vector3f::AxisY));
 
 		const Vector3f vectorB = Vector3f::AxisX * Quaternion::FromRotator(Rotator(0.f, 0.f, -90.f));
-		CHECK(IsNearly(vectorB, -Vector3f::AxisY));
+		CHECK(math::IsNearly(vectorB, -Vector3f::AxisY));
 
 		const Vector3f vectorC = Vector3f::AxisY * Quaternion::FromRotator(Rotator(0.f, 0.f, 90.f));
-		CHECK(IsNearly(vectorC, -Vector3f::AxisX));
+		CHECK(math::IsNearly(vectorC, -Vector3f::AxisX));
 
 		const Vector3f vectorD = Vector3f::AxisY * Quaternion::FromRotator(Rotator(0.f, 0.f, -90.f));
-		CHECK(IsNearly(vectorD, Vector3f::AxisX));
+		CHECK(math::IsNearly(vectorD, Vector3f::AxisX));
 
 		const Vector3f vectorE = Vector3f::AxisZ * Quaternion::FromRotator(Rotator(0.f, 0.f, 90.f));
-		CHECK(IsNearly(vectorE, Vector3f::AxisZ));
+		CHECK(math::IsNearly(vectorE, Vector3f::AxisZ));
 
 		const Vector3f vectorF = Vector3f::AxisZ * Quaternion::FromRotator(Rotator(0.f, 0.f, -90.f));
-		CHECK(IsNearly(vectorF, Vector3f::AxisZ));
+		CHECK(math::IsNearly(vectorF, Vector3f::AxisZ));
 	}
 
 	{
 		INFO("XYZ-Axis");
 		const Quaternion quaternion = Quaternion::FromRotator(Rotator(90.f));
 		const Vector3f vector = Vector3f(1.f) * quaternion;
-		CHECK(IsNearly(vector, Vector3f(1.f, 1.f, -1.f)));
+		CHECK(math::IsNearly(vector, Vector3f(1.f, 1.f, -1.f)));
 	}
 }
 
@@ -568,13 +570,13 @@ TEST_CASE("Quaternion. operator*(Vector2f, Quaternion).")
 		const Quaternion quaternion = Quaternion::FromRotator(Rotator(90.f, 0.f, 0.f));
 
 		const Vector2f vectorA = Vector2f::Zero * quaternion;
-		CHECK(IsNearly(vectorA, Vector2f::Zero));
+		CHECK(math::IsNearly(vectorA, Vector2f::Zero));
 
 		const Vector2f vectorB = Vector2f::AxisX * quaternion;
-		CHECK(IsNearly(vectorB, Vector2f::AxisX));
+		CHECK(math::IsNearly(vectorB, Vector2f::AxisX));
 
 		const Vector2f vectorC = Vector2f::AxisY * quaternion;
-		CHECK(IsNearly(vectorC, Vector2f::Zero));
+		CHECK(math::IsNearly(vectorC, Vector2f::Zero));
 	}
 
 	{
@@ -582,13 +584,13 @@ TEST_CASE("Quaternion. operator*(Vector2f, Quaternion).")
 		const Quaternion quaternion = Quaternion::FromRotator(Rotator(0.f, 90.f, 0.f));
 
 		const Vector2f vectorA = Vector2f::Zero * quaternion;
-		CHECK(IsNearly(vectorA, Vector2f::Zero));
+		CHECK(math::IsNearly(vectorA, Vector2f::Zero));
 
 		const Vector2f vectorB = Vector2f::AxisX * quaternion;
-		CHECK(IsNearly(vectorB, Vector2f::Zero));
+		CHECK(math::IsNearly(vectorB, Vector2f::Zero));
 
 		const Vector2f vectorC = Vector2f::AxisY * quaternion;
-		CHECK(IsNearly(vectorC, Vector2f::AxisY));
+		CHECK(math::IsNearly(vectorC, Vector2f::AxisY));
 	}
 
 	{
@@ -596,13 +598,13 @@ TEST_CASE("Quaternion. operator*(Vector2f, Quaternion).")
 		const Quaternion quaternion = Quaternion::FromRotator(Rotator(0.f, 0.f, 90.f));
 
 		const Vector2f vectorA = Vector2f::Zero * quaternion;
-		CHECK(IsNearly(vectorA, Vector2f::Zero));
+		CHECK(math::IsNearly(vectorA, Vector2f::Zero));
 
 		const Vector2f vectorB = Vector2f::AxisX * quaternion;
-		CHECK(IsNearly(vectorB, Vector2f::AxisY));
+		CHECK(math::IsNearly(vectorB, Vector2f::AxisY));
 
 		const Vector2f vectorC = Vector2f::AxisY * quaternion;
-		CHECK(IsNearly(vectorC, -Vector2f::AxisX));
+		CHECK(math::IsNearly(vectorC, -Vector2f::AxisX));
 	}
 }
 

@@ -1,6 +1,5 @@
 #include <Catch2/catch.hpp>
 
-#include "Math/Common.h"
 #include "Math/Matrix.h"
 #include "Math/Vector.h"
 #include "Math/VectorMath.h"
@@ -114,9 +113,9 @@ TEST_CASE("Vector2f. operator*(Matrix4x4) - Rotate.")
 		const Vector2f vectorB = Vector2f::AxisX * Matrix4x4::FromRotate(quaternion);
 		const Vector2f vectorC = Vector2f::AxisY * Matrix4x4::FromRotate(quaternion);
 
-		CHECK(IsNearly(vectorA, Vector2f::Zero));
-		CHECK(IsNearly(vectorB, Vector2f::AxisX));
-		CHECK(IsNearly(vectorC, Vector2f::Zero));
+		CHECK(math::IsNearly(vectorA, Vector2f::Zero));
+		CHECK(math::IsNearly(vectorB, Vector2f::AxisX));
+		CHECK(math::IsNearly(vectorC, Vector2f::Zero));
 	}
 
 	{
@@ -127,9 +126,9 @@ TEST_CASE("Vector2f. operator*(Matrix4x4) - Rotate.")
 		const Vector2f vectorB = Vector2f::AxisX * Matrix4x4::FromRotate(quaternion);
 		const Vector2f vectorC = Vector2f::AxisY * Matrix4x4::FromRotate(quaternion);
 
-		CHECK(IsNearly(vectorA, Vector2f::Zero));
-		CHECK(IsNearly(vectorB, Vector2f::Zero));
-		CHECK(IsNearly(vectorC, Vector2f::AxisY));
+		CHECK(math::IsNearly(vectorA, Vector2f::Zero));
+		CHECK(math::IsNearly(vectorB, Vector2f::Zero));
+		CHECK(math::IsNearly(vectorC, Vector2f::AxisY));
 	}
 
 	{
@@ -140,9 +139,9 @@ TEST_CASE("Vector2f. operator*(Matrix4x4) - Rotate.")
 		const Vector2f vectorB = Vector2f::AxisX * Matrix4x4::FromRotate(quaternion);
 		const Vector2f vectorC = Vector2f::AxisY * Matrix4x4::FromRotate(quaternion);
 
-		CHECK(IsNearly(vectorA, Vector2f::Zero));
-		CHECK(IsNearly(vectorB, Vector2f::AxisY));
-		CHECK(IsNearly(vectorC, -Vector2f::AxisX));
+		CHECK(math::IsNearly(vectorA, Vector2f::Zero));
+		CHECK(math::IsNearly(vectorB, Vector2f::AxisY));
+		CHECK(math::IsNearly(vectorC, -Vector2f::AxisX));
 	}
 }
 
@@ -173,21 +172,21 @@ TEST_CASE("Vector2f. operator*(Matrix4x4) - Translate & Rotate.")
 {
 	const Quaternion quaternion = Quaternion::FromAxisAngle(Vector3f::AxisZ, math::ToRadians(90.f));
 	const Vector2f vector = Vector2f(2.f) * Matrix4x4::FromTransform(Vector3f(1.f), quaternion, 1.f);
-	CHECK(IsNearly(vector, Vector2f(-1.f, 3.f)));
+	CHECK(math::IsNearly(vector, Vector2f(-1.f, 3.f)));
 }
 
 TEST_CASE("Vector2f. operator*(Matrix4x4) - Rotate & Scale.")
 {
 	const Quaternion quaternion = Quaternion::FromAxisAngle(Vector3f::AxisZ, math::ToRadians(90.f));
 	const Vector2f vector = Vector2f(2.f) * Matrix4x4::FromTransform(Vector3f(0.f), quaternion, 2.f);
-	CHECK(IsNearly(vector, Vector2f(-4.f, 4.f)));
+	CHECK(math::IsNearly(vector, Vector2f(-4.f, 4.f)));
 }
 
 TEST_CASE("Vector2f. operator*(Matrix4x4) - Translate, Rotate & Scale.")
 {
 	const Quaternion quaternion = Quaternion::FromAxisAngle(Vector3f::AxisZ, math::ToRadians(90.f));
 	const Vector2f vector = Vector2f(2.f) * Matrix4x4::FromTransform(Vector3f(2.f), quaternion, 2.f);
-	CHECK(IsNearly(vector, Vector2f(-2.f, 6.f)));
+	CHECK(math::IsNearly(vector, Vector2f(-2.f, 6.f)));
 }
 
 TEST_CASE("Vector2f. operator+().")

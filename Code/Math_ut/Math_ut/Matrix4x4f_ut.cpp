@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
 
-#include "Math/Common.h"
 #include "Math/Matrix.h"
+#include "Math/MatrixMath.h"
 
 TEST_CASE("Matrix4x4. Alignment.")
 {
@@ -303,7 +303,7 @@ TEST_CASE("Matrix4x4. FromRotate(Quaternion).")
 		-1.f, 0.f, 0.f, 0.f,
 		0.f, 0.f, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f);
-	CHECK(IsNearly(matrixA, matrixB));
+	CHECK(math::IsNearly(matrixA, matrixB));
 }
 
 TEST_CASE("Matrix4x4. FromRotate(Rotator).")

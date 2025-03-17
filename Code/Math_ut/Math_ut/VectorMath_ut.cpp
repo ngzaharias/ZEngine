@@ -1,6 +1,5 @@
 #include <Catch2/catch.hpp>
 
-#include "Math/Common.h"
 #include "Math/Line.h"
 #include "Math/Ray.h"
 #include "Math/Segment.h"
@@ -11,7 +10,7 @@ TEST_CASE("math::IsNearly(Vector2f). Exact match and near origin.")
 
 	const Vector2f a = Vector2f(1.23f, 4.56f);
 	const Vector2f b = Vector2f(1.23f, 4.56f);
-	CHECK(IsNearly(a, b));
+	CHECK(math::IsNearly(a, b));
 }
 
 TEST_CASE("math::IsNearly(Vector2f). Exact match and far from origin.")
@@ -19,7 +18,7 @@ TEST_CASE("math::IsNearly(Vector2f). Exact match and far from origin.")
 
 	const Vector2f a = Vector2f(KINDA_LARGE_FLOAT);
 	const Vector2f b = Vector2f(KINDA_LARGE_FLOAT);
-	CHECK(IsNearly(a, b));
+	CHECK(math::IsNearly(a, b));
 }
 
 TEST_CASE("math::IsNearly(Vector2f). Nearly matches and near origin.")
@@ -29,7 +28,7 @@ TEST_CASE("math::IsNearly(Vector2f). Nearly matches and near origin.")
 	const float offsetB = 0.13f;
 	const Vector2f a = Vector2f(1.23f + offsetA, 4.56f);
 	const Vector2f b = Vector2f(1.23f + offsetB, 4.56f);
-	CHECK(IsNearly(a, b));
+	CHECK(math::IsNearly(a, b));
 }
 
 TEST_CASE("math::IsNearly(Vector2f). Nearly matches and far from origin.")
@@ -39,7 +38,7 @@ TEST_CASE("math::IsNearly(Vector2f). Nearly matches and far from origin.")
 	const float offsetB = 0.4f;
 	const Vector2f a = Vector2f(KINDA_LARGE_FLOAT + offsetA, KINDA_LARGE_FLOAT);
 	const Vector2f b = Vector2f(KINDA_LARGE_FLOAT + offsetB, KINDA_LARGE_FLOAT);
-	CHECK(IsNearly(a, b));
+	CHECK(math::IsNearly(a, b));
 }
 
 TEST_CASE("math::IsNearly(Vector2f). Doesn't match and near origin.")
@@ -49,7 +48,7 @@ TEST_CASE("math::IsNearly(Vector2f). Doesn't match and near origin.")
 	const float offsetB = 0.14f;
 	const Vector2f a = Vector2f(1.23f + offsetA, 4.56f);
 	const Vector2f b = Vector2f(1.23f + offsetB, 4.56f);
-	CHECK(!IsNearly(a, b));
+	CHECK(!math::IsNearly(a, b));
 }
 
 TEST_CASE("math::IsNearly(Vector2f). Doesn't match and far from origin.")
@@ -59,7 +58,7 @@ TEST_CASE("math::IsNearly(Vector2f). Doesn't match and far from origin.")
 	const float offsetB = 0.5f;
 	const Vector2f a = Vector2f(KINDA_LARGE_FLOAT + offsetA, KINDA_LARGE_FLOAT);
 	const Vector2f b = Vector2f(KINDA_LARGE_FLOAT + offsetB, KINDA_LARGE_FLOAT);
-	CHECK(!IsNearly(a, b));
+	CHECK(!math::IsNearly(a, b));
 }
 
 TEST_CASE("math::IsNearly(Vector3f). Exact match and near origin.")
@@ -67,7 +66,7 @@ TEST_CASE("math::IsNearly(Vector3f). Exact match and near origin.")
 
 	const Vector3f a = Vector3f(1.23f, 4.56f, 7.89f);
 	const Vector3f b = Vector3f(1.23f, 4.56f, 7.89f);
-	CHECK(IsNearly(a, b));
+	CHECK(math::IsNearly(a, b));
 }
 
 TEST_CASE("math::IsNearly(Vector3f). Exact match and nar from origin.")
@@ -75,7 +74,7 @@ TEST_CASE("math::IsNearly(Vector3f). Exact match and nar from origin.")
 
 	const Vector3f a = Vector3f(KINDA_LARGE_FLOAT);
 	const Vector3f b = Vector3f(KINDA_LARGE_FLOAT);
-	CHECK(IsNearly(a, b));
+	CHECK(math::IsNearly(a, b));
 }
 
 TEST_CASE("math::IsNearly(Vector3f). Nearly matches and near origin.")
@@ -85,7 +84,7 @@ TEST_CASE("math::IsNearly(Vector3f). Nearly matches and near origin.")
 	const float offsetB = 0.13f;
 	const Vector3f a = Vector3f(1.23f + offsetA, 4.56f, 7.89f);
 	const Vector3f b = Vector3f(1.23f + offsetB, 4.56f, 7.89f);
-	CHECK(IsNearly(a, b));
+	CHECK(math::IsNearly(a, b));
 }
 
 TEST_CASE("math::IsNearly(Vector3f). Nearly matches and far from origin.")
@@ -95,7 +94,7 @@ TEST_CASE("math::IsNearly(Vector3f). Nearly matches and far from origin.")
 	const float offsetB = 0.4f;
 	const Vector3f a = Vector3f(KINDA_LARGE_FLOAT + offsetA, KINDA_LARGE_FLOAT, KINDA_LARGE_FLOAT);
 	const Vector3f b = Vector3f(KINDA_LARGE_FLOAT + offsetB, KINDA_LARGE_FLOAT, KINDA_LARGE_FLOAT);
-	CHECK(IsNearly(a, b));
+	CHECK(math::IsNearly(a, b));
 }
 
 TEST_CASE("math::IsNearly(Vector3f). Doesn't match and near origin.")
@@ -105,7 +104,7 @@ TEST_CASE("math::IsNearly(Vector3f). Doesn't match and near origin.")
 	const float offsetB = 0.14f;
 	const Vector3f a = Vector3f(1.23f + offsetA, 4.56f, 7.89f);
 	const Vector3f b = Vector3f(1.23f + offsetB, 4.56f, 7.89f);
-	CHECK(!IsNearly(a, b));
+	CHECK(!math::IsNearly(a, b));
 }
 
 TEST_CASE("math::IsNearly(Vector3f). Doesn't match and far from origin.")
@@ -115,7 +114,7 @@ TEST_CASE("math::IsNearly(Vector3f). Doesn't match and far from origin.")
 	const float offsetB = 0.5f;
 	const Vector3f a = Vector3f(KINDA_LARGE_FLOAT + offsetA, KINDA_LARGE_FLOAT, KINDA_LARGE_FLOAT);
 	const Vector3f b = Vector3f(KINDA_LARGE_FLOAT + offsetB, KINDA_LARGE_FLOAT, KINDA_LARGE_FLOAT);
-	CHECK(!IsNearly(a, b));
+	CHECK(!math::IsNearly(a, b));
 }
 
 TEST_CASE("math::Angle(Vector2f). Parallel and same direction.")

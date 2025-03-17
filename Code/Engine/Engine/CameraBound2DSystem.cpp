@@ -11,8 +11,8 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Math/Common.h"
 #include "Math/Math.h"
+#include "Math/VectorMath.h"
 
 void eng::camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -56,7 +56,7 @@ void eng::camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 				translate.x = math::Clamp(translate.x, clampedMin.x, clampedMax.x);
 				translate.y = math::Clamp(translate.y, clampedMin.y, clampedMax.y);
 
-				if (!IsNearly(readTransform.m_Translate, translate))
+				if (!math::IsNearly(readTransform.m_Translate, translate))
 				{
 					auto& writeTransform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
 					writeTransform.m_Translate = translate;

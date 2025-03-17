@@ -13,10 +13,10 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Math/Common.h"
 #include "Math/Math.h"
 #include "Math/Quaternion.h"
 #include "Math/Rotator.h"
+#include "Math/Vector.h"
 
 void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 {

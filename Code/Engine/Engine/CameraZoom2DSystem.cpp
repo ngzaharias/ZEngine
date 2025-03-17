@@ -13,7 +13,6 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Math/Common.h"
 #include "Math/Math.h"
 
 namespace
@@ -94,7 +93,7 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 					writeTransform.m_Translate += preZoom - postZoom;
 				}
 
-				if (readZoom.m_Target && IsNearly(readOrtho.m_Size, readZoom.m_Target->m_Size))
+				if (readZoom.m_Target && math::IsNearly(readOrtho.m_Size, readZoom.m_Target->m_Size))
 				{
 					auto& writeZoom = world.WriteComponent<eng::camera::Zoom2DComponent>(cameraEntity);
 					writeZoom.m_Target = {};

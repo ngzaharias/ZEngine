@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
 
-#include "Math/Common.h"
 #include "Math/Matrix.h"
+#include "Math/MatrixMath.h"
 
 TEST_CASE("Matrix3x3. Alignment.")
 {
@@ -76,7 +76,7 @@ TEST_CASE("Matrix3x3. Matrix3x3(Quaternion).")
 		-1.f, -0.f, 0.f,
 		+0.f, +0.f, 1.f);
 
-	CHECK(IsNearly(matrixA, matrixB));
+	CHECK(math::IsNearly(matrixA, matrixB));
 }
 
 TEST_CASE("Matrix3x3. Matrix3x3(Rotator).")
@@ -168,7 +168,7 @@ TEST_CASE("Matrix3x3. Inverse.")
 		+0.f, 0.f, 1.f,
 		+0.f, 1.f, 0.f,
 		-1.f, 0.f, 0.f);
-	CHECK(IsNearly(matrixA, matrixB));
+	CHECK(math::IsNearly(matrixA, matrixB));
 }
 
 TEST_CASE("Matrix3x3. Transpose.")
@@ -195,7 +195,7 @@ TEST_CASE("Matrix3x3. Inversed.")
 		+0.f, 0.f, 1.f,
 		+0.f, 1.f, 0.f,
 		-1.f, 0.f, 0.f);
-	CHECK(IsNearly(matrixB, matrixC));
+	CHECK(math::IsNearly(matrixB, matrixC));
 }
 
 TEST_CASE("Matrix3x3. Transposed.")
@@ -240,7 +240,7 @@ TEST_CASE("Matrix3x3. FromRotate(Quaternion).")
 		+0.f, 1.f, 0.f,
 		-1.f, 0.f, 0.f,
 		+0.f, 0.f, 1.f);
-	CHECK(IsNearly(matrixA, matrixB));
+	CHECK(math::IsNearly(matrixA, matrixB));
 }
 
 TEST_CASE("Matrix3x3. FromRotate(Rotator).")

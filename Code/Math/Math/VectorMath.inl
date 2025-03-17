@@ -163,6 +163,21 @@ inline constexpr float math::Dot(const Vector3f& a, const Vector3f& b) noexcept
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
+inline constexpr bool math::IsNearly(const Vector2f& a, const Vector2f& b, const float threshold /*= 0.001f*/) noexcept
+{
+	return (a - b).LengthSqr() < threshold;
+}
+
+inline constexpr bool math::IsNearly(const Vector3f& a, const Vector3f& b, const float threshold /*= 0.001f*/) noexcept
+{
+	return (a - b).LengthSqr() < threshold;
+}
+
+inline constexpr bool math::IsNearly(const Vector4f& a, const Vector4f& b, const float threshold /*= 0.001f*/) noexcept
+{
+	return (a - b).LengthSqr() < threshold;
+}
+
 inline constexpr Vector2f math::Max(const Vector2f& a, const Vector2f& b) noexcept
 {
 	return Vector2f(

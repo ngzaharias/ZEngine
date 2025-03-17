@@ -26,6 +26,12 @@ constexpr float DIAGONAL_3D = SQUARE_ROOT_THREE;
 
 namespace math
 {
+	/// \brief Returns the number as a positive.
+	inline constexpr float Absolute(const float value) noexcept
+	{
+		return value < 0.f ? -value : value;
+	}
+
 	/// \brief Clamps value between min and max so that it doesn't exceed either.
 	template<typename Type = float>
 	inline constexpr Type Clamp(const Type& value, const Type& min, const Type& max) noexcept
@@ -59,6 +65,12 @@ namespace math
 	inline Type Floor(const float value, const float multiplier) noexcept
 	{
 		return static_cast<Type>(std::floorf(value / multiplier)) * multiplier;
+	}
+
+	/// \brief Check if the distance between two floats is less than the threshold.
+	inline constexpr bool IsNearly(const float a, const float b, const float threshold = 0.001f) noexcept
+	{
+		return Absolute(a - b) < threshold;
 	}
 
 	/// \brief Linearly interpolations from a -> b based on t.

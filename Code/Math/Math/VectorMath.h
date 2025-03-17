@@ -72,6 +72,13 @@ namespace math
 	/// \brief Dot Product of two vectors.
 	inline constexpr float Dot(const Vector3f& a, const Vector3f& b) noexcept;
 
+	/// \brief Check if the distance between two vectors is less than the threshold.
+	constexpr bool IsNearly(const Vector2f& a, const Vector2f& b, const float threshold = 0.001f) noexcept;
+	/// \brief Check if the distance between two vectors is less than the threshold.
+	constexpr bool IsNearly(const Vector3f& a, const Vector3f& b, const float threshold = 0.001f) noexcept;
+	/// \brief Check if the distance between two vectors is less than the threshold.
+	constexpr bool IsNearly(const Vector4f& a, const Vector4f& b, const float threshold = 0.001f) noexcept;
+
 	/// \brief Returns a vector made up of the largest components of the two vectors.
 	inline constexpr Vector2f Max(const Vector2f& a, const Vector2f& b) noexcept;
 	/// \brief Returns a vector made up of the largest components of the two vectors.
