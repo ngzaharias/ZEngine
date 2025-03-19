@@ -13,7 +13,7 @@ namespace
 	}
 }
 
-float math::DamperExact(float a, float b, float halfLife, float deltaTime, float epsilon = 1e-5f)
+float math::DamperExact(float a, float b, float halflife, float dt, float eps)
 {
-	return math::Lerp(a, b, 1.0f - NegExp((NATURAL_LOG_TWO * deltaTime) / (halfLife + epsilon)));
+	return math::Lerp(a, b, 1.0f - NegExp((NATURAL_LOG_TWO * dt) / (halflife + eps)));
 }
