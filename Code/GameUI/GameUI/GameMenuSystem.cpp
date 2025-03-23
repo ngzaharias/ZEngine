@@ -21,8 +21,8 @@ namespace
 	constexpr Vector2f s_DefaultSize = Vector2f(200.f, -1.f);
 	constexpr Vector2f s_OffsetPos = Vector2f(0.f, -100.f);
 
-	const str::Guid s_InputGuid = str::Guid::Generate();
-	const str::Name s_InputClose = NAME("GameMenu_Close");
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strInputClose = NAME("GameMenu_Close");
 }
 
 void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
@@ -43,15 +43,15 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 			input::Layer layer;
 			layer.m_Priority = eng::EInputPriority::GameUI;
-			layer.m_Bindings.Emplace(input::EKeyboard::Escape, s_InputClose);
-			input.AppendLayer(s_InputGuid, layer);
+			layer.m_Bindings.Emplace(input::EKeyboard::Escape, strInputClose);
+			input.AppendLayer(strInputGuid, layer);
 		}
 	}
 
 	if (world.HasAny<ecs::query::Removed<gui::game_menu::WindowComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(s_InputGuid);
+		input.RemoveLayer(strInputGuid);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::game_menu::WindowComponent>>())
@@ -105,7 +105,7 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 		}
 
 		const auto& input = world.ReadResource<eng::InputManager>();
-		if (!isWindowOpen || input.IsKeyPressed(s_InputClose))
+		if (!isWindowOpen || input.IsPressed(strInputClose))
 			world.DestroyEntity(entity);
 	}
 }

@@ -8,6 +8,7 @@
 #include "Input/Layer.h"
 #include "Input/Mouse.h"
 #include "Input/Value.h"
+#include "Math/Vector.h"
 
 namespace ecs
 {
@@ -55,6 +56,10 @@ namespace eng
 		bool IsHeld(const str::Name& name) const;
 		bool IsPressed(const str::Name& name) const;
 		bool IsReleased(const str::Name& name) const;
+
+		Vector2f m_MouseDelta = Vector2f::Zero;
+		Vector2f m_MousePosition = Vector2f::Zero;
+		Vector2f m_ScrollDelta = Vector2f::Zero;
 
 	private:
 		Cache m_CacheCurr = {};

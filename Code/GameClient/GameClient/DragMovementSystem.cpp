@@ -32,6 +32,7 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
+	const auto& input = world.ReadResource<eng::InputManager>();
 	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 
 	const Vector2u& resolution = window->GetResolution();
