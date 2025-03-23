@@ -94,8 +94,8 @@ namespace dbg
 			eng::settings::LocalComponent,
 			gui::settings::OpenRequestComponent>;
 
-		void Initialise(World& world, const GameTime& gameTime);
-		void Shutdown(World& world, const GameTime& gameTime);
+		void Initialise(World& world);
+		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

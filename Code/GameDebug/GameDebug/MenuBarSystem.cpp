@@ -30,7 +30,7 @@ namespace
 	const str::Name strSave = str::Name::Create("DebugMenuBar_Save");
 }
 
-void dbg::MenuBarSystem::Initialise(World& world, const GameTime& gameTime)
+void dbg::MenuBarSystem::Initialise(World& world)
 {
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::Debug;
@@ -44,7 +44,7 @@ void dbg::MenuBarSystem::Initialise(World& world, const GameTime& gameTime)
 	input.AppendLayer(strInputGuid, layer);
 }
 
-void dbg::MenuBarSystem::Shutdown(World& world, const GameTime& gameTime)
+void dbg::MenuBarSystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.RemoveLayer(strInputGuid);

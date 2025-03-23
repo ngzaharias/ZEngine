@@ -61,7 +61,7 @@ namespace
 	}
 }
 
-void hexmap::RootSystem::Initialise(World& world, const GameTime& gameTime)
+void hexmap::RootSystem::Initialise(World& world)
 {
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -71,7 +71,7 @@ void hexmap::RootSystem::Initialise(World& world, const GameTime& gameTime)
 	input.AppendLayer(strInputGuid, layer);
 }
 
-void hexmap::RootSystem::Shutdown(World& world, const GameTime& gameTime)
+void hexmap::RootSystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.RemoveLayer(strInputGuid);

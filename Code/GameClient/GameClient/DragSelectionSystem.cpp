@@ -27,7 +27,7 @@ namespace
 	const str::Name strSelect = str::Name::Create("DragSelection_Select");
 }
 
-void drag::SelectionSystem::Initialise(World& world, const GameTime& gameTime)
+void drag::SelectionSystem::Initialise(World& world)
 {
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -37,7 +37,7 @@ void drag::SelectionSystem::Initialise(World& world, const GameTime& gameTime)
 	input.AppendLayer(strInputGuid, layer);
 }
 
-void drag::SelectionSystem::Shutdown(World& world, const GameTime& gameTime)
+void drag::SelectionSystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.RemoveLayer(strInputGuid);

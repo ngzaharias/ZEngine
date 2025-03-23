@@ -44,7 +44,7 @@ namespace
 	}
 }
 
-void hidden::RevealSystem::Initialise(World& world, const GameTime& gameTime)
+void hidden::RevealSystem::Initialise(World& world)
 {
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -54,7 +54,7 @@ void hidden::RevealSystem::Initialise(World& world, const GameTime& gameTime)
 	input.AppendLayer(strInputGuid, layer);
 }
 
-void hidden::RevealSystem::Shutdown(World& world, const GameTime& gameTime)
+void hidden::RevealSystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.RemoveLayer(strInputGuid);

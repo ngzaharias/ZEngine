@@ -42,8 +42,8 @@ namespace drag
 			const eng::PhysicsSceneComponent,
 			const eng::TransformComponent>;
 
-		void Initialise(World& world, const GameTime& gameTime);
-		void Shutdown(World& world, const GameTime& gameTime);
+		void Initialise(World& world);
+		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

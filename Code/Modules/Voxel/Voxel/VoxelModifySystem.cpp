@@ -24,7 +24,6 @@ namespace
 {
 	const str::Guid strInputGuid = str::Guid::Generate();
 	const str::Name strRadius0 = str::Name::Create("VoxelModify_Radius0");
-	const str::Name strRadius0 = str::Name::Create("VoxelModify_Radius0");
 	const str::Name strRadius1 = str::Name::Create("VoxelModify_Radius1");
 	const str::Name strRadius2 = str::Name::Create("VoxelModify_Radius2");
 	const str::Name strRadius3 = str::Name::Create("VoxelModify_Radius3");
@@ -94,7 +93,7 @@ namespace
 	}
 }
 
-void voxel::ModifySystem::Initialise(World& world, const GameTime& gameTime)
+void voxel::ModifySystem::Initialise(World& world)
 {
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -118,7 +117,7 @@ void voxel::ModifySystem::Initialise(World& world, const GameTime& gameTime)
 	input.AppendLayer(strInputGuid, layer);
 }
 
-void voxel::ModifySystem::Shutdown(World& world, const GameTime& gameTime)
+void voxel::ModifySystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.RemoveLayer(strInputGuid);
