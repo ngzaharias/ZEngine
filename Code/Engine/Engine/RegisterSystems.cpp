@@ -10,7 +10,6 @@
 #include "Engine/CameraZoom2DSystem.h"
 #include "Engine/FlipbookAssetSystem.h"
 #include "Engine/FlipbookPlaySystem.h"
-#include "Engine/InputSystem.h"
 #include "Engine/LevelLoadSystem.h"
 #include "Engine/MusicSystem.h"
 #include "Engine/NetworkSystem.h"
@@ -41,7 +40,6 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::camera::Zoom2DSystem>();
 	entityWorld.RegisterSystem<eng::FlipbookAssetSystem>();
 	entityWorld.RegisterSystem<eng::FlipbookPlaySystem>();
-	entityWorld.RegisterSystem<eng::InputSystem>();
 	entityWorld.RegisterSystem<eng::MusicSystem>();
 	entityWorld.RegisterSystem<eng::network::NetworkSystem>();
 	entityWorld.RegisterSystem<eng::RenderSystem>(entityWorld);

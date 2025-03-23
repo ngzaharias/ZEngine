@@ -10,7 +10,6 @@
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/FrameBufferComponent.h"
-#include "Engine/InputComponent.h"
 #include "Engine/LevelComponents.h"
 #include "Engine/LightComponents.h"
 #include "Engine/LinesComponent.h"
@@ -125,7 +124,6 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::application::CloseRequestComponent>();
 	entityWorld.RegisterComponent<eng::DynamicMeshComponent>();
 	entityWorld.RegisterComponent<eng::FlipbookAssetComponent>();
-	entityWorld.RegisterComponent<eng::InputComponent>();
 	entityWorld.RegisterComponent<eng::LightAmbientComponent>();
 	entityWorld.RegisterComponent<eng::LightDirectionalComponent>();
 	entityWorld.RegisterComponent<eng::LightPointComponent>();
