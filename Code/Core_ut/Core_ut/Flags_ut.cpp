@@ -1,8 +1,7 @@
 #include <Catch2/catch.hpp>
 
 #include "Core/Flags.h"
-
-#define BIT32(value) (1<<value)
+#include "Math/Math.h"
 
 namespace
 {

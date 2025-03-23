@@ -10,14 +10,14 @@ constexpr Flags<Enum>::Flags(const Enum flag)
 
 template<typename Enum>
 constexpr Flags<Enum>::Flags(const Flags& flags)
-	: m_Value(flags)
+	: m_Value(flags.m_Value)
 {
 }
 
 template<typename Enum>
 constexpr bool Flags<Enum>::Has(const Enum flag) const
 {
-	return (m_Value & Value(flag)) != 0;
+	return (m_Value & flag) != 0;
 }
 
 template<typename Enum>
@@ -65,7 +65,7 @@ constexpr bool Flags<Enum>::HasNone(const Flags& flags) const
 template<typename Enum>
 constexpr void Flags<Enum>::Clear(const Enum flag)
 {
-	m_Value &= Value(~flag);
+	m_Value &= ~flag;
 }
 
 
