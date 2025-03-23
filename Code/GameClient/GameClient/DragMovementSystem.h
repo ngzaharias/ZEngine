@@ -4,8 +4,8 @@
 
 namespace eng
 {
+	class InputManager;
 	class WindowManager;
-	struct InputComponent;
 	struct LinesComponent;
 	struct NameComponent;
 	struct TransformComponent;
@@ -25,13 +25,13 @@ namespace drag
 	public:
 		using World = ecs::WorldView<
 			// Resources
+			const eng::InputManager,
 			const eng::WindowManager,
 			// Components
 			eng::LinesComponent,
 			eng::TransformComponent,
 			const drag::SelectionComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::InputComponent>;
+			const eng::camera::ProjectionComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -9,7 +9,7 @@
 #include "Editor/TextureHelpers.h"
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "Engine/Texture2DAsset.h"
 
 #include "GameDebug/MenuBarComponents.h"
@@ -21,6 +21,13 @@
 
 namespace
 {
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strImport = str::Name::Create("TextureEditor_Import");
+	const str::Name strModifier = str::Name::Create("TextureEditor_Modifier");
+	const str::Name strNew = str::Name::Create("TextureEditor_New");
+	const str::Name strOpen = str::Name::Create("TextureEditor_Open");
+	const str::Name strSave = str::Name::Create("TextureEditor_Save");
+
 	using World = editor::TextureEditorSystem::World;
 
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
@@ -36,14 +43,10 @@ namespace
 		return std::format("{}: {}", label, index);
 	}
 
-	bool HasInput(World& world, const input::EKeyboard key)
+	bool HasInput(World& world, const str::Name& name)
 	{
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
-		{
-			const auto& input = world.ReadComponent<eng::InputComponent>(entity);
-			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(key);
-		}
-		return false;
+		const auto& input = world.ReadResource<eng::InputManager>();
+		return input.IsHeld(strModifier) && input.IsPressed(name);
 	}
 
 	void DrawMenuBar(World& world, const ecs::Entity& entity)
@@ -88,7 +91,7 @@ namespace
 		if (world.HasComponent<editor::TextureAssetImportComponent>(entity))
 			world.RemoveComponent<editor::TextureAssetImportComponent>(entity);
 
-		if (HasInput(world, input::EKeyboard::I) || world.HasComponent<editor::TextureAssetImportComponent>(entity))
+		if (HasInput(world, strImport) || world.HasComponent<editor::TextureAssetImportComponent>(entity))
 		{
 			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 
@@ -115,7 +118,7 @@ namespace
 		if (world.HasComponent<editor::TextureAssetNewComponent>(entity))
 			world.RemoveComponent<editor::TextureAssetNewComponent>(entity);
 
-		if (HasInput(world, input::EKeyboard::N) || world.HasComponent<editor::TextureAssetNewComponent>(entity))
+		if (HasInput(world, strNew) || world.HasComponent<editor::TextureAssetNewComponent>(entity))
 		{
 			auto& windowComponent = world.WriteComponent<editor::TextureWindowComponent>(entity);
 			windowComponent.m_Asset = {};
@@ -135,7 +138,7 @@ namespace
 		if (world.HasComponent<editor::TextureAssetOpenComponent>(entity))
 			world.RemoveComponent<editor::TextureAssetOpenComponent>(entity);
 
-		if (HasInput(world, input::EKeyboard::O) || world.HasComponent<editor::TextureAssetOpenComponent>(entity))
+		if (HasInput(world, strOpen) || world.HasComponent<editor::TextureAssetOpenComponent>(entity))
 		{
 			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 
@@ -166,7 +169,7 @@ namespace
 		if (world.HasComponent<editor::TextureAssetSaveComponent>(entity))
 			world.RemoveComponent<editor::TextureAssetSaveComponent>(entity);
 
-		if (HasInput(world, input::EKeyboard::S) || world.HasComponent<editor::TextureAssetSaveComponent>(entity))
+		if (HasInput(world, strSave) || world.HasComponent<editor::TextureAssetSaveComponent>(entity))
 		{
 			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 			const auto& readWindow = world.ReadComponent<editor::TextureWindowComponent>(entity);
@@ -208,6 +211,28 @@ namespace
 void editor::TextureEditorSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	const int32 count = world.Query<ecs::query::Include<editor::TextureWindowComponent>>().GetCount();
+	if (count == 1 && world.HasAny<ecs::query::Added<editor::TextureWindowComponent>>())
+	{
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::Editor;
+		layer.m_Bindings.Emplace(input::EKeyboard::I, strImport);
+		layer.m_Bindings.Emplace(input::EKeyboard::N, strNew);
+		layer.m_Bindings.Emplace(input::EKeyboard::O, strOpen);
+		layer.m_Bindings.Emplace(input::EKeyboard::S, strSave);
+		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strModifier);
+		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strModifier);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInputGuid, layer);
+	}
+
+	if (count == 0 && world.HasAny<ecs::query::Removed<editor::TextureWindowComponent>>())
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInputGuid);
+	}
 
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);

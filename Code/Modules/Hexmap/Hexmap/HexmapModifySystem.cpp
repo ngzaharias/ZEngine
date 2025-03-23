@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -21,6 +21,15 @@
 
 namespace
 {
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strHexmap0 = str::Name::Create("HexmapModify_Hexmap0");
+	const str::Name strHexmap1 = str::Name::Create("HexmapModify_Hexmap1");
+	const str::Name strHexmap2 = str::Name::Create("HexmapModify_Hexmap2");
+	const str::Name strHexmap3 = str::Name::Create("HexmapModify_Hexmap3");
+	const str::Name strHexmap4 = str::Name::Create("HexmapModify_Hexmap4");
+	const str::Name strHexmap5 = str::Name::Create("HexmapModify_Hexmap5");
+	const str::Name strSelect = str::Name::Create("HexmapModify_Select");
+
 	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
 	{
 		if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
@@ -37,38 +46,54 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const int32 count = world.Query<ecs::query::Include<hexmap::LayerComponent>>().GetCount();
+	if (count == 1 && world.HasAny<ecs::query::Added<hexmap::LayerComponent>>())
+	{
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::Gameplay;
+		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_0, strHexmap0);
+		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_1, strHexmap1);
+		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_2, strHexmap2);
+		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_3, strHexmap3);
+		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_4, strHexmap4);
+		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_5, strHexmap5);
+		layer.m_Bindings.Emplace(input::EMouse::Left, strSelect);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInputGuid, layer);
+	}
+
+	if (count == 0 && world.HasAny<ecs::query::Removed<hexmap::LayerComponent>>())
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInputGuid);
+	}
+
 	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
 	if (!window)
 		return;
 
 	static int32 value = 2;
-
-	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::ProjectionComponent>;
-	using InputQuery = ecs::query::Include<const eng::InputComponent>;
-
 	const Vector2u& resolution = window->GetResolution();
-	for (const ecs::Entity& inputEntity : world.Query<InputQuery>())
+
+	const auto& input = world.ReadResource<eng::InputManager>();
+	if (input.IsPressed(strHexmap0))
+		value = 0;
+	if (input.IsPressed(strHexmap1))
+		value = 1;
+	if (input.IsPressed(strHexmap2))
+		value = 2;
+	if (input.IsPressed(strHexmap3))
+		value = 3;
+	if (input.IsPressed(strHexmap4))
+		value = 4;
+	if (input.IsPressed(strHexmap5))
+		value = 5;
+
+	if (input.IsHeld(strSelect))
 	{
-		const auto& input = world.ReadComponent<eng::InputComponent>(inputEntity);
-
-		if (input.IsKeyPressed(input::EKeyboard::Num_0))
-			value = 0;
-		if (input.IsKeyPressed(input::EKeyboard::Num_1))
-			value = 1;
-		if (input.IsKeyPressed(input::EKeyboard::Num_2))
-			value = 2;
-		if (input.IsKeyPressed(input::EKeyboard::Num_3))
-			value = 3;
-		if (input.IsKeyPressed(input::EKeyboard::Num_4))
-			value = 4;
-		if (input.IsKeyPressed(input::EKeyboard::Num_5))
-			value = 5;
-
-
-		if (!input.IsKeyHeld(input::EMouse::Left))
-			continue;
-
+		using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::ProjectionComponent>;
 		for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 		{
 			const auto& camera = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);

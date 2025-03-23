@@ -7,7 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -22,6 +22,9 @@
 
 namespace
 {
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strSelect = str::Name::Create("HexmapRoot_Select");
+
 	AABB2f GetCameraZone(const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform, const Vector2u& windowSize)
 	{
 		constexpr Plane3f plane = Plane3f(Vector3f::AxisY, Vector3f::Zero);
@@ -58,6 +61,22 @@ namespace
 	}
 }
 
+void hexmap::RootSystem::Initialise(World& world, const GameTime& gameTime)
+{
+	input::Layer layer;
+	layer.m_Priority = eng::EInputPriority::Gameplay;
+	layer.m_Bindings.Emplace(input::EMouse::Left, strSelect);
+
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.AppendLayer(strInputGuid, layer);
+}
+
+void hexmap::RootSystem::Shutdown(World& world, const GameTime& gameTime)
+{
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.RemoveLayer(strInputGuid);
+}
+
 void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
@@ -68,17 +87,16 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 		return;
 
 	bool hasChanged = false;
-	for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<eng::InputComponent>>())
 	{
-		const auto& input = world.ReadComponent<eng::InputComponent>(inputEntity);
-		if (input.m_ScrollDelta.y == 0)
-			continue;
-
-		for (const ecs::Entity& rootEntity : world.Query<ecs::query::Include<hexmap::RootComponent>>())
+		const auto& input = world.ReadResource<eng::InputManager>();
+		if (input.m_ScrollDelta.y != 0)
 		{
-			auto& root = world.WriteComponent<hexmap::RootComponent>(rootEntity);
-			root.m_Zoom -= input.m_ScrollDelta.y * 0.1f;
-			root.m_Zoom = math::Clamp(root.m_Zoom, 0.f, 1.f);
+			for (const ecs::Entity& rootEntity : world.Query<ecs::query::Include<hexmap::RootComponent>>())
+			{
+				auto& root = world.WriteComponent<hexmap::RootComponent>(rootEntity);
+				root.m_Zoom -= input.m_ScrollDelta.y * 0.1f;
+				root.m_Zoom = math::Clamp(root.m_Zoom, 0.f, 1.f);
+			}
 		}
 	}
 

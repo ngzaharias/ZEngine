@@ -47,7 +47,7 @@ namespace editor::settings
 namespace eng
 {
 	class AssetManager;
-	struct InputComponent;
+	class InputManager;
 }
 
 namespace eng::settings
@@ -65,7 +65,10 @@ namespace dbg
 	class MenuBarSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView <
+			// Resources
+			const eng::InputManager,
+			// Components
 			dbg::BufferWindowRequestComponent,
 			dbg::ContainerWindowRequestComponent,
 			dbg::EntityWindowRequestComponent,
@@ -89,8 +92,10 @@ namespace dbg
 			editor::TrajectoryWindowRequestComponent,
 			eng::AssetManager,
 			eng::settings::LocalComponent,
-			gui::settings::OpenRequestComponent,
-			const eng::InputComponent>;
+			gui::settings::OpenRequestComponent>;
+
+		void Initialise(World& world, const GameTime& gameTime);
+		void Shutdown(World& world, const GameTime& gameTime);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

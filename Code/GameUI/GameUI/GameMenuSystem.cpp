@@ -42,7 +42,7 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 			auto& input = world.WriteResource<eng::InputManager>();
 
 			input::Layer layer;
-			layer.m_Priority = 100;
+			layer.m_Priority = eng::EInputPriority::GameUI;
 			layer.m_Bindings.Emplace(input::EKeyboard::Escape, s_InputClose);
 			input.AppendLayer(s_InputGuid, layer);
 		}

@@ -10,9 +10,9 @@ namespace clt::settings
 
 namespace eng
 {
+	class InputManager;
 	class WindowManager;
 	struct LinesComponent;
-	struct InputComponent;
 	struct PhysicsSceneComponent;
 	struct RigidStaticComponent;
 	struct TransformComponent;
@@ -41,17 +41,20 @@ namespace hidden
 	public:
 		using World = ecs::WorldView <
 			// Resources
+			const eng::InputManager,
 			const eng::WindowManager,
 			// Components
 			eng::LinesComponent,
 			eng::RigidStaticComponent,
 			hidden::RevealComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::InputComponent,
 			const eng::PhysicsSceneComponent,
 			const eng::TransformComponent,
 			const hidden::ObjectComponent,
 			const hidden::settings::DebugComponent>;
+
+		void Initialise(World& world, const GameTime& gameTime);
+		void Shutdown(World& world, const GameTime& gameTime);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -4,8 +4,8 @@
 
 namespace eng
 {
+	class InputManager;
 	class WindowManager;
-	struct InputComponent;
 	struct TransformComponent;
 }
 
@@ -24,12 +24,12 @@ namespace eng::camera
 	public:
 		using World = ecs::WorldView<
 			// Resources
+			const eng::InputManager,
 			const eng::WindowManager,
 			// Components
 			eng::TransformComponent,
 			const eng::camera::PanningComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::InputComponent,
 			const eng::settings::LocalComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

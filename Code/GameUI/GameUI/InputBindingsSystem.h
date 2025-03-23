@@ -4,7 +4,7 @@
 
 namespace eng
 {
-	struct InputComponent;
+	class InputManager;
 }
 
 namespace gui::game_menu
@@ -23,8 +23,10 @@ namespace gui::input
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			const eng::InputManager,
+			// Components
 			gui::game_menu::OpenRequestComponent,
-			const eng::InputComponent,
 			const gui::input::BindingsComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

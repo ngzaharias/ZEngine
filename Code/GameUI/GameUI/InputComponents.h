@@ -12,21 +12,11 @@ namespace gui::input
 	enum class ECommand
 	{
 		None,
-		ToggleGameMenu,
-	};
-
-	using Input = Variant<
-		::input::EKeyboard,
-		::input::EMouse>;
-
-	struct Binding
-	{
-		ECommand m_Command = ECommand::None;
-		Input m_Input = ::input::EKeyboard::Unknown;
+		GameMenu,
 	};
 
 	struct BindingsComponent final : public ecs::Component<BindingsComponent>
 	{
-		Array<Binding> m_Bindings = {};
+		Array<ECommand> m_Commands = {};
 	};
 }

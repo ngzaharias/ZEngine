@@ -8,7 +8,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "Engine/SettingsComponents.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -18,9 +18,32 @@
 #include "Math/Rotator.h"
 #include "Math/Vector.h"
 
+namespace
+{
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strSelect = str::Name::Create("CameraPanning_Select");
+}
+
 void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	const int32 count = world.Query<ecs::query::Include<eng::camera::Pan3DComponent>>().GetCount();
+	if (count == 1 && world.HasAny<ecs::query::Added<eng::camera::Pan3DComponent>>())
+	{
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::Gameplay;
+		layer.m_Bindings.Emplace(input::EMouse::Left, strSelect);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInputGuid, layer);
+	}
+
+	if (count == 0 && world.HasAny<ecs::query::Removed<eng::camera::Pan3DComponent>>())
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInputGuid);
+	}
 
 	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
@@ -28,35 +51,30 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 		return;
 
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Pan3DComponent, const eng::camera::ProjectionComponent>;
-	using InputQuery = ecs::query::Include<const eng::InputComponent>;
 
 	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
 		const auto& projection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 
-		for (const ecs::Entity& inputEntity : world.Query<InputQuery>())
+		const auto& input = world.ReadResource<eng::InputManager>();
+		if (input.IsHeld(strSelect))
 		{
-			const auto& input = world.ReadComponent<eng::InputComponent>(inputEntity);
+			const Vector3f worldPosA = eng::camera::ScreenToWorld(
+				Vector2f::Zero,
+				projection.m_Projection,
+				Matrix4x4::Identity,
+				resolution);
+			const Vector3f worldPosB = eng::camera::ScreenToWorld(
+				input.m_MouseDelta,
+				projection.m_Projection,
+				Matrix4x4::Identity,
+				resolution);
 
-			if (input.IsKeyHeld(input::EMouse::Left))
-			{
-				const Vector3f worldPosA = eng::camera::ScreenToWorld(
-					Vector2f::Zero,
-					projection.m_Projection,
-					Matrix4x4::Identity,
-					resolution);
-				const Vector3f worldPosB = eng::camera::ScreenToWorld(
-					input.m_MouseDelta,
-					projection.m_Projection,
-					Matrix4x4::Identity,
-					resolution);
-
-				auto& transform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
-				const Quaternion rotation = Quaternion::FromRotator(transform.m_Rotate);
-				const Vector3f delta = (worldPosB - worldPosA) * rotation;
-				transform.m_Translate += delta;
-			}
+			auto& transform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
+			const Quaternion rotation = Quaternion::FromRotator(transform.m_Rotate);
+			const Vector3f delta = (worldPosB - worldPosA) * rotation;
+			transform.m_Translate += delta;
 		}
 	}
 }

@@ -7,7 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/RigidStaticComponent.h"
@@ -29,6 +29,8 @@
 namespace
 {
 	const str::Guid strSoundSequence = GUID("2bde153c851a429c88957b6b0fd482fb");
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strSelect = str::Name::Create("HiddenReveal_Select");
 
 	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
 	{
@@ -40,6 +42,22 @@ namespace
 
 		return (mousePosition - transform.m_Translate).Normalized();
 	}
+}
+
+void hidden::RevealSystem::Initialise(World& world, const GameTime& gameTime)
+{
+	input::Layer layer;
+	layer.m_Priority = eng::EInputPriority::Gameplay;
+	layer.m_Bindings.Emplace(input::EMouse::Left, strSelect);
+
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.AppendLayer(strInputGuid, layer);
+}
+
+void hidden::RevealSystem::Shutdown(World& world, const GameTime& gameTime)
+{
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.RemoveLayer(strInputGuid);
 }
 
 void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
@@ -62,13 +80,12 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 
 		const Matrix4x4 cameraView = transform.ToTransform();
 
-		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
+			const auto& input = world.ReadResource<eng::InputManager>();
 
 			// mouse
 			constexpr float s_Distance = 100000.f;
-			const Vector3f mousePosition = eng::camera::ScreenToWorld(inputComponent.m_MousePosition, camera.m_Projection, cameraView, resolution);
+			const Vector3f mousePosition = eng::camera::ScreenToWorld(input.m_MousePosition, camera.m_Projection, cameraView, resolution);
 			const Vector3f mouseDirection = ToMouseDirection(mousePosition, camera, transform);
 
 			const physx::PxVec3 position = { 
@@ -91,7 +108,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 				if (world.HasComponent<hidden::ObjectComponent>(selectedEntity))
 				{
 					const bool isRevealed = world.HasComponent<hidden::RevealComponent>(selectedEntity);
-					if (!isRevealed && inputComponent.IsKeyPressed(input::EMouse::Left))
+					if (!isRevealed && input.IsPressed(strSelect))
 						world.AddComponent<hidden::RevealComponent>(selectedEntity);
 				}
 

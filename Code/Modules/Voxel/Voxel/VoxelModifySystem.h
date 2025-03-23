@@ -4,7 +4,7 @@
 
 namespace eng
 {
-	struct InputComponent;
+	class InputManager;
 	struct LinesComponent;
 	struct TextComponent;
 	struct TransformComponent;
@@ -25,14 +25,19 @@ namespace voxel
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			const eng::InputManager,
+			// Components
 			eng::LinesComponent,
 			eng::TextComponent,
 			eng::TransformComponent,
 			voxel::ModifyComponent,
 			voxel::ModifySettingsComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::InputComponent,
 			const voxel::ChunkComponent>;
+
+		void Initialise(World& world, const GameTime& gameTime);
+		void Shutdown(World& world, const GameTime& gameTime);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

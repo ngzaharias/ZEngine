@@ -9,8 +9,8 @@ namespace ecs
 
 namespace eng
 {
+	class InputManager;
 	class WindowManager;
-	struct InputComponent;
 	struct LinesComponent;
 	struct PhysicsSceneComponent;
 	struct TransformComponent;
@@ -31,6 +31,7 @@ namespace drag
 	public:
 		using World = ecs::WorldView<
 			// Resources
+			const eng::InputManager,
 			const eng::WindowManager,
 			// Components
 			drag::SelectionComponent,
@@ -38,9 +39,11 @@ namespace drag
 			eng::LinesComponent,
 			const drag::IsSelectableComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::InputComponent,
 			const eng::PhysicsSceneComponent,
 			const eng::TransformComponent>;
+
+		void Initialise(World& world, const GameTime& gameTime);
+		void Shutdown(World& world, const GameTime& gameTime);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

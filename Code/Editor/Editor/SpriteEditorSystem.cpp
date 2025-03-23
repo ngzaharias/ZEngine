@@ -10,7 +10,7 @@
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/ShaderAsset.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "Engine/Texture2DAsset.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "Math/AABB.h"
@@ -23,6 +23,15 @@
 
 namespace
 {
+	const str::Guid uuidShader = GUID("cbbb7d3ff44b45fdb9e5a207d92262fb");
+	const str::Guid uuidStaticMesh = GUID("e94876a8e4cc4d1684c85859b48a1af6");
+	const str::Guid uuidTexture2D = GUID("c6bb231ce97f104e860eb55e71988bdb");
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strModifier = str::Name::Create("SpriteEditor_Modifier");
+	const str::Name strNew = str::Name::Create("SpriteEditor_New");
+	const str::Name strOpen = str::Name::Create("SpriteEditor_Open");
+	const str::Name strSave = str::Name::Create("SpriteEditor_Save");
+
 	using World = editor::SpriteEditorSystem::World;
 
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
@@ -32,10 +41,6 @@ namespace
 	constexpr ImGuiWindowFlags s_WindowFlags =
 		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
-
-	const str::Guid uuidShader = GUID("cbbb7d3ff44b45fdb9e5a207d92262fb");
-	const str::Guid uuidStaticMesh = GUID("e94876a8e4cc4d1684c85859b48a1af6");
-	const str::Guid uuidTexture2D = GUID("c6bb231ce97f104e860eb55e71988bdb");
 
 	str::String ToLabel(const char* label, const int32 index)
 	{
@@ -51,14 +56,10 @@ namespace
 			data.m_Initial.y + (data.m_Stride.y * y));
 	}
 
-	bool HasInput(World& world, const input::EKeyboard key)
+	bool HasInput(World& world, const str::Name& name)
 	{
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
-		{
-			const auto& input = world.ReadComponent<eng::InputComponent>(entity);
-			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(key);
-		}
-		return false;
+		const auto& input = world.ReadResource<eng::InputManager>();
+		return input.IsHeld(strModifier) && input.IsPressed(name);
 	}
 
 	void DrawMenuBar(World& world, const ecs::Entity& entity)
@@ -184,7 +185,7 @@ namespace
 		if (world.HasComponent<editor::SpriteAssetNewComponent>(entity))
 			world.RemoveComponent<editor::SpriteAssetNewComponent>(entity);
 
-		if (HasInput(world, input::EKeyboard::N) || world.HasComponent<editor::SpriteAssetNewComponent>(entity))
+		if (HasInput(world, strNew) || world.HasComponent<editor::SpriteAssetNewComponent>(entity))
 		{
 			auto& window = world.WriteComponent<editor::SpriteWindowComponent>(entity);
 			window.m_Asset = {};
@@ -207,7 +208,7 @@ namespace
 		if (world.HasComponent<editor::SpriteAssetOpenComponent>(entity))
 			world.RemoveComponent<editor::SpriteAssetOpenComponent>(entity);
 
-		if (HasInput(world, input::EKeyboard::O) || world.HasComponent<editor::SpriteAssetOpenComponent>(entity))
+		if (HasInput(world, strOpen) || world.HasComponent<editor::SpriteAssetOpenComponent>(entity))
 		{
 			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 
@@ -238,7 +239,7 @@ namespace
 		if (world.HasComponent<editor::SpriteAssetSaveComponent>(entity))
 			world.RemoveComponent<editor::SpriteAssetSaveComponent>(entity);
 
-		if (HasInput(world, input::EKeyboard::S) || world.HasComponent<editor::SpriteAssetSaveComponent>(entity))
+		if (HasInput(world, strSave) || world.HasComponent<editor::SpriteAssetSaveComponent>(entity))
 		{
 			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 			const auto& readWindow = world.ReadComponent<editor::SpriteWindowComponent>(entity);
@@ -348,6 +349,27 @@ namespace
 void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	const int32 count = world.Query<ecs::query::Include<editor::SpriteWindowComponent>>().GetCount();
+	if (count == 1 && world.HasAny<ecs::query::Added<editor::SpriteWindowComponent>>())
+	{
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::Editor;
+		layer.m_Bindings.Emplace(input::EKeyboard::N, strNew);
+		layer.m_Bindings.Emplace(input::EKeyboard::O, strOpen);
+		layer.m_Bindings.Emplace(input::EKeyboard::S, strSave);
+		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strModifier);
+		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strModifier);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInputGuid, layer);
+	}
+
+	if (count == 0 && world.HasAny<ecs::query::Removed<editor::SpriteWindowComponent>>())
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInputGuid);
+	}
 
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);

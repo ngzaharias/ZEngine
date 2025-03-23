@@ -11,7 +11,6 @@ namespace drag
 	struct SelectionComponent : public ecs::Component<SelectionComponent>
 	{
 		ecs::Entity m_CameraEntity = { };
-		ecs::Entity m_InputEntity = { };
 		ecs::Entity m_SelectedEntity = { };
 
 		Vector3f m_TranslateOffset = { };

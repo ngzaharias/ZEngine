@@ -9,7 +9,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/LinesComponent.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -38,8 +38,6 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& dragEntity : world.Query<ecs::query::Include<const drag::SelectionComponent>>())
 	{
 		const auto& dragComponent = world.ReadComponent<drag::SelectionComponent>(dragEntity);
-		const auto& inputComponent = world.ReadComponent<eng::InputComponent>(dragComponent.m_InputEntity);
-
 		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(dragComponent.m_CameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(dragComponent.m_CameraEntity);
 
@@ -48,7 +46,7 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 		const Matrix4x4 cameraView = cameraTransform.ToTransform();
 
 		const Vector3f mousePosition = eng::camera::ScreenToWorld(
-			inputComponent.m_MousePosition, 
+			input.m_MousePosition, 
 			cameraComponent.m_Projection, 
 			cameraView, 
 			resolution);

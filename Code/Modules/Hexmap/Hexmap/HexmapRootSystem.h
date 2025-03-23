@@ -4,8 +4,8 @@
 
 namespace eng
 {
+	class InputManager;
 	class WindowManager;
-	struct InputComponent;
 	struct TransformComponent;
 }
 
@@ -26,12 +26,15 @@ namespace hexmap
 	public:
 		using World = ecs::WorldView<
 			// Resources
+			const eng::InputManager,
 			const eng::WindowManager,
 			// Components
 			hexmap::RootComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::InputComponent,
 			const eng::TransformComponent>;
+
+		void Initialise(World& world, const GameTime& gameTime);
+		void Shutdown(World& world, const GameTime& gameTime);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

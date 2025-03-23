@@ -21,7 +21,7 @@ namespace ecs
 namespace eng
 {
 	class AssetManager;
-	struct InputComponent;
+	class InputManager;
 	struct PhysicsComponent;
 	struct PrototypeComponent;
 	struct SpriteComponent;
@@ -66,13 +66,13 @@ namespace editor
 		using World = ecs::WorldView<
 			// resources
 			const eng::AssetManager,
+			const eng::InputManager,
 			// components
 			ecs::NameComponent,
 			editor::EntitySaveComponent,
 			editor::EntityWindowComponent,
 			editor::settings::LocalComponent,
 			const editor::EntityWindowRequestComponent,
-			const eng::InputComponent,
 			const eng::level::EntityComponent,
 			const eng::PrototypeComponent>;
 

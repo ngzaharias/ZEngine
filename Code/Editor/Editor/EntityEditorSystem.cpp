@@ -9,7 +9,7 @@
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/FileHelpers.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "Engine/InspectorHelpers.h"
 #include "Engine/LevelComponents.h"
 #include "Engine/PhysicsComponent.h"
@@ -26,6 +26,13 @@
 #include "imgui/imgui_internal.h"
 #include "imgui/imgui_stdlib.h"
 #include "imgui/imgui_user.h"
+
+namespace
+{
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strModifier = str::Name::Create("EntityEditor_Modifier");
+	const str::Name strSave = str::Name::Create("EntityEditor_Save");
+}
 
 template<>
 bool imgui::Inspector::WriteCustom(ecs::NameComponent& value)
@@ -58,14 +65,10 @@ namespace
 		return std::format("{}: {}", label, index);
 	}
 
-	bool HasInput(World& world, const input::EKeyboard key)
+	bool HasInput(World& world, const str::Name& name)
 	{
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
-		{
-			const auto& input = world.ReadComponent<eng::InputComponent>(entity);
-			return input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(key);
-		}
-		return false;
+		const auto& input = world.ReadResource<eng::InputManager>();
+		return input.IsHeld(strModifier) && input.IsPressed(name);
 	}
 
 	template<typename Component>
@@ -115,6 +118,25 @@ editor::EntityEditorSystem::EntityEditorSystem(ecs::EntityWorld& world)
 void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	const int32 count = world.Query<ecs::query::Include<editor::EntityWindowComponent>>().GetCount();
+	if (count == 1 && world.HasAny<ecs::query::Added<editor::EntityWindowComponent>>())
+	{
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::Editor;
+		layer.m_Bindings.Emplace(input::EKeyboard::S, strSave);
+		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strModifier);
+		layer.m_Bindings.Emplace(input::EKeyboard::Control_R, strModifier);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInputGuid, layer);
+	}
+
+	if (count == 0 && world.HasAny<ecs::query::Removed<editor::EntityWindowComponent>>())
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInputGuid);
+	}
 
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
 		ImGuiDockNodeFlags_NoCloseButton |
@@ -343,7 +365,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 			if (world.HasComponent<editor::EntitySaveComponent>(windowEntity))
 				world.RemoveComponent<editor::EntitySaveComponent>(windowEntity);
 
-			if (HasInput(world, input::EKeyboard::S) || world.HasComponent<editor::EntitySaveComponent>(windowEntity))
+			if (HasInput(world, strSave) || world.HasComponent<editor::EntitySaveComponent>(windowEntity))
 			{
 				const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 				const auto& readWindow = world.ReadComponent<editor::EntityWindowComponent>(windowEntity);

@@ -22,6 +22,14 @@ namespace eng
 
 namespace eng
 {
+	enum EInputPriority
+	{
+		Gameplay = 0,
+		Debug = 100,
+		GameUI = 200,
+		Editor = 300,
+	};
+
 	class InputManager final
 	{
 		struct Cache
@@ -44,9 +52,9 @@ namespace eng
 		void RemoveLayer(const str::Guid& guid);
 
 		auto GetValue(const str::Name& name) const->const input::Value&;
-		bool IsKeyHeld(const str::Name& name) const;
-		bool IsKeyPressed(const str::Name& name) const;
-		bool IsKeyReleased(const str::Name& name) const;
+		bool IsHeld(const str::Name& name) const;
+		bool IsPressed(const str::Name& name) const;
+		bool IsReleased(const str::Name& name) const;
 
 	private:
 		Cache m_CacheCurr = {};

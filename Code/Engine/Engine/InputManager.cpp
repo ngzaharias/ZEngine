@@ -190,12 +190,12 @@ auto eng::InputManager::GetValue(const str::Name& name) const->const input::Valu
 	return s_Empty;
 }
 
-bool eng::InputManager::IsKeyHeld(const str::Name& name) const
+bool eng::InputManager::IsHeld(const str::Name& name) const
 {
 	return m_ValueMap.Contains(name);
 }
 
-bool eng::InputManager::IsKeyPressed(const str::Name& name) const
+bool eng::InputManager::IsPressed(const str::Name& name) const
 {
 	auto find = m_ValueMap.Find(name);
 	if (find != m_ValueMap.end())
@@ -204,7 +204,7 @@ bool eng::InputManager::IsKeyPressed(const str::Name& name) const
 	return false;
 }
 
-bool eng::InputManager::IsKeyReleased(const str::Name& name) const
+bool eng::InputManager::IsReleased(const str::Name& name) const
 {
 	auto find = m_ValueMap.Find(name);
 	if (find != m_ValueMap.end())

@@ -9,7 +9,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
@@ -18,8 +18,28 @@
 #include "Math/Algorithms.h"
 #include "Math/CollisionMath.h"
 
+// #todo: enable only when voxels are present
+
 namespace
 {
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strRadius0 = str::Name::Create("VoxelModify_Radius0");
+	const str::Name strRadius0 = str::Name::Create("VoxelModify_Radius0");
+	const str::Name strRadius1 = str::Name::Create("VoxelModify_Radius1");
+	const str::Name strRadius2 = str::Name::Create("VoxelModify_Radius2");
+	const str::Name strRadius3 = str::Name::Create("VoxelModify_Radius3");
+	const str::Name strRadius4 = str::Name::Create("VoxelModify_Radius4");
+	const str::Name strRadius5 = str::Name::Create("VoxelModify_Radius5");
+	const str::Name strRadius6 = str::Name::Create("VoxelModify_Radius6");
+	const str::Name strSelect = str::Name::Create("VoxelModify_Select");
+	const str::Name strVoxel0 = str::Name::Create("VoxelModify_Voxel0");
+	const str::Name strVoxel1 = str::Name::Create("VoxelModify_Voxel1");
+	const str::Name strVoxel2 = str::Name::Create("VoxelModify_Voxel2");
+	const str::Name strVoxel3 = str::Name::Create("VoxelModify_Voxel3");
+	const str::Name strVoxel4 = str::Name::Create("VoxelModify_Voxel4");
+	const str::Name strVoxel5 = str::Name::Create("VoxelModify_Voxel5");
+	const str::Name strVoxel6 = str::Name::Create("VoxelModify_Voxel6");
+
 	int32 ToInnerIndex(const Vector3i& innerPos)
 	{
 		return innerPos.x
@@ -74,6 +94,36 @@ namespace
 	}
 }
 
+void voxel::ModifySystem::Initialise(World& world, const GameTime& gameTime)
+{
+	input::Layer layer;
+	layer.m_Priority = eng::EInputPriority::Gameplay;
+	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_0, strRadius0);
+	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_1, strRadius1);
+	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_2, strRadius2);
+	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_3, strRadius3);
+	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_4, strRadius4);
+	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_5, strRadius5);
+	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_6, strRadius6);
+	layer.m_Bindings.Emplace(input::EMouse::Left, strSelect);
+	layer.m_Bindings.Emplace(input::EKeyboard::Num_0, strVoxel0);
+	layer.m_Bindings.Emplace(input::EKeyboard::Num_1, strVoxel1);
+	layer.m_Bindings.Emplace(input::EKeyboard::Num_2, strVoxel2);
+	layer.m_Bindings.Emplace(input::EKeyboard::Num_3, strVoxel3);
+	layer.m_Bindings.Emplace(input::EKeyboard::Num_4, strVoxel4);
+	layer.m_Bindings.Emplace(input::EKeyboard::Num_5, strVoxel5);
+	layer.m_Bindings.Emplace(input::EKeyboard::Num_6, strVoxel6);
+
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.AppendLayer(strInputGuid, layer);
+}
+
+void voxel::ModifySystem::Shutdown(World& world, const GameTime& gameTime)
+{
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.RemoveLayer(strInputGuid);
+}
+
 void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
@@ -94,41 +144,40 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 		auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 		linesComponent.AddAABB(alignPos, voxel::s_BlockSize1D * 0.5f, Vector4f(1.f));
 
-		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
+			const auto& input = world.ReadResource<eng::InputManager>();
 			auto& settingsComponent = world.WriteSingleton<voxel::ModifySettingsComponent>();
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Numpad_1))
-				settingsComponent.m_Radius = 1;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Numpad_2))
-				settingsComponent.m_Radius = 2;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Numpad_3))
-				settingsComponent.m_Radius = 3;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Numpad_4))
-				settingsComponent.m_Radius = 4;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Numpad_5))
-				settingsComponent.m_Radius = 5;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Numpad_6))
-				settingsComponent.m_Radius = 6;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Numpad_0))
+			if (input.IsPressed(strRadius0))
 				settingsComponent.m_Radius = 0;
+			if (input.IsPressed(strRadius1))
+				settingsComponent.m_Radius = 1;
+			if (input.IsPressed(strRadius2))
+				settingsComponent.m_Radius = 2;
+			if (input.IsPressed(strRadius3))
+				settingsComponent.m_Radius = 3;
+			if (input.IsPressed(strRadius4))
+				settingsComponent.m_Radius = 4;
+			if (input.IsPressed(strRadius5))
+				settingsComponent.m_Radius = 5;
+			if (input.IsPressed(strRadius6))
+				settingsComponent.m_Radius = 6;
 
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Num_1))
-				settingsComponent.m_Type = voxel::EType::Black;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Num_2))
-				settingsComponent.m_Type = voxel::EType::Green;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Num_3))
-				settingsComponent.m_Type = voxel::EType::Grey;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Num_4))
-				settingsComponent.m_Type = voxel::EType::Orange;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Num_5))
-				settingsComponent.m_Type = voxel::EType::Purple;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Num_6))
-				settingsComponent.m_Type = voxel::EType::Red;
-			if (inputComponent.IsKeyPressed(input::EKeyboard::Num_0))
+			if (input.IsPressed(strVoxel0))
 				settingsComponent.m_Type = voxel::EType::None;
+			if (input.IsPressed(strVoxel1))
+				settingsComponent.m_Type = voxel::EType::Black;
+			if (input.IsPressed(strVoxel2))
+				settingsComponent.m_Type = voxel::EType::Green;
+			if (input.IsPressed(strVoxel3))
+				settingsComponent.m_Type = voxel::EType::Grey;
+			if (input.IsPressed(strVoxel4))
+				settingsComponent.m_Type = voxel::EType::Orange;
+			if (input.IsPressed(strVoxel5))
+				settingsComponent.m_Type = voxel::EType::Purple;
+			if (input.IsPressed(strVoxel6))
+				settingsComponent.m_Type = voxel::EType::Red;
 
-			if (inputComponent.IsKeyPressed(input::EMouse::Left))
+			if (input.IsPressed(strSelect))
 			{
 				const ecs::Entity entity = world.CreateEntity();
 				auto& requestComponent = world.AddComponent<voxel::ModifyComponent>(entity);

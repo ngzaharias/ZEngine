@@ -20,7 +20,7 @@ namespace editor::settings
 namespace eng
 {
 	class AssetManager;
-	struct InputComponent;
+	class InputManager;
 }
 
 namespace editor
@@ -69,6 +69,7 @@ namespace editor
 		using World = ecs::WorldView<
 			// managers
 			eng::AssetManager,
+			const eng::InputManager,
 			// components
 			ecs::NameComponent,
 			editor::settings::LocalComponent,
@@ -77,8 +78,7 @@ namespace editor
 			editor::SpriteAssetSaveComponent,
 			editor::SpriteBatchingComponent,
 			editor::SpriteWindowComponent,
-			const editor::SpriteWindowRequestComponent,
-			const eng::InputComponent>;
+			const editor::SpriteWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

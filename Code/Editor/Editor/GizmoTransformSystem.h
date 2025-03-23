@@ -7,8 +7,8 @@
 
 namespace eng
 {
+	class InputManager;
 	class WindowManager;
-	struct InputComponent;
 	struct LinesComponent;
 	struct PhysicsComponent;
 	struct TransformComponent;
@@ -37,14 +37,14 @@ namespace editor::gizmo
 	public:
 		using World = ecs::WorldView<
 			// Resources
+			const eng::InputManager,
 			const eng::WindowManager,
 			// Components
 			eng::PhysicsComponent,
 			eng::TransformComponent,
 			const editor::EntityWindowComponent,
 			const editor::settings::LocalComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::InputComponent>;
+			const eng::camera::ProjectionComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

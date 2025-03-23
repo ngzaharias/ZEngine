@@ -35,7 +35,7 @@ void eng::camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 	if (count == 1 && world.HasAny<ecs::query::Added<eng::camera::Move2DComponent>>())
 	{
 		input::Layer layer;
-		layer.m_Priority = -100;
+		layer.m_Priority = eng::EInputPriority::Gameplay;
 		layer.m_Bindings.Emplace(input::EKeyboard::W, strMoveUp);
 		layer.m_Bindings.Emplace(input::EKeyboard::A, strMoveLeft);
 		layer.m_Bindings.Emplace(input::EKeyboard::S, strMoveDown);
@@ -73,9 +73,9 @@ void eng::camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 			direction.Normalize();
 
 		float speed = cameraSettings.m_TranslateSpeed * gameTime.m_DeltaTime;
-		if (input.IsKeyHeld(strSpeedUpA))
+		if (input.IsHeld(strSpeedUpA))
 			speed *= 3.f;
-		if (input.IsKeyHeld(strSpeedUpB))
+		if (input.IsHeld(strSpeedUpB))
 			speed *= 5.f;
 
 		if (!math::IsNearly(direction, Vector3f::Zero))

@@ -8,7 +8,7 @@
 #include "Editor/SettingsComponents.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -20,6 +20,13 @@
 
 namespace
 {
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strPhysics = str::Name::Create("GizmoTransform_Physics");
+	const str::Name strRotate = str::Name::Create("GizmoTransform_Rotate");
+	const str::Name strScale = str::Name::Create("GizmoTransform_Scale");
+	const str::Name strTransform = str::Name::Create("GizmoTransform_Transform");
+	const str::Name strTranslate = str::Name::Create("GizmoTransform_Translate");
+
 	enum class ETransformOper
 	{
 		Translate,
@@ -57,6 +64,26 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
+	if (false)
+	{
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::Editor;
+		layer.m_Bindings.Emplace(input::EKeyboard::F1, strTransform);
+		layer.m_Bindings.Emplace(input::EKeyboard::F2, strPhysics);
+		layer.m_Bindings.Emplace(input::EKeyboard::Num_1, strTranslate);
+		layer.m_Bindings.Emplace(input::EKeyboard::Num_2, strRotate);
+		layer.m_Bindings.Emplace(input::EKeyboard::Num_3, strScale);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInputGuid, layer);
+	}
+
+	if (false)
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInputGuid);
+	}
+
 	const auto& localSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 	const auto& gizmos = localSettings.m_Gizmos;
 	const auto& settings = gizmos.m_FloorGrid;
@@ -68,19 +95,18 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 	if (!window)
 		return;
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::InputComponent>>())
 	{
-		const auto& input = world.ReadComponent<eng::InputComponent>(entity);
-		if (input.IsKeyPressed(input::EKeyboard::F1))
+		const auto& input = world.ReadResource<eng::InputManager>();
+		if (input.IsPressed(strTransform))
 			s_TransformType = ETransformType::Transform;
-		if (input.IsKeyPressed(input::EKeyboard::F2))
+		if (input.IsPressed(strPhysics))
 			s_TransformType = ETransformType::Physics;
 
-		if (input.IsKeyPressed(input::EKeyboard::Num_1))
+		if (input.IsPressed(strTranslate))
 			s_TransformOper = ETransformOper::Translate;
-		if (input.IsKeyPressed(input::EKeyboard::Num_2))
+		if (input.IsPressed(strRotate))
 			s_TransformOper = ETransformOper::Rotate;
-		if (input.IsKeyPressed(input::EKeyboard::Num_3))
+		if (input.IsPressed(strScale))
 			s_TransformOper = ETransformOper::Scale;
 	}
 

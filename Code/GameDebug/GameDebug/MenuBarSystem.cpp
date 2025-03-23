@@ -5,7 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "GameDebug/SettingsComponents.h"
 #include "GameUI/SettingsComponents.h"
@@ -18,6 +18,37 @@
 #include "Core/Name.h"
 #include "Core/Path.h"
 #include "Core/String.h"
+
+// #todo: disable on release builds
+
+namespace
+{
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strModifier = str::Name::Create("DebugMenuBar_Modifier");
+	const str::Name strOpen = str::Name::Create("DebugMenuBar_Open");
+	const str::Name strReload = str::Name::Create("DebugMenuBar_Reload");
+	const str::Name strSave = str::Name::Create("DebugMenuBar_Save");
+}
+
+void dbg::MenuBarSystem::Initialise(World& world, const GameTime& gameTime)
+{
+	input::Layer layer;
+	layer.m_Priority = eng::EInputPriority::Debug;
+	layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strModifier);
+	layer.m_Bindings.Emplace(input::EKeyboard::Control_R, strModifier);
+	layer.m_Bindings.Emplace(input::EKeyboard::O, strOpen);
+	layer.m_Bindings.Emplace(input::EKeyboard::R, strReload);
+	layer.m_Bindings.Emplace(input::EKeyboard::S, strSave);
+
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.AppendLayer(strInputGuid, layer);
+}
+
+void dbg::MenuBarSystem::Shutdown(World& world, const GameTime& gameTime)
+{
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.RemoveLayer(strInputGuid);
+}
 
 void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -103,14 +134,13 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::EndMainMenuBar();
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 	{
-		const auto& input = world.ReadComponent<eng::InputComponent>(entity);
-		if (input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::O))
+		const auto& input = world.ReadResource<eng::InputManager>();
+		if (input.IsHeld(strModifier) && input.IsPressed(strOpen))
 			world.AddEventComponent<dbg::level::OpenRequestComponent>();
-		if (input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::R))
+		if (input.IsHeld(strModifier) && input.IsPressed(strReload))
 			world.AddEventComponent<dbg::level::ReloadRequestComponent>();
-		if (input.IsKeyHeld(input::EKeyboard::Control_L) && input.IsKeyPressed(input::EKeyboard::S))
+		if (input.IsHeld(strModifier) && input.IsPressed(strSave))
 			world.AddEventComponent<dbg::level::SaveRequestComponent>();
 	}
 }

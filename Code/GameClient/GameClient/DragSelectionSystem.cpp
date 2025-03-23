@@ -9,7 +9,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/LinesComponent.h"
-#include "Engine/InputComponent.h"
+#include "Engine/InputManager.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -20,6 +20,28 @@
 
 #include <PhysX/PxRigidActor.h>
 #include <PhysX/PxScene.h>
+
+namespace
+{
+	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strSelect = str::Name::Create("DragSelection_Select");
+}
+
+void drag::SelectionSystem::Initialise(World& world, const GameTime& gameTime)
+{
+	input::Layer layer;
+	layer.m_Priority = eng::EInputPriority::Gameplay;
+	layer.m_Bindings.Emplace(input::EMouse::Left, strSelect);
+
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.AppendLayer(strInputGuid, layer);
+}
+
+void drag::SelectionSystem::Shutdown(World& world, const GameTime& gameTime)
+{
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.RemoveLayer(strInputGuid);
+}
 
 void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -44,14 +66,13 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 		const Vector3f cameraForward = Vector3f::AxisZ * cameraRotate;
 
 		const Matrix4x4 cameraView = cameraTransform.ToTransform();
-		for (const ecs::Entity& inputEntity : world.Query<ecs::query::Include<const eng::InputComponent>>())
 		{
-			const auto& inputComponent = world.ReadComponent<eng::InputComponent>(inputEntity);
+			const auto& input = world.ReadResource<eng::InputManager>();
 
 			// mouse
 			constexpr float distance = 100000.f;
 			const Vector3f mousePosition = eng::camera::ScreenToWorld(
-				inputComponent.m_MousePosition, 
+				input.m_MousePosition,
 				cameraComponent.m_Projection, 
 				cameraView, 
 				resolution);
@@ -83,7 +104,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 					const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(selectedEntity);
 					linesComponent.AddAABB(transformComponent.m_Translate, s_Extents, Colour::Magenta);
 
-					if (inputComponent.IsKeyPressed(input::EMouse::Left))
+					if (input.IsPressed(strSelect))
 					{
 						const ecs::Entity dragEntity = world.CreateEntity();
 						auto& nameComponent = world.AddComponent<ecs::NameComponent>(dragEntity);
@@ -91,7 +112,6 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 
 						auto& dragComponent = world.AddComponent<drag::SelectionComponent>(dragEntity);
 						dragComponent.m_CameraEntity = cameraEntity;
-						dragComponent.m_InputEntity = inputEntity;
 						dragComponent.m_SelectedEntity = selectedEntity;
 						dragComponent.m_TranslatePlane = Plane3f(-cameraForward, hitPosition);
 						dragComponent.m_TranslateOffset = transformComponent.m_Translate - hitPosition;
@@ -103,10 +123,8 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& dragEntity : world.Query<ecs::query::Include<const drag::SelectionComponent>>())
 	{
-		const auto& dragComponent = world.ReadComponent<drag::SelectionComponent>(dragEntity);
-		const auto& inputComponent = world.ReadComponent<eng::InputComponent>(dragComponent.m_InputEntity);
-
-		if (!inputComponent.IsKeyHeld(input::EMouse::Left))
+		const auto& input = world.ReadResource<eng::InputManager>();
+		if (!input.IsHeld(strSelect))
 			world.DestroyEntity(dragEntity);
 	}
 }

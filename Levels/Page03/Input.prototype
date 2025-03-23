@@ -2,4 +2,4 @@ m_Guid = "eaa14909b3e7427f91e514cff7785222"
 m_Name = "GUI Bindings"
 
 ['gui::input::BindingsComponent']
-m_Bindings = [ { m_Command = "ToggleGameMenu", m_Input = { EKeyboard = "Escape" } } ]
+m_Bindings = [ { m_Command = "GameMenu" } } ]
