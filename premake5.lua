@@ -80,6 +80,7 @@ workspace "ZEngine"
 	include "Code/GameShared/premake5.lua"
 	include "Code/GameUI/premake5.lua"
 	include "Code/Imgui/premake5.lua"
+	include "Code/Input/premake5.lua"
 	include "Code/Math/premake5.lua"
 	include "Code/Network/premake5.lua"
 
