@@ -1,9 +1,10 @@
 #pragma once
 
 #ifdef Z_GLFW
-#include "Core/Input.h"
 #include "Core/Set.h"
 #include "Engine/Window.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 #include "Math/Vector.h"
 
 struct GLFWwindow;

@@ -22,7 +22,9 @@ namespace game
 		void Initialise() override;
 		void Shutdown() override;
 
+		void PreUpdate(const GameTime& gameTime) override;
 		void Update(const GameTime& gameTime) override;
+		void PostUpdate(const GameTime& gameTime) override;
 
 		bool ShouldClose() override;
 

@@ -5,7 +5,6 @@
 namespace eng
 {
 	class WindowManager;
-	struct InputComponent;
 	struct TransformComponent;
 }
 
@@ -23,8 +22,7 @@ namespace eng::camera
 			// Components
 			eng::TransformComponent,
 			const eng::camera::Bound2DComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::InputComponent>;
+			const eng::camera::ProjectionComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

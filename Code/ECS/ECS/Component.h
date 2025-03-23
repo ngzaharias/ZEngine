@@ -1,6 +1,6 @@
 #pragma once
 
-using int32 = int32_t;
+#include "Core/Types.h"
 
 namespace ecs
 {

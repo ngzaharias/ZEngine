@@ -2,7 +2,8 @@
 #include "Engine/GLFW/Window.h"
 
 #ifdef Z_GLFW
-#include "Core/Input.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>

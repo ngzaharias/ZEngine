@@ -79,6 +79,13 @@ void game::Application::Shutdown()
 	eng::Application::Shutdown();
 }
 
+void game::Application::PreUpdate(const GameTime& gameTime)
+{
+	eng::Application::PreUpdate(gameTime);
+
+	m_GameClient.PreUpdate(gameTime);
+}
+
 void game::Application::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
@@ -92,6 +99,13 @@ void game::Application::Update(const GameTime& gameTime)
 	m_GameServer.Update(gameTime);
 	m_GameUI.Update(gameTime);
 	m_GameDebug.Update(gameTime);
+}
+
+void game::Application::PostUpdate(const GameTime& gameTime)
+{
+	eng::Application::PostUpdate(gameTime);
+
+	m_GameClient.PostUpdate(gameTime);
 }
 
 bool game::Application::ShouldClose()

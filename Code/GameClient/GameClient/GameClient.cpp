@@ -1,6 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/GameClient.h"
 
+#include "ECS/WorldView.h"
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
 #include "Engine/NetworkManager.h"
@@ -49,6 +50,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
 		m_EntityWorld.RegisterResource(dependencies.m_WindowManager);
 		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
+		m_EntityWorld.RegisterResource(m_InputManager);
 		m_EntityWorld.RegisterResource(m_ReplicationPeer);
 
 		// tables
@@ -80,11 +82,21 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 void clt::GameClient::Initialise()
 {
 	m_EntityWorld.Initialise();
+	m_InputManager.Initialise();
 }
 
 void clt::GameClient::Shutdown()
 {
+	m_InputManager.Shutdown();
 	m_EntityWorld.Shutdown();
+}
+
+void clt::GameClient::PreUpdate(const GameTime& gameTime)
+{
+	PROFILE_FUNCTION();
+
+	auto inputWorld = m_EntityWorld.GetWorldView<eng::InputManager::World>();
+	m_InputManager.Update(inputWorld);
 }
 
 void clt::GameClient::Update(const GameTime& gameTime)
@@ -92,4 +104,9 @@ void clt::GameClient::Update(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	m_EntityWorld.Update(gameTime);
+}
+
+void clt::GameClient::PostUpdate(const GameTime& gameTime)
+{
+	PROFILE_FUNCTION();
 }

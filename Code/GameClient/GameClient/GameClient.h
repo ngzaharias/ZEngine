@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/EntityWorld.h"
+#include "Engine/InputManager.h"
 #include "Engine/ReplicationPeer.h"
 
 class GameTime;
@@ -45,10 +46,13 @@ namespace clt
 		void Initialise();
 		void Shutdown();
 
+		void PreUpdate(const GameTime& gameTime);
 		void Update(const GameTime& gameTime);
+		void PostUpdate(const GameTime& gameTime);
 
 	public:
 		ecs::EntityWorld m_EntityWorld;
+		eng::InputManager m_InputManager;
 		net::ReplicationPeer m_ReplicationPeer;
 	};
 }

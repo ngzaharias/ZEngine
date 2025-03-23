@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Core/Input.h"
 #include "Core/Set.h"
 #include "Core/StringView.h"
 #include "Engine/WindowConfig.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 #include "Math/Vector.h"
 
 class GameTime;
