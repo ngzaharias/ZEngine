@@ -6,6 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/ApplicationComponents.h"
+#include "Engine/InputManager.h"
 #include "Engine/LevelComponents.h"
 #include "Engine/SettingsComponents.h"
 #include "GameUI/GameMenuComponents.h"
@@ -19,6 +20,9 @@ namespace
 {
 	constexpr Vector2f s_DefaultSize = Vector2f(200.f, -1.f);
 	constexpr Vector2f s_OffsetPos = Vector2f(0.f, -100.f);
+
+	const str::Guid s_InputGuid = str::Guid::Generate();
+	const str::Name s_InputClose = NAME("GameMenu_Close");
 }
 
 void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
@@ -33,6 +37,21 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<gui::game_menu::WindowComponent>(windowEntity);
 
 		ImGui::OpenPopup("Game Menu");
+
+		{
+			auto& input = world.WriteResource<eng::InputManager>();
+
+			input::Layer layer;
+			layer.m_Priority = 100;
+			layer.m_Bindings.Emplace(input::EKeyboard::Escape, s_InputClose);
+			input.AppendLayer(s_InputGuid, layer);
+		}
+	}
+
+	if (world.HasAny<ecs::query::Removed<gui::game_menu::WindowComponent>>())
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(s_InputGuid);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::game_menu::WindowComponent>>())
@@ -85,7 +104,8 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 			ImGui::EndPopup();
 		}
 
-		if (!isWindowOpen)
+		const auto& input = world.ReadResource<eng::InputManager>();
+		if (!isWindowOpen || input.IsKeyPressed(s_InputClose))
 			world.DestroyEntity(entity);
 	}
 }

@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Core/Array.h"
-#include "Core/Input.h"
 #include "Core/Variant.h"
 #include "Core/String.h"
 #include "ECS/Component.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 
 namespace gui::input
 {

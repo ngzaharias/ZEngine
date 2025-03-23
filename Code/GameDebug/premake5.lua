@@ -32,6 +32,7 @@ project "GameDebug"
 		"%{wks.location}/../Code/GameShared/",
 		"%{wks.location}/../Code/GameUI/",
 		"%{wks.location}/../Code/Imgui/",
+		"%{wks.location}/../Code/Input/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
 		"%{wks.location}/../Code/Modules/Hexmap/",

@@ -51,13 +51,16 @@ project "Imgui"
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",
 		"%{wks.location}/../Code/Core/",
+		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Imgui/",
+		"%{wks.location}/../Code/Input/",
 		"%{wks.location}/../Code/Math/",
 	}
 
 	links 
 	{ 
 		"Core", 
+		"ECS",
 		"Math",
 	}
 

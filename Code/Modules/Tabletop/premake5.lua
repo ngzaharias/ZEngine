@@ -22,6 +22,7 @@ project "Tabletop"
 		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
 		"%{wks.location}/../Code/Imgui/",
+		"%{wks.location}/../Code/Input/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Modules/Tabletop/",
 	}

@@ -9,6 +9,11 @@ namespace ecs
 	struct NameComponent;
 }
 
+namespace eng
+{
+	class InputManager;
+}
+
 namespace eng::application
 {
 	struct CloseRequestComponent;
@@ -41,6 +46,9 @@ namespace gui::game_menu
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			eng::InputManager,
+			// Components
 			ecs::NameComponent,
 			eng::application::CloseRequestComponent,
 			eng::level::LoadRequestComponent,

@@ -25,6 +25,7 @@ project "GameClient_ut"
 		"%{wks.location}/../Code/ECS/",
 		"%{wks.location}/../Code/Engine/",
 		"%{wks.location}/../Code/GameClient/",
+		"%{wks.location}/../Code/Input/",
 		"%{wks.location}/../Code/Math/",
 	}
 

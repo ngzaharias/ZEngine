@@ -24,6 +24,7 @@ project "GameServer"
 		"%{wks.location}/../Code/Engine/",
 		"%{wks.location}/../Code/GameServer/",
 		"%{wks.location}/../Code/GameShared/",
+		"%{wks.location}/../Code/Input/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Network/",
 	}

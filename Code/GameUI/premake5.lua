@@ -24,6 +24,7 @@ project "GameUI"
 		"%{wks.location}/../Code/GameClient/",
 		"%{wks.location}/../Code/GameUI/",
 		"%{wks.location}/../Code/Imgui/",
+		"%{wks.location}/../Code/Input/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Modules/Hidden/",
 	}

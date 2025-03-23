@@ -24,6 +24,7 @@ project "Engine_ut"
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../Code/Core/",
+		"%{wks.location}/../Code/Input/",
 		"%{wks.location}/../Code/Math/",
 		"%{wks.location}/../Code/Engine/",
 	}
