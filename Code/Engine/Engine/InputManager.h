@@ -1,12 +1,11 @@
 #pragma once
 
 #include "Core/Array.h"
-#include "Core/Guid.h"
 #include "Core/Map.h"
+#include "Core/Name.h"
 #include "Core/Set.h"
-#include "Input/Keyboard.h"
+#include "Input/Key.h"
 #include "Input/Layer.h"
-#include "Input/Mouse.h"
 #include "Input/Value.h"
 #include "Math/Vector.h"
 
@@ -28,17 +27,11 @@ namespace eng
 		Gameplay = 0,
 		Debug = 100,
 		GameUI = 200,
-		Editor = 300,
+		Editor = 1000,
 	};
 
 	class InputManager final
 	{
-		struct Cache
-		{
-			Set<input::EKeyboard> m_Keyboard;
-			Set<input::EMouse>    m_Mouse;
-		};
-
 	public:
 		using World = ecs::WorldView<
 			const eng::WindowManager>;
@@ -48,9 +41,9 @@ namespace eng
 
 		void Update(World& world);
 
-		void AppendLayer(const str::Guid& guid, const input::Layer& layer);
-		auto ModifyLayer(const str::Guid& guid)->input::Layer&;
-		void RemoveLayer(const str::Guid& guid);
+		void AppendLayer(const str::Name& name, const input::Layer& layer);
+		auto ModifyLayer(const str::Name& name)->input::Layer&;
+		void RemoveLayer(const str::Name& name);
 
 		auto GetValue(const str::Name& name) const->const input::Value&;
 		bool IsHeld(const str::Name& name) const;
@@ -62,12 +55,12 @@ namespace eng
 		Vector2f m_ScrollDelta = Vector2f::Zero;
 
 	private:
-		Cache m_CacheCurr = {};
-		Cache m_CachePrev = {};
+		Set<input::EKey> m_Current;
+		Set<input::EKey> m_Previous;
 
 		bool m_AreLayersDirty = false;
-		Array<str::Guid> m_LayerOrder = {};
-		Map<str::Guid, input::Layer> m_LayerMap = {};
+		Array<str::Name> m_LayerOrder = {};
+		Map<str::Name, input::Layer> m_LayerMap = {};
 		Map<str::Name, input::Value> m_ValueMap = {};
 	};
 }

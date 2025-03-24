@@ -18,7 +18,7 @@
 
 namespace
 {
-	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strInput = str::Name::Create("CameraMove2D");
 	const str::Name strMoveDown = str::Name::Create("CameraMove2D_MoveDown");
 	const str::Name strMoveLeft = str::Name::Create("CameraMove2D_MoveLeft");
 	const str::Name strMoveRight = str::Name::Create("CameraMove2D_MoveRight");
@@ -36,23 +36,23 @@ void eng::camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
-		layer.m_Bindings.Emplace(input::EKeyboard::W, strMoveUp);
-		layer.m_Bindings.Emplace(input::EKeyboard::A, strMoveLeft);
-		layer.m_Bindings.Emplace(input::EKeyboard::S, strMoveDown);
-		layer.m_Bindings.Emplace(input::EKeyboard::D, strMoveRight);
-		layer.m_Bindings.Emplace(input::EKeyboard::Shift_L, strSpeedUpA);
-		layer.m_Bindings.Emplace(input::EKeyboard::Shift_R, strSpeedUpA);
-		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strSpeedUpB);
-		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strSpeedUpB);
+		layer.m_Bindings.Emplace(strMoveUp,    input::EKey::W);
+		layer.m_Bindings.Emplace(strMoveLeft,  input::EKey::A);
+		layer.m_Bindings.Emplace(strMoveDown,  input::EKey::S);
+		layer.m_Bindings.Emplace(strMoveRight, input::EKey::D);
+		layer.m_Bindings.Emplace(strSpeedUpA,  input::EKey::Shift_L);
+		layer.m_Bindings.Emplace(strSpeedUpA,  input::EKey::Shift_R);
+		layer.m_Bindings.Emplace(strSpeedUpB,  input::EKey::Control_L);
+		layer.m_Bindings.Emplace(strSpeedUpB,  input::EKey::Control_L);
 
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.AppendLayer(strInputGuid, layer);
+		input.AppendLayer(strInput, layer);
 	}
 
 	if (count == 0 && world.HasAny<ecs::query::Removed<eng::camera::Move2DComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInputGuid);
+		input.RemoveLayer(strInput);
 	}
 
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Move2DComponent, const eng::camera::ProjectionComponent>;

@@ -20,7 +20,7 @@
 
 namespace
 {
-	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strInput = str::Name::Create("CameraPanning");
 	const str::Name strSelect = str::Name::Create("CameraPanning_Select");
 }
 
@@ -33,16 +33,16 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
-		layer.m_Bindings.Emplace(input::EMouse::Left, strSelect);
+		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, false);
 
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.AppendLayer(strInputGuid, layer);
+		input.AppendLayer(strInput, layer);
 	}
 
 	if (count == 0 && world.HasAny<ecs::query::Removed<eng::camera::Pan3DComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInputGuid);
+		input.RemoveLayer(strInput);
 	}
 
 	const auto& windowManager = world.ReadResource<const eng::WindowManager>();

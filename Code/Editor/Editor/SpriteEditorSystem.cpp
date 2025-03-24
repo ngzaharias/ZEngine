@@ -26,8 +26,7 @@ namespace
 	const str::Guid uuidShader = GUID("cbbb7d3ff44b45fdb9e5a207d92262fb");
 	const str::Guid uuidStaticMesh = GUID("e94876a8e4cc4d1684c85859b48a1af6");
 	const str::Guid uuidTexture2D = GUID("c6bb231ce97f104e860eb55e71988bdb");
-	const str::Guid strInputGuid = str::Guid::Generate();
-	const str::Name strModifier = str::Name::Create("SpriteEditor_Modifier");
+	const str::Name strInput = str::Name::Create("SpriteEditor");
 	const str::Name strNew = str::Name::Create("SpriteEditor_New");
 	const str::Name strOpen = str::Name::Create("SpriteEditor_Open");
 	const str::Name strSave = str::Name::Create("SpriteEditor_Save");
@@ -59,7 +58,7 @@ namespace
 	bool HasInput(World& world, const str::Name& name)
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
-		return input.IsHeld(strModifier) && input.IsPressed(name);
+		return input.IsPressed(name);
 	}
 
 	void DrawMenuBar(World& world, const ecs::Entity& entity)
@@ -355,20 +354,21 @@ void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Editor;
-		layer.m_Bindings.Emplace(input::EKeyboard::N, strNew);
-		layer.m_Bindings.Emplace(input::EKeyboard::O, strOpen);
-		layer.m_Bindings.Emplace(input::EKeyboard::S, strSave);
-		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strModifier);
-		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strModifier);
+		layer.m_Bindings.Emplace(strNew,  input::EKey::N, input::EKey::Control_L);
+		layer.m_Bindings.Emplace(strNew,  input::EKey::N, input::EKey::Control_R);
+		layer.m_Bindings.Emplace(strOpen, input::EKey::O, input::EKey::Control_L);
+		layer.m_Bindings.Emplace(strOpen, input::EKey::O, input::EKey::Control_R);
+		layer.m_Bindings.Emplace(strSave, input::EKey::S, input::EKey::Control_L);
+		layer.m_Bindings.Emplace(strSave, input::EKey::S, input::EKey::Control_R);
 
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.AppendLayer(strInputGuid, layer);
+		input.AppendLayer(strInput, layer);
 	}
 
 	if (count == 0 && world.HasAny<ecs::query::Removed<editor::SpriteWindowComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInputGuid);
+		input.RemoveLayer(strInput);
 	}
 
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);

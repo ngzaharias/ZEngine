@@ -22,7 +22,7 @@
 
 namespace
 {
-	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strInput = str::Name::Create("HexmapRoot");
 	const str::Name strSelect = str::Name::Create("HexmapRoot_Select");
 
 	AABB2f GetCameraZone(const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform, const Vector2u& windowSize)
@@ -65,16 +65,16 @@ void hexmap::RootSystem::Initialise(World& world)
 {
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::Gameplay;
-	layer.m_Bindings.Emplace(input::EMouse::Left, strSelect);
+	layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, false);
 
 	auto& input = world.WriteResource<eng::InputManager>();
-	input.AppendLayer(strInputGuid, layer);
+	input.AppendLayer(strInput, layer);
 }
 
 void hexmap::RootSystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
-	input.RemoveLayer(strInputGuid);
+	input.RemoveLayer(strInput);
 }
 
 void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)

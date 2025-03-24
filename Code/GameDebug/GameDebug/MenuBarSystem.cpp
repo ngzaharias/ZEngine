@@ -23,8 +23,7 @@
 
 namespace
 {
-	const str::Guid strInputGuid = str::Guid::Generate();
-	const str::Name strModifier = str::Name::Create("DebugMenuBar_Modifier");
+	const str::Name strInput = str::Name::Create("DebugMenuBar");
 	const str::Name strOpen = str::Name::Create("DebugMenuBar_Open");
 	const str::Name strReload = str::Name::Create("DebugMenuBar_Reload");
 	const str::Name strSave = str::Name::Create("DebugMenuBar_Save");
@@ -34,20 +33,19 @@ void dbg::MenuBarSystem::Initialise(World& world)
 {
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::Debug;
-	layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strModifier);
-	layer.m_Bindings.Emplace(input::EKeyboard::Control_R, strModifier);
-	layer.m_Bindings.Emplace(input::EKeyboard::O, strOpen);
-	layer.m_Bindings.Emplace(input::EKeyboard::R, strReload);
-	layer.m_Bindings.Emplace(input::EKeyboard::S, strSave);
+	layer.m_Bindings.Emplace(strOpen,   input::EKey::O, input::EKey::Control_L);
+	layer.m_Bindings.Emplace(strOpen,   input::EKey::O, input::EKey::Control_R);
+	layer.m_Bindings.Emplace(strReload, input::EKey::R, input::EKey::Control_L);
+	layer.m_Bindings.Emplace(strReload, input::EKey::R, input::EKey::Control_R);
 
 	auto& input = world.WriteResource<eng::InputManager>();
-	input.AppendLayer(strInputGuid, layer);
+	input.AppendLayer(strInput, layer);
 }
 
 void dbg::MenuBarSystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
-	input.RemoveLayer(strInputGuid);
+	input.RemoveLayer(strInput);
 }
 
 void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
@@ -62,10 +60,6 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<dbg::level::OpenRequestComponent>();
 			if (ImGui::MenuItem("Reload Level", "Ctrl+R"))
 				world.AddEventComponent<dbg::level::ReloadRequestComponent>();
-			if (ImGui::MenuItem("Save Level", "Ctrl+S", nullptr, false))
-				world.AddEventComponent<dbg::level::SaveRequestComponent>();
-			if (ImGui::MenuItem("Save Level As...", "Ctrl+S+A", nullptr, false))
-				world.AddEventComponent<dbg::level::SaveAsRequestComponent>();
 			
 			ImGui::Separator();
 
@@ -136,11 +130,11 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
-		if (input.IsHeld(strModifier) && input.IsPressed(strOpen))
+		if (input.IsPressed(strOpen))
 			world.AddEventComponent<dbg::level::OpenRequestComponent>();
-		if (input.IsHeld(strModifier) && input.IsPressed(strReload))
+		if (input.IsPressed(strReload))
 			world.AddEventComponent<dbg::level::ReloadRequestComponent>();
-		if (input.IsHeld(strModifier) && input.IsPressed(strSave))
+		if (input.IsPressed(strSave))
 			world.AddEventComponent<dbg::level::SaveRequestComponent>();
 	}
 }

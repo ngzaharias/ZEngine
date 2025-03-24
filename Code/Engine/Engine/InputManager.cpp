@@ -14,7 +14,7 @@
 namespace
 {
 	constexpr input::Value s_Empty = {};
-	const str::Guid s_ImGui = str::Guid::Generate();
+	const str::Name s_ImGui = str::Name::Create("ImGui");
 }
 
 void eng::InputManager::Initialise()
@@ -23,7 +23,7 @@ void eng::InputManager::Initialise()
 
 	// #todo: move to a system
 	{
-		AppendLayer(s_ImGui, input::Layer{});
+		AppendLayer(s_ImGui, input::Layer{ eng::EInputPriority::Debug });
 	}
 }
 
@@ -62,7 +62,7 @@ void eng::InputManager::Update(World& world)
 
 		// sort them so highest priority is first
 		std::sort(m_LayerOrder.begin(), m_LayerOrder.end(),
-			[&](const str::Guid& lhs, const str::Guid& rhs)
+			[&](const str::Name& lhs, const str::Name& rhs)
 			{
 				const input::Layer& a = m_LayerMap[lhs];
 				const input::Layer& b = m_LayerMap[rhs];
@@ -73,112 +73,83 @@ void eng::InputManager::Update(World& world)
 	const auto& manager = world.ReadResource<eng::WindowManager>();
 	if (const eng::Window* window = manager.GetWindow(0))
 	{
-		std::swap(m_CachePrev.m_Keyboard, m_CacheCurr.m_Keyboard);
-		std::swap(m_CacheCurr.m_Mouse,    m_CacheCurr.m_Mouse);
-		m_CacheCurr.m_Keyboard.RemoveAll();
-		m_CacheCurr.m_Mouse.RemoveAll();
+		std::swap(m_Previous, m_Current);
+		m_Current.RemoveAll();
 		m_ValueMap.RemoveAll();
 
-		Vector2f mouseDelta, mousePos, scrollDelta;
-		window->GatherKeyboard(m_CacheCurr.m_Keyboard);
-		window->GatherMouse(m_CacheCurr.m_Mouse, mouseDelta, mousePos);
-		window->GatherScroll(scrollDelta);
+		window->GatherGamepad(m_Current);
+		window->GatherKeyboard(m_Current);
+		window->GatherMouse(m_Current, m_MouseDelta, m_MousePosition);
+		window->GatherScroll(m_ScrollDelta);
 
-		Set<input::EKeyboard> pressedK, releasedK;
-		Set<input::EMouse> pressedM, releasedM;
-		enumerate::Difference(m_CacheCurr.m_Keyboard, m_CachePrev.m_Keyboard, pressedK);
-		enumerate::Difference(m_CachePrev.m_Keyboard, m_CacheCurr.m_Keyboard, releasedK);
+		Set<input::EKey> held = m_Current;
+		Set<input::EKey> pressed, released;
+		enumerate::Difference(m_Current, m_Previous, pressed);
+		enumerate::Difference(m_Previous, m_Current, released);
 
-		Set<input::EKeyboard> heldK = m_CacheCurr.m_Keyboard;
-		Set<input::EMouse> heldM = m_CacheCurr.m_Mouse;
-		for (const str::Guid& guid : m_LayerOrder)
+		for (const str::Name& name : m_LayerOrder)
 		{
-			const input::Layer& layer = m_LayerMap[guid];
+			const input::Layer& layer = m_LayerMap[name];
 			for (const input::Binding& binding : layer.m_Bindings)
 			{
-				if (std::holds_alternative<input::EKeyboard>(binding.m_Key))
+				bool modifier = binding.m_Modifier == input::EKey::None;
+				if (held.Contains(binding.m_Modifier))
+					modifier = true;
+
+				if (held.Contains(binding.m_Primary))
 				{
-					const auto key = std::get<input::EKeyboard>(binding.m_Key);
-					if (heldK.Contains(key))
-					{
-						m_ValueMap[binding.m_Name].m_Value = 1.f;
-						if (binding.m_Consume)
-							heldK.Remove(key);
-					}
-
-					if (pressedK.Contains(key))
-					{
-						m_ValueMap[binding.m_Name].m_Pressed = true;
-						if (binding.m_Consume)
-							pressedK.Remove(key);
-					}
-
-					if (releasedK.Contains(key))
-					{
-						m_ValueMap[binding.m_Name].m_Released = true;
-						if (binding.m_Consume)
-							releasedK.Remove(key);
-					}
+					m_ValueMap[binding.m_Name].m_Value = 1.f;
+					if (modifier && binding.m_Consume)
+						held.Remove(binding.m_Primary);
 				}
 
-				if (std::holds_alternative<input::EMouse>(binding.m_Key))
+				if (pressed.Contains(binding.m_Primary))
 				{
-					const auto key = std::get<input::EMouse>(binding.m_Key);
-					if (heldM.Contains(key))
-					{
-						m_ValueMap[binding.m_Name].m_Value = 1.f;
-						if (binding.m_Consume)
-							heldM.Remove(key);
-					}
+					m_ValueMap[binding.m_Name].m_Pressed = true;
+					if (modifier && binding.m_Consume)
+						pressed.Remove(binding.m_Primary);
+				}
 
-					if (pressedM.Contains(key))
-					{
-						m_ValueMap[binding.m_Name].m_Pressed = true;
-						if (binding.m_Consume)
-							pressedM.Remove(key);
-					}
-
-					if (releasedM.Contains(key))
-					{
-						m_ValueMap[binding.m_Name].m_Released = true;
-						if (binding.m_Consume)
-							releasedM.Remove(key);
-					}
+				if (released.Contains(binding.m_Primary))
+				{
+					m_ValueMap[binding.m_Name].m_Released = true;
+					if (modifier && binding.m_Consume)
+						released.Remove(binding.m_Primary);
 				}
 			}
 
 			if (layer.m_Consume.Has(input::EConsume::Keyboard))
 			{
-				heldK.RemoveAll();
-				pressedK.RemoveAll();
-				releasedK.RemoveAll();
+				held.RemoveAll();
+				pressed.RemoveAll();
+				released.RemoveAll();
 			}
 
 			if (layer.m_Consume.Has(input::EConsume::Mouse))
 			{
-				heldM.RemoveAll();
-				pressedM.RemoveAll();
-				releasedM.RemoveAll();
+				held.RemoveAll();
+				pressed.RemoveAll();
+				released.RemoveAll();
 			}
 		}
 	}
 }
 
-void eng::InputManager::AppendLayer(const str::Guid& guid, const input::Layer& layer)
+void eng::InputManager::AppendLayer(const str::Name& name, const input::Layer& layer)
 {
 	m_AreLayersDirty = true;
-	m_LayerMap[guid] = layer;
+	m_LayerMap[name] = layer;
 }
 
-auto eng::InputManager::ModifyLayer(const str::Guid& guid)->input::Layer&
+auto eng::InputManager::ModifyLayer(const str::Name& name)->input::Layer&
 {
-	return m_LayerMap.Get(guid);
+	return m_LayerMap.Get(name);
 }
 
-void eng::InputManager::RemoveLayer(const str::Guid& guid)
+void eng::InputManager::RemoveLayer(const str::Name& name)
 {
 	m_AreLayersDirty = true;
-	m_LayerMap.Remove(guid);
+	m_LayerMap.Remove(name);
 }
 
 auto eng::InputManager::GetValue(const str::Name& name) const->const input::Value&

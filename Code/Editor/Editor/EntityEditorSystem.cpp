@@ -29,8 +29,7 @@
 
 namespace
 {
-	const str::Guid strInputGuid = str::Guid::Generate();
-	const str::Name strModifier = str::Name::Create("EntityEditor_Modifier");
+	const str::Name strInput = str::Name::Create("EntityEditor");
 	const str::Name strSave = str::Name::Create("EntityEditor_Save");
 }
 
@@ -68,7 +67,7 @@ namespace
 	bool HasInput(World& world, const str::Name& name)
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
-		return input.IsHeld(strModifier) && input.IsPressed(name);
+		return input.IsPressed(name);
 	}
 
 	template<typename Component>
@@ -124,18 +123,17 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Editor;
-		layer.m_Bindings.Emplace(input::EKeyboard::S, strSave);
-		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strModifier);
-		layer.m_Bindings.Emplace(input::EKeyboard::Control_R, strModifier);
+		layer.m_Bindings.Emplace(strSave, input::EKey::S, input::EKey::Control_L);
+		layer.m_Bindings.Emplace(strSave, input::EKey::S, input::EKey::Control_R);
 
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.AppendLayer(strInputGuid, layer);
+		input.AppendLayer(strInput, layer);
 	}
 
 	if (count == 0 && world.HasAny<ecs::query::Removed<editor::EntityWindowComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInputGuid);
+		input.RemoveLayer(strInput);
 	}
 
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =

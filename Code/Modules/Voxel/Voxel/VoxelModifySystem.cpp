@@ -22,7 +22,7 @@
 
 namespace
 {
-	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strInput = str::Name::Create("VoxelModify");
 	const str::Name strRadius0 = str::Name::Create("VoxelModify_Radius0");
 	const str::Name strRadius1 = str::Name::Create("VoxelModify_Radius1");
 	const str::Name strRadius2 = str::Name::Create("VoxelModify_Radius2");
@@ -97,30 +97,30 @@ void voxel::ModifySystem::Initialise(World& world)
 {
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::Gameplay;
-	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_0, strRadius0);
-	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_1, strRadius1);
-	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_2, strRadius2);
-	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_3, strRadius3);
-	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_4, strRadius4);
-	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_5, strRadius5);
-	layer.m_Bindings.Emplace(input::EKeyboard::Numpad_6, strRadius6);
-	layer.m_Bindings.Emplace(input::EMouse::Left, strSelect);
-	layer.m_Bindings.Emplace(input::EKeyboard::Num_0, strVoxel0);
-	layer.m_Bindings.Emplace(input::EKeyboard::Num_1, strVoxel1);
-	layer.m_Bindings.Emplace(input::EKeyboard::Num_2, strVoxel2);
-	layer.m_Bindings.Emplace(input::EKeyboard::Num_3, strVoxel3);
-	layer.m_Bindings.Emplace(input::EKeyboard::Num_4, strVoxel4);
-	layer.m_Bindings.Emplace(input::EKeyboard::Num_5, strVoxel5);
-	layer.m_Bindings.Emplace(input::EKeyboard::Num_6, strVoxel6);
+	layer.m_Bindings.Emplace(strRadius0, input::EKey::Numpad_0);
+	layer.m_Bindings.Emplace(strRadius1, input::EKey::Numpad_1);
+	layer.m_Bindings.Emplace(strRadius2, input::EKey::Numpad_2);
+	layer.m_Bindings.Emplace(strRadius3, input::EKey::Numpad_3);
+	layer.m_Bindings.Emplace(strRadius4, input::EKey::Numpad_4);
+	layer.m_Bindings.Emplace(strRadius5, input::EKey::Numpad_5);
+	layer.m_Bindings.Emplace(strRadius6, input::EKey::Numpad_6);
+	layer.m_Bindings.Emplace(strSelect,  input::EKey::Mouse_Left, false);
+	layer.m_Bindings.Emplace(strVoxel0,  input::EKey::Num_0);
+	layer.m_Bindings.Emplace(strVoxel1,  input::EKey::Num_1);
+	layer.m_Bindings.Emplace(strVoxel2,  input::EKey::Num_2);
+	layer.m_Bindings.Emplace(strVoxel3,  input::EKey::Num_3);
+	layer.m_Bindings.Emplace(strVoxel4,  input::EKey::Num_4);
+	layer.m_Bindings.Emplace(strVoxel5,  input::EKey::Num_5);
+	layer.m_Bindings.Emplace(strVoxel6,  input::EKey::Num_6);
 
 	auto& input = world.WriteResource<eng::InputManager>();
-	input.AppendLayer(strInputGuid, layer);
+	input.AppendLayer(strInput, layer);
 }
 
 void voxel::ModifySystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
-	input.RemoveLayer(strInputGuid);
+	input.RemoveLayer(strInput);
 }
 
 void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)

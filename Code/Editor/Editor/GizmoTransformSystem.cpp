@@ -20,7 +20,7 @@
 
 namespace
 {
-	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strInput = str::Name::Create("GizmoTransform");
 	const str::Name strPhysics = str::Name::Create("GizmoTransform_Physics");
 	const str::Name strRotate = str::Name::Create("GizmoTransform_Rotate");
 	const str::Name strScale = str::Name::Create("GizmoTransform_Scale");
@@ -64,24 +64,25 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
-	if (false)
+	const int32 count = world.Query<ecs::query::Include<editor::EntityWindowComponent>>().GetCount();
+	if (count == 1 && world.HasAny<ecs::query::Added<editor::EntityWindowComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Editor;
-		layer.m_Bindings.Emplace(input::EKeyboard::F1, strTransform);
-		layer.m_Bindings.Emplace(input::EKeyboard::F2, strPhysics);
-		layer.m_Bindings.Emplace(input::EKeyboard::Num_1, strTranslate);
-		layer.m_Bindings.Emplace(input::EKeyboard::Num_2, strRotate);
-		layer.m_Bindings.Emplace(input::EKeyboard::Num_3, strScale);
+		layer.m_Bindings.Emplace(strTransform, input::EKey::F1);
+		layer.m_Bindings.Emplace(strPhysics,   input::EKey::F2);
+		layer.m_Bindings.Emplace(strTranslate, input::EKey::Num_1);
+		layer.m_Bindings.Emplace(strRotate,    input::EKey::Num_2);
+		layer.m_Bindings.Emplace(strScale,     input::EKey::Num_3);
 
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.AppendLayer(strInputGuid, layer);
+		input.AppendLayer(strInput, layer);
 	}
 
-	if (false)
+	if (count == 0 && world.HasAny<ecs::query::Removed<editor::EntityWindowComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInputGuid);
+		input.RemoveLayer(strInput);
 	}
 
 	const auto& localSettings = world.ReadSingleton<editor::settings::LocalComponent>();

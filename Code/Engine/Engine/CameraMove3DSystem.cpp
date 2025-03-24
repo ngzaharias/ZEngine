@@ -18,7 +18,7 @@
 
 namespace
 {
-	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strInput = str::Name::Create("CameraMove3D");
 	const str::Name strMoveBackward = str::Name::Create("CameraMove3D_MoveBackward");
 	const str::Name strMoveDown = str::Name::Create("CameraMove3D_MoveDown");
 	const str::Name strMoveForward = str::Name::Create("CameraMove3D_MoveForward");
@@ -39,26 +39,26 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
-		layer.m_Bindings.Emplace(input::EKeyboard::A, strMoveLeft);
-		layer.m_Bindings.Emplace(input::EKeyboard::D, strMoveRight);
-		layer.m_Bindings.Emplace(input::EKeyboard::Q, strMoveDown);
-		layer.m_Bindings.Emplace(input::EKeyboard::E, strMoveRight);
-		layer.m_Bindings.Emplace(input::EKeyboard::W, strMoveForward);
-		layer.m_Bindings.Emplace(input::EKeyboard::S, strMoveBackward);
-		layer.m_Bindings.Emplace(input::EMouse::Right, strRotate);
-		layer.m_Bindings.Emplace(input::EKeyboard::Shift_L, strSpeedUpA);
-		layer.m_Bindings.Emplace(input::EKeyboard::Shift_R, strSpeedUpA);
-		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strSpeedUpB);
-		layer.m_Bindings.Emplace(input::EKeyboard::Control_L, strSpeedUpB);
+		layer.m_Bindings.Emplace(strMoveLeft,     input::EKey::A);
+		layer.m_Bindings.Emplace(strMoveRight,    input::EKey::D);
+		layer.m_Bindings.Emplace(strMoveDown,     input::EKey::Q);
+		layer.m_Bindings.Emplace(strMoveRight,    input::EKey::E);
+		layer.m_Bindings.Emplace(strMoveForward,  input::EKey::W);
+		layer.m_Bindings.Emplace(strMoveBackward, input::EKey::S);
+		layer.m_Bindings.Emplace(strRotate,       input::EKey::Mouse_Right);
+		layer.m_Bindings.Emplace(strSpeedUpA,     input::EKey::Shift_L);
+		layer.m_Bindings.Emplace(strSpeedUpA,     input::EKey::Shift_R);
+		layer.m_Bindings.Emplace(strSpeedUpB,     input::EKey::Control_L);
+		layer.m_Bindings.Emplace(strSpeedUpB,     input::EKey::Control_L);
 
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.AppendLayer(strInputGuid, layer);
+		input.AppendLayer(strInput, layer);
 	}
 
 	if (count == 0 && world.HasAny<ecs::query::Removed<eng::camera::Move3DComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInputGuid);
+		input.RemoveLayer(strInput);
 	}
 
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Move3DComponent, const eng::camera::ProjectionComponent>;
@@ -73,23 +73,17 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 			const auto& input = world.ReadResource<eng::InputManager>();
 
 			Vector3f direction = Vector3f::Zero;
-			if (input.IsPressed(strMoveLeft))
-				direction.x -= 1.f;
-			if (input.IsPressed(strMoveRight))
-				direction.x += 1.f;
-			if (input.IsPressed(strMoveDown))
-				direction.y -= 1.f;
-			if (input.IsPressed(strMoveUp))
-				direction.y += 1.f;
-			if (input.IsPressed(strMoveForward))
-				direction.z += 1.f;
-			if (input.IsPressed(strMoveBackward))
-				direction.z -= 1.f;
+			direction.x += input.GetValue(strMoveRight);
+			direction.x -= input.GetValue(strMoveLeft);
+			direction.y += input.GetValue(strMoveUp);
+			direction.y -= input.GetValue(strMoveDown);
+			direction.z += input.GetValue(strMoveForward);
+			direction.z -= input.GetValue(strMoveBackward);
 
 			float speed = cameraSettings.m_TranslateSpeed * gameTime.m_DeltaTime;
-			if (input.IsPressed(strSpeedUpA))
+			if (input.IsHeld(strSpeedUpA))
 				speed *= 3.f;
-			if (input.IsPressed(strSpeedUpB))
+			if (input.IsHeld(strSpeedUpB))
 				speed *= 5.f;
 
 			const Quaternion rotation = Quaternion::FromRotator(readTransform.m_Rotate);
@@ -102,7 +96,7 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 				writeTransform.m_Translate = translate;
 			}
 
-			if (input.IsPressed(strRotate))
+			if (input.IsHeld(strRotate))
 			{
 				Rotator rotator = Rotator::Zero;
 				rotator.m_Pitch = -input.m_MouseDelta.y * cameraSettings.m_RotateSpeed.m_Pitch;

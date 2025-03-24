@@ -21,7 +21,7 @@
 
 namespace
 {
-	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strInput = str::Name::Create("HexmapModify");
 	const str::Name strHexmap0 = str::Name::Create("HexmapModify_Hexmap0");
 	const str::Name strHexmap1 = str::Name::Create("HexmapModify_Hexmap1");
 	const str::Name strHexmap2 = str::Name::Create("HexmapModify_Hexmap2");
@@ -51,22 +51,22 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
-		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_0, strHexmap0);
-		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_1, strHexmap1);
-		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_2, strHexmap2);
-		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_3, strHexmap3);
-		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_4, strHexmap4);
-		layer.m_Bindings.Emplace(input::EKeyboard::Numpad_5, strHexmap5);
-		layer.m_Bindings.Emplace(input::EMouse::Left, strSelect);
+		layer.m_Bindings.Emplace(strHexmap0, input::EKey::Numpad_0);
+		layer.m_Bindings.Emplace(strHexmap1, input::EKey::Numpad_1);
+		layer.m_Bindings.Emplace(strHexmap2, input::EKey::Numpad_2);
+		layer.m_Bindings.Emplace(strHexmap3, input::EKey::Numpad_3);
+		layer.m_Bindings.Emplace(strHexmap4, input::EKey::Numpad_4);
+		layer.m_Bindings.Emplace(strHexmap5, input::EKey::Numpad_5);
+		layer.m_Bindings.Emplace(strSelect,  input::EKey::Mouse_Left);
 
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.AppendLayer(strInputGuid, layer);
+		input.AppendLayer(strInput, layer);
 	}
 
 	if (count == 0 && world.HasAny<ecs::query::Removed<hexmap::LayerComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInputGuid);
+		input.RemoveLayer(strInput);
 	}
 
 	const auto& windowManager = world.ReadResource<const eng::WindowManager>();

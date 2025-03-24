@@ -3,8 +3,7 @@
 #include "Core/Set.h"
 #include "Core/StringView.h"
 #include "Engine/WindowConfig.h"
-#include "Input/Keyboard.h"
-#include "Input/Mouse.h"
+#include "Input/Key.h"
 #include "Math/Vector.h"
 
 class GameTime;
@@ -28,8 +27,9 @@ namespace eng
 
 		virtual bool ShouldClose() const { return false; }
 
-		virtual void GatherKeyboard(Set<input::EKeyboard>& out_Keys) const {}
-		virtual void GatherMouse(Set<input::EMouse>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const {}
+		virtual void GatherGamepad(Set<input::EKey>& out_Keys) const {}
+		virtual void GatherKeyboard(Set<input::EKey>& out_Keys) const {}
+		virtual void GatherMouse(Set<input::EKey>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const {}
 		virtual void GatherScroll(Vector2f& out_Delta) const {}
 
 		virtual auto GetMode() const -> eng::EWindowMode { return m_Config.m_Mode; }

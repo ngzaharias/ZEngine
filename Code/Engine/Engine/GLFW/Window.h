@@ -3,8 +3,7 @@
 #ifdef Z_GLFW
 #include "Core/Set.h"
 #include "Engine/Window.h"
-#include "Input/Keyboard.h"
-#include "Input/Mouse.h"
+#include "Input/Key.h"
 #include "Math/Vector.h"
 
 struct GLFWwindow;
@@ -30,8 +29,9 @@ namespace glfw
 
 		bool ShouldClose() const override;
 
-		void GatherKeyboard(Set<input::EKeyboard>& out_Keys) const override;
-		void GatherMouse(Set<input::EMouse>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const override;
+		void GatherGamepad(Set<input::EKey>& out_Keys) const override;
+		void GatherKeyboard(Set<input::EKey>& out_Keys) const override;
+		void GatherMouse(Set<input::EKey>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const override;
 		void GatherScroll(Vector2f& out_Delta) const override;
 
 		void Refresh() override;

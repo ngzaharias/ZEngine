@@ -29,7 +29,7 @@
 namespace
 {
 	const str::Guid strSoundSequence = GUID("2bde153c851a429c88957b6b0fd482fb");
-	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strInput = str::Name::Create("HiddenReveal");
 	const str::Name strSelect = str::Name::Create("HiddenReveal_Select");
 
 	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
@@ -48,16 +48,16 @@ void hidden::RevealSystem::Initialise(World& world)
 {
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::Gameplay;
-	layer.m_Bindings.Emplace(input::EMouse::Left, strSelect);
+	layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, false);
 
 	auto& input = world.WriteResource<eng::InputManager>();
-	input.AppendLayer(strInputGuid, layer);
+	input.AppendLayer(strInput, layer);
 }
 
 void hidden::RevealSystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
-	input.RemoveLayer(strInputGuid);
+	input.RemoveLayer(strInput);
 }
 
 void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)

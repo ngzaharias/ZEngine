@@ -10,13 +10,30 @@
 
 namespace 
 {
-	const str::Guid strInputGuid = str::Guid::Generate();
+	const str::Name strInput = str::Name::Create("GUIBinding");
 	const str::Name strGameMenu = str::Name::Create("GUIBinding_GameMenu");
 }
 
 void gui::input::BindingsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	const int32 count = world.Query<ecs::query::Include<gui::input::BindingsComponent>>().GetCount();
+	if (count == 1 && world.HasAny<ecs::query::Added<gui::input::BindingsComponent>>())
+	{
+		::input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::Gameplay;
+		layer.m_Bindings.Emplace(strGameMenu, ::input::EKey::Escape);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInput, layer);
+	}
+
+	if (count == 0 && world.HasAny<ecs::query::Removed<gui::input::BindingsComponent>>())
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInput);
+	}
 
 	const auto& input = world.ReadResource<eng::InputManager>();
 	for (const ecs::Entity& bindingEntity : world.Query<ecs::query::Include<const gui::input::BindingsComponent>>())
