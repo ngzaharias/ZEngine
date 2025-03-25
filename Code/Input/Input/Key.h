@@ -159,10 +159,10 @@ namespace input
 		Gamepad_Guide,
 		Gamepad_Thumb_L,
 		Gamepad_Thumb_R,
-		Gamepad_DPad_Up,
-		Gamepad_DPad_Right,
-		Gamepad_DPad_Down,
-		Gamepad_DPad_Left,
+		Gamepad_DPad_U,
+		Gamepad_DPad_R,
+		Gamepad_DPad_D,
+		Gamepad_DPad_L,
 
 		// Keys with multiple names
 		Minus = Hyphen,
