@@ -5,6 +5,7 @@
 namespace eng
 {
 	class InputManager;
+	class WindowManager;
 	struct LinesComponent;
 	struct TextComponent;
 	struct TransformComponent;
@@ -27,6 +28,7 @@ namespace voxel
 		using World = ecs::WorldView<
 			// Resources
 			const eng::InputManager,
+			const eng::WindowManager,
 			// Components
 			eng::LinesComponent,
 			eng::TextComponent,

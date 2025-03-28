@@ -13,10 +13,13 @@
 #include "Engine/LinesComponent.h"
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "Voxel/VoxelComponents.h"
 #include "Math/AABB.h"
 #include "Math/Algorithms.h"
 #include "Math/CollisionMath.h"
+#include "Math/Sphere.h"
 
 // #todo: enable only when voxels are present
 
@@ -91,6 +94,17 @@ namespace
 		}
 		return segment.m_PointB;
 	}
+
+	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
+	{
+		if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
+		{
+			const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
+			return Vector3f::AxisZ * cameraRotate;
+		}
+
+		return (mousePosition - transform.m_Translate).Normalized();
+	}
 }
 
 void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
@@ -126,16 +140,27 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
 	}
+	
+	if (!world.HasAny<ecs::query::Include<voxel::ChunkComponent>>())
+		return;
 
+	const auto& windowManager = world.ReadResource<eng::WindowManager>();
+	const auto* window = windowManager.GetWindow(0);
+	if (!window)
+		return;
+
+	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
+		const auto& input = world.ReadResource<eng::InputManager>();
+		const auto& projection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
-		const Segment3f segment = Segment3f(
-			transform.m_Translate,
-			transform.m_Translate +
-			Vector3f::AxisZ * Quaternion::FromRotator(transform.m_Rotate) *
-			100000.f);
+		constexpr float s_Distance = 100000.f;
+		const Vector3f mousePosition = eng::camera::ScreenToWorld(input.m_MousePosition, projection.m_Projection, transform.ToTransform(), resolution);
+		const Vector3f mouseDirection = ToMouseDirection(mousePosition, projection, transform);
+
+		const Segment3f segment = Segment3f(mousePosition, mousePosition + mouseDirection * s_Distance);
 		const Vector3f worldPos = Raycast(world, segment);
 		const Vector3i gridPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
 		const Vector3f alignPos = math::ToWorldPos(gridPos, voxel::s_BlockSize1D);
@@ -143,55 +168,52 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 		auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 		linesComponent.AddAABB(alignPos, voxel::s_BlockSize1D * 0.5f, Vector4f(1.f));
 
+		auto& settingsComponent = world.WriteSingleton<voxel::ModifySettingsComponent>();
+		if (input.IsPressed(strRadius0))
+			settingsComponent.m_Radius = 0;
+		if (input.IsPressed(strRadius1))
+			settingsComponent.m_Radius = 1;
+		if (input.IsPressed(strRadius2))
+			settingsComponent.m_Radius = 2;
+		if (input.IsPressed(strRadius3))
+			settingsComponent.m_Radius = 3;
+		if (input.IsPressed(strRadius4))
+			settingsComponent.m_Radius = 4;
+		if (input.IsPressed(strRadius5))
+			settingsComponent.m_Radius = 5;
+		if (input.IsPressed(strRadius6))
+			settingsComponent.m_Radius = 6;
+
+		if (input.IsPressed(strVoxel0))
+			settingsComponent.m_Type = voxel::EType::None;
+		if (input.IsPressed(strVoxel1))
+			settingsComponent.m_Type = voxel::EType::Black;
+		if (input.IsPressed(strVoxel2))
+			settingsComponent.m_Type = voxel::EType::Green;
+		if (input.IsPressed(strVoxel3))
+			settingsComponent.m_Type = voxel::EType::Grey;
+		if (input.IsPressed(strVoxel4))
+			settingsComponent.m_Type = voxel::EType::Orange;
+		if (input.IsPressed(strVoxel5))
+			settingsComponent.m_Type = voxel::EType::Purple;
+		if (input.IsPressed(strVoxel6))
+			settingsComponent.m_Type = voxel::EType::Red;
+
+		if (input.IsPressed(strSelect))
 		{
-			const auto& input = world.ReadResource<eng::InputManager>();
-			auto& settingsComponent = world.WriteSingleton<voxel::ModifySettingsComponent>();
-			if (input.IsPressed(strRadius0))
-				settingsComponent.m_Radius = 0;
-			if (input.IsPressed(strRadius1))
-				settingsComponent.m_Radius = 1;
-			if (input.IsPressed(strRadius2))
-				settingsComponent.m_Radius = 2;
-			if (input.IsPressed(strRadius3))
-				settingsComponent.m_Radius = 3;
-			if (input.IsPressed(strRadius4))
-				settingsComponent.m_Radius = 4;
-			if (input.IsPressed(strRadius5))
-				settingsComponent.m_Radius = 5;
-			if (input.IsPressed(strRadius6))
-				settingsComponent.m_Radius = 6;
+			const ecs::Entity entity = world.CreateEntity();
+			auto& requestComponent = world.AddComponent<voxel::ModifyComponent>(entity);
 
-			if (input.IsPressed(strVoxel0))
-				settingsComponent.m_Type = voxel::EType::None;
-			if (input.IsPressed(strVoxel1))
-				settingsComponent.m_Type = voxel::EType::Black;
-			if (input.IsPressed(strVoxel2))
-				settingsComponent.m_Type = voxel::EType::Green;
-			if (input.IsPressed(strVoxel3))
-				settingsComponent.m_Type = voxel::EType::Grey;
-			if (input.IsPressed(strVoxel4))
-				settingsComponent.m_Type = voxel::EType::Orange;
-			if (input.IsPressed(strVoxel5))
-				settingsComponent.m_Type = voxel::EType::Purple;
-			if (input.IsPressed(strVoxel6))
-				settingsComponent.m_Type = voxel::EType::Red;
-
-			if (input.IsPressed(strSelect))
+			const int32 radius = settingsComponent.m_Radius;
+			const voxel::EType type = settingsComponent.m_Type;
+			for (const Vector3i& index : enumerate::Vector(Vector3i(-radius), Vector3i(+radius)))
 			{
-				const ecs::Entity entity = world.CreateEntity();
-				auto& requestComponent = world.AddComponent<voxel::ModifyComponent>(entity);
+				const Vector3f offset = Vector3f(
+					voxel::s_BlockSize1D * index.x,
+					voxel::s_BlockSize1D * index.y,
+					voxel::s_BlockSize1D * index.z);
 
-				const int32 radius = settingsComponent.m_Radius;
-				const voxel::EType type = settingsComponent.m_Type;
-				for (const Vector3i& index : enumerate::Vector(Vector3i(-radius), Vector3i(+radius)))
-				{
-					const Vector3f offset = Vector3f(
-						voxel::s_BlockSize1D * index.x,
-						voxel::s_BlockSize1D * index.y,
-						voxel::s_BlockSize1D * index.z);
-
-					requestComponent.m_Changes.Emplace(alignPos + offset, voxel::Block{ voxel::EFlags::None, type });
-				}
+				requestComponent.m_Changes.Emplace(alignPos + offset, voxel::Block{ voxel::EFlags::None, type });
 			}
 		}
 	}
