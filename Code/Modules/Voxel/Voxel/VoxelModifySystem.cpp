@@ -93,39 +93,40 @@ namespace
 	}
 }
 
-void voxel::ModifySystem::Initialise(World& world)
-{
-	input::Layer layer;
-	layer.m_Priority = eng::EInputPriority::Gameplay;
-	layer.m_Bindings.Emplace(strRadius0, input::EKey::Numpad_0);
-	layer.m_Bindings.Emplace(strRadius1, input::EKey::Numpad_1);
-	layer.m_Bindings.Emplace(strRadius2, input::EKey::Numpad_2);
-	layer.m_Bindings.Emplace(strRadius3, input::EKey::Numpad_3);
-	layer.m_Bindings.Emplace(strRadius4, input::EKey::Numpad_4);
-	layer.m_Bindings.Emplace(strRadius5, input::EKey::Numpad_5);
-	layer.m_Bindings.Emplace(strRadius6, input::EKey::Numpad_6);
-	layer.m_Bindings.Emplace(strSelect,  input::EKey::Mouse_Left, false);
-	layer.m_Bindings.Emplace(strVoxel0,  input::EKey::Num_0);
-	layer.m_Bindings.Emplace(strVoxel1,  input::EKey::Num_1);
-	layer.m_Bindings.Emplace(strVoxel2,  input::EKey::Num_2);
-	layer.m_Bindings.Emplace(strVoxel3,  input::EKey::Num_3);
-	layer.m_Bindings.Emplace(strVoxel4,  input::EKey::Num_4);
-	layer.m_Bindings.Emplace(strVoxel5,  input::EKey::Num_5);
-	layer.m_Bindings.Emplace(strVoxel6,  input::EKey::Num_6);
-
-	auto& input = world.WriteResource<eng::InputManager>();
-	input.AppendLayer(strInput, layer);
-}
-
-void voxel::ModifySystem::Shutdown(World& world)
-{
-	auto& input = world.WriteResource<eng::InputManager>();
-	input.RemoveLayer(strInput);
-}
-
 void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	const int32 count = world.Query<ecs::query::Include<voxel::ChunkComponent>>().GetCount();
+	if (count == 1 && world.HasAny<ecs::query::Added<voxel::ChunkComponent>>())
+	{
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::Gameplay;
+		layer.m_Bindings.Emplace(strRadius0, input::EKey::Numpad_0);
+		layer.m_Bindings.Emplace(strRadius1, input::EKey::Numpad_1);
+		layer.m_Bindings.Emplace(strRadius2, input::EKey::Numpad_2);
+		layer.m_Bindings.Emplace(strRadius3, input::EKey::Numpad_3);
+		layer.m_Bindings.Emplace(strRadius4, input::EKey::Numpad_4);
+		layer.m_Bindings.Emplace(strRadius5, input::EKey::Numpad_5);
+		layer.m_Bindings.Emplace(strRadius6, input::EKey::Numpad_6);
+		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, false);
+		layer.m_Bindings.Emplace(strVoxel0, input::EKey::Num_0);
+		layer.m_Bindings.Emplace(strVoxel1, input::EKey::Num_1);
+		layer.m_Bindings.Emplace(strVoxel2, input::EKey::Num_2);
+		layer.m_Bindings.Emplace(strVoxel3, input::EKey::Num_3);
+		layer.m_Bindings.Emplace(strVoxel4, input::EKey::Num_4);
+		layer.m_Bindings.Emplace(strVoxel5, input::EKey::Num_5);
+		layer.m_Bindings.Emplace(strVoxel6, input::EKey::Num_6);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInput, layer);
+	}
+
+	if (count == 0 && world.HasAny<ecs::query::Removed<voxel::ChunkComponent>>())
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInput);
+	}
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{

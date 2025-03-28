@@ -36,9 +36,6 @@ namespace voxel
 			const eng::camera::ProjectionComponent,
 			const voxel::ChunkComponent>;
 
-		void Initialise(World& world);
-		void Shutdown(World& world);
-
 		void Update(World& world, const GameTime& gameTime);
 	};
 }
