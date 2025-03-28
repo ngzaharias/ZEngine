@@ -32,7 +32,7 @@ namespace
 void dbg::MenuBarSystem::Initialise(World& world)
 {
 	input::Layer layer;
-	layer.m_Priority = eng::EInputPriority::Debug;
+	layer.m_Priority = eng::EInputPriority::MenuBar;
 	layer.m_Bindings.Emplace(strOpen,   input::EKey::O, input::EKey::Control_L);
 	layer.m_Bindings.Emplace(strOpen,   input::EKey::O, input::EKey::Control_R);
 	layer.m_Bindings.Emplace(strReload, input::EKey::R, input::EKey::Control_L);

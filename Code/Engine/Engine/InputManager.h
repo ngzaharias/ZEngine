@@ -25,9 +25,10 @@ namespace eng
 	enum EInputPriority
 	{
 		Gameplay = 0,
-		Debug = 100,
-		GameUI = 200,
-		Editor = 1000,
+		MenuBar = 1000,
+		Debug = 2000,
+		GameUI = 3000,
+		Editor = 4000,
 	};
 
 	class InputManager final
