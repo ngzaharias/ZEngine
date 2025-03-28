@@ -2,6 +2,12 @@
 
 #include "ECS/System.h"
 
+namespace drag
+{
+	struct IsSelectableComponent;
+	struct SelectionComponent;
+}
+
 namespace ecs
 {
 	struct NameComponent;
@@ -23,9 +29,6 @@ namespace eng::camera
 
 namespace drag
 {
-	struct IsSelectableComponent;
-	struct SelectionComponent;
-
 	class SelectionSystem final : public ecs::System
 	{
 	public:
@@ -41,9 +44,6 @@ namespace drag
 			const eng::camera::ProjectionComponent,
 			const eng::PhysicsSceneComponent,
 			const eng::TransformComponent>;
-
-		void Initialise(World& world);
-		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

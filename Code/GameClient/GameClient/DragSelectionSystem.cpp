@@ -27,25 +27,26 @@ namespace
 	const str::Name strSelect = str::Name::Create("DragSelection_Select");
 }
 
-void drag::SelectionSystem::Initialise(World& world)
-{
-	input::Layer layer;
-	layer.m_Priority = eng::EInputPriority::Gameplay;
-	layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, false);
-
-	auto& input = world.WriteResource<eng::InputManager>();
-	input.AppendLayer(strInput, layer);
-}
-
-void drag::SelectionSystem::Shutdown(World& world)
-{
-	auto& input = world.WriteResource<eng::InputManager>();
-	input.RemoveLayer(strInput);
-}
-
 void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	const int32 count = world.Query<ecs::query::Include<drag::IsSelectableComponent>>().GetCount();
+	if (count == 1 && world.HasAny<ecs::query::Added<drag::IsSelectableComponent>>())
+	{
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::Gameplay;
+		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, false);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInput, layer);
+	}
+
+	if (count == 0 && world.HasAny<ecs::query::Removed<drag::IsSelectableComponent>>())
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInput);
+	}
 
 	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
