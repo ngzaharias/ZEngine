@@ -61,10 +61,7 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 			ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_NoMove |
 			ImGuiWindowFlags_NoSavedSettings |
-			ImGuiWindowFlags_NoTitleBar |
 			ImGuiWindowFlags_NoDocking;
-
-		auto& window = world.WriteComponent<gui::game_menu::WindowComponent>(entity);
 
 		const Vector2f viewportSize = ImGui::GetWindowViewport()->Size;
 		const Vector2f viewportCentre = (viewportSize * 0.5f);
