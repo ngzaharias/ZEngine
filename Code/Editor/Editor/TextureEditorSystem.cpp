@@ -212,7 +212,7 @@ void editor::TextureEditorSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const int32 count = world.Query<ecs::query::Include<editor::TextureWindowComponent>>().GetCount();
-	if (count == 1 && world.HasAny<ecs::query::Added<editor::TextureWindowComponent>>())
+	if (count >= 1 && world.HasAny<ecs::query::Added<editor::TextureWindowComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Editor;

@@ -49,7 +49,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const int32 count = world.Query<ecs::query::Include<hidden::ObjectComponent>>().GetCount();
-	if (count == 1 && world.HasAny<ecs::query::Added<hidden::ObjectComponent>>())
+	if (count >= 1 && world.HasAny<ecs::query::Added<hidden::ObjectComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;

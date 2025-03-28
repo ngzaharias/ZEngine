@@ -47,7 +47,7 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const int32 count = world.Query<ecs::query::Include<hexmap::LayerComponent>>().GetCount();
-	if (count == 1 && world.HasAny<ecs::query::Added<hexmap::LayerComponent>>())
+	if (count >= 1 && world.HasAny<ecs::query::Added<hexmap::LayerComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;

@@ -98,7 +98,7 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const int32 count = world.Query<ecs::query::Include<voxel::ChunkComponent>>().GetCount();
-	if (count == 1 && world.HasAny<ecs::query::Added<voxel::ChunkComponent>>())
+	if (count >= 1 && world.HasAny<ecs::query::Added<voxel::ChunkComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;

@@ -29,7 +29,7 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const int32 count = world.Query<ecs::query::Include<eng::camera::Pan3DComponent>>().GetCount();
-	if (count == 1 && world.HasAny<ecs::query::Added<eng::camera::Pan3DComponent>>())
+	if (count >= 1 && world.HasAny<ecs::query::Added<eng::camera::Pan3DComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;

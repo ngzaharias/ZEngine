@@ -119,7 +119,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const int32 count = world.Query<ecs::query::Include<editor::EntityWindowComponent>>().GetCount();
-	if (count == 1 && world.HasAny<ecs::query::Added<editor::EntityWindowComponent>>())
+	if (count >= 1 && world.HasAny<ecs::query::Added<editor::EntityWindowComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Editor;
