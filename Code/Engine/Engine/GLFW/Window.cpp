@@ -24,10 +24,10 @@ namespace
 		case GLFW_GAMEPAD_BUTTON_GUIDE:			return input::EKey::Gamepad_Guide;
 		case GLFW_GAMEPAD_BUTTON_LEFT_THUMB:	return input::EKey::Gamepad_Thumb_L;
 		case GLFW_GAMEPAD_BUTTON_RIGHT_THUMB:	return input::EKey::Gamepad_Thumb_R;
-		case GLFW_GAMEPAD_BUTTON_DPAD_UP:		return input::EKey::Gamepad_DPad_Up;
-		case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:	return input::EKey::Gamepad_DPad_Right;
-		case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:		return input::EKey::Gamepad_DPad_Down;
-		case GLFW_GAMEPAD_BUTTON_DPAD_LEFT:		return input::EKey::Gamepad_DPad_Left;
+		case GLFW_GAMEPAD_BUTTON_DPAD_UP:		return input::EKey::Gamepad_DPad_U;
+		case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:	return input::EKey::Gamepad_DPad_R;
+		case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:		return input::EKey::Gamepad_DPad_D;
+		case GLFW_GAMEPAD_BUTTON_DPAD_LEFT:		return input::EKey::Gamepad_DPad_L;
 		}
 		return input::EKey::None;
 	}
