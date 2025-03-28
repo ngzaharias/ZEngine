@@ -39,6 +39,7 @@ namespace eng
 
 		void Update(World& world);
 
+		bool HasLayer(const str::Name& name) const;
 		void AppendLayer(const str::Name& name, const input::Layer& layer);
 		auto ModifyLayer(const str::Name& name)->input::Layer&;
 		void RemoveLayer(const str::Name& name);
@@ -58,6 +59,7 @@ namespace eng
 
 		bool m_AreLayersDirty = false;
 		Array<str::Name> m_LayerOrder = {};
+		Map<str::Name, int32> m_LayerRef = {};
 		Map<str::Name, input::Layer> m_LayerMap = {};
 		Map<str::Name, input::Value> m_ValueMap = {};
 	};

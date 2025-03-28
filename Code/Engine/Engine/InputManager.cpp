@@ -105,10 +105,19 @@ void eng::InputManager::Update(World& world)
 	}
 }
 
+bool eng::InputManager::HasLayer(const str::Name& name) const
+{
+	return m_LayerRef.Contains(name);
+}
+
 void eng::InputManager::AppendLayer(const str::Name& name, const input::Layer& layer)
 {
-	m_AreLayersDirty = true;
-	m_LayerMap[name] = layer;
+	int32& refCount = m_LayerRef[name];
+	if (++refCount == 1)
+	{
+		m_AreLayersDirty = true;
+		m_LayerMap[name] = layer;
+	}
 }
 
 auto eng::InputManager::ModifyLayer(const str::Name& name)->input::Layer&
@@ -118,8 +127,13 @@ auto eng::InputManager::ModifyLayer(const str::Name& name)->input::Layer&
 
 void eng::InputManager::RemoveLayer(const str::Name& name)
 {
-	m_AreLayersDirty = true;
-	m_LayerMap.Remove(name);
+	int32& refCount = m_LayerRef[name];
+	if (--refCount == 0)
+	{
+		m_AreLayersDirty = true;
+		m_LayerRef.Remove(name);
+		m_LayerMap.Remove(name);
+	}
 }
 
 auto eng::InputManager::GetValue(const str::Name& name) const->const input::Value&
