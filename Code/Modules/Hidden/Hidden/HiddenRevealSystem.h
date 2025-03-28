@@ -53,9 +53,6 @@ namespace hidden
 			const hidden::ObjectComponent,
 			const hidden::settings::DebugComponent>;
 
-		void Initialise(World& world);
-		void Shutdown(World& world);
-
 		void Update(World& world, const GameTime& gameTime);
 	};
 }
