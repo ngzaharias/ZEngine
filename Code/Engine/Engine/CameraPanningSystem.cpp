@@ -28,8 +28,7 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const int32 count = world.Query<ecs::query::Include<eng::camera::Pan3DComponent>>().GetCount();
-	if (count >= 1 && world.HasAny<ecs::query::Added<eng::camera::Pan3DComponent>>())
+	if (world.HasAny<ecs::query::Added<eng::camera::Pan3DComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -39,7 +38,7 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (count == 0 && world.HasAny<ecs::query::Removed<eng::camera::Pan3DComponent>>())
+	if (world.HasAny<ecs::query::Removed<eng::camera::Pan3DComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);

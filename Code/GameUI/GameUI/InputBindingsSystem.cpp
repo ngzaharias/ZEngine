@@ -18,8 +18,7 @@ void gui::input::BindingsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const int32 count = world.Query<ecs::query::Include<gui::input::BindingsComponent>>().GetCount();
-	if (count >= 1 && world.HasAny<ecs::query::Added<gui::input::BindingsComponent>>())
+	if (world.HasAny<ecs::query::Added<gui::input::BindingsComponent>>())
 	{
 		::input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -29,7 +28,7 @@ void gui::input::BindingsSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (count == 0 && world.HasAny<ecs::query::Removed<gui::input::BindingsComponent>>())
+	if (world.HasAny<ecs::query::Removed<gui::input::BindingsComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);

@@ -349,8 +349,7 @@ void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const int32 count = world.Query<ecs::query::Include<editor::SpriteWindowComponent>>().GetCount();
-	if (count >= 1 && world.HasAny<ecs::query::Added<editor::SpriteWindowComponent>>())
+	if (world.HasAny<ecs::query::Added<editor::SpriteWindowComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Editor;
@@ -365,7 +364,7 @@ void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (count == 0 && world.HasAny<ecs::query::Removed<editor::SpriteWindowComponent>>())
+	if (world.HasAny<ecs::query::Removed<editor::SpriteWindowComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);

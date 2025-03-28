@@ -31,8 +31,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const int32 count = world.Query<ecs::query::Include<drag::IsSelectableComponent>>().GetCount();
-	if (count >= 1 && world.HasAny<ecs::query::Added<drag::IsSelectableComponent>>())
+	if (world.HasAny<ecs::query::Added<drag::IsSelectableComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -42,7 +41,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (count == 0 && world.HasAny<ecs::query::Removed<drag::IsSelectableComponent>>())
+	if (world.HasAny<ecs::query::Removed<drag::IsSelectableComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
