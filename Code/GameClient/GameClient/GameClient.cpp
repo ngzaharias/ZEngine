@@ -82,12 +82,10 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 void clt::GameClient::Initialise()
 {
 	m_EntityWorld.Initialise();
-	m_InputManager.Initialise();
 }
 
 void clt::GameClient::Shutdown()
 {
-	m_InputManager.Shutdown();
 	m_EntityWorld.Shutdown();
 }
 
