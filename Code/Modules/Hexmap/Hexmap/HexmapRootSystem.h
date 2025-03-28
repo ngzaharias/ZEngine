@@ -33,9 +33,6 @@ namespace hexmap
 			const eng::camera::ProjectionComponent,
 			const eng::TransformComponent>;
 
-		void Initialise(World& world);
-		void Shutdown(World& world);
-
 		void Update(World& world, const GameTime& gameTime);
 	};
 }
