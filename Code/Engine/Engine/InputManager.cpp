@@ -99,6 +99,7 @@ void eng::InputManager::Update(World& world)
 				held.RemoveAll();
 				pressed.RemoveAll();
 				released.RemoveAll();
+				m_ScrollDelta = Vector2f::Zero;
 			}
 		}
 	}

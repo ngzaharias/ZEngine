@@ -2,6 +2,16 @@
 
 #include "ECS/System.h"
 
+namespace ecs
+{
+	struct NameComponent;
+}
+
+namespace eng
+{
+	class InputManager;
+}
+
 namespace eng::level
 {
 	struct DirectoryComponent;
@@ -11,6 +21,7 @@ namespace eng::level
 namespace dbg::level
 {
 	struct OpenRequestComponent;
+	struct WindowComponent;
 }
 
 namespace dbg::level
@@ -19,6 +30,11 @@ namespace dbg::level
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			eng::InputManager,
+			// Components
+			dbg::level::WindowComponent,
+			ecs::NameComponent,
 			eng::level::LoadRequestComponent,
 			const dbg::level::OpenRequestComponent,
 			const eng::level::DirectoryComponent>;

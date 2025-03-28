@@ -18,7 +18,6 @@ namespace dbg
 
 namespace dbg::level
 {
-	struct OpenRequestComponent : ecs::EventComponent<OpenRequestComponent> { };
 	struct ReloadRequestComponent : ecs::EventComponent<ReloadRequestComponent> { };
 	struct SaveRequestComponent : ecs::EventComponent<SaveRequestComponent> { };
 	struct SaveAsRequestComponent : ecs::EventComponent<SaveAsRequestComponent> { };

@@ -6,6 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/InputManager.h"
+#include "GameDebug/LevelOpenComponents.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "GameDebug/SettingsComponents.h"
 #include "GameUI/SettingsComponents.h"
