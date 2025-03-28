@@ -36,9 +36,6 @@ namespace eng
 		using World = ecs::WorldView<
 			const eng::WindowManager>;
 
-		void Initialise();
-		void Shutdown();
-
 		void Update(World& world);
 
 		void AppendLayer(const str::Name& name, const input::Layer& layer);

@@ -17,40 +17,9 @@ namespace
 	const str::Name s_ImGui = str::Name::Create("ImGui");
 }
 
-void eng::InputManager::Initialise()
-{
-	PROFILE_FUNCTION();
-
-	// #todo: move to a system
-	{
-		AppendLayer(s_ImGui, input::Layer{ eng::EInputPriority::Debug });
-	}
-}
-
-void eng::InputManager::Shutdown()
-{
-	PROFILE_FUNCTION();
-
-	RemoveLayer(s_ImGui);
-}
-
 void eng::InputManager::Update(World& world)
 {
 	PROFILE_FUNCTION();
-
-	// #todo: move to a system
-	{
-		input::Layer& layer = ModifyLayer(s_ImGui);
-		const bool hasKeyboard = layer.m_Consume.Has(input::EConsume::Keyboard);
-		const bool hasMouse = layer.m_Consume.Has(input::EConsume::Mouse);
-		const bool wantsKeyboard = ImGui::GetIO().WantCaptureKeyboard;
-		const bool wantsMouse = ImGui::GetIO().WantCaptureMouse;
-		if (hasKeyboard != wantsKeyboard || hasMouse != wantsMouse)
-		{
-			layer.m_Consume.Set(input::EConsume::Keyboard, wantsKeyboard);
-			layer.m_Consume.Set(input::EConsume::Mouse, wantsMouse);
-		}
-	}
 
 	if (m_AreLayersDirty)
 	{
