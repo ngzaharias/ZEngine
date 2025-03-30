@@ -105,6 +105,26 @@ str::Path eng::GetLevelsDirectory()
 #endif
 }
 
+str::Path eng::GetThirdPartyDirectory()
+{
+#ifdef _WIN32
+	const std::filesystem::path directory = std::filesystem::current_path();
+
+	str::Path path = directory.string();
+	while (!path.IsEmpty())
+	{
+		path += "\\3rdParty";
+		if (std::filesystem::is_directory(path.ToChar()))
+			return str::Path(path, "\\");
+
+		path = path.GetParent();
+		path = path.GetParent();
+	}
+
+	return {};
+#endif
+}
+
 str::Path eng::GetWorkingDirectory()
 {
 #ifdef _WIN32

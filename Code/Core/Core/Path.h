@@ -12,6 +12,7 @@ namespace str
 		Config,
 		Executable,
 		Levels,
+		ThirdParty,
 		WorkingDir,
 	};
 

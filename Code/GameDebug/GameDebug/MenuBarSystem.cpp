@@ -1,6 +1,10 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/MenuBarSystem.h"
 
+#include "Core/Guid.h"
+#include "Core/Name.h"
+#include "Core/Path.h"
+#include "Core/String.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -15,10 +19,7 @@
 #include "imgui/imgui_user.h"
 #include "imgui/Inspector.h"
 
-#include "Core/Guid.h"
-#include "Core/Name.h"
-#include "Core/Path.h"
-#include "Core/String.h"
+#include <windows.h>
 
 // #todo: disable on release builds
 
@@ -110,6 +111,11 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<dbg::ContainerWindowRequestComponent>();
 			if (ImGui::MenuItem("Debug: Entities", "Ctrl+Shift+F11"))
 				world.AddEventComponent<dbg::EntityWindowRequestComponent>();
+			if (ImGui::MenuItem("Debug: Optick"))
+			{
+				const str::Path path = str::Path(str::EPath::ThirdParty, "optick/1.3.1/Optick.exe");
+				ShellExecuteA(NULL, "open", path.ToChar(), NULL, NULL, SW_SHOWDEFAULT);
+			}
 			if (ImGui::MenuItem("Debug: Shapes"))
 				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
 			if (ImGui::MenuItem("Demo: ImGui"))

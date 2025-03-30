@@ -17,6 +17,7 @@ int main(int agrc, char* argv[])
 	const str::Path configDirectory = eng::GetConfigDirectory();
 	const str::Path executableFilepath = eng::GetExecutableFilepath();
 	const str::Path levelsDirectory = eng::GetLevelsDirectory();
+	const str::Path thirdpartyDirectory = eng::GetThirdPartyDirectory();
 	const str::Path workingDirectory = eng::GetWorkingDirectory();
 	const str::Path immediateDirectory = executableFilepath.GetDirectory();
 
@@ -25,6 +26,7 @@ int main(int agrc, char* argv[])
 	str::SetPath(str::EPath::Config, configDirectory);
 	str::SetPath(str::EPath::Executable, executableFilepath);
 	str::SetPath(str::EPath::Levels, levelsDirectory);
+	str::SetPath(str::EPath::ThirdParty, thirdpartyDirectory);
 	str::SetPath(str::EPath::WorkingDir, workingDirectory);
 
 	std::filesystem::create_directories(appdataDirectory.ToChar());
@@ -37,11 +39,13 @@ int main(int agrc, char* argv[])
 	core::LogInitialise();
 
 	Z_LOG(ELog::Debug, "=================Session Start====================");
-	Z_LOG(ELog::Debug, "AppData Directory:   {}", appdataDirectory.ToChar());
-	Z_LOG(ELog::Debug, "Assets Directory:    {}", assetsDirectory.ToChar());
-	Z_LOG(ELog::Debug, "Config Directory:    {}", configDirectory.ToChar());
-	Z_LOG(ELog::Debug, "Executable Filepath: {}", executableFilepath.ToChar());
-	Z_LOG(ELog::Debug, "Working Directory:   {}", workingDirectory.ToChar());
+	Z_LOG(ELog::Debug, "AppData Directory:    {}", appdataDirectory.ToChar());
+	Z_LOG(ELog::Debug, "Assets Directory:     {}", assetsDirectory.ToChar());
+	Z_LOG(ELog::Debug, "Config Directory:     {}", configDirectory.ToChar());
+	Z_LOG(ELog::Debug, "Executable Filepath:  {}", executableFilepath.ToChar());
+	Z_LOG(ELog::Debug, "Levels Directory:     {}", levelsDirectory.ToChar());
+	Z_LOG(ELog::Debug, "ThirdParty Directory: {}", thirdpartyDirectory.ToChar());
+	Z_LOG(ELog::Debug, "Working Directory:    {}", workingDirectory.ToChar());
 
 	game::Application* application = new game::Application();
 	application->Execute(agrc, argv);
