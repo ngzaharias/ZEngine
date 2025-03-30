@@ -15,21 +15,10 @@ namespace softbody
 	struct ChainComponent : public ecs::Component<ChainComponent>
 	{
 		Array<Link> m_Links = { 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{}, 
-			Link{} };
+			Link{}, Link{}, Link{}, Link{}, 
+			Link{}, Link{}, Link{}, Link{}, 
+			Link{}, Link{}, Link{}, Link{}, 
+			Link{}, Link{}, Link{}, Link{}, 
+			Link{}, Link{}, Link{}, Link{} };
 	};
 }
