@@ -1,0 +1,9 @@
+m_Guid = "10ed57cf87da4005aa152c1f1e763d8c"
+m_Name = "Chain"
+
+['softbody::ChainComponent']
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0, Roll = 0, Yaw = 0 }
+m_Scale = { X = 1, Y = 1, Z = 1 }
+m_Translate = { X = 0, Y = 0, Z = 0 }
