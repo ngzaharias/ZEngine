@@ -52,8 +52,8 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 	if (!debugSettings.m_AreLinesEnabled)
 		return;
 
-	const auto* linesShader = assetManager.FetchAsset<eng::ShaderAsset>(strLinesShader);
-	if (!linesShader)
+	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strLinesShader);
+	if (!shader)
 		return;
 
 	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
@@ -86,13 +86,13 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 			constexpr size_t s_PointOffset = offsetof(LineVertex, m_Point);
 			constexpr size_t s_ColourOffset = offsetof(LineVertex, m_Colour);
 
-			glUseProgram(linesShader->m_ProgramId);
+			glUseProgram(shader->m_ProgramId);
 
 			glBindVertexArray(m_AttributeObject);
 
-			const uint32 transformId = glGetUniformLocation(linesShader->m_ProgramId, "u_Transform");
 			const Matrix4x4 transform = cameraView * cameraProj;
-			glUniformMatrix4fv(transformId, 1, GL_FALSE, &transform[0][0]);
+			const uint32 location = *shader->u_Transform;
+			glUniformMatrix4fv(location, 1, GL_FALSE, &transform[0][0]);
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
 			glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(LineVertex), &readComponent.m_Vertices[0], GL_DYNAMIC_DRAW);
