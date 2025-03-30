@@ -34,6 +34,8 @@ void eng::WindowManager::Initialise(const eng::WindowConfig& config)
 	if (auto* glfwWindow = reinterpret_cast<glfw::Window*>(m_Windows[0]))
 		glfwMakeContextCurrent(glfwWindow->GetWindow());
 
+	glfwSwapInterval(config.m_IsVSyncEnabled);
+
 	// #note: glfwMakeContextCurrent must be called before initializing 
 	const auto error = glewInit();
 	if (error != GLEW_OK)

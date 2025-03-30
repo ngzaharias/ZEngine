@@ -12,5 +12,7 @@ namespace eng
 		Vector2u m_Resolution = Vector2u::Zero;
 		EWindowMode m_Mode = EWindowMode::Fullscreen;
 		int32 m_RefreshRate = 0;
+
+		bool m_IsVSyncEnabled = false;
 	};
 }
