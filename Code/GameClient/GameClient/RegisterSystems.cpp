@@ -33,6 +33,7 @@
 #include "Hidden/HiddenSpriteSystem.h"
 #include "Hidden/HiddenTrackerSystem.h"
 #include "Hidden/HiddenVFXSystem.h"
+#include "Softbody/SoftbodyChainSystem.h"
 
 void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 {
@@ -63,6 +64,7 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<movement::VelocitySystem>();
 	entityWorld.RegisterSystem<projectile::SpawnSystem>();
 	entityWorld.RegisterSystem<projectile::TrajectorySystem>();
+	entityWorld.RegisterSystem<softbody::ChainSystem>();
 	entityWorld.RegisterSystem<transform::TransformSystem>();
 	entityWorld.RegisterSystem<visual::VisualSystem>();
 

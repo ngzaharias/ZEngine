@@ -276,30 +276,22 @@ void eng::LinesComponent::AddAABB(const Vector3f& translate, const AABB3f& exten
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& circle, const Colour& colour)
+void eng::LinesComponent::AddCircle(const Vector3f& translate, const Circle2f& circle, const float steps, const Colour& colour)
 {
-	Vector3f corners[8];
-	corners[0] = translate + circle.m_Position.X0Y() + Vector3f(-circle.m_Radius, 0.f, 0.f);
-	corners[1] = translate + circle.m_Position.X0Y() + Vector3f(+circle.m_Radius, 0.f, 0.f);
-	corners[2] = translate + circle.m_Position.X0Y() + Vector3f(0.f, -circle.m_Radius, 0.f);
-	corners[3] = translate + circle.m_Position.X0Y() + Vector3f(0.f, +circle.m_Radius, 0.f);
-	corners[4] = translate + circle.m_Position.X0Y() + Vector3f(0.f, 0.f, -circle.m_Radius);
-	corners[5] = translate + circle.m_Position.X0Y() + Vector3f(0.f, 0.f, +circle.m_Radius);
+	const float step = math::ToRadians(360.f / steps);
 
-	AddLine(corners[0], corners[2], colour);
-	AddLine(corners[2], corners[1], colour);
-	AddLine(corners[1], corners[3], colour);
-	AddLine(corners[3], corners[0], colour);
+	Vector3f pointA;
+	Vector3f pointB = translate + Vector3f::AxisX * circle.m_Radius;
+	for (float angle = step; angle <= PI_TWO; angle += step)
+	{
+		pointA = pointB;
+		pointB.x = translate.x + std::cos(angle) * circle.m_Radius;
+		pointB.y = translate.y + std::sin(angle) * circle.m_Radius;
+		AddLine(pointA, pointB, colour);
+	}
 
-	AddLine(corners[0], corners[4], colour);
-	AddLine(corners[4], corners[1], colour);
-	AddLine(corners[1], corners[5], colour);
-	AddLine(corners[5], corners[0], colour);
-
-	AddLine(corners[2], corners[4], colour);
-	AddLine(corners[4], corners[3], colour);
-	AddLine(corners[3], corners[5], colour);
-	AddLine(corners[5], corners[2], colour);
+	pointA = translate + Vector3f::AxisX * circle.m_Radius;
+	AddLine(pointA, pointB, colour);
 }
 
 void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Vector2u& size, const Colour& colour)

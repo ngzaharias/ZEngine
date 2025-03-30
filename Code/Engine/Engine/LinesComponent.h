@@ -40,7 +40,7 @@ namespace eng
 		void AddAABB(const Vector3f& translate, const AABB3f& abb, const Colour& colour);
 
 		/// \brief Adds a circle.
-		void AddCircle(const Vector3f& translate, const Circle2f& circle, const Colour& colour);
+		void AddCircle(const Vector3f& translate, const Circle2f& circle, const float steps, const Colour& colour);
 
 		/// \brief Adds a frustum.
 		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Vector2u& size, const Colour& colour);

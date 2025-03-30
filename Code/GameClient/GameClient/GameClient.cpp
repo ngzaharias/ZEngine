@@ -19,6 +19,7 @@
 #include "Hidden/HiddenCountComponent.h"
 #include "Hidden/HiddenGroupComponent.h"
 #include "Hidden/HiddenObjectComponent.h"
+#include "Softbody/SoftbodyComponents.h"
 #include "Tabletop/TabletopCardComponent.h"
 #include "Tabletop/TabletopDeckComponent.h"
 
@@ -36,6 +37,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 		prototypeManager.Register<hidden::CountComponent>();
 		prototypeManager.Register<hidden::GroupComponent>();
 		prototypeManager.Register<hidden::ObjectComponent>();
+		prototypeManager.Register<softbody::ChainComponent>();
 		prototypeManager.Register<tabletop::CardComponent>();
 		prototypeManager.Register<tabletop::DeckComponent>();
 	}

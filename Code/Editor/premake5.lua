@@ -50,6 +50,7 @@ project "Editor"
 		"%{wks.location}/../Code/Bindings/Steam/",
 		"%{wks.location}/../Code/Modules/Hexmap/",
 		"%{wks.location}/../Code/Modules/Hidden/",
+		"%{wks.location}/../Code/Modules/Softbody/",
 		"%{wks.location}/../Code/Modules/Tabletop/",
 		"%{wks.location}/../Code/Modules/Voxel/",
 	}
@@ -100,6 +101,7 @@ project "Editor"
 
 		"Hexmap",
 		"Hidden",
+		"Softbody",
 		"Tabletop",
 		"Voxel",
 

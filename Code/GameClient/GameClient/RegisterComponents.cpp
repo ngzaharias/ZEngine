@@ -17,6 +17,7 @@
 #include "Hidden/HiddenRevealComponent.h"
 #include "Hidden/HiddenSettingsComponents.h"
 #include "Hidden/HiddenVFXComponent.h"
+#include "Softbody/SoftbodyComponents.h"
 #include "Tabletop/TabletopCardComponent.h"
 #include "Tabletop/TabletopDeckComponent.h"
 
@@ -53,6 +54,7 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<projectile::CreateResultComponent>();
 	entityWorld.RegisterComponent<projectile::SpawnComponent>();
 	entityWorld.RegisterComponent<projectile::TrajectoryComponent>();
+	entityWorld.RegisterComponent<softbody::ChainComponent>();
 	entityWorld.RegisterComponent<tabletop::CardComponent>();
 	entityWorld.RegisterComponent<tabletop::DeckComponent>();
 
