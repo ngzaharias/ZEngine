@@ -20,9 +20,9 @@ namespace math
 	/// \brief Calculates the unsigned angle between two vectors in radians.
 	inline float Angle(const Vector3f& a, const Vector3f& b) noexcept;
 
-	/// \brief Calculates the signed angle from vector a to vector b in radians.
+	/// \brief Calculates the signed angle from direction a to direction b in radians.
 	inline float AngleSigned(const Vector2f& a, const Vector2f& b) noexcept;
-	/// \brief Calculates the signed angle from vector a to vector b in radians.
+	/// \brief Calculates the signed angle from direction a to direction b in radians.
 	inline float AngleSigned(const Vector3f& a, const Vector3f& b, const Vector3f& normal) noexcept;
 
 	/// \brief Returns the vector with each component clamped between min and max so that they doesn't exceed either.
@@ -149,6 +149,9 @@ namespace math
 	/// \brief Convert a world position to a grid position.
 	/// Input in the range of >= 0.f and < 1.f will all map to the same value.
 	inline constexpr Vector3i ToGridPos(const Vector3f& worldPos, const Vector3f& cellSize = Vector3f::One);
+
+	/// \brief Convert a direction to a circular radian.
+	inline float ToHeading(const Vector2f& direction);
 
 	/// \brief Convert a grid position to a world position.
 	/// The world position will be centered on the grid position.

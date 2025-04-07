@@ -19,12 +19,14 @@ inline constexpr Vector3f math::Abs(const Vector3f& value) noexcept
 
 inline float math::Angle(const Vector2f& a, const Vector2f& b) noexcept
 {
-	return std::acos(math::Dot(a, b));
+	const float dot = math::Dot(a, b);
+	return std::acos(math::Clamp(dot, -1.f, 1.f));
 }
 
 inline float math::Angle(const Vector3f& a, const Vector3f& b) noexcept
 {
-	return std::acos(math::Dot(a, b));
+	const float dot = math::Dot(a, b);
+	return std::acos(math::Clamp(dot, -1.f, 1.f));
 }
 
 inline float math::AngleSigned(const Vector2f& a, const Vector2f& b) noexcept
@@ -435,6 +437,12 @@ inline constexpr Vector3i math::ToGridPos(const Vector3f& worldPos, const Vector
 		math::Floor<int32>(worldPos.x / cellSize.x),
 		math::Floor<int32>(worldPos.y / cellSize.y),
 		math::Floor<int32>(worldPos.z / cellSize.z));
+}
+
+inline float math::ToHeading(const Vector2f& direction)
+{
+	const float radians = std::atan2(direction.y, direction.x);
+	return math::ToCircular(radians);
 }
 
 inline constexpr Vector2f math::ToWorldPos(const Vector2i& gridPos, const float cellSize /*= 1.f*/)
