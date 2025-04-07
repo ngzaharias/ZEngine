@@ -27,6 +27,7 @@
 #include "GameDebug/SettingsMenuSystem.h"
 #include "GameDebug/ShapeComponents.h"
 #include "GameDebug/ShapeSystem.h"
+#include "GameDebug/SoftbodySystem.h"
 #include "GameDebug/SplineComponents.h"
 #include "GameDebug/SplineSystem.h"
 
@@ -93,6 +94,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<dbg::settings::DebugSystem>();
 	m_ClientWorld.RegisterSystem<dbg::settings::MenuSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ShapeSystem>();
+	m_ClientWorld.RegisterSystem<dbg::SoftbodySystem>();
 	m_ClientWorld.RegisterSystem<dbg::SplineSystem>();
 }
 

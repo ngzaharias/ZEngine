@@ -37,6 +37,7 @@ project "GameDebug"
 		"%{wks.location}/../Code/Network/",
 		"%{wks.location}/../Code/Modules/Hexmap/",
 		"%{wks.location}/../Code/Modules/Hidden/",
+		"%{wks.location}/../Code/Modules/Softbody/",
 		"%{wks.location}/../Code/Modules/Tabletop/",
 		"%{wks.location}/../Code/Modules/Voxel/",
 	}
@@ -55,6 +56,7 @@ project "GameDebug"
 
 		"Hexmap",
 		"Hidden",
+		"Softbody",
 		"Tabletop",
 		"Voxel",
 	}

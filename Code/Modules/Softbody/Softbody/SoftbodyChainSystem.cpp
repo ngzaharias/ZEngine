@@ -6,23 +6,40 @@
 #include "ECS/QueryTypes.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/LinesComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Math/Circle.h"
 #include "Math/CollisionMath.h"
+#include "Math/Math.h"
 #include "Math/Plane.h"
-#include "Math/Quaternion.h"
-#include "Math/Ray.h"
 #include "Softbody/SoftbodyComponents.h"
 
 namespace
 {
 	const str::Name strInput = str::Name::Create("SoftbodyChain");
 	const str::Name strSelect = str::Name::Create("SoftbodyChain_Select");
+
+	Vector2f ConstrainAngle(const Vector2f& directionA, const Vector2f& directionB, const float constraint)
+	{
+		const float angleH = math::AngleSigned(directionA, Vector2f::AxisY);
+		const float angleI = math::AngleSigned(directionB, Vector2f::AxisY);
+		const float diff = math::AngleSigned(directionA, -directionB);
+		if (math::Absolute(diff) < constraint)
+		{
+			const float angle = diff > 0.f
+				? angleH - constraint + PI_ONE
+				: angleH + constraint + PI_ONE;
+			return Vector2f::AxisY * Quaternion::FromAxisAngle(Vector3f::AxisZ, -angle);
+		}
+		return directionB;
+	}
+
+	Vector2f ConstrainLength(const Vector2f& positionA, const Vector2f& directionB, const float constraint)
+	{
+		return positionA - directionB * constraint;
+	}
 
 	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
 	{
@@ -89,23 +106,36 @@ void softbody::ChainSystem::Update(World& world, const GameTime& gameTime)
 			}
 		}
 
-		auto& lines = world.WriteSingleton<eng::LinesComponent>();
 		auto& chain = world.WriteComponent<softbody::ChainComponent>(chainEntity);
 		const auto& transform = world.ReadComponent<eng::TransformComponent>(chainEntity);
 		if (!chain.m_Links.IsEmpty())
 		{
-			chain.m_Links[0].m_Position = transform.m_Translate;
+			// update first node
+			chain.m_Links[0].m_Position = transform.m_Translate.XY();
+			if (chain.m_Links.GetCount() >= 2)
+			{
+				softbody::Link& linkH = chain.m_Links[0];
+				softbody::Link& linkI = chain.m_Links[1];
+				if (!math::IsNearly(linkH.m_Position, linkI.m_Position))
+					linkH.m_Direction = (linkH.m_Position - linkI.m_Position).Normalized();
+			}
+
+			const float radians = math::ToRadians(chain.m_Angle);
+			const bool isAngleConstrained = chain.m_Angle > 0.f;
+			const bool isLengthConstrained = chain.m_Radius > 0.f;
 			for (int32 i = 1; i < chain.m_Links.GetCount(); ++i)
 			{
-				auto& linkH = chain.m_Links[i - 1];
-				auto& linkI = chain.m_Links[i];
+				softbody::Link& linkH = chain.m_Links[i-1];
+				softbody::Link& linkI = chain.m_Links[i];
 
-				const Vector3f direction = (linkI.m_Position - linkH.m_Position).Normalized();
-				linkI.m_Position = linkH.m_Position + direction * linkH.m_Radius;
+				linkI.m_Position += chain.m_Gravity * gameTime.m_DeltaTime;
+
+				linkI.m_Direction = (linkH.m_Position - linkI.m_Position).Normalized();
+				if (isAngleConstrained)
+					linkI.m_Direction = ConstrainAngle(linkH.m_Direction, linkI.m_Direction, radians);
+				if (isLengthConstrained)
+					linkI.m_Position = ConstrainLength(linkH.m_Position, linkI.m_Direction, chain.m_Radius);
 			}
 		}
-
-		for (const softbody::Link& link : chain.m_Links)
-			lines.AddCircle(link.m_Position, Circle2f(50.f), 30.f, Colour::White);
 	}
 }

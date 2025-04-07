@@ -8,7 +8,6 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
-	struct LinesComponent;
 	struct TransformComponent;
 }
 
@@ -32,7 +31,6 @@ namespace softbody
 			eng::InputManager,
 			const eng::WindowManager,
 			// Components
-			eng::LinesComponent,
 			eng::TransformComponent,
 			softbody::ChainComponent,
 			const eng::camera::ProjectionComponent>;

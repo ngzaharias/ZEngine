@@ -21,6 +21,7 @@
 #include "Hidden/HiddenGroupComponent.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
+#include "Softbody/SoftbodyComponents.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -321,6 +322,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 						SelectComponent<hidden::GroupComponent>(m_World, selected);
 						SelectComponent<hidden::ObjectComponent>(m_World, selected);
 						SelectComponent<hidden::RevealComponent>(m_World, selected);
+						SelectComponent<softbody::ChainComponent>(m_World, selected);
 						ImGui::EndMenu();
 					}
 					ImGui::EndMenuBar();
@@ -347,6 +349,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 					InspectComponent<hidden::GroupComponent>(m_World, selected, inspector);
 					InspectComponent<hidden::ObjectComponent>(m_World, selected, inspector);
 					InspectComponent<hidden::RevealComponent>(m_World, selected, inspector);
+					InspectComponent<softbody::ChainComponent>(m_World, selected, inspector);
 					inspector.End();
 				}
 			}
