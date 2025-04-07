@@ -13,6 +13,7 @@ namespace dbg
 	struct InspectorDemoRequestComponent;
 	struct NetworkWindowRequestComponent;
 	struct ShapeWindowRequestComponent;
+	struct SplineWindowRequestComponent;
 }
 
 namespace dbg::level
@@ -83,6 +84,7 @@ namespace dbg
 			dbg::NetworkWindowRequestComponent,
 			dbg::settings::WindowRequestComponent,
 			dbg::ShapeWindowRequestComponent,
+			dbg::SplineWindowRequestComponent,
 			editor::EntityWindowRequestComponent,
 			editor::FlipbookWindowRequestComponent,
 			editor::settings::WindowRequestComponent,

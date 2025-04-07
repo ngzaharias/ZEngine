@@ -27,6 +27,8 @@
 #include "GameDebug/SettingsMenuSystem.h"
 #include "GameDebug/ShapeComponents.h"
 #include "GameDebug/ShapeSystem.h"
+#include "GameDebug/SplineComponents.h"
+#include "GameDebug/SplineSystem.h"
 
 dbg::GameDebug::GameDebug(
 	ecs::EntityWorld& clientWorld,
@@ -62,6 +64,8 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::ServerWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ShapeWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ShapeWindowRequestComponent>();
+	m_ClientWorld.RegisterComponent<dbg::SplineWindowComponent>();
+	m_ClientWorld.RegisterComponent<dbg::SplineWindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<dbg::settings::WindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::settings::WindowRequestComponent>();
 	m_ClientWorld.RegisterComponent<editor::EntityWindowRequestComponent>();
@@ -89,6 +93,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<dbg::settings::DebugSystem>();
 	m_ClientWorld.RegisterSystem<dbg::settings::MenuSystem>();
 	m_ClientWorld.RegisterSystem<dbg::ShapeSystem>();
+	m_ClientWorld.RegisterSystem<dbg::SplineSystem>();
 }
 
 void dbg::GameDebug::Initialise()

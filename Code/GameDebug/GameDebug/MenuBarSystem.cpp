@@ -118,6 +118,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 			}
 			if (ImGui::MenuItem("Debug: Shapes"))
 				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
+			if (ImGui::MenuItem("Debug: Splines"))
+				world.AddEventComponent<dbg::SplineWindowRequestComponent>();
 			if (ImGui::MenuItem("Demo: ImGui"))
 				world.AddEventComponent<dbg::ImGuiDemoRequestComponent>();
 			if (ImGui::MenuItem("Demo: ImNodes"))
