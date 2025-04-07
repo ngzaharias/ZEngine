@@ -5,6 +5,8 @@
 using int32 = int32_t;
 using uint64 = uint64_t;
 
+constexpr float GRAVITY = 980.7f;
+
 constexpr float KINDA_LARGE_FLOAT = 9999999.0f;
 constexpr float KINDA_SMALL_FLOAT = 0.0000001f;
 
@@ -138,6 +140,12 @@ namespace math
 		return sqrtf(value);
 	}
 
+	/// \brief Converts a radian from range [-PI,+PI] to [0,2PI].
+	inline float ToCircular(float radians) noexcept
+	{
+		return std::fmod(radians + PI_TWO, PI_TWO);
+	}
+
 	/// \brief Converts a radian to an euler angle.
 	inline constexpr float ToDegrees(float radians) noexcept
 	{
@@ -154,5 +162,11 @@ namespace math
 	inline constexpr float ToRadians(float degrees) noexcept
 	{
 		return degrees * 0.0174533f;
+	}
+
+	/// \brief Converts a radian from range [0,2PI] to [-PI,+PI].
+	inline float ToSigned(float radians) noexcept
+	{
+		return std::fmod(radians + PI_ONE, PI_TWO) - PI_ONE;
 	}
 }
