@@ -297,9 +297,32 @@ void imgui::EndGraph()
 	ImGui::EndChild();
 }
 
+void imgui::GraphLine(const Vector2f& point1, const Vector2f& point2, float thickness)
+{
+	const ImU32 colour = ImGui::GetColorU32(ImGuiCol_PlotLines);
+	const ImRect inner_bb = GetInner();
+	const ImRect range_bb = GetRange();
+
+	const ImVec2 p1 = ToLocal(point1, inner_bb, range_bb);
+	const ImVec2 p2 = ToLocal(point2, inner_bb, range_bb);
+	ImDrawList* drawList = ImGui::GetWindowDrawList();
+	drawList->AddLine(p1, p2, colour, thickness);
+}
+
+void imgui::GraphPoint(const Vector2f& value, float thickness)
+{
+	const ImU32 colour = ImGui::GetColorU32(ImGuiCol_PlotLines);
+	const ImRect inner_bb = GetInner();
+	const ImRect range_bb = GetRange();
+	const ImVec2 mousePos = ImGui::GetIO().MousePos;
+
+	const ImVec2 localPos = ToLocal(value, inner_bb, range_bb);
+	ImDrawList* drawList = ImGui::GetWindowDrawList();
+	drawList->AddCircle(localPos, controlRadius, colour);
+}
+
 void imgui::GraphShape(AABB2f& value, float rounding, float thickness, ImDrawFlags flags)
 {
-	const float scale = GetScale();
 	const int dragIdx1 = GenerateDragIndex();
 	const int dragIdx2 = GenerateDragIndex();
 	const int dragIdx3 = GenerateDragIndex();
@@ -398,7 +421,6 @@ void imgui::GraphShape(Circle2f& value, int segments, float thickness)
 
 void imgui::GraphShape(Line2f& value, float thickness)
 {
-	const float scale = GetScale();
 	const int dragIdx1 = GenerateDragIndex();
 	const int dragIdx2 = GenerateDragIndex();
 	const ImU32 colourA = ImGui::GetColorU32(ImGuiCol_PlotLines);
@@ -439,7 +461,6 @@ void imgui::GraphShape(Line2f& value, float thickness)
 
 void imgui::GraphShape(OBB2f& value, float thickness)
 {
-	const float scale = GetScale();
 	const int dragIdx1 = GenerateDragIndex();
 	const int dragIdx2 = GenerateDragIndex();
 	const int dragIdx3 = GenerateDragIndex();
@@ -496,7 +517,6 @@ void imgui::GraphShape(OBB2f& value, float thickness)
 
 void imgui::GraphShape(Ray2f& value, float thickness)
 {
-	const float scale = GetScale();
 	const int dragIdx1 = GenerateDragIndex();
 	const int dragIdx2 = GenerateDragIndex();
 	const ImU32 colourA = ImGui::GetColorU32(ImGuiCol_PlotLines);
@@ -541,7 +561,6 @@ void imgui::GraphShape(Ray2f& value, float thickness)
 
 void imgui::GraphShape(Segment2f& value, float thickness)
 {
-	const float scale = GetScale();
 	const int dragIdx1 = GenerateDragIndex();
 	const int dragIdx2 = GenerateDragIndex();
 	const ImU32 colourA = ImGui::GetColorU32(ImGuiCol_PlotLines);
@@ -579,7 +598,6 @@ void imgui::GraphShape(Segment2f& value, float thickness)
 
 void imgui::GraphShape(Triangle2f& value, float thickness)
 {
-	const float scale = GetScale();
 	const int dragIdx1 = GenerateDragIndex();
 	const int dragIdx2 = GenerateDragIndex();
 	const int dragIdx3 = GenerateDragIndex();
