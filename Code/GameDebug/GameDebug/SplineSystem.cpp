@@ -62,7 +62,7 @@ namespace
 					for (const float t : enumerate::Length(0.1f, 1.f))
 					{
 						p1 = p2;
-						p2 = math::BezierQuatric(data.p1, data.c, data.p2, t);
+						p2 = math::BezierQuadratic(data.p1, data.c, data.p2, t);
 						imgui::GraphLine(p1, p2);
 					}
 				},
