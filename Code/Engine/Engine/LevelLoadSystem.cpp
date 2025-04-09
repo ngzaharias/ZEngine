@@ -32,7 +32,7 @@ void eng::level::LoadSystem::Initialise(World& world)
 	for (const auto& entry : std::filesystem::directory_iterator(path.ToChar()))
 	{
 		subpath = std::move(entry.path().string());
-		if (path.IsDirectory())
+		if (subpath.IsDirectory())
 		{
 			const str::Name name = NAME(subpath.GetStem());
 			directoryComponent.m_Levels.Emplace(name, subpath);
