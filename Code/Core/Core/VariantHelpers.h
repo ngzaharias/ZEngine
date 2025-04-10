@@ -3,6 +3,7 @@
 #include "Core/StringHelpers.h"
 #include "Core/StringView.h"
 #include "Core/TypeInfo.h"
+#include "Core/TypeName.h"
 #include "Core/Variant.h"
 
 namespace core

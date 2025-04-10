@@ -2,7 +2,7 @@
 
 #include "Core/Assert.h"
 
-#include <iterator>
+#include <algorithm>
 
 template<typename Type>
 Array<Type>::Array()
