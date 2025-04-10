@@ -1,4 +1,4 @@
-#include <Catch2/catch.hpp>
+#include "MathPCH.h"
 
 #include "Math/Math.h"
 

@@ -1,4 +1,4 @@
-#include <Catch2/catch.hpp>
+#include "MathPCH.h"
 
 #include "Core/Array.h"
 #include "Math/Algorithms.h"

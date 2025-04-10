@@ -1,5 +1,7 @@
 project "Math_ut"
 	kind "ConsoleApp"
+	pchheader "MathPCH.h"
+	pchsource "Math_ut/MathPCH.cpp"
 	location "%{wks.location}/Math_ut"
 
 	defines { "Z_UNIT_TEST" }
@@ -30,3 +32,6 @@ project "Math_ut"
 		"Core",
 		"Math",
 	}
+
+	filter "files:Math_ut/Main.cpp"
+		flags { "NoPCH" }
