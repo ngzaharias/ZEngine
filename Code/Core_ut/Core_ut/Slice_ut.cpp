@@ -1,4 +1,4 @@
-#include <Catch2/catch.hpp>
+#include "CorePCH.h"
 
 #include "Core/Array.h"
 #include "Core/Slice.h"

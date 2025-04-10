@@ -1,4 +1,4 @@
-#include <Catch2/catch.hpp>
+#include "CorePCH.h"
 
 #include "Core/Set.h"
 #include "Core/Types.h"

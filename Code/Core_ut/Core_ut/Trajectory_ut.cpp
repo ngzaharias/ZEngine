@@ -1,4 +1,4 @@
-#include <Catch2/catch.hpp>
+#include "CorePCH.h"
 
 #include "Core/Trajectory.h"
 #include "Math/Vector.h"
