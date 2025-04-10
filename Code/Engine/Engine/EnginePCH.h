@@ -10,3 +10,4 @@
 #include "Core/Types.h"
 
 // Engine
+#include "Engine/Visitor.h"
