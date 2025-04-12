@@ -20,5 +20,5 @@ m_ClippingNear = 30.0
 m_Size = 2600.0
 
 ['eng::camera::Zoom2DComponent']
-m_Max = 5000.0
+m_Max = 2600.0
 m_Min = 1000.0
