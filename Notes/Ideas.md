@@ -1,0 +1,21 @@
+- [x] Fullscreen + Resolution
+- [x] Input Layers
+- [ ] Input Bindings
+- [ ] Parallax Background
+- [ ] Hints - Purring that gets louder the closer the mouse position is.
+- [x] Smooth Zoom
+- [ ] Unlocking achievements unlocks rewards in the game.
+- [ ] Fish eye distortion. https://danielilett.com/2019-10-17-tut3-1-something-fishy/
+- [ ] Softbody Procedural Animation https://youtu.be/GXh0Vxg7AnQ
+	- [x] Chains
+	- [ ] Ropes
+	- [ ] Shapes
+- [ ] Moving mouse over plants makes them move
+	- particle effects
+	- pushes the leaves and stems around
+- [ ] Move objects around to find further cats
+- [ ] Reveal shows a portrait of the cat with its name
+- [ ] Boids
+- [ ] Build Insights
+- [ ] Post Processing
+- [ ] LUT
