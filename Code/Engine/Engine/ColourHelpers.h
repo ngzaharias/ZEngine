@@ -2,6 +2,11 @@
 
 class Colour;
 
+namespace ecs
+{
+	struct Entity;
+}
+
 namespace colour
 {
 	Colour LerpRGB(const Colour& a, const Colour& b, const float t);
