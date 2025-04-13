@@ -10,7 +10,7 @@ namespace eng
 		str::String m_Name = "ZEngine";
 		Vector2u m_Position = Vector2u::Zero;
 		Vector2u m_Resolution = Vector2u::Zero;
-		EWindowMode m_Mode = EWindowMode::Fullscreen;
+		EWindowMode m_Mode = EWindowMode::Borderless;
 		int32 m_RefreshRate = 0;
 
 		bool m_IsVSyncEnabled = false;

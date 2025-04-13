@@ -24,7 +24,7 @@ namespace eng::settings
 
 	struct Window
 	{
-		eng::EWindowMode m_Mode = eng::EWindowMode::Fullscreen;
+		eng::EWindowMode m_Mode = eng::EWindowMode::Borderless;
 		Vector2u m_Resolution = Vector2u::Zero;
 		int32 m_RefreshRate = 0;
 	};

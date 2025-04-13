@@ -6,7 +6,7 @@ namespace eng
 {
 	enum class EWindowMode
 	{
-		Fullscreen,
+		Borderless,
 		Windowed,
 	};
 }

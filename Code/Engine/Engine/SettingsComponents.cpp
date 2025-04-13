@@ -185,6 +185,7 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 	if (WriteHeader("m_Resolution", value.m_Resolution))
 	{
 		ImGui::TableSetColumnIndex(1);
+		ImGui::BeginDisabled(value.m_Mode != eng::EWindowMode::Windowed);
 
 		m_Scratch = std::format("{}x{}", value.m_Resolution.x, value.m_Resolution.y);
 		if (ImGui::BeginCombo("##resolution", m_Scratch.c_str()))
@@ -200,6 +201,7 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 			}
 			ImGui::EndCombo();
 		}
+		ImGui::EndDisabled();
 	}
 
 	ImGui::TableNextRow();

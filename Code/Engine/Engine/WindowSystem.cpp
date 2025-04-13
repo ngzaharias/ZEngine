@@ -9,18 +9,6 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 
-void eng::WindowSystem::Initialise(World& world)
-{
-	const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
-	const auto& windowSettings = localSettings.m_Window;
-
-	auto& manager = world.WriteResource<eng::WindowManager>();
-	eng::Window* window = manager.GetWindow(0);
-	window->SetMode(windowSettings.m_Mode);
-	window->SetResolution(windowSettings.m_Resolution);
-	window->Refresh();
-}
-
 void eng::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
@@ -31,11 +19,13 @@ void eng::WindowSystem::Update(World& world, const GameTime& gameTime)
 		const auto& windowSettings = localSettings.m_Window;
 
 		auto& manager = world.WriteResource<eng::WindowManager>();
-		eng::Window* window = manager.GetWindow(0);
-		window->SetMode(windowSettings.m_Mode);
-		window->SetResolution(windowSettings.m_Resolution);
-		window->SetRefreshRate(windowSettings.m_RefreshRate);
-		window->Refresh();
+		if (eng::Window* window = manager.GetWindow(0))
+		{
+			window->SetMode(windowSettings.m_Mode);
+			window->SetResolution(windowSettings.m_Resolution);
+			window->SetRefreshRate(windowSettings.m_RefreshRate);
+			window->Refresh();
+		}
 	}
 
 	const auto& manager = world.ReadResource<eng::WindowManager>();

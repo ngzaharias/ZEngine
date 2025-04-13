@@ -15,7 +15,7 @@ namespace
 	}
 }
 
-void eng::WindowManager::Initialise(const eng::WindowConfig& config)
+void eng::WindowManager::Initialise()
 {
 	glfwSetErrorCallback(glfw_error_callback);
 
@@ -23,8 +23,16 @@ void eng::WindowManager::Initialise(const eng::WindowConfig& config)
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	eng::WindowConfig config;
+	{
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+		config.m_Mode = EWindowMode::Borderless;
+		config.m_Resolution = Vector2u(mode->width, mode->height);
+		config.m_RefreshRate = mode->refreshRate;
+	}
 
 	Create(config);
 	if (m_Windows.IsEmpty())
@@ -60,7 +68,7 @@ void eng::WindowManager::Initialise(const eng::WindowConfig& config)
 			resolutions.Add(Vector2u(mode.width, mode.height));
 		}
 
-		m_Modes.Append(eng::EWindowMode::Fullscreen);
+		m_Modes.Append(eng::EWindowMode::Borderless);
 		m_Modes.Append(eng::EWindowMode::Windowed);
 		for (const int32 value : refreshRates)
 			m_RefreshRates.Append(value);
@@ -123,4 +131,18 @@ bool eng::WindowManager::Destroy(const eng::Window* value)
 		return true;
 	}
 	return false;
+}
+
+eng::Window* eng::WindowManager::GetWindow(const int32 index) 
+{ 
+	if (index < m_Windows.GetCount())
+		return m_Windows[index]; 
+	return nullptr;
+}
+
+const eng::Window* eng::WindowManager::GetWindow(const int32 index) const 
+{ 
+	if (index < m_Windows.GetCount())
+		return m_Windows[index];
+	return nullptr;
 }

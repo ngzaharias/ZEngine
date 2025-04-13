@@ -23,8 +23,6 @@ namespace eng
 			// Components
 			eng::settings::LocalComponent>;
 
-		void Initialise(World& world);
-
 		void Update(World& world, const GameTime& gameTime);
 	};
 }

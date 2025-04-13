@@ -15,7 +15,7 @@ namespace eng
 	class WindowManager final
 	{
 	public:
-		void Initialise(const eng::WindowConfig& config);
+		void Initialise();
 		void Shutdown();
 
 		void PreUpdate(const GameTime& gameTime);
@@ -24,8 +24,8 @@ namespace eng
 		auto Create(const eng::WindowConfig& config) -> const eng::Window*;
 		bool Destroy(const eng::Window* value);
 
-		eng::Window* GetWindow(const int32 index) { return m_Windows[index]; }
-		const eng::Window* GetWindow(const int32 index) const { return m_Windows[index]; }
+		auto GetWindow(const int32 index) -> eng::Window*;
+		auto GetWindow(const int32 index) const -> const eng::Window*;
 
 		const Array<int32>& GetRefreshRates() const { return m_RefreshRates; }
 		const Array<Vector2u>& GetResolutions() const { return m_Resolutions; }

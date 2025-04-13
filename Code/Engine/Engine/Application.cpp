@@ -179,10 +179,7 @@ void eng::Application::Initialise()
 	PROFILE_FUNCTION();
 
 	// do first
-	eng::WindowConfig config;
-	config.m_Mode = eng::EWindowMode::Windowed;
-	config.m_Resolution = Vector2u(1920, 1080);
-	m_WindowManager.Initialise(config);
+	m_WindowManager.Initialise();
 
 	m_AssetManager.Initialise();
 	m_ImguiManager.Initialise(m_WindowManager.GetWindow(0));
@@ -232,5 +229,5 @@ void eng::Application::Shutdown()
 bool eng::Application::ShouldClose()
 {
 	const eng::Window* window = m_WindowManager.GetWindow(0);
-	return window->ShouldClose();
+	return window && window->ShouldClose();
 }

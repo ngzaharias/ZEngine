@@ -185,22 +185,39 @@ namespace
 	}
 }
 
+// https://www.glfw.org/docs/3.3/window_guide.html
 glfw::Window::Window(const eng::WindowConfig& config)
 	: eng::Window(config)
 {
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+	glfwWindowHint(GLFW_AUTO_ICONIFY, true);		// full-screen
+	glfwWindowHint(GLFW_CENTER_CURSOR, true);		// full-screen
+	glfwWindowHint(GLFW_DECORATED, true);			// windowed
+	glfwWindowHint(GLFW_FLOATING, false);			// windowed
+	glfwWindowHint(GLFW_FOCUS_ON_SHOW, true);
+	glfwWindowHint(GLFW_FOCUSED, true);				// windowed
+	glfwWindowHint(GLFW_MAXIMIZED, false);			// windowed
+	glfwWindowHint(GLFW_RESIZABLE, false);
+	glfwWindowHint(GLFW_VISIBLE, true);				// windowed
+	glfwWindowHint(GLFW_SCALE_TO_MONITOR, false);	// windowed
+
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
 	m_Window = glfwCreateWindow(
-		config.m_Resolution.x, 
-		config.m_Resolution.y, 
+		mode->width,
+		mode->height,
 		config.m_Name.c_str(), 
 		nullptr,
 		nullptr);
 
-	glfwSetWindowAttrib(m_Window, GLFW_FLOATING, GLFW_FALSE);
 	glfwSetWindowUserPointer(m_Window, this);
 	glfwSetFramebufferSizeCallback(m_Window, Callback_FramebufferResized);
 	glfwSetScrollCallback(m_Window, Callback_ScrollChanged);
-
-	Refresh();
 }
 
 glfw::Window::~Window()
@@ -281,7 +298,7 @@ void glfw::Window::Refresh()
 {
 	switch (m_Config.m_Mode)
 	{
-	case eng::EWindowMode::Fullscreen:
+	case eng::EWindowMode::Borderless:
 	{
 		GLFWmonitor* glfwMonitor = glfwGetPrimaryMonitor();
 		const GLFWvidmode* glfwMode = glfwGetVideoMode(glfwMonitor);
