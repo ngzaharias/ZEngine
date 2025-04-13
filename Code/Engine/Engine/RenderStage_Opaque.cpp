@@ -2,6 +2,7 @@
 #include "Engine/RenderStage_Opaque.h"
 
 #include "Core/Algorithms.h"
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -199,9 +200,9 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 			const Matrix4x4 model = meshTransform.ToTransform();
 
-			const Vector4f& colour = colour::From(id.m_Entity);
+			const Colour& colour = colour::From(id.m_Entity);
 
-			batchData.m_Colours.Emplace(colour.x, colour.y, colour.z);
+			batchData.m_Colours.Emplace(colour);
 			batchData.m_Models.Append(model);
 			batchData.m_TexParams.Append(Vector4f::Zero);
 

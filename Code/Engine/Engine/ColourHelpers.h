@@ -1,23 +1,18 @@
 #pragma once
 
-#include "Math/Vector.h"
-
-namespace ecs
-{
-	struct Entity;
-}
+class Colour;
 
 namespace colour
 {
-	Vector3f LerpRGB(const Vector3f& a, const Vector3f& b, const float t);
+	Colour LerpRGB(const Colour& a, const Colour& b, const float t);
 
-	Vector3f ToHSV(const Vector3f& rgb);
-	Vector3f ToRGB(const Vector3f& hsv);
+	Colour ToHSV(const Colour& rgb);
+	Colour ToRGB(const Colour& hsv);
 
-	const Vector4f& From(const void* value);
-	const Vector4f& From(const int32 value);
-	const Vector4f& From(const uint32 value);
-	const Vector4f& From(const ecs::Entity& value);
+	const Colour& From(const void* value);
+	const Colour& From(const int32 value);
+	const Colour& From(const uint32 value);
+	const Colour& From(const ecs::Entity& value);
 
-	const Vector4f& Generate();
+	const Colour& Generate();
 }

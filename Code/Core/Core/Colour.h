@@ -16,7 +16,7 @@ public:
 	constexpr Colour(const Vector4f& rgba) noexcept
 		: r(rgba.x), g(rgba.y), b(rgba.z), a(rgba.w) { }
 
-	operator Vector4f() { return Vector4f(r, g, b, a); }
+	operator Vector4f() const { return Vector4f(r, g, b, a); }
 
 	static const Colour Black;
 	static const Colour Blue;
