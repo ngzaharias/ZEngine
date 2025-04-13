@@ -29,6 +29,14 @@ namespace
 	const str::Name strOpen = str::Name::Create("DebugMenuBar_Open");
 	const str::Name strReload = str::Name::Create("DebugMenuBar_Reload");
 	const str::Name strSave = str::Name::Create("DebugMenuBar_Save");
+
+	void LaunchExe(const str::Path& filepath)
+	{
+		// #release: programs that run shell commands will be deleted by windows defender
+#ifndef Z_RELEASE
+		ShellExecuteA(NULL, "open", filepath.ToChar(), NULL, NULL, SW_SHOWDEFAULT);
+#endif
+	}
 }
 
 void dbg::MenuBarSystem::Initialise(World& world)
@@ -53,6 +61,10 @@ void dbg::MenuBarSystem::Shutdown(World& world)
 void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+#ifdef Z_RELEASE
+	return;
+#endif 
 
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -112,10 +124,7 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 			if (ImGui::MenuItem("Debug: Entities", "Ctrl+Shift+F11"))
 				world.AddEventComponent<dbg::EntityWindowRequestComponent>();
 			if (ImGui::MenuItem("Debug: Optick"))
-			{
-				const str::Path path = str::Path(str::EPath::ThirdParty, "optick/1.3.1/Optick.exe");
-				ShellExecuteA(NULL, "open", path.ToChar(), NULL, NULL, SW_SHOWDEFAULT);
-			}
+				LaunchExe(str::Path(str::EPath::ThirdParty, "optick/1.3.1/Optick.exe"));
 			if (ImGui::MenuItem("Debug: Shapes"))
 				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
 			if (ImGui::MenuItem("Debug: Splines"))
