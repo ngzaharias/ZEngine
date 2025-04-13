@@ -52,3 +52,4 @@ imgui.ini
 *.krz~
 Package/Steam.zip
 /BuildInsights
+/Package/Steam
