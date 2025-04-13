@@ -3,6 +3,8 @@
 #include "Core/String.h"
 #include "ECS/Component.h"
 
+// #release: bump the version number
+
 namespace eng
 {
 	/// \brief
@@ -10,6 +12,6 @@ namespace eng
 	{
 		str::String m_Branch = {};
 		str::String m_Commit = {};
-		str::String m_Version = "alpha-0.0.8";
+		str::String m_Version = "alpha-0.0.9";
 	};
 }
