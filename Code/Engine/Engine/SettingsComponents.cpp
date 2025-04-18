@@ -208,6 +208,7 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 	if (WriteHeader("m_RefreshRate", value.m_RefreshRate))
 	{
 		ImGui::TableSetColumnIndex(1);
+		ImGui::BeginDisabled(value.m_Mode == eng::EWindowMode::Windowed);
 
 		m_Scratch = std::format("{}", value.m_RefreshRate);
 		if (ImGui::BeginCombo("##refreshrate", m_Scratch.c_str()))
@@ -223,6 +224,7 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 			}
 			ImGui::EndCombo();
 		}
+		ImGui::EndDisabled();
 	}
 
 	return result;
