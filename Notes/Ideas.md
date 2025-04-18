@@ -10,12 +10,17 @@
 	- [x] Chains
 	- [ ] Ropes
 	- [ ] Shapes
-- [ ] Moving mouse over plants makes them move
-	- particle effects
-	- pushes the leaves and stems around
-- [ ] Move objects around to find further cats
 - [ ] Reveal shows a portrait of the cat with its name
 - [ ] Boids
-- [ ] Build Insights
+- [x] Build Insights
 - [ ] Post Processing
 - [ ] LUT
+- [ ] Interactive Scene
+	- [ ] Clouds in the window scroll left to right.
+	- [ ] Boxes can be pushed around slightly.
+	- [ ] The arcade door can be opened and closed.
+	- [ ] The arcade cabinet can be turned on.
+	- [ ] A coin can be inserted into the arcade to change the screen.
+	- [ ] Moving mouse over plants makes them move
+		- particle effects
+		- pushes the leaves and stems around

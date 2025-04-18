@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Ideas.md",
+                "file": "Tasks.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Ideas"
+              "title": "Tasks"
             }
           }
         ]
@@ -137,9 +137,9 @@
   },
   "active": "cb7287120b17b1a0",
   "lastOpenFiles": [
-    "Tasks.md",
-    "Resources.md",
     "Ideas.md",
+    "Resources.md",
+    "Tasks.md",
     "Car Dealerships.md",
     "Game/Tasks.md",
     "Core/Tasks.md",
