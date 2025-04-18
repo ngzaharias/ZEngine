@@ -1,0 +1,11 @@
+m_Guid = "e6f743dfbbb040c1b56e65e0ac70e872"
+m_Name = "SpriteMask"
+
+['eng::SpriteComponent']
+m_Size = { X = 500, Y = 500 }
+m_Sprite = "57f24ba4ad254571bae579bcbc88691c"
+
+['eng::TransformComponent']
+m_Translate = { X = 500.0, Y = 0.0, Z = 0.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
