@@ -33,7 +33,6 @@ void eng::StaticMeshAssetSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	using AddedQuery = ecs::query
 		::Include<eng::StaticMeshComponent>
@@ -41,6 +40,8 @@ void eng::StaticMeshAssetSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<AddedQuery>())
 	{
 		const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(entity);
+
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		auto& assetComponent = world.AddComponent<eng::StaticMeshAssetComponent>(entity);
 		LoadAsset(assetManager, assetComponent, meshComponent.m_StaticMesh);
 	}
@@ -51,14 +52,16 @@ void eng::StaticMeshAssetSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<UpdatedQuery>())
 	{
 		const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(entity);
-		auto& assetComponent = world.WriteComponent<eng::StaticMeshAssetComponent>(entity);
+		const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(entity);
 
 		const str::Guid& source = assetComponent.m_Asset ? assetComponent.m_Asset->m_Guid : str::Guid::Unassigned;
 		const str::Guid& target = meshComponent.m_StaticMesh;
 		if (source != target)
 		{
-			UnloadAsset(assetManager, assetComponent);
-			LoadAsset(assetManager, assetComponent, meshComponent.m_StaticMesh);
+			auto& assetManager = world.WriteResource<eng::AssetManager>();
+			auto& writeComponent = world.WriteComponent<eng::StaticMeshAssetComponent>(entity);
+			UnloadAsset(assetManager, writeComponent);
+			LoadAsset(assetManager, writeComponent, meshComponent.m_StaticMesh);
 		}
 	}
 
@@ -67,6 +70,7 @@ void eng::StaticMeshAssetSystem::Update(World& world, const GameTime& gameTime)
 		::Include<eng::StaticMeshAssetComponent>;
 	for (const ecs::Entity& entity : world.Query<RemovedQuery>())
 	{
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		auto& assetComponent = world.WriteComponent<eng::StaticMeshAssetComponent>(entity);
 		UnloadAsset(assetManager, assetComponent);
 

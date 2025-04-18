@@ -61,14 +61,14 @@ void eng::SpriteAssetSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
-
 	using AddedQuery = ecs::query
 		::Include<eng::SpriteComponent>
 		::Exclude<eng::SpriteAssetComponent>;
 	for (const ecs::Entity& entity : world.Query<AddedQuery>())
 	{
 		const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(entity);
+
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		auto& assetComponent = world.AddComponent<eng::SpriteAssetComponent>(entity);
 		LoadAsset(assetManager, assetComponent, spriteComponent.m_Sprite);
 	}
@@ -79,14 +79,16 @@ void eng::SpriteAssetSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<UpdatedQuery>())
 	{
 		const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(entity);
-		auto& assetComponent = world.WriteComponent<eng::SpriteAssetComponent>(entity);
+		const auto& assetComponent = world.ReadComponent<eng::SpriteAssetComponent>(entity);
 
 		const str::Guid& source = assetComponent.m_Sprite ? assetComponent.m_Sprite->m_Guid : str::Guid::Unassigned;
 		const str::Guid& target = spriteComponent.m_Sprite;
 		if (source != target)
 		{
-			UnloadAsset(assetManager, assetComponent);
-			LoadAsset(assetManager, assetComponent, spriteComponent.m_Sprite);
+			auto& assetManager = world.WriteResource<eng::AssetManager>();
+			auto& writeComponent = world.WriteComponent<eng::SpriteAssetComponent>(entity);
+			UnloadAsset(assetManager, writeComponent);
+			LoadAsset(assetManager, writeComponent, spriteComponent.m_Sprite);
 		}
 	}
 
@@ -95,6 +97,7 @@ void eng::SpriteAssetSystem::Update(World& world, const GameTime& gameTime)
 		::Include<eng::SpriteAssetComponent>;
 	for (const ecs::Entity& entity : world.Query<RemovedQuery>())
 	{
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		auto& assetComponent = world.WriteComponent<eng::SpriteAssetComponent>(entity);
 		UnloadAsset(assetManager, assetComponent);
 

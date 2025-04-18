@@ -33,7 +33,6 @@ void eng::TextAssetSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	using AddedQuery = ecs::query
 		::Include<eng::TextComponent>
@@ -41,6 +40,8 @@ void eng::TextAssetSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<AddedQuery>())
 	{
 		const auto& textComponent = world.ReadComponent<eng::TextComponent>(entity);
+
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		auto& assetComponent = world.AddComponent<eng::TextAssetComponent>(entity);
 		LoadAsset(assetManager, assetComponent, textComponent.m_Font);
 	}
@@ -51,14 +52,16 @@ void eng::TextAssetSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<UpdatedQuery>())
 	{
 		const auto& textComponent = world.ReadComponent<eng::TextComponent>(entity);
-		auto& assetComponent = world.WriteComponent<eng::TextAssetComponent>(entity);
+		const auto& assetComponent = world.ReadComponent<eng::TextAssetComponent>(entity);
 
 		const str::Guid& source = assetComponent.m_Font ? assetComponent.m_Font->m_Guid : str::Guid::Unassigned;
 		const str::Guid& target = textComponent.m_Font;
 		if (source != target)
 		{
-			UnloadAsset(assetManager, assetComponent);
-			LoadAsset(assetManager, assetComponent, textComponent.m_Font);
+			auto& assetManager = world.WriteResource<eng::AssetManager>();
+			auto& writeComponent = world.WriteComponent<eng::TextAssetComponent>(entity);
+			UnloadAsset(assetManager, writeComponent);
+			LoadAsset(assetManager, writeComponent, textComponent.m_Font);
 		}
 	}
 
@@ -67,6 +70,7 @@ void eng::TextAssetSystem::Update(World& world, const GameTime& gameTime)
 		::Include<eng::TextAssetComponent>;
 	for (const ecs::Entity& entity : world.Query<RemovedQuery>())
 	{
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		auto& assetComponent = world.WriteComponent<eng::TextAssetComponent>(entity);
 		UnloadAsset(assetManager, assetComponent);
 

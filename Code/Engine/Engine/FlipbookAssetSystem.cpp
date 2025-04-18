@@ -61,7 +61,6 @@ void eng::FlipbookAssetSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	using AddedQuery = ecs::query
 		::Include<eng::FlipbookComponent>
@@ -69,6 +68,8 @@ void eng::FlipbookAssetSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<AddedQuery>())
 	{
 		const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(entity);
+
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		auto& assetComponent = world.AddComponent<eng::FlipbookAssetComponent>(entity);
 		LoadAsset(assetManager, assetComponent, flipbookComponent.m_Flipbook);
 	}
@@ -79,14 +80,16 @@ void eng::FlipbookAssetSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<UpdatedQuery>())
 	{
 		const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(entity);
-		auto& assetComponent = world.WriteComponent<eng::FlipbookAssetComponent>(entity);
+		const auto& assetComponent = world.ReadComponent<eng::FlipbookAssetComponent>(entity);
 
 		const str::Guid& source = assetComponent.m_Flipbook ? assetComponent.m_Flipbook->m_Guid : str::Guid::Unassigned;
 		const str::Guid& target = flipbookComponent.m_Flipbook;
 		if (source != target)
 		{
-			UnloadAsset(assetManager, assetComponent);
-			LoadAsset(assetManager, assetComponent, flipbookComponent.m_Flipbook);
+			auto& assetManager = world.WriteResource<eng::AssetManager>();
+			auto& writeComponent = world.WriteComponent<eng::FlipbookAssetComponent>(entity);
+			UnloadAsset(assetManager, writeComponent);
+			LoadAsset(assetManager, writeComponent, flipbookComponent.m_Flipbook);
 		}
 	}
 
@@ -95,6 +98,7 @@ void eng::FlipbookAssetSystem::Update(World& world, const GameTime& gameTime)
 		::Include<eng::FlipbookAssetComponent>;
 	for (const ecs::Entity& entity : world.Query<RemovedQuery>())
 	{
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		auto& assetComponent = world.WriteComponent<eng::FlipbookAssetComponent>(entity);
 		UnloadAsset(assetManager, assetComponent);
 
