@@ -300,12 +300,11 @@ void glfw::Window::Refresh()
 	{
 	case eng::EWindowMode::Borderless:
 	{
-		GLFWmonitor* glfwMonitor = glfwGetPrimaryMonitor();
-		const GLFWvidmode* glfwMode = glfwGetVideoMode(glfwMonitor);
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
-		// #bug: setting the monitor with a resolution that doesn't 
-		// match causes the window to become unresponsive
-		glfwSetWindowMonitor(m_Window, glfwMonitor, 0, 0, glfwMode->width, glfwMode->height, glfwMode->refreshRate);
+		// #bug: setting the monitor with a resolution that doesn't match causes the window to become unresponsive
+		glfwSetWindowMonitor(m_Window, monitor, 0, 0, mode->width, mode->height, m_Config.m_RefreshRate);
 	} break;
 
 	case eng::EWindowMode::Windowed:
