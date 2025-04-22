@@ -19,6 +19,6 @@ namespace eng
 		void PostUpdate();
 
 	private:
-		const eng::Window* m_Window;
+		const eng::Window* m_Window = nullptr;
 	};
 }

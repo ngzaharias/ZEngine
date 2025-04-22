@@ -83,6 +83,9 @@ void eng::ImguiManager::Shutdown()
 {
 	PROFILE_FUNCTION();
 
+	if (!m_Window)
+		return;
+
 	if (const auto* glfwWindow = dynamic_cast<const glfw::Window*>(m_Window))
 	{
 		ImGui_ImplOpenGL3_Shutdown();
@@ -97,6 +100,9 @@ void eng::ImguiManager::PreUpdate()
 {
 	PROFILE_FUNCTION();
 
+	if (!m_Window)
+		return;
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -106,6 +112,9 @@ void eng::ImguiManager::PreUpdate()
 void eng::ImguiManager::PostUpdate()
 {
 	PROFILE_FUNCTION();
+
+	if (!m_Window)
+		return;
 
 	// render
 	{
