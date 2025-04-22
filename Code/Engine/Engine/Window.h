@@ -35,21 +35,21 @@ namespace eng
 		virtual auto GetMode() const -> eng::EWindowMode { return m_Config.m_Mode; }
 		virtual void SetMode(const eng::EWindowMode value) 
 		{ 
-			m_IsDirty = value != m_Config.m_Mode;
+			m_IsDirty |= value != m_Config.m_Mode;
 			m_Config.m_Mode = value; 
 		}
 
 		virtual auto GetRefreshRate() const -> int32 { return m_Config.m_RefreshRate; }
 		virtual void SetRefreshRate(const int32 value)
 		{
-			m_IsDirty = value != m_Config.m_RefreshRate;
+			m_IsDirty |= value != m_Config.m_RefreshRate;
 			m_Config.m_RefreshRate = value;
 		}
 
 		virtual auto GetResolution() const -> const Vector2u& { return m_Config.m_Resolution; }
 		virtual void SetResolution(const Vector2u& value) 
 		{ 
-			m_IsDirty = value != m_Config.m_Resolution;
+			m_IsDirty |= value != m_Config.m_Resolution;
 			m_Config.m_Resolution = value;
 		}
 

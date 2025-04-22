@@ -39,6 +39,14 @@ namespace glfw
 	private:
 		static void Callback_FramebufferResized(GLFWwindow* glfwWindow, int width, int height);
 		static void Callback_ScrollChanged(GLFWwindow* glfwWindow, double xOffset, double yOffset);
+		static void Callback_WindowClose(GLFWwindow* glfwWindow);
+		static void Callback_WindowContentScale(GLFWwindow* glfwWindow, float xscale, float yscale);
+		static void Callback_WindowFocus(GLFWwindow* glfwWindow, int focused);
+		static void Callback_WindowIconify(GLFWwindow* glfwWindow, int iconified);
+		static void Callback_WindowMaximize(GLFWwindow* glfwWindow, int maximized);
+		static void Callback_WindowPos(GLFWwindow* glfwWindow, int xpos, int ypos);
+		static void Callback_WindowRefresh(GLFWwindow* glfwWindow);
+		static void Callback_WindowSize(GLFWwindow* glfwWindow, int width, int height);
 
 	private:
 		Vector2f m_MousePos = Vector2f::Zero;

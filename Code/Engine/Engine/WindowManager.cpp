@@ -11,12 +11,14 @@ namespace
 {
 	static void glfw_error_callback(int error, const char* description)
 	{
-		fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+		fprintf(stderr, "Window: Error - %d: %s.\n", error, description);
 	}
 }
 
 void eng::WindowManager::Initialise()
 {
+	Z_LOG(ELog::Debug, "Window: Initialise - GLFW.");
+
 	glfwSetErrorCallback(glfw_error_callback);
 
 	glfwInit();
@@ -83,6 +85,8 @@ void eng::WindowManager::Shutdown()
 	for (eng::Window* window : m_Windows)
 		delete window;
 	m_Windows.RemoveAll();
+
+	Z_LOG(ELog::Debug, "Window: Shutdown - GLFW.");
 }
 
 void eng::WindowManager::PreUpdate(const GameTime& gameTime)
