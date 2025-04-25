@@ -24,9 +24,9 @@ namespace eng::settings
 
 	struct Window
 	{
-		eng::EWindowMode m_Mode = eng::EWindowMode::Borderless;
-		Vector2u m_Resolution = Vector2u::Zero;
-		int32 m_RefreshRate = 0;
+		eng::EWindowMode m_WindowMode = eng::EWindowMode::Fullscreen;
+		Vector2u m_Resolution = Vector2u(800, 600);
+		int32 m_RefreshRate = 59;
 	};
 
 	/// \brief Debug settings that is only used in non-gold builds.

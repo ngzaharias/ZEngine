@@ -1,13 +1,14 @@
 #pragma once
 
 #include "Core/Array.h"
-#include "Engine/WindowConfig.h"
+#include "Engine/WindowModeEnum.h"
 
 class GameTime;
 
 namespace eng
 {
 	class Window;
+	struct WindowConfig;
 }
 
 namespace eng
@@ -27,14 +28,15 @@ namespace eng
 		auto GetWindow(const int32 index) -> eng::Window*;
 		auto GetWindow(const int32 index) const -> const eng::Window*;
 
-		const Array<int32>& GetRefreshRates() const { return m_RefreshRates; }
+		const Array<eng::EWindowMode>& GetWindowModes() const { return m_WindowModes; }
 		const Array<Vector2u>& GetResolutions() const { return m_Resolutions; }
-		const Array<EWindowMode>& GetModes() const { return m_Modes; }
+		const Array<int32>& GetRefreshRates() const { return m_RefreshRates; }
 
 	private:
-		Array<int32> m_RefreshRates = {};
-		Array<Vector2u> m_Resolutions = {};
-		Array<eng::EWindowMode> m_Modes = {};
 		Array<eng::Window*> m_Windows = {};
+
+		Array<eng::EWindowMode> m_WindowModes = {};
+		Array<Vector2u> m_Resolutions = {};
+		Array<int32> m_RefreshRates = {};
 	};
 }

@@ -2,6 +2,9 @@
 #include "Engine/GLFW/Window.h"
 
 #ifdef Z_GLFW
+#include "Core/Variant.h"
+#include "Engine/WindowConfig.h"
+#include "Engine/WindowModeEnum.h"
 #include "Input/Key.h"
 
 #include <GLEW/glew.h>
@@ -189,7 +192,6 @@ namespace
 glfw::Window::Window(const eng::WindowConfig& config)
 	: eng::Window(config)
 {
-
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -209,12 +211,9 @@ glfw::Window::Window(const eng::WindowConfig& config)
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-	m_Window = glfwCreateWindow(
-		mode->width,
-		mode->height,
-		config.m_Name.c_str(), 
-		nullptr,
-		nullptr);
+	m_Window = glfwCreateWindow(mode->width, mode->height, config.m_Name.c_str(), nullptr, nullptr);
+	m_Resolution = Vector2u(mode->width, mode->height);
+	m_RefreshRate = mode->refreshRate;
 
 	glfwSetFramebufferSizeCallback(m_Window, Callback_FramebufferResized);
 	glfwSetScrollCallback(m_Window, Callback_ScrollChanged);
@@ -227,19 +226,12 @@ glfw::Window::Window(const eng::WindowConfig& config)
 	glfwSetWindowRefreshCallback(m_Window, Callback_WindowRefresh);
 	glfwSetWindowSizeCallback(m_Window, Callback_WindowSize);
 	glfwSetWindowUserPointer(m_Window, this);
-
-	Z_LOG(ELog::Debug, "Window: Create - {}", config.m_Name.c_str());
-	Z_LOG(ELog::Debug, "- Resolution {}x{}.", mode->width, mode->height);
-	Z_LOG(ELog::Debug, "- RefreshRate {}.", mode->refreshRate);
-	Z_LOG(ELog::Debug, "- Red {}, Green {}, Blue {}.", mode->redBits, mode->greenBits, mode->blueBits);
 }
 
 glfw::Window::~Window()
 {
 	glfwDestroyWindow(m_Window);
 	glfwTerminate();
-
-	Z_LOG(ELog::Debug, "Window: Destroy - {}", m_Config.m_Name.c_str());
 }
 
 void glfw::Window::PreUpdate(const GameTime& gameTime)
@@ -310,54 +302,45 @@ void glfw::Window::GatherScroll(Vector2f& out_Delta) const
 	out_Delta = m_ScrollDelta;
 }
 
-void glfw::Window::Refresh()
+void glfw::Window::Refresh(const eng::EWindowMode& windowMode, const Vector2u& resolution, const int32 refreshRate)
 {
-	if (!m_IsDirty)
-		return;
-	m_IsDirty = false;
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
-	switch (m_Config.m_Mode)
+	switch (windowMode)
 	{
 	case eng::EWindowMode::Borderless:
 	{
-		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-
-		// #bug: setting the monitor with a resolution that doesn't match causes the window to become unresponsive
-		glfwSetWindowMonitor(m_Window, monitor, 0, 0, mode->width, mode->height, m_Config.m_RefreshRate);
-
-		Z_LOG(ELog::Debug, "Window: Refresh - {}", m_Config.m_Name.c_str());
-		Z_LOG(ELog::Debug, "- Borderless");
-		Z_LOG(ELog::Debug, "- Resolution {}x{}.", mode->width, mode->height);
-		Z_LOG(ELog::Debug, "- RefreshRate {}.", m_Config.m_RefreshRate);
+		glfwSetWindowAttrib(m_Window, GLFW_DECORATED, false);
+		glfwSetWindowMonitor(m_Window, nullptr, 0, 0, mode->width, mode->height, mode->refreshRate);
+		m_Resolution = Vector2u(mode->width, mode->height);
+		m_RefreshRate = mode->refreshRate;
 	} break;
-
+	case eng::EWindowMode::Fullscreen:
+	{
+		// #bug: setting the monitor with a resolution that doesn't match causes the window to become unresponsive
+		glfwSetWindowMonitor(m_Window, monitor, 0, 0, mode->width, mode->height, refreshRate);
+		m_Resolution = Vector2u(mode->width, mode->height);
+		m_RefreshRate = refreshRate;
+	} break;
 	case eng::EWindowMode::Windowed:
 	{
-		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-		const Vector2u& resolution = m_Config.m_Resolution;
 		const Vector2i position = Vector2i(
 			mode->width / 2 - resolution.x / 2,
 			mode->height / 2 - resolution.y / 2);
 
+		glfwSetWindowAttrib(m_Window, GLFW_DECORATED, true);
 		glfwSetWindowMonitor(m_Window, nullptr, position.x, position.y, resolution.x, resolution.y, mode->refreshRate);
-
-		Z_LOG(ELog::Debug, "Window: Refresh - {}", m_Config.m_Name.c_str());
-		Z_LOG(ELog::Debug, "- Windowed");
-		Z_LOG(ELog::Debug, "- Resolution {}x{}.", resolution.x, resolution.y);
-		Z_LOG(ELog::Debug, "- RefreshRate {}.", mode->refreshRate);
+		m_Resolution = resolution;
+		m_RefreshRate = mode->refreshRate;
 	} break;
 	}
 }
 
 void glfw::Window::Callback_FramebufferResized(GLFWwindow* glfwWindow, int width, int height)
 {
-	Z_LOG(ELog::Debug, "Window: Callback_FramebufferResized - {}x{}.", width, height);
-
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
-	window->m_Config.m_Resolution.x = static_cast<uint32>(width);
-	window->m_Config.m_Resolution.y = static_cast<uint32>(height);
+	window->m_Resolution = Vector2u(width, height);
 
 	glViewport(0, 0, width, height);
 	//glScissor(0, 0, width, height);
@@ -365,8 +348,6 @@ void glfw::Window::Callback_FramebufferResized(GLFWwindow* glfwWindow, int width
 
 void glfw::Window::Callback_ScrollChanged(GLFWwindow* glfwWindow, double xOffset, double yOffset)
 {
-	Z_LOG(ELog::Debug, "Window: Callback_ScrollChanged - {}, {}.", xOffset, yOffset);
-
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
 	window->m_ScrollDelta.x = static_cast<float>(xOffset);
 	window->m_ScrollDelta.y = static_cast<float>(yOffset);
@@ -374,42 +355,46 @@ void glfw::Window::Callback_ScrollChanged(GLFWwindow* glfwWindow, double xOffset
 
 void glfw::Window::Callback_WindowClose(GLFWwindow* glfwWindow)
 {
-	Z_LOG(ELog::Debug, "Window: Callback_WindowClose");
 }
 
 void glfw::Window::Callback_WindowContentScale(GLFWwindow* glfwWindow, float xscale, float yscale)
 {
-	Z_LOG(ELog::Debug, "Window: Callback_WindowContnetScale - {}, {}.", xscale, yscale);
+	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
+	window->m_Scale = Vector2f(xscale, yscale);
 }
 
 void glfw::Window::Callback_WindowRefresh(GLFWwindow* glfwWindow)
 {
-	Z_LOG(ELog::Debug, "Window: Callback_WindowRefresh");
 }
 
 void glfw::Window::Callback_WindowFocus(GLFWwindow* glfwWindow, int focused)
 {
-	Z_LOG(ELog::Debug, "Window: Callback_WindowFocus - {}.", focused != 0 ? "true" : "false");
+	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
+	window->m_IsFocused = focused != 0;
 }
 
 void glfw::Window::Callback_WindowIconify(GLFWwindow* glfwWindow, int iconified)
 {
-	Z_LOG(ELog::Debug, "Window: Callback_WindowIconify - {}.", iconified != 0 ? "true" : "false");
+	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
+	window->m_IsIconified = iconified != 0;
 }
 
 void glfw::Window::Callback_WindowMaximize(GLFWwindow* glfwWindow, int maximized)
 {
-	Z_LOG(ELog::Debug, "Window: Callback_WindowMaximize - {}.", maximized != 0 ? "true" : "false");
+	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
+	window->m_IsMaximized = maximized != 0;
 }
 
 void glfw::Window::Callback_WindowPos(GLFWwindow* glfwWindow, int xpos, int ypos)
 {
-	Z_LOG(ELog::Debug, "Window: Callback_WindowPos - {},{}.", xpos, ypos);
+	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
+	window->m_Position = Vector2i(xpos, ypos);
 }
 
 void glfw::Window::Callback_WindowSize(GLFWwindow* glfwWindow, int width, int height)
 {
-	Z_LOG(ELog::Debug, "Window: Callback_WindowSize - {}x{}.", width, height);
+	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
+	window->m_Resolution = Vector2u(width, height);
 }
 
 #endif

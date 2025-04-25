@@ -1,16 +1,15 @@
 #pragma once
 
-#include "Engine/WindowModeEnum.h"
 #include "Math/Vector.h"
 
 namespace eng
 {
 	struct WindowConfig
 	{
-		str::String m_Name = "ZEngine";
-		Vector2u m_Position = Vector2u::Zero;
+		str::String m_Name = {};
+
 		Vector2u m_Resolution = Vector2u::Zero;
-		EWindowMode m_Mode = EWindowMode::Borderless;
+		Vector2u m_Position = Vector2u::Zero;
 		int32 m_RefreshRate = 0;
 
 		bool m_IsVSyncEnabled = false;

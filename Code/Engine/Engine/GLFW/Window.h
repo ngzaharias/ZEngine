@@ -3,16 +3,9 @@
 #ifdef Z_GLFW
 #include "Core/Set.h"
 #include "Engine/Window.h"
-#include "Input/Key.h"
 #include "Math/Vector.h"
 
 struct GLFWwindow;
-
-namespace input
-{
-	enum class EKeyboard;
-	enum class EMouse;
-}
 
 namespace glfw
 {
@@ -34,7 +27,7 @@ namespace glfw
 		void GatherMouse(Set<input::EKey>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const override;
 		void GatherScroll(Vector2f& out_Delta) const override;
 
-		void Refresh() override;
+		void Refresh(const eng::EWindowMode& windowMode, const Vector2u& resolution, const int32 refreshRate) override;
 
 	private:
 		static void Callback_FramebufferResized(GLFWwindow* glfwWindow, int width, int height);

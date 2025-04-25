@@ -17,7 +17,6 @@ namespace
 	const str::StringView strEffectVolume = "m_EffectVolume";
 	const str::StringView strGraphics = "m_Graphics";
 	const str::StringView strLevel = "m_Level";
-	const str::StringView strMode = "m_Mode";
 	const str::StringView strMusicVolume = "m_MusicVolume";
 	const str::StringView strRefreshRate = "m_RefreshRate";
 	const str::StringView strResolution = "m_Resolution";
@@ -26,6 +25,7 @@ namespace
 	const str::StringView strZoomAmount = "m_ZoomAmount";
 	const str::StringView strZoomSpeed = "m_ZoomSpeed";
 	const str::StringView strWindow = "m_Window";
+	const str::StringView strWindowMode = "m_WindowMode";
 
 	static str::String m_Scratch = {};
 }
@@ -142,14 +142,14 @@ bool imgui::Inspector::WriteCustom(eng::settings::Camera& value)
 template<>
 void eng::Visitor::ReadCustom(eng::settings::Window& value) const
 {
-	Read(strMode, value.m_Mode, value.m_Mode);
+	Read(strWindowMode, value.m_WindowMode, value.m_WindowMode);
 	Read(strResolution, value.m_Resolution, value.m_Resolution);
 	Read(strRefreshRate, value.m_RefreshRate, value.m_RefreshRate);
 }
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::Window& value)
 {
-	Write(strMode, value.m_Mode);
+	Write(strWindowMode, value.m_WindowMode);
 	Write(strResolution, value.m_Resolution);
 	Write(strRefreshRate, value.m_RefreshRate);
 }
@@ -161,20 +161,20 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 	const auto& windowManager = GetPayload<const eng::WindowManager>();
 
 	ImGui::TableNextRow();
-	if (WriteHeader("m_Mode", value.m_Mode))
+	if (WriteHeader("m_Mode", value.m_WindowMode))
 	{
 		ImGui::TableSetColumnIndex(1);
 
-		m_Scratch = EnumToString(value.m_Mode);
+		m_Scratch = EnumToString(value.m_WindowMode);
 		if (ImGui::BeginCombo("##mode", m_Scratch.c_str()))
 		{
-			for (const eng::EWindowMode mode : windowManager.GetModes())
+			for (const eng::EWindowMode mode : windowManager.GetWindowModes())
 			{
 				m_Scratch = EnumToString(mode);
 				if (ImGui::Selectable(m_Scratch.c_str()))
 				{
+					value.m_WindowMode = mode;
 					result = true;
-					value.m_Mode = mode;
 				}
 			}
 			ImGui::EndCombo();
@@ -185,7 +185,7 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 	if (WriteHeader("m_Resolution", value.m_Resolution))
 	{
 		ImGui::TableSetColumnIndex(1);
-		ImGui::BeginDisabled(value.m_Mode != eng::EWindowMode::Windowed);
+		ImGui::BeginDisabled(value.m_WindowMode != eng::EWindowMode::Windowed);
 
 		m_Scratch = std::format("{}x{}", value.m_Resolution.x, value.m_Resolution.y);
 		if (ImGui::BeginCombo("##resolution", m_Scratch.c_str()))
@@ -208,7 +208,7 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 	if (WriteHeader("m_RefreshRate", value.m_RefreshRate))
 	{
 		ImGui::TableSetColumnIndex(1);
-		ImGui::BeginDisabled(value.m_Mode == eng::EWindowMode::Windowed);
+		ImGui::BeginDisabled(value.m_WindowMode != eng::EWindowMode::Fullscreen);
 
 		m_Scratch = std::format("{}", value.m_RefreshRate);
 		if (ImGui::BeginCombo("##refreshrate", m_Scratch.c_str()))

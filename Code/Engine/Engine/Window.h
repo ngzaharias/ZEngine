@@ -1,9 +1,6 @@
 #pragma once
 
 #include "Core/Set.h"
-#include "Core/StringView.h"
-#include "Engine/WindowConfig.h"
-#include "Input/Key.h"
 #include "Math/Vector.h"
 
 class GameTime;
@@ -11,6 +8,12 @@ class GameTime;
 namespace eng
 {
 	enum class EWindowMode;
+	struct WindowConfig;
+}
+
+namespace input
+{
+	enum class EKey;
 }
 
 namespace eng
@@ -18,8 +21,7 @@ namespace eng
 	class Window
 	{
 	public:
-		explicit Window(const WindowConfig& config) 
-			: m_Config(config) { }
+		explicit Window(const WindowConfig& config) { }
 		virtual ~Window() { }
 
 		virtual void PreUpdate(const GameTime& gameTime) { }
@@ -32,35 +34,24 @@ namespace eng
 		virtual void GatherMouse(Set<input::EKey>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const {}
 		virtual void GatherScroll(Vector2f& out_Delta) const {}
 
-		virtual auto GetMode() const -> eng::EWindowMode { return m_Config.m_Mode; }
-		virtual void SetMode(const eng::EWindowMode value) 
-		{ 
-			m_IsDirty |= value != m_Config.m_Mode;
-			m_Config.m_Mode = value; 
-		}
+		virtual auto GetResolution() const -> const Vector2u& { return m_Resolution; }
+		virtual auto GetPosition() const -> const Vector2i& { return m_Position; }
+		virtual auto GetRefreshRate() const -> int32 { return m_RefreshRate; }
 
-		virtual auto GetRefreshRate() const -> int32 { return m_Config.m_RefreshRate; }
-		virtual void SetRefreshRate(const int32 value)
-		{
-			m_IsDirty |= value != m_Config.m_RefreshRate;
-			m_Config.m_RefreshRate = value;
-		}
-
-		virtual auto GetResolution() const -> const Vector2u& { return m_Config.m_Resolution; }
-		virtual void SetResolution(const Vector2u& value) 
-		{ 
-			m_IsDirty |= value != m_Config.m_Resolution;
-			m_Config.m_Resolution = value;
-		}
-
-		virtual void Refresh() {}
+		virtual void Refresh(const eng::EWindowMode& windowMode, const Vector2u& resolution, const int32 refreshRate) {}
 
 	private:
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
 
 	protected:
-		eng::WindowConfig m_Config = {};
-		bool m_IsDirty = false;
+		Vector2u m_Resolution = Vector2u::Zero;
+		Vector2i m_Position = Vector2i::Zero;
+		Vector2f m_Scale = Vector2f::Zero;
+		int32 m_RefreshRate = 0;
+
+		bool m_IsFocused = false;
+		bool m_IsIconified = false;
+		bool m_IsMaximized = false;
 	};
 }

@@ -27,13 +27,11 @@ public:
 
 	[[nodiscard]] constexpr Vector2f operator+(const Vector2f& rhs) const noexcept { return Vector2f(x + rhs.x, y + rhs.y); }
 	[[nodiscard]] constexpr Vector2f operator-(const Vector2f& rhs) const noexcept { return Vector2f(x - rhs.x, y - rhs.y); }
-
-	constexpr Vector2f& operator+=(const Vector2f& rhs) noexcept { x += rhs.x; y += rhs.y; return *this; }
-	constexpr Vector2f& operator-=(const Vector2f& rhs) noexcept { x -= rhs.x; y -= rhs.y; return *this; }
-
 	[[nodiscard]] constexpr Vector2f operator*(const float rhs) const noexcept { return Vector2f(x * rhs, y * rhs); }
 	[[nodiscard]] constexpr Vector2f operator/(const float rhs) const noexcept { return Vector2f(x / rhs, y / rhs); }
 
+	constexpr Vector2f& operator+=(const Vector2f& rhs) noexcept { x += rhs.x; y += rhs.y; return *this; }
+	constexpr Vector2f& operator-=(const Vector2f& rhs) noexcept { x -= rhs.x; y -= rhs.y; return *this; }
 	constexpr Vector2f& operator*=(const float rhs) noexcept { x *= rhs; y *= rhs; return *this; }
 	constexpr Vector2f& operator/=(const float rhs) noexcept { x /= rhs; y /= rhs; return *this; }
 
@@ -93,9 +91,13 @@ public:
 
 	[[nodiscard]] constexpr Vector2i operator+(const Vector2i& rhs) const noexcept { return Vector2i(x + rhs.x, y + rhs.y); }
 	[[nodiscard]] constexpr Vector2i operator-(const Vector2i& rhs) const noexcept { return Vector2i(x - rhs.x, y - rhs.y); }
+	[[nodiscard]] constexpr Vector2i operator*(const int32 rhs) const noexcept { return Vector2i(x * rhs, y * rhs); }
+	[[nodiscard]] constexpr Vector2i operator/(const int32 rhs) const noexcept { return Vector2i(x / rhs, y / rhs); }
 
 	constexpr Vector2i& operator+=(const Vector2i& rhs) noexcept { x += rhs.x; y += rhs.y; return *this; }
 	constexpr Vector2i& operator-=(const Vector2i& rhs) noexcept { x -= rhs.x; y -= rhs.y; return *this; }
+	constexpr Vector2i& operator*=(const int32 rhs) noexcept { x *= rhs; y *= rhs; return *this; }
+	constexpr Vector2i& operator/=(const int32 rhs) noexcept { x /= rhs; y /= rhs; return *this; }
 
 	constexpr Vector2i operator+() const noexcept { return *this; }
 	constexpr Vector2i operator-() const noexcept { return Vector2i(-x, -y); }
@@ -131,9 +133,13 @@ public:
 
 	[[nodiscard]] constexpr Vector2u operator+(const Vector2u& rhs) const noexcept { return Vector2u(x + rhs.x, y + rhs.y); }
 	[[nodiscard]] constexpr Vector2u operator-(const Vector2u& rhs) const noexcept { return Vector2u(x - rhs.x, y - rhs.y); }
+	[[nodiscard]] constexpr Vector2u operator*(const uint32 rhs) const noexcept { return Vector2u(x * rhs, y * rhs); }
+	[[nodiscard]] constexpr Vector2u operator/(const uint32 rhs) const noexcept { return Vector2u(x / rhs, y / rhs); }
 
 	constexpr Vector2u& operator+=(const Vector2u& rhs) noexcept { x += rhs.x; y += rhs.y; return *this; }
 	constexpr Vector2u& operator-=(const Vector2u& rhs) noexcept { x -= rhs.x; y -= rhs.y; return *this; }
+	constexpr Vector2u& operator*=(const uint32 rhs) noexcept { x *= rhs; y *= rhs; return *this; }
+	constexpr Vector2u& operator/=(const uint32 rhs) noexcept { x /= rhs; y /= rhs; return *this; }
 
 	static const Vector2u AxisX;
 	static const Vector2u AxisY;
@@ -171,13 +177,11 @@ public:
 
 	[[nodiscard]] constexpr Vector3f operator+(const Vector3f& rhs) const noexcept { return Vector3f(x + rhs.x, y + rhs.y, z + rhs.z); }
 	[[nodiscard]] constexpr Vector3f operator-(const Vector3f& rhs) const noexcept { return Vector3f(x - rhs.x, y - rhs.y, z - rhs.z); }
-
-	constexpr Vector3f& operator+=(const Vector3f& rhs) noexcept { x += rhs.x; y += rhs.y; z += rhs.z; return *this; }
-	constexpr Vector3f& operator-=(const Vector3f& rhs) noexcept { x -= rhs.x; y -= rhs.y; z -= rhs.z; return *this; }
-
 	[[nodiscard]] constexpr Vector3f operator*(const float rhs) const noexcept { return Vector3f(x * rhs, y * rhs, z * rhs); }
 	[[nodiscard]] constexpr Vector3f operator/(const float rhs) const noexcept { return Vector3f(x / rhs, y / rhs, z / rhs); }
 
+	constexpr Vector3f& operator+=(const Vector3f& rhs) noexcept { x += rhs.x; y += rhs.y; z += rhs.z; return *this; }
+	constexpr Vector3f& operator-=(const Vector3f& rhs) noexcept { x -= rhs.x; y -= rhs.y; z -= rhs.z; return *this; }
 	constexpr Vector3f& operator*=(const float rhs) noexcept { x *= rhs; y *= rhs; z *= rhs; return *this; }
 	constexpr Vector3f& operator/=(const float rhs) noexcept { x /= rhs; y /= rhs; z /= rhs; return *this; }
 
@@ -294,13 +298,11 @@ public:
 
 	[[nodiscard]] constexpr Vector4f operator+(const Vector4f& rhs) const noexcept { return Vector4f(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); }
 	[[nodiscard]] constexpr Vector4f operator-(const Vector4f& rhs) const noexcept { return Vector4f(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w); }
-
-	constexpr Vector4f& operator+=(const Vector4f& rhs) noexcept { x += rhs.x; y += rhs.y; z += rhs.z; w += rhs.w; return *this; }
-	constexpr Vector4f& operator-=(const Vector4f& rhs) noexcept { x -= rhs.x; y -= rhs.y; z -= rhs.z; w -= rhs.w; return *this; }
-
 	[[nodiscard]] constexpr Vector4f operator*(const float rhs) const noexcept { return Vector4f(x * rhs, y * rhs, z * rhs, w * rhs); }
 	[[nodiscard]] constexpr Vector4f operator/(const float rhs) const noexcept { return Vector4f(x / rhs, y / rhs, z / rhs, w / rhs); }
 
+	constexpr Vector4f& operator+=(const Vector4f& rhs) noexcept { x += rhs.x; y += rhs.y; z += rhs.z; w += rhs.w; return *this; }
+	constexpr Vector4f& operator-=(const Vector4f& rhs) noexcept { x -= rhs.x; y -= rhs.y; z -= rhs.z; w -= rhs.w; return *this; }
 	constexpr Vector4f& operator*=(const float rhs) noexcept { x *= rhs; y *= rhs; z *= rhs; w *= rhs; return *this; }
 	constexpr Vector4f& operator/=(const float rhs) noexcept { x /= rhs; y /= rhs; z /= rhs; w /= rhs; return *this; }
 

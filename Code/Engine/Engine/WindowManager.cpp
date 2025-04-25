@@ -3,6 +3,8 @@
 
 #include "Core/Algorithms.h"
 #include "Engine/GLFW/Window.h"
+#include "Engine/WindowConfig.h"
+#include "Engine/WindowModeEnum.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -31,8 +33,8 @@ void eng::WindowManager::Initialise()
 	{
 		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-		config.m_Mode = EWindowMode::Borderless;
 		config.m_Resolution = Vector2u(mode->width, mode->height);
+		config.m_Position = config.m_Resolution / 2;
 		config.m_RefreshRate = mode->refreshRate;
 	}
 
@@ -58,24 +60,25 @@ void eng::WindowManager::Initialise()
 	// #todo: gather available resolutions and refresh rate
 	if (GLFWmonitor* monitor = glfwGetPrimaryMonitor())
 	{
-		Set<int32> refreshRates = {};
 		Set<Vector2u> resolutions = {};
+		Set<int32> refreshRates = {};
 
 		int32 modeCount = 0;
 		const GLFWvidmode* modes = glfwGetVideoModes(monitor, &modeCount);
 		for (int32 i = 0; i < modeCount; ++i)
 		{
 			const GLFWvidmode& mode = modes[i];
-			refreshRates.Add(mode.refreshRate);
 			resolutions.Add(Vector2u(mode.width, mode.height));
+			refreshRates.Add(mode.refreshRate);
 		}
 
-		m_Modes.Append(eng::EWindowMode::Borderless);
-		m_Modes.Append(eng::EWindowMode::Windowed);
-		for (const int32 value : refreshRates)
-			m_RefreshRates.Append(value);
+		m_WindowModes.Append(eng::EWindowMode::Borderless);
+		m_WindowModes.Append(eng::EWindowMode::Fullscreen);
+		m_WindowModes.Append(eng::EWindowMode::Windowed);
 		for (const Vector2u& value : resolutions)
 			m_Resolutions.Append(value);
+		for (const int32 value : refreshRates)
+			m_RefreshRates.Append(value);
 	}
 #endif
 }
