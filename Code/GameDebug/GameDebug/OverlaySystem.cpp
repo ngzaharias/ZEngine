@@ -63,13 +63,14 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 			}
 		}
 
-		// resolution
+		// resolution / refreshRate
 		{
 			const auto& windowManager = world.ReadResource<eng::WindowManager>();
 			if (const eng::Window* window = windowManager.GetWindow(0))
 			{
 				const Vector2u& resolution = window->GetResolution();
-				ImGui::TextColored(Colour::Green, "%dx%d", resolution.x, resolution.y);
+				const int32 refreshRate = window->GetRefreshRate();
+				ImGui::TextColored(Colour::Green, "%dx%d : %d", resolution.x, resolution.y, refreshRate);
 			}
 		}
 
