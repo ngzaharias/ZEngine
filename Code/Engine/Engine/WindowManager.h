@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Array.h"
+#include "Engine/Monitor.h"
 #include "Engine/WindowModeEnum.h"
 
 class GameTime;
@@ -25,14 +26,19 @@ namespace eng
 		auto Create(const eng::WindowConfig& config) -> const eng::Window*;
 		bool Destroy(const eng::Window* value);
 
+		auto GetMonitor(const int32 index) const -> const eng::Monitor*;
+		auto GetMonitors() const -> const Array<eng::Monitor>&;
+
 		auto GetWindow(const int32 index) -> eng::Window*;
 		auto GetWindow(const int32 index) const -> const eng::Window*;
+		auto GetWindows() const -> const Array<eng::Window*>&;
 
 		const Array<eng::EWindowMode>& GetWindowModes() const { return m_WindowModes; }
 		const Array<Vector2u>& GetResolutions() const { return m_Resolutions; }
 		const Array<int32>& GetRefreshRates() const { return m_RefreshRates; }
 
 	private:
+		Array<eng::Monitor> m_Monitors = {};
 		Array<eng::Window*> m_Windows = {};
 
 		Array<eng::EWindowMode> m_WindowModes = {};

@@ -57,14 +57,17 @@ void eng::WindowManager::Initialise()
 		return;
 	}
 
-	// #todo: gather available resolutions and refresh rate
-	if (GLFWmonitor* monitor = glfwGetPrimaryMonitor())
+	Set<int32> refreshRates = {};
+	Set<Vector2u> resolutions = {};
+
+	int monitorCount = 0;
+	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
+	for (int32 monitorIndex = 0; monitorIndex < monitorCount; ++monitorIndex)
 	{
-		Set<Vector2u> resolutions = {};
-		Set<int32> refreshRates = {};
+		GLFWmonitor* glfwMonitor = monitors[monitorIndex];
 
 		int32 modeCount = 0;
-		const GLFWvidmode* modes = glfwGetVideoModes(monitor, &modeCount);
+		const GLFWvidmode* modes = glfwGetVideoModes(glfwMonitor, &modeCount);
 		for (int32 i = 0; i < modeCount; ++i)
 		{
 			const GLFWvidmode& mode = modes[i];
@@ -72,14 +75,24 @@ void eng::WindowManager::Initialise()
 			refreshRates.Add(mode.refreshRate);
 		}
 
-		m_WindowModes.Append(eng::EWindowMode::Borderless);
-		m_WindowModes.Append(eng::EWindowMode::Fullscreen);
-		m_WindowModes.Append(eng::EWindowMode::Windowed);
-		for (const Vector2u& value : resolutions)
-			m_Resolutions.Append(value);
-		for (const int32 value : refreshRates)
-			m_RefreshRates.Append(value);
+		int xpos, ypos;
+		glfwGetMonitorPos(glfwMonitor, &xpos, &ypos);
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwMonitor);
+		eng::Monitor& monitor = m_Monitors.Emplace();
+		monitor.m_Resolution = Vector2u(mode->width, mode->height);
+		monitor.m_Position = Vector2u(xpos, ypos);
+		monitor.m_RefreshRate = mode->refreshRate;
 	}
+
+	m_WindowModes.Append(eng::EWindowMode::Borderless);
+	m_WindowModes.Append(eng::EWindowMode::Fullscreen);
+	m_WindowModes.Append(eng::EWindowMode::Windowed);
+
+	for (const Vector2u& value : resolutions)
+		m_Resolutions.Append(value);
+	for (const int32 value : refreshRates)
+		m_RefreshRates.Append(value);
+
 #endif
 }
 
@@ -140,6 +153,18 @@ bool eng::WindowManager::Destroy(const eng::Window* value)
 	return false;
 }
 
+const eng::Monitor* eng::WindowManager::GetMonitor(const int32 index) const
+{
+	if (index < m_Monitors.GetCount())
+		return &m_Monitors[index];
+	return nullptr;
+}
+
+const Array<eng::Monitor>& eng::WindowManager::GetMonitors() const
+{
+	return m_Monitors;
+}
+
 eng::Window* eng::WindowManager::GetWindow(const int32 index) 
 { 
 	if (index < m_Windows.GetCount())
@@ -152,4 +177,9 @@ const eng::Window* eng::WindowManager::GetWindow(const int32 index) const
 	if (index < m_Windows.GetCount())
 		return m_Windows[index];
 	return nullptr;
+}
+
+const Array<eng::Window*>& eng::WindowManager::GetWindows() const
+{
+	return m_Windows;
 }
