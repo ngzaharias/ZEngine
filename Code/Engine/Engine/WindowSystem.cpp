@@ -20,6 +20,12 @@ void eng::WindowSystem::Update(World& world, const GameTime& gameTime)
 
 		auto& manager = world.WriteResource<eng::WindowManager>();
 		if (eng::Window* window = manager.GetWindow(0))
-			window->Refresh(windowSettings.m_WindowMode, windowSettings.m_Resolution, windowSettings.m_RefreshRate);
+		{
+			window->Refresh(
+				windowSettings.m_WindowMode, 
+				windowSettings.m_Resolution, 
+				windowSettings.m_RefreshRate, 
+				windowSettings.m_Monitor);
+		}
 	}
 }

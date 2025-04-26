@@ -27,6 +27,7 @@ namespace eng::settings
 		eng::EWindowMode m_WindowMode = eng::EWindowMode::Fullscreen;
 		Vector2u m_Resolution = Vector2u(800, 600);
 		int32 m_RefreshRate = 59;
+		int32 m_Monitor = 0;
 	};
 
 	/// \brief Debug settings that is only used in non-gold builds.

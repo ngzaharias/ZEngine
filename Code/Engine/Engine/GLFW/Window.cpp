@@ -302,36 +302,45 @@ void glfw::Window::GatherScroll(Vector2f& out_Delta) const
 	out_Delta = m_ScrollDelta;
 }
 
-void glfw::Window::Refresh(const eng::EWindowMode& windowMode, const Vector2u& resolution, const int32 refreshRate)
+void glfw::Window::Refresh(const eng::EWindowMode& windowMode, const Vector2u& resolution, const int32 refreshRate, const int32 monitor)
 {
-	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	int monitorCount = 0;
+	GLFWmonitor** glfwMonitors = glfwGetMonitors(&monitorCount);
+	GLFWmonitor* glfwMonitor = glfwMonitors[monitor];
 
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwMonitor);
 	switch (windowMode)
 	{
 	case eng::EWindowMode::Borderless:
 	{
+		int xpos, ypos;
+		glfwGetMonitorPos(glfwMonitor, &xpos, &ypos);
 		glfwSetWindowAttrib(m_Window, GLFW_DECORATED, false);
-		glfwSetWindowMonitor(m_Window, nullptr, 0, 0, mode->width, mode->height, mode->refreshRate);
+		glfwSetWindowMonitor(m_Window, nullptr, xpos, ypos, mode->width, mode->height, mode->refreshRate);
 		m_Resolution = Vector2u(mode->width, mode->height);
+		m_Position = Vector2i(xpos, ypos);
 		m_RefreshRate = mode->refreshRate;
 	} break;
 	case eng::EWindowMode::Fullscreen:
 	{
 		// #bug: setting the monitor with a resolution that doesn't match causes the window to become unresponsive
-		glfwSetWindowMonitor(m_Window, monitor, 0, 0, mode->width, mode->height, refreshRate);
+		glfwSetWindowMonitor(m_Window, glfwMonitor, 0, 0, mode->width, mode->height, refreshRate);
 		m_Resolution = Vector2u(mode->width, mode->height);
+		m_Position = Vector2i::Zero;
 		m_RefreshRate = refreshRate;
 	} break;
 	case eng::EWindowMode::Windowed:
 	{
+		int xpos, ypos;
+		glfwGetMonitorPos(glfwMonitor, &xpos, &ypos);
 		const Vector2i position = Vector2i(
-			mode->width / 2 - resolution.x / 2,
-			mode->height / 2 - resolution.y / 2);
+			xpos + mode->width / 2 - resolution.x / 2,
+			ypos + mode->height / 2 - resolution.y / 2);
 
 		glfwSetWindowAttrib(m_Window, GLFW_DECORATED, true);
 		glfwSetWindowMonitor(m_Window, nullptr, position.x, position.y, resolution.x, resolution.y, mode->refreshRate);
 		m_Resolution = resolution;
+		m_Position = position;
 		m_RefreshRate = mode->refreshRate;
 	} break;
 	}

@@ -17,6 +17,7 @@ namespace
 	const str::StringView strEffectVolume = "m_EffectVolume";
 	const str::StringView strGraphics = "m_Graphics";
 	const str::StringView strLevel = "m_Level";
+	const str::StringView strMonitor = "m_Monitor";
 	const str::StringView strMusicVolume = "m_MusicVolume";
 	const str::StringView strRefreshRate = "m_RefreshRate";
 	const str::StringView strResolution = "m_Resolution";
@@ -28,6 +29,16 @@ namespace
 	const str::StringView strWindowMode = "m_WindowMode";
 
 	static str::String m_Scratch = {};
+
+	str::String MonitorToString(const int32 index)
+	{
+		switch (index)
+		{
+		case 0: return "Primary";
+		case 1: return "Secondary";
+		}
+		return std::format("Monitor {}", index + 1);
+	}
 }
 
 template<>
@@ -145,6 +156,7 @@ void eng::Visitor::ReadCustom(eng::settings::Window& value) const
 	Read(strWindowMode, value.m_WindowMode, value.m_WindowMode);
 	Read(strResolution, value.m_Resolution, value.m_Resolution);
 	Read(strRefreshRate, value.m_RefreshRate, value.m_RefreshRate);
+	Read(strMonitor, value.m_Monitor, value.m_Monitor);
 }
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::Window& value)
@@ -152,6 +164,7 @@ void eng::Visitor::WriteCustom(const eng::settings::Window& value)
 	Write(strWindowMode, value.m_WindowMode);
 	Write(strResolution, value.m_Resolution);
 	Write(strRefreshRate, value.m_RefreshRate);
+	Write(strMonitor, value.m_Monitor);
 }
 template<>
 bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
@@ -159,6 +172,32 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 	bool result = false;
 
 	const auto& windowManager = GetPayload<const eng::WindowManager>();
+	const eng::Monitor* monitor = windowManager.GetMonitor(value.m_Monitor);
+	if (!monitor)
+		return false;
+
+	ImGui::TableNextRow();
+	if (WriteHeader("m_Monitor", value.m_Monitor))
+	{
+		ImGui::TableSetColumnIndex(1);
+		ImGui::BeginDisabled(value.m_WindowMode == eng::EWindowMode::Windowed);
+
+		m_Scratch = MonitorToString(value.m_Monitor);
+		if (ImGui::BeginCombo("##monitor", m_Scratch.c_str()))
+		{
+			for (const auto& [i, unused] : enumerate::Forward(windowManager.GetMonitors()))
+			{
+				m_Scratch = MonitorToString(i);
+				if (ImGui::Selectable(m_Scratch.c_str()))
+				{
+					value.m_Monitor = i;
+					result = true;
+				}
+			}
+			ImGui::EndCombo();
+		}
+		ImGui::EndDisabled();
+	}
 
 	ImGui::TableNextRow();
 	if (WriteHeader("m_Mode", value.m_WindowMode))
@@ -192,7 +231,8 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 		{
 			for (const Vector2u& resolution : windowManager.GetResolutions())
 			{
-				m_Scratch = std::format("{}x{}", resolution.x, resolution.y);
+				const bool isNative = resolution == monitor->m_Resolution;
+				m_Scratch = std::format("{}x{}{}", resolution.x, resolution.y, isNative ? " (native)" : "");
 				if (ImGui::Selectable(m_Scratch.c_str()))
 				{
 					result = true;
@@ -215,7 +255,8 @@ bool imgui::Inspector::WriteCustom(eng::settings::Window& value)
 		{
 			for (const int32 refreshRate : windowManager.GetRefreshRates())
 			{
-				m_Scratch = std::format("{}", refreshRate);
+				const bool isNative = refreshRate == monitor->m_RefreshRate;
+				m_Scratch = std::format("{}{}", refreshRate, isNative ? " (native)" : "");
 				if (ImGui::Selectable(m_Scratch.c_str()))
 				{
 					result = true;

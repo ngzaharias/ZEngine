@@ -38,7 +38,7 @@ namespace eng
 		virtual auto GetPosition() const -> const Vector2i& { return m_Position; }
 		virtual auto GetRefreshRate() const -> int32 { return m_RefreshRate; }
 
-		virtual void Refresh(const eng::EWindowMode& windowMode, const Vector2u& resolution, const int32 refreshRate) {}
+		virtual void Refresh(const eng::EWindowMode& windowMode, const Vector2u& resolution, const int32 refreshRate, const int32 monitor) {}
 
 	private:
 		Window(const Window&) = delete;
