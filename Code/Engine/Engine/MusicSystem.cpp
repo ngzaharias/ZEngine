@@ -12,7 +12,7 @@
 
 namespace
 {
-	const str::Guid strAsset = GUID("d193864ee4f444e7b6aabb84b95bcc5b");
+	const str::Guid strAsset = GUID("0640370595b247cfa579e0dd794a6324");
 }
 
 void eng::MusicSystem::Initialise(World& world)
