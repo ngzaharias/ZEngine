@@ -24,3 +24,4 @@
 	- [ ] Moving mouse over plants makes them move
 		- particle effects
 		- pushes the leaves and stems around
+	- [ ] Cat that randomly appears from behind objects
