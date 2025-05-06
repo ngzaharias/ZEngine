@@ -2,7 +2,8 @@
 - [x] Input Layers
 - [ ] Input Bindings
 - [ ] Parallax Background
-- [ ] Hints - Purring that gets louder the closer the mouse position is.
+- [ ] Hints 
+	- [ ] Purring that gets louder the closer the mouse position is.
 - [x] Smooth Zoom
 - [ ] Unlocking achievements unlocks rewards in the game.
 - [ ] Fish eye distortion. https://danielilett.com/2019-10-17-tut3-1-something-fishy/

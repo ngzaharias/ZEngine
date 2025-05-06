@@ -35,8 +35,7 @@
               "title": "Tasks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -150,7 +149,7 @@
       "markdown-importer:Open format converter": false
     }
   },
-  "active": "8ec2a9ea0c00d7ba",
+  "active": "cb7287120b17b1a0",
   "lastOpenFiles": [
     "Tasks.md",
     "Ideas.md",
