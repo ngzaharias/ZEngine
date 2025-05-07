@@ -16,6 +16,9 @@ project "Game"
 			"Game/**.h", 
 			"Game/**.cpp", 
 			"Game/**.inl" } },
+		 
+		{ ["Resource/*"] = {  
+			"Resource/**.*" } },
 	}
 
 	includedirs 

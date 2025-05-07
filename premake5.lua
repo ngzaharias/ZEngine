@@ -46,21 +46,22 @@ workspace "ZEngine"
 
 	files 
 	{ 
+		"%{wks.location}/../Code/%{prj.name}/*.natvis",
+		"%{wks.location}/../Code/%{prj.name}/premake5.*",
+		"%{wks.location}/../Code/%{prj.name}/Resource/**.*",
 		"%{wks.location}/../Code/%{prj.name}/%{prj.name}/**.h",
 		"%{wks.location}/../Code/%{prj.name}/%{prj.name}/**.cpp",
 		"%{wks.location}/../Code/%{prj.name}/%{prj.name}/**.inl",
-		"%{wks.location}/../Code/%{prj.name}/premake5.*",
-		"%{wks.location}/../Code/%{prj.name}/*.natvis",
+		"%{wks.location}/../Code/Bindings/%{prj.name}/*.natvis",
+		"%{wks.location}/../Code/Bindings/%{prj.name}/premake5.*",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/%{prj.name}/**.h",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/%{prj.name}/**.cpp",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/%{prj.name}/**.inl",
-		"%{wks.location}/../Code/Bindings/%{prj.name}/premake5.*",
-		"%{wks.location}/../Code/Bindings/%{prj.name}/*.natvis",
+		"%{wks.location}/../Code/Modules/%{prj.name}/*.natvis",
+		"%{wks.location}/../Code/Modules/%{prj.name}/premake5.*",
 		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.h",
 		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.cpp",
 		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.inl",
-		"%{wks.location}/../Code/Modules/%{prj.name}/premake5.*",
-		"%{wks.location}/../Code/Modules/%{prj.name}/*.natvis",
 	}
 
 	vpaths 
