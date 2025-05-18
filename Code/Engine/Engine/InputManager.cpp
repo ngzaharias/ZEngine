@@ -65,24 +65,24 @@ void eng::InputManager::Update(World& world)
 				if (held.Contains(binding.m_Modifier))
 					modifier = true;
 
-				if (held.Contains(binding.m_Primary))
+				if (modifier && held.Contains(binding.m_Primary))
 				{
 					m_ValueMap[binding.m_Name].m_Value = 1.f;
-					if (modifier && binding.m_Consume)
+					if (binding.m_Consume)
 						held.Remove(binding.m_Primary);
 				}
 
-				if (pressed.Contains(binding.m_Primary))
+				if (modifier && pressed.Contains(binding.m_Primary))
 				{
 					m_ValueMap[binding.m_Name].m_Pressed = true;
-					if (modifier && binding.m_Consume)
+					if (binding.m_Consume)
 						pressed.Remove(binding.m_Primary);
 				}
 
-				if (released.Contains(binding.m_Primary))
+				if (modifier && released.Contains(binding.m_Primary))
 				{
 					m_ValueMap[binding.m_Name].m_Released = true;
-					if (modifier && binding.m_Consume)
+					if (binding.m_Consume)
 						released.Remove(binding.m_Primary);
 				}
 			}
