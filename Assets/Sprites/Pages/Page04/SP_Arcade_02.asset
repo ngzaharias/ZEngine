@@ -1,0 +1,7 @@
+m_Guid = '6b83d2b616694689a0625134b6fc1b38'
+m_Name = 'SP_Arcade_02'
+m_Position = { X = 1207.0, Y = 0.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 1039.0, Y = 2048.0 }
+m_Texture2D = '857605ab67db43f2814513604fb49730'
+m_Type = 'Sprite'
