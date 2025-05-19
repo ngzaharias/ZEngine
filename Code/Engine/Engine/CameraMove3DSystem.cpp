@@ -41,7 +41,7 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 		layer.m_Bindings.Emplace(strMoveLeft,     input::EKey::A);
 		layer.m_Bindings.Emplace(strMoveRight,    input::EKey::D);
 		layer.m_Bindings.Emplace(strMoveDown,     input::EKey::Q);
-		layer.m_Bindings.Emplace(strMoveRight,    input::EKey::E);
+		layer.m_Bindings.Emplace(strMoveUp,       input::EKey::E);
 		layer.m_Bindings.Emplace(strMoveForward,  input::EKey::W);
 		layer.m_Bindings.Emplace(strMoveBackward, input::EKey::S);
 		layer.m_Bindings.Emplace(strRotate,       input::EKey::Mouse_Right);
