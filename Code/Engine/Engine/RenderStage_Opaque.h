@@ -19,6 +19,7 @@ namespace eng
 
 namespace eng::camera
 {
+	struct EditorComponent;
 	struct ProjectionComponent;
 }
 
@@ -33,6 +34,7 @@ namespace eng
 			const eng::WindowManager,
 			// Components
 			eng::FrameBufferComponent,
+			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::LightAmbientComponent,
 			const eng::LightDirectionalComponent,

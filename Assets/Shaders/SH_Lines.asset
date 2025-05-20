@@ -7,16 +7,18 @@ m_Type = "Shader"
 m_Vertex = """
 #version 330 core
 
-in vec3 a_Position;
+in vec3 a_Vertex;
 in vec4 a_Colour;
 
-uniform mat4 u_Transform;
+uniform mat4 u_CameraProj;
+uniform mat4 u_CameraView;
 
 out vec4 v_Colour;
 
 void main()
 {
-	gl_Position = u_Transform * vec4(a_Position, 1.f);
+	mat4 transform = u_CameraProj * u_CameraView;
+	gl_Position = transform * vec4(a_Vertex, 1.f);
 	v_Colour = a_Colour;
 }
 """

@@ -97,6 +97,11 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
+		const bool isEditorActive = true;
+		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		if (isEditorActive != isEditorCamera)
+			continue;
+
 		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 

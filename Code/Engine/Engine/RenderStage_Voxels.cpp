@@ -80,6 +80,11 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 
 		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<eng::DynamicMeshComponent, eng::TransformComponent, voxel::ChunkComponent>>())
 		{
+			const bool isEditorActive = true;
+			const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+			if (isEditorActive != isEditorCamera)
+				continue;
+
 			const auto& voxelComponent = world.ReadComponent<voxel::ChunkComponent>(voxelEntity);
 			const auto& voxelDynamicMesh = world.ReadComponent<eng::DynamicMeshComponent>(voxelEntity);
 			const auto& voxelTransform = world.ReadComponent<eng::TransformComponent>(voxelEntity);

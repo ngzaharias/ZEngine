@@ -74,9 +74,17 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 		glDepthFunc(GL_LESS);
 		glDepthMask(GL_TRUE);
 
+		glUseProgram(shader->m_ProgramId);
+		glBindVertexArray(m_AttributeObject);
+
 		const uint32 vertexCount = readComponent.m_Vertices.GetCount();
 		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 		{
+			const bool isEditorActive = true;
+			const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+			if (isEditorActive != isEditorCamera)
+				continue;
+
 			const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
@@ -86,24 +94,40 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 			constexpr size_t s_PointOffset = offsetof(LineVertex, m_Point);
 			constexpr size_t s_ColourOffset = offsetof(LineVertex, m_Colour);
 
-			glUseProgram(shader->m_ProgramId);
-
-			glBindVertexArray(m_AttributeObject);
-
-			const Matrix4x4 transform = cameraView * cameraProj;
-			const uint32 location = *shader->u_Transform;
-			glUniformMatrix4fv(location, 1, GL_FALSE, &transform[0][0]);
-
 			glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
 			glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(LineVertex), &readComponent.m_Vertices[0], GL_DYNAMIC_DRAW);
 
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (void*)s_PointOffset);
-			glVertexAttribDivisor(0, GL_FALSE);
+			if (shader->a_Vertex)
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
 
-			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (void*)s_ColourOffset);
-			glVertexAttribDivisor(1, GL_FALSE);
+				const uint32 location = *shader->a_Vertex;
+				glEnableVertexAttribArray(location);
+				glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (void*)s_PointOffset);
+				glVertexAttribDivisor(location, GL_FALSE);
+			}
+
+			if (shader->a_Colour)
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
+
+				const uint32 location = *shader->a_Colour;
+				glEnableVertexAttribArray(location);
+				glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (void*)s_ColourOffset);
+				glVertexAttribDivisor(location, GL_FALSE);
+			}
+
+			if (shader->u_CameraProj)
+			{
+				const uint32 location = *shader->u_CameraProj;
+				glUniformMatrix4fv(location, 1, false, &cameraProj.m_Data[0][0]);
+			}
+
+			if (shader->u_CameraView)
+			{
+				const uint32 location = *shader->u_CameraView;
+				glUniformMatrix4fv(location, 1, false, &cameraView.m_Data[0][0]);
+			}
 
 			glDrawArrays(GL_LINES, 0, vertexCount);
 		}

@@ -19,6 +19,7 @@ namespace eng
 
 namespace eng::camera
 {
+	struct EditorComponent;
 	struct ProjectionComponent;
 }
 
@@ -36,6 +37,7 @@ namespace hexmap
 			eng::AssetManager,
 			const eng::WindowManager,
 			// Components
+			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::TransformComponent,
 			const hexmap::AssetComponent,

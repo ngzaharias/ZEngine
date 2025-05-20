@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
+#include "Math/Vector.h"
 
 namespace editor::settings
 {
@@ -13,6 +15,7 @@ namespace eng
 {
 	class AssetManager;
 	class WindowManager;
+	struct LinesComponent;
 	struct TransformComponent;
 }
 
@@ -24,10 +27,7 @@ namespace eng::camera
 
 namespace editor
 {
-	class AssetManager;
-	struct TransformComponent;
-
-	class RenderStage_Grid final : public eng::RenderStage
+	class RenderStage_Axes final : public eng::RenderStage
 	{
 	public:
 		using World = ecs::WorldView<
@@ -46,9 +46,14 @@ namespace editor
 		void Render(ecs::EntityWorld& entityWorld) override;
 
 	private:
+		void UpdateBuffers(const bool showX, const bool showY, const bool showZ);
+
+	private:
 		uint32 m_AttributeObject = 0;
 		uint32 m_VertexBuffer = 0;
-		uint32 m_TexCoordBuffer = 0;
-		uint32 m_IndexBuffer = 0;
+		uint32 m_ColourBuffer = 0;
+
+		Array<Vector3f> m_Vertices = {};
+		Array<Colour> m_Colours = {};
 	};
 }

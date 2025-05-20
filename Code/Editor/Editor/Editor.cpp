@@ -4,11 +4,12 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Editor/CameraSystem.h"
 #include "Editor/EntityEditorSystem.h"
 #include "Editor/FlipbookEditorSystem.h"
-#include "Editor/GizmoAxesSystem.h"
 #include "Editor/GizmoCrosshairSystem.h"
 #include "Editor/GizmoTransformSystem.h"
+#include "Editor/RenderStage_Axes.h"
 #include "Editor/RenderStage_Grid.h"
 #include "Editor/SettingsMenuSystem.h"
 #include "Editor/SettingsComponents.h"
@@ -53,9 +54,9 @@ void editor::Editor::Register()
 
 	m_ClientWorld.RegisterSingleton<editor::settings::LocalComponent>();
 
+	m_ClientWorld.RegisterSystem<editor::CameraSystem>();
 	m_ClientWorld.RegisterSystem<editor::EntityEditorSystem>(m_ClientWorld);
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditorSystem>();
-	m_ClientWorld.RegisterSystem<editor::gizmo::AxesSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::LocalSystem>();
@@ -72,6 +73,7 @@ void editor::Editor::Register()
 	{
 		auto& renderSystem = m_ClientWorld.GetSystem<eng::RenderSystem>();
 		renderSystem.RegisterStage<editor::RenderStage_Grid>();
+		renderSystem.RegisterStage<editor::RenderStage_Axes>();
 	}
 }
 

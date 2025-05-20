@@ -105,14 +105,18 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
-		glDepthMask(GL_TRUE);
+		glDepthMask(GL_FALSE);
 
 		glDisable(GL_CULL_FACE);
-
 	}
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
+		const bool isEditorActive = true;
+		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		if (isEditorActive != isEditorCamera)
+			continue;
+
 		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
@@ -143,7 +147,7 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 				glVertexAttribDivisor(location, GL_FALSE);
 			}
 
-			// texcoords
+			// tex-coords
 			if (shader->a_TexCoords)
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, m_TexCoordBuffer);

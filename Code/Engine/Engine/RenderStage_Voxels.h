@@ -19,6 +19,7 @@ namespace voxel
 
 namespace eng::camera
 {
+	struct EditorComponent;
 	struct ProjectionComponent;
 }
 
@@ -32,6 +33,7 @@ namespace eng
 			eng::AssetManager,
 			const eng::WindowManager,
 			// Components
+			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::TransformComponent,
 			const eng::DynamicMeshComponent,

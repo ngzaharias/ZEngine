@@ -6,6 +6,7 @@
 
 namespace eng::camera
 {
+	struct EditorComponent;
 	struct ProjectionComponent;
 }
 
@@ -24,6 +25,7 @@ namespace eng
 		using World = ecs::WorldView<
 			eng::AssetManager,
 			eng::FrameBufferComponent,
+			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::LightDirectionalComponent,
 			const eng::StaticMeshAssetComponent,

@@ -9,6 +9,8 @@
 
 namespace eng::camera
 {
+	struct EditorComponent final : public ecs::Component<EditorComponent> {};
+
 	/// \brief
 	struct Bound2DComponent final : public ecs::Component<Bound2DComponent>
 	{

@@ -166,11 +166,12 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 {
 	// components
 	entityWorld.RegisterComponent<eng::camera::Bound2DComponent>();
+	entityWorld.RegisterComponent<eng::camera::EditorComponent>();
 	entityWorld.RegisterComponent<eng::camera::Move2DComponent>();
 	entityWorld.RegisterComponent<eng::camera::Move3DComponent>();
 	entityWorld.RegisterComponent<eng::camera::Pan3DComponent>();
-	entityWorld.RegisterComponent<eng::camera::Zoom2DComponent>();
 	entityWorld.RegisterComponent<eng::camera::ProjectionComponent>();
+	entityWorld.RegisterComponent<eng::camera::Zoom2DComponent>();
 	entityWorld.RegisterComponent<eng::FlipbookComponent>();
 	entityWorld.RegisterComponent<eng::level::EntityComponent>();
 	entityWorld.RegisterComponent<eng::level::LoadedComponent>();

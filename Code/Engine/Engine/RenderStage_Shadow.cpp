@@ -103,6 +103,11 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
+		const bool isEditorActive = true;
+		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		if (isEditorActive != isEditorCamera)
+			continue;
+
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 		const Matrix3x3 cameraRotate = Matrix3x3::FromRotate(cameraTransform.m_Rotate);
 		const Vector3f cameraFoward = Vector3f::AxisZ * cameraRotate;
