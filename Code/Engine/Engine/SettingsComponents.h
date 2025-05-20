@@ -36,6 +36,7 @@ namespace eng::settings
 		bool m_AreLinesEnabled = false;
 		bool m_ArePhysicsEnabled = false;
 		bool m_AreSoftbodyEnabled = false;
+		bool m_IsEditorModeEnabled = false;
 	};
 
 	/// \brief Launch settings for the game.

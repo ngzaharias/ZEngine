@@ -9,6 +9,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/FontAsset.h"
+#include "Engine/SettingsComponents.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/TextComponent.h"
@@ -113,9 +114,10 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const bool isEditorActive = true;
+		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
 		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
 		if (isEditorActive != isEditorCamera)
 			continue;

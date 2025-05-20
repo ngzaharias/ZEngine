@@ -11,6 +11,7 @@
 #include "Engine/ColourHelpers.h"
 #include "Engine/FlipbookAsset.h"
 #include "Engine/FlipbookComponent.h"
+#include "Engine/SettingsComponents.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/SpriteAsset.h"
 #include "Engine/SpriteComponent.h"
@@ -90,9 +91,10 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const bool isEditorActive = true;
+		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
 		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
 		if (isEditorActive != isEditorCamera)
 			continue;

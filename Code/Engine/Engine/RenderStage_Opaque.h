@@ -23,12 +23,17 @@ namespace eng::camera
 	struct ProjectionComponent;
 }
 
+namespace eng::settings
+{
+	struct DebugComponent;
+}
+
 namespace eng
 {
 	class RenderStage_Opaque final : public eng::RenderStage
 	{
 	public:
-		using World = ecs::WorldView <
+		using World = ecs::WorldView<
 			// Resources
 			eng::AssetManager,
 			const eng::WindowManager,
@@ -39,6 +44,7 @@ namespace eng
 			const eng::LightAmbientComponent,
 			const eng::LightDirectionalComponent,
 			const eng::LightPointComponent,
+			const eng::settings::DebugComponent,
 			const eng::StaticMeshAssetComponent,
 			const eng::StaticMeshComponent,
 			const eng::TransformComponent>;

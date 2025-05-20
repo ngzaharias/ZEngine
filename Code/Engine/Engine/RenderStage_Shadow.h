@@ -10,6 +10,11 @@ namespace eng::camera
 	struct ProjectionComponent;
 }
 
+namespace eng::settings
+{
+	struct DebugComponent;
+}
+
 namespace eng
 {
 	class AssetManager;
@@ -28,6 +33,7 @@ namespace eng
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::LightDirectionalComponent,
+			const eng::settings::DebugComponent,
 			const eng::StaticMeshAssetComponent,
 			const eng::StaticMeshComponent,
 			const eng::TransformComponent>;

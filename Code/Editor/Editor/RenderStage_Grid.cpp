@@ -79,6 +79,7 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
 	const auto& localSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 	const auto& gizmos = localSettings.m_Gizmos;
 	const auto& settings = gizmos.m_FloorGrid;
@@ -112,7 +113,7 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const bool isEditorActive = true;
+		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
 		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
 		if (isEditorActive != isEditorCamera)
 			continue;

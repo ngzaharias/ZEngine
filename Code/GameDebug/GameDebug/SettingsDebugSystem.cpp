@@ -24,6 +24,11 @@ void dbg::settings::DebugSystem::Initialise(World& world)
 	visitor.Read(world.WriteSingleton<clt::settings::DebugComponent>());
 	visitor.Read(world.WriteSingleton<eng::settings::DebugComponent>());
 	visitor.Read(world.WriteSingleton<hidden::settings::DebugComponent>());
+
+#ifdef Z_EDITOR
+	auto& component = world.WriteSingleton<eng::settings::DebugComponent>();
+	component.m_IsEditorModeEnabled = true;
+#endif
 }
 
 void dbg::settings::DebugSystem::Update(World& world, const GameTime& gameTime)

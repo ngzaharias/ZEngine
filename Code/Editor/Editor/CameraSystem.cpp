@@ -7,14 +7,15 @@
 #include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/LevelComponents.h"
+#include "Engine/SettingsComponents.h"
 #include "Engine/TransformComponent.h"
 
 void editor::CameraSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const Set<ecs::Entity> entities = world.Query<ecs::query::Include<const eng::camera::EditorComponent>>();
-	if (world.HasAny<ecs::query::Added<const eng::level::LoadedComponent>>())
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	if (debugSettings.m_IsEditorModeEnabled && !world.HasAny<ecs::query::Include<const eng::camera::EditorComponent>>())
 	{
 		const ecs::Entity entity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(entity, "Editor Camera");
@@ -26,9 +27,9 @@ void editor::CameraSystem::Update(World& world, const GameTime& gameTime)
 		transform.m_Translate = Vector3f(+500.f, +500.f, -500.f);
 	}
 
-	if (world.HasAny<ecs::query::Removed<const eng::level::LoadedComponent>>())
+	if (!debugSettings.m_IsEditorModeEnabled && world.HasAny<ecs::query::Include<const eng::camera::EditorComponent>>())
 	{
-		for (const ecs::Entity& entity : entities)
+		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::camera::EditorComponent>>())
 			world.DestroyEntity(entity);
 	}
 }

@@ -9,6 +9,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/DynamicMeshComponent.h"
+#include "Engine/SettingsComponents.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TransformComponent.h"
@@ -68,8 +69,14 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, eng::TransformComponent>>())
 	{
+		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
+		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		if (isEditorActive != isEditorCamera)
+			continue;
+
 		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 

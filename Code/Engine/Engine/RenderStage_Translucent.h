@@ -21,6 +21,11 @@ namespace eng::camera
 	struct ProjectionComponent;
 }
 
+namespace eng::settings
+{
+	struct DebugComponent;
+}
+
 namespace eng
 {
 	class RenderStage_Translucent final : public eng::RenderStage
@@ -35,6 +40,7 @@ namespace eng
 			const eng::camera::ProjectionComponent,
 			const eng::FlipbookAssetComponent,
 			const eng::FlipbookComponent,
+			const eng::settings::DebugComponent,
 			const eng::SpriteAssetComponent,
 			const eng::SpriteComponent,
 			const eng::TransformComponent>;

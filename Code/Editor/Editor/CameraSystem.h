@@ -24,6 +24,11 @@ namespace eng::level
 	struct LoadedComponent;
 }
 
+namespace eng::settings
+{
+	struct DebugComponent;
+}
+
 namespace editor
 {
 	class CameraSystem final : public ecs::System
@@ -35,7 +40,8 @@ namespace editor
 			eng::camera::Move3DComponent,
 			eng::camera::ProjectionComponent,
 			eng::TransformComponent,
-			const eng::level::LoadedComponent>;
+			const eng::level::LoadedComponent,
+			const eng::settings::DebugComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

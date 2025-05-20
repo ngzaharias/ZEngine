@@ -12,15 +12,20 @@ namespace eng
 	struct DynamicMeshComponent;
 }
 
-namespace voxel
-{
-	struct ChunkComponent;
-}
-
 namespace eng::camera
 {
 	struct EditorComponent;
 	struct ProjectionComponent;
+}
+
+namespace eng::settings
+{
+	struct DebugComponent;
+}
+
+namespace voxel
+{
+	struct ChunkComponent;
 }
 
 namespace eng
@@ -35,6 +40,7 @@ namespace eng
 			// Components
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
+			const eng::settings::DebugComponent,
 			const eng::TransformComponent,
 			const eng::DynamicMeshComponent,
 			const voxel::ChunkComponent>;

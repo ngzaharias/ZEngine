@@ -33,6 +33,8 @@ workspace "ZEngine"
 		optimize "Speed"
 		runtime "Release"
 		symbols "Off"
+	filter "*_Editor"
+		defines { "Z_EDITOR" }
 	filter {} -- disable the filter
 
 	-- https://premake.github.io/docs/flags/

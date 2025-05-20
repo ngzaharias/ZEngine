@@ -23,6 +23,11 @@ namespace eng::camera
 	struct ProjectionComponent;
 }
 
+namespace eng::settings
+{
+	struct DebugComponent;
+}
+
 namespace hexmap
 {
 	struct AssetComponent;
@@ -39,6 +44,7 @@ namespace hexmap
 			// Components
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
+			const eng::settings::DebugComponent,
 			const eng::TransformComponent,
 			const hexmap::AssetComponent,
 			const hexmap::LayerComponent,

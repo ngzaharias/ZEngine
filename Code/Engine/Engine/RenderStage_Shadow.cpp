@@ -11,6 +11,7 @@
 #include "Engine/ColourHelpers.h"
 #include "Engine/FrameBufferComponent.h"
 #include "Engine/LightComponents.h"
+#include "Engine/SettingsComponents.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/StaticMeshComponent.h"
@@ -101,9 +102,10 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const bool isEditorActive = true;
+		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
 		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
 		if (isEditorActive != isEditorCamera)
 			continue;

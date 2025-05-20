@@ -13,15 +13,20 @@ namespace eng
 	struct TransformComponent;
 }
 
-namespace glfw
-{
-	class Window;
-}
-
 namespace eng::camera
 {
 	struct EditorComponent;
 	struct ProjectionComponent;
+}
+
+namespace eng::settings
+{
+	struct DebugComponent;
+}
+
+namespace glfw
+{
+	class Window;
 }
 
 namespace eng
@@ -36,6 +41,7 @@ namespace eng
 			// Components
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
+			const eng::settings::DebugComponent,
 			const eng::TextAssetComponent,
 			const eng::TextComponent,
 			const eng::TransformComponent>;

@@ -80,7 +80,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 		const uint32 vertexCount = readComponent.m_Vertices.GetCount();
 		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 		{
-			const bool isEditorActive = true;
+			const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
 			const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
 			if (isEditorActive != isEditorCamera)
 				continue;
