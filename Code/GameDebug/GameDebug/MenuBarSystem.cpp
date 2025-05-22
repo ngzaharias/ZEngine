@@ -105,6 +105,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<editor::EntityWindowRequestComponent>();
 			if (ImGui::MenuItem("Flipbook Editor"))
 				world.AddEventComponent<editor::FlipbookWindowRequestComponent>();
+			if (ImGui::MenuItem("Input Editor"))
+				world.AddEventComponent<editor::InputWindowRequestComponent>();
 			if (ImGui::MenuItem("Sprite Editor"))
 				world.AddEventComponent<editor::SpriteWindowRequestComponent>();
 			if (ImGui::MenuItem("Table Editor"))

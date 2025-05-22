@@ -36,6 +36,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::FlipbookAssetSaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookBatchingComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowComponent>();
+	m_ClientWorld.RegisterComponent<editor::InputWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::SpriteAssetNewComponent>();
 	m_ClientWorld.RegisterComponent<editor::SpriteAssetOpenComponent>();
@@ -59,6 +60,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
+	m_ClientWorld.RegisterSystem<editor::InputSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::LocalSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
 	m_ClientWorld.RegisterSystem<editor::SpriteEditorSystem>();

@@ -136,6 +136,21 @@ void eng::InputManager::RemoveLayer(const str::Name& name)
 	}
 }
 
+auto eng::InputManager::GetLayers() const->const Array<str::Name>&
+{
+	return m_LayerOrder;
+}
+
+auto eng::InputManager::GetLayer(const str::Name& name) const->const input::Layer&
+{
+	auto find = m_LayerMap.Find(name);
+	if (find != m_LayerMap.end())
+		return find->second;
+
+	static input::Layer layer;
+	return layer;
+}
+
 auto eng::InputManager::GetValue(const str::Name& name) const->const input::Value&
 {
 	auto find = m_ValueMap.Find(name);

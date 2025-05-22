@@ -44,6 +44,8 @@ namespace eng
 		auto ModifyLayer(const str::Name& name)->input::Layer&;
 		void RemoveLayer(const str::Name& name);
 
+		auto GetLayers() const->const Array<str::Name>&;
+		auto GetLayer(const str::Name& name) const->const input::Layer&;
 		auto GetValue(const str::Name& name) const->const input::Value&;
 		bool IsHeld(const str::Name& name) const;
 		bool IsPressed(const str::Name& name) const;

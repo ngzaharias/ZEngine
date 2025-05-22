@@ -28,6 +28,7 @@ namespace editor
 {
 	struct EntityWindowRequestComponent : ecs::EventComponent<EntityWindowRequestComponent> { };
 	struct FlipbookWindowRequestComponent : ecs::EventComponent<FlipbookWindowRequestComponent> { };
+	struct InputWindowRequestComponent : ecs::EventComponent<InputWindowRequestComponent> { };
 	struct SettingsWindowRequestComponent : ecs::EventComponent<SettingsWindowRequestComponent> { };
 	struct SpriteWindowRequestComponent : ecs::EventComponent<SpriteWindowRequestComponent> { };
 	struct TableWindowRequestComponent : ecs::EventComponent<TableWindowRequestComponent> { };
