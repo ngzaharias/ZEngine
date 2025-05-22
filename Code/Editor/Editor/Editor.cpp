@@ -9,6 +9,7 @@
 #include "Editor/FlipbookEditorSystem.h"
 #include "Editor/GizmoCrosshairSystem.h"
 #include "Editor/GizmoTransformSystem.h"
+#include "Editor/InputSystem.h"
 #include "Editor/RenderStage_Axes.h"
 #include "Editor/RenderStage_Grid.h"
 #include "Editor/SettingsMenuSystem.h"
