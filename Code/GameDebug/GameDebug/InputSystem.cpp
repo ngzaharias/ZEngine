@@ -11,19 +11,19 @@
 
 namespace
 {
-	const str::Name strInput = str::Name::Create("DebugConsume");
+	const str::Name strImGui = str::Name::Create("ImGui");
 }
 
 void dbg::InputSystem::Initialise(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
-	input.AppendLayer(strInput, input::Layer{ eng::EInputPriority::Debug });
+	input.AppendLayer(strImGui, input::Layer{ eng::EInputPriority::Debug });
 }
 
 void dbg::InputSystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
-	input.RemoveLayer(strInput);
+	input.RemoveLayer(strImGui);
 }
 
 void dbg::InputSystem::Update(World& world, const GameTime& gameTime)
@@ -31,7 +31,7 @@ void dbg::InputSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	auto& input = world.WriteResource<eng::InputManager>();
-	input::Layer& layer = input.ModifyLayer(strInput);
+	input::Layer& layer = input.ModifyLayer(strImGui);
 	const bool hasKeyboard = layer.m_Consume.Has(input::EConsume::Keyboard);
 	const bool hasMouse = layer.m_Consume.Has(input::EConsume::Mouse);
 	const bool wantsKeyboard = ImGui::GetIO().WantCaptureKeyboard;
