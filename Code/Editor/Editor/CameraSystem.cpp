@@ -23,8 +23,8 @@ void editor::CameraSystem::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<eng::camera::Move3DComponent>(entity);
 		world.AddComponent<eng::camera::ProjectionComponent>(entity);
 		auto& transform = world.AddComponent<eng::TransformComponent>(entity);
-		transform.m_Rotate = Rotator(+45.f, -45.f, 0.f);
-		transform.m_Translate = Vector3f(+500.f, +500.f, -500.f);
+		transform.m_Rotate = Rotator(+20.f, -45.f, 0.f);
+		transform.m_Translate = Vector3f(+1000.f, +500.f, -1000.f);
 	}
 
 	if (!debugSettings.m_IsEditorModeEnabled && world.HasAny<ecs::query::Include<const eng::camera::EditorComponent>>())
