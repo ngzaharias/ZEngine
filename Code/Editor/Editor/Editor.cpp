@@ -7,6 +7,7 @@
 #include "Editor/CameraSystem.h"
 #include "Editor/EntityEditorSystem.h"
 #include "Editor/FlipbookEditorSystem.h"
+#include "Editor/GameModeSystem.h"
 #include "Editor/GizmoCrosshairSystem.h"
 #include "Editor/GizmoTransformSystem.h"
 #include "Editor/InputSystem.h"
@@ -59,6 +60,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::CameraSystem>();
 	m_ClientWorld.RegisterSystem<editor::EntityEditorSystem>(m_ClientWorld);
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditorSystem>();
+	m_ClientWorld.RegisterSystem<editor::GameModeSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
 	m_ClientWorld.RegisterSystem<editor::InputSystem>();
