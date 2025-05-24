@@ -6,3 +6,4 @@
 - [ ] Customisable colours
 - [ ] Customisable key bindings
 - [ ] Boids
+- [ ] Valgrind https://valgrind.org/downloads/
