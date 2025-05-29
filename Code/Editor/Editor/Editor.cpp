@@ -4,6 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Editor/AssetBrowserSystem.h"
 #include "Editor/CameraSystem.h"
 #include "Editor/EntityEditorSystem.h"
 #include "Editor/FlipbookEditorSystem.h"
@@ -32,6 +33,7 @@ void editor::Editor::Register()
 {
 	PROFILE_FUNCTION();
 
+	m_ClientWorld.RegisterComponent<editor::AssetBrowserWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::EntitySaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::EntityWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::FlipbookAssetOpenComponent>();
@@ -57,6 +59,7 @@ void editor::Editor::Register()
 
 	m_ClientWorld.RegisterSingleton<editor::settings::LocalComponent>();
 
+	m_ClientWorld.RegisterSystem<editor::AssetBrowserSystem>();
 	m_ClientWorld.RegisterSystem<editor::CameraSystem>();
 	m_ClientWorld.RegisterSystem<editor::EntityEditorSystem>(m_ClientWorld);
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditorSystem>();
