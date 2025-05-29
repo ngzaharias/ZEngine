@@ -84,6 +84,9 @@ namespace eng
 		// #temp: need to find a better way of discovering assets, AddEntry perhaps ?
 		void LoadFilepath(const str::Path& filepath, const bool canSearchSubdirectories);
 
+		auto GetFileMap() const -> const FileMap&;
+		auto GetTypeMap() const -> const TypeMap&;
+
 	public:
 		const eng::AssetFile* GetAssetFile(const str::Guid& guid) const;
 

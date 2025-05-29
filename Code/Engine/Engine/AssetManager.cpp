@@ -57,6 +57,16 @@ void eng::AssetManager::LoadFilepath(const str::Path& filepath, const bool canSe
 	}
 }
 
+auto eng::AssetManager::GetFileMap() const -> const FileMap&
+{
+	return m_FileMap;
+}
+
+auto eng::AssetManager::GetTypeMap() const -> const TypeMap&
+{
+	return m_TypeMap;
+}
+
 const eng::AssetFile* eng::AssetManager::GetAssetFile(const str::Guid& guid) const
 {
 	const auto find = m_FileMap.Find(guid);

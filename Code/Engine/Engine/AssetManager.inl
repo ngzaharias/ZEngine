@@ -64,7 +64,7 @@ bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
 
 	if (!entry.m_Save || !entry.m_Save(&asset, loader, path))
 	{
-		Z_LOG(ELog::Assert, "Asset failed to save! Path [{}]", filepath.ToChar());
+		Z_LOG(ELog::Assert, "Asset failed to save! Path [{}]", path.ToChar());
 		return false;
 	}
 
@@ -72,6 +72,7 @@ bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
 	file.m_Guid = asset.m_Guid;
 	file.m_Name = asset.m_Name;
 	file.m_Type = asset.m_Type;
+	file.m_Path = path;
 	return true;
 }
 
