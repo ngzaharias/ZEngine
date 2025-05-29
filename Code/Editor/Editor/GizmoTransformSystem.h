@@ -5,6 +5,16 @@
 #include "ECS/Entity.h"
 #include "ECS/System.h"
 
+namespace editor
+{
+	struct EntityWindowComponent;
+}
+
+namespace editor::settings
+{
+	struct LocalComponent;
+}
+
 namespace eng
 {
 	class InputManager;
@@ -17,17 +27,13 @@ namespace eng
 
 namespace eng::camera
 {
-	struct  ProjectionComponent;
+	struct EditorComponent;
+	struct ProjectionComponent;
 }
 
-namespace editor
+namespace eng::settings
 {
-	struct EntityWindowComponent;
-}
-
-namespace editor::settings
-{
-	struct LocalComponent;
+	struct DebugComponent;
 }
 
 namespace editor::gizmo
@@ -44,7 +50,9 @@ namespace editor::gizmo
 			eng::TransformComponent,
 			const editor::EntityWindowComponent,
 			const editor::settings::LocalComponent,
-			const eng::camera::ProjectionComponent>;
+			const eng::camera::EditorComponent,
+			const eng::camera::ProjectionComponent,
+			const eng::settings::DebugComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

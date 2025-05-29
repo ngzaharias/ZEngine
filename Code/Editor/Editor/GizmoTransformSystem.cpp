@@ -10,6 +10,7 @@
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
 #include "Engine/PhysicsComponent.h"
+#include "Engine/SettingsComponents.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -134,8 +135,14 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 		}
 
 		const Vector2u& resolution = window->GetResolution();
+		const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
 		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent>>())
 		{
+			const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
+			const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+			if (isEditorActive != isEditorCamera)
+				continue;
+
 			const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
