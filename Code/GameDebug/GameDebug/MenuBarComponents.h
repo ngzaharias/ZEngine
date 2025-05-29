@@ -26,6 +26,7 @@ namespace dbg::level
 
 namespace editor
 {
+	struct AssetBrowserWindowRequestComponent : ecs::EventComponent<AssetBrowserWindowRequestComponent> { };
 	struct EntityWindowRequestComponent : ecs::EventComponent<EntityWindowRequestComponent> { };
 	struct FlipbookWindowRequestComponent : ecs::EventComponent<FlipbookWindowRequestComponent> { };
 	struct InputWindowRequestComponent : ecs::EventComponent<InputWindowRequestComponent> { };

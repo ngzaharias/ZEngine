@@ -101,6 +101,8 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 		if (ImGui::BeginMenu("Editors"))
 		{
+			if (ImGui::MenuItem("Asset Browser"))
+				world.AddEventComponent<editor::AssetBrowserWindowRequestComponent>();
 			if (ImGui::MenuItem("Entity Editor"))
 				world.AddEventComponent<editor::EntityWindowRequestComponent>();
 			if (ImGui::MenuItem("Flipbook Editor"))

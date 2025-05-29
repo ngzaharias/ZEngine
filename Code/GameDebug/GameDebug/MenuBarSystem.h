@@ -31,6 +31,7 @@ namespace dbg::settings
 
 namespace editor
 {
+	struct AssetBrowserWindowRequestComponent;
 	struct EntityWindowRequestComponent;
 	struct FlipbookWindowRequestComponent;
 	struct InputWindowRequestComponent;
@@ -86,6 +87,7 @@ namespace dbg
 			dbg::settings::WindowRequestComponent,
 			dbg::ShapeWindowRequestComponent,
 			dbg::SplineWindowRequestComponent,
+			editor::AssetBrowserWindowRequestComponent,
 			editor::EntityWindowRequestComponent,
 			editor::FlipbookWindowRequestComponent,
 			editor::InputWindowRequestComponent,
