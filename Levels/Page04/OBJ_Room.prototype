@@ -1,0 +1,12 @@
+m_Guid = '53793eb61a8042c47ebcf86d726d4ce5'
+m_Name = 'OBJ_Room'
+
+['eng::SpriteComponent']
+m_Colour = { A = 1.0, B = 1.0, G = 1.0, R = 1.0 }
+m_Size = { X = 4096, Y = 4096 }
+m_Sprite = 'a5ded3233a084961738fa1ad85db9d2d'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 0.0, Y = 0.0, Z = 1001.0 }

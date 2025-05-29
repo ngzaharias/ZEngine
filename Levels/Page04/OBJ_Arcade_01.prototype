@@ -1,0 +1,12 @@
+m_Guid = '85155b384409433d3db59a8752ceed1f'
+m_Name = 'OBJ_Arcade_01'
+
+['eng::SpriteComponent']
+m_Colour = { A = 1.0, B = 1.0, G = 1.0, R = 1.0 }
+m_Size = { X = 1219, Y = 2048 }
+m_Sprite = '1781658f77c74670ebaa91ca95654e89'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -1372.380615234375, Y = 89.78683471679688, Z = 0.0 }
