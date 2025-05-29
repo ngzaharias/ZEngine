@@ -29,6 +29,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/UserComponents.h"
 #include "Engine/VersionComponent.h"
+#include "Engine/VisibilityComponent.h"
 #include "Voxel/VoxelComponents.h"
 
 #include <yojimbo/yojimbo.h>
@@ -140,6 +141,7 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::SpriteAssetComponent>();
 	entityWorld.RegisterComponent<eng::StaticMeshAssetComponent>();
 	entityWorld.RegisterComponent<eng::TextAssetComponent>();
+	entityWorld.RegisterComponent<eng::VisibilityComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkChangedEventComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkLoadedEventComponent>();

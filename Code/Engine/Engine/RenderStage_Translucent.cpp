@@ -18,6 +18,7 @@
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/VisibilityComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 
@@ -193,6 +194,13 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				batchData.m_TexParams.RemoveAll();
 			}
 
+			if (world.HasComponent<eng::VisibilityComponent>(id.m_Entity))
+			{
+				const auto& visibileComponent = world.ReadComponent<eng::VisibilityComponent>(id.m_Entity);
+				if (!visibileComponent.m_IsVisible)
+					continue;
+			}
+
 			if (world.HasComponent<eng::FlipbookComponent>(id.m_Entity) && world.HasComponent<eng::FlipbookAssetComponent>(id.m_Entity))
 			{
 				const auto& assetComponent = world.ReadComponent<eng::FlipbookAssetComponent>(id.m_Entity);
@@ -288,6 +296,8 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 	if (!mesh || !shader || !texture)
 		return;
 	if (texture->m_TextureId == 0)
+		return;
+	if (batchData.m_Models.IsEmpty())
 		return;
 
 	glUseProgram(shader->m_ProgramId);

@@ -13,6 +13,7 @@ namespace eng
 	struct SpriteAssetComponent;
 	struct SpriteComponent;
 	struct TransformComponent;
+	struct VisibilityComponent;
 }
 
 namespace eng::camera
@@ -43,7 +44,8 @@ namespace eng
 			const eng::settings::DebugComponent,
 			const eng::SpriteAssetComponent,
 			const eng::SpriteComponent,
-			const eng::TransformComponent>;
+			const eng::TransformComponent,
+			const eng::VisibilityComponent>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

@@ -29,6 +29,7 @@
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TrajectoryAsset.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/VisibilityComponent.h"
 #include "Engine/Window.h"
 #include "Voxel/VoxelComponents.h"
 
@@ -165,6 +166,7 @@ void eng::Application::Register()
 		m_PrototypeManager.Register<eng::StaticMeshComponent>();
 		m_PrototypeManager.Register<eng::TextComponent>();
 		m_PrototypeManager.Register<eng::TransformComponent>();
+		m_PrototypeManager.Register<eng::VisibilityComponent>();
 		m_PrototypeManager.Register<voxel::ChunkComponent>();
 	}
 

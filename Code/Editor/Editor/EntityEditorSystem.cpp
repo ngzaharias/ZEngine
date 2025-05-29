@@ -16,6 +16,7 @@
 #include "Engine/PrototypeManager.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/VisibilityComponent.h"
 #include "Engine/Visitor.h"
 #include "Hidden/HiddenCountComponent.h"
 #include "Hidden/HiddenGroupComponent.h"
@@ -318,6 +319,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 						SelectComponent<eng::PrototypeComponent>(m_World, selected);
 						SelectComponent<eng::SpriteComponent>(m_World, selected);
 						SelectComponent<eng::TransformComponent>(m_World, selected);
+						SelectComponent<eng::VisibilityComponent>(m_World, selected);
 						SelectComponent<hidden::CountComponent>(m_World, selected);
 						SelectComponent<hidden::GroupComponent>(m_World, selected);
 						SelectComponent<hidden::ObjectComponent>(m_World, selected);
@@ -333,6 +335,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 				if (inspector.Begin("##table"))
 				{
 					// always first
+					InspectComponent<eng::VisibilityComponent>(m_World, selected, inspector);
 					InspectComponent<ecs::NameComponent>(m_World, selected, inspector);
 					InspectComponent<eng::TransformComponent>(m_World, selected, inspector);
 
@@ -371,45 +374,49 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 				const auto& readWindow = world.ReadComponent<editor::EntityWindowComponent>(windowEntity);
 				const ecs::Entity selected = windowComponent.m_Selected;
 
-				const auto& readPrototype = m_World.ReadComponent<eng::PrototypeComponent>(selected);
-				const auto& readName = m_World.ReadComponent<ecs::NameComponent>(selected);
-
-				str::Path filepath = readPrototype.m_Path;
-				if (filepath.IsEmpty())
+				if (m_World.HasComponent<eng::PrototypeComponent>(selected))
 				{
-					eng::SaveFileSettings settings;
-					settings.m_Title = "Save Sprite";
-					settings.m_Filters = { "Prototypes (*.prototype)", "*.prototype" };
-					settings.m_Path = str::Path(readSettings.m_Entity.m_Save, readName.m_Name, eng::PrototypeManager::s_Extension);
-					filepath = eng::SaveFileDialog(settings);
-				}
+					const auto& readPrototype = m_World.ReadComponent<eng::PrototypeComponent>(selected);
+					const auto& readName = m_World.ReadComponent<ecs::NameComponent>(selected);
 
-				if (!filepath.IsEmpty())
-				{
-					auto& writePrototype = m_World.WriteComponent<eng::PrototypeComponent>(selected);
-					writePrototype.m_Path = filepath;
-					auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
-					writeSettings.m_Entity.m_Save = filepath.GetDirectory();
+					str::Path filepath = readPrototype.m_Path;
+					if (filepath.IsEmpty())
+					{
+						eng::SaveFileSettings settings;
+						settings.m_Title = "Save Entity";
+						settings.m_Filters = { "Prototypes (*.prototype)", "*.prototype" };
+						settings.m_Path = str::Path(readSettings.m_Entity.m_Save, readName.m_Name, eng::PrototypeManager::s_Extension);
+						filepath = eng::SaveFileDialog(settings);
+					}
 
-					eng::Visitor visitor;
-					visitor.Write("m_Guid", readPrototype.m_Guid);
-					visitor.Write("m_Name", readName.m_Name);
+					if (!filepath.IsEmpty())
+					{
+						auto& writePrototype = m_World.WriteComponent<eng::PrototypeComponent>(selected);
+						writePrototype.m_Path = filepath;
+						auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
+						writeSettings.m_Entity.m_Save = filepath.GetDirectory();
 
-					SaveComponent<eng::camera::Bound2DComponent>(m_World, selected, visitor);
-					SaveComponent<eng::camera::Move2DComponent>(m_World, selected, visitor);
-					SaveComponent<eng::camera::Move3DComponent>(m_World, selected, visitor);
-					SaveComponent<eng::camera::Pan3DComponent>(m_World, selected, visitor);
-					SaveComponent<eng::camera::ProjectionComponent>(m_World, selected, visitor);
-					SaveComponent<eng::camera::Zoom2DComponent>(m_World, selected, visitor);
-					SaveComponent<eng::PhysicsComponent>(m_World, selected, visitor);
-					SaveComponent<eng::SpriteComponent>(m_World, selected, visitor);
-					SaveComponent<eng::TransformComponent>(m_World, selected, visitor);
-					SaveComponent<hidden::CountComponent>(m_World, selected, visitor);
-					SaveComponent<hidden::GroupComponent>(m_World, selected, visitor);
-					SaveComponent<hidden::ObjectComponent>(m_World, selected, visitor);
+						eng::Visitor visitor;
+						visitor.Write("m_Guid", readPrototype.m_Guid);
+						visitor.Write("m_Name", readName.m_Name);
 
-					str::String string = visitor;
-					visitor.SaveToFile(filepath);
+						SaveComponent<eng::camera::Bound2DComponent>(m_World, selected, visitor);
+						SaveComponent<eng::camera::Move2DComponent>(m_World, selected, visitor);
+						SaveComponent<eng::camera::Move3DComponent>(m_World, selected, visitor);
+						SaveComponent<eng::camera::Pan3DComponent>(m_World, selected, visitor);
+						SaveComponent<eng::camera::ProjectionComponent>(m_World, selected, visitor);
+						SaveComponent<eng::camera::Zoom2DComponent>(m_World, selected, visitor);
+						SaveComponent<eng::PhysicsComponent>(m_World, selected, visitor);
+						SaveComponent<eng::SpriteComponent>(m_World, selected, visitor);
+						SaveComponent<eng::TransformComponent>(m_World, selected, visitor);
+						SaveComponent<eng::VisibilityComponent>(m_World, selected, visitor);
+						SaveComponent<hidden::CountComponent>(m_World, selected, visitor);
+						SaveComponent<hidden::GroupComponent>(m_World, selected, visitor);
+						SaveComponent<hidden::ObjectComponent>(m_World, selected, visitor);
+
+						str::String string = visitor;
+						visitor.SaveToFile(filepath);
+					}
 				}
 			}
 		}
