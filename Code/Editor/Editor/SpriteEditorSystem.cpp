@@ -11,11 +11,13 @@
 #include "Engine/FileHelpers.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/InputManager.h"
+#include "Engine/InspectorHelpers.h"
 #include "Engine/Texture2DAsset.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "Math/AABB.h"
 
 #include "imgui/imgui.h"
+#include "imgui/imgui_graph.h"
 #include "imgui/imgui_internal.h"
 #include "imgui/imgui_stdlib.h"
 #include "imgui/imgui_user.h"
@@ -166,10 +168,12 @@ namespace
 		imgui::Inspector inspector;
 		if (inspector.Begin("##inspector"))
 		{
+			const auto& assetManager = world.ReadResource<eng::AssetManager>();
+
 			inspector.Write("m_Guid", sprite.m_Guid);
 			inspector.Write("m_Name", sprite.m_Name);
 			inspector.Write("m_Shader", sprite.m_Shader);
-			inspector.Write("m_Texture2D", sprite.m_Texture2D);
+			imgui::WriteTexture2D(assetManager, "m_Texture2D", sprite.m_Texture2D);
 			inspector.Write("m_Position", sprite.m_Position);
 			inspector.Write("m_Size", sprite.m_Size);
 			inspector.End();
@@ -187,14 +191,15 @@ namespace
 		if (HasInput(world, strNew) || world.HasComponent<editor::SpriteAssetNewComponent>(entity))
 		{
 			auto& window = world.WriteComponent<editor::SpriteWindowComponent>(entity);
-			window.m_Asset = {};
+			if (!window.m_Asset.m_Guid.IsValid())
+			{
+				window.m_Asset.m_Shader = uuidShader;
+				window.m_Asset.m_Texture2D = uuidTexture2D;
+				window.m_Asset.m_Size = Vector2f(128.f);
+			}
 
-			eng::SpriteAsset& sprite = window.m_Asset;
-			sprite.m_Guid = str::Guid::Generate();
-			sprite.m_Name = str::Name::Create("SP_Sprite");
-			sprite.m_Shader = uuidShader;
-			sprite.m_Texture2D = uuidTexture2D;
-			sprite.m_Size = Vector2f(128.f);
+			window.m_Asset.m_Guid = str::Guid::Generate();
+			window.m_Asset.m_Name = str::Name::Create("SP_");
 		}
 	}
 
@@ -323,7 +328,8 @@ namespace
 			max.x = math::Remap(max.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
 			max.y = math::Remap(max.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
 
-			imgui::AddRect({ min, max }, Vector4f(1.0f, 1.0f, 0.4f, 1.0f));
+			constexpr Colour colour = Colour(1.0f, 1.0f, 0.4f, 1.0f);
+			imgui::AddRect({ min, max }, colour);
 		}
 
 		// draw sprites to be extracted

@@ -34,7 +34,7 @@ bool imgui::Inspector::WriteCustom(hidden::GroupComponent& value)
 	const auto& manager = GetPayload<eng::AssetManager>();
 
 	bool result = false;
-	result |= WriteAsset("m_Sprite", value.m_Sprite, manager);
+	result |= WriteSprite(manager, "m_Sprite", value.m_Sprite);
 	result |= Write("m_Size", value.m_Size);
 	result |= Write("m_Objects", value.m_Objects);
 	Read("m_Revealed", value.m_Revealed);

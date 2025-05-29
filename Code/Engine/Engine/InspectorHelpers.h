@@ -14,5 +14,6 @@ namespace str
 
 namespace imgui
 {
-	bool WriteAsset(const char* label, str::Guid& value, const eng::AssetManager& manager);
+	bool WriteSprite(const eng::AssetManager& manager, const char* label, str::Guid& value);
+	bool WriteTexture2D(const eng::AssetManager& manager, const char* label, str::Guid& value);
 }

@@ -38,7 +38,7 @@ bool imgui::Inspector::WriteCustom(eng::SpriteComponent& value)
 	else
 	{
 		const auto& manager = GetPayload<eng::AssetManager>();
-		result |= WriteAsset("m_Sprite", value.m_Sprite, manager);
+		result |= WriteSprite(manager, "m_Sprite", value.m_Sprite);
 	}
 	result |= Write("m_Colour", value.m_Colour);
 	result |= Write("m_Size", value.m_Size);

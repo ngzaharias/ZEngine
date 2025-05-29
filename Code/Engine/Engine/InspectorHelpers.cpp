@@ -10,6 +10,9 @@
 
 namespace
 {
+	const str::Name strSprite = NAME("Sprite");
+	const str::Name strTexture2D = NAME("Texture2D");
+
 	bool Contains(const eng::AssetFile* file, const str::StringView& substring)
 	{
 		if (!file)
@@ -25,72 +28,93 @@ namespace
 	{
 		return std::format("{}", file ? file->m_Name.ToChar() : guid.ToString());
 	}
+
+	bool WriteAsset(const eng::AssetManager& manager, const str::Name& type, const char* label, str::Guid& value)
+	{
+		static str::String search = {};
+		constexpr ImGuiComboFlags s_ComboFlags =
+			ImGuiComboFlags_HeightLarge;
+
+		ImGui::TableNextRow();
+
+		bool result = false;
+		imgui::RaiiID id(label);
+		ImGui::TableSetColumnIndex(0);
+		ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_Bullet);
+		{
+			imgui::RaiiIndent indent(0);
+			ImGui::TableSetColumnIndex(1);
+			ImGui::SetNextItemWidth(-1);
+
+			const eng::AssetFile* parent = manager.GetAssetFile(value);
+			const str::String preview = ToName(parent, value);
+			imgui::InputText("##value", value);
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("eng::AssetFile"))
+				{
+					const eng::AssetFile& file = *(const eng::AssetFile*)payload->Data;
+					value = file.m_Guid;
+					result = true;
+				}
+				ImGui::EndDragDropTarget();
+			}
+
+			ImGui::SetNextItemWidth(-1);
+			if (ImGui::BeginCombo("##combo", preview.c_str(), s_ComboFlags))
+			{
+				if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) && !ImGui::IsAnyItemActive() && !ImGui::IsMouseClicked(0))
+					ImGui::SetKeyboardFocusHere(0);
+				imgui::InputText("##search", search);
+
+				const auto& typeMap = manager.GetTypeMap();
+				for (const str::Guid& guid : typeMap.Get(type))
+				{
+					const eng::AssetFile* child = manager.GetAssetFile(guid);
+					if (!Contains(child, search))
+						continue;
+
+					imgui::RaiiID id(&guid);
+					bool isSelected = guid == value;
+					const str::String label = ToName(child, guid);
+					if (imgui::Selectable(label, isSelected))
+					{
+						result = true;
+						value = guid;
+					}
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+
+					if (ImGui::IsItemHovered())
+					{
+						ImGui::BeginTooltip();
+						imgui::Text(child->m_Path);
+						imgui::Text(child->m_Guid);
+						ImGui::EndTooltip();
+					}
+				}
+				ImGui::EndCombo();
+			}
+
+			if (parent && ImGui::IsItemHovered())
+			{
+				ImGui::BeginTooltip();
+				imgui::Text(parent->m_Path);
+				ImGui::EndTooltip();
+			}
+		}
+		return result;
+	}
 }
 
-bool imgui::WriteAsset(const char* label, str::Guid& value, const eng::AssetManager& manager)
+bool imgui::WriteSprite(const eng::AssetManager& manager, const char* label, str::Guid& value)
 {
-	static str::String search = {};
-	constexpr ImGuiComboFlags s_ComboFlags =
-		ImGuiComboFlags_HeightLarge;
+	return WriteAsset(manager, strSprite, label, value);
+}
 
-	ImGui::TableNextRow();
-
-	bool result = false;
-	imgui::RaiiID id(label);
-	ImGui::TableSetColumnIndex(0);
-	ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_Bullet);
-	{
-		imgui::RaiiIndent indent(0);
-		ImGui::TableSetColumnIndex(1);
-		ImGui::SetNextItemWidth(-1);
-
-		const eng::AssetFile* parent = manager.GetAssetFile(value);
-		const str::String preview = ToName(parent, value);
-		imgui::InputText("##value", value);
-
-		ImGui::SetNextItemWidth(-1);
-		if (ImGui::BeginCombo("##combo", preview.c_str(), s_ComboFlags))
-		{
-			if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) && !ImGui::IsAnyItemActive() && !ImGui::IsMouseClicked(0))
-				ImGui::SetKeyboardFocusHere(0);
-			imgui::InputText("##search", search);
-
-			static const str::Name s_Sprite = str::Name::Create("Sprite");
-			for (const str::Guid& guid : manager.m_TypeMap.Get(s_Sprite))
-			{
-				const eng::AssetFile* child = manager.GetAssetFile(guid);
-				if (!Contains(child, search))
-					continue;
-
-				imgui::RaiiID id(&guid);
-				bool isSelected = guid == value;
-				const str::String label = ToName(child, guid);
-				if (imgui::Selectable(label, isSelected))
-				{
-					result = true;
-					value = guid;
-				}
-
-				if (isSelected)
-					ImGui::SetItemDefaultFocus();
-
-				if (ImGui::IsItemHovered())
-				{
-					ImGui::BeginTooltip();
-					imgui::Text(child->m_Path);
-					imgui::Text(child->m_Guid);
-					ImGui::EndTooltip();
-				}
-			}
-			ImGui::EndCombo();
-		}
-
-		if (parent && ImGui::IsItemHovered())
-		{
-			ImGui::BeginTooltip();
-			imgui::Text(parent->m_Path);
-			ImGui::EndTooltip();
-		}
-	}
-	return result;
+bool imgui::WriteTexture2D(const eng::AssetManager& manager, const char* label, str::Guid& value)
+{
+	return WriteAsset(manager, strTexture2D, label, value);
 }
