@@ -49,7 +49,7 @@ namespace natsort
 	{
 		int bias = 0;
 
-		// The longest run of digits wins.  That aside, the greatest
+		// The longest run of digits wins. That aside, the greatest
 		// value wins, but we can't know that it will until we've scanned
 		// both numbers to know that they have the same magnitude, so we
 		// remember it in BIAS.
@@ -86,8 +86,7 @@ namespace natsort
 
 	static int Compare_Left(const str::StringView& a, const str::StringView& b)
 	{
-		// Compare two left-aligned numbers: the first to have a
-		// different value wins.
+		// Compare two left-aligned numbers: the first to have a different value wins.
 		for (int i = 0;; i++)
 		{
 			if (!IsDigit(a[i]) && !IsDigit(b[i]))
@@ -115,8 +114,7 @@ namespace natsort
 		ai = bi = 0;
 		while (true)
 		{
-			// The strings compare the same.  Perhaps the caller
-			// will want to call strcmp to break the tie.
+			// The strings compare the same. Perhaps the caller will want to call strcmp to break the tie.
 			if (ai == a.size() && bi == b.size())
 				return 0;
 
