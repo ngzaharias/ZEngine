@@ -10,3 +10,6 @@ m_Sprite = '7415b7561a2c4848b9169a1a33b7deae'
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = 0.0, Y = 0.0, Z = 1000.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true
