@@ -1,0 +1,7 @@
+m_Guid = '9ea503d98d3c40195d9243a735582397'
+m_Name = 'SP_ControllerA'
+m_Position = { X = 0.0, Y = 269.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 448.0, Y = 409.0 }
+m_Texture2D = '798d0d82ba2c4a6bb5e7314169dc98cb'
+m_Type = 'Sprite'

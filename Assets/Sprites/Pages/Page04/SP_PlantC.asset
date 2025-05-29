@@ -1,0 +1,7 @@
+m_Guid = 'd5659b79753247bb61a9c3c037f46c32'
+m_Name = 'SP_PlantC'
+m_Position = { X = 750.0, Y = 547.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 276.0, Y = 349.0 }
+m_Texture2D = '798d0d82ba2c4a6bb5e7314169dc98cb'
+m_Type = 'Sprite'

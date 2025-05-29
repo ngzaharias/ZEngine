@@ -1,0 +1,7 @@
+m_Guid = '247022ae2633435075a3a0f23dcfea98'
+m_Name = 'SP_CanB'
+m_Position = { X = 153.0, Y = 1095.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 238.0, Y = 173.0 }
+m_Texture2D = '7db2403d44a84f7aaf4712b28e2f4101'
+m_Type = 'Sprite'

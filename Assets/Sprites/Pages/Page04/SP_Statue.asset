@@ -1,0 +1,7 @@
+m_Guid = '519962fe5862449fd4958175bd570d4c'
+m_Name = 'SP_Statue'
+m_Position = { X = 1112.0, Y = 1072.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 241.0, Y = 377.0 }
+m_Texture2D = '798d0d82ba2c4a6bb5e7314169dc98cb'
+m_Type = 'Sprite'

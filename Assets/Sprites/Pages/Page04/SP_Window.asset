@@ -1,0 +1,7 @@
+m_Guid = 'b892fadac64a4f30818be025aec84b72'
+m_Name = 'SP_Window'
+m_Position = { X = 0.0, Y = 886.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 1043.0, Y = 1124.0 }
+m_Texture2D = 'c7219c4dc3524ee998e9631d405fdbf9'
+m_Type = 'Sprite'

@@ -1,0 +1,7 @@
+m_Guid = '9363b1048a3b492148add4eda63d96d0'
+m_Name = 'SP_CloudB'
+m_Position = { X = 1484.0, Y = 86.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 252.0, Y = 79.0 }
+m_Texture2D = 'c7219c4dc3524ee998e9631d405fdbf9'
+m_Type = 'Sprite'

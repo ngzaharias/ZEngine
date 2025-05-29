@@ -1,0 +1,7 @@
+m_Guid = 'af6f746dbb254305b0b0950fffd6cef9'
+m_Name = 'SP_Box'
+m_Position = { X = 738.0, Y = 1483.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 724.0, Y = 527.0 }
+m_Texture2D = '798d0d82ba2c4a6bb5e7314169dc98cb'
+m_Type = 'Sprite'

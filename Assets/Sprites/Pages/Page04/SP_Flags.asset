@@ -1,0 +1,7 @@
+m_Guid = '4992a0a6ce704c2d22b0e5de92bedccc'
+m_Name = 'SP_Flags'
+m_Position = { X = 0.0, Y = 0.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 1458.0, Y = 375.0 }
+m_Texture2D = 'c7219c4dc3524ee998e9631d405fdbf9'
+m_Type = 'Sprite'

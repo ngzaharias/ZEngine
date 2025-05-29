@@ -1,0 +1,7 @@
+m_Guid = 'e500496eb5f54ad5e7bd016e1dde8a10'
+m_Name = 'SP_CanA'
+m_Position = { X = 0.0, Y = 1027.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 153.0, Y = 279.0 }
+m_Texture2D = '7db2403d44a84f7aaf4712b28e2f4101'
+m_Type = 'Sprite'

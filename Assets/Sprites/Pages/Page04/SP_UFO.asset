@@ -1,0 +1,7 @@
+m_Guid = '28f5ff28c0504a1e66b9d4d7c48ce2cc'
+m_Name = 'SP_UFO'
+m_Position = { X = 0.0, Y = 670.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 448.0, Y = 409.0 }
+m_Texture2D = '798d0d82ba2c4a6bb5e7314169dc98cb'
+m_Type = 'Sprite'
