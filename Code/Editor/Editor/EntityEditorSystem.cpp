@@ -29,12 +29,6 @@
 #include "imgui/imgui_stdlib.h"
 #include "imgui/imgui_user.h"
 
-namespace
-{
-	const str::Name strInput = str::Name::Create("EntityEditor");
-	const str::Name strSave = str::Name::Create("EntityEditor_Save");
-}
-
 template<>
 bool imgui::Inspector::WriteCustom(ecs::NameComponent& value)
 {
@@ -43,6 +37,10 @@ bool imgui::Inspector::WriteCustom(ecs::NameComponent& value)
 
 namespace
 {
+	const str::Name strInput = str::Name::Create("EntityEditor");
+	const str::Name strSave = str::Name::Create("EntityEditor_Save");
+	const str::Name strSprite = str::Name::Create("Sprite");
+
 	using World = editor::EntityEditorSystem::World;
 
 	ecs::Entity CreateEntity(ecs::EntityWorld& world, const ecs::Entity& windowEntity, const str::StringView name, const str::Name& level)
@@ -261,10 +259,10 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 
 					if (ImGui::MenuItem("Sprite"))
 					{
-						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Sprite_", levelName);
+						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "SP_", levelName);
+						m_World.AddComponent<eng::VisibilityComponent>(entity);
 						auto& spriteComponent = m_World.AddComponent<eng::SpriteComponent>(entity);
 						spriteComponent.m_Sprite = str::Guid::Create("52ffdca6bc1d64230eda0e2056e9662b");
-						spriteComponent.m_Size = Vector2u(128);
 					}
 					ImGui::EndMenu();
 				}
@@ -295,6 +293,27 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 						world.DestroyEntity(entity);
 					ImGui::EndPopup();
 				}
+			}
+
+			const auto* window = ImGui::GetCurrentWindow();
+
+			ImRect bb;
+			bb.Min = window->Pos;
+			bb.Max = bb.Min + window->Size;
+			if (ImGui::BeginDragDropTargetCustom(bb, window->ID))
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("eng::AssetFile"))
+				{
+					const eng::AssetFile& file = *(const eng::AssetFile*)payload->Data;
+					if (file.m_Type == strSprite)
+					{
+						const ecs::Entity entity = CreateEntity(m_World, windowEntity, file.m_Name, levelName);
+						m_World.AddComponent<eng::VisibilityComponent>(entity);
+						auto& spriteComponent = m_World.AddComponent<eng::SpriteComponent>(entity);
+						spriteComponent.m_Sprite = file.m_Guid;
+					}
+				}
+				ImGui::EndDragDropTarget();
 			}
 		}
 		ImGui::End();
