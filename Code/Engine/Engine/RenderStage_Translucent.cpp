@@ -2,6 +2,7 @@
 #include "Engine/RenderStage_Translucent.h"
 
 #include "Core/Algorithms.h"
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -250,14 +251,15 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				if (!spriteAsset || !texture2DAsset)
 					continue;
 
-				const Vector2f spritePos = Vector2f((float)spriteAsset->m_Position.x, (float)spriteAsset->m_Position.y);
-				const Vector2f spriteSize = Vector2f((float)spriteAsset->m_Size.x, (float)spriteAsset->m_Size.y);
+				const Vector2f spritePos = Vector2f(spriteAsset->m_Position.x, spriteAsset->m_Position.y);
+				const Vector2f spriteSize = Vector2f(spriteAsset->m_Size.x, spriteAsset->m_Size.y);
 				const Vector2f textureSize = Vector2f((float)texture2DAsset->m_Width, (float)texture2DAsset->m_Height);
+				const Vector2u componentSize = spriteComponent.m_Size.value_or(Vector2u((uint32)spriteSize.x, (uint32)spriteSize.y));
 
 				const Vector3f modelScale = spriteTransform.m_Scale;
 				const Vector3f spriteScale = Vector3f(
-					(float)spriteComponent.m_Size.x / 100.f,
-					(float)spriteComponent.m_Size.y / 100.f,
+					(float)componentSize.x / 100.f,
+					(float)componentSize.y / 100.f,
 					1.f);
 
 				Matrix4x4 model = spriteTransform.ToTransform();
@@ -270,7 +272,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					spriteSize.x / textureSize.x,
 					spriteSize.y / textureSize.y);
 
-				batchData.m_Colours.Append(spriteComponent.m_Colour);
+				batchData.m_Colours.Append(spriteComponent.m_Colour.value_or(Colour::White));
 				batchData.m_Models.Append(model);
 				batchData.m_TexParams.Emplace(
 					texcoordOffset.x, texcoordOffset.y,

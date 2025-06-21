@@ -17,8 +17,9 @@ namespace eng
 	struct SpriteComponent : public ecs::Component<SpriteComponent>
 	{
 		str::Guid m_Sprite = {};
-		Colour m_Colour = Colour::White;
-		Vector2u m_Size = Vector2u::Zero;
+		
+		Optional<Colour> m_Colour = {};
+		Optional<Vector2u> m_Size = {};
 	};
 
 	// \brief Attached to the same entity as SpriteComponent and holds a reference to the currently loaded assets.
