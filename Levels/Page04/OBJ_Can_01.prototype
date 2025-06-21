@@ -1,0 +1,13 @@
+m_Guid = '5c94ed4040f6499e02a6f9b4245c8405'
+m_Name = 'OBJ_Can_01'
+
+['eng::SpriteComponent']
+m_Sprite = 'e500496eb5f54ad5e7bd016e1dde8a10'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 1070.869140625, Y = -1045.591552734375, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

@@ -1,13 +1,13 @@
-m_Guid = '85155b384409433d3db59a8752ceed1f'
-m_Name = 'OBJ_Arcade_01'
+m_Guid = '977e9f15f95549df1992d2a94a21561e'
+m_Name = 'OBJ_Bottle'
 
 ['eng::SpriteComponent']
-m_Sprite = '1781658f77c74670ebaa91ca95654e89'
+m_Sprite = 'e2c05e9f655341425aa2e251cd74f614'
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = -1372.380615234375, Y = 91.09356689453125, Z = 100.0 }
+m_Translate = { X = 494.7415466308594, Y = 774.0313720703125, Z = 0.0 }
 
 ['eng::VisibilityComponent']
 m_IsVisible = false

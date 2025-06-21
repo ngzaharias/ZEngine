@@ -1,13 +1,13 @@
-m_Guid = '85155b384409433d3db59a8752ceed1f'
-m_Name = 'OBJ_Arcade_01'
+m_Guid = '5c5d504fb29442d4ab831e9a997ccf56'
+m_Name = 'OBJ_Beanbag'
 
 ['eng::SpriteComponent']
-m_Sprite = '1781658f77c74670ebaa91ca95654e89'
+m_Sprite = 'de7e507ecf4a4ccd5b88ad94adb28f08'
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = -1372.380615234375, Y = 91.09356689453125, Z = 100.0 }
+m_Translate = { X = -449.2020263671875, Y = -1441.6219482421875, Z = 0.0 }
 
 ['eng::VisibilityComponent']
 m_IsVisible = false

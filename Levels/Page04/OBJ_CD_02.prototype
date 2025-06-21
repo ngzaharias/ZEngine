@@ -1,0 +1,13 @@
+m_Guid = '116b43b5df134909eeb61035dff393d2'
+m_Name = 'OBJ_CD_02'
+
+['eng::SpriteComponent']
+m_Sprite = '23b6218ca9c04e430888b27eb4ec3245'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = -17.064645767211914, Yaw = -0.0 }
+m_Scale = { X = 0.9999979734420776, Y = 0.9999979734420776, Z = 1.0 }
+m_Translate = { X = -1563.3717041015625, Y = -1653.4334716796875, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

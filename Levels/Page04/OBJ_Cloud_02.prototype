@@ -1,0 +1,13 @@
+m_Guid = 'dd6c7229d9914f397499417991255893'
+m_Name = 'OBJ_Cloud_02'
+
+['eng::SpriteComponent']
+m_Sprite = '9363b1048a3b492148add4eda63d96d0'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -1294.617919921875, Y = 1388.0089111328125, Z = 2200.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

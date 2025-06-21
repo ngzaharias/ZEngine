@@ -1,13 +1,13 @@
-m_Guid = '85155b384409433d3db59a8752ceed1f'
-m_Name = 'OBJ_Arcade_01'
+m_Guid = '1f13bf8255594cf633b4a7c285c7ecf7'
+m_Name = 'OBJ_Box'
 
 ['eng::SpriteComponent']
-m_Sprite = '1781658f77c74670ebaa91ca95654e89'
+m_Sprite = 'af6f746dbb254305b0b0950fffd6cef9'
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = -1372.380615234375, Y = 91.09356689453125, Z = 100.0 }
+m_Translate = { X = -355.72882080078125, Y = -567.6084594726562, Z = 0.0 }
 
 ['eng::VisibilityComponent']
 m_IsVisible = false

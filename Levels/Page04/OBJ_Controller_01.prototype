@@ -1,0 +1,13 @@
+m_Guid = 'f93422332a8442350091d5cbac98014a'
+m_Name = 'OBJ_Controller_01'
+
+['eng::SpriteComponent']
+m_Sprite = '9ea503d98d3c40195d9243a735582397'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -1834.4404296875, Y = -1798.01318359375, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

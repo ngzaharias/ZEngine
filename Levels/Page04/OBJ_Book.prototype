@@ -1,13 +1,13 @@
-m_Guid = '85155b384409433d3db59a8752ceed1f'
-m_Name = 'OBJ_Arcade_01'
+m_Guid = '186915e5414b42597c9afeced997085f'
+m_Name = 'OBJ_Book'
 
 ['eng::SpriteComponent']
-m_Sprite = '1781658f77c74670ebaa91ca95654e89'
+m_Sprite = 'dbca85e2ce15466ca81c4ce1468e8970'
 
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = -1372.380615234375, Y = 91.09356689453125, Z = 100.0 }
+m_Translate = { X = 1514.5322265625, Y = -1679.379150390625, Z = 0.0 }
 
 ['eng::VisibilityComponent']
 m_IsVisible = false
