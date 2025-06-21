@@ -43,7 +43,6 @@ void editor::GameModeSystem::Update(World& world, const GameTime& gameTime)
 		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_NoDocking |
 		ImGuiWindowFlags_NoFocusOnAppearing |
-		//ImGuiWindowFlags_NoMouseInputs |
 		ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_NoNavFocus |
 		ImGuiWindowFlags_NoNavInputs |
@@ -76,8 +75,7 @@ void editor::GameModeSystem::Update(World& world, const GameTime& gameTime)
 				if (ImGui::ImageButton("##play", iconPlay->m_TextureId, Vector2f(32.f)))
 					settings.m_IsEditorModeEnabled = false;
 			}
-
-			if (!settings.m_IsEditorModeEnabled)
+			else
 			{
 				if (ImGui::ImageButton("##stop", iconStop->m_TextureId, Vector2f(32.f)))
 					settings.m_IsEditorModeEnabled = true;
