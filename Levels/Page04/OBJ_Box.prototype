@@ -10,4 +10,4 @@ m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = -355.72882080078125, Y = -567.6084594726562, Z = 0.0 }
 
 ['eng::VisibilityComponent']
-m_IsVisible = false
+m_IsVisible = true
