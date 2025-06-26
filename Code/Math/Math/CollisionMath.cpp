@@ -95,9 +95,6 @@ namespace
 	}
 }
 
-// returns true if line (L1, L2) intersects with the box (B1, B2)
-// returns intersection point in Hit
-//int CheckLineBox(CVec3 B1, CVec3 B2, CVec3 L1, CVec3 L2, CVec3& Hit)
 bool math::Intersection(const AABB3f& a, const Segment3f& b, Vector3f& out_IntersectPos)
 {
 	if (b.m_PointB.x < a.m_Min.x && b.m_PointA.x < a.m_Min.x)
@@ -150,6 +147,27 @@ bool math::Intersection(const Line3f& a, const Plane3f& b, Vector3f& out_Interse
 	return true;
 }
 
+// https://medium.com/@logandvllrd/how-to-pick-a-3d-object-using-raycasting-in-c-39112aed1987
+bool math::Intersection(const Ray3f& ray, const AABB3f& box, Vector3f& out_IntersectPos)
+{
+	const Vector3f tMin = math::Divide(box.m_Min - ray.m_Position, ray.m_Direction);
+	const Vector3f tMax = math::Divide(box.m_Max - ray.m_Position, ray.m_Direction);
+	const Vector3f tNear = math::Min(tMin, tMax);
+	const Vector3f tFar = math::Max(tMin, tMax);
+
+	const float tNearMax = math::Max(math::Max(tNear.x, tNear.y), tNear.z);
+	const float tFarMin = math::Min(math::Min(tFar.x, tFar.y), tFar.z);
+
+	constexpr float max = std::numeric_limits<float>::max();
+	if (tNearMax <= tFarMin && max > tNearMax)
+	{
+		out_IntersectPos = ray.m_Position + ray.m_Direction * tNearMax;
+		return true;
+	}
+
+	return false;
+}
+
 // https://github.com/BSVino/MathForGameDevelopers/blob/line-plane-intersection/math/collision.cpp
 bool math::Intersection(const Ray3f& a, const Plane3f& b, Vector3f& out_IntersectPos)
 {
@@ -162,6 +180,25 @@ bool math::Intersection(const Ray3f& a, const Plane3f& b, Vector3f& out_Intersec
 	const float d2 = d1 / d0;
 	out_IntersectPos = a.m_Position + a.m_Direction * d2;
 	return d2 >= 0.f;
+}
+
+// https://gamedev.stackexchange.com/questions/96459/fast-ray-sphere-collision-code
+bool math::Intersection(const Ray3f& ray, const Sphere3f& sphere, Vector3f& out_IntersectPos)
+{
+	const Vector3f m = ray.m_Position - sphere.m_Position;
+	const float b = math::Dot(m, ray.m_Direction);
+	const float c = math::Dot(m, m) - sphere.m_Radius * sphere.m_Radius;
+
+	if (c > 0.f && b > 0.f) 
+		return false;
+
+	const float d = b * b - c;
+	if (d < 0.0f) 
+		return false;
+
+	const float t = math::Max(0.f, -b - math::Sqrt(d));
+	out_IntersectPos = ray.m_Position + ray.m_Direction * t;
+	return true;
 }
 
 // https://github.com/BSVino/MathForGameDevelopers/blob/line-plane-intersection/math/collision.cpp
@@ -529,7 +566,7 @@ bool math::IsOverlapping(const Segment2f& a, const Triangle2f& b)
 	if (math::IsOverlapping(a, Segment2f(b.m_PointC, b.m_PointA)))
 		return true;
 
-	// if either of the points are inside the triangle we are overlapping
+	// If either of the points are inside the triangle we are overlapping
 	return math::IsOverlapping(a.m_PointA, b);
 }
 
