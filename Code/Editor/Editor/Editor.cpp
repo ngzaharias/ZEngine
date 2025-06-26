@@ -7,8 +7,9 @@
 #include "Editor/AssetBrowserSystem.h"
 #include "Editor/CameraSystem.h"
 #include "Editor/EntityEditorSystem.h"
+#include "Editor/EntitySelectComponent.h"
+#include "Editor/EntitySelectSystem.h"
 #include "Editor/FlipbookEditorSystem.h"
-#include "Editor/GameModeSystem.h"
 #include "Editor/GizmoCrosshairSystem.h"
 #include "Editor/GizmoTransformSystem.h"
 #include "Editor/InputSystem.h"
@@ -58,11 +59,13 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::TrajectoryAssetSaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowComponent>();
 
+	m_ClientWorld.RegisterSingleton<editor::EntitySelectComponent>();
 	m_ClientWorld.RegisterSingleton<editor::settings::LocalComponent>();
 
 	m_ClientWorld.RegisterSystem<editor::AssetBrowserSystem>();
 	m_ClientWorld.RegisterSystem<editor::CameraSystem>();
 	m_ClientWorld.RegisterSystem<editor::EntityEditorSystem>(m_ClientWorld);
+	m_ClientWorld.RegisterSystem<editor::EntitySelectSystem>();
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();

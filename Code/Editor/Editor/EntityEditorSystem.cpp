@@ -5,6 +5,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Editor/EntitySelectComponent.h"
 #include "Editor/SettingsComponents.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
@@ -53,8 +54,8 @@ namespace
 		auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
 		prototypeComponent.m_Guid = str::Guid::Generate();
 
-		auto& windowComponent = world.WriteComponent<editor::EntityWindowComponent>(windowEntity);
-		windowComponent.m_Selected = entity;
+		auto& selectComponent = world.WriteSingleton<editor::EntitySelectComponent>();
+		selectComponent.m_Entity = entity;
 
 		return entity;
 	}
@@ -121,7 +122,6 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 	if (world.HasAny<ecs::query::Added<editor::EntityWindowComponent>>())
 	{
 		input::Layer layer;
-		layer.m_Priority = eng::EInputPriority::Editor;
 		layer.m_Priority = eng::EInputPriority::EditorUI;
 		layer.m_Bindings.Emplace(strSave, input::EKey::S, input::EKey::Control_L);
 		layer.m_Bindings.Emplace(strSave, input::EKey::S, input::EKey::Control_R);
@@ -168,6 +168,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::EntityWindowComponent>>())
 	{
+		const auto& selectComponent = world.ReadSingleton<editor::EntitySelectComponent>();
 		auto& windowComponent = world.WriteComponent<editor::EntityWindowComponent>(windowEntity);
 
 		bool isOpen = true;
@@ -283,9 +284,12 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 					name = component.m_Name.c_str();
 				}
 
-				const bool isSelected = entity == windowComponent.m_Selected;
+				const bool isSelected = entity == selectComponent.m_Entity;
 				if (ImGui::Selectable(name, isSelected))
-					windowComponent.m_Selected = entity;
+				{
+					auto& writeComponent = world.WriteSingleton<editor::EntitySelectComponent>();
+					writeComponent.m_Entity = entity;
+				}
 
 				ImGui::OpenPopupOnItemClick(name);
 				if (ImGui::BeginPopup(name))
@@ -321,7 +325,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 
 		if (ImGui::Begin(windowComponent.m_InspectorLabel.c_str(), nullptr, ImGuiWindowFlags_MenuBar))
 		{
-			const ecs::Entity selected = windowComponent.m_Selected;
+			const ecs::Entity selected = selectComponent.m_Entity;
 			if (world.IsAlive(selected))
 			{
 				if (ImGui::BeginMenuBar())
@@ -392,7 +396,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 			{
 				const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 				const auto& readWindow = world.ReadComponent<editor::EntityWindowComponent>(windowEntity);
-				const ecs::Entity selected = windowComponent.m_Selected;
+				const ecs::Entity selected = selectComponent.m_Entity;
 
 				if (m_World.HasComponent<eng::PrototypeComponent>(selected))
 				{

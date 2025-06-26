@@ -8,6 +8,11 @@
 
 #include <vector>
 
+namespace editor
+{
+	struct EntitySelectComponent;
+}
+
 namespace editor::settings
 {
 	struct LocalComponent;
@@ -53,7 +58,6 @@ namespace editor
 	struct EntityWindowComponent : public ecs::Component<EntityWindowComponent>
 	{
 		int32 m_Identifier = 0;
-		ecs::Entity m_Selected = {};
 
 		str::String m_DockspaceLabel = {};
 		str::String m_EntitiesLabel = {};
@@ -70,6 +74,7 @@ namespace editor
 			// components
 			ecs::NameComponent,
 			editor::EntitySaveComponent,
+			editor::EntitySelectComponent,
 			editor::EntityWindowComponent,
 			editor::settings::LocalComponent,
 			const editor::EntityWindowRequestComponent,
