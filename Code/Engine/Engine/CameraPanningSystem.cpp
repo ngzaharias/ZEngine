@@ -28,19 +28,19 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<eng::camera::Pan3DComponent>>())
+	const bool hasComponent = world.HasAny<ecs::query::Include<eng::camera::Pan3DComponent>>();
+
+	auto& input = world.WriteResource<eng::InputManager>();
+	if (hasComponent && !input.HasLayer(strInput))
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
 		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, false);
-
-		auto& input = world.WriteResource<eng::InputManager>();
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<eng::camera::Pan3DComponent>>())
+	if (!hasComponent && input.HasLayer(strInput))
 	{
-		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
 	}
 
