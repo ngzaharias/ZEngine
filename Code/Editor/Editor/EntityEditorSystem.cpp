@@ -154,9 +154,9 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 
 		auto& window = world.AddComponent<editor::EntityWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
-		window.m_DockspaceLabel = ToLabel("Entity Editor", identifier);
-		window.m_EntitiesLabel = ToLabel("Entities##entity", identifier);
-		window.m_InspectorLabel = ToLabel("Inspector##entity", identifier);
+		window.m_DockspaceLabel = ToLabel("Entity Editor##entityeditor", identifier);
+		window.m_EntitiesLabel = ToLabel("Entities##entityeditor", identifier);
+		window.m_InspectorLabel = ToLabel("Inspector##entityeditor", identifier);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::EntityWindowComponent>>())

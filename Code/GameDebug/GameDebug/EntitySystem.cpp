@@ -110,9 +110,9 @@ void dbg::EntitySystem::Update(World& world, const GameTime& gameTime)
 
 		auto& window = world.AddComponent<dbg::EntityWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
-		window.m_DockspaceLabel = ToLabel("Entity Debugger##entity", identifier);
-		window.m_EntitiesLabel = ToLabel("Entities##entity", identifier);
-		window.m_ComponentsLabel = ToLabel("Components##entity", identifier);
+		window.m_DockspaceLabel = ToLabel("Entity Debugger##entitydebugger", identifier);
+		window.m_EntitiesLabel = ToLabel("Entities##entitydebugger", identifier);
+		window.m_ComponentsLabel = ToLabel("Components##entitydebugger", identifier);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const dbg::EntityWindowComponent>>())
