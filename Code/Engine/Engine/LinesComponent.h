@@ -33,11 +33,13 @@ namespace eng
 	struct LinesComponent final : public ecs::SingletonComponent<LinesComponent>
 	{
 		/// \brief Adds an axis-aligned bounding box.
+		void AddAABB(const AABB3f& extents, const Colour& colour);
+		/// \brief Adds an axis-aligned bounding box.
 		void AddAABB(const Vector3f& translate, const float extents, const Colour& colour);
 		/// \brief Adds an axis-aligned bounding box.
 		void AddAABB(const Vector3f& translate, const Vector3f& extents, const Colour& colour);
 		/// \brief Adds an axis-aligned bounding box.
-		void AddAABB(const Vector3f& translate, const AABB3f& abb, const Colour& colour);
+		void AddAABB(const Vector3f& translate, const AABB3f& extents, const Colour& colour);
 
 		/// \brief Adds a circle.
 		void AddCircle(const Vector3f& translate, const Circle2f& circle, const float steps, const Colour& colour);
@@ -61,6 +63,10 @@ namespace eng
 		/// \brief Adds a orientated bounding box.
 		void AddOBB(const Vector3f& translate, const OBB3f& obb, const Colour& colour);
 
+		/// \brief Adds a sphere.
+		void AddSphere(const Sphere3f& sphere, const Colour& colour);
+		/// \brief Adds a sphere.
+		void AddSphere(const Vector3f& translate, const float radius, const Colour& colour);
 		/// \brief Adds a sphere.
 		void AddSphere(const Vector3f& translate, const Sphere3f& sphere, const Colour& colour);
 

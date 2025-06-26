@@ -189,6 +189,11 @@ namespace
 			Vector3f(0.0f, 0.866f, -0.499f) };
 }
 
+void eng::LinesComponent::AddAABB(const AABB3f& extents, const Colour& colour)
+{
+	AddAABB(Vector3f::Zero, extents, colour);
+}
+
 void eng::LinesComponent::AddAABB(const Vector3f& translate, const float extents, const Colour& colour)
 {
 	Vector3f corners[8];
@@ -441,15 +446,20 @@ void eng::LinesComponent::AddOBB(const Vector3f& translate, const OBB3f& obb, co
 	AddLine(translate + obb.m_Points[3], translate + obb.m_Points[7], colour);
 }
 
-void eng::LinesComponent::AddSphere(const Vector3f& translate, const Sphere3f& sphere, const Colour& colour)
+void eng::LinesComponent::AddSphere(const Sphere3f& sphere, const Colour& colour)
+{
+	AddSphere(Vector3f::Zero, sphere, colour);
+}
+
+void eng::LinesComponent::AddSphere(const Vector3f& translate, const float radius, const Colour& colour)
 {
 	Vector3f corners[8];
-	corners[0] = translate + sphere.m_Position + Vector3f(-sphere.m_Radius, 0.f, 0.f);
-	corners[1] = translate + sphere.m_Position + Vector3f(+sphere.m_Radius, 0.f, 0.f);
-	corners[2] = translate + sphere.m_Position + Vector3f(0.f, -sphere.m_Radius, 0.f);
-	corners[3] = translate + sphere.m_Position + Vector3f(0.f, +sphere.m_Radius, 0.f);
-	corners[4] = translate + sphere.m_Position + Vector3f(0.f, 0.f, -sphere.m_Radius);
-	corners[5] = translate + sphere.m_Position + Vector3f(0.f, 0.f, +sphere.m_Radius);
+	corners[0] = translate + Vector3f(-radius, 0.f, 0.f);
+	corners[1] = translate + Vector3f(+radius, 0.f, 0.f);
+	corners[2] = translate + Vector3f(0.f, -radius, 0.f);
+	corners[3] = translate + Vector3f(0.f, +radius, 0.f);
+	corners[4] = translate + Vector3f(0.f, 0.f, -radius);
+	corners[5] = translate + Vector3f(0.f, 0.f, +radius);
 
 	AddLine(corners[0], corners[2], colour);
 	AddLine(corners[2], corners[1], colour);
@@ -465,4 +475,9 @@ void eng::LinesComponent::AddSphere(const Vector3f& translate, const Sphere3f& s
 	AddLine(corners[4], corners[3], colour);
 	AddLine(corners[3], corners[5], colour);
 	AddLine(corners[5], corners[2], colour);
+}
+
+void eng::LinesComponent::AddSphere(const Vector3f& translate, const Sphere3f& sphere, const Colour& colour)
+{
+	AddSphere(translate + sphere.m_Position, sphere.m_Radius, colour);
 }
