@@ -34,6 +34,17 @@ namespace
 		float m_DistanceSqr = FLT_MAX;
 	};
 
+	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
+	{
+		if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
+		{
+			const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
+			return Vector3f::AxisZ * cameraRotate;
+		}
+
+		return (mousePosition - transform.m_Translate).Normalized();
+	}
+
 	Optional<AABB3f> GetEntityBounds(editor::EntitySelectSystem::World& world, const ecs::Entity& entity)
 	{
 		if (!world.HasComponent<eng::TransformComponent>(entity))
@@ -71,12 +82,8 @@ namespace
 
 void editor::EntitySelectSystem::Initialise(World& world)
 {
-	input::Layer layer;
-	layer.m_Priority = eng::EInputPriority::EditorWorld;
-	layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_1);
-
 	auto& input = world.WriteResource<eng::InputManager>();
-	input.AppendLayer(strInput, layer);
+	input.AppendLayer(strInput, input::Layer{ eng::EInputPriority::EditorWorld });
 }
 
 void editor::EntitySelectSystem::Shutdown(World& world)
@@ -88,6 +95,18 @@ void editor::EntitySelectSystem::Shutdown(World& world)
 void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (world.HasAny<ecs::query::Updated<eng::settings::DebugComponent>>())
+	{
+		const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+		auto& input = world.WriteResource<eng::InputManager>();
+		input::Layer& layer = input.ModifyLayer(strInput);
+		layer.m_Bindings.RemoveAll();
+
+		if (debugSettings.m_IsEditorModeEnabled)
+			layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_1, false);
+	}
+
 
 	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
@@ -115,7 +134,7 @@ void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
 			cameraProjection.m_Projection,
 			cameraView,
 			resolution);
-		const Vector3f mouseForward = (mousePosition - cameraTranslate).Normalized();
+		const Vector3f mouseForward = ToMouseDirection(mousePosition, cameraProjection, cameraTransform);
 
 		Ray3f ray;
 		ray.m_Position = mousePosition;
