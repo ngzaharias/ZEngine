@@ -1,0 +1,13 @@
+m_Guid = 'fbb9e56aea084a32a49cf6fea6a6ca41'
+m_Name = 'OBJ_Shelve_02'
+
+['eng::SpriteComponent']
+m_Sprite = '47309151329745725a8cb33984edaef0'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 995.957275390625, Y = 626.5660400390625, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

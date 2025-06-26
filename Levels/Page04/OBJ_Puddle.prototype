@@ -1,0 +1,13 @@
+m_Guid = '9566c05a24e04b56de9683e3594e60e8'
+m_Name = 'OBJ_Puddle'
+
+['eng::SpriteComponent']
+m_Sprite = '9cb7bcb5f773475b6da5d3e18b964961'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 353.843505859375, Y = -895.9683837890625, Z = 100.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

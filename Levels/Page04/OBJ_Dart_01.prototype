@@ -1,0 +1,13 @@
+m_Guid = 'ca8ec151cccf4dd1279e4c2282aca984'
+m_Name = 'OBJ_Dart_01'
+
+['eng::SpriteComponent']
+m_Sprite = 'bf6c76c5734749f5f0a1cd8336157adf'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 1265.360107421875, Y = -1297.81298828125, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

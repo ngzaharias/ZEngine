@@ -1,0 +1,13 @@
+m_Guid = '98bbbc853c954394bcb1a4948023fb33'
+m_Name = 'OBJ_Koala'
+
+['eng::SpriteComponent']
+m_Sprite = '656fd31f2b4f491fbbcdca5e77dc9a9b'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 303.00079345703125, Y = -1542.2467041015625, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

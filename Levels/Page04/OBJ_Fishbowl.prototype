@@ -1,0 +1,13 @@
+m_Guid = '6d2d9ad818c144334b98a92ff8022723'
+m_Name = 'OBJ_Fishbowl'
+
+['eng::SpriteComponent']
+m_Sprite = '8c0cd742b8d34e8f5f826b3df4190b6c'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 1492.742919921875, Y = 1055.8038330078125, Z = 100.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

@@ -1,0 +1,13 @@
+m_Guid = '63b8cb3639774025d6be11a2aa726a7d'
+m_Name = 'OBJ_Doorframe'
+
+['eng::SpriteComponent']
+m_Sprite = 'ac1c351baae44c9ff89c2d2797908c42'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 1973.9127197265625, Y = 1026.659912109375, Z = 1900.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

@@ -1,0 +1,13 @@
+m_Guid = '5ade976db9c9472e9bbcac113c36030f'
+m_Name = 'OBJ_Plant_01'
+
+['eng::SpriteComponent']
+m_Sprite = 'a09bbd8f323341e3e991174c6a637749'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 41.517913818359375, Y = -1775.3388671875, Z = -100.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

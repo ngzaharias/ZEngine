@@ -1,0 +1,13 @@
+m_Guid = '321aa34b098945f88a9896641539b6d4'
+m_Name = 'OBJ_Rubik'
+
+['eng::SpriteComponent']
+m_Sprite = 'f3a20088cc25442457836c06fafe1aad'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 850.9791870117188, Y = -1719.939697265625, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

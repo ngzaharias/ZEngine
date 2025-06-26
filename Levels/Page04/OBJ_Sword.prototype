@@ -1,0 +1,13 @@
+m_Guid = 'd08014a6b23f47c7d2955af3cce568fe'
+m_Name = 'OBJ_Sword'
+
+['eng::SpriteComponent']
+m_Sprite = 'fbac178ae15e47cf4ab53d732f660da5'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 303.19537353515625, Y = 984.1424560546875, Z = 1000.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

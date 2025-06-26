@@ -1,0 +1,13 @@
+m_Guid = '2c1427b58f8343ae35b9f5707b3fa4ee'
+m_Name = 'OBJ_Window_City'
+
+['eng::SpriteComponent']
+m_Sprite = '7f46628d65f14baafeb6f90b8fb5987f'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -953.49267578125, Y = 983.8297729492188, Z = 2500.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

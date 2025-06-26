@@ -1,0 +1,13 @@
+m_Guid = 'e2d4bdc17180404c58a3b08fa74d045d'
+m_Name = 'OBJ_Drawers'
+
+['eng::SpriteComponent']
+m_Sprite = 'a46faef808d8404d529743146b8badd5'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -481.4183654785156, Y = -92.13632202148438, Z = 400.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true
