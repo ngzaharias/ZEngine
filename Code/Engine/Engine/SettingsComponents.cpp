@@ -47,6 +47,7 @@ void eng::Visitor::ReadCustom(eng::settings::DebugComponent& value) const
 	Read(strAreLinesEnabled, value.m_AreLinesEnabled, value.m_AreLinesEnabled);
 	Read(strArePhysicsEnabled, value.m_ArePhysicsEnabled, value.m_ArePhysicsEnabled);
 	Read(strAreSoftbodyEnabled, value.m_AreSoftbodyEnabled, value.m_AreSoftbodyEnabled);
+	// Read(strIsEditorModeEnabled, value.m_IsEditorModeEnabled, value.m_IsEditorModeEnabled);
 }
 template<>
 void eng::Visitor::WriteCustom(const eng::settings::DebugComponent& value)
@@ -54,6 +55,7 @@ void eng::Visitor::WriteCustom(const eng::settings::DebugComponent& value)
 	Write(strAreLinesEnabled, value.m_AreLinesEnabled);
 	Write(strArePhysicsEnabled, value.m_ArePhysicsEnabled);
 	Write(strAreSoftbodyEnabled, value.m_AreSoftbodyEnabled);
+	// Write(strIsEditorModeEnabled, value.m_IsEditorModeEnabled);
 }
 template<>
 bool imgui::Inspector::WriteCustom(eng::settings::DebugComponent& value)

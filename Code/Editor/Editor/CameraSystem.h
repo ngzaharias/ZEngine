@@ -21,11 +21,6 @@ namespace eng::camera
 	struct Zoom2DComponent;
 }
 
-namespace eng::level
-{
-	struct LoadedComponent;
-}
-
 namespace eng::settings
 {
 	struct DebugComponent;
@@ -44,7 +39,6 @@ namespace editor
 			eng::camera::ProjectionComponent,
 			eng::camera::Zoom2DComponent,
 			eng::TransformComponent,
-			const eng::level::LoadedComponent,
 			const eng::settings::DebugComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

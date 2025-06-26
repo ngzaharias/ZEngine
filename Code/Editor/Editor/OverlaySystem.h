@@ -2,12 +2,16 @@
 
 #include "ECS/Component.h"
 #include "ECS/System.h"
-#include "GameDebug/FPSCounter.h"
 
 namespace eng
 {
-	class AssetManager;
 	class WindowManager;
+	struct TransformComponent;
+}
+
+namespace eng::camera
+{
+	struct ProjectionComponent;
 }
 
 namespace eng::settings
@@ -17,18 +21,16 @@ namespace eng::settings
 
 namespace editor
 {
-	class GameModeSystem final : public ecs::System
+	class OverlaySystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
 			// Resources
-			eng::AssetManager,
 			const eng::WindowManager,
 			// Components
+			eng::camera::ProjectionComponent,
+			eng::TransformComponent,
 			const eng::settings::DebugComponent>;
-
-		void Initialise(World& world);
-		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

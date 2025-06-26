@@ -12,6 +12,7 @@
 #include "Editor/GizmoCrosshairSystem.h"
 #include "Editor/GizmoTransformSystem.h"
 #include "Editor/InputSystem.h"
+#include "Editor/OverlaySystem.h"
 #include "Editor/RenderStage_Axes.h"
 #include "Editor/RenderStage_Grid.h"
 #include "Editor/SettingsMenuSystem.h"
@@ -63,10 +64,10 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::CameraSystem>();
 	m_ClientWorld.RegisterSystem<editor::EntityEditorSystem>(m_ClientWorld);
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditorSystem>();
-	m_ClientWorld.RegisterSystem<editor::GameModeSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
 	m_ClientWorld.RegisterSystem<editor::InputSystem>();
+	m_ClientWorld.RegisterSystem<editor::OverlaySystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::LocalSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
 	m_ClientWorld.RegisterSystem<editor::SpriteEditorSystem>();
