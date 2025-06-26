@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/EntityEditorSystem.h"
+#include "Editor/EntitySelectComponent.h"
 #include "Editor/SettingsComponents.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
@@ -60,35 +60,38 @@ namespace
 		ImGuiWindowFlags_NoScrollWithMouse |
 		ImGuiWindowFlags_NoTitleBar;
 }
+void editor::gizmo::TransformSystem::Initialise(World& world)
+{
+	input::Layer layer;
+	layer.m_Priority = eng::EInputPriority::EditorUI;
+	layer.m_Bindings.Emplace(strTransform, input::EKey::F1);
+	layer.m_Bindings.Emplace(strPhysics, input::EKey::F2);
+	layer.m_Bindings.Emplace(strTranslate, input::EKey::Num_1);
+	layer.m_Bindings.Emplace(strRotate, input::EKey::Num_2);
+	layer.m_Bindings.Emplace(strScale, input::EKey::Num_3);
+
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.AppendLayer(strInput, layer);
+}
+
+void editor::gizmo::TransformSystem::Shutdown(World& world)
+{
+	auto& input = world.WriteResource<eng::InputManager>();
+	input.RemoveLayer(strInput);
+}
 
 void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<editor::EntityWindowComponent>>())
-	{
-		input::Layer layer;
-		layer.m_Priority = eng::EInputPriority::Editor;
-		layer.m_Bindings.Emplace(strTransform, input::EKey::F1);
-		layer.m_Bindings.Emplace(strPhysics,   input::EKey::F2);
-		layer.m_Bindings.Emplace(strTranslate, input::EKey::Num_1);
-		layer.m_Bindings.Emplace(strRotate,    input::EKey::Num_2);
-		layer.m_Bindings.Emplace(strScale,     input::EKey::Num_3);
-
-		auto& input = world.WriteResource<eng::InputManager>();
-		input.AppendLayer(strInput, layer);
-	}
-
-	if (world.HasAny<ecs::query::Removed<editor::EntityWindowComponent>>())
-	{
-		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInput);
-	}
-
 	const auto& localSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 	const auto& gizmos = localSettings.m_Gizmos;
 	const auto& settings = gizmos.m_FloorGrid;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
+		return;
+
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	if (!debugSettings.m_IsEditorModeEnabled)
 		return;
 
 	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
@@ -135,14 +138,8 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 		}
 
 		const Vector2u& resolution = window->GetResolution();
-		const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
-		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent>>())
+		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::EditorComponent, const eng::camera::ProjectionComponent>>())
 		{
-			const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-			const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
-			if (isEditorActive != isEditorCamera)
-				continue;
-
 			const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
@@ -154,82 +151,79 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 			ImGuizmo::SetDrawlist();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 
-			int32 index = 0;
-			for (const ecs::Entity windowEntity : world.Query<ecs::query::Include<editor::EntityWindowComponent>>())
+			const auto& selectComponent = world.ReadSingleton<editor::EntitySelectComponent>();
+			const ecs::Entity selected = selectComponent.m_Entity;
+			if (selected.IsUnassigned())
+				continue;
+			if (!world.IsAlive(selected))
+				continue;
+
+			if (s_TransformType == ETransformType::Transform && world.HasComponent<eng::TransformComponent>(selected))
 			{
-				const auto& window = world.WriteComponent<editor::EntityWindowComponent>(windowEntity);
-				if (window.m_Selected.IsUnassigned())
-					continue;
-				if (!world.IsAlive(window.m_Selected))
-					continue;
+				auto& transform = world.WriteComponent<eng::TransformComponent>(selected);
 
-				if (s_TransformType == ETransformType::Transform && world.HasComponent<eng::TransformComponent>(window.m_Selected))
+				Matrix4x4 objectTran = transform.ToTransform();
+
+				ImGuizmo::SetID(0);
+				ImGuizmo::Manipulate(
+					cameraView.m_Data[0],
+					cameraProj.m_Data[0],
+					operation,
+					ImGuizmo::WORLD,
+					objectTran.m_Data[0]);
+
+				ImGuizmo::DecomposeMatrixToComponents(
+					objectTran.m_Data[0],
+					&transform.m_Translate.x,
+					&transform.m_Rotate.m_Pitch,
+					&transform.m_Scale.x);
+			}
+
+			if (s_TransformType == ETransformType::Physics && world.HasComponent<eng::PhysicsComponent>(selected))
+			{
+				const bool isScale = s_TransformOper == ETransformOper::Scale;
+				if (isScale)
+					operation = ImGuizmo::BOUNDS;
+
+				auto& physics = world.WriteComponent<eng::PhysicsComponent>(selected);
+				for (eng::Shape& shape : physics.m_Shapes)
 				{
-					auto& transform = world.WriteComponent<eng::TransformComponent>(window.m_Selected);
-
-					Matrix4x4 objectTran = transform.ToTransform();
-
-					ImGuizmo::SetID(index++);
-					ImGuizmo::Manipulate(
-						cameraView.m_Data[0],
-						cameraProj.m_Data[0],
-						operation,
-						ImGuizmo::WORLD,
-						objectTran.m_Data[0]);
-
-					ImGuizmo::DecomposeMatrixToComponents(
-						objectTran.m_Data[0],
-						&transform.m_Translate.x,
-						&transform.m_Rotate.m_Pitch,
-						&transform.m_Scale.x);
-				}
-
-				if (s_TransformType == ETransformType::Physics && world.HasComponent<eng::PhysicsComponent>(window.m_Selected))
-				{
-					const bool isScale = s_TransformOper == ETransformOper::Scale;
-					if (isScale)
-						operation = ImGuizmo::BOUNDS;
-
-					auto& physics = world.WriteComponent<eng::PhysicsComponent>(window.m_Selected);
-					for (eng::Shape& shape : physics.m_Shapes)
+					Matrix4x4 parentTran = Matrix4x4::Identity;
+					if (world.HasComponent<eng::TransformComponent>(selected))
 					{
-						Matrix4x4 parentTran = Matrix4x4::Identity;
-						if (world.HasComponent<eng::TransformComponent>(window.m_Selected))
-						{
-							const auto& transform = world.ReadComponent<eng::TransformComponent>(window.m_Selected);
-							parentTran = transform.ToTransform();
-						}
+						const auto& transform = world.ReadComponent<eng::TransformComponent>(selected);
+						parentTran = transform.ToTransform();
+					}
 
-						if (std::holds_alternative<eng::ShapeBox>(shape))
-						{
-							eng::ShapeBox& shapeBox = std::get<eng::ShapeBox>(shape);
+					if (std::holds_alternative<eng::ShapeBox>(shape))
+					{
+						eng::ShapeBox& shapeBox = std::get<eng::ShapeBox>(shape);
 
-							Matrix4x4 objectTran = Matrix4x4::FromTransform(
-								shapeBox.m_Translate,
-								shapeBox.m_Rotate,
-								shapeBox.m_Extents);
+						Matrix4x4 objectTran = Matrix4x4::FromTransform(
+							shapeBox.m_Translate,
+							shapeBox.m_Rotate,
+							shapeBox.m_Extents);
 
-							float bounds[6] = { -1.f, -1.f, -1.f, +1.f, +1.f, +1.f };
+						float bounds[6] = { -1.f, -1.f, -1.f, +1.f, +1.f, +1.f };
 
-							objectTran *= parentTran;
-							ImGuizmo::SetID(index++);
-							ImGuizmo::Manipulate(
-								cameraView.m_Data[0],
-								cameraProj.m_Data[0],
-								operation,
-								ImGuizmo::WORLD,
-								objectTran.m_Data[0],
-								nullptr,
-								nullptr,
-								isScale ? bounds : nullptr);
-							objectTran *= parentTran.Inversed();
+						objectTran *= parentTran;
+						ImGuizmo::SetID(0);
+						ImGuizmo::Manipulate(
+							cameraView.m_Data[0],
+							cameraProj.m_Data[0],
+							operation,
+							ImGuizmo::WORLD,
+							objectTran.m_Data[0],
+							nullptr,
+							nullptr,
+							isScale ? bounds : nullptr);
+						objectTran *= parentTran.Inversed();
 
-							ImGuizmo::DecomposeMatrixToComponents(
-								objectTran.m_Data[0],
-								&shapeBox.m_Translate.x,
-								&shapeBox.m_Rotate.m_Pitch,
-								&shapeBox.m_Extents.x);
-						}
+						ImGuizmo::DecomposeMatrixToComponents(
+							objectTran.m_Data[0],
+							&shapeBox.m_Translate.x,
+							&shapeBox.m_Rotate.m_Pitch,
+							&shapeBox.m_Extents.x);
 					}
 				}
 			}

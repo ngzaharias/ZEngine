@@ -122,6 +122,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Editor;
+		layer.m_Priority = eng::EInputPriority::EditorUI;
 		layer.m_Bindings.Emplace(strSave, input::EKey::S, input::EKey::Control_L);
 		layer.m_Bindings.Emplace(strSave, input::EKey::S, input::EKey::Control_R);
 

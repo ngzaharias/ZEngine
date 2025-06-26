@@ -214,7 +214,7 @@ void editor::TextureEditorSystem::Update(World& world, const GameTime& gameTime)
 	if (world.HasAny<ecs::query::Added<editor::TextureWindowComponent>>())
 	{
 		input::Layer layer;
-		layer.m_Priority = eng::EInputPriority::Editor;
+		layer.m_Priority = eng::EInputPriority::EditorUI;
 		layer.m_Bindings.Emplace(strImport, input::EKey::I, input::EKey::Control_L);
 		layer.m_Bindings.Emplace(strImport, input::EKey::I, input::EKey::Control_R);
 		layer.m_Bindings.Emplace(strNew,    input::EKey::N, input::EKey::Control_L);

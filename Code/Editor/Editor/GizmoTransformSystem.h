@@ -7,7 +7,7 @@
 
 namespace editor
 {
-	struct EntityWindowComponent;
+	struct EntitySelectComponent;
 }
 
 namespace editor::settings
@@ -48,11 +48,14 @@ namespace editor::gizmo
 			// Components
 			eng::PhysicsComponent,
 			eng::TransformComponent,
-			const editor::EntityWindowComponent,
+			const editor::EntitySelectComponent,
 			const editor::settings::LocalComponent,
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::settings::DebugComponent>;
+
+		void Initialise(World& world);
+		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

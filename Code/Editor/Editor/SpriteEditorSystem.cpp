@@ -358,7 +358,7 @@ void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 	if (world.HasAny<ecs::query::Added<editor::SpriteWindowComponent>>())
 	{
 		input::Layer layer;
-		layer.m_Priority = eng::EInputPriority::Editor;
+		layer.m_Priority = eng::EInputPriority::EditorUI;
 		layer.m_Bindings.Emplace(strNew,  input::EKey::N, input::EKey::Control_L);
 		layer.m_Bindings.Emplace(strNew,  input::EKey::N, input::EKey::Control_R);
 		layer.m_Bindings.Emplace(strOpen, input::EKey::O, input::EKey::Control_L);

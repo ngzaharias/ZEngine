@@ -14,7 +14,6 @@
 namespace
 {
 	constexpr input::Value s_Empty = {};
-	const str::Name s_ImGui = str::Name::Create("ImGui");
 }
 
 void eng::InputManager::Update(World& world)
