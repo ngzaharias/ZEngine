@@ -86,7 +86,7 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 
 	const auto& localSettings = world.ReadSingleton<editor::settings::LocalComponent>();
 	const auto& gizmos = localSettings.m_Gizmos;
-	const auto& settings = gizmos.m_FloorGrid;
+	const auto& settings = gizmos.m_Transform;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
 		return;
 
