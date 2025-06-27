@@ -1,15 +1,15 @@
-project "Hidden"
+project "GameUI"
 	kind "StaticLib"
-	pchheader "HiddenPCH.h"
-	pchsource "Hidden/HiddenPCH.cpp"
-	location "%{wks.location}/Modules/Hidden"
-	
+	pchheader "GameUIPCH.h"
+	pchsource "GameUI/GameUIPCH.cpp"
+	location "%{wks.location}/Application/GameUI"
+
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"Hidden/**.h", 
-			"Hidden/**.cpp", 
-			"Hidden/**.inl" } },
+			"GameUI/**.h", 
+			"GameUI/**.cpp", 
+			"GameUI/**.inl" } },
 	}
 
 	includedirs 
@@ -18,8 +18,8 @@ project "Hidden"
 		"%{wks.location}/../3rdParty/imgui/1.91/Include/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
-		"%{wks.location}/../3rdParty/PhysX/Include/",
-		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",
+		"%{wks.location}/../Code/Application/GameClient/",
+		"%{wks.location}/../Code/Application/GameUI/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Engine/",
@@ -27,4 +27,14 @@ project "Hidden"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Modules/Hidden/",
+	}
+
+	links 
+	{ 
+		"Core", 
+		"ECS", 
+		"Engine", 
+		"GameClient", 
+		"Imgui", 
+		"Math",
 	}
