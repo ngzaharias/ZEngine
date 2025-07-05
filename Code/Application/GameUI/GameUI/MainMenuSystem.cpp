@@ -32,10 +32,10 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 		auto& window = world.WriteComponent<gui::main_menu::WindowComponent>(entity);
 
-		const Vector2f viewportSize = ImGui::GetWindowViewport()->Size;
-		const Vector2f viewportCentre = (viewportSize * 0.5f);
+		const Vector2f windowSize = ImGui::GetWindowViewport()->Size;
+		const Vector2f windowPos = Vector2f(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
-		imgui::SetNextWindowPos(viewportCentre, Vector2f(0.5f));
+		imgui::SetNextWindowPos(windowPos, Vector2f(0.5f));
 		imgui::SetNextWindowSize(s_DefaultSize);
 		if (ImGui::Begin("Main Menu", nullptr, s_WindowFlags))
 		{
