@@ -1,0 +1,7 @@
+m_Guid = '0693eaa5cd9948847cb8f29d34babab8'
+m_Name = 'SP_Logo'
+m_Position = { X = 0.0, Y = 0.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 1280.0, Y = 720.0 }
+m_Texture2D = 'ab8f0e2fa74a45199686a66f1e3463aa'
+m_Type = 'Sprite'
