@@ -2,7 +2,9 @@ https://www.noesisengine.com/docs/Gui.Core.SDKGuide.html
 
 #include "NoesisPCH.h"
 
+#include "Core/Algorithms.h"
 #include "Core/GameTime.h"
+#include "Engine/InputManager.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 
@@ -10,6 +12,7 @@ https://www.noesisengine.com/docs/Gui.Core.SDKGuide.html
 #include <NsApp/LocalTextureProvider.h>
 #include <NsApp/LocalXamlProvider.h>
 #include <NsApp/ThemeProviders.h>
+#include <NsGui/InputEnums.h>
 #include <NsGui/IntegrationAPI.h>
 #include <NsGui/IRenderer.h>
 #include <NsGui/IView.h>
@@ -20,13 +23,38 @@ https://www.noesisengine.com/docs/Gui.Core.SDKGuide.html
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
 
+namespace
+{
+	Noesis::Key ToKey(const input::EKey value)
+	{
+		switch (value)
+		{
+		case input::EKey::A: return Noesis::Key_A;
+		}
+
+		return Noesis::Key::Key_None;
+	}
+
+	Noesis::MouseButton ToMouse(const input::EKey value)
+	{
+		switch (value)
+		{
+		case input::EKey::Mouse_1: return Noesis::MouseButton::MouseButton_Left;
+		case input::EKey::Mouse_2: return Noesis::MouseButton::MouseButton_Right;
+		case input::EKey::Mouse_3: return Noesis::MouseButton::MouseButton_Middle;
+		}
+
+		return Noesis::MouseButton::MouseButton_Count;
+	}
+}
+
 int NsMain(int argc, char** argv)
 {
 	NS_UNUSED(argc, argv);
 
-	eng::WindowManager manager;
-	manager.Initialise();
-	eng::Window& window = *manager.GetWindow(0);
+	eng::WindowManager windowManager;
+	windowManager.Initialise();
+	eng::Window& window = *windowManager.GetWindow(0);
 	Vector2u resolution = window.GetResolution();
 
 	// A logging handler is installed here. You can also install a custom error handler and memory
@@ -65,6 +93,12 @@ int NsMain(int argc, char** argv)
 	GameTime gameTime;
 	double currTime = 0.0;
 	double lastTime = 0.0;
+
+	Vector2f mouseDelta = Vector2f::Zero;
+	Vector2f mousePosition = Vector2f::Zero;
+	Vector2f scrollDelta = Vector2f::Zero;
+	Set<input::EKey> inputCurrent;
+	Set<input::EKey> inputPrevious;
 	while (!window.ShouldClose())
 	{
 		lastTime = currTime;
@@ -74,20 +108,54 @@ int NsMain(int argc, char** argv)
 		gameTime.m_TotalTime += gameTime.m_DeltaTime;
 		gameTime.m_Frame++;
 
-		window.PreUpdate(gameTime);
+		windowManager.PreUpdate(gameTime);
 		resolution = window.GetResolution();
+		view->SetSize(resolution.x, resolution.y);
+
+
+		std::swap(inputPrevious, inputCurrent);
+		inputCurrent.RemoveAll();
+
+		window.GatherGamepad(inputCurrent);
+		window.GatherKeyboard(inputCurrent);
+		window.GatherMouse(inputCurrent, mouseDelta, mousePosition);
+		window.GatherScroll(scrollDelta);
+
+		Set<input::EKey> held, pressed, released;
+		enumerate::Intersection(inputPrevious, inputCurrent, held);
+		enumerate::Difference(inputCurrent, inputPrevious, pressed);
+		enumerate::Difference(inputPrevious, inputCurrent, released);
+
+		for (const input::EKey value : pressed)
+		{
+			const Noesis::Key key = ToKey(value);
+			if (key != Noesis::Key::Key_None)
+				view->KeyDown(key);
+
+			const Noesis::MouseButton mouse = ToMouse(value);
+			if (mouse != Noesis::MouseButton::MouseButton_Count)
+				view->MouseButtonDown((int)mousePosition.x, (int)mousePosition.y, mouse);
+		}
+
+		for (const input::EKey value : released)
+		{
+			const Noesis::Key key = ToKey(value);
+			if (key != Noesis::Key::Key_None)
+				view->KeyUp(key);
+
+			const Noesis::MouseButton mouse = ToMouse(value);
+			if (mouse != Noesis::MouseButton::MouseButton_Count)
+				view->MouseButtonUp((int)mousePosition.x, (int)mousePosition.y, mouse);
+		}
 
 		//view->MouseButtonDown();
 		//view->MouseButtonUp();
 		//view->MouseDoubleClick();
-		//view->MouseMove();
+		view->MouseMove((int)mousePosition.x, (int)mousePosition.y);
 		//view->MouseWheel();
 		//view->MouseHWheel();
-		//view->KeyDown();
-		//view->KeyUp();
 
-		view->SetSize(resolution.x, resolution.y);
-		view->Update(currTime - lastTime);
+		view->Update(currTime);
 
 		{
 			// The offscreen rendering phase must be done before binding the framebuffer. This step
@@ -99,11 +167,12 @@ int NsMain(int argc, char** argv)
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glViewport(0, 0, resolution.x, resolution.y);
 			glDisable(GL_SCISSOR_TEST);
-
-			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-			glClearColor(0.0f, 0.0f, 0.25f, 0.0f);
 			glClearStencil(0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+			// Always clear the stencil, important in tiled architectures to avoid loading
+			glColorMask(true, true, true, true);
+			glClearColor(0.0f, 0.0f, 0.25f, 0.0f);
+			glClear(GL_STENCIL_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 			// -> # At this point, you can render your 3D scene... # <-
 			// Note that each function invocation of the renderer modifies the GPU state, you must
@@ -114,7 +183,7 @@ int NsMain(int argc, char** argv)
 			view->GetRenderer()->Render();
 		}
 
-		window.PostUpdate(gameTime);
+		windowManager.PostUpdate(gameTime);
 	}
 
 	view->GetRenderer()->Shutdown();
@@ -123,7 +192,7 @@ int NsMain(int argc, char** argv)
 
 	Noesis::GUI::Shutdown();
 
-	manager.Shutdown();
+	windowManager.Shutdown();
 
 	return 0;
 }
