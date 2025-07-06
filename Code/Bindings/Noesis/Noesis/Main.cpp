@@ -1,3 +1,5 @@
+https://www.noesisengine.com/docs/Gui.Core.SDKGuide.html
+
 #include "NoesisPCH.h"
 
 #include <NsApp/LocalFontProvider.h>
