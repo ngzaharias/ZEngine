@@ -10,10 +10,6 @@ project "Noesis"
 		"%{wks.location}/../Code/Bindings/Noesis/Noesis/**.h",
 		"%{wks.location}/../Code/Bindings/Noesis/Noesis/**.cpp",
 		"%{wks.location}/../Code/Bindings/Noesis/Noesis/**.inl",
-
-		-- data
-		"%{wks.location}/../Code/Bindings/Noesis/Noesis/**.ttf",
-		"%{wks.location}/../Code/Bindings/Noesis/Noesis/**.xaml",
 	}
 
 	vpaths 
@@ -154,11 +150,6 @@ project "Noesis"
 			"sfml-audio.lib",
 		}
 	filter {} -- disable the filter
-
-	prebuildcommands 
-	{ 
-		--"D:/Projects/C++/ZEngine/3rdParty/NoesisGUI/3.2.8-Indie/Tools/bin2h.exe D:/Projects/C++/ZEngine/Code/Bindings/Noesis/Noesis/Font.ttf > D:/Projects/C++/ZEngine/Code/Bindings/Noesis/Noesis/Font.ttf.bin.h",
-	}
 
 	filter { "kind:*App" }
 		postbuildcommands 

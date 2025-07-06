@@ -20,10 +20,10 @@ namespace
 	}
 }
 
-void eng::ImguiManager::Initialise(const eng::Window* window)
+void eng::ImguiManager::Initialise(const eng::Window& window)
 {
 	PROFILE_FUNCTION();
-	m_Window = window;
+	m_Window = &window;
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -41,7 +41,7 @@ void eng::ImguiManager::Initialise(const eng::Window* window)
 	io.ConfigDragClickToInputText = false;
 	io.FontGlobalScale = 1.f;
 
-	if (const auto* glfwWindow = dynamic_cast<const glfw::Window*>(window))
+	if (const auto* glfwWindow = dynamic_cast<const glfw::Window*>(&window))
 	{
 		ImGui_ImplGlfw_InitForOpenGL(glfwWindow->GetWindow(), true);
 		ImGui_ImplOpenGL3_Init("#version 410");

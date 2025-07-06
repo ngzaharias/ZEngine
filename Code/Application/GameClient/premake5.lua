@@ -19,6 +19,7 @@ project "GameClient"
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Include/",
 		"%{wks.location}/../3rdParty/imgui/1.91/Include/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
+		"%{wks.location}/../3rdParty/NoesisGUI/3.2.8-Indie/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../3rdParty/PhysX/Include/",
 		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",

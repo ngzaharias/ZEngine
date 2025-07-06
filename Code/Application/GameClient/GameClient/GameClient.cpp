@@ -5,6 +5,7 @@
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
 #include "Engine/NetworkManager.h"
+#include "Engine/NoesisManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PlatformManager.h"
 #include "Engine/PrototypeManager.h"
@@ -52,6 +53,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
 		m_EntityWorld.RegisterResource(dependencies.m_WindowManager);
 		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
+		m_EntityWorld.RegisterResource(dependencies.m_NoesisManager);
 		m_EntityWorld.RegisterResource(m_InputManager);
 		m_EntityWorld.RegisterResource(m_ReplicationPeer);
 

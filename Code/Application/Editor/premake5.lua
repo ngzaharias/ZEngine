@@ -9,6 +9,15 @@ project "Editor"
 	pchsource "Editor/EditorPCH.cpp"
 	location "%{wks.location}/Application/Editor"
 
+	files 
+	{ 
+		"%{wks.location}/../Code/Application/Editor/*.natvis",
+		"%{wks.location}/../Code/Application/Editor/premake5.*",
+		"%{wks.location}/../Code/Application/Editor/Editor/**.h",
+		"%{wks.location}/../Code/Application/Editor/Editor/**.cpp",
+		"%{wks.location}/../Code/Application/Editor/Editor/**.inl",
+	}
+
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
@@ -28,6 +37,7 @@ project "Editor"
 		"%{wks.location}/../3rdParty/imguizmo/1.83/Include/",
 		"%{wks.location}/../3rdParty/imnodes/0.5/Include/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
+		"%{wks.location}/../3rdParty/NoesisGUI/3.2.8-Indie/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../3rdParty/PhysX/Include/",
 		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",
@@ -61,6 +71,7 @@ project "Editor"
 		"%{wks.location}/../3rdParty/assimp/5.2.4/Library/",
 		"%{wks.location}/../3rdParty/glew/2.1.0/Library/",
 		"%{wks.location}/../3rdParty/glfw/3.3.4/Library/",
+		"%{wks.location}/../3rdParty/NoesisGUI/3.2.8-Indie/Library/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
 		"%{wks.location}/../3rdParty/SteamworksSDK/Library/",
 	}
@@ -109,6 +120,8 @@ project "Editor"
 		"freetype.lib",
 		"glew32.lib",
 		"glfw3.lib",
+		"Noesis.lib",
+		"NoesisApp.lib",
 		"OptickCore.lib",
 		"PhysX_64.lib",
 		"PhysXCommon_64.lib",
@@ -155,6 +168,7 @@ project "Editor"
 		"{COPY} %{wks.location}/../3rdParty/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/assimp/5.2.4/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/glew/2.1.0/Binary/*.dll $(OutDir)",
+		"{COPY} %{wks.location}/../3rdParty/NoesisGUI/3.2.8-Indie/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/optick/1.3.1/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/SteamworksSDK/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../steam_appid.txt $(OutDir)",

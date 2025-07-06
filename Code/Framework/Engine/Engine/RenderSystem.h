@@ -6,11 +6,22 @@
 namespace eng
 {
 	class RenderStage;
+	class WindowManager;
+}
 
+namespace ui
+{
+	class NoesisManager;
+}
+
+namespace eng
+{
 	class RenderSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<>;
+		using World = ecs::WorldView<
+			eng::WindowManager,
+			ui::NoesisManager>;
 
 		RenderSystem(ecs::EntityWorld& entityWorld);
 		~RenderSystem();

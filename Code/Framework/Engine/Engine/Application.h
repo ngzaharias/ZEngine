@@ -4,6 +4,7 @@
 #include "Engine/ComponentSerializer.h"
 #include "Engine/ImguiManager.h"
 #include "Engine/NetworkManager.h"
+#include "Engine/NoesisManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PlatformManager.h"
 #include "Engine/PrototypeManager.h"
@@ -50,6 +51,7 @@ namespace eng
 		eng::PrototypeManager m_PrototypeManager;
 		eng::TableHeadmaster m_TableHeadmaster;
 		eng::WindowManager m_WindowManager;
+		ui::NoesisManager m_NoesisManager;
 
 		net::ComponentSerializer m_ComponentSerializer;
 	};

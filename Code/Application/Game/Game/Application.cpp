@@ -32,7 +32,8 @@ void game::Application::Register()
 		m_PrototypeManager,
 		m_TableHeadmaster,
 		m_WindowManager,
-		m_ComponentSerializer };
+		m_ComponentSerializer,
+		m_NoesisManager };
 
 	svr::Dependencies serverDependencies = {
 		m_AssetManager,

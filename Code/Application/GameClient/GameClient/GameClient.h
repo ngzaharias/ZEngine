@@ -22,6 +22,11 @@ namespace net
 	class ComponentSerializer;
 }
 
+namespace ui
+{
+	class NoesisManager;
+}
+
 namespace clt
 {
 	struct Dependencies
@@ -34,6 +39,7 @@ namespace clt
 		eng::TableHeadmaster& m_TableHeadmaster;
 		eng::WindowManager& m_WindowManager;
 		net::ComponentSerializer& m_Serializer;
+		ui::NoesisManager& m_NoesisManager;
 	};
 
 	class GameClient final
