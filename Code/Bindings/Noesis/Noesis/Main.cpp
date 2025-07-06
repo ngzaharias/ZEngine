@@ -212,14 +212,11 @@ int NsMain(int argc, char** argv)
 	Noesis::GUI::SetLogHandler([](const char*, uint32_t, uint32_t level, const char*, const char* msg)
 		{
 			// [TRACE] [DEBUG] [INFO] [WARNING] [ERROR]
-			const char* prefixes[] = { "T", "D", "I", "W", "E" };
+			const char* prefixes[] = { "TRACE", "DEBUG", "INFO", "WARNING", "ERROR" };
 			printf("[NOESIS/%s] %s\n", prefixes[level], msg);
 		});
 
-	// https://www.noesisengine.com/docs/Gui.Core.Licensing.html
 	Noesis::GUI::SetLicense(NS_LICENSE_NAME, NS_LICENSE_KEY);
-
-	// Noesis initialization. This must be the first step before using any NoesisGUI functionality
 	Noesis::GUI::Init();
 
 	// Register app components. We need a few in this example, like Display and RenderContext
