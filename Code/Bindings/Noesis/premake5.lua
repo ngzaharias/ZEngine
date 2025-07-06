@@ -1,5 +1,5 @@
 project "Noesis"
-	kind "WindowedApp"
+	kind "ConsoleApp"
 	dependson { }
 	pchheader "NoesisPCH.h"
 	pchsource "Noesis/NoesisPCH.cpp"
@@ -30,11 +30,15 @@ project "Noesis"
 
 	includedirs 
 	{ 
+		"%{wks.location}/../3rdParty/glew/2.1.0/Include/",
+		"%{wks.location}/../3rdParty/glfw/3.3.4/Include/",
 		"%{wks.location}/../3rdParty/NoesisGUI/3.2.8-Indie/Include/",
 	}
 
 	libdirs 
 	{
+		"%{wks.location}/../3rdParty/glew/2.1.0/Library/",
+		"%{wks.location}/../3rdParty/glfw/3.3.4/Library/",
 		"%{wks.location}/../3rdParty/NoesisGUI/3.2.8-Indie/Library/",
 	}
 
@@ -42,6 +46,9 @@ project "Noesis"
 	{ 
 		"Noesis.lib",
 		"NoesisApp.lib",
+
+		"glew32.lib",
+		"glfw3.lib",
 	}
 
 	prebuildcommands 
@@ -51,5 +58,8 @@ project "Noesis"
 
 	postbuildcommands 
 	{ 
+		"{COPY} %{wks.location}/../3rdParty/glew/2.1.0/Binary/*.dll $(OutDir)",
 		"{COPY} %{wks.location}/../3rdParty/NoesisGUI/3.2.8-Indie/Binary/*.dll $(OutDir)",
+		"{COPY} %{wks.location}/../Code/Bindings/Noesis/Noesis/*.ttf $(OutDir)",
+		"{COPY} %{wks.location}/../Code/Bindings/Noesis/Noesis/*.xaml $(OutDir)",
 	}
