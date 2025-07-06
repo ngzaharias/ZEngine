@@ -2,6 +2,10 @@ https://www.noesisengine.com/docs/Gui.Core.SDKGuide.html
 
 #include "NoesisPCH.h"
 
+#include "Core/GameTime.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
+
 #include <NsApp/LocalFontProvider.h>
 #include <NsApp/LocalTextureProvider.h>
 #include <NsApp/LocalXamlProvider.h>
@@ -18,30 +22,12 @@ https://www.noesisengine.com/docs/Gui.Core.SDKGuide.html
 
 int NsMain(int argc, char** argv)
 {
-	constexpr int width = 1024;
-	constexpr int height = 768;
-
 	NS_UNUSED(argc, argv);
 
-	GLFWwindow* window = nullptr;
-	{
-		glfwInit();
-		glfwWindowHint(GLFW_SAMPLES, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-		window = glfwCreateWindow(width, height,"Noesis", nullptr, nullptr);
-		glfwMakeContextCurrent(window);
-
-		const auto error = glewInit();
-		if (error != GLEW_OK)
-		{
-			const auto* message = glewGetErrorString(error);
-			printf("Error: %s\n", message);
-			return 0;
-		}
-	}
+	eng::WindowManager manager;
+	manager.Initialise();
+	eng::Window& window = *manager.GetWindow(0);
+	Vector2u resolution = window.GetResolution();
 
 	// A logging handler is installed here. You can also install a custom error handler and memory
 	// allocator (see IntegrationAPI.h). By default errors are redirected to the logging handler
@@ -71,23 +57,36 @@ int NsMain(int argc, char** argv)
 	Noesis::Ptr<Noesis::FrameworkElement> xaml = Noesis::GUI::LoadXaml<Noesis::UserControl>("Settings.xaml");
 	Noesis::Ptr<Noesis::IView> view = Noesis::GUI::CreateView(xaml);
 	view->SetFlags(Noesis::RenderFlags_PPAA | Noesis::RenderFlags_LCD);
-	view->SetSize(width, height);
+	view->SetSize(resolution.x, resolution.y);
 
 	Noesis::Ptr<Noesis::RenderDevice> device = NoesisApp::GLFactory::CreateDevice(false);
 	view->GetRenderer()->Init(device);
 
+	GameTime gameTime;
 	double currTime = 0.0;
 	double lastTime = 0.0;
-	while (!glfwWindowShouldClose(window))
+	while (!window.ShouldClose())
 	{
-		glfwPollEvents();
-
-		double posX, posY;
-		glfwGetCursorPos(window, &posX, &posY);
-
-		// ...
 		lastTime = currTime;
 		currTime = glfwGetTime();
+
+		gameTime.m_DeltaTime = static_cast<float>(currTime - lastTime);
+		gameTime.m_TotalTime += gameTime.m_DeltaTime;
+		gameTime.m_Frame++;
+
+		window.PreUpdate(gameTime);
+		resolution = window.GetResolution();
+
+		//view->MouseButtonDown();
+		//view->MouseButtonUp();
+		//view->MouseDoubleClick();
+		//view->MouseMove();
+		//view->MouseWheel();
+		//view->MouseHWheel();
+		//view->KeyDown();
+		//view->KeyUp();
+
+		view->SetSize(resolution.x, resolution.y);
 		view->Update(currTime - lastTime);
 
 		{
@@ -98,13 +97,13 @@ int NsMain(int argc, char** argv)
 
 			// Bind framebuffer and viewport. Do this per frame because the offscreen phase alters them
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			//glViewport(0, 0, width, height);
-			//glDisable(GL_SCISSOR_TEST);
+			glViewport(0, 0, resolution.x, resolution.y);
+			glDisable(GL_SCISSOR_TEST);
 
-			//glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-			//glClearColor(0.0f, 0.0f, 0.25f, 0.0f);
-			//glClearStencil(0);
-			//glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+			glClearColor(0.0f, 0.0f, 0.25f, 0.0f);
+			glClearStencil(0);
+			glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 			// -> # At this point, you can render your 3D scene... # <-
 			// Note that each function invocation of the renderer modifies the GPU state, you must
@@ -115,7 +114,7 @@ int NsMain(int argc, char** argv)
 			view->GetRenderer()->Render();
 		}
 
-		glfwSwapBuffers(window);
+		window.PostUpdate(gameTime);
 	}
 
 	view->GetRenderer()->Shutdown();
@@ -124,11 +123,7 @@ int NsMain(int argc, char** argv)
 
 	Noesis::GUI::Shutdown();
 
-	{
-		glfwDestroyWindow(window);
-		glfwTerminate();
-		window = nullptr;
-	}
+	manager.Shutdown();
 
 	return 0;
 }
