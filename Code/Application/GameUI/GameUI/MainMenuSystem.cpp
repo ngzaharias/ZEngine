@@ -22,6 +22,8 @@ namespace
 
 void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
+	return;
+
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::main_menu::WindowComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags =

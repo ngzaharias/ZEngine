@@ -17,6 +17,9 @@
 #include <NsGui/UserControl.h>
 #include <NsRender/GLFactory.h>
 
+// https://www.noesisengine.com/docs/4.0/Gui.Studio.Documentation_Index.html
+// https://www.noesisengine.com/docs/Gui.Core.SDKGuide.html
+
 void ui::NoesisManager::Initialise(const eng::Window& window)
 {
 	m_Window = &window;
@@ -53,7 +56,7 @@ void ui::NoesisManager::Initialise(const eng::Window& window)
 
 	Noesis::GUI::LoadApplicationResources(NoesisApp::Theme::DarkBlue());
 
-	Noesis::Ptr<Noesis::FrameworkElement> xaml = Noesis::GUI::LoadXaml<Noesis::UserControl>("ToggleButton.xaml");
+	Noesis::Ptr<Noesis::FrameworkElement> xaml = Noesis::GUI::LoadXaml<Noesis::UserControl>("MainMenu.xaml");
 	m_View = Noesis::GUI::CreateView(xaml);
 	m_View->SetFlags(Noesis::RenderFlags_PPAA | Noesis::RenderFlags_LCD);
 	m_View->SetSize(resolution.x, resolution.y);
