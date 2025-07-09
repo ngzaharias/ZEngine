@@ -2,6 +2,7 @@
 #include "Engine/NoesisManager.h"
 
 #include "Core/GameTime.h"
+#include "Core/Guid.h"
 #include "Core/Path.h"
 #include "Engine/Window.h"
 #include "Math/Vector.h"
@@ -19,6 +20,29 @@
 
 // https://www.noesisengine.com/docs/4.0/Gui.Studio.Documentation_Index.html
 // https://www.noesisengine.com/docs/Gui.Core.SDKGuide.html
+
+namespace
+{
+	Noesis::Key ToKey(const input::EKey value)
+	{
+		switch (value)
+		{
+		case input::EKey::A: return Noesis::Key_A;
+		}
+		return Noesis::Key::Key_None;
+	}
+
+	Noesis::MouseButton ToMouse(const input::EKey value)
+	{
+		switch (value)
+		{
+		case input::EKey::Mouse_1: return Noesis::MouseButton::MouseButton_Left;
+		case input::EKey::Mouse_2: return Noesis::MouseButton::MouseButton_Right;
+		case input::EKey::Mouse_3: return Noesis::MouseButton::MouseButton_Middle;
+		}
+		return Noesis::MouseButton::MouseButton_Count;
+	}
+}
 
 void ui::NoesisManager::Initialise(const eng::Window& window)
 {
@@ -47,7 +71,7 @@ void ui::NoesisManager::Initialise(const eng::Window& window)
 	const char* fonts[] = { "Arial" };
 	Noesis::GUI::SetFontFallbacks(fonts, 1);
 	Noesis::GUI::SetFontDefaultProperties(
-		15.0f, 
+		15.0f,
 		Noesis::FontWeight_Normal,
 		Noesis::FontStretch_Normal,
 		Noesis::FontStyle_Normal);
@@ -56,13 +80,17 @@ void ui::NoesisManager::Initialise(const eng::Window& window)
 
 	Noesis::GUI::LoadApplicationResources(NoesisApp::Theme::DarkBlue());
 
-	Noesis::Ptr<Noesis::FrameworkElement> xaml = Noesis::GUI::LoadXaml<Noesis::UserControl>("MainMenu.xaml");
-	m_View = Noesis::GUI::CreateView(xaml);
-	m_View->SetFlags(Noesis::RenderFlags_PPAA | Noesis::RenderFlags_LCD);
-	m_View->SetSize(resolution.x, resolution.y);
+	{
+		Noesis::Ptr<Noesis::FrameworkElement> xaml = Noesis::GUI::LoadXaml<Noesis::UserControl>("MainMenu.xaml");
+		Noesis::Ptr<Noesis::IView> view = Noesis::GUI::CreateView(xaml);
+		view->SetFlags(Noesis::RenderFlags_PPAA | Noesis::RenderFlags_LCD);
+		view->SetSize(resolution.x, resolution.y);
 
-	Noesis::Ptr<Noesis::RenderDevice> device = NoesisApp::GLFactory::CreateDevice(false);
-	m_View->GetRenderer()->Init(device);
+		Noesis::Ptr<Noesis::RenderDevice> device = NoesisApp::GLFactory::CreateDevice(false);
+		view->GetRenderer()->Init(device);
+
+		m_Views.Emplace(str::Guid::Generate(), view);
+	}
 }
 
 void ui::NoesisManager::Shutdown()
@@ -70,8 +98,11 @@ void ui::NoesisManager::Shutdown()
 	if (!m_Window)
 		return;
 
-	m_View->GetRenderer()->Shutdown();
-	m_View.Reset();
+	for (auto& [guid, view] : m_Views)
+	{
+		view->GetRenderer()->Shutdown();
+		view.Reset();
+	}
 
 	Noesis::GUI::Shutdown();
 }
@@ -81,8 +112,11 @@ void ui::NoesisManager::Update(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const Vector2u resolution = m_Window->GetResolution();
-	m_View->SetSize(resolution.x, resolution.y);
-	m_View->Update((double)gameTime.m_TotalTime); // #todo: update gameTime to support double
+	for (auto& [guid, view] : m_Views)
+	{
+		view->SetSize(resolution.x, resolution.y);
+		view->Update((double)gameTime.m_TotalTime); // #todo: update gameTime to support double
+	}
 }
 
 void ui::NoesisManager::RenderBegin()
@@ -91,13 +125,59 @@ void ui::NoesisManager::RenderBegin()
 
 	// The offscreen rendering phase must be done before binding the framebuffer. This step
 	// populates all the internal textures that are needed for the active frame
-	m_View->GetRenderer()->UpdateRenderTree();
-	m_View->GetRenderer()->RenderOffscreen();
+	for (auto& [guid, view] : m_Views)
+	{
+		view->GetRenderer()->UpdateRenderTree();
+		view->GetRenderer()->RenderOffscreen();
+	}
 }
 
 void ui::NoesisManager::RenderFinish()
 {
 	PROFILE_FUNCTION();
 
-	m_View->GetRenderer()->Render();
+	for (auto& [guid, view] : m_Views)
+		view->GetRenderer()->Render();
+}
+
+void ui::NoesisManager::ProcessInput(
+	const Vector2f& mousePos, 
+	const Vector2f& mouseDelta, 
+	const Vector2f& scrollDelta, 
+	Set<input::EKey>& inout_Held, 
+	Set<input::EKey>& inout_Pressed, 
+	Set<input::EKey>& inout_Released)
+{
+	for (auto& [guid, view] : m_Views)
+	{
+		view->MouseMove((int)mousePos.x, (int)mousePos.y);
+		view->MouseHWheel((int)mousePos.x, (int)mousePos.y, (int)mouseDelta.x);
+		view->MouseWheel((int)mousePos.x, (int)mousePos.y, (int)mouseDelta.y);
+
+		for (const input::EKey value : inout_Pressed)
+		{
+			const Noesis::MouseButton mouse = ToMouse(value);
+			if (mouse != Noesis::MouseButton_Count)
+			{
+				if (view->MouseButtonDown((int)mousePos.x, (int)mousePos.y, mouse))
+				{
+					inout_Pressed.Remove(value);
+					break;
+				}
+			}
+		}
+
+		for (const input::EKey value : inout_Released)
+		{
+			const Noesis::MouseButton mouse = ToMouse(value);
+			if (mouse != Noesis::MouseButton_Count)
+			{
+				if (view->MouseButtonUp((int)mousePos.x, (int)mousePos.y, mouse))
+				{
+					inout_Released.Remove(value);
+					break;
+				}
+			}
+		}
+	}
 }

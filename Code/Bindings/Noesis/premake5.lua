@@ -1,5 +1,5 @@
 project "Noesis"
-	kind "ConsoleApp"
+	kind "StaticLib"
 	pchheader "NoesisPCH.h"
 	pchsource "Noesis/NoesisPCH.cpp"
 	location "%{wks.location}/Bindings/Noesis"

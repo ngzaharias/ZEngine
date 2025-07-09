@@ -24,6 +24,11 @@
 #include "Tabletop/TabletopCardComponent.h"
 #include "Tabletop/TabletopDeckComponent.h"
 
+namespace
+{
+	const str::Name strNoesis = NAME("Noesis");
+}
+
 clt::GameClient::GameClient()
 	: m_ReplicationPeer(m_EntityWorld)
 {
@@ -86,10 +91,21 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 void clt::GameClient::Initialise()
 {
 	m_EntityWorld.Initialise();
+
+	{
+		auto& noesisManager = m_EntityWorld.WriteResource<ui::NoesisManager>();
+
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::GameUI;
+		layer.m_Callback.Connect(noesisManager, &ui::NoesisManager::ProcessInput);
+		m_InputManager.AppendLayer(strNoesis, layer);
+	}
 }
 
 void clt::GameClient::Shutdown()
 {
+	m_InputManager.RemoveLayer(strNoesis);
+
 	m_EntityWorld.Shutdown();
 }
 
