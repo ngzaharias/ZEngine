@@ -61,7 +61,7 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="1" VerticalAlignment="Center">
           <Button x:Name="NewGame" Content="New Game" Style="{DynamicResource ButtonStyle}"/>
-          <Button x:Name="Continue" Content="Continue" Style="{DynamicResource ButtonStyle}"/>
+          <Button x:Name="Continue" Content="Continue" Style="{DynamicResource ButtonStyle}" Visibility="Collapsed"/>
           <Button x:Name="Settings" Content="Settings" Style="{DynamicResource ButtonStyle}"/>
           <Button x:Name="ExitGame" Content="Exit Game" Style="{DynamicResource ButtonStyle}"/>
         </StackPanel>
