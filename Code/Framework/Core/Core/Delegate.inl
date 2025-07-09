@@ -3,7 +3,7 @@
 // https://simoncoenen.com/blog/programming/CPP_Delegates
 
 template<typename... Args>
-void Delegate<void(Args...)>::Publish(Args... args)
+void Delegate<void(Args...)>::Publish(Args... args) const
 {
 	for (auto& connection : m_Connections)
 		connection.m_Function(args...);
