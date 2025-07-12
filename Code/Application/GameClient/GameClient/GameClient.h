@@ -9,6 +9,7 @@ class GameTime;
 namespace eng
 {
 	class AssetManager;
+	class ImguiManager;
 	class NetworkManager;
 	class PhysicsManager;
 	class PlatformManager;
@@ -32,6 +33,7 @@ namespace clt
 	struct Dependencies
 	{
 		eng::AssetManager& m_AssetManager;
+		eng::ImguiManager& m_ImguiManager;
 		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
 		eng::PlatformManager& m_PlatformManager;

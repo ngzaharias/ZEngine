@@ -3,6 +3,7 @@
 
 #include "Engine/Window.h"
 #include "Engine/GLFW/Window.h"
+#include "Input/Key.h"
 
 #include <GLFW/glfw3.h>
 #include "imgui/imgui.h"
@@ -17,6 +18,21 @@ namespace
 	{
 		const ImGuiIO& io = ImGui::GetIO();
 		return (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) != 0;
+	}
+
+	bool IsGamepad(const input::EKey value)
+	{
+		return value >= input::EKey::Gamepad_A && value <= input::EKey::Gamepad_DPad_L;
+	}
+
+	bool IsKeyboard(const input::EKey value)
+	{
+		return value > input::EKey::None && value < input::EKey::Mouse_1;
+	}
+
+	bool IsMouse(const input::EKey value)
+	{
+		return value >= input::EKey::Mouse_1 && value <= input::EKey::Mouse_8;
 	}
 }
 
@@ -135,4 +151,70 @@ void eng::ImguiManager::PostUpdate()
 	}
 
 	//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+}
+
+void eng::ImguiManager::ProcessInput(
+	const Vector2f& mousePos,
+	const Vector2f& mouseDelta,
+	const Vector2f& scrollDelta,
+	Set<input::EKey>& inout_Held,
+	Set<input::EKey>& inout_Pressed,
+	Set<input::EKey>& inout_Released)
+{
+
+	if (ImGui::GetIO().WantCaptureKeyboard)
+	{
+		Set<input::EKey> held = inout_Held;
+		for (const input::EKey value : inout_Held)
+		{
+			if (IsKeyboard(value))
+				held.Remove(value);
+		}
+
+		Set<input::EKey> pressed = inout_Pressed;
+		for (const input::EKey value : inout_Pressed)
+		{
+			if (IsKeyboard(value))
+				pressed.Remove(value);
+		}
+
+		Set<input::EKey> released = inout_Released;
+		for (const input::EKey value : inout_Released)
+		{
+			if (IsKeyboard(value))
+				released.Remove(value);
+		}
+
+		std::swap(held, inout_Held);
+		std::swap(pressed, inout_Pressed);
+		std::swap(released, inout_Released);
+	}
+
+	if (ImGui::GetIO().WantCaptureMouse)
+	{
+		Set<input::EKey> held = inout_Held;
+		for (const input::EKey value : inout_Held)
+		{
+			if (IsMouse(value))
+				held.Remove(value);
+		}
+
+		Set<input::EKey> pressed = inout_Pressed;
+		for (const input::EKey value : inout_Pressed)
+		{
+			if (IsMouse(value))
+				pressed.Remove(value);
+		}
+
+		Set<input::EKey> released = inout_Released;
+		for (const input::EKey value : inout_Released)
+		{
+			if (IsMouse(value))
+				released.Remove(value);
+		}
+
+		std::swap(held, inout_Held);
+		std::swap(pressed, inout_Pressed);
+		std::swap(released, inout_Released);
+	}
 }

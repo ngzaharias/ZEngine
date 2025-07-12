@@ -26,6 +26,7 @@ void game::Application::Register()
 
 	clt::Dependencies clientDependencies = {
 		m_AssetManager, 
+		m_ImguiManager,
 		m_NetworkManager,
 		m_PhysicsManager,
 		m_PlatformManager,

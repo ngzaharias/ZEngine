@@ -4,6 +4,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
+#include "Engine/ImguiManager.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/NoesisManager.h"
 #include "Engine/PhysicsManager.h"
@@ -51,6 +52,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 	// resources
 	{
 		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
+		m_EntityWorld.RegisterResource(dependencies.m_ImguiManager);
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PlatformManager);
