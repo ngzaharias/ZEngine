@@ -1,21 +1,49 @@
 #pragma once
 
 #include "Core/Map.h"
-#include "Core/Set.h"
-#include "Input/Key.h"
 
+#include <NsApp/DelegateCommand.h>
+#include <NsCore/BaseComponent.h>
 #include <NsCore/Ptr.h>
+#include <NsGui/BaseCommand.h>
+#include <NsGui/INotifyPropertyChanged.h>
 #include <NsGui/IView.h>
 
 class GameTime;
+template<typename Type>
+class Set;
+class Vector2f;
 
 namespace eng
 {
 	class Window;
 }
 
+namespace input
+{
+	enum class EKey;
+}
+
 namespace ui
 {
+	class DCMainMenu final : public Noesis::BaseComponent
+	{
+	public:
+		DCMainMenu();
+
+		Noesis::ICommand* GetNewGameCommand() const;
+
+	private:
+		void OnNewGameCommand(Noesis::BaseComponent* param);
+
+	private:
+		Noesis::Ptr<NoesisApp::DelegateCommand> m_NewGameCommand;
+
+		NS_DECLARE_REFLECTION(ui::DCMainMenu, Noesis::BaseComponent)
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	class NoesisManager final
 	{
 	public:

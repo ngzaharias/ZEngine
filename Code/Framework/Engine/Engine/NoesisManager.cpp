@@ -4,13 +4,16 @@
 #include "Core/GameTime.h"
 #include "Core/Guid.h"
 #include "Core/Path.h"
+#include "Core/Set.h"
 #include "Engine/Window.h"
+#include "Input/Key.h"
 #include "Math/Vector.h"
 
 #include <NsApp/LocalFontProvider.h>
 #include <NsApp/LocalTextureProvider.h>
 #include <NsApp/LocalXamlProvider.h>
 #include <NsApp/ThemeProviders.h>
+#include <NsCore/RegisterComponent.h>
 #include <NsGui/InputEnums.h>
 #include <NsGui/IntegrationAPI.h>
 #include <NsGui/IRenderer.h>
@@ -43,6 +46,33 @@ namespace
 		return Noesis::MouseButton::MouseButton_Count;
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ui::DCMainMenu::DCMainMenu()
+{
+	m_NewGameCommand = *new NoesisApp::DelegateCommand([this](Noesis::BaseComponent* param)
+		{
+			this->OnNewGameCommand(param);
+		});
+}
+
+Noesis::ICommand* ui::DCMainMenu::GetNewGameCommand() const
+{
+	return m_NewGameCommand;
+}
+
+void ui::DCMainMenu::OnNewGameCommand(Noesis::BaseComponent* param)
+{
+	Z_LOG(ELog::Debug, "NewGame");
+}
+
+NS_IMPLEMENT_REFLECTION(ui::DCMainMenu)
+{
+	NsProp("NewGameCommand", &ui::DCMainMenu::GetNewGameCommand);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void ui::NoesisManager::Initialise(const eng::Window& window)
 {
@@ -81,7 +111,11 @@ void ui::NoesisManager::Initialise(const eng::Window& window)
 	Noesis::GUI::LoadApplicationResources(NoesisApp::Theme::DarkBlue());
 
 	{
-		Noesis::Ptr<Noesis::FrameworkElement> xaml = Noesis::GUI::LoadXaml<Noesis::UserControl>("MainMenu.xaml");
+		Noesis::Ptr<ui::DCMainMenu> dcMainMenu = *new ui::DCMainMenu();
+
+		Noesis::Ptr<Noesis::UserControl> xaml = Noesis::GUI::LoadXaml<Noesis::UserControl>("MainMenu.xaml");
+		xaml->SetDataContext(dcMainMenu);
+
 		Noesis::Ptr<Noesis::IView> view = Noesis::GUI::CreateView(xaml);
 		view->SetFlags(Noesis::RenderFlags_PPAA | Noesis::RenderFlags_LCD);
 		view->SetSize(resolution.x, resolution.y);
@@ -154,6 +188,7 @@ void ui::NoesisManager::ProcessInput(
 		view->MouseHWheel((int)mousePos.x, (int)mousePos.y, (int)mouseDelta.x);
 		view->MouseWheel((int)mousePos.x, (int)mousePos.y, (int)mouseDelta.y);
 
+		// #todo: process more than one press/release at a time
 		for (const input::EKey value : inout_Pressed)
 		{
 			const Noesis::MouseButton mouse = ToMouse(value);

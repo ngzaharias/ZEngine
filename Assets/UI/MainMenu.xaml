@@ -5,7 +5,7 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d"
   d:DesignWidth="1920"
-  d:DesignHeight="1080" xmlns:noesis="clr-namespace:NoesisGUIExtensions">
+  d:DesignHeight="1080">
   <Page.Background>
     <SolidColorBrush Color="#FF4D5052" Opacity="0"/>
   </Page.Background>
@@ -60,7 +60,7 @@
           <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="1" VerticalAlignment="Center">
-          <Button x:Name="NewGame" Content="New Game" Style="{DynamicResource ButtonStyle}"/>
+          <Button x:Name="NewGame" Content="New Game" Style="{DynamicResource ButtonStyle}" Command="{Binding NewGameCommand}"/>
           <Button x:Name="Continue" Content="Continue" Style="{DynamicResource ButtonStyle}" Visibility="Collapsed"/>
           <Button x:Name="Settings" Content="Settings" Style="{DynamicResource ButtonStyle}"/>
           <Button x:Name="ExitGame" Content="Exit Game" Style="{DynamicResource ButtonStyle}"/>
