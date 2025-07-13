@@ -4,6 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/UIManager.h"
+#include "GameUI/DCGameMenu.h"
 #include "GameUI/DCMainMenu.h"
 #include "GameUI/GameMenuComponents.h"
 #include "GameUI/GameMenuSystem.h"
@@ -18,6 +19,7 @@
 
 namespace
 {
+	const str::Name strGameMenu = NAME("GameMenu.xaml");
 	const str::Name strMainMenu = NAME("MainMenu.xaml");
 }
 
@@ -59,6 +61,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 	// ui
 	{
 		auto& uiManager = dependencies.m_UIManager;
+		uiManager.RegisterDataContext<gui::DCGameMenu>(strGameMenu);
 		uiManager.RegisterDataContext<gui::DCMainMenu>(strMainMenu);
 	}
 }
@@ -68,7 +71,7 @@ void gui::GameUI::Initialise()
 	// ui
 	{
 		auto& uiManager = m_EntityWorld.WriteResource<eng::UIManager>();
-		uiManager.CreateWidget(strMainMenu);
+		uiManager.CreateWidget(strGameMenu);
 	}
 }
 
