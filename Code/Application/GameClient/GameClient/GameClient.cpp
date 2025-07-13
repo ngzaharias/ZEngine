@@ -6,13 +6,13 @@
 #include "Engine/AssetManager.h"
 #include "Engine/ImguiManager.h"
 #include "Engine/NetworkManager.h"
-#include "Engine/NoesisManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PlatformManager.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
 #include "Engine/TableHeadmaster.h"
+#include "Engine/UIManager.h"
 #include "Engine/WindowManager.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
@@ -58,9 +58,9 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_PlatformManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
 		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
+		m_EntityWorld.RegisterResource(dependencies.m_UIManager);
 		m_EntityWorld.RegisterResource(dependencies.m_WindowManager);
 		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
-		m_EntityWorld.RegisterResource(dependencies.m_NoesisManager);
 		m_EntityWorld.RegisterResource(m_InputManager);
 		m_EntityWorld.RegisterResource(m_ReplicationPeer);
 
@@ -95,11 +95,11 @@ void clt::GameClient::Initialise()
 	m_EntityWorld.Initialise();
 
 	{
-		auto& noesisManager = m_EntityWorld.WriteResource<ui::NoesisManager>();
+		auto& uiManager = m_EntityWorld.WriteResource<eng::UIManager>();
 
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::GameUI;
-		layer.m_Callback.Connect(noesisManager, &ui::NoesisManager::ProcessInput);
+		layer.m_Callback.Connect(uiManager, &eng::UIManager::ProcessInput);
 		m_InputManager.AppendLayer(strNoesis, layer);
 	}
 }

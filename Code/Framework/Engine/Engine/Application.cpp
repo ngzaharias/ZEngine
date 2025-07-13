@@ -69,10 +69,10 @@ eng::Application::Application()
 	: m_AssetManager()
 	, m_ImguiManager()
 	, m_NetworkManager(m_ComponentSerializer)
-	, m_NoesisManager()
 	, m_PhysicsManager()
 	, m_PlatformManager()
 	, m_PrototypeManager()
+	, m_UIManager()
 	, m_WindowManager()
 	, m_ComponentSerializer()
 {
@@ -186,10 +186,10 @@ void eng::Application::Initialise()
 
 	m_AssetManager.Initialise();
 	m_ImguiManager.Initialise(*m_WindowManager.GetWindow(0));
-	m_NoesisManager.Initialise(*m_WindowManager.GetWindow(0));
 	m_PhysicsManager.Initialise();
 	m_PlatformManager.Initialise();
 	m_TableHeadmaster.Initialise(str::Path(str::EPath::Assets, "Tables"));
+	m_UIManager.Initialise(*m_WindowManager.GetWindow(0));
 }
 
 void eng::Application::PreUpdate(const GameTime& gameTime)
@@ -206,7 +206,7 @@ void eng::Application::Update(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	m_NetworkManager.Update(gameTime);
-	m_NoesisManager.Update(gameTime);
+	m_UIManager.Update(gameTime);
 }
 
 void eng::Application::PostUpdate(const GameTime& gameTime)
@@ -221,10 +221,10 @@ void eng::Application::Shutdown()
 {
 	PROFILE_FUNCTION();
 
+	m_UIManager.Shutdown();
 	m_TableHeadmaster.Shutdown();
 	m_PlatformManager.Shutdown();
 	m_PhysicsManager.Shutdown();
-	m_NoesisManager.Shutdown();
 	m_ImguiManager.Shutdown();
 	m_AssetManager.Shutdown();
 

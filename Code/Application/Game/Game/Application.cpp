@@ -32,19 +32,21 @@ void game::Application::Register()
 		m_PlatformManager,
 		m_PrototypeManager,
 		m_TableHeadmaster,
+		m_UIManager,
 		m_WindowManager,
-		m_ComponentSerializer,
-		m_NoesisManager };
+		m_ComponentSerializer };
 
 	svr::Dependencies serverDependencies = {
 		m_AssetManager,
 		m_NetworkManager,
 		m_PhysicsManager,
 		m_PrototypeManager,
-		m_ComponentSerializer};
+		m_ComponentSerializer };
 
 	gui::Dependencies guiDependencies = {
-		m_PrototypeManager };
+		m_PrototypeManager,
+		m_UIManager,
+		m_WindowManager };
 
 	m_GameClient.Register(clientDependencies);
 	m_GameServer.Register(serverDependencies);

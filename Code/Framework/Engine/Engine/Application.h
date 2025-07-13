@@ -4,13 +4,13 @@
 #include "Engine/ComponentSerializer.h"
 #include "Engine/ImguiManager.h"
 #include "Engine/NetworkManager.h"
-#include "Engine/NoesisManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PlatformManager.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/ReplicationHost.h"
 #include "Engine/ReplicationPeer.h"
 #include "Engine/TableHeadmaster.h"
+#include "Engine/UIManager.h"
 #include "Engine/WindowManager.h"
 
 class GameTime;
@@ -50,8 +50,8 @@ namespace eng
 		eng::PlatformManager m_PlatformManager;
 		eng::PrototypeManager m_PrototypeManager;
 		eng::TableHeadmaster m_TableHeadmaster;
+		eng::UIManager m_UIManager;
 		eng::WindowManager m_WindowManager;
-		ui::NoesisManager m_NoesisManager;
 
 		net::ComponentSerializer m_ComponentSerializer;
 	};

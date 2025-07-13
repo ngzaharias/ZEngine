@@ -1,8 +1,9 @@
 #include "EnginePCH.h"
-#include "Engine/NoesisManager.h"
+#include "Engine/UIManager.h"
 
 #include "Core/GameTime.h"
 #include "Core/Guid.h"
+#include "Core/Name.h"
 #include "Core/Path.h"
 #include "Core/Set.h"
 #include "Engine/Window.h"
@@ -13,6 +14,7 @@
 #include <NsApp/LocalTextureProvider.h>
 #include <NsApp/LocalXamlProvider.h>
 #include <NsApp/ThemeProviders.h>
+#include <NsCore/BaseComponent.h>
 #include <NsCore/RegisterComponent.h>
 #include <NsGui/InputEnums.h>
 #include <NsGui/IntegrationAPI.h>
@@ -26,6 +28,8 @@
 
 namespace
 {
+	const str::Name strMainMenu = NAME("MainMenu.xaml");
+
 	Noesis::Key ToKey(const input::EKey value)
 	{
 		switch (value)
@@ -47,37 +51,9 @@ namespace
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-ui::DCMainMenu::DCMainMenu()
-{
-	m_NewGameCommand = *new NoesisApp::DelegateCommand([this](Noesis::BaseComponent* param)
-		{
-			this->OnNewGameCommand(param);
-		});
-}
-
-Noesis::ICommand* ui::DCMainMenu::GetNewGameCommand() const
-{
-	return m_NewGameCommand;
-}
-
-void ui::DCMainMenu::OnNewGameCommand(Noesis::BaseComponent* param)
-{
-	Z_LOG(ELog::Debug, "NewGame");
-}
-
-NS_IMPLEMENT_REFLECTION(ui::DCMainMenu)
-{
-	NsProp("NewGameCommand", &ui::DCMainMenu::GetNewGameCommand);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void ui::NoesisManager::Initialise(const eng::Window& window)
+void eng::UIManager::Initialise(const eng::Window& window)
 {
 	m_Window = &window;
-	const Vector2u resolution = m_Window->GetResolution();
 
 	// A logging handler is installed here. You can also install a custom error handler and memory
 	// allocator (see IntegrationAPI.h). By default errors are redirected to the logging handler
@@ -109,30 +85,14 @@ void ui::NoesisManager::Initialise(const eng::Window& window)
 	NoesisApp::SetThemeProviders();
 
 	Noesis::GUI::LoadApplicationResources(NoesisApp::Theme::DarkBlue());
-
-	{
-		Noesis::Ptr<ui::DCMainMenu> dcMainMenu = *new ui::DCMainMenu();
-
-		Noesis::Ptr<Noesis::UserControl> xaml = Noesis::GUI::LoadXaml<Noesis::UserControl>("MainMenu.xaml");
-		xaml->SetDataContext(dcMainMenu);
-
-		Noesis::Ptr<Noesis::IView> view = Noesis::GUI::CreateView(xaml);
-		view->SetFlags(Noesis::RenderFlags_PPAA | Noesis::RenderFlags_LCD);
-		view->SetSize(resolution.x, resolution.y);
-
-		Noesis::Ptr<Noesis::RenderDevice> device = NoesisApp::GLFactory::CreateDevice(false);
-		view->GetRenderer()->Init(device);
-
-		m_Views.Emplace(str::Guid::Generate(), view);
-	}
 }
 
-void ui::NoesisManager::Shutdown()
+void eng::UIManager::Shutdown()
 {
 	if (!m_Window)
 		return;
 
-	for (auto& [guid, view] : m_Views)
+	for (auto& [guid, view] : m_Widgets)
 	{
 		view->GetRenderer()->Shutdown();
 		view.Reset();
@@ -141,48 +101,48 @@ void ui::NoesisManager::Shutdown()
 	Noesis::GUI::Shutdown();
 }
 
-void ui::NoesisManager::Update(const GameTime& gameTime)
+void eng::UIManager::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	const Vector2u resolution = m_Window->GetResolution();
-	for (auto& [guid, view] : m_Views)
+	for (auto& [guid, view] : m_Widgets)
 	{
 		view->SetSize(resolution.x, resolution.y);
 		view->Update((double)gameTime.m_TotalTime); // #todo: update gameTime to support double
 	}
 }
 
-void ui::NoesisManager::RenderBegin()
+void eng::UIManager::RenderBegin()
 {
 	PROFILE_FUNCTION();
 
 	// The offscreen rendering phase must be done before binding the framebuffer. This step
 	// populates all the internal textures that are needed for the active frame
-	for (auto& [guid, view] : m_Views)
+	for (auto& [guid, view] : m_Widgets)
 	{
 		view->GetRenderer()->UpdateRenderTree();
 		view->GetRenderer()->RenderOffscreen();
 	}
 }
 
-void ui::NoesisManager::RenderFinish()
+void eng::UIManager::RenderFinish()
 {
 	PROFILE_FUNCTION();
 
-	for (auto& [guid, view] : m_Views)
+	for (auto& [guid, view] : m_Widgets)
 		view->GetRenderer()->Render();
 }
 
-void ui::NoesisManager::ProcessInput(
-	const Vector2f& mousePos, 
-	const Vector2f& mouseDelta, 
-	const Vector2f& scrollDelta, 
-	Set<input::EKey>& inout_Held, 
-	Set<input::EKey>& inout_Pressed, 
+void eng::UIManager::ProcessInput(
+	const Vector2f& mousePos,
+	const Vector2f& mouseDelta,
+	const Vector2f& scrollDelta,
+	Set<input::EKey>& inout_Held,
+	Set<input::EKey>& inout_Pressed,
 	Set<input::EKey>& inout_Released)
 {
-	for (auto& [guid, view] : m_Views)
+	for (auto& [guid, view] : m_Widgets)
 	{
 		view->MouseMove((int)mousePos.x, (int)mousePos.y);
 		view->MouseHWheel((int)mousePos.x, (int)mousePos.y, (int)mouseDelta.x);
@@ -215,4 +175,25 @@ void ui::NoesisManager::ProcessInput(
 			}
 		}
 	}
+}
+
+void eng::UIManager::CreateWidget(const str::Name& name)
+{
+	const Vector2u& resolution = m_Window->GetResolution();
+
+	Noesis::Ptr<Noesis::UserControl> xaml = Noesis::GUI::LoadXaml<Noesis::UserControl>(name.ToChar());
+	if (m_DataContexts.Contains(name))
+	{
+		auto dataContext = m_DataContexts[name];
+		xaml->SetDataContext(dataContext);
+	}
+
+	Noesis::Ptr<Noesis::IView> view = Noesis::GUI::CreateView(xaml);
+	view->SetFlags(Noesis::RenderFlags_PPAA | Noesis::RenderFlags_LCD);
+	view->SetSize(resolution.x, resolution.y);
+
+	Noesis::Ptr<Noesis::RenderDevice> device = NoesisApp::GLFactory::CreateDevice(false);
+	view->GetRenderer()->Init(device);
+
+	m_Widgets.Emplace(name, view);
 }

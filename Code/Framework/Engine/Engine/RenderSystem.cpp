@@ -9,7 +9,6 @@
 #include "Engine/AssetManager.h"
 #include "Engine/FrameBufferComponent.h"
 #include "Engine/LinesComponent.h"
-#include "Engine/NoesisManager.h"
 #include "Engine/RenderStage_Lines.h"
 #include "Engine/RenderStage_Opaque.h"
 #include "Engine/RenderStage_Shadow.h"
@@ -17,6 +16,7 @@
 #include "Engine/RenderStage_UI.h"
 #include "Engine/RenderStage_Voxels.h"
 #include "Engine/SettingsComponents.h"
+#include "Engine/UIManager.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 
@@ -71,8 +71,8 @@ void eng::RenderSystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-	auto& noesisManager = world.WriteResource<ui::NoesisManager>();
-	noesisManager.RenderBegin();
+	auto& uiManager = world.WriteResource<eng::UIManager>();
+	uiManager.RenderBegin();
 
 	{
 		const Vector2u& resolution = window->GetResolution();
@@ -93,6 +93,6 @@ void eng::RenderSystem::Update(World& world, const GameTime& gameTime)
 	for (auto&& stage : m_RenderStages)
 		stage->Render(m_EntityWorld);
 
-	noesisManager.RenderFinish();
+	uiManager.RenderFinish();
 }
 

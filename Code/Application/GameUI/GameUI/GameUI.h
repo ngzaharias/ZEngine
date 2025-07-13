@@ -10,6 +10,8 @@ namespace ecs
 namespace eng
 {
 	class PrototypeManager;
+	class UIManager;
+	class WindowManager;
 }
 
 namespace gui
@@ -17,6 +19,8 @@ namespace gui
 	struct Dependencies
 	{
 		eng::PrototypeManager& m_PrototypeManager;
+		eng::UIManager& m_UIManager;
+		eng::WindowManager& m_WindowManager;
 	};
 
 	class GameUI final

@@ -2,11 +2,8 @@
 
 #include "Core/Map.h"
 
-#include <NsApp/DelegateCommand.h>
 #include <NsCore/BaseComponent.h>
 #include <NsCore/Ptr.h>
-#include <NsGui/BaseCommand.h>
-#include <NsGui/INotifyPropertyChanged.h>
 #include <NsGui/IView.h>
 
 class GameTime;
@@ -24,27 +21,9 @@ namespace input
 	enum class EKey;
 }
 
-namespace ui
+namespace eng
 {
-	class DCMainMenu final : public Noesis::BaseComponent
-	{
-	public:
-		DCMainMenu();
-
-		Noesis::ICommand* GetNewGameCommand() const;
-
-	private:
-		void OnNewGameCommand(Noesis::BaseComponent* param);
-
-	private:
-		Noesis::Ptr<NoesisApp::DelegateCommand> m_NewGameCommand;
-
-		NS_DECLARE_REFLECTION(ui::DCMainMenu, Noesis::BaseComponent)
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	class NoesisManager final
+	class UIManager final
 	{
 	public:
 		void Initialise(const eng::Window& window);
@@ -63,9 +42,19 @@ namespace ui
 			Set<input::EKey>& inout_Pressed, 
 			Set<input::EKey>& inout_Released);
 
+		//////////////////////////////////////////////////////////////////////////
+		// Widgets
+		void CreateWidget(const str::Name& name);
+
+		template<typename TDataContext>
+		void RegisterDataContext(const str::Name& name);
+
 	private:
 		const eng::Window* m_Window = nullptr;
 
-		Map<str::Guid, Noesis::Ptr<Noesis::IView>> m_Views = {};
+		Map<str::Name, Noesis::Ptr<Noesis::BaseComponent>> m_DataContexts = {};
+		Map<str::Name, Noesis::Ptr<Noesis::IView>> m_Widgets = {};
 	};
 }
+
+#include "NoesisManager.inl"

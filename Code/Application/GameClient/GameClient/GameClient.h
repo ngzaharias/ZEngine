@@ -15,17 +15,13 @@ namespace eng
 	class PlatformManager;
 	class PrototypeManager;
 	class TableHeadmaster;
+	class UIManager;
 	class WindowManager;
 }
 
 namespace net
 {
 	class ComponentSerializer;
-}
-
-namespace ui
-{
-	class NoesisManager;
 }
 
 namespace clt
@@ -39,9 +35,9 @@ namespace clt
 		eng::PlatformManager& m_PlatformManager;
 		eng::PrototypeManager& m_PrototypeManager;
 		eng::TableHeadmaster& m_TableHeadmaster;
+		eng::UIManager& m_UIManager;
 		eng::WindowManager& m_WindowManager;
 		net::ComponentSerializer& m_Serializer;
-		ui::NoesisManager& m_NoesisManager;
 	};
 
 	class GameClient final
