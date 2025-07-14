@@ -1,5 +1,5 @@
 #include "GameUIPCH.h"
-#include "GameUI/MainMenuComponent.h"
+#include "GameUI/MainMenuComponents.h"
 
 #include "Engine/Visitor.h"
 
@@ -9,13 +9,13 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(gui::main_menu::MenuComponent& value) const
+void eng::Visitor::ReadCustom(gui::main_menu::WindowComponent& value) const
 {
 	Read(strNewGame, value.m_NewGame, value.m_NewGame);
 }
 
 template<>
-void eng::Visitor::WriteCustom(const gui::main_menu::MenuComponent& value)
+void eng::Visitor::WriteCustom(const gui::main_menu::WindowComponent& value)
 {
 	Write(strNewGame, value.m_NewGame);
 }

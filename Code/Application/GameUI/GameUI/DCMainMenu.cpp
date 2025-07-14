@@ -2,9 +2,7 @@
 #include "GameUI/DCMainMenu.h"
 
 #include "ECS/EntityWorld.h"
-#include "Engine/ApplicationComponents.h"
-#include "Engine/LevelComponents.h"
-#include "GameUI/SettingsComponents.h"
+#include "GameUI/MainMenuComponents.h"
 
 #include <NsCore/ReflectionImplement.h>
 
@@ -29,33 +27,32 @@ void gui::DCMainMenu::SetNewGameLevel(const str::Name& value)
 
 void gui::DCMainMenu::OnContinueGameCommand(Noesis::BaseComponent* param)
 {
-	Z_LOG(ELog::Debug, "Continue Game");
+	m_EntityWorld->AddEventComponent<gui::main_menu::ContinueGameRequest>();
 }
 
 void gui::DCMainMenu::OnExitGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<eng::application::CloseRequestComponent>();
+	m_EntityWorld->AddEventComponent<gui::main_menu::ExitGameRequest>();
 }
 
 void gui::DCMainMenu::OnLoadGameCommand(Noesis::BaseComponent* param)
 {
-	Z_LOG(ELog::Debug, "Load Game");
+	m_EntityWorld->AddEventComponent<gui::main_menu::LoadGameRequest>();
 }
 
 void gui::DCMainMenu::OnNewGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<eng::level::LoadRequestComponent>(m_NewGameLevel);
+	auto& request = m_EntityWorld->AddEventComponent<gui::main_menu::NewGameRequest>();
+	request.m_Level = m_NewGameLevel;
 }
 
 void gui::DCMainMenu::OnSettingsCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::settings::OpenRequestComponent>();
+	m_EntityWorld->AddEventComponent<gui::main_menu::SettingsRequest>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCMainMenu)
 {
-	NsProp("NewGameLevel", &gui::DCMainMenu::GetNewGameLevel);
-
 	NsProp("ContinueGameCommand", &gui::DCMainMenu::GetContinueGameCommand);
 	NsProp("ExitGameCommand", &gui::DCMainMenu::GetExitGameCommand);
 	NsProp("LoadGameCommand", &gui::DCMainMenu::GetLoadGameCommand);
