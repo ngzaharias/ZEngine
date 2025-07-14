@@ -28,6 +28,11 @@ void ecs::EntityWorld::Initialise()
 
 	// flush the initialise
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
+
+	// do post flush so that the entity is destroyed in the next frame
+	for (const ecs::Entity& entity : m_EventEntities)
+		DestroyEntity(entity);
+	m_EventEntities.RemoveAll();
 }
 
 void ecs::EntityWorld::Shutdown()
