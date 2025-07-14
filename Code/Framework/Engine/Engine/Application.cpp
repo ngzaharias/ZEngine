@@ -184,7 +184,7 @@ void eng::Application::Initialise()
 	m_WindowManager.Initialise();
 
 	m_AssetManager.Initialise();
-	m_ImguiManager.Initialise(m_WindowManager.GetWindow(0));
+	m_ImguiManager.Initialise(*m_WindowManager.GetWindow(0));
 	m_PhysicsManager.Initialise();
 	m_PlatformManager.Initialise();
 	m_TableHeadmaster.Initialise(str::Path(str::EPath::Assets, "Tables"));

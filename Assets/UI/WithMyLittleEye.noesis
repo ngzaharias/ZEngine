@@ -1,0 +1,4 @@
+<Project>
+  <Assembly>project</Assembly>
+  <DefaultDataNamespace>project</DefaultDataNamespace>
+</Project>

@@ -28,7 +28,7 @@ class Delegate<void(Args...)>
 	};
 
 public:
-	void Publish(Args... args);
+	void Publish(Args... args) const;
 
 	auto Connect(std::function<void(Args ...)> function)->DelegateHandle<void(Args...)>;
 	template<typename Object>

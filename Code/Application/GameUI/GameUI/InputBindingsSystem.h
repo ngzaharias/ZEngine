@@ -9,7 +9,7 @@ namespace eng
 
 namespace gui::game_menu
 {
-	struct OpenRequestComponent;
+	struct OpenRequest;
 }
 
 namespace gui::input
@@ -26,7 +26,7 @@ namespace gui::input
 			// Resources
 			const eng::InputManager,
 			// Components
-			gui::game_menu::OpenRequestComponent,
+			gui::game_menu::OpenRequest,
 			const gui::input::BindingsComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

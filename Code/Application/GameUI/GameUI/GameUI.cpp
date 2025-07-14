@@ -3,16 +3,25 @@
 
 #include "ECS/EntityWorld.h"
 #include "Engine/PrototypeManager.h"
-#include "GameUI/GameMenuSystem.h"
+#include "Engine/UIManager.h"
+#include "GameUI/DCGameMenu.h"
+#include "GameUI/DCMainMenu.h"
 #include "GameUI/GameMenuComponents.h"
+#include "GameUI/GameMenuSystem.h"
 #include "GameUI/HiddenCountSystem.h"
 #include "GameUI/HiddenLevelSystem.h"
 #include "GameUI/InputBindingsSystem.h"
 #include "GameUI/InputComponents.h"
-#include "GameUI/MainMenuSystem.h"
 #include "GameUI/MainMenuComponents.h"
+#include "GameUI/MainMenuSystem.h"
 #include "GameUI/SettingsComponents.h"
 #include "GameUI/SettingsMenuSystem.h"
+
+namespace
+{
+	const str::Name strGameMenu_xaml = NAME("GameMenu.xaml");
+	const str::Name strMainMenu_xaml = NAME("MainMenu.xaml");
+}
 
 gui::GameUI::GameUI(ecs::EntityWorld& entityWorld)
 	: m_EntityWorld(entityWorld)
@@ -21,23 +30,49 @@ gui::GameUI::GameUI(ecs::EntityWorld& entityWorld)
 
 void gui::GameUI::Register(const Dependencies& dependencies)
 {
-	m_EntityWorld.RegisterComponent<gui::game_menu::OpenRequestComponent>();
-	m_EntityWorld.RegisterComponent<gui::game_menu::WindowComponent>();
-	m_EntityWorld.RegisterComponent<gui::input::BindingsComponent>();
-	m_EntityWorld.RegisterComponent<gui::main_menu::WindowComponent>();
-	m_EntityWorld.RegisterComponent<gui::settings::CloseRequestComponent>();
-	m_EntityWorld.RegisterComponent<gui::settings::OpenRequestComponent>();
-	m_EntityWorld.RegisterComponent<gui::settings::WindowComponent>();
+	// components
+	{
+		m_EntityWorld.RegisterComponent<gui::game_menu::CloseRequest>();
+		m_EntityWorld.RegisterComponent<gui::game_menu::ExitGameRequest>();
+		m_EntityWorld.RegisterComponent<gui::game_menu::ExitToMenuRequest>();
+		m_EntityWorld.RegisterComponent<gui::game_menu::OpenRequest>();
+		m_EntityWorld.RegisterComponent<gui::game_menu::SettingsRequest>();
+		m_EntityWorld.RegisterComponent<gui::game_menu::WindowComponent>();
+		m_EntityWorld.RegisterComponent<gui::input::BindingsComponent>();
+		m_EntityWorld.RegisterComponent<gui::main_menu::ContinueGameRequest>();
+		m_EntityWorld.RegisterComponent<gui::main_menu::ExitGameRequest>();
+		m_EntityWorld.RegisterComponent<gui::main_menu::LoadGameRequest>();
+		m_EntityWorld.RegisterComponent<gui::main_menu::NewGameRequest>();
+		m_EntityWorld.RegisterComponent<gui::main_menu::SettingsRequest>();
+		m_EntityWorld.RegisterComponent<gui::main_menu::WindowComponent>();
+		m_EntityWorld.RegisterComponent<gui::settings::CloseRequestComponent>();
+		m_EntityWorld.RegisterComponent<gui::settings::OpenRequestComponent>();
+		m_EntityWorld.RegisterComponent<gui::settings::WindowComponent>();
+	}
 
-	m_EntityWorld.RegisterSystem<gui::game_menu::MenuSystem>();
-	m_EntityWorld.RegisterSystem<gui::hidden::CountSystem>();
-	m_EntityWorld.RegisterSystem<gui::hidden::LevelSystem>();
-	m_EntityWorld.RegisterSystem<gui::input::BindingsSystem>();
-	m_EntityWorld.RegisterSystem<gui::main_menu::MenuSystem>();
-	m_EntityWorld.RegisterSystem<gui::settings::MenuSystem>();
+	// systems
+	{
+		m_EntityWorld.RegisterSystem<gui::game_menu::MenuSystem>();
+		m_EntityWorld.RegisterSystem<gui::hidden::CountSystem>();
+		m_EntityWorld.RegisterSystem<gui::hidden::LevelSystem>();
+		m_EntityWorld.RegisterSystem<gui::input::BindingsSystem>();
+		m_EntityWorld.RegisterSystem<gui::main_menu::MenuSystem>();
+		m_EntityWorld.RegisterSystem<gui::settings::MenuSystem>();
+	}
 
-	dependencies.m_PrototypeManager.Register<gui::input::BindingsComponent>();
-	dependencies.m_PrototypeManager.Register<gui::main_menu::WindowComponent>();
+	// prototypes
+	{
+		auto& manager = dependencies.m_PrototypeManager;
+		manager.Register<gui::input::BindingsComponent>();
+		manager.Register<gui::main_menu::WindowComponent>();
+	}
+
+	// ui
+	{
+		auto& uiManager = dependencies.m_UIManager;
+		uiManager.RegisterDataContext<gui::DCGameMenu>(strGameMenu_xaml);
+		uiManager.RegisterDataContext<gui::DCMainMenu>(strMainMenu_xaml);
+	}
 }
 
 void gui::GameUI::Initialise()

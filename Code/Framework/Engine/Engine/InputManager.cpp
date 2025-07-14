@@ -58,6 +58,8 @@ void eng::InputManager::Update(World& world)
 		for (const str::Name& name : m_LayerOrder)
 		{
 			const input::Layer& layer = m_LayerMap[name];
+			layer.m_Callback.Publish(m_MousePosition, m_MouseDelta, m_ScrollDelta, held, pressed, released);
+
 			for (const input::Binding& binding : layer.m_Bindings)
 			{
 				bool modifier = binding.m_Modifier == input::EKey::None;

@@ -3,12 +3,14 @@
 #include "ECS/EntityWorld.h"
 #include "Engine/InputManager.h"
 #include "Engine/ReplicationPeer.h"
+#include "Engine/UIManager.h"
 
 class GameTime;
 
 namespace eng
 {
 	class AssetManager;
+	class ImguiManager;
 	class NetworkManager;
 	class PhysicsManager;
 	class PlatformManager;
@@ -27,6 +29,7 @@ namespace clt
 	struct Dependencies
 	{
 		eng::AssetManager& m_AssetManager;
+		eng::ImguiManager& m_ImguiManager;
 		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
 		eng::PlatformManager& m_PlatformManager;
@@ -53,6 +56,7 @@ namespace clt
 	public:
 		ecs::EntityWorld m_EntityWorld;
 		eng::InputManager m_InputManager;
+		eng::UIManager m_UIManager;
 		net::ReplicationPeer m_ReplicationPeer;
 	};
 }

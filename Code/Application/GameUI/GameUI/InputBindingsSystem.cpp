@@ -41,7 +41,7 @@ void gui::input::BindingsSystem::Update(World& world, const GameTime& gameTime)
 		for (const gui::input::ECommand& command : bindings.m_Commands)
 		{
 			if (command == ECommand::GameMenu && input.IsPressed(strGameMenu))
-				world.AddEventComponent<gui::game_menu::OpenRequestComponent>();
+				world.AddEventComponent<gui::game_menu::OpenRequest>();
 		}
 	}
 }

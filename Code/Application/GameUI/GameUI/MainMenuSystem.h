@@ -4,6 +4,11 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace eng
+{
+	class UIManager;
+}
+
 namespace eng::application
 {
 	struct CloseRequestComponent;
@@ -16,6 +21,11 @@ namespace eng::level
 
 namespace gui::main_menu
 {
+	struct ContinueGameRequest;
+	struct ExitGameRequest;
+	struct LoadGameRequest;
+	struct NewGameRequest;
+	struct SettingsRequest;
 	struct WindowComponent;
 }
 
@@ -30,9 +40,17 @@ namespace gui::main_menu
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			eng::UIManager,
+			// Components
 			eng::application::CloseRequestComponent,
 			eng::level::LoadRequestComponent,
 			gui::settings::OpenRequestComponent,
+			const gui::main_menu::ContinueGameRequest,
+			const gui::main_menu::ExitGameRequest,
+			const gui::main_menu::LoadGameRequest,
+			const gui::main_menu::NewGameRequest,
+			const gui::main_menu::SettingsRequest,
 			const gui::main_menu::WindowComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

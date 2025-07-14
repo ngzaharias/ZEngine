@@ -9,6 +9,8 @@
 #include "Engine/InputManager.h"
 #include "Engine/LevelComponents.h"
 #include "Engine/SettingsComponents.h"
+#include "Engine/UIManager.h"
+#include "GameUI/DCGameMenu.h"
 #include "GameUI/GameMenuComponents.h"
 #include "GameUI/SettingsComponents.h"
 
@@ -18,91 +20,76 @@
 
 namespace
 {
-	constexpr Vector2f s_DefaultSize = Vector2f(200.f, -1.f);
-	constexpr Vector2f s_OffsetPos = Vector2f(0.f, -100.f);
-
-	const str::Name strInput = str::Name::Create("GameMenu");
-	const str::Name strClose = str::Name::Create("GameMenu_Close");
+	const str::Name strGameMenu = NAME("GameMenu");
+	const str::Name strGameMenu_Close = NAME("GameMenu_Close");
+	const str::Name strGameMenu_xaml = NAME("GameMenu.xaml");
 }
 
 void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
-	const auto& settings = world.ReadSingleton<eng::settings::LaunchComponent>();
-
-	const bool hasWindow = world.HasAny<ecs::query::Include<gui::game_menu::WindowComponent>>();
-	if (!hasWindow && world.HasAny<ecs::query::Include<gui::game_menu::OpenRequestComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::game_menu::WindowComponent>>())
 	{
-		const ecs::Entity windowEntity = world.CreateEntity();
-		world.AddComponent<ecs::NameComponent>(windowEntity, "Game Menu");
-		world.AddComponent<gui::game_menu::WindowComponent>(windowEntity);
-
-		ImGui::OpenPopup("Game Menu");
+		{
+			auto& uiManager = world.WriteResource<eng::UIManager>();
+			uiManager.CreateWidget(strGameMenu_xaml);
+		}
 
 		{
 			input::Layer layer;
 			layer.m_Priority = eng::EInputPriority::GameUI;
-			layer.m_Bindings.Emplace(strClose, input::EKey::Escape);
+			layer.m_Bindings.Emplace(strGameMenu_Close, input::EKey::Escape);
+			layer.m_Consume.RaiseAll();
 
 			auto& input = world.WriteResource<eng::InputManager>();
-			input.AppendLayer(strInput, layer);
+			input.AppendLayer(strGameMenu, layer);
 		}
 	}
 
-	if (world.HasAny<ecs::query::Removed<gui::game_menu::WindowComponent>>())
+	if (world.HasAny<ecs::query::Include<gui::game_menu::WindowComponent>>())
 	{
-		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInput);
-	}
-
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::game_menu::WindowComponent>>())
-	{
-		constexpr ImGuiWindowFlags s_WindowFlags =
-			ImGuiWindowFlags_NoCollapse |
-			ImGuiWindowFlags_NoResize |
-			ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoSavedSettings |
-			ImGuiWindowFlags_NoDocking;
-
-		const Vector2f viewportSize = ImGui::GetWindowViewport()->Size;
-		const Vector2f viewportCentre = (viewportSize * 0.5f);
-
-		imgui::SetNextWindowPos(viewportCentre, Vector2f(0.5f));
-		imgui::SetNextWindowSize(s_DefaultSize);
-
-		bool isWindowOpen = true;
-		if (ImGui::BeginPopupModal("Game Menu", &isWindowOpen, s_WindowFlags))
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
-			if (ImGui::BeginTable("##table", 1))
-			{
-				ImGui::TableNextRow();
-				ImGui::PushItemWidth(-1);
-
-				ImGui::TableNextColumn();
-				if (ImGui::Selectable("Resume"))
-					isWindowOpen = false;
-
-				ImGui::TableNextColumn();
-				if (ImGui::Selectable("Settings"))
-					world.AddEventComponent<gui::settings::OpenRequestComponent>();
-
-				ImGui::TableNextColumn();
-				if (ImGui::Selectable("Exit to Menu"))
-					world.AddEventComponent<eng::level::LoadRequestComponent>(settings.m_Level);
-
-				ImGui::TableNextColumn();
-				if (ImGui::Selectable("Exit Game"))
-					world.AddEventComponent<eng::application::CloseRequestComponent>();
-
-				ImGui::EndTable();
-			}
-			ImGui::PopStyleVar();
-
-			ImGui::EndPopup();
-		}
-
 		const auto& input = world.ReadResource<eng::InputManager>();
-		if (!isWindowOpen || input.IsPressed(strClose))
+		if (input.IsPressed(strGameMenu_Close))
+			world.AddEventComponent<gui::game_menu::CloseRequest>();
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<gui::game_menu::WindowComponent>>())
+	{
+		auto& uiManager = world.WriteResource<eng::UIManager>();
+		uiManager.DestroyWidget(strGameMenu_xaml);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strGameMenu);
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Events
+
+	if (world.HasAny<ecs::query::Added<gui::game_menu::CloseRequest>>())
+	{
+		for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::game_menu::WindowComponent>>())
 			world.DestroyEntity(entity);
+	}
+
+	if (world.HasAny<ecs::query::Added<gui::game_menu::ExitGameRequest>>())
+	{
+		world.AddEventComponent<eng::application::CloseRequestComponent>();
+	}
+
+	if (world.HasAny<ecs::query::Added<gui::game_menu::ExitToMenuRequest>>())
+	{
+		const auto& settings = world.ReadSingleton<eng::settings::LaunchComponent>();
+		world.AddEventComponent<eng::level::LoadRequestComponent>(settings.m_Level);
+		world.AddEventComponent<gui::game_menu::CloseRequest>();
+	}
+
+	if (world.HasAny<ecs::query::Added<gui::game_menu::OpenRequest>>())
+	{
+		const ecs::Entity entity = world.CreateEntity();
+		world.AddComponent<gui::game_menu::WindowComponent>(entity);
+	}
+
+	if (world.HasAny<ecs::query::Added<gui::game_menu::SettingsRequest>>())
+	{
+		world.AddEventComponent<gui::settings::OpenRequestComponent>();
 	}
 }

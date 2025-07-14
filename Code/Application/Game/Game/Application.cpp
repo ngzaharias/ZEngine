@@ -26,6 +26,7 @@ void game::Application::Register()
 
 	clt::Dependencies clientDependencies = {
 		m_AssetManager, 
+		m_ImguiManager,
 		m_NetworkManager,
 		m_PhysicsManager,
 		m_PlatformManager,
@@ -39,10 +40,12 @@ void game::Application::Register()
 		m_NetworkManager,
 		m_PhysicsManager,
 		m_PrototypeManager,
-		m_ComponentSerializer};
+		m_ComponentSerializer };
 
 	gui::Dependencies guiDependencies = {
-		m_PrototypeManager };
+		m_PrototypeManager,
+		m_GameClient.m_UIManager,
+		m_WindowManager };
 
 	m_GameClient.Register(clientDependencies);
 	m_GameServer.Register(serverDependencies);

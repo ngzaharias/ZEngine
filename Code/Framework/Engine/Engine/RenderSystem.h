@@ -6,11 +6,18 @@
 namespace eng
 {
 	class RenderStage;
+	class UIManager;
+	class WindowManager;
+}
 
+namespace eng
+{
 	class RenderSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<>;
+		using World = ecs::WorldView<
+			eng::UIManager,
+			eng::WindowManager>;
 
 		RenderSystem(ecs::EntityWorld& entityWorld);
 		~RenderSystem();

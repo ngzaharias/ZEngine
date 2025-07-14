@@ -48,7 +48,7 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 
 	// load requests
 	{
-		for (const ecs::Entity& requestEntity : world.Query<ecs::query::Include<const eng::level::LoadRequestComponent>>())
+		for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const eng::level::LoadRequestComponent>>())
 		{
 			const auto& requestComponent = world.ReadComponent<eng::level::LoadRequestComponent>(requestEntity);
 
