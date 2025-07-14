@@ -37,23 +37,19 @@
     </ResourceDictionary>
   </Page.Resources>
   <Grid>
-    <Grid x:Name="Background">
-      <Grid.Background>
-        <SolidColorBrush Color="#FF000000" Opacity="0.5"/>
-      </Grid.Background>
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="1*"/>
-          <ColumnDefinition Width="1*"/>
-          <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <StackPanel VerticalAlignment="Center" Grid.Column="1">
-          <Button x:Name="Resume" Style="{DynamicResource ButtonStyle}" Command="{Binding Path=ResumeCommand}" Content="Resume"/>
-          <Button x:Name="Settings" Content="Settings" Style="{DynamicResource ButtonStyle}" Command="{Binding SettingsCommand}"/>
-          <Button x:Name="ExitToMenu" Style="{DynamicResource ButtonStyle}" Command="{Binding Path=ExitToMenuCommand}" Content="Exit to Menu"/>
-          <Button x:Name="ExitGame" Style="{DynamicResource ButtonStyle}" Command="{Binding ExitGameCommand}" Content="Exit Game"/>
-        </StackPanel>
-      </Grid>
-    </Grid>
+    <Grid.Background>
+      <SolidColorBrush Color="#FF000000" Opacity="0.5"/>
+    </Grid.Background>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="2*"/>
+      <ColumnDefinition Width="1*"/>
+      <ColumnDefinition Width="2*"/>
+    </Grid.ColumnDefinitions>
+    <StackPanel VerticalAlignment="Center" Margin="0" Grid.Column="1">
+      <Button x:Name="Resume" Style="{DynamicResource ButtonStyle}" Command="{Binding Path=ResumeCommand}" Content="Resume"/>
+      <Button x:Name="Settings" Content="Settings" Style="{DynamicResource ButtonStyle}" Command="{Binding SettingsCommand}"/>
+      <Button x:Name="ExitToMenu" Style="{DynamicResource ButtonStyle}" Command="{Binding Path=ExitToMenuCommand}" Content="Exit to Menu"/>
+      <Button x:Name="ExitGame" Style="{DynamicResource ButtonStyle}" Command="{Binding ExitGameCommand}" Content="Exit Game"/>
+    </StackPanel>
   </Grid>
 </Page>
