@@ -32,7 +32,6 @@ void game::Application::Register()
 		m_PlatformManager,
 		m_PrototypeManager,
 		m_TableHeadmaster,
-		m_UIManager,
 		m_WindowManager,
 		m_ComponentSerializer };
 
@@ -45,7 +44,7 @@ void game::Application::Register()
 
 	gui::Dependencies guiDependencies = {
 		m_PrototypeManager,
-		m_UIManager,
+		m_GameClient.m_UIManager,
 		m_WindowManager };
 
 	m_GameClient.Register(clientDependencies);

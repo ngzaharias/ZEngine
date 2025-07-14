@@ -51,6 +51,11 @@ namespace
 	}
 }
 
+eng::UIManager::UIManager(ecs::EntityWorld& entityWorld)
+	: m_EntityWorld(entityWorld)
+{
+}
+
 void eng::UIManager::Initialise(const eng::Window& window)
 {
 	m_Window = &window;
@@ -196,4 +201,9 @@ void eng::UIManager::CreateWidget(const str::Name& name)
 	view->GetRenderer()->Init(device);
 
 	m_Widgets.Emplace(name, view);
+}
+
+void eng::UIManager::DestroyWidget(const str::Name& name)
+{
+	m_Widgets.Remove(name);
 }

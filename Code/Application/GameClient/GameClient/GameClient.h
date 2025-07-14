@@ -3,6 +3,7 @@
 #include "ECS/EntityWorld.h"
 #include "Engine/InputManager.h"
 #include "Engine/ReplicationPeer.h"
+#include "Engine/UIManager.h"
 
 class GameTime;
 
@@ -15,7 +16,6 @@ namespace eng
 	class PlatformManager;
 	class PrototypeManager;
 	class TableHeadmaster;
-	class UIManager;
 	class WindowManager;
 }
 
@@ -35,7 +35,6 @@ namespace clt
 		eng::PlatformManager& m_PlatformManager;
 		eng::PrototypeManager& m_PrototypeManager;
 		eng::TableHeadmaster& m_TableHeadmaster;
-		eng::UIManager& m_UIManager;
 		eng::WindowManager& m_WindowManager;
 		net::ComponentSerializer& m_Serializer;
 	};
@@ -57,6 +56,7 @@ namespace clt
 	public:
 		ecs::EntityWorld m_EntityWorld;
 		eng::InputManager m_InputManager;
+		eng::UIManager m_UIManager;
 		net::ReplicationPeer m_ReplicationPeer;
 	};
 }

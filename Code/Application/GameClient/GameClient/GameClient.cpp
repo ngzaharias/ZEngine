@@ -31,7 +31,9 @@ namespace
 }
 
 clt::GameClient::GameClient()
-	: m_ReplicationPeer(m_EntityWorld)
+	: m_InputManager()
+	, m_UIManager(m_EntityWorld)
+	, m_ReplicationPeer(m_EntityWorld)
 {
 }
 
@@ -58,10 +60,10 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_PlatformManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
 		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
-		m_EntityWorld.RegisterResource(dependencies.m_UIManager);
 		m_EntityWorld.RegisterResource(dependencies.m_WindowManager);
 		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
 		m_EntityWorld.RegisterResource(m_InputManager);
+		m_EntityWorld.RegisterResource(m_UIManager);
 		m_EntityWorld.RegisterResource(m_ReplicationPeer);
 
 		// tables
@@ -94,12 +96,14 @@ void clt::GameClient::Initialise()
 {
 	m_EntityWorld.Initialise();
 
+	// ui
 	{
-		auto& uiManager = m_EntityWorld.WriteResource<eng::UIManager>();
+		const auto& windowManager = m_EntityWorld.ReadResource<eng::WindowManager>();
+		m_UIManager.Initialise(*windowManager.GetWindow(0));
 
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::GameUI;
-		layer.m_Callback.Connect(uiManager, &eng::UIManager::ProcessInput);
+		layer.m_Callback.Connect(m_UIManager, &eng::UIManager::ProcessInput);
 		m_InputManager.AppendLayer(strNoesis, layer);
 	}
 }
@@ -107,6 +111,7 @@ void clt::GameClient::Initialise()
 void clt::GameClient::Shutdown()
 {
 	m_InputManager.RemoveLayer(strNoesis);
+	m_UIManager.Shutdown();
 
 	m_EntityWorld.Shutdown();
 }
@@ -124,6 +129,7 @@ void clt::GameClient::Update(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	m_EntityWorld.Update(gameTime);
+	m_UIManager.Update(gameTime);
 }
 
 void clt::GameClient::PostUpdate(const GameTime& gameTime)

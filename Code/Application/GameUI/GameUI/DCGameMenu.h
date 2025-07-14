@@ -1,14 +1,14 @@
 #pragma once
 
+#include "Engine/UIWidget.h"
+
 #include <NsApp/DelegateCommand.h>
-#include <NsCore/BaseComponent.h>
-#include <NsCore/Ptr.h>
 #include <NsGui/BaseCommand.h>
 #include <NsGui/INotifyPropertyChanged.h>
 
 namespace gui
 {
-	class DCGameMenu final : public Noesis::BaseComponent
+	class DCGameMenu final : public eng::UIWidget
 	{
 	public:
 		DCGameMenu();

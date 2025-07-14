@@ -12,7 +12,7 @@
 #include "GameUI/HiddenLevelSystem.h"
 #include "GameUI/InputBindingsSystem.h"
 #include "GameUI/InputComponents.h"
-#include "GameUI/MainMenuComponents.h"
+#include "GameUI/MainMenuComponent.h"
 #include "GameUI/MainMenuSystem.h"
 #include "GameUI/SettingsComponents.h"
 #include "GameUI/SettingsMenuSystem.h"
@@ -35,7 +35,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterComponent<gui::game_menu::OpenRequestComponent>();
 		m_EntityWorld.RegisterComponent<gui::game_menu::WindowComponent>();
 		m_EntityWorld.RegisterComponent<gui::input::BindingsComponent>();
-		m_EntityWorld.RegisterComponent<gui::main_menu::WindowComponent>();
+		m_EntityWorld.RegisterComponent<gui::MainMenuComponent>();
 		m_EntityWorld.RegisterComponent<gui::settings::CloseRequestComponent>();
 		m_EntityWorld.RegisterComponent<gui::settings::OpenRequestComponent>();
 		m_EntityWorld.RegisterComponent<gui::settings::WindowComponent>();
@@ -47,7 +47,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterSystem<gui::hidden::CountSystem>();
 		m_EntityWorld.RegisterSystem<gui::hidden::LevelSystem>();
 		m_EntityWorld.RegisterSystem<gui::input::BindingsSystem>();
-		m_EntityWorld.RegisterSystem<gui::main_menu::MenuSystem>();
+		m_EntityWorld.RegisterSystem<gui::MainMenuSystem>();
 		m_EntityWorld.RegisterSystem<gui::settings::MenuSystem>();
 	}
 
@@ -55,7 +55,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 	{
 		auto& manager = dependencies.m_PrototypeManager;
 		manager.Register<gui::input::BindingsComponent>();
-		manager.Register<gui::main_menu::WindowComponent>();
+		manager.Register<gui::MainMenuComponent>();
 	}
 
 	// ui
@@ -68,11 +68,6 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 
 void gui::GameUI::Initialise()
 {
-	// ui
-	{
-		auto& uiManager = m_EntityWorld.WriteResource<eng::UIManager>();
-		uiManager.CreateWidget(strGameMenu);
-	}
 }
 
 void gui::GameUI::Shutdown()

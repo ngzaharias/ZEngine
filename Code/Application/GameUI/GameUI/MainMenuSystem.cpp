@@ -7,63 +7,32 @@
 #include "ECS/WorldView.h"
 #include "Engine/ApplicationComponents.h"
 #include "Engine/LevelComponents.h"
-#include "GameUI/MainMenuComponents.h"
+#include "Engine/UIManager.h"
+#include "GameUI/DCMainMenu.h"
+#include "GameUI/MainMenuComponent.h"
 #include "GameUI/SettingsComponents.h"
-
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
-#include "imgui/imgui_user.h"
 
 namespace
 {
-	constexpr Vector2f s_DefaultSize = Vector2f(200.f, -1.f);
-	constexpr Vector2f s_OffsetPos = Vector2f(0.f, -100.f);
+	const str::Name strMainMenu = NAME("MainMenu.xaml");
 }
 
-void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
+void gui::MainMenuSystem::Update(World& world, const GameTime& gameTime)
 {
-	return;
-
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::main_menu::WindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::MainMenuComponent>>())
 	{
-		constexpr ImGuiWindowFlags s_WindowFlags =
-			ImGuiWindowFlags_NoCollapse |
-			ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoResize |
-			ImGuiWindowFlags_NoTitleBar;
+		const auto& menuComponent = world.ReadComponent<gui::MainMenuComponent>(entity);
+		auto& uiManager = world.WriteResource<eng::UIManager>();
 
-		auto& window = world.WriteComponent<gui::main_menu::WindowComponent>(entity);
+		auto& dataContext = uiManager.WriteDataContext<gui::DCMainMenu>(strMainMenu);
+		dataContext.SetNewGameLevel(menuComponent.m_NewGame);
 
-		const Vector2f viewportSize = ImGui::GetWindowViewport()->Size;
-		const Vector2f viewportCentre = (viewportSize * 0.5f);
+		uiManager.CreateWidget(strMainMenu);
+	}
 
-		imgui::SetNextWindowPos(viewportCentre, Vector2f(0.5f));
-		imgui::SetNextWindowSize(s_DefaultSize);
-		if (ImGui::Begin("Main Menu", nullptr, s_WindowFlags))
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
-			if (ImGui::BeginTable("##table", 1))
-			{
-				ImGui::TableNextRow();
-				ImGui::PushItemWidth(-1);
-
-				ImGui::TableNextColumn();
-				if (ImGui::Selectable("New Game"))
-					world.AddEventComponent<eng::level::LoadRequestComponent>(window.m_NewGame);
-
-				ImGui::TableNextColumn();
-				if (ImGui::Selectable("Settings"))
-					world.AddEventComponent<gui::settings::OpenRequestComponent>();
-
-				ImGui::TableNextColumn();
-				if (ImGui::Selectable("Exit Game"))
-					world.AddEventComponent<eng::application::CloseRequestComponent>();
-
-				ImGui::EndTable();
-			}
-			ImGui::PopStyleVar();
-		}
-
-		ImGui::End();
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<gui::MainMenuComponent>>())
+	{
+		auto& uiManager = world.WriteResource<eng::UIManager>();
+		uiManager.DestroyWidget(strMainMenu);
 	}
 }
