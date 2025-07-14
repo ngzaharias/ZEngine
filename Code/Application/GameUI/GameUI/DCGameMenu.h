@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/UIWidget.h"
+#include "Engine/UIDataContext.h"
 
 #include <NsApp/DelegateCommand.h>
 #include <NsGui/BaseCommand.h>
@@ -8,7 +8,7 @@
 
 namespace gui
 {
-	class DCGameMenu final : public eng::UIWidget
+	class DCGameMenu final : public eng::UIDataContext
 	{
 	public:
 		DCGameMenu();
@@ -30,6 +30,6 @@ namespace gui
 		NoesisApp::DelegateCommand m_ResumeCommand = {};
 		NoesisApp::DelegateCommand m_SettingsCommand = {};
 
-		NS_DECLARE_REFLECTION(gui::DCGameMenu, Noesis::BaseComponent)
+		NS_DECLARE_REFLECTION(gui::DCGameMenu, eng::UIDataContext)
 	};
 }

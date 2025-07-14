@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Name.h"
-#include "Engine/UIWidget.h"
+#include "Engine/UIDataContext.h"
 
 #include <NsApp/DelegateCommand.h>
 #include <NsApp/NotifyPropertyChangedBase.h>
@@ -11,13 +11,12 @@
 
 namespace gui
 {
-	class DCMainMenu final : public eng::UIWidget
+	class DCMainMenu final : public eng::UIDataContext
 	{
 	public:
 		DCMainMenu();
 
 		const char* GetNewGameLevel() const;
-
 		void SetNewGameLevel(const str::Name& value);
 
 	private:
@@ -42,6 +41,6 @@ namespace gui
 
 		str::Name m_NewGameLevel = {};
 
-		NS_DECLARE_REFLECTION(gui::DCMainMenu, eng::UIWidget)
+		NS_DECLARE_REFLECTION(gui::DCMainMenu, eng::UIDataContext)
 	};
 }

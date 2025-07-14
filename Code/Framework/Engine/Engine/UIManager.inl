@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Engine/UIWidget.h"
+#include "Engine/UIDataContext.h"
 
 #include <NsCore/DynamicCast.h>
 
 template<typename TDataContext>
 void eng::UIManager::RegisterDataContext(const str::Name& name)
 {
-	Noesis::Ptr<TDataContext> widget = Noesis::MakePtr<TDataContext>();
+	Noesis::Ptr<eng::UIDataContext> widget = Noesis::MakePtr<TDataContext>();
 	widget->m_EntityWorld = &m_EntityWorld;
 	m_DataContexts[name] = widget;
 }

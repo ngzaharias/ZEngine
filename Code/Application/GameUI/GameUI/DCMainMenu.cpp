@@ -17,14 +17,14 @@ gui::DCMainMenu::DCMainMenu()
 	m_SettingsCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCMainMenu::OnSettingsCommand));
 }
 
-void gui::DCMainMenu::SetNewGameLevel(const str::Name& value)
-{
-	m_NewGameLevel = value;
-}
-
 const char* gui::DCMainMenu::GetNewGameLevel() const
 {
 	return m_NewGameLevel.ToChar();
+}
+
+void gui::DCMainMenu::SetNewGameLevel(const str::Name& value)
+{
+	m_NewGameLevel = value;
 }
 
 void gui::DCMainMenu::OnContinueGameCommand(Noesis::BaseComponent* param)

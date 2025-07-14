@@ -12,7 +12,7 @@ namespace ecs
 
 namespace eng
 {
-	class UIWidget : public Noesis::BaseComponent, public Noesis::INotifyPropertyChanged
+	class UIDataContext : public Noesis::BaseComponent, public Noesis::INotifyPropertyChanged
 	{
 		friend class UIManager;
 
@@ -30,6 +30,6 @@ namespace eng
 	private:
 		Noesis::PropertyChangedEventHandler m_PropertyChanged;
 
-		NS_DECLARE_REFLECTION(eng::UIWidget, Noesis::BaseComponent)
+		NS_DECLARE_REFLECTION(eng::UIDataContext, Noesis::BaseComponent)
 	};
 }

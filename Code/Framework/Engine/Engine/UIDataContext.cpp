@@ -1,14 +1,14 @@
 #include "EnginePCH.h"
-#include "Engine/UIWidget.h"
+#include "Engine/UIDataContext.h"
 
 #include <NsCore/ReflectionImplement.h>
 
-Noesis::PropertyChangedEventHandler& eng::UIWidget::PropertyChanged()
+Noesis::PropertyChangedEventHandler& eng::UIDataContext::PropertyChanged()
 {
 	return m_PropertyChanged;
 }
 
-void eng::UIWidget::OnPropertyChanged(const char* name)
+void eng::UIDataContext::OnPropertyChanged(const char* name)
 {
 	if (m_PropertyChanged)
 	{
@@ -16,7 +16,7 @@ void eng::UIWidget::OnPropertyChanged(const char* name)
 	}
 }
 
-NS_IMPLEMENT_REFLECTION(eng::UIWidget)
+NS_IMPLEMENT_REFLECTION(eng::UIDataContext)
 {
 	NsImpl<Noesis::INotifyPropertyChanged>();
 }

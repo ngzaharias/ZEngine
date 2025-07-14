@@ -1,6 +1,8 @@
 #include "GameUIPCH.h"
 
+#include "ECS/EntityWorld.h"
 #include "GameUI/DCGameMenu.h"
+#include "GameUI/GameMenuComponents.h"
 
 #include <NsCore/ReflectionImplement.h>
 
@@ -14,22 +16,22 @@ gui::DCGameMenu::DCGameMenu()
 
 void gui::DCGameMenu::OnExitGameCommand(Noesis::BaseComponent* param)
 {
-	Z_LOG(ELog::Debug, "Exit Game");
+	m_EntityWorld->AddEventComponent<gui::game_menu::ExitGameRequest>();
 }
 
 void gui::DCGameMenu::OnExitToMenuCommand(Noesis::BaseComponent* param)
 {
-	Z_LOG(ELog::Debug, "Exit to Menu");
+	m_EntityWorld->AddEventComponent<gui::game_menu::ExitToMenuRequest>();
 }
 
 void gui::DCGameMenu::OnResumeCommand(Noesis::BaseComponent* param)
 {
-	Z_LOG(ELog::Debug, "Resume");
+	m_EntityWorld->AddEventComponent<gui::game_menu::CloseRequest>();
 }
 
 void gui::DCGameMenu::OnSettingsCommand(Noesis::BaseComponent* param)
 {
-	Z_LOG(ELog::Debug, "Settings");
+	m_EntityWorld->AddEventComponent<gui::game_menu::SettingsRequest>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCGameMenu)

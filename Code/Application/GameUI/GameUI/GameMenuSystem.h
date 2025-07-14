@@ -12,6 +12,7 @@ namespace ecs
 namespace eng
 {
 	class InputManager;
+	class UIManager;
 }
 
 namespace eng::application
@@ -31,7 +32,12 @@ namespace eng::settings
 
 namespace gui::game_menu
 {
-	struct OpenRequestComponent;
+	struct CloseRequest;
+	struct ExitGameRequest;
+	struct ExitToMenuRequest;
+	struct ResumeRequest;
+	struct OpenRequest;
+	struct SettingsRequest;
 	struct WindowComponent;
 }
 
@@ -48,13 +54,18 @@ namespace gui::game_menu
 		using World = ecs::WorldView<
 			// Resources
 			eng::InputManager,
+			eng::UIManager,
 			// Components
 			ecs::NameComponent,
 			eng::application::CloseRequestComponent,
 			eng::level::LoadRequestComponent,
+			gui::game_menu::CloseRequest,
 			gui::settings::OpenRequestComponent,
 			const eng::settings::LaunchComponent,
-			const gui::game_menu::OpenRequestComponent,
+			const gui::game_menu::ExitGameRequest,
+			const gui::game_menu::ExitToMenuRequest,
+			const gui::game_menu::OpenRequest,
+			const gui::game_menu::SettingsRequest,
 			const gui::game_menu::WindowComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

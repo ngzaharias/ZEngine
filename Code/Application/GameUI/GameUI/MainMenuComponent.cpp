@@ -9,13 +9,13 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(gui::MainMenuComponent& value) const
+void eng::Visitor::ReadCustom(gui::main_menu::MenuComponent& value) const
 {
 	Read(strNewGame, value.m_NewGame, value.m_NewGame);
 }
 
 template<>
-void eng::Visitor::WriteCustom(const gui::MainMenuComponent& value)
+void eng::Visitor::WriteCustom(const gui::main_menu::MenuComponent& value)
 {
 	Write(strNewGame, value.m_NewGame);
 }

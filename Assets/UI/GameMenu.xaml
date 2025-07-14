@@ -38,6 +38,9 @@
   </Page.Resources>
   <Grid>
     <Grid x:Name="Background">
+      <Grid.Background>
+        <SolidColorBrush Color="#FF000000" Opacity="0.5"/>
+      </Grid.Background>
       <Grid>
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="1*"/>

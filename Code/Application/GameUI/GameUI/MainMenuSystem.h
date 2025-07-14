@@ -19,14 +19,14 @@ namespace eng::level
 	struct LoadRequestComponent;
 }
 
-namespace gui
+namespace gui::main_menu
 {
-	struct MainMenuComponent;
+	struct MenuComponent;
 }
 
-namespace gui
+namespace gui::main_menu
 {
-	class MainMenuSystem final : public ecs::System
+	class MenuSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
@@ -35,7 +35,7 @@ namespace gui
 			// Components
 			eng::application::CloseRequestComponent,
 			eng::level::LoadRequestComponent,
-			gui::MainMenuComponent>;
+			gui::main_menu::MenuComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

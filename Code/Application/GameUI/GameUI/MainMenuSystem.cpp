@@ -17,11 +17,11 @@ namespace
 	const str::Name strMainMenu = NAME("MainMenu.xaml");
 }
 
-void gui::MainMenuSystem::Update(World& world, const GameTime& gameTime)
+void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::MainMenuComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::main_menu::MenuComponent>>())
 	{
-		const auto& menuComponent = world.ReadComponent<gui::MainMenuComponent>(entity);
+		const auto& menuComponent = world.ReadComponent<gui::main_menu::MenuComponent>(entity);
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 
 		auto& dataContext = uiManager.WriteDataContext<gui::DCMainMenu>(strMainMenu);
@@ -30,7 +30,7 @@ void gui::MainMenuSystem::Update(World& world, const GameTime& gameTime)
 		uiManager.CreateWidget(strMainMenu);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<gui::MainMenuComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<gui::main_menu::MenuComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strMainMenu);

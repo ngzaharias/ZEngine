@@ -19,8 +19,8 @@
 
 namespace
 {
-	const str::Name strGameMenu = NAME("GameMenu.xaml");
-	const str::Name strMainMenu = NAME("MainMenu.xaml");
+	const str::Name strGameMenu_xaml = NAME("GameMenu.xaml");
+	const str::Name strMainMenu_xaml = NAME("MainMenu.xaml");
 }
 
 gui::GameUI::GameUI(ecs::EntityWorld& entityWorld)
@@ -32,10 +32,14 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 {
 	// components
 	{
-		m_EntityWorld.RegisterComponent<gui::game_menu::OpenRequestComponent>();
+		m_EntityWorld.RegisterComponent<gui::game_menu::CloseRequest>();
+		m_EntityWorld.RegisterComponent<gui::game_menu::ExitGameRequest>();
+		m_EntityWorld.RegisterComponent<gui::game_menu::ExitToMenuRequest>();
+		m_EntityWorld.RegisterComponent<gui::game_menu::OpenRequest>();
+		m_EntityWorld.RegisterComponent<gui::game_menu::SettingsRequest>();
 		m_EntityWorld.RegisterComponent<gui::game_menu::WindowComponent>();
 		m_EntityWorld.RegisterComponent<gui::input::BindingsComponent>();
-		m_EntityWorld.RegisterComponent<gui::MainMenuComponent>();
+		m_EntityWorld.RegisterComponent<gui::main_menu::MenuComponent>();
 		m_EntityWorld.RegisterComponent<gui::settings::CloseRequestComponent>();
 		m_EntityWorld.RegisterComponent<gui::settings::OpenRequestComponent>();
 		m_EntityWorld.RegisterComponent<gui::settings::WindowComponent>();
@@ -47,7 +51,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterSystem<gui::hidden::CountSystem>();
 		m_EntityWorld.RegisterSystem<gui::hidden::LevelSystem>();
 		m_EntityWorld.RegisterSystem<gui::input::BindingsSystem>();
-		m_EntityWorld.RegisterSystem<gui::MainMenuSystem>();
+		m_EntityWorld.RegisterSystem<gui::main_menu::MenuSystem>();
 		m_EntityWorld.RegisterSystem<gui::settings::MenuSystem>();
 	}
 
@@ -55,14 +59,14 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 	{
 		auto& manager = dependencies.m_PrototypeManager;
 		manager.Register<gui::input::BindingsComponent>();
-		manager.Register<gui::MainMenuComponent>();
+		manager.Register<gui::main_menu::MenuComponent>();
 	}
 
 	// ui
 	{
 		auto& uiManager = dependencies.m_UIManager;
-		uiManager.RegisterDataContext<gui::DCGameMenu>(strGameMenu);
-		uiManager.RegisterDataContext<gui::DCMainMenu>(strMainMenu);
+		uiManager.RegisterDataContext<gui::DCGameMenu>(strGameMenu_xaml);
+		uiManager.RegisterDataContext<gui::DCMainMenu>(strMainMenu_xaml);
 	}
 }
 
