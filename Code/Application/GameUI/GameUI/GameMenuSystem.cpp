@@ -20,8 +20,8 @@
 
 namespace
 {
-	const str::Name strClose = NAME("GameMenu_Close");
 	const str::Name strGameMenu = NAME("GameMenu");
+	const str::Name strGameMenu_Close = NAME("GameMenu_Close");
 	const str::Name strGameMenu_xaml = NAME("GameMenu.xaml");
 }
 
@@ -37,7 +37,7 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 		{
 			input::Layer layer;
 			layer.m_Priority = eng::EInputPriority::GameUI;
-			layer.m_Bindings.Emplace(strClose, input::EKey::Escape);
+			layer.m_Bindings.Emplace(strGameMenu_Close, input::EKey::Escape);
 			layer.m_Consume.RaiseAll();
 
 			auto& input = world.WriteResource<eng::InputManager>();
@@ -48,7 +48,7 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	if (world.HasAny<ecs::query::Include<gui::game_menu::WindowComponent>>())
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
-		if (input.IsPressed(strClose))
+		if (input.IsPressed(strGameMenu_Close))
 			world.AddEventComponent<gui::game_menu::CloseRequest>();
 	}
 
