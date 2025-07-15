@@ -8,7 +8,7 @@
   d:DesignHeight="1080" 
   Focusable="True">
   <Page.InputBindings>
-    <KeyBinding Key="Escape" Command="{Binding ResumeCommand}"/>
+    <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
   </Page.InputBindings>
   <Page.Background>
     <SolidColorBrush Color="#FF4D5052" Opacity="0"/>
@@ -50,7 +50,7 @@
       <ColumnDefinition Width="2*"/>
     </Grid.ColumnDefinitions>
     <StackPanel VerticalAlignment="Center" Margin="0" Grid.Column="1">
-      <Button x:Name="Resume" Content="Resume" Style="{DynamicResource ButtonStyle}" Command="{Binding ResumeCommand}"/>
+      <Button x:Name="Resume" Content="Resume" Style="{DynamicResource ButtonStyle}" Command="{Binding CloseCommand}"/>
       <Button x:Name="Settings" Content="Settings" Style="{DynamicResource ButtonStyle}" Command="{Binding SettingsCommand}"/>
       <Button x:Name="ExitToMenu" Content="Exit to Menu" Style="{DynamicResource ButtonStyle}" Command="{Binding ExitToMenuCommand}"/>
       <Button x:Name="ExitGame" Content="Exit Game" Style="{DynamicResource ButtonStyle}" Command="{Binding ExitGameCommand}"/>
