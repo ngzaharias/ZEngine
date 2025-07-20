@@ -1,8 +1,9 @@
 #include "GameUIPCH.h"
+#include "GameUI/DCGameMenu.h"
 
 #include "ECS/EntityWorld.h"
-#include "GameUI/DCGameMenu.h"
 #include "GameUI/GameMenuComponents.h"
+#include "GameUI/SettingsMenuComponents.h"
 
 #include <NsCore/ReflectionImplement.h>
 
@@ -31,7 +32,7 @@ void gui::DCGameMenu::OnExitToMenuCommand(Noesis::BaseComponent* param)
 
 void gui::DCGameMenu::OnSettingsCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::game_menu::SettingsRequest>();
+	m_EntityWorld->AddEventComponent<gui::settings_menu::OpenRequest>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCGameMenu)

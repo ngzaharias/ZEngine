@@ -17,5 +17,4 @@ namespace gui::main_menu
 	{ 
 		str::Name m_Level = {};
 	};
-	struct SettingsRequest final : public ecs::EventComponent<SettingsRequest> { };
 }

@@ -58,11 +58,6 @@ namespace eng::settings
 	struct LocalComponent;
 }
 
-namespace gui::settings
-{
-	struct OpenRequestComponent;
-}
-
 namespace dbg
 {
 	class MenuBarSystem final : public ecs::System
@@ -97,8 +92,7 @@ namespace dbg
 			editor::TextureWindowRequestComponent,
 			editor::TrajectoryWindowRequestComponent,
 			eng::AssetManager,
-			eng::settings::LocalComponent,
-			gui::settings::OpenRequestComponent>;
+			eng::settings::LocalComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

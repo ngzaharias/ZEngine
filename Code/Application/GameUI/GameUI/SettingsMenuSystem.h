@@ -3,44 +3,33 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
-#include "imgui/Identifier.h"
-
-namespace ecs
-{
-	struct NameComponent;
-}
 
 namespace eng
 {
-	class WindowManager;
+	class InputManager;
+	class UIManager;
 }
 
-namespace eng::settings
+namespace gui::settings_menu
 {
-	struct LocalComponent;
-}
-
-namespace gui::settings
-{
-	struct CloseRequestComponent;
-	struct OpenRequestComponent;
+	struct CloseRequest;
+	struct OpenRequest;
 	struct WindowComponent;
 }
 
-namespace gui::settings
+namespace gui::settings_menu
 {
 	class MenuSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
 			// Resources
-			eng::WindowManager,
+			eng::InputManager,
+			eng::UIManager,
 			// Components
-			ecs::NameComponent,
-			eng::settings::LocalComponent,
-			gui::settings::WindowComponent,
-			const gui::settings::CloseRequestComponent,
-			const gui::settings::OpenRequestComponent>;
+			gui::settings_menu::WindowComponent,
+			const gui::settings_menu::CloseRequest,
+			const gui::settings_menu::OpenRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

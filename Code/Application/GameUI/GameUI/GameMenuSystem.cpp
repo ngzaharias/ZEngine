@@ -12,7 +12,6 @@
 #include "Engine/UIManager.h"
 #include "GameUI/DCGameMenu.h"
 #include "GameUI/GameMenuComponents.h"
-#include "GameUI/SettingsComponents.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -77,10 +76,5 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const ecs::Entity entity = world.CreateEntity();
 		world.AddComponent<gui::game_menu::WindowComponent>(entity);
-	}
-
-	if (world.HasAny<ecs::query::Added<gui::game_menu::SettingsRequest>>())
-	{
-		world.AddEventComponent<gui::settings::OpenRequestComponent>();
 	}
 }

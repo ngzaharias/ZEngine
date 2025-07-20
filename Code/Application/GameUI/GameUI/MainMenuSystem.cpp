@@ -10,7 +10,6 @@
 #include "Engine/UIManager.h"
 #include "GameUI/DCMainMenu.h"
 #include "GameUI/MainMenuComponents.h"
-#include "GameUI/SettingsComponents.h"
 
 namespace
 {
@@ -55,10 +54,5 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const auto& request = world.ReadComponent<gui::main_menu::NewGameRequest>(entity);
 		world.AddEventComponent<eng::level::LoadRequestComponent>(request.m_Level);
-	}
-
-	if (world.HasAny<ecs::query::Added<gui::main_menu::SettingsRequest>>())
-	{
-		world.AddEventComponent<gui::settings::OpenRequestComponent>();
 	}
 }

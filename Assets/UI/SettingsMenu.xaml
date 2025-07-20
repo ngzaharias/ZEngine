@@ -1,0 +1,203 @@
+<Page
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:noesis="clr-namespace:NoesisGUIExtensions" 
+  xmlns:system="clr-namespace:System;assembly=mscorlib"
+  d:DesignWidth="1280" d:DesignHeight="720" 
+  Background="#FF242C32"
+  FontFamily="./#Super Fortrees"
+  FontSize="15" mc:Ignorable="d">
+  <Page.Resources>
+    <ResourceDictionary>
+      <SolidColorBrush x:Key="Background.Primary" Color="#4580A3"/>
+      <SolidColorBrush x:Key="Background.Secondary" Color="#FF1E2225"/>
+      <SolidColorBrush x:Key="Brush.Text.Primary" Color="#FF000000"/>
+      <SolidColorBrush x:Key="Brush.Primary.Shade0" Color="#17567B"/>
+      <SolidColorBrush x:Key="Brush.Primary.Shade25" Color="#2D6C92"/>
+      <SolidColorBrush x:Key="Brush.Primary.Shade75" Color="#6CA2C2"/>
+      <SolidColorBrush x:Key="Brush.Primary.Shade100" Color="#A0C7DF"/>
+      <Thickness x:Key="Thickness.PropertyGrid">10,8,10,0</Thickness>
+      <DataTemplate x:Key="MonitorItemTemplate">
+        <TextBlock Text="{Binding Name}"/>
+      </DataTemplate>
+    </ResourceDictionary>
+  </Page.Resources>
+  <Page.Foreground>
+    <StaticResource ResourceKey="Background.Primary"/>
+  </Page.Foreground>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1*"/>
+      <RowDefinition Height="8*"/>
+      <RowDefinition Height="1*"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="1*"/>
+      <ColumnDefinition Width="8*"/>
+      <ColumnDefinition Width="1*"/>
+    </Grid.ColumnDefinitions>
+    <Viewbox Grid.Row="1" Grid.Column="1">
+      <StackPanel Width="520">
+        <Border Background="{StaticResource Background.Primary}" Padding="0,2" CornerRadius="4,4,0,0">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="10*"/>
+              <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="S E T T I N G S" Foreground="White" FontSize="24" HorizontalAlignment="Center" Grid.ColumnSpan="2" Margin="0" VerticalAlignment="Center"/>
+            <Button Grid.Column="1" Content="X" HorizontalAlignment="Right" Margin="4,4,4,4" Command="{Binding CloseCommand}"/>
+          </Grid>
+        </Border>
+        <Border Background="{StaticResource Background.Secondary}" BorderThickness="1,0,1,1" BorderBrush="{StaticResource Background.Primary}" Height="310" Padding="10">
+          <TabControl Padding="10">
+            <TabItem x:Name="Audio" Header="Audio">
+              <Grid>
+                <StackPanel>
+                  <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Brush.Primary.Shade25}" Background="{DynamicResource Brush.Primary.Shade0}">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Text="Volume" Padding="10,10,10,10"/>
+                  </Border>
+                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}" RenderTransformOrigin="0.5,0.5">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="3*"/>
+                      <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Master" VerticalAlignment="Center"/>
+                    <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding Path=MasterVolume}"/>
+                  </Grid>
+                  <Grid Margin="{DynamicResource Thickness.PropertyGrid}">
+                    <Separator/>
+                  </Grid>
+                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="3*"/>
+                      <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Sound Effects" VerticalAlignment="Center"/>
+                    <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding EffectVolume}"/>
+                  </Grid>
+                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="3*"/>
+                      <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Music" VerticalAlignment="Center"/>
+                    <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding Path=MusicVolume}"/>
+                  </Grid>
+                </StackPanel>
+              </Grid>
+            </TabItem>
+            <TabItem x:Name="Gameplay" Header="Gameplay">
+              <Grid>
+                <StackPanel>
+                  <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Brush.Primary.Shade25}" Background="{DynamicResource Brush.Primary.Shade0}">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Text="Camera" Padding="10,10,10,10"/>
+                  </Border>
+                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}" RenderTransformOrigin="0.5,0.5">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="3*"/>
+                      <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Move Speed" VerticalAlignment="Center"/>
+                    <Slider Grid.Column="1" Maximum="1000" LargeChange="90" Value="{Binding Path=MoveSpeed}" Minimum="100"/>
+                  </Grid>
+                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="3*"/>
+                      <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Zoom Rate" VerticalAlignment="Center"/>
+                    <Slider Grid.Column="1" Maximum="200" LargeChange="15" Value="{Binding Path=ZoomRate}" Minimum="50"/>
+                  </Grid>
+                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="3*"/>
+                      <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Zoom Speed" VerticalAlignment="Center"/>
+                    <Slider Grid.Column="1" Maximum="1" LargeChange="0.1" Value="{Binding Path=ZoomSpeed}"/>
+                  </Grid>
+                </StackPanel>
+              </Grid>
+            </TabItem>
+            <TabItem x:Name="Graphics" Header="Graphics">
+              <Grid>
+                <StackPanel>
+                  <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Brush.Primary.Shade25}" Background="{DynamicResource Brush.Primary.Shade0}">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Text="Window" Padding="10,10,10,10"/>
+                  </Border>
+                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}" RenderTransformOrigin="0.5,0.5">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="3*"/>
+                      <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Monitor" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Monitors}" SelectedItem="{Binding MonitorSelected, Mode=TwoWay}" ItemTemplate="{StaticResource MonitorItemTemplate}"/>
+                  </Grid>
+                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}" RenderTransformOrigin="0.5,0.5">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="3*"/>
+                      <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Mode" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1">
+                      <system:String>Item #1</system:String>
+                      <system:String>Item #2</system:String>
+                      <system:String>Item #3</system:String>
+                      <system:String>Item #4</system:String>
+                      <system:String>Item #5</system:String>
+                      <system:String>Item #6</system:String>
+                      <system:String>Item #7</system:String>
+                      <system:String>Item #8</system:String>
+                      <system:String>Item #9</system:String>
+                      <system:String>Item #10</system:String>
+                    </ComboBox>
+                  </Grid>
+                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="3*"/>
+                      <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Resolution" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1">
+                      <system:String>Item #1</system:String>
+                      <system:String>Item #2</system:String>
+                      <system:String>Item #3</system:String>
+                      <system:String>Item #4</system:String>
+                      <system:String>Item #5</system:String>
+                      <system:String>Item #6</system:String>
+                      <system:String>Item #7</system:String>
+                      <system:String>Item #8</system:String>
+                      <system:String>Item #9</system:String>
+                      <system:String>Item #10</system:String>
+                    </ComboBox>
+                  </Grid>
+                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="3*"/>
+                      <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Refresh Rate" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1">
+                      <system:String>Item #1</system:String>
+                      <system:String>Item #2</system:String>
+                      <system:String>Item #3</system:String>
+                      <system:String>Item #4</system:String>
+                      <system:String>Item #5</system:String>
+                      <system:String>Item #6</system:String>
+                      <system:String>Item #7</system:String>
+                      <system:String>Item #8</system:String>
+                      <system:String>Item #9</system:String>
+                      <system:String>Item #10</system:String>
+                    </ComboBox>
+                  </Grid>
+                </StackPanel>
+              </Grid>
+            </TabItem>
+          </TabControl>
+        </Border>
+      </StackPanel>
+    </Viewbox>
+  </Grid>
+</Page>

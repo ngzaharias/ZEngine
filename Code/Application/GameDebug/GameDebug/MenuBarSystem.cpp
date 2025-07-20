@@ -13,7 +13,6 @@
 #include "GameDebug/LevelOpenComponents.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "GameDebug/SettingsComponents.h"
-#include "GameUI/SettingsComponents.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -92,8 +91,6 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<dbg::settings::WindowRequestComponent>();
 			if (ImGui::MenuItem("Editor"))
 				world.AddEventComponent<editor::settings::WindowRequestComponent>();
-			if (ImGui::MenuItem("Game"))
-				world.AddEventComponent<gui::settings::OpenRequestComponent>();
 			ImGui::EndMenu();
 		}
 

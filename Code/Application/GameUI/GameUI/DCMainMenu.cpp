@@ -3,6 +3,7 @@
 
 #include "ECS/EntityWorld.h"
 #include "GameUI/MainMenuComponents.h"
+#include "GameUI/SettingsMenuComponents.h"
 
 #include <NsCore/ReflectionImplement.h>
 
@@ -48,7 +49,7 @@ void gui::DCMainMenu::OnNewGameCommand(Noesis::BaseComponent* param)
 
 void gui::DCMainMenu::OnSettingsCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::main_menu::SettingsRequest>();
+	m_EntityWorld->AddEventComponent<gui::settings_menu::OpenRequest>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCMainMenu)
