@@ -5,6 +5,7 @@
 #include "Engine/PrototypeManager.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCGameMenu.h"
+#include "GameUI/DCHiddenCount.h"
 #include "GameUI/DCMainMenu.h"
 #include "GameUI/GameMenuComponents.h"
 #include "GameUI/GameMenuSystem.h"
@@ -20,6 +21,7 @@
 namespace
 {
 	const str::Name strGameMenu_xaml = NAME("GameMenu.xaml");
+	const str::Name strHiddenCount_xaml = NAME("HiddenCount.xaml");
 	const str::Name strMainMenu_xaml = NAME("MainMenu.xaml");
 }
 
@@ -71,6 +73,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 	{
 		auto& uiManager = dependencies.m_UIManager;
 		uiManager.RegisterDataContext<gui::DCGameMenu>(strGameMenu_xaml);
+		uiManager.RegisterDataContext<gui::DCHiddenCount>(strHiddenCount_xaml);
 		uiManager.RegisterDataContext<gui::DCMainMenu>(strMainMenu_xaml);
 	}
 }

@@ -2,6 +2,11 @@
 
 #include "ECS/System.h"
 
+namespace eng
+{
+	class UIManager;
+}
+
 namespace hidden
 {
 	struct CountComponent;
@@ -13,6 +18,9 @@ namespace gui::hidden
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			eng::UIManager,
+			// Components
 			const ::hidden::CountComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
