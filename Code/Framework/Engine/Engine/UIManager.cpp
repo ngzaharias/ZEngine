@@ -270,8 +270,8 @@ void eng::UIManager::ProcessInput(
 	for (auto& [guid, view] : m_Widgets)
 	{
 		view->MouseMove((int)mousePos.x, (int)mousePos.y);
-		view->MouseHWheel((int)mousePos.x, (int)mousePos.y, (int)mouseDelta.x);
-		view->MouseWheel((int)mousePos.x, (int)mousePos.y, (int)mouseDelta.y);
+		view->MouseHWheel((int)mousePos.x, (int)mousePos.y, (int)scrollDelta.x);
+		view->MouseWheel((int)mousePos.x, (int)mousePos.y, (int)scrollDelta.y);
 
 		// #todo: process more than one press/release at a time
 		for (const input::EKey value : inout_Pressed)
