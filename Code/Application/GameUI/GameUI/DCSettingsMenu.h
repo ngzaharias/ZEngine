@@ -26,6 +26,45 @@ namespace gui
 		NS_DECLARE_REFLECTION(gui::VMMonitor, Noesis::BaseComponent)
 	};
 
+	class VMMode final : public Noesis::BaseComponent
+	{
+	public:
+		VMMode(const char* name);
+
+		const char* GetName() const;
+
+	private:
+		Noesis::String m_Name;
+
+		NS_DECLARE_REFLECTION(gui::VMMode, Noesis::BaseComponent)
+	};
+
+	class VMResolution final : public Noesis::BaseComponent
+	{
+	public:
+		VMResolution(const char* name);
+
+		const char* GetName() const;
+
+	private:
+		Noesis::String m_Name;
+
+		NS_DECLARE_REFLECTION(gui::VMResolution, Noesis::BaseComponent)
+	};
+
+	class VMRefreshRate final : public Noesis::BaseComponent
+	{
+	public:
+		VMRefreshRate(const char* name);
+
+		const char* GetName() const;
+
+	private:
+		Noesis::String m_Name;
+
+		NS_DECLARE_REFLECTION(gui::VMRefreshRate, Noesis::BaseComponent)
+	};
+
 	class DCSettingsMenu final : public eng::UIDataContext
 	{
 	public:
@@ -45,9 +84,21 @@ namespace gui
 		float GetZoomSpeed() const;
 		void SetZoomSpeed(float value);
 
+		Noesis::ObservableCollection<gui::VMMode>* GetModes() const;
+		gui::VMMode* GetMode() const;
+		void SetMode(gui::VMMode* value);
+
 		Noesis::ObservableCollection<gui::VMMonitor>* GetMonitors() const;
-		void SetMonitorSelected(gui::VMMonitor* value);
-		gui::VMMonitor* GetMonitorSelected() const;
+		gui::VMMonitor* GetMonitor() const;
+		void SetMonitor(gui::VMMonitor* value);
+
+		Noesis::ObservableCollection<gui::VMRefreshRate>* GetRefreshRates() const;
+		gui::VMRefreshRate* GetRefreshRate() const;
+		void SetRefreshRate(gui::VMRefreshRate* value);
+
+		Noesis::ObservableCollection<gui::VMResolution>* GetResolutions() const;
+		gui::VMResolution* GetResolution() const;
+		void SetResolution(gui::VMResolution* value);
 
 		const NoesisApp::DelegateCommand* GetCloseCommand() const { return &m_CloseCommand; }
 
@@ -67,8 +118,14 @@ namespace gui
 		float m_ZoomRate = 0.f;
 		float m_ZoomSpeed = 0.f;
 		// window
+		Noesis::Ptr<Noesis::ObservableCollection<gui::VMMode>> m_Modes;
 		Noesis::Ptr<Noesis::ObservableCollection<gui::VMMonitor>> m_Monitors;
-		gui::VMMonitor* m_MonitorSelected = nullptr;
+		Noesis::Ptr<Noesis::ObservableCollection<gui::VMRefreshRate>> m_RefreshRates;
+		Noesis::Ptr<Noesis::ObservableCollection<gui::VMResolution>> m_Resolutions;
+		gui::VMMode* m_Mode = nullptr;
+		gui::VMMonitor* m_Monitor = nullptr;
+		gui::VMRefreshRate* m_RefreshRate = nullptr;
+		gui::VMResolution* m_Resolution = nullptr;
 
 		NS_DECLARE_REFLECTION(gui::DCSettingsMenu, eng::UIDataContext)
 	};

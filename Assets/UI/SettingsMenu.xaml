@@ -8,7 +8,12 @@
   d:DesignWidth="1280" d:DesignHeight="720" 
   Background="#FF242C32"
   FontFamily="./#Super Fortrees"
-  FontSize="15" mc:Ignorable="d">
+  FontSize="15" 
+  mc:Ignorable="d" 
+  Focusable="True">
+  <Page.InputBindings>
+    <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
+  </Page.InputBindings>
   <Page.Resources>
     <ResourceDictionary>
       <SolidColorBrush x:Key="Background.Primary" Color="#4580A3"/>
@@ -19,7 +24,7 @@
       <SolidColorBrush x:Key="Brush.Primary.Shade75" Color="#6CA2C2"/>
       <SolidColorBrush x:Key="Brush.Primary.Shade100" Color="#A0C7DF"/>
       <Thickness x:Key="Thickness.PropertyGrid">10,8,10,0</Thickness>
-      <DataTemplate x:Key="MonitorItemTemplate">
+      <DataTemplate x:Key="ComboBoxItemTemplate">
         <TextBlock Text="{Binding Name}"/>
       </DataTemplate>
     </ResourceDictionary>
@@ -133,7 +138,7 @@
                       <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Monitor" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1" ItemsSource="{Binding Monitors}" SelectedItem="{Binding MonitorSelected, Mode=TwoWay}" ItemTemplate="{StaticResource MonitorItemTemplate}"/>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Monitors}" SelectedItem="{Binding Monitor, Mode=TwoWay}" ItemTemplate="{StaticResource ComboBoxItemTemplate}"/>
                   </Grid>
                   <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}" RenderTransformOrigin="0.5,0.5">
                     <Grid.ColumnDefinitions>
@@ -141,18 +146,7 @@
                       <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Mode" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1">
-                      <system:String>Item #1</system:String>
-                      <system:String>Item #2</system:String>
-                      <system:String>Item #3</system:String>
-                      <system:String>Item #4</system:String>
-                      <system:String>Item #5</system:String>
-                      <system:String>Item #6</system:String>
-                      <system:String>Item #7</system:String>
-                      <system:String>Item #8</system:String>
-                      <system:String>Item #9</system:String>
-                      <system:String>Item #10</system:String>
-                    </ComboBox>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Modes}" SelectedItem="{Binding Mode, Mode=TwoWay}" ItemTemplate="{StaticResource ComboBoxItemTemplate}"/>
                   </Grid>
                   <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
                     <Grid.ColumnDefinitions>
@@ -160,18 +154,7 @@
                       <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Resolution" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1">
-                      <system:String>Item #1</system:String>
-                      <system:String>Item #2</system:String>
-                      <system:String>Item #3</system:String>
-                      <system:String>Item #4</system:String>
-                      <system:String>Item #5</system:String>
-                      <system:String>Item #6</system:String>
-                      <system:String>Item #7</system:String>
-                      <system:String>Item #8</system:String>
-                      <system:String>Item #9</system:String>
-                      <system:String>Item #10</system:String>
-                    </ComboBox>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Resolutions}" SelectedItem="{Binding Resolution, Mode=TwoWay}" ItemTemplate="{StaticResource ComboBoxItemTemplate}"/>
                   </Grid>
                   <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
                     <Grid.ColumnDefinitions>
@@ -179,18 +162,7 @@
                       <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Refresh Rate" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1">
-                      <system:String>Item #1</system:String>
-                      <system:String>Item #2</system:String>
-                      <system:String>Item #3</system:String>
-                      <system:String>Item #4</system:String>
-                      <system:String>Item #5</system:String>
-                      <system:String>Item #6</system:String>
-                      <system:String>Item #7</system:String>
-                      <system:String>Item #8</system:String>
-                      <system:String>Item #9</system:String>
-                      <system:String>Item #10</system:String>
-                    </ComboBox>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding RefreshRates}" SelectedItem="{Binding RefreshRate, Mode=TwoWay}" ItemTemplate="{StaticResource ComboBoxItemTemplate}"/>
                   </Grid>
                 </StackPanel>
               </Grid>
