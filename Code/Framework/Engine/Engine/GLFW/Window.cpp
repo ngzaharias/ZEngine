@@ -337,7 +337,7 @@ void glfw::Window::Refresh(const eng::EWindowMode& windowMode, const Vector2u& r
 			xpos + mode->width / 2 - resolution.x / 2,
 			ypos + mode->height / 2 - resolution.y / 2);
 
-		// #bug: changing the monitor without calling the window size causes the window not to be sized correctly
+		// #bug: changing the monitor without re-setting the size causes the window not to be sized correctly
 		glfwSetWindowAttrib(m_Window, GLFW_DECORATED, true);
 		glfwSetWindowMonitor(m_Window, nullptr, position.x, position.y, resolution.x, resolution.y, mode->refreshRate);
 		glfwSetWindowSize(m_Window, resolution.x, resolution.y);
