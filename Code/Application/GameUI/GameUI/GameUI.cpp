@@ -49,6 +49,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterComponent<gui::main_menu::WindowComponent>();
 		m_EntityWorld.RegisterComponent<gui::settings_menu::CloseRequest>();
 		m_EntityWorld.RegisterComponent<gui::settings_menu::OpenRequest>();
+		m_EntityWorld.RegisterComponent<gui::settings_menu::ValueRequest>();
 		m_EntityWorld.RegisterComponent<gui::settings_menu::WindowComponent>();
 	}
 

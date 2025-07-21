@@ -271,7 +271,7 @@ void eng::UIManager::ProcessInput(
 	{
 		view->MouseMove((int)mousePos.x, (int)mousePos.y);
 		view->MouseHWheel((int)mousePos.x, (int)mousePos.y, (int)scrollDelta.x);
-		view->MouseWheel((int)mousePos.x, (int)mousePos.y, (int)scrollDelta.y);
+		view->MouseWheel((int)mousePos.x, (int)mousePos.y, (int)scrollDelta.y * 50);
 
 		// #todo: process more than one press/release at a time
 		for (const input::EKey value : inout_Pressed)

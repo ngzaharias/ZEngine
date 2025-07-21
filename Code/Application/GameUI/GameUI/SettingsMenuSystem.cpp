@@ -1,13 +1,23 @@
 #include "GameUIPCH.h"
 #include "GameUI/SettingsMenuSystem.h"
 
+#include "Core/EnumHelpers.h"
 #include "Core/Name.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
+#include "Engine/SettingsComponents.h"
 #include "Engine/UIManager.h"
+#include "Engine/WindowManager.h"
+#include "GameUI/DCSettingsMenu.h"
 #include "GameUI/SettingsMenuComponents.h"
+#include "GameUI/VMMonitor.h"
+#include "GameUI/VMRefreshRate.h"
+#include "GameUI/VMResolution.h"
+#include "GameUI/VMWindowMode.h"
+
+#include <NsGui/ObservableCollection.h>
 
 namespace
 {
@@ -20,8 +30,65 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::settings_menu::WindowComponent>>())
 	{
 		{
+			const auto& settings = world.ReadSingleton<eng::settings::LocalComponent>();
+			const auto& windowManager = world.ReadResource<eng::WindowManager>();
+			const auto& monitor = *windowManager.GetMonitor(0);
+
 			auto& uiManager = world.WriteResource<eng::UIManager>();
 			uiManager.CreateWidget(strSettingsMenu_xaml);
+			auto& dataContext = uiManager.WriteDataContext<gui::DCSettingsMenu>(strSettingsMenu_xaml);
+
+			// audio
+			dataContext.SetEffectVolume(settings.m_Audio.m_EffectVolume);
+			dataContext.SetMasterVolume(settings.m_Audio.m_MasterVolume);
+			dataContext.SetMusicVolume(settings.m_Audio.m_MusicVolume);
+
+			// gameplay
+			dataContext.SetMoveSpeed(settings.m_Camera.m_TranslateSpeed);
+			dataContext.SetZoomRate(settings.m_Camera.m_ZoomAmount);
+			dataContext.SetZoomSpeed(settings.m_Camera.m_ZoomSpeed);
+
+			auto monitors = new Noesis::ObservableCollection<gui::VMMonitor>();
+			for (const auto& [i, value] : enumerate::Forward(windowManager.GetMonitors()))
+			{
+				auto monitor = Noesis::MakePtr<gui::VMMonitor>(i);
+				monitors->Add(monitor);
+				if (i == settings.m_Window.m_Monitor)
+					dataContext.SetMonitor(monitor);
+			}
+			dataContext.SetMonitors(*monitors);
+
+			auto refreshRates = new Noesis::ObservableCollection<gui::VMRefreshRate>();
+			for (const int32 value : windowManager.GetRefreshRates())
+			{
+				const bool isNative = value == monitor.m_RefreshRate;
+				auto refreshRate = Noesis::MakePtr<gui::VMRefreshRate>(value, isNative);
+				refreshRates->Add(refreshRate);
+				if (value == settings.m_Window.m_RefreshRate)
+					dataContext.SetRefreshRate(refreshRate);
+			}
+			dataContext.SetRefreshRates(*refreshRates);
+
+			auto resolutions = new Noesis::ObservableCollection<gui::VMResolution>();
+			for (const Vector2u& value : windowManager.GetResolutions())
+			{
+				const bool isNative = value == monitor.m_Resolution;
+				auto resolution = Noesis::MakePtr<gui::VMResolution>(value, isNative);
+				resolutions->Add(resolution);
+				if (value == settings.m_Window.m_Resolution)
+					dataContext.SetResolution(resolution);
+			}
+			dataContext.SetResolutions(*resolutions);
+
+			auto windowModes = new Noesis::ObservableCollection<gui::VMWindowMode>();
+			for (const eng::EWindowMode value : windowManager.GetWindowModes())
+			{
+				auto windowMode = Noesis::MakePtr<gui::VMWindowMode>(value);
+				windowModes->Add(windowMode);
+				if (value == settings.m_Window.m_WindowMode)
+					dataContext.SetWindowMode(windowMode);
+			}
+			dataContext.SetWindowModes(*windowModes);
 		}
 
 		{
@@ -55,5 +122,37 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 	if (world.HasAny<ecs::query::Added<gui::settings_menu::OpenRequest>>())
 	{
 		world.AddComponent<gui::settings_menu::WindowComponent>(world.CreateEntity());
+	}
+
+	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::settings_menu::ValueRequest>>())
+	{
+		const auto& eventData = world.ReadComponent<gui::settings_menu::ValueRequest>(entity);
+		auto& settings = world.WriteSingleton<eng::settings::LocalComponent>();
+
+		// audio
+		if (eventData.m_EffectVolume)
+			settings.m_Audio.m_EffectVolume = *eventData.m_EffectVolume;
+		if (eventData.m_MasterVolume)
+			settings.m_Audio.m_MasterVolume = *eventData.m_MasterVolume;
+		if (eventData.m_MusicVolume)
+			settings.m_Audio.m_MusicVolume = *eventData.m_MusicVolume;
+
+		// gameplay
+		if (eventData.m_MoveSpeed)
+			settings.m_Camera.m_TranslateSpeed = *eventData.m_MoveSpeed;
+		if (eventData.m_ZoomRate)
+			settings.m_Camera.m_ZoomAmount = *eventData.m_ZoomRate;
+		if (eventData.m_ZoomSpeed)
+			settings.m_Camera.m_ZoomSpeed = *eventData.m_ZoomSpeed;
+
+		// graphics
+		if (eventData.m_Monitor)
+			settings.m_Window.m_Monitor = *eventData.m_Monitor;
+		if (eventData.m_RefreshRate)
+			settings.m_Window.m_RefreshRate = *eventData.m_RefreshRate;
+		if (eventData.m_Resolution)
+			settings.m_Window.m_Resolution = *eventData.m_Resolution;
+		if (eventData.m_WindowMode)
+			settings.m_Window.m_WindowMode = *eventData.m_WindowMode;
 	}
 }

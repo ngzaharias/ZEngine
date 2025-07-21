@@ -11,6 +11,7 @@ namespace eng::settings
 	struct Audio
 	{
 		int32 m_EffectVolume = 50;
+		int32 m_MasterVolume = 50;
 		int32 m_MusicVolume = 50;
 	};
 
@@ -24,10 +25,10 @@ namespace eng::settings
 
 	struct Window
 	{
-		eng::EWindowMode m_WindowMode = eng::EWindowMode::Fullscreen;
+		int32 m_Monitor = 0;
 		Vector2u m_Resolution = Vector2u(800, 600);
 		int32 m_RefreshRate = 59;
-		int32 m_Monitor = 0;
+		eng::EWindowMode m_WindowMode = eng::EWindowMode::Fullscreen;
 	};
 
 	/// \brief Debug settings that is only used in non-gold builds.

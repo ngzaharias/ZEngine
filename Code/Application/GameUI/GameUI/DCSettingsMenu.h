@@ -5,6 +5,14 @@
 #include <NsApp/DelegateCommand.h>
 #include <NsGui/BaseCommand.h>
 
+namespace gui
+{
+	class VMMonitor;
+	class VMRefreshRate;
+	class VMResolution;
+	class VMWindowMode;
+}
+
 namespace Noesis
 {
 	template<class T>
@@ -13,69 +21,17 @@ namespace Noesis
 
 namespace gui
 {
-	class VMMonitor final : public Noesis::BaseComponent
-	{
-	public:
-		VMMonitor(const char* name);
-
-		const char* GetName() const;
-
-	private:
-		Noesis::String m_Name;
-
-		NS_DECLARE_REFLECTION(gui::VMMonitor, Noesis::BaseComponent)
-	};
-
-	class VMMode final : public Noesis::BaseComponent
-	{
-	public:
-		VMMode(const char* name);
-
-		const char* GetName() const;
-
-	private:
-		Noesis::String m_Name;
-
-		NS_DECLARE_REFLECTION(gui::VMMode, Noesis::BaseComponent)
-	};
-
-	class VMResolution final : public Noesis::BaseComponent
-	{
-	public:
-		VMResolution(const char* name);
-
-		const char* GetName() const;
-
-	private:
-		Noesis::String m_Name;
-
-		NS_DECLARE_REFLECTION(gui::VMResolution, Noesis::BaseComponent)
-	};
-
-	class VMRefreshRate final : public Noesis::BaseComponent
-	{
-	public:
-		VMRefreshRate(const char* name);
-
-		const char* GetName() const;
-
-	private:
-		Noesis::String m_Name;
-
-		NS_DECLARE_REFLECTION(gui::VMRefreshRate, Noesis::BaseComponent)
-	};
-
 	class DCSettingsMenu final : public eng::UIDataContext
 	{
 	public:
 		DCSettingsMenu();
 
-		float GetEffectVolume() const;
-		void SetEffectVolume(float value);
-		float GetMasterVolume() const;
-		void SetMasterVolume(float value);
-		float GetMusicVolume() const;
-		void SetMusicVolume(float value);
+		int32 GetEffectVolume() const;
+		void SetEffectVolume(int32 value);
+		int32 GetMasterVolume() const;
+		void SetMasterVolume(int32 value);
+		int32 GetMusicVolume() const;
+		void SetMusicVolume(int32 value);
 
 		float GetMoveSpeed() const;
 		void SetMoveSpeed(float value);
@@ -84,21 +40,25 @@ namespace gui
 		float GetZoomSpeed() const;
 		void SetZoomSpeed(float value);
 
-		Noesis::ObservableCollection<gui::VMMode>* GetModes() const;
-		gui::VMMode* GetMode() const;
-		void SetMode(gui::VMMode* value);
-
 		Noesis::ObservableCollection<gui::VMMonitor>* GetMonitors() const;
+		void SetMonitors(Noesis::Ptr<Noesis::ObservableCollection<gui::VMMonitor>> value);
 		gui::VMMonitor* GetMonitor() const;
 		void SetMonitor(gui::VMMonitor* value);
 
 		Noesis::ObservableCollection<gui::VMRefreshRate>* GetRefreshRates() const;
+		void SetRefreshRates(Noesis::Ptr<Noesis::ObservableCollection<gui::VMRefreshRate>> value);
 		gui::VMRefreshRate* GetRefreshRate() const;
 		void SetRefreshRate(gui::VMRefreshRate* value);
 
 		Noesis::ObservableCollection<gui::VMResolution>* GetResolutions() const;
+		void SetResolutions(Noesis::Ptr<Noesis::ObservableCollection<gui::VMResolution>> value);
 		gui::VMResolution* GetResolution() const;
 		void SetResolution(gui::VMResolution* value);
+
+		Noesis::ObservableCollection<gui::VMWindowMode>* GetWindowModes() const;
+		void SetWindowModes(Noesis::Ptr<Noesis::ObservableCollection<gui::VMWindowMode>> value);
+		gui::VMWindowMode* GetWindowMode() const;
+		void SetWindowMode(gui::VMWindowMode* value);
 
 		const NoesisApp::DelegateCommand* GetCloseCommand() const { return &m_CloseCommand; }
 
@@ -110,22 +70,22 @@ namespace gui
 
 	private:
 		// audio
-		float m_EffectVolume = 0.f;
-		float m_MasterVolume = 0.f;
-		float m_MusicVolume = 0.f;
+		int32 m_EffectVolume = 0;
+		int32 m_MasterVolume = 0;
+		int32 m_MusicVolume = 0;
 		// gameplay
 		float m_MoveSpeed = 0.f;
 		float m_ZoomRate = 0.f;
 		float m_ZoomSpeed = 0.f;
 		// window
-		Noesis::Ptr<Noesis::ObservableCollection<gui::VMMode>> m_Modes;
 		Noesis::Ptr<Noesis::ObservableCollection<gui::VMMonitor>> m_Monitors;
 		Noesis::Ptr<Noesis::ObservableCollection<gui::VMRefreshRate>> m_RefreshRates;
 		Noesis::Ptr<Noesis::ObservableCollection<gui::VMResolution>> m_Resolutions;
-		gui::VMMode* m_Mode = nullptr;
+		Noesis::Ptr<Noesis::ObservableCollection<gui::VMWindowMode>> m_WindowModes;
 		gui::VMMonitor* m_Monitor = nullptr;
 		gui::VMRefreshRate* m_RefreshRate = nullptr;
 		gui::VMResolution* m_Resolution = nullptr;
+		gui::VMWindowMode* m_WindowMode = nullptr;
 
 		NS_DECLARE_REFLECTION(gui::DCSettingsMenu, eng::UIDataContext)
 	};
