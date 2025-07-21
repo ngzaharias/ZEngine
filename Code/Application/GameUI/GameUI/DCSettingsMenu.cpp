@@ -27,10 +27,10 @@ void gui::DCSettingsMenu::SetEffectVolume(int32 value)
 	{
 		m_EffectVolume = value;
 		OnPropertyChanged("EffectVolume");
-
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_EffectVolume = value;
 	}
+
+	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+	eventData.m_EffectVolume = value;
 }
 
 int32 gui::DCSettingsMenu::GetMasterVolume() const
@@ -44,10 +44,10 @@ void gui::DCSettingsMenu::SetMasterVolume(int32 value)
 	{
 		m_MasterVolume = value;
 		OnPropertyChanged("MasterVolume");
-
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_MasterVolume = value;
 	}
+
+	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+	eventData.m_MasterVolume = value;
 }
 
 int32 gui::DCSettingsMenu::GetMusicVolume() const
@@ -61,10 +61,10 @@ void gui::DCSettingsMenu::SetMusicVolume(int32 value)
 	{
 		m_MusicVolume = value;
 		OnPropertyChanged("MusicVolume");
-
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_MusicVolume = value;
 	}
+
+	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+	eventData.m_MusicVolume = value;
 }
 
 float gui::DCSettingsMenu::GetMoveSpeed() const
@@ -78,10 +78,10 @@ void gui::DCSettingsMenu::SetMoveSpeed(float value)
 	{
 		m_MoveSpeed = value;
 		OnPropertyChanged("MoveSpeed");
-
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_MoveSpeed = value;
 	}
+
+	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+	eventData.m_MoveSpeed = value;
 }
 
 float gui::DCSettingsMenu::GetZoomRate() const
@@ -95,10 +95,10 @@ void gui::DCSettingsMenu::SetZoomRate(float value)
 	{
 		m_ZoomRate = value;
 		OnPropertyChanged("ZoomRate");
-
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_ZoomRate = value;
 	}
+
+	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+	eventData.m_ZoomRate = value;
 }
 
 float gui::DCSettingsMenu::GetZoomSpeed() const
@@ -112,10 +112,10 @@ void gui::DCSettingsMenu::SetZoomSpeed(float value)
 	{
 		m_ZoomSpeed = value;
 		OnPropertyChanged("ZoomSpeed");
-
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_ZoomSpeed = value;
 	}
+
+	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+	eventData.m_ZoomSpeed = value;
 }
 
 Noesis::ObservableCollection<gui::VMMonitor>* gui::DCSettingsMenu::GetMonitors() const
@@ -143,10 +143,10 @@ void gui::DCSettingsMenu::SetMonitor(gui::VMMonitor* value)
 	{
 		m_Monitor = value;
 		OnPropertyChanged("Monitor");
-
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_Monitor = value->m_Index;
 	}
+
+	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+	eventData.m_Monitor = value->m_Index;
 }
 
 Noesis::ObservableCollection<gui::VMRefreshRate>* gui::DCSettingsMenu::GetRefreshRates() const
@@ -174,10 +174,10 @@ void gui::DCSettingsMenu::SetRefreshRate(gui::VMRefreshRate* value)
 	{
 		m_RefreshRate = value;
 		OnPropertyChanged("RefreshRate");
-
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_RefreshRate = value->m_RefreshRate;
 	}
+
+	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+	eventData.m_RefreshRate = value->m_RefreshRate;
 }
 
 Noesis::ObservableCollection<gui::VMResolution>* gui::DCSettingsMenu::GetResolutions() const
@@ -205,10 +205,10 @@ void gui::DCSettingsMenu::SetResolution(gui::VMResolution* value)
 	{
 		m_Resolution = value;
 		OnPropertyChanged("Resolution");
-
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_Resolution = value->m_Resolution;
 	}
+
+	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+	eventData.m_Resolution = value->m_Resolution;
 }
 
 Noesis::ObservableCollection<gui::VMWindowMode>* gui::DCSettingsMenu::GetWindowModes() const
@@ -236,10 +236,10 @@ void gui::DCSettingsMenu::SetWindowMode(gui::VMWindowMode* value)
 	{
 		m_WindowMode = value;
 		OnPropertyChanged("WindowMode");
-
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_WindowMode = value->m_WindowMode;
 	}
+
+	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+	eventData.m_WindowMode = value->m_WindowMode;
 }
 
 void gui::DCSettingsMenu::OnCloseCommand(Noesis::BaseComponent* param)
