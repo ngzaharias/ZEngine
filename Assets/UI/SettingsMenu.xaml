@@ -6,7 +6,7 @@
   xmlns:noesis="clr-namespace:NoesisGUIExtensions" 
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   d:DesignWidth="1920" d:DesignHeight="1080"
-  FontFamily="{DynamicResource Font.Primary}"
+  FontFamily="{DynamicResource Font}"
   FontSize="15" 
   mc:Ignorable="d" 
   Focusable="True">
@@ -16,7 +16,7 @@
   <Page.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Themes/Dictionary.xaml" />
+        <ResourceDictionary Source="Themes/Default.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Page.Resources>
@@ -32,7 +32,7 @@
       <ColumnDefinition Width="1*"/>
     </Grid.ColumnDefinitions>
     <Viewbox Grid.Row="1" Grid.Column="1">
-      <Border BorderThickness="2,2,2,2" CornerRadius="4,4,4,4" BorderBrush="{StaticResource Brush.Shade100}" Background="{StaticResource Brush.Shade25}">
+      <Border BorderThickness="2,2,2,2" CornerRadius="4,4,4,4" BorderBrush="{StaticResource Brush.Foreground}" Background="{StaticResource Brush.Background25}">
         <StackPanel Width="520">
           <Border Style="{DynamicResource Style.Header.Border}" BorderThickness="0,0,0,2">
             <Grid>
@@ -66,7 +66,7 @@
                       <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding Path=MasterVolume}" Style="{StaticResource Style.Slider}"/>
                     </Grid>
                     <Grid Margin="4,4,4,4">
-                      <Separator Background="{StaticResource Brush.Shade25}" Height="1" Foreground="{x:Null}"/>
+                      <Separator Background="{StaticResource Brush.Background25}" Height="1" Foreground="{x:Null}"/>
                     </Grid>
                     <Grid Height="27" Margin="4,4,4,4">
                       <Grid.ColumnDefinitions>

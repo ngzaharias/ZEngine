@@ -5,14 +5,14 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d"
   d:DesignWidth="1920"
-  d:DesignHeight="1080" FontFamily="{DynamicResource Font.Primary}">
+  d:DesignHeight="1080" FontFamily="{DynamicResource Font}">
   <Page.Background>
     <SolidColorBrush Color="#FF4D5052" Opacity="0"/>
   </Page.Background>
   <Page.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Themes/Dictionary.xaml" />
+        <ResourceDictionary Source="Themes/Default.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Page.Resources>
