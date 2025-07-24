@@ -5,9 +5,8 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:noesis="clr-namespace:NoesisGUIExtensions" 
   xmlns:system="clr-namespace:System;assembly=mscorlib"
-  d:DesignWidth="1920" d:DesignHeight="1080" 
-  Background="#FF242C32"
-  FontFamily="./#Super Fortrees"
+  d:DesignWidth="1920" d:DesignHeight="1080"
+  FontFamily="{DynamicResource Font.Primary}"
   FontSize="15" 
   mc:Ignorable="d" 
   Focusable="True">
@@ -16,23 +15,12 @@
   </Page.InputBindings>
   <Page.Resources>
     <ResourceDictionary>
-      <SolidColorBrush x:Key="Background.Primary" Color="#4580A3"/>
-      <SolidColorBrush x:Key="Background.Secondary" Color="#FF1E2225"/>
-      <SolidColorBrush x:Key="Brush.Text.Primary" Color="#FF000000"/>
-      <SolidColorBrush x:Key="Brush.Primary.Shade0" Color="#17567B"/>
-      <SolidColorBrush x:Key="Brush.Primary.Shade25" Color="#2D6C92"/>
-      <SolidColorBrush x:Key="Brush.Primary.Shade75" Color="#6CA2C2"/>
-      <SolidColorBrush x:Key="Brush.Primary.Shade100" Color="#A0C7DF"/>
-      <Thickness x:Key="Thickness.PropertyGrid">10,8,10,0</Thickness>
-      <DataTemplate x:Key="ComboBoxItemTemplate">
-        <TextBlock Text="{Binding Name}"/>
-      </DataTemplate>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Themes/Dictionary.xaml" />
+      </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Page.Resources>
-  <Page.Foreground>
-    <StaticResource ResourceKey="Background.Primary"/>
-  </Page.Foreground>
-  <Grid>
+  <Grid Style="{DynamicResource Style.Fade}">
     <Grid.RowDefinitions>
       <RowDefinition Height="3*"/>
       <RowDefinition Height="8*"/>
@@ -44,132 +32,139 @@
       <ColumnDefinition Width="1*"/>
     </Grid.ColumnDefinitions>
     <Viewbox Grid.Row="1" Grid.Column="1">
-      <StackPanel Width="520">
-        <Border Background="{StaticResource Background.Primary}" CornerRadius="4,4,0,0">
-          <Grid>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="10*"/>
-              <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="S E T T I N G S" Foreground="White" FontSize="20" HorizontalAlignment="Center" Grid.ColumnSpan="2" Margin="0" VerticalAlignment="Center"/>
-            <Button Grid.Column="1" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Content="X" Margin="6,6,6,6"/>
-          </Grid>
-        </Border>
-        <Border Background="{StaticResource Background.Secondary}" BorderThickness="1,0,1,1" BorderBrush="{StaticResource Background.Primary}" Height="310" Padding="10">
-          <TabControl Padding="10">
-            <TabItem x:Name="Audio" Header="Audio">
-              <Grid>
-                <StackPanel>
-                  <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Brush.Primary.Shade25}" Background="{DynamicResource Brush.Primary.Shade0}">
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Text="Volume" Padding="10,10,10,10"/>
-                  </Border>
-                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}" RenderTransformOrigin="0.5,0.5">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="3*"/>
-                      <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Master" VerticalAlignment="Center"/>
-                    <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding Path=MasterVolume}"/>
-                  </Grid>
-                  <Grid Margin="{DynamicResource Thickness.PropertyGrid}">
-                    <Separator/>
-                  </Grid>
-                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="3*"/>
-                      <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Sound Effects" VerticalAlignment="Center"/>
-                    <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding EffectVolume}"/>
-                  </Grid>
-                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="3*"/>
-                      <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Music" VerticalAlignment="Center"/>
-                    <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding Path=MusicVolume}"/>
-                  </Grid>
-                </StackPanel>
-              </Grid>
-            </TabItem>
-            <TabItem x:Name="Gameplay" Header="Gameplay">
-              <Grid>
-                <StackPanel>
-                  <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Brush.Primary.Shade25}" Background="{DynamicResource Brush.Primary.Shade0}">
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Text="Camera" Padding="10,10,10,10"/>
-                  </Border>
-                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}" RenderTransformOrigin="0.5,0.5">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="3*"/>
-                      <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Move Speed" VerticalAlignment="Center"/>
-                    <Slider Grid.Column="1" Maximum="1000" LargeChange="90" Value="{Binding Path=MoveSpeed}" Minimum="100"/>
-                  </Grid>
-                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="3*"/>
-                      <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Zoom Rate" VerticalAlignment="Center"/>
-                    <Slider Grid.Column="1" Maximum="200" LargeChange="15" Value="{Binding Path=ZoomRate}" Minimum="50"/>
-                  </Grid>
-                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="3*"/>
-                      <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Zoom Speed" VerticalAlignment="Center"/>
-                    <Slider Grid.Column="1" Maximum="1" LargeChange="0.1" Value="{Binding Path=ZoomSpeed}"/>
-                  </Grid>
-                </StackPanel>
-              </Grid>
-            </TabItem>
-            <TabItem x:Name="Graphics" Header="Graphics">
-              <Grid>
-                <StackPanel>
-                  <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Brush.Primary.Shade25}" Background="{DynamicResource Brush.Primary.Shade0}">
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Text="Window" Padding="10,10,10,10"/>
-                  </Border>
-                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}" RenderTransformOrigin="0.5,0.5">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="3*"/>
-                      <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Monitor" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1" ItemsSource="{Binding Monitors}" SelectedItem="{Binding Monitor, Mode=TwoWay}" ItemTemplate="{StaticResource ComboBoxItemTemplate}"/>
-                  </Grid>
-                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}" RenderTransformOrigin="0.5,0.5">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="3*"/>
-                      <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Mode" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1" ItemsSource="{Binding WindowModes}" SelectedItem="{Binding WindowMode, Mode=TwoWay}" ItemTemplate="{StaticResource ComboBoxItemTemplate}"/>
-                  </Grid>
-                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="3*"/>
-                      <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Resolution" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1" ItemsSource="{Binding Resolutions}" SelectedItem="{Binding Resolution, Mode=TwoWay}" ItemTemplate="{StaticResource ComboBoxItemTemplate}"/>
-                  </Grid>
-                  <Grid Height="27" Margin="{DynamicResource Thickness.PropertyGrid}">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="3*"/>
-                      <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Refresh Rate" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1" ItemsSource="{Binding RefreshRates}" SelectedItem="{Binding RefreshRate, Mode=TwoWay}" ItemTemplate="{StaticResource ComboBoxItemTemplate}"/>
-                  </Grid>
-                </StackPanel>
-              </Grid>
-            </TabItem>
-          </TabControl>
-        </Border>
-      </StackPanel>
+      <Border BorderThickness="2,2,2,2" CornerRadius="4,4,4,4" BorderBrush="{StaticResource Brush.Shade100}" Background="{StaticResource Brush.Shade25}">
+        <StackPanel Width="520">
+          <Border Style="{DynamicResource Style.Header.Border}" BorderThickness="0,0,0,2">
+            <Grid>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="41*"/>
+                <RowDefinition Height="0*"/>
+              </Grid.RowDefinitions>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="1*"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="S E T T I N G S" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="2" FontSize="20" Style="{DynamicResource Style.SubHeader.Text}"/>
+              <Button Grid.Column="1" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Content="X" Margin="0,6,6,6" Padding="4,4,4,4" Style="{DynamicResource Style.Button}" VerticalAlignment="Center" FontSize="12" Background="{x:Null}" BorderBrush="{x:Null}"/>
+            </Grid>
+          </Border>
+          <Border Height="310" Padding="10" Style="{DynamicResource Style.Body}" CornerRadius="0,0,2,2">
+            <TabControl Style="{DynamicResource Style.TabControl}" ItemContainerStyle="{DynamicResource Style.TabItem}">
+              <TabItem x:Name="Audio" Header="Audio" HeaderTemplate="{StaticResource Template.TabText}">
+                <Grid>
+                  <StackPanel>
+                    <Border Style="{StaticResource Style.SubHeader.Border}">
+                      <TextBlock Text="Volume" Style="{StaticResource Style.SubHeader.Text}"/>
+                    </Border>
+                    <Grid Height="27" Margin="4,4,4,4" RenderTransformOrigin="0.5,0.5">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="Master" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                      <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding Path=MasterVolume}" Style="{StaticResource Style.Slider}"/>
+                    </Grid>
+                    <Grid Margin="4,4,4,4">
+                      <Separator Background="{StaticResource Brush.Shade25}" Height="1" Foreground="{x:Null}"/>
+                    </Grid>
+                    <Grid Height="27" Margin="4,4,4,4">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="Sound Effects" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                      <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding EffectVolume}" Style="{StaticResource Style.Slider}"/>
+                    </Grid>
+                    <Grid Height="27" Margin="4,4,4,4">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="Music" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                      <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding Path=MusicVolume}" Style="{StaticResource Style.Slider}"/>
+                    </Grid>
+                  </StackPanel>
+                </Grid>
+              </TabItem>
+              <TabItem x:Name="Gameplay" Header="Gameplay" HeaderTemplate="{StaticResource Template.TabText}">
+                <Grid>
+                  <StackPanel>
+                    <Border Style="{StaticResource Style.SubHeader.Border}">
+                      <TextBlock Text="Camera" Style="{StaticResource Style.SubHeader.Text}"/>
+                    </Border>
+                    <Grid Height="27" Margin="4,4,4,4" RenderTransformOrigin="0.5,0.5">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="Move Speed" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                      <Slider Grid.Column="1" Maximum="1000" LargeChange="90" Value="{Binding Path=MoveSpeed}" Minimum="100" Style="{StaticResource Style.Slider}"/>
+                    </Grid>
+                    <Grid Height="27" Margin="4,4,4,4">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="Zoom Rate" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                      <Slider Grid.Column="1" Maximum="200" LargeChange="15" Value="{Binding Path=ZoomRate}" Minimum="50" Style="{StaticResource Style.Slider}"/>
+                    </Grid>
+                    <Grid Height="27" Margin="4,4,4,4">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="Zoom Speed" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                      <Slider Grid.Column="1" Maximum="1" LargeChange="0.1" Value="{Binding Path=ZoomSpeed}" Style="{StaticResource Style.Slider}"/>
+                    </Grid>
+                  </StackPanel>
+                </Grid>
+              </TabItem>
+              <TabItem x:Name="Graphics" Header="Graphics" HeaderTemplate="{StaticResource Template.TabText}">
+                <Grid>
+                  <StackPanel>
+                    <Border Style="{StaticResource Style.SubHeader.Border}">
+                      <TextBlock Text="Window" Style="{StaticResource Style.SubHeader.Text}"/>
+                    </Border>
+                    <Grid Height="27" Margin="4,4,4,4">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="Monitor" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                      <ComboBox Grid.Column="1" ItemsSource="{Binding Monitors}" SelectedItem="{Binding Monitor, Mode=TwoWay}" Style="{DynamicResource Style.ComboBox}"/>
+                    </Grid>
+                    <Grid Height="27" Margin="4,4,4,4">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="Mode" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                      <ComboBox Grid.Column="1" ItemsSource="{Binding WindowModes}" SelectedItem="{Binding WindowMode, Mode=TwoWay}" Style="{DynamicResource Style.ComboBox}"/>
+                    </Grid>
+                    <Grid Height="27" Margin="4,4,4,4">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="Resolution" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                      <ComboBox Grid.Column="1" ItemsSource="{Binding Resolutions}" SelectedItem="{Binding Resolution, Mode=TwoWay}" Style="{DynamicResource Style.ComboBox}"/>
+                    </Grid>
+                    <Grid Height="27" Margin="4,4,4,4">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="Refresh Rate" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                      <ComboBox Grid.Column="1" ItemsSource="{Binding RefreshRates}" SelectedItem="{Binding RefreshRate, Mode=TwoWay}" Style="{DynamicResource Style.ComboBox}"/>
+                    </Grid>
+                  </StackPanel>
+                </Grid>
+              </TabItem>
+            </TabControl>
+          </Border>
+        </StackPanel>
+      </Border>
     </Viewbox>
   </Grid>
 </Page>

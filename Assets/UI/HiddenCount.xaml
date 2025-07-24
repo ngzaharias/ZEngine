@@ -5,9 +5,15 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d"
   d:DesignWidth="1920"
-  d:DesignHeight="1080" d:DataContext="Empty">
+  d:DesignHeight="1080" 
+  d:DataContext="Empty"
+  FontFamily="{DynamicResource Font.Primary}">
   <Page.Resources>
-    <ResourceDictionary/>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Themes/Dictionary.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
   </Page.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
@@ -15,11 +21,11 @@
       <ColumnDefinition Width="1*"/>
       <ColumnDefinition Width="1*"/>
     </Grid.ColumnDefinitions>
-    <Border BorderThickness="4,4,4,4" BorderBrush="#FF000000" Margin="100,100,100,100" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" CornerRadius="4,4,4,4" Background="#FFFFFFFF">
+    <Border Grid.Column="1" HorizontalAlignment="Center" Style="{DynamicResource Style.Header.Border}" VerticalAlignment="Bottom" CornerRadius="4,4,4,4" BorderThickness="2,2,2,2" Margin="0,0,0,100">
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16,16,16,16">
-        <TextBlock x:Name="ObjectCount" Text="{Binding ObjectCount}" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Left" FontFamily="./#Super Fortrees" FontSize="42" Foreground="#FF000000"/>
-        <TextBlock Text="/" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Center" TextAlignment="Center" Foreground="#FF000000" FontFamily="./#Super Fortrees" FontSize="42"/>
-        <TextBlock x:Name="ObjectTotal" Text="{Binding ObjectTotal}" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Right" Foreground="#FF000000" FontFamily="./#Super Fortrees" FontSize="42"/>
+        <TextBlock x:Name="ObjectCount" Text="{Binding ObjectCount}" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Left" FontSize="42" Foreground="#FF000000"/>
+        <TextBlock Text="/" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Center" TextAlignment="Center" Foreground="#FF000000" FontSize="42"/>
+        <TextBlock x:Name="ObjectTotal" Text="{Binding ObjectTotal}" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Right" Foreground="#FF000000" FontSize="42"/>
       </StackPanel>
     </Border>
   </Grid>

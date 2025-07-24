@@ -1,0 +1,72 @@
+<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--////////////////////////////////////////////////////////////////////////////////////////////////////-->
+  <!--Fonts-->
+  <FontFamily x:Key="Font.Primary">Super Fortrees</FontFamily>
+  <!--////////////////////////////////////////////////////////////////////////////////////////////////////-->
+  <!--Brushes-->
+  <SolidColorBrush x:Key="Brush.Accent25" Color="#FF8A8AEA"/>
+  <SolidColorBrush x:Key="Brush.Shade0" Color="#FFFFFFFF"/>
+  <SolidColorBrush x:Key="Brush.Shade25" Color="#FFAAAAAA"/>
+  <SolidColorBrush x:Key="Brush.Shade100" Color="#FF000000"/>
+  <SolidColorBrush x:Key="Brush.Fade" Color="#FF000000" Opacity="0.5"/>
+  <!--////////////////////////////////////////////////////////////////////////////////////////////////////-->
+  <!--Styles-->
+  <Style x:Key="Style.Button" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+    <Setter Property="Padding" Value="16,16,16,16"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="FontSize" Value="32"/>
+    <Setter Property="Margin" Value="8,8,8,8"/>
+    <Setter Property="Background" Value="{DynamicResource Brush.Shade0}"/>
+    <Setter Property="BorderThickness" Value="4,4,4,4"/>
+    <Setter Property="Foreground" Value="{StaticResource Brush.Shade100}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource Brush.Shade100}"/>
+  </Style>
+  <Style x:Key="Style.SubHeader.Text" TargetType="TextBlock">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="10,4,10,4"/>
+    <Setter Property="Foreground" Value="{DynamicResource Brush.Shade100}"/>
+  </Style>
+  <Style x:Key="Style.SubHeader.Border" TargetType="Border">
+    <Setter Property="CornerRadius" Value="4,4,4,4"/>
+    <Setter Property="BorderThickness" Value="2,2,2,2"/>
+    <Setter Property="Background" Value="{DynamicResource Brush.Shade0}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Shade100}"/>
+  </Style>
+  <Style x:Key="Style.Slider" TargetType="Slider" BasedOn="{StaticResource {x:Type Slider}}">
+    <Setter Property="Background" Value="{StaticResource Brush.Shade25}"/>
+    <Setter Property="Foreground" Value="{StaticResource Brush.Accent25}"/>
+  </Style>
+  <Style x:Key="Style.Header.Border" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource Brush.Shade0}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Shade100}"/>
+    <Setter Property="CornerRadius" Value="2,2,0,0"/>
+  </Style>
+  <Style x:Key="Style.TabControl" TargetType="TabControl" BasedOn="{StaticResource {x:Type TabControl}}">
+    <Setter Property="Background" Value="{DynamicResource Brush.Shade0}"/>
+    <Setter Property="Padding" Value="10,10,10,10"/>
+    <Setter Property="ItemTemplate" Value="{DynamicResource Template.TabText}"/>
+  </Style>
+  <Style x:Key="Style.Property.Text" TargetType="TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource Brush.Shade100}"/>
+  </Style>
+  <Style x:Key="Style.Fade" TargetType="Grid">
+    <Setter Property="Background" Value="{DynamicResource Brush.Fade}"/>
+  </Style>
+  <Style x:Key="Style.ComboBox" TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+    <Setter Property="Background" Value="{DynamicResource Brush.Shade0}"/>
+    <Setter Property="ItemTemplate" Value="{DynamicResource Template.ComboText}"/>
+  </Style>
+  <!--////////////////////////////////////////////////////////////////////////////////////////////////////-->
+  <!--Templates-->
+  <DataTemplate x:Key="Template.ComboText">
+    <TextBlock Text="{Binding Name}" Foreground="{DynamicResource Brush.Shade100}"/>
+  </DataTemplate>
+  <DataTemplate x:Key="Template.TabText">
+    <Grid>
+      <TextBlock Text="{Binding}" Foreground="{StaticResource Brush.Shade100}"/>
+    </Grid>
+  </DataTemplate>
+</ResourceDictionary>

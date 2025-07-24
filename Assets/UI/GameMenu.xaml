@@ -6,54 +6,29 @@
   mc:Ignorable="d"
   d:DesignWidth="1920"
   d:DesignHeight="1080" 
-  Focusable="True">
+  Focusable="True" 
+  FontFamily="{DynamicResource Font.Primary}">
   <Page.InputBindings>
     <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
   </Page.InputBindings>
-  <Page.Background>
-    <SolidColorBrush Color="#FF4D5052" Opacity="0"/>
-  </Page.Background>
   <Page.Resources>
     <ResourceDictionary>
-      <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Padding" Value="16,16,16,16"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="FontFamily" Value="Super Fortrees"/>
-        <Setter Property="FontSize" Value="32"/>
-        <Setter Property="Margin" Value="8,8,8,8"/>
-        <Setter Property="Background">
-          <Setter.Value>
-            <SolidColorBrush Color="#FFFFFFFF"/>
-          </Setter.Value>
-        </Setter>
-        <Setter Property="Foreground">
-          <Setter.Value>
-            <SolidColorBrush Color="#FF000000"/>
-          </Setter.Value>
-        </Setter>
-        <Setter Property="BorderBrush">
-          <Setter.Value>
-            <SolidColorBrush Color="#FF000000"/>
-          </Setter.Value>
-        </Setter>
-        <Setter Property="BorderThickness" Value="8,8,8,8"/>
-      </Style>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Themes/Dictionary.xaml" />
+      </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Page.Resources>
-  <Grid>
-    <Grid.Background>
-      <SolidColorBrush Color="#FF000000" Opacity="0.5"/>
-    </Grid.Background>
+  <Grid Style="{DynamicResource Style.Fade}">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="2*"/>
       <ColumnDefinition Width="1*"/>
       <ColumnDefinition Width="2*"/>
     </Grid.ColumnDefinitions>
     <StackPanel VerticalAlignment="Center" Margin="0" Grid.Column="1">
-      <Button x:Name="Resume" Content="Resume" Style="{DynamicResource ButtonStyle}" Command="{Binding CloseCommand}"/>
-      <Button x:Name="Settings" Content="Settings" Style="{DynamicResource ButtonStyle}" Command="{Binding SettingsCommand}"/>
-      <Button x:Name="ExitToMenu" Content="Exit to Menu" Style="{DynamicResource ButtonStyle}" Command="{Binding ExitToMenuCommand}"/>
-      <Button x:Name="ExitGame" Content="Exit Game" Style="{DynamicResource ButtonStyle}" Command="{Binding ExitGameCommand}"/>
+      <Button x:Name="Resume" Content="Resume" Style="{StaticResource Style.Button}" Command="{Binding CloseCommand}"/>
+      <Button x:Name="Settings" Content="Settings" Style="{StaticResource Style.Button}" Command="{Binding SettingsCommand}"/>
+      <Button x:Name="ExitToMenu" Content="Exit to Menu" Style="{StaticResource Style.Button}" Command="{Binding ExitToMenuCommand}"/>
+      <Button x:Name="ExitGame" Content="Exit Game" Style="{StaticResource Style.Button}" Command="{Binding ExitGameCommand}"/>
     </StackPanel>
   </Grid>
 </Page>
