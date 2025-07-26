@@ -10,7 +10,7 @@ workspace "ZEngine"
 	cppdialect "C++20"
 	buildoptions { "/Zc:__cplusplus" }
 	platforms { "x64" }
-	startproject "Game"
+	startproject "Editor"
 	inheritdependencies "On"
 
 	targetdir "%{wks.location}/_Build/%{prj.name}/%{cfg.buildcfg}_%{cfg.platform}/"
