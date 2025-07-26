@@ -13,10 +13,6 @@
 #include "GameUI/DCGameMenu.h"
 #include "GameUI/GameMenuComponents.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
-#include "imgui/imgui_user.h"
-
 namespace
 {
 	const str::Name strGameMenu = NAME("GameMenu");
