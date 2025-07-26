@@ -17,8 +17,10 @@ namespace ecs
 		explicit WorldView(ecs::EntityWorld& entityWorld);
 		WorldView(const WorldView&) = delete;
 
-	public:
+		template<typename... TOthers>
+		operator WorldView<TOthers...>&();
 
+	public:
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 

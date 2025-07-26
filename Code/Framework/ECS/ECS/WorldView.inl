@@ -3,27 +3,35 @@
 #include "ECS/Entity.h"
 #include "ECS/QueryRegistry.h"
 
-template <typename... TObjects>
-ecs::WorldView<TObjects...>::WorldView(ecs::EntityWorld& entityWorld)
+template <typename... TTypes>
+ecs::WorldView<TTypes...>::WorldView(ecs::EntityWorld& entityWorld)
 	: m_EntityWorld(entityWorld)
 	, m_QueryRegistry(entityWorld.m_QueryRegistry)
 {
 }
 
-template <typename... TObjects>
-bool ecs::WorldView<TObjects...>::IsAlive(const Entity& entity) const
+template <typename... TTypes>
+template <typename... TOthers>
+ecs::WorldView<TTypes...>::operator ecs::WorldView<TOthers...>&()
+{
+	return reinterpret_cast<ecs::WorldView<TOthers...>&>(*this);
+}
+
+
+template <typename... TTypes>
+bool ecs::WorldView<TTypes...>::IsAlive(const Entity& entity) const
 {
 	return m_EntityWorld.IsAlive(entity);
 }
 
-template <typename... TObjects>
-inline auto ecs::WorldView<TObjects...>::CreateEntity()->ecs::Entity
+template <typename... TTypes>
+inline auto ecs::WorldView<TTypes...>::CreateEntity()->ecs::Entity
 {
 	return m_EntityWorld.CreateEntity();
 }
 
-template <typename... TObjects>
-inline void ecs::WorldView<TObjects...>::DestroyEntity(const Entity& entity)
+template <typename... TTypes>
+inline void ecs::WorldView<TTypes...>::DestroyEntity(const Entity& entity)
 {
 	m_EntityWorld.DestroyEntity(entity);
 }
@@ -143,9 +151,9 @@ auto ecs::WorldView<TTypes...>::WriteResource()->TResource&
 	return m_EntityWorld.template WriteResource<TResource>();
 }
 
-template <typename... TObjects>
+template <typename... TTypes>
 template<class TQuery>
-auto ecs::WorldView<TObjects...>::HasAny()-> bool
+auto ecs::WorldView<TTypes...>::HasAny()-> bool
 {
 	Z_PANIC(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
 
@@ -154,9 +162,9 @@ auto ecs::WorldView<TObjects...>::HasAny()-> bool
 	return !queryGroup.IsEmpty();
 }
 
-template <typename... TObjects>
+template <typename... TTypes>
 template<class TQuery>
-auto ecs::WorldView<TObjects...>::Query()-> const Set<Entity>&
+auto ecs::WorldView<TTypes...>::Query()-> const Set<Entity>&
 {
 	Z_PANIC(m_EntityWorld.IsInitialised(), "ecs::EntityWorld hasn't been initialised!");
 
