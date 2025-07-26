@@ -1,7 +1,6 @@
 #include "GameUIPCH.h"
 #include "GameUI/SettingsMenuSystem.h"
 
-#include "Core/EnumHelpers.h"
 #include "Core/Name.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -9,15 +8,8 @@
 #include "Engine/InputManager.h"
 #include "Engine/SettingsComponents.h"
 #include "Engine/UIManager.h"
-#include "Engine/WindowManager.h"
 #include "GameUI/DCSettingsMenu.h"
 #include "GameUI/SettingsMenuComponents.h"
-#include "GameUI/VMMonitor.h"
-#include "GameUI/VMRefreshRate.h"
-#include "GameUI/VMResolution.h"
-#include "GameUI/VMWindowMode.h"
-
-#include <NsGui/ObservableCollection.h>
 
 namespace
 {
@@ -30,65 +22,10 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::settings_menu::WindowComponent>>())
 	{
 		{
-			const auto& settings = world.ReadSingleton<eng::settings::LocalComponent>();
-			const auto& windowManager = world.ReadResource<eng::WindowManager>();
-			const auto& monitor = *windowManager.GetMonitor(0);
-
 			auto& uiManager = world.WriteResource<eng::UIManager>();
 			uiManager.CreateWidget(strSettingsMenu_xaml);
 			auto& dataContext = uiManager.WriteDataContext<gui::DCSettingsMenu>(strSettingsMenu_xaml);
-
-			// audio
-			dataContext.SetEffectVolume(settings.m_Audio.m_EffectVolume);
-			dataContext.SetMasterVolume(settings.m_Audio.m_MasterVolume);
-			dataContext.SetMusicVolume(settings.m_Audio.m_MusicVolume);
-
-			// gameplay
-			dataContext.SetMoveSpeed(settings.m_Camera.m_TranslateSpeed);
-			dataContext.SetZoomRate(settings.m_Camera.m_ZoomAmount);
-			dataContext.SetZoomSpeed(settings.m_Camera.m_ZoomSpeed);
-
-			auto monitors = new Noesis::ObservableCollection<gui::VMMonitor>();
-			for (const auto& [i, value] : enumerate::Forward(windowManager.GetMonitors()))
-			{
-				auto monitor = Noesis::MakePtr<gui::VMMonitor>(i);
-				monitors->Add(monitor);
-				if (i == settings.m_Window.m_Monitor)
-					dataContext.SetMonitor(monitor);
-			}
-			dataContext.SetMonitors(*monitors);
-
-			auto refreshRates = new Noesis::ObservableCollection<gui::VMRefreshRate>();
-			for (const int32 value : windowManager.GetRefreshRates())
-			{
-				const bool isNative = value == monitor.m_RefreshRate;
-				auto refreshRate = Noesis::MakePtr<gui::VMRefreshRate>(value, isNative);
-				refreshRates->Add(refreshRate);
-				if (value == settings.m_Window.m_RefreshRate)
-					dataContext.SetRefreshRate(refreshRate);
-			}
-			dataContext.SetRefreshRates(*refreshRates);
-
-			auto resolutions = new Noesis::ObservableCollection<gui::VMResolution>();
-			for (const Vector2u& value : windowManager.GetResolutions())
-			{
-				const bool isNative = value == monitor.m_Resolution;
-				auto resolution = Noesis::MakePtr<gui::VMResolution>(value, isNative);
-				resolutions->Add(resolution);
-				if (value == settings.m_Window.m_Resolution)
-					dataContext.SetResolution(resolution);
-			}
-			dataContext.SetResolutions(*resolutions);
-
-			auto windowModes = new Noesis::ObservableCollection<gui::VMWindowMode>();
-			for (const eng::EWindowMode value : windowManager.GetWindowModes())
-			{
-				auto windowMode = Noesis::MakePtr<gui::VMWindowMode>(value);
-				windowModes->Add(windowMode);
-				if (value == settings.m_Window.m_WindowMode)
-					dataContext.SetWindowMode(windowMode);
-			}
-			dataContext.SetWindowModes(*windowModes);
+			dataContext.Initialise(world);
 		}
 
 		{

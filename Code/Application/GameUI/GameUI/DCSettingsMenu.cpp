@@ -1,7 +1,12 @@
 #include "GameUIPCH.h"
 #include "GameUI/DCSettingsMenu.h"
 
+#include "Core/Algorithms.h"
+#include "Core/EnumHelpers.h"
 #include "ECS/EntityWorld.h"
+#include "Engine/SettingsComponents.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
 #include "GameUI/SettingsMenuComponents.h"
 #include "GameUI/VMMonitor.h"
 #include "GameUI/VMRefreshRate.h"
@@ -16,6 +21,63 @@ gui::DCSettingsMenu::DCSettingsMenu()
 	m_CloseCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCSettingsMenu::OnCloseCommand));
 }
 
+void gui::DCSettingsMenu::Initialise(World& world)
+{
+	const auto& settings = world.ReadSingleton<eng::settings::LocalComponent>();
+	const auto& windowManager = world.ReadResource<eng::WindowManager>();
+	const auto& monitor = *windowManager.GetMonitor(0);
+
+	// audio
+	m_EffectVolume = settings.m_Audio.m_EffectVolume;
+	m_MasterVolume = settings.m_Audio.m_MasterVolume;
+	m_MusicVolume = settings.m_Audio.m_MusicVolume;
+
+	// gameplay
+	m_MoveSpeed = settings.m_Camera.m_TranslateSpeed;
+	m_ZoomRate = settings.m_Camera.m_ZoomAmount;
+	m_ZoomSpeed = settings.m_Camera.m_ZoomSpeed;
+
+	m_Monitors = *new Noesis::ObservableCollection<gui::VMMonitor>();
+	for (const auto& [i, value] : enumerate::Forward(windowManager.GetMonitors()))
+	{
+		auto monitor = Noesis::MakePtr<gui::VMMonitor>(i);
+		m_Monitors->Add(monitor);
+		if (i == settings.m_Window.m_Monitor)
+			m_Monitor = monitor;
+	}
+
+	m_RefreshRates = *new Noesis::ObservableCollection<gui::VMRefreshRate>();
+	for (const int32 value : windowManager.GetRefreshRates())
+	{
+		const bool isNative = value == monitor.m_RefreshRate;
+		auto refreshRate = Noesis::MakePtr<gui::VMRefreshRate>(value, isNative);
+		m_RefreshRates->Add(refreshRate);
+		if (value == settings.m_Window.m_RefreshRate)
+			m_RefreshRate = refreshRate;
+	}
+
+	m_Resolutions = *new Noesis::ObservableCollection<gui::VMResolution>();
+	for (const Vector2u& value : windowManager.GetResolutions())
+	{
+		const bool isNative = value == monitor.m_Resolution;
+		auto resolution = Noesis::MakePtr<gui::VMResolution>(value, isNative);
+		m_Resolutions->Add(resolution);
+		if (value == settings.m_Window.m_Resolution)
+			m_Resolution = resolution;
+	}
+
+	m_WindowModes = *new Noesis::ObservableCollection<gui::VMWindowMode>();
+	for (const eng::EWindowMode value : windowManager.GetWindowModes())
+	{
+		auto windowMode = Noesis::MakePtr<gui::VMWindowMode>(value);
+		m_WindowModes->Add(windowMode);
+		if (value == settings.m_Window.m_WindowMode)
+			m_WindowMode = windowMode;
+	}
+
+	OnPropertyChanged("");
+}
+
 int32 gui::DCSettingsMenu::GetEffectVolume() const
 {
 	return m_EffectVolume;
@@ -27,10 +89,10 @@ void gui::DCSettingsMenu::SetEffectVolume(int32 value)
 	{
 		m_EffectVolume = value;
 		OnPropertyChanged("EffectVolume");
-	}
 
-	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-	eventData.m_EffectVolume = value;
+		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+		eventData.m_EffectVolume = value;
+	}
 }
 
 int32 gui::DCSettingsMenu::GetMasterVolume() const
@@ -44,10 +106,10 @@ void gui::DCSettingsMenu::SetMasterVolume(int32 value)
 	{
 		m_MasterVolume = value;
 		OnPropertyChanged("MasterVolume");
-	}
 
-	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-	eventData.m_MasterVolume = value;
+		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+		eventData.m_MasterVolume = value;
+	}
 }
 
 int32 gui::DCSettingsMenu::GetMusicVolume() const
@@ -61,10 +123,10 @@ void gui::DCSettingsMenu::SetMusicVolume(int32 value)
 	{
 		m_MusicVolume = value;
 		OnPropertyChanged("MusicVolume");
-	}
 
-	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-	eventData.m_MusicVolume = value;
+		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+		eventData.m_MusicVolume = value;
+	}
 }
 
 float gui::DCSettingsMenu::GetMoveSpeed() const
@@ -78,10 +140,10 @@ void gui::DCSettingsMenu::SetMoveSpeed(float value)
 	{
 		m_MoveSpeed = value;
 		OnPropertyChanged("MoveSpeed");
-	}
 
-	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-	eventData.m_MoveSpeed = value;
+		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+		eventData.m_MoveSpeed = value;
+	}
 }
 
 float gui::DCSettingsMenu::GetZoomRate() const
@@ -95,10 +157,10 @@ void gui::DCSettingsMenu::SetZoomRate(float value)
 	{
 		m_ZoomRate = value;
 		OnPropertyChanged("ZoomRate");
-	}
 
-	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-	eventData.m_ZoomRate = value;
+		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+		eventData.m_ZoomRate = value;
+	}
 }
 
 float gui::DCSettingsMenu::GetZoomSpeed() const
@@ -112,10 +174,10 @@ void gui::DCSettingsMenu::SetZoomSpeed(float value)
 	{
 		m_ZoomSpeed = value;
 		OnPropertyChanged("ZoomSpeed");
-	}
 
-	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-	eventData.m_ZoomSpeed = value;
+		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+		eventData.m_ZoomSpeed = value;
+	}
 }
 
 Noesis::ObservableCollection<gui::VMMonitor>* gui::DCSettingsMenu::GetMonitors() const
@@ -143,10 +205,10 @@ void gui::DCSettingsMenu::SetMonitor(gui::VMMonitor* value)
 	{
 		m_Monitor = value;
 		OnPropertyChanged("Monitor");
-	}
 
-	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-	eventData.m_Monitor = value->m_Index;
+		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+		eventData.m_Monitor = value->m_Index;
+	}
 }
 
 Noesis::ObservableCollection<gui::VMRefreshRate>* gui::DCSettingsMenu::GetRefreshRates() const
@@ -174,10 +236,10 @@ void gui::DCSettingsMenu::SetRefreshRate(gui::VMRefreshRate* value)
 	{
 		m_RefreshRate = value;
 		OnPropertyChanged("RefreshRate");
-	}
 
-	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-	eventData.m_RefreshRate = value->m_RefreshRate;
+		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+		eventData.m_RefreshRate = value->m_RefreshRate;
+	}
 }
 
 Noesis::ObservableCollection<gui::VMResolution>* gui::DCSettingsMenu::GetResolutions() const
@@ -205,10 +267,10 @@ void gui::DCSettingsMenu::SetResolution(gui::VMResolution* value)
 	{
 		m_Resolution = value;
 		OnPropertyChanged("Resolution");
-	}
 
-	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-	eventData.m_Resolution = value->m_Resolution;
+		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+		eventData.m_Resolution = value->m_Resolution;
+	}
 }
 
 Noesis::ObservableCollection<gui::VMWindowMode>* gui::DCSettingsMenu::GetWindowModes() const
@@ -236,10 +298,10 @@ void gui::DCSettingsMenu::SetWindowMode(gui::VMWindowMode* value)
 	{
 		m_WindowMode = value;
 		OnPropertyChanged("WindowMode");
-	}
 
-	auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-	eventData.m_WindowMode = value->m_WindowMode;
+		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+		eventData.m_WindowMode = value->m_WindowMode;
+	}
 }
 
 void gui::DCSettingsMenu::OnCloseCommand(Noesis::BaseComponent* param)

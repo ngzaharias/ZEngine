@@ -1,9 +1,21 @@
 #pragma once
 
+#include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
 #include "Engine/UIDataContext.h"
 
 #include <NsApp/DelegateCommand.h>
 #include <NsGui/BaseCommand.h>
+
+namespace eng
+{
+	class WindowManager;
+}
+
+namespace eng::settings
+{
+	struct LocalComponent;
+}
 
 namespace gui
 {
@@ -24,7 +36,16 @@ namespace gui
 	class DCSettingsMenu final : public eng::UIDataContext
 	{
 	public:
+		using World = ecs::WorldView<
+			// Resources
+			const eng::WindowManager,
+			// Components
+			const eng::settings::LocalComponent
+		>;
+
 		DCSettingsMenu();
+
+		void Initialise(World& world);
 
 		int32 GetEffectVolume() const;
 		void SetEffectVolume(int32 value);
