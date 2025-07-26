@@ -2,9 +2,9 @@
 
 #include "ECS/System.h"
 
-namespace gui::modal
+namespace gui::level_complete
 {
-	struct MessageComponent;
+	struct WindowComponent;
 }
 
 namespace hidden
@@ -19,7 +19,7 @@ namespace gui::hidden
 	{
 	public:
 		using World = ecs::WorldView<
-			gui::modal::MessageComponent,
+			gui::level_complete::WindowComponent,
 			const ::hidden::ObjectComponent,
 			const ::hidden::RevealComponent>;
 

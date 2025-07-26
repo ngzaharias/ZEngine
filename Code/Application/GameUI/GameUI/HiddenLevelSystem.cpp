@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
-#include "GameClient/ModalComponents.h"
+#include "GameUI/LevelCompleteComponents.h"
 
 void gui::hidden::LevelSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -26,8 +26,7 @@ void gui::hidden::LevelSystem::Update(World& world, const GameTime& gameTime)
 			{
 				// #todo: load next level
 				const ecs::Entity messageEntity = world.CreateEntity();
-				auto& component = world.AddComponent<gui::modal::MessageComponent>(messageEntity);
-				component.m_Message = "Level Complete!";
+				world.AddComponent<gui::level_complete::WindowComponent>(messageEntity);
 			}
 		}
 	}
