@@ -37,8 +37,8 @@ void gui::DCGameMenu::OnSettingsCommand(Noesis::BaseComponent* param)
 
 NS_IMPLEMENT_REFLECTION(gui::DCGameMenu)
 {
+	NsProp("CloseCommand", &gui::DCGameMenu::GetCloseCommand);
 	NsProp("ExitGameCommand", &gui::DCGameMenu::GetExitGameCommand);
 	NsProp("ExitToMenuCommand", &gui::DCGameMenu::GetExitToMenuCommand);
-	NsProp("CloseCommand", &gui::DCGameMenu::GetCloseCommand);
 	NsProp("SettingsCommand", &gui::DCGameMenu::GetSettingsCommand);
 }
