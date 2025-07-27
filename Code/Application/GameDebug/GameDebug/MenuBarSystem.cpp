@@ -96,6 +96,34 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 		ImGui::Separator();
 
+		//if (ImGui::BeginMenu("Cheats"))
+		//{
+		//	if (ImGui::MenuItem("Reveal All"))
+		//		world.AddEventComponent<dbg::cheats::RevealAll>();
+		//	if (ImGui::MenuItem("Reveal All (-1)"))
+		//		world.AddEventComponent<dbg::cheats::RevealAll>(-1);
+		//}
+
+		if (ImGui::BeginMenu("Debuggers"))
+		{
+			if (ImGui::MenuItem("Container"))
+				world.AddEventComponent<dbg::ContainerWindowRequestComponent>();
+			if (ImGui::MenuItem("Entities", "Ctrl+Shift+F11"))
+				world.AddEventComponent<dbg::EntityWindowRequestComponent>();
+			if (ImGui::MenuItem("Network"))
+				world.AddEventComponent<dbg::NetworkWindowRequestComponent>();
+			if (ImGui::MenuItem("Optick (external)"))
+				LaunchExe(str::Path(str::EPath::ThirdParty, "optick/1.3.1/Optick.exe"));
+			if (ImGui::MenuItem("Shapes"))
+				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
+			if (ImGui::MenuItem("Splines"))
+				world.AddEventComponent<dbg::SplineWindowRequestComponent>();
+			if (ImGui::MenuItem("Render: Frame Buffer"))
+				world.AddEventComponent<dbg::BufferWindowRequestComponent>();
+
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("Editors"))
 		{
 			if (ImGui::MenuItem("Asset Browser"))
@@ -114,32 +142,20 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEventComponent<editor::TextureWindowRequestComponent>();
 			if (ImGui::MenuItem("Trajectory Editor"))
 				world.AddEventComponent<editor::TrajectoryWindowRequestComponent>();
+			if (ImGui::MenuItem("UI Editor (external)"))
+				LaunchExe(str::Path(str::EPath::Assets, "UI/ZEngine.noesis"));
 
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Windows"))
 		{
-			if (ImGui::MenuItem("Debug: Container"))
-				world.AddEventComponent<dbg::ContainerWindowRequestComponent>();
-			if (ImGui::MenuItem("Debug: Entities", "Ctrl+Shift+F11"))
-				world.AddEventComponent<dbg::EntityWindowRequestComponent>();
-			if (ImGui::MenuItem("Debug: Optick"))
-				LaunchExe(str::Path(str::EPath::ThirdParty, "optick/1.3.1/Optick.exe"));
-			if (ImGui::MenuItem("Debug: Shapes"))
-				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
-			if (ImGui::MenuItem("Debug: Splines"))
-				world.AddEventComponent<dbg::SplineWindowRequestComponent>();
 			if (ImGui::MenuItem("Demo: ImGui"))
 				world.AddEventComponent<dbg::ImGuiDemoRequestComponent>();
 			if (ImGui::MenuItem("Demo: ImNodes"))
 				world.AddEventComponent<dbg::ImNodesDemoRequestComponent>();
 			if (ImGui::MenuItem("Demo: Inspector"))
 				world.AddEventComponent<dbg::InspectorDemoRequestComponent>();
-			if (ImGui::MenuItem("Network"))
-				world.AddEventComponent<dbg::NetworkWindowRequestComponent>();
-			if (ImGui::MenuItem("Render: Frame Buffer"))
-				world.AddEventComponent<dbg::BufferWindowRequestComponent>();
 
 			ImGui::EndMenu();
 		}
