@@ -5,7 +5,7 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d"
   d:DesignWidth="1920"
-  d:DesignHeight="1080" FontFamily="{DynamicResource Font}">
+  d:DesignHeight="1080" FontFamily="Fonts/#Super Fortrees">
   <Page.Background>
     <SolidColorBrush Color="#FF4D5052" Opacity="0"/>
   </Page.Background>

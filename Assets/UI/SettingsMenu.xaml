@@ -6,10 +6,9 @@
   xmlns:noesis="clr-namespace:NoesisGUIExtensions" 
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   d:DesignWidth="1920" d:DesignHeight="1080"
-  FontFamily="{DynamicResource Font}"
   FontSize="15" 
   mc:Ignorable="d" 
-  Focusable="True">
+  Focusable="True" FontFamily="/project;component/Fonts/#Super Fortrees">
   <Page.InputBindings>
     <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
   </Page.InputBindings>

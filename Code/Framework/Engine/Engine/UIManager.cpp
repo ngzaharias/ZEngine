@@ -192,8 +192,8 @@ void eng::UIManager::Initialise(const eng::Window& window)
 	Noesis::GUI::SetLicense(NS_LICENSE_NAME, NS_LICENSE_KEY);
 	Noesis::GUI::Init();
 
-	const str::Path fontPath = str::Path(str::EPath::Assets, "Fonts");
-	const str::Path texturePath = str::Path(str::EPath::Assets, "Textures");
+	const str::Path fontPath = str::Path(str::EPath::Assets);
+	const str::Path texturePath = str::Path(str::EPath::Assets);
 	const str::Path xamlPath = str::Path(str::EPath::Assets, "UI");
 	Noesis::GUI::SetFontProvider(Noesis::MakePtr<NoesisApp::LocalFontProvider>(fontPath.ToChar()));
 	Noesis::GUI::SetTextureProvider(Noesis::MakePtr<NoesisApp::LocalTextureProvider>(texturePath.ToChar()));
