@@ -218,14 +218,9 @@ void eng::UIManager::Shutdown()
 		return;
 
 	for (auto& [name, value] : m_Widgets)
-	{
 		value->GetRenderer()->Shutdown();
-		value.Reset();
-	}
 	m_Widgets.RemoveAll();
 
-	for (auto& [name, value] : m_DataContexts)
-		value.Reset();
 	m_DataContexts.RemoveAll();
 
 	Noesis::GUI::Shutdown();
