@@ -41,7 +41,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 	m_ZoomRate = settings.m_Camera.m_ZoomAmount;
 	m_ZoomSpeed = settings.m_Camera.m_ZoomSpeed;
 
-	m_Monitors = *new Noesis::ObservableCollection<gui::VMMonitor>();
+	m_Monitors = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMMonitor>>();
 	for (const auto& [i, value] : enumerate::Forward(windowManager.GetMonitors()))
 	{
 		auto monitor = Noesis::MakePtr<gui::VMMonitor>(i);
@@ -49,8 +49,10 @@ void gui::DCSettingsMenu::Initialise(World& world)
 		if (i == settings.m_Window.m_Monitor)
 			m_Monitor = monitor;
 	}
+	OnPropertyChanged("Monitors");
+	OnPropertyChanged("Monitor");
 
-	m_RefreshRates = *new Noesis::ObservableCollection<gui::VMRefreshRate>();
+	m_RefreshRates = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMRefreshRate>>();
 	for (const int32 value : windowManager.GetRefreshRates())
 	{
 		const bool isNative = value == monitor.m_RefreshRate;
@@ -60,7 +62,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 			m_RefreshRate = refreshRate;
 	}
 
-	m_Resolutions = *new Noesis::ObservableCollection<gui::VMResolution>();
+	m_Resolutions = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMResolution>>();
 	for (const Vector2u& value : windowManager.GetResolutions())
 	{
 		const bool isNative = value == monitor.m_Resolution;
@@ -70,7 +72,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 			m_Resolution = resolution;
 	}
 
-	m_WindowModes = *new Noesis::ObservableCollection<gui::VMWindowMode>();
+	m_WindowModes = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMWindowMode>>();
 	for (const eng::EWindowMode value : windowManager.GetWindowModes())
 	{
 		auto windowMode = Noesis::MakePtr<gui::VMWindowMode>(value);
@@ -79,7 +81,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 			m_WindowMode = windowMode;
 	}
 
-	OnPropertyChanged("");
+	//OnPropertyChanged("");
 }
 
 int32 gui::DCSettingsMenu::GetEffectVolume() const
