@@ -16,6 +16,10 @@ gui::DCMainMenu::DCMainMenu()
 	m_SettingsCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCMainMenu::OnSettingsCommand));
 }
 
+gui::DCMainMenu::~DCMainMenu()
+{
+}
+
 const char* gui::DCMainMenu::GetNewGameLevel() const
 {
 	return m_NewGameLevel.ToChar();

@@ -15,6 +15,10 @@ gui::DCGameMenu::DCGameMenu()
 	m_SettingsCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCGameMenu::OnSettingsCommand));
 }
 
+gui::DCGameMenu::~DCGameMenu()
+{
+}
+
 void gui::DCGameMenu::OnCloseCommand(Noesis::BaseComponent* param)
 {
 	m_EntityWorld->AddEventComponent<gui::game_menu::CloseRequest>();

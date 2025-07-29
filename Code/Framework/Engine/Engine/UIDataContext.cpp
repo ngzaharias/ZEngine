@@ -3,6 +3,10 @@
 
 #include <NsCore/ReflectionImplement.h>
 
+eng::UIDataContext::~UIDataContext()
+{
+}
+
 Noesis::PropertyChangedEventHandler& eng::UIDataContext::PropertyChanged()
 {
 	return m_PropertyChanged;

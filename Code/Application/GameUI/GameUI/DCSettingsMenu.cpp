@@ -21,6 +21,10 @@ gui::DCSettingsMenu::DCSettingsMenu()
 	m_CloseCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCSettingsMenu::OnCloseCommand));
 }
 
+gui::DCSettingsMenu::~DCSettingsMenu()
+{
+}
+
 void gui::DCSettingsMenu::Initialise(World& world)
 {
 	const auto& settings = world.ReadSingleton<eng::settings::LocalComponent>();

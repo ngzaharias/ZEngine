@@ -15,6 +15,7 @@ namespace gui
 	{
 	public:
 		DCMainMenu();
+		~DCMainMenu() override;
 
 		const char* GetNewGameLevel() const;
 		void SetNewGameLevel(const str::Name& value);

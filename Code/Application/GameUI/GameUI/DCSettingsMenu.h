@@ -44,6 +44,7 @@ namespace gui
 		>;
 
 		DCSettingsMenu();
+		~DCSettingsMenu() override;
 
 		void Initialise(World& world);
 

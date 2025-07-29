@@ -12,6 +12,7 @@ namespace gui
 	{
 	public:
 		DCHiddenCount();
+		~DCHiddenCount() override;
 
 		int32 GetObjectCount() const;
 		void SetObjectCount(int32 value);

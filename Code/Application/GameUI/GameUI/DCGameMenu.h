@@ -12,6 +12,7 @@ namespace gui
 	{
 	public:
 		DCGameMenu();
+		~DCGameMenu() override;
 
 		const NoesisApp::DelegateCommand* GetCloseCommand() const { return &m_CloseCommand; }
 		const NoesisApp::DelegateCommand* GetExitGameCommand() const { return &m_ExitGameCommand; }

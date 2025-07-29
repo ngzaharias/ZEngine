@@ -10,6 +10,10 @@ gui::DCHiddenCount::DCHiddenCount()
 {
 }
 
+gui::DCHiddenCount::~DCHiddenCount()
+{
+}
+
 int32 gui::DCHiddenCount::GetObjectCount() const
 {
 	return m_ObjectCount;

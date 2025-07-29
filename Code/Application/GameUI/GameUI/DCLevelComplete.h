@@ -12,6 +12,7 @@ namespace gui
 	{
 	public:
 		DCLevelComplete();
+		~DCLevelComplete() override;
 
 		const NoesisApp::DelegateCommand* GetExitGameCommand() const { return &m_ExitGameCommand; }
 		const NoesisApp::DelegateCommand* GetExitToMenuCommand() const { return &m_ExitToMenuCommand; }

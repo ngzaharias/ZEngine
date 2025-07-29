@@ -17,6 +17,8 @@ namespace eng
 		friend class UIManager;
 
 	public:
+		virtual ~UIDataContext();
+
 		Noesis::PropertyChangedEventHandler& PropertyChanged() override final;
 
 		NS_IMPLEMENT_INTERFACE_FIXUP

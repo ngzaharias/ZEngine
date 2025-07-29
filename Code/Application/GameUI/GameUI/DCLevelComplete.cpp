@@ -12,6 +12,10 @@ gui::DCLevelComplete::DCLevelComplete()
 	m_ExitToMenuCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCLevelComplete::OnExitToMenuCommand));
 }
 
+gui::DCLevelComplete::~DCLevelComplete()
+{
+}
+
 void gui::DCLevelComplete::OnExitGameCommand(Noesis::BaseComponent* param)
 {
 	m_EntityWorld->AddEventComponent<gui::level_complete::ExitGameRequest>();
