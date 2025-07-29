@@ -5,10 +5,7 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d"
   d:DesignWidth="1920"
-  d:DesignHeight="1080" FontFamily="Fonts/#Super Fortrees">
-  <Page.Background>
-    <SolidColorBrush Color="#FF4D5052" Opacity="0"/>
-  </Page.Background>
+  d:DesignHeight="1080" Style="{DynamicResource Style.Page}">
   <Page.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>

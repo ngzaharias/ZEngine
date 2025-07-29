@@ -6,8 +6,7 @@
   mc:Ignorable="d"
   d:DesignWidth="1920"
   d:DesignHeight="1080" 
-  d:DataContext="Empty"
-  FontFamily="Fonts/#Super Fortrees">
+  d:DataContext="Empty" Style="{DynamicResource Style.Page}">
   <Page.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
