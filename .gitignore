@@ -32,8 +32,10 @@ _Code
 
 # Executables
 *.exe
+!App.StudioTool.exe
 !premake5.exe
 !optick.exe
+!7za.exe
 *.out
 *.app
 
