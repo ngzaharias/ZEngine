@@ -14,7 +14,7 @@ call del .\Steam\debug.txt
 call del .\Steam\imgui.ini
 call del .\Steam\steam_appid.txt
 
-call "C:\Program Files\7-Zip\7z.exe" a -o{..\} -sdel Steam.zip .\Steam\*
+call "%cd%\..\3rdParty\7-Zip\7za.exe" a -o{..\} -sdel Steam.zip .\Steam\*
 call rmdir /s /q .\Steam\
 
 popd
