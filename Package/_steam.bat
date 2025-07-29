@@ -13,6 +13,12 @@ call del .\Steam\crashes.txt
 call del .\Steam\debug.txt
 call del .\Steam\imgui.ini
 call del .\Steam\steam_appid.txt
+call rmdir /S /Q .\Steam\Assets\Textures\Pages\Page01
+call rmdir /S /Q .\Steam\Assets\Textures\Pages\Page02
+call rmdir /S /Q .\Steam\Assets\Textures\Pages\Page04
+call del .\Steam\Assets\UI\ZEngine.noesis
+call rmdir /S /Q .\Steam\Assets\UI\Fonts
+call rmdir /S /Q .\Steam\Assets\UI\Textures
 
 call "%cd%\..\3rdParty\7-Zip\7za.exe" a -o{..\} -sdel Steam.zip .\Steam\*
 call rmdir /s /q .\Steam\
