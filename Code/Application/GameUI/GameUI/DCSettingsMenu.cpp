@@ -18,6 +18,11 @@
 
 gui::DCSettingsMenu::DCSettingsMenu()
 {
+	m_Monitors = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMMonitor>>();
+	m_RefreshRates = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMRefreshRate>>();
+	m_Resolutions = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMResolution>>();
+	m_WindowModes = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMWindowMode>>();
+
 	m_CloseCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCSettingsMenu::OnCloseCommand));
 }
 
@@ -41,7 +46,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 	m_ZoomRate = settings.m_Camera.m_ZoomAmount;
 	m_ZoomSpeed = settings.m_Camera.m_ZoomSpeed;
 
-	m_Monitors = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMMonitor>>();
+	m_Monitors->Clear();
 	for (const auto& [i, value] : enumerate::Forward(windowManager.GetMonitors()))
 	{
 		auto monitor = Noesis::MakePtr<gui::VMMonitor>(i);
@@ -49,10 +54,8 @@ void gui::DCSettingsMenu::Initialise(World& world)
 		if (i == settings.m_Window.m_Monitor)
 			m_Monitor = monitor;
 	}
-	OnPropertyChanged("Monitors");
-	OnPropertyChanged("Monitor");
 
-	m_RefreshRates = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMRefreshRate>>();
+	m_RefreshRates->Clear();
 	for (const int32 value : windowManager.GetRefreshRates())
 	{
 		const bool isNative = value == monitor.m_RefreshRate;
@@ -62,7 +65,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 			m_RefreshRate = refreshRate;
 	}
 
-	m_Resolutions = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMResolution>>();
+	m_Resolutions->Clear();
 	for (const Vector2u& value : windowManager.GetResolutions())
 	{
 		const bool isNative = value == monitor.m_Resolution;
@@ -72,7 +75,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 			m_Resolution = resolution;
 	}
 
-	m_WindowModes = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMWindowMode>>();
+	m_WindowModes->Clear();
 	for (const eng::EWindowMode value : windowManager.GetWindowModes())
 	{
 		auto windowMode = Noesis::MakePtr<gui::VMWindowMode>(value);
@@ -81,7 +84,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 			m_WindowMode = windowMode;
 	}
 
-	//OnPropertyChanged("");
+	OnPropertyChanged("");
 }
 
 int32 gui::DCSettingsMenu::GetEffectVolume() const
@@ -212,8 +215,11 @@ void gui::DCSettingsMenu::SetMonitor(gui::VMMonitor* value)
 		m_Monitor = value;
 		OnPropertyChanged("Monitor");
 
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_Monitor = value->m_Index;
+		if (value)
+		{
+			auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+			eventData.m_Monitor = value->m_Index;
+		}
 	}
 }
 
@@ -243,8 +249,11 @@ void gui::DCSettingsMenu::SetRefreshRate(gui::VMRefreshRate* value)
 		m_RefreshRate = value;
 		OnPropertyChanged("RefreshRate");
 
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_RefreshRate = value->m_RefreshRate;
+		if (value)
+		{
+			auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+			eventData.m_RefreshRate = value->m_RefreshRate;
+		}
 	}
 }
 
@@ -274,8 +283,11 @@ void gui::DCSettingsMenu::SetResolution(gui::VMResolution* value)
 		m_Resolution = value;
 		OnPropertyChanged("Resolution");
 
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_Resolution = value->m_Resolution;
+		if (value)
+		{
+			auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+			eventData.m_Resolution = value->m_Resolution;
+		}
 	}
 }
 
@@ -305,8 +317,11 @@ void gui::DCSettingsMenu::SetWindowMode(gui::VMWindowMode* value)
 		m_WindowMode = value;
 		OnPropertyChanged("WindowMode");
 
-		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
-		eventData.m_WindowMode = value->m_WindowMode;
+		if (value)
+		{
+			auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+			eventData.m_WindowMode = value->m_WindowMode;
+		}
 	}
 }
 
