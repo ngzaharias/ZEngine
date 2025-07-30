@@ -17,6 +17,8 @@ namespace
 
 	bool LoadTexture(eng::Texture2DAsset& asset, const str::Path& filepath)
 	{
+		PROFILE_FUNCTION();
+
 		stbi_set_flip_vertically_on_load(true);
 		unsigned char* textureData = stbi_load(filepath.ToChar(), &asset.m_Width, &asset.m_Height, &asset.m_Channels, STBI_rgb_alpha);
 		if (!textureData)
@@ -58,6 +60,8 @@ bool eng::Texture2DAssetLoader::Import(eng::Texture2DAsset& asset, const str::Pa
 
 bool eng::Texture2DAssetLoader::Load(eng::Texture2DAsset& asset, eng::Visitor& visitor) const
 {
+	PROFILE_FUNCTION();
+
 	visitor.Read(strSourceFile, asset.m_SourceFile, {});
 
 	// #todo: error message
