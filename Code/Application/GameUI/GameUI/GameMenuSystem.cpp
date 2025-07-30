@@ -64,7 +64,7 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	if (world.HasAny<ecs::query::Added<gui::game_menu::ExitToMenuRequest>>())
 	{
 		const auto& settings = world.ReadSingleton<eng::settings::LaunchComponent>();
-		world.AddEventComponent<eng::level::LoadRequestComponent>(settings.m_Level);
+		world.AddEventComponent<eng::level::LoadRequest>(settings.m_Level);
 		world.AddEventComponent<gui::game_menu::CloseRequest>();
 	}
 

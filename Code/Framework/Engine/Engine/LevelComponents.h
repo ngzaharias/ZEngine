@@ -7,6 +7,14 @@
 
 namespace eng::level
 {
+	enum class ELoadingState
+	{
+		FadeOut,
+		Unload,
+		Load,
+		FadeIn,
+	};
+
 	/// \brief Contains every available level that can be loaded.
 	struct DirectoryComponent : public ecs::SingletonComponent<DirectoryComponent>
 	{
@@ -28,19 +36,22 @@ namespace eng::level
 		str::Path m_Path = {};
 	};
 
-	/// \brief Request to load a specific level.
-	struct LoadRequestComponent : public ecs::EventComponent<LoadRequestComponent>
+	/// \brief There exists one of these components for every level that is loaded.
+	struct LoadingComponent : public ecs::Component<LoadingComponent>
 	{
-		LoadRequestComponent() = default;
-		LoadRequestComponent(const str::Name& name) : m_Name(name) { }
+		str::Name m_Name = {};
+
+		ELoadingState m_StateCurrent = ELoadingState::FadeOut;
+		ELoadingState m_StatePrevious = ELoadingState::FadeOut;
+		float m_FadeInTimer = 0.f;
+		float m_FadeOutTimer = 0.f;
+	};
+
+	/// \brief Request to load a specific level.
+	struct LoadRequest : public ecs::EventComponent<LoadRequest>
+	{
+		LoadRequest() = default;
+		LoadRequest(const str::Name& name) : m_Name(name) { }
 		str::Name m_Name = {};
 	}; 
-
-	/// \brief Request to unload a specific level.
-	struct UnloadRequestComponent : public ecs::EventComponent<UnloadRequestComponent>
-	{
-		UnloadRequestComponent() = default;
-		UnloadRequestComponent(const str::Name & name) : m_Name(name) { }
-		str::Name m_Name = {};
-	};
 }

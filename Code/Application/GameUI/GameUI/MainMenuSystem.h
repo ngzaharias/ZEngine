@@ -16,7 +16,7 @@ namespace eng::application
 
 namespace eng::level
 {
-	struct LoadRequestComponent;
+	struct LoadRequest;
 }
 
 namespace gui::main_menu
@@ -43,7 +43,7 @@ namespace gui::main_menu
 			eng::UIManager,
 			// Components
 			eng::application::CloseRequestComponent,
-			eng::level::LoadRequestComponent,
+			eng::level::LoadRequest,
 			gui::settings::OpenRequestComponent,
 			const gui::main_menu::ContinueGameRequest,
 			const gui::main_menu::ExitGameRequest,

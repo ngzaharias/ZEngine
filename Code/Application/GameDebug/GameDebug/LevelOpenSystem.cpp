@@ -91,7 +91,7 @@ void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 
 					if (ImGui::Button(name.ToChar(), { width, 0 }))
 					{
-						world.AddEventComponent<eng::level::LoadRequestComponent>(name);
+						world.AddEventComponent<eng::level::LoadRequest>(name);
 						ImGui::CloseCurrentPopup();
 					}
 

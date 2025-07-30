@@ -9,7 +9,7 @@ namespace eng
 
 namespace eng::level
 {
-	struct LoadRequestComponent;
+	struct LoadRequest;
 }
 
 namespace eng::network
@@ -38,7 +38,7 @@ namespace gamestate
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::level::LoadRequestComponent,
+			eng::level::LoadRequest,
 			eng::NetworkManager,
 			eng::network::RequestComponent,
 			gamestate::NetworkJoinComponent,

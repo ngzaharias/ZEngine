@@ -22,7 +22,7 @@ namespace eng::application
 
 namespace eng::level
 {
-	struct LoadRequestComponent;
+	struct LoadRequest;
 }
 
 namespace eng::settings
@@ -52,7 +52,7 @@ namespace gui::game_menu
 			// Components
 			ecs::NameComponent,
 			eng::application::CloseRequestComponent,
-			eng::level::LoadRequestComponent,
+			eng::level::LoadRequest,
 			gui::game_menu::CloseRequest,
 			const eng::settings::LaunchComponent,
 			const gui::game_menu::ExitGameRequest,

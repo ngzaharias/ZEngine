@@ -53,6 +53,6 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::main_menu::NewGameRequest>>())
 	{
 		const auto& request = world.ReadComponent<gui::main_menu::NewGameRequest>(entity);
-		world.AddEventComponent<eng::level::LoadRequestComponent>(request.m_Level);
+		world.AddEventComponent<eng::level::LoadRequest>(request.m_Level);
 	}
 }

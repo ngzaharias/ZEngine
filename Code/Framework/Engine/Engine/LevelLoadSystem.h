@@ -18,8 +18,8 @@ namespace eng::level
 	struct DirectoryComponent;
 	struct EntityComponent;
 	struct LoadedComponent;
-	struct LoadRequestComponent;
-	struct UnloadRequestComponent;
+	struct LoadingComponent;
+	struct LoadRequest;
 }
 
 namespace str
@@ -41,8 +41,8 @@ namespace eng::level
 			eng::level::DirectoryComponent,
 			eng::level::EntityComponent,
 			eng::level::LoadedComponent,
-			eng::level::LoadRequestComponent,
-			eng::level::UnloadRequestComponent>;
+			eng::level::LoadingComponent,
+			eng::level::LoadRequest>;
 		
 		LoadSystem(ecs::EntityWorld& entityWorld);
 

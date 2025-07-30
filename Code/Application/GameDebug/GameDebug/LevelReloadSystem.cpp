@@ -16,7 +16,7 @@ void dbg::level::ReloadSystem::Update(World& world, const GameTime& gameTime)
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 		{
 			const auto& levelComponent = world.ReadComponent<eng::level::LoadedComponent>(entity);
-			world.AddEventComponent<eng::level::LoadRequestComponent>(levelComponent.m_Name);
+			world.AddEventComponent<eng::level::LoadRequest>(levelComponent.m_Name);
 		}
 	}
 }

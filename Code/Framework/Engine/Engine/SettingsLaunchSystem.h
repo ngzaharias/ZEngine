@@ -4,7 +4,7 @@
 
 namespace eng::level
 {
-	struct LoadRequestComponent;
+	struct LoadRequest;
 }
 
 namespace eng::settings
@@ -15,7 +15,7 @@ namespace eng::settings
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::level::LoadRequestComponent,
+			eng::level::LoadRequest,
 			eng::settings::LaunchComponent>;
 
 		void Initialise(World& world);

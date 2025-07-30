@@ -91,8 +91,8 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	entityWorld.RegisterComponent<eng::FlipbookComponent>();
 	entityWorld.RegisterComponent<eng::level::EntityComponent>();
 	entityWorld.RegisterComponent<eng::level::LoadedComponent>();
-	entityWorld.RegisterComponent<eng::level::LoadRequestComponent>();
-	entityWorld.RegisterComponent<eng::level::UnloadRequestComponent>();
+	entityWorld.RegisterComponent<eng::level::LoadingComponent>();
+	entityWorld.RegisterComponent<eng::level::LoadRequest>();
 	entityWorld.RegisterComponent<eng::PhysicsComponent>();
 	entityWorld.RegisterComponent<eng::PrototypeComponent>();
 	entityWorld.RegisterComponent<eng::SpriteComponent>();

@@ -2,6 +2,7 @@
 #include "Engine/LevelLoadSystem.h"
 
 #include "Core/Array.h"
+#include "Core/GameTime.h"
 #include "Core/Name.h"
 #include "Core/Path.h"
 #include "ECS/EntityWorld.h"
@@ -46,41 +47,59 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 
 	const auto& directoryComponent = world.ReadSingleton<eng::level::DirectoryComponent>();
 
-	// load requests
+	// requests
+	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const eng::level::LoadRequest>>())
 	{
-		for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const eng::level::LoadRequestComponent>>())
-		{
-			const auto& requestComponent = world.ReadComponent<eng::level::LoadRequestComponent>(requestEntity);
+		const auto& request = world.ReadComponent<eng::level::LoadRequest>(requestEntity);
 
-			// unload current levels
+		const ecs::Entity levelEntity = world.CreateEntity();
+		auto& loadingComponent = world.AddComponent<eng::level::LoadingComponent>(levelEntity);
+		loadingComponent.m_Name = request.m_Name;
+	}
+
+	// loading
+	for (const ecs::Entity& levelEntity : world.Query<ecs::query::Include<const eng::level::LoadingComponent>>())
+	{
+		auto& loadingComponent = world.WriteComponent<eng::level::LoadingComponent>(levelEntity);
+		loadingComponent.m_StatePrevious = loadingComponent.m_StateCurrent;
+
+		switch (loadingComponent.m_StateCurrent)
+		{
+		case eng::level::ELoadingState::FadeOut:
+		{
+			loadingComponent.m_FadeOutTimer += gameTime.m_DeltaTime;
+			if (loadingComponent.m_FadeOutTimer > 1.f)
+				loadingComponent.m_StateCurrent = eng::level::ELoadingState::Unload;
+		} break;
+
+		case eng::level::ELoadingState::Unload:
+		{
 			for (const ecs::Entity& loadedEntity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 			{
 				const auto& loadedComponent = world.ReadComponent<eng::level::LoadedComponent>(loadedEntity);
 				UnloadLevel(world, loadedComponent.m_Name);
 			}
+			loadingComponent.m_StateCurrent = eng::level::ELoadingState::Load;
+		} break;
 
-			// load requested level
-			if (directoryComponent.m_Levels.Contains(requestComponent.m_Name))
-			{
-				const str::Path& directory = directoryComponent.m_Levels.Get(requestComponent.m_Name);
-				LoadLevel(world, requestComponent.m_Name, directory);
-			}
-		}
-	}
-
-	// unload requests
-	{
-		for (const ecs::Entity& requestEntity : world.Query<ecs::query::Include<const eng::level::UnloadRequestComponent>>())
+		case eng::level::ELoadingState::Load:
 		{
-			const auto& requestComponent = world.ReadComponent<eng::level::UnloadRequestComponent>(requestEntity);
-
-			for (const ecs::Entity& loadedEntity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
+			if (directoryComponent.m_Levels.Contains(loadingComponent.m_Name))
 			{
-				const auto& loadedComponent = world.ReadComponent<eng::level::LoadedComponent>(loadedEntity);
-				if (requestComponent.m_Name == loadedComponent.m_Name)
-					UnloadLevel(world, loadedComponent.m_Name);
+				const str::Path& directory = directoryComponent.m_Levels.Get(loadingComponent.m_Name);
+				LoadLevel(world, loadingComponent.m_Name, directory);
 			}
+			loadingComponent.m_StateCurrent = eng::level::ELoadingState::FadeIn;
+		} break;
+
+		case eng::level::ELoadingState::FadeIn:
+		{
+			loadingComponent.m_FadeInTimer += gameTime.m_DeltaTime;
+			if (loadingComponent.m_FadeInTimer > 1.f)
+				world.DestroyEntity(levelEntity);
+		} break;
 		}
+
 	}
 }
 

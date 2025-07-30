@@ -15,7 +15,7 @@ namespace eng
 namespace eng::level
 {
 	struct DirectoryComponent;
-	struct LoadRequestComponent;
+	struct LoadRequest;
 }
 
 namespace dbg::level
@@ -35,7 +35,7 @@ namespace dbg::level
 			// Components
 			dbg::level::WindowComponent,
 			ecs::NameComponent,
-			eng::level::LoadRequestComponent,
+			eng::level::LoadRequest,
 			const dbg::level::OpenRequestComponent,
 			const eng::level::DirectoryComponent>;
 

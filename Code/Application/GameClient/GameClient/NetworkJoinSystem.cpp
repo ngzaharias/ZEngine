@@ -63,7 +63,7 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 
 		case NetworkJoinComponent::EState::LoadLevel:
 		{
-			world.AddEventComponent<eng::level::LoadRequestComponent>();
+			world.AddEventComponent<eng::level::LoadRequest>();
 			writeComponent.m_State = NetworkJoinComponent::EState::SyncWorld;
 		} break;
 
