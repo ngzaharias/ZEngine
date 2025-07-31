@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/UIManager.h"
 
+#include "Core/Algorithms.h"
 #include "Core/GameTime.h"
 #include "Core/Guid.h"
 #include "Core/Name.h"
@@ -15,6 +16,7 @@
 #include <NsApp/LocalXamlProvider.h>
 #include <NsApp/ThemeProviders.h>
 #include <NsCore/BaseComponent.h>
+#include <NsCore/Delegate.h>
 #include <NsCore/RegisterComponent.h>
 #include <NsGui/InputEnums.h>
 #include <NsGui/IntegrationAPI.h>
@@ -217,8 +219,8 @@ void eng::UIManager::Shutdown()
 	if (!m_Window)
 		return;
 
-	for (auto& [name, value] : m_Widgets)
-		value->GetRenderer()->Shutdown();
+	for (auto& [name, widget] : m_Widgets)
+		widget.m_View->GetRenderer()->Shutdown();
 	m_Widgets.RemoveAll();
 
 	m_DataContexts.RemoveAll();
@@ -231,10 +233,11 @@ void eng::UIManager::Update(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const Vector2u resolution = m_Window->GetResolution();
-	for (auto& [guid, view] : m_Widgets)
+	for (const str::Name& name : m_Stack)
 	{
-		view->SetSize(resolution.x, resolution.y);
-		view->Update((double)gameTime.m_TotalTime); // #todo: update gameTime to support double
+		eng::Widget& widget = m_Widgets.Get(name);
+		widget.m_View->SetSize(resolution.x, resolution.y);
+		widget.m_View->Update((double)gameTime.m_TotalTime); // #todo: update gameTime to support double
 	}
 }
 
@@ -244,10 +247,11 @@ void eng::UIManager::RenderBegin()
 
 	// The offscreen rendering phase must be done before binding the framebuffer. This step
 	// populates all the internal textures that are needed for the active frame
-	for (auto& [guid, view] : m_Widgets)
+	for (const str::Name& name : m_Stack)
 	{
-		view->GetRenderer()->UpdateRenderTree();
-		view->GetRenderer()->RenderOffscreen();
+		eng::Widget& widget = m_Widgets.Get(name);
+		widget.m_View->GetRenderer()->UpdateRenderTree();
+		widget.m_View->GetRenderer()->RenderOffscreen();
 	}
 }
 
@@ -255,8 +259,8 @@ void eng::UIManager::RenderFinish()
 {
 	PROFILE_FUNCTION();
 
-	for (auto& [guid, view] : m_Widgets)
-		view->GetRenderer()->Render();
+	for (auto& [name, widget] : m_Widgets)
+		widget.m_View->GetRenderer()->Render();
 }
 
 void eng::UIManager::ProcessInput(
@@ -267,33 +271,31 @@ void eng::UIManager::ProcessInput(
 	Set<input::EKey>& inout_Pressed,
 	Set<input::EKey>& inout_Released)
 {
-	for (auto& [guid, view] : m_Widgets)
+	for (const auto& [i, name] : enumerate::Reverse(m_Stack))
 	{
+		Set<input::EKey> pressed;
+		Set<input::EKey> released;
+
+		eng::Widget& widget = m_Widgets.Get(name);
+		Noesis::Ptr<Noesis::IView> view = widget.m_View;
 		view->MouseMove((int)mousePos.x, (int)mousePos.y);
 		view->MouseHWheel((int)mousePos.x, (int)mousePos.y, (int)scrollDelta.x);
 		view->MouseWheel((int)mousePos.x, (int)mousePos.y, (int)scrollDelta.y * 50);
 
-		// #todo: process more than one press/release at a time
 		for (const input::EKey value : inout_Pressed)
 		{
 			const Noesis::Key key = ToKey(value);
 			if (key != Noesis::Key_None)
 			{
 				if (view->KeyDown(key))
-				{
-					inout_Pressed.Remove(value);
-					break;
-				}
+					pressed.Add(value);
 			}
 
 			const Noesis::MouseButton mouse = ToMouse(value);
 			if (mouse != Noesis::MouseButton_Count)
 			{
 				if (view->MouseButtonDown((int)mousePos.x, (int)mousePos.y, mouse))
-				{
-					inout_Pressed.Remove(value);
-					break;
-				}
+					pressed.Add(value);
 			}
 		}
 
@@ -303,26 +305,29 @@ void eng::UIManager::ProcessInput(
 			if (key != Noesis::Key_None)
 			{
 				if (view->KeyUp(key))
-				{
-					inout_Released.Remove(value);
-					break;
-				}
+					released.Add(value);
 			}
 
 			const Noesis::MouseButton mouse = ToMouse(value);
 			if (mouse != Noesis::MouseButton_Count)
 			{
 				if (view->MouseButtonUp((int)mousePos.x, (int)mousePos.y, mouse))
-				{
-					inout_Released.Remove(value);
-					break;
-				}
+					released.Add(value);
 			}
+		}
+
+		inout_Pressed.Remove(pressed);
+		inout_Released.Remove(released);
+		if (widget.m_CosumeAll)
+		{
+			inout_Held.RemoveAll();
+			inout_Pressed.RemoveAll();
+			inout_Released.RemoveAll();
 		}
 	}
 }
 
-void eng::UIManager::CreateWidget(const str::Name& name)
+void eng::UIManager::CreateWidget(const str::Name& name, const bool consumeAll)
 {
 	const Vector2u& resolution = m_Window->GetResolution();
 
@@ -340,10 +345,20 @@ void eng::UIManager::CreateWidget(const str::Name& name)
 	Noesis::Ptr<Noesis::RenderDevice> device = NoesisApp::GLFactory::CreateDevice(false);
 	view->GetRenderer()->Init(device);
 
-	m_Widgets.Emplace(name, view);
+	m_Widgets[name] = eng::Widget{ view, consumeAll };
+	m_Stack.Emplace(name);
 }
 
 void eng::UIManager::DestroyWidget(const str::Name& name)
 {
 	m_Widgets.Remove(name);
+
+	for (const auto& [i, value] : enumerate::Forward(m_Stack))
+	{
+		if (value == name)
+		{
+			m_Stack.RemoveOrderedAt(i);
+			break;
+		}
+	}
 }

@@ -5,7 +5,6 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/InputManager.h"
 #include "Engine/SettingsComponents.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCSettingsMenu.h"
@@ -13,7 +12,6 @@
 
 namespace
 {
-	const str::Name strSettingsMenu = NAME("SettingsMenu");
 	const str::Name strSettingsMenu_xaml = NAME("SettingsMenu.xaml");
 }
 
@@ -21,30 +19,16 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 {
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::settings_menu::WindowComponent>>())
 	{
-		{
-			auto& uiManager = world.WriteResource<eng::UIManager>();
-			uiManager.CreateWidget(strSettingsMenu_xaml);
-			auto& dataContext = uiManager.WriteDataContext<gui::DCSettingsMenu>(strSettingsMenu_xaml);
-			dataContext.Initialise(world);
-		}
-
-		{
-			input::Layer layer;
-			layer.m_Priority = eng::EInputPriority::GameUI;
-			layer.m_Consume.RaiseAll();
-
-			auto& input = world.WriteResource<eng::InputManager>();
-			input.AppendLayer(strSettingsMenu, layer);
-		}
+		auto& uiManager = world.WriteResource<eng::UIManager>();
+		uiManager.CreateWidget(strSettingsMenu_xaml, true);
+		auto& dataContext = uiManager.WriteDataContext<gui::DCSettingsMenu>(strSettingsMenu_xaml);
+		dataContext.Initialise(world);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<gui::settings_menu::WindowComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strSettingsMenu_xaml);
-
-		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strSettingsMenu);
 	}
 
 	//////////////////////////////////////////////////////////////////////////

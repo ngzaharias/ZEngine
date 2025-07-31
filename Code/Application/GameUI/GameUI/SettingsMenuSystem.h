@@ -6,7 +6,6 @@
 
 namespace eng
 {
-	class InputManager;
 	class UIManager;
 	class WindowManager;
 }
@@ -31,7 +30,6 @@ namespace gui::settings_menu
 	public:
 		using World = ecs::WorldView<
 			// Resources
-			eng::InputManager,
 			eng::UIManager,
 			eng::WindowManager,
 			// Components

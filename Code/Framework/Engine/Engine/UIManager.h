@@ -27,6 +27,12 @@ namespace input
 
 namespace eng
 {
+	struct Widget
+	{
+		Noesis::Ptr<Noesis::IView> m_View = {};
+		bool m_CosumeAll = false;
+	};
+
 	class UIManager final
 	{
 	public:
@@ -50,7 +56,7 @@ namespace eng
 
 		//////////////////////////////////////////////////////////////////////////
 		// Widgets
-		void CreateWidget(const str::Name& name);
+		void CreateWidget(const str::Name& name, const bool consumeAll = false);
 		void DestroyWidget(const str::Name& name);
 
 		template<typename TDataContext>
@@ -66,8 +72,9 @@ namespace eng
 		ecs::EntityWorld& m_EntityWorld;
 		const eng::Window* m_Window = nullptr;
 
+		Array<str::Name> m_Stack = {};
 		Map<str::Name, Noesis::Ptr<Noesis::BaseComponent>> m_DataContexts = {};
-		Map<str::Name, Noesis::Ptr<Noesis::IView>> m_Widgets = {};
+		Map<str::Name, eng::Widget> m_Widgets = {};
 	};
 }
 

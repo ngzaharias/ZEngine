@@ -11,7 +11,6 @@ namespace ecs
 
 namespace eng
 {
-	class InputManager;
 	class UIManager;
 }
 
@@ -47,7 +46,6 @@ namespace gui::game_menu
 	public:
 		using World = ecs::WorldView<
 			// Resources
-			eng::InputManager,
 			eng::UIManager,
 			// Components
 			ecs::NameComponent,
