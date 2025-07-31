@@ -20,7 +20,7 @@ call del .\Steam\Assets\UI\ZEngine.noesis
 call rmdir /S /Q .\Steam\Assets\UI\Fonts
 call rmdir /S /Q .\Steam\Assets\UI\Textures
 
-call "%cd%\..\3rdParty\7-Zip\7za.exe" a -o{..\} -sdel Steam.zip .\Steam\*
+call "%cd%\..\Tools\7-Zip\7za.exe" a -o{..\} -sdel Steam.zip .\Steam\*
 call rmdir /s /q .\Steam\
 
 popd
