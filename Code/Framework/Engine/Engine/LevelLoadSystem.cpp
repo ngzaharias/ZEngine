@@ -55,6 +55,7 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 		const ecs::Entity levelEntity = world.CreateEntity();
 		auto& loadingComponent = world.AddComponent<eng::level::LoadingComponent>(levelEntity);
 		loadingComponent.m_Name = request.m_Name;
+		loadingComponent.m_IsSplash = request.m_IsSplash;
 	}
 
 	// loading

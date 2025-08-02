@@ -45,6 +45,7 @@ namespace eng::level
 		ELoadingState m_StatePrevious = ELoadingState::FadeOut;
 		float m_FadeInTimer = 0.f;
 		float m_FadeOutTimer = 0.f;
+		bool m_IsSplash = false;
 	};
 
 	/// \brief Request to load a specific level.
@@ -53,5 +54,6 @@ namespace eng::level
 		LoadRequest() = default;
 		LoadRequest(const str::Name& name) : m_Name(name) { }
 		str::Name m_Name = {};
+		bool m_IsSplash = false;
 	}; 
 }

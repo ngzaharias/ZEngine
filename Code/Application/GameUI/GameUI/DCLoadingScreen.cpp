@@ -28,7 +28,22 @@ void gui::DCLoadingScreen::SetProgress(int32 value)
 	}
 }
 
+bool gui::DCLoadingScreen::GetIsSplash() const
+{
+	return m_IsSplash;
+}
+
+void gui::DCLoadingScreen::SetIsSplash(bool value)
+{
+	if (m_IsSplash != value)
+	{
+		m_IsSplash = value;
+		OnPropertyChanged("IsSplash");
+	}
+}
+
 NS_IMPLEMENT_REFLECTION(gui::DCLoadingScreen)
 {
 	NsProp("Progress", &gui::DCLoadingScreen::GetProgress, &gui::DCLoadingScreen::SetProgress);
+	NsProp("IsSplash", &gui::DCLoadingScreen::GetIsSplash, &gui::DCLoadingScreen::SetIsSplash);
 }
