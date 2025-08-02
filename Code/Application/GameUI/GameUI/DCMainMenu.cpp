@@ -30,6 +30,20 @@ void gui::DCMainMenu::SetNewGameLevel(const str::Name& value)
 	m_NewGameLevel = value;
 }
 
+const char* gui::DCMainMenu::GetVersion() const
+{
+	return m_Version.c_str();
+}
+
+void gui::DCMainMenu::SetVersion(const str::String& value)
+{
+	if (m_Version != value)
+	{
+		m_Version = value;
+		OnPropertyChanged("Version");
+	}
+}
+
 void gui::DCMainMenu::OnContinueGameCommand(Noesis::BaseComponent* param)
 {
 	m_EntityWorld->AddEventComponent<gui::main_menu::ContinueGameRequest>();
@@ -58,6 +72,8 @@ void gui::DCMainMenu::OnSettingsCommand(Noesis::BaseComponent* param)
 
 NS_IMPLEMENT_REFLECTION(gui::DCMainMenu)
 {
+	NsProp("Version", &gui::DCMainMenu::GetVersion);
+
 	NsProp("ContinueGameCommand", &gui::DCMainMenu::GetContinueGameCommand);
 	NsProp("ExitGameCommand", &gui::DCMainMenu::GetExitGameCommand);
 	NsProp("LoadGameCommand", &gui::DCMainMenu::GetLoadGameCommand);

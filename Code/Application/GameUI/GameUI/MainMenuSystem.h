@@ -7,6 +7,7 @@
 namespace eng
 {
 	class UIManager;
+	struct VersionComponent;
 }
 
 namespace eng::application
@@ -45,6 +46,7 @@ namespace gui::main_menu
 			eng::application::CloseRequestComponent,
 			eng::level::LoadRequest,
 			gui::settings::OpenRequestComponent,
+			const eng::VersionComponent,
 			const gui::main_menu::ContinueGameRequest,
 			const gui::main_menu::ExitGameRequest,
 			const gui::main_menu::LoadGameRequest,

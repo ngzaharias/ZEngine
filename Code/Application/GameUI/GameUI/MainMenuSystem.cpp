@@ -8,6 +8,7 @@
 #include "Engine/ApplicationComponents.h"
 #include "Engine/LevelComponents.h"
 #include "Engine/UIManager.h"
+#include "Engine/VersionComponent.h"
 #include "GameUI/DCMainMenu.h"
 #include "GameUI/MainMenuComponents.h"
 
@@ -23,9 +24,11 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.CreateWidget(strMainMenu_xaml);
 
+		const auto& versionComponent = world.ReadSingleton<eng::VersionComponent>();
 		const auto& menuComponent = world.ReadComponent<gui::main_menu::WindowComponent>(entity);
 		auto& dataContext = uiManager.WriteDataContext<gui::DCMainMenu>(strMainMenu_xaml);
 		dataContext.SetNewGameLevel(menuComponent.m_NewGame);
+		dataContext.SetVersion(versionComponent.m_Version);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<gui::main_menu::WindowComponent>>())

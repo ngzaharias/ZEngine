@@ -20,6 +20,9 @@ namespace gui
 		const char* GetNewGameLevel() const;
 		void SetNewGameLevel(const str::Name& value);
 
+		const char* GetVersion() const;
+		void SetVersion(const str::String& value);
+
 	private:
 		const NoesisApp::DelegateCommand* GetContinueGameCommand() const { return &m_ContinueGameCommand; }
 		const NoesisApp::DelegateCommand* GetExitGameCommand() const { return &m_ExitGameCommand; }
@@ -41,6 +44,7 @@ namespace gui
 		NoesisApp::DelegateCommand m_SettingsCommand = {};
 
 		str::Name m_NewGameLevel = {};
+		str::String m_Version = {};
 
 		NS_DECLARE_REFLECTION(gui::DCMainMenu, eng::UIDataContext)
 	};
