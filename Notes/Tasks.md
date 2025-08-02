@@ -1,6 +1,4 @@
-- [ ] UI
-	- https://youtu.be/by9lQvpvMIc
-	- https://github.com/nicbarker/clay
+- [x] UI
 - [ ] Savegame
 - [ ] Post-processing
 - [ ] Customisable colours
