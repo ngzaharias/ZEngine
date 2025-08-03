@@ -18,7 +18,11 @@
   <Grid Background="{StaticResource Brush.Background0}">
     <Viewbox>
       <Grid Width="1280" Height="720">
-        <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Style.SubHeader.Text}" Margin="0" FontSize="60"/>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="5*"/>
+          <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{StaticResource Style.SubHeader.Text}" Margin="0" FontSize="20"/>
       </Grid>
     </Viewbox>
   </Grid>
