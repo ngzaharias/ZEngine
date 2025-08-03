@@ -18,16 +18,20 @@
     </ResourceDictionary>
   </Page.Resources>
   <Grid Style="{StaticResource Style.Fade}">
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="2*"/>
-      <ColumnDefinition Width="1*"/>
-      <ColumnDefinition Width="2*"/>
-    </Grid.ColumnDefinitions>
-    <StackPanel VerticalAlignment="Center" Margin="0" Grid.Column="1">
-      <Button x:Name="Resume" Content="Resume" Style="{StaticResource Style.Button}" Command="{Binding CloseCommand}"/>
-      <Button x:Name="Settings" Content="Settings" Style="{StaticResource Style.Button}" Command="{Binding SettingsCommand}"/>
-      <Button x:Name="ExitToMenu" Content="Exit to Menu" Style="{StaticResource Style.Button}" Command="{Binding ExitToMenuCommand}"/>
-      <Button x:Name="ExitGame" Content="Exit Game" Style="{StaticResource Style.Button}" Command="{Binding ExitGameCommand}"/>
-    </StackPanel>
+    <Viewbox Margin="0">
+      <Grid Width="1280" Height="720">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="4*"/>
+          <ColumnDefinition Width="3*"/>
+          <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel VerticalAlignment="Center" Margin="0" Grid.Column="1">
+          <Button x:Name="Resume" Content="Resume" Style="{StaticResource Style.Button}" Command="{Binding CloseCommand}"/>
+          <Button x:Name="Settings" Content="Settings" Style="{StaticResource Style.Button}" Command="{Binding SettingsCommand}"/>
+          <Button x:Name="ExitToMenu" Content="Exit to Menu" Style="{StaticResource Style.Button}" Command="{Binding ExitToMenuCommand}"/>
+          <Button x:Name="ExitGame" Content="Exit Game" Style="{StaticResource Style.Button}" Command="{Binding ExitGameCommand}"/>
+        </StackPanel>
+      </Grid>
+    </Viewbox>
   </Grid>
 </Page>
