@@ -28,7 +28,7 @@ namespace gui::loading
 			// Resources
 			eng::UIManager,
 			// Components
-			const eng::level::LoadingComponent,
+			eng::level::LoadingComponent,
 			const gui::loading::CloseRequest>;
 
 		void Update(World& world, const GameTime& gameTime);

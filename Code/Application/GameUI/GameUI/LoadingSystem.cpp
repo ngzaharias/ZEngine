@@ -32,4 +32,14 @@ void gui::loading::LoadingSystem::Update(World& world, const GameTime& gameTime)
 		uiManager.DestroyWidget(strLoading_xaml);
 		uiManager.DestroyWidget(strSplash_xaml);
 	}
+
+	// Events
+	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<gui::loading::CloseRequest>>())
+	{
+		for (const ecs::Entity& levelEntity : world.Query<ecs::query::Include<eng::level::LoadingComponent>>())
+		{
+			auto& loadingComponent = world.WriteComponent<eng::level::LoadingComponent>(levelEntity);
+			loadingComponent.m_FadeOutTimer = loadingComponent.m_FadeOutTime;
+		}
+	}
 }
