@@ -18,6 +18,7 @@
 #include "GameUI/InputComponents.h"
 #include "GameUI/LevelCompleteComponents.h"
 #include "GameUI/LevelCompleteSystem.h"
+#include "GameUI/LoadingComponents.h"
 #include "GameUI/LoadingSystem.h"
 #include "GameUI/MainMenuComponents.h"
 #include "GameUI/MainMenuSystem.h"
@@ -53,6 +54,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterComponent<gui::level_complete::ExitGameRequest>();
 		m_EntityWorld.RegisterComponent<gui::level_complete::ExitToMenuRequest>();
 		m_EntityWorld.RegisterComponent<gui::level_complete::WindowComponent>();
+		m_EntityWorld.RegisterComponent<gui::loading::CloseRequest>();
 		m_EntityWorld.RegisterComponent<gui::main_menu::ContinueGameRequest>();
 		m_EntityWorld.RegisterComponent<gui::main_menu::ExitGameRequest>();
 		m_EntityWorld.RegisterComponent<gui::main_menu::LoadGameRequest>();
