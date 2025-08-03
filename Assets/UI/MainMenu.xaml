@@ -5,42 +5,84 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d"
   d:DesignWidth="1920"
-  d:DesignHeight="1080" Style="{DynamicResource Style.Page}" d:DataContext="DCMainMenu.Data">
+  d:DesignHeight="1080" Style="{DynamicResource Style.Page}" d:DataContext="Default">
   <Page.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Themes/Default.xaml" />
       </ResourceDictionary.MergedDictionaries>
+      <Storyboard x:Key="Loaded">
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Buttons" Storyboard.TargetProperty="(UIElement.Opacity)">
+          <LinearDoubleKeyFrame Value="0" KeyTime="0:0:1"/>
+          <EasingDoubleKeyFrame Value="1" KeyTime="0:0:2">
+            <EasingDoubleKeyFrame.EasingFunction>
+              <SineEase EasingMode="EaseInOut"/>
+            </EasingDoubleKeyFrame.EasingFunction>
+          </EasingDoubleKeyFrame>
+        </DoubleAnimationUsingKeyFrames>
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Buttons" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+          <LinearDoubleKeyFrame Value="200" KeyTime="0:0:1"/>
+          <SplineDoubleKeyFrame KeySpline="0.24,0.73,0.38,0.96" Value="0" KeyTime="0:0:2"/>
+        </DoubleAnimationUsingKeyFrames>
+      </Storyboard>
     </ResourceDictionary>
   </Page.Resources>
+  <Page.Triggers>
+    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+      <BeginStoryboard Storyboard="{StaticResource Loaded}" />
+    </EventTrigger>
+  </Page.Triggers>
   <Grid>
-    <Image Source="Textures/Pages/Page03/T_Background.png" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    <Grid>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="1*"/>
-        <RowDefinition Height="2*"/>
-        <RowDefinition Height="1*"/>
-      </Grid.RowDefinitions>
-      <Image Source="Textures/T_Logo.png" Grid.Row="1" Margin="480,0"/>
-    </Grid>
-    <Grid Margin="64,64,64,64">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="1*"/>
-        <RowDefinition Height="1*"/>
-      </Grid.RowDefinitions>
-      <StackPanel Grid.Row="1" VerticalAlignment="Center">
-        <Button Content="New Game" Style="{StaticResource Style.Button}" Command="{Binding NewGameCommand}"/>
-        <Button Content="Continue" Style="{StaticResource Style.Button}" Command="{Binding ContinueGameCommand}" Visibility="Collapsed"/>
-        <Button Content="Load Game" Style="{StaticResource Style.Button}" Command="{Binding LoadGameCommand}" Visibility="Collapsed"/>
-        <Button Content="Settings" Style="{StaticResource Style.Button}" Command="{Binding SettingsCommand}"/>
-        <Button Content="Exit Game" Style="{StaticResource Style.Button}" Command="{Binding ExitGameCommand}"/>
-      </StackPanel>
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="1*"/>
-        <ColumnDefinition Width="2*"/>
-        <ColumnDefinition Width="1*"/>
-      </Grid.ColumnDefinitions>
-    </Grid>
-    <TextBlock Text="{Binding Version}" TextWrapping="Wrap" VerticalAlignment="Bottom" HorizontalAlignment="Left" Padding="16,16,16,16" Foreground="{DynamicResource Brush.Foreground}" FontSize="20"/>
+    <Viewbox>
+      <Grid Height="720" Width="1280">
+        <Image Source="Textures/Pages/Page03/T_Background.png" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+          </Grid.RowDefinitions>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+          </Grid.ColumnDefinitions>
+          <Image Source="Textures/T_Logo.png" Grid.Row="1" Grid.Column="1"/>
+        </Grid>
+        <Grid Margin="64,64,64,64">
+          <Grid.RenderTransform>
+            <TransformGroup>
+              <ScaleTransform/>
+              <SkewTransform/>
+              <RotateTransform/>
+              <TranslateTransform/>
+            </TransformGroup>
+          </Grid.RenderTransform>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="1*"/>
+          </Grid.RowDefinitions>
+          <StackPanel x:Name="Buttons" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Opacity="0" Grid.RowSpan="2">
+            <StackPanel.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform/>
+                <SkewTransform/>
+                <RotateTransform/>
+                <TranslateTransform Y="200"/>
+              </TransformGroup>
+            </StackPanel.RenderTransform>
+            <Button Content="New Game" Style="{StaticResource Style.Button}" Command="{Binding NewGameCommand}"/>
+            <Button Content="Settings" Style="{StaticResource Style.Button}" Command="{Binding SettingsCommand}" FontSize="20"/>
+            <Button Content="Exit Game" Style="{StaticResource Style.Button}" Command="{Binding ExitGameCommand}" FontSize="20"/>
+          </StackPanel>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="1*"/>
+          </Grid.ColumnDefinitions>
+        </Grid>
+        <TextBlock Text="{Binding Version}" TextWrapping="Wrap" VerticalAlignment="Bottom" HorizontalAlignment="Left" Padding="16,16,16,16" Foreground="{DynamicResource Brush.Foreground}" FontSize="20"/>
+      </Grid>
+    </Viewbox>
   </Grid>
 </Page>
