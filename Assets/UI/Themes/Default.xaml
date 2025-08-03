@@ -16,12 +16,12 @@
   <Style x:Key="Style.Button" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
     <Setter Property="Padding" Value="16,16,16,16"/>
     <Setter Property="HorizontalContentAlignment" Value="Center"/>
-    <Setter Property="FontSize" Value="32"/>
-    <Setter Property="Margin" Value="8,8,8,8"/>
+    <Setter Property="Margin" Value="4,4,4,4"/>
     <Setter Property="Background" Value="{DynamicResource Brush.Background0}"/>
     <Setter Property="BorderThickness" Value="4,4,4,4"/>
     <Setter Property="Foreground" Value="{StaticResource Brush.Foreground}"/>
     <Setter Property="BorderBrush" Value="{StaticResource Brush.Foreground}"/>
+    <Setter Property="FontSize" Value="20"/>
   </Style>
   <Style x:Key="Style.SubHeader.Text" TargetType="TextBlock">
     <Setter Property="HorizontalAlignment" Value="Left"/>

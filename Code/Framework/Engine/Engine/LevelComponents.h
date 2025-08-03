@@ -43,7 +43,9 @@ namespace eng::level
 
 		ELoadingState m_StateCurrent = ELoadingState::FadeOut;
 		ELoadingState m_StatePrevious = ELoadingState::FadeOut;
+		float m_FadeInTime = 1.f;
 		float m_FadeInTimer = 0.f;
+		float m_FadeOutTime = 1.f;
 		float m_FadeOutTimer = 0.f;
 		bool m_IsSplash = false;
 	};

@@ -18,12 +18,15 @@ namespace gui
 		int32 GetProgress() const;
 		void SetProgress(int32 value);
 
-		bool GetIsSplash() const;
-		void SetIsSplash(bool value);
+		const NoesisApp::DelegateCommand* GetCloseCommand() const { return &m_CloseCommand; }
+
+	private:
+		void OnCloseCommand(Noesis::BaseComponent* param);
 
 	private:
 		int32 m_Progress = 0;
-		bool m_IsSplash = false;
+
+		NoesisApp::DelegateCommand m_CloseCommand = {};
 
 		NS_DECLARE_REFLECTION(gui::DCLoadingScreen, eng::UIDataContext)
 	};

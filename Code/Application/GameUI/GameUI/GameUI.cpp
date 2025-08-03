@@ -18,7 +18,7 @@
 #include "GameUI/InputComponents.h"
 #include "GameUI/LevelCompleteComponents.h"
 #include "GameUI/LevelCompleteSystem.h"
-#include "GameUI/LoadingScreenSystem.h"
+#include "GameUI/LoadingSystem.h"
 #include "GameUI/MainMenuComponents.h"
 #include "GameUI/MainMenuSystem.h"
 #include "GameUI/SettingsMenuComponents.h"
@@ -29,9 +29,10 @@ namespace
 	const str::Name strGameMenu_xaml = NAME("GameMenu.xaml");
 	const str::Name strHiddenCount_xaml = NAME("HiddenCount.xaml");
 	const str::Name strLevelComplete_xaml = NAME("LevelComplete.xaml");
-	const str::Name strLoadingScreen_xaml = NAME("LoadingScreen.xaml");
+	const str::Name strLoading_xaml = NAME("Loading.xaml");
 	const str::Name strMainMenu_xaml = NAME("MainMenu.xaml");
 	const str::Name strSettingsMenu_xaml = NAME("SettingsMenu.xaml");
+	const str::Name strSplash_xaml = NAME("Splash.xaml");
 }
 
 gui::GameUI::GameUI(ecs::EntityWorld& entityWorld)
@@ -70,7 +71,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterSystem<gui::hidden::LevelSystem>();
 		m_EntityWorld.RegisterSystem<gui::input::BindingsSystem>();
 		m_EntityWorld.RegisterSystem<gui::level_complete::MenuSystem>();
-		m_EntityWorld.RegisterSystem<gui::LoadingScreenSystem>();
+		m_EntityWorld.RegisterSystem<gui::loading::LoadingSystem>();
 		m_EntityWorld.RegisterSystem<gui::main_menu::MenuSystem>();
 		m_EntityWorld.RegisterSystem<gui::settings_menu::MenuSystem>();
 	}
@@ -88,7 +89,8 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 		uiManager.RegisterDataContext<gui::DCGameMenu>(strGameMenu_xaml);
 		uiManager.RegisterDataContext<gui::DCHiddenCount>(strHiddenCount_xaml);
 		uiManager.RegisterDataContext<gui::DCLevelComplete>(strLevelComplete_xaml);
-		uiManager.RegisterDataContext<gui::DCLoadingScreen>(strLoadingScreen_xaml);
+		uiManager.RegisterDataContext<gui::DCLoadingScreen>(strLoading_xaml);
+		uiManager.RegisterDataContext<gui::DCLoadingScreen>(strSplash_xaml);
 		uiManager.RegisterDataContext<gui::DCMainMenu>(strMainMenu_xaml);
 		uiManager.RegisterDataContext<gui::DCSettingsMenu>(strSettingsMenu_xaml);
 	}

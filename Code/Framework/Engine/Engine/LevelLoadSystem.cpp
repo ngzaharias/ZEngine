@@ -56,6 +56,8 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 		auto& loadingComponent = world.AddComponent<eng::level::LoadingComponent>(levelEntity);
 		loadingComponent.m_Name = request.m_Name;
 		loadingComponent.m_IsSplash = request.m_IsSplash;
+		if (request.m_IsSplash)
+			loadingComponent.m_FadeOutTime = 8.f;
 	}
 
 	// loading
@@ -69,7 +71,7 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 		case eng::level::ELoadingState::FadeOut:
 		{
 			loadingComponent.m_FadeOutTimer += gameTime.m_DeltaTime;
-			if (loadingComponent.m_FadeOutTimer > 1.f)
+			if (loadingComponent.m_FadeOutTimer > loadingComponent.m_FadeOutTime)
 				loadingComponent.m_StateCurrent = eng::level::ELoadingState::Unload;
 		} break;
 
@@ -96,7 +98,7 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 		case eng::level::ELoadingState::FadeIn:
 		{
 			loadingComponent.m_FadeInTimer += gameTime.m_DeltaTime;
-			if (loadingComponent.m_FadeInTimer > 1.f)
+			if (loadingComponent.m_FadeInTimer > loadingComponent.m_FadeInTime)
 				world.DestroyEntity(levelEntity);
 		} break;
 		}

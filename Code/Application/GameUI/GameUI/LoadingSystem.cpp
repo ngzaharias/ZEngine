@@ -1,5 +1,5 @@
 #include "GameUIPCH.h"
-#include "GameUI/LoadingScreenSystem.h"
+#include "GameUI/LoadingSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -10,24 +10,26 @@
 
 namespace
 {
-	const str::Name strLoadingScreen_xaml = NAME("LoadingScreen.xaml");
+	const str::Name strLoading_xaml = NAME("Loading.xaml");
+	const str::Name strSplash_xaml = NAME("Splash.xaml");
 }
 
-void gui::LoadingScreenSystem::Update(World& world, const GameTime& gameTime)
+void gui::loading::LoadingSystem::Update(World& world, const GameTime& gameTime)
 {
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::level::LoadingComponent>>())
 	{
 		const auto& loadingComponent = world.ReadComponent<eng::level::LoadingComponent>(entity);
 		auto& uiManager = world.WriteResource<eng::UIManager>();
-		uiManager.CreateWidget(strLoadingScreen_xaml);
-
-		auto& dataContext = uiManager.WriteDataContext<gui::DCLoadingScreen>(strLoadingScreen_xaml);
-		dataContext.SetIsSplash(loadingComponent.m_IsSplash);
+		const str::Name& widget = !loadingComponent.m_IsSplash
+			? strLoading_xaml
+			: strSplash_xaml;
+		uiManager.CreateWidget(widget);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::level::LoadingComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
-		uiManager.DestroyWidget(strLoadingScreen_xaml);
+		uiManager.DestroyWidget(strLoading_xaml);
+		uiManager.DestroyWidget(strSplash_xaml);
 	}
 }

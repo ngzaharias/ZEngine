@@ -14,16 +14,22 @@ namespace eng::level
 	struct LoadingComponent;
 }
 
-namespace gui
+namespace gui::loading
 {
-	class LoadingScreenSystem final : public ecs::System
+	struct CloseRequest;
+}
+
+namespace gui::loading
+{
+	class LoadingSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
 			// Resources
 			eng::UIManager,
 			// Components
-			const eng::level::LoadingComponent>;
+			const eng::level::LoadingComponent,
+			const gui::loading::CloseRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

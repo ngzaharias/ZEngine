@@ -3,11 +3,13 @@
 
 #include "ECS/EntityWorld.h"
 #include "Engine/SettingsComponents.h"
+#include "GameUI/LoadingComponents.h"
 
 #include <NsCore/ReflectionImplement.h>
 
 gui::DCLoadingScreen::DCLoadingScreen()
 {
+	m_CloseCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCLoadingScreen::OnCloseCommand));
 }
 
 gui::DCLoadingScreen::~DCLoadingScreen()
@@ -28,22 +30,14 @@ void gui::DCLoadingScreen::SetProgress(int32 value)
 	}
 }
 
-bool gui::DCLoadingScreen::GetIsSplash() const
+void gui::DCLoadingScreen::OnCloseCommand(Noesis::BaseComponent* param)
 {
-	return m_IsSplash;
-}
-
-void gui::DCLoadingScreen::SetIsSplash(bool value)
-{
-	if (m_IsSplash != value)
-	{
-		m_IsSplash = value;
-		OnPropertyChanged("IsSplash");
-	}
+	m_EntityWorld->AddEventComponent<gui::loading::CloseRequest>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCLoadingScreen)
 {
 	NsProp("Progress", &gui::DCLoadingScreen::GetProgress, &gui::DCLoadingScreen::SetProgress);
-	NsProp("IsSplash", &gui::DCLoadingScreen::GetIsSplash, &gui::DCLoadingScreen::SetIsSplash);
+
+	NsProp("CloseCommand", &gui::DCLoadingScreen::GetCloseCommand);
 }
