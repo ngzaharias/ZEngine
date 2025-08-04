@@ -10,6 +10,8 @@
   d:DesignHeight="720" Focusable="True">
   <Page.InputBindings>
     <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
+    <KeyBinding Key="Space" Command="{Binding CloseCommand}"/>
+    <MouseBinding MouseAction="LeftClick" Command="{Binding CloseCommand}"/>
   </Page.InputBindings>
   <Page.Resources>
     <ResourceDictionary>
