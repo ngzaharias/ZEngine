@@ -2,12 +2,14 @@
 #include "Engine/WindowManager.h"
 
 #include "Core/Algorithms.h"
+#include "Core/Path.h"
 #include "Engine/GLFW/Window.h"
 #include "Engine/WindowConfig.h"
 #include "Engine/WindowModeEnum.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
+#include <stb/stb_image.h>
 
 namespace
 {
@@ -43,8 +45,21 @@ void eng::WindowManager::Initialise()
 		return;
 
 #ifdef Z_GLFW
-	if (auto* glfwWindow = reinterpret_cast<glfw::Window*>(m_Windows[0]))
-		glfwMakeContextCurrent(glfwWindow->GetWindow());
+	if (auto* window = reinterpret_cast<glfw::Window*>(m_Windows[0]))
+	{
+		auto* glfwWindow = window->GetWindow();
+		glfwSetWindowTitle(glfwWindow, "With My Little Eye");
+		glfwMakeContextCurrent(glfwWindow);
+
+		int channels;
+		GLFWimage icon;
+		const str::Path filepath = str::Path(str::EPath::WorkingDir, "ClientIcon.png");
+		if (icon.pixels = stbi_load(filepath.ToChar(), &icon.width, &icon.height, &channels, STBI_rgb_alpha))
+		{
+			glfwSetWindowIcon(glfwWindow, 1, &icon);
+			stbi_image_free(icon.pixels);
+		}
+	}
 
 	glfwSwapInterval(config.m_IsVSyncEnabled);
 

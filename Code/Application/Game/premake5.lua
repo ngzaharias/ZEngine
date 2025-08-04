@@ -168,6 +168,7 @@ project "Game"
 			"{COPY} %{wks.location}/../3rdParty/NoesisGUI/3.2.8-Indie/Binary/*.dll $(OutDir)",
 			"{COPY} %{wks.location}/../3rdParty/optick/1.3.1/Binary/*.dll $(OutDir)",
 			"{COPY} %{wks.location}/../3rdParty/SteamworksSDK/Binary/*.dll $(OutDir)",
+			"{COPY} %{wks.location}/../Code/Application/Game/Resource/ClientIcon.png $(OutDir)",
 			"{COPY} %{wks.location}/../steam_appid.txt $(OutDir)",
 		}
 	filter { "kind:*App", "Debug*" }
