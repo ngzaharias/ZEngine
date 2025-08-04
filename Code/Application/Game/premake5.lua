@@ -17,7 +17,7 @@ project "Game"
 		"%{wks.location}/../Code/Application/Game/Game/**.h",
 		"%{wks.location}/../Code/Application/Game/Game/**.cpp",
 		"%{wks.location}/../Code/Application/Game/Game/**.inl",
-		"%{wks.location}/../Code/Application/Resource/**.*",
+		"%{wks.location}/../Code/Application/Game/Resource/**.*",
 	}
 
 	vpaths 
