@@ -12,7 +12,7 @@
         <ResourceDictionary Source="Themes/Default.xaml" />
       </ResourceDictionary.MergedDictionaries>
       <Storyboard x:Key="Loaded">
-        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Buttons" Storyboard.TargetProperty="(UIElement.Opacity)">
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ButtonsA" Storyboard.TargetProperty="(UIElement.Opacity)">
           <LinearDoubleKeyFrame Value="0" KeyTime="0:0:1"/>
           <EasingDoubleKeyFrame Value="1" KeyTime="0:0:2">
             <EasingDoubleKeyFrame.EasingFunction>
@@ -20,9 +20,25 @@
             </EasingDoubleKeyFrame.EasingFunction>
           </EasingDoubleKeyFrame>
         </DoubleAnimationUsingKeyFrames>
-        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Buttons" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ButtonsA" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
           <LinearDoubleKeyFrame Value="200" KeyTime="0:0:1"/>
-          <SplineDoubleKeyFrame KeySpline="0.24,0.73,0.38,0.96" Value="0" KeyTime="0:0:2"/>
+          <EasingDoubleKeyFrame Value="0" KeyTime="0:0:2">
+            <EasingDoubleKeyFrame.EasingFunction>
+              <ExponentialEase EasingMode="EaseOut"/>
+            </EasingDoubleKeyFrame.EasingFunction>
+          </EasingDoubleKeyFrame>
+        </DoubleAnimationUsingKeyFrames>
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ButtonsB" Storyboard.TargetProperty="(UIElement.Opacity)">
+          <LinearDoubleKeyFrame KeyTime="00:00:01" Value="0"/>
+          <LinearDoubleKeyFrame KeyTime="00:00:02" Value="1"/>
+        </DoubleAnimationUsingKeyFrames>
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ButtonsB" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+          <LinearDoubleKeyFrame KeyTime="00:00:01" Value="200"/>
+          <EasingDoubleKeyFrame Value="0" KeyTime="0:0:2">
+            <EasingDoubleKeyFrame.EasingFunction>
+              <ExponentialEase EasingMode="EaseOut"/>
+            </EasingDoubleKeyFrame.EasingFunction>
+          </EasingDoubleKeyFrame>
         </DoubleAnimationUsingKeyFrames>
       </Storyboard>
     </ResourceDictionary>
@@ -62,7 +78,7 @@
             <RowDefinition Height="10*"/>
             <RowDefinition Height="1*"/>
           </Grid.RowDefinitions>
-          <StackPanel x:Name="Buttons" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Opacity="0" Grid.RowSpan="2">
+          <StackPanel x:Name="ButtonsA" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Opacity="0" Grid.RowSpan="2">
             <StackPanel.RenderTransform>
               <TransformGroup>
                 <ScaleTransform/>
@@ -74,6 +90,17 @@
             <Button Content="New Game" Style="{StaticResource Style.Button}" Command="{Binding NewGameCommand}"/>
             <Button Content="Settings" Style="{StaticResource Style.Button}" Command="{Binding SettingsCommand}" FontSize="20"/>
             <Button Content="Exit Game" Style="{StaticResource Style.Button}" Command="{Binding ExitGameCommand}" FontSize="20"/>
+          </StackPanel>
+          <StackPanel x:Name="ButtonsB" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Opacity="0" Grid.RowSpan="2" Grid.Column="2">
+            <StackPanel.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform/>
+                <SkewTransform/>
+                <RotateTransform/>
+                <TranslateTransform Y="200"/>
+              </TransformGroup>
+            </StackPanel.RenderTransform>
+            <Button Style="{StaticResource Style.Button}" Command="{Binding Path=ReportCommand}" Content="Report"/>
           </StackPanel>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>

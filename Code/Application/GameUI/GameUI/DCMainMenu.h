@@ -28,12 +28,14 @@ namespace gui
 		const NoesisApp::DelegateCommand* GetExitGameCommand() const { return &m_ExitGameCommand; }
 		const NoesisApp::DelegateCommand* GetLoadGameCommand() const { return &m_LoadGameCommand; }
 		const NoesisApp::DelegateCommand* GetNewGameCommand() const { return &m_NewGameCommand; }
+		const NoesisApp::DelegateCommand* GetReportCommand() const { return &m_ReportCommand; }
 		const NoesisApp::DelegateCommand* GetSettingsCommand() const { return &m_SettingsCommand; }
 
 		void OnContinueGameCommand(Noesis::BaseComponent* param);
 		void OnExitGameCommand(Noesis::BaseComponent* param);
 		void OnLoadGameCommand(Noesis::BaseComponent* param);
 		void OnNewGameCommand(Noesis::BaseComponent* param);
+		void OnReportCommand(Noesis::BaseComponent* param);
 		void OnSettingsCommand(Noesis::BaseComponent* param);
 
 	private:
@@ -41,6 +43,7 @@ namespace gui
 		NoesisApp::DelegateCommand m_ExitGameCommand = {};
 		NoesisApp::DelegateCommand m_LoadGameCommand = {};
 		NoesisApp::DelegateCommand m_NewGameCommand = {};
+		NoesisApp::DelegateCommand m_ReportCommand = {};
 		NoesisApp::DelegateCommand m_SettingsCommand = {};
 
 		str::Name m_NewGameLevel = {};

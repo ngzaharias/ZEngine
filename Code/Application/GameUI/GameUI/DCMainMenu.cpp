@@ -7,12 +7,15 @@
 
 #include <NsCore/ReflectionImplement.h>
 
+#include <windows.h>
+
 gui::DCMainMenu::DCMainMenu()
 {
 	m_ContinueGameCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCMainMenu::OnContinueGameCommand));
 	m_ExitGameCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCMainMenu::OnExitGameCommand));
 	m_LoadGameCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCMainMenu::OnLoadGameCommand));
 	m_NewGameCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCMainMenu::OnNewGameCommand));
+	m_ReportCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCMainMenu::OnReportCommand));
 	m_SettingsCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCMainMenu::OnSettingsCommand));
 }
 
@@ -65,6 +68,28 @@ void gui::DCMainMenu::OnNewGameCommand(Noesis::BaseComponent* param)
 	request.m_Level = m_NewGameLevel;
 }
 
+void gui::DCMainMenu::OnReportCommand(Noesis::BaseComponent* param)
+{
+	const wchar_t* recipient = L"support@papa-koala.com";
+	const wchar_t* subject = L"With My Little Eye";
+	const wchar_t* body =
+		L"Issue:%0D%0A"
+		L"%0D%0A"
+		L"Attachments:%0D%0A"
+		L"%0D%0A";
+
+	// Format mailto URI
+	wchar_t mailto[1024];
+	swprintf(mailto, 1024,
+		L"mailto:%s?subject=%s&body=%s",
+		recipient,
+		subject,
+		body
+	);
+
+	ShellExecuteW(nullptr, L"open", mailto, nullptr, nullptr, SW_SHOWNORMAL);
+}
+
 void gui::DCMainMenu::OnSettingsCommand(Noesis::BaseComponent* param)
 {
 	m_EntityWorld->AddEventComponent<gui::settings_menu::OpenRequest>();
@@ -78,5 +103,6 @@ NS_IMPLEMENT_REFLECTION(gui::DCMainMenu)
 	NsProp("ExitGameCommand", &gui::DCMainMenu::GetExitGameCommand);
 	NsProp("LoadGameCommand", &gui::DCMainMenu::GetLoadGameCommand);
 	NsProp("NewGameCommand", &gui::DCMainMenu::GetNewGameCommand);
+	NsProp("ReportCommand", &gui::DCMainMenu::GetReportCommand);
 	NsProp("SettingsCommand", &gui::DCMainMenu::GetSettingsCommand);
 }
