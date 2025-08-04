@@ -23,6 +23,10 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+#ifdef Z_RELEASE
+	return;
+#endif
+
 	constexpr ImGuiWindowFlags s_Flags =
 		ImGuiWindowFlags_NoBackground |
 		ImGuiWindowFlags_NoBringToFrontOnFocus |
