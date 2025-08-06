@@ -8,10 +8,13 @@
 #include "Engine/SpriteComponent.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
+#include "Hidden/HiddenSettingsComponents.h"
 
 void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	const auto& settings = world.ReadSingleton<hidden::settings::LocalComponent>();
 
 	using Query = ecs::query
 		::Added<const hidden::RevealComponent>
@@ -26,7 +29,7 @@ void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 			core::VariantMatch(effect,
 				[&](const hidden::SetColour& data)
 				{
-					sprite.m_Colour = data.m_Colour;
+					sprite.m_Colour = settings.m_Highlight;
 				},
 				[&](const hidden::SetSprite& data)
 				{

@@ -14,6 +14,11 @@ namespace hidden
 	struct RevealComponent;
 }
 
+namespace hidden::settings
+{
+	struct LocalComponent;
+}
+
 namespace hidden
 {
 	class SpriteSystem final : public ecs::System
@@ -22,7 +27,8 @@ namespace hidden
 		using World = ecs::WorldView<
 			eng::SpriteComponent,
 			const hidden::ObjectComponent,
-			const hidden::RevealComponent>;
+			const hidden::RevealComponent,
+			const hidden::settings::LocalComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

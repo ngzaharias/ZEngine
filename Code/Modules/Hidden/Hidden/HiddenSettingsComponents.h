@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Colour.h"
 #include "ECS/Component.h"
 
 namespace hidden::settings
@@ -9,5 +10,13 @@ namespace hidden::settings
 	{
 		bool m_IsInputEnabled = false;
 		bool m_IsObjectEnabled = false;
+	};
+
+	/// \brief 
+	struct LocalComponent : public ecs::SingletonComponent<LocalComponent>
+	{
+		Colour m_Background = Colour::White;
+		Colour m_Highlight = Colour(0.54f, 0.54f, 0.91f);
+		Colour m_Outline = Colour::Black;
 	};
 }

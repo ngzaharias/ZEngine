@@ -63,5 +63,6 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSingleton<gamestate::NetworkJoinComponent>();
 	entityWorld.RegisterSingleton<gamestate::StateComponent>();
 	entityWorld.RegisterSingleton<hidden::settings::DebugComponent>();
+	entityWorld.RegisterSingleton<hidden::settings::LocalComponent>();
 	entityWorld.RegisterSingleton<projectile::ChangesComponent>();
 }
