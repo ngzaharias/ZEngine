@@ -19,7 +19,7 @@ namespace eng::settings
 	{
 		Rotator m_RotateSpeed = Rotator(0.2f);
 		float m_TranslateSpeed = 1000.f;
-		float m_ZoomAmount = 100.f;
+		float m_ZoomAmount = 300.f;
 		float m_ZoomSpeed = 0.1f;
 	};
 
