@@ -7,6 +7,7 @@ namespace eng
 {
 	class RenderStage;
 	class UIManager;
+	class WindowManager;
 }
 
 namespace eng
