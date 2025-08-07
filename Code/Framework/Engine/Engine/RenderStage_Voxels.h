@@ -45,8 +45,8 @@ namespace eng
 			const eng::DynamicMeshComponent,
 			const voxel::ChunkComponent>;
 
-		void Initialise(ecs::EntityWorld& world) override;
-		void Shutdown(ecs::EntityWorld& world) override;
+		void Initialise(ecs::EntityWorld& entityWorld) override;
+		void Shutdown(ecs::EntityWorld& entityWorld) override;
 
 		void Render(ecs::EntityWorld& entityWorld) override;
 	};

@@ -46,10 +46,10 @@ namespace eng
 			const eng::TextComponent,
 			const eng::TransformComponent>;
 
-		void Initialise(ecs::EntityWorld& world) override;
-		void Shutdown(ecs::EntityWorld& world) override;
+		void Initialise(ecs::EntityWorld& entityWorld) override;
+		void Shutdown(ecs::EntityWorld& entityWorld) override;
 
-		void Render(ecs::EntityWorld& world) override;
+		void Render(ecs::EntityWorld& entityWorld) override;
 
 	private:
 		uint32 m_AttributeObject = 0;

@@ -7,7 +7,6 @@ namespace eng
 {
 	class RenderStage;
 	class UIManager;
-	class WindowManager;
 }
 
 namespace eng
@@ -16,7 +15,6 @@ namespace eng
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::UIManager,
 			eng::WindowManager>;
 
 		RenderSystem(ecs::EntityWorld& entityWorld);
