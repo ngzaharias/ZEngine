@@ -11,7 +11,7 @@ namespace eng
 
 namespace eng
 {
-	class RenderStage_UI_Post final : public eng::RenderStage
+	class RenderStage_Noesis_Post final : public eng::RenderStage
 	{
 	public:
 		using World = ecs::WorldView<eng::UIManager>;

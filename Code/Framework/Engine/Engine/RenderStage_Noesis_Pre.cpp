@@ -1,5 +1,5 @@
 #include "EnginePCH.h"
-#include "Engine/RenderStage_UI_Pre.h"
+#include "Engine/RenderStage_Noesis_Pre.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -16,7 +16,7 @@ namespace
 	constexpr Colour s_ClearColour = Colour(0.24f);
 }
 
-void eng::RenderStage_UI_Pre::Render(ecs::EntityWorld& entityWorld)
+void eng::RenderStage_Noesis_Pre::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 

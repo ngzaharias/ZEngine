@@ -5,13 +5,14 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/RenderStage_Cursor.h"
+#include "Engine/RenderStage_ImGui.h"
 #include "Engine/RenderStage_Lines.h"
+#include "Engine/RenderStage_Noesis_Post.h"
+#include "Engine/RenderStage_Noesis_Pre.h"
 #include "Engine/RenderStage_Opaque.h"
 #include "Engine/RenderStage_Shadow.h"
 #include "Engine/RenderStage_Translucent.h"
 #include "Engine/RenderStage_UI.h"
-#include "Engine/RenderStage_UI_Post.h"
-#include "Engine/RenderStage_UI_Pre.h"
 #include "Engine/RenderStage_Voxels.h"
 
 // http://realtimecollisiondetection.net/blog/?p=86
@@ -21,14 +22,15 @@
 eng::RenderSystem::RenderSystem(ecs::EntityWorld& entityWorld)
 	: m_EntityWorld(entityWorld)
 {
-	RegisterStage<eng::RenderStage_UI_Pre>();
+	RegisterStage<eng::RenderStage_Noesis_Pre>();
 	RegisterStage<eng::RenderStage_Shadow>();
 	RegisterStage<eng::RenderStage_Voxels>();
 	RegisterStage<eng::RenderStage_Opaque>();
 	RegisterStage<eng::RenderStage_Lines>();
 	RegisterStage<eng::RenderStage_Translucent>();
 	RegisterStage<eng::RenderStage_UI>();
-	RegisterStage<eng::RenderStage_UI_Post>();
+	RegisterStage<eng::RenderStage_Noesis_Post>();
+	RegisterStage<eng::RenderStage_ImGui>();
 	RegisterStage<eng::RenderStage_Cursor>();
 }
 

@@ -48,6 +48,7 @@ void eng::ImguiManager::Initialise(const eng::Window& window)
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 	io.ConfigDockingWithShift = true;
 	io.ConfigDockingTransparentPayload = true;
 	//io.ConfigViewportsNoAutoMerge = true;
@@ -132,13 +133,6 @@ void eng::ImguiManager::PostUpdate()
 	if (!m_Window)
 		return;
 
-	// render
-	{
-		PROFILE_CUSTOM("ImGui::Render");
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	}
-
 	// viewports
 	if (AreViewportsEnabled())
 	{
@@ -161,7 +155,6 @@ void eng::ImguiManager::ProcessInput(
 	Set<input::EKey>& inout_Pressed,
 	Set<input::EKey>& inout_Released)
 {
-
 	if (ImGui::GetIO().WantCaptureKeyboard)
 	{
 		Set<input::EKey> held = inout_Held;
