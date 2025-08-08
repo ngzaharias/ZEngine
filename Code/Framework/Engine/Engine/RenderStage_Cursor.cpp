@@ -102,22 +102,10 @@ void eng::RenderStage_Cursor::Render(ecs::EntityWorld& entityWorld)
 			glVertexAttribDivisor(location, GL_FALSE);
 		}
 
-		//const Vector2f spritePos = Vector2f(spriteAsset->m_Position.x, spriteAsset->m_Position.y);
-		//const Vector2f spriteSize = Vector2f(spriteAsset->m_Size.x, spriteAsset->m_Size.y);
-		//const Vector2f textureSize = Vector2f((float)texture2DAsset->m_Width, (float)texture2DAsset->m_Height);
-		//const Vector2u componentSize = spriteComponent.m_Size.value_or(Vector2u((uint32)spriteSize.x, (uint32)spriteSize.y));
-
-		//const Vector3f modelScale = spriteTransform.m_Scale;
-		//const Vector3f spriteScale = Vector3f(
-		//	(float)componentSize.x / 100.f,
-		//	(float)componentSize.y / 100.f,
-		//	1.f);
-
 		const Matrix4x4 cameraProj = eng::camera::GetProjection(resolution, camera::UserInterface{});
 		const Matrix4x4 transform = Matrix4x4::FromTransform(
 			Vector3f(inputManager.m_MousePosition, 0.f),
-			Quaternion::Identity,
-			Vector3f::One);
+			Vector3f(32.f / 100.f, 32.f / 100.f, 1.f));
 
 		if (shader->u_CameraProj)
 		{
