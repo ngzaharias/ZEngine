@@ -95,7 +95,7 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 	if (!mesh || !shader)
 		return;
 
-	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
 	if (!window)
 		return;

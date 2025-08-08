@@ -89,7 +89,7 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 	if (texture->m_TextureId == 0)
 		return;
 
-	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
 	if (!window)
 		return;

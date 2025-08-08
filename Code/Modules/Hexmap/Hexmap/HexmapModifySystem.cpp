@@ -68,7 +68,7 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 		input.RemoveLayer(strInput);
 	}
 
-	const auto& windowManager = world.ReadResource<const eng::WindowManager>();
+	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
 	if (!window)
 		return;
