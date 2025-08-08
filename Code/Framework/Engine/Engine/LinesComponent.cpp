@@ -389,6 +389,10 @@ void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[3], corners[7], colour);
 }
 
+void eng::LinesComponent::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::UserInterface& projection, const Vector2u& size, const Colour& colour)
+{
+}
+
 void eng::LinesComponent::AddHexagon(const Vector3f& translate, const float radius, const Colour& colour)
 {
 	constexpr Vector3f s_DirectionE = Vector2f(+1.f, 0.f).X0Y();

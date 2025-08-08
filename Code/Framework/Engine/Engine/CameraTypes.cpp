@@ -19,14 +19,12 @@ void eng::Visitor::ReadCustom(eng::camera::Cinematic& value) const
 	Read(strClippingNear, value.m_ClippingNear, value.m_ClippingNear);
 	Read(strClippingFar, value.m_ClippingFar, value.m_ClippingFar);
 }
-
 template<>
 void eng::Visitor::WriteCustom(const eng::camera::Cinematic& value)
 {
 	Write(strClippingNear, value.m_ClippingNear);
 	Write(strClippingFar, value.m_ClippingFar);
 }
-
 template<>
 bool imgui::Inspector::WriteCustom(eng::camera::Cinematic& value)
 {
@@ -43,7 +41,6 @@ void eng::Visitor::ReadCustom(eng::camera::Orthographic& value) const
 	Read(strClippingFar, value.m_ClippingFar, value.m_ClippingFar);
 	Read(strSize, value.m_Size, value.m_Size);
 }
-
 template<>
 void eng::Visitor::WriteCustom(const eng::camera::Orthographic& value)
 {
@@ -51,7 +48,6 @@ void eng::Visitor::WriteCustom(const eng::camera::Orthographic& value)
 	Write(strClippingFar, value.m_ClippingFar);
 	Write(strSize, value.m_Size);
 }
-
 template<>
 bool imgui::Inspector::WriteCustom(eng::camera::Orthographic& value)
 {
@@ -70,7 +66,6 @@ void eng::Visitor::ReadCustom(eng::camera::Perspective& value) const
 	Read(strFieldOfView, value.m_FieldOfView, value.m_FieldOfView);
 	Read(strFoVAxis, value.m_FoVAxis, value.m_FoVAxis);
 }
-
 template<>
 void eng::Visitor::WriteCustom(const eng::camera::Perspective& value)
 {
@@ -79,7 +74,6 @@ void eng::Visitor::WriteCustom(const eng::camera::Perspective& value)
 	Write(strFieldOfView, value.m_FieldOfView);
 	Write(strFoVAxis, value.m_FoVAxis);
 }
-
 template<>
 bool imgui::Inspector::WriteCustom(eng::camera::Perspective& value)
 {
@@ -89,4 +83,18 @@ bool imgui::Inspector::WriteCustom(eng::camera::Perspective& value)
 	result |= Write("m_FieldOfView", value.m_FieldOfView);
 	result |= Write("m_FoVAxis", value.m_FoVAxis);
 	return result;
+}
+
+template<>
+void eng::Visitor::ReadCustom(eng::camera::UserInterface& value) const
+{
+}
+template<>
+void eng::Visitor::WriteCustom(const eng::camera::UserInterface& value)
+{
+}
+template<>
+bool imgui::Inspector::WriteCustom(eng::camera::UserInterface& value)
+{
+	return false;
 }

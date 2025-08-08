@@ -17,9 +17,11 @@ namespace eng::camera
 {
 	struct Orthographic;
 	struct Perspective;
+	struct UserInterface;
 	using Projection = Variant<
 		Orthographic,
-		Perspective>;
+		Perspective,
+		UserInterface>;
 }
 
 namespace eng
@@ -50,6 +52,8 @@ namespace eng
 		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Vector2u& size, const Colour& colour);
 		/// \brief Adds a frustum.
 		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Vector2u& size, const Colour& colour);
+		/// \brief Adds a frustum.
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::UserInterface& projection, const Vector2u& size, const Colour& colour);
 
 		/// \brief Adds an icosphere.
 		void AddIcosphere(const Vector3f& translate, const Sphere3f& sphere, const Colour& colour);

@@ -33,8 +33,15 @@ namespace eng::camera
 		EAxis m_FoVAxis = EAxis::Horizontal;
 	};
 
+	struct UserInterface
+	{
+		float m_ClippingNear = 0.3f;
+		float m_ClippingFar = 100.f;
+	};
+
 	using Projection = Variant<
 		//Cinematic, 
-		Orthographic, 
-		Perspective>;
+		Orthographic,
+		Perspective,
+		UserInterface>;
 }

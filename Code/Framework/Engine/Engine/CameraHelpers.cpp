@@ -78,6 +78,31 @@ Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Perspecti
 #endif
 }
 
+Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const UserInterface& settings)
+{
+	const float right = (float)windowSize.x;
+	const float bottom = (float)windowSize.y;
+	const float near = math::Max(settings.m_ClippingNear, 0.1f);
+	const float far = math::Max(settings.m_ClippingFar, near + 0.1f);
+
+#ifdef Z_OPENGL
+	Matrix4x4 projection = Matrix4x4::Identity;
+
+	// set the viewing volume to be the size of the window
+	// with 0,0 as the top left of the window
+	projection[0][0] = 2.0f / (right);
+	projection[1][1] = 2.0f / (-bottom);
+	projection[3][0] = -1.f;
+	projection[3][1] = 1.f;
+
+	// scale the z buffer
+	projection[2][2] = 1.f / (far - near);
+	projection[3][2] = near / (near - far);
+
+	return projection;
+#endif
+}
+
 Vector3f eng::camera::ScreenToWorld(const Vector2f& pixelPos, const Projection& projection, const Matrix4x4& transform, const Vector2u& windowSize)
 {
 	return ScreenToWorld(pixelPos, 0.f, projection, transform, windowSize);
