@@ -44,15 +44,6 @@
   <Grid Background="{StaticResource Brush.Background0}">
     <Viewbox>
       <Grid Width="1280" Height="720">
-        <Grid.Style>
-          <Style TargetType="Grid">
-            <Style.Triggers>
-              <DataTrigger Binding="{Binding IsSplash}" Value="False">
-                <Setter Property="Visibility" Value="Collapsed"/>
-              </DataTrigger>
-            </Style.Triggers>
-          </Style>
-        </Grid.Style>
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="1*"/>
           <ColumnDefinition Width="2*"/>
