@@ -48,9 +48,6 @@ void eng::WindowManager::Initialise()
 	if (auto* window = reinterpret_cast<glfw::Window*>(m_Windows[0]))
 	{
 		auto* glfwWindow = window->GetWindow();
-		glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		glfwSetWindowTitle(glfwWindow, "With My Little Eye");
-		glfwMakeContextCurrent(glfwWindow);
 
 		int channels;
 		GLFWimage icon;

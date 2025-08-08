@@ -7,8 +7,12 @@
 #include "Engine/WindowModeEnum.h"
 #include "Input/Key.h"
 
+#include <windows.h>
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
+
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h> 
 
 namespace
 {
@@ -214,6 +218,11 @@ glfw::Window::Window(const eng::WindowConfig& config)
 	m_Window = glfwCreateWindow(mode->width, mode->height, config.m_Name.c_str(), nullptr, nullptr);
 	m_Resolution = Vector2u(mode->width, mode->height);
 	m_RefreshRate = mode->refreshRate;
+	m_IsFocused = true;
+
+	glfwMakeContextCurrent(m_Window);
+	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	glfwSetWindowTitle(m_Window, "With My Little Eye");
 
 	glfwSetFramebufferSizeCallback(m_Window, Callback_FramebufferResized);
 	glfwSetScrollCallback(m_Window, Callback_ScrollChanged);
@@ -241,7 +250,21 @@ void glfw::Window::PreUpdate(const GameTime& gameTime)
 	glfwPollEvents();
 
 	double posX, posY;
-	glfwGetCursorPos(m_Window, &posX, &posY);
+
+	if (m_IsFocused)
+	{
+		glfwGetCursorPos(m_Window, &posX, &posY);
+	}
+	else
+	{
+		POINT point;
+		if (GetCursorPos(&point))
+		{
+			HWND hwnd = glfwGetWin32Window(m_Window);
+			ScreenToClient(hwnd, &point);
+			posX = point.x; posY = point.y;
+		}
+	}
 
 	Vector2f mousePos;
 	mousePos.x = static_cast<float>(posX);
