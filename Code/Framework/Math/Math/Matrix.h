@@ -132,6 +132,8 @@ public:
 	static Matrix4x4 FromTransform(const Vector3f& translate, const Rotator& rotate, const Vector3f& scale) noexcept;
 	static Matrix4x4 FromRotate(const Rotator& value) noexcept;
 
+	static constexpr Matrix4x4 FromTransform(const Vector3f& translate, const float scale) noexcept;
+	static constexpr Matrix4x4 FromTransform(const Vector3f& translate, const Vector3f& scale) noexcept;
 	static constexpr Matrix4x4 FromTransform(const Vector3f& translate, const Matrix3x3& rotate, const float scale) noexcept;
 	static constexpr Matrix4x4 FromTransform(const Vector3f& translate, const Matrix3x3& rotate, const Vector3f& scale) noexcept;
 	static constexpr Matrix4x4 FromTransform(const Vector3f& translate, const Quaternion& rotate, const float scale) noexcept;

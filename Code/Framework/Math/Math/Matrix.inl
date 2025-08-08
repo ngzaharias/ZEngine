@@ -796,6 +796,56 @@ inline Matrix4x4 Matrix4x4::FromRotate(const Rotator& value) noexcept
 	return matrix;
 }
 
+inline constexpr Matrix4x4 Matrix4x4::FromTransform(const Vector3f& translate, const float scale) noexcept
+{
+	Matrix4x4 matrix = Identity;
+	matrix.m_Data[0][0] *= scale;
+	matrix.m_Data[0][1] *= scale;
+	matrix.m_Data[0][2] *= scale;
+	matrix.m_Data[0][3] = 0.f;
+
+	matrix.m_Data[1][0] *= scale;
+	matrix.m_Data[1][1] *= scale;
+	matrix.m_Data[1][2] *= scale;
+	matrix.m_Data[1][3] = 0.f;
+
+	matrix.m_Data[2][0] *= scale;
+	matrix.m_Data[2][1] *= scale;
+	matrix.m_Data[2][2] *= scale;
+	matrix.m_Data[2][3] = 0.f;
+
+	matrix.m_Data[3][0] = translate.x;
+	matrix.m_Data[3][1] = translate.y;
+	matrix.m_Data[3][2] = translate.z;
+	matrix.m_Data[3][3] = 1.f;
+	return matrix;
+}
+
+inline constexpr Matrix4x4 Matrix4x4::FromTransform(const Vector3f& translate, const Vector3f& scale) noexcept
+{
+	Matrix4x4 matrix = Identity;
+	matrix.m_Data[0][0] *= scale.x;
+	matrix.m_Data[0][1] *= scale.x;
+	matrix.m_Data[0][2] *= scale.x;
+	matrix.m_Data[0][3] = 0.f;
+
+	matrix.m_Data[1][0] *= scale.y;
+	matrix.m_Data[1][1] *= scale.y;
+	matrix.m_Data[1][2] *= scale.y;
+	matrix.m_Data[1][3] = 0.f;
+
+	matrix.m_Data[2][0] *= scale.z;
+	matrix.m_Data[2][1] *= scale.z;
+	matrix.m_Data[2][2] *= scale.z;
+	matrix.m_Data[2][3] = 0.f;
+
+	matrix.m_Data[3][0] = translate.x;
+	matrix.m_Data[3][1] = translate.y;
+	matrix.m_Data[3][2] = translate.z;
+	matrix.m_Data[3][3] = 1.f;
+	return matrix;
+}
+
 inline constexpr Matrix4x4 Matrix4x4::FromTransform(const Vector3f& translate, const Matrix3x3& rotate, const float scale) noexcept
 {
 	Matrix4x4 matrix(rotate);
