@@ -1,0 +1,40 @@
+m_Guid = "b7d0c9eb5380438ba90b9a344626134a"
+m_Name = "SH_Cursor"
+m_Type = "Shader"
+
+[Programs]
+
+m_Vertex = """
+#version 330 core
+
+in vec3 a_Vertex;
+in vec2 a_TexCoords;
+
+uniform mat4 u_CameraProj;
+uniform mat4 u_Transform;
+
+out vec2 v_TexCoords;
+
+void main()
+{
+	mat4 transform = u_CameraProj * u_Transform;
+	gl_Position = transform * vec4(a_Vertex, 1.f);
+	v_TexCoords = a_TexCoords;
+}
+"""
+
+m_Fragment = """
+#version 330 core
+
+in vec2 v_TexCoords;
+
+uniform sampler2D u_Texture;
+
+out vec4 f_Colour;
+
+void main()
+{
+	vec2 uv = vec2(v_TexCoords.x, -v_TexCoords.y);
+	f_Colour = texture(u_Texture, uv);
+}
+"""
