@@ -104,7 +104,7 @@ void eng::RenderStage_Cursor::Render(ecs::EntityWorld& entityWorld)
 
 		const Matrix4x4 cameraProj = eng::camera::GetProjection(resolution, camera::UserInterface{});
 		const Matrix4x4 transform = Matrix4x4::FromTransform(
-			Vector3f(inputManager.m_MousePosition, 0.f),
+			Vector3f(inputManager.m_MousePosition, 0.f) + Vector3f(10.f, 14.f, 0.f),
 			Vector3f(32.f / 100.f, 32.f / 100.f, 1.f));
 
 		if (shader->u_CameraProj)
