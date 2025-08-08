@@ -4,6 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/RenderStage_Cursor.h"
 #include "Engine/RenderStage_Lines.h"
 #include "Engine/RenderStage_Opaque.h"
 #include "Engine/RenderStage_Shadow.h"
@@ -28,6 +29,7 @@ eng::RenderSystem::RenderSystem(ecs::EntityWorld& entityWorld)
 	RegisterStage<eng::RenderStage_Translucent>();
 	RegisterStage<eng::RenderStage_UI>();
 	RegisterStage<eng::RenderStage_UI_Post>();
+	RegisterStage<eng::RenderStage_Cursor>();
 }
 
 eng::RenderSystem::~RenderSystem()
