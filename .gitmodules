@@ -1,3 +1,6 @@
 [submodule "3rdParty/SteamworksSDK"]
 	path = 3rdParty/SteamworksSDK
 	url = https://github.com/ngzaharias/SteamworksSDK
+[submodule "3rdParty/NoesisGUI"]
+	path = 3rdParty/NoesisGUI
+	url = https://github.com/ngzaharias/NoesisGUI
