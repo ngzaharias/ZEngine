@@ -21,6 +21,8 @@ void hidden::VFXSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	return;
+
 	for (const ecs::Entity& objectEntity : world.Query<ecs::query::Added<const hidden::RevealComponent>>())
 	{
 		const auto& objectName = world.ReadComponent<ecs::NameComponent>(objectEntity);
