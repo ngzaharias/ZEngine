@@ -29,8 +29,6 @@ git pull --recurse-submodules
 - [premake](https://premake.github.io/)
 - [Ruby](https://rubyinstaller.org/)
 
-
 ## Assets
-- [bdragon1727](https://bdragon1727.itch.io/)
 - [kenney](https://kenney.nl/)
 - [moby](https://mobygratis.com/)
