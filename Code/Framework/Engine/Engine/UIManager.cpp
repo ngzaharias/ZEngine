@@ -24,6 +24,7 @@
 #include <NsGui/Uri.h>
 #include <NsGui/UserControl.h>
 #include <NsRender/GLFactory.h>
+#include <NoesisGUI/License.h>
 
 // https://www.noesisengine.com/docs/4.0/Gui.Studio.Documentation_Index.html
 // https://www.noesisengine.com/docs/Gui.Core.SDKGuide.html
@@ -191,7 +192,7 @@ void eng::UIManager::Initialise(const eng::Window& window)
 			printf("[NOESIS/%s] %s\n", prefixes[level], msg);
 		});
 
-	Noesis::GUI::SetLicense(NS_LICENSE_NAME, NS_LICENSE_KEY);
+	Noesis::GUI::SetLicense(Noesis::strName, Noesis::strKey);
 	Noesis::GUI::Init();
 
 	const str::Path fontPath = str::Path(str::EPath::Assets);
