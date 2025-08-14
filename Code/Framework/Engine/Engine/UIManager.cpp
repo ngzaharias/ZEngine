@@ -212,7 +212,7 @@ void eng::UIManager::Initialise(const eng::Window& window)
 
 	NoesisApp::SetThemeProviders();
 
-	Noesis::GUI::LoadApplicationResources(NoesisApp::Theme::DarkBlue());
+	Noesis::GUI::LoadApplicationResources("Themes/Default.xaml");
 }
 
 void eng::UIManager::Shutdown()
