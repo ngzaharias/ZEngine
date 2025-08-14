@@ -1,0 +1,5 @@
+- [ ] chess board render
+- [ ] arbitrary tile based movement
+- [ ] chess pieces 
+- [ ] modular "spellcasting" (movement)
+- [ ] go through list of ideas and figure out what's next
