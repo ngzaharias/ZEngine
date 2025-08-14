@@ -30,5 +30,6 @@ git pull --recurse-submodules
 - [Ruby](https://rubyinstaller.org/)
 
 ## Assets
+- [fontspace](https://www.fontspace.com/)
 - [kenney](https://kenney.nl/)
 - [moby](https://mobygratis.com/)
