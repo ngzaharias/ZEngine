@@ -47,6 +47,7 @@ imgui.ini
 
 # Project Files
 *.sln
+*.obsidian
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
