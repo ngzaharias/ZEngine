@@ -22,6 +22,12 @@
     <Color x:Key="Color.Accent2">#FF9D71F5</Color>
     <Color x:Key="Color.Accent3">#FFA67FF5</Color>
 
+    <SolidColorBrush x:Key="Brush.Accent" Color="#FF8A8AEA"/>
+    <SolidColorBrush x:Key="Brush.Background0" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="Brush.Background25" Color="#FFAAAAAA"/>
+    <SolidColorBrush x:Key="Brush.Foreground" Color="#FF000000"/>
+    <SolidColorBrush x:Key="Brush.Fade" Color="#FF000000" Opacity="0.5"/>
+
     <SolidColorBrush x:Key="Brush.Window.Background" Color="{StaticResource Color.White}" />
 
     <SolidColorBrush x:Key="Brush.Glyph.Normal" Color="{StaticResource Color.Gray0}" />

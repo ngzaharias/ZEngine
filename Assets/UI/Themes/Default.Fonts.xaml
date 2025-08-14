@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <FontFamily x:Key="Font.Family.Default">studio:///project;component/Fonts/Figtree/#Figtree</FontFamily>
+    <FontFamily x:Key="Font.Family.Primary">studio:///project;component/Fonts/#Super Fortrees</FontFamily>
     <sys:Double x:Key="Font.Size.Header">17</sys:Double>
     <sys:Double x:Key="Font.Size.Normal">15</sys:Double>
     <sys:Double x:Key="Font.Size.ToolTip">12</sys:Double>
