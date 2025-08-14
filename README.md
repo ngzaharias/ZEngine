@@ -30,6 +30,7 @@ git pull --recurse-submodules
 - [Ruby](https://rubyinstaller.org/)
 
 ## Assets
+- [figtree](https://www.erikdkennedy.com/projects/figtree.html#download)
 - [fontspace](https://www.fontspace.com/)
 - [kenney](https://kenney.nl/)
 - [moby](https://mobygratis.com/)
