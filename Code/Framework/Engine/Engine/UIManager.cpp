@@ -202,7 +202,7 @@ void eng::UIManager::Initialise(const eng::Window& window)
 	Noesis::GUI::SetTextureProvider(Noesis::MakePtr<NoesisApp::LocalTextureProvider>(texturePath.ToChar()));
 	Noesis::GUI::SetXamlProvider(Noesis::MakePtr<NoesisApp::LocalXamlProvider>(xamlPath.ToChar()));
 
-	const char* fonts[] = { "Arial" };
+	const char* fonts[] = { "Figtree" };
 	Noesis::GUI::SetFontFallbacks(fonts, 1);
 	Noesis::GUI::SetFontDefaultProperties(
 		15.0f,
