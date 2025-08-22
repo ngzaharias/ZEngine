@@ -373,6 +373,9 @@ void glfw::Window::Refresh(const eng::EWindowMode& windowMode, const Vector2u& r
 
 void glfw::Window::Callback_FramebufferResized(GLFWwindow* glfwWindow, int width, int height)
 {
+	if (width == 0 || height == 0)
+		return;
+
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
 	window->m_Resolution = Vector2u(width, height);
 
@@ -427,6 +430,9 @@ void glfw::Window::Callback_WindowPos(GLFWwindow* glfwWindow, int xpos, int ypos
 
 void glfw::Window::Callback_WindowSize(GLFWwindow* glfwWindow, int width, int height)
 {
+	if (width == 0 || height == 0)
+		return;
+
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
 	window->m_Resolution = Vector2u(width, height);
 }
