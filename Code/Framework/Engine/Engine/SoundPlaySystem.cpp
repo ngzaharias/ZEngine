@@ -9,6 +9,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
+#include "Engine/AudioHelpers.h"
 #include "Engine/AudioSettingsComponent.h"
 #include "Engine/SoundAssets.h"
 #include "Engine/SoundComponents.h"
@@ -49,6 +50,8 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 		assetManager.RequestAsset<eng::sound::SingleAsset>(request);
 		if (const auto* soundAsset = assetManager.FetchAsset<eng::sound::SingleAsset>(request))
 		{
+			const float volume = audio::ToVolume(audioSettings.m_EffectVolume * audioSettings.m_MasterVolume);
+
 			const ecs::Entity entity = world.CreateEntity();
 
 			auto& name = world.AddComponent<ecs::NameComponent>(entity);
@@ -57,7 +60,7 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 			auto& object = world.AddComponent<eng::sound::ObjectComponent>(entity);
 			object.m_Sound = new sf::Sound();
 			object.m_Sound->setBuffer(soundAsset->m_SoundBuffer);
-			object.m_Sound->setVolume(audioSettings.m_EffectVolume * audioSettings.m_MasterVolume * 100.f);
+			object.m_Sound->setVolume(volume);
 			object.m_Sound->play();
 			object.m_Asset = request;
 		}

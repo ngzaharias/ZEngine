@@ -6,6 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
+#include "Engine/AudioHelpers.h"
 #include "Engine/MusicAsset.h"
 #include "Engine/MusicComponents.h"
 #include "Engine/AudioSettingsComponent.h"
@@ -52,7 +53,8 @@ void eng::MusicSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const auto& audioSettings = world.ReadSingleton<eng::settings::AudioComponent>();
 		auto& musicComponent = world.WriteSingleton<eng::MusicComponent>();
-		musicComponent.m_Music->setVolume(audioSettings.m_MusicVolume * audioSettings.m_MasterVolume * 100.f);
+		const float volume = audio::ToVolume(audioSettings.m_MusicVolume * audioSettings.m_MasterVolume);
+		musicComponent.m_Music->setVolume(volume);
 	}
 }
 
