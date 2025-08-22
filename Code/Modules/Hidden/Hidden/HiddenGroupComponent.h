@@ -15,6 +15,6 @@ namespace hidden
 		Vector2u m_Size = Vector2u::Zero;
 
 		Array<str::Guid> m_Objects = {};
-		Set<str::Guid> m_Revealed = {};
+		Array<str::Guid> m_Revealed = {};
 	};
 }

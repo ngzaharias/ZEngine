@@ -31,7 +31,8 @@ void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 				if (enumerate::Contains(groupComponent.m_Objects, objectComponent.m_Guid))
 				{
 					auto& component = world.WriteComponent<hidden::GroupComponent>(groupEntity);
-					component.m_Revealed.Add(objectComponent.m_Guid);
+					if (!enumerate::Contains(component.m_Revealed, objectComponent.m_Guid))
+						component.m_Revealed.Append(objectComponent.m_Guid);
 				}
 			}
 		}
