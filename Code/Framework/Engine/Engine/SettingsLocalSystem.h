@@ -9,7 +9,9 @@ namespace eng
 
 namespace eng::settings
 {
-	struct LocalComponent;
+	struct AudioComponent;
+	struct CameraComponent;
+	struct WindowComponent;
 }
 
 namespace eng::settings
@@ -21,7 +23,9 @@ namespace eng::settings
 			// resources
 			const eng::WindowManager,
 			// components
-			eng::settings::LocalComponent>;
+			eng::settings::AudioComponent,
+			eng::settings::CameraComponent,
+			eng::settings::WindowComponent>;
 
 		void Initialise(World& world);
 

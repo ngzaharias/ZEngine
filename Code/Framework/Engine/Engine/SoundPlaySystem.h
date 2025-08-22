@@ -14,7 +14,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct LocalComponent;
+	struct AudioComponent;
 }
 
 namespace eng::sound
@@ -36,7 +36,7 @@ namespace eng::sound
 			// components
 			ecs::NameComponent,
 			eng::sound::ObjectComponent,
-			const eng::settings::LocalComponent,
+			const eng::settings::AudioComponent,
 			const eng::sound::RandomBufferComponent,
 			const eng::sound::SequenceBufferComponent,
 			const eng::sound::SingleRequestComponent>;

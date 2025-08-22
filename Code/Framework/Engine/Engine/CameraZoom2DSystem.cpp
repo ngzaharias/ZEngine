@@ -9,7 +9,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/CameraSettingsComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -27,8 +27,7 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 
 	using CameraQuery = ecs::query::Include<eng::camera::ProjectionComponent, const eng::camera::Zoom2DComponent>;
 
-	const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
-	const auto& cameraSettings = localSettings.m_Camera;
+	const auto& cameraSettings = world.ReadSingleton<eng::settings::CameraComponent>();
 
 	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())

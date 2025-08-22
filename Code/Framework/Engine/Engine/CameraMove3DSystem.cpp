@@ -9,7 +9,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/CameraSettingsComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Math/Math.h"
 #include "Math/Quaternion.h"
@@ -62,9 +62,7 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Move3DComponent, const eng::camera::ProjectionComponent>;
 
-	const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
-	const auto& cameraSettings = localSettings.m_Camera;
-
+	const auto& cameraSettings = world.ReadSingleton<eng::settings::CameraComponent>();
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
 		const auto& readTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);

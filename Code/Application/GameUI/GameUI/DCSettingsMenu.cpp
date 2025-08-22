@@ -4,9 +4,11 @@
 #include "Core/Algorithms.h"
 #include "Core/EnumHelpers.h"
 #include "ECS/EntityWorld.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/AudioSettingsComponent.h"
+#include "Engine/CameraSettingsComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "Engine/WindowSettingsComponent.h"
 #include "GameUI/SettingsMenuComponents.h"
 #include "GameUI/VMMonitor.h"
 #include "GameUI/VMRefreshRate.h"
@@ -32,26 +34,28 @@ gui::DCSettingsMenu::~DCSettingsMenu()
 
 void gui::DCSettingsMenu::Initialise(World& world)
 {
-	const auto& settings = world.ReadSingleton<eng::settings::LocalComponent>();
+	const auto& audio = world.ReadSingleton<eng::settings::AudioComponent>();
+	const auto& camera = world.ReadSingleton<eng::settings::CameraComponent>();
+	const auto& window = world.ReadSingleton<eng::settings::WindowComponent>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const auto& monitor = *windowManager.GetMonitor(0);
 
 	// audio
-	m_EffectVolume = settings.m_Audio.m_EffectVolume;
-	m_MasterVolume = settings.m_Audio.m_MasterVolume;
-	m_MusicVolume = settings.m_Audio.m_MusicVolume;
+	m_EffectVolume = audio.m_EffectVolume;
+	m_MasterVolume = audio.m_MasterVolume;
+	m_MusicVolume = audio.m_MusicVolume;
 
 	// gameplay
-	m_MoveSpeed = settings.m_Camera.m_TranslateSpeed;
-	m_ZoomRate = settings.m_Camera.m_ZoomAmount;
-	m_ZoomSpeed = settings.m_Camera.m_ZoomSpeed;
+	m_MoveSpeed = camera.m_TranslateSpeed;
+	m_ZoomRate = camera.m_ZoomAmount;
+	m_ZoomSpeed = camera.m_ZoomSpeed;
 
 	m_Monitors->Clear();
 	for (const auto& [i, value] : enumerate::Forward(windowManager.GetMonitors()))
 	{
 		auto monitor = Noesis::MakePtr<gui::VMMonitor>(i);
 		m_Monitors->Add(monitor);
-		if (i == settings.m_Window.m_Monitor)
+		if (i == window.m_Monitor)
 			m_Monitor = monitor;
 	}
 
@@ -61,7 +65,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 		const bool isNative = value == monitor.m_RefreshRate;
 		auto refreshRate = Noesis::MakePtr<gui::VMRefreshRate>(value, isNative);
 		m_RefreshRates->Add(refreshRate);
-		if (value == settings.m_Window.m_RefreshRate)
+		if (value == window.m_RefreshRate)
 			m_RefreshRate = refreshRate;
 	}
 
@@ -71,7 +75,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 		const bool isNative = value == monitor.m_Resolution;
 		auto resolution = Noesis::MakePtr<gui::VMResolution>(value, isNative);
 		m_Resolutions->Add(resolution);
-		if (value == settings.m_Window.m_Resolution)
+		if (value == window.m_Resolution)
 			m_Resolution = resolution;
 	}
 
@@ -80,19 +84,19 @@ void gui::DCSettingsMenu::Initialise(World& world)
 	{
 		auto windowMode = Noesis::MakePtr<gui::VMWindowMode>(value);
 		m_WindowModes->Add(windowMode);
-		if (value == settings.m_Window.m_WindowMode)
+		if (value == window.m_WindowMode)
 			m_WindowMode = windowMode;
 	}
 
 	OnPropertyChanged("");
 }
 
-int32 gui::DCSettingsMenu::GetEffectVolume() const
+float gui::DCSettingsMenu::GetEffectVolume() const
 {
 	return m_EffectVolume;
 }
 
-void gui::DCSettingsMenu::SetEffectVolume(int32 value)
+void gui::DCSettingsMenu::SetEffectVolume(float value)
 {
 	if (m_EffectVolume != value)
 	{
@@ -104,12 +108,12 @@ void gui::DCSettingsMenu::SetEffectVolume(int32 value)
 	}
 }
 
-int32 gui::DCSettingsMenu::GetMasterVolume() const
+float gui::DCSettingsMenu::GetMasterVolume() const
 {
 	return m_MasterVolume;
 }
 
-void gui::DCSettingsMenu::SetMasterVolume(int32 value)
+void gui::DCSettingsMenu::SetMasterVolume(float value)
 {
 	if (m_MasterVolume != value)
 	{
@@ -121,12 +125,12 @@ void gui::DCSettingsMenu::SetMasterVolume(int32 value)
 	}
 }
 
-int32 gui::DCSettingsMenu::GetMusicVolume() const
+float gui::DCSettingsMenu::GetMusicVolume() const
 {
 	return m_MusicVolume;
 }
 
-void gui::DCSettingsMenu::SetMusicVolume(int32 value)
+void gui::DCSettingsMenu::SetMusicVolume(float value)
 {
 	if (m_MusicVolume != value)
 	{

@@ -9,7 +9,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct LocalComponent;
+	struct WindowComponent;
 }
 
 namespace eng
@@ -21,7 +21,7 @@ namespace eng
 			// Resources
 			eng::WindowManager,
 			// Components
-			eng::settings::LocalComponent>;
+			eng::settings::WindowComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

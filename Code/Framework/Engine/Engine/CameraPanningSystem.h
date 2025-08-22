@@ -9,11 +9,6 @@ namespace eng
 	struct TransformComponent;
 }
 
-namespace eng::settings
-{
-	struct LocalComponent;
-}
-
 namespace eng::camera
 {
 	struct PanningComponent;
@@ -29,8 +24,7 @@ namespace eng::camera
 			// Components
 			eng::TransformComponent,
 			const eng::camera::PanningComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::settings::LocalComponent>;
+			const eng::camera::ProjectionComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

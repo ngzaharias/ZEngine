@@ -8,7 +8,7 @@
 #include "Engine/AssetManager.h"
 #include "Engine/MusicAsset.h"
 #include "Engine/MusicComponents.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/AudioSettingsComponent.h"
 
 namespace
 {
@@ -28,7 +28,6 @@ void eng::MusicSystem::Initialise(World& world)
 	{
 		const str::Path filepath = str::Path(str::EPath::Assets, musicAsset->m_SourceFile);
 
-		const auto& settingsComponent = world.ReadSingleton<eng::settings::LocalComponent>();
 		musicComponent.m_Music->setVolume(0.f);
 		musicComponent.m_Music->openFromFile(filepath.ToChar());
 		musicComponent.m_Music->play();
@@ -49,13 +48,11 @@ void eng::MusicSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	// update the music volume when it changes
-	if (world.HasAny<ecs::query::Updated<const eng::settings::LocalComponent>>())
+	if (world.HasAny<ecs::query::Updated<const eng::settings::AudioComponent>>())
 	{
-		const auto& localSettings = world.ReadSingleton<eng::settings::LocalComponent>();
-		const auto& audioSettings = localSettings.m_Audio;
-
+		const auto& audioSettings = world.ReadSingleton<eng::settings::AudioComponent>();
 		auto& musicComponent = world.WriteSingleton<eng::MusicComponent>();
-		musicComponent.m_Music->setVolume(static_cast<float>(audioSettings.m_MusicVolume));
+		musicComponent.m_Music->setVolume(audioSettings.m_MusicVolume * audioSettings.m_MasterVolume * 100.f);
 	}
 }
 

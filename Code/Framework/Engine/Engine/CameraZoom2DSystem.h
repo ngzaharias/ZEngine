@@ -11,7 +11,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct LocalComponent;
+	struct CameraComponent;
 }
 
 namespace eng::camera
@@ -30,7 +30,7 @@ namespace eng::camera
 			eng::camera::ProjectionComponent,
 			eng::TransformComponent,
 			const eng::camera::Zoom2DComponent,
-			const eng::settings::LocalComponent>;
+			const eng::settings::CameraComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -8,29 +8,6 @@
 
 namespace eng::settings
 {
-	struct Audio
-	{
-		int32 m_EffectVolume = 50;
-		int32 m_MasterVolume = 50;
-		int32 m_MusicVolume = 50;
-	};
-
-	struct Camera
-	{
-		Rotator m_RotateSpeed = Rotator(0.2f);
-		float m_TranslateSpeed = 1000.f;
-		float m_ZoomAmount = 300.f;
-		float m_ZoomSpeed = 0.1f;
-	};
-
-	struct Window
-	{
-		int32 m_Monitor = 0;
-		Vector2u m_Resolution = Vector2u(800, 600);
-		int32 m_RefreshRate = 59;
-		eng::EWindowMode m_WindowMode = eng::EWindowMode::Fullscreen;
-	};
-
 	/// \brief Debug settings that is only used in non-gold builds.
 	struct DebugComponent : public ecs::SingletonComponent<DebugComponent>
 	{
@@ -45,14 +22,6 @@ namespace eng::settings
 	{
 		// the level that is loaded when the game first launches
 		str::Name m_Level = {};
-	};
-
-	/// \brief Shared settings for all local users that is saved to a config file.
-	struct LocalComponent : public ecs::SingletonComponent<LocalComponent>
-	{
-		Audio m_Audio = {};
-		Camera m_Camera = {};
-		Window m_Window = {};
 	};
 
 	/// \brief Shared settings broadcast from the host to all users that is saved to the savegame.

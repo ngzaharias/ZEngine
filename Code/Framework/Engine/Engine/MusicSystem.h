@@ -15,7 +15,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct LocalComponent;
+	struct AudioComponent;
 }
 
 namespace eng
@@ -29,7 +29,7 @@ namespace eng
 			// components
 			ecs::NameComponent,
 			eng::MusicComponent,
-			const eng::settings::LocalComponent>;
+			const eng::settings::AudioComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

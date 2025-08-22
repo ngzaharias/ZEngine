@@ -14,10 +14,10 @@ namespace gui::settings_menu
 	struct ValueRequest final : public ecs::EventComponent<ValueRequest> 
 	{ 
 		// audio
-		Optional<int32> m_EffectVolume = {};
-		Optional<int32> m_MasterVolume = {};
-		Optional<int32> m_MusicVolume = {};
-		// gameplay
+		Optional<float> m_EffectVolume = {};
+		Optional<float> m_MasterVolume = {};
+		Optional<float> m_MusicVolume = {};
+		// camera
 		Optional<float> m_MoveSpeed = {};
 		Optional<float> m_ZoomRate = {};
 		Optional<float> m_ZoomSpeed = {};

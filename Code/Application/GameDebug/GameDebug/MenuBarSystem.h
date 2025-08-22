@@ -53,18 +53,14 @@ namespace eng
 	class InputManager;
 }
 
-namespace eng::settings
-{
-	struct LocalComponent;
-}
-
 namespace dbg
 {
 	class MenuBarSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView <
+		using World = ecs::WorldView<
 			// Resources
+			eng::AssetManager,
 			const eng::InputManager,
 			// Components
 			dbg::BufferWindowRequestComponent,
@@ -90,9 +86,7 @@ namespace dbg
 			editor::SpriteWindowRequestComponent,
 			editor::TableWindowRequestComponent,
 			editor::TextureWindowRequestComponent,
-			editor::TrajectoryWindowRequestComponent,
-			eng::AssetManager,
-			eng::settings::LocalComponent>;
+			editor::TrajectoryWindowRequestComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

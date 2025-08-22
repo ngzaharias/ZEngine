@@ -5,7 +5,9 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "Engine/ApplicationComponents.h"
+#include "Engine/AudioSettingsComponent.h"
 #include "Engine/CameraComponent.h"
+#include "Engine/CameraSettingsComponent.h"
 #include "Engine/ComponentSerializer.h"
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/FlipbookComponent.h"
@@ -30,9 +32,8 @@
 #include "Engine/UserComponents.h"
 #include "Engine/VersionComponent.h"
 #include "Engine/VisibilityComponent.h"
+#include "Engine/WindowSettingsComponent.h"
 #include "Voxel/VoxelComponents.h"
-
-#include <yojimbo/yojimbo.h>
 
 void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 {
@@ -65,9 +66,11 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSingleton<eng::LinesComponent>();
 	entityWorld.RegisterSingleton<eng::MusicComponent>();
 	entityWorld.RegisterSingleton<eng::network::StateComponent>();
+	entityWorld.RegisterSingleton<eng::settings::AudioComponent>();
+	entityWorld.RegisterSingleton<eng::settings::CameraComponent>();
 	entityWorld.RegisterSingleton<eng::settings::DebugComponent>();
 	entityWorld.RegisterSingleton<eng::settings::LaunchComponent>();
-	entityWorld.RegisterSingleton<eng::settings::LocalComponent>();
+	entityWorld.RegisterSingleton<eng::settings::WindowComponent>();
 	entityWorld.RegisterSingleton<eng::sound::RandomBufferComponent>();
 	entityWorld.RegisterSingleton<eng::sound::SequenceBufferComponent>();
 	entityWorld.RegisterSingleton<voxel::ModifySettingsComponent>();

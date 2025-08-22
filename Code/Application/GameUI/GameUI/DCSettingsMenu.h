@@ -14,7 +14,9 @@ namespace eng
 
 namespace eng::settings
 {
-	struct LocalComponent;
+	struct AudioComponent;
+	struct CameraComponent;
+	struct WindowComponent;
 }
 
 namespace gui
@@ -40,7 +42,9 @@ namespace gui
 			// Resources
 			const eng::WindowManager,
 			// Components
-			const eng::settings::LocalComponent
+			const eng::settings::AudioComponent,
+			const eng::settings::CameraComponent,
+			const eng::settings::WindowComponent
 		>;
 
 		DCSettingsMenu();
@@ -48,12 +52,12 @@ namespace gui
 
 		void Initialise(World& world);
 
-		int32 GetEffectVolume() const;
-		void SetEffectVolume(int32 value);
-		int32 GetMasterVolume() const;
-		void SetMasterVolume(int32 value);
-		int32 GetMusicVolume() const;
-		void SetMusicVolume(int32 value);
+		float GetEffectVolume() const;
+		void SetEffectVolume(float value);
+		float GetMasterVolume() const;
+		void SetMasterVolume(float value);
+		float GetMusicVolume() const;
+		void SetMusicVolume(float value);
 
 		float GetMoveSpeed() const;
 		void SetMoveSpeed(float value);
@@ -92,9 +96,9 @@ namespace gui
 
 	private:
 		// audio
-		int32 m_EffectVolume = 0;
-		int32 m_MasterVolume = 0;
-		int32 m_MusicVolume = 0;
+		float m_EffectVolume = 0.f;
+		float m_MasterVolume = 0.f;
+		float m_MusicVolume = 0.f;
 		// gameplay
 		float m_MoveSpeed = 0.f;
 		float m_ZoomRate = 0.f;

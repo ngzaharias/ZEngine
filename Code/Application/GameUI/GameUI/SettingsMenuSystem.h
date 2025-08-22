@@ -12,7 +12,9 @@ namespace eng
 
 namespace eng::settings
 {
-	struct LocalComponent;
+	struct AudioComponent;
+	struct CameraComponent;
+	struct WindowComponent;
 }
 
 namespace gui::settings_menu
@@ -33,7 +35,9 @@ namespace gui::settings_menu
 			eng::UIManager,
 			eng::WindowManager,
 			// Components
-			eng::settings::LocalComponent,
+			eng::settings::AudioComponent,
+			eng::settings::CameraComponent,
+			eng::settings::WindowComponent,
 			gui::settings_menu::WindowComponent,
 			const gui::settings_menu::CloseRequest,
 			const gui::settings_menu::OpenRequest,
