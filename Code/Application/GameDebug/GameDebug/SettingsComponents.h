@@ -4,7 +4,7 @@
 #include "ECS/Component.h"
 #include "Engine/SettingsComponents.h"
 #include "GameClient/SettingsComponents.h"
-#include "Hidden/HiddenSettingsComponents.h"
+#include "Hidden/HiddenDebugSettingsComponent.h"
 
 namespace dbg::settings
 {

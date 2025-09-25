@@ -3,6 +3,7 @@
 
 #include "ECS/EntityWorld.h"
 #include "Engine/PrototypeManager.h"
+#include "Engine/TableHeadmaster.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCGameMenu.h"
 #include "GameUI/DCHiddenCount.h"
@@ -14,6 +15,7 @@
 #include "GameUI/GameMenuSystem.h"
 #include "GameUI/HiddenCountSystem.h"
 #include "GameUI/HiddenLevelSystem.h"
+#include "GameUI/HintTable.h"
 #include "GameUI/InputBindingsSystem.h"
 #include "GameUI/InputComponents.h"
 #include "GameUI/LevelCompleteComponents.h"
@@ -24,6 +26,7 @@
 #include "GameUI/MainMenuSystem.h"
 #include "GameUI/SettingsMenuComponents.h"
 #include "GameUI/SettingsMenuSystem.h"
+#include "GameUI/ThemeSystem.h"
 
 namespace
 {
@@ -53,6 +56,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterComponent<gui::input::BindingsComponent>();
 		m_EntityWorld.RegisterComponent<gui::level_complete::ExitGameRequest>();
 		m_EntityWorld.RegisterComponent<gui::level_complete::ExitToMenuRequest>();
+		m_EntityWorld.RegisterComponent<gui::level_complete::ResetGameRequest>();
 		m_EntityWorld.RegisterComponent<gui::level_complete::WindowComponent>();
 		m_EntityWorld.RegisterComponent<gui::loading::CloseRequest>();
 		m_EntityWorld.RegisterComponent<gui::main_menu::ContinueGameRequest>();
@@ -76,6 +80,7 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterSystem<gui::loading::LoadingSystem>();
 		m_EntityWorld.RegisterSystem<gui::main_menu::MenuSystem>();
 		m_EntityWorld.RegisterSystem<gui::settings_menu::MenuSystem>();
+		m_EntityWorld.RegisterSystem<gui::ThemeSystem>();
 	}
 
 	// prototypes
@@ -83,6 +88,14 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 		auto& manager = dependencies.m_PrototypeManager;
 		manager.Register<gui::input::BindingsComponent>();
 		manager.Register<gui::main_menu::WindowComponent>();
+	}
+
+	// tables
+	{
+		auto& headmaster = dependencies.m_Headmaster;
+		headmaster.Register<gui::HintTable>("Hints");
+
+		m_EntityWorld.RegisterResource(headmaster.GetManager<gui::HintTable>());
 	}
 
 	// ui

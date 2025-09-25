@@ -4,11 +4,9 @@
 #include "Network/Host.h"
 #include "Network/PeerId.h"
 
-#include <yojimbo/yojimbo.h>
-
-yojimbo::MessageFactory* net::Adaptor::CreateMessageFactory(yojimbo::Allocator& allocator)
+void* net::Adaptor::CreateMessageFactory()
 {
-	return YOJIMBO_NEW(allocator, net::EngineMessageFactory, allocator);
+	return nullptr;
 }
 
 void net::Adaptor::OnServerClientConnected(int32 clientIndex)

@@ -9,6 +9,11 @@
 #include "Engine/SoundAssets.h"
 #include "Engine/SoundComponents.h"
 
+namespace
+{
+	static int32 s_IndexPrev = -1;
+}
+
 void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
@@ -34,6 +39,10 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 				: world.AddComponent<eng::sound::RandomComponent>(entity);
 			sequenceComponent.m_Index = random::Range(0, count - 1);
 			sequenceComponent.m_Asset = requestComponent.m_Asset;
+
+			if (sequenceComponent.m_Index == s_IndexPrev)
+				sequenceComponent.m_Index = (sequenceComponent.m_Index + 1) % count;
+			s_IndexPrev = sequenceComponent.m_Index;
 
 			str::Guid& singleHandle = bufferComponent.m_Requests.Emplace();
 			singleHandle = randomAsset->m_Handles[sequenceComponent.m_Index];

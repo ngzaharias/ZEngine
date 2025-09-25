@@ -8,7 +8,7 @@ Type random::Range<Type>(const Type& min, const Type& max)
 	if (min == max)
 		return min;
 
-	const Type r = std::rand() % (max - min + 1);
+	const Type r = std::rand() % (max - min);
 	return r + min;
 }
 

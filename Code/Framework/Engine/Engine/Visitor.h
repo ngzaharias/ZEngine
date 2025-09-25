@@ -23,6 +23,7 @@ class Map;
 template<typename Value>
 class Set;
 
+class Colour;
 class Vector2f;
 class Vector2i;
 class Vector2u;
@@ -107,6 +108,7 @@ namespace eng
 		void Read(const str::StringView& key, uint8& value, const uint8 defaultValue) const;
 		void Read(const str::StringView& key, uint16& value, const uint16 defaultValue) const;
 		void Read(const str::StringView& key, uint32& value, const uint32 defaultValue) const;
+		void Read(const str::StringView& key, Colour& value, const Colour defaultValue) const;
 		void Read(const str::StringView& key, str::Guid& value, const str::Guid& defaultValue) const;
 		void Read(const str::StringView& key, str::Name& value, const str::Name& defaultValue) const;
 		void Read(const str::StringView& key, str::Path& value, const str::Path& defaultValue) const;
@@ -124,6 +126,7 @@ namespace eng
 		void Read(const int32 index, uint8& value) const;
 		void Read(const int32 index, uint16& value) const;
 		void Read(const int32 index, uint32& value) const;
+		void Read(const int32 index, Colour& value) const;
 		void Read(const int32 index, str::Guid& value) const;
 		void Read(const int32 index, str::Name& value) const;
 		void Read(const int32 index, str::Path& value) const;

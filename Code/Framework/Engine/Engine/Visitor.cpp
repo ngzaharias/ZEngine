@@ -189,6 +189,13 @@ void eng::Visitor::Read(const str::StringView& key, uint32& value, const uint32 
 	ReadPrimitive(key, value, defaultValue);
 }
 
+void eng::Visitor::Read(const str::StringView& key, Colour& value, const Colour defaultValue) const
+{
+	toml::Table& currentNode = *m_Node->as_table();
+	const auto result = currentNode[key].value<uint32>();
+	value = result ? Colour(*result) : defaultValue;
+}
+
 void eng::Visitor::Read(const str::StringView& key, str::Guid& value, const str::Guid& defaultValue) const
 {
 	toml::Table& currentNode = *m_Node->as_table();
@@ -270,6 +277,13 @@ void eng::Visitor::Read(const int32 index, uint32& value) const
 	ReadPrimitive(index, value);
 }
 
+void eng::Visitor::Read(const int32 index, Colour& value) const
+{
+	toml::Array& currentNode = *m_Node->as_array();
+	if (const auto result = currentNode.at(index).value<uint32>())
+		value = Colour(*result);
+}
+
 void eng::Visitor::Read(const int32 index, str::Guid& value) const
 {
 	toml::Array& currentNode = *m_Node->as_array();
@@ -300,15 +314,6 @@ void eng::Visitor::Read(const int32 index, str::String& value) const
 
 //////////////////////////////////////////////////////////////////////////
 // Read - Non-Fundamentals
-
-template<>
-void eng::Visitor::ReadCustom(Colour& value) const
-{
-	Read("R", value.r, 1.f);
-	Read("G", value.g, 1.f);
-	Read("B", value.b, 1.f);
-	Read("A", value.a, 1.f);
-}
 
 template<>
 void eng::Visitor::ReadCustom(Quaternion& value) const

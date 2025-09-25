@@ -6,14 +6,7 @@
   mc:Ignorable="d"
   d:DesignWidth="1920"
   d:DesignHeight="1080" Style="{DynamicResource Style.Page}">
-  <Page.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Themes/Default.xaml" />
-      </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </Page.Resources>
-  <Grid Style="{StaticResource Style.Fade}">
+  <Grid Style="{DynamicResource Style.Fade}">
     <Viewbox Margin="0">
       <Grid Width="1280" Height="720">
         <Grid.RowDefinitions>
@@ -28,11 +21,12 @@
           <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="0" Grid.Row="1">
-          <TextBlock Text="Level Complete!" TextWrapping="Wrap" FontSize="81"/>
+          <TextBlock Text="Level Complete!" TextWrapping="Wrap" FontSize="81" Foreground="{DynamicResource Brush.Background0}" Stroke="{DynamicResource Brush.Outline}" StrokeThickness="8"/>
         </Grid>
         <StackPanel VerticalAlignment="Center" Grid.Column="1" Margin="0" Grid.Row="2">
-          <Button Content="Exit to Menu" Style="{StaticResource Style.Button}" Command="{Binding ExitToMenuCommand}"/>
-          <Button Content="Exit Game" Style="{StaticResource Style.Button}" Command="{Binding ExitGameCommand}"/>
+          <Button Content="Reset Level" Style="{DynamicResource Style.Button}" Command="{Binding ResetGameCommand}" />
+          <Button Content="Exit to Menu" Style="{DynamicResource Style.Button}" Command="{Binding ExitToMenuCommand}"/>
+          <Button Content="Exit Game" Style="{DynamicResource Style.Button}" Command="{Binding ExitGameCommand}"/>
         </StackPanel>
       </Grid>
     </Viewbox>

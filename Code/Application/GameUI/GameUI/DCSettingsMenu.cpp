@@ -6,6 +6,8 @@
 #include "ECS/EntityWorld.h"
 #include "Engine/AudioSettingsComponent.h"
 #include "Engine/CameraSettingsComponent.h"
+#include "Engine/GameplaySettingsComponent.h"
+#include "Engine/ThemeTable.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "Engine/WindowSettingsComponent.h"
@@ -13,6 +15,7 @@
 #include "GameUI/VMMonitor.h"
 #include "GameUI/VMRefreshRate.h"
 #include "GameUI/VMResolution.h"
+#include "GameUI/VMTheme.h"
 #include "GameUI/VMWindowMode.h"
 
 #include <NsCore/ReflectionImplement.h>
@@ -20,6 +23,7 @@
 
 gui::DCSettingsMenu::DCSettingsMenu()
 {
+	m_Themes = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMTheme>>();
 	m_Monitors = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMMonitor>>();
 	m_RefreshRates = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMRefreshRate>>();
 	m_Resolutions = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMResolution>>();
@@ -36,6 +40,8 @@ void gui::DCSettingsMenu::Initialise(World& world)
 {
 	const auto& audio = world.ReadSingleton<eng::settings::AudioComponent>();
 	const auto& camera = world.ReadSingleton<eng::settings::CameraComponent>();
+	const auto& gameplay = world.ReadSingleton<eng::settings::GameplayComponent>();
+	const auto& themes = world.ReadResource<eng::ThemeTable>();
 	const auto& window = world.ReadSingleton<eng::settings::WindowComponent>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const auto& monitor = *windowManager.GetMonitor(0);
@@ -50,6 +56,16 @@ void gui::DCSettingsMenu::Initialise(World& world)
 	m_ZoomRate = camera.m_ZoomAmount;
 	m_ZoomSpeed = camera.m_ZoomSpeed;
 
+	m_Themes->Clear();
+	for (const auto& [guid, value] : themes.GetObjectMap())
+	{
+		auto theme = Noesis::MakePtr<gui::VMTheme>(value.m_Name, guid);
+		m_Themes->Add(theme);
+		if (guid == gameplay.m_Theme)
+			m_Theme = theme;
+	}
+
+	// window
 	m_Monitors->Clear();
 	for (const auto& [i, value] : enumerate::Forward(windowManager.GetMonitors()))
 	{
@@ -190,6 +206,40 @@ void gui::DCSettingsMenu::SetZoomSpeed(float value)
 
 		auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
 		eventData.m_ZoomSpeed = value;
+	}
+}
+
+Noesis::ObservableCollection<gui::VMTheme>* gui::DCSettingsMenu::GetThemes() const
+{
+	return m_Themes;
+}
+
+void gui::DCSettingsMenu::SetThemes(Noesis::Ptr<Noesis::ObservableCollection<gui::VMTheme>> value)
+{
+	if (m_Themes != value)
+	{
+		m_Themes = value;
+		OnPropertyChanged("Themes");
+	}
+}
+
+gui::VMTheme* gui::DCSettingsMenu::GetTheme() const
+{
+	return m_Theme;
+}
+
+void gui::DCSettingsMenu::SetTheme(gui::VMTheme* value)
+{
+	if (m_Theme != value)
+	{
+		m_Theme = value;
+		OnPropertyChanged("Theme");
+
+		if (value)
+		{
+			auto& eventData = m_EntityWorld->AddEventComponent<gui::settings_menu::ValueRequest>();
+			eventData.m_Theme = value->m_Guid;
+		}
 	}
 }
 
@@ -336,14 +386,21 @@ void gui::DCSettingsMenu::OnCloseCommand(Noesis::BaseComponent* param)
 
 NS_IMPLEMENT_REFLECTION(gui::DCSettingsMenu)
 {
+	// audio
 	NsProp("EffectVolume", &gui::DCSettingsMenu::GetEffectVolume, &gui::DCSettingsMenu::SetEffectVolume);
 	NsProp("MasterVolume", &gui::DCSettingsMenu::GetMasterVolume, &gui::DCSettingsMenu::SetMasterVolume);
 	NsProp("MusicVolume", &gui::DCSettingsMenu::GetMusicVolume, &gui::DCSettingsMenu::SetMusicVolume);
 
+	// camera
 	NsProp("MoveSpeed", &gui::DCSettingsMenu::GetMoveSpeed, &gui::DCSettingsMenu::SetMoveSpeed);
 	NsProp("ZoomRate", &gui::DCSettingsMenu::GetZoomRate, &gui::DCSettingsMenu::SetZoomRate);
 	NsProp("ZoomSpeed", &gui::DCSettingsMenu::GetZoomSpeed, &gui::DCSettingsMenu::SetZoomSpeed);
 
+	// gameplay
+	NsProp("Themes", &gui::DCSettingsMenu::GetThemes);
+	NsProp("Theme", &gui::DCSettingsMenu::GetTheme, &gui::DCSettingsMenu::SetTheme);
+
+	// window
 	NsProp("Monitors", &gui::DCSettingsMenu::GetMonitors);
 	NsProp("Monitor", &gui::DCSettingsMenu::GetMonitor, &gui::DCSettingsMenu::SetMonitor);
 	NsProp("RefreshRates", &gui::DCSettingsMenu::GetRefreshRates);
@@ -353,5 +410,6 @@ NS_IMPLEMENT_REFLECTION(gui::DCSettingsMenu)
 	NsProp("WindowModes", &gui::DCSettingsMenu::GetWindowModes);
 	NsProp("WindowMode", &gui::DCSettingsMenu::GetWindowMode, &gui::DCSettingsMenu::SetWindowMode);
 
+	// commands
 	NsProp("CloseCommand", &gui::DCSettingsMenu::GetCloseCommand);
 }

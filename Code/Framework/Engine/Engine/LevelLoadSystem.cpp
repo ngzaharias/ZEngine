@@ -16,6 +16,8 @@
 
 namespace
 {
+	constexpr float s_FadeOutTime = 6.f;
+
 	const str::Name strLevels = NAME("Levels");
 }
 
@@ -57,7 +59,7 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 		loadingComponent.m_Name = request.m_Name;
 		loadingComponent.m_IsSplash = request.m_IsSplash;
 		if (request.m_IsSplash)
-			loadingComponent.m_FadeOutTime = 8.f;
+			loadingComponent.m_FadeOutTime = s_FadeOutTime;
 	}
 
 	// loading

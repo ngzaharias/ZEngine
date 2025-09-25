@@ -27,12 +27,12 @@ workspace "ZEngine"
 		runtime "Debug"
 		symbols "On"
 	filter "Release*"
-		defines { "NDEBUG", "Z_RELEASE", "USE_OPTICK", "ASSERTS_ENABLED", "LOGGING_ENABLED" }
+		defines { "NDEBUG", "Z_RELEASE" }
 		editandcontinue "Off"
 		flags { "FatalWarnings" }
 		optimize "Speed"
 		runtime "Release"
-		symbols "Off"
+		symbols "On"
 	filter "*_Editor"
 		defines { "Z_EDITOR" }
 	filter {} -- disable the filter

@@ -8,7 +8,7 @@
 #include "Engine/SettingsComponents.h"
 #include "Engine/Visitor.h"
 #include "GameClient/SettingsComponents.h"
-#include "Hidden/HiddenSettingsComponents.h"
+#include "Hidden/HiddenDebugSettingsComponent.h"
 
 namespace
 {

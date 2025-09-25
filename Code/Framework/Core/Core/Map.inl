@@ -82,6 +82,22 @@ auto Map<Key, Value>::Find(const Key& key) const->const_iterator
 }
 
 template<typename Key, typename Value>
+auto Map<Key, Value>::Get(const uint32 index) -> Value&
+{
+	auto itr = m_Values.begin();
+	std::advance(itr, index);
+	return itr->second;
+}
+
+template<typename Key, typename Value>
+auto Map<Key, Value>::Get(const uint32 index) const -> const Value&
+{
+	auto itr = m_Values.cbegin();
+	std::advance(itr, index);
+	return itr->second;
+}
+
+template<typename Key, typename Value>
 auto Map<Key, Value>::Get(const Key& key) -> Value&
 {
 	return m_Values.at(key);

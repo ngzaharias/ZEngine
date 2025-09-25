@@ -5,6 +5,7 @@
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
+#include "Engine/ColourTable.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/FlipbookAsset.h"
 #include "Engine/FlipbookComponent.h"
@@ -27,6 +28,7 @@
 #include "Engine/StaticMeshComponent.h"
 #include "Engine/TextComponent.h"
 #include "Engine/Texture2DAsset.h"
+#include "Engine/ThemeTable.h"
 #include "Engine/TrajectoryAsset.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
@@ -84,9 +86,6 @@ eng::Application::~Application()
 
 void eng::Application::Execute(int argc, char* argv[])
 {
-	InitializeYojimbo();
-	yojimbo_log_level(YOJIMBO_LOG_LEVEL_INFO);
-
 	Register();
 	Initialise();
 
@@ -127,8 +126,6 @@ void eng::Application::Execute(int argc, char* argv[])
 	}
 
 	Shutdown();
-
-	ShutdownYojimbo();
 }
 
 void eng::Application::Register()
@@ -173,6 +170,8 @@ void eng::Application::Register()
 	// tables
 	{
 		m_TableHeadmaster.Register<eng::AchievementTable>("Achievements");
+		m_TableHeadmaster.Register<eng::ColourTable>("Colours");
+		m_TableHeadmaster.Register<eng::ThemeTable>("Themes");
 	}
 }
 

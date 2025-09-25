@@ -23,7 +23,6 @@ project "GameClient"
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
 		"%{wks.location}/../3rdParty/PhysX/Include/",
 		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",
-		"%{wks.location}/../3rdParty/yojimbo/1.2.1/Include/",
 		"%{wks.location}/../Code/Application/GameClient/",
 		"%{wks.location}/../Code/Application/GameShared/",
 		"%{wks.location}/../Code/Framework/Core/",

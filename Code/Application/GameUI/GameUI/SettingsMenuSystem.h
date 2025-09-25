@@ -14,6 +14,7 @@ namespace eng::settings
 {
 	struct AudioComponent;
 	struct CameraComponent;
+	struct GameplayComponent;
 	struct WindowComponent;
 }
 
@@ -37,6 +38,7 @@ namespace gui::settings_menu
 			// Components
 			eng::settings::AudioComponent,
 			eng::settings::CameraComponent,
+			eng::settings::GameplayComponent,
 			eng::settings::WindowComponent,
 			gui::settings_menu::WindowComponent,
 			const gui::settings_menu::CloseRequest,

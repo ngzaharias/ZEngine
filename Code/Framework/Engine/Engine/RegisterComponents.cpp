@@ -15,6 +15,7 @@
 #include "Engine/LevelComponents.h"
 #include "Engine/LightComponents.h"
 #include "Engine/LinesComponent.h"
+#include "Engine/GameplaySettingsComponent.h"
 #include "Engine/MusicComponents.h"
 #include "Engine/NetworkComponents.h"
 #include "Engine/PhysicsComponent.h"
@@ -23,10 +24,12 @@
 #include "Engine/ReplicationComponents.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
+#include "Engine/SavegameComponent.h"
 #include "Engine/SettingsComponents.h"
 #include "Engine/SoundComponents.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshComponent.h"
+#include "Engine/TablesReloadedEvent.h"
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/UserComponents.h"
@@ -47,6 +50,7 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::network::RequestFinishedComponent>();
 	entityWorld.RegisterComponent<eng::RigidDynamicComponent>();
 	entityWorld.RegisterComponent<eng::RigidStaticComponent>();
+	entityWorld.RegisterComponent<eng::SavegameComponent>();
 	entityWorld.RegisterComponent<eng::sound::ObjectComponent>();
 	entityWorld.RegisterComponent<eng::sound::RandomComponent>();
 	entityWorld.RegisterComponent<eng::sound::RandomRequestComponent>();
@@ -55,6 +59,7 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::sound::SingleRequestComponent>();
 	entityWorld.RegisterComponent<eng::SpriteAssetComponent>();
 	entityWorld.RegisterComponent<eng::StaticMeshAssetComponent>();
+	entityWorld.RegisterComponent<eng::TablesReloadedEvent>();
 	entityWorld.RegisterComponent<eng::TextAssetComponent>();
 	entityWorld.RegisterComponent<eng::VisibilityComponent>();
 	entityWorld.RegisterComponent<voxel::ChunkChangedEventComponent>();
@@ -69,6 +74,7 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSingleton<eng::settings::AudioComponent>();
 	entityWorld.RegisterSingleton<eng::settings::CameraComponent>();
 	entityWorld.RegisterSingleton<eng::settings::DebugComponent>();
+	entityWorld.RegisterSingleton<eng::settings::GameplayComponent>();
 	entityWorld.RegisterSingleton<eng::settings::LaunchComponent>();
 	entityWorld.RegisterSingleton<eng::settings::WindowComponent>();
 	entityWorld.RegisterSingleton<eng::sound::RandomBufferComponent>();
@@ -109,11 +115,4 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	entityWorld.RegisterSingleton<eng::level::DirectoryComponent>();
 	entityWorld.RegisterSingleton<eng::PhysicsSceneComponent>();
 	entityWorld.RegisterSingleton<eng::VersionComponent>();
-
-	// serialization
-	//serializer.RegisterComponent<eng::camera::ProjectionComponent, Default<eng::camera::ProjectionComponent>>();
-	//serializer.RegisterComponent<ecs::NameComponent, NameSerializer>();
-	//serializer.RegisterComponent<eng::SpriteComponent, SpriteSerializer>();
-	//serializer.RegisterComponent<eng::TransformComponent, TransformSerializer>();
-	//serializer.RegisterComponent<net::UserComponent, UserSerializer>();
 }

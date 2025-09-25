@@ -26,11 +26,13 @@ namespace eng
 		TableManager() {}
 		virtual ~TableManager() {}
 
+		bool HasObject(const TKey& value) const { return m_ObjectMap.Contains(value); }
+		const TObject& GetObject(const TKey& value) const { return m_ObjectMap.Get(value); }
 		const ObjectMap& GetObjectMap() const { return m_ObjectMap; }
 
 		void Read(eng::Visitor& visitor) override;
 
-	private:
+	protected:
 		ObjectMap m_ObjectMap = {};
 	};
 }

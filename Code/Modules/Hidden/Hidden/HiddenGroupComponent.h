@@ -11,9 +11,6 @@ namespace hidden
 	/// \brief Group of hidden objects.
 	struct GroupComponent : public ecs::Component<GroupComponent>
 	{
-		str::Guid m_Sprite = {};
-		Vector2u m_Size = Vector2u::Zero;
-
 		Array<str::Guid> m_Objects = {};
 		Array<str::Guid> m_Revealed = {};
 	};

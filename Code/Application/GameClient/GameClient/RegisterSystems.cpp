@@ -20,24 +20,19 @@
 #include "GameClient/ProjectileSpawnSystem.h"
 #include "GameClient/ProjectileTrajectorySystem.h"
 #include "GameClient/RenderStage_Hexmap.h"
+#include "GameClient/SettingsSystem.h"
 #include "GameClient/TransformSystem.h"
 #include "GameClient/VelocitySystem.h"
 #include "GameClient/VisualSystem.h"
 #include "Hexmap/HexmapLoadSystem.h"
 #include "Hexmap/HexmapModifySystem.h"
 #include "Hexmap/HexmapRootSystem.h"
-#include "Hidden/HiddenCountSystem.h"
-#include "Hidden/HiddenPhysicsSystem.h"
-#include "Hidden/HiddenRevealSystem.h"
-#include "Hidden/HiddenSoundSystem.h"
-#include "Hidden/HiddenSpriteSystem.h"
-#include "Hidden/HiddenTrackerSystem.h"
-#include "Hidden/HiddenVFXSystem.h"
 #include "Softbody/SoftbodyChainSystem.h"
 
 void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.RegisterSystem<clt::AchievementSystem>();
+	entityWorld.RegisterSystem<client::AchievementSystem>();
+	entityWorld.RegisterSystem<client::SettingsSystem>();
 	entityWorld.RegisterSystem<container::StorageSystem>();
 	// #todo: container::MemberSystem depends on container::StorageSystem
 	entityWorld.RegisterSystem<container::MemberSystem>();
@@ -53,13 +48,6 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<hexmap::LoadSystem>();
 	entityWorld.RegisterSystem<hexmap::ModifySystem>();
 	entityWorld.RegisterSystem<hexmap::RootSystem>();
-	entityWorld.RegisterSystem<hidden::CountSystem>();
-	entityWorld.RegisterSystem<hidden::PhysicsSystem>();
-	entityWorld.RegisterSystem<hidden::RevealSystem>();
-	entityWorld.RegisterSystem<hidden::SoundSystem>();
-	entityWorld.RegisterSystem<hidden::SpriteSystem>();
-	entityWorld.RegisterSystem<hidden::TrackerSystem>();
-	entityWorld.RegisterSystem<hidden::VFXSystem>();
 	entityWorld.RegisterSystem<movement::AccelerationSystem>();
 	entityWorld.RegisterSystem<movement::VelocitySystem>();
 	entityWorld.RegisterSystem<projectile::SpawnSystem>();
@@ -68,5 +56,6 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<transform::TransformSystem>();
 	entityWorld.RegisterSystem<visual::VisualSystem>();
 
-	entityWorld.GetSystem<eng::RenderSystem>().RegisterStage<hexmap::RenderStage>();
+	// SettingsSystem system needs to run before WindowSystem
+	entityWorld.RegisterSystemPriority<client::SettingsSystem>(1);
 }

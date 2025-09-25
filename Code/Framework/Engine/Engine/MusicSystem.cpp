@@ -55,6 +55,7 @@ void eng::MusicSystem::Update(World& world, const GameTime& gameTime)
 		auto& musicComponent = world.WriteSingleton<eng::MusicComponent>();
 		const float volume = audio::ToVolume(audioSettings.m_MusicVolume * audioSettings.m_MasterVolume);
 		musicComponent.m_Music->setVolume(volume);
+		musicComponent.m_Music->setLoop(true);
 	}
 }
 

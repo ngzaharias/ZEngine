@@ -42,7 +42,6 @@ project "Editor"
 		"%{wks.location}/../3rdParty/PhysX/Include/",
 		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",
 		"%{wks.location}/../3rdParty/SteamworksSDK/Include/",
-		"%{wks.location}/../3rdParty/yojimbo/1.2.1/Include/",
 		"%{wks.location}/../Code/Application/Editor/",
 		"%{wks.location}/../Code/Application/Game/",
 		"%{wks.location}/../Code/Application/GameClient/",
@@ -82,7 +81,6 @@ project "Editor"
 			"%{wks.location}/../3rdParty/Freetype/2.13.3/Library/debug",
 			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/debug/",
 			"%{wks.location}/../3rdParty/PhysX/Library/debug/",
-			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/debug/",
 		}
 	filter "Release*"
 		libdirs 
@@ -90,7 +88,6 @@ project "Editor"
 			"%{wks.location}/../3rdParty/Freetype/2.13.3/Library/release",
 			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/release/",
 			"%{wks.location}/../3rdParty/PhysX/Library/release/",
-			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/release/",
 		}
 	filter {} -- disable the filter
 
@@ -129,7 +126,6 @@ project "Editor"
 		"PhysXFoundation_64.lib",
 		"PhysXPvdSDK_static_64.lib",
 		"steam_api64.lib",
-		"yojimbo.lib",
 
 		"flac.lib",
 		"gdi32.lib",

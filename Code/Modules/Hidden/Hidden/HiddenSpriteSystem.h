@@ -5,7 +5,14 @@
 
 namespace eng
 {
+	class ThemeTable;
 	struct SpriteComponent;
+	struct TablesReloadedEvent;
+}
+
+namespace eng::settings
+{
+	struct GameplayComponent;
 }
 
 namespace hidden
@@ -14,21 +21,20 @@ namespace hidden
 	struct RevealComponent;
 }
 
-namespace hidden::settings
-{
-	struct LocalComponent;
-}
-
 namespace hidden
 {
 	class SpriteSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
+			const eng::ThemeTable,
+			// Components
 			eng::SpriteComponent,
+			const eng::settings::GameplayComponent,
+			const eng::TablesReloadedEvent,
 			const hidden::ObjectComponent,
-			const hidden::RevealComponent,
-			const hidden::settings::LocalComponent>;
+			const hidden::RevealComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

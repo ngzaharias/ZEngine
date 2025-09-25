@@ -207,7 +207,7 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 			const Matrix4x4 model = meshTransform.ToTransform();
 
-			const Colour& colour = colour::From(id.m_Entity);
+			const Colour& colour = colour::Generate(id.m_Entity);
 
 			batchData.m_Colours.Emplace(colour);
 			batchData.m_Models.Append(model);

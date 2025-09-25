@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Guid.h"
 #include "Core/Optional.h"
 #include "ECS/Component.h"
 #include "Engine/WindowModeEnum.h"
@@ -21,6 +22,7 @@ namespace gui::settings_menu
 		Optional<float> m_MoveSpeed = {};
 		Optional<float> m_ZoomRate = {};
 		Optional<float> m_ZoomSpeed = {};
+		Optional<str::Guid> m_Theme = {};
 		// window
 		Optional<int32> m_Monitor = {};
 		Optional<int32> m_RefreshRate = {};

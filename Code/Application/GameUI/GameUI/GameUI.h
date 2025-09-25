@@ -10,6 +10,7 @@ namespace ecs
 namespace eng
 {
 	class PrototypeManager;
+	class TableHeadmaster;
 	class UIManager;
 	class WindowManager;
 }
@@ -19,6 +20,7 @@ namespace gui
 	struct Dependencies
 	{
 		eng::PrototypeManager& m_PrototypeManager;
+		eng::TableHeadmaster& m_Headmaster;
 		eng::UIManager& m_UIManager;
 		eng::WindowManager& m_WindowManager;
 	};

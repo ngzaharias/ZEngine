@@ -6,14 +6,8 @@
   mc:Ignorable="d"
   d:DesignWidth="1920"
   d:DesignHeight="1080" 
-  d:DataContext="Empty" Style="{DynamicResource Style.Page}">
-  <Page.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Themes/Default.xaml" />
-      </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </Page.Resources>
+  d:DataContext="Empty" 
+  Style="{DynamicResource Style.Page}">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="1*"/>
@@ -22,9 +16,9 @@
     </Grid.ColumnDefinitions>
     <Border Grid.Column="1" HorizontalAlignment="Center" Style="{DynamicResource Style.Header.Border}" VerticalAlignment="Bottom" CornerRadius="4,4,4,4" BorderThickness="2,2,2,2" Margin="0,0,0,100">
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16,16,16,16">
-        <TextBlock x:Name="ObjectCount" Text="{Binding ObjectCount}" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Left" FontSize="42" Foreground="#FF000000"/>
-        <TextBlock Text="/" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Center" TextAlignment="Center" Foreground="#FF000000" FontSize="42"/>
-        <TextBlock x:Name="ObjectTotal" Text="{Binding ObjectTotal}" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Right" Foreground="#FF000000" FontSize="42"/>
+        <TextBlock x:Name="ObjectCount" Text="{Binding ObjectCount}" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Left" FontSize="42" Foreground="{DynamicResource Brush.Outline}"/>
+        <TextBlock Text="/" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Center" TextAlignment="Center" Foreground="{DynamicResource Brush.Outline}" FontSize="42"/>
+        <TextBlock x:Name="ObjectTotal" Text="{Binding ObjectTotal}" Style="{DynamicResource Text_StyleB}" HorizontalAlignment="Right" Foreground="{DynamicResource Brush.Outline}" FontSize="42"/>
       </StackPanel>
     </Border>
   </Grid>

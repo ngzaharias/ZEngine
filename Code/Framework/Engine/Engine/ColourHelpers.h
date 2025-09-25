@@ -14,10 +14,9 @@ namespace colour
 	Colour ToHSV(const Colour& rgb);
 	Colour ToRGB(const Colour& hsv);
 
-	const Colour& From(const void* value);
-	const Colour& From(const int32 value);
-	const Colour& From(const uint32 value);
-	const Colour& From(const ecs::Entity& value);
-
 	const Colour& Generate();
+	const Colour& Generate(const void* value);
+	const Colour& Generate(const int32 value);
+	const Colour& Generate(const uint32 value);
+	const Colour& Generate(const ecs::Entity& value);
 }

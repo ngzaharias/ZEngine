@@ -19,7 +19,6 @@
 #include "Engine/ReplicationPeer.h"
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SettingsLaunchSystem.h"
-#include "Engine/SettingsLocalSystem.h"
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SoundRandomSystem.h"
 #include "Engine/SoundSequenceSystem.h"
@@ -44,7 +43,6 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::network::NetworkSystem>();
 	entityWorld.RegisterSystem<eng::RenderSystem>(entityWorld);
 	entityWorld.RegisterSystem<eng::settings::LaunchSystem>();
-	entityWorld.RegisterSystem<eng::settings::LocalSystem>();
 	entityWorld.RegisterSystem<eng::sound::PlaySystem>();
 	entityWorld.RegisterSystem<eng::sound::RandomSystem>();
 	entityWorld.RegisterSystem<eng::sound::SequenceSystem>();
@@ -56,8 +54,7 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<voxel::MeshingSystem>();
 	entityWorld.RegisterSystem<voxel::ModifySystem>();
 
-	// LocalSystem system needs to run before WindowSystem
-	entityWorld.RegisterSystemPriority<eng::settings::LocalSystem>(1);
+	// SettingsSystem system needs to run before WindowSystem
 	entityWorld.RegisterSystemPriority<eng::WindowSystem>(2);
 
 	// RandomSystem and SequenceSystem systems need to run before PlaySystem

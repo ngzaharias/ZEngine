@@ -6,6 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/ApplicationComponents.h"
+#include "Engine/InputManager.h"
 #include "Engine/LevelComponents.h"
 #include "Engine/SettingsComponents.h"
 #include "Engine/UIManager.h"
@@ -14,6 +15,7 @@
 
 namespace
 {
+	const str::Name strInput = NAME("GameMenu");
 	const str::Name strGameMenu_xaml = NAME("GameMenu.xaml");
 }
 
@@ -23,12 +25,22 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.CreateWidget(strGameMenu_xaml, true);
+
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::Gameplay;
+		layer.m_Consume.RaiseAll();
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInput, layer);
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<gui::game_menu::WindowComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strGameMenu_xaml);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInput);
 	}
 
 	//////////////////////////////////////////////////////////////////////////

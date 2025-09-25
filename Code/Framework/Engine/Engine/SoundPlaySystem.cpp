@@ -2,7 +2,6 @@
 #include "Engine/SoundPlaySystem.h"
 
 #include "Core/Algorithms.h"
-#include "Core/Guid.h"
 #include "Core/Random.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
@@ -14,7 +13,25 @@
 #include "Engine/SoundAssets.h"
 #include "Engine/SoundComponents.h"
 
+#include <NsGUI/IntegrationAPI.h>
+#include <NsGUI/Uri.h>
 #include <SFML/Audio/SoundBuffer.hpp>
+
+void eng::sound::PlaySystem::Initialise(World& world)
+{
+	Noesis::GUI::SetPlayAudioCallback(this, [](void* user, const Noesis::Uri& uri, float volume)
+		{
+			auto* self = reinterpret_cast<eng::sound::PlaySystem*>(user);
+			const Noesis::String string = uri.ToString();
+			const str::Path path = string.Str();
+			const str::StringView stem = path.GetStem();
+			if (str::Guid::IsValidString(stem))
+			{
+				const str::Guid guid = GUID(stem);
+				self->m_Requests.Append(guid);
+			}
+		});
+}
 
 void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 {
@@ -22,26 +39,25 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 
 	const auto& audioSettings = world.ReadSingleton<eng::settings::AudioComponent>();
 
-	Array<str::Guid> requests;
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SingleRequestComponent>>())
 	{
 		const auto& requestComponent = world.ReadComponent<eng::sound::SingleRequestComponent>(entity);
-		requests.Append(requestComponent.m_Asset);
+		m_Requests.Append(requestComponent.m_Asset);
 	}
 
 	// Random Buffer
 	{
 		const auto& bufferComponent = world.ReadSingleton<eng::sound::RandomBufferComponent>();
-		requests.Append(bufferComponent.m_Requests);
+		m_Requests.Append(bufferComponent.m_Requests);
 	}
 
 	// Sequence Buffer
 	{
 		const auto& bufferComponent = world.ReadSingleton<eng::sound::SequenceBufferComponent>();
-		requests.Append(bufferComponent.m_Requests);
+		m_Requests.Append(bufferComponent.m_Requests);
 	}
 
-	for (const str::Guid& request : requests)
+	for (const str::Guid& request : m_Requests)
 	{
 		if (!request.IsValid())
 			continue;
@@ -65,6 +81,7 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 			object.m_Asset = request;
 		}
 	}
+	m_Requests.RemoveAll();
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::sound::ObjectComponent>>())
 	{

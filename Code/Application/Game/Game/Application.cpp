@@ -44,6 +44,7 @@ void game::Application::Register()
 
 	gui::Dependencies guiDependencies = {
 		m_PrototypeManager,
+		m_TableHeadmaster,
 		m_GameClient.m_UIManager,
 		m_WindowManager };
 

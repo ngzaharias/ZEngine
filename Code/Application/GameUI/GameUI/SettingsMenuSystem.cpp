@@ -7,10 +7,12 @@
 #include "ECS/WorldView.h"
 #include "Engine/AudioSettingsComponent.h"
 #include "Engine/CameraSettingsComponent.h"
+#include "Engine/GameplaySettingsComponent.h"
 #include "Engine/WindowSettingsComponent.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCSettingsMenu.h"
 #include "GameUI/SettingsMenuComponents.h"
+#include "Hidden/HiddenDebugSettingsComponent.h"
 
 namespace
 {
@@ -66,6 +68,8 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 			world.WriteSingleton<eng::settings::CameraComponent>().m_ZoomAmount = *eventData.m_ZoomRate;
 		if (eventData.m_ZoomSpeed)
 			world.WriteSingleton<eng::settings::CameraComponent>().m_ZoomSpeed = *eventData.m_ZoomSpeed;
+		if (eventData.m_Theme)
+			world.WriteSingleton<eng::settings::GameplayComponent>().m_Theme = *eventData.m_Theme;
 
 		// graphics
 		if (eventData.m_Monitor)

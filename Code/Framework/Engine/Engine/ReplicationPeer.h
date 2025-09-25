@@ -12,11 +12,6 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace yojimbo
-{
-	class Message;
-}
-
 namespace net
 {
 	struct AddComponentMessage;
@@ -38,7 +33,7 @@ namespace net
 
 	private:
 		void OnClientDisconnected(const net::PeerId& peerId);
-		void OnProcessMessage(const yojimbo::Message* message);
+		void OnProcessMessage(const void* message);
 
 		void OnCreateEntity(const net::CreateEntityMessage* message);
 		void OnDestroyEntity(const net::DestroyEntityMessage* message);

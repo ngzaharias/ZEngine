@@ -11,8 +11,8 @@
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "GameDebug/HiddenObjectComponent.h"
+#include "Hidden/HiddenDebugSettingsComponent.h"
 #include "Hidden/HiddenObjectComponent.h"
-#include "Hidden/HiddenSettingsComponents.h"
 #include "Math/AABB.h"
 
 void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
@@ -43,18 +43,7 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 			childTransform = world.ReadComponent<eng::TransformComponent>(entity);
 
 			const auto& parentObject = world.ReadComponent<::hidden::ObjectComponent>(entity);
-			for (const ::hidden::Effect& effect : parentObject.m_Effects)
-			{
-				core::VariantMatch(effect,
-					[&](const ::hidden::SetColour& data)
-					{
-						childSprite.m_Colour = data.m_Colour;
-					},
-					[&](const ::hidden::SetSprite& data)
-					{
-						childSprite.m_Sprite = data.m_Sprite;
-					});
-			}
+			childSprite.m_Colour = Colour::Magenta;
 		}
 
 		using SpriteQuery = ecs::query
@@ -67,18 +56,7 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 			const auto& parentSprite = world.ReadComponent<eng::SpriteComponent>(entity);
 
 			auto& childSprite = world.WriteComponent<eng::SpriteComponent>(parentDebug.m_Child);
-			for (const ::hidden::Effect& effect : parentObject.m_Effects)
-			{
-				core::VariantMatch(effect,
-					[&](const ::hidden::SetColour& data)
-					{
-						childSprite.m_Colour = data.m_Colour;
-					},
-					[&](const ::hidden::SetSprite& data)
-					{
-						childSprite.m_Sprite = data.m_Sprite;
-					});
-			}
+			childSprite.m_Colour = Colour::Magenta;
 		}
 
 		using TransformQuery = ecs::query

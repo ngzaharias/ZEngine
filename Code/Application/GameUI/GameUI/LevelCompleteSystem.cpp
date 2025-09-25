@@ -14,6 +14,8 @@
 namespace
 {
 	const str::Name strLevelComplete_xaml = NAME("LevelComplete.xaml");
+
+	const str::StringView strFilename = "Savegame.toml";
 }
 
 void gui::level_complete::MenuSystem::Update(World& world, const GameTime& gameTime)
@@ -42,6 +44,21 @@ void gui::level_complete::MenuSystem::Update(World& world, const GameTime& gameT
 	{
 		const auto& settings = world.ReadSingleton<eng::settings::LaunchComponent>();
 		world.AddEventComponent<eng::level::LoadRequest>(settings.m_Level);
+
+		for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::level_complete::WindowComponent>>())
+			world.DestroyEntity(entity);
+	}
+
+	if (world.HasAny<ecs::query::Added<gui::level_complete::ResetGameRequest>>())
+	{
+		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
+		std::remove(filepath.ToChar());
+
+		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
+		{
+			const auto& levelComponent = world.ReadComponent<eng::level::LoadedComponent>(entity);
+			world.AddEventComponent<eng::level::LoadRequest>(levelComponent.m_Name);
+		}
 
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::level_complete::WindowComponent>>())
 			world.DestroyEntity(entity);

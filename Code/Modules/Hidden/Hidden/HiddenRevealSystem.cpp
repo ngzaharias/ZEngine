@@ -14,9 +14,9 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "Hidden/HiddenDebugSettingsComponent.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
-#include "Hidden/HiddenSettingsComponents.h"
 #include "Math/AABB.h"
 #include "Math/CollisionMath.h"
 #include "Math/Ray.h"
@@ -28,7 +28,6 @@
 
 namespace
 {
-	const str::Guid strSoundSequence = GUID("2bde153c851a429c88957b6b0fd482fb");
 	const str::Name strInput = str::Name::Create("HiddenReveal");
 	const str::Name strSelect = str::Name::Create("HiddenReveal_Select");
 

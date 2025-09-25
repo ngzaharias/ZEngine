@@ -9,6 +9,7 @@
 #include <NsCore/Ptr.h>
 #include <NsGui/INotifyPropertyChanged.h>
 #include <NsGui/IView.h>
+#include <NsGui/ResourceDictionary.h>
 
 class GameTime;
 template<typename Type>
@@ -68,9 +69,12 @@ namespace eng
 		template<typename TDataContext>
 		auto WriteDataContext(const str::Name& name)->TDataContext&;
 
+		void SetResource(const char* key, Noesis::Ptr<Noesis::BaseComponent> value);
+
 	private:
 		ecs::EntityWorld& m_EntityWorld;
 		const eng::Window* m_Window = nullptr;
+		Noesis::Ptr<Noesis::ResourceDictionary> m_ResourceDictionary = {};
 
 		Array<str::Name> m_Stack = {};
 		Map<str::Name, Noesis::Ptr<Noesis::BaseComponent>> m_DataContexts = {};

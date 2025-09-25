@@ -51,6 +51,8 @@ namespace eng
 {
 	class AssetManager;
 	class InputManager;
+	class TableHeadmaster;
+	struct TablesReloadedEvent;
 }
 
 namespace dbg
@@ -61,6 +63,7 @@ namespace dbg
 		using World = ecs::WorldView<
 			// Resources
 			eng::AssetManager,
+			eng::TableHeadmaster,
 			const eng::InputManager,
 			// Components
 			dbg::BufferWindowRequestComponent,
@@ -86,7 +89,8 @@ namespace dbg
 			editor::SpriteWindowRequestComponent,
 			editor::TableWindowRequestComponent,
 			editor::TextureWindowRequestComponent,
-			editor::TrajectoryWindowRequestComponent>;
+			editor::TrajectoryWindowRequestComponent,
+			eng::TablesReloadedEvent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

@@ -4,6 +4,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
+#include "Engine/ColourTable.h"
 #include "Engine/ImguiManager.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
@@ -12,15 +13,14 @@
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
 #include "Engine/TableHeadmaster.h"
+#include "Engine/ThemeTable.h"
 #include "Engine/UIManager.h"
 #include "Engine/WindowManager.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
 #include "GameShared/RegisterComponents.h"
 #include "Hexmap/HexmapRootComponent.h"
-#include "Hidden/HiddenCountComponent.h"
-#include "Hidden/HiddenGroupComponent.h"
-#include "Hidden/HiddenObjectComponent.h"
+#include "Hidden/RegisterModule.h"
 #include "Softbody/SoftbodyComponents.h"
 #include "Tabletop/TabletopCardComponent.h"
 #include "Tabletop/TabletopDeckComponent.h"
@@ -43,9 +43,6 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 	{
 		auto& prototypeManager = dependencies.m_PrototypeManager;
 		prototypeManager.Register<hexmap::RootComponent>();
-		prototypeManager.Register<hidden::CountComponent>();
-		prototypeManager.Register<hidden::GroupComponent>();
-		prototypeManager.Register<hidden::ObjectComponent>();
 		prototypeManager.Register<softbody::ChainComponent>();
 		prototypeManager.Register<tabletop::CardComponent>();
 		prototypeManager.Register<tabletop::DeckComponent>();
@@ -69,6 +66,8 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 		// tables
 		auto& headmaster = dependencies.m_TableHeadmaster;
 		m_EntityWorld.RegisterResource(headmaster.GetManager<eng::AchievementTable>());
+		m_EntityWorld.RegisterResource(headmaster.GetManager<eng::ColourTable>());
+		m_EntityWorld.RegisterResource(headmaster.GetManager<eng::ThemeTable>());
 	}
 
 	// engine
@@ -89,6 +88,11 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 	{
 		clt::RegisterComponents(m_EntityWorld);
 		clt::RegisterSystems(m_EntityWorld);
+	}
+
+	// modules
+	{
+		hidden::RegisterModule(m_EntityWorld);
 	}
 }
 

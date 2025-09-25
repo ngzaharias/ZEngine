@@ -8,9 +8,10 @@
 
 void eng::TableHeadmaster::Initialise(const str::Path& folderPath)
 {
+	m_FolderPath = folderPath;
 	for (const eng::TableEntry& entry : m_Entries.GetValues())
 	{
-		str::Path filepath = str::Path(folderPath, "\\", entry.m_Filename);
+		str::Path filepath = str::Path(m_FolderPath, "\\", entry.m_Filename);
 		if (!filepath.HasExtension())
 			filepath += s_Extension;
 
@@ -25,4 +26,9 @@ void eng::TableHeadmaster::Shutdown()
 	for (const eng::TableEntry& entry : m_Entries.GetValues())
 		delete entry.m_Manager;
 	m_Entries.RemoveAll();
+}
+
+void eng::TableHeadmaster::Reload()
+{
+	Initialise(m_FolderPath);
 }

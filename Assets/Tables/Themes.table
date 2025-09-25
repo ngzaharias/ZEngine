@@ -1,0 +1,65 @@
+[605947d5630f4508921b83738d2b6869]
+m_Name = "Default (Light)"
+m_Background0 = 0xf6f7eb
+m_Highlight = 0x8989ff
+m_Outline = 0x393e41
+
+[f596cb79db6b4a16907fa44fcf1815fa]
+m_Name = "Peach (Light)"
+m_Background0 = 0xe5dbce
+m_Highlight = 0xf8d3c5
+m_Outline = 0x55433c
+
+[26fa18cd95374e339825875131f96b78]
+m_Name = "Seaside (Light)"
+m_Background0 = 0xfedc97
+m_Highlight = 0xb5b682
+m_Outline = 0x033f63
+
+[d94ebac9680e4dbb9ab6de0bf5055133]
+m_Name = "Berry (Light)"
+m_Background0 = 0xf9dbbd
+m_Highlight = 0xffa5ab
+m_Outline = 0xa53860
+
+[803b21f3d32548ada1904afe496a285d]
+m_Name = "Garden (Light)"
+m_Background0 = 0xA4B465
+m_Highlight = 0xFFCF50
+m_Outline = 0x626F47
+
+[11f8a12c0cfa45f8bb2906e592b634d1]
+m_Name = "Default (Dark)"
+m_Background0 = 0x393e41
+m_Highlight = 0x8989ff
+m_Outline = 0xf6f7eb
+
+[b9380873372b4d8d94b448d73d2676ee]
+m_Name = "Moonshine (Dark)"
+m_Background0 = 0x0d3b66
+m_Highlight = 0xe59500
+m_Outline = 0xfaf0ca
+
+[161861c6d9994f45a014340af4578a8e]
+m_Name = "Midnight (Dark)"
+m_Background0 = 0x0b192c
+m_Highlight = 0xB31312
+m_Outline = 0xECDFCC
+
+[78db7e470ae64c93b4d6fb93d22ea31a]
+m_Name = "Peach (Dark)"
+m_Background0 = 0x505652
+m_Highlight = 0xc07262
+m_Outline = 0xdcc4a9
+
+[954307170903426e82447579806240bd]
+m_Name = "Mystic (Dark)"
+m_Background0 = 0x372549
+m_Highlight = 0xb75d69
+m_Outline = 0xeacdc2
+
+[0e7b5e9259404f63a048809e802491b3]
+m_Name = "RGB"
+m_Background0 = 0xFF0000
+m_Highlight = 0x00FF00
+m_Outline = 0x0000FF

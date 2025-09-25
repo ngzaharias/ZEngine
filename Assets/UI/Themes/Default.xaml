@@ -14,29 +14,29 @@
     <Setter Property="Margin" Value="4,4,4,4"/>
     <Setter Property="Background" Value="{DynamicResource Brush.Background0}"/>
     <Setter Property="BorderThickness" Value="4,4,4,4"/>
-    <Setter Property="Foreground" Value="{StaticResource Brush.Foreground}"/>
-    <Setter Property="BorderBrush" Value="{StaticResource Brush.Foreground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource Brush.Outline}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Outline}"/>
     <Setter Property="FontSize" Value="20"/>
   </Style>
   <Style x:Key="Style.SubHeader.Text" TargetType="TextBlock">
     <Setter Property="HorizontalAlignment" Value="Left"/>
     <Setter Property="VerticalAlignment" Value="Center"/>
     <Setter Property="Padding" Value="10,4,10,4"/>
-    <Setter Property="Foreground" Value="{DynamicResource Brush.Foreground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource Brush.Outline}"/>
   </Style>
   <Style x:Key="Style.SubHeader.Border" TargetType="Border">
     <Setter Property="CornerRadius" Value="4,4,4,4"/>
     <Setter Property="BorderThickness" Value="2,2,2,2"/>
     <Setter Property="Background" Value="{DynamicResource Brush.Background0}"/>
-    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Foreground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Outline}"/>
   </Style>
   <Style x:Key="Style.Slider" TargetType="Slider" BasedOn="{StaticResource {x:Type Slider}}">
-    <Setter Property="Background" Value="{StaticResource Brush.Background25}"/>
-    <Setter Property="Foreground" Value="{StaticResource Brush.Accent}"/>
+    <Setter Property="Background" Value="{DynamicResource Brush.Background2}"/>
+    <Setter Property="Foreground" Value="{DynamicResource Brush.Highlight}"/>
   </Style>
   <Style x:Key="Style.Header.Border" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource Brush.Background0}"/>
-    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Foreground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Outline}"/>
     <Setter Property="CornerRadius" Value="2,2,0,0"/>
   </Style>
   <Style x:Key="Style.TabControl" TargetType="TabControl" BasedOn="{StaticResource {x:Type TabControl}}">
@@ -45,7 +45,7 @@
     <Setter Property="ItemTemplate" Value="{DynamicResource Template.TabText}"/>
   </Style>
   <Style x:Key="Style.Property.Text" TargetType="TextBlock">
-    <Setter Property="Foreground" Value="{DynamicResource Brush.Foreground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource Brush.Outline}"/>
   </Style>
   <Style x:Key="Style.Fade" TargetType="Grid">
     <Setter Property="Background" Value="{DynamicResource Brush.Fade}"/>
@@ -65,11 +65,11 @@
   <!--////////////////////////////////////////////////////////////////////////////////////////////////////-->
   <!--Templates-->
   <DataTemplate x:Key="Template.ComboText">
-    <TextBlock Text="{Binding Name}" Foreground="{DynamicResource Brush.Foreground}"/>
+    <TextBlock Text="{Binding Name}" Foreground="{DynamicResource Brush.Outline}"/>
   </DataTemplate>
   <DataTemplate x:Key="Template.TabText">
     <Grid>
-      <TextBlock Text="{Binding}" Foreground="{StaticResource Brush.Foreground}"/>
+      <TextBlock Text="{Binding}" Foreground="{DynamicResource Brush.Outline}"/>
     </Grid>
   </DataTemplate>
 </ResourceDictionary>

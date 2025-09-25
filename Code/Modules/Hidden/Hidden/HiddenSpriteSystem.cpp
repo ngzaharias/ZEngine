@@ -5,36 +5,68 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/GameplaySettingsComponent.h"
 #include "Engine/SpriteComponent.h"
+#include "Engine/TablesReloadedEvent.h"
+#include "Engine/ThemeTable.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
-#include "Hidden/HiddenSettingsComponents.h"
+
+namespace
+{
+	void Refresh(hidden::SpriteSystem::World& world)
+	{
+		const auto& themes = world.ReadResource<eng::ThemeTable>();
+		const auto& settings = world.ReadSingleton<eng::settings::GameplayComponent>();
+
+		using Query = ecs::query::Include<const eng::SpriteComponent, const hidden::ObjectComponent>;
+		for (const ecs::Entity& entity : world.Query<Query>())
+		{
+			const eng::Theme& theme = themes.GetTheme(settings.m_Theme);
+			const bool wasRevealed = world.HasComponent<hidden::RevealComponent>(entity);
+
+			auto& sprite = world.WriteComponent<eng::SpriteComponent>(entity);
+			sprite.m_Colour = wasRevealed
+				? theme.m_Highlight
+				: theme.m_Background0;
+		}
+	}
+}
 
 void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& settings = world.ReadSingleton<hidden::settings::LocalComponent>();
+	const auto& themes = world.ReadResource<eng::ThemeTable>();
+	const auto& settings = world.ReadSingleton<eng::settings::GameplayComponent>();
 
-	using Query = ecs::query
-		::Added<const hidden::RevealComponent>
-		::Include<const eng::SpriteComponent, const hidden::ObjectComponent>;
-	for (const ecs::Entity& entity : world.Query<Query>())
+	using ObjectQuery = ecs::query
+		::Added<const hidden::ObjectComponent>
+		::Include<const eng::SpriteComponent>;
+	for (const ecs::Entity& entity : world.Query<ObjectQuery>())
 	{
-		const auto& object = world.ReadComponent<hidden::ObjectComponent>(entity);
-		auto& sprite = world.WriteComponent<eng::SpriteComponent>(entity);
+		const eng::Theme& theme = themes.GetTheme(settings.m_Theme);
+		const bool wasRevealed = world.HasComponent<hidden::RevealComponent>(entity);
 
-		for (const hidden::Effect& effect : object.m_Effects)
-		{
-			core::VariantMatch(effect,
-				[&](const hidden::SetColour& data)
-				{
-					sprite.m_Colour = settings.m_Highlight;
-				},
-				[&](const hidden::SetSprite& data)
-				{
-					sprite.m_Sprite = data.m_Sprite;
-				});
-		}
+		auto& sprite = world.WriteComponent<eng::SpriteComponent>(entity);
+		sprite.m_Colour = wasRevealed
+			? theme.m_Highlight
+			: theme.m_Background0;
 	}
+
+	using RevealQuery = ecs::query
+		::Added<const hidden::RevealComponent>
+		::Include<const eng::SpriteComponent>;
+	for (const ecs::Entity& entity : world.Query<RevealQuery>())
+	{
+		const eng::Theme& theme = themes.GetTheme(settings.m_Theme);
+
+		auto& sprite = world.WriteComponent<eng::SpriteComponent>(entity);
+		sprite.m_Colour = theme.m_Highlight;
+	}
+
+	if (world.HasAny<ecs::query::Added<const eng::TablesReloadedEvent>>())
+		Refresh(world);
+	if (world.HasAny<ecs::query::Updated<const eng::settings::GameplayComponent>>())
+		Refresh(world);
 }

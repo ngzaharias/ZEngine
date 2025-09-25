@@ -16,14 +16,17 @@ namespace gui
 
 		const NoesisApp::DelegateCommand* GetExitGameCommand() const { return &m_ExitGameCommand; }
 		const NoesisApp::DelegateCommand* GetExitToMenuCommand() const { return &m_ExitToMenuCommand; }
+		const NoesisApp::DelegateCommand* GetResetGameCommand() const { return &m_ResetGameCommand; }
 
 	private:
 		void OnExitGameCommand(Noesis::BaseComponent* param);
 		void OnExitToMenuCommand(Noesis::BaseComponent* param);
+		void OnResetGameCommand(Noesis::BaseComponent* param);
 
 	private:
 		NoesisApp::DelegateCommand m_ExitGameCommand = {};
 		NoesisApp::DelegateCommand m_ExitToMenuCommand = {};
+		NoesisApp::DelegateCommand m_ResetGameCommand = {};
 
 		NS_DECLARE_REFLECTION(gui::DCLevelComplete, eng::UIDataContext)
 	};

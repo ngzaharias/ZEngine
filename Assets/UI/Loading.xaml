@@ -8,21 +8,22 @@
   Style="{DynamicResource Style.Page}" 
   d:DesignWidth="1280" 
   d:DesignHeight="720">
-  <Page.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Themes/Default.xaml" />
-      </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </Page.Resources>
-  <Grid Background="{StaticResource Brush.Background0}">
+  <Grid Background="{DynamicResource Brush.Background0}">
     <Viewbox>
       <Grid Width="1280" Height="720">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="1*"/>
+          <ColumnDefinition Width="2*"/>
+          <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-          <RowDefinition Height="5*"/>
-          <RowDefinition Height="1*"/>
+          <RowDefinition Height="3*"/>
+          <RowDefinition Height="2*"/>
+          <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{StaticResource Style.SubHeader.Text}" Margin="0" FontSize="20"/>
+        <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Top" Style="{DynamicResource Style.SubHeader.Text}" FontSize="32" Grid.Column="1" Grid.Row="1"/>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{DynamicResource Style.SubHeader.Text}" FontSize="20" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0.082,0,0" Text="Hint:"/>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Style="{DynamicResource Style.SubHeader.Text}" FontSize="20" Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Path=Hint}" TextAlignment="Center" Margin="0,0.082,0,0"/>
       </Grid>
     </Viewbox>
   </Grid>

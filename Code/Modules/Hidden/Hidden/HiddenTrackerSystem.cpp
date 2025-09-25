@@ -37,21 +37,4 @@ void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 			}
 		}
 	}
-	
-	// group complete
-	{
-		using Query = ecs::query
-			::Updated<hidden::GroupComponent>
-			::Exclude<eng::SpriteComponent>;
-		for (const ecs::Entity& entity : world.Query<Query>())
-		{
-			const auto& groupComponent = world.ReadComponent<hidden::GroupComponent>(entity);
-			if (groupComponent.m_Objects.GetCount() == groupComponent.m_Revealed.GetCount())
-			{
-				auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(entity);
-				spriteComponent.m_Size = groupComponent.m_Size;
-				spriteComponent.m_Sprite = groupComponent.m_Sprite;
-			}
-		}
-	}
 }

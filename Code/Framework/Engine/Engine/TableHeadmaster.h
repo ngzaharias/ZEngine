@@ -22,6 +22,8 @@ namespace eng
 		/// \brief 
 		void Shutdown();
 
+		void Reload();
+
 		template<class TManager>
 		bool IsRegistered() const;
 
@@ -35,6 +37,7 @@ namespace eng
 		auto GetManager() const -> const TManager&;
 
 	private:
+		str::Path m_FolderPath = {};
 		Entries m_Entries = {};
 	};
 }

@@ -166,34 +166,34 @@ Colour colour::ToRGB(const Colour& hsv)
 	return rgb;
 }
 
-const Colour& colour::From(const void* value)
+const Colour& colour::Generate()
+{
+	static uint32 index = 0;
+	index = (++index) % s_ColoursCount;
+	return s_Colours[index];
+}
+
+const Colour& colour::Generate(const void* value)
 {
 	auto iValue = reinterpret_cast<std::uintptr_t>(value);
 	const uint32 index = iValue % s_ColoursCount;
 	return s_Colours[index];
 }
 
-const Colour& colour::From(const int32 value)
+const Colour& colour::Generate(const int32 value)
 {
 	const uint32 index = static_cast<uint32>(value) % s_ColoursCount;
 	return s_Colours[index];
 }
 
-const Colour& colour::From(const uint32 value)
+const Colour& colour::Generate(const uint32 value)
 {
 	const uint32 index = static_cast<uint32>(value) % s_ColoursCount;
 	return s_Colours[index];
 }
 
-const Colour& colour::From(const ecs::Entity& value)
+const Colour& colour::Generate(const ecs::Entity& value)
 {
 	const uint32 index = static_cast<uint32>(value.m_Value) % s_ColoursCount;
-	return s_Colours[index];
-}
-
-const Colour& colour::Generate()
-{
-	static uint32 index = 0;
-	index = (++index) % s_ColoursCount;
 	return s_Colours[index];
 }

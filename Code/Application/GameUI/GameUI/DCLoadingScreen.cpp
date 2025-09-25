@@ -16,17 +16,17 @@ gui::DCLoadingScreen::~DCLoadingScreen()
 {
 }
 
-int32 gui::DCLoadingScreen::GetProgress() const
+const char* gui::DCLoadingScreen::GetHint() const
 {
-	return m_Progress;
+	return m_Hint.c_str();
 }
 
-void gui::DCLoadingScreen::SetProgress(int32 value)
+void gui::DCLoadingScreen::SetHint(const char* value)
 {
-	if (m_Progress != value)
+	if (m_Hint != value)
 	{
-		m_Progress = value;
-		OnPropertyChanged("Progress");
+		m_Hint = value;
+		OnPropertyChanged("Hint");
 	}
 }
 
@@ -37,7 +37,7 @@ void gui::DCLoadingScreen::OnCloseCommand(Noesis::BaseComponent* param)
 
 NS_IMPLEMENT_REFLECTION(gui::DCLoadingScreen)
 {
-	NsProp("Progress", &gui::DCLoadingScreen::GetProgress, &gui::DCLoadingScreen::SetProgress);
+	NsProp("Hint", &gui::DCLoadingScreen::GetHint, &gui::DCLoadingScreen::SetHint);
 
 	NsProp("CloseCommand", &gui::DCLoadingScreen::GetCloseCommand);
 }

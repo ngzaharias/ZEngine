@@ -3,6 +3,7 @@
 #include <map>
 
 using int32 = int32_t;
+using uint32 = uint32_t;
 
 template<typename Key, typename Value>
 class Map
@@ -41,6 +42,11 @@ public:
 	/// \brief Gets an iterator to an element in the container that matches that key.
 	/// A past-the-end iterator is returned if none exists.
 	auto Find(const Key& key) const ->const_iterator;
+
+	/// \brief Gets an element from the container if one exists at that index.
+	auto Get(const uint32 index)->Value&;
+	/// \brief Gets an element from the container if one exists at that index.
+	auto Get(const uint32 index) const -> const Value&;
 
 	/// \brief Gets an element from the container if one exists with that key.
 	/// An exception std::out_of_range is thrown if none exists.

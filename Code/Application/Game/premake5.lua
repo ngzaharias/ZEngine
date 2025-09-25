@@ -1,10 +1,10 @@
 project "Game"
-
-	--kind "ConsoleApp"
 	kind "WindowedApp"
+	filter "Debug*"
+		kind "ConsoleApp"
 	filter "*_Editor"
 		kind "StaticLib"
-	filter {} -- disable the filter
+	filter {}
 
 	pchheader "GamePCH.h"
 	pchsource "Game/GamePCH.cpp"
@@ -46,7 +46,6 @@ project "Game"
 		"%{wks.location}/../3rdParty/PhysX/Include/",
 		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",
 		"%{wks.location}/../3rdParty/SteamworksSDK/Include/",
-		"%{wks.location}/../3rdParty/yojimbo/1.2.1/Include/",
 		"%{wks.location}/../Code/Application/Game/",
 		"%{wks.location}/../Code/Application/GameClient/",
 		"%{wks.location}/../Code/Application/GameDebug/",
@@ -85,7 +84,6 @@ project "Game"
 			"%{wks.location}/../3rdParty/Freetype/2.13.3/Library/debug",
 			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/debug/",
 			"%{wks.location}/../3rdParty/PhysX/Library/debug/",
-			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/debug/",
 		}
 	filter "Release*"
 		libdirs 
@@ -93,7 +91,6 @@ project "Game"
 			"%{wks.location}/../3rdParty/Freetype/2.13.3/Library/release",
 			"%{wks.location}/../3rdParty/SFML/2.6.1/Library/release/",
 			"%{wks.location}/../3rdParty/PhysX/Library/release/",
-			"%{wks.location}/../3rdParty/yojimbo/1.2.1/Library/release/",
 		}
 	filter {} -- disable the filter
 
@@ -131,7 +128,6 @@ project "Game"
 		"PhysXFoundation_64.lib",
 		"PhysXPvdSDK_static_64.lib",
 		"steam_api64.lib",
-		"yojimbo.lib",
 
 		"Dbghelp.lib",
 		"flac.lib",

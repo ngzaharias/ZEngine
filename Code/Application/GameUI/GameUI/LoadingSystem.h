@@ -14,6 +14,11 @@ namespace eng::level
 	struct LoadingComponent;
 }
 
+namespace gui
+{
+	class HintTable;
+}
+
 namespace gui::loading
 {
 	struct CloseRequest;
@@ -27,6 +32,7 @@ namespace gui::loading
 		using World = ecs::WorldView<
 			// Resources
 			eng::UIManager,
+			const gui::HintTable,
 			// Components
 			eng::level::LoadingComponent,
 			const gui::loading::CloseRequest>;

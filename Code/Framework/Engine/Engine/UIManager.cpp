@@ -10,6 +10,7 @@
 #include "Engine/Window.h"
 #include "Input/Key.h"
 #include "Math/Vector.h"
+#include "Modules/App.Interactivity.cpp"
 
 #include <NsApp/LocalFontProvider.h>
 #include <NsApp/LocalTextureProvider.h>
@@ -195,6 +196,9 @@ void eng::UIManager::Initialise(const eng::Window& window)
 	Noesis::GUI::SetLicense(Noesis::strName, Noesis::strKey);
 	Noesis::GUI::Init();
 
+	NsRegisterReflectionAppInteractivity();
+	NsInitPackageAppInteractivity();
+
 	const str::Path fontPath = str::Path(str::EPath::Assets);
 	const str::Path texturePath = str::Path(str::EPath::Assets);
 	const str::Path xamlPath = str::Path(str::EPath::Assets, "UI");
@@ -212,7 +216,8 @@ void eng::UIManager::Initialise(const eng::Window& window)
 
 	NoesisApp::SetThemeProviders();
 
-	Noesis::GUI::LoadApplicationResources("Themes/Default.xaml");
+	m_ResourceDictionary = Noesis::GUI::LoadXaml<Noesis::ResourceDictionary>("Themes/Default.xaml");
+	Noesis::GUI::SetApplicationResources(m_ResourceDictionary);
 }
 
 void eng::UIManager::Shutdown()
@@ -226,6 +231,7 @@ void eng::UIManager::Shutdown()
 
 	m_DataContexts.RemoveAll();
 
+	NsShutdownPackageAppInteractivity();
 	Noesis::GUI::Shutdown();
 }
 
@@ -362,4 +368,9 @@ void eng::UIManager::DestroyWidget(const str::Name& name)
 			break;
 		}
 	}
+}
+
+void eng::UIManager::SetResource(const char* key, Noesis::Ptr<Noesis::BaseComponent> value)
+{
+	m_ResourceDictionary->Set(key, value);
 }

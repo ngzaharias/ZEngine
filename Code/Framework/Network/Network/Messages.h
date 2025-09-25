@@ -5,8 +5,6 @@
 #include "Core/Types.h"
 #include "Network/Entity.h"
 
-#include <yojimbo/yojimbo.h>
-
 namespace net
 {
 	enum class ECommand
@@ -28,7 +26,7 @@ namespace net
 		RemoveComponent,
 	};
 
-	struct ServerCommandMessage : public yojimbo::Message
+	struct ServerCommandMessage
 	{
 		template <typename Stream>
 		bool Serialize(Stream& stream)
@@ -40,11 +38,9 @@ namespace net
 		}
 
 		ECommand m_Data = ECommand::None;
-
-		YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
 	};
 
-	struct CreateEntityMessage : public yojimbo::Message
+	struct CreateEntityMessage
 	{
 		template <typename Stream>
 		bool Serialize(Stream& stream)
@@ -54,11 +50,9 @@ namespace net
 		}
 
 		net::Entity m_Entity = { };
-
-		YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
 	};
 
-	struct DestroyEntityMessage : public yojimbo::Message
+	struct DestroyEntityMessage
 	{
 		template <typename Stream>
 		bool Serialize(Stream& stream)
@@ -68,11 +62,9 @@ namespace net
 		}
 
 		net::Entity m_Entity = { };
-
-		YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
 	};
 
-	struct AddComponentMessage : public yojimbo::Message
+	struct AddComponentMessage
 	{
 		template <typename Stream>
 		bool Serialize(Stream& stream)
@@ -91,11 +83,9 @@ namespace net
 		net::Entity m_Entity = { };
 		int32 m_ComponentId = -1;
 		MemBuffer m_Data;
-
-		YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
 	};
 
-	struct UpdateComponentMessage : public yojimbo::Message
+	struct UpdateComponentMessage
 	{
 		template <typename Stream>
 		bool Serialize(Stream& stream)
@@ -114,11 +104,9 @@ namespace net
 		net::Entity m_Entity = { };
 		int32 m_ComponentId = -1;
 		MemBuffer m_Data;
-
-		YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
 	};
 
-	struct RemoveComponentMessage : public yojimbo::Message
+	struct RemoveComponentMessage
 	{
 		template <typename Stream>
 		bool Serialize(Stream& stream)
@@ -130,16 +118,5 @@ namespace net
 
 		net::Entity m_Entity = { };
 		int32 m_ComponentId = -1;
-
-		YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
 	};
-
-	YOJIMBO_MESSAGE_FACTORY_START(EngineMessageFactory, EnumToCount<EMessage>());
-		YOJIMBO_DECLARE_MESSAGE_TYPE(EnumToValue(EMessage::ServerCommand), ServerCommandMessage);
-		YOJIMBO_DECLARE_MESSAGE_TYPE(EnumToValue(EMessage::CreateEntity), CreateEntityMessage);
-		YOJIMBO_DECLARE_MESSAGE_TYPE(EnumToValue(EMessage::DestroyEntity), DestroyEntityMessage);
-		YOJIMBO_DECLARE_MESSAGE_TYPE(EnumToValue(EMessage::AddComponent), AddComponentMessage);
-		YOJIMBO_DECLARE_MESSAGE_TYPE(EnumToValue(EMessage::RemoveComponent), RemoveComponentMessage);
-		YOJIMBO_DECLARE_MESSAGE_TYPE(EnumToValue(EMessage::UpdateComponent), UpdateComponentMessage);
-	YOJIMBO_MESSAGE_FACTORY_FINISH();
 }

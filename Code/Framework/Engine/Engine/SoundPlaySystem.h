@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Guid.h"
 #include "ECS/System.h"
 
 namespace ecs
@@ -41,6 +42,11 @@ namespace eng::sound
 			const eng::sound::SequenceBufferComponent,
 			const eng::sound::SingleRequestComponent>;
 
+		void Initialise(World& world);
+
 		void Update(World& world, const GameTime& gameTime);
+
+	private:
+		Array<str::Guid> m_Requests = {};
 	};
 };

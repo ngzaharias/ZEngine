@@ -8,6 +8,11 @@ namespace ecs
 	struct NameComponent;
 }
 
+namespace eng
+{
+	struct SavegameComponent;
+}
+
 namespace eng::sound
 {
 	struct SequenceRequestComponent;
@@ -26,6 +31,7 @@ namespace hidden
 		using World = ecs::WorldView<
 			ecs::NameComponent,
 			eng::sound::SequenceRequestComponent,
+			const eng::SavegameComponent,
 			const hidden::RevealComponent>;
 
 		void Initialise(World& world);

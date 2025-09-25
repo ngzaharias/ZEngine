@@ -12,8 +12,6 @@
 #include "Network/Peer.h"
 #include "Network/PeerId.h"
 
-#include <yojimbo/yojimbo.h>
-
 net::ReplicationPeer::ReplicationPeer(ecs::EntityWorld& entityWorld)
 	: m_EntityWorld(entityWorld)
 {
@@ -21,26 +19,10 @@ net::ReplicationPeer::ReplicationPeer(ecs::EntityWorld& entityWorld)
 
 void net::ReplicationPeer::Initialise()
 {
-	//auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
-	//auto& adaptor = networkManager.GetAdaptor();
-	//auto& peer = networkManager.GetPeer();
-
-	//m_Connections =
-	//{
-	//	adaptor.m_OnServerClientDisconnected.Connect(*this, &net::ReplicationPeer::OnClientDisconnected),
-	//	peer.m_OnProcessMessage.Connect(*this, &net::ReplicationPeer::OnProcessMessage),
-	//};
 }
 
 void net::ReplicationPeer::Shutdown()
 {
-	//auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
-	//auto& adaptor = networkManager.GetAdaptor();
-	//auto& peer = networkManager.GetPeer();
-
-	//adaptor.m_OnServerClientDisconnected.Disconnect(m_Connections[0]);
-	//peer.m_OnProcessMessage.Disconnect(m_Connections[1]);
-	//m_Connections.RemoveAll();
 }
 
 void net::ReplicationPeer::Update(const GameTime& gameTime)
@@ -65,28 +47,8 @@ void net::ReplicationPeer::OnClientDisconnected(const net::PeerId& peerId)
 	m_HasDisconnected = true;
 }
 
-void net::ReplicationPeer::OnProcessMessage(const yojimbo::Message* message)
+void net::ReplicationPeer::OnProcessMessage(const void* message)
 {
-	const auto messageType = ValueToEnum<EMessage>(message->GetType());
-	switch (messageType)
-	{
-	case EMessage::CreateEntity:
-		OnCreateEntity(reinterpret_cast<const net::CreateEntityMessage*>(message));
-		break;
-	case EMessage::DestroyEntity:
-		OnDestroyEntity(reinterpret_cast<const net::DestroyEntityMessage*>(message));
-		break;
-
-	case EMessage::AddComponent:
-		OnAddComponent(reinterpret_cast<const net::AddComponentMessage*>(message));
-		break;
-	case EMessage::RemoveComponent:
-		OnRemoveComponent(reinterpret_cast<const net::RemoveComponentMessage*>(message));
-		break;
-	case EMessage::UpdateComponent:
-		OnUpdateComponent(reinterpret_cast<const net::UpdateComponentMessage*>(message));
-		break;
-	}
 }
 
 void net::ReplicationPeer::OnCreateEntity(const net::CreateEntityMessage* message)

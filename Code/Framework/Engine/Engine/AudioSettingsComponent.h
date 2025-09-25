@@ -8,7 +8,7 @@ namespace eng::settings
 	struct AudioComponent : public ecs::SingletonComponent<AudioComponent>
 	{
 		float m_EffectVolume = 1.f;
-		float m_MasterVolume = 0.5f;
-		float m_MusicVolume = 1.f;
+		float m_MasterVolume = 1.f;
+		float m_MusicVolume = 0.5f;
 	};
 }

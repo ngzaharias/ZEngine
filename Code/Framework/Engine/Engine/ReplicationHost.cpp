@@ -9,8 +9,6 @@
 #include "Network/Host.h"
 #include "Network/Messages.h"
 
-#include <yojimbo/yojimbo.h>
-
 namespace
 {
 	constexpr net::PeerId s_HostPeerId = net::PeerId(0);

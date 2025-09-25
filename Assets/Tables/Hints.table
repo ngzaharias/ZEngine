@@ -1,0 +1,11 @@
+[605947d5630f4508921b83738d2b6869]
+m_Text = "Move around the screen using WASD or left-click and drag."
+
+[324b40f1f1ae4391a9b543821adc0c4c]
+m_Text = "Zoom in and out using the mouse wheel."
+
+[8c635087021a4e97a99d8f59957496f0]
+m_Text = "The game saves itself in the background, so feel free to take a break at any time."
+
+[0224a3adfb444deda8bcdc2fc280ebba]
+m_Text = "Change the colours via the options menu under Gameplay -> Themes."

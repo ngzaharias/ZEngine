@@ -11,13 +11,6 @@
   <Page.InputBindings>
     <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
   </Page.InputBindings>
-  <Page.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Themes/Default.xaml" />
-      </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </Page.Resources>
   <Grid Style="{DynamicResource Style.Fade}">
     <Grid.RowDefinitions>
       <RowDefinition Height="3*"/>
@@ -30,7 +23,7 @@
       <ColumnDefinition Width="1*"/>
     </Grid.ColumnDefinitions>
     <Viewbox Grid.Row="1" Grid.Column="1">
-      <Border BorderThickness="2,2,2,2" CornerRadius="4,4,4,4" BorderBrush="{StaticResource Brush.Foreground}" Background="{StaticResource Brush.Background25}">
+      <Border BorderThickness="2,2,2,2" CornerRadius="4,4,4,4" BorderBrush="{DynamicResource Brush.Outline}" Background="{DynamicResource Brush.Background2}">
         <StackPanel Width="520">
           <Border Style="{DynamicResource Style.Header.Border}" BorderThickness="0,0,0,2">
             <Grid>
@@ -43,17 +36,17 @@
                 <ColumnDefinition Width="10*"/>
                 <ColumnDefinition Width="1*"/>
               </Grid.ColumnDefinitions>
-              <TextBlock Text="S E T T I N G S" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="2" FontSize="20" Style="{DynamicResource Style.SubHeader.Text}"/>
+              <TextBlock Text="O P T I O N S" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="2" FontSize="20" Style="{DynamicResource Style.SubHeader.Text}"/>
               <Button Grid.Column="1" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Content="X" Margin="0,6,6,6" Padding="4,4,4,4" Style="{DynamicResource Style.Button}" VerticalAlignment="Center" FontSize="12" Background="{x:Null}" BorderBrush="{x:Null}"/>
             </Grid>
           </Border>
           <Border Height="310" Padding="10" Style="{DynamicResource Style.Body}" CornerRadius="0,0,2,2">
             <TabControl Style="{DynamicResource Style.TabControl}" ItemContainerStyle="{DynamicResource Style.TabItem}">
-              <TabItem x:Name="Audio" Header="Audio" HeaderTemplate="{StaticResource Template.TabText}">
+              <TabItem x:Name="Audio" Header="Audio" HeaderTemplate="{DynamicResource Template.TabText}">
                 <Grid>
                   <StackPanel>
-                    <Border Style="{StaticResource Style.SubHeader.Border}">
-                      <TextBlock Text="Volume" Style="{StaticResource Style.SubHeader.Text}"/>
+                    <Border Style="{DynamicResource Style.SubHeader.Border}">
+                      <TextBlock Text="Volume" Style="{DynamicResource Style.SubHeader.Text}"/>
                     </Border>
                     <Grid Height="27" Margin="4,4,4,4" RenderTransformOrigin="0.5,0.5">
                       <Grid.ColumnDefinitions>
@@ -61,10 +54,10 @@
                         <ColumnDefinition Width="5*"/>
                       </Grid.ColumnDefinitions>
                       <TextBlock Text="Master" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
-                      <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding Path=MasterVolume}" Style="{StaticResource Style.Slider}"/>
+                      <Slider Grid.Column="1" Maximum="1" LargeChange="0.1" Value="{Binding Path=MasterVolume}" Style="{DynamicResource Style.Slider}" SmallChange="0.01"/>
                     </Grid>
                     <Grid Margin="4,4,4,4">
-                      <Separator Background="{StaticResource Brush.Background25}" Height="1" Foreground="{x:Null}"/>
+                      <Separator Background="{DynamicResource Brush.Background2}" Height="1" Foreground="{x:Null}"/>
                     </Grid>
                     <Grid Height="27" Margin="4,4,4,4">
                       <Grid.ColumnDefinitions>
@@ -72,7 +65,7 @@
                         <ColumnDefinition Width="5*"/>
                       </Grid.ColumnDefinitions>
                       <TextBlock Text="Sound Effects" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
-                      <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding EffectVolume}" Style="{StaticResource Style.Slider}"/>
+                      <Slider Grid.Column="1" Maximum="1" LargeChange="0.1" Value="{Binding EffectVolume}" Style="{DynamicResource Style.Slider}" SmallChange="0.01"/>
                     </Grid>
                     <Grid Height="27" Margin="4,4,4,4">
                       <Grid.ColumnDefinitions>
@@ -80,49 +73,62 @@
                         <ColumnDefinition Width="5*"/>
                       </Grid.ColumnDefinitions>
                       <TextBlock Text="Music" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
-                      <Slider Grid.Column="1" Maximum="100" LargeChange="10" Value="{Binding Path=MusicVolume}" Style="{StaticResource Style.Slider}"/>
+                      <Slider Grid.Column="1" Maximum="1" Value="{Binding Path=MusicVolume}" Style="{DynamicResource Style.Slider}" SmallChange="0.01" LargeChange="0.1"/>
                     </Grid>
                   </StackPanel>
                 </Grid>
               </TabItem>
-              <TabItem x:Name="Gameplay" Header="Gameplay" HeaderTemplate="{StaticResource Template.TabText}">
+              <TabItem x:Name="Gameplay" Header="Gameplay" HeaderTemplate="{DynamicResource Template.TabText}">
                 <Grid>
-                  <StackPanel>
-                    <Border Style="{StaticResource Style.SubHeader.Border}">
-                      <TextBlock Text="Camera" Style="{StaticResource Style.SubHeader.Text}"/>
-                    </Border>
-                    <Grid Height="27" Margin="4,4,4,4" RenderTransformOrigin="0.5,0.5">
-                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="5*"/>
-                      </Grid.ColumnDefinitions>
-                      <TextBlock Text="Move Speed" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
-                      <Slider Grid.Column="1" Maximum="1000" LargeChange="90" Value="{Binding Path=MoveSpeed}" Minimum="100" Style="{StaticResource Style.Slider}"/>
-                    </Grid>
-                    <Grid Height="27" Margin="4,4,4,4">
-                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="5*"/>
-                      </Grid.ColumnDefinitions>
-                      <TextBlock Text="Zoom Amount" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
-                      <Slider Grid.Column="1" Maximum="1000" LargeChange="15" Value="{Binding Path=ZoomRate}" Minimum="300" Style="{StaticResource Style.Slider}"/>
-                    </Grid>
-                    <Grid Height="27" Margin="4,4,4,4">
-                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="5*"/>
-                      </Grid.ColumnDefinitions>
-                      <TextBlock Text="Zoom Speed" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
-                      <Slider Grid.Column="1" Maximum="1" LargeChange="0.1" Value="{Binding Path=ZoomSpeed}" Style="{StaticResource Style.Slider}"/>
-                    </Grid>
-                  </StackPanel>
+                  <ScrollViewer ScrollViewer.PanningMode="HorizontalOnly">
+                    <StackPanel Margin="0,0,24,0">
+                      <Border Style="{DynamicResource Style.SubHeader.Border}">
+                        <TextBlock Text="Camera" Style="{DynamicResource Style.SubHeader.Text}"/>
+                      </Border>
+                      <Grid Height="27" Margin="4,4,4,4" RenderTransformOrigin="0.5,0.5">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="3*"/>
+                          <ColumnDefinition Width="5*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Move Speed" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                        <Slider Grid.Column="1" Maximum="1000" LargeChange="90" Value="{Binding Path=MoveSpeed}" Minimum="100" Style="{DynamicResource Style.Slider}"/>
+                      </Grid>
+                      <Grid Height="27" Margin="4,4,4,4">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="3*"/>
+                          <ColumnDefinition Width="5*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Zoom Amount" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                        <Slider Grid.Column="1" Maximum="1000" LargeChange="15" Value="{Binding Path=ZoomRate}" Minimum="300" Style="{DynamicResource Style.Slider}"/>
+                      </Grid>
+                      <Grid Height="27" Margin="4,4,4,4">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="3*"/>
+                          <ColumnDefinition Width="5*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Zoom Speed" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}"/>
+                        <Slider Grid.Column="1" Maximum="1" LargeChange="0.1" Value="{Binding Path=ZoomSpeed}" Style="{DynamicResource Style.Slider}"/>
+                      </Grid>
+                      <Border Style="{DynamicResource Style.SubHeader.Border}">
+                        <TextBlock Text="Colours" Style="{DynamicResource Style.SubHeader.Text}"/>
+                      </Border>
+                      <Grid Height="27" Margin="4,4,4,4">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="3*"/>
+                          <ColumnDefinition Width="5*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Theme" VerticalAlignment="Center" Style="{DynamicResource Style.Property.Text}" Margin="0"/>
+                        <ComboBox Grid.Column="1" ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme, Mode=TwoWay}" Style="{DynamicResource Style.ComboBox}"/>
+                      </Grid>
+                    </StackPanel>
+                  </ScrollViewer>
                 </Grid>
               </TabItem>
-              <TabItem x:Name="Graphics" Header="Graphics" HeaderTemplate="{StaticResource Template.TabText}">
+              <TabItem x:Name="Graphics" Header="Graphics" HeaderTemplate="{DynamicResource Template.TabText}">
                 <Grid>
                   <StackPanel>
-                    <Border Style="{StaticResource Style.SubHeader.Border}">
-                      <TextBlock Text="Window" Style="{StaticResource Style.SubHeader.Text}"/>
+                    <Border Style="{DynamicResource Style.SubHeader.Border}">
+                      <TextBlock Text="Window" Style="{DynamicResource Style.SubHeader.Text}"/>
                     </Border>
                     <Grid Height="27" Margin="4,4,4,4">
                       <Grid.ColumnDefinitions>

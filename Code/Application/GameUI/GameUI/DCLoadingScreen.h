@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/String.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/UIDataContext.h"
@@ -15,8 +16,8 @@ namespace gui
 		DCLoadingScreen();
 		~DCLoadingScreen() override;
 
-		int32 GetProgress() const;
-		void SetProgress(int32 value);
+		const char* GetHint() const;
+		void SetHint(const char* value);
 
 		const NoesisApp::DelegateCommand* GetCloseCommand() const { return &m_CloseCommand; }
 
@@ -24,7 +25,7 @@ namespace gui
 		void OnCloseCommand(Noesis::BaseComponent* param);
 
 	private:
-		int32 m_Progress = 0;
+		str::String m_Hint = {};
 
 		NoesisApp::DelegateCommand m_CloseCommand = {};
 

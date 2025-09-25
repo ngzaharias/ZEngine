@@ -16,6 +16,7 @@ namespace eng::application
 
 namespace eng::level
 {
+	struct LoadedComponent;
 	struct LoadRequest;
 }
 
@@ -28,6 +29,7 @@ namespace gui::level_complete
 {
 	struct ExitGameRequest;
 	struct ExitToMenuRequest;
+	struct ResetGameRequest;
 	struct WindowComponent;
 }
 
@@ -42,9 +44,11 @@ namespace gui::level_complete
 			// Components
 			eng::application::CloseRequestComponent,
 			eng::level::LoadRequest,
+			const eng::level::LoadedComponent,
 			const eng::settings::LaunchComponent,
 			const gui::level_complete::ExitGameRequest,
 			const gui::level_complete::ExitToMenuRequest,
+			const gui::level_complete::ResetGameRequest,
 			const gui::level_complete::WindowComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

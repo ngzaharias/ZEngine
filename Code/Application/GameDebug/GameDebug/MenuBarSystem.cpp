@@ -10,6 +10,8 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/InputManager.h"
+#include "Engine/TableHeadmaster.h"
+#include "Engine/TablesReloadedEvent.h"
 #include "GameDebug/LevelOpenComponents.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "GameDebug/SettingsComponents.h"
@@ -80,6 +82,13 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 			{
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
 				assetManager.ReloadAssets();
+			}
+
+			if (ImGui::MenuItem("Reload Tables"))
+			{
+				world.AddEventComponent<eng::TablesReloadedEvent>();
+				auto& tableHeadmaster = world.WriteResource<eng::TableHeadmaster>();
+				tableHeadmaster.Reload();
 			}
 
 			ImGui::EndMenu();

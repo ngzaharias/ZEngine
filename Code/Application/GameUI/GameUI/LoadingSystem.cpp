@@ -7,6 +7,7 @@
 #include "Engine/LevelComponents.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCLoadingScreen.h"
+#include "GameUI/HintTable.h"
 
 namespace
 {
@@ -24,6 +25,11 @@ void gui::loading::LoadingSystem::Update(World& world, const GameTime& gameTime)
 			? strLoading_xaml
 			: strSplash_xaml;
 		uiManager.CreateWidget(widget);
+
+		const auto& hints = world.ReadResource<gui::HintTable>();
+		const auto& hint = hints.GetRandom();
+		auto& dcLoading = uiManager.WriteDataContext<gui::DCLoadingScreen>(widget);
+		dcLoading.SetHint(hint.m_Text.c_str());
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::level::LoadingComponent>>())

@@ -15,23 +15,16 @@
   </Page.InputBindings>
   <Page.Resources>
     <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Themes/Default.xaml" />
-      </ResourceDictionary.MergedDictionaries>
       <Storyboard x:Key="Loaded">
-        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Text" Storyboard.TargetProperty="(UIElement.Opacity)">
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Developer" Storyboard.TargetProperty="(UIElement.Opacity)">
           <LinearDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
           <LinearDoubleKeyFrame KeyTime="0:0:2" Value="1"/>
           <LinearDoubleKeyFrame KeyTime="00:00:03" Value="1"/>
-          <LinearDoubleKeyFrame KeyTime="0:0:3.800" Value="0"/>
+          <LinearDoubleKeyFrame KeyTime="0:0:3.900" Value="0"/>
         </DoubleAnimationUsingKeyFrames>
-        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Logo_Game" Storyboard.TargetProperty="(UIElement.Opacity)">
-          <LinearDoubleKeyFrame KeyTime="0:0:4" Value="0"/>
-          <LinearDoubleKeyFrame KeyTime="0:0:5" Value="1"/>
-        </DoubleAnimationUsingKeyFrames>
-        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Background" Storyboard.TargetProperty="(UIElement.Opacity)">
-          <LinearDoubleKeyFrame KeyTime="0:0:6" Value="0"/>
-          <LinearDoubleKeyFrame KeyTime="0:0:8" Value="1"/>
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Logo" Storyboard.TargetProperty="(UIElement.Opacity)">
+          <LinearDoubleKeyFrame KeyTime="00:00:04.1000000" Value="0"/>
+          <LinearDoubleKeyFrame KeyTime="00:00:05" Value="1"/>
         </DoubleAnimationUsingKeyFrames>
       </Storyboard>
     </ResourceDictionary>
@@ -41,7 +34,7 @@
       <BeginStoryboard Storyboard="{StaticResource Loaded}" />
     </EventTrigger>
   </Page.Triggers>
-  <Grid Background="{StaticResource Brush.Background0}">
+  <Grid Background="{DynamicResource Brush.Background0}">
     <Viewbox>
       <Grid Width="1280" Height="720">
         <Grid.ColumnDefinitions>
@@ -54,9 +47,24 @@
           <RowDefinition Height="2*"/>
           <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <Image x:Name="Background" Grid.ColumnSpan="3" Grid.RowSpan="3" Source="Textures/Pages/Page03/T_Background.png" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0"/>
-        <Image x:Name="Logo_Game" Source="Textures/T_Logo.png" Grid.Row="1" Grid.Column="1" Opacity="0"/>
-        <TextBlock x:Name="Text" TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" Foreground="{DynamicResource Brush.Foreground}" FontSize="120" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Text=" Papa&#x0a;Koala" Opacity="0" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="Logo"  Grid.Row="1" Grid.Column="1" Opacity="0">
+          <Rectangle Fill="{DynamicResource Brush.Highlight}">
+            <Rectangle.OpacityMask>
+              <ImageBrush ImageSource="Textures/T_Logo_01.png"/>
+            </Rectangle.OpacityMask>
+          </Rectangle>
+          <Rectangle x:Name="Background" Fill="{DynamicResource Brush.Background0}">
+            <Rectangle.OpacityMask>
+              <ImageBrush ImageSource="Textures/T_Logo_02.png"/>
+            </Rectangle.OpacityMask>
+          </Rectangle>
+          <Rectangle Fill="{DynamicResource Brush.Outline}">
+            <Rectangle.OpacityMask>
+              <ImageBrush ImageSource="Textures/T_Logo_03.png"/>
+            </Rectangle.OpacityMask>
+          </Rectangle>
+        </Grid>
+        <TextBlock x:Name="Developer" TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" Foreground="{DynamicResource Brush.Outline}" FontSize="120" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Text=" Papa&#x0a;Koala" Opacity="0" RenderTransformOrigin="0.5,0.5">
           <TextBlock.RenderTransform>
             <TransformGroup>
               <RotateTransform Angle="-3"/>

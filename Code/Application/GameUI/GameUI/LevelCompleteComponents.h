@@ -8,4 +8,5 @@ namespace gui::level_complete
 
 	struct ExitGameRequest final : public ecs::EventComponent<ExitGameRequest> { };
 	struct ExitToMenuRequest final : public ecs::EventComponent<ExitToMenuRequest> { };
+	struct ResetGameRequest final : public ecs::EventComponent<ResetGameRequest> { };
 }

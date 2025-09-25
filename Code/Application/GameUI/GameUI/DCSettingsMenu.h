@@ -9,6 +9,7 @@
 
 namespace eng
 {
+	class ThemeTable;
 	class WindowManager;
 }
 
@@ -16,6 +17,7 @@ namespace eng::settings
 {
 	struct AudioComponent;
 	struct CameraComponent;
+	struct GameplayComponent;
 	struct WindowComponent;
 }
 
@@ -24,6 +26,7 @@ namespace gui
 	class VMMonitor;
 	class VMRefreshRate;
 	class VMResolution;
+	class VMTheme;
 	class VMWindowMode;
 }
 
@@ -40,12 +43,13 @@ namespace gui
 	public:
 		using World = ecs::WorldView<
 			// Resources
+			const eng::ThemeTable,
 			const eng::WindowManager,
 			// Components
 			const eng::settings::AudioComponent,
 			const eng::settings::CameraComponent,
-			const eng::settings::WindowComponent
-		>;
+			const eng::settings::GameplayComponent,
+			const eng::settings::WindowComponent>;
 
 		DCSettingsMenu();
 		~DCSettingsMenu() override;
@@ -65,6 +69,12 @@ namespace gui
 		void SetZoomRate(float value);
 		float GetZoomSpeed() const;
 		void SetZoomSpeed(float value);
+
+		Noesis::ObservableCollection<gui::VMTheme>* GetThemes() const;
+		void SetThemes(Noesis::Ptr<Noesis::ObservableCollection<gui::VMTheme>> value);
+
+		gui::VMTheme* GetTheme() const;
+		void SetTheme(gui::VMTheme* value);
 
 		Noesis::ObservableCollection<gui::VMMonitor>* GetMonitors() const;
 		void SetMonitors(Noesis::Ptr<Noesis::ObservableCollection<gui::VMMonitor>> value);
@@ -103,6 +113,8 @@ namespace gui
 		float m_MoveSpeed = 0.f;
 		float m_ZoomRate = 0.f;
 		float m_ZoomSpeed = 0.f;
+		Noesis::Ptr<Noesis::ObservableCollection<gui::VMTheme>> m_Themes;
+		gui::VMTheme* m_Theme = nullptr;
 		// window
 		Noesis::Ptr<Noesis::ObservableCollection<gui::VMMonitor>> m_Monitors;
 		Noesis::Ptr<Noesis::ObservableCollection<gui::VMRefreshRate>> m_RefreshRates;

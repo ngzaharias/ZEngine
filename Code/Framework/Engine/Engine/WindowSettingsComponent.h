@@ -12,6 +12,6 @@ namespace eng::settings
 		int32 m_Monitor = 0;
 		int32 m_RefreshRate = 59;
 		Vector2u m_Resolution = Vector2u(800, 600);
-		eng::EWindowMode m_WindowMode = eng::EWindowMode::Fullscreen;
+		eng::EWindowMode m_WindowMode = eng::EWindowMode::Borderless;
 	};
 }

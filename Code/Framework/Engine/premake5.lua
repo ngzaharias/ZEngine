@@ -33,7 +33,6 @@ project "Engine"
 		"%{wks.location}/../3rdParty/PhysX/Include/",
 		"%{wks.location}/../3rdParty/SFML/2.6.1/Include/",
 		"%{wks.location}/../3rdParty/SteamworksSDK/Include/",
-		"%{wks.location}/../3rdParty/yojimbo/1.2.1/Include/",
 		"%{wks.location}/../Code/Bindings/Steam/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",

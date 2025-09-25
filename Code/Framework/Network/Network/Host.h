@@ -10,12 +10,6 @@
 
 class GameTime;
 
-namespace yojimbo
-{
-	class Message;
-	class Server;
-}
-
 namespace net
 {
 	class Adaptor;
@@ -36,24 +30,23 @@ namespace net
 		template<typename TMessage>
 		TMessage* CreateMessage(const net::PeerId& peerId, const EMessage type);
 
-		void SendMessage(const net::PeerId& peerId, yojimbo::Message* message);
+		void SendMessage(const net::PeerId& peerId, void* message);
 
-		bool IsRunning() const { return m_Server && m_Server->IsRunning(); };
+		bool IsRunning() const { return false; };
 		const Set<net::PeerId>& GetConnectedPeers() const { return m_PeersConnected; }
 
 	protected:
-		void ProcessMessage(const net::PeerId& peerId, const yojimbo::Message* message);
+		void ProcessMessage(const net::PeerId& peerId, const void* message);
 
 		void OnClientConnected(const net::PeerId& peerId);
 		void OnClientDisconnected(const net::PeerId& peerId);
 
 	public:
-		Delegate<void(const net::PeerId& peerId, const yojimbo::Message* message)> m_OnProcessMessage;
+		Delegate<void(const net::PeerId& peerId, const void* message)> m_OnProcessMessage;
 
 	protected:
 		net::Adaptor& m_Adaptor;
 		net::Config& m_Config;
-		yojimbo::Server* m_Server = nullptr;
 
 		DelegateCollection m_Collection = { };
 		Set<net::PeerId> m_PeersConnected = { };
