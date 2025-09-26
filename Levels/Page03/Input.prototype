@@ -1,5 +1,0 @@
-m_Guid = "eaa14909b3e7427f91e514cff7785222"
-m_Name = "GUI Bindings"
-
-['gui::input::BindingsComponent']
-m_Commands = [ "GameMenu" ]
