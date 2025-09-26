@@ -1,7 +1,0 @@
-m_Guid = '1eaf099e814c47f7bf84411e2d2fe9d5'
-m_Name = 'SP_Fan'
-m_Position = { X = 0.0, Y = 1303.0 }
-m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
-m_Size = { X = 1604.0, Y = 705.0 }
-m_Texture2D = '7db2403d44a84f7aaf4712b28e2f4101'
-m_Type = 'Sprite'

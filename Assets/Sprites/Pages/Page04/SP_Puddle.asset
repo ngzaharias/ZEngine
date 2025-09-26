@@ -1,7 +1,0 @@
-m_Guid = '9cb7bcb5f773475b6da5d3e18b964961'
-m_Name = 'SP_Puddle'
-m_Position = { X = 419.0, Y = 1072.0 }
-m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
-m_Size = { X = 511.0, Y = 193.0 }
-m_Texture2D = '7db2403d44a84f7aaf4712b28e2f4101'
-m_Type = 'Sprite'

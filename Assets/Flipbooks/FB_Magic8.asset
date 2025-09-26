@@ -1,8 +1,0 @@
-m_Fps = 30.0
-m_Frames = []
-m_Guid = '5f1dfe6e32a64b1b4c89ed022a2f8793'
-m_IsLooping = true
-m_Name = 'FB_Magic8'
-m_Shader = '00000000000000000000000000000000'
-m_Texture2D = '00000000000000000000000000000000'
-m_Type = 'Flipbook'

@@ -1,7 +1,0 @@
-m_Guid = '439a41f319884ead80f733e96e8bbdc5'
-m_Name = 'SP_Reveal_44'
-m_Position = { X = 1284, Y = 581 }
-m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
-m_Size = { X = 512, Y = 256 }
-m_Texture2D = '5111d58569e64e5061bba1b81d5eb290'
-m_Type = 'Sprite'

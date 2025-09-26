@@ -1,7 +1,0 @@
-m_Guid = 'cc6a81798a494d699210d41b8255b326'
-m_Name = 'SP_Censored'
-m_Texture2D = 'c2ac1ab73a3e4df4bc11efbec19f9ab2'
-m_Type = 'Sprite'
-
-m_Position = { X = 0, Y = 0 }
-m_Size = { X = 200, Y = 20 }

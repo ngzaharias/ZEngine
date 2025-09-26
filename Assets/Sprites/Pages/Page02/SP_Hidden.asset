@@ -1,7 +1,0 @@
-m_Guid = '3c95eaba30b943fae6b6a64de8ff9043'
-m_Name = 'SP_Hidden'
-m_Type = 'Sprite'
-
-m_Position = { X = 0, Y = 0 }
-m_Size = { X = 3281, Y = 2203 }
-m_Texture2D = '65b4dea92df74a788ee3b361881ec8fd'

@@ -1,7 +1,0 @@
-m_Guid = 'a5ded3233a084961738fa1ad85db9d2d'
-m_Name = 'SP_Room'
-m_Position = { X = 0.0, Y = 0.0 }
-m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
-m_Size = { X = 4096.0, Y = 4096.0 }
-m_Texture2D = 'cb1c44f734604bbb9b45888209489e09'
-m_Type = 'Sprite'

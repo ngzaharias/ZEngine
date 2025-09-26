@@ -1,7 +1,0 @@
-m_Guid = 'f691a401a6bd40b48942a69c79dfa6ba'
-m_Name = 'SP_Reveal_Fish'
-m_Position = { X = 0, Y = 0 }
-m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
-m_Size = { X = 256, Y = 256 }
-m_Texture2D = '565e75f1b7594a7149aea39ecf7ac50f'
-m_Type = 'Sprite'

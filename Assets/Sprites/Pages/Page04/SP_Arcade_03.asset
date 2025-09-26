@@ -1,7 +1,0 @@
-m_Guid = '308fd1352ee942dc906fb0cf85242b7e'
-m_Name = 'SP_Arcade_03'
-m_Position = { X = 2228.0, Y = 534.0 }
-m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
-m_Size = { X = 1015.0, Y = 1445.0 }
-m_Texture2D = '857605ab67db43f2814513604fb49730'
-m_Type = 'Sprite'

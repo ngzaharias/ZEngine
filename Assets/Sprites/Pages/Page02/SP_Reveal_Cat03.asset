@@ -1,8 +1,0 @@
-m_Guid = '93b96dba3c884e8f8d92783ba08cd1fa'
-m_Name = 'SP_Reveal_Cat03'
-m_Type = 'Sprite'
-
-m_Position = { X = 0, Y = 0 }
-m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
-m_Size = { X = 256, Y = 512 }
-m_Texture2D = '3184df32d68940a85c94328de1d4bebf'

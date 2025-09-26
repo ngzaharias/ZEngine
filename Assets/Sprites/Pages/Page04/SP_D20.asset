@@ -1,7 +1,0 @@
-m_Guid = '2bbbfe2880ae4c1c8bb191f92badc857'
-m_Name = 'SP_D20'
-m_Position = { X = 1300.0, Y = 879.0 }
-m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
-m_Size = { X = 168.0, Y = 139.0 }
-m_Texture2D = 'c7219c4dc3524ee998e9631d405fdbf9'
-m_Type = 'Sprite'

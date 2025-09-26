@@ -1,7 +1,0 @@
-m_Guid = 'a46faef808d8404d529743146b8badd5'
-m_Name = 'SP_Drawers'
-m_Position = { X = 0.0, Y = 1096.0 }
-m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
-m_Size = { X = 724.0, Y = 926.0 }
-m_Texture2D = '798d0d82ba2c4a6bb5e7314169dc98cb'
-m_Type = 'Sprite'

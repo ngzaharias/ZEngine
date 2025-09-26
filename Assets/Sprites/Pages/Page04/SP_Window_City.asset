@@ -1,7 +1,0 @@
-m_Guid = '7f46628d65f14baafeb6f90b8fb5987f'
-m_Name = 'SP_Window_City'
-m_Position = { X = 1052.0, Y = 1591.0 }
-m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
-m_Size = { X = 776.0, Y = 429.0 }
-m_Texture2D = 'c7219c4dc3524ee998e9631d405fdbf9'
-m_Type = 'Sprite'
