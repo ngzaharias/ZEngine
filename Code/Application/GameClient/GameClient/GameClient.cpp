@@ -19,11 +19,11 @@
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
 #include "GameShared/RegisterComponents.h"
-#include "Hexmap/HexmapRootComponent.h"
+#include "Hexmap/RegisterModule.h"
 #include "Hidden/RegisterModule.h"
-#include "Softbody/SoftbodyComponents.h"
-#include "Tabletop/TabletopCardComponent.h"
-#include "Tabletop/TabletopDeckComponent.h"
+#include "Softbody/RegisterModule.h"
+#include "Tabletop/RegisterModule.h"
+#include "Voxel/RegisterModule.h"
 
 namespace
 {
@@ -39,15 +39,6 @@ clt::GameClient::GameClient()
 
 void clt::GameClient::Register(const Dependencies& dependencies)
 {
-	// prototypes
-	{
-		auto& prototypeManager = dependencies.m_PrototypeManager;
-		prototypeManager.Register<hexmap::RootComponent>();
-		prototypeManager.Register<softbody::ChainComponent>();
-		prototypeManager.Register<tabletop::CardComponent>();
-		prototypeManager.Register<tabletop::DeckComponent>();
-	}
-
 	// resources
 	{
 		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
@@ -92,7 +83,11 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 
 	// modules
 	{
+		hexmap::RegisterModule(m_EntityWorld);
 		hidden::RegisterModule(m_EntityWorld);
+		softbody::RegisterModule(m_EntityWorld);
+		tabletop::RegisterModule(m_EntityWorld);
+		voxel::RegisterModule(m_EntityWorld);
 	}
 }
 

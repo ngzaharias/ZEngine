@@ -164,7 +164,6 @@ void eng::Application::Register()
 		m_PrototypeManager.Register<eng::TextComponent>();
 		m_PrototypeManager.Register<eng::TransformComponent>();
 		m_PrototypeManager.Register<eng::VisibilityComponent>();
-		m_PrototypeManager.Register<voxel::ChunkComponent>();
 	}
 
 	// tables

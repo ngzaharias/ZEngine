@@ -9,17 +9,6 @@
 #include "GameClient/MovementComponents.h"
 #include "GameClient/ProjectileComponents.h"
 #include "GameClient/SettingsComponents.h"
-#include "Hexmap/HexmapLayerComponent.h"
-#include "Hexmap/HexmapRootComponent.h"
-#include "Hidden/HiddenCountComponent.h"
-#include "Hidden/HiddenGroupComponent.h"
-#include "Hidden/HiddenObjectComponent.h"
-#include "Hidden/HiddenRevealComponent.h"
-#include "Hidden/HiddenSettingsComponents.h"
-#include "Hidden/HiddenVFXComponent.h"
-#include "Softbody/SoftbodyComponents.h"
-#include "Tabletop/TabletopCardComponent.h"
-#include "Tabletop/TabletopDeckComponent.h"
 
 void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 {
@@ -41,28 +30,16 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<gamestate::RequestComponent>();
 	entityWorld.RegisterComponent<gamestate::StateFinishedComponent>();
 	entityWorld.RegisterComponent<gui::modal::MessageComponent>();
-	entityWorld.RegisterComponent<hexmap::LayerComponent>();
-	entityWorld.RegisterComponent<hexmap::RootComponent>();
-	entityWorld.RegisterComponent<hidden::CountComponent>();
-	entityWorld.RegisterComponent<hidden::GroupComponent>();
-	entityWorld.RegisterComponent<hidden::ObjectComponent>();
-	entityWorld.RegisterComponent<hidden::RevealComponent>();
-	entityWorld.RegisterComponent<hidden::VFXComponent>();
 	entityWorld.RegisterComponent<movement::AccelerationComponent>();
 	entityWorld.RegisterComponent<movement::VelocityComponent>();
 	entityWorld.RegisterComponent<projectile::CreateRequestComponent>();
 	entityWorld.RegisterComponent<projectile::CreateResultComponent>();
 	entityWorld.RegisterComponent<projectile::SpawnComponent>();
 	entityWorld.RegisterComponent<projectile::TrajectoryComponent>();
-	entityWorld.RegisterComponent<softbody::ChainComponent>();
-	entityWorld.RegisterComponent<tabletop::CardComponent>();
-	entityWorld.RegisterComponent<tabletop::DeckComponent>();
 
 	entityWorld.RegisterSingleton<container::StorageChangesComponent>();
 	entityWorld.RegisterSingleton<clt::settings::DebugComponent>();
 	entityWorld.RegisterSingleton<gamestate::NetworkJoinComponent>();
 	entityWorld.RegisterSingleton<gamestate::StateComponent>();
-	entityWorld.RegisterSingleton<hidden::settings::DebugComponent>();
-	entityWorld.RegisterSingleton<hidden::settings::LocalComponent>();
 	entityWorld.RegisterSingleton<projectile::ChangesComponent>();
 }

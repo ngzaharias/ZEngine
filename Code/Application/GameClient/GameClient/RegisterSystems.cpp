@@ -24,10 +24,6 @@
 #include "GameClient/TransformSystem.h"
 #include "GameClient/VelocitySystem.h"
 #include "GameClient/VisualSystem.h"
-#include "Hexmap/HexmapLoadSystem.h"
-#include "Hexmap/HexmapModifySystem.h"
-#include "Hexmap/HexmapRootSystem.h"
-#include "Softbody/SoftbodyChainSystem.h"
 
 void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 {
@@ -45,14 +41,10 @@ void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<gamestate::NetworkStopSystem>();
 	entityWorld.RegisterSystem<gamestate::StateSystem>();
 	entityWorld.RegisterSystem<gui::modal::StateSystem>();
-	entityWorld.RegisterSystem<hexmap::LoadSystem>();
-	entityWorld.RegisterSystem<hexmap::ModifySystem>();
-	entityWorld.RegisterSystem<hexmap::RootSystem>();
 	entityWorld.RegisterSystem<movement::AccelerationSystem>();
 	entityWorld.RegisterSystem<movement::VelocitySystem>();
 	entityWorld.RegisterSystem<projectile::SpawnSystem>();
 	entityWorld.RegisterSystem<projectile::TrajectorySystem>();
-	entityWorld.RegisterSystem<softbody::ChainSystem>();
 	entityWorld.RegisterSystem<transform::TransformSystem>();
 	entityWorld.RegisterSystem<visual::VisualSystem>();
 

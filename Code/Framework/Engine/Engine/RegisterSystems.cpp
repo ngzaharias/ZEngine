@@ -27,8 +27,6 @@
 #include "Engine/TextAssetSystem.h"
 #include "Engine/VersionSystem.h"
 #include "Engine/WindowSystem.h"
-#include "Voxel/VoxelMeshingSystem.h"
-#include "Voxel/VoxelModifySystem.h"
 
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 {
@@ -51,8 +49,6 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::TextAssetSystem>();
 	entityWorld.RegisterSystem<eng::VersionSystem>();
 	entityWorld.RegisterSystem<eng::WindowSystem>();
-	entityWorld.RegisterSystem<voxel::MeshingSystem>();
-	entityWorld.RegisterSystem<voxel::ModifySystem>();
 
 	// SettingsSystem system needs to run before WindowSystem
 	entityWorld.RegisterSystemPriority<eng::WindowSystem>(2);

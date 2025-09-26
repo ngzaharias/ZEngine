@@ -36,7 +36,6 @@
 #include "Engine/VersionComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "Engine/WindowSettingsComponent.h"
-#include "Voxel/VoxelComponents.h"
 
 void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 {
@@ -62,10 +61,6 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::TablesReloadedEvent>();
 	entityWorld.RegisterComponent<eng::TextAssetComponent>();
 	entityWorld.RegisterComponent<eng::VisibilityComponent>();
-	entityWorld.RegisterComponent<voxel::ChunkChangedEventComponent>();
-	entityWorld.RegisterComponent<voxel::ChunkComponent>();
-	entityWorld.RegisterComponent<voxel::ChunkLoadedEventComponent>();
-	entityWorld.RegisterComponent<voxel::ModifyComponent>();
 
 	entityWorld.RegisterSingleton<eng::FrameBufferComponent>();
 	entityWorld.RegisterSingleton<eng::LinesComponent>();
@@ -79,7 +74,6 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSingleton<eng::settings::WindowComponent>();
 	entityWorld.RegisterSingleton<eng::sound::RandomBufferComponent>();
 	entityWorld.RegisterSingleton<eng::sound::SequenceBufferComponent>();
-	entityWorld.RegisterSingleton<voxel::ModifySettingsComponent>();
 }
 
 void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
