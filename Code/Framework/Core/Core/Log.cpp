@@ -16,45 +16,37 @@
 
 namespace 
 {
-	static bool s_HasInitialised = false;
 	std::shared_ptr<spdlog::logger> m_AssertLogger;
 	std::shared_ptr<spdlog::logger> m_CrashLogger;
 	std::shared_ptr<spdlog::logger> m_DebugLogger;
+	std::shared_ptr<spdlog::logger> m_NetworkLogger;
 }
 
 void core::LogInitialise()
 {
-	if (!s_HasInitialised)
-	{
-		s_HasInitialised = true;
+	m_AssertLogger = spdlog::basic_logger_mt("assert", "asserts.txt");
+	m_AssertLogger->set_level(spdlog::level::critical);
 
-		m_AssertLogger = spdlog::basic_logger_mt("assert", "asserts.txt");
-		m_AssertLogger->set_level(spdlog::level::critical);
+	m_CrashLogger = spdlog::basic_logger_mt("crash", "crashes.txt");
+	m_CrashLogger->set_level(spdlog::level::critical);
 
-		m_CrashLogger = spdlog::basic_logger_mt("crash", "crashes.txt");
-		m_CrashLogger->set_level(spdlog::level::critical);
+	m_DebugLogger = spdlog::basic_logger_mt("debug", "debug.txt");
+	m_DebugLogger->set_level(spdlog::level::info);
 
-		m_DebugLogger = spdlog::basic_logger_mt("debug", "debug.txt");
-		m_DebugLogger->set_level(spdlog::level::info);
-	}
+	m_NetworkLogger = spdlog::basic_logger_mt("network", "network.txt");
+	m_NetworkLogger->set_level(spdlog::level::info);
 }
 
 void core::LogShutdown()
 {
-	if (s_HasInitialised)
-	{
-		s_HasInitialised = false;
-
-		m_AssertLogger->flush();
-		m_CrashLogger->flush();
-		m_DebugLogger->flush();
-	}
+	m_AssertLogger->flush();
+	m_CrashLogger->flush();
+	m_DebugLogger->flush();
+	m_NetworkLogger->flush();
 }
 
 void core::LogMessage(const ELog channel, const char* message)
 {
-	core::LogInitialise();
-
 #ifdef _WIN32
 	OutputDebugStringA(message);
 	OutputDebugStringA("\n");
@@ -70,9 +62,19 @@ void core::LogMessage(const ELog channel, const char* message)
 		m_CrashLogger->critical(message);
 		m_CrashLogger->flush();
 		break;
-
-	default:
+	case ELog::Debug:
 		m_DebugLogger->info(message);
+		break;
+	case ELog::Error:
+		m_DebugLogger->error(message);
+		break;
+	case ELog::Warn:
+		m_DebugLogger->warn(message);
+		break;
+
+		// Customs
+	case ELog::Network:
+		m_NetworkLogger->warn(message);
 		break;
 	}
 }

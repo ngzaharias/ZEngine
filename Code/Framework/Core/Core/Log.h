@@ -5,6 +5,10 @@ enum class ELog
 	Assert,
 	Crash,
 	Debug,
+	Error,
+	Warn,
+
+	// Custom
 	Network,
 };
 
