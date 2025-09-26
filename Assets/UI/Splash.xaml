@@ -13,27 +13,6 @@
     <KeyBinding Key="Space" Command="{Binding CloseCommand}"/>
     <MouseBinding MouseAction="LeftClick" Command="{Binding CloseCommand}"/>
   </Page.InputBindings>
-  <Page.Resources>
-    <ResourceDictionary>
-      <Storyboard x:Key="Loaded">
-        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Developer" Storyboard.TargetProperty="(UIElement.Opacity)">
-          <LinearDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
-          <LinearDoubleKeyFrame KeyTime="0:0:2" Value="1"/>
-          <LinearDoubleKeyFrame KeyTime="00:00:03" Value="1"/>
-          <LinearDoubleKeyFrame KeyTime="0:0:3.900" Value="0"/>
-        </DoubleAnimationUsingKeyFrames>
-        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Logo" Storyboard.TargetProperty="(UIElement.Opacity)">
-          <LinearDoubleKeyFrame KeyTime="00:00:04.1000000" Value="0"/>
-          <LinearDoubleKeyFrame KeyTime="00:00:05" Value="1"/>
-        </DoubleAnimationUsingKeyFrames>
-      </Storyboard>
-    </ResourceDictionary>
-  </Page.Resources>
-  <Page.Triggers>
-    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-      <BeginStoryboard Storyboard="{StaticResource Loaded}" />
-    </EventTrigger>
-  </Page.Triggers>
   <Grid Background="{DynamicResource Brush.Background0}">
     <Viewbox>
       <Grid Width="1280" Height="720">
@@ -47,24 +26,7 @@
           <RowDefinition Height="2*"/>
           <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <Grid x:Name="Logo"  Grid.Row="1" Grid.Column="1" Opacity="0">
-          <Rectangle Fill="{DynamicResource Brush.Highlight}">
-            <Rectangle.OpacityMask>
-              <ImageBrush ImageSource="Textures/T_Logo_01.png"/>
-            </Rectangle.OpacityMask>
-          </Rectangle>
-          <Rectangle x:Name="Background" Fill="{DynamicResource Brush.Background0}">
-            <Rectangle.OpacityMask>
-              <ImageBrush ImageSource="Textures/T_Logo_02.png"/>
-            </Rectangle.OpacityMask>
-          </Rectangle>
-          <Rectangle Fill="{DynamicResource Brush.Outline}">
-            <Rectangle.OpacityMask>
-              <ImageBrush ImageSource="Textures/T_Logo_03.png"/>
-            </Rectangle.OpacityMask>
-          </Rectangle>
-        </Grid>
-        <TextBlock x:Name="Developer" TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" Foreground="{DynamicResource Brush.Outline}" FontSize="120" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Text=" Papa&#x0a;Koala" Opacity="0" RenderTransformOrigin="0.5,0.5">
+        <TextBlock x:Name="Developer" TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" Foreground="{DynamicResource Brush.Outline}" FontSize="120" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Text=" Papa&#x0a;Koala" RenderTransformOrigin="0.5,0.5">
           <TextBlock.RenderTransform>
             <TransformGroup>
               <RotateTransform Angle="-3"/>
