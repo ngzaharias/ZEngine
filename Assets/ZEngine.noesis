@@ -1,0 +1,9 @@
+<Project Version="0.0.161">
+  <Assembly>
+    project
+  </Assembly>
+  <DefaultDataNamespace>
+    project
+  </DefaultDataNamespace>
+  <StartupDocument/>
+</Project>
