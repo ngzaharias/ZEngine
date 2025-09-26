@@ -138,17 +138,21 @@ const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 	auto& entry = m_Registry[typeId];
 	auto& loader = *entry.m_Loader;
 
-	const auto find = m_RefMap.Find(guid);
-	if (find != m_RefMap.end() && find->second.m_Asset)
-		return static_cast<const TAsset*>(find->second.m_Asset);
+	const auto findRef = m_RefMap.Find(guid);
+	if (findRef != m_RefMap.end() && findRef->second.m_Asset)
+		return static_cast<const TAsset*>(findRef->second.m_Asset);
 
-	Z_PANIC(enumerate::Contains(m_FileMap, guid), "Asset doesn't exist! Guid [{}]", guid.ToString().c_str());
-	const eng::AssetFile& file = m_FileMap.Get(guid);
+	const auto findFile = m_FileMap.Find(guid);
+	if (findFile == m_FileMap.end())
+	{
+		Z_LOG(ELog::Error, "Asset doesn't exist! Guid [{}]", guid.ToString().c_str());
+		return nullptr;
+	}
 
 	TAsset* asset = new TAsset();
-	if (!entry.m_Load(asset, loader, file.m_Path))
+	if (!entry.m_Load(asset, loader, findFile->second.m_Path))
 	{
-		Z_LOG(ELog::Assert, "Asset failed to load! Path [{}]", file.m_Path.ToChar());
+		Z_LOG(ELog::Error, "Asset failed to load! Path [{}]", findFile->second.m_Path.ToChar());
 		delete asset;
 		return nullptr;
 	}
@@ -162,7 +166,9 @@ template<class TAsset>
 void eng::AssetManager::RequestAsset(const str::Guid& guid)
 {
 	eng::AssetRef& ref = m_RefMap[guid];
-	if (ref.m_Count++ == 0)
+
+	ref.m_Count++;
+	if (ref.m_Count == 1)
 	{
 		ref.m_Asset = LoadAsset<TAsset>(guid);
 	}
@@ -172,7 +178,9 @@ template<class TAsset>
 void eng::AssetManager::ReleaseAsset(const str::Guid& guid)
 {
 	eng::AssetRef& ref = m_RefMap[guid];
-	if (--ref.m_Count == 0)
+
+	ref.m_Count--;
+	if (ref.m_Count == 0)
 	{
 		if (ref.m_Asset)
 		{
