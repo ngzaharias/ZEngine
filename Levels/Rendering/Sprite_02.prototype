@@ -3,7 +3,7 @@ m_Name = "Sprite_02"
 
 ['eng::SpriteComponent']
 m_Size = { X = 50, Y = 50 }
-m_Sprite = "00a51d6c15ca4ea9bdb8b4b11edffa63"
+m_Sprite = "52ffdca6bc1d64230eda0e2056e9662b"
 
 ['eng::TransformComponent']
 m_Translate = { X = 0.0, Y = 400.0, Z = 0.0 }
