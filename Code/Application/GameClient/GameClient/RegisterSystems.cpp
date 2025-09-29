@@ -6,7 +6,6 @@
 #include "Engine/RenderSystem.h"
 #include "Engine/ReplicationHost.h"
 #include "GameClient/AccelerationSystem.h"
-#include "GameClient/AchievementSystem.h"
 #include "GameClient/ContainerMemberSystem.h"
 #include "GameClient/ContainerOwnerSystem.h"
 #include "GameClient/ContainerStorageSystem.h"
@@ -27,7 +26,6 @@
 
 void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.RegisterSystem<client::AchievementSystem>();
 	entityWorld.RegisterSystem<client::SettingsSystem>();
 	entityWorld.RegisterSystem<container::StorageSystem>();
 	// #todo: container::MemberSystem depends on container::StorageSystem
