@@ -143,6 +143,10 @@ public:
 	static constexpr Matrix4x4 FromScale(const float value) noexcept;
 	static constexpr Matrix4x4 FromScale(const Vector3f& value) noexcept;
 
+	static Rotator ToRotator(const Matrix4x4& value) noexcept;
+	static Vector3f ToScale(const Matrix4x4& value) noexcept;
+	static Vector3f ToTranslate(const Matrix4x4& value) noexcept;
+
 	static const Matrix4x4 Identity;
 	static const Matrix4x4 Zero;
 

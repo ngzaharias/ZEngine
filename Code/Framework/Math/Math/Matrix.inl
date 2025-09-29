@@ -989,6 +989,30 @@ inline constexpr Matrix4x4 Matrix4x4::FromScale(const float value) noexcept
 		0.f, 0.f, 0.f, 1.f };
 }
 
+inline Rotator Matrix4x4::ToRotator(const Matrix4x4& value) noexcept
+{
+	return Rotator::FromMatrix(value);
+}
+
+inline Vector3f Matrix4x4::ToScale(const Matrix4x4& value) noexcept
+{
+	const Vector3f x = Vector3f(value.m_Data[0][0], value.m_Data[0][1], value.m_Data[0][2]);
+	const Vector3f y = Vector3f(value.m_Data[1][0], value.m_Data[1][1], value.m_Data[1][2]);
+	const Vector3f z = Vector3f(value.m_Data[2][0], value.m_Data[2][1], value.m_Data[2][2]);
+	return Vector3f(
+		x.Length(),
+		y.Length(),
+		z.Length());
+}
+
+inline Vector3f Matrix4x4::ToTranslate(const Matrix4x4& value) noexcept
+{
+	return Vector3f(
+		value.m_Data[3][0],
+		value.m_Data[3][1],
+		value.m_Data[3][2]);
+}
+
 inline constexpr Vector2f operator*(const Vector2f& lhs, const Matrix4x4& rhs) noexcept
 {
 	return Vector2f(
