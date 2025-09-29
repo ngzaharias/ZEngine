@@ -14,6 +14,7 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "Math/Math.h"
+#include "Math/Matrix.h"
 #include "Math/SpringMath.h"
 
 void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
@@ -29,7 +30,7 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 
 	const auto& cameraSettings = world.ReadSingleton<eng::settings::CameraComponent>();
 
-	const Vector2u& resolution = window->GetResolution();
+	const Vector2u& windowSize = window->GetSize();
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
 		const auto& readZoom = world.ReadComponent<eng::camera::Zoom2DComponent>(cameraEntity);
@@ -57,18 +58,18 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 
 				const auto& target = *readZoom.m_Target;
 				const Vector3f preZoom = camera::ScreenToWorld(
-					target.m_Position,
 					readProjection.m_Projection,
 					readTransform.ToTransform(),
-					resolution);
+					windowSize,
+					target.m_Position);
 
 				writeOrtho.m_Size = math::DamperExact(writeOrtho.m_Size, target.m_Size, cameraSettings.m_ZoomSpeed, gameTime.m_DeltaTime);
 
 				const Vector3f postZoom = camera::ScreenToWorld(
-					target.m_Position,
 					readProjection.m_Projection,
 					readTransform.ToTransform(),
-					resolution);
+					windowSize,
+					target.m_Position);
 
 				// we calculate the delta on the mouse pos and add it back onto the translate
 				auto& writeTransform = world.WriteComponent<eng::TransformComponent>(cameraEntity);

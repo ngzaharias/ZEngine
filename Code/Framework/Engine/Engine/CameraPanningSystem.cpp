@@ -51,7 +51,7 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Pan3DComponent, const eng::camera::ProjectionComponent>;
 
-	const Vector2u& resolution = window->GetResolution();
+	const Vector2u& windowSize = window->GetSize();
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
 		const auto& projection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
@@ -60,15 +60,15 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 		if (input.IsHeld(strSelect))
 		{
 			const Vector3f worldPosA = eng::camera::ScreenToWorld(
-				Vector2f::Zero,
 				projection.m_Projection,
 				Matrix4x4::Identity,
-				resolution);
+				windowSize,
+				Vector2f::Zero);
 			const Vector3f worldPosB = eng::camera::ScreenToWorld(
-				input.m_MouseDelta,
 				projection.m_Projection,
 				Matrix4x4::Identity,
-				resolution);
+				windowSize,
+				input.m_MouseDelta);
 
 			auto& transform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
 			const Quaternion rotation = Quaternion::FromRotator(transform.m_Rotate);

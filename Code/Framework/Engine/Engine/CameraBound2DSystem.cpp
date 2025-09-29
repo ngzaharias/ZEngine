@@ -24,7 +24,7 @@ void eng::camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Bound2DComponent, const eng::camera::ProjectionComponent>;
 
-	const Vector2u& resolution = window->GetResolution();
+	const Vector2u& windowSize = window->GetSize();
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
 		const auto& bound2d = world.ReadComponent<eng::camera::Bound2DComponent>(cameraEntity);
@@ -35,7 +35,7 @@ void eng::camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 		{
 			const auto& orthographic = std::get<eng::camera::Orthographic>(projection.m_Projection);
 
-			const float aspect = (float)resolution.x / (float)resolution.y;
+			const float aspect = (float)windowSize.x / (float)windowSize.y;
 			const Vector2f rangeMin = bound2d.m_Min;
 			const Vector2f rangeMax = bound2d.m_Max;
 			const Vector2f rangeHalf = (rangeMax - rangeMin) * 0.5f;

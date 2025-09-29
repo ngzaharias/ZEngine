@@ -34,9 +34,9 @@ namespace eng
 		virtual void GatherMouse(Set<input::EKey>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const {}
 		virtual void GatherScroll(Vector2f& out_Delta) const {}
 
-		virtual auto GetResolution() const -> const Vector2u& { return m_Resolution; }
 		virtual auto GetPosition() const -> const Vector2i& { return m_Position; }
 		virtual auto GetRefreshRate() const -> int32 { return m_RefreshRate; }
+		virtual auto GetSize() const -> const Vector2u& { return m_Size; }
 
 		virtual void Refresh(const eng::EWindowMode& windowMode, const Vector2u& resolution, const int32 refreshRate, const int32 monitor) {}
 
@@ -45,9 +45,9 @@ namespace eng
 		Window& operator=(const Window&) = delete;
 
 	protected:
-		Vector2u m_Resolution = Vector2u::Zero;
 		Vector2i m_Position = Vector2i::Zero;
 		Vector2f m_Scale = Vector2f::Zero;
+		Vector2u m_Size = Vector2u::Zero;
 		int32 m_RefreshRate = 0;
 
 		bool m_IsFocused = false;

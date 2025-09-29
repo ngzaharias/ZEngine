@@ -118,27 +118,17 @@ void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::camera::EditorComponent>>())
 		cameraEntity = entity;
 
-	const Vector2u& resolution = window->GetResolution();
 	if (!cameraEntity.IsUnassigned())
 	{
 		const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
-		const Quaternion cameraRotate = Quaternion::FromRotator(cameraTransform.m_Rotate);
-		const Vector3f& cameraTranslate = cameraTransform.m_Translate;
-		const Matrix4x4 cameraView = cameraTransform.ToTransform();
-
 		const auto& input = world.ReadResource<eng::InputManager>();
-		const Vector3f mousePosition = eng::camera::ScreenToWorld(
-			input.m_MousePosition,
-			cameraProjection.m_Projection,
-			cameraView,
-			resolution);
-		const Vector3f mouseForward = ToMouseDirection(mousePosition, cameraProjection, cameraTransform);
-
-		Ray3f ray;
-		ray.m_Position = mousePosition;
-		ray.m_Direction = mouseForward;
+		const Ray3f ray = eng::camera::ScreenToRay(
+			cameraProjection,
+			cameraTransform,
+			*window,
+			input.m_MousePosition);
 
 		Array<Selection> selected = {};
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::EntityComponent, const eng::TransformComponent>>())
@@ -151,7 +141,7 @@ void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
 			if (!math::Intersection(ray, *aabb, intersectPos))
 				continue;
 
-			selected.Emplace(entity, math::DistanceSqr(mousePosition, intersectPos));
+			selected.Emplace(entity, math::DistanceSqr(ray.m_Position, intersectPos));
 
 			auto& lines = world.WriteSingleton<eng::LinesComponent>();
 			lines.AddSphere(intersectPos, 100.f, Colour::Red);

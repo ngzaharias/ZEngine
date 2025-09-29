@@ -56,8 +56,8 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 	if (!window)
 		return;
 
-	const Vector2u& resolution = window->GetResolution();
-	glViewport(0, 0, resolution.x, resolution.y);
+	const Vector2u& windowSize = window->GetSize();
+	glViewport(0, 0, windowSize.x, windowSize.y);
 
 	glDisable(GL_BLEND);
 
@@ -80,7 +80,7 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
-		const Matrix4x4 cameraProj = camera::GetProjection(resolution, cameraComponent.m_Projection);
+		const Matrix4x4 cameraProj = camera::GetProjection(cameraComponent.m_Projection, windowSize);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 		glUseProgram(shader->m_ProgramId);

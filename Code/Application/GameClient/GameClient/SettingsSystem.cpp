@@ -35,7 +35,7 @@ void client::SettingsSystem::Initialise(World& world)
 	auto& windowSettings = world.WriteSingleton<eng::settings::WindowComponent>();
 	if (const eng::Window* window = windowManager.GetWindow(0))
 	{
-		windowSettings.m_Resolution = window->GetResolution();
+		windowSettings.m_Resolution = window->GetSize();
 		windowSettings.m_RefreshRate = window->GetRefreshRate();
 	}
 

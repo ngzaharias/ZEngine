@@ -55,37 +55,30 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 	const auto& sceneComponent = world.ReadSingleton<eng::PhysicsSceneComponent>();
 	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 
-	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
 		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
-		const Quaternion cameraRotate = Quaternion::FromRotator(cameraTransform.m_Rotate);
-		const Vector3f& cameraTranslate = cameraTransform.m_Translate;
-		const Vector3f cameraForward = Vector3f::AxisZ * cameraRotate;
-
-		const Matrix4x4 cameraView = cameraTransform.ToTransform();
 		{
 			const auto& input = world.ReadResource<eng::InputManager>();
 
 			// mouse
 			constexpr float distance = 100000.f;
-			const Vector3f mousePosition = eng::camera::ScreenToWorld(
-				input.m_MousePosition,
-				cameraComponent.m_Projection, 
-				cameraView, 
-				resolution);
-			const Vector3f mouseForward = (mousePosition - cameraTranslate).Normalized();
+			const Ray3f ray = eng::camera::ScreenToRay(
+				cameraComponent,
+				cameraTransform,
+				*window,
+				input.m_MousePosition);
 
 			const physx::PxVec3 position = { 
-				mousePosition.x,
-				mousePosition.y,
-				mousePosition.z };
+				ray.m_Position.x,
+				ray.m_Position.y,
+				ray.m_Position.z };
 			const physx::PxVec3 direction = { 
-				mouseForward.x,
-				mouseForward.y,
-				mouseForward.z };
+				ray.m_Direction.x,
+				ray.m_Direction.y,
+				ray.m_Direction.z };
 
 			physx::PxRaycastBuffer hitcall;
 			sceneComponent.m_PhysicsScene->raycast(position, direction, distance, hitcall);
@@ -113,7 +106,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 						auto& dragComponent = world.AddComponent<drag::SelectionComponent>(dragEntity);
 						dragComponent.m_CameraEntity = cameraEntity;
 						dragComponent.m_SelectedEntity = selectedEntity;
-						dragComponent.m_TranslatePlane = Plane3f(-cameraForward, hitPosition);
+						dragComponent.m_TranslatePlane = Plane3f(-ray.m_Direction, hitPosition);
 						dragComponent.m_TranslateOffset = transformComponent.m_Translate - hitPosition;
 					}
 				}

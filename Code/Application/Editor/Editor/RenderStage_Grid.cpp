@@ -98,8 +98,8 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 
 
 	{
-		const Vector2u& resolution = window->GetResolution();
-		glViewport(0, 0, resolution.x, resolution.y);
+		const Vector2u& windowSize = window->GetSize();
+		glViewport(0, 0, windowSize.x, windowSize.y);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -123,8 +123,8 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 
 		const Vector3f translate = cameraTransform.m_Translate.X0Z();
 
-		const Vector2u& resolution = window->GetResolution();
-		const Matrix4x4 cameraProj = eng::camera::GetProjection(resolution, cameraComponent.m_Projection);
+		const Vector2u& windowSize = window->GetSize();
+		const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraComponent.m_Projection, windowSize);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 		const Matrix4x4 modelTran = Matrix4x4::FromTranslate(translate);
 

@@ -2,7 +2,11 @@
 #include "Engine/CameraHelpers.h"
 
 #include "Core/Assert.h"
+#include "Engine/CameraComponent.h"
+#include "Engine/TransformComponent.h"
+#include "Engine/Window.h"
 #include "Math/Math.h"
+#include "Math/Matrix.h"
 
 #include <algorithm>
 
@@ -12,20 +16,20 @@
 // http://learnwebgl.brown37.net/08_projections/projections_ortho.html
 // http://learnwebgl.brown37.net/08_projections/projections_perspective.html
 
-Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Projection& value)
+Matrix4x4 eng::camera::GetProjection(const Projection& value, const Vector2u& windowSize)
 {
 	Matrix4x4 projection = Matrix4x4::Identity;
-	std::visit([&](auto data) { projection = GetProjection(windowSize, data); }, value);
+	std::visit([&](auto data) { projection = GetProjection(data, windowSize); }, value);
 	return projection;
 }
 
-Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Cinematic& settings)
+Matrix4x4 eng::camera::GetProjection(const Cinematic& settings, const Vector2u& windowSize)
 {
 	Z_PANIC(false, "");
 	return Matrix4x4::Identity;
 }
 
-Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Orthographic& settings)
+Matrix4x4 eng::camera::GetProjection(const Orthographic& settings, const Vector2u& windowSize)
 {
 	const float aspect = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
 	const float near = math::Max(settings.m_ClippingNear, 0.1f);
@@ -49,7 +53,7 @@ Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Orthograp
 #endif
 }
 
-Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Perspective& settings)
+Matrix4x4 eng::camera::GetProjection(const Perspective& settings, const Vector2u& windowSize)
 {
 	const float aspect = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
 	const float near = math::Max(settings.m_ClippingNear, 0.1f);
@@ -78,7 +82,7 @@ Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const Perspecti
 #endif
 }
 
-Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const UserInterface& settings)
+Matrix4x4 eng::camera::GetProjection(const UserInterface& settings, const Vector2u& windowSize)
 {
 	const float right = (float)windowSize.x;
 	const float bottom = (float)windowSize.y;
@@ -103,19 +107,84 @@ Matrix4x4 eng::camera::GetProjection(const Vector2u& windowSize, const UserInter
 #endif
 }
 
-Vector3f eng::camera::ScreenToWorld(const Vector2f& pixelPos, const Projection& projection, const Matrix4x4& transform, const Vector2u& windowSize)
+Vector3f eng::camera::ScreenToDirection(
+	const Projection& projection,
+	const Matrix4x4& transform, 
+	const Vector3f& screenPos)
 {
-	return ScreenToWorld(pixelPos, 0.f, projection, transform, windowSize);
+	if (std::holds_alternative<eng::camera::Orthographic>(projection))
+	{
+		const Quaternion cameraRotate = Quaternion::FromMatrix(transform);
+		return Vector3f::AxisZ * cameraRotate;
+	}
+
+	const Vector3f translate = Matrix4x4::ToTranslate(transform);
+	return (screenPos - translate).Normalized();
 }
 
-Vector3f eng::camera::ScreenToWorld(const Vector2f& pixelPos, const float depth, const Projection& projection, const Matrix4x4& transform, const Vector2u& windowSize)
+Vector3f eng::camera::ScreenToDirection(
+	const eng::camera::ProjectionComponent& camera, 
+	const eng::TransformComponent& transform, 
+	const Vector3f& screenPos)
 {
-	const Matrix4x4 inverseProj = GetProjection(windowSize, projection).Inversed();
+	if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
+	{
+		const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
+		return Vector3f::AxisZ * cameraRotate;
+	}
+
+	return (screenPos - transform.m_Translate).Normalized();
+}
+
+Ray3f eng::camera::ScreenToRay(
+	const Projection& projection,
+	const Matrix4x4& transform,
+	const Vector2u& windowSize,
+	const Vector2f& pixelPos)
+{
+	Ray3f ray;
+	ray.m_Position = eng::camera::ScreenToWorld(projection, transform, windowSize, pixelPos);
+	ray.m_Direction = eng::camera::ScreenToDirection(projection, transform, ray.m_Position);
+	return ray;
+}
+
+Ray3f eng::camera::ScreenToRay(
+	const eng::camera::ProjectionComponent& camera,
+	const eng::TransformComponent& transform,
+	const eng::Window& window,
+	const Vector2f& pixelPos)
+{
+	const Matrix4x4 cameraView = transform.ToTransform();
+	const Vector2u& windowSize = window.GetSize();
+
+	Ray3f ray;
+	ray.m_Position = eng::camera::ScreenToWorld(camera.m_Projection, cameraView, windowSize, pixelPos);
+	ray.m_Direction = eng::camera::ScreenToDirection(camera, transform, ray.m_Position);
+	return ray;
+}
+
+Vector3f eng::camera::ScreenToWorld(
+	const Projection& projection, 
+	const Matrix4x4& transform, 
+	const Vector2u& windowSize, 
+	const Vector2f& pixelPos)
+{
+	return ScreenToWorld(projection, transform, windowSize, pixelPos, 0.f);
+}
+
+Vector3f eng::camera::ScreenToWorld(
+	const Projection& projection, 
+	const Matrix4x4& transform, 
+	const Vector2u& windowSize, 
+	const Vector2f& pixelPos, 
+	const float depth)
+{
+	const Matrix4x4 inverseProj = GetProjection(projection, windowSize).Inversed();
 
 	// pixel -> screen
 	Vector3f screenPos;
-	screenPos.x = +math::Remap(pixelPos.x, 0.f, (float)windowSize.x, -1.f, 1.f);
-	screenPos.y = -math::Remap(pixelPos.y, 0.f, (float)windowSize.y, -1.f, 1.f);
+	screenPos.x = +math::Remap(screenPos.x, 0.f, (float)windowSize.x, -1.f, 1.f);
+	screenPos.y = -math::Remap(screenPos.y, 0.f, (float)windowSize.y, -1.f, 1.f);
 	screenPos.z = depth;
 
 	// screen -> homogeneous
@@ -132,17 +201,21 @@ Vector3f eng::camera::ScreenToWorld(const Vector2f& pixelPos, const float depth,
 	return localPos * transform;
 }
 
-Vector2f eng::camera::WorldToScreen(const Vector3f& worldPos, const Projection& projection, const Matrix4x4& transform, const Vector2u& windowSize)
+Vector3f eng::camera::ScreenToWorld(
+	const eng::camera::ProjectionComponent& camera,
+	const eng::TransformComponent& transform,
+	const eng::Window& window,
+	const Vector2f& pixelPos)
 {
-	Z_PANIC(false, "Incomplete function!");
+	return ScreenToWorld(camera.m_Projection, transform.ToTransform(), window.GetSize(), pixelPos, 0.f);
+}
 
-	const Matrix4x4 cameraProj = GetProjection(windowSize, projection);
-
-	Vector3f localPos = worldPos;
-	localPos = localPos * transform.Inversed();
-
-	Vector4f homogeneousPos = Vector4f(localPos, 1.f);
-	homogeneousPos = homogeneousPos * cameraProj;
-
-	return Vector2f(homogeneousPos.x, homogeneousPos.y);
+Vector3f eng::camera::ScreenToWorld(
+	const eng::camera::ProjectionComponent& camera,
+	const eng::TransformComponent& transform,
+	const eng::Window& window,
+	const Vector2f& pixelPos,
+	const float depth)
+{
+	return ScreenToWorld(camera.m_Projection, transform.ToTransform(), window.GetSize(), pixelPos, depth);
 }

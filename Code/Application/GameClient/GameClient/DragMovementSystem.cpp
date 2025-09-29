@@ -33,25 +33,17 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 		return;
 
 	const auto& input = world.ReadResource<eng::InputManager>();
-	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
-
-	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& dragEntity : world.Query<ecs::query::Include<const drag::SelectionComponent>>())
 	{
 		const auto& dragComponent = world.ReadComponent<drag::SelectionComponent>(dragEntity);
 		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(dragComponent.m_CameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(dragComponent.m_CameraEntity);
 
-		const Quaternion cameraRotate = Quaternion::FromRotator(cameraTransform.m_Rotate);
-		const Vector3f& cameraTranslate = cameraTransform.m_Translate;
-		const Matrix4x4 cameraView = cameraTransform.ToTransform();
-
-		const Vector3f mousePosition = eng::camera::ScreenToWorld(
-			input.m_MousePosition, 
-			cameraComponent.m_Projection, 
-			cameraView, 
-			resolution);
-		const Vector3f mouseForward = (mousePosition - cameraTranslate).Normalized();
+		const Ray3f ray = eng::camera::ScreenToRay(
+			cameraComponent, 
+			cameraTransform,
+			*window,
+			input.m_MousePosition);
 
 		// debug
 		{
@@ -65,14 +57,12 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 			const Rotator rotator = Rotator(pitch, yaw, 0.f);
 
 			const OBB3f obb = OBB3f::FromExtents(rotator, Vector3f(500.f, 500.f, 0.f));
+
+			auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
 			linesComponent.AddOBB(planeTranslate, obb, Colour::White);
 		}
 
 		{
-			Ray3f ray;
-			ray.m_Position = mousePosition;
-			ray.m_Direction = mouseForward;
-
 			Vector3f intersectPos;
 			if (math::Intersection(ray, dragComponent.m_TranslatePlane, intersectPos))
 			{

@@ -27,10 +27,10 @@ void eng::RenderStage_Noesis_Pre::Render(ecs::EntityWorld& entityWorld)
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	if (const eng::Window* window = windowManager.GetWindow(0))
 	{
-		const Vector2u& resolution = window->GetResolution();
+		const Vector2u& windowSize = window->GetSize();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, resolution.x, resolution.y);
+		glViewport(0, 0, windowSize.x, windowSize.y);
 		glDisable(GL_SCISSOR_TEST);
 		glClearStencil(0);
 		glClearDepthf(1.f);

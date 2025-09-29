@@ -74,8 +74,6 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 		return;
 
 	static int32 value = 2;
-	const Vector2u& resolution = window->GetResolution();
-
 	const auto& input = world.ReadResource<eng::InputManager>();
 	if (input.IsPressed(strHexmap0))
 		value = 0;
@@ -95,15 +93,15 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 		using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::ProjectionComponent>;
 		for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 		{
-			const auto& camera = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-			const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+			const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
-			const Matrix4x4 cameraView = transform.ToTransform();
-			const Vector3f mousePosition = eng::camera::ScreenToWorld(input.m_MousePosition, camera.m_Projection, cameraView, resolution);
-			const Vector3f mouseDirection = ToMouseDirection(mousePosition, camera, transform);
-
-			const Ray3f ray = Ray3f(mousePosition, mouseDirection);
 			const Plane3f plane = Plane3f(Vector3f::AxisY, Vector3f::Zero);
+			const Ray3f ray = eng::camera::ScreenToRay(
+				cameraProjection,
+				cameraTransform,
+				*window,
+				input.m_MousePosition);
 
 			Vector3f intersectPos;
 			if (math::Intersection(ray, plane, intersectPos))

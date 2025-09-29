@@ -216,7 +216,7 @@ glfw::Window::Window(const eng::WindowConfig& config)
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
 	m_Window = glfwCreateWindow(mode->width, mode->height, config.m_Name.c_str(), nullptr, nullptr);
-	m_Resolution = Vector2u(mode->width, mode->height);
+	m_Size = Vector2u(mode->width, mode->height);
 	m_RefreshRate = mode->refreshRate;
 	m_IsFocused = true;
 
@@ -325,7 +325,7 @@ void glfw::Window::GatherScroll(Vector2f& out_Delta) const
 	out_Delta = m_ScrollDelta;
 }
 
-void glfw::Window::Refresh(const eng::EWindowMode& windowMode, const Vector2u& resolution, const int32 refreshRate, const int32 monitor)
+void glfw::Window::Refresh(const eng::EWindowMode& windowMode, const Vector2u& size, const int32 refreshRate, const int32 monitor)
 {
 	int monitorCount = 0;
 	GLFWmonitor** glfwMonitors = glfwGetMonitors(&monitorCount);
@@ -340,15 +340,15 @@ void glfw::Window::Refresh(const eng::EWindowMode& windowMode, const Vector2u& r
 		glfwGetMonitorPos(glfwMonitor, &xpos, &ypos);
 		glfwSetWindowAttrib(m_Window, GLFW_DECORATED, false);
 		glfwSetWindowMonitor(m_Window, nullptr, xpos, ypos, mode->width, mode->height, mode->refreshRate);
-		m_Resolution = Vector2u(mode->width, mode->height);
+		m_Size = Vector2u(mode->width, mode->height);
 		m_Position = Vector2i(xpos, ypos);
 		m_RefreshRate = mode->refreshRate;
 	} break;
 	case eng::EWindowMode::Fullscreen:
 	{
-		// #bug: setting the monitor with a resolution that doesn't match causes the window to become unresponsive
+		// #bug: setting the monitor with a size that doesn't match causes the window to become unresponsive
 		glfwSetWindowMonitor(m_Window, glfwMonitor, 0, 0, mode->width, mode->height, refreshRate);
-		m_Resolution = Vector2u(mode->width, mode->height);
+		m_Size = Vector2u(mode->width, mode->height);
 		m_Position = Vector2i::Zero;
 		m_RefreshRate = refreshRate;
 	} break;
@@ -357,14 +357,14 @@ void glfw::Window::Refresh(const eng::EWindowMode& windowMode, const Vector2u& r
 		int xpos, ypos;
 		glfwGetMonitorPos(glfwMonitor, &xpos, &ypos);
 		const Vector2i position = Vector2i(
-			xpos + mode->width / 2 - resolution.x / 2,
-			ypos + mode->height / 2 - resolution.y / 2);
+			xpos + mode->width / 2 - size.x / 2,
+			ypos + mode->height / 2 - size.y / 2);
 
 		// #bug: changing the monitor without re-setting the size causes the window not to be sized correctly
 		glfwSetWindowAttrib(m_Window, GLFW_DECORATED, true);
-		glfwSetWindowMonitor(m_Window, nullptr, position.x, position.y, resolution.x, resolution.y, mode->refreshRate);
-		glfwSetWindowSize(m_Window, resolution.x, resolution.y);
-		m_Resolution = resolution;
+		glfwSetWindowMonitor(m_Window, nullptr, position.x, position.y, size.x, size.y, mode->refreshRate);
+		glfwSetWindowSize(m_Window, size.x, size.y);
+		m_Size = size;
 		m_Position = position;
 		m_RefreshRate = mode->refreshRate;
 	} break;
@@ -377,7 +377,7 @@ void glfw::Window::Callback_FramebufferResized(GLFWwindow* glfwWindow, int width
 		return;
 
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
-	window->m_Resolution = Vector2u(width, height);
+	window->m_Size = Vector2u(width, height);
 
 	glViewport(0, 0, width, height);
 	//glScissor(0, 0, width, height);
@@ -434,7 +434,7 @@ void glfw::Window::Callback_WindowSize(GLFWwindow* glfwWindow, int width, int he
 		return;
 
 	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
-	window->m_Resolution = Vector2u(width, height);
+	window->m_Size = Vector2u(width, height);
 }
 
 #endif

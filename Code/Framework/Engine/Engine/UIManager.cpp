@@ -239,11 +239,11 @@ void eng::UIManager::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const Vector2u resolution = m_Window->GetResolution();
+	const Vector2u& windowSize = m_Window->GetSize();
 	for (const str::Name& name : m_Stack)
 	{
 		eng::Widget& widget = m_Widgets.Get(name);
-		widget.m_View->SetSize(resolution.x, resolution.y);
+		widget.m_View->SetSize(windowSize.x, windowSize.y);
 		widget.m_View->Update((double)gameTime.m_TotalTime); // #todo: update gameTime to support double
 	}
 }
@@ -336,7 +336,7 @@ void eng::UIManager::ProcessInput(
 
 void eng::UIManager::CreateWidget(const str::Name& name, const bool consumeAll)
 {
-	const Vector2u& resolution = m_Window->GetResolution();
+	const Vector2u& windowSize = m_Window->GetSize();
 
 	Noesis::Ptr<Noesis::UserControl> xaml = Noesis::GUI::LoadXaml<Noesis::UserControl>(name.ToChar());
 	if (m_DataContexts.Contains(name))
@@ -347,7 +347,7 @@ void eng::UIManager::CreateWidget(const str::Name& name, const bool consumeAll)
 
 	Noesis::Ptr<Noesis::IView> view = Noesis::GUI::CreateView(xaml);
 	view->SetFlags(Noesis::RenderFlags_PPAA | Noesis::RenderFlags_LCD);
-	view->SetSize(resolution.x, resolution.y);
+	view->SetSize(windowSize.x, windowSize.y);
 
 	Noesis::Ptr<Noesis::RenderDevice> device = NoesisApp::GLFactory::CreateDevice(false);
 	view->GetRenderer()->Init(device);

@@ -128,7 +128,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 			const Vector3f offset = (cameraFoward * 1000.f) + (-lightFoward * distForward);
 			const Vector3f translate = cameraTransform.m_Translate + offset;
 
-			const Matrix4x4 lightProj = camera::GetProjection(bufferComponent.m_ShadowSize, orthographic);
+			const Matrix4x4 lightProj = camera::GetProjection(orthographic, bufferComponent.m_ShadowSize);
 			const Matrix4x4 lightView = lightTransform.ToTransform().Inversed();
 
 			Array<RenderBatchID> batchIDs;

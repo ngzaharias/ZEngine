@@ -71,30 +71,30 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 	const auto& settings = world.ReadSingleton<hidden::settings::DebugComponent>();
 	const auto& physics = world.ReadSingleton<eng::PhysicsSceneComponent>();
 
-	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& camera = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
-
-		const Matrix4x4 cameraView = transform.ToTransform();
+		const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		{
 			const auto& input = world.ReadResource<eng::InputManager>();
 
 			// mouse
 			constexpr float s_Distance = 100000.f;
-			const Vector3f mousePosition = eng::camera::ScreenToWorld(input.m_MousePosition, camera.m_Projection, cameraView, resolution);
-			const Vector3f mouseDirection = ToMouseDirection(mousePosition, camera, transform);
+			const Ray3f ray = eng::camera::ScreenToRay(
+				cameraProjection,
+				cameraTransform,
+				*window,
+				input.m_MousePosition);
 
-			const physx::PxVec3 position = { 
-				mousePosition.x,
-				mousePosition.y,
-				mousePosition.z };
-			const physx::PxVec3 direction = { 
-				mouseDirection.x,
-				mouseDirection.y,
-				mouseDirection.z };
+			const physx::PxVec3 position = {
+				ray.m_Position.x,
+				ray.m_Position.y,
+				ray.m_Position.z };
+			const physx::PxVec3 direction = {
+				ray.m_Direction.x,
+				ray.m_Direction.y,
+				ray.m_Direction.z };
 
 			physx::PxRaycastBuffer hitcall;
 			physics.m_PhysicsScene->raycast(position, direction, s_Distance, hitcall);
@@ -122,7 +122,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 				if (settings.m_IsInputEnabled)
 				{
 					auto& lines = world.WriteSingleton<eng::LinesComponent>();
-					lines.AddSphere(mousePosition + mouseDirection * 100.f, Sphere3f(10.f), Colour::Green);
+					lines.AddSphere(ray.m_Position + ray.m_Direction * 100.f, Sphere3f(10.f), Colour::Green);
 				}
 			}
 		}

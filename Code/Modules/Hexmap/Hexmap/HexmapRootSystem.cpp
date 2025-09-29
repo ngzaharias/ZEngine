@@ -34,8 +34,8 @@ namespace
 		const Vector2f pixelPosB = screenCentre + screenCentre;
 
 		const Matrix4x4 cameraView = Matrix4x4::FromTransform(transform.m_Translate, Quaternion::FromRotator(Rotator(90.f, 0.f, 0.f)), 1.f);
-		const Vector3f worldPosA = eng::camera::ScreenToWorld(pixelPosA, camera.m_Projection, cameraView, windowSize);
-		const Vector3f worldPosB = eng::camera::ScreenToWorld(pixelPosB, camera.m_Projection, cameraView, windowSize);
+		const Vector3f worldPosA = eng::camera::ScreenToWorld(camera.m_Projection, cameraView, windowSize, pixelPosA);
+		const Vector3f worldPosB = eng::camera::ScreenToWorld(camera.m_Projection, cameraView, windowSize, pixelPosB);
 
 		Vector3f forwardA = -Vector3f::AxisY;
 		Vector3f forwardB = -Vector3f::AxisY;
@@ -100,7 +100,7 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	const Vector2u& resolution = window->GetResolution();
+	const Vector2u& windowSize = window->GetSize();
 	const bool cameraAdded = world.HasAny<ecs::query::Added<eng::camera::ProjectionComponent>::Include<eng::TransformComponent>>();
 	const bool cameraChanged = world.HasAny<ecs::query::Updated<eng::camera::ProjectionComponent>::Include<eng::TransformComponent>>();
 	const bool transformAdded = world.HasAny<ecs::query::Added<eng::TransformComponent>::Include<eng::camera::ProjectionComponent>>();
@@ -124,7 +124,7 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 					projection.m_Size = math::Lerp(zoomMin, zoomMax, root.m_Zoom);
 				}
 
-				root.m_Zone = GetCameraZone(camera, transform, resolution);
+				root.m_Zone = GetCameraZone(camera, transform, windowSize);
 			}
 		}
 	}

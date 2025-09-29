@@ -228,37 +228,6 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 						m_World.AddComponent<eng::camera::ProjectionComponent>(entity);
 					}
 
-					if (ImGui::MenuItem("Hidden Count"))
-					{
-						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Count", levelName);
-						m_World.AddComponent<hidden::CountComponent>(entity);
-					}
-
-					if (ImGui::MenuItem("Hidden Group"))
-					{
-						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Group_", levelName);
-						auto& groupComponent = m_World.AddComponent<hidden::GroupComponent>(entity);
-						groupComponent.m_Objects.Emplace();
-					}
-
-					if (ImGui::MenuItem("Hidden Object"))
-					{
-						eng::ShapeBox defaultBox;
-						defaultBox.m_Extents = Vector3f(20.f, 20.f, 1.f);
-
-						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "Object_", levelName);
-						auto& objectComponent = m_World.AddComponent<hidden::ObjectComponent>(entity);
-						objectComponent.m_Effects = { hidden::SetColour { Vector3f::One } };
-
-						auto& spriteComponent = m_World.AddComponent<eng::SpriteComponent>(entity);
-						spriteComponent.m_Sprite = str::Guid::Create("52ffdca6bc1d64230eda0e2056e9662b");
-						spriteComponent.m_Size = Vector2u(128);
-
-						auto& physicsComponent = m_World.AddComponent<eng::PhysicsComponent>(entity);
-						physicsComponent.m_Rigidbody = eng::RigidStatic();
-						physicsComponent.m_Shapes.Append(defaultBox);
-					}
-
 					if (ImGui::MenuItem("Sprite"))
 					{
 						const ecs::Entity entity = CreateEntity(m_World, windowEntity, "SP_", levelName);

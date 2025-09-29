@@ -86,8 +86,8 @@ void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
 
 	if (!m_Vertices.IsEmpty())
 	{
-		const Vector2u& resolution = window->GetResolution();
-		glViewport(0, 0, resolution.x, resolution.y);
+		const Vector2u& windowSize = window->GetSize();
+		glViewport(0, 0, windowSize.x, windowSize.y);
 
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
@@ -128,7 +128,7 @@ void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
 			const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
-			const Matrix4x4 cameraProj = eng::camera::GetProjection(resolution, cameraComponent.m_Projection);
+			const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraComponent.m_Projection, windowSize);
 			const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 			if (shader->u_CameraProj)

@@ -7,6 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraHelpers.h"
+#include "Engine/CameraTypes.h"
 #include "Engine/InputManager.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/StaticMeshAsset.h"
@@ -64,8 +65,8 @@ void eng::RenderStage_Cursor::Render(ecs::EntityWorld& entityWorld)
 		return;
 
 	{
-		const Vector2u& resolution = window->GetResolution();
-		glViewport(0, 0, resolution.x, resolution.y);
+		const Vector2u& windowSize = window->GetSize();
+		glViewport(0, 0, windowSize.x, windowSize.y);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -102,7 +103,7 @@ void eng::RenderStage_Cursor::Render(ecs::EntityWorld& entityWorld)
 			glVertexAttribDivisor(location, GL_FALSE);
 		}
 
-		const Matrix4x4 cameraProj = eng::camera::GetProjection(resolution, camera::UserInterface{});
+		const Matrix4x4 cameraProj = eng::camera::GetProjection(camera::UserInterface{}, windowSize);
 		const Matrix4x4 transform = Matrix4x4::FromTransform(
 			Vector3f(inputManager.m_MousePosition, 0.f) + Vector3f(10.f, 14.f, 0.f),
 			Vector3f(32.f / 100.f, 32.f / 100.f, 1.f));

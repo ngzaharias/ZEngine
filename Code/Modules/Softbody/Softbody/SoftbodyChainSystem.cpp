@@ -13,6 +13,7 @@
 #include "Engine/WindowManager.h"
 #include "Math/CollisionMath.h"
 #include "Math/Math.h"
+#include "Math/Matrix.h"
 #include "Math/Plane.h"
 #include "Softbody/SoftbodyComponents.h"
 
@@ -78,25 +79,21 @@ void softbody::ChainSystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-	const Vector2u& resolution = window->GetResolution();
+	const Vector2u& windowSize = window->GetSize();
 	for (const ecs::Entity& chainEntity : world.Query<ecs::query::Include<const eng::TransformComponent, const softbody::ChainComponent>>())
 	{
 		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 		{
 			const auto& input = world.ReadResource<eng::InputManager>();
-			const auto& projection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-			const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+			const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
-			const Vector3f mousePosition = eng::camera::ScreenToWorld(input.m_MousePosition, projection.m_Projection, transform.ToTransform(), resolution);
-			const Vector3f mouseDirection = ToMouseDirection(mousePosition, projection, transform);
-
-			Plane3f plane;
-			plane.m_Normal = Vector3f::AxisZ;
-			plane.m_Point = Vector3f::Zero;
-
-			Ray3f ray;
-			ray.m_Position = mousePosition;
-			ray.m_Direction = mouseDirection;
+			const Plane3f plane = Plane3f(Vector3f::AxisZ, Vector3f::Zero);
+			const Ray3f ray = eng::camera::ScreenToRay(
+				cameraProjection,
+				cameraTransform,
+				*window,
+				input.m_MousePosition);
 
 			Vector3f intersectPos;
 			if (math::Intersection(ray, plane, intersectPos))
