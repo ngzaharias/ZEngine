@@ -149,18 +149,20 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-	const Vector2u& resolution = window->GetResolution();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
-		const auto& projection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		constexpr float s_Distance = 100000.f;
-		const Vector3f mousePosition = eng::camera::ScreenToWorld(input.m_MousePosition, projection.m_Projection, transform.ToTransform(), resolution);
-		const Vector3f mouseDirection = ToMouseDirection(mousePosition, projection, transform);
+		const Ray3f ray = eng::camera::ScreenToRay(
+			cameraProjection,
+			cameraTransform,
+			*window,
+			input.m_MousePosition);
 
-		const Segment3f segment = Segment3f(mousePosition, mousePosition + mouseDirection * s_Distance);
+		const Segment3f segment = Segment3f(ray.m_Position, ray.m_Position + ray.m_Direction * s_Distance);
 		const Vector3f worldPos = Raycast(world, segment);
 		const Vector3i gridPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
 		const Vector3f alignPos = math::ToWorldPos(gridPos, voxel::s_BlockSize1D);
