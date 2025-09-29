@@ -145,7 +145,6 @@ namespace math
 	/// \brief Convert a world position to a grid position.
 	/// Input in the range of >= 0.f and < 1.f will all map to the same value.
 	inline constexpr Vector3i ToGridPos(const Vector3f& worldPos, const float cellSize = 1.f);
-
 	/// \brief Convert a world position to a grid position.
 	/// Input in the range of >= 0.f and < 1.f will all map to the same value.
 	inline constexpr Vector3i ToGridPos(const Vector3f& worldPos, const Vector3f& cellSize = Vector3f::One);
