@@ -23,6 +23,7 @@
 #include "Hidden/RegisterModule.h"
 #include "Softbody/RegisterModule.h"
 #include "Tabletop/RegisterModule.h"
+#include "Tilemap/RegisterModule.h"
 #include "Voxel/RegisterModule.h"
 
 namespace
@@ -87,6 +88,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 		hidden::RegisterModule(m_EntityWorld);
 		softbody::RegisterModule(m_EntityWorld);
 		tabletop::RegisterModule(m_EntityWorld);
+		tilemap::RegisterModule(m_EntityWorld);
 		voxel::RegisterModule(m_EntityWorld);
 	}
 }
