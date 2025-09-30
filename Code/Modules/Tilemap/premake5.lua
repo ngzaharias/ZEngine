@@ -33,6 +33,5 @@ project "Tilemap"
 		"ECS", 
 		"Engine", 
 		"Imgui", 
-		"Input", 
 		"Math", 
 	}
