@@ -12,7 +12,13 @@ namespace eng
 
 namespace eng::camera
 {
+	struct EditorComponent;
 	struct ProjectionComponent;
+}
+
+namespace eng::settings
+{
+	struct DebugComponent;
 }
 
 namespace tilemap
@@ -31,7 +37,9 @@ namespace tilemap
 			const eng::WindowManager,
 			// Components
 			eng::LinesComponent,
+			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
+			const eng::settings::DebugComponent,
 			const eng::TransformComponent,
 			const tilemap::AgentComponent>;
 
