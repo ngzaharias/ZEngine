@@ -182,9 +182,9 @@ Vector3f eng::camera::ScreenToWorld(
 	const Matrix4x4 inverseProj = GetProjection(projection, windowSize).Inversed();
 
 	// pixel -> screen
-	Vector3f screenPos;
-	screenPos.x = +math::Remap(screenPos.x, 0.f, (float)windowSize.x, -1.f, 1.f);
-	screenPos.y = -math::Remap(screenPos.y, 0.f, (float)windowSize.y, -1.f, 1.f);
+	Vector3f screenPos = Vector3f::Zero;
+	screenPos.x = +math::Remap(pixelPos.x, 0.f, (float)windowSize.x, -1.f, 1.f);
+	screenPos.y = -math::Remap(pixelPos.y, 0.f, (float)windowSize.y, -1.f, 1.f);
 	screenPos.z = depth;
 
 	// screen -> homogeneous
