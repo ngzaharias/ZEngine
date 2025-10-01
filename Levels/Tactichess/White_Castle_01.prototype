@@ -1,0 +1,14 @@
+m_Guid = '51188cf3ec29414b89964ea8675609ee'
+m_Name = 'White_Castle_01'
+
+['eng::SpriteComponent']
+m_Size = { X = 80, Y = 80 }
+m_Sprite = 'a59415bdab6c4772b2b2e9925bccfd95'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -280.0, Y = -280.0, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

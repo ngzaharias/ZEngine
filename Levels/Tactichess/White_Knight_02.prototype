@@ -1,0 +1,14 @@
+m_Guid = '0559a6a03ac74f09bedcb7ac46b105f3'
+m_Name = 'White_Knight_02'
+
+['eng::SpriteComponent']
+m_Size = { X = 80, Y = 80 }
+m_Sprite = 'fa32bb4bd4744e5d94583fc9fc76185d'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 200.0, Y = -280.0, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

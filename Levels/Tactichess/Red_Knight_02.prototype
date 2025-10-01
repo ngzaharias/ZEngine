@@ -1,0 +1,14 @@
+m_Guid = 'ba8993a3b42247f210ac94f5cc1b20f3'
+m_Name = 'Red_Knight_02'
+
+['eng::SpriteComponent']
+m_Size = { X = 80, Y = 80 }
+m_Sprite = 'c66e38c21cd643f7c08969f8b81e5766'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 200.0, Y = 280.0, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

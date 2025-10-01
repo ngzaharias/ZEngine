@@ -1,0 +1,14 @@
+m_Guid = '721576e4e5f94ae0819a042244164b6b'
+m_Name = 'White_Queen'
+
+['eng::SpriteComponent']
+m_Size = { X = 80, Y = 80 }
+m_Sprite = '78e65aeb3c7848d0b09cff876a775c25'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 40.0, Y = -280.0, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true

@@ -1,0 +1,14 @@
+m_Guid = 'c2f2079eaf6a4ad601b6eab16e307743'
+m_Name = 'Red_Bishop_01'
+
+['eng::SpriteComponent']
+m_Size = { X = 80, Y = 80 }
+m_Sprite = '25fa51c4682c44a3b888e4b0f599d52b'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -120.0, Y = 280.0, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true
