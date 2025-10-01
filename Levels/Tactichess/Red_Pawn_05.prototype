@@ -1,0 +1,16 @@
+m_Guid = '65b9244772f34245d29d1ea6e275aa61'
+m_Name = 'Red_Pawn_05'
+
+['eng::SpriteComponent']
+m_Size = { X = 80, Y = 80 }
+m_Sprite = 'a0e51fa93b5444bddd935d34ceb4671c'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = 40.0, Y = 200.0, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true
+
+['tilemap::AgentComponent']

@@ -1,0 +1,16 @@
+m_Guid = '7b998cc3cc894a18bcfdf3e46155edd9'
+m_Name = 'White_Pawn_02'
+
+['eng::SpriteComponent']
+m_Size = { X = 80, Y = 80 }
+m_Sprite = '6944bf5fe9ba45dc39b6417da5c219c1'
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -200.0, Y = -200.0, Z = 0.0 }
+
+['eng::VisibilityComponent']
+m_IsVisible = true
+
+['tilemap::AgentComponent']
