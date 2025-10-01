@@ -24,6 +24,7 @@ namespace eng::settings
 namespace tilemap
 {
 	struct AgentComponent;
+	struct GridComponent;
 }
 
 namespace tilemap
@@ -41,7 +42,8 @@ namespace tilemap
 			const eng::camera::ProjectionComponent,
 			const eng::settings::DebugComponent,
 			const eng::TransformComponent,
-			const tilemap::AgentComponent>;
+			const tilemap::AgentComponent,
+			const tilemap::GridComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
