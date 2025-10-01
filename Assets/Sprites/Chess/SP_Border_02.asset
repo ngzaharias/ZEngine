@@ -1,0 +1,7 @@
+m_Guid = '9909e6453e554c2afc8cf9acbbb7989c'
+m_Name = 'SP_Border_02'
+m_Position = { X = 24.0, Y = 88.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 8.0, Y = 4.0 }
+m_Texture2D = '4f83eae5ee5e476da2ac1c2b07919b4a'
+m_Type = 'Sprite'

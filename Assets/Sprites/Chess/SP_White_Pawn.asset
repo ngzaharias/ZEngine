@@ -1,0 +1,7 @@
+m_Guid = '6944bf5fe9ba45dc39b6417da5c219c1'
+m_Name = 'SP_White_Pawn'
+m_Position = { X = 40.0, Y = 72.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 8.0, Y = 8.0 }
+m_Texture2D = '4f83eae5ee5e476da2ac1c2b07919b4a'
+m_Type = 'Sprite'

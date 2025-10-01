@@ -1,0 +1,7 @@
+m_Guid = '8717b36ba68f42a1afd15ab3161fa907'
+m_Name = 'SP_Board'
+m_Position = { X = 0.0, Y = 0.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 64.0, Y = 64.0 }
+m_Texture2D = '4f83eae5ee5e476da2ac1c2b07919b4a'
+m_Type = 'Sprite'

@@ -1,0 +1,7 @@
+m_Guid = 'a0e51fa93b5444bddd935d34ceb4671c'
+m_Name = 'SP_Red_Pawn'
+m_Position = { X = 40.0, Y = 88.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 8.0, Y = 8.0 }
+m_Texture2D = '4f83eae5ee5e476da2ac1c2b07919b4a'
+m_Type = 'Sprite'

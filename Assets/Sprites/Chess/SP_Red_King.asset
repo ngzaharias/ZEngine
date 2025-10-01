@@ -1,0 +1,7 @@
+m_Guid = '2f0d2c1746e542b240ab45b7295321cd'
+m_Name = 'SP_Red_King'
+m_Position = { X = 48.0, Y = 80.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 8.0, Y = 8.0 }
+m_Texture2D = '4f83eae5ee5e476da2ac1c2b07919b4a'
+m_Type = 'Sprite'
