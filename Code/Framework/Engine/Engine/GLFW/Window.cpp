@@ -222,7 +222,7 @@ glfw::Window::Window(const eng::WindowConfig& config)
 
 	glfwMakeContextCurrent(m_Window);
 	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	glfwSetWindowTitle(m_Window, "With My Little Eye");
+	glfwSetWindowTitle(m_Window, "Tactichess");
 
 	glfwSetFramebufferSizeCallback(m_Window, Callback_FramebufferResized);
 	glfwSetScrollCallback(m_Window, Callback_ScrollChanged);

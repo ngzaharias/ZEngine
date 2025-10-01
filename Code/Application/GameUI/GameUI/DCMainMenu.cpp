@@ -71,7 +71,7 @@ void gui::DCMainMenu::OnNewGameCommand(Noesis::BaseComponent* param)
 void gui::DCMainMenu::OnReportCommand(Noesis::BaseComponent* param)
 {
 	const wchar_t* recipient = L"support@papa-koala.com";
-	const wchar_t* subject = L"With My Little Eye";
+	const wchar_t* subject = L"Tactichess";
 	const wchar_t* body =
 		L"Issue:%0D%0A"
 		L"%0D%0A"
