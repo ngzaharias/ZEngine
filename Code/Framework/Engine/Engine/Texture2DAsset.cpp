@@ -22,7 +22,11 @@ namespace
 		stbi_set_flip_vertically_on_load(true);
 		unsigned char* textureData = stbi_load(filepath.ToChar(), &asset.m_Width, &asset.m_Height, &asset.m_Channels, STBI_rgb_alpha);
 		if (!textureData)
+		{
+			const char* failureReason = stbi_failure_reason();
+			Z_LOG(ELog::Assert, "Asset failed to Texture2D! Path [{}] \nReason: {}", filepath.ToChar(), failureReason);
 			return false;
+		}
 
 		glGenTextures(1, &asset.m_TextureId);
 		glBindTexture(GL_TEXTURE_2D, asset.m_TextureId);
