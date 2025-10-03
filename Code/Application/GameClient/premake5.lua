@@ -36,6 +36,7 @@ project "GameClient"
 		"%{wks.location}/../Code/Modules/Hidden/",
 		"%{wks.location}/../Code/Modules/Softbody/",
 		"%{wks.location}/../Code/Modules/Tabletop/",
+		"%{wks.location}/../Code/Modules/Tactics/",
 		"%{wks.location}/../Code/Modules/Tilemap/",
 		"%{wks.location}/../Code/Modules/Voxel/",
 	}
