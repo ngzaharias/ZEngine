@@ -34,17 +34,6 @@ namespace
 		float m_DistanceSqr = FLT_MAX;
 	};
 
-	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
-	{
-		if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
-		{
-			const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
-			return Vector3f::AxisZ * cameraRotate;
-		}
-
-		return (mousePosition - transform.m_Translate).Normalized();
-	}
-
 	Optional<AABB3f> GetEntityBounds(editor::EntitySelectSystem::World& world, const ecs::Entity& entity)
 	{
 		if (!world.HasComponent<eng::TransformComponent>(entity))
