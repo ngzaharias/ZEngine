@@ -23,6 +23,8 @@ namespace ecs
 		Entity(const uint64& value) : m_Value(value) { }
 		Entity(const Entity& entity) : m_Value(entity.m_Value) { }
 
+		operator bool() const { return !IsUnassigned(); }
+
 		bool operator==(const Entity& rhs) const { return m_Value == rhs.m_Value; }
 		bool operator!=(const Entity& rhs) const { return !this->operator==(rhs); }
 		bool operator<(const Entity& rhs) const { return m_Value < rhs.m_Value; }
