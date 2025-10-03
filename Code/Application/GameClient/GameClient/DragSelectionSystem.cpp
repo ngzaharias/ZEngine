@@ -57,7 +57,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
 
 		{
@@ -66,7 +66,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 			// mouse
 			constexpr float distance = 100000.f;
 			const Ray3f ray = eng::camera::ScreenToRay(
-				cameraComponent,
+				cameraProjection,
 				cameraTransform,
 				*window,
 				input.m_MousePosition);
