@@ -91,9 +91,13 @@ namespace math
 
 	/// \brief Multiplies the two vectors component-wise.
 	inline constexpr Vector2f Multiply(const Vector2f& a, const Vector2f& b) noexcept;
+	inline constexpr Vector2f Multiply(const Vector2f& a, const Vector2i& b) noexcept;
+	inline constexpr Vector2f Multiply(const Vector2i& a, const Vector2f& b) noexcept;
 	inline constexpr Vector2i Multiply(const Vector2i& a, const Vector2i& b) noexcept;
 	/// \brief Multiplies the two vectors component-wise.
 	inline constexpr Vector3f Multiply(const Vector3f& a, const Vector3f& b) noexcept;
+	inline constexpr Vector3f Multiply(const Vector3f& a, const Vector3i& b) noexcept;
+	inline constexpr Vector3f Multiply(const Vector3i& a, const Vector3f& b) noexcept;
 	inline constexpr Vector3i Multiply(const Vector3i& a, const Vector3i& b) noexcept;
 
 	/// \brief Returns the vector perpendicular (clockwise) to the original vector.

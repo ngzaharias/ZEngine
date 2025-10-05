@@ -215,12 +215,32 @@ inline constexpr Vector2f math::Multiply(const Vector2f& a, const Vector2f& b) n
 	return Vector2f(a.x * b.x, a.y * b.y);
 }
 
+inline constexpr Vector2f math::Multiply(const Vector2f& a, const Vector2i& b) noexcept
+{
+	return Vector2f(a.x * b.x, a.y * b.y);
+}
+
+inline constexpr Vector2f math::Multiply(const Vector2i& a, const Vector2f& b) noexcept
+{
+	return Vector2f(a.x * b.x, a.y * b.y);
+}
+
 inline constexpr Vector2i math::Multiply(const Vector2i& a, const Vector2i& b) noexcept
 {
 	return Vector2i(a.x * b.x, a.y * b.y);
 }
 
 inline constexpr Vector3f math::Multiply(const Vector3f& a, const Vector3f& b) noexcept
+{
+	return Vector3f(a.x * b.x, a.y * b.y, a.z * b.z);
+}
+
+inline constexpr Vector3f math::Multiply(const Vector3f& a, const Vector3i& b) noexcept
+{
+	return Vector3f(a.x * b.x, a.y * b.y, a.z * b.z);
+}
+
+inline constexpr Vector3f math::Multiply(const Vector3i& a, const Vector3f& b) noexcept
 {
 	return Vector3f(a.x * b.x, a.y * b.y, a.z * b.z);
 }

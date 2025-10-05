@@ -257,9 +257,12 @@ public:
 
 	[[nodiscard]] constexpr Vector3i operator+(const Vector3i& rhs) const noexcept { return Vector3i(x + rhs.x, y + rhs.y, z + rhs.z); }
 	[[nodiscard]] constexpr Vector3i operator-(const Vector3i& rhs) const noexcept { return Vector3i(x - rhs.x, y - rhs.y, z - rhs.z); }
+	[[nodiscard]] constexpr Vector3i operator*(const int32 rhs) const noexcept { return Vector3i(x * rhs, y * rhs, z * rhs); }
 
 	constexpr Vector3i& operator+=(const Vector3i& rhs) noexcept { x += rhs.x; y += rhs.y; z += rhs.z; return *this; }
 	constexpr Vector3i& operator-=(const Vector3i& rhs) noexcept { x -= rhs.x; y -= rhs.y; z -= rhs.z; return *this; }
+	constexpr Vector3i& operator*=(const int32 rhs) noexcept { x *= rhs; y *= rhs; z *= rhs; return *this; }
+
 
 	[[nodiscard]] constexpr Vector3i operator+() const noexcept { return *this; }
 	[[nodiscard]] constexpr Vector3i operator-() const noexcept { return Vector3i(-x, -y, -z); }
