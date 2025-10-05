@@ -1,6 +1,14 @@
 m_Guid = '65b9244772f34245d29d1ea6e275aa61'
 m_Name = 'Red_Pawn_05'
 
+['eng::PhysicsComponent'.m_Rigidbody.RigidDynamic]
+[['eng::PhysicsComponent'.m_Shapes]]
+	['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+	m_Channel = 0
+	m_Extents = { X = 40.0, Y = 40.0, Z = 40.0 }
+	m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+	m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
+
 ['eng::SpriteComponent']
 m_Size = { X = 80, Y = 80 }
 m_Sprite = 'a0e51fa93b5444bddd935d34ceb4671c'
@@ -12,5 +20,8 @@ m_Translate = { X = 40.0, Y = 200.0, Z = 0.0 }
 
 ['eng::VisibilityComponent']
 m_IsVisible = true
+
+['tactics::AbilityComponent']
+m_Abilities = [ 'Pawn_Basic_S', 'Pawn_Opener_S', 'Pawn_Attack_SE', 'Pawn_Attack_SW' ]
 
 ['tilemap::AgentComponent']

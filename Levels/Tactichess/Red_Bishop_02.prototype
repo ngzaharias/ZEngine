@@ -1,6 +1,14 @@
 m_Guid = 'a812738828764c2d438f7207a42360ae'
 m_Name = 'Red_Bishop_02'
 
+['eng::PhysicsComponent'.m_Rigidbody.RigidDynamic]
+[['eng::PhysicsComponent'.m_Shapes]]
+	['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+	m_Channel = 0
+	m_Extents = { X = 40.0, Y = 40.0, Z = 40.0 }
+	m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+	m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
+
 ['eng::SpriteComponent']
 m_Size = { X = 80, Y = 80 }
 m_Sprite = '25fa51c4682c44a3b888e4b0f599d52b'
@@ -12,3 +20,8 @@ m_Translate = { X = 120.0, Y = 280.0, Z = 0.0 }
 
 ['eng::VisibilityComponent']
 m_IsVisible = true
+
+['tactics::AbilityComponent']
+m_Abilities = [ 'Bishop_NE', 'Bishop_NW', 'Bishop_SE', 'Bishop_SW' ]
+
+['tilemap::AgentComponent']

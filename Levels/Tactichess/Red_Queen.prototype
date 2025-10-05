@@ -1,6 +1,14 @@
 m_Guid = '28a08c03168f4f51348e16ffe6c414df'
 m_Name = 'Red_Queen'
 
+['eng::PhysicsComponent'.m_Rigidbody.RigidDynamic]
+[['eng::PhysicsComponent'.m_Shapes]]
+	['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+	m_Channel = 0
+	m_Extents = { X = 40.0, Y = 40.0, Z = 40.0 }
+	m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = 0.0 }
+	m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
+
 ['eng::SpriteComponent']
 m_Size = { X = 80, Y = 80 }
 m_Sprite = 'f082434075cc40731b88352d82519509'
