@@ -8,9 +8,9 @@
 #include "Tactics/TacticsAbilityComponent.h"
 #include "Tactics/TacticsAbilityTable.h"
 #include "Tactics/TacticsInputSystem.h"
-#include "Tactics/TacticsSelectSystem.h"
 #include "Tactics/TacticsPreviewSystem.h"
 #include "Tactics/TacticsSelectedComponent.h"
+#include "Tactics/TacticsSelectSystem.h"
 
 void tactics::RegisterModule(ecs::EntityWorld& entityWorld)
 {
@@ -35,8 +35,6 @@ void tactics::RegisterModule(ecs::EntityWorld& entityWorld)
 
 	// tables
 	{
-		auto& tableHeadmaster = entityWorld.WriteResource<eng::TableHeadmaster>();
-		tableHeadmaster.Register<tactics::SkillTable>("Skills");
 		auto& headmaster = entityWorld.WriteResource<eng::TableHeadmaster>();
 		headmaster.Register<tactics::AbilityTable>("Abilities");
 
