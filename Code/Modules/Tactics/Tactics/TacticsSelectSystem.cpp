@@ -31,6 +31,9 @@ namespace
 void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
 {
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	if (debugSettings.m_IsEditorModeEnabled)
+		return;
+
 	const auto& inputManager = world.ReadResource<eng::InputManager>();
 	const auto& physicsScene = world.ReadSingleton<eng::PhysicsSceneComponent>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
@@ -41,14 +44,11 @@ void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
 	using CameraQuery = ecs::query
 		::Include<
 		const eng::camera::ProjectionComponent,
-		const eng::TransformComponent>;
+		const eng::TransformComponent>
+		::Exclude<
+		const eng::camera::EditorComponent>;
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
 	{
-		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
-		if (isEditorActive != isEditorCamera)
-			continue;
-
 		if (!inputManager.IsPressed(strSelect))
 			continue;
 
@@ -93,5 +93,4 @@ void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
 				world.RemoveComponent<tactics::SelectedComponent>(selectedEntity);
 		}
 	}
-
 }
