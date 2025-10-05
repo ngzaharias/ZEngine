@@ -1,17 +1,17 @@
 [Bishop_NE]
-[Bishop_N.Rush]
+[Bishop_NE.Rush]
 m_Direction = { X = 1, Y = 1 }
 
 [Bishop_NW]
-[Bishop_E.Rush]
+[Bishop_NW.Rush]
 m_Direction = { X = -1, Y = 1 }
 
 [Bishop_SE]
-[Bishop_S.Rush]
+[Bishop_SE.Rush]
 m_Direction = { X = 1, Y = -1 }
 
 [Bishop_SW]
-[Bishop_W.Rush]
+[Bishop_SW.Rush]
 m_Direction = { X = -1, Y = -1 }
 
 [Castle_N]
