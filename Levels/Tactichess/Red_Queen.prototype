@@ -20,3 +20,8 @@ m_Translate = { X = 40.0, Y = 280.0, Z = 0.0 }
 
 ['eng::VisibilityComponent']
 m_IsVisible = true
+
+['tactics::AbilityComponent']
+m_Abilities = [ 'Queen_NW', 'Queen_N', 'Queen_NE', 'Queen_E', 'Queen_SE', 'Queen_S', 'Queen_SW', 'Queen_W' ]
+
+['tilemap::AgentComponent']

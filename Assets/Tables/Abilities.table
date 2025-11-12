@@ -109,3 +109,35 @@ m_Nodes = [{ X = 1, Y = -1 }]
 [Pawn_Attack_SW]
 [Pawn_Attack_SW.Path]
 m_Nodes = [{ X = -1, Y = -1 }]
+
+[Queen_NW]
+[Queen_NW.Rush]
+m_Direction = { X = -1, Y = 1 }
+
+[Queen_N]
+[Queen_N.Rush]
+m_Direction = { Y = 1 }
+
+[Queen_NE]
+[Queen_NE.Rush]
+m_Direction = { X = 1, Y = 1 }
+
+[Queen_E]
+[Queen_E.Rush]
+m_Direction = { X = 1 }
+
+[Queen_SE]
+[Queen_SE.Rush]
+m_Direction = { X = 1, Y = -1 }
+
+[Queen_S]
+[Queen_S.Rush]
+m_Direction = { Y = -1 }
+
+[Queen_SW]
+[Queen_SW.Rush]
+m_Direction = { X = -1, Y = -1 }
+
+[Queen_W]
+[Queen_W.Rush]
+m_Direction = { X = -1 }
