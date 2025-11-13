@@ -75,6 +75,20 @@ const eng::AssetFile* eng::AssetManager::GetAssetFile(const str::Guid& guid) con
 		: nullptr;
 }
 
+void eng::AssetManager::ReloadAsset(const str::Guid& guid)
+{
+	const auto ref = m_RefMap.Find(guid);
+	const auto file = m_FileMap.Find(guid);
+	if (ref != m_RefMap.end() && file != m_FileMap.end())
+	{
+		eng::Asset* asset = ref->second.m_Asset;
+
+		auto& entry = m_Registry[asset->m_TypeId];
+		auto& loader = *entry.m_Loader;
+		entry.m_Load(asset, loader, file->second.m_Path);
+	}
+}
+
 void eng::AssetManager::ReloadAssets()
 {
 	// #temp: easy way of reloading assets is to just clear the cache

@@ -15,5 +15,6 @@ namespace eng
 		str::Guid m_Guid = { };
 		str::Name m_Name = { };
 		str::Name m_Type = { };
+		TypeId m_TypeId = 0;
 	};
 }

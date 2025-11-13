@@ -44,8 +44,8 @@ namespace eng
 
 	struct AssetRef
 	{
+		eng::Asset* m_Asset = nullptr;
 		int32 m_Count = 0;
-		const eng::Asset* m_Asset = nullptr;
 	};
 
 	class AssetManager final
@@ -90,11 +90,12 @@ namespace eng
 	public:
 		const eng::AssetFile* GetAssetFile(const str::Guid& guid) const;
 
+		void ReloadAsset(const str::Guid& guid);
 		void ReloadAssets();
 
 	private:
 		template<class TAsset>
-		const TAsset* LoadAsset(const str::Guid& guid);
+		TAsset* LoadAsset(const str::Guid& guid);
 
 	public:
 		template<typename TAsset, typename TLoader>

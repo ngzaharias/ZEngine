@@ -128,7 +128,7 @@ const TAsset* eng::AssetManager::FetchAsset(const str::Guid& guid) const
 }
 
 template<class TAsset>
-const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
+TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 {
 	PROFILE_FUNCTION();
 
@@ -140,7 +140,7 @@ const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 
 	const auto findRef = m_RefMap.Find(guid);
 	if (findRef != m_RefMap.end() && findRef->second.m_Asset)
-		return static_cast<const TAsset*>(findRef->second.m_Asset);
+		return static_cast<TAsset*>(findRef->second.m_Asset);
 
 	const auto findFile = m_FileMap.Find(guid);
 	if (findFile == m_FileMap.end())
@@ -159,6 +159,7 @@ const TAsset* eng::AssetManager::LoadAsset(const str::Guid& guid)
 
 	asset->m_Guid = guid;
 	asset->m_Type = entry.m_Type;
+	asset->m_TypeId = typeId;
 	return asset;
 }
 

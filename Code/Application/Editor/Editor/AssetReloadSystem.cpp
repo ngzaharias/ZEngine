@@ -16,7 +16,9 @@
 
 namespace
 {
-	std::string ToString(const std::wstring& input)
+	const str::Name strGuid = NAME("m_Guid");
+
+	str::String ToString(const std::wstring& input)
 	{
 		// +1 for null terminator
 		std::string output;
@@ -27,13 +29,13 @@ namespace
 		return output;
 	}
 
-	std::string ToFilename(FILE_NOTIFY_INFORMATION* tmp)
+	str::Path ToPath(const str::Path& root, FILE_NOTIFY_INFORMATION* tmp)
 	{
 		std::wstring w = L"";
 		for (DWORD i = 0; i < tmp->FileNameLength / 2; i++)
 			w += tmp->FileName[i];
 
-		return ToString(w);
+		return str::Path(root, ToString(w));
 	}
 }
 
@@ -51,25 +53,29 @@ void editor::AssetReloadSystem::Update(World& world, const GameTime& gameTime)
 	{
 		m_Mutex.lock();
 
+		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		for (const editor::Command& command : m_Commands)
 		{
+			// we need to support rename since visual studio does a 'safe save'
+			// 1. saves changes in a temporary file
+			// 2. rename original file to something else
+			// 3. rename temporary file to original filename
+			// 4. delete original file
+			str::Path filepath;
 			core::VariantMatch(command,
-				[](const editor::Create& data)
-				{
-					std::cout << "Create: '" << data.m_Path.ToChar() << "'\n";
-				},
-				[](const editor::Delete& data)
-				{
-					std::cout << "Delete: '" << data.m_Path.ToChar() << "'\n";
-				},
-				[](const editor::Modify& data)
-				{
-					std::cout << "Modify: '" << data.m_Path.ToChar() << "'\n";
-				},
-				[](const editor::Rename& data)
-				{
-					std::cout << "Rename: '" << data.m_Old.ToChar() << "' > '" << data.m_New.ToChar() << "'\n";
-				});
+				[&](const editor::Modify& data) { filepath = data.m_Path; },
+				[&](const editor::Rename& data) { filepath = data.m_New; },
+				[&](const auto&) {});
+
+			if (!filepath.IsEmpty() && !filepath.IsDirectory())
+			{
+				str::Guid guid;
+				eng::Visitor visitor;
+				visitor.LoadFromFile(filepath);
+				visitor.Read(strGuid, guid, {});
+				if (guid.IsValid())
+					assetManager.ReloadAsset(guid);
+			}
 		}
 		m_Commands.RemoveAll();
 
@@ -91,8 +97,7 @@ void editor::AssetReloadSystem::Execute()
 		FILE_FLAG_BACKUP_SEMANTICS |
 		FILE_FLAG_OVERLAPPED;
 
-	const str::Path assetPath = "C:\\Users\\Koala\\Desktop\\Folder\\";
-	//const str::Path assetPath = str::Path(str::EPath::Assets);
+	const str::Path assetPath = str::Path(str::EPath::Assets);
 
 	const HANDLE hDirectory = CreateFileA(assetPath.ToChar(), dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
 	if (hDirectory == INVALID_HANDLE_VALUE)
@@ -103,11 +108,12 @@ void editor::AssetReloadSystem::Execute()
 		FILE_NOTIFY_CHANGE_FILE_NAME |
 		FILE_NOTIFY_CHANGE_LAST_WRITE;
 
-	FILE_NOTIFY_INFORMATION buffer[1024];
+	constexpr DWORD dwBufferLen = 1024;
+	FILE_NOTIFY_INFORMATION* buffer = new FILE_NOTIFY_INFORMATION[dwBufferLen];
 	while (true)
 	{
 		DWORD lpBytesReturned;
-		if (ReadDirectoryChangesW(hDirectory, &buffer, sizeof(buffer), bWatchSubtree, dwNotifyFilter, &lpBytesReturned, NULL, NULL))
+		if (ReadDirectoryChangesW(hDirectory, buffer, dwBufferLen, bWatchSubtree, dwNotifyFilter, &lpBytesReturned, NULL, NULL))
 		{
 			m_Mutex.lock();
 
@@ -118,21 +124,21 @@ void editor::AssetReloadSystem::Execute()
 				pbuffer = (FILE_NOTIFY_INFORMATION*)(((char*)pbuffer) + OffsetToNext);
 				switch (pbuffer->Action)
 				{
-				case FILE_ACTION_ADDED:
-					m_Commands.Emplace(editor::Create{ .m_Path = ToFilename(pbuffer) });
-					break;
-				case FILE_ACTION_REMOVED:
-					m_Commands.Emplace(editor::Delete{ .m_Path = ToFilename(pbuffer) });
-					break;
+				//case FILE_ACTION_ADDED:
+				//	m_Commands.Emplace(editor::Create{ .m_Path = ToPath(assetPath, pbuffer) });
+				//	break;
+				//case FILE_ACTION_REMOVED:
+				//	m_Commands.Emplace(editor::Delete{ .m_Path = ToPath(assetPath, pbuffer) });
+				//	break;
 				case FILE_ACTION_MODIFIED:
-					m_Commands.Emplace(editor::Modify{ .m_Path = ToFilename(pbuffer) });
+					m_Commands.Emplace(editor::Modify{ .m_Path = ToPath(assetPath, pbuffer) });
 					break;
 				case FILE_ACTION_RENAMED_OLD_NAME:
-					m_Commands.Emplace(editor::Rename{ .m_Old = ToFilename(pbuffer) });
+					m_Commands.Emplace(editor::Rename{ .m_Old = ToPath(assetPath, pbuffer) });
 					break;
 				case FILE_ACTION_RENAMED_NEW_NAME:
 					auto& command = std::get<editor::Rename>(m_Commands.GetLast());
-					command.m_New = ToFilename(pbuffer);
+					command.m_New = ToPath(assetPath, pbuffer);
 					break;
 				}
 				OffsetToNext = pbuffer->NextEntryOffset;
@@ -141,4 +147,5 @@ void editor::AssetReloadSystem::Execute()
 			m_Mutex.unlock();
 		}
 	}
+	delete[] buffer;
 }
