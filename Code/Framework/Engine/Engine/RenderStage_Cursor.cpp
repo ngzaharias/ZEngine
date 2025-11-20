@@ -33,17 +33,17 @@ namespace
 void eng::RenderStage_Cursor::Initialise(ecs::EntityWorld& entityWorld)
 {
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::ShaderAsset>(strShader);
-	assetManager.RequestAsset<eng::StaticMeshAsset>(strMesh);
-	assetManager.RequestAsset<eng::Texture2DAsset>(strTexture);
+	assetManager.RequestAsset(strShader);
+	assetManager.RequestAsset(strMesh);
+	assetManager.RequestAsset(strTexture);
 }
 
 void eng::RenderStage_Cursor::Shutdown(ecs::EntityWorld& entityWorld)
 {
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strShader);
-	assetManager.ReleaseAsset<eng::StaticMeshAsset>(strMesh);
-	assetManager.ReleaseAsset<eng::Texture2DAsset>(strTexture);
+	assetManager.ReleaseAsset(strShader);
+	assetManager.ReleaseAsset(strMesh);
+	assetManager.ReleaseAsset(strTexture);
 }
 
 void eng::RenderStage_Cursor::Render(ecs::EntityWorld& entityWorld)

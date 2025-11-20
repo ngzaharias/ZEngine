@@ -8,7 +8,6 @@ namespace eng
 {
 	class AssetManager;
 	class WindowManager;
-	struct TextAssetComponent;
 	struct TextComponent;
 	struct TransformComponent;
 }
@@ -42,7 +41,6 @@ namespace eng
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::settings::DebugComponent,
-			const eng::TextAssetComponent,
 			const eng::TextComponent,
 			const eng::TransformComponent>;
 

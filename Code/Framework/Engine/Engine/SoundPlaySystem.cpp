@@ -63,7 +63,7 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 			continue;
 
 		auto& assetManager = world.WriteResource<eng::AssetManager>();
-		assetManager.RequestAsset<eng::sound::SingleAsset>(request);
+		assetManager.RequestAsset(request);
 		if (const auto* soundAsset = assetManager.FetchAsset<eng::sound::SingleAsset>(request))
 		{
 			const float volume = audio::ToVolume(audioSettings.m_EffectVolume * audioSettings.m_MasterVolume);
@@ -96,7 +96,7 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 		delete object.m_Sound;
 
 		auto& assetManager = world.WriteResource<eng::AssetManager>();
-		assetManager.ReleaseAsset<eng::sound::SingleAsset>(object.m_Asset);
+		assetManager.ReleaseAsset(object.m_Asset);
 	}
 }
 

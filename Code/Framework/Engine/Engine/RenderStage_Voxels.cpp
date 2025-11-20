@@ -29,15 +29,15 @@ namespace
 void eng::RenderStage_Voxels::Initialise(ecs::EntityWorld& entityWorld)
 {
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::ShaderAsset>(strVoxelShader);
-	assetManager.RequestAsset<eng::Texture2DAsset>(strVoxelTexture);
+	assetManager.RequestAsset(strVoxelShader);
+	assetManager.RequestAsset(strVoxelTexture);
 }
 
 void eng::RenderStage_Voxels::Shutdown(ecs::EntityWorld& entityWorld)
 {
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strVoxelShader);
-	assetManager.ReleaseAsset<eng::Texture2DAsset>(strVoxelTexture);
+	assetManager.ReleaseAsset(strVoxelShader);
+	assetManager.ReleaseAsset(strVoxelTexture);
 }
 
 void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)

@@ -5,6 +5,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "Engine/ApplicationComponents.h"
+#include "Engine/AssetComponent.h"
+#include "Engine/AssetManager.h"
 #include "Engine/AudioSettingsComponent.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraSettingsComponent.h"
@@ -41,7 +43,6 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterComponent<eng::application::CloseRequestComponent>();
 	entityWorld.RegisterComponent<eng::DynamicMeshComponent>();
-	entityWorld.RegisterComponent<eng::FlipbookAssetComponent>();
 	entityWorld.RegisterComponent<eng::LightAmbientComponent>();
 	entityWorld.RegisterComponent<eng::LightDirectionalComponent>();
 	entityWorld.RegisterComponent<eng::LightPointComponent>();
@@ -56,10 +57,7 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::sound::SequenceComponent>();
 	entityWorld.RegisterComponent<eng::sound::SequenceRequestComponent>();
 	entityWorld.RegisterComponent<eng::sound::SingleRequestComponent>();
-	entityWorld.RegisterComponent<eng::SpriteAssetComponent>();
-	entityWorld.RegisterComponent<eng::StaticMeshAssetComponent>();
 	entityWorld.RegisterComponent<eng::TablesReloadedEvent>();
-	entityWorld.RegisterComponent<eng::TextAssetComponent>();
 	entityWorld.RegisterComponent<eng::VisibilityComponent>();
 
 	entityWorld.RegisterSingleton<eng::FrameBufferComponent>();
@@ -84,6 +82,8 @@ void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::ComponentSerializer& serializer)
 {
 	// components
+	entityWorld.RegisterComponent<eng::AssetComponent>();
+	entityWorld.RegisterComponent<eng::AssetLoadedEvent>();
 	entityWorld.RegisterComponent<eng::camera::Bound2DComponent>();
 	entityWorld.RegisterComponent<eng::camera::EditorComponent>();
 	entityWorld.RegisterComponent<eng::camera::Move2DComponent>();

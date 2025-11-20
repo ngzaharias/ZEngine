@@ -23,7 +23,7 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 
 		// #temp: request and fetch in the same frame
 		auto& assetManager = world.WriteResource<eng::AssetManager>();
-		assetManager.RequestAsset<eng::sound::SequenceAsset>(requestComponent.m_Asset);
+		assetManager.RequestAsset(requestComponent.m_Asset);
 		if (const auto* sequenceAsset = assetManager.FetchAsset<eng::sound::SequenceAsset>(requestComponent.m_Asset))
 		{
 			const int32 count = sequenceAsset->m_Handles.GetCount();
@@ -46,7 +46,7 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 			str::Guid& singleHandle = bufferComponent.m_Requests.Emplace();
 			singleHandle = sequenceAsset->m_Handles[sequenceComponent.m_Index];
 		}
-		assetManager.ReleaseAsset<eng::sound::SequenceAsset>(requestComponent.m_Asset);
+		assetManager.ReleaseAsset(requestComponent.m_Asset);
 	}
 }
 

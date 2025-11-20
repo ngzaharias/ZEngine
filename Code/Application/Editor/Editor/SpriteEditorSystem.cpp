@@ -453,24 +453,24 @@ void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 		{
 			auto& assetManager = world.WriteResource<eng::AssetManager>();
 			if (assetManager.HasAsset(window.m_ShaderLoaded))
-				assetManager.ReleaseAsset<eng::ShaderAsset>(window.m_ShaderLoaded);
+				assetManager.ReleaseAsset(window.m_ShaderLoaded);
 
 			window.m_ShaderLoaded = window.m_Asset.m_Shader;
 
 			if (assetManager.HasAsset(window.m_ShaderLoaded))
-				assetManager.RequestAsset<eng::ShaderAsset>(window.m_ShaderLoaded);
+				assetManager.RequestAsset(window.m_ShaderLoaded);
 		}
 
 		if (window.m_Asset.m_Texture2D != window.m_TextureLoaded)
 		{
 			auto& assetManager = world.WriteResource<eng::AssetManager>();
 			if (assetManager.HasAsset(window.m_TextureLoaded))
-				assetManager.ReleaseAsset<eng::Texture2DAsset>(window.m_TextureLoaded);
+				assetManager.ReleaseAsset(window.m_TextureLoaded);
 
 			window.m_TextureLoaded = window.m_Asset.m_Texture2D;
 
 			if (assetManager.HasAsset(window.m_TextureLoaded))
-				assetManager.RequestAsset<eng::Texture2DAsset>(window.m_TextureLoaded);
+				assetManager.RequestAsset(window.m_TextureLoaded);
 		}
 	}
 }

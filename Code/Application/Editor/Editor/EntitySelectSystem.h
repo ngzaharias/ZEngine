@@ -10,10 +10,10 @@ namespace editor
 
 namespace eng
 {
+	class AssetManager;
 	class InputManager;
 	class WindowManager;
 	struct LinesComponent;
-	struct SpriteAssetComponent;
 	struct SpriteComponent;
 	struct TransformComponent;
 	struct VisibilityComponent;
@@ -38,13 +38,13 @@ namespace editor
 		using World = ecs::WorldView<
 			// Resources
 			eng::InputManager,
+			const eng::AssetManager,
 			const eng::WindowManager,
 			// Components
 			editor::EntitySelectComponent,
 			eng::LinesComponent,
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::SpriteAssetComponent,
 			const eng::SpriteComponent,
 			const eng::TransformComponent,
 			const eng::VisibilityComponent,

@@ -5,6 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Editor/EntitySelectComponent.h"
+#include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
@@ -47,11 +48,11 @@ namespace
 		}
 
 		const auto& entityTransform = world.ReadComponent<eng::TransformComponent>(entity);
-		if (world.HasComponent<eng::SpriteComponent>(entity) && world.HasComponent<eng::SpriteAssetComponent>(entity))
+		if (world.HasComponent<eng::SpriteComponent>(entity))
 		{
+			const auto& assetManager = world.ReadResource<eng::AssetManager>();
 			const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(entity);
-			const auto& assetComponent = world.ReadComponent<eng::SpriteAssetComponent>(entity);
-			const eng::SpriteAsset* spriteAsset = assetComponent.m_Sprite;
+			const auto* spriteAsset = assetManager.FetchAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
 			if (!spriteAsset)
 				return {};
 

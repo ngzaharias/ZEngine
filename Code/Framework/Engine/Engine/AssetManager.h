@@ -8,13 +8,20 @@
 #include "Core/Set.h"
 #include "Core/StringHelpers.h"
 #include "Core/TypeTraits.h"
+#include "ECS/Component.h"
 #include "Engine/Asset.h"
 #include "Engine/TypeInfo.h"
 #include "Engine/Visitor.h"
 
+namespace ecs
+{
+	class EntityWorld;
+}
+
 namespace eng
 {
 	class AssetLoader;
+	class AssetManager;
 	class Visitor;
 }
 
@@ -28,24 +35,39 @@ namespace eng
 		str::Name m_Type = { };
 	};
 
+	struct AssetMethods
+	{
+		using Initialise = void(eng::Asset&, const eng::AssetLoader&);
+		Initialise* m_Initialise = nullptr;
+		using Shutdown = void(eng::Asset&, const eng::AssetLoader&);
+		Shutdown* m_Shutdown = nullptr;
+
+		using Save = bool(eng::Asset&, const eng::AssetLoader&, eng::Visitor&);
+		Save* m_Save = nullptr;
+		using Load = bool(eng::Asset&, const eng::AssetLoader&, eng::Visitor&);
+		Load* m_Load = nullptr;
+		using Import = bool(eng::Asset&, const eng::AssetLoader&, eng::Visitor&);
+		Import* m_Import = nullptr;
+	};
+
 	struct AssetEntry
 	{
-		using Import = bool(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
-		using Load = bool(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
-		using Save = bool(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
-
-		str::Name m_Type = { };
 		eng::AssetLoader* m_Loader = nullptr;
+		eng::AssetMethods m_Methods = {};
 
-		Save* m_Save = nullptr;
+		using Load = void(eng::AssetManager&, const str::Path&);
 		Load* m_Load = nullptr;
-		Import* m_Import = nullptr;
 	};
 
 	struct AssetRef
 	{
 		eng::Asset* m_Asset = nullptr;
 		int32 m_Count = 0;
+	};
+
+	struct AssetLoadedEvent : public ecs::EventComponent<AssetLoadedEvent> 
+	{ 
+		eng::Asset* m_Asset = nullptr;
 	};
 
 	class AssetManager final
@@ -55,12 +77,14 @@ namespace eng
 
 		using FileMap = Map<str::Guid, eng::AssetFile>;
 		using RefMap = Map<str::Guid, AssetRef>;
-		using Registry = Map<TypeId, eng::AssetEntry>;
+		using Registry = Map<str::Name, eng::AssetEntry>;
 		using TypeMap = Map<str::Name, Set<str::Guid>>;
 
 	public:
 		void Initialise();
 		void Shutdown();
+		
+		void Update(ecs::EntityWorld& client, ecs::EntityWorld& server);
 
 		bool HasAsset(const str::Guid& guid);
 
@@ -68,48 +92,57 @@ namespace eng
 		void RegisterAsset(const str::Name& type, TArgs&&... args);
 
 		template<class TAsset>
-		bool SaveAsset(TAsset& asset, const str::Path& filepath);
-		template<class TAsset>
-		bool LoadAsset(TAsset& asset, const str::Path& filepath);
-		template<class TAsset>
-		bool ImportAsset(TAsset& asset, const str::Path& filepath);
-
-		template<class TAsset>
 		const TAsset* FetchAsset(const str::Guid& guid) const;
-		template<class TAsset>
-		void RequestAsset(const str::Guid& guid);
-		template<class TAsset>
-		void ReleaseAsset(const str::Guid& guid);
 
-		// #temp: need to find a better way of discovering assets, AddEntry perhaps ?
-		void LoadFilepath(const str::Path& filepath, const bool canSearchSubdirectories);
+		template<class TAsset>
+		bool SaveAsset(TAsset& asset, const str::Path& filepath) { return false; }
+		template<class TAsset>
+		bool ImportAsset(TAsset& asset, const str::Path& filepath) { return false; }
+
+		void LoadAsset(const str::Guid& guid);
+		void RequestAsset(const str::Guid& guid);
+		void ReleaseAsset(const str::Guid& guid);
+		void ReloadAsset(const str::Guid& guid);
+		void ReloadAssets();
 
 		auto GetFileMap() const -> const FileMap&;
 		auto GetTypeMap() const -> const TypeMap&;
 
 	public:
+		// #temp: need to find a better way of discovering assets, AddEntry perhaps ?
+		void LoadFilepath(const str::Path& filepath, const bool canSearchSubdirectories);
+
 		const eng::AssetFile* GetAssetFile(const str::Guid& guid) const;
 
-		void ReloadAsset(const str::Guid& guid);
-		void ReloadAssets();
+	private:
+		template<typename TAsset>
+		void LoadDeferred(const str::Path filepath);
+		template<typename TAsset>
+		void LoadImmediate(const str::Path& filepath);
 
 	private:
-		template<class TAsset>
-		TAsset* LoadAsset(const str::Guid& guid);
+		template<typename TAsset>
+		static void Load(eng::AssetManager& manager, const str::Path& filepath);
 
-	public:
 		template<typename TAsset, typename TLoader>
-		static bool SaveFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
+		static void InitialiseMethod(eng::Asset& asset, const eng::AssetLoader& loader);
 		template<typename TAsset, typename TLoader>
-		static bool LoadFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
+		static void ShutdownMethod(eng::Asset& asset, const eng::AssetLoader& loader);
 		template<typename TAsset, typename TLoader>
-		static bool ImportFunction(eng::Asset* asset, const eng::AssetLoader& loader, const str::Path& filepath);
+		static bool SaveMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
+		template<typename TAsset, typename TLoader>
+		static bool LoadMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
+		template<typename TAsset, typename TLoader>
+		static bool ImportMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
 
-	public:
+	private:
 		FileMap m_FileMap = { };
 		RefMap m_RefMap = { };
 		Registry m_Registry = { };
 		TypeMap m_TypeMap = { };
+
+		Array<eng::Asset*> m_Loaded = {};
+		std::mutex m_Mutex;
 	};
 }
 

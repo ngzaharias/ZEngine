@@ -17,7 +17,7 @@ namespace
 	const str::Name strSourceFile = NAME("m_SourceFile");
 }
 
-void eng::StaticMeshAssetLoader::Bind(eng::StaticMeshAsset& asset)
+bool eng::StaticMeshAssetLoader::Bind(eng::StaticMeshAsset& asset)
 {
 	auto& binding = asset.m_Binding;
 
@@ -48,6 +48,8 @@ void eng::StaticMeshAssetLoader::Bind(eng::StaticMeshAsset& asset)
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	return true;
 }
 
 bool eng::StaticMeshAssetLoader::Load(StaticMeshAsset& asset, eng::Visitor& visitor) const

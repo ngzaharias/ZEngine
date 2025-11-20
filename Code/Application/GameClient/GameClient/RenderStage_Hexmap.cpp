@@ -58,9 +58,9 @@ void hexmap::RenderStage::Initialise(ecs::EntityWorld& entityWorld)
 	glGenBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::StaticMeshAsset>(strMesh);
-	assetManager.RequestAsset<eng::ShaderAsset>(strShader);
-	assetManager.RequestAsset<eng::Texture2DAsset>(strTexture);
+	assetManager.RequestAsset(strMesh);
+	assetManager.RequestAsset(strShader);
+	assetManager.RequestAsset(strTexture);
 }
 
 void hexmap::RenderStage::Shutdown(ecs::EntityWorld& entityWorld)
@@ -70,9 +70,9 @@ void hexmap::RenderStage::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::StaticMeshAsset>(strMesh);
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strShader);
-	assetManager.ReleaseAsset<eng::Texture2DAsset>(strTexture);
+	assetManager.ReleaseAsset(strMesh);
+	assetManager.ReleaseAsset(strShader);
+	assetManager.ReleaseAsset(strTexture);
 }
 
 void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)

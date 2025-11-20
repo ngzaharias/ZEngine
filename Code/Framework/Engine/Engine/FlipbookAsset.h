@@ -32,7 +32,10 @@ namespace eng
 	class FlipbookAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Save(FlipbookAsset& asset, eng::Visitor& visitor) const;
-		bool Load(FlipbookAsset& asset, eng::Visitor& visitor) const;
+		void Initialise(eng::FlipbookAsset& asset) const;
+		void Shutdown(eng::FlipbookAsset& asset) const;
+
+		bool Save(eng::FlipbookAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::FlipbookAsset& asset, eng::Visitor& visitor) const;
 	};
 }

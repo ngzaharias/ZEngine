@@ -150,13 +150,13 @@ void eng::PhysicsSystem::Initialise(World& world)
 	sceneComponent.m_PhysicsScene = physics.createScene(sceneDesc);
 
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
+	assetManager.RequestAsset(strDefaultMaterial);
 }
 
 void eng::PhysicsSystem::Shutdown(World& world)
 {
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
+	assetManager.ReleaseAsset(strDefaultMaterial);
 }
 
 void eng::PhysicsSystem::Update(World& world, const GameTime& gameTime)

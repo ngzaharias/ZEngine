@@ -2,7 +2,8 @@
 #include "Engine/FlipbookAsset.h"
 
 #include "Engine/AssetManager.h"
-#include "Engine/TomlHelpers.h"
+#include "Engine/ShaderAsset.h"
+#include "Engine/Texture2DAsset.h"
 #include "Engine/Visitor.h"
 
 namespace
@@ -26,7 +27,19 @@ void eng::Visitor::ReadCustom(eng::FlipbookFrame& value) const
 	Read(strSize, value.m_Size, s_DefaultFrame.m_Size);
 }
 
-bool eng::FlipbookAssetLoader::Save(FlipbookAsset& asset, eng::Visitor& visitor) const
+void eng::FlipbookAssetLoader::Initialise(eng::FlipbookAsset& asset) const
+{
+	m_AssetManager->RequestAsset(asset.m_Shader);
+	m_AssetManager->RequestAsset(asset.m_Texture2D);
+}
+
+void eng::FlipbookAssetLoader::Shutdown(eng::FlipbookAsset& asset) const
+{
+	m_AssetManager->ReleaseAsset(asset.m_Shader);
+	m_AssetManager->ReleaseAsset(asset.m_Texture2D);
+}
+
+bool eng::FlipbookAssetLoader::Save(eng::FlipbookAsset& asset, eng::Visitor& visitor) const
 {
 	visitor.Read(strFps, asset.m_FPS, s_DefaultAsset.m_FPS);
 	visitor.Read(strFrames, asset.m_Frames, s_DefaultAsset.m_Frames);
@@ -36,7 +49,7 @@ bool eng::FlipbookAssetLoader::Save(FlipbookAsset& asset, eng::Visitor& visitor)
 	return true;
 }
 
-bool eng::FlipbookAssetLoader::Load(FlipbookAsset& asset, eng::Visitor& visitor) const
+bool eng::FlipbookAssetLoader::Load(eng::FlipbookAsset& asset, eng::Visitor& visitor) const
 {
 	visitor.Read(strFps, asset.m_FPS, s_DefaultAsset.m_FPS);
 	visitor.Read(strFrames, asset.m_Frames, s_DefaultAsset.m_Frames);

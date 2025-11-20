@@ -56,9 +56,9 @@ void eng::RenderStage_Opaque::Initialise(ecs::EntityWorld& entityWorld)
 	glGenBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::ShaderAsset>(strDebugDepthShader);
-	assetManager.RequestAsset<eng::ShaderAsset>(strPhongShader);
-	assetManager.RequestAsset<eng::ShaderAsset>(strUnlitShader);
+	assetManager.RequestAsset(strDebugDepthShader);
+	assetManager.RequestAsset(strPhongShader);
+	assetManager.RequestAsset(strUnlitShader);
 }
 
 void eng::RenderStage_Opaque::Shutdown(ecs::EntityWorld& entityWorld)
@@ -68,9 +68,9 @@ void eng::RenderStage_Opaque::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strDebugDepthShader);
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strPhongShader);
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strUnlitShader);
+	assetManager.ReleaseAsset(strDebugDepthShader);
+	assetManager.ReleaseAsset(strPhongShader);
+	assetManager.ReleaseAsset(strUnlitShader);
 }
 
 void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
@@ -116,18 +116,13 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 		{
 			using Query = ecs::query
 				::Include<
-				eng::StaticMeshAssetComponent,
 				eng::StaticMeshComponent,
 				eng::TransformComponent>;
 
 			for (const ecs::Entity& renderEntity : world.Query<Query>())
 			{
-				const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(renderEntity);
 				const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(renderEntity);
 				const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
-
-				if (!assetComponent.m_Asset)
-					continue;
 
 				RenderBatchID& id = batchIDs.Emplace();
 				id.m_Entity = renderEntity;
@@ -198,12 +193,7 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 				batchData.m_TexParams.RemoveAll();
 			}
 
-			const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(id.m_Entity);
-			const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(id.m_Entity);
 			const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-			const auto* meshAsset = assetComponent.m_Asset;
-			if (!meshAsset)
-				continue;
 
 			const Matrix4x4 model = meshTransform.ToTransform();
 
