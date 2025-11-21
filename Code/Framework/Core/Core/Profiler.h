@@ -15,6 +15,7 @@ namespace profile
 
 #else
 
+#define PROFILE_CUSTOM(...)
 #define PROFILE_FUNCTION()
 #define PROFILE_TICK(name)
 
