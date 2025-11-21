@@ -1,7 +1,5 @@
 #include "Core/Log.h"
 
-#ifdef LOGGING_ENABLED
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <spdlog/spdlog.h>
@@ -24,6 +22,7 @@ namespace
 
 void core::LogInitialise()
 {
+#ifdef LOGGING_ENABLED
 	m_AssertLogger = spdlog::basic_logger_mt("assert", "asserts.txt");
 	m_AssertLogger->set_level(spdlog::level::critical);
 
@@ -35,18 +34,22 @@ void core::LogInitialise()
 
 	m_NetworkLogger = spdlog::basic_logger_mt("network", "network.txt");
 	m_NetworkLogger->set_level(spdlog::level::info);
+#endif 
 }
 
 void core::LogShutdown()
 {
+#ifdef LOGGING_ENABLED
 	m_AssertLogger->flush();
 	m_CrashLogger->flush();
 	m_DebugLogger->flush();
 	m_NetworkLogger->flush();
+#endif 
 }
 
 void core::LogMessage(const ELog channel, const char* message)
 {
+#ifdef LOGGING_ENABLED
 #ifdef _WIN32
 	OutputDebugStringA(message);
 	OutputDebugStringA("\n");
@@ -77,6 +80,5 @@ void core::LogMessage(const ELog channel, const char* message)
 		m_NetworkLogger->warn(message);
 		break;
 	}
+#endif 
 }
-
-#endif

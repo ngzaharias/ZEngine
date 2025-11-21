@@ -36,9 +36,7 @@ namespace str
 		static Guid Generate();
 		static bool IsValidString(const str::StringView& string);
 
-#ifdef ASSERTS_ENABLED
 		static void ValidateString(const str::StringView& string);
-#endif // ASSERTS_ENABLED
 
 	public:
 		Data m_Data;

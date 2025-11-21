@@ -2,6 +2,7 @@
 #include "Engine/Application.h"
 
 #include "Core/GameTime.h"
+#include "Core/Profiler.h"
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
