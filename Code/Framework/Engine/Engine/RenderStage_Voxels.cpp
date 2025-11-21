@@ -46,8 +46,8 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strVoxelShader);
-	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(strVoxelTexture);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strVoxelShader);
+	const auto* texture = assetManager.ReadAsset<eng::Texture2DAsset>(strVoxelTexture);
 	if (!shader || !texture)
 		return;
 

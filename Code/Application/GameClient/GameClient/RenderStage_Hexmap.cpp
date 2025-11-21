@@ -81,9 +81,9 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(strMesh);
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strShader);
-	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(strTexture);
+	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(strMesh);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);
+	const auto* texture = assetManager.ReadAsset<eng::Texture2DAsset>(strTexture);
 	if (!mesh || !shader || !texture)
 		return;
 	if (texture->m_TextureId == 0)

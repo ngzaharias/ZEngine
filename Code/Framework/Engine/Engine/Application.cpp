@@ -193,6 +193,7 @@ void eng::Application::PreUpdate(const GameTime& gameTime)
 	// do first
 	m_WindowManager.PreUpdate(gameTime);
 
+	m_AssetManager.Update();
 	m_PlatformManager.Update(gameTime);
 	m_ImguiManager.PreUpdate();
 }

@@ -25,7 +25,7 @@ void eng::MusicSystem::Initialise(World& world)
 
 	// #todo: trigger music from somewhere else
 	assetManager.RequestAsset(strAsset);
-	if (const auto* musicAsset = assetManager.FetchAsset<eng::MusicAsset>(strAsset))
+	if (const auto* musicAsset = assetManager.ReadAsset<eng::MusicAsset>(strAsset))
 	{
 		const str::Path filepath = str::Path(str::EPath::Assets, musicAsset->m_SourceFile);
 

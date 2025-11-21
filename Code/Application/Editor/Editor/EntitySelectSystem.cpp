@@ -52,7 +52,7 @@ namespace
 		{
 			const auto& assetManager = world.ReadResource<eng::AssetManager>();
 			const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(entity);
-			const auto* spriteAsset = assetManager.FetchAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
+			const auto* spriteAsset = assetManager.ReadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
 			if (!spriteAsset)
 				return {};
 

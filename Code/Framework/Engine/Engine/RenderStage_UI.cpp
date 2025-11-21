@@ -90,8 +90,8 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(strModel);
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strShader);
+	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(strModel);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);
 	if (!mesh || !shader)
 		return;
 
@@ -143,7 +143,7 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 			const auto& binding = mesh->m_Binding;
 
 			int32 instanceCount = static_cast<int32>(textComponent.m_Text.size());
-			const auto* fontAsset = assetManager.FetchAsset<eng::FontAsset>(textComponent.m_Font);
+			const auto* fontAsset = assetManager.ReadAsset<eng::FontAsset>(textComponent.m_Font);
 			if (!fontAsset || fontAsset->m_TextureId == 0)
 				continue;
 

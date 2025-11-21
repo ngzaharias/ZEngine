@@ -216,8 +216,8 @@ void eng::RenderStage_Opaque::RenderBatch(World& world, const RenderBatchID& bat
 	PROFILE_FUNCTION();
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
 	if (!mesh || !shader)
 		return;
 

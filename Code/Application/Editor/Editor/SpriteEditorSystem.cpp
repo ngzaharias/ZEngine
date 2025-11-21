@@ -229,7 +229,7 @@ namespace
 
 				auto& writeWindow = world.WriteComponent<editor::SpriteWindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				assetManager.LoadAsset(writeWindow.m_Asset, filepath);
+				//assetManager.LoadAsset(writeWindow.m_Asset, filepath);
 			}
 		}
 	};
@@ -278,7 +278,7 @@ namespace
 			return;
 
 		const auto& assetManager = world.ReadResource<eng::AssetManager>();
-		const auto* textureAsset = assetManager.FetchAsset<eng::Texture2DAsset>(sprite.m_Texture2D);
+		const auto* textureAsset = assetManager.ReadAsset<eng::Texture2DAsset>(sprite.m_Texture2D);
 		if (!textureAsset)
 			return;
 
@@ -304,7 +304,7 @@ namespace
 			return;
 
 		const auto& assetManager = world.ReadResource<eng::AssetManager>();
-		const auto* textureAsset = assetManager.FetchAsset<eng::Texture2DAsset>(sprite.m_Texture2D);
+		const auto* textureAsset = assetManager.ReadAsset<eng::Texture2DAsset>(sprite.m_Texture2D);
 		if (!textureAsset)
 			return;
 

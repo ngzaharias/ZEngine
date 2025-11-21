@@ -88,7 +88,6 @@ void game::Application::PreUpdate(const GameTime& gameTime)
 	eng::Application::PreUpdate(gameTime);
 
 	m_GameClient.PreUpdate(gameTime);
-	m_AssetManager.Update(m_GameClient.m_EntityWorld, m_GameServer.m_EntityWorld);
 }
 
 void game::Application::Update(const GameTime& gameTime)

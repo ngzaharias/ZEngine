@@ -121,7 +121,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 			{
 				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(renderEntity);
 				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
-				const auto* spriteAsset = assetManager.FetchAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
+				const auto* spriteAsset = assetManager.ReadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
 				if (!spriteAsset)
 					continue;
 
@@ -146,7 +146,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 			{
 				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(renderEntity);
 				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
-				const auto* flipbookAsset = assetManager.FetchAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
+				const auto* flipbookAsset = assetManager.ReadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 				if (!flipbookAsset || flipbookAsset->m_Frames.IsEmpty())
 					continue;
 				if (flipbookComponent.m_Index >= flipbookAsset->m_Frames.GetCount())
@@ -200,10 +200,10 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 			{
 				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(id.m_Entity);
 				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-				const auto* flipbookAsset = assetManager.FetchAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
+				const auto* flipbookAsset = assetManager.ReadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 				if (!flipbookAsset)
 					continue;
-				const auto* texture2DAsset = assetManager.FetchAsset<eng::Texture2DAsset>(flipbookAsset->m_Texture2D);
+				const auto* texture2DAsset = assetManager.ReadAsset<eng::Texture2DAsset>(flipbookAsset->m_Texture2D);
 				if (!texture2DAsset)
 					continue;
 
@@ -238,10 +238,10 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 			{
 				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(id.m_Entity);
 				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-				const auto* spriteAsset = assetManager.FetchAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
+				const auto* spriteAsset = assetManager.ReadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
 				if (!spriteAsset)
 					continue;
-				const auto* texture2DAsset = assetManager.FetchAsset<eng::Texture2DAsset>(spriteAsset->m_Texture2D);
+				const auto* texture2DAsset = assetManager.ReadAsset<eng::Texture2DAsset>(spriteAsset->m_Texture2D);
 				if (!texture2DAsset)
 					continue;
 
@@ -286,9 +286,9 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 	PROFILE_FUNCTION();
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(batchID.m_ShaderId);
-	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(batchID.m_TextureId);
+	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	const auto* texture = assetManager.ReadAsset<eng::Texture2DAsset>(batchID.m_TextureId);
 	if (!mesh || !shader || !texture)
 		return;
 	if (texture->m_TextureId == 0)

@@ -52,7 +52,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 	if (!debugSettings.m_AreLinesEnabled)
 		return;
 
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strLinesShader);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strLinesShader);
 	if (!shader)
 		return;
 

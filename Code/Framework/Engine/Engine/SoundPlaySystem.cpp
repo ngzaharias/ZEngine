@@ -64,7 +64,7 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 
 		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		assetManager.RequestAsset(request);
-		if (const auto* soundAsset = assetManager.FetchAsset<eng::sound::SingleAsset>(request))
+		if (const auto* soundAsset = assetManager.ReadAsset<eng::sound::SingleAsset>(request))
 		{
 			const float volume = audio::ToVolume(audioSettings.m_EffectVolume * audioSettings.m_MasterVolume);
 

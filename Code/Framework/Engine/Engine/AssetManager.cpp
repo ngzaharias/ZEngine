@@ -24,42 +24,31 @@ void eng::AssetManager::Shutdown()
 {
 }
 
-void eng::AssetManager::Update(ecs::EntityWorld& client, ecs::EntityWorld& server)
+void eng::AssetManager::Update()
 {
 	if (!m_Loaded.IsEmpty())
 	{
 		m_Mutex.lock();
-		for (eng::Asset* asset : m_Loaded)
+		Array<eng::Asset*> loaded;
+		std::swap(loaded, m_Loaded);
+		m_Mutex.unlock();
+
+		for (eng::Asset* asset : loaded)
 		{
 			const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
+
+			// #note: don't lock mutex before calling initialise since asset loaders can request other assets
 			if (entry.m_Methods.m_Initialise)
 				entry.m_Methods.m_Initialise(*asset, *entry.m_Loader);
 
-			auto& clientEvent = client.AddEventComponent<eng::AssetLoadedEvent>();
-			clientEvent.m_Asset = asset;
-			auto& serverEvent = server.AddEventComponent<eng::AssetLoadedEvent>();
-			serverEvent.m_Asset = asset;
-
 			m_RefMap[asset->m_Guid].m_Asset = asset;
 		}
-		m_Loaded.RemoveAll();
-		m_Mutex.unlock();
 	}
 }
 
 bool eng::AssetManager::HasAsset(const str::Guid& guid)
 {
 	return enumerate::Contains(m_FileMap, guid);
-}
-
-void eng::AssetManager::LoadAsset(const str::Guid& guid)
-{
-	const auto file = m_FileMap.Find(guid);
-	if (file == m_FileMap.end())
-		return;
-
-	const eng::AssetEntry& entry = m_Registry.Get(file->second.m_Type);
-	entry.m_Load(*this, file->second.m_Path);
 }
 
 void eng::AssetManager::RequestAsset(const str::Guid& guid)
@@ -76,19 +65,12 @@ void eng::AssetManager::RequestAsset(const str::Guid& guid)
 
 void eng::AssetManager::ReleaseAsset(const str::Guid& guid)
 {
-	eng::AssetRef& ref = m_RefMap[guid];
+	eng::AssetRef& ref = m_RefMap.Get(guid);
 
 	ref.m_Count--;
 	if (ref.m_Count == 0)
 	{
-		eng::Asset* asset = ref.m_Asset;
-		const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
-		if (entry.m_Methods.m_Shutdown)
-			entry.m_Methods.m_Shutdown(*asset, *entry.m_Loader);
-
-		delete ref.m_Asset;
-		ref.m_Asset = nullptr;
-		m_RefMap.Remove(guid);
+		UnloadAsset(guid);
 	}
 	else
 	{
@@ -98,34 +80,22 @@ void eng::AssetManager::ReleaseAsset(const str::Guid& guid)
 
 void eng::AssetManager::ReloadAsset(const str::Guid& guid)
 {
-	//const auto ref = m_RefMap.Find(guid);
-	//const auto file = m_FileMap.Find(guid);
-	//if (ref != m_RefMap.end() && file != m_FileMap.end())
-	//{
-	//	eng::Asset* asset = ref->second.m_Asset;
-	//	const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
-	//	entry.m_Methods.m_Load(
-	//		*asset, 
-	//		*entry.m_Loader, 
-	//		file->second.m_Path);
-	//}
+	const auto ref = m_RefMap.Find(guid);
+	if (ref != m_RefMap.end())
+	{
+		eng::Asset* asset = ref->second.m_Asset;
+		UnloadAsset(asset->m_Guid);
+		LoadAsset(asset->m_Guid);
+	}
 }
 
 void eng::AssetManager::ReloadAssets()
 {
-	//for (auto& [guid, ref] : m_RefMap)
-	//{
-	//	const auto file = m_FileMap.Find(guid);
-	//	if (file == m_FileMap.end())
-	//		continue;
-
-	//	eng::Asset* asset = ref.m_Asset;
-	//	const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
-	//	entry.m_Methods.m_Load(
-	//		*asset, 
-	//		*entry.m_Loader, 
-	//		file->second.m_Path);
-	//}
+	for (auto& [guid, ref] : m_RefMap)
+	{
+		UnloadAsset(guid);
+		LoadAsset(guid);
+	}
 }
 
 auto eng::AssetManager::GetFileMap() const -> const FileMap&
@@ -173,4 +143,26 @@ const eng::AssetFile* eng::AssetManager::GetAssetFile(const str::Guid& guid) con
 	return file != m_FileMap.end()
 		? &file->second
 		: nullptr;
+}
+
+void eng::AssetManager::LoadAsset(const str::Guid& guid)
+{
+	const auto file = m_FileMap.Find(guid);
+	if (file == m_FileMap.end())
+		return;
+
+	const eng::AssetEntry& entry = m_Registry.Get(file->second.m_Type);
+	entry.m_Load(*this, file->second.m_Path);
+}
+
+void eng::AssetManager::UnloadAsset(const str::Guid& guid)
+{
+	eng::AssetRef& ref = m_RefMap.Get(guid);
+	eng::Asset* asset = ref.m_Asset;
+	const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
+	if (entry.m_Methods.m_Shutdown)
+		entry.m_Methods.m_Shutdown(*asset, *entry.m_Loader);
+
+	delete asset;
+	m_RefMap.Remove(guid);
 }

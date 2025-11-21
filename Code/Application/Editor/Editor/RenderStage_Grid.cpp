@@ -87,7 +87,7 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 		return;
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strShader);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);
 	if (!shader)
 		return;
 

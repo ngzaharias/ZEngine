@@ -30,7 +30,7 @@ void eng::FlipbookPlaySystem::Update(World& world, const GameTime& gameTime)
 		if (!flipbookComponent.m_IsPlaying)
 			continue;
 
-		const auto* flipbookAsset = assetManager.FetchAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
+		const auto* flipbookAsset = assetManager.ReadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 		if (!flipbookAsset || flipbookAsset->m_Frames.IsEmpty())
 			continue;
 

@@ -192,7 +192,7 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 	PROFILE_FUNCTION();
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* materialAsset = assetManager.FetchAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
+	const auto* materialAsset = assetManager.ReadAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
 	if (!materialAsset)
 		return;
 

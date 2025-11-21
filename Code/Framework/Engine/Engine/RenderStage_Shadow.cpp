@@ -175,7 +175,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 
 				const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(id.m_Entity);
 				const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-				const auto* meshAsset = assetManager.FetchAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
+				const auto* meshAsset = assetManager.ReadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
 				if (!meshAsset)
 					continue;
 
@@ -198,8 +198,8 @@ void eng::RenderStage_Shadow::RenderBatch(World& world, const RenderBatchID& bat
 	PROFILE_FUNCTION();
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
 	if (!mesh || !shader)
 		return;
 

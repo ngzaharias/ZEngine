@@ -65,11 +65,6 @@ namespace eng
 		int32 m_Count = 0;
 	};
 
-	struct AssetLoadedEvent : public ecs::EventComponent<AssetLoadedEvent> 
-	{ 
-		eng::Asset* m_Asset = nullptr;
-	};
-
 	class AssetManager final
 	{
 	public:
@@ -84,65 +79,88 @@ namespace eng
 		void Initialise();
 		void Shutdown();
 		
-		void Update(ecs::EntityWorld& client, ecs::EntityWorld& server);
+		void Update();
 
-		bool HasAsset(const str::Guid& guid);
-
+		/// \brief Register an class/struct as an asset.
 		template<typename TAsset, typename TLoader, typename... TArgs>
 		void RegisterAsset(const str::Name& type, TArgs&&... args);
 
+		/// \brief Checks if the asset exists, but doesn't check if it is loaded.
+		bool HasAsset(const str::Guid& guid);
+		/// \brief Increases the ref count of an asset. If it is the first call, will schedule the asset to be loaded.
+		void RequestAsset(const str::Guid& guid);
+		/// \brief Decreases the ref count of an asset. If it is the last call, will schedule the asset to be unloaded.
+		void ReleaseAsset(const str::Guid& guid);
+		/// \brief Unloads and then loads the asset without changing the ref count.
+		void ReloadAsset(const str::Guid& guid);
+		/// \brief Unloads and then loads all assets without changing the ref counts.
+		void ReloadAssets();
+
+		/// \brief Tries to fetch a non-const asset.
+		/// Will return nullptr if the asset isn't loaded.
 		template<class TAsset>
-		const TAsset* FetchAsset(const str::Guid& guid) const;
+		TAsset* WriteAsset(const str::Guid& guid);
+		/// \brief Tries to fetch a const asset.
+		/// Will return nullptr if the asset isn't loaded.
+		template<class TAsset>
+		const TAsset* ReadAsset(const str::Guid& guid) const;
 
 		template<class TAsset>
 		bool SaveAsset(TAsset& asset, const str::Path& filepath) { return false; }
 		template<class TAsset>
 		bool ImportAsset(TAsset& asset, const str::Path& filepath) { return false; }
 
-		void LoadAsset(const str::Guid& guid);
-		void RequestAsset(const str::Guid& guid);
-		void ReleaseAsset(const str::Guid& guid);
-		void ReloadAsset(const str::Guid& guid);
-		void ReloadAssets();
-
 		auto GetFileMap() const -> const FileMap&;
 		auto GetTypeMap() const -> const TypeMap&;
 
-	public:
 		// #temp: need to find a better way of discovering assets, AddEntry perhaps ?
 		void LoadFilepath(const str::Path& filepath, const bool canSearchSubdirectories);
 
 		const eng::AssetFile* GetAssetFile(const str::Guid& guid) const;
 
 	private:
+		/// \brief Creates and loads the asset.
+		void LoadAsset(const str::Guid& guid);
+		/// \brief Unloads and destroys the asset.
+		void UnloadAsset(const str::Guid& guid);
+
+		/// \brief Loads the asset in a different thread.
 		template<typename TAsset>
 		void LoadDeferred(const str::Path filepath);
+		/// \brief Loads the asset immediately on the current thread.
 		template<typename TAsset>
 		void LoadImmediate(const str::Path& filepath);
 
 	private:
+		/// \brief Function that can be used to load an asset deferred or immediate based on the asset type.
+		/// The function is bound to the asset entry when it is first registered so that the caller doesn't need the template.
 		template<typename TAsset>
-		static void Load(eng::AssetManager& manager, const str::Path& filepath);
+		static void ScheduleLoad(eng::AssetManager& manager, const str::Path& filepath);
 
+		/// \brief Function that can be used to initialise an asset after it has been loaded.
 		template<typename TAsset, typename TLoader>
 		static void InitialiseMethod(eng::Asset& asset, const eng::AssetLoader& loader);
+		/// \brief Function that can be used to shutdown an asset before it is unloaded.
 		template<typename TAsset, typename TLoader>
 		static void ShutdownMethod(eng::Asset& asset, const eng::AssetLoader& loader);
+		/// \brief Function that can be used to save the asset to a visitor.
 		template<typename TAsset, typename TLoader>
 		static bool SaveMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
+		/// \brief Function that can be used to load the asset from a visitor.
 		template<typename TAsset, typename TLoader>
 		static bool LoadMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
+		/// \brief Function that can be used to import an asset from a file.
 		template<typename TAsset, typename TLoader>
 		static bool ImportMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
 
 	private:
+		std::mutex m_Mutex;
+		Array<eng::Asset*> m_Loaded = {};
+
 		FileMap m_FileMap = { };
 		RefMap m_RefMap = { };
 		Registry m_Registry = { };
 		TypeMap m_TypeMap = { };
-
-		Array<eng::Asset*> m_Loaded = {};
-		std::mutex m_Mutex;
 	};
 }
 

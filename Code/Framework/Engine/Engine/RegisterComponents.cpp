@@ -83,7 +83,6 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 {
 	// components
 	entityWorld.RegisterComponent<eng::AssetComponent>();
-	entityWorld.RegisterComponent<eng::AssetLoadedEvent>();
 	entityWorld.RegisterComponent<eng::camera::Bound2DComponent>();
 	entityWorld.RegisterComponent<eng::camera::EditorComponent>();
 	entityWorld.RegisterComponent<eng::camera::Move2DComponent>();

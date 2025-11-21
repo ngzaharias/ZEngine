@@ -31,7 +31,7 @@ void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 	eng::AssetEntry& entry = m_Registry[type];
 	entry.m_Loader = new TLoader(std::forward<TArgs>(args)...);
 	entry.m_Loader->m_AssetManager = this;
-	entry.m_Load = &Load<TAsset>;
+	entry.m_Load = &ScheduleLoad<TAsset>;
 
 	eng::AssetMethods& methods = entry.m_Methods;
 	if constexpr (core::IsDetected<_private::HasInitialiseMethod, TAsset, TLoader>::value)
@@ -47,7 +47,16 @@ void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 }
 
 template<class TAsset>
-const TAsset* eng::AssetManager::FetchAsset(const str::Guid& guid) const
+TAsset* eng::AssetManager::WriteAsset(const str::Guid& guid)
+{
+	const auto find = m_RefMap.Find(guid);
+	if (find != m_RefMap.end())
+		return static_cast<const TAsset*>(find->second.m_Asset);
+	return nullptr;
+}
+
+template<class TAsset>
+const TAsset* eng::AssetManager::ReadAsset(const str::Guid& guid) const
 {
 	const auto find = m_RefMap.Find(guid);
 	if (find != m_RefMap.end())
@@ -80,16 +89,13 @@ void eng::AssetManager::LoadImmediate(const str::Path& filepath)
 		return;
 	}
 
-	if (entry.m_Methods.m_Initialise)
-		entry.m_Methods.m_Initialise(*asset, *entry.m_Loader);
-
 	m_Mutex.lock();
 	m_Loaded.Append(asset);
 	m_Mutex.unlock();
 }
 
 template<typename TAsset>
-void eng::AssetManager::Load(eng::AssetManager& manager, const str::Path& filepath)
+void eng::AssetManager::ScheduleLoad(eng::AssetManager& manager, const str::Path& filepath)
 {
 	if (std::is_base_of<eng::DeferredLoad, TAsset>::value)
 	{

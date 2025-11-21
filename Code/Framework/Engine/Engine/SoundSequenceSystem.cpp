@@ -24,7 +24,7 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 		// #temp: request and fetch in the same frame
 		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		assetManager.RequestAsset(requestComponent.m_Asset);
-		if (const auto* sequenceAsset = assetManager.FetchAsset<eng::sound::SequenceAsset>(requestComponent.m_Asset))
+		if (const auto* sequenceAsset = assetManager.ReadAsset<eng::sound::SequenceAsset>(requestComponent.m_Asset))
 		{
 			const int32 count = sequenceAsset->m_Handles.GetCount();
 

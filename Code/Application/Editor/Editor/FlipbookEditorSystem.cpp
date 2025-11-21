@@ -228,7 +228,7 @@ namespace
 			return;
 
 		const auto& assetManager = world.ReadResource<eng::AssetManager>();
-		const auto* textureAsset = assetManager.FetchAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
+		const auto* textureAsset = assetManager.ReadAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
 		if (!textureAsset)
 			return;
 
@@ -258,7 +258,7 @@ namespace
 			return;
 
 		const auto& assetManager = world.ReadResource<eng::AssetManager>();
-		const auto* textureAsset = assetManager.FetchAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
+		const auto* textureAsset = assetManager.ReadAsset<eng::Texture2DAsset>(flipbook.m_Texture2D);
 		if (!textureAsset)
 			return;
 

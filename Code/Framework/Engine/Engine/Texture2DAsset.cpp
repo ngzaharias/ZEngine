@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/Texture2DAsset.h"
 
+#include "Core/Thread.h"
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/Visitor.h"
@@ -35,6 +36,7 @@ namespace
 void eng::Texture2DAssetLoader::Initialise(eng::Texture2DAsset& asset) const
 {
 	PROFILE_FUNCTION();
+	Z_PANIC(core::IsMainThread(), "OpenGL functions must be called from the main thread!");
 
 	glGenTextures(1, &asset.m_TextureId);
 	glBindTexture(GL_TEXTURE_2D, asset.m_TextureId);
