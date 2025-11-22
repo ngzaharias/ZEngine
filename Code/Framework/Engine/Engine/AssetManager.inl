@@ -26,7 +26,10 @@ void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 	static_assert(std::is_convertible<TLoader*, eng::AssetLoader*>::value, "Loader must inherit from eng::AssetLoader using the [public] keyword!");
 	static_assert(std::is_base_of<eng::AssetLoader, TLoader>::value, "Loader isn't a base of eng::AssetLoader!");
 
-	Z_PANIC(!enumerate::Contains(m_Registry, type), "Asset has already been registered! Typ' '{}] ", ToTypeName<TAsset>());
+	Z_PANIC(!enumerate::Contains(m_Registry, type), "Asset type '{}' has already been registered!", ToTypeName<TAsset>());
+
+	constexpr TypeId typeId = ToTypeId<TAsset>();
+	m_TypeIds[typeId] = type;
 
 	eng::AssetEntry& entry = m_Registry[type];
 	entry.m_Loader = new TLoader(std::forward<TArgs>(args)...);
@@ -62,6 +65,74 @@ const TAsset* eng::AssetManager::ReadAsset(const str::Guid& guid) const
 	if (find != m_RefMap.end())
 		return static_cast<const TAsset*>(find->second.m_Asset);
 	return nullptr;
+}
+
+template<class TAsset>
+bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
+{
+	PROFILE_FUNCTION();
+
+	constexpr TypeId typeId = ToTypeId<TAsset>();
+	const str::Name& type = m_TypeIds.Get(typeId);
+	const eng::AssetEntry& entry = m_Registry.Get(type);
+
+	if (!asset.m_Guid.IsValid())
+		asset.m_Guid = str::Guid::Generate();
+
+	if (asset.m_Name.IsEmpty())
+		asset.m_Name = NAME(filepath.GetFileNameNoExtension());
+
+	asset.m_Type = type;
+
+	if (!filepath.HasExtension())
+		return false;
+
+	eng::Visitor visitor;
+	visitor.Write("m_Guid", asset.m_Guid);
+	visitor.Write("m_Name", asset.m_Name);
+	visitor.Write("m_Type", asset.m_Type);
+	if (!entry.m_Methods.m_Save || !entry.m_Methods.m_Save(asset, *entry.m_Loader, visitor))
+	{
+		Z_LOG(ELog::Assert, "Asset failed to save to '{}'!", filepath.ToChar());
+		return false;
+	}
+
+	if (!visitor.SaveToFile(filepath))
+		return false;
+
+	eng::AssetFile& file = m_FileMap[asset.m_Guid];
+	file.m_Guid = asset.m_Guid;
+	file.m_Name = asset.m_Name;
+	file.m_Path = filepath;
+	file.m_Type = type;
+	return true;
+}
+
+template<class TAsset>
+bool eng::AssetManager::ImportAsset(TAsset& asset, const str::Path& filepath)
+{
+	constexpr TypeId typeId = ToTypeId<TAsset>();
+	const str::Name& type = m_TypeIds.Get(typeId);
+	const eng::AssetEntry& entry = m_Registry.Get(type);
+
+	asset.m_Guid = str::Guid::Generate();
+	asset.m_Name = NAME(filepath.GetFileNameNoExtension());
+	asset.m_Type = type;
+
+	eng::Visitor visitor;
+	visitor.LoadFromFile(filepath);
+	if (!entry.m_Methods.m_Import || !entry.m_Methods.m_Import(asset, *entry.m_Loader, visitor))
+	{
+		Z_LOG(ELog::Assert, "Asset failed to import from '{}'!", filepath.ToChar());
+		return false;
+	}
+
+	eng::AssetFile& file = m_FileMap[asset.m_Guid];
+	file.m_Guid = asset.m_Guid;
+	file.m_Name = asset.m_Name;
+	file.m_Path = filepath;
+	file.m_Type = type;
+	return true;
 }
 
 template<typename TAsset>

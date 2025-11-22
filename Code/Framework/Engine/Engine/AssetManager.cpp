@@ -80,22 +80,24 @@ void eng::AssetManager::ReleaseAsset(const str::Guid& guid)
 
 void eng::AssetManager::ReloadAsset(const str::Guid& guid)
 {
+	const auto file = m_FileMap.Find(guid);
 	const auto ref = m_RefMap.Find(guid);
-	if (ref != m_RefMap.end())
+	if (file != m_FileMap.end() && ref != m_RefMap.end())
 	{
-		eng::Asset* asset = ref->second.m_Asset;
-		UnloadAsset(asset->m_Guid);
-		LoadAsset(asset->m_Guid);
+		const eng::AssetEntry& entry = m_Registry.Get(file->second.m_Type);
+		if (entry.m_Methods.m_Shutdown)
+			entry.m_Methods.m_Shutdown(*ref->second.m_Asset, *entry.m_Loader);
+
+		ref->second.m_Asset = nullptr;
+
+		entry.m_Load(*this, file->second.m_Path);
 	}
 }
 
 void eng::AssetManager::ReloadAssets()
 {
 	for (auto& [guid, ref] : m_RefMap)
-	{
-		UnloadAsset(guid);
-		LoadAsset(guid);
-	}
+		ReloadAsset(guid);
 }
 
 auto eng::AssetManager::GetFileMap() const -> const FileMap&

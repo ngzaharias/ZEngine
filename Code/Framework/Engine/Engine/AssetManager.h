@@ -73,6 +73,7 @@ namespace eng
 		using FileMap = Map<str::Guid, eng::AssetFile>;
 		using RefMap = Map<str::Guid, AssetRef>;
 		using Registry = Map<str::Name, eng::AssetEntry>;
+		using TypeIds = Map<TypeId, str::Name>;
 		using TypeMap = Map<str::Name, Set<str::Guid>>;
 
 	public:
@@ -106,9 +107,9 @@ namespace eng
 		const TAsset* ReadAsset(const str::Guid& guid) const;
 
 		template<class TAsset>
-		bool SaveAsset(TAsset& asset, const str::Path& filepath) { return false; }
+		bool SaveAsset(TAsset& asset, const str::Path& filepath);
 		template<class TAsset>
-		bool ImportAsset(TAsset& asset, const str::Path& filepath) { return false; }
+		bool ImportAsset(TAsset& asset, const str::Path& filepath);
 
 		auto GetFileMap() const -> const FileMap&;
 		auto GetTypeMap() const -> const TypeMap&;
@@ -160,6 +161,7 @@ namespace eng
 		FileMap m_FileMap = { };
 		RefMap m_RefMap = { };
 		Registry m_Registry = { };
+		TypeIds m_TypeIds = { };
 		TypeMap m_TypeMap = { };
 	};
 }
