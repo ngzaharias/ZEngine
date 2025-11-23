@@ -29,15 +29,15 @@ namespace
 void eng::RenderStage_Voxels::Initialise(ecs::EntityWorld& entityWorld)
 {
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::ShaderAsset>(strVoxelShader);
-	assetManager.RequestAsset<eng::Texture2DAsset>(strVoxelTexture);
+	assetManager.RequestAsset(strVoxelShader);
+	assetManager.RequestAsset(strVoxelTexture);
 }
 
 void eng::RenderStage_Voxels::Shutdown(ecs::EntityWorld& entityWorld)
 {
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strVoxelShader);
-	assetManager.ReleaseAsset<eng::Texture2DAsset>(strVoxelTexture);
+	assetManager.ReleaseAsset(strVoxelShader);
+	assetManager.ReleaseAsset(strVoxelTexture);
 }
 
 void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
@@ -46,8 +46,8 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strVoxelShader);
-	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(strVoxelTexture);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strVoxelShader);
+	const auto* texture = assetManager.ReadAsset<eng::Texture2DAsset>(strVoxelTexture);
 	if (!shader || !texture)
 		return;
 

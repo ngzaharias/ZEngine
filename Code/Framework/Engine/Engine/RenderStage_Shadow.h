@@ -20,7 +20,6 @@ namespace eng
 	class AssetManager;
 	struct FrameBufferComponent;
 	struct LightDirectionalComponent;
-	struct StaticMeshAssetComponent;
 	struct StaticMeshComponent;
 	struct TransformComponent;
 
@@ -34,7 +33,6 @@ namespace eng
 			const eng::camera::ProjectionComponent,
 			const eng::LightDirectionalComponent,
 			const eng::settings::DebugComponent,
-			const eng::StaticMeshAssetComponent,
 			const eng::StaticMeshComponent,
 			const eng::TransformComponent>;
 

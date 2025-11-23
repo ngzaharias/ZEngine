@@ -17,7 +17,7 @@ const gui::Hint& gui::HintTable::GetRandom() const
 		return s_Hint;
 
 	const uint32 index = random::Range<uint32>(0, count);
-	return m_ObjectMap.Get(index);
+	return m_ObjectMap.At(index);
 }
 
 template<>

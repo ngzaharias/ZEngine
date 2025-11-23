@@ -2,6 +2,8 @@
 #include "Engine/SpriteAsset.h"
 
 #include "Engine/AssetManager.h"
+#include "Engine/ShaderAsset.h"
+#include "Engine/Texture2DAsset.h"
 #include "Engine/Visitor.h"
 
 namespace
@@ -14,6 +16,18 @@ namespace
 	// defaults
 	const str::Guid uuidShader = GUID("cbbb7d3ff44b45fdb9e5a207d92262fb");
 	const str::Guid uuidTexture2D = GUID("c6bb231ce97f104e860eb55e71988bdb");
+}
+
+void eng::SpriteAssetLoader::Initialise(eng::SpriteAsset& asset) const
+{
+	m_AssetManager->RequestAsset(asset.m_Shader);
+	m_AssetManager->RequestAsset(asset.m_Texture2D);
+}
+
+void eng::SpriteAssetLoader::Shutdown(eng::SpriteAsset& asset) const
+{
+	m_AssetManager->ReleaseAsset(asset.m_Shader);
+	m_AssetManager->ReleaseAsset(asset.m_Texture2D);
 }
 
 bool eng::SpriteAssetLoader::Save(SpriteAsset& asset, eng::Visitor& visitor) const

@@ -80,6 +80,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto& bufferComponent = world.ReadSingleton<eng::FrameBufferComponent>();
 
 	{
@@ -137,20 +138,17 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 			{
 				using Query = ecs::query
 					::Include<
-					eng::StaticMeshAssetComponent,
 					eng::StaticMeshComponent,
 					eng::TransformComponent>;
 
 				for (const ecs::Entity& renderEntity : world.Query<Query>())
 				{
-					const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(renderEntity);
-					if (!assetComponent.m_Asset)
-						continue;
+					const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(renderEntity);
 
 					RenderBatchID& id = batchIDs.Emplace();
 					id.m_Entity = renderEntity;
 					id.m_ShaderId = strDepthShader;
-					id.m_StaticMeshId = assetComponent.m_Asset->m_Guid;
+					id.m_StaticMeshId = meshComponent.m_StaticMesh;
 				}
 			}
 
@@ -175,11 +173,9 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 					batchData.m_Models.RemoveAll();
 				}
 
-				const auto& assetComponent = world.ReadComponent<eng::StaticMeshAssetComponent>(id.m_Entity);
 				const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(id.m_Entity);
 				const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-
-				const eng::StaticMeshAsset* meshAsset = assetComponent.m_Asset;
+				const auto* meshAsset = assetManager.ReadAsset<eng::StaticMeshAsset>(meshComponent.m_StaticMesh);
 				if (!meshAsset)
 					continue;
 
@@ -202,8 +198,8 @@ void eng::RenderStage_Shadow::RenderBatch(World& world, const RenderBatchID& bat
 	PROFILE_FUNCTION();
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
 	if (!mesh || !shader)
 		return;
 

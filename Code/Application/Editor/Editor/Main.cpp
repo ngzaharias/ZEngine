@@ -1,6 +1,7 @@
 #include "EditorPCH.h"
 #include "Editor/Application.h"
 
+#include "Core/Thread.h"
 #include "Engine/ExceptionFilter.h"
 #include "Engine/FileHelpers.h"
 
@@ -10,6 +11,7 @@
 
 int main(int agrc, char* argv[])
 {
+	core::SetMainThread();
 	SetUnhandledExceptionFilter(eng::UnhandledExceptionFilter);
 
 	const str::Path appdataDirectory = eng::GetAppDataDirectory();

@@ -36,17 +36,17 @@ public:
 	/// \brief Checks if an element in the container exists with that key.
 	bool Contains(const Key& key) const;
 
+	/// \brief Gets an element from the container if one exists at that index.
+	auto At(const uint32 index)->Value&;
+	/// \brief Gets an element from the container if one exists at that index.
+	auto At(const uint32 index) const -> const Value&;
+
 	/// \brief Gets an iterator to an element in the container that matches that key.
 	/// A past-the-end iterator is returned if none exists.
 	auto Find(const Key& key) -> iterator;
 	/// \brief Gets an iterator to an element in the container that matches that key.
 	/// A past-the-end iterator is returned if none exists.
 	auto Find(const Key& key) const ->const_iterator;
-
-	/// \brief Gets an element from the container if one exists at that index.
-	auto Get(const uint32 index)->Value&;
-	/// \brief Gets an element from the container if one exists at that index.
-	auto Get(const uint32 index) const -> const Value&;
 
 	/// \brief Gets an element from the container if one exists with that key.
 	/// An exception std::out_of_range is thrown if none exists.

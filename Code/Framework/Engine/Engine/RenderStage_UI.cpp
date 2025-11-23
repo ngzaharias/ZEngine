@@ -68,8 +68,8 @@ void eng::RenderStage_UI::Initialise(ecs::EntityWorld& entityWorld)
 	glVertexAttribDivisor(1, GL_FALSE);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::StaticMeshAsset>(strModel);
-	assetManager.RequestAsset<eng::ShaderAsset>(strShader);
+	assetManager.RequestAsset(strModel);
+	assetManager.RequestAsset(strShader);
 }
 
 void eng::RenderStage_UI::Shutdown(ecs::EntityWorld& entityWorld)
@@ -80,8 +80,8 @@ void eng::RenderStage_UI::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_VertexBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::StaticMeshAsset>(strModel);
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strShader);
+	assetManager.ReleaseAsset(strModel);
+	assetManager.ReleaseAsset(strShader);
 }
 
 void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
@@ -90,8 +90,8 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(strModel);
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strShader);
+	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(strModel);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);
 	if (!mesh || !shader)
 		return;
 
@@ -133,19 +133,17 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 
 		using Query = ecs::query
 			::Include<
-			eng::TextAssetComponent,
 			eng::TextComponent,
 			eng::TransformComponent>;
 
 		for (const ecs::Entity& textEntity : world.Query<Query>())
 		{
-			const auto& assetComponent = world.ReadComponent<eng::TextAssetComponent>(textEntity);
 			const auto& textComponent = world.ReadComponent<eng::TextComponent>(textEntity);
 			const auto& textTransform = world.ReadComponent<eng::TransformComponent>(textEntity);
 			const auto& binding = mesh->m_Binding;
 
 			int32 instanceCount = static_cast<int32>(textComponent.m_Text.size());
-			const auto* fontAsset = assetComponent.m_Font;
+			const auto* fontAsset = assetManager.ReadAsset<eng::FontAsset>(textComponent.m_Font);
 			if (!fontAsset || fontAsset->m_TextureId == 0)
 				continue;
 

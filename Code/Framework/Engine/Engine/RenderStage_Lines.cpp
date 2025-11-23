@@ -30,7 +30,7 @@ void eng::RenderStage_Lines::Initialise(ecs::EntityWorld& entityWorld)
 	glGenBuffers(1, &m_VertexBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::ShaderAsset>(strLinesShader);
+	assetManager.RequestAsset(strLinesShader);
 }
 
 void eng::RenderStage_Lines::Shutdown(ecs::EntityWorld& entityWorld)
@@ -39,7 +39,7 @@ void eng::RenderStage_Lines::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_VertexBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strLinesShader);
+	assetManager.ReleaseAsset(strLinesShader);
 }
 
 void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
@@ -52,7 +52,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 	if (!debugSettings.m_AreLinesEnabled)
 		return;
 
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strLinesShader);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strLinesShader);
 	if (!shader)
 		return;
 

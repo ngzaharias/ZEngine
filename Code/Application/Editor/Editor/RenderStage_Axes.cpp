@@ -37,7 +37,7 @@ void editor::RenderStage_Axes::Initialise(ecs::EntityWorld& entityWorld)
 	glGenBuffers(1, &m_ColourBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::ShaderAsset>(strLinesShader);
+	assetManager.RequestAsset(strLinesShader);
 
 	const auto& settings = entityWorld.ReadSingleton<editor::settings::LocalComponent>();
 	const auto& gizmos = settings.m_Gizmos;
@@ -52,7 +52,7 @@ void editor::RenderStage_Axes::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_ColourBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strLinesShader);
+	assetManager.ReleaseAsset(strLinesShader);
 }
 
 void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
@@ -75,7 +75,7 @@ void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
 		return;
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strLinesShader);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strLinesShader);
 	if (!shader)
 		return;
 

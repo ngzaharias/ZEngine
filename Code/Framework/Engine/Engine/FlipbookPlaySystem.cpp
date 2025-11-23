@@ -6,6 +6,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/AssetManager.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/FlipbookAsset.h"
 
@@ -18,18 +19,18 @@ void eng::FlipbookPlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+
 	using Query = ecs::query
 		::Include<
-		eng::FlipbookAssetComponent,
 		eng::FlipbookComponent>;
 	for (const ecs::Entity& entity : world.Query<Query>())
 	{
-		const auto& assetComponent = world.ReadComponent<eng::FlipbookAssetComponent>(entity);
 		auto& flipbookComponent = world.WriteComponent<eng::FlipbookComponent>(entity);
 		if (!flipbookComponent.m_IsPlaying)
 			continue;
 
-		const auto* flipbookAsset = assetComponent.m_Flipbook;
+		const auto* flipbookAsset = assetManager.ReadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 		if (!flipbookAsset || flipbookAsset->m_Frames.IsEmpty())
 			continue;
 

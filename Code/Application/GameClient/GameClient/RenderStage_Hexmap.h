@@ -30,7 +30,6 @@ namespace eng::settings
 
 namespace hexmap
 {
-	struct AssetComponent;
 	struct LayerComponent;
 	struct RootComponent;
 
@@ -46,7 +45,6 @@ namespace hexmap
 			const eng::camera::ProjectionComponent,
 			const eng::settings::DebugComponent,
 			const eng::TransformComponent,
-			const hexmap::AssetComponent,
 			const hexmap::LayerComponent,
 			const hexmap::RootComponent>;
 

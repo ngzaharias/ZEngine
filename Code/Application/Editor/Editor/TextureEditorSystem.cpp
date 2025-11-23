@@ -154,7 +154,7 @@ namespace
 
 				auto& writeWindow = world.WriteComponent<editor::TextureWindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				assetManager.LoadAsset(writeWindow.m_Asset, filepath);
+				//assetManager.LoadAsset(writeWindow.m_Asset, filepath);
 			}
 		}
 	};

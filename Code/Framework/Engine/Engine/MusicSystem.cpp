@@ -24,8 +24,8 @@ void eng::MusicSystem::Initialise(World& world)
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 	// #todo: trigger music from somewhere else
-	assetManager.RequestAsset<eng::MusicAsset>(strAsset);
-	if (const auto* musicAsset = assetManager.FetchAsset<eng::MusicAsset>(strAsset))
+	assetManager.RequestAsset(strAsset);
+	if (const auto* musicAsset = assetManager.ReadAsset<eng::MusicAsset>(strAsset))
 	{
 		const str::Path filepath = str::Path(str::EPath::Assets, musicAsset->m_SourceFile);
 
@@ -41,7 +41,7 @@ void eng::MusicSystem::Shutdown(World& world)
 	delete component.m_Music;
 
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::MusicAsset>(strAsset);
+	assetManager.ReleaseAsset(strAsset);
 }
 
 void eng::MusicSystem::Update(World& world, const GameTime& gameTime)

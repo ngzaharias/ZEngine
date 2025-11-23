@@ -56,7 +56,7 @@ void eng::RenderStage_Translucent::Initialise(ecs::EntityWorld& entityWorld)
 	glGenBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::StaticMeshAsset>(strQuadMesh);
+	assetManager.RequestAsset(strQuadMesh);
 }
 
 void eng::RenderStage_Translucent::Shutdown(ecs::EntityWorld& entityWorld)
@@ -66,7 +66,7 @@ void eng::RenderStage_Translucent::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::StaticMeshAsset>(strQuadMesh);
+	assetManager.ReleaseAsset(strQuadMesh);
 }
 
 void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
@@ -74,6 +74,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
+	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
 	if (!window)
@@ -113,18 +114,14 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 		{
 			using Query = ecs::query
 				::Include<
-				eng::SpriteAssetComponent,
 				eng::SpriteComponent,
 				eng::TransformComponent>;
 
 			for (const ecs::Entity& renderEntity : world.Query<Query>())
 			{
-				const auto& assetComponent = world.ReadComponent<eng::SpriteAssetComponent>(renderEntity);
 				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(renderEntity);
 				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
-
-				const eng::SpriteAsset* spriteAsset = assetComponent.m_Sprite;
-				const eng::Texture2DAsset* texture2DAsset = assetComponent.m_Texture2D;
+				const auto* spriteAsset = assetManager.ReadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
 				if (!spriteAsset)
 					continue;
 
@@ -142,17 +139,14 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 		{
 			using Query = ecs::query
 				::Include<
-				eng::FlipbookAssetComponent,
 				eng::FlipbookComponent,
 				eng::TransformComponent>;
 
 			for (const ecs::Entity& renderEntity : world.Query<Query>())
 			{
-				const auto& assetComponent = world.ReadComponent<eng::FlipbookAssetComponent>(renderEntity);
 				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(renderEntity);
 				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
-
-				const auto* flipbookAsset = assetComponent.m_Flipbook;
+				const auto* flipbookAsset = assetManager.ReadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 				if (!flipbookAsset || flipbookAsset->m_Frames.IsEmpty())
 					continue;
 				if (flipbookComponent.m_Index >= flipbookAsset->m_Frames.GetCount())
@@ -202,15 +196,15 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					continue;
 			}
 
-			if (world.HasComponent<eng::FlipbookComponent>(id.m_Entity) && world.HasComponent<eng::FlipbookAssetComponent>(id.m_Entity))
+			if (world.HasComponent<eng::FlipbookComponent>(id.m_Entity))
 			{
-				const auto& assetComponent = world.ReadComponent<eng::FlipbookAssetComponent>(id.m_Entity);
 				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(id.m_Entity);
 				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-
-				const auto* flipbookAsset = assetComponent.m_Flipbook;
-				const auto* texture2DAsset = assetComponent.m_Texture2D;
-				if (!flipbookAsset || !texture2DAsset)
+				const auto* flipbookAsset = assetManager.ReadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
+				if (!flipbookAsset)
+					continue;
+				const auto* texture2DAsset = assetManager.ReadAsset<eng::Texture2DAsset>(flipbookAsset->m_Texture2D);
+				if (!texture2DAsset)
 					continue;
 
 				const eng::FlipbookFrame& flipbookFrame = flipbookAsset->m_Frames[flipbookComponent.m_Index];
@@ -240,15 +234,15 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					texcoordOffset.x, texcoordOffset.y,
 					texcoordScale.x, texcoordScale.y);
 			}
-			else if (world.HasComponent<eng::SpriteComponent>(id.m_Entity) && world.HasComponent<eng::SpriteAssetComponent>(id.m_Entity))
+			else if (world.HasComponent<eng::SpriteComponent>(id.m_Entity))
 			{
-				const auto& assetComponent = world.ReadComponent<eng::SpriteAssetComponent>(id.m_Entity);
 				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(id.m_Entity);
 				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
-
-				const eng::SpriteAsset* spriteAsset = assetComponent.m_Sprite;
-				const eng::Texture2DAsset* texture2DAsset = assetComponent.m_Texture2D;
-				if (!spriteAsset || !texture2DAsset)
+				const auto* spriteAsset = assetManager.ReadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
+				if (!spriteAsset)
+					continue;
+				const auto* texture2DAsset = assetManager.ReadAsset<eng::Texture2DAsset>(spriteAsset->m_Texture2D);
+				if (!texture2DAsset)
 					continue;
 
 				const Vector2f spritePos = Vector2f(spriteAsset->m_Position.x, spriteAsset->m_Position.y);
@@ -292,9 +286,9 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 	PROFILE_FUNCTION();
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(batchID.m_ShaderId);
-	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(batchID.m_TextureId);
+	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
+	const auto* texture = assetManager.ReadAsset<eng::Texture2DAsset>(batchID.m_TextureId);
 	if (!mesh || !shader || !texture)
 		return;
 	if (texture->m_TextureId == 0)

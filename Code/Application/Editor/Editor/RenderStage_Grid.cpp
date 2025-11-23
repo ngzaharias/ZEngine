@@ -65,13 +65,13 @@ void editor::RenderStage_Grid::Initialise(ecs::EntityWorld& entityWorld)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::ShaderAsset>(strShader);
+	assetManager.RequestAsset(strShader);
 }
 
 void editor::RenderStage_Grid::Shutdown(ecs::EntityWorld& entityWorld)
 {
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strShader);
+	assetManager.ReleaseAsset(strShader);
 }
 
 void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
@@ -87,7 +87,7 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 		return;
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strShader);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);
 	if (!shader)
 		return;
 

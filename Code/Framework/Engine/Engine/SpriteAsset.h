@@ -23,6 +23,9 @@ namespace eng
 	class SpriteAssetLoader final : public eng::AssetLoader
 	{
 	public:
+		void Initialise(eng::SpriteAsset& asset) const;
+		void Shutdown(eng::SpriteAsset& asset) const;
+
 		bool Save(SpriteAsset& asset, eng::Visitor& visitor) const;
 		bool Load(SpriteAsset& asset, eng::Visitor& visitor) const;
 	};

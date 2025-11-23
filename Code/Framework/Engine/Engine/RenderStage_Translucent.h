@@ -8,9 +8,7 @@ namespace eng
 {
 	class AssetManager;
 	class WindowManager;
-	struct FlipbookAssetComponent;
 	struct FlipbookComponent;
-	struct SpriteAssetComponent;
 	struct SpriteComponent;
 	struct TransformComponent;
 	struct VisibilityComponent;
@@ -39,10 +37,8 @@ namespace eng
 			// Components
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::FlipbookAssetComponent,
 			const eng::FlipbookComponent,
 			const eng::settings::DebugComponent,
-			const eng::SpriteAssetComponent,
 			const eng::SpriteComponent,
 			const eng::TransformComponent,
 			const eng::VisibilityComponent>;

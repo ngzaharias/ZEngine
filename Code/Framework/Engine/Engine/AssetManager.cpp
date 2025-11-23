@@ -2,6 +2,7 @@
 #include "Engine/AssetManager.h"
 
 #include "Core/StringHelpers.h"
+#include "ECS/EntityWorld.h"
 #include "Engine/AssetLoader.h"
 
 #include <filesystem>
@@ -23,9 +24,90 @@ void eng::AssetManager::Shutdown()
 {
 }
 
+void eng::AssetManager::Update()
+{
+	if (!m_Loaded.IsEmpty())
+	{
+		m_Mutex.lock();
+		Array<eng::Asset*> loaded;
+		std::swap(loaded, m_Loaded);
+		m_Mutex.unlock();
+
+		for (eng::Asset* asset : loaded)
+		{
+			const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
+
+			// #note: don't lock mutex before calling initialise since asset loaders can request other assets
+			if (entry.m_Methods.m_Initialise)
+				entry.m_Methods.m_Initialise(*asset, *entry.m_Loader);
+
+			m_RefMap[asset->m_Guid].m_Asset = asset;
+		}
+	}
+}
+
 bool eng::AssetManager::HasAsset(const str::Guid& guid)
 {
 	return enumerate::Contains(m_FileMap, guid);
+}
+
+void eng::AssetManager::RequestAsset(const str::Guid& guid)
+{
+	eng::AssetRef& ref = m_RefMap[guid];
+
+	ref.m_Count++;
+	if (ref.m_Count == 1)
+	{
+		Z_PANIC(!ref.m_Asset, "Reference asset already exists! Guid '{}'", guid.ToString());
+		LoadAsset(guid);
+	}
+}
+
+void eng::AssetManager::ReleaseAsset(const str::Guid& guid)
+{
+	eng::AssetRef& ref = m_RefMap.Get(guid);
+
+	ref.m_Count--;
+	if (ref.m_Count == 0)
+	{
+		UnloadAsset(guid);
+	}
+	else
+	{
+		Z_PANIC(ref.m_Count > 0, "Reference count dropped below 0! Guid '{}'", guid.ToString());
+	}
+}
+
+void eng::AssetManager::ReloadAsset(const str::Guid& guid)
+{
+	const auto file = m_FileMap.Find(guid);
+	const auto ref = m_RefMap.Find(guid);
+	if (file != m_FileMap.end() && ref != m_RefMap.end())
+	{
+		const eng::AssetEntry& entry = m_Registry.Get(file->second.m_Type);
+		if (entry.m_Methods.m_Shutdown)
+			entry.m_Methods.m_Shutdown(*ref->second.m_Asset, *entry.m_Loader);
+
+		ref->second.m_Asset = nullptr;
+
+		entry.m_Load(*this, file->second.m_Path);
+	}
+}
+
+void eng::AssetManager::ReloadAssets()
+{
+	for (auto& [guid, ref] : m_RefMap)
+		ReloadAsset(guid);
+}
+
+auto eng::AssetManager::GetFileMap() const -> const FileMap&
+{
+	return m_FileMap;
+}
+
+auto eng::AssetManager::GetTypeMap() const -> const TypeMap&
+{
+	return m_TypeMap;
 }
 
 void eng::AssetManager::LoadFilepath(const str::Path& filepath, const bool canSearchSubdirectories)
@@ -57,43 +139,32 @@ void eng::AssetManager::LoadFilepath(const str::Path& filepath, const bool canSe
 	}
 }
 
-auto eng::AssetManager::GetFileMap() const -> const FileMap&
-{
-	return m_FileMap;
-}
-
-auto eng::AssetManager::GetTypeMap() const -> const TypeMap&
-{
-	return m_TypeMap;
-}
-
 const eng::AssetFile* eng::AssetManager::GetAssetFile(const str::Guid& guid) const
 {
-	const auto find = m_FileMap.Find(guid);
-	return find != m_FileMap.end()
-		? &find->second
+	const auto file = m_FileMap.Find(guid);
+	return file != m_FileMap.end()
+		? &file->second
 		: nullptr;
 }
 
-void eng::AssetManager::ReloadAsset(const str::Guid& guid)
+void eng::AssetManager::LoadAsset(const str::Guid& guid)
 {
-	const auto ref = m_RefMap.Find(guid);
 	const auto file = m_FileMap.Find(guid);
-	if (ref != m_RefMap.end() && file != m_FileMap.end())
-	{
-		eng::Asset* asset = ref->second.m_Asset;
+	if (file == m_FileMap.end())
+		return;
 
-		auto& entry = m_Registry[asset->m_TypeId];
-		auto& loader = *entry.m_Loader;
-		entry.m_Load(asset, loader, file->second.m_Path);
-	}
+	const eng::AssetEntry& entry = m_Registry.Get(file->second.m_Type);
+	entry.m_Load(*this, file->second.m_Path);
 }
 
-void eng::AssetManager::ReloadAssets()
+void eng::AssetManager::UnloadAsset(const str::Guid& guid)
 {
-	// #temp: easy way of reloading assets is to just clear the cache
-	//for (auto&& [typeId, entry] : m_Registry)
-	//{
-	//	entry.m_Loader->ClearCache();
-	//}
+	eng::AssetRef& ref = m_RefMap.Get(guid);
+	eng::Asset* asset = ref.m_Asset;
+	const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
+	if (entry.m_Methods.m_Shutdown)
+		entry.m_Methods.m_Shutdown(*asset, *entry.m_Loader);
+
+	delete asset;
+	m_RefMap.Remove(guid);
 }

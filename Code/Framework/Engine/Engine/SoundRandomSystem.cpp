@@ -29,8 +29,8 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 
 		// #temp: request and fetch in the same frame
 		auto& assetManager = world.WriteResource<eng::AssetManager>();
-		assetManager.RequestAsset<eng::sound::RandomAsset>(requestComponent.m_Asset);
-		if (const auto* randomAsset = assetManager.FetchAsset<eng::sound::RandomAsset>(requestComponent.m_Asset))
+		assetManager.RequestAsset(requestComponent.m_Asset);
+		if (const auto* randomAsset = assetManager.ReadAsset<eng::sound::RandomAsset>(requestComponent.m_Asset))
 		{
 			const int32 count = randomAsset->m_Handles.GetCount();
 
@@ -47,7 +47,7 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 			str::Guid& singleHandle = bufferComponent.m_Requests.Emplace();
 			singleHandle = randomAsset->m_Handles[sequenceComponent.m_Index];
 		}
-		assetManager.ReleaseAsset<eng::sound::RandomAsset>(requestComponent.m_Asset);
+		assetManager.ReleaseAsset(requestComponent.m_Asset);
 	}
 }
 

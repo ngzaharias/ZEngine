@@ -58,9 +58,9 @@ void hexmap::RenderStage::Initialise(ecs::EntityWorld& entityWorld)
 	glGenBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset<eng::StaticMeshAsset>(strMesh);
-	assetManager.RequestAsset<eng::ShaderAsset>(strShader);
-	assetManager.RequestAsset<eng::Texture2DAsset>(strTexture);
+	assetManager.RequestAsset(strMesh);
+	assetManager.RequestAsset(strShader);
+	assetManager.RequestAsset(strTexture);
 }
 
 void hexmap::RenderStage::Shutdown(ecs::EntityWorld& entityWorld)
@@ -70,9 +70,9 @@ void hexmap::RenderStage::Shutdown(ecs::EntityWorld& entityWorld)
 	glDeleteBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset<eng::StaticMeshAsset>(strMesh);
-	assetManager.ReleaseAsset<eng::ShaderAsset>(strShader);
-	assetManager.ReleaseAsset<eng::Texture2DAsset>(strTexture);
+	assetManager.ReleaseAsset(strMesh);
+	assetManager.ReleaseAsset(strShader);
+	assetManager.ReleaseAsset(strTexture);
 }
 
 void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
@@ -81,9 +81,9 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* mesh = assetManager.FetchAsset<eng::StaticMeshAsset>(strMesh);
-	const auto* shader = assetManager.FetchAsset<eng::ShaderAsset>(strShader);
-	const auto* texture = assetManager.FetchAsset<eng::Texture2DAsset>(strTexture);
+	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(strMesh);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);
+	const auto* texture = assetManager.ReadAsset<eng::Texture2DAsset>(strTexture);
 	if (!mesh || !shader || !texture)
 		return;
 	if (texture->m_TextureId == 0)
