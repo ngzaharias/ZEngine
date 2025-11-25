@@ -27,8 +27,6 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<container::StorageDestroyResultComponent>();
 	entityWorld.RegisterComponent<drag::IsSelectableComponent>();
 	entityWorld.RegisterComponent<drag::SelectionComponent>();
-	entityWorld.RegisterComponent<gamestate::RequestComponent>();
-	entityWorld.RegisterComponent<gamestate::StateFinishedComponent>();
 	entityWorld.RegisterComponent<gui::modal::MessageComponent>();
 	entityWorld.RegisterComponent<movement::AccelerationComponent>();
 	entityWorld.RegisterComponent<movement::VelocityComponent>();
@@ -36,6 +34,9 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<projectile::CreateResultComponent>();
 	entityWorld.RegisterComponent<projectile::SpawnComponent>();
 	entityWorld.RegisterComponent<projectile::TrajectoryComponent>();
+
+	entityWorld.RegisterEvent<gamestate::ChangeFinished>();
+	entityWorld.RegisterEvent<gamestate::ChangeRequest>();
 
 	entityWorld.RegisterSingleton<container::StorageChangesComponent>();
 	entityWorld.RegisterSingleton<clt::settings::DebugComponent>();

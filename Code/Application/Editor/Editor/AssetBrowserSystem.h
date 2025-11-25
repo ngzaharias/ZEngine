@@ -21,14 +21,11 @@ namespace eng
 
 namespace editor
 {
-	struct AssetBrowserWindowComponent;
-	struct AssetBrowserWindowRequestComponent;
+	struct AssetBrowserWindowRequest;
 }
 
 namespace editor
 {
-	struct AssetBrowserWindowRequestComponent;
-
 	struct AssetBrowserWindowComponent : public ecs::Component<AssetBrowserWindowComponent>
 	{
 		int32 m_Identifier = 0;
@@ -46,7 +43,7 @@ namespace editor
 			// components
 			ecs::NameComponent,
 			editor::AssetBrowserWindowComponent,
-			const editor::AssetBrowserWindowRequestComponent>;
+			const editor::AssetBrowserWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

@@ -16,7 +16,7 @@ namespace eng
 
 namespace editor
 {
-	struct InputWindowRequestComponent;
+	struct InputWindowRequest;
 
 	struct InputWindowComponent : public ecs::Component<InputWindowComponent>
 	{
@@ -33,7 +33,7 @@ namespace editor
 			// Components
 			ecs::NameComponent,
 			editor::InputWindowComponent,
-			const editor::InputWindowRequestComponent>;
+			const editor::InputWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

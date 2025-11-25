@@ -49,22 +49,22 @@ void gui::DCMainMenu::SetVersion(const str::String& value)
 
 void gui::DCMainMenu::OnContinueGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::main_menu::ContinueGameRequest>();
+	m_EntityWorld->AddEvent<gui::main_menu::ContinueGameRequest>();
 }
 
 void gui::DCMainMenu::OnExitGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::main_menu::ExitGameRequest>();
+	m_EntityWorld->AddEvent<gui::main_menu::ExitGameRequest>();
 }
 
 void gui::DCMainMenu::OnLoadGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::main_menu::LoadGameRequest>();
+	m_EntityWorld->AddEvent<gui::main_menu::LoadGameRequest>();
 }
 
 void gui::DCMainMenu::OnNewGameCommand(Noesis::BaseComponent* param)
 {
-	auto& request = m_EntityWorld->AddEventComponent<gui::main_menu::NewGameRequest>();
+	auto& request = m_EntityWorld->AddEvent<gui::main_menu::NewGameRequest>();
 	request.m_Level = m_NewGameLevel;
 }
 
@@ -92,7 +92,7 @@ void gui::DCMainMenu::OnReportCommand(Noesis::BaseComponent* param)
 
 void gui::DCMainMenu::OnSettingsCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::settings_menu::OpenRequest>();
+	m_EntityWorld->AddEvent<gui::settings_menu::OpenRequest>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCMainMenu)

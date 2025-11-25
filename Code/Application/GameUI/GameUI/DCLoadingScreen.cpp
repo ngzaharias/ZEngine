@@ -32,7 +32,7 @@ void gui::DCLoadingScreen::SetHint(const char* value)
 
 void gui::DCLoadingScreen::OnCloseCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::loading::CloseRequest>();
+	m_EntityWorld->AddEvent<gui::loading::CloseRequest>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCLoadingScreen)

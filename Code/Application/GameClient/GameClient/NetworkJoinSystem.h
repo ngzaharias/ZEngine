@@ -14,8 +14,8 @@ namespace eng::level
 
 namespace eng::network
 {
-	struct RequestComponent;
-	struct RequestFinishedComponent;
+	struct ChangeFinished;
+	struct ChangeRequest;
 }
 
 namespace gui::modal
@@ -30,9 +30,9 @@ namespace net
 
 namespace gamestate
 {
+	struct ChangeFinished;
 	struct NetworkJoinComponent;
 	struct StateComponent;
-	struct StateFinishedComponent;
 
 	class NetworkJoinSystem : public ecs::System
 	{
@@ -40,11 +40,11 @@ namespace gamestate
 		using World = ecs::WorldView<
 			eng::level::LoadRequest,
 			eng::NetworkManager,
-			eng::network::RequestComponent,
+			eng::network::ChangeRequest,
+			gamestate::ChangeFinished,
 			gamestate::NetworkJoinComponent,
-			gamestate::StateFinishedComponent,
 			gui::modal::MessageComponent,
-			const eng::network::RequestFinishedComponent,
+			const eng::network::ChangeFinished,
 			const gamestate::StateComponent,
 			const net::UserComponent>;
 

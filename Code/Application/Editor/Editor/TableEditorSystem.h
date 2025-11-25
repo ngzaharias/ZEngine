@@ -14,7 +14,7 @@ namespace ecs
 
 namespace editor
 {
-	struct TableWindowRequestComponent;
+	struct TableWindowRequest;
 
 	enum class EType
 	{
@@ -51,7 +51,7 @@ namespace editor
 			// components
 			ecs::NameComponent,
 			editor::TableWindowComponent,
-			const editor::TableWindowRequestComponent>;
+			const editor::TableWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

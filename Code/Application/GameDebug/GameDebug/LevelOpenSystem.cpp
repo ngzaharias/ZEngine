@@ -36,7 +36,7 @@ void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const bool hasWindow = world.HasAny<ecs::query::Include<dbg::level::WindowComponent>>();
-	if (!hasWindow && world.HasAny<ecs::query::Include<dbg::level::OpenRequestComponent>>())
+	if (!hasWindow && world.HasAny<dbg::level::OpenRequest>())
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, s_Title);
@@ -91,7 +91,7 @@ void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 
 					if (ImGui::Button(name.ToChar(), { width, 0 }))
 					{
-						world.AddEventComponent<eng::level::LoadRequest>(name);
+						world.AddEvent<eng::level::LoadRequest>(name);
 						ImGui::CloseCurrentPopup();
 					}
 

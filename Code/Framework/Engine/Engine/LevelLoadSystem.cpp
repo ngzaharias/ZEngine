@@ -50,10 +50,8 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 	const auto& directoryComponent = world.ReadSingleton<eng::level::DirectoryComponent>();
 
 	// requests
-	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const eng::level::LoadRequest>>())
+	for (const auto& request : world.Events<eng::level::LoadRequest>())
 	{
-		const auto& request = world.ReadComponent<eng::level::LoadRequest>(requestEntity);
-
 		const ecs::Entity levelEntity = world.CreateEntity();
 		auto& loadingComponent = world.AddComponent<eng::level::LoadingComponent>(levelEntity);
 		loadingComponent.m_Name = request.m_Name;

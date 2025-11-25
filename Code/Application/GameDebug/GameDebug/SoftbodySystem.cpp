@@ -18,7 +18,7 @@
 
 void dbg::SoftbodySystem::Update(World& world, const GameTime& gameTime)
 {
-	const auto& settings = world.ReadSingleton<const eng::settings::DebugComponent>();
+	const auto& settings = world.ReadSingleton<eng::settings::DebugComponent>();
 	if (!settings.m_AreSoftbodyEnabled)
 		return;
 

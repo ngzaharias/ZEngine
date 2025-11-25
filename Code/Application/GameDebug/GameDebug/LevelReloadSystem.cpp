@@ -11,12 +11,12 @@ void dbg::level::ReloadSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Include<const dbg::level::ReloadRequestComponent>>())
+	if (world.HasAny<dbg::level::ReloadRequest>())
 	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 		{
 			const auto& levelComponent = world.ReadComponent<eng::level::LoadedComponent>(entity);
-			world.AddEventComponent<eng::level::LoadRequest>(levelComponent.m_Name);
+			world.AddEvent<eng::level::LoadRequest>(levelComponent.m_Name);
 		}
 	}
 }

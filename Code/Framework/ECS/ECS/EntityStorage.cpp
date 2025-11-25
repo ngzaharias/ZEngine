@@ -19,6 +19,10 @@ void ecs::EntityStorage::FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryR
 	for (ecs::IComponentStorage* storage : m_DeadComponents.GetValues())
 		storage->RemoveAll();
 
+	// remove previous events
+	for (ecs::IEventStorage* storage : m_Events.GetValues())
+		storage->RemoveAll();
+
 	// remove dead entities from all queries
 	for (const ecs::Entity& entity : m_DeadEntities)
 	{
@@ -52,6 +56,15 @@ void ecs::EntityStorage::FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryR
 	{
 		ecs::IComponentStorage* eStorage = m_AliveComponents.Get(componentId);
 		fStorage->Move(*eStorage);
+		fStorage->RemoveAll();
+	}
+
+	// move events from buffer -> storage
+	for (auto&& [eventId, fStorage] : frameBuffer.m_Events)
+	{
+		ecs::IEventStorage* eStorage = m_Events.Get(eventId);
+		fStorage->Move(*eStorage);
+		fStorage->RemoveAll();
 	}
 
 	// updates queries

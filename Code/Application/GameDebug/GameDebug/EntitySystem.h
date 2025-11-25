@@ -16,7 +16,7 @@ namespace ecs
 
 namespace dbg
 {
-	struct EntityWindowRequestComponent;
+	struct EntityWindowRequest;
 
 	struct EntityWindowComponent : public ecs::Component<EntityWindowComponent> 
 	{ 
@@ -36,7 +36,7 @@ namespace dbg
 		using World = ecs::WorldView<
 			dbg::EntityWindowComponent,
 			ecs::NameComponent,
-			const dbg::EntityWindowRequestComponent>;
+			const dbg::EntityWindowRequest>;
 
 		EntitySystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld);
 

@@ -51,7 +51,7 @@ namespace hidden
 
 namespace editor
 {
-	struct EntityWindowRequestComponent;
+	struct EntityWindowRequest;
 
 	struct EntitySaveComponent : public ecs::Component<EntitySaveComponent> { };
 
@@ -77,7 +77,7 @@ namespace editor
 			editor::EntitySelectComponent,
 			editor::EntityWindowComponent,
 			editor::settings::LocalComponent,
-			const editor::EntityWindowRequestComponent,
+			const editor::EntityWindowRequest,
 			const eng::level::EntityComponent,
 			const eng::PrototypeComponent>;
 

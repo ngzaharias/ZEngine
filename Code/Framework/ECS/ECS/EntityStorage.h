@@ -6,26 +6,35 @@
 #include "ECS/ComponentMask.h"
 #include "ECS/ComponentStorage.h"
 #include "ECS/Entity.h"
+#include "ECS/Event.h"
+#include "ECS/EventStorage.h"
 
 namespace ecs
 {
 	class EntityWorld;
 	class FrameBuffer;
 	class QueryRegistry;
+}
 
+namespace ecs
+{
 	class EntityStorage
 	{
 		friend class EntityWorld;
 
+		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
 		using EntityMap = Map<ecs::Entity, ecs::ComponentMask>;
 		using EntitySet = Array<ecs::Entity>;
-		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
+		using Events = SparseArray<ecs::EventId, ecs::IEventStorage*>;
 
 	public:
+		//////////////////////////////////////////////////////////////////////////
+		// Entity
+
 		bool IsAlive(const ecs::Entity& entity) const;
 
-		template<class TComponent>
-		bool IsRegistered() const;
+		//////////////////////////////////////////////////////////////////////////
+		// Component
 
 		template<class TComponent>
 		void RegisterComponent();
@@ -34,7 +43,16 @@ namespace ecs
 		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
 
 		template<class TComponent>
-		auto GetComponent(const ecs::Entity& entity, const bool alive = true)->TComponent&;
+		auto GetComponent(const ecs::Entity& entity, const bool alive = true) -> TComponent&;
+
+		//////////////////////////////////////////////////////////////////////////
+		// Event
+
+		template<class TEvent>
+		void RegisterEvent();
+
+		template<class TEvent>
+		auto GetEvents() const -> const Array<TEvent>&;
 
 	private:
 		void FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryRegistry& queryRegistry);
@@ -44,6 +62,7 @@ namespace ecs
 		Components m_DeadComponents;
 		EntityMap m_AliveEntities;
 		EntitySet m_DeadEntities;
+		Events m_Events;
 	};
 }
 

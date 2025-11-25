@@ -58,7 +58,6 @@ inline void ecs::ComponentStorage<TComponent>::Move(IComponentStorage& destinati
 		Z_PANIC(!storage.Contains(entity), "Trying to add component to an entity that already has it!");
 		storage.Set(entity, std::move(component));
 	}
-	RemoveAll();
 }
 
 template<typename TComponent>

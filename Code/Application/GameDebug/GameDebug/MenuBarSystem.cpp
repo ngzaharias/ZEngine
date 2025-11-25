@@ -72,9 +72,9 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("Open Level", "Ctrl+O"))
-				world.AddEventComponent<dbg::level::OpenRequestComponent>();
+				world.AddEvent<dbg::level::OpenRequest>();
 			if (ImGui::MenuItem("Reload Level", "Ctrl+R"))
-				world.AddEventComponent<dbg::level::ReloadRequestComponent>();
+				world.AddEvent<dbg::level::ReloadRequest>();
 			
 			ImGui::Separator();
 
@@ -86,7 +86,7 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::MenuItem("Reload Tables"))
 			{
-				world.AddEventComponent<eng::TablesReloadedEvent>();
+				world.AddEvent<eng::TablesReloaded>();
 				auto& tableHeadmaster = world.WriteResource<eng::TableHeadmaster>();
 				tableHeadmaster.Reload();
 			}
@@ -97,9 +97,9 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("Settings"))
 		{
 			if (ImGui::MenuItem("Debug"))
-				world.AddEventComponent<dbg::settings::WindowRequestComponent>();
+				world.AddEvent<dbg::settings::WindowRequest>();
 			if (ImGui::MenuItem("Editor"))
-				world.AddEventComponent<editor::settings::WindowRequestComponent>();
+				world.AddEvent<editor::settings::WindowRequest>();
 			ImGui::EndMenu();
 		}
 
@@ -108,27 +108,27 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		//if (ImGui::BeginMenu("Cheats"))
 		//{
 		//	if (ImGui::MenuItem("Reveal All"))
-		//		world.AddEventComponent<dbg::cheats::RevealAll>();
+		//		world.AddEvent<dbg::cheats::RevealAll>();
 		//	if (ImGui::MenuItem("Reveal All (-1)"))
-		//		world.AddEventComponent<dbg::cheats::RevealAll>(-1);
+		//		world.AddEvent<dbg::cheats::RevealAll>(-1);
 		//}
 
 		if (ImGui::BeginMenu("Debuggers"))
 		{
 			if (ImGui::MenuItem("Container"))
-				world.AddEventComponent<dbg::ContainerWindowRequestComponent>();
+				world.AddEvent<dbg::ContainerWindowRequest>();
 			if (ImGui::MenuItem("Entities", "Ctrl+Shift+F11"))
-				world.AddEventComponent<dbg::EntityWindowRequestComponent>();
+				world.AddEvent<dbg::EntityWindowRequest>();
 			if (ImGui::MenuItem("Network"))
-				world.AddEventComponent<dbg::NetworkWindowRequestComponent>();
+				world.AddEvent<dbg::NetworkWindowRequest>();
 			if (ImGui::MenuItem("Optick (external)"))
 				LaunchExe(str::Path(str::EPath::ThirdParty, "optick/1.3.1/Optick.exe"));
 			if (ImGui::MenuItem("Shapes"))
-				world.AddEventComponent<dbg::ShapeWindowRequestComponent>();
+				world.AddEvent<dbg::ShapeWindowRequest>();
 			if (ImGui::MenuItem("Splines"))
-				world.AddEventComponent<dbg::SplineWindowRequestComponent>();
+				world.AddEvent<dbg::SplineWindowRequest>();
 			if (ImGui::MenuItem("Render: Frame Buffer"))
-				world.AddEventComponent<dbg::BufferWindowRequestComponent>();
+				world.AddEvent<dbg::BufferWindowRequest>();
 
 			ImGui::EndMenu();
 		}
@@ -136,21 +136,21 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("Editors"))
 		{
 			if (ImGui::MenuItem("Asset Browser"))
-				world.AddEventComponent<editor::AssetBrowserWindowRequestComponent>();
+				world.AddEvent<editor::AssetBrowserWindowRequest>();
 			if (ImGui::MenuItem("Entity Editor"))
-				world.AddEventComponent<editor::EntityWindowRequestComponent>();
+				world.AddEvent<editor::EntityWindowRequest>();
 			if (ImGui::MenuItem("Flipbook Editor"))
-				world.AddEventComponent<editor::FlipbookWindowRequestComponent>();
+				world.AddEvent<editor::FlipbookWindowRequest>();
 			if (ImGui::MenuItem("Input Editor"))
-				world.AddEventComponent<editor::InputWindowRequestComponent>();
+				world.AddEvent<editor::InputWindowRequest>();
 			if (ImGui::MenuItem("Sprite Editor"))
-				world.AddEventComponent<editor::SpriteWindowRequestComponent>();
+				world.AddEvent<editor::SpriteWindowRequest>();
 			if (ImGui::MenuItem("Table Editor"))
-				world.AddEventComponent<editor::TableWindowRequestComponent>();
+				world.AddEvent<editor::TableWindowRequest>();
 			if (ImGui::MenuItem("Texture Editor"))
-				world.AddEventComponent<editor::TextureWindowRequestComponent>();
+				world.AddEvent<editor::TextureWindowRequest>();
 			if (ImGui::MenuItem("Trajectory Editor"))
-				world.AddEventComponent<editor::TrajectoryWindowRequestComponent>();
+				world.AddEvent<editor::TrajectoryWindowRequest>();
 			if (ImGui::MenuItem("UI Editor (external)"))
 				LaunchExe(str::Path(str::EPath::Assets, "UI/ZEngine.noesis"));
 
@@ -160,11 +160,11 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("Windows"))
 		{
 			if (ImGui::MenuItem("Demo: ImGui"))
-				world.AddEventComponent<dbg::ImGuiDemoRequestComponent>();
+				world.AddEvent<dbg::ImGuiDemoRequest>();
 			if (ImGui::MenuItem("Demo: ImNodes"))
-				world.AddEventComponent<dbg::ImNodesDemoRequestComponent>();
+				world.AddEvent<dbg::ImNodesDemoRequest>();
 			if (ImGui::MenuItem("Demo: Inspector"))
-				world.AddEventComponent<dbg::InspectorDemoRequestComponent>();
+				world.AddEvent<dbg::InspectorDemoRequest>();
 
 			ImGui::EndMenu();
 		}
@@ -175,10 +175,10 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
 		if (input.IsPressed(strOpen))
-			world.AddEventComponent<dbg::level::OpenRequestComponent>();
+			world.AddEvent<dbg::level::OpenRequest>();
 		if (input.IsPressed(strReload))
-			world.AddEventComponent<dbg::level::ReloadRequestComponent>();
+			world.AddEvent<dbg::level::ReloadRequest>();
 		if (input.IsPressed(strSave))
-			world.AddEventComponent<dbg::level::SaveRequestComponent>();
+			world.AddEvent<dbg::level::SaveRequest>();
 	}
 }

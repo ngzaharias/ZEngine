@@ -1,6 +1,6 @@
 #include "ECS/FrameBuffer.h"
 
-auto ecs::FrameBuffer::CreateEntity()->ecs::Entity
+auto ecs::FrameBuffer::CreateEntity() -> ecs::Entity
 {
 	ecs::Entity entity = { };
 	if (!m_HandlesRecycled.IsEmpty())

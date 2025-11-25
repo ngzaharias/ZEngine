@@ -20,7 +20,7 @@ namespace eng::level
 
 namespace dbg::level
 {
-	struct OpenRequestComponent;
+	struct OpenRequestEvent;
 	struct WindowComponent;
 }
 
@@ -36,7 +36,7 @@ namespace dbg::level
 			dbg::level::WindowComponent,
 			ecs::NameComponent,
 			eng::level::LoadRequest,
-			const dbg::level::OpenRequestComponent,
+			const dbg::level::OpenRequestEvent,
 			const eng::level::DirectoryComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

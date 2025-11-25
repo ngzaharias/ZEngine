@@ -12,7 +12,7 @@ namespace eng
 
 namespace eng::application
 {
-	struct CloseRequestComponent;
+	struct CloseRequest;
 }
 
 namespace eng::level
@@ -31,7 +31,7 @@ namespace gui::main_menu
 
 namespace gui::settings
 {
-	struct OpenRequestComponent;
+	struct OpenRequestEvent;
 }
 
 namespace gui::main_menu
@@ -43,9 +43,9 @@ namespace gui::main_menu
 			// Resources
 			eng::UIManager,
 			// Components
-			eng::application::CloseRequestComponent,
+			eng::application::CloseRequest,
 			eng::level::LoadRequest,
-			gui::settings::OpenRequestComponent,
+			gui::settings::OpenRequestEvent,
 			const eng::VersionComponent,
 			const gui::main_menu::ContinueGameRequest,
 			const gui::main_menu::ExitGameRequest,

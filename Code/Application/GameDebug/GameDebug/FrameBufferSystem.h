@@ -5,7 +5,7 @@
 
 namespace dbg
 {
-	struct BufferWindowRequestComponent;
+	struct BufferWindowRequest;
 }
 
 namespace eng
@@ -24,7 +24,7 @@ namespace dbg
 	public:
 		using World = ecs::WorldView<
 			dbg::BufferWindowComponent,
-			const dbg::BufferWindowRequestComponent,
+			const dbg::BufferWindowRequest,
 			const eng::FrameBufferComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

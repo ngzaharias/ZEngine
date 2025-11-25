@@ -40,22 +40,21 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	//////////////////////////////////////////////////////////////////////////
 	// Events
 
-	if (world.HasAny<ecs::query::Added<gui::main_menu::ContinueGameRequest>>())
+	if (world.HasAny<gui::main_menu::ContinueGameRequest>())
 	{
 	}
 
-	if (world.HasAny<ecs::query::Added<gui::main_menu::ExitGameRequest>>())
+	if (world.HasAny<gui::main_menu::ExitGameRequest>())
 	{
-		world.AddEventComponent<eng::application::CloseRequestComponent>();
+		world.AddEvent<eng::application::CloseRequest>();
 	}
 
-	if (world.HasAny<ecs::query::Added<gui::main_menu::LoadGameRequest>>())
+	if (world.HasAny<gui::main_menu::LoadGameRequest>())
 	{
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::main_menu::NewGameRequest>>())
+	for (const auto& request : world.Events<gui::main_menu::NewGameRequest>())
 	{
-		const auto& request = world.ReadComponent<gui::main_menu::NewGameRequest>(entity);
-		world.AddEventComponent<eng::level::LoadRequest>(request.m_Level);
+		world.AddEvent<eng::level::LoadRequest>(request.m_Level);
 	}
 }

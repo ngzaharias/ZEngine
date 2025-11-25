@@ -10,7 +10,7 @@ namespace ecs
 
 namespace dbg
 {
-	struct ImGuiDemoRequestComponent;
+	struct ImGuiDemoRequest;
 
 	struct ImGuiDemoWindowComponent : public ecs::Component<ImGuiDemoWindowComponent> { };
 
@@ -19,7 +19,7 @@ namespace dbg
 	public:
 		using World = ecs::WorldView<
 			dbg::ImGuiDemoWindowComponent,
-			const dbg::ImGuiDemoRequestComponent>;
+			const dbg::ImGuiDemoRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

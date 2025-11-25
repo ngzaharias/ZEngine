@@ -117,7 +117,7 @@ bool game::Application::ShouldClose()
 	if (base::ShouldClose())
 		return true;
 
-	using World = ecs::WorldView<eng::application::CloseRequestComponent>;
+	using World = ecs::WorldView<eng::application::CloseRequest>;
 	World world = m_GameClient.m_EntityWorld.GetWorldView<World>();
-	return world.HasAny<ecs::query::Include<eng::application::CloseRequestComponent>>();
+	return world.HasAny<eng::application::CloseRequest>();
 }

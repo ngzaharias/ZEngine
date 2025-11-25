@@ -5,7 +5,7 @@
 
 namespace gamestate
 {
-	struct RequestComponent;
+	struct ChangeRequest;
 }
 
 namespace ecs
@@ -16,7 +16,7 @@ namespace ecs
 namespace dbg
 {
 	struct NetworkWindowComponent;
-	struct NetworkWindowRequestComponent;
+	struct NetworkWindowRequest;
 
 	class NetworkSystem final : public ecs::System
 	{
@@ -24,8 +24,8 @@ namespace dbg
 		using World = ecs::WorldView<
 			dbg::NetworkWindowComponent,
 			ecs::NameComponent,
-			gamestate::RequestComponent,
-			const dbg::NetworkWindowRequestComponent>;
+			gamestate::ChangeRequest,
+			const dbg::NetworkWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

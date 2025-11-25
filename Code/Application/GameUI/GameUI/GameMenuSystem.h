@@ -17,7 +17,7 @@ namespace eng
 
 namespace eng::application
 {
-	struct CloseRequestComponent;
+	struct CloseRequest;
 }
 
 namespace eng::level
@@ -45,13 +45,13 @@ namespace gui::game_menu
 	class MenuSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView <
 			// Resources
 			eng::InputManager,
 			eng::UIManager,
 			// Components
 			ecs::NameComponent,
-			eng::application::CloseRequestComponent,
+			eng::application::CloseRequest,
 			eng::level::LoadRequest,
 			gui::game_menu::CloseRequest,
 			const eng::settings::LaunchComponent,

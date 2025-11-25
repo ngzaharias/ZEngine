@@ -21,22 +21,22 @@ gui::DCGameMenu::~DCGameMenu()
 
 void gui::DCGameMenu::OnCloseCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::game_menu::CloseRequest>();
+	m_EntityWorld->AddEvent<gui::game_menu::CloseRequest>();
 }
 
 void gui::DCGameMenu::OnExitGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::game_menu::ExitGameRequest>();
+	m_EntityWorld->AddEvent<gui::game_menu::ExitGameRequest>();
 }
 
 void gui::DCGameMenu::OnExitToMenuCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::game_menu::ExitToMenuRequest>();
+	m_EntityWorld->AddEvent<gui::game_menu::ExitToMenuRequest>();
 }
 
 void gui::DCGameMenu::OnSettingsCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::settings_menu::OpenRequest>();
+	m_EntityWorld->AddEvent<gui::settings_menu::OpenRequest>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCGameMenu)

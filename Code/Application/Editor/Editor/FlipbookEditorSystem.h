@@ -17,7 +17,7 @@ namespace eng
 
 namespace editor
 {
-	struct FlipbookWindowRequestComponent;
+	struct FlipbookWindowRequest;
 
 	struct FlipbookAssetOpenComponent : public ecs::Component<FlipbookAssetOpenComponent> { };
 	struct FlipbookAssetSaveComponent : public ecs::Component<FlipbookAssetSaveComponent> { };
@@ -64,7 +64,7 @@ namespace editor
 			editor::FlipbookAssetSaveComponent,
 			editor::FlipbookBatchingComponent,
 			editor::FlipbookWindowComponent,
-			const editor::FlipbookWindowRequestComponent>;
+			const editor::FlipbookWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

@@ -46,25 +46,25 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	//////////////////////////////////////////////////////////////////////////
 	// Events
 
-	if (world.HasAny<ecs::query::Added<gui::game_menu::CloseRequest>>())
+	if (world.HasAny<gui::game_menu::CloseRequest>())
 	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::game_menu::WindowComponent>>())
 			world.DestroyEntity(entity);
 	}
 
-	if (world.HasAny<ecs::query::Added<gui::game_menu::ExitGameRequest>>())
+	if (world.HasAny<gui::game_menu::ExitGameRequest>())
 	{
-		world.AddEventComponent<eng::application::CloseRequestComponent>();
+		world.AddEvent<eng::application::CloseRequest>();
 	}
 
-	if (world.HasAny<ecs::query::Added<gui::game_menu::ExitToMenuRequest>>())
+	if (world.HasAny<gui::game_menu::ExitToMenuRequest>())
 	{
 		const auto& settings = world.ReadSingleton<eng::settings::LaunchComponent>();
-		world.AddEventComponent<eng::level::LoadRequest>(settings.m_Level);
-		world.AddEventComponent<gui::game_menu::CloseRequest>();
+		world.AddEvent<eng::level::LoadRequest>(settings.m_Level);
+		world.AddEvent<gui::game_menu::CloseRequest>();
 	}
 
-	if (world.HasAny<ecs::query::Added<gui::game_menu::OpenRequest>>())
+	if (world.HasAny<gui::game_menu::OpenRequest>())
 	{
 		const ecs::Entity entity = world.CreateEntity();
 		world.AddComponent<gui::game_menu::WindowComponent>(entity);

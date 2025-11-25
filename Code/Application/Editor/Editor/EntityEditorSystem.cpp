@@ -19,6 +19,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Visitor.h"
+#include "GameDebug/MenuBarComponents.h"
 #include "Hidden/HiddenCountComponent.h"
 #include "Hidden/HiddenGroupComponent.h"
 #include "Hidden/HiddenObjectComponent.h"
@@ -147,7 +148,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(800, 600.f);
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::EntityWindowRequestComponent>>())
+	for (const auto& request : world.Events<editor::EntityWindowRequest>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

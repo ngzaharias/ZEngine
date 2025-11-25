@@ -1,6 +1,9 @@
 #pragma once
 
 template<typename Type>
+class Array;
+
+template<typename Type>
 class Set;
 
 namespace ecs
@@ -49,10 +52,10 @@ namespace ecs
 		auto WriteComponent(const Entity& entity, const bool alive = true)->TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
-		// Component - Event
+		// Event
 
-		template<class TComponent, typename... TArgs>
-		auto AddEventComponent(TArgs&&... args)->decltype(auto);
+		template<class TEvent, typename... TArgs>
+		auto AddEvent(TArgs&&... args)->decltype(auto);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Singleton
@@ -75,8 +78,11 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Query
 
-		template<class TQuery>
+		template<class TType>
 		auto HasAny()-> bool;
+
+		template<class TEvent>
+		auto Events()-> const Array<TEvent>&;
 
 		template<class TQuery>
 		auto Query()-> const Set<Entity>&;

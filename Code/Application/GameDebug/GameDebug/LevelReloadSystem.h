@@ -10,7 +10,7 @@ namespace eng::level
 
 namespace dbg::level
 {
-	struct ReloadRequestComponent;
+	struct ReloadRequest;
 }
 
 namespace dbg::level
@@ -21,7 +21,7 @@ namespace dbg::level
 		using World = ecs::WorldView<
 			eng::level::LoadRequest,
 			const eng::level::LoadedComponent,
-			const dbg::level::ReloadRequestComponent>;
+			const dbg::level::ReloadRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

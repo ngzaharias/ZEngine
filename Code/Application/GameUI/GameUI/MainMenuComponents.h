@@ -2,6 +2,7 @@
 
 #include "Core/Name.h"
 #include "ECS/Component.h"
+#include "ECS/Event.h"
 
 namespace gui::main_menu
 {
@@ -10,10 +11,10 @@ namespace gui::main_menu
 		str::Name m_NewGame = {};
 	};
 
-	struct ContinueGameRequest final : public ecs::EventComponent<ContinueGameRequest> { };
-	struct ExitGameRequest final : public ecs::EventComponent<ExitGameRequest> { };
-	struct LoadGameRequest final : public ecs::EventComponent<LoadGameRequest> { };
-	struct NewGameRequest final : public ecs::EventComponent<NewGameRequest> 
+	struct ContinueGameRequest final : public ecs::Event<ContinueGameRequest> { };
+	struct ExitGameRequest final : public ecs::Event<ExitGameRequest> { };
+	struct LoadGameRequest final : public ecs::Event<LoadGameRequest> { };
+	struct NewGameRequest final : public ecs::Event<NewGameRequest> 
 	{ 
 		str::Name m_Level = {};
 	};

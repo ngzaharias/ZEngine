@@ -24,7 +24,7 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 			joinComponent.m_State = NetworkJoinComponent::EState::Connect;
 
 			const auto& request = std::get<gamestate::NetworkJoin>(stateComponent.m_State);
-			auto& requestComponent = world.AddEventComponent<eng::network::RequestComponent>();
+			auto& requestComponent = world.AddEvent<eng::network::ChangeRequest>();
 
 			eng::network::Startup startup;
 			startup.m_Mode = request.m_Mode;
@@ -63,7 +63,7 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 
 		case NetworkJoinComponent::EState::LoadLevel:
 		{
-			world.AddEventComponent<eng::level::LoadRequest>();
+			world.AddEvent<eng::level::LoadRequest>();
 			writeComponent.m_State = NetworkJoinComponent::EState::SyncWorld;
 		} break;
 
@@ -75,7 +75,7 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 		case NetworkJoinComponent::EState::Finished:
 		{
 			writeComponent.m_State = NetworkJoinComponent::EState::None;
-			world.AddEventComponent<gamestate::StateFinishedComponent>();
+			world.AddEvent<gamestate::ChangeFinished>();
 		} break;
 		}
 	}

@@ -38,21 +38,19 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 	//////////////////////////////////////////////////////////////////////////
 	// Events
 
-	if (world.HasAny<ecs::query::Added<gui::settings_menu::CloseRequest>>())
+	if (world.HasAny<gui::settings_menu::CloseRequest>())
 	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::settings_menu::WindowComponent>>())
 			world.DestroyEntity(entity);
 	}
 
-	if (world.HasAny<ecs::query::Added<gui::settings_menu::OpenRequest>>())
+	if (world.HasAny<gui::settings_menu::OpenRequest>())
 	{
 		world.AddComponent<gui::settings_menu::WindowComponent>(world.CreateEntity());
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::settings_menu::ValueRequest>>())
+	for (const auto& eventData : world.Events<gui::settings_menu::ValueRequest>())
 	{
-		const auto& eventData = world.ReadComponent<gui::settings_menu::ValueRequest>(entity);
-
 		// audio
 		if (eventData.m_EffectVolume)
 			world.WriteSingleton<eng::settings::AudioComponent>().m_EffectVolume = *eventData.m_EffectVolume;

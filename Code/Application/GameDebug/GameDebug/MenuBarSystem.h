@@ -4,47 +4,47 @@
 
 namespace dbg
 {
-	struct BufferWindowRequestComponent;
-	struct ContainerWindowRequestComponent;
-	struct EntityWindowRequestComponent;
-	struct FlipbookWindowRequestComponent;
-	struct ImGuiDemoRequestComponent;
-	struct ImNodesDemoRequestComponent;
-	struct InspectorDemoRequestComponent;
-	struct NetworkWindowRequestComponent;
-	struct ShapeWindowRequestComponent;
-	struct SplineWindowRequestComponent;
+	struct BufferWindowRequest;
+	struct ContainerWindowRequest;
+	struct EntityWindowRequest;
+	struct FlipbookWindowRequest;
+	struct ImGuiDemoRequest;
+	struct ImNodesDemoRequest;
+	struct InspectorDemoRequest;
+	struct NetworkWindowRequest;
+	struct ShapeWindowRequest;
+	struct SplineWindowRequest;
 }
 
 namespace dbg::level
 {
-	struct OpenRequestComponent;
-	struct ReloadRequestComponent;
-	struct SaveRequestComponent;
-	struct SaveAsRequestComponent;
+	struct OpenRequest;
+	struct ReloadRequest;
+	struct SaveRequest;
+	struct SaveAsRequest;
 }
 
 namespace dbg::settings
 {
-	struct WindowRequestComponent;
+	struct WindowRequest;
 }
 
 namespace editor
 {
-	struct AssetBrowserWindowRequestComponent;
-	struct EntityWindowRequestComponent;
-	struct FlipbookWindowRequestComponent;
-	struct InputWindowRequestComponent;
-	struct SettingsWindowRequestComponent;
-	struct SpriteWindowRequestComponent;
-	struct TableWindowRequestComponent;
-	struct TextureWindowRequestComponent;
-	struct TrajectoryWindowRequestComponent;
+	struct AssetBrowserWindowRequest;
+	struct EntityWindowRequest;
+	struct FlipbookWindowRequest;
+	struct InputWindowRequest;
+	struct SettingsWindowRequest;
+	struct SpriteWindowRequest;
+	struct TableWindowRequest;
+	struct TextureWindowRequest;
+	struct TrajectoryWindowRequest;
 }
 
 namespace editor::settings
 {
-	struct WindowRequestComponent;
+	struct WindowRequest;
 }
 
 namespace eng
@@ -52,7 +52,7 @@ namespace eng
 	class AssetManager;
 	class InputManager;
 	class TableHeadmaster;
-	struct TablesReloadedEvent;
+	struct TablesReloaded;
 }
 
 namespace dbg
@@ -65,32 +65,32 @@ namespace dbg
 			eng::AssetManager,
 			eng::TableHeadmaster,
 			const eng::InputManager,
-			// Components
-			dbg::BufferWindowRequestComponent,
-			dbg::ContainerWindowRequestComponent,
-			dbg::EntityWindowRequestComponent,
-			dbg::FlipbookWindowRequestComponent,
-			dbg::ImGuiDemoRequestComponent,
-			dbg::ImNodesDemoRequestComponent,
-			dbg::InspectorDemoRequestComponent,
-			dbg::level::OpenRequestComponent,
-			dbg::level::ReloadRequestComponent,
-			dbg::level::SaveRequestComponent,
-			dbg::level::SaveAsRequestComponent,
-			dbg::NetworkWindowRequestComponent,
-			dbg::settings::WindowRequestComponent,
-			dbg::ShapeWindowRequestComponent,
-			dbg::SplineWindowRequestComponent,
-			editor::AssetBrowserWindowRequestComponent,
-			editor::EntityWindowRequestComponent,
-			editor::FlipbookWindowRequestComponent,
-			editor::InputWindowRequestComponent,
-			editor::settings::WindowRequestComponent,
-			editor::SpriteWindowRequestComponent,
-			editor::TableWindowRequestComponent,
-			editor::TextureWindowRequestComponent,
-			editor::TrajectoryWindowRequestComponent,
-			eng::TablesReloadedEvent>;
+			// Events
+			dbg::BufferWindowRequest,
+			dbg::ContainerWindowRequest,
+			dbg::EntityWindowRequest,
+			dbg::FlipbookWindowRequest,
+			dbg::ImGuiDemoRequest,
+			dbg::ImNodesDemoRequest,
+			dbg::InspectorDemoRequest,
+			dbg::level::OpenRequest,
+			dbg::level::ReloadRequest,
+			dbg::level::SaveAsRequest,
+			dbg::level::SaveRequest,
+			dbg::NetworkWindowRequest,
+			dbg::settings::WindowRequest,
+			dbg::ShapeWindowRequest,
+			dbg::SplineWindowRequest,
+			editor::AssetBrowserWindowRequest,
+			editor::EntityWindowRequest,
+			editor::FlipbookWindowRequest,
+			editor::InputWindowRequest,
+			editor::settings::WindowRequest,
+			editor::SpriteWindowRequest,
+			editor::TableWindowRequest,
+			editor::TextureWindowRequest,
+			editor::TrajectoryWindowRequest,
+			eng::TablesReloaded>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

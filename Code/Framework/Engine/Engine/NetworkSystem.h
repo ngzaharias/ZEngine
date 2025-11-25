@@ -15,18 +15,21 @@ namespace net
 
 namespace eng::network
 {
-	struct RequestComponent;
-	struct RequestFinishedComponent;
+	struct ChangeFinished;
+	struct ChangeRequest;
 	struct StateComponent;
+}
 
+namespace eng::network
+{
 	class NetworkSystem : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
 			eng::NetworkManager,
-			eng::network::RequestFinishedComponent,
+			eng::network::ChangeFinished,
 			eng::network::StateComponent,
-			const eng::network::RequestComponent>;
+			const eng::network::ChangeRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

@@ -48,26 +48,30 @@ void gui::GameUI::Register(const Dependencies& dependencies)
 {
 	// components
 	{
-		m_EntityWorld.RegisterComponent<gui::game_menu::CloseRequest>();
-		m_EntityWorld.RegisterComponent<gui::game_menu::ExitGameRequest>();
-		m_EntityWorld.RegisterComponent<gui::game_menu::ExitToMenuRequest>();
-		m_EntityWorld.RegisterComponent<gui::game_menu::OpenRequest>();
 		m_EntityWorld.RegisterComponent<gui::game_menu::WindowComponent>();
 		m_EntityWorld.RegisterComponent<gui::input::BindingsComponent>();
-		m_EntityWorld.RegisterComponent<gui::level_complete::ExitGameRequest>();
-		m_EntityWorld.RegisterComponent<gui::level_complete::ExitToMenuRequest>();
-		m_EntityWorld.RegisterComponent<gui::level_complete::ResetGameRequest>();
 		m_EntityWorld.RegisterComponent<gui::level_complete::WindowComponent>();
-		m_EntityWorld.RegisterComponent<gui::loading::CloseRequest>();
-		m_EntityWorld.RegisterComponent<gui::main_menu::ContinueGameRequest>();
-		m_EntityWorld.RegisterComponent<gui::main_menu::ExitGameRequest>();
-		m_EntityWorld.RegisterComponent<gui::main_menu::LoadGameRequest>();
-		m_EntityWorld.RegisterComponent<gui::main_menu::NewGameRequest>();
 		m_EntityWorld.RegisterComponent<gui::main_menu::WindowComponent>();
-		m_EntityWorld.RegisterComponent<gui::settings_menu::CloseRequest>();
-		m_EntityWorld.RegisterComponent<gui::settings_menu::OpenRequest>();
-		m_EntityWorld.RegisterComponent<gui::settings_menu::ValueRequest>();
 		m_EntityWorld.RegisterComponent<gui::settings_menu::WindowComponent>();
+	}
+
+	// events
+	{
+		m_EntityWorld.RegisterEvent<gui::game_menu::CloseRequest>();
+		m_EntityWorld.RegisterEvent<gui::game_menu::ExitGameRequest>();
+		m_EntityWorld.RegisterEvent<gui::game_menu::ExitToMenuRequest>();
+		m_EntityWorld.RegisterEvent<gui::game_menu::OpenRequest>();
+		m_EntityWorld.RegisterEvent<gui::level_complete::ExitGameRequest>();
+		m_EntityWorld.RegisterEvent<gui::level_complete::ExitToMenuRequest>();
+		m_EntityWorld.RegisterEvent<gui::level_complete::ResetGameRequest>();
+		m_EntityWorld.RegisterEvent<gui::loading::CloseRequest>();
+		m_EntityWorld.RegisterEvent<gui::main_menu::ContinueGameRequest>();
+		m_EntityWorld.RegisterEvent<gui::main_menu::ExitGameRequest>();
+		m_EntityWorld.RegisterEvent<gui::main_menu::LoadGameRequest>();
+		m_EntityWorld.RegisterEvent<gui::main_menu::NewGameRequest>();
+		m_EntityWorld.RegisterEvent<gui::settings_menu::CloseRequest>();
+		m_EntityWorld.RegisterEvent<gui::settings_menu::OpenRequest>();
+		m_EntityWorld.RegisterEvent<gui::settings_menu::ValueRequest>();
 	}
 
 	// systems

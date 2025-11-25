@@ -25,7 +25,7 @@ void eng::settings::LaunchSystem::Initialise(World& world)
 
 	if (!settings.m_Level.IsEmpty())
 	{
-		auto& request = world.AddEventComponent<eng::level::LoadRequest>();
+		auto& request = world.AddEvent<eng::level::LoadRequest>();
 		request.m_Name = settings.m_Level;
 		request.m_IsSplash = true;
 	}

@@ -4,22 +4,22 @@
 
 namespace eng::network
 {
-	struct RequestComponent;
-	struct RequestFinishedComponent;
+	struct ChangeFinished;
+	struct ChangeRequest;
 }
 
 namespace gamestate
 {
+	struct ChangeFinished;
 	struct StateComponent;
-	struct StateFinishedComponent;
 
 	class NetworkStopSystem : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::network::RequestComponent,
-			gamestate::StateFinishedComponent,
-			const eng::network::RequestFinishedComponent,
+			eng::network::ChangeRequest,
+			gamestate::ChangeFinished,
+			const eng::network::ChangeFinished,
 			const gamestate::StateComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

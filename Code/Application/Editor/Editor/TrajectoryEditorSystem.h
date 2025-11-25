@@ -25,7 +25,7 @@ namespace projectile
 
 namespace editor
 {
-	struct TrajectoryWindowRequestComponent;
+	struct TrajectoryWindowRequest;
 
 	struct TrajectoryAssetOpenComponent : public ecs::Component<TrajectoryAssetOpenComponent> { };
 	struct TrajectoryAssetSaveComponent : public ecs::Component<TrajectoryAssetSaveComponent> { };
@@ -51,7 +51,7 @@ namespace editor
 			editor::TrajectoryAssetSaveComponent,
 			editor::TrajectoryWindowComponent,
 			projectile::CreateRequestComponent,
-			const editor::TrajectoryWindowRequestComponent>;
+			const editor::TrajectoryWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

@@ -8,6 +8,7 @@
 #include "Engine/UIManager.h"
 #include "GameUI/DCLoadingScreen.h"
 #include "GameUI/HintTable.h"
+#include "GameUI/LoadingComponents.h"
 
 namespace
 {
@@ -40,7 +41,7 @@ void gui::loading::LoadingSystem::Update(World& world, const GameTime& gameTime)
 	}
 
 	// Events
-	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<gui::loading::CloseRequest>>())
+	for (const auto& request : world.Events<gui::loading::CloseRequest>())
 	{
 		for (const ecs::Entity& levelEntity : world.Query<ecs::query::Include<eng::level::LoadingComponent>>())
 		{

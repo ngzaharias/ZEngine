@@ -4,40 +4,40 @@
 
 namespace dbg
 {
-	struct BufferWindowRequestComponent : ecs::EventComponent<BufferWindowRequestComponent> { };
-	struct ClientWindowRequestComponent : ecs::EventComponent<ClientWindowRequestComponent> { };
-	struct ContainerWindowRequestComponent : ecs::EventComponent<ContainerWindowRequestComponent> { };
-	struct EntityWindowRequestComponent : ecs::EventComponent<EntityWindowRequestComponent> { };
-	struct ImGuiDemoRequestComponent : ecs::EventComponent<ImGuiDemoRequestComponent> { };
-	struct ImNodesDemoRequestComponent : ecs::EventComponent<ImNodesDemoRequestComponent> { };
-	struct InspectorDemoRequestComponent : ecs::EventComponent<InspectorDemoRequestComponent> { };
-	struct NetworkWindowRequestComponent : ecs::EventComponent<NetworkWindowRequestComponent> { };
-	struct ServerWindowRequestComponent : ecs::EventComponent<ServerWindowRequestComponent> { };
-	struct ShapeWindowRequestComponent : ecs::EventComponent<ShapeWindowRequestComponent> { };
-	struct SplineWindowRequestComponent : ecs::EventComponent<SplineWindowRequestComponent> { };
+	struct BufferWindowRequest : ecs::Event<BufferWindowRequest> { };
+	struct ClientWindowRequest : ecs::Event<ClientWindowRequest> { };
+	struct ContainerWindowRequest : ecs::Event<ContainerWindowRequest> { };
+	struct EntityWindowRequest : ecs::Event<EntityWindowRequest> { };
+	struct ImGuiDemoRequest : ecs::Event<ImGuiDemoRequest> { };
+	struct ImNodesDemoRequest : ecs::Event<ImNodesDemoRequest> { };
+	struct InspectorDemoRequest : ecs::Event<InspectorDemoRequest> { };
+	struct NetworkWindowRequest : ecs::Event<NetworkWindowRequest> { };
+	struct ServerWindowRequest : ecs::Event<ServerWindowRequest> { };
+	struct ShapeWindowRequest : ecs::Event<ShapeWindowRequest> { };
+	struct SplineWindowRequest : ecs::Event<SplineWindowRequest> { };
 }
 
 namespace dbg::level
 {
-	struct ReloadRequestComponent : ecs::EventComponent<ReloadRequestComponent> { };
-	struct SaveRequestComponent : ecs::EventComponent<SaveRequestComponent> { };
-	struct SaveAsRequestComponent : ecs::EventComponent<SaveAsRequestComponent> { };
+	struct ReloadRequest : ecs::Event<ReloadRequest> { };
+	struct SaveRequest : ecs::Event<SaveRequest> { };
+	struct SaveAsRequest : ecs::Event<SaveAsRequest> { };
 }
 
 namespace editor
 {
-	struct AssetBrowserWindowRequestComponent : ecs::EventComponent<AssetBrowserWindowRequestComponent> { };
-	struct EntityWindowRequestComponent : ecs::EventComponent<EntityWindowRequestComponent> { };
-	struct FlipbookWindowRequestComponent : ecs::EventComponent<FlipbookWindowRequestComponent> { };
-	struct InputWindowRequestComponent : ecs::EventComponent<InputWindowRequestComponent> { };
-	struct SettingsWindowRequestComponent : ecs::EventComponent<SettingsWindowRequestComponent> { };
-	struct SpriteWindowRequestComponent : ecs::EventComponent<SpriteWindowRequestComponent> { };
-	struct TableWindowRequestComponent : ecs::EventComponent<TableWindowRequestComponent> { };
-	struct TextureWindowRequestComponent : ecs::EventComponent<TextureWindowRequestComponent> { };
-	struct TrajectoryWindowRequestComponent : ecs::EventComponent<TrajectoryWindowRequestComponent> { };
+	struct AssetBrowserWindowRequest : ecs::Event<AssetBrowserWindowRequest> { };
+	struct EntityWindowRequest : ecs::Event<EntityWindowRequest> { };
+	struct FlipbookWindowRequest : ecs::Event<FlipbookWindowRequest> { };
+	struct InputWindowRequest : ecs::Event<InputWindowRequest> { };
+	struct SettingsWindowRequest : ecs::Event<SettingsWindowRequest> { };
+	struct SpriteWindowRequest : ecs::Event<SpriteWindowRequest> { };
+	struct TableWindowRequest : ecs::Event<TableWindowRequest> { };
+	struct TextureWindowRequest : ecs::Event<TextureWindowRequest> { };
+	struct TrajectoryWindowRequest : ecs::Event<TrajectoryWindowRequest> { };
 }
 
 namespace editor::settings
 {
-	struct WindowRequestComponent : ecs::EventComponent<WindowRequestComponent> { };
+	struct WindowRequest : ecs::Event<WindowRequest> { };
 }

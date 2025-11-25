@@ -14,7 +14,7 @@ bool eng::TableHeadmaster::IsRegistered() const
 template<class TManager, typename... TArgs>
 void eng::TableHeadmaster::Register(const str::String& filename, TArgs&&... args)
 {
-	Z_PANIC(!IsRegistered<TManager>(), "TableManager has already been registered!");
+	Z_PANIC(!IsRegistered<TManager>(), "TableManager is already registered!");
 
 	using NonConst = std::remove_const<TManager>::type;
 	const eng::TableId tableId = ToTypeIndex<NonConst, eng::TableTag>();
@@ -28,7 +28,7 @@ void eng::TableHeadmaster::Register(const str::String& filename, TArgs&&... args
 template<class TManager>
 auto eng::TableHeadmaster::GetManager() -> TManager&
 {
-	Z_PANIC(IsRegistered<TManager>(), "TableManager hasn't been registered!");
+	Z_PANIC(IsRegistered<TManager>(), "TableManager isn't registered!");
 
 	using NonConst = std::remove_const<TManager>::type;
 	const eng::TableId tableId = ToTypeIndex<NonConst, eng::TableTag>();
@@ -39,7 +39,7 @@ auto eng::TableHeadmaster::GetManager() -> TManager&
 template<class TManager>
 auto eng::TableHeadmaster::GetManager() const -> const TManager&
 {
-	Z_PANIC(IsRegistered<TManager>(), "TableManager hasn't been registered!");
+	Z_PANIC(IsRegistered<TManager>(), "TableManager isn't registered!");
 
 	using NonConst = std::remove_const<TManager>::type;
 	const eng::TableId tableId = ToTypeIndex<NonConst, eng::TableTag>();

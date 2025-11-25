@@ -8,7 +8,7 @@
 
 namespace dbg::settings
 {
-	struct WindowRequestComponent final : public ecs::EventComponent<WindowRequestComponent> { };
+	struct WindowRequest final : public ecs::Event<WindowRequest> { };
 
 	struct WindowComponent final : public ecs::Component<WindowComponent>
 	{

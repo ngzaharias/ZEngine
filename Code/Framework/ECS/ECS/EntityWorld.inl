@@ -3,22 +3,24 @@
 template<class TType>
 bool ecs::EntityWorld::IsRegistered() const
 {
-	using NonConst = std::remove_const<TType>::type;
+	static_assert(!std::is_const<TType>::value, "Type cannot be const.");
 
-	constexpr bool isComponent = std::is_base_of<ecs::Component<NonConst>, NonConst>::value;
-	constexpr bool isSystem = std::is_base_of<ecs::System, NonConst>::value;
-
-	if constexpr (isComponent)
+	if constexpr (std::is_base_of<ecs::Component<TType>, TType>::value)
 	{
-		return m_EntityStorage.IsRegistered<NonConst>();
+		return m_ComponentRegistry.IsRegistered<TType>();
 	}
-	else if constexpr (isSystem)
+	else if constexpr (std::is_base_of<ecs::Event<TType>, TType>::value)
 	{
-		return m_SystemRegistry.IsRegistered<NonConst>();
+		return m_EventRegistry.IsRegistered<TType>();
 	}
-
-	static_assert(isComponent || isSystem, "Type doesn't inherit from ecs::Component, ecs::Manager or ecs::System!");
-	return false;
+	else if constexpr (std::is_base_of<ecs::System, TType>::value)
+	{
+		return m_SystemRegistry.IsRegistered<TType>();
+	}
+	else
+	{
+		return m_ResourceRegistry.IsRegistered<TType>();
+	}
 }
 
 template<class TWorldView>
@@ -39,14 +41,19 @@ inline auto ecs::EntityWorld::CreateEntity()->ecs::Entity
 
 inline void ecs::EntityWorld::DestroyEntity(const ecs::Entity& entity)
 {
+	Z_PANIC(IsAlive(entity), "Entity isn't alive!");
 	m_FrameBuffer.DestroyEntity(entity);
 }
 
 template<class TComponent>
 void ecs::EntityWorld::RegisterComponent()
 {
-	using NonConst = typename std::remove_const<TComponent>::type;
-	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use RegisterSingleton instead.");
+	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
+	static_assert(!std::is_base_of<ecs::SingletonComponent<TComponent>, TComponent>::value, "Type inherits from ecs::SingletonComponent, use RegisterSingleton instead.");
+
+	Z_PANIC(!IsRegistered<TComponent>(), "Component is already registered!");
 
 	m_ComponentRegistry.Register<TComponent>();
 	m_EntityStorage.RegisterComponent<TComponent>();
@@ -56,150 +63,207 @@ void ecs::EntityWorld::RegisterComponent()
 template<class TComponent, typename... TArgs>
 auto ecs::EntityWorld::AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto)
 {
-	using NonConst = typename std::remove_const<TComponent>::type;
-	static_assert(std::is_base_of<ecs::Component<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::Component.");
-	static_assert(!std::is_base_of<ecs::EventComponent<NonConst>, NonConst>::value, "Type inherits from ecs::EventComponent, use AddEventComponent instead.");
-	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use AddSingleton instead.");
+	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::Component<TComponent>, TComponent>::value, "Type doesn't inherit from ecs::Component.");
+	static_assert(!std::is_base_of<ecs::Event<TComponent>, TComponent>::value, "Type inherits from ecs::EventComponent, use AddEvent instead.");
+	static_assert(!std::is_base_of<ecs::SingletonComponent<TComponent>, TComponent>::value, "Type inherits from ecs::SingletonComponent, use AddSingleton instead.");
 	
 	Z_PANIC(!entity.IsUnassigned(), "Entity is unassigned!");
-	Z_PANIC(IsRegistered<NonConst>(), "Component isn't registered!");
+	Z_PANIC(IsRegistered<TComponent>(), "Component isn't registered!");
 
-	return m_FrameBuffer.AddComponent<NonConst>(entity, std::forward<TArgs>(args)...);
+	return m_FrameBuffer.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
 }
 
 template<class TComponent>
 void ecs::EntityWorld::RemoveComponent(const ecs::Entity& entity)
 {
-	using NonConst = typename std::remove_const<TComponent>::type;
-	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent and isn't supported.");
+	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
+	static_assert(!std::is_base_of<ecs::SingletonComponent<TComponent>, TComponent>::value, "Type inherits from ecs::SingletonComponent and isn't supported.");
 
 	Z_PANIC(IsAlive(entity), "Entity isn't alive!");
-	Z_PANIC(HasComponent<NonConst>(entity), "Entity doesn't have this component!");
+	Z_PANIC(HasComponent<TComponent>(entity), "Entity doesn't have this component!");
 
-	m_FrameBuffer.RemoveComponent<NonConst>(entity);
+	m_FrameBuffer.RemoveComponent<TComponent>(entity);
 }
 
 template<class TComponent>
 bool ecs::EntityWorld::HasComponent(const ecs::Entity& entity, const bool alive /*= true*/) const
 {
-	using NonConst = typename std::remove_const<TComponent>::type;
-	static_assert(std::is_base_of<ecs::Component<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::Component.");
-	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent and isn't supported.");
+	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::Component<TComponent>, TComponent>::value, "Type doesn't inherit from ecs::Component.");
+	static_assert(!std::is_base_of<ecs::SingletonComponent<TComponent>, TComponent>::value, "Type inherits from ecs::SingletonComponent and isn't supported.");
 
-	Z_PANIC(IsRegistered<NonConst>(), "Component isn't registered!");
-
-	return m_EntityStorage.HasComponent<NonConst>(entity, alive);
+	Z_PANIC(IsRegistered<TComponent>(), "Component isn't registered!");
+	return m_EntityStorage.HasComponent<TComponent>(entity, alive);
 }
 
 template<class TComponent>
 auto ecs::EntityWorld::ReadComponent(const ecs::Entity& entity, const bool alive /*= true*/)->const TComponent&
 {
-	using NonConst = typename std::remove_const<TComponent>::type;
-	static_assert(std::is_base_of<ecs::Component<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::Component.");
-	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use ReadSingleton instead.");
+	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::Component<TComponent>, TComponent>::value, "Type doesn't inherit from ecs::Component.");
+	static_assert(!std::is_base_of<ecs::SingletonComponent<TComponent>, TComponent>::value, "Type inherits from ecs::SingletonComponent, use ReadSingleton instead.");
 
-	Z_PANIC(HasComponent<NonConst>(entity, alive), "Entity doesn't have this component!");
-
-	return m_EntityStorage.GetComponent< NonConst>(entity, alive);
+	Z_PANIC(HasComponent<TComponent>(entity, alive), "Entity doesn't have this component!");
+	return m_EntityStorage.GetComponent<TComponent>(entity, alive);
 }
 
 template<class TComponent>
 auto ecs::EntityWorld::WriteComponent(const ecs::Entity& entity, const bool alive /*= true*/)->TComponent&
 {
-	using NonConst = typename std::remove_const<TComponent>::type;
-	static_assert(std::is_base_of<ecs::Component<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::Component.");
-	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent, use WriteSingleton instead.");
+	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::Component<TComponent>, TComponent>::value, "Type doesn't inherit from ecs::Component.");
+	static_assert(!std::is_base_of<ecs::SingletonComponent<TComponent>, TComponent>::value, "Type inherits from ecs::SingletonComponent, use WriteSingleton instead.");
 
-	Z_PANIC(HasComponent<NonConst>(entity, alive), "Entity doesn't have this component!");
+	Z_PANIC(HasComponent<TComponent>(entity, alive), "Entity doesn't have this component!");
 
 	if (alive)
-		m_FrameBuffer.UpdateComponent<NonConst>(entity);
-	return m_EntityStorage.GetComponent<NonConst>(entity, alive);
+		m_FrameBuffer.UpdateComponent<TComponent>(entity);
+	return m_EntityStorage.GetComponent<TComponent>(entity, alive);
 }
 
-template<class TComponent, typename... TArgs>
-auto ecs::EntityWorld::AddEventComponent(TArgs&&... args)->decltype(auto)
+template<class TEvent>
+void ecs::EntityWorld::RegisterEvent()
 {
-	using NonConst = typename std::remove_const<TComponent>::type;
-	static_assert(std::is_base_of<ecs::EventComponent<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::EventComponent.");
-	static_assert(!std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type inherits from ecs::SingletonComponent and isn't supported.");
+	static_assert(!std::is_const<TEvent>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TEvent>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TEvent>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
 
-	Z_PANIC(IsRegistered<NonConst>(), "Component isn't registered!");
+	Z_PANIC(!IsRegistered<TEvent>(), "Event is already registered!");
 
-	const ecs::Entity entity = CreateEntity();
-	m_EventEntities.Append(entity);
+	m_EventRegistry.Register<TEvent>();
+	m_EntityStorage.RegisterEvent<TEvent>();
+	m_FrameBuffer.RegisterEvent<TEvent>();
+}
 
-	return m_FrameBuffer.AddComponent<NonConst>(entity, std::forward<TArgs>(args)...);
+template<class TEvent, typename... TArgs>
+auto ecs::EntityWorld::AddEvent(TArgs&&... args)->decltype(auto)
+{
+	static_assert(!std::is_const<TEvent>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TEvent>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TEvent>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
+
+	Z_PANIC(IsRegistered<TEvent>(), "Event isn't registered!");
+	return m_FrameBuffer.AddEvent<TEvent>(std::forward<TArgs>(args)...);
 }
 
 template<class TSingleton, typename... TArgs>
 void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
 {
-	using NonConst = typename std::remove_const<TSingleton>::type;
-	static_assert(std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::SingletonComponent.");
+	static_assert(!std::is_const<TSingleton>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TSingleton>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TSingleton>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::SingletonComponent<TSingleton>, TSingleton>::value, "Type doesn't inherit from ecs::SingletonComponent.");
+
+	Z_PANIC(!IsRegistered<TSingleton>(), "Singleton is already registered!");
 
 	m_ComponentRegistry.Register<TSingleton>();
 	m_EntityStorage.RegisterComponent<TSingleton>();
 	m_FrameBuffer.RegisterComponent<TSingleton>();
 
-	m_FrameBuffer.AddComponent<NonConst>(m_SingletonEntity, std::forward<TArgs>(args)...);
+	m_FrameBuffer.AddComponent<TSingleton>(m_SingletonEntity, std::forward<TArgs>(args)...);
 }
 
 template<class TSingleton>
 auto ecs::EntityWorld::ReadSingleton()->const TSingleton&
 {
-	using NonConst = typename std::remove_const<TSingleton>::type;
-	static_assert(std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::SingletonComponent.");
+	static_assert(!std::is_const<TSingleton>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TSingleton>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TSingleton>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::SingletonComponent<TSingleton>, TSingleton>::value, "Type doesn't inherit from ecs::SingletonComponent.");
 
-	Z_PANIC(IsRegistered<NonConst>(), "Component isn't registered!");
-
-	return m_EntityStorage.GetComponent<NonConst>(m_SingletonEntity);
+	Z_PANIC(IsRegistered<TSingleton>(), "Singleton isn't registered!");
+	return m_EntityStorage.GetComponent<TSingleton>(m_SingletonEntity);
 }
 
 template<class TSingleton>
 auto ecs::EntityWorld::WriteSingleton()->TSingleton&
 {
-	using NonConst = typename std::remove_const<TSingleton>::type;
-	static_assert(std::is_base_of<ecs::SingletonComponent<NonConst>, NonConst>::value, "Type doesn't inherit from ecs::SingletonComponent.");
+	static_assert(!std::is_const<TSingleton>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TSingleton>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TSingleton>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::SingletonComponent<TSingleton>, TSingleton>::value, "Type doesn't inherit from ecs::SingletonComponent.");
 
-	Z_PANIC(IsRegistered<NonConst>(), "Component isn't registered!");
+	Z_PANIC(IsRegistered<TSingleton>(), "Singleton isn't registered!");
 
-	m_FrameBuffer.UpdateComponent<NonConst>(m_SingletonEntity);
-	return m_EntityStorage.GetComponent<NonConst>(m_SingletonEntity);
+	m_FrameBuffer.UpdateComponent<TSingleton>(m_SingletonEntity);
+	return m_EntityStorage.GetComponent<TSingleton>(m_SingletonEntity);
 }
 
 template<class TResource>
 void ecs::EntityWorld::RegisterResource(TResource& resource)
 {
+	static_assert(!std::is_const<TResource>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TResource>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TResource>, "Type cannot be a pointer.");
+
+	Z_PANIC(!IsRegistered<TResource>(), "Resource is already registered!");
 	return m_ResourceRegistry.Register<TResource>(resource);
 }
 
 template<class TResource>
 auto ecs::EntityWorld::ReadResource() -> const TResource&
 {
+	static_assert(!std::is_const<TResource>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TResource>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TResource>, "Type cannot be a pointer.");
+
+	Z_PANIC(IsRegistered<TResource>(), "Resource isn't registered!");
 	return m_ResourceRegistry.Get<TResource>();
 }
 
 template<class TResource>
 auto ecs::EntityWorld::WriteResource() -> TResource&
 {
+	static_assert(!std::is_const<TResource>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TResource>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TResource>, "Type cannot be a pointer.");
+
+	Z_PANIC(IsRegistered<TResource>(), "Resource isn't registered!");
 	return m_ResourceRegistry.Get<TResource>();
 }
 
 template<class TSystem, typename... TArgs>
 void ecs::EntityWorld::RegisterSystem(TArgs&&... args)
 {
+	static_assert(!std::is_const<TSystem>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TSystem>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TSystem>, "Type cannot be a pointer.");
+
+	Z_PANIC(!IsRegistered<TSystem>(), "System is already registered!");
 	m_SystemRegistry.Register<TSystem>(std::forward<TArgs>(args)...);
 }
 
 template<class TSystem>
 void ecs::EntityWorld::RegisterSystemPriority(const int32 priority)
 {
+	static_assert(!std::is_const<TSystem>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TSystem>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TSystem>, "Type cannot be a pointer.");
+
+	Z_PANIC(IsRegistered<TSystem>(), "System isn't registered!");
 	m_SystemRegistry.RegisterPriority<TSystem>(priority);
 }
 
 template<class TSystem>
 auto ecs::EntityWorld::GetSystem()->TSystem&
 {
+	static_assert(!std::is_const<TSystem>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TSystem>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TSystem>, "Type cannot be a pointer.");
+
+	Z_PANIC(IsRegistered<TSystem>(), "System isn't registered!");
 	return m_SystemRegistry.GetSystem<TSystem>();
 }

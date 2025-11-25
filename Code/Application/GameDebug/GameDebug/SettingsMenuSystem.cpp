@@ -22,7 +22,7 @@ namespace
 void dbg::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
 	const bool hasWindow = world.HasAny<ecs::query::Include<dbg::settings::WindowComponent>>();
-	if (!hasWindow && world.HasAny<ecs::query::Include<dbg::settings::WindowRequestComponent>>())
+	if (!hasWindow && world.HasAny<dbg::settings::WindowRequest>())
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Debug Settings");

@@ -51,7 +51,7 @@ namespace eng::level
 	};
 
 	/// \brief Request to load a specific level.
-	struct LoadRequest : public ecs::EventComponent<LoadRequest>
+	struct LoadRequest : public ecs::Event<LoadRequest>
 	{
 		LoadRequest() = default;
 		LoadRequest(const str::Name& name) : m_Name(name) { }

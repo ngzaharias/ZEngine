@@ -27,7 +27,9 @@ namespace ecs
 		friend class EntityWorld;
 
 	public:
-		inline bool Contains(const ecs::Entity& entity) const override;
+		~ComponentStorage() override = default;
+
+		inline bool Contains(const ecs::Entity & entity) const override;
 
 		inline TComponent& Get(const ecs::Entity& entity);
 		inline const TComponent& Get(const ecs::Entity& entity) const;

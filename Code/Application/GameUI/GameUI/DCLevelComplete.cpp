@@ -19,17 +19,17 @@ gui::DCLevelComplete::~DCLevelComplete()
 
 void gui::DCLevelComplete::OnExitGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::level_complete::ExitGameRequest>();
+	m_EntityWorld->AddEvent<gui::level_complete::ExitGameRequest>();
 }
 
 void gui::DCLevelComplete::OnExitToMenuCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::level_complete::ExitToMenuRequest>();
+	m_EntityWorld->AddEvent<gui::level_complete::ExitToMenuRequest>();
 }
 
 void gui::DCLevelComplete::OnResetGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEventComponent<gui::level_complete::ResetGameRequest>();
+	m_EntityWorld->AddEvent<gui::level_complete::ResetGameRequest>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCLevelComplete)

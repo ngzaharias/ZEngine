@@ -24,7 +24,7 @@ namespace eng
 
 namespace editor
 {
-	struct TextureWindowRequestComponent;
+	struct TextureWindowRequest;
 
 	struct TextureAssetImportComponent : public ecs::Component<TextureAssetImportComponent> { };
 	struct TextureAssetNewComponent : public ecs::Component<TextureAssetNewComponent> { };
@@ -56,7 +56,7 @@ namespace editor
 			editor::TextureAssetOpenComponent,
 			editor::TextureAssetSaveComponent,
 			editor::TextureWindowComponent,
-			const editor::TextureWindowRequestComponent>;
+			const editor::TextureWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

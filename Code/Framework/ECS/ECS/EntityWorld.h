@@ -3,6 +3,7 @@
 #include "Core/Set.h"
 #include "ECS/ComponentRegistry.h"
 #include "ECS/EntityStorage.h"
+#include "ECS/EventRegistry.h"
 #include "ECS/FrameBuffer.h"
 #include "ECS/QueryRegistry.h"
 #include "ECS/ResourceRegistry.h"
@@ -64,10 +65,13 @@ namespace ecs
 		auto WriteComponent(const ecs::Entity& entity, const bool alive = true)->TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
-		// Component - Event
+		// Event
 
-		template<class TComponent, typename... TArgs>
-		auto AddEventComponent(TArgs&&... args)->decltype(auto);
+		template<class TEvent>
+		void RegisterEvent();
+
+		template<class TEvent, typename... TArgs>
+		auto AddEvent(TArgs&&... args)->decltype(auto);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Singleton
@@ -113,11 +117,10 @@ namespace ecs
 		ecs::QueryRegistry m_QueryRegistry;
 
 		ecs::ComponentRegistry m_ComponentRegistry;
+		ecs::EventRegistry m_EventRegistry;
 		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
 
-
-		Array<ecs::Entity> m_EventEntities = { };
 		ecs::Entity m_SingletonEntity = { };
 		bool m_IsInitialised = false;
 	};

@@ -12,7 +12,7 @@ namespace ecs
 namespace dbg
 {
 	struct ShapeWindowComponent;
-	struct ShapeWindowRequestComponent;
+	struct ShapeWindowRequest;
 
 	class ShapeSystem final : public ecs::System
 	{
@@ -20,7 +20,7 @@ namespace dbg
 		using World = ecs::WorldView<
 			dbg::ShapeWindowComponent,
 			ecs::NameComponent,
-			const dbg::ShapeWindowRequestComponent>;
+			const dbg::ShapeWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

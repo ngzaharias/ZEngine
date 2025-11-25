@@ -10,9 +10,9 @@ namespace gui::settings_menu
 {
 	struct WindowComponent final : public ecs::Component<WindowComponent> { };
 
-	struct CloseRequest final : public ecs::EventComponent<CloseRequest> { };
-	struct OpenRequest final : public ecs::EventComponent<OpenRequest> { };
-	struct ValueRequest final : public ecs::EventComponent<ValueRequest> 
+	struct CloseRequest final : public ecs::Event<CloseRequest> { };
+	struct OpenRequest final : public ecs::Event<OpenRequest> { };
+	struct ValueRequest final : public ecs::Event<ValueRequest> 
 	{ 
 		// audio
 		Optional<float> m_EffectVolume = {};

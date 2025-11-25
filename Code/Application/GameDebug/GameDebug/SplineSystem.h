@@ -6,7 +6,7 @@
 namespace dbg
 {
 	struct SplineWindowComponent;
-	struct SplineWindowRequestComponent;
+	struct SplineWindowRequest;
 }
 
 namespace ecs
@@ -22,7 +22,7 @@ namespace dbg
 		using World = ecs::WorldView<
 			dbg::SplineWindowComponent,
 			ecs::NameComponent,
-			const dbg::SplineWindowRequestComponent>;
+			const dbg::SplineWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

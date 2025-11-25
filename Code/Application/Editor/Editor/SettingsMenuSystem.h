@@ -13,7 +13,7 @@ namespace ecs
 
 namespace editor::settings
 {
-	struct WindowRequestComponent;
+	struct WindowRequest;
 }
 
 namespace editor::settings
@@ -33,7 +33,7 @@ namespace editor::settings
 			ecs::NameComponent,
 			editor::settings::LocalComponent,
 			editor::settings::WindowComponent,
-			const editor::settings::WindowRequestComponent>;
+			const editor::settings::WindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

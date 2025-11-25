@@ -32,10 +32,13 @@ namespace gamestate
 	};
 
 	/// \brief Holds a single gamestate request.
-	struct RequestComponent : public ecs::EventComponent<RequestComponent>
+	struct ChangeRequest : public ecs::Event<ChangeRequest>
 	{
 		Array<gamestate::State> m_Queue = { };
 	};
+
+	/// \brief Signals that the current gamestate has finished.
+	struct ChangeFinished : public ecs::Event<ChangeFinished> { };
 
 	/// \brief Holds the current gamestate as well as the current queue.
 	struct StateComponent : public ecs::SingletonComponent<StateComponent>
@@ -43,7 +46,4 @@ namespace gamestate
 		gamestate::State m_State = gamestate::None();
 		Array<gamestate::State> m_Queue = { };
 	};
-
-	/// \brief Signals that the current gamestate has finished.
-	struct StateFinishedComponent : public ecs::EventComponent<StateFinishedComponent> { };
 }

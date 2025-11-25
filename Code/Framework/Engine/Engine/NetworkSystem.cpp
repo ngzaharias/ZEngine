@@ -45,9 +45,8 @@ void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 	auto& host = networkManager.GetHost();
 	auto& peer = networkManager.GetPeer();
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::network::RequestComponent>>())
+	for (const auto& eventData : world.Events<eng::network::ChangeRequest>())
 	{
-		const auto& eventComponent = world.ReadComponent<eng::network::RequestComponent>(entity);
 		auto& stateComponent = world.WriteSingleton<eng::network::StateComponent>();
 
 		if (IsClient(stateComponent.m_Mode))
@@ -56,9 +55,9 @@ void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 		if (IsServer(stateComponent.m_Mode))
 			host.Shutdown();
 
-		if (std::holds_alternative<eng::network::Startup>(eventComponent.m_Request))
+		if (std::holds_alternative<eng::network::Startup>(eventData.m_Request))
 		{
-			const auto& request = std::get<eng::network::Startup>(eventComponent.m_Request);
+			const auto& request = std::get<eng::network::Startup>(eventData.m_Request);
 
 			// update new values
 			stateComponent.m_Mode = request.m_Mode;
@@ -77,6 +76,6 @@ void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 			}
 		}
 
-		world.AddEventComponent<eng::network::RequestFinishedComponent>();
+		world.AddEvent<eng::network::ChangeFinished>();
 	}
 }

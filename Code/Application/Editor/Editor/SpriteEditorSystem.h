@@ -25,7 +25,7 @@ namespace eng
 
 namespace editor
 {
-	struct SpriteWindowRequestComponent;
+	struct SpriteWindowRequest;
 
 	struct SpriteAssetNewComponent : public ecs::Component<SpriteAssetNewComponent> { };
 	struct SpriteAssetOpenComponent : public ecs::Component<SpriteAssetOpenComponent> { };
@@ -78,7 +78,7 @@ namespace editor
 			editor::SpriteAssetSaveComponent,
 			editor::SpriteBatchingComponent,
 			editor::SpriteWindowComponent,
-			const editor::SpriteWindowRequestComponent>;
+			const editor::SpriteWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

@@ -6,6 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Editor/SettingsComponents.h"
+#include "GameDebug/MenuBarComponents.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -22,7 +23,7 @@ namespace
 
 void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const editor::settings::WindowRequestComponent>>())
+	for (const auto& request : world.Events<editor::settings::WindowRequest>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

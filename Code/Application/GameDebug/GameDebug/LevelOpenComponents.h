@@ -4,7 +4,7 @@
 
 namespace dbg::level
 {
-	struct OpenRequestComponent final : public ecs::EventComponent<OpenRequestComponent> { };
+	struct OpenRequest final : public ecs::Event<OpenRequest> { };
 
 	struct WindowComponent final : public ecs::Component<WindowComponent> { };
 }

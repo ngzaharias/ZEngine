@@ -4,9 +4,9 @@
 
 namespace gamestate
 {
-	struct RequestComponent;
+	struct ChangeFinished;
+	struct ChangeRequest;
 	struct StateComponent;
-	struct StateFinishedComponent;
 
 	/// \brief System that holds a queue of requested states and the current state.
 	class StateSystem : public ecs::System
@@ -14,8 +14,8 @@ namespace gamestate
 	public:
 		using World = ecs::WorldView<
 			gamestate::StateComponent,
-			const gamestate::RequestComponent,
-			const gamestate::StateFinishedComponent>;
+			const gamestate::ChangeFinished,
+			const gamestate::ChangeRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

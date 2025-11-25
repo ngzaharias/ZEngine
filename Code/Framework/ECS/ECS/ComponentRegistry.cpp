@@ -7,6 +7,6 @@ bool ecs::ComponentRegistry::IsRegistered(const ecs::ComponentId componentId) co
 
 auto ecs::ComponentRegistry::GetEntry(const ecs::ComponentId componentId) const -> const ecs::ComponentEntry&
 {
-	Z_PANIC(IsRegistered(componentId), "Component hasn't been registered!");
+	Z_PANIC(IsRegistered(componentId), "Component isn't registered!");
 	return m_Entries.Get(componentId);
 }

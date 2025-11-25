@@ -30,11 +30,11 @@ namespace eng::network
 	};
 
 	/// \brief 
-	struct RequestComponent : public ecs::EventComponent<RequestComponent>
+	struct ChangeRequest : public ecs::Event<ChangeRequest>
 	{
 		Request m_Request = { };
 	};
 
 	/// \brief 
-	struct RequestFinishedComponent : public ecs::EventComponent<RequestFinishedComponent> { };
+	struct ChangeFinished : public ecs::Event<ChangeFinished> { };
 }
