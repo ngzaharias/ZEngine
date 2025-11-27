@@ -10,9 +10,9 @@ namespace eng
 
 namespace voxel
 {
+	struct ChunkChangedFrameComponent;
 	struct ChunkComponent;
-	struct ChunkChangedEventComponent;
-	struct ChunkLoadedEventComponent;
+	struct ChunkLoadedFrameComponent;
 	struct ModifyComponent;
 
 	class MeshingSystem final : public ecs::System
@@ -21,9 +21,9 @@ namespace voxel
 		using World = ecs::WorldView<
 			eng::DynamicMeshComponent,
 			const eng::TransformComponent,
+			const voxel::ChunkChangedFrameComponent,
 			const voxel::ChunkComponent,
-			const voxel::ChunkChangedEventComponent,
-			const voxel::ChunkLoadedEventComponent,
+			const voxel::ChunkLoadedFrameComponent,
 			const voxel::ModifyComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

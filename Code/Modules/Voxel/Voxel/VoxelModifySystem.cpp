@@ -15,11 +15,13 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Voxel/VoxelComponents.h"
 #include "Math/AABB.h"
 #include "Math/Algorithms.h"
 #include "Math/CollisionMath.h"
 #include "Math/Sphere.h"
+#include "Voxel/VoxelChunkComponent.h"
+#include "Voxel/VoxelModifyComponent.h"
+#include "Voxel/VoxelModifySettingsSingleton.h"
 
 // #todo: enable only when voxels are present
 

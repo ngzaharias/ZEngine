@@ -4,7 +4,11 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/PrototypeManager.h"
-#include "Voxel/VoxelComponents.h"
+#include "Voxel/VoxelChunkChangedFrameComponent.h"
+#include "Voxel/VoxelChunkComponent.h"
+#include "Voxel/VoxelChunkLoadedFrameComponent.h"
+#include "Voxel/VoxelModifyComponent.h"
+#include "Voxel/VoxelModifySettingsSingleton.h"
 #include "Voxel/VoxelMeshingSystem.h"
 #include "Voxel/VoxelModifySystem.h"
 
@@ -18,9 +22,9 @@ void voxel::RegisterModule(ecs::EntityWorld& entityWorld)
 
 	// components
 	{
-		entityWorld.RegisterComponent<voxel::ChunkChangedEventComponent>();
+		entityWorld.RegisterComponent<voxel::ChunkChangedFrameComponent>();
 		entityWorld.RegisterComponent<voxel::ChunkComponent>();
-		entityWorld.RegisterComponent<voxel::ChunkLoadedEventComponent>();
+		entityWorld.RegisterComponent<voxel::ChunkLoadedFrameComponent>();
 		entityWorld.RegisterComponent<voxel::ModifyComponent>();
 	}
 

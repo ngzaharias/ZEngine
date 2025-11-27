@@ -34,7 +34,6 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Window.h"
-#include "Voxel/VoxelComponents.h"
 
 #include <GLFW/glfw3.h>
 

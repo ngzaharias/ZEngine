@@ -15,7 +15,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Voxel/VoxelComponents.h"
+#include "Voxel/VoxelChunkComponent.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
