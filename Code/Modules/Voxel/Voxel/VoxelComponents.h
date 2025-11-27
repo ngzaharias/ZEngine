@@ -8,16 +8,16 @@
 
 namespace voxel
 {
-	struct ChunkComponent : public ecs::Component<ChunkComponent>
+	struct ChunkComponent final : public ecs::Component<ChunkComponent>
 	{
 		Array<voxel::Block> m_Data;
 	};
 
-	struct ChunkChangedEventComponent : public ecs::Component<ChunkChangedEventComponent>
+	struct ChunkChangedEventComponent final : public ecs::Component<ChunkChangedEventComponent>
 	{
 	};
 
-	struct ChunkLoadedEventComponent : public ecs::Component<ChunkLoadedEventComponent>
+	struct ChunkLoadedEventComponent final : public ecs::Component<ChunkLoadedEventComponent>
 	{
 	};
 
@@ -27,7 +27,7 @@ namespace voxel
 		Array<Modify> m_Changes;
 	};
 
-	struct ModifySettingsSingleton : public ecs::Singleton<ModifySettingsSingleton>
+	struct ModifySettingsSingleton final : public ecs::Singleton<ModifySettingsSingleton>
 	{
 		voxel::EType m_Type = voxel::EType::None;
 		int32 m_Radius = 0;

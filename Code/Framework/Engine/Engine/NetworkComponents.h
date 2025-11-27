@@ -21,7 +21,7 @@ namespace eng::network
 	using Request = Variant<Shutdown, Startup>;
 
 	/// \brief 
-	struct StateSingleton : public ecs::Singleton<StateSingleton>
+	struct StateSingleton final : public ecs::Singleton<StateSingleton>
 	{
 		net::EMode m_Mode = net::EMode::Standalone;
 		str::String m_ClientAddress = "0.0.0.0";
@@ -31,11 +31,11 @@ namespace eng::network
 	};
 
 	/// \brief 
-	struct ChangeRequest : public ecs::Event<ChangeRequest>
+	struct ChangeRequest final : public ecs::Event<ChangeRequest>
 	{
 		Request m_Request = { };
 	};
 
 	/// \brief 
-	struct ChangeFinished : public ecs::Event<ChangeFinished> { };
+	struct ChangeFinished final : public ecs::Event<ChangeFinished> { };
 }

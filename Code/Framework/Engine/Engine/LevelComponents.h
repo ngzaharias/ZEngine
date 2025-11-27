@@ -17,13 +17,13 @@ namespace eng::level
 	};
 
 	/// \brief Contains every available level that can be loaded.
-	struct DirectorySingleton : public ecs::Singleton<DirectorySingleton>
+	struct DirectorySingleton final : public ecs::Singleton<DirectorySingleton>
 	{
 		Map<str::Name, str::Path> m_Levels;
 	};
 
 	/// \brief Attached to entities that were loaded from a level.
-	struct EntityComponent : public ecs::Component<EntityComponent>
+	struct EntityComponent final : public ecs::Component<EntityComponent>
 	{
 		EntityComponent() = default;
 		EntityComponent(const str::Name & name) : m_Name(name) { }
@@ -31,14 +31,14 @@ namespace eng::level
 	};
 
 	/// \brief There exists one of these components for every level that is loaded.
-	struct LoadedComponent : public ecs::Component<LoadedComponent>
+	struct LoadedComponent final : public ecs::Component<LoadedComponent>
 	{
 		str::Name m_Name = {};
 		str::Path m_Path = {};
 	};
 
 	/// \brief There exists one of these components for every level that is loaded.
-	struct LoadingComponent : public ecs::Component<LoadingComponent>
+	struct LoadingComponent final : public ecs::Component<LoadingComponent>
 	{
 		str::Name m_Name = {};
 
@@ -52,7 +52,7 @@ namespace eng::level
 	};
 
 	/// \brief Request to load a specific level.
-	struct LoadRequest : public ecs::Event<LoadRequest>
+	struct LoadRequest final : public ecs::Event<LoadRequest>
 	{
 		LoadRequest() = default;
 		LoadRequest(const str::Name& name) : m_Name(name) { }

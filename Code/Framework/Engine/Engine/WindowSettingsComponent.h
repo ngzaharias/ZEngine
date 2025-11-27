@@ -7,7 +7,7 @@
 namespace eng::settings
 {
 	/// \brief Shared window settings for all local users that is saved to a config file.
-	struct WindowSingleton : public ecs::Singleton<WindowSingleton>
+	struct WindowSingleton final : public ecs::Singleton<WindowSingleton>
 	{
 		int32 m_Monitor = 0;
 		int32 m_RefreshRate = 59;

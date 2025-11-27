@@ -10,7 +10,7 @@
 namespace eng::settings
 {
 	/// \brief Debug settings that is only used in non-gold builds.
-	struct DebugSingleton : public ecs::Singleton<DebugSingleton>
+	struct DebugSingleton final : public ecs::Singleton<DebugSingleton>
 	{
 		bool m_AreLinesEnabled = false;
 		bool m_ArePhysicsEnabled = false;
@@ -19,19 +19,19 @@ namespace eng::settings
 	};
 
 	/// \brief Launch settings for the game.
-	struct LaunchSingleton : public ecs::Singleton<LaunchSingleton>
+	struct LaunchSingleton final : public ecs::Singleton<LaunchSingleton>
 	{
 		// the level that is loaded when the game first launches
 		str::Name m_Level = {};
 	};
 
 	/// \brief Shared settings broadcast from the host to all users that is saved to the savegame.
-	struct HostComponent : public ecs::Component<HostComponent>
+	struct HostComponent final : public ecs::Component<HostComponent>
 	{
 	};
 
 	/// \brief Unique settings for each local user that is saved to the savegame.
-	struct UserComponent : public ecs::Component<UserComponent>
+	struct UserComponent final : public ecs::Component<UserComponent>
 	{
 	};
 }

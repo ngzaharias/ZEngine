@@ -5,7 +5,7 @@
 
 namespace editor
 {
-	struct EntitySelectSingleton : public ecs::Singleton<EntitySelectSingleton>
+	struct EntitySelectSingleton final : public ecs::Singleton<EntitySelectSingleton>
 	{
 		ecs::Entity m_Entity = {};
 	};

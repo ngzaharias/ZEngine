@@ -7,7 +7,7 @@
 namespace eng::settings
 {
 	/// \brief Shared camera settings for all local users that is saved to a config file.
-	struct CameraSingleton : public ecs::Singleton<CameraSingleton>
+	struct CameraSingleton final : public ecs::Singleton<CameraSingleton>
 	{
 		Rotator m_RotateSpeed = Rotator(0.2f);
 		float m_TranslateSpeed = 1000.f;
