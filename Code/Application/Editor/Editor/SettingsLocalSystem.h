@@ -4,13 +4,17 @@
 
 namespace editor::settings
 {
-	struct LocalComponent;
+	struct LocalSingleton;
+}
 
+namespace editor::settings
+{
 	class LocalSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			editor::settings::LocalComponent>;
+			// Singletons
+			editor::settings::LocalSingleton>;
 
 		void Initialise(World& world);
 

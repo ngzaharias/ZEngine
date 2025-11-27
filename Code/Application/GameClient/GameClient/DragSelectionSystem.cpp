@@ -52,8 +52,8 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-	const auto& sceneComponent = world.ReadSingleton<eng::PhysicsSceneComponent>();
-	auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
+	const auto& sceneComponent = world.ReadSingleton<eng::PhysicsSceneSingleton>();
+	auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{

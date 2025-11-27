@@ -170,7 +170,7 @@ namespace container
 	};
 
 	/// \brief 
-	struct StorageChangesComponent final : public ecs::SingletonComponent<StorageChangesComponent>
+	struct StorageChangesSingleton final : public ecs::Singleton<StorageChangesSingleton>
 	{
 		Array<MemberAdded> m_MemberAdded;
 		Array<MemberMoved> m_MemberMoved;

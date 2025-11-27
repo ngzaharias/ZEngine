@@ -58,7 +58,7 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 
 			const OBB3f obb = OBB3f::FromExtents(rotator, Vector3f(500.f, 500.f, 0.f));
 
-			auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
+			auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
 			linesComponent.AddOBB(planeTranslate, obb, Colour::White);
 		}
 

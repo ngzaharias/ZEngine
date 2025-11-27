@@ -6,7 +6,7 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
-	struct LinesComponent;
+	struct LinesSingleton;
 	struct NameComponent;
 	struct TransformComponent;
 }
@@ -28,10 +28,11 @@ namespace drag
 			const eng::InputManager,
 			const eng::WindowManager,
 			// Components
-			eng::LinesComponent,
 			eng::TransformComponent,
 			const drag::SelectionComponent,
-			const eng::camera::ProjectionComponent>;
+			const eng::camera::ProjectionComponent,
+			// Singletons
+			eng::LinesSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

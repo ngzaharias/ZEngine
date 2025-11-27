@@ -19,7 +19,7 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& settings = world.ReadSingleton<::hidden::settings::DebugComponent>();
+	const auto& settings = world.ReadSingleton<::hidden::settings::DebugSingleton>();
 	if (settings.m_IsObjectEnabled)
 	{
 		using AddQuery = ecs::query

@@ -44,7 +44,7 @@ void editor::OverlaySystem::Update(World& world, const GameTime& gameTime)
 	ImGui::SetNextWindowSize(Vector2f(80.f, 16.f));
 	if (ImGui::Begin("Game Mode##editor", nullptr, s_Flags))
 	{
-		auto& settings = world.WriteSingleton<eng::settings::DebugComponent>();
+		auto& settings = world.WriteSingleton<eng::settings::DebugSingleton>();
 		if (ImGui::Selectable("Game Mode", !settings.m_IsEditorModeEnabled))
 			settings.m_IsEditorModeEnabled = !settings.m_IsEditorModeEnabled;
 	}

@@ -11,19 +11,19 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(hidden::settings::DebugComponent& value) const
+void eng::Visitor::ReadCustom(hidden::settings::DebugSingleton& value) const
 {
 	Read(strIsInputEnabled, value.m_IsInputEnabled, value.m_IsInputEnabled);
 	Read(strIsObjectEnabled, value.m_IsObjectEnabled, value.m_IsObjectEnabled);
 }
 template<>
-void eng::Visitor::WriteCustom(const hidden::settings::DebugComponent& value)
+void eng::Visitor::WriteCustom(const hidden::settings::DebugSingleton& value)
 {
 	Write(strIsInputEnabled, value.m_IsInputEnabled);
 	Write(strIsObjectEnabled, value.m_IsObjectEnabled);
 }
 template<>
-bool imgui::Inspector::WriteCustom(hidden::settings::DebugComponent& value)
+bool imgui::Inspector::WriteCustom(hidden::settings::DebugSingleton& value)
 {
 	bool result = false;
 	result |= Write("m_IsInputEnabled", value.m_IsInputEnabled);

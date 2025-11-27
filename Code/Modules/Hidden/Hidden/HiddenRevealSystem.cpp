@@ -68,8 +68,8 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-	const auto& settings = world.ReadSingleton<hidden::settings::DebugComponent>();
-	const auto& physics = world.ReadSingleton<eng::PhysicsSceneComponent>();
+	const auto& settings = world.ReadSingleton<hidden::settings::DebugSingleton>();
+	const auto& physics = world.ReadSingleton<eng::PhysicsSceneSingleton>();
 
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
@@ -113,7 +113,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 
 				if (settings.m_IsInputEnabled)
 				{
-					auto& lines = world.WriteSingleton<eng::LinesComponent>();
+					auto& lines = world.WriteSingleton<eng::LinesSingleton>();
 					lines.AddSphere(hitPosition, Sphere3f(10.f), Colour::Red);
 				}
 			}
@@ -121,7 +121,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 			{
 				if (settings.m_IsInputEnabled)
 				{
-					auto& lines = world.WriteSingleton<eng::LinesComponent>();
+					auto& lines = world.WriteSingleton<eng::LinesSingleton>();
 					lines.AddSphere(ray.m_Position + ray.m_Direction * 100.f, Sphere3f(10.f), Colour::Green);
 				}
 			}

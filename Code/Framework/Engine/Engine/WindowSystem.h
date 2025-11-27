@@ -9,7 +9,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct WindowComponent;
+	struct WindowSingleton;
 }
 
 namespace eng
@@ -20,8 +20,8 @@ namespace eng
 		using World = ecs::WorldView<
 			// Resources
 			eng::WindowManager,
-			// Components
-			eng::settings::WindowComponent>;
+			// Singletons
+			eng::settings::WindowSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

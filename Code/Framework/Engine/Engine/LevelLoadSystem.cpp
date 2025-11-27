@@ -28,7 +28,7 @@ eng::level::LoadSystem::LoadSystem(ecs::EntityWorld& entityWorld)
 
 void eng::level::LoadSystem::Initialise(World& world)
 {
-	auto& directoryComponent = world.WriteSingleton<eng::level::DirectoryComponent>();
+	auto& directoryComponent = world.WriteSingleton<eng::level::DirectorySingleton>();
 
 	str::Path subpath;
 	const str::Path path = str::Path(str::EPath::Levels);
@@ -47,7 +47,7 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& directoryComponent = world.ReadSingleton<eng::level::DirectoryComponent>();
+	const auto& directoryComponent = world.ReadSingleton<eng::level::DirectorySingleton>();
 
 	// requests
 	for (const auto& request : world.Events<eng::level::LoadRequest>())

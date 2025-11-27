@@ -26,22 +26,28 @@ namespace eng
 	class AssetManager;
 	class PhysicsManager;
 	struct PhysicsComponent;
-	struct PhysicsSceneComponent;
+	struct PhysicsSceneSingleton;
 	struct RigidDynamicComponent;
 	struct RigidStaticComponent;
 	struct TransformComponent;
+}
 
+namespace eng
+{
 	class PhysicsSystem final : public ecs::System, public physx::PxSimulationEventCallback
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
 			eng::AssetManager,
 			eng::PhysicsManager,
-			eng::PhysicsSceneComponent,
+			// Components
 			eng::RigidDynamicComponent,
 			eng::RigidStaticComponent,
 			eng::TransformComponent,
-			const eng::PhysicsComponent>;
+			const eng::PhysicsComponent,
+			// Singletons
+			eng::PhysicsSceneSingleton>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

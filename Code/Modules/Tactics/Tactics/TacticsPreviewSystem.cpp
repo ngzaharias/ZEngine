@@ -39,7 +39,7 @@ void tactics::PreviewSystem::Update(World& world, const GameTime& gameTime)
 		const auto& abilityComponent = world.ReadComponent<tactics::AbilityComponent>(agentEntity);
 		const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(agentEntity);
 
-		auto& lines = world.WriteSingleton<eng::LinesComponent>();
+		auto& lines = world.WriteSingleton<eng::LinesSingleton>();
 		for (const str::Name& name : abilityComponent.m_Abilities)
 		{
 			const tactics::Ability& ability = abilityTable.GetObject(name);

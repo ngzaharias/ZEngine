@@ -8,7 +8,7 @@ namespace eng
 {
 	class AssetManager;
 	class WindowManager;
-	struct LinesComponent;
+	struct LinesSingleton;
 	struct TransformComponent;
 }
 
@@ -20,7 +20,7 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace eng
@@ -33,11 +33,12 @@ namespace eng
 			eng::AssetManager,
 			const eng::WindowManager,
 			// Components
-			eng::LinesComponent,
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::settings::DebugComponent,
-			const eng::TransformComponent>;
+			const eng::TransformComponent,
+			// Singletons
+			eng::LinesSingleton,
+			const eng::settings::DebugSingleton>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

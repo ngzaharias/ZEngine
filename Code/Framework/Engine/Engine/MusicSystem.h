@@ -2,20 +2,15 @@
 
 #include "ECS/System.h"
 
-namespace ecs
-{
-	struct NameComponent;
-}
-
 namespace eng
 {
 	class AssetManager;
-	struct MusicComponent;
+	struct MusicSingleton;
 }
 
 namespace eng::settings
 {
-	struct AudioComponent;
+	struct AudioSingleton;
 }
 
 namespace eng
@@ -24,12 +19,11 @@ namespace eng
 	{
 	public:
 		using World = ecs::WorldView<
-			// resources
+			// Resources
 			eng::AssetManager,
-			// components
-			ecs::NameComponent,
-			eng::MusicComponent,
-			const eng::settings::AudioComponent>;
+			// Singletons
+			eng::MusicSingleton,
+			const eng::settings::AudioSingleton>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

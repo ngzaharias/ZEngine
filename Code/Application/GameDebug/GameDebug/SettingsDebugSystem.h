@@ -4,17 +4,17 @@
 
 namespace clt::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace hidden::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace dbg::settings
@@ -23,9 +23,9 @@ namespace dbg::settings
 	{
 	public:
 		using World = ecs::WorldView<
-			clt::settings::DebugComponent,
-			eng::settings::DebugComponent,
-			::hidden::settings::DebugComponent>;
+			clt::settings::DebugSingleton,
+			eng::settings::DebugSingleton,
+			::hidden::settings::DebugSingleton>;
 
 		void Initialise(World& world);
 

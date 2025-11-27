@@ -29,10 +29,10 @@ namespace
 void client::SettingsSystem::Initialise(World& world)
 {
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
-	auto& audioSettings = world.WriteSingleton<eng::settings::AudioComponent>();
-	auto& cameraSettings = world.WriteSingleton<eng::settings::CameraComponent>();
-	auto& gameplaySettings = world.WriteSingleton<eng::settings::GameplayComponent>();
-	auto& windowSettings = world.WriteSingleton<eng::settings::WindowComponent>();
+	auto& audioSettings = world.WriteSingleton<eng::settings::AudioSingleton>();
+	auto& cameraSettings = world.WriteSingleton<eng::settings::CameraSingleton>();
+	auto& gameplaySettings = world.WriteSingleton<eng::settings::GameplaySingleton>();
+	auto& windowSettings = world.WriteSingleton<eng::settings::WindowSingleton>();
 	if (const eng::Window* window = windowManager.GetWindow(0))
 	{
 		windowSettings.m_Resolution = window->GetSize();
@@ -52,19 +52,19 @@ void client::SettingsSystem::Initialise(World& world)
 void client::SettingsSystem::Update(World& world, const GameTime& gameTime)
 {
 	const bool hasChanged =
-		world.HasAny<ecs::query::Updated<const eng::settings::AudioComponent>>() ||
-		world.HasAny<ecs::query::Updated<const eng::settings::CameraComponent>>() ||
-		world.HasAny<ecs::query::Updated<const eng::settings::GameplayComponent>>() ||
-		world.HasAny<ecs::query::Updated<const eng::settings::WindowComponent>>();
+		world.HasAny<eng::settings::AudioSingleton>() || 
+		world.HasAny<eng::settings::CameraSingleton>() ||
+		world.HasAny<eng::settings::GameplaySingleton>() ||
+		world.HasAny<eng::settings::WindowSingleton>();
 	if (hasChanged)
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(strAudio, world.ReadSingleton<eng::settings::AudioComponent>());
-		visitor.Write(strCamera, world.ReadSingleton<eng::settings::CameraComponent>());
-		visitor.Write(strGameplay, world.ReadSingleton<eng::settings::GameplayComponent>());
-		visitor.Write(strWindow, world.ReadSingleton<eng::settings::WindowComponent>());
+		visitor.Write(strAudio, world.ReadSingleton<eng::settings::AudioSingleton>());
+		visitor.Write(strCamera, world.ReadSingleton<eng::settings::CameraSingleton>());
+		visitor.Write(strGameplay, world.ReadSingleton<eng::settings::GameplaySingleton>());
+		visitor.Write(strWindow, world.ReadSingleton<eng::settings::WindowSingleton>());
 		visitor.SaveToFile(filepath);
 	}
 }

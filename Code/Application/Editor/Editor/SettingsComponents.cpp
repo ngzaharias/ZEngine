@@ -17,7 +17,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(editor::settings::LocalComponent& value) const
+void eng::Visitor::ReadCustom(editor::settings::LocalSingleton& value) const
 {
 	Read(strEntity, value.m_Entity, value.m_Entity);
 	Read(strGizmos, value.m_Gizmos, value.m_Gizmos);
@@ -25,7 +25,7 @@ void eng::Visitor::ReadCustom(editor::settings::LocalComponent& value) const
 	Read(strTexture, value.m_Texture, value.m_Texture);
 }
 template<>
-void eng::Visitor::WriteCustom(const editor::settings::LocalComponent& value)
+void eng::Visitor::WriteCustom(const editor::settings::LocalSingleton& value)
 {
 	Write(strEntity, value.m_Entity);
 	Write(strGizmos, value.m_Gizmos);

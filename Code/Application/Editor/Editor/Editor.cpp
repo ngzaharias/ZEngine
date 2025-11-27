@@ -60,8 +60,8 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::TrajectoryAssetSaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowComponent>();
 
-	m_ClientWorld.RegisterSingleton<editor::EntitySelectComponent>();
-	m_ClientWorld.RegisterSingleton<editor::settings::LocalComponent>();
+	m_ClientWorld.RegisterSingleton<editor::EntitySelectSingleton>();
+	m_ClientWorld.RegisterSingleton<editor::settings::LocalSingleton>();
 
 	m_ClientWorld.RegisterSystem<editor::AssetBrowserSystem>();
 	m_ClientWorld.RegisterSystem<editor::AssetReloadSystem>();

@@ -14,7 +14,7 @@ namespace eng
 
 namespace eng::level
 {
-	struct DirectoryComponent;
+	struct DirectorySingleton;
 	struct LoadRequest;
 }
 
@@ -35,9 +35,11 @@ namespace dbg::level
 			// Components
 			dbg::level::WindowComponent,
 			ecs::NameComponent,
+			// Events
 			eng::level::LoadRequest,
 			const dbg::level::OpenRequestEvent,
-			const eng::level::DirectoryComponent>;
+			// Singletons
+			const eng::level::DirectorySingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

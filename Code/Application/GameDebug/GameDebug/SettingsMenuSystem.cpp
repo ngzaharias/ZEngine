@@ -28,9 +28,9 @@ void dbg::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Debug Settings");
 
 		auto& window = world.AddComponent<dbg::settings::WindowComponent>(windowEntity);
-		window.m_Client = world.ReadSingleton<clt::settings::DebugComponent>();
-		window.m_Engine = world.ReadSingleton<eng::settings::DebugComponent>();
-		window.m_Hidden = world.ReadSingleton<hidden::settings::DebugComponent>();
+		window.m_Client = world.ReadSingleton<clt::settings::DebugSingleton>();
+		window.m_Engine = world.ReadSingleton<eng::settings::DebugSingleton>();
+		window.m_Hidden = world.ReadSingleton<hidden::settings::DebugSingleton>();
 
 		ImGui::OpenPopup("Debug Settings##gamedebug");
 	}
@@ -54,13 +54,13 @@ void dbg::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 			if (inspector.Begin("##debugsettings"))
 			{
 				if (inspector.Write(window.m_Client))
-					world.WriteSingleton<clt::settings::DebugComponent>() = window.m_Client;
+					world.WriteSingleton<clt::settings::DebugSingleton>() = window.m_Client;
 				ImGui::Spacing();
 				if (inspector.Write(window.m_Engine))
-					world.WriteSingleton<eng::settings::DebugComponent>() = window.m_Engine;
+					world.WriteSingleton<eng::settings::DebugSingleton>() = window.m_Engine;
 				ImGui::Spacing();
 				if (inspector.Write(window.m_Hidden))
-					world.WriteSingleton<hidden::settings::DebugComponent>() = window.m_Hidden;
+					world.WriteSingleton<hidden::settings::DebugSingleton>() = window.m_Hidden;
 				inspector.End();
 			}
 			ImGui::End();

@@ -9,7 +9,7 @@ namespace eng
 
 namespace projectile
 {
-	struct ChangesComponent;
+	struct ChangesSingleton;
 	struct CreateRequestComponent;
 	struct TrajectoryComponent;
 }
@@ -21,10 +21,12 @@ namespace transform
 	{
 	public:
 		using World = ecs::WorldView<
+			// Components
 			eng::TransformComponent,
-			const projectile::ChangesComponent,
 			const projectile::CreateRequestComponent,
-			const projectile::TrajectoryComponent>;
+			const projectile::TrajectoryComponent,
+			// Singletons
+			const projectile::ChangesSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 

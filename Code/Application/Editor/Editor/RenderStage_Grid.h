@@ -6,7 +6,7 @@
 
 namespace editor::settings
 {
-	struct LocalComponent;
+	struct LocalSingleton;
 }
 
 namespace eng
@@ -24,7 +24,7 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace editor
@@ -40,11 +40,12 @@ namespace editor
 			eng::AssetManager,
 			const eng::WindowManager,
 			// Components
-			const editor::settings::LocalComponent,
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::settings::DebugComponent,
-			const eng::TransformComponent>;
+			const eng::TransformComponent,
+			// Singletons
+			const editor::settings::LocalSingleton,
+			const eng::settings::DebugSingleton>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

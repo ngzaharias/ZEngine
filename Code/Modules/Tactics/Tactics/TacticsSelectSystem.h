@@ -6,7 +6,7 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
-	struct PhysicsSceneComponent;
+	struct PhysicsSceneSingleton;
 	struct TransformComponent;
 }
 
@@ -18,7 +18,7 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace tactics
@@ -43,11 +43,12 @@ namespace tactics
 			// Components
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::settings::DebugComponent,
-			const eng::PhysicsSceneComponent,
 			const eng::TransformComponent,
 			const tactics::SelectedComponent,
-			const tilemap::AgentComponent>;
+			const tilemap::AgentComponent,
+			// Singleton
+			const eng::PhysicsSceneSingleton,
+			const eng::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

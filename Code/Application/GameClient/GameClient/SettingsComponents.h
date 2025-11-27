@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ECS/Component.h"
+#include "ECS/Singleton.h"
 
 namespace clt::settings
 {
 	/// \brief Debug settings that is only used in non-gold builds.
-	struct DebugComponent : public ecs::SingletonComponent<DebugComponent>
+	struct DebugSingleton : public ecs::Singleton<DebugSingleton>
 	{
 		bool m_IsHexmapEnabled = false;
 	};

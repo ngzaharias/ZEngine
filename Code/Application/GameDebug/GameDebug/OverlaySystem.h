@@ -7,7 +7,7 @@
 namespace eng
 {
 	class WindowManager;
-	struct VersionComponent;
+	struct VersionSingleton;
 }
 
 namespace dbg
@@ -18,8 +18,8 @@ namespace dbg
 		using World = ecs::WorldView<
 			// Resources
 			const eng::WindowManager,
-			// Components
-			const eng::VersionComponent>;
+			// Singletons
+			const eng::VersionSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 

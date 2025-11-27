@@ -52,7 +52,7 @@ namespace
 	Vector3f Raycast(voxel::ModifySystem::World& world, const Segment3f& segment)
 	{
 		Array<ecs::Entity> voxelEntities;
-		auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
+		auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
 		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
 		{
 			const auto& transform = world.ReadComponent<eng::TransformComponent>(voxelEntity);
@@ -167,10 +167,10 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 		const Vector3i gridPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
 		const Vector3f alignPos = math::ToWorldPos(gridPos, voxel::s_BlockSize1D);
 
-		auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
+		auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
 		linesComponent.AddAABB(alignPos, voxel::s_BlockSize1D * 0.5f, Vector4f(1.f));
 
-		auto& settingsComponent = world.WriteSingleton<voxel::ModifySettingsComponent>();
+		auto& settingsComponent = world.WriteSingleton<voxel::ModifySettingsSingleton>();
 		if (input.IsPressed(strRadius0))
 			settingsComponent.m_Radius = 0;
 		if (input.IsPressed(strRadius1))

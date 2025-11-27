@@ -9,7 +9,7 @@ namespace physx
 
 namespace eng
 {
-	struct PhysicsSceneComponent : ecs::SingletonComponent<PhysicsSceneComponent>
+	struct PhysicsSceneSingleton final : ecs::Singleton<PhysicsSceneSingleton>
 	{
 		physx::PxScene* m_PhysicsScene = nullptr;
 	};

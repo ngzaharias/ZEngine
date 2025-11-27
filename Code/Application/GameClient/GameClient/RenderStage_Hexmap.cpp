@@ -108,7 +108,7 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;

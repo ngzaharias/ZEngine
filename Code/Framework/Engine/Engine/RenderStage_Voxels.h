@@ -20,7 +20,7 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace voxel
@@ -40,10 +40,11 @@ namespace eng
 			// Components
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::settings::DebugComponent,
 			const eng::TransformComponent,
 			const eng::DynamicMeshComponent,
-			const voxel::ChunkComponent>;
+			const voxel::ChunkComponent,
+			// Singletons
+			const eng::settings::DebugSingleton>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

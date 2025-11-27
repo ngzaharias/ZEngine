@@ -16,7 +16,7 @@ void editor::CameraSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	const bool hasEditorCamera = world.HasAny<ecs::query::Include<const eng::camera::EditorComponent>>();
 	if (!hasEditorCamera && debugSettings.m_IsEditorModeEnabled)
 	{

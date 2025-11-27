@@ -2,15 +2,16 @@
 
 #include "Core/Array.h"
 #include "Core/Name.h"
-#include "ECS/Component.h"
+#include "ECS/Singleton.h"
 #include "ECS/Entity.h"
+#include "ECS/Event.h"
 #include "GameClient/GameStateTypes.h"
 #include "Network/Config.h"
 
 namespace gamestate
 {
 	/// \brief Holds the state for joining a server.
-	struct NetworkJoinComponent : public ecs::SingletonComponent<NetworkJoinComponent> 
+	struct NetworkJoinSingleton : public ecs::Singleton<NetworkJoinSingleton>
 	{ 
 		enum class EResult
 		{
@@ -41,7 +42,7 @@ namespace gamestate
 	struct ChangeFinished : public ecs::Event<ChangeFinished> { };
 
 	/// \brief Holds the current gamestate as well as the current queue.
-	struct StateComponent : public ecs::SingletonComponent<StateComponent>
+	struct StateSingleton : public ecs::Singleton<StateSingleton>
 	{
 		gamestate::State m_State = gamestate::None();
 		Array<gamestate::State> m_Queue = { };

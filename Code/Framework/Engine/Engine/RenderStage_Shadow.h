@@ -4,6 +4,15 @@
 #include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
 
+namespace eng
+{
+	class AssetManager;
+	struct FrameBufferSingleton;
+	struct LightDirectionalComponent;
+	struct StaticMeshComponent;
+	struct TransformComponent;
+}
+
 namespace eng::camera
 {
 	struct EditorComponent;
@@ -12,29 +21,26 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace eng
 {
-	class AssetManager;
-	struct FrameBufferComponent;
-	struct LightDirectionalComponent;
-	struct StaticMeshComponent;
-	struct TransformComponent;
-
 	class RenderStage_Shadow final : public RenderStage
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
 			eng::AssetManager,
-			eng::FrameBufferComponent,
+			// Components
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::LightDirectionalComponent,
-			const eng::settings::DebugComponent,
 			const eng::StaticMeshComponent,
-			const eng::TransformComponent>;
+			const eng::TransformComponent,
+			// Singletons
+			eng::FrameBufferSingleton,
+			const eng::settings::DebugSingleton>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

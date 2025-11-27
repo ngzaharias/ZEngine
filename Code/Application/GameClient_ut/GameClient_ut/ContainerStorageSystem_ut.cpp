@@ -28,7 +28,7 @@ namespace
 			m_EntityWorld.RegisterComponent<container::StorageCreateResultComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyResultComponent>();
-			m_EntityWorld.RegisterSingleton<container::StorageChangesComponent>();
+			m_EntityWorld.RegisterSingleton<container::StorageChangesSingleton>();
 			m_EntityWorld.RegisterSystem<container::StorageSystem>();
 			m_EntityWorld.RegisterSystem<container::MemberSystem>();
 			m_EntityWorld.RegisterSystem<container::OwnerSystem>();
@@ -338,7 +338,7 @@ TEST_CASE("container::StorageSystem::Member Add")
 		CHECK(memberComponent.m_Type == 666);
 
 		// checks changes
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesComponent>();
+		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesSingleton>();
 		REQUIRE(changesComponent.m_MemberAdded.GetCount() == 1);
 		CHECK(changesComponent.m_MemberAdded[0].m_Member == memberEntity);
 		CHECK(changesComponent.m_MemberAdded[0].m_Storage == storageEntity);
@@ -348,7 +348,7 @@ TEST_CASE("container::StorageSystem::Member Add")
 	{
 		world.Update();
 
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesComponent>();
+		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesSingleton>();
 		CHECK(changesComponent.m_MemberAdded.GetCount() == 0);
 		CHECK(changesComponent.m_MemberMoved.GetCount() == 0);
 		CHECK(changesComponent.m_MemberRemoved.GetCount() == 0);
@@ -632,7 +632,7 @@ TEST_CASE("container::StorageSystem::Member Remove")
 		CHECK(!storageComponent.m_Members.Contains(memberEntity));
 
 		// check changes
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesComponent>();
+		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesSingleton>();
 		REQUIRE(changesComponent.m_MemberRemoved.GetCount() == 1);
 		CHECK(changesComponent.m_MemberRemoved[0].m_Member == memberEntity);
 		CHECK(changesComponent.m_MemberRemoved[0].m_Storage == storageEntity);
@@ -642,7 +642,7 @@ TEST_CASE("container::StorageSystem::Member Remove")
 	{
 		world.Update();
 
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesComponent>();
+		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesSingleton>();
 		CHECK(changesComponent.m_MemberAdded.GetCount() == 0);
 		CHECK(changesComponent.m_MemberMoved.GetCount() == 0);
 		CHECK(changesComponent.m_MemberRemoved.GetCount() == 0);
@@ -766,7 +766,7 @@ TEST_CASE("container::StorageSystem::Storage Create")
 		CHECK(storageComponent.m_Type == 666);
 
 		// check changes
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesComponent>();
+		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesSingleton>();
 		REQUIRE(changesComponent.m_StorageCreated.GetCount() == 1);
 		REQUIRE(changesComponent.m_StorageDestroyed.GetCount() == 0);
 		CHECK(changesComponent.m_StorageCreated[0].m_Storage == resultComponent.m_Storage);
@@ -942,7 +942,7 @@ TEST_CASE("container::StorageSystem::Storage Destroy")
 		CHECK(!world.IsAlive(storageEntity));
 
 		// check changes
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesComponent>();
+		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<container::StorageChangesSingleton>();
 		REQUIRE(changesComponent.m_StorageCreated.GetCount() == 0);
 		REQUIRE(changesComponent.m_StorageDestroyed.GetCount() == 1);
 		CHECK(changesComponent.m_StorageDestroyed[0].m_Storage == storageEntity);

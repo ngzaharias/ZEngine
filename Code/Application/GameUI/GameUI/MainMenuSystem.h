@@ -7,7 +7,7 @@
 namespace eng
 {
 	class UIManager;
-	struct VersionComponent;
+	struct VersionSingleton;
 }
 
 namespace eng::application
@@ -46,12 +46,13 @@ namespace gui::main_menu
 			eng::application::CloseRequest,
 			eng::level::LoadRequest,
 			gui::settings::OpenRequestEvent,
-			const eng::VersionComponent,
 			const gui::main_menu::ContinueGameRequest,
 			const gui::main_menu::ExitGameRequest,
 			const gui::main_menu::LoadGameRequest,
 			const gui::main_menu::NewGameRequest,
-			const gui::main_menu::WindowComponent>;
+			const gui::main_menu::WindowComponent,
+			// Singletons
+			const eng::VersionSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

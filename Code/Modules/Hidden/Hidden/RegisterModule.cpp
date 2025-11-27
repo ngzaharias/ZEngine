@@ -45,7 +45,7 @@ void hidden::RegisterModule(ecs::EntityWorld& entityWorld)
 
 	// singletons
 	{
-		entityWorld.RegisterSingleton<hidden::settings::DebugComponent>();
+		entityWorld.RegisterSingleton<hidden::settings::DebugSingleton>();
 	}
 
 	// prototypes

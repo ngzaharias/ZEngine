@@ -2,7 +2,7 @@
 
 #include "Core/Array.h"
 #include "Core/Colour.h"
-#include "ECS/Component.h"
+#include "ECS/Singleton.h"
 #include "Engine/CameraTypes.h"
 #include "Math/Vector.h"
 
@@ -32,7 +32,7 @@ namespace eng
 		Colour m_Colour = { };
 	};
 
-	struct LinesComponent final : public ecs::SingletonComponent<LinesComponent>
+	struct LinesSingleton final : public ecs::Singleton<LinesSingleton>
 	{
 		/// \brief Adds an axis-aligned bounding box.
 		void AddAABB(const AABB3f& extents, const Colour& colour);

@@ -10,7 +10,7 @@ namespace eng
 namespace eng::sound
 {
 	struct RandomComponent;
-	struct RandomBufferComponent;
+	struct RandomBufferSingleton;
 	struct RandomRequestComponent;
 }
 
@@ -20,12 +20,13 @@ namespace eng::sound
 	{
 	public:
 		using World = ecs::WorldView<
-			// managers
+			// Resources
 			eng::AssetManager,
-			// components
+			// Components
 			eng::sound::RandomComponent,
-			eng::sound::RandomBufferComponent,
-			const eng::sound::RandomRequestComponent>;
+			const eng::sound::RandomRequestComponent,
+			// Singletons
+			eng::sound::RandomBufferSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

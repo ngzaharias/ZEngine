@@ -7,19 +7,18 @@
 
 namespace editor
 {
-	struct EntitySelectComponent;
+	struct EntitySelectSingleton;
 }
 
 namespace editor::settings
 {
-	struct LocalComponent;
+	struct LocalSingleton;
 }
 
 namespace eng
 {
 	class InputManager;
 	class WindowManager;
-	struct LinesComponent;
 	struct PhysicsComponent;
 	struct TransformComponent;
 	struct VersionComponent;
@@ -33,7 +32,7 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace editor::gizmo
@@ -48,11 +47,12 @@ namespace editor::gizmo
 			// Components
 			eng::PhysicsComponent,
 			eng::TransformComponent,
-			const editor::EntitySelectComponent,
-			const editor::settings::LocalComponent,
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::settings::DebugComponent>;
+			const eng::settings::DebugSingleton,
+			// Singletons
+			const editor::EntitySelectSingleton,
+			const editor::settings::LocalSingleton>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

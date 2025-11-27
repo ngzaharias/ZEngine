@@ -16,7 +16,7 @@ void visual::VisualSystem::Update(World& world, const GameTime& gameTime)
 
 void visual::VisualSystem::ProjectileRequests(World& world)
 {
-	const auto& changesComponent = world.ReadSingleton<projectile::ChangesComponent>();
+	const auto& changesComponent = world.ReadSingleton<projectile::ChangesSingleton>();
 	for (const projectile::Created& createdData : changesComponent.m_Created)
 	{
 		const auto& requestComponent = world.ReadComponent<projectile::CreateRequestComponent>(createdData.m_Request);

@@ -10,19 +10,13 @@ ecs::EntityWorld::EntityWorld()
 	, m_QueryRegistry()
 	, m_SystemRegistry()
 {
-	m_SingletonEntity = CreateEntity();
 	RegisterComponent<ecs::NameComponent>();
-	AddComponent<ecs::NameComponent>(m_SingletonEntity, "Singleton");
 }
 
 void ecs::EntityWorld::Initialise()
 {
 	PROFILE_FUNCTION();
 
-	// flush the singletons
-	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
-
-	m_IsInitialised = true;
 	m_QueryRegistry.Initialise();
 	m_SystemRegistry.Initialise(*this);
 
@@ -44,9 +38,4 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 	m_SystemRegistry.Update(*this, gameTime);
 
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
-}
-
-bool ecs::EntityWorld::IsInitialised() const
-{
-	return m_IsInitialised;
 }

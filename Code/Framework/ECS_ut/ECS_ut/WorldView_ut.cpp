@@ -12,8 +12,8 @@ namespace
 	struct ComponentA : public ecs::Component<ComponentA> {};
 	struct ComponentB : public ecs::Component<ComponentB> {};
 
-	struct SingletonA : public ecs::SingletonComponent<SingletonA> {};
-	struct SingletonB : public ecs::SingletonComponent<SingletonB> {};
+	struct SingletonA : public ecs::Singleton<SingletonA> {};
+	struct SingletonB : public ecs::Singleton<SingletonB> {};
 
 	class ResourceA { };
 	class ResourceB { };

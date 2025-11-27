@@ -7,12 +7,11 @@
 
 namespace clt::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace dbg::settings
 {
-	struct RequestComponent;
 	struct WindowComponent;
 }
 
@@ -28,12 +27,12 @@ namespace eng
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace hidden::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace dbg::settings
@@ -46,11 +45,11 @@ namespace dbg::settings
 			eng::WindowManager,
 			// Components
 			ecs::NameComponent,
-			clt::settings::DebugComponent,
 			dbg::settings::WindowComponent,
-			eng::settings::DebugComponent,
-			::hidden::settings::DebugComponent,
-			const dbg::settings::RequestComponent>;
+			// Singletons
+			clt::settings::DebugSingleton,
+			eng::settings::DebugSingleton,
+			::hidden::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

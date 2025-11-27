@@ -17,8 +17,8 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
-	struct LinesComponent;
-	struct PhysicsSceneComponent;
+	struct LinesSingleton;
+	struct PhysicsSceneSingleton;
 	struct TransformComponent;
 }
 
@@ -39,11 +39,12 @@ namespace drag
 			// Components
 			drag::SelectionComponent,
 			ecs::NameComponent,
-			eng::LinesComponent,
 			const drag::IsSelectableComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::PhysicsSceneComponent,
-			const eng::TransformComponent>;
+			const eng::TransformComponent,
+			// Singletons
+			eng::LinesSingleton,
+			const eng::PhysicsSceneSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

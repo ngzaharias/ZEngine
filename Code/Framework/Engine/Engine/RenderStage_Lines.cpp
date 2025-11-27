@@ -48,7 +48,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	if (!debugSettings.m_AreLinesEnabled)
 		return;
 
@@ -61,7 +61,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 	if (!window)
 		return;
 
-	const auto& readComponent = world.ReadSingleton<eng::LinesComponent>();
+	const auto& readComponent = world.ReadSingleton<eng::LinesSingleton>();
 	if (!readComponent.m_Vertices.IsEmpty())
 	{
 		const Vector2u& windowSize = window->GetSize();
@@ -132,7 +132,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 			glDrawArrays(GL_LINES, 0, vertexCount);
 		}
 
-		auto& writeComponent = world.WriteSingleton<eng::LinesComponent>();
+		auto& writeComponent = world.WriteSingleton<eng::LinesSingleton>();
 		writeComponent.m_Vertices.RemoveAll();
 	}
 }

@@ -12,7 +12,7 @@ namespace
 {
 	using World = container::StorageSystem::World;
 
-	container::EError VerifyMemberAdd(World& world, const ecs::Entity& entity, const container::StorageChangesComponent& frameData)
+	container::EError VerifyMemberAdd(World& world, const ecs::Entity& entity, const container::StorageChangesSingleton& frameData)
 	{
 		const auto& requestComponent = world.ReadComponent<container::MemberAddRequestComponent>(entity);
 		if (requestComponent.m_Member.IsUnassigned())
@@ -40,7 +40,7 @@ namespace
 		return container::EError::None;
 	}
 
-	container::EError VerifyMemberMove(World& world, const ecs::Entity& entity, const container::StorageChangesComponent& frameData)
+	container::EError VerifyMemberMove(World& world, const ecs::Entity& entity, const container::StorageChangesSingleton& frameData)
 	{
 		const auto& requestComponent = world.ReadComponent<container::MemberMoveRequestComponent>(entity);
 		if (requestComponent.m_Member.IsUnassigned())
@@ -67,7 +67,7 @@ namespace
 		return container::EError::None;
 	}
 
-	container::EError VerifyMemberRemove(World& world, const ecs::Entity& entity, const container::StorageChangesComponent& frameData)
+	container::EError VerifyMemberRemove(World& world, const ecs::Entity& entity, const container::StorageChangesSingleton& frameData)
 	{
 		const auto& requestComponent = world.ReadComponent<container::MemberRemoveRequestComponent>(entity);
 		if (requestComponent.m_Member.IsUnassigned())
@@ -92,7 +92,7 @@ namespace
 		return container::EError::None;
 	}
 
-	container::EError VerifyStorageCreate(World& world, const ecs::Entity& entity, const container::StorageChangesComponent& frameData)
+	container::EError VerifyStorageCreate(World& world, const ecs::Entity& entity, const container::StorageChangesSingleton& frameData)
 	{
 		const auto& requestComponent = world.ReadComponent<container::StorageCreateRequestComponent>(entity);
 		if (world.HasComponent<container::OwnerComponent>(requestComponent.m_Owner))
@@ -115,7 +115,7 @@ namespace
 	}
 
 	using DestroyWorld = container::StorageSystem::World;
-	container::EError VerifyStorageDestroy(DestroyWorld& world, const ecs::Entity& entity, const container::StorageChangesComponent& frameData)
+	container::EError VerifyStorageDestroy(DestroyWorld& world, const ecs::Entity& entity, const container::StorageChangesSingleton& frameData)
 	{
 		const auto& requestComponent = world.ReadComponent<container::StorageDestroyRequestComponent>(entity);
 		if (requestComponent.m_Storage.IsUnassigned())
@@ -142,7 +142,7 @@ namespace
 void container::StorageSystem::Update(World& world, const GameTime& gameTime)
 {
 	// clear values from previous frame
-	auto& changesComponent = world.WriteSingleton<container::StorageChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<container::StorageChangesSingleton>();
 	changesComponent.m_MemberAdded.RemoveAll();
 	changesComponent.m_MemberMoved.RemoveAll();
 	changesComponent.m_MemberRemoved.RemoveAll();
@@ -169,7 +169,7 @@ void container::StorageSystem::Update(World& world, const GameTime& gameTime)
 
 void container::StorageSystem::ProcessMemberAddRequests(World& world)
 {
-	auto& changesComponent = world.WriteSingleton<container::StorageChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<container::StorageChangesSingleton>();
 	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const container::MemberAddRequestComponent>>())
 	{
 		const EError error = VerifyMemberAdd(world, requestEntity, changesComponent);
@@ -198,7 +198,7 @@ void container::StorageSystem::ProcessMemberAddRequests(World& world)
 
 void container::StorageSystem::ProcessMemberMoveRequests(World& world)
 {
-	auto& changesComponent = world.WriteSingleton<container::StorageChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<container::StorageChangesSingleton>();
 	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const container::MemberMoveRequestComponent>>())
 	{
 		const EError error = VerifyMemberMove(world, requestEntity, changesComponent);
@@ -226,7 +226,7 @@ void container::StorageSystem::ProcessMemberMoveRequests(World& world)
 
 void container::StorageSystem::ProcessMemberRemoveRequests(World& world)
 {
-	auto& changesComponent = world.WriteSingleton<container::StorageChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<container::StorageChangesSingleton>();
 	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const container::MemberRemoveRequestComponent>>())
 	{
 		const EError error = VerifyMemberRemove(world, requestEntity, changesComponent);
@@ -265,7 +265,7 @@ void container::StorageSystem::ProcessMemberRemoveRequests(World& world)
 
 void container::StorageSystem::ProcessStorageRequests(World& world)
 {
-	auto& storageChangesComponent = world.WriteSingleton<container::StorageChangesComponent>();
+	auto& storageChangesComponent = world.WriteSingleton<container::StorageChangesSingleton>();
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const container::StorageCreateRequestComponent>>())
 	{

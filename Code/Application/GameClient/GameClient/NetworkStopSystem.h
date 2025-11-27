@@ -11,16 +11,21 @@ namespace eng::network
 namespace gamestate
 {
 	struct ChangeFinished;
-	struct StateComponent;
+	struct StateSingleton;
+}
 
+namespace gamestate
+{
 	class NetworkStopSystem : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
+			// Components
 			eng::network::ChangeRequest,
 			gamestate::ChangeFinished,
 			const eng::network::ChangeFinished,
-			const gamestate::StateComponent>;
+			// Singletons
+			const gamestate::StateSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

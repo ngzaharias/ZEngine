@@ -146,7 +146,7 @@ void eng::PhysicsSystem::Initialise(World& world)
 	sceneDesc.gravity = physx::PxVec3(0.f, s_Gravity, 0.f);
 	sceneDesc.simulationEventCallback = this;
 
-	auto& sceneComponent = world.WriteSingleton<eng::PhysicsSceneComponent>();
+	auto& sceneComponent = world.WriteSingleton<eng::PhysicsSceneSingleton>();
 	sceneComponent.m_PhysicsScene = physics.createScene(sceneDesc);
 
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
@@ -163,7 +163,7 @@ void eng::PhysicsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& sceneComponent = world.WriteSingleton<eng::PhysicsSceneComponent>();
+	auto& sceneComponent = world.WriteSingleton<eng::PhysicsSceneSingleton>();
 
 	// must be done before the simulation is run
 	ProcessAdded(world);
@@ -205,7 +205,7 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 
 		// #hack: dirty hack to not mark the component as updated which causes an infinite loop
 		auto& physicsComponent = const_cast<eng::PhysicsComponent&>(world.ReadComponent<eng::PhysicsComponent>(entity));
-		auto& sceneComponent = world.WriteSingleton<eng::PhysicsSceneComponent>();
+		auto& sceneComponent = world.WriteSingleton<eng::PhysicsSceneSingleton>();
 
 		physx::PxPhysics& physics = physicsManager.GetPhysics();
 		for (physx::PxShape* shape : physicsComponent.m_PxShapes)

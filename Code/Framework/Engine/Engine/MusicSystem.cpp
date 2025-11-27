@@ -2,7 +2,6 @@
 #include "Engine/MusicSystem.h"
 
 #include "ECS/EntityWorld.h"
-#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
@@ -18,7 +17,7 @@ namespace
 
 void eng::MusicSystem::Initialise(World& world)
 {
-	auto& musicComponent = world.WriteSingleton<eng::MusicComponent>();
+	auto& musicComponent = world.WriteSingleton<eng::MusicSingleton>();
 	musicComponent.m_Music = new sf::Music();
 
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
@@ -37,7 +36,7 @@ void eng::MusicSystem::Initialise(World& world)
 
 void eng::MusicSystem::Shutdown(World& world)
 {
-	auto& component = world.WriteSingleton<eng::MusicComponent>();
+	auto& component = world.WriteSingleton<eng::MusicSingleton>();
 	delete component.m_Music;
 
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
@@ -49,10 +48,10 @@ void eng::MusicSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	// update the music volume when it changes
-	if (world.HasAny<ecs::query::Updated<const eng::settings::AudioComponent>>())
+	if (world.HasAny<eng::settings::AudioSingleton>())
 	{
-		const auto& audioSettings = world.ReadSingleton<eng::settings::AudioComponent>();
-		auto& musicComponent = world.WriteSingleton<eng::MusicComponent>();
+		const auto& audioSettings = world.ReadSingleton<eng::settings::AudioSingleton>();
+		auto& musicComponent = world.WriteSingleton<eng::MusicSingleton>();
 		const float volume = audio::ToVolume(audioSettings.m_MusicVolume * audioSettings.m_MasterVolume);
 		musicComponent.m_Music->setVolume(volume);
 		musicComponent.m_Music->setLoop(true);

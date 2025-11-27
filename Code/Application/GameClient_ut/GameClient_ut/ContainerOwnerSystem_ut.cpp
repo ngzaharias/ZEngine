@@ -28,7 +28,7 @@ namespace
 			m_EntityWorld.RegisterComponent<container::StorageCreateResultComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyRequestComponent>();
 			m_EntityWorld.RegisterComponent<container::StorageDestroyResultComponent>();
-			m_EntityWorld.RegisterSingleton<container::StorageChangesComponent>();
+			m_EntityWorld.RegisterSingleton<container::StorageChangesSingleton>();
 			m_EntityWorld.RegisterSystem<container::StorageSystem>();
 			m_EntityWorld.RegisterSystem<container::MemberSystem>();
 			m_EntityWorld.RegisterSystem<container::OwnerSystem>();

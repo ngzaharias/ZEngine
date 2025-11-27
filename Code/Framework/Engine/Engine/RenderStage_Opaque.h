@@ -8,7 +8,7 @@ namespace eng
 {
 	class AssetManager;
 	class WindowManager;
-	struct FrameBufferComponent;
+	struct FrameBufferSingleton;
 	struct LightAmbientComponent;
 	struct LightDirectionalComponent;
 	struct LightPointComponent;
@@ -24,7 +24,7 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace eng
@@ -37,15 +37,16 @@ namespace eng
 			eng::AssetManager,
 			const eng::WindowManager,
 			// Components
-			eng::FrameBufferComponent,
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::LightAmbientComponent,
 			const eng::LightDirectionalComponent,
 			const eng::LightPointComponent,
-			const eng::settings::DebugComponent,
 			const eng::StaticMeshComponent,
-			const eng::TransformComponent>;
+			const eng::TransformComponent,
+			// Singletons
+			eng::FrameBufferSingleton,
+			const eng::settings::DebugSingleton>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

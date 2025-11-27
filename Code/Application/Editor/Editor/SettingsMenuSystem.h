@@ -23,17 +23,20 @@ namespace editor::settings
 		int32 m_Identifier = 0;
 		str::String m_Label = {};
 
-		LocalComponent m_Local = {};
+		LocalSingleton m_Local = {};
 	};
 
 	class MenuSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
+			// Components
 			ecs::NameComponent,
-			editor::settings::LocalComponent,
 			editor::settings::WindowComponent,
-			const editor::settings::WindowRequest>;
+			// Events
+			const editor::settings::WindowRequest,
+			// Singletons
+			editor::settings::LocalSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 

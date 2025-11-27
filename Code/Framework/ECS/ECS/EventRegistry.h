@@ -17,11 +17,11 @@ namespace ecs
 
 		template<class TEvent>
 		bool IsRegistered() const;
-		bool IsRegistered(const ecs::EventId componentId) const;
+		bool IsRegistered(const ecs::EventId id) const;
 
 		template<class TEvent>
 		auto GetEntry() const -> const ecs::EventEntry&;
-		auto GetEntry(const ecs::EventId eventId) const -> const ecs::EventEntry&;
+		auto GetEntry(const ecs::EventId id) const -> const ecs::EventEntry&;
 
 	private:
 		SparseArray<ecs::EventId, ecs::EventEntry> m_Entries = { };

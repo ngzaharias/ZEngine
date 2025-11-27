@@ -9,6 +9,7 @@
 #include "ECS/Entity.h"
 #include "ECS/Event.h"
 #include "ECS/EventStorage.h"
+#include "ECS/Singleton.h"
 
 namespace ecs
 {
@@ -27,6 +28,7 @@ namespace ecs
 		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
 		using EntityMap = Map<ecs::Entity, EntityChange>;
 		using Events = SparseArray<ecs::EventId, ecs::IEventStorage*>;
+		using Singletons = Set<ecs::SingletonId>;
 
 	public:
 		//////////////////////////////////////////////////////////////////////////
@@ -53,11 +55,17 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Event
 
-		template<class TComponent>
+		template<class TEvent>
 		void RegisterEvent();
 
 		template<class TEvent, typename... TArgs>
 		auto AddEvent(TArgs&&... args)->decltype(auto);
+
+		//////////////////////////////////////////////////////////////////////////
+		// Singletons
+
+		template<class TSingleton>
+		void UpdateSingleton();
 
 	private:
 		ecs::Entity m_HandlesUnused = { 0, 0 };
@@ -66,6 +74,7 @@ namespace ecs
 		Components m_Components = { };
 		EntityMap m_EntityChanges = { };
 		Events m_Events = { };
+		Singletons m_Singletons = { };
 	};
 }
 

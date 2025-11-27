@@ -13,9 +13,9 @@ void gamestate::NetworkHostSystem::Update(World& world, const GameTime& gameTime
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Updated<const gamestate::StateComponent>>())
+	if (world.HasAny<gamestate::StateSingleton>())
 	{
-		const auto& stateComponent = world.ReadSingleton<gamestate::StateComponent>();
+		const auto& stateComponent = world.ReadSingleton<gamestate::StateSingleton>();
 		if (std::holds_alternative<gamestate::NetworkHost>(stateComponent.m_State))
 		{
 			const auto& request = std::get<gamestate::NetworkHost>(stateComponent.m_State);
@@ -33,7 +33,7 @@ void gamestate::NetworkHostSystem::Update(World& world, const GameTime& gameTime
 
 	if (world.HasAny<eng::network::ChangeFinished>())
 	{
-		const auto& stateComponent = world.ReadSingleton<gamestate::StateComponent>();
+		const auto& stateComponent = world.ReadSingleton<gamestate::StateSingleton>();
 		if (std::holds_alternative<gamestate::NetworkHost>(stateComponent.m_State))
 			world.AddEvent<gamestate::ChangeFinished>();
 	}

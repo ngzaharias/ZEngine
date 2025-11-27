@@ -55,7 +55,7 @@ namespace
 		auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
 		prototypeComponent.m_Guid = str::Guid::Generate();
 
-		auto& selectComponent = world.WriteSingleton<editor::EntitySelectComponent>();
+		auto& selectComponent = world.WriteSingleton<editor::EntitySelectSingleton>();
 		selectComponent.m_Entity = entity;
 
 		return entity;
@@ -169,7 +169,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::EntityWindowComponent>>())
 	{
-		const auto& selectComponent = world.ReadSingleton<editor::EntitySelectComponent>();
+		const auto& selectComponent = world.ReadSingleton<editor::EntitySelectSingleton>();
 		auto& windowComponent = world.WriteComponent<editor::EntityWindowComponent>(windowEntity);
 
 		bool isOpen = true;
@@ -257,7 +257,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 				const bool isSelected = entity == selectComponent.m_Entity;
 				if (ImGui::Selectable(name, isSelected))
 				{
-					auto& writeComponent = world.WriteSingleton<editor::EntitySelectComponent>();
+					auto& writeComponent = world.WriteSingleton<editor::EntitySelectSingleton>();
 					writeComponent.m_Entity = entity;
 				}
 
@@ -364,7 +364,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 
 			if (HasInput(world, strSave) || world.HasComponent<editor::EntitySaveComponent>(windowEntity))
 			{
-				const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+				const auto& readSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
 				const auto& readWindow = world.ReadComponent<editor::EntityWindowComponent>(windowEntity);
 				const ecs::Entity selected = selectComponent.m_Entity;
 
@@ -387,7 +387,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 					{
 						auto& writePrototype = m_World.WriteComponent<eng::PrototypeComponent>(selected);
 						writePrototype.m_Path = filepath;
-						auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
+						auto& writeSettings = world.WriteSingleton<editor::settings::LocalSingleton>();
 						writeSettings.m_Entity.m_Save = filepath.GetDirectory();
 
 						eng::Visitor visitor;

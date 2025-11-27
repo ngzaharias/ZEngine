@@ -39,7 +39,7 @@ void editor::RenderStage_Axes::Initialise(ecs::EntityWorld& entityWorld)
 	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
 	assetManager.RequestAsset(strLinesShader);
 
-	const auto& settings = entityWorld.ReadSingleton<editor::settings::LocalComponent>();
+	const auto& settings = entityWorld.ReadSingleton<editor::settings::LocalSingleton>();
 	const auto& gizmos = settings.m_Gizmos;
 	const auto& value = gizmos.m_CoordAxes;
 	UpdateBuffers(value.m_ShowX, value.m_ShowY, value.m_ShowZ);
@@ -60,15 +60,15 @@ void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	for (const ecs::Entity& entity : world.Query<ecs::query::Updated<editor::settings::LocalComponent>>())
+	if (world.HasAny<editor::settings::LocalSingleton>())
 	{
-		const auto& settings = world.ReadSingleton<editor::settings::LocalComponent>();
+		const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
 		const auto& gizmos = settings.m_Gizmos;
 		const auto& value = gizmos.m_CoordAxes;
 		UpdateBuffers(value.m_ShowX, value.m_ShowY, value.m_ShowZ);
 	}
 
-	const auto& localSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+	const auto& localSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
 	const auto& gizmos = localSettings.m_Gizmos;
 	const auto& settings = gizmos.m_CoordAxes;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)

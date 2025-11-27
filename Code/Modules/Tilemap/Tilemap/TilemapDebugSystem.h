@@ -6,7 +6,7 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
-	struct LinesComponent;
+	struct LinesSingleton;
 	struct TransformComponent;
 }
 
@@ -18,7 +18,7 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace tilemap
@@ -37,13 +37,14 @@ namespace tilemap
 			const eng::InputManager,
 			const eng::WindowManager,
 			// Components
-			eng::LinesComponent,
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::settings::DebugComponent,
 			const eng::TransformComponent,
 			const tilemap::AgentComponent,
-			const tilemap::GridComponent>;
+			const tilemap::GridComponent,
+			// Singletons
+			eng::LinesSingleton,
+			const eng::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

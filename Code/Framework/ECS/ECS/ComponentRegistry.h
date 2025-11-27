@@ -17,11 +17,11 @@ namespace ecs
 
 		template<class TComponent>
 		bool IsRegistered() const;
-		bool IsRegistered(const ecs::ComponentId componentId) const;
+		bool IsRegistered(const ecs::ComponentId id) const;
 
 		template<class TComponent>
 		auto GetEntry() const -> const ecs::ComponentEntry&;
-		auto GetEntry(const ecs::ComponentId componentId) const -> const ecs::ComponentEntry&;
+		auto GetEntry(const ecs::ComponentId id) const -> const ecs::ComponentEntry&;
 
 	private:
 		SparseArray<ecs::ComponentId, ecs::ComponentEntry> m_Entries = { };

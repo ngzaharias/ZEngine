@@ -14,7 +14,7 @@ namespace ecs
 
 namespace editor::settings
 {
-	struct LocalComponent;
+	struct LocalSingleton;
 }
 
 namespace eng
@@ -67,18 +67,20 @@ namespace editor
 	{
 	public:
 		using World = ecs::WorldView<
-			// managers
+			// Resources
 			eng::AssetManager,
 			const eng::InputManager,
-			// components
+			// Components
 			ecs::NameComponent,
-			editor::settings::LocalComponent,
 			editor::SpriteAssetNewComponent,
 			editor::SpriteAssetOpenComponent,
 			editor::SpriteAssetSaveComponent,
 			editor::SpriteBatchingComponent,
 			editor::SpriteWindowComponent,
-			const editor::SpriteWindowRequest>;
+			// Events
+			const editor::SpriteWindowRequest,
+			// Singletons
+			editor::settings::LocalSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 

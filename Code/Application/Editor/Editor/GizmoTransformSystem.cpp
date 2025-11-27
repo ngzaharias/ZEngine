@@ -85,13 +85,13 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
-	const auto& localSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+	const auto& localSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
 	const auto& gizmos = localSettings.m_Gizmos;
 	const auto& settings = gizmos.m_Transform;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
 		return;
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	if (!debugSettings.m_IsEditorModeEnabled)
 		return;
 
@@ -152,7 +152,7 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 			ImGuizmo::SetDrawlist();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 
-			const auto& selectComponent = world.ReadSingleton<editor::EntitySelectComponent>();
+			const auto& selectComponent = world.ReadSingleton<editor::EntitySelectSingleton>();
 			const ecs::Entity selected = selectComponent.m_Entity;
 			if (selected.IsUnassigned())
 				continue;

@@ -12,7 +12,7 @@
 
 namespace
 {
-	projectile::EError VerifyDestroy(const ecs::Entity& entity, const projectile::ChangesComponent& frameData)
+	projectile::EError VerifyDestroy(const ecs::Entity& entity, const projectile::ChangesSingleton& frameData)
 	{
 		auto hasDuplicate = [&](const projectile::Destroyed& rhs)
 		{
@@ -30,7 +30,7 @@ void projectile::SpawnSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& changesComponent = world.WriteSingleton<projectile::ChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<projectile::ChangesSingleton>();
 	changesComponent.m_Created.RemoveAll();
 	changesComponent.m_Destroyed.RemoveAll();
 
@@ -44,7 +44,7 @@ void projectile::SpawnSystem::Update(World& world, const GameTime& gameTime)
 
 void projectile::SpawnSystem::ProcessCreate(World& world)
 {
-	auto& changesComponent = world.WriteSingleton<projectile::ChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<projectile::ChangesSingleton>();
 	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const projectile::CreateRequestComponent>>())
 	{
 		const auto& requestComponent = world.ReadComponent<projectile::CreateRequestComponent>(requestEntity);
@@ -73,14 +73,14 @@ void projectile::SpawnSystem::ProcessCreate(World& world)
 
 void projectile::SpawnSystem::ProcessDestroy(World& world)
 {
-	auto& changesComponent = world.WriteSingleton<projectile::ChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<projectile::ChangesSingleton>();
 	for (const Destroyed& destroyData : changesComponent.m_Destroyed)
 		world.DestroyEntity(destroyData.m_Projectile);
 }
 
 void projectile::SpawnSystem::ProcessLifetime(World& world, const GameTime& gameTime)
 {
-	auto& changesComponent = world.WriteSingleton<projectile::ChangesComponent>();
+	auto& changesComponent = world.WriteSingleton<projectile::ChangesSingleton>();
 	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::SpawnComponent>>())
 	{
 		auto& spawnComponent = world.WriteComponent<projectile::SpawnComponent>(entity);

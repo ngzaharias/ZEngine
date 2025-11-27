@@ -12,7 +12,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct GameplayComponent;
+	struct GameplaySingleton;
 }
 
 namespace hidden
@@ -31,10 +31,11 @@ namespace hidden
 			const eng::ThemeTable,
 			// Components
 			eng::SpriteComponent,
-			const eng::settings::GameplayComponent,
 			const eng::TablesReloadedEvent,
 			const hidden::ObjectComponent,
-			const hidden::RevealComponent>;
+			const hidden::RevealComponent,
+			// Singletons
+			const eng::settings::GameplaySingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -29,7 +29,7 @@ namespace ecs
 
 		bool IsAlive(const Entity& entity) const;
 
-		auto CreateEntity()->ecs::Entity;
+		auto CreateEntity() -> ecs::Entity;
 
 		void DestroyEntity(const Entity& entity);
 
@@ -58,34 +58,34 @@ namespace ecs
 		auto AddEvent(TArgs&&... args)->decltype(auto);
 
 		//////////////////////////////////////////////////////////////////////////
-		// Singleton
-
-		template<class TComponent>
-		auto ReadSingleton()->const TComponent&;
-
-		template<class TComponent>
-		auto WriteSingleton()->TComponent&;
-
-		//////////////////////////////////////////////////////////////////////////
 		// Resource
 
 		template<class TResource>
-		auto ReadResource()->const TResource&;
+		auto ReadResource() -> const TResource&;
 
 		template<class TResource>
-		auto WriteResource()->TResource&;
+		auto WriteResource() -> TResource&;
+
+		//////////////////////////////////////////////////////////////////////////
+		// Singleton
+
+		template<class TComponent>
+		auto ReadSingleton() -> const TComponent&;
+
+		template<class TComponent>
+		auto WriteSingleton() -> TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Query
 
 		template<class TType>
-		auto HasAny()-> bool;
+		auto HasAny() ->  bool;
 
 		template<class TEvent>
-		auto Events()-> const Array<TEvent>&;
+		auto Events() ->  const Array<TEvent>&;
 
 		template<class TQuery>
-		auto Query()-> const Set<Entity>&;
+		auto Query() ->  const Set<Entity>&;
 
 	private:
 		ecs::EntityWorld& m_EntityWorld;

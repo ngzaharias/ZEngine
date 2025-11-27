@@ -15,7 +15,7 @@ void editor::gizmo::CrosshairSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
-	const auto& localSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+	const auto& localSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
 	const auto& gizmos = localSettings.m_Gizmos;
 	const auto& settings = gizmos.m_Crosshair;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
@@ -33,7 +33,7 @@ void editor::gizmo::CrosshairSystem::Update(World& world, const GameTime& gameTi
 
 		const Vector3f position = translate + forward * 30.f;
 
-		auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
+		auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
 		linesComponent.AddLine(
 			position - right * 0.1f,
 			position + right * 0.1f,

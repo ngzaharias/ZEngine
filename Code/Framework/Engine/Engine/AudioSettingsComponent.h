@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ECS/Component.h"
+#include "ECS/Singleton.h"
 
 namespace eng::settings
 {
 	/// \brief Shared audio settings for all local users that is saved to a config file.
-	struct AudioComponent : public ecs::SingletonComponent<AudioComponent>
+	struct AudioSingleton : public ecs::Singleton<AudioSingleton>
 	{
 		float m_EffectVolume = 1.f;
 		float m_MasterVolume = 1.f;

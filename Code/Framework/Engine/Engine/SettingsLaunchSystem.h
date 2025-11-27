@@ -9,14 +9,19 @@ namespace eng::level
 
 namespace eng::settings
 {
-	struct LaunchComponent;
+	struct LaunchSingleton;
+}
 
+namespace eng::settings
+{
 	class LaunchSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
+			// Events
 			eng::level::LoadRequest,
-			eng::settings::LaunchComponent>;
+			// Singletons
+			eng::settings::LaunchSingleton>;
 
 		void Initialise(World& world);
 	};

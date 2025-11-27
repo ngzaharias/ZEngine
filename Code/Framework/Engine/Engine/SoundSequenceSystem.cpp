@@ -12,7 +12,7 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& bufferComponent = world.WriteSingleton<eng::sound::SequenceBufferComponent>();
+	auto& bufferComponent = world.WriteSingleton<eng::sound::SequenceBufferSingleton>();
 	bufferComponent.m_Requests.RemoveAll();
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SequenceRequestComponent>>())

@@ -96,7 +96,7 @@ namespace
 		ImGui::TextDisabled("Options:");
 		if (ImGui::Button("Extract"))
 		{
-			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+			const auto& readSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
 			const auto& readWindow = world.ReadComponent<editor::SpriteWindowComponent>(entity);
 
 			eng::SelectFolderSettings settings;
@@ -106,7 +106,7 @@ namespace
 			const str::Path folderpath = eng::SelectFolderDialog(settings);
 			if (!folderpath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
+				auto& writeSettings = world.WriteSingleton<editor::settings::LocalSingleton>();
 				writeSettings.m_Sprite.m_Extract = folderpath;
 
 				auto& writeWindow = world.WriteComponent<editor::SpriteWindowComponent>(entity);
@@ -214,7 +214,7 @@ namespace
 
 		if (HasInput(world, strOpen) || world.HasComponent<editor::SpriteAssetOpenComponent>(entity))
 		{
-			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+			const auto& readSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
 
 			eng::SelectFileSettings settings;
 			settings.m_Title = "Open Sprite";
@@ -224,7 +224,7 @@ namespace
 			const str::Path filepath = eng::SelectFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
+				auto& writeSettings = world.WriteSingleton<editor::settings::LocalSingleton>();
 				writeSettings.m_Sprite.m_Open = filepath.GetDirectory();
 
 				auto& writeWindow = world.WriteComponent<editor::SpriteWindowComponent>(entity);
@@ -245,7 +245,7 @@ namespace
 
 		if (HasInput(world, strSave) || world.HasComponent<editor::SpriteAssetSaveComponent>(entity))
 		{
-			const auto& readSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+			const auto& readSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
 			const auto& readWindow = world.ReadComponent<editor::SpriteWindowComponent>(entity);
 			const str::Name& name = readWindow.m_Asset.m_Name;
 
@@ -260,7 +260,7 @@ namespace
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteSingleton<editor::settings::LocalComponent>();
+				auto& writeSettings = world.WriteSingleton<editor::settings::LocalSingleton>();
 				writeSettings.m_Sprite.m_Save = filepath.GetDirectory();
 
 				auto& writeWindow = world.WriteComponent<editor::SpriteWindowComponent>(entity);

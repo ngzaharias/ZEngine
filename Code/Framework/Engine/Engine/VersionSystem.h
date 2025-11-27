@@ -4,12 +4,17 @@
 
 namespace eng
 {
-	struct VersionComponent;
+	struct VersionSingleton;
+}
 
+namespace eng
+{
 	class VersionSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<eng::VersionComponent>;
+		using World = ecs::WorldView<
+			// Singletons
+			eng::VersionSingleton>;
 
 		void Initialise(World& world);
 	};

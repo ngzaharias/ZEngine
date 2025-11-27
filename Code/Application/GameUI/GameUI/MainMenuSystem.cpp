@@ -24,7 +24,7 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.CreateWidget(strMainMenu_xaml);
 
-		const auto& versionComponent = world.ReadSingleton<eng::VersionComponent>();
+		const auto& versionComponent = world.ReadSingleton<eng::VersionSingleton>();
 		const auto& menuComponent = world.ReadComponent<gui::main_menu::WindowComponent>(entity);
 		auto& dataContext = uiManager.WriteDataContext<gui::DCMainMenu>(strMainMenu_xaml);
 		dataContext.SetNewGameLevel(menuComponent.m_NewGame);

@@ -10,7 +10,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct CameraComponent;
+	struct CameraSingleton;
 }
 
 namespace eng::camera
@@ -28,7 +28,8 @@ namespace eng::camera
 			eng::TransformComponent,
 			const eng::camera::Move3DComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::settings::CameraComponent>;
+			// Singletons
+			const eng::settings::CameraSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -2,6 +2,7 @@
 
 #include "Core/Path.h"
 #include "ECS/Component.h"
+#include "ECS/Singleton.h"
 #include "Editor/GizmoSettings.h"
 
 namespace editor::settings
@@ -26,7 +27,7 @@ namespace editor::settings
 		str::Path m_Save = {};
 	};
 
-	struct LocalComponent final : public ecs::SingletonComponent<LocalComponent>
+	struct LocalSingleton final : public ecs::Singleton<LocalSingleton>
 	{
 		Entity m_Entity = {};
 		Gizmos m_Gizmos = {};

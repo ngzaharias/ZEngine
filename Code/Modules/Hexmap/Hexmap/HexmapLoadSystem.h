@@ -4,7 +4,7 @@
 
 namespace clt::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace ecs
@@ -14,7 +14,7 @@ namespace ecs
 
 namespace eng
 {
-	struct LinesComponent;
+	struct LinesSingleton;
 	struct StaticMeshComponent;
 	struct TransformComponent;
 }
@@ -36,14 +36,16 @@ namespace hexmap
 	{
 	public:
 		using World = ecs::WorldView<
+			// Components
 			ecs::NameComponent,
 			eng::level::EntityComponent,
-			eng::LinesComponent,
 			eng::StaticMeshComponent,
 			eng::TransformComponent,
 			hexmap::LayerComponent,
-			const clt::settings::DebugComponent,
-			const hexmap::RootComponent>;
+			const hexmap::RootComponent,
+			// Singletons
+			eng::LinesSingleton,
+			const clt::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

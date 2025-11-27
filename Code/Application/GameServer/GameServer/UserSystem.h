@@ -21,13 +21,12 @@ namespace net
 {
 	class Host;
 	class ReplicationHost;
+	struct UserComponent;
+	struct UserMapSingleton;
 }
 
 namespace net
 {
-	struct UserComponent;
-	struct UserMapComponent;
-
 	/// \brief Responsible for creating/destroying an entity/component per user that connects/disconnects.
 	class UserSystem : public ecs::System
 	{
@@ -39,7 +38,8 @@ namespace net
 			ecs::NameComponent,
 			eng::NetworkManager,
 			net::UserComponent,
-			net::UserMapComponent>;
+			// Singletons
+			net::UserMapSingleton>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

@@ -18,7 +18,7 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& bufferComponent = world.WriteSingleton<eng::sound::RandomBufferComponent>();
+	auto& bufferComponent = world.WriteSingleton<eng::sound::RandomBufferSingleton>();
 	bufferComponent.m_Requests.RemoveAll();
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::RandomRequestComponent>>())

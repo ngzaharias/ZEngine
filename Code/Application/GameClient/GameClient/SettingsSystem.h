@@ -9,10 +9,10 @@ namespace eng
 
 namespace eng::settings
 {
-	struct AudioComponent;
-	struct CameraComponent;
-	struct GameplayComponent;
-	struct WindowComponent;
+	struct AudioSingleton;
+	struct CameraSingleton;
+	struct GameplaySingleton;
+	struct WindowSingleton;
 }
 
 namespace client
@@ -21,13 +21,13 @@ namespace client
 	{
 	public:
 		using World = ecs::WorldView<
-			// resources
+			// Resources
 			const eng::WindowManager,
-			// components
-			eng::settings::AudioComponent,
-			eng::settings::CameraComponent,
-			eng::settings::GameplayComponent,
-			eng::settings::WindowComponent>;
+			// Singletons
+			eng::settings::AudioSingleton,
+			eng::settings::CameraSingleton,
+			eng::settings::GameplaySingleton,
+			eng::settings::WindowSingleton>;
 
 		void Initialise(World& world);
 

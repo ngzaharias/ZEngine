@@ -28,7 +28,7 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 
 	using CameraQuery = ecs::query::Include<eng::camera::ProjectionComponent, const eng::camera::Zoom2DComponent>;
 
-	const auto& cameraSettings = world.ReadSingleton<eng::settings::CameraComponent>();
+	const auto& cameraSettings = world.ReadSingleton<eng::settings::CameraSingleton>();
 
 	const Vector2u& windowSize = window->GetSize();
 	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())

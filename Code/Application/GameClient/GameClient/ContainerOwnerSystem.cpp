@@ -15,7 +15,7 @@ void container::OwnerSystem::Update(World& world, const GameTime& gameTime)
 
 void container::OwnerSystem::ProcessStorageChanges(World& world)
 {
-	const auto& storageChangesComponent = world.ReadSingleton<container::StorageChangesComponent>();
+	const auto& storageChangesComponent = world.ReadSingleton<container::StorageChangesSingleton>();
 
 	Map<ecs::Entity, Array<const StorageChange*>> requests;
 	for (const StorageChange& data : storageChangesComponent.m_StorageCreated)

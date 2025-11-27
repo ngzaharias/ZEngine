@@ -9,19 +9,24 @@ namespace movement
 
 namespace projectile
 {
-	struct ChangesComponent;
+	struct ChangesSingleton;
 	struct CreateRequestComponent;
 	struct TrajectoryComponent;
+}
 
+namespace projectile
+{
 	/// \brief
 	class TrajectorySystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
+			// Components
 			projectile::TrajectoryComponent,
 			const movement::VelocityComponent,
-			const projectile::ChangesComponent,
-			const projectile::CreateRequestComponent>;
+			const projectile::CreateRequestComponent,
+			// Singletons
+			const projectile::ChangesSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

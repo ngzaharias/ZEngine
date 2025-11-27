@@ -17,7 +17,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::settings::DebugComponent& value) const
+void eng::Visitor::ReadCustom(eng::settings::DebugSingleton& value) const
 {
 	Read(strAreLinesEnabled, value.m_AreLinesEnabled, value.m_AreLinesEnabled);
 	Read(strArePhysicsEnabled, value.m_ArePhysicsEnabled, value.m_ArePhysicsEnabled);
@@ -25,7 +25,7 @@ void eng::Visitor::ReadCustom(eng::settings::DebugComponent& value) const
 	// Read(strIsEditorModeEnabled, value.m_IsEditorModeEnabled, value.m_IsEditorModeEnabled);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::settings::DebugComponent& value)
+void eng::Visitor::WriteCustom(const eng::settings::DebugSingleton& value)
 {
 	Write(strAreLinesEnabled, value.m_AreLinesEnabled);
 	Write(strArePhysicsEnabled, value.m_ArePhysicsEnabled);
@@ -33,7 +33,7 @@ void eng::Visitor::WriteCustom(const eng::settings::DebugComponent& value)
 	// Write(strIsEditorModeEnabled, value.m_IsEditorModeEnabled);
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::settings::DebugComponent& value)
+bool imgui::Inspector::WriteCustom(eng::settings::DebugSingleton& value)
 {
 	bool result = false;
 	result |= Write("m_AreLinesEnabled", value.m_AreLinesEnabled);
@@ -44,12 +44,12 @@ bool imgui::Inspector::WriteCustom(eng::settings::DebugComponent& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::settings::LaunchComponent& value) const
+void eng::Visitor::ReadCustom(eng::settings::LaunchSingleton& value) const
 {
 	Read(strLevel, value.m_Level, value.m_Level);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::settings::LaunchComponent& value)
+void eng::Visitor::WriteCustom(const eng::settings::LaunchSingleton& value)
 {
 	Write(strLevel, value.m_Level);
 }

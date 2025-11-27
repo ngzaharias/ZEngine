@@ -21,29 +21,30 @@ void dbg::settings::DebugSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(world.WriteSingleton<clt::settings::DebugComponent>());
-	visitor.Read(world.WriteSingleton<eng::settings::DebugComponent>());
-	visitor.Read(world.WriteSingleton<hidden::settings::DebugComponent>());
+	visitor.Read(world.WriteSingleton<clt::settings::DebugSingleton>());
+	visitor.Read(world.WriteSingleton<eng::settings::DebugSingleton>());
+	visitor.Read(world.WriteSingleton<hidden::settings::DebugSingleton>());
 
 #ifdef Z_EDITOR
-	auto& component = world.WriteSingleton<eng::settings::DebugComponent>();
+	auto& component = world.WriteSingleton<eng::settings::DebugSingleton>();
 	component.m_IsEditorModeEnabled = true;
 #endif
 }
 
 void dbg::settings::DebugSystem::Update(World& world, const GameTime& gameTime)
 {
-	const bool wasClient = world.HasAny<ecs::query::Updated<clt::settings::DebugComponent>>();
-	const bool wasEngine = world.HasAny<ecs::query::Updated<eng::settings::DebugComponent>>();
-	const bool wasHidden = world.HasAny<ecs::query::Updated<hidden::settings::DebugComponent>>();
-	if (wasClient || wasEngine || wasHidden)
+	const bool hasChanged =
+		world.HasAny<clt::settings::DebugSingleton>() ||
+		world.HasAny<eng::settings::DebugSingleton>() ||
+		world.HasAny<hidden::settings::DebugSingleton>();
+	if (hasChanged)
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(world.ReadSingleton<clt::settings::DebugComponent>());
-		visitor.Write(world.ReadSingleton<eng::settings::DebugComponent>());
-		visitor.Write(world.ReadSingleton<hidden::settings::DebugComponent>());
+		visitor.Write(world.ReadSingleton<clt::settings::DebugSingleton>());
+		visitor.Write(world.ReadSingleton<eng::settings::DebugSingleton>());
+		visitor.Write(world.ReadSingleton<hidden::settings::DebugSingleton>());
 		visitor.SaveToFile(filepath);
 	}
 }

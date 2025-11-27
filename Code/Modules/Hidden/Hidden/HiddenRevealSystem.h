@@ -12,8 +12,8 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
-	struct LinesComponent;
-	struct PhysicsSceneComponent;
+	struct LinesSingleton;
+	struct PhysicsSceneSingleton;
 	struct RigidStaticComponent;
 	struct TransformComponent;
 }
@@ -31,7 +31,7 @@ namespace hidden
 
 namespace hidden::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace hidden
@@ -44,14 +44,15 @@ namespace hidden
 			const eng::InputManager,
 			const eng::WindowManager,
 			// Components
-			eng::LinesComponent,
 			eng::RigidStaticComponent,
 			hidden::RevealComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::PhysicsSceneComponent,
 			const eng::TransformComponent,
 			const hidden::ObjectComponent,
-			const hidden::settings::DebugComponent>;
+			// Singletons
+			eng::LinesSingleton,
+			const eng::PhysicsSceneSingleton,
+			const hidden::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -15,14 +15,14 @@ namespace eng
 
 namespace eng::settings
 {
-	struct AudioComponent;
+	struct AudioSingleton;
 }
 
 namespace eng::sound
 {
 	struct ObjectComponent;
-	struct RandomBufferComponent;
-	struct SequenceBufferComponent;
+	struct RandomBufferSingleton;
+	struct SequenceBufferSingleton;
 	struct SingleRequestComponent;
 }
 
@@ -32,15 +32,16 @@ namespace eng::sound
 	{
 	public:
 		using World = ecs::WorldView<
-			// managers
+			// Resources
 			eng::AssetManager,
-			// components
+			// Components
 			ecs::NameComponent,
 			eng::sound::ObjectComponent,
-			const eng::settings::AudioComponent,
-			const eng::sound::RandomBufferComponent,
-			const eng::sound::SequenceBufferComponent,
-			const eng::sound::SingleRequestComponent>;
+			const eng::sound::SingleRequestComponent,
+			// Singletons
+			const eng::settings::AudioSingleton,
+			const eng::sound::RandomBufferSingleton,
+			const eng::sound::SequenceBufferSingleton>;
 
 		void Initialise(World& world);
 

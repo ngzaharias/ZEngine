@@ -31,7 +31,7 @@ void dbg::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(label.c_str(), &isOpen))
 		{
-			const auto& component = world.ReadSingleton<eng::FrameBufferComponent>();
+			const auto& component = world.ReadSingleton<eng::FrameBufferSingleton>();
 
 			const ImVec2 regionSize = ImGui::GetContentRegionAvail();
 			imgui::Image(component.m_ShadowTexture, Vector2f(regionSize.x, regionSize.y));

@@ -4,7 +4,7 @@
 
 namespace eng
 {
-	struct LinesComponent;
+	struct LinesSingleton;
 	struct TransformComponent;
 }
 
@@ -29,11 +29,12 @@ namespace tactics
 			// Resources
 			const tactics::AbilityTable,
 			// Components
-			eng::LinesComponent,
 			const eng::TransformComponent,
 			const tactics::AbilityComponent,
 			const tactics::SelectedComponent,
-			const tilemap::GridComponent>;
+			const tilemap::GridComponent,
+			// Singletons
+			eng::LinesSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

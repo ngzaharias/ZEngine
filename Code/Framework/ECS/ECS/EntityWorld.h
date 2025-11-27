@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Core/Set.h"
 #include "ECS/ComponentRegistry.h"
 #include "ECS/EntityStorage.h"
 #include "ECS/EventRegistry.h"
 #include "ECS/FrameBuffer.h"
 #include "ECS/QueryRegistry.h"
 #include "ECS/ResourceRegistry.h"
-#include "ECS/System.h"
+#include "ECS/SingletonRegistry.h"
 #include "ECS/SystemRegistry.h"
 
 class GameTime;
@@ -39,7 +38,7 @@ namespace ecs
 
 		bool IsAlive(const ecs::Entity& entity) const;
 
-		auto CreateEntity()->ecs::Entity;
+		auto CreateEntity() -> ecs::Entity;
 
 		void DestroyEntity(const ecs::Entity& entity);
 
@@ -74,28 +73,28 @@ namespace ecs
 		auto AddEvent(TArgs&&... args)->decltype(auto);
 
 		//////////////////////////////////////////////////////////////////////////
-		// Singleton
-
-		template<class TSingleton, typename... TArgs>
-		void RegisterSingleton(TArgs&&... args);
-
-		template<class TSingleton>
-		auto ReadSingleton()->const TSingleton&;
-
-		template<class TSingleton>
-		auto WriteSingleton()->TSingleton&;
-
-		//////////////////////////////////////////////////////////////////////////
 		// Resource
 
 		template<class TResource>
 		void RegisterResource(TResource& resource);
 
 		template<class TResource>
-		auto ReadResource()->const TResource&;
+		auto ReadResource() -> const TResource&;
 
 		template<class TResource>
-		auto WriteResource()->TResource&;
+		auto WriteResource() -> TResource&;
+
+		//////////////////////////////////////////////////////////////////////////
+		// Singleton
+
+		template<class TSingleton, typename... TArgs>
+		void RegisterSingleton(TArgs&&... args);
+
+		template<class TSingleton>
+		auto ReadSingleton() -> const TSingleton&;
+
+		template<class TSingleton>
+		auto WriteSingleton() -> TSingleton&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// System
@@ -109,7 +108,7 @@ namespace ecs
 		void RegisterSystemPriority(const int32 priority);
 
 		template<class TSystem>
-		auto GetSystem()->TSystem&;
+		auto GetSystem() -> TSystem&;
 
 	public:
 		ecs::FrameBuffer m_FrameBuffer;
@@ -119,10 +118,8 @@ namespace ecs
 		ecs::ComponentRegistry m_ComponentRegistry;
 		ecs::EventRegistry m_EventRegistry;
 		ecs::ResourceRegistry m_ResourceRegistry;
+		ecs::SingletonRegistry m_SingletonRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
-
-		ecs::Entity m_SingletonEntity = { };
-		bool m_IsInitialised = false;
 	};
 }
 

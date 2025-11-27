@@ -4,7 +4,7 @@
 
 namespace eng
 {
-	struct LinesComponent;
+	struct LinesSingleton;
 	struct PhysicsComponent;
 	struct RigidDynamicComponent;
 	struct RigidStaticComponent;
@@ -12,7 +12,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace dbg
@@ -21,11 +21,13 @@ namespace dbg
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::LinesComponent,
+			// Components
 			const eng::PhysicsComponent,
 			const eng::RigidDynamicComponent,
 			const eng::RigidStaticComponent,
-			const eng::settings::DebugComponent>;
+			// Singletons
+			eng::LinesSingleton,
+			const eng::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -5,7 +5,7 @@
 
 namespace eng
 {
-	struct FrameBufferComponent final : public ecs::SingletonComponent<FrameBufferComponent>
+	struct FrameBufferSingleton final : public ecs::Singleton<FrameBufferSingleton>
 	{
 		uint32 m_ShadowBuffer = 0;
 		uint32 m_ShadowTexture = 0;

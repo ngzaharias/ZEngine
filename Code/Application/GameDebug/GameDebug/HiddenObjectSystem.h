@@ -9,7 +9,7 @@ namespace dbg::hidden
 
 namespace eng
 {
-	struct LinesComponent;
+	struct LinesSingleton;
 	struct SpriteComponent;
 	struct TransformComponent;
 }
@@ -26,7 +26,7 @@ namespace hidden
 
 namespace hidden::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace dbg::hidden
@@ -35,13 +35,15 @@ namespace dbg::hidden
 	{
 	public:
 		using World = ecs::WorldView<
+			// Components
 			dbg::hidden::ObjectComponent,
-			eng::LinesComponent,
 			eng::level::EntityComponent,
 			eng::SpriteComponent,
 			eng::TransformComponent,
 			const ::hidden::ObjectComponent,
-			const ::hidden::settings::DebugComponent>;
+			// Singletons
+			eng::LinesSingleton,
+			const ::hidden::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

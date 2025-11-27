@@ -22,7 +22,7 @@
 
 void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 {
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	const auto& inputManager = world.ReadResource<eng::InputManager>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
@@ -68,7 +68,7 @@ void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 				const Vector3i tilePos = math::ToGridPos(intersectPos, tileSize);
 				const Vector3f snapPos = math::ToWorldPos(tilePos, tileSize);
 
-				auto& lines = world.WriteSingleton<eng::LinesComponent>();
+				auto& lines = world.WriteSingleton<eng::LinesSingleton>();
 				lines.AddAABB(snapPos, tileSize * 0.5f, Colour::Magenta);
 			}
 		}

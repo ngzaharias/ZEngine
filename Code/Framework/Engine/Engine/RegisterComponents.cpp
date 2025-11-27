@@ -61,23 +61,23 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterEvent<eng::network::ChangeRequest>();
 	entityWorld.RegisterEvent<eng::network::ChangeFinished>();
 
-	entityWorld.RegisterSingleton<eng::FrameBufferComponent>();
-	entityWorld.RegisterSingleton<eng::LinesComponent>();
-	entityWorld.RegisterSingleton<eng::MusicComponent>();
-	entityWorld.RegisterSingleton<eng::network::StateComponent>();
-	entityWorld.RegisterSingleton<eng::settings::AudioComponent>();
-	entityWorld.RegisterSingleton<eng::settings::CameraComponent>();
-	entityWorld.RegisterSingleton<eng::settings::DebugComponent>();
-	entityWorld.RegisterSingleton<eng::settings::GameplayComponent>();
-	entityWorld.RegisterSingleton<eng::settings::LaunchComponent>();
-	entityWorld.RegisterSingleton<eng::settings::WindowComponent>();
-	entityWorld.RegisterSingleton<eng::sound::RandomBufferComponent>();
-	entityWorld.RegisterSingleton<eng::sound::SequenceBufferComponent>();
+	entityWorld.RegisterSingleton<eng::FrameBufferSingleton>();
+	entityWorld.RegisterSingleton<eng::LinesSingleton>();
+	entityWorld.RegisterSingleton<eng::MusicSingleton>();
+	entityWorld.RegisterSingleton<eng::network::StateSingleton>();
+	entityWorld.RegisterSingleton<eng::settings::AudioSingleton>();
+	entityWorld.RegisterSingleton<eng::settings::CameraSingleton>();
+	entityWorld.RegisterSingleton<eng::settings::DebugSingleton>();
+	entityWorld.RegisterSingleton<eng::settings::GameplaySingleton>();
+	entityWorld.RegisterSingleton<eng::settings::LaunchSingleton>();
+	entityWorld.RegisterSingleton<eng::settings::WindowSingleton>();
+	entityWorld.RegisterSingleton<eng::sound::RandomBufferSingleton>();
+	entityWorld.RegisterSingleton<eng::sound::SequenceBufferSingleton>();
 }
 
 void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.RegisterSingleton<net::UserMapComponent>();
+	entityWorld.RegisterSingleton<net::UserMapSingleton>();
 }
 
 void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::ComponentSerializer& serializer)
@@ -107,7 +107,7 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	entityWorld.RegisterEvent<eng::level::LoadRequest>();
 
 	// singletons
-	entityWorld.RegisterSingleton<eng::level::DirectoryComponent>();
-	entityWorld.RegisterSingleton<eng::PhysicsSceneComponent>();
-	entityWorld.RegisterSingleton<eng::VersionComponent>();
+	entityWorld.RegisterSingleton<eng::level::DirectorySingleton>();
+	entityWorld.RegisterSingleton<eng::PhysicsSceneSingleton>();
+	entityWorld.RegisterSingleton<eng::VersionSingleton>();
 }

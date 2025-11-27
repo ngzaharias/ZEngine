@@ -13,9 +13,9 @@ void gamestate::NetworkStopSystem::Update(World& world, const GameTime& gameTime
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Updated<const gamestate::StateComponent>>())
+	if (world.HasAny<gamestate::StateSingleton>())
 	{
-		const auto& stateComponent = world.ReadSingleton<gamestate::StateComponent>();
+		const auto& stateComponent = world.ReadSingleton<gamestate::StateSingleton>();
 		if (std::holds_alternative<gamestate::NetworkStop>(stateComponent.m_State))
 		{
 			auto& component = world.AddEvent<eng::network::ChangeRequest>();
@@ -25,7 +25,7 @@ void gamestate::NetworkStopSystem::Update(World& world, const GameTime& gameTime
 
 	if (world.HasAny<ecs::query::Include<const eng::network::ChangeFinished>>())
 	{
-		const auto& stateComponent = world.ReadSingleton<gamestate::StateComponent>();
+		const auto& stateComponent = world.ReadSingleton<gamestate::StateSingleton>();
 		if (std::holds_alternative<gamestate::NetworkStop>(stateComponent.m_State))
 			world.AddEvent<gamestate::ChangeFinished>();
 	}

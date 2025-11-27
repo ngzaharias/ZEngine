@@ -15,7 +15,7 @@ namespace
 
 void eng::VersionSystem::Initialise(World& world)
 {
-	auto& component = world.WriteSingleton<eng::VersionComponent>();
+	auto& component = world.WriteSingleton<eng::VersionSingleton>();
 
 	// #todo: do not allow system commands in shipped games
 	char buffer[256];

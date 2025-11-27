@@ -1,12 +1,12 @@
 #include "ECS/ComponentRegistry.h"
 
-bool ecs::ComponentRegistry::IsRegistered(const ecs::ComponentId componentId) const
+bool ecs::ComponentRegistry::IsRegistered(const ecs::ComponentId id) const
 {
-	return m_Entries.Contains(componentId);
+	return m_Entries.Contains(id);
 }
 
-auto ecs::ComponentRegistry::GetEntry(const ecs::ComponentId componentId) const -> const ecs::ComponentEntry&
+auto ecs::ComponentRegistry::GetEntry(const ecs::ComponentId id) const -> const ecs::ComponentEntry&
 {
-	Z_PANIC(IsRegistered(componentId), "Component isn't registered!");
-	return m_Entries.Get(componentId);
+	Z_PANIC(IsRegistered(id), "Component isn't registered!");
+	return m_Entries.Get(id);
 }

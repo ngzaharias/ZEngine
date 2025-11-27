@@ -4,6 +4,7 @@
 #include "Core/Name.h"
 #include "Core/Path.h"
 #include "ECS/Component.h"
+#include "ECS/Singleton.h"
 
 namespace eng::level
 {
@@ -16,7 +17,7 @@ namespace eng::level
 	};
 
 	/// \brief Contains every available level that can be loaded.
-	struct DirectoryComponent : public ecs::SingletonComponent<DirectoryComponent>
+	struct DirectorySingleton : public ecs::Singleton<DirectorySingleton>
 	{
 		Map<str::Name, str::Path> m_Levels;
 	};

@@ -15,10 +15,10 @@ namespace eng
 
 namespace eng::settings
 {
-	struct AudioComponent;
-	struct CameraComponent;
-	struct GameplayComponent;
-	struct WindowComponent;
+	struct AudioSingleton;
+	struct CameraSingleton;
+	struct GameplaySingleton;
+	struct WindowSingleton;
 }
 
 namespace gui
@@ -45,11 +45,11 @@ namespace gui
 			// Resources
 			const eng::ThemeTable,
 			const eng::WindowManager,
-			// Components
-			const eng::settings::AudioComponent,
-			const eng::settings::CameraComponent,
-			const eng::settings::GameplayComponent,
-			const eng::settings::WindowComponent>;
+			// Singletons
+			const eng::settings::AudioSingleton,
+			const eng::settings::CameraSingleton,
+			const eng::settings::GameplaySingleton,
+			const eng::settings::WindowSingleton>;
 
 		DCSettingsMenu();
 		~DCSettingsMenu() override;

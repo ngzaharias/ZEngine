@@ -2,6 +2,7 @@
 
 #include "Core/Name.h"
 #include "ECS/Component.h"
+#include "ECS/Singleton.h"
 #include "Engine/WindowModeEnum.h"
 #include "Math/Rotator.h"
 #include "Math/Vector.h"
@@ -9,7 +10,7 @@
 namespace eng::settings
 {
 	/// \brief Debug settings that is only used in non-gold builds.
-	struct DebugComponent : public ecs::SingletonComponent<DebugComponent>
+	struct DebugSingleton : public ecs::Singleton<DebugSingleton>
 	{
 		bool m_AreLinesEnabled = false;
 		bool m_ArePhysicsEnabled = false;
@@ -18,7 +19,7 @@ namespace eng::settings
 	};
 
 	/// \brief Launch settings for the game.
-	struct LaunchComponent : public ecs::SingletonComponent<LaunchComponent>
+	struct LaunchSingleton : public ecs::Singleton<LaunchSingleton>
 	{
 		// the level that is loaded when the game first launches
 		str::Name m_Level = {};

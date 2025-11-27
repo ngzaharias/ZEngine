@@ -10,12 +10,12 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::settings::GameplayComponent& value) const
+void eng::Visitor::ReadCustom(eng::settings::GameplaySingleton& value) const
 {
 	Read(strTheme, value.m_Theme, value.m_Theme);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::settings::GameplayComponent& value)
+void eng::Visitor::WriteCustom(const eng::settings::GameplaySingleton& value)
 {
 	Write(strTheme, value.m_Theme);
 }

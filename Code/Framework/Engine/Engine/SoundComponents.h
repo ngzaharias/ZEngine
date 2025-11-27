@@ -2,6 +2,7 @@
 
 #include "Core/Guid.h"
 #include "ECS/Component.h"
+#include "ECS/Singleton.h"
 
 #include <SFML/Audio/Sound.hpp>
 
@@ -20,7 +21,7 @@ namespace eng::sound
 		int32 m_Index = 0;
 	};
 
-	struct RandomBufferComponent : public ecs::SingletonComponent<RandomBufferComponent>
+	struct RandomBufferSingleton : public ecs::Singleton<RandomBufferSingleton>
 	{
 		Array<str::Guid> m_Requests = {};
 	};
@@ -36,7 +37,7 @@ namespace eng::sound
 		int32 m_Index = -1;
 	};
 
-	struct SequenceBufferComponent : public ecs::SingletonComponent<SequenceBufferComponent>
+	struct SequenceBufferSingleton : public ecs::Singleton<SequenceBufferSingleton>
 	{
 		Array<str::Guid> m_Requests = {};
 	};

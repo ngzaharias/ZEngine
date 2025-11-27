@@ -23,7 +23,7 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace editor
@@ -32,6 +32,7 @@ namespace editor
 	{
 	public:
 		using World = ecs::WorldView<
+			// Components
 			ecs::NameComponent,
 			eng::camera::EditorComponent,
 			eng::camera::Move3DComponent,
@@ -39,7 +40,8 @@ namespace editor
 			eng::camera::ProjectionComponent,
 			eng::camera::Zoom2DComponent,
 			eng::TransformComponent,
-			const eng::settings::DebugComponent>;
+			// Singletons
+			const eng::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -8,19 +8,19 @@
 
 #include <vector>
 
+namespace ecs
+{
+	struct NameComponent;
+}
+
 namespace editor
 {
-	struct EntitySelectComponent;
+	struct EntitySelectSingleton;
 }
 
 namespace editor::settings
 {
-	struct LocalComponent;
-}
-
-namespace ecs
-{
-	struct NameComponent;
+	struct LocalSingleton;
 }
 
 namespace eng
@@ -68,18 +68,19 @@ namespace editor
 	{
 	public:
 		using World = ecs::WorldView<
-			// resources
+			// Resources
 			const eng::AssetManager,
 			const eng::InputManager,
-			// components
+			// Components
 			ecs::NameComponent,
 			editor::EntitySaveComponent,
-			editor::EntitySelectComponent,
 			editor::EntityWindowComponent,
-			editor::settings::LocalComponent,
 			const editor::EntityWindowRequest,
 			const eng::level::EntityComponent,
-			const eng::PrototypeComponent>;
+			const eng::PrototypeComponent,
+			// Singletons
+			editor::EntitySelectSingleton,
+			editor::settings::LocalSingleton>;
 
 		EntityEditorSystem(ecs::EntityWorld& world);
 

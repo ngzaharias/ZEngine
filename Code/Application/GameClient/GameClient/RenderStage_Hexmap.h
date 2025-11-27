@@ -25,7 +25,7 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace hexmap
@@ -43,10 +43,11 @@ namespace hexmap
 			// Components
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::settings::DebugComponent,
 			const eng::TransformComponent,
 			const hexmap::LayerComponent,
-			const hexmap::RootComponent>;
+			const hexmap::RootComponent,
+			// Singletons
+			const eng::settings::DebugSingleton>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

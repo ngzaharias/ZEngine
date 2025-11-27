@@ -6,7 +6,7 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
-	struct LinesComponent;
+	struct LinesSingleton;
 	struct TextComponent;
 	struct TransformComponent;
 }
@@ -20,8 +20,11 @@ namespace voxel
 {
 	struct ChunkComponent;
 	struct ModifyComponent;
-	struct ModifySettingsComponent;
+	struct ModifySettingsSingleton;
+}
 
+namespace voxel
+{
 	class ModifySystem final : public ecs::System
 	{
 	public:
@@ -30,13 +33,14 @@ namespace voxel
 			const eng::InputManager,
 			const eng::WindowManager,
 			// Components
-			eng::LinesComponent,
 			eng::TextComponent,
 			eng::TransformComponent,
 			voxel::ModifyComponent,
-			voxel::ModifySettingsComponent,
 			const eng::camera::ProjectionComponent,
-			const voxel::ChunkComponent>;
+			const voxel::ChunkComponent,
+			// Singletons
+			eng::LinesSingleton,
+			voxel::ModifySettingsSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

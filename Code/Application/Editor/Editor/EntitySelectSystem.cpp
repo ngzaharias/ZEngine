@@ -86,9 +86,9 @@ void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Updated<eng::settings::DebugComponent>>())
+	if (world.HasAny<eng::settings::DebugSingleton>())
 	{
-		const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+		const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 		auto& input = world.WriteResource<eng::InputManager>();
 		input::Layer& layer = input.ModifyLayer(strInput);
 		layer.m_Bindings.RemoveAll();
@@ -133,13 +133,13 @@ void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
 
 			selected.Emplace(entity, math::DistanceSqr(ray.m_Position, intersectPos));
 
-			auto& lines = world.WriteSingleton<eng::LinesComponent>();
+			auto& lines = world.WriteSingleton<eng::LinesSingleton>();
 			lines.AddSphere(intersectPos, 100.f, Colour::Red);
 		}
 
 		if (input.IsPressed(strSelect))
 		{
-			auto& selectComponent = world.WriteSingleton<editor::EntitySelectComponent>();
+			auto& selectComponent = world.WriteSingleton<editor::EntitySelectSingleton>();
 			if (!selected.IsEmpty())
 			{
 				std::sort(selected.begin(), selected.end(),

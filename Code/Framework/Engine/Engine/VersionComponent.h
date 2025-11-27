@@ -8,7 +8,7 @@
 namespace eng
 {
 	/// \brief
-	struct VersionComponent final : ecs::SingletonComponent<VersionComponent>
+	struct VersionSingleton final : ecs::Singleton<VersionSingleton>
 	{
 		str::String m_Branch = {};
 		str::String m_Commit = {};

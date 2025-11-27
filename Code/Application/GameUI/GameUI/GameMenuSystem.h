@@ -27,7 +27,7 @@ namespace eng::level
 
 namespace eng::settings
 {
-	struct LaunchComponent;
+	struct LaunchSingleton;
 }
 
 namespace gui::game_menu
@@ -54,11 +54,12 @@ namespace gui::game_menu
 			eng::application::CloseRequest,
 			eng::level::LoadRequest,
 			gui::game_menu::CloseRequest,
-			const eng::settings::LaunchComponent,
 			const gui::game_menu::ExitGameRequest,
 			const gui::game_menu::ExitToMenuRequest,
 			const gui::game_menu::OpenRequest,
-			const gui::game_menu::WindowComponent>;
+			const gui::game_menu::WindowComponent,
+			// Singletons
+			const eng::settings::LaunchSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

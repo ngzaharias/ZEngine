@@ -38,11 +38,11 @@ gui::DCSettingsMenu::~DCSettingsMenu()
 
 void gui::DCSettingsMenu::Initialise(World& world)
 {
-	const auto& audio = world.ReadSingleton<eng::settings::AudioComponent>();
-	const auto& camera = world.ReadSingleton<eng::settings::CameraComponent>();
-	const auto& gameplay = world.ReadSingleton<eng::settings::GameplayComponent>();
+	const auto& audio = world.ReadSingleton<eng::settings::AudioSingleton>();
+	const auto& camera = world.ReadSingleton<eng::settings::CameraSingleton>();
+	const auto& gameplay = world.ReadSingleton<eng::settings::GameplaySingleton>();
 	const auto& themes = world.ReadResource<eng::ThemeTable>();
-	const auto& window = world.ReadSingleton<eng::settings::WindowComponent>();
+	const auto& window = world.ReadSingleton<eng::settings::WindowSingleton>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const auto& monitor = *windowManager.GetMonitor(0);
 

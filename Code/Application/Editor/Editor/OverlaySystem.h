@@ -16,7 +16,7 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace editor
@@ -30,7 +30,8 @@ namespace editor
 			// Components
 			eng::camera::ProjectionComponent,
 			eng::TransformComponent,
-			const eng::settings::DebugComponent>;
+			// Singletons
+			const eng::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

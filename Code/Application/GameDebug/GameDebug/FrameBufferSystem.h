@@ -10,12 +10,12 @@ namespace dbg
 
 namespace eng
 {
-	struct FrameBufferComponent;
+	struct FrameBufferSingleton;
 }
 
 namespace dbg
 {
-	struct FrameBufferComponent;
+	struct FrameBufferSingleton;
 
 	struct BufferWindowComponent : public ecs::Component<BufferWindowComponent> { };
 
@@ -23,9 +23,11 @@ namespace dbg
 	{
 	public:
 		using World = ecs::WorldView<
+			// Components
 			dbg::BufferWindowComponent,
 			const dbg::BufferWindowRequest,
-			const eng::FrameBufferComponent>;
+			// Singletons
+			const eng::FrameBufferSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

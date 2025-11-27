@@ -12,7 +12,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::settings::CameraComponent& value) const
+void eng::Visitor::ReadCustom(eng::settings::CameraSingleton& value) const
 {
 	Read(strRotateSpeed, value.m_RotateSpeed, value.m_RotateSpeed);
 	Read(strTranslateSpeed, value.m_TranslateSpeed, value.m_TranslateSpeed);
@@ -20,7 +20,7 @@ void eng::Visitor::ReadCustom(eng::settings::CameraComponent& value) const
 	Read(strZoomSpeed, value.m_ZoomSpeed, value.m_ZoomSpeed);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::settings::CameraComponent& value)
+void eng::Visitor::WriteCustom(const eng::settings::CameraSingleton& value)
 {
 	Write(strRotateSpeed, value.m_RotateSpeed);
 	Write(strTranslateSpeed, value.m_TranslateSpeed);

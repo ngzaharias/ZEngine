@@ -13,7 +13,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct GameplayComponent;
+	struct GameplaySingleton;
 }
 
 namespace gui
@@ -25,9 +25,10 @@ namespace gui
 			// Resources
 			eng::UIManager,
 			const eng::ThemeTable,
-			// Components
-			const eng::settings::GameplayComponent,
-			const eng::TablesReloadedEvent>;
+			// Events
+			const eng::TablesReloadedEvent,
+			// Singletons
+			const eng::settings::GameplaySingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

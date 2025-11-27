@@ -96,7 +96,7 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
@@ -345,7 +345,7 @@ void eng::RenderStage_Opaque::RenderBatch(World& world, const RenderBatchID& bat
 
 			if (shader->u_Texture_ShadowMap)
 			{
-				auto& component = world.WriteSingleton<eng::FrameBufferComponent>();
+				auto& component = world.WriteSingleton<eng::FrameBufferSingleton>();
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, component.m_ShadowTexture);
 			}

@@ -8,6 +8,8 @@
 #include "ECS/Entity.h"
 #include "ECS/Event.h"
 #include "ECS/EventStorage.h"
+#include "ECS/Singleton.h"
+#include "ECS/SingletonStorage.h"
 
 namespace ecs
 {
@@ -26,6 +28,7 @@ namespace ecs
 		using EntityMap = Map<ecs::Entity, ecs::ComponentMask>;
 		using EntitySet = Array<ecs::Entity>;
 		using Events = SparseArray<ecs::EventId, ecs::IEventStorage*>;
+		using Singletons = SparseArray<ecs::SingletonId, ecs::ISingletonStorage*>;
 
 	public:
 		//////////////////////////////////////////////////////////////////////////
@@ -54,6 +57,15 @@ namespace ecs
 		template<class TEvent>
 		auto GetEvents() const -> const Array<TEvent>&;
 
+		//////////////////////////////////////////////////////////////////////////
+		// Singleton
+
+		template<class TSingleton, typename... TArgs>
+		void RegisterSingleton(TArgs&&... args);
+
+		template<class TSingleton>
+		auto GetSingleton() -> TSingleton&;
+
 	private:
 		void FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryRegistry& queryRegistry);
 
@@ -63,6 +75,9 @@ namespace ecs
 		EntityMap m_AliveEntities;
 		EntitySet m_DeadEntities;
 		Events m_Events;
+		Singletons m_Singletons;
+
+		Set<ecs::SingletonId> m_SingletonsUpdated;
 	};
 }
 

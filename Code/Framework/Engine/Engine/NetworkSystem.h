@@ -17,7 +17,7 @@ namespace eng::network
 {
 	struct ChangeFinished;
 	struct ChangeRequest;
-	struct StateComponent;
+	struct StateSingleton;
 }
 
 namespace eng::network
@@ -26,10 +26,13 @@ namespace eng::network
 	{
 	public:
 		using World = ecs::WorldView<
+			// Resources
 			eng::NetworkManager,
+			// Events
 			eng::network::ChangeFinished,
-			eng::network::StateComponent,
-			const eng::network::ChangeRequest>;
+			const eng::network::ChangeRequest,
+			// Singletons
+			eng::network::StateSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 

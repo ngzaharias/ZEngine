@@ -53,30 +53,30 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 	{
 		// audio
 		if (eventData.m_EffectVolume)
-			world.WriteSingleton<eng::settings::AudioComponent>().m_EffectVolume = *eventData.m_EffectVolume;
+			world.WriteSingleton<eng::settings::AudioSingleton>().m_EffectVolume = *eventData.m_EffectVolume;
 		if (eventData.m_MasterVolume)
-			world.WriteSingleton<eng::settings::AudioComponent>().m_MasterVolume = *eventData.m_MasterVolume;
+			world.WriteSingleton<eng::settings::AudioSingleton>().m_MasterVolume = *eventData.m_MasterVolume;
 		if (eventData.m_MusicVolume)
-			world.WriteSingleton<eng::settings::AudioComponent>().m_MusicVolume = *eventData.m_MusicVolume;
+			world.WriteSingleton<eng::settings::AudioSingleton>().m_MusicVolume = *eventData.m_MusicVolume;
 
 		// gameplay
 		if (eventData.m_MoveSpeed)
-			world.WriteSingleton<eng::settings::CameraComponent>().m_TranslateSpeed = *eventData.m_MoveSpeed;
+			world.WriteSingleton<eng::settings::CameraSingleton>().m_TranslateSpeed = *eventData.m_MoveSpeed;
 		if (eventData.m_ZoomRate)
-			world.WriteSingleton<eng::settings::CameraComponent>().m_ZoomAmount = *eventData.m_ZoomRate;
+			world.WriteSingleton<eng::settings::CameraSingleton>().m_ZoomAmount = *eventData.m_ZoomRate;
 		if (eventData.m_ZoomSpeed)
-			world.WriteSingleton<eng::settings::CameraComponent>().m_ZoomSpeed = *eventData.m_ZoomSpeed;
+			world.WriteSingleton<eng::settings::CameraSingleton>().m_ZoomSpeed = *eventData.m_ZoomSpeed;
 		if (eventData.m_Theme)
-			world.WriteSingleton<eng::settings::GameplayComponent>().m_Theme = *eventData.m_Theme;
+			world.WriteSingleton<eng::settings::GameplaySingleton>().m_Theme = *eventData.m_Theme;
 
 		// graphics
 		if (eventData.m_Monitor)
-			world.WriteSingleton<eng::settings::WindowComponent>().m_Monitor = *eventData.m_Monitor;
+			world.WriteSingleton<eng::settings::WindowSingleton>().m_Monitor = *eventData.m_Monitor;
 		if (eventData.m_RefreshRate)
-			world.WriteSingleton<eng::settings::WindowComponent>().m_RefreshRate = *eventData.m_RefreshRate;
+			world.WriteSingleton<eng::settings::WindowSingleton>().m_RefreshRate = *eventData.m_RefreshRate;
 		if (eventData.m_Resolution)
-			world.WriteSingleton<eng::settings::WindowComponent>().m_Resolution = *eventData.m_Resolution;
+			world.WriteSingleton<eng::settings::WindowSingleton>().m_Resolution = *eventData.m_Resolution;
 		if (eventData.m_WindowMode)
-			world.WriteSingleton<eng::settings::WindowComponent>().m_WindowMode = *eventData.m_WindowMode;
+			world.WriteSingleton<eng::settings::WindowSingleton>().m_WindowMode = *eventData.m_WindowMode;
 	}
 }

@@ -32,7 +32,7 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 		auto& window = world.AddComponent<editor::settings::WindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_Label = ToLabel("Settings Menu##editor", identifier);
-		window.m_Local = world.ReadSingleton<editor::settings::LocalComponent>();
+		window.m_Local = world.ReadSingleton<editor::settings::LocalSingleton>();
 	}
 
 	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::settings::WindowComponent>>())
@@ -67,7 +67,7 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 
 			if (wasModified)
 			{
-				world.WriteSingleton<editor::settings::LocalComponent>() = localSettings;
+				world.WriteSingleton<editor::settings::LocalSingleton>() = localSettings;
 			}
 		}
 		ImGui::End();

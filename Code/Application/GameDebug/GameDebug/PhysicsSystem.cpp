@@ -46,7 +46,7 @@ namespace
 	using World = dbg::PhysicsSystem::World;
 	void RenderShape(World& world, const physx::PxActor& actor, const physx::PxShape& shape, const physx::PxTransform& actorTransform)
 	{
-		auto& linesComponent = world.WriteSingleton<eng::LinesComponent>();
+		auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
 
 		const physx::PxTransform& shapeTransform = shape.getLocalPose();
 		const Matrix4x4 transform = ToTransform(shapeTransform) * ToTransform(actorTransform);
@@ -81,7 +81,7 @@ namespace
 
 void dbg::PhysicsSystem::Update(World& world, const GameTime& gameTime)
 {
-	const auto& settings = world.ReadSingleton<eng::settings::DebugComponent>();
+	const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	if (!settings.m_ArePhysicsEnabled)
 		return;
 

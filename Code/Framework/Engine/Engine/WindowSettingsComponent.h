@@ -1,13 +1,13 @@
 #pragma once
 
-#include "ECS/Component.h"
+#include "ECS/Singleton.h"
 #include "Engine/WindowModeEnum.h"
 #include "Math/Vector.h"
 
 namespace eng::settings
 {
 	/// \brief Shared window settings for all local users that is saved to a config file.
-	struct WindowComponent : public ecs::SingletonComponent<WindowComponent>
+	struct WindowSingleton : public ecs::Singleton<WindowSingleton>
 	{
 		int32 m_Monitor = 0;
 		int32 m_RefreshRate = 59;

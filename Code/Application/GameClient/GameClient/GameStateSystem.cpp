@@ -14,17 +14,17 @@ void gamestate::StateSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const auto& request : world.Events<gamestate::ChangeRequest>())
 	{
-		auto& stateComponent = world.WriteSingleton<gamestate::StateComponent>();
+		auto& stateComponent = world.WriteSingleton<gamestate::StateSingleton>();
 		stateComponent.m_Queue.Append(request.m_Queue);
 	}
 
-	const auto& constComponent = world.ReadSingleton<gamestate::StateComponent>();
+	const auto& constComponent = world.ReadSingleton<gamestate::StateSingleton>();
 	const bool hasEmptyState = std::holds_alternative<gamestate::None>(constComponent.m_State);
 	const bool hasStateQueued = !constComponent.m_Queue.IsEmpty();
 	const bool hasStateFinished = world.HasAny<gamestate::ChangeFinished>();
 	if ((hasEmptyState && hasStateQueued) || hasStateFinished)
 	{
-		auto& stateComponent = world.WriteSingleton<gamestate::StateComponent>();
+		auto& stateComponent = world.WriteSingleton<gamestate::StateSingleton>();
 
 		// remove old state
 		stateComponent.m_State = gamestate::None();

@@ -12,10 +12,10 @@ namespace eng
 
 namespace eng::settings
 {
-	struct AudioComponent;
-	struct CameraComponent;
-	struct GameplayComponent;
-	struct WindowComponent;
+	struct AudioSingleton;
+	struct CameraSingleton;
+	struct GameplaySingleton;
+	struct WindowSingleton;
 }
 
 namespace gui::settings_menu
@@ -36,14 +36,15 @@ namespace gui::settings_menu
 			eng::UIManager,
 			eng::WindowManager,
 			// Components
-			eng::settings::AudioComponent,
-			eng::settings::CameraComponent,
-			eng::settings::GameplayComponent,
-			eng::settings::WindowComponent,
 			gui::settings_menu::WindowComponent,
 			const gui::settings_menu::CloseRequest,
 			const gui::settings_menu::OpenRequest,
-			const gui::settings_menu::ValueRequest>;
+			const gui::settings_menu::ValueRequest,
+			// Singletons
+			eng::settings::AudioSingleton,
+			eng::settings::CameraSingleton,
+			eng::settings::GameplaySingleton,
+			eng::settings::WindowSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

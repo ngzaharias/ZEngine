@@ -127,4 +127,7 @@ void ecs::EntityStorage::FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryR
 		}
 	}
 	frameBuffer.m_EntityChanges.RemoveAll();
+
+	std::swap(m_SingletonsUpdated, frameBuffer.m_Singletons);
+	frameBuffer.m_Singletons.RemoveAll();
 }

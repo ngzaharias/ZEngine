@@ -8,14 +8,13 @@
 
 namespace editor::settings
 {
-	struct LocalComponent;
+	struct LocalSingleton;
 }
 
 namespace eng
 {
 	class AssetManager;
 	class WindowManager;
-	struct LinesComponent;
 	struct TransformComponent;
 }
 
@@ -35,10 +34,11 @@ namespace editor
 			eng::AssetManager,
 			const eng::WindowManager,
 			// Components
-			const editor::settings::LocalComponent,
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::TransformComponent>;
+			const eng::TransformComponent,
+			// Singletons
+			const editor::settings::LocalSingleton>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

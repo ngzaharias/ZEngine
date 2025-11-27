@@ -38,9 +38,9 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterEvent<gamestate::ChangeFinished>();
 	entityWorld.RegisterEvent<gamestate::ChangeRequest>();
 
-	entityWorld.RegisterSingleton<container::StorageChangesComponent>();
-	entityWorld.RegisterSingleton<clt::settings::DebugComponent>();
-	entityWorld.RegisterSingleton<gamestate::NetworkJoinComponent>();
-	entityWorld.RegisterSingleton<gamestate::StateComponent>();
-	entityWorld.RegisterSingleton<projectile::ChangesComponent>();
+	entityWorld.RegisterSingleton<container::StorageChangesSingleton>();
+	entityWorld.RegisterSingleton<clt::settings::DebugSingleton>();
+	entityWorld.RegisterSingleton<gamestate::NetworkJoinSingleton>();
+	entityWorld.RegisterSingleton<gamestate::StateSingleton>();
+	entityWorld.RegisterSingleton<projectile::ChangesSingleton>();
 }

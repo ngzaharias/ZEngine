@@ -22,7 +22,7 @@ namespace
 
 	void UpdateTheme(gui::ThemeSystem::World& world)
 	{
-		const auto& settings = world.ReadSingleton<eng::settings::GameplayComponent>();
+		const auto& settings = world.ReadSingleton<eng::settings::GameplaySingleton>();
 		const auto& themes = world.WriteResource<eng::ThemeTable>();
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 
@@ -50,10 +50,8 @@ namespace
 
 void gui::ThemeSystem::Update(World& world, const GameTime& gameTime)
 {
-	if (world.HasAny<ecs::query::Added<const eng::settings::GameplayComponent>>())
+	if (world.HasAny<eng::settings::GameplaySingleton>())
 		UpdateTheme(world);
 	if (world.HasAny<ecs::query::Added<const eng::TablesReloadedEvent>>())
-		UpdateTheme(world);
-	if (world.HasAny<ecs::query::Updated<const eng::settings::GameplayComponent>>())
 		UpdateTheme(world);
 }

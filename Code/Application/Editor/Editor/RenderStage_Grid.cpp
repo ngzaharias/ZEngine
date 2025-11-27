@@ -79,8 +79,8 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	World world = entityWorld.GetWorldView<World>();
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
-	const auto& localSettings = world.ReadSingleton<editor::settings::LocalComponent>();
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
+	const auto& localSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
 	const auto& gizmos = localSettings.m_Gizmos;
 	const auto& settings = gizmos.m_FloorGrid;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)

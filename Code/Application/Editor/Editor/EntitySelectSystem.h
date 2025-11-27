@@ -5,7 +5,7 @@
 
 namespace editor
 {
-	struct EntitySelectComponent;
+	struct EntitySelectSingleton;
 }
 
 namespace eng
@@ -13,7 +13,7 @@ namespace eng
 	class AssetManager;
 	class InputManager;
 	class WindowManager;
-	struct LinesComponent;
+	struct LinesSingleton;
 	struct SpriteComponent;
 	struct TransformComponent;
 	struct VisibilityComponent;
@@ -27,7 +27,7 @@ namespace eng::camera
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace editor
@@ -41,14 +41,15 @@ namespace editor
 			const eng::AssetManager,
 			const eng::WindowManager,
 			// Components
-			editor::EntitySelectComponent,
-			eng::LinesComponent,
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
 			const eng::SpriteComponent,
 			const eng::TransformComponent,
 			const eng::VisibilityComponent,
-			const eng::settings::DebugComponent>;
+			// Singletons
+			editor::EntitySelectSingleton,
+			eng::LinesSingleton,
+			const eng::settings::DebugSingleton>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

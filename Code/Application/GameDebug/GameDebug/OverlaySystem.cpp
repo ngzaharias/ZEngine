@@ -56,7 +56,7 @@ void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
 
 		// version
 		{
-			const auto& component = world.ReadSingleton<eng::VersionComponent>();
+			const auto& component = world.ReadSingleton<eng::VersionSingleton>();
 			if (!component.m_Commit.empty())
 			{
 				ImGui::TextColored(Colour::Green, "%s : %s", component.m_Commit.c_str(), component.m_Branch.c_str());

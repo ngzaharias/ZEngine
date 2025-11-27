@@ -2,8 +2,9 @@
 
 #include "Core/Array.h"
 #include "ECS/Component.h"
-#include "Voxel/VoxelTypes.h"
+#include "ECS/Singleton.h"
 #include "Math/Vector.h"
+#include "Voxel/VoxelTypes.h"
 
 namespace voxel
 {
@@ -26,7 +27,7 @@ namespace voxel
 		Array<Modify> m_Changes;
 	};
 
-	struct ModifySettingsComponent : public ecs::SingletonComponent<ModifySettingsComponent>
+	struct ModifySettingsSingleton : public ecs::Singleton<ModifySettingsSingleton>
 	{
 		voxel::EType m_Type = voxel::EType::None;
 		int32 m_Radius = 0;

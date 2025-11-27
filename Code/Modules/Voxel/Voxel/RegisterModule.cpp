@@ -26,7 +26,7 @@ void voxel::RegisterModule(ecs::EntityWorld& entityWorld)
 
 	// singletons
 	{
-		entityWorld.RegisterSingleton<voxel::ModifySettingsComponent>();
+		entityWorld.RegisterSingleton<voxel::ModifySettingsSingleton>();
 	}
 
 	// prototype

@@ -7,7 +7,7 @@
 namespace container
 {
 	struct OwnerComponent;
-	struct StorageChangesComponent;
+	struct StorageChangesSingleton;
 	struct StorageComponent;
 
 	/// \brief Handles creating/destroying of storage entity and its components.
@@ -15,9 +15,11 @@ namespace container
 	{
 	public:
 		using World = ecs::WorldView<
+			// Components
 			container::OwnerComponent,
-			const container::StorageChangesComponent,
-			const container::StorageComponent>;
+			const container::StorageComponent,
+			// Singletons
+			const container::StorageChangesSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 

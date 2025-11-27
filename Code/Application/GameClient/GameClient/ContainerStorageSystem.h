@@ -15,22 +15,25 @@ namespace container
 	struct MemberRemoveRequestComponent;
 	struct MemberRemoveResultComponent;
 	struct OwnerComponent;
-	struct StorageChangesComponent;
+	struct StorageChangesSingleton;
 	struct StorageComponent;
 	struct StorageCreateRequestComponent;
 	struct StorageCreateResultComponent;
 	struct StorageDestroyRequestComponent;
 	struct StorageDestroyResultComponent;
+}
 
+namespace container
+{
 	/// \brief Handles creating/destroying of storage entity and its components.
 	class StorageSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
+			// Components
 			container::MemberAddResultComponent,
 			container::MemberMoveResultComponent,
 			container::MemberRemoveResultComponent,
-			container::StorageChangesComponent,
 			container::StorageComponent,
 			container::StorageCreateResultComponent,
 			container::StorageDestroyResultComponent,
@@ -40,7 +43,9 @@ namespace container
 			const container::MemberRemoveRequestComponent,
 			const container::OwnerComponent,
 			const container::StorageCreateRequestComponent,
-			const container::StorageDestroyRequestComponent>;
+			const container::StorageDestroyRequestComponent,
+			// Singletons
+			container::StorageChangesSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 

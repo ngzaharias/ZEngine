@@ -39,7 +39,7 @@ void eng::RenderStage_Shadow::Initialise(ecs::EntityWorld& entityWorld)
 
 	// texture and buffer
 	{
-		auto& bufferComponent = world.WriteSingleton<eng::FrameBufferComponent>();
+		auto& bufferComponent = world.WriteSingleton<eng::FrameBufferSingleton>();
 		bufferComponent.m_ShadowSize = Vector2u(1024, 1024);
 
 		glGenFramebuffers(1, &bufferComponent.m_ShadowBuffer);
@@ -68,7 +68,7 @@ void eng::RenderStage_Shadow::Initialise(ecs::EntityWorld& entityWorld)
 
 void eng::RenderStage_Shadow::Shutdown(ecs::EntityWorld& entityWorld)
 {
-	auto& bufferComponent = entityWorld.WriteSingleton<eng::FrameBufferComponent>();
+	auto& bufferComponent = entityWorld.WriteSingleton<eng::FrameBufferSingleton>();
 
 	glDeleteFramebuffers(1, &bufferComponent.m_ShadowBuffer);
 	glDeleteTextures(1, &bufferComponent.m_ShadowTexture);
@@ -81,7 +81,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 
 	World world = entityWorld.GetWorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto& bufferComponent = world.ReadSingleton<eng::FrameBufferComponent>();
+	const auto& bufferComponent = world.ReadSingleton<eng::FrameBufferSingleton>();
 
 	{
 		glViewport(0, 0, bufferComponent.m_ShadowSize.x, bufferComponent.m_ShadowSize.y);
@@ -103,7 +103,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;

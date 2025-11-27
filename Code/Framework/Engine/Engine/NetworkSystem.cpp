@@ -47,7 +47,7 @@ void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const auto& eventData : world.Events<eng::network::ChangeRequest>())
 	{
-		auto& stateComponent = world.WriteSingleton<eng::network::StateComponent>();
+		auto& stateComponent = world.WriteSingleton<eng::network::StateSingleton>();
 
 		if (IsClient(stateComponent.m_Mode))
 			peer.Shutdown();

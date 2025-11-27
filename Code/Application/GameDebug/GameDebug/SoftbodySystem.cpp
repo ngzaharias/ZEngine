@@ -18,11 +18,11 @@
 
 void dbg::SoftbodySystem::Update(World& world, const GameTime& gameTime)
 {
-	const auto& settings = world.ReadSingleton<eng::settings::DebugComponent>();
+	const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	if (!settings.m_AreSoftbodyEnabled)
 		return;
 
-	auto& lines = world.WriteSingleton<eng::LinesComponent>();
+	auto& lines = world.WriteSingleton<eng::LinesSingleton>();
 	for (const ecs::Entity& chainEntity : world.Query<ecs::query::Include<const eng::TransformComponent, const softbody::ChainComponent>>())
 	{
 		const auto& chain = world.ReadComponent<softbody::ChainComponent>(chainEntity);

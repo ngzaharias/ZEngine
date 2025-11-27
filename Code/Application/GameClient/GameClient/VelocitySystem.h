@@ -4,7 +4,7 @@
 
 namespace projectile
 {
-	struct ChangesComponent;
+	struct ChangesSingleton;
 	struct CreateRequestComponent;
 }
 
@@ -18,10 +18,12 @@ namespace movement
 	{
 	public:
 		using World = ecs::WorldView<
+			// Components
 			movement::VelocityComponent,
 			const movement::AccelerationComponent,
-			const projectile::ChangesComponent,
-			const projectile::CreateRequestComponent>;
+			const projectile::CreateRequestComponent,
+			// Singletons
+			const projectile::ChangesSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

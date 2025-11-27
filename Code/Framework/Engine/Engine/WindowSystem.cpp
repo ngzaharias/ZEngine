@@ -13,9 +13,9 @@ void eng::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Updated<eng::settings::WindowComponent>>())
+	if (world.HasAny<eng::settings::WindowSingleton>())
 	{
-		const auto& windowSettings = world.ReadSingleton<eng::settings::WindowComponent>();
+		const auto& windowSettings = world.ReadSingleton<eng::settings::WindowSingleton>();
 
 		auto& manager = world.WriteResource<eng::WindowManager>();
 		if (eng::Window* window = manager.GetWindow(0))

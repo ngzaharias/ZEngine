@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Core/Variant.h"
-#include "ECS/Component.h"
+#include "ECS/Event.h"
+#include "ECS/Singleton.h"
 #include "Network/Types.h"
 
 namespace eng::network
@@ -20,7 +21,7 @@ namespace eng::network
 	using Request = Variant<Shutdown, Startup>;
 
 	/// \brief 
-	struct StateComponent : public ecs::SingletonComponent<StateComponent>
+	struct StateSingleton : public ecs::Singleton<StateSingleton>
 	{
 		net::EMode m_Mode = net::EMode::Standalone;
 		str::String m_ClientAddress = "0.0.0.0";

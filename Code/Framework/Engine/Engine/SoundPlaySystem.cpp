@@ -37,8 +37,7 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& audioSettings = world.ReadSingleton<eng::settings::AudioComponent>();
-
+	const auto& audioSettings = world.ReadSingleton<eng::settings::AudioSingleton>();
 	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SingleRequestComponent>>())
 	{
 		const auto& requestComponent = world.ReadComponent<eng::sound::SingleRequestComponent>(entity);
@@ -47,13 +46,13 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 
 	// Random Buffer
 	{
-		const auto& bufferComponent = world.ReadSingleton<eng::sound::RandomBufferComponent>();
+		const auto& bufferComponent = world.ReadSingleton<eng::sound::RandomBufferSingleton>();
 		m_Requests.Append(bufferComponent.m_Requests);
 	}
 
 	// Sequence Buffer
 	{
-		const auto& bufferComponent = world.ReadSingleton<eng::sound::SequenceBufferComponent>();
+		const auto& bufferComponent = world.ReadSingleton<eng::sound::SequenceBufferSingleton>();
 		m_Requests.Append(bufferComponent.m_Requests);
 	}
 

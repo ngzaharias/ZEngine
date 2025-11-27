@@ -17,7 +17,7 @@ void container::MemberSystem::Update(World& world, const GameTime& gameTime)
 
 void container::MemberSystem::ProcessAddRequests(World& world)
 {
-	const auto& changesComponent = world.ReadSingleton<container::StorageChangesComponent>();
+	const auto& changesComponent = world.ReadSingleton<container::StorageChangesSingleton>();
 	for (const MemberAdded& data : changesComponent.m_MemberAdded)
 	{
 		auto& memberComponent = world.AddComponent<container::MemberComponent>(data.m_Member);
@@ -31,7 +31,7 @@ void container::MemberSystem::ProcessAddRequests(World& world)
 
 void container::MemberSystem::ProcessMoveRequests(World& world)
 {
-	const auto& changesComponent = world.ReadSingleton<container::StorageChangesComponent>();
+	const auto& changesComponent = world.ReadSingleton<container::StorageChangesSingleton>();
 	for (const MemberMoved& data : changesComponent.m_MemberMoved)
 	{
 		auto& memberComponent = world.WriteComponent<container::MemberComponent>(data.m_Member);
@@ -41,7 +41,7 @@ void container::MemberSystem::ProcessMoveRequests(World& world)
 
 void container::MemberSystem::ProcessRemoveRequests(World& world)
 {
-	const auto& changesComponent = world.ReadSingleton<container::StorageChangesComponent>();
+	const auto& changesComponent = world.ReadSingleton<container::StorageChangesSingleton>();
 
 	// gather remove requests to handle duplicates
 	Set<ecs::Entity> removeRequests;

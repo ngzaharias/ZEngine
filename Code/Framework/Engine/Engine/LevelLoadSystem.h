@@ -15,7 +15,7 @@ namespace eng
 
 namespace eng::level
 {
-	struct DirectoryComponent;
+	struct DirectorySingleton;
 	struct EntityComponent;
 	struct LoadedComponent;
 	struct LoadingComponent;
@@ -34,15 +34,17 @@ namespace eng::level
 	{
 	public:
 		using World = ecs::WorldView<
-			// managers
+			// Resources
 			eng::PrototypeManager,
 			// components
 			ecs::NameComponent,
-			eng::level::DirectoryComponent,
 			eng::level::EntityComponent,
 			eng::level::LoadedComponent,
 			eng::level::LoadingComponent,
-			eng::level::LoadRequest>;
+			// Events
+			eng::level::LoadRequest,
+			// Singletons
+			eng::level::DirectorySingleton>;
 		
 		LoadSystem(ecs::EntityWorld& entityWorld);
 

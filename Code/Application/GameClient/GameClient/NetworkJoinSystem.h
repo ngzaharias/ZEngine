@@ -31,22 +31,29 @@ namespace net
 namespace gamestate
 {
 	struct ChangeFinished;
-	struct NetworkJoinComponent;
-	struct StateComponent;
+	struct NetworkJoinSingleton;
+	struct StateSingleton;
+}
 
+namespace gamestate
+{
 	class NetworkJoinSystem : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::level::LoadRequest,
+			// Resources
 			eng::NetworkManager,
+			// Components
+			gui::modal::MessageComponent,
+			const net::UserComponent,
+			// Events
+			eng::level::LoadRequest,
 			eng::network::ChangeRequest,
 			gamestate::ChangeFinished,
-			gamestate::NetworkJoinComponent,
-			gui::modal::MessageComponent,
 			const eng::network::ChangeFinished,
-			const gamestate::StateComponent,
-			const net::UserComponent>;
+			// Singletons
+			gamestate::NetworkJoinSingleton,
+			const gamestate::StateSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

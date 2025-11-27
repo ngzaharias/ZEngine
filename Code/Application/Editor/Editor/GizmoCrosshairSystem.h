@@ -7,7 +7,7 @@
 
 namespace eng
 {
-	struct LinesComponent;
+	struct LinesSingleton;
 	struct TransformComponent;
 }
 
@@ -18,7 +18,7 @@ namespace eng::camera
 
 namespace editor::settings
 {
-	struct LocalComponent;
+	struct LocalSingleton;
 }
 
 namespace editor::gizmo
@@ -27,10 +27,12 @@ namespace editor::gizmo
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::LinesComponent,
-			const editor::settings::LocalComponent,
+			// Components
 			const eng::camera::ProjectionComponent,
-			const eng::TransformComponent>;
+			const eng::TransformComponent,
+			// Singletons
+			eng::LinesSingleton,
+			const editor::settings::LocalSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

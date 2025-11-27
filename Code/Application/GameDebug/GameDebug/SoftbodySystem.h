@@ -4,12 +4,12 @@
 
 namespace eng
 {
-	struct LinesComponent;
+	struct LinesSingleton;
 }
 
 namespace eng::settings
 {
-	struct DebugComponent;
+	struct DebugSingleton;
 }
 
 namespace softbody
@@ -23,9 +23,11 @@ namespace dbg
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::LinesComponent,
+			// Components
 			const softbody::ChainComponent,
-			const eng::settings::DebugComponent>;
+			// Singletons
+			eng::LinesSingleton,
+			const eng::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

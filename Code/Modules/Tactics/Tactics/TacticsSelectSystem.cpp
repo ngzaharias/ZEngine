@@ -30,12 +30,12 @@ namespace
 
 void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
 {
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugComponent>();
+	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	if (debugSettings.m_IsEditorModeEnabled)
 		return;
 
 	const auto& inputManager = world.ReadResource<eng::InputManager>();
-	const auto& physicsScene = world.ReadSingleton<eng::PhysicsSceneComponent>();
+	const auto& physicsScene = world.ReadSingleton<eng::PhysicsSceneSingleton>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
 	if (!window)

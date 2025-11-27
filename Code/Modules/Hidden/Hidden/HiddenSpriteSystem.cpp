@@ -17,7 +17,7 @@ namespace
 	void Refresh(hidden::SpriteSystem::World& world)
 	{
 		const auto& themes = world.ReadResource<eng::ThemeTable>();
-		const auto& settings = world.ReadSingleton<eng::settings::GameplayComponent>();
+		const auto& settings = world.ReadSingleton<eng::settings::GameplaySingleton>();
 
 		using Query = ecs::query::Include<const eng::SpriteComponent, const hidden::ObjectComponent>;
 		for (const ecs::Entity& entity : world.Query<Query>())
@@ -38,7 +38,7 @@ void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const auto& themes = world.ReadResource<eng::ThemeTable>();
-	const auto& settings = world.ReadSingleton<eng::settings::GameplayComponent>();
+	const auto& settings = world.ReadSingleton<eng::settings::GameplaySingleton>();
 
 	using ObjectQuery = ecs::query
 		::Added<const hidden::ObjectComponent>
@@ -67,6 +67,6 @@ void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 
 	if (world.HasAny<ecs::query::Added<const eng::TablesReloadedEvent>>())
 		Refresh(world);
-	if (world.HasAny<ecs::query::Updated<const eng::settings::GameplayComponent>>())
+	if (world.HasAny<eng::settings::GameplaySingleton>())
 		Refresh(world);
-}
+} 
