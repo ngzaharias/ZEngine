@@ -1,9 +1,7 @@
 #include "EnginePCH.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 
-#include "Core/Array.h"
 #include "Engine/Visitor.h"
-#include "Engine/WindowManager.h"
 #include "imgui/Inspector.h"
 
 namespace
@@ -11,9 +9,6 @@ namespace
 	const str::StringView strAreLinesEnabled = "m_AreLinesEnabled";
 	const str::StringView strArePhysicsEnabled = "m_ArePhysicsEnabled";
 	const str::StringView strAreSoftbodyEnabled = "m_AreSoftbodyEnabled";
-	const str::StringView strLevel = "m_Level";
-
-	static str::String m_Scratch = {};
 }
 
 template<>
@@ -41,15 +36,4 @@ bool imgui::Inspector::WriteCustom(eng::settings::DebugSingleton& value)
 	result |= Write("m_AreSoftbodyEnabled", value.m_AreSoftbodyEnabled);
 	result |= Write("m_IsEditorModeEnabled", value.m_IsEditorModeEnabled);
 	return result;
-}
-
-template<>
-void eng::Visitor::ReadCustom(eng::settings::LaunchSingleton& value) const
-{
-	Read(strLevel, value.m_Level, value.m_Level);
-}
-template<>
-void eng::Visitor::WriteCustom(const eng::settings::LaunchSingleton& value)
-{
-	Write(strLevel, value.m_Level);
 }

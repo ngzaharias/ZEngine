@@ -2,7 +2,6 @@
 #include "GameUI/DCLoadingScreen.h"
 
 #include "ECS/EntityWorld.h"
-#include "Engine/SettingsComponents.h"
 #include "GameUI/LoadingComponents.h"
 
 #include <NsCore/ReflectionImplement.h>

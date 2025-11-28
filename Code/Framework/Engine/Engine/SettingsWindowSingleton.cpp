@@ -1,5 +1,5 @@
 #include "EnginePCH.h"
-#include "Engine/WindowSettingsComponent.h"
+#include "Engine/SettingsWindowSingleton.h"
 
 #include "Engine/Visitor.h"
 

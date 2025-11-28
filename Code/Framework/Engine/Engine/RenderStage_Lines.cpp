@@ -10,7 +10,7 @@
 #include "Engine/CameraHelpers.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/ShaderAsset.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"

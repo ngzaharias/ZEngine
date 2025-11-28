@@ -11,7 +11,7 @@
 #include "Engine/InputManager.h"
 #include "Engine/LevelComponents.h"
 #include "Engine/LinesComponent.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/SpriteAsset.h"
 #include "Engine/TransformComponent.h"

@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "Engine/TransformComponent.h"
 
 #include "imgui/imgui.h"

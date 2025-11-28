@@ -11,7 +11,7 @@
 #include "Engine/ColourHelpers.h"
 #include "Engine/FrameBufferComponent.h"
 #include "Engine/LightComponents.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/StaticMeshComponent.h"

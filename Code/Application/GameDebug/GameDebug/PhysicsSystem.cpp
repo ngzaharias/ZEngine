@@ -9,7 +9,7 @@
 #include "Engine/PhysicsComponent.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "Math/AABB.h"
 #include "Math/Matrix.h"
 #include "Math/OBB.h"

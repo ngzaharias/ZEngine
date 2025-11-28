@@ -7,7 +7,6 @@
 #include "ECS/WorldView.h"
 #include "Engine/LevelComponents.h"
 #include "Engine/LinesComponent.h"
-#include "Engine/SettingsComponents.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "GameDebug/HiddenObjectComponent.h"

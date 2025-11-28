@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "Engine/Visitor.h"
 #include "GameClient/SettingsComponents.h"
 #include "Hidden/HiddenDebugSettingsSingleton.h"

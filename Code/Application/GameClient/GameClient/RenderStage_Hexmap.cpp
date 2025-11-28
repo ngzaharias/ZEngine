@@ -9,7 +9,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/ColourHelpers.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/SpriteAsset.h"
 #include "Engine/StaticMeshAsset.h"

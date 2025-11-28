@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/LevelComponents.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/Visitor.h"
 
 namespace

@@ -5,6 +5,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "GameClient/SettingsComponents.h"
 #include "GameDebug/SettingsComponents.h"
 #include "Hidden/HiddenDebugSettingsSingleton.h"

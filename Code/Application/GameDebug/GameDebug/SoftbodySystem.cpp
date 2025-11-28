@@ -9,7 +9,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/ColourHelpers.h"
 #include "Engine/LinesComponent.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "Engine/TransformComponent.h"
 #include "Math/Algorithms.h"
 #include "Math/Circle.h"

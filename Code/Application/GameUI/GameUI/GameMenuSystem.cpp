@@ -8,7 +8,7 @@
 #include "Engine/ApplicationComponents.h"
 #include "Engine/InputManager.h"
 #include "Engine/LevelComponents.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCGameMenu.h"
 #include "GameUI/GameMenuComponents.h"

@@ -8,7 +8,7 @@
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
 #include "Engine/PhysicsSceneComponent.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"

@@ -10,11 +10,11 @@
 #include "Engine/AudioSettingsComponent.h"
 #include "Engine/CameraSettingsComponent.h"
 #include "Engine/GameplaySettingsComponent.h"
+#include "Engine/SettingsWindowSingleton.h"
 #include "Engine/MusicAsset.h"
 #include "Engine/MusicComponents.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Engine/WindowSettingsComponent.h"
 #include "Engine/Visitor.h"
 
 namespace

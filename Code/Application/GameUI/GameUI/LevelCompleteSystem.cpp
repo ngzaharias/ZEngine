@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/ApplicationComponents.h"
 #include "Engine/LevelComponents.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCLevelComplete.h"
 #include "GameUI/LevelCompleteComponents.h"

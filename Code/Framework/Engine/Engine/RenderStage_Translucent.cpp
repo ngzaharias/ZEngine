@@ -12,7 +12,7 @@
 #include "Engine/ColourHelpers.h"
 #include "Engine/FlipbookAsset.h"
 #include "Engine/FlipbookComponent.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/SpriteAsset.h"
 #include "Engine/SpriteComponent.h"

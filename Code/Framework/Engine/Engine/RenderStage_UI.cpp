@@ -9,7 +9,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/FontAsset.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/TextComponent.h"

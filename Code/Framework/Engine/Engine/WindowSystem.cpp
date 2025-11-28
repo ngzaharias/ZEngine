@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/WindowSettingsComponent.h"
+#include "Engine/SettingsWindowSingleton.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 

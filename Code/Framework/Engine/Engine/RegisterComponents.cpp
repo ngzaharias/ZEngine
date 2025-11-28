@@ -27,7 +27,9 @@
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/SavegameComponent.h"
-#include "Engine/SettingsComponents.h"
+#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/SettingsLaunchSingleton.h"
+#include "Engine/SettingsWindowSingleton.h"
 #include "Engine/SoundComponents.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshComponent.h"
@@ -37,7 +39,6 @@
 #include "Engine/UserComponents.h"
 #include "Engine/VersionComponent.h"
 #include "Engine/VisibilityComponent.h"
-#include "Engine/WindowSettingsComponent.h"
 
 void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 {
