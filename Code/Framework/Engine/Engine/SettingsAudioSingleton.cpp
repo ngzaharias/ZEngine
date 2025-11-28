@@ -1,5 +1,5 @@
 #include "EnginePCH.h"
-#include "Engine/AudioSettingsComponent.h"
+#include "Engine/SettingsAudioSingleton.h"
 
 #include "Engine/Visitor.h"
 

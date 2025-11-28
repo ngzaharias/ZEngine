@@ -52,7 +52,7 @@ namespace eng
 	class AssetManager;
 	class InputManager;
 	class TableHeadmaster;
-	struct TablesReloaded;
+	struct TablesReloadedEvent;
 }
 
 namespace dbg
@@ -90,7 +90,7 @@ namespace dbg
 			editor::TableWindowRequest,
 			editor::TextureWindowRequest,
 			editor::TrajectoryWindowRequest,
-			eng::TablesReloaded>;
+			eng::TablesReloadedEvent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

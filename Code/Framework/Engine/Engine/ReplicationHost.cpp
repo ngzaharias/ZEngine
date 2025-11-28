@@ -3,11 +3,11 @@
 
 #include "Core/Algorithms.h"
 #include "Engine/NetworkManager.h"
-#include "Engine/ReplicationComponents.h"
+#include "Engine/ReplicationComponent.h"
 #include "Engine/ComponentSerializer.h"
-#include "Engine/NetworkComponents.h"
 #include "Network/Host.h"
 #include "Network/Messages.h"
+#include "Network/Types.h"
 
 namespace
 {

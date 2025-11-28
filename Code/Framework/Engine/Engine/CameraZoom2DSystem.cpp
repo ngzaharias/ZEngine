@@ -6,10 +6,11 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/CameraComponent.h"
+#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraZoom2DComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
-#include "Engine/CameraSettingsComponent.h"
+#include "Engine/SettingsCameraSingleton.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -48,7 +49,7 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 				size = math::Clamp(size, readZoom.m_Min, readZoom.m_Max);
 
 				auto& writeZoom = world.WriteComponent<eng::camera::Zoom2DComponent>(cameraEntity);
-				writeZoom.m_Target = { size, input.m_MousePosition };
+				writeZoom.m_Target = { input.m_MousePosition, size };
 			}
 
 			if (readZoom.m_Target)

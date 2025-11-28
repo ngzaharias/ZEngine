@@ -86,7 +86,7 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::MenuItem("Reload Tables"))
 			{
-				world.AddEvent<eng::TablesReloaded>();
+				world.AddEvent<eng::TablesReloadedEvent>();
 				auto& tableHeadmaster = world.WriteResource<eng::TableHeadmaster>();
 				tableHeadmaster.Reload();
 			}

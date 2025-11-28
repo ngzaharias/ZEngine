@@ -7,8 +7,8 @@
 #include "Engine/AssetManager.h"
 #include "Engine/AudioHelpers.h"
 #include "Engine/MusicAsset.h"
-#include "Engine/MusicComponents.h"
-#include "Engine/AudioSettingsComponent.h"
+#include "Engine/MusicSingleton.h"
+#include "Engine/SettingsAudioSingleton.h"
 
 namespace
 {

@@ -6,11 +6,14 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraComponent.h"
+#include "Engine/CameraEditorComponent.h"
 #include "Engine/CameraHelpers.h"
+#include "Engine/CameraProjectionComponent.h"
 #include "Engine/ColourHelpers.h"
-#include "Engine/FrameBufferComponent.h"
-#include "Engine/LightComponents.h"
+#include "Engine/FrameBufferSingleton.h"
+#include "Engine/LightAmbientComponent.h"
+#include "Engine/LightDirectionalComponent.h"
+#include "Engine/LightPointComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/StaticMeshAsset.h"
@@ -115,9 +118,9 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 		const Matrix3x3 cameraRotate = Matrix3x3::FromRotate(cameraTransform.m_Rotate);
 		const Vector3f cameraFoward = Vector3f::AxisZ * cameraRotate;
 
-		for (const ecs::Entity& lightEntity : world.Query<ecs::query::Include<const eng::LightDirectionalComponent, const eng::TransformComponent>>())
+		for (const ecs::Entity& lightEntity : world.Query<ecs::query::Include<const eng::light::DirectionalComponent, const eng::TransformComponent>>())
 		{
-			const auto& lightComponent = world.ReadComponent<eng::LightDirectionalComponent>(lightEntity);
+			const auto& lightComponent = world.ReadComponent<eng::light::DirectionalComponent>(lightEntity);
 			const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(lightEntity);
 
 			camera::Orthographic orthographic;

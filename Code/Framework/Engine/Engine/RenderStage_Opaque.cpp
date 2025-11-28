@@ -7,11 +7,14 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraComponent.h"
+#include "Engine/CameraEditorComponent.h"
 #include "Engine/CameraHelpers.h"
+#include "Engine/CameraProjectionComponent.h"
 #include "Engine/ColourHelpers.h"
-#include "Engine/FrameBufferComponent.h"
-#include "Engine/LightComponents.h"
+#include "Engine/FrameBufferSingleton.h"
+#include "Engine/LightAmbientComponent.h"
+#include "Engine/LightDirectionalComponent.h"
+#include "Engine/LightPointComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/StaticMeshAsset.h"
@@ -145,18 +148,18 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 		// Ambient Lights
 		{
-			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::LightAmbientComponent>>())
+			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::light::AmbientComponent>>())
 			{
-				const auto& lightComponent = world.ReadComponent<eng::LightAmbientComponent>(entity);
+				const auto& lightComponent = world.ReadComponent<eng::light::AmbientComponent>(entity);
 				stageData.m_LightAmbient_Colour.Append(lightComponent.m_Colour);
 			}
 		}
 
 		// Directional Lights
 		{
-			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::LightDirectionalComponent, const eng::TransformComponent>>())
+			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::light::DirectionalComponent, const eng::TransformComponent>>())
 			{
-				const auto& lightComponent = world.ReadComponent<eng::LightDirectionalComponent>(entity);
+				const auto& lightComponent = world.ReadComponent<eng::light::DirectionalComponent>(entity);
 				const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(entity);
 				const Matrix3x3 rotation = Matrix3x3::FromRotate(lightTransform.m_Rotate);
 
@@ -167,9 +170,9 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 		// Point Lights
 		{
-			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::LightPointComponent, const eng::TransformComponent>>())
+			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::light::PointComponent, const eng::TransformComponent>>())
 			{
-				const auto& lightComponent = world.ReadComponent<eng::LightPointComponent>(entity);
+				const auto& lightComponent = world.ReadComponent<eng::light::PointComponent>(entity);
 				const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(entity);
 
 				stageData.m_LightPoint_Range.Append(lightComponent.m_Range);

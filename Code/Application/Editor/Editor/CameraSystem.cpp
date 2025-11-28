@@ -5,7 +5,11 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/CameraComponent.h"
+#include "Engine/CameraEditorComponent.h"
+#include "Engine/CameraMove3DComponent.h"
+#include "Engine/CameraPan3DComponent.h"
+#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraZoom2DComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/TransformComponent.h"
 

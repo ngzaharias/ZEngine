@@ -4,5 +4,5 @@
 
 namespace eng
 {
-	struct TablesReloaded final : ecs::Event<TablesReloaded> {};
+	struct TablesReloadedEvent final : ecs::Event<TablesReloadedEvent> {};
 }

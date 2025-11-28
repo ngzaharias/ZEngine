@@ -15,8 +15,8 @@ namespace net
 
 namespace eng::network
 {
-	struct ChangeFinished;
-	struct ChangeRequest;
+	struct ChangeFinishedEvent;
+	struct ChangeRequestEvent;
 	struct StateSingleton;
 }
 
@@ -29,8 +29,8 @@ namespace eng::network
 			// Resources
 			eng::NetworkManager,
 			// Events
-			eng::network::ChangeFinished,
-			const eng::network::ChangeRequest,
+			eng::network::ChangeFinishedEvent,
+			const eng::network::ChangeRequestEvent,
 			// Singletons
 			eng::network::StateSingleton>;
 

@@ -5,8 +5,8 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/ApplicationComponents.h"
-#include "Engine/LevelComponents.h"
+#include "Engine/ApplicationCloseRequestEvent.h"
+#include "Engine/LevelLoadRequestEvent.h"
 #include "Engine/UIManager.h"
 #include "Engine/VersionComponent.h"
 #include "GameUI/DCMainMenu.h"
@@ -46,7 +46,7 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 	if (world.HasAny<gui::main_menu::ExitGameRequest>())
 	{
-		world.AddEvent<eng::application::CloseRequest>();
+		world.AddEvent<eng::application::CloseRequestEvent>();
 	}
 
 	if (world.HasAny<gui::main_menu::LoadGameRequest>())
@@ -55,6 +55,6 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const auto& request : world.Events<gui::main_menu::NewGameRequest>())
 	{
-		world.AddEvent<eng::level::LoadRequest>(request.m_Level);
+		world.AddEvent<eng::level::LoadRequestEvent>(request.m_Level);
 	}
 }

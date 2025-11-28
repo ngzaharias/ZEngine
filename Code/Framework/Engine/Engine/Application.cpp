@@ -5,15 +5,21 @@
 #include "Core/Profiler.h"
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraComponent.h"
+#include "Engine/CameraBound2DComponent.h"
+#include "Engine/CameraMove2DComponent.h"
+#include "Engine/CameraMove3DComponent.h"
+#include "Engine/CameraPan3DComponent.h"
+#include "Engine/CameraZoom2DComponent.h"
+#include "Engine/CameraProjectionComponent.h"
 #include "Engine/ColourTable.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/FlipbookAsset.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/FontAsset.h"
-#include "Engine/LightComponents.h"
+#include "Engine/LightAmbientComponent.h"
+#include "Engine/LightDirectionalComponent.h"
+#include "Engine/LightPointComponent.h"
 #include "Engine/MusicAsset.h"
-#include "Engine/NetworkComponents.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsManager.h"
@@ -155,9 +161,9 @@ void eng::Application::Register()
 		m_PrototypeManager.Register<eng::camera::ProjectionComponent>();
 		m_PrototypeManager.Register<eng::camera::Zoom2DComponent>();
 		m_PrototypeManager.Register<eng::FlipbookComponent>();
-		m_PrototypeManager.Register<eng::LightAmbientComponent>();
-		m_PrototypeManager.Register<eng::LightDirectionalComponent>();
-		m_PrototypeManager.Register<eng::LightPointComponent>();
+		m_PrototypeManager.Register<eng::light::AmbientComponent>();
+		m_PrototypeManager.Register<eng::light::DirectionalComponent>();
+		m_PrototypeManager.Register<eng::light::PointComponent>();
 		m_PrototypeManager.Register<eng::PhysicsComponent>();
 		m_PrototypeManager.Register<eng::SpriteComponent>();
 		m_PrototypeManager.Register<eng::StaticMeshComponent>();

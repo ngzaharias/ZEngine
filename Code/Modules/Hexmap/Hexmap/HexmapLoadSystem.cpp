@@ -7,7 +7,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/LevelComponents.h"
+#include "Engine/LevelEntityComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Hexmap/HexmapHelpers.h"
 #include "Hexmap/HexmapLayerComponent.h"

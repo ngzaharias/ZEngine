@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Editor/SettingsComponents.h"
-#include "Engine/CameraComponent.h"
+#include "Engine/CameraProjectionComponent.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Math/Quaternion.h"

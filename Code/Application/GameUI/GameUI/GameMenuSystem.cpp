@@ -5,9 +5,9 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/ApplicationComponents.h"
+#include "Engine/ApplicationCloseRequestEvent.h"
 #include "Engine/InputManager.h"
-#include "Engine/LevelComponents.h"
+#include "Engine/LevelLoadRequestEvent.h"
 #include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCGameMenu.h"
@@ -54,13 +54,13 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 	if (world.HasAny<gui::game_menu::ExitGameRequest>())
 	{
-		world.AddEvent<eng::application::CloseRequest>();
+		world.AddEvent<eng::application::CloseRequestEvent>();
 	}
 
 	if (world.HasAny<gui::game_menu::ExitToMenuRequest>())
 	{
 		const auto& settings = world.ReadSingleton<eng::settings::LaunchSingleton>();
-		world.AddEvent<eng::level::LoadRequest>(settings.m_Level);
+		world.AddEvent<eng::level::LoadRequestEvent>(settings.m_Level);
 		world.AddEvent<gui::game_menu::CloseRequest>();
 	}
 

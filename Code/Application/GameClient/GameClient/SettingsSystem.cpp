@@ -7,15 +7,15 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "Engine/AudioSettingsComponent.h"
-#include "Engine/CameraSettingsComponent.h"
-#include "Engine/GameplaySettingsComponent.h"
-#include "Engine/SettingsWindowSingleton.h"
 #include "Engine/MusicAsset.h"
-#include "Engine/MusicComponents.h"
+#include "Engine/MusicSingleton.h"
+#include "Engine/SettingsAudioSingleton.h"
+#include "Engine/SettingsCameraSingleton.h"
+#include "Engine/SettingsGameplaySingleton.h"
+#include "Engine/SettingsWindowSingleton.h"
+#include "Engine/Visitor.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Engine/Visitor.h"
 
 namespace
 {

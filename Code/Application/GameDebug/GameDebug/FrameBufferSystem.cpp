@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/FrameBufferComponent.h"
+#include "Engine/FrameBufferSingleton.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "Math/Vector.h"
 

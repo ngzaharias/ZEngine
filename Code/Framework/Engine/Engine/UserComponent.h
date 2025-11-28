@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Core/Map.h"
 #include "ECS/Component.h"
-#include "ECS/Entity.h"
 #include "Network/UserId.h"
 
 namespace net
@@ -11,12 +9,5 @@ namespace net
 	struct UserComponent final : ecs::Component<UserComponent>
 	{
 		net::UserId m_UserId = net::UserId::Unassigned;
-	};
-
-	/// \brief Singleton that allows mapping between UserId and Entity.
-	struct UserMapSingleton final : ecs::Singleton<UserMapSingleton>
-	{
-		Map<ecs::Entity, net::UserId> m_EntityToUser;
-		Map<net::UserId, ecs::Entity> m_UserToEntity;
 	};
 }

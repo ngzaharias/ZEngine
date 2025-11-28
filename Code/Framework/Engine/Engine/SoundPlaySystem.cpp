@@ -9,7 +9,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/AudioHelpers.h"
-#include "Engine/AudioSettingsComponent.h"
+#include "Engine/SettingsAudioSingleton.h"
 #include "Engine/SoundAssets.h"
 #include "Engine/SoundComponents.h"
 

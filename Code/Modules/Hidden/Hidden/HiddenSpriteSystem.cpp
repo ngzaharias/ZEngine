@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/GameplaySettingsComponent.h"
+#include "Engine/SettingsGameplaySingleton.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TablesReloadedEvent.h"
 #include "Engine/ThemeTable.h"

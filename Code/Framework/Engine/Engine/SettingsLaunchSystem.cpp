@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/LevelComponents.h"
+#include "Engine/LevelLoadRequestEvent.h"
 #include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/Visitor.h"
 
@@ -25,7 +25,7 @@ void eng::settings::LaunchSystem::Initialise(World& world)
 
 	if (!settings.m_Level.IsEmpty())
 	{
-		auto& request = world.AddEvent<eng::level::LoadRequest>();
+		auto& request = world.AddEvent<eng::level::LoadRequestEvent>();
 		request.m_Name = settings.m_Level;
 		request.m_IsSplash = true;
 	}

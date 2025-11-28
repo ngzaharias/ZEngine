@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/NetworkComponents.h"
+#include "Engine/NetworkChangeRequestEvent.h"
 #include "Engine/NetworkManager.h"
 #include "GameClient/GameStateComponents.h"
 
@@ -18,12 +18,12 @@ void gamestate::NetworkStopSystem::Update(World& world, const GameTime& gameTime
 		const auto& stateComponent = world.ReadSingleton<gamestate::StateSingleton>();
 		if (std::holds_alternative<gamestate::NetworkStop>(stateComponent.m_State))
 		{
-			auto& component = world.AddEvent<eng::network::ChangeRequest>();
-			component.m_Request = eng::network::Shutdown();
+			auto& eventData = world.AddEvent<eng::network::ChangeRequestEvent>();
+			eventData.m_Request = eng::network::Shutdown();
 		}
 	}
 
-	if (world.HasAny<ecs::query::Include<const eng::network::ChangeFinished>>())
+	if (world.HasAny<ecs::query::Include<const eng::network::ChangeFinishedEvent>>())
 	{
 		const auto& stateComponent = world.ReadSingleton<gamestate::StateSingleton>();
 		if (std::holds_alternative<gamestate::NetworkStop>(stateComponent.m_State))

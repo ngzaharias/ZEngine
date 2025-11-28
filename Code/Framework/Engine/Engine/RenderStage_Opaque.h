@@ -9,9 +9,6 @@ namespace eng
 	class AssetManager;
 	class WindowManager;
 	struct FrameBufferSingleton;
-	struct LightAmbientComponent;
-	struct LightDirectionalComponent;
-	struct LightPointComponent;
 	struct StaticMeshComponent;
 	struct TransformComponent;
 }
@@ -20,6 +17,13 @@ namespace eng::camera
 {
 	struct EditorComponent;
 	struct ProjectionComponent;
+}
+
+namespace eng::light
+{
+	struct AmbientComponent;
+	struct DirectionalComponent;
+	struct PointComponent;
 }
 
 namespace eng::settings
@@ -39,9 +43,9 @@ namespace eng
 			// Components
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent,
-			const eng::LightAmbientComponent,
-			const eng::LightDirectionalComponent,
-			const eng::LightPointComponent,
+			const eng::light::AmbientComponent,
+			const eng::light::DirectionalComponent,
+			const eng::light::PointComponent,
 			const eng::StaticMeshComponent,
 			const eng::TransformComponent,
 			// Singletons

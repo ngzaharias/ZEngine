@@ -1,5 +1,5 @@
 #include "EnginePCH.h"
-#include "Engine/CameraSettingsComponent.h"
+#include "Engine/SettingsCameraSingleton.h"
 
 #include "Engine/Visitor.h"
 

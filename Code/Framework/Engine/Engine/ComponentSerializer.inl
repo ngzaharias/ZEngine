@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/ReplicationComponents.h"
+#include "Engine/ReplicationComponent.h"
 
 namespace net
 {

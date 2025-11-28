@@ -7,7 +7,8 @@
 #include "ECS/WorldView.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/ReplicationHost.h"
-#include "Engine/UserComponents.h"
+#include "Engine/UserComponent.h"
+#include "Engine/UserMapSingleton.h"
 #include "Network/Adaptor.h"
 #include "Network/Host.h"
 

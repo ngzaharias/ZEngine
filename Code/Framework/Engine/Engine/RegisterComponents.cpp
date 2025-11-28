@@ -4,30 +4,44 @@
 #include "Core/MemBuffer.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
-#include "Engine/ApplicationComponents.h"
+#include "Engine/ApplicationCloseRequestEvent.h"
 #include "Engine/AssetComponent.h"
 #include "Engine/AssetManager.h"
-#include "Engine/AudioSettingsComponent.h"
-#include "Engine/CameraComponent.h"
-#include "Engine/CameraSettingsComponent.h"
+#include "Engine/CameraBound2DComponent.h"
+#include "Engine/CameraEditorComponent.h"
+#include "Engine/CameraMove2DComponent.h"
+#include "Engine/CameraMove3DComponent.h"
+#include "Engine/CameraPan3DComponent.h"
+#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraZoom2DComponent.h"
 #include "Engine/ComponentSerializer.h"
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/FlipbookComponent.h"
-#include "Engine/FrameBufferComponent.h"
-#include "Engine/LevelComponents.h"
-#include "Engine/LightComponents.h"
+#include "Engine/FrameBufferSingleton.h"
+#include "Engine/LevelDirectorySingleton.h"
+#include "Engine/LevelEntityComponent.h"
+#include "Engine/LevelLoadedComponent.h"
+#include "Engine/LevelLoadingComponent.h"
+#include "Engine/LevelLoadRequestEvent.h"
+#include "Engine/LightAmbientComponent.h"
+#include "Engine/LightDirectionalComponent.h"
+#include "Engine/LightPointComponent.h"
 #include "Engine/LinesComponent.h"
-#include "Engine/GameplaySettingsComponent.h"
-#include "Engine/MusicComponents.h"
-#include "Engine/NetworkComponents.h"
+#include "Engine/MusicSingleton.h"
+#include "Engine/NetworkChangeFinishedEvent.h"
+#include "Engine/NetworkChangeRequestEvent.h"
+#include "Engine/NetworkStateSingleton.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/PrototypeManager.h"
-#include "Engine/ReplicationComponents.h"
+#include "Engine/ReplicationComponent.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/SavegameComponent.h"
+#include "Engine/SettingsAudioSingleton.h"
+#include "Engine/SettingsCameraSingleton.h"
 #include "Engine/SettingsDebugSingleton.h"
+#include "Engine/SettingsGameplaySingleton.h"
 #include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/SettingsWindowSingleton.h"
 #include "Engine/SoundComponents.h"
@@ -36,16 +50,17 @@
 #include "Engine/TablesReloadedEvent.h"
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
-#include "Engine/UserComponents.h"
+#include "Engine/UserComponent.h"
+#include "Engine/UserMapSingleton.h"
 #include "Engine/VersionComponent.h"
 #include "Engine/VisibilityComponent.h"
 
 void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterComponent<eng::DynamicMeshComponent>();
-	entityWorld.RegisterComponent<eng::LightAmbientComponent>();
-	entityWorld.RegisterComponent<eng::LightDirectionalComponent>();
-	entityWorld.RegisterComponent<eng::LightPointComponent>();
+	entityWorld.RegisterComponent<eng::light::AmbientComponent>();
+	entityWorld.RegisterComponent<eng::light::DirectionalComponent>();
+	entityWorld.RegisterComponent<eng::light::PointComponent>();
 	entityWorld.RegisterComponent<eng::RigidDynamicComponent>();
 	entityWorld.RegisterComponent<eng::RigidStaticComponent>();
 	entityWorld.RegisterComponent<eng::SavegameComponent>();
@@ -57,10 +72,10 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::sound::SingleRequestComponent>();
 	entityWorld.RegisterComponent<eng::VisibilityComponent>();
 
-	entityWorld.RegisterEvent<eng::application::CloseRequest>();
-	entityWorld.RegisterEvent<eng::TablesReloaded>();
-	entityWorld.RegisterEvent<eng::network::ChangeRequest>();
-	entityWorld.RegisterEvent<eng::network::ChangeFinished>();
+	entityWorld.RegisterEvent<eng::application::CloseRequestEvent>();
+	entityWorld.RegisterEvent<eng::network::ChangeFinishedEvent>();
+	entityWorld.RegisterEvent<eng::network::ChangeRequestEvent>();
+	entityWorld.RegisterEvent<eng::TablesReloadedEvent>();
 
 	entityWorld.RegisterSingleton<eng::FrameBufferSingleton>();
 	entityWorld.RegisterSingleton<eng::LinesSingleton>();
@@ -105,7 +120,7 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	entityWorld.RegisterComponent<net::ReplicationComponent>();
 	entityWorld.RegisterComponent<net::UserComponent>();
 
-	entityWorld.RegisterEvent<eng::level::LoadRequest>();
+	entityWorld.RegisterEvent<eng::level::LoadRequestEvent>();
 
 	// singletons
 	entityWorld.RegisterSingleton<eng::level::DirectorySingleton>();

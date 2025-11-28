@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/LevelComponents.h"
+#include "Engine/LevelLoadingComponent.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCLoadingScreen.h"
 #include "GameUI/HintTable.h"

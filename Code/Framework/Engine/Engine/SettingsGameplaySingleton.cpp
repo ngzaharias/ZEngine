@@ -1,5 +1,5 @@
 #include "EnginePCH.h"
-#include "Engine/GameplaySettingsComponent.h"
+#include "Engine/SettingsGameplaySingleton.h"
 
 #include "Engine/Visitor.h"
 #include "imgui/Inspector.h"

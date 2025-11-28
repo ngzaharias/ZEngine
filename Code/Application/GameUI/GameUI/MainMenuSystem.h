@@ -12,12 +12,12 @@ namespace eng
 
 namespace eng::application
 {
-	struct CloseRequest;
+	struct CloseRequestEvent;
 }
 
 namespace eng::level
 {
-	struct LoadRequest;
+	struct LoadRequestEvent;
 }
 
 namespace gui::main_menu
@@ -43,14 +43,15 @@ namespace gui::main_menu
 			// Resources
 			eng::UIManager,
 			// Components
-			eng::application::CloseRequest,
-			eng::level::LoadRequest,
-			gui::settings::OpenRequestEvent,
 			const gui::main_menu::ContinueGameRequest,
+			const gui::main_menu::WindowComponent,
+			// Events
+			eng::application::CloseRequestEvent,
+			eng::level::LoadRequestEvent,
+			gui::settings::OpenRequestEvent,
 			const gui::main_menu::ExitGameRequest,
 			const gui::main_menu::LoadGameRequest,
 			const gui::main_menu::NewGameRequest,
-			const gui::main_menu::WindowComponent,
 			// Singletons
 			const eng::VersionSingleton>;
 

@@ -2,7 +2,7 @@
 #include "Engine/CameraHelpers.h"
 
 #include "Core/Assert.h"
-#include "Engine/CameraComponent.h"
+#include "Engine/CameraProjectionComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Math/Math.h"

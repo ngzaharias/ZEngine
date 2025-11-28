@@ -4,8 +4,8 @@
 
 namespace eng::network
 {
-	struct ChangeFinished;
-	struct ChangeRequest;
+	struct ChangeFinishedEvent;
+	struct ChangeRequestEvent;
 }
 
 namespace gamestate
@@ -21,9 +21,9 @@ namespace gamestate
 	public:
 		using World = ecs::WorldView<
 			// Components
-			eng::network::ChangeRequest,
+			eng::network::ChangeRequestEvent,
 			gamestate::ChangeFinished,
-			const eng::network::ChangeFinished,
+			const eng::network::ChangeRequestEvent,
 			// Singletons
 			const gamestate::StateSingleton>;
 
