@@ -14,7 +14,7 @@
 #include "Math/Algorithms.h"
 #include "Math/Circle.h"
 #include "Math/SplineMath.h"
-#include "Softbody/SoftbodyComponents.h"
+#include "Softbody/SoftbodyChainComponent.h"
 
 void dbg::SoftbodySystem::Update(World& world, const GameTime& gameTime)
 {

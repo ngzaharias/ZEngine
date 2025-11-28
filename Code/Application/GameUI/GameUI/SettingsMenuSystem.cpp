@@ -12,7 +12,7 @@
 #include "Engine/UIManager.h"
 #include "GameUI/DCSettingsMenu.h"
 #include "GameUI/SettingsMenuComponents.h"
-#include "Hidden/HiddenDebugSettingsComponent.h"
+#include "Hidden/HiddenDebugSettingsSingleton.h"
 
 namespace
 {

@@ -7,7 +7,7 @@
 #include "Engine/TableHeadmaster.h"
 #include "Hidden/HiddenCountComponent.h"
 #include "Hidden/HiddenCountSystem.h"
-#include "Hidden/HiddenDebugSettingsComponent.h"
+#include "Hidden/HiddenDebugSettingsSingleton.h"
 #include "Hidden/HiddenGroupComponent.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Hidden/HiddenPhysicsSystem.h"

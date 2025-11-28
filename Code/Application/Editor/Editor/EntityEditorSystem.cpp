@@ -24,7 +24,7 @@
 #include "Hidden/HiddenGroupComponent.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
-#include "Softbody/SoftbodyComponents.h"
+#include "Softbody/SoftbodyChainComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"

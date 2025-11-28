@@ -1,5 +1,5 @@
 #include "HiddenPCH.h"
-#include "Hidden/HiddenDebugSettingsComponent.h"
+#include "Hidden/HiddenDebugSettingsSingleton.h"
 
 #include "Engine/Visitor.h"
 #include "imgui/Inspector.h"

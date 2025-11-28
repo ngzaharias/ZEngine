@@ -1,5 +1,5 @@
 #include "SoftbodyPCH.h"
-#include "Softbody/SoftbodyComponents.h"
+#include "Softbody/SoftbodyChainComponent.h"
 
 #include "Engine/Visitor.h"
 #include "imgui/Inspector.h"

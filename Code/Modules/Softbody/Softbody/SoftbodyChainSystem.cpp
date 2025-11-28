@@ -15,7 +15,7 @@
 #include "Math/Math.h"
 #include "Math/Matrix.h"
 #include "Math/Plane.h"
-#include "Softbody/SoftbodyComponents.h"
+#include "Softbody/SoftbodyChainComponent.h"
 
 namespace
 {

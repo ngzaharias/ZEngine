@@ -11,7 +11,7 @@
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "GameDebug/HiddenObjectComponent.h"
-#include "Hidden/HiddenDebugSettingsComponent.h"
+#include "Hidden/HiddenDebugSettingsSingleton.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Math/AABB.h"
 

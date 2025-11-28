@@ -14,7 +14,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Hidden/HiddenDebugSettingsComponent.h"
+#include "Hidden/HiddenDebugSettingsSingleton.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
 #include "Math/AABB.h"

@@ -4,8 +4,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/PrototypeManager.h"
+#include "Softbody/SoftbodyChainComponent.h"
 #include "Softbody/SoftbodyChainSystem.h"
-#include "Softbody/SoftbodyComponents.h"
 
 void softbody::RegisterModule(ecs::EntityWorld& entityWorld)
 {
