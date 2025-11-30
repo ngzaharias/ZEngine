@@ -6,7 +6,7 @@
 
 namespace eng
 {
-	struct TextComponent : ecs::Component<TextComponent>
+	struct TextComponent final : public ecs::Component<TextComponent>
 	{
 		str::String m_Text = { };
 		str::Guid m_Font = { };

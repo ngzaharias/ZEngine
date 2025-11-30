@@ -17,7 +17,7 @@ namespace dbg
 {
 	struct FrameBufferSingleton;
 
-	struct BufferWindowComponent : public ecs::Component<BufferWindowComponent> { };
+	struct BufferWindowComponent final : public ecs::Component<BufferWindowComponent> { };
 
 	class FrameBufferSystem final : public ecs::System
 	{

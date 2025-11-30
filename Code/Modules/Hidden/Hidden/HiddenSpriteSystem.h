@@ -7,7 +7,7 @@ namespace eng
 {
 	class ThemeTable;
 	struct SpriteComponent;
-	struct TablesReloadedEvent;
+	struct TablesReloaded;
 }
 
 namespace eng::settings
@@ -31,7 +31,7 @@ namespace hidden
 			const eng::ThemeTable,
 			// Components
 			eng::SpriteComponent,
-			const eng::TablesReloadedEvent,
+			const eng::TablesReloaded,
 			const hidden::ObjectComponent,
 			const hidden::RevealComponent,
 			// Singletons

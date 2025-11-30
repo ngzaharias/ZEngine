@@ -4,7 +4,7 @@
 
 namespace tilemap
 {
-	struct AgentComponent : ecs::Component<AgentComponent>
+	struct AgentComponent final : public ecs::Component<AgentComponent>
 	{
 	};
 }

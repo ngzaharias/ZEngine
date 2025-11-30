@@ -32,7 +32,7 @@ namespace editor
 
 	using Schema = Array<Field>;
 
-	struct TableWindowComponent : public ecs::Component<TableWindowComponent>
+	struct TableWindowComponent final : public ecs::Component<TableWindowComponent>
 	{
 		int32 m_Identifier = 0;
 

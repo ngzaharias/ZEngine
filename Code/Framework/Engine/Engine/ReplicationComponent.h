@@ -9,7 +9,7 @@
 namespace net
 {
 	/// \brief Component added to host entities that are to be replicated to peers.
-	struct ReplicationComponent : ecs::Component<ReplicationComponent>
+	struct ReplicationComponent final : public ecs::Component<ReplicationComponent>
 	{
 		Set<net::PeerId> m_Peers = { };
 	};

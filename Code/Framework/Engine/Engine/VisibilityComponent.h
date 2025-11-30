@@ -5,7 +5,7 @@
 namespace eng
 {
 	// \brief 
-	struct VisibilityComponent : public ecs::Component<VisibilityComponent>
+	struct VisibilityComponent final : public ecs::Component<VisibilityComponent>
 	{
 		bool m_IsVisible = true;
 	};

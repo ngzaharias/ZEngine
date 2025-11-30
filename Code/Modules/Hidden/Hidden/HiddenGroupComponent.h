@@ -9,7 +9,7 @@
 namespace hidden
 {
 	/// \brief Group of hidden objects.
-	struct GroupComponent : public ecs::Component<GroupComponent>
+	struct GroupComponent final : public ecs::Component<GroupComponent>
 	{
 		Array<str::Guid> m_Objects = {};
 		Array<str::Guid> m_Revealed = {};

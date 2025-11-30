@@ -50,7 +50,7 @@ namespace eng
 	using Shape = Variant<ShapeBox, ShapeSphere>;
 	using Rigidbody = Variant<RigidDynamic, RigidStatic>;
 
-	struct PhysicsComponent final : ecs::Component<PhysicsComponent>
+	struct PhysicsComponent final : public ecs::Component<PhysicsComponent>
 	{
 		Rigidbody m_Rigidbody = { };
 		Array<Shape> m_Shapes = { };

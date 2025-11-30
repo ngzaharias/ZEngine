@@ -6,7 +6,7 @@
 namespace tabletop
 {
 	/// \brief 
-	struct CardComponent : public ecs::Component<CardComponent>
+	struct CardComponent final : public ecs::Component<CardComponent>
 	{
 	};
 }

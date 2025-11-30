@@ -7,7 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/SettingsGameplaySingleton.h"
 #include "Engine/SpriteComponent.h"
-#include "Engine/TablesReloadedEvent.h"
+#include "Engine/TablesReloaded.h"
 #include "Engine/ThemeTable.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
@@ -65,7 +65,7 @@ void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 		sprite.m_Colour = theme.m_Highlight;
 	}
 
-	if (world.HasAny<ecs::query::Added<const eng::TablesReloadedEvent>>())
+	if (world.HasAny<ecs::query::Added<const eng::TablesReloaded>>())
 		Refresh(world);
 	if (world.HasAny<eng::settings::GameplaySingleton>())
 		Refresh(world);

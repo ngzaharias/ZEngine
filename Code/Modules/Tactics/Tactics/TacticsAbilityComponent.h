@@ -5,7 +5,7 @@
 
 namespace tactics
 {
-	struct AbilityComponent : ecs::Component<AbilityComponent>
+	struct AbilityComponent final : public ecs::Component<AbilityComponent>
 	{
 		Array<str::Name> m_Abilities = {};
 	};

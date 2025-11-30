@@ -26,7 +26,7 @@ namespace editor
 
 namespace editor
 {
-	struct AssetBrowserWindowComponent : public ecs::Component<AssetBrowserWindowComponent>
+	struct AssetBrowserWindowComponent final : public ecs::Component<AssetBrowserWindowComponent>
 	{
 		int32 m_Identifier = 0;
 		str::String m_Label = {};

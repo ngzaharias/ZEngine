@@ -27,9 +27,9 @@ namespace editor
 {
 	struct TrajectoryWindowRequest;
 
-	struct TrajectoryAssetOpenComponent : public ecs::Component<TrajectoryAssetOpenComponent> { };
-	struct TrajectoryAssetSaveComponent : public ecs::Component<TrajectoryAssetSaveComponent> { };
-	struct TrajectoryWindowComponent : public ecs::Component<TrajectoryWindowComponent> 
+	struct TrajectoryAssetOpenComponent final : public ecs::Component<TrajectoryAssetOpenComponent> { };
+	struct TrajectoryAssetSaveComponent final : public ecs::Component<TrajectoryAssetSaveComponent> { };
+	struct TrajectoryWindowComponent final : public ecs::Component<TrajectoryWindowComponent> 
 	{ 
 		int32 m_Identifier = 0;
 		eng::TrajectoryAsset m_Asset = {};

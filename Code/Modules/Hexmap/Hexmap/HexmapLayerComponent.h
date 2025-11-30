@@ -9,7 +9,7 @@
 namespace hexmap
 {
 	/// \brief 
-	struct LayerComponent : ecs::Component<LayerComponent>
+	struct LayerComponent final : public ecs::Component<LayerComponent>
 	{
 		LayerPos m_Origin = {};
 		ecs::Entity m_Root = {};

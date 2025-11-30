@@ -18,7 +18,7 @@ namespace dbg
 {
 	struct EntityWindowRequest;
 
-	struct EntityWindowComponent : public ecs::Component<EntityWindowComponent> 
+	struct EntityWindowComponent final : public ecs::Component<EntityWindowComponent> 
 	{ 
 		int32 m_Identifier = 0;
 

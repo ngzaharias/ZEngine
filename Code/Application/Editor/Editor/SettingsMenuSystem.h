@@ -18,7 +18,7 @@ namespace editor::settings
 
 namespace editor::settings
 {
-	struct WindowComponent : public ecs::Component<WindowComponent>
+	struct WindowComponent final : public ecs::Component<WindowComponent>
 	{
 		int32 m_Identifier = 0;
 		str::String m_Label = {};

@@ -5,7 +5,7 @@
 namespace hidden
 {
 	/// \brief 
-	struct VFXComponent : public ecs::Component<VFXComponent>
+	struct VFXComponent final : public ecs::Component<VFXComponent>
 	{
 	};
 }

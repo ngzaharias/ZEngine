@@ -12,7 +12,7 @@ namespace softbody
 		Vector2f m_Position = Vector2f::Zero;
 	};
 
-	struct ChainComponent : public ecs::Component<ChainComponent>
+	struct ChainComponent final : public ecs::Component<ChainComponent>
 	{
 		// constraints
 		float m_Angle = math::ToRadians(0.f);

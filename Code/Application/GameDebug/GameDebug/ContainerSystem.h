@@ -26,7 +26,7 @@ namespace dbg
 
 namespace dbg
 {
-	struct ContainerWindowComponent : public ecs::Component<ContainerWindowComponent> 
+	struct ContainerWindowComponent final : public ecs::Component<ContainerWindowComponent> 
 	{ 
 		int32 m_Identifier = 0;
 		str::String m_Label = {};

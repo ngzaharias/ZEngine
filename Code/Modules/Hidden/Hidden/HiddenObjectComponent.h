@@ -9,7 +9,7 @@
 namespace hidden
 {
 	/// \brief Base object to mark which entities are hidden objects.
-	struct ObjectComponent : public ecs::Component<ObjectComponent>
+	struct ObjectComponent final : public ecs::Component<ObjectComponent>
 	{
 		str::Guid m_Group = {};
 	};

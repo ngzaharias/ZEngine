@@ -19,7 +19,7 @@ namespace dbg
 		Segment2f,
 		Triangle2f>;
 
-	struct ShapeWindowComponent : public ecs::Component<ShapeWindowComponent>
+	struct ShapeWindowComponent final : public ecs::Component<ShapeWindowComponent>
 	{
 		int32 m_Identifier = 0;
 		str::String m_DockspaceLabel = {};

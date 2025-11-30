@@ -5,7 +5,7 @@
 namespace tabletop
 {
 	/// \brief 
-	struct DeckComponent : public ecs::Component<DeckComponent>
+	struct DeckComponent final : public ecs::Component<DeckComponent>
 	{
 	};
 }

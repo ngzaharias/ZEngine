@@ -53,9 +53,9 @@ namespace editor
 {
 	struct EntityWindowRequest;
 
-	struct EntitySaveComponent : public ecs::Component<EntitySaveComponent> { };
+	struct EntitySaveComponent final : public ecs::Component<EntitySaveComponent> { };
 
-	struct EntityWindowComponent : public ecs::Component<EntityWindowComponent>
+	struct EntityWindowComponent final : public ecs::Component<EntityWindowComponent>
 	{
 		int32 m_Identifier = 0;
 

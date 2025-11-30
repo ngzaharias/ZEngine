@@ -19,9 +19,9 @@ namespace editor
 {
 	struct FlipbookWindowRequest;
 
-	struct FlipbookAssetOpenComponent : public ecs::Component<FlipbookAssetOpenComponent> { };
-	struct FlipbookAssetSaveComponent : public ecs::Component<FlipbookAssetSaveComponent> { };
-	struct FlipbookBatchingComponent : public ecs::Component<FlipbookBatchingComponent>
+	struct FlipbookAssetOpenComponent final : public ecs::Component<FlipbookAssetOpenComponent> { };
+	struct FlipbookAssetSaveComponent final : public ecs::Component<FlipbookAssetSaveComponent> { };
+	struct FlipbookBatchingComponent final : public ecs::Component<FlipbookBatchingComponent>
 	{
 		/// \brief How many iterations are done along X and Y.
 		/// X is iterated again for each iteration of Y.
@@ -40,7 +40,7 @@ namespace editor
 		bool m_IsPreviewing = true;
 	};
 
-	struct FlipbookWindowComponent : public ecs::Component<FlipbookWindowComponent>
+	struct FlipbookWindowComponent final : public ecs::Component<FlipbookWindowComponent>
 	{
 		int32 m_Identifier = 0;
 		eng::FlipbookAsset m_Asset = {};

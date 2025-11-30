@@ -26,12 +26,12 @@ namespace editor
 {
 	struct TextureWindowRequest;
 
-	struct TextureAssetImportComponent : public ecs::Component<TextureAssetImportComponent> { };
-	struct TextureAssetNewComponent : public ecs::Component<TextureAssetNewComponent> { };
-	struct TextureAssetOpenComponent : public ecs::Component<TextureAssetOpenComponent> { };
-	struct TextureAssetSaveComponent : public ecs::Component<TextureAssetSaveComponent> { };
+	struct TextureAssetImportComponent final : public ecs::Component<TextureAssetImportComponent> { };
+	struct TextureAssetNewComponent final : public ecs::Component<TextureAssetNewComponent> { };
+	struct TextureAssetOpenComponent final : public ecs::Component<TextureAssetOpenComponent> { };
+	struct TextureAssetSaveComponent final : public ecs::Component<TextureAssetSaveComponent> { };
 
-	struct TextureWindowComponent : public ecs::Component<TextureWindowComponent>
+	struct TextureWindowComponent final : public ecs::Component<TextureWindowComponent>
 	{
 		int32 m_Identifier = 0;
 		eng::Texture2DAsset m_Asset = {};

@@ -12,7 +12,7 @@ namespace dbg
 {
 	struct InspectorDemoRequest;
 
-	struct InspectorDemoWindowComponent : public ecs::Component<InspectorDemoWindowComponent> { };
+	struct InspectorDemoWindowComponent final : public ecs::Component<InspectorDemoWindowComponent> { };
 
 	class InspectorDemoSystem final : public ecs::System
 	{

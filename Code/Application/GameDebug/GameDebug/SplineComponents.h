@@ -48,7 +48,7 @@ namespace dbg
 		CatmullRom,
 		Hermite>;
 
-	struct SplineWindowComponent : public ecs::Component<SplineWindowComponent>
+	struct SplineWindowComponent final : public ecs::Component<SplineWindowComponent>
 	{
 		int32 m_Identifier = 0;
 		str::String m_DockspaceLabel = {};

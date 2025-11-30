@@ -7,7 +7,7 @@
 
 namespace hexmap
 {
-	struct RootComponent : ecs::Component<RootComponent>
+	struct RootComponent final : public ecs::Component<RootComponent>
 	{
 		float m_HexRadius = 100.f;
 		Vector2i m_HexCount = Vector2i(20, 10);

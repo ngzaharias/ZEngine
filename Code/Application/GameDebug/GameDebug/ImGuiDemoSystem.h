@@ -12,7 +12,7 @@ namespace dbg
 {
 	struct ImGuiDemoRequest;
 
-	struct ImGuiDemoWindowComponent : public ecs::Component<ImGuiDemoWindowComponent> { };
+	struct ImGuiDemoWindowComponent final : public ecs::Component<ImGuiDemoWindowComponent> { };
 
 	class ImGuiDemoSystem final : public ecs::System
 	{

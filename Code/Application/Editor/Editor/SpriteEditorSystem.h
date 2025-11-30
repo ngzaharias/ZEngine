@@ -27,10 +27,10 @@ namespace editor
 {
 	struct SpriteWindowRequest;
 
-	struct SpriteAssetNewComponent : public ecs::Component<SpriteAssetNewComponent> { };
-	struct SpriteAssetOpenComponent : public ecs::Component<SpriteAssetOpenComponent> { };
-	struct SpriteAssetSaveComponent : public ecs::Component<SpriteAssetSaveComponent> { };
-	struct SpriteBatchingComponent : public ecs::Component<SpriteBatchingComponent>
+	struct SpriteAssetNewComponent final : public ecs::Component<SpriteAssetNewComponent> { };
+	struct SpriteAssetOpenComponent final : public ecs::Component<SpriteAssetOpenComponent> { };
+	struct SpriteAssetSaveComponent final : public ecs::Component<SpriteAssetSaveComponent> { };
+	struct SpriteBatchingComponent final : public ecs::Component<SpriteBatchingComponent>
 	{
 		/// \brief How many iterations are done along X and Y.
 		/// X is iterated again for each iteration of Y.
@@ -49,7 +49,7 @@ namespace editor
 		bool m_IsPreviewing = true;
 	};
 
-	struct SpriteWindowComponent : public ecs::Component<SpriteWindowComponent>
+	struct SpriteWindowComponent final : public ecs::Component<SpriteWindowComponent>
 	{
 		int32 m_Identifier = 0;
 

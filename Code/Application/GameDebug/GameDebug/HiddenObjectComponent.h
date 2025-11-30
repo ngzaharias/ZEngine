@@ -4,7 +4,7 @@
 
 namespace dbg::hidden
 {
-	struct ObjectComponent : ecs::Component<ObjectComponent>
+	struct ObjectComponent final : public ecs::Component<ObjectComponent>
 	{ 
 		ecs::Entity m_Child = {};
 	};

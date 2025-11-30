@@ -18,7 +18,7 @@ namespace editor
 {
 	struct InputWindowRequest;
 
-	struct InputWindowComponent : public ecs::Component<InputWindowComponent>
+	struct InputWindowComponent final : public ecs::Component<InputWindowComponent>
 	{
 		int32 m_Identifier = 0;
 		str::String m_Label = {};

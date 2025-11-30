@@ -6,9 +6,9 @@
 
 namespace drag
 {
-	struct IsSelectableComponent : public ecs::Component<IsSelectableComponent> {};
+	struct IsSelectableComponent final : public ecs::Component<IsSelectableComponent> {};
 
-	struct SelectionComponent : public ecs::Component<SelectionComponent>
+	struct SelectionComponent final : public ecs::Component<SelectionComponent>
 	{
 		ecs::Entity m_CameraEntity = { };
 		ecs::Entity m_SelectedEntity = { };

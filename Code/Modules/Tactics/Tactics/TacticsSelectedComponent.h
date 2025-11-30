@@ -4,7 +4,7 @@
 
 namespace tactics
 {
-	struct SelectedComponent : ecs::Component<SelectedComponent>
+	struct SelectedComponent final : public ecs::Component<SelectedComponent>
 	{
 	};
 }
