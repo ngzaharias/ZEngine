@@ -10,8 +10,6 @@ bool ecs::ResourceRegistry::IsRegistered() const
 template<class TResource>
 void ecs::ResourceRegistry::Register(TResource& resource)
 {
-	Z_PANIC(!IsRegistered<TResource>(), "Resource is already registered!");
-
 	const ecs::ResourceId resourceId = ToTypeIndex<TResource, ecs::ResourceTag>();
 	ecs::ResourceEntry& entry = m_Entries.Emplace(resourceId);
 	entry.m_Resource = (void*)&resource;
@@ -21,8 +19,6 @@ void ecs::ResourceRegistry::Register(TResource& resource)
 template<class TResource>
 TResource& ecs::ResourceRegistry::Get()
 {
-	Z_PANIC(IsRegistered<TResource>(), "Resource isn't registered!");
-
 	const ecs::ResourceId resourceId = ToTypeIndex<TResource, ecs::ResourceTag>();
 	const ecs::ResourceEntry& entry = m_Entries.Get(resourceId);
 	return *static_cast<TResource*>(entry.m_Resource);
