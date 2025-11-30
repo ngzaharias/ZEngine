@@ -56,6 +56,7 @@ void ecs::EntityWorld::RegisterComponent()
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
 	static_assert(std::is_base_of<ecs::Component<TComponent>, TComponent>::value, "Type doesn't inherit from ecs::Component.");
+	static_assert(std::is_convertible<TComponent*, ecs::Component<TComponent>*>::value, "Type must inherit using the [public] keyword!");
 
 	Z_PANIC(!IsRegistered<TComponent>(), "Component is already registered!");
 
@@ -137,6 +138,7 @@ void ecs::EntityWorld::RegisterEvent()
 	static_assert(!std::is_reference_v<TEvent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TEvent>, "Type cannot be a pointer.");
 	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
+	static_assert(std::is_convertible<TEvent*, ecs::Event<TEvent>*>::value, "Type must inherit using the [public] keyword!");
 
 	Z_PANIC(!IsRegistered<TEvent>(), "Event is already registered!");
 
@@ -197,6 +199,7 @@ void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
 	static_assert(!std::is_reference_v<TSingleton>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TSingleton>, "Type cannot be a pointer.");
 	static_assert(std::is_base_of<ecs::Singleton<TSingleton>, TSingleton>::value, "Type doesn't inherit from ecs::Singleton.");
+	static_assert(std::is_convertible<TSingleton*, ecs::Singleton<TSingleton>*>::value, "Type must inherit using the [public] keyword!");
 
 	Z_PANIC(!IsRegistered<TSingleton>(), "Singleton is already registered!");
 
@@ -236,6 +239,8 @@ void ecs::EntityWorld::RegisterSystem(TArgs&&... args)
 	static_assert(!std::is_const<TSystem>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TSystem>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TSystem>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::System, TSystem>::value, "Type doesn't inherit from ecs::System.");
+	static_assert(std::is_convertible<TSystem*, ecs::System*>::value, "Type must inherit using the [public] keyword!");
 
 	Z_PANIC(!IsRegistered<TSystem>(), "System is already registered!");
 	m_SystemRegistry.Register<TSystem>(std::forward<TArgs>(args)...);
