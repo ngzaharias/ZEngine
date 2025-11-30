@@ -1,7 +1,7 @@
 m_Guid = "2b8437963385415889c16c5ba899b5b6"
 m_Name = "PointLight_02"
 
-['eng::LightPointComponent']
+['eng::light::PointComponent']
 m_Colour = { X = 0.0, Y = 1.0, Z = 0.0 }
 m_Range = 1000.0
 

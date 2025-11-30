@@ -1,7 +1,7 @@
 m_Guid = "7212084c734344319aac2f4e00bb0e9e"
 m_Name = "Light"
 
-['eng::LightDirectionalComponent']
+['eng::light::DirectionalComponent']
 m_Colour = { X = 0.8, Y = 0.8, Z = 0.8 }
 
 ['eng::TransformComponent']
