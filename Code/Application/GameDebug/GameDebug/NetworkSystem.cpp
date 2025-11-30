@@ -8,7 +8,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/GameStateComponents.h"
+#include "GameClient/GameStateChangeRequest.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "GameDebug/NetworkComponents.h"
 #include "Math/Math.h"

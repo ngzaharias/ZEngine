@@ -5,7 +5,9 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/GameStateComponents.h"
+#include "GameClient/GameStateChangeFinished.h"
+#include "GameClient/GameStateChangeRequest.h"
+#include "GameClient/GameStateStateSingleton.h"
 #include "GameClient/GameStateTypes.h"
 
 void gamestate::StateSystem::Update(World& world, const GameTime& gameTime)

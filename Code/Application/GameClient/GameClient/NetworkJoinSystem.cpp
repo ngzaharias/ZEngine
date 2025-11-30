@@ -8,7 +8,10 @@
 #include "Engine/LevelLoadRequestEvent.h"
 #include "Engine/NetworkChangeRequestEvent.h"
 #include "Engine/NetworkManager.h"
-#include "GameClient/GameStateComponents.h"
+#include "GameClient/GameStateChangeFinished.h"
+#include "GameClient/GameStateChangeRequest.h"
+#include "GameClient/GameStateNetworkJoinSingleton.h"
+#include "GameClient/GameStateStateSingleton.h"
 #include "GameClient/ModalComponents.h"
 
 void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime)

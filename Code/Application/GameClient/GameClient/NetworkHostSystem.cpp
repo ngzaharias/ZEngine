@@ -7,7 +7,9 @@
 #include "ECS/WorldView.h"
 #include "Engine/NetworkChangeRequestEvent.h"
 #include "Engine/NetworkManager.h"
-#include "GameClient/GameStateComponents.h"
+#include "GameClient/GameStateChangeFinished.h"
+#include "GameClient/GameStateChangeRequest.h"
+#include "GameClient/GameStateStateSingleton.h"
 
 void gamestate::NetworkHostSystem::Update(World& world, const GameTime& gameTime)
 {
