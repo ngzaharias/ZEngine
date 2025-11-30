@@ -21,7 +21,7 @@ namespace eng::network
 	using Request = Variant<Shutdown, Startup>;
 
 	/// \brief 
-	struct ChangeRequestEvent final : public ecs::Event<ChangeRequestEvent>
+	struct ChangeRequest final : public ecs::Event<ChangeRequest>
 	{
 		Request m_Request = { };
 	};

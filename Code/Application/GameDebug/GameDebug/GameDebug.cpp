@@ -13,8 +13,9 @@
 #include "GameDebug/ImNodesDemoSystem.h"
 #include "GameDebug/InputSystem.h"
 #include "GameDebug/InspectorDemoSystem.h"
-#include "GameDebug/LevelOpenComponents.h"
+#include "GameDebug/LevelOpenRequest.h"
 #include "GameDebug/LevelOpenSystem.h"
+#include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/LevelReloadSystem.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "GameDebug/MenuBarSystem.h"
@@ -48,7 +49,7 @@ void dbg::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<dbg::ImGuiDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ImNodesDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::InspectorDemoWindowComponent>();
-	m_ClientWorld.RegisterComponent<dbg::level::WindowComponent>();
+	m_ClientWorld.RegisterComponent<dbg::level::OpenWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::NetworkWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::ShapeWindowComponent>();
 	m_ClientWorld.RegisterComponent<dbg::SplineWindowComponent>();

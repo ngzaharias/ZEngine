@@ -9,13 +9,13 @@ namespace eng
 
 namespace eng::level
 {
-	struct LoadRequestEvent;
+	struct LoadRequest;
 }
 
 namespace eng::network
 {
-	struct ChangeFinishedEvent;
-	struct ChangeRequestEvent;
+	struct ChangeFinished;
+	struct ChangeRequest;
 }
 
 namespace gui::modal
@@ -47,10 +47,10 @@ namespace gamestate
 			gui::modal::MessageComponent,
 			const net::UserComponent,
 			// Events
-			eng::level::LoadRequestEvent,
-			eng::network::ChangeRequestEvent,
+			eng::level::LoadRequest,
+			eng::network::ChangeRequest,
 			gamestate::ChangeFinished,
-			const eng::network::ChangeFinishedEvent,
+			const eng::network::ChangeFinished,
 			// Singletons
 			gamestate::NetworkJoinSingleton,
 			const gamestate::StateSingleton>;

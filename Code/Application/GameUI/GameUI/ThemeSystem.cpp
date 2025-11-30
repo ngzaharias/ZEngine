@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/SettingsGameplaySingleton.h"
-#include "Engine/TablesReloadedEvent.h"
+#include "Engine/TablesReloaded.h"
 #include "Engine/ThemeTable.h"
 #include "Engine/UIManager.h"
 
@@ -52,6 +52,6 @@ void gui::ThemeSystem::Update(World& world, const GameTime& gameTime)
 {
 	if (world.HasAny<eng::settings::GameplaySingleton>())
 		UpdateTheme(world);
-	if (world.HasAny<ecs::query::Added<const eng::TablesReloadedEvent>>())
+	if (world.HasAny<ecs::query::Added<const eng::TablesReloaded>>())
 		UpdateTheme(world);
 }

@@ -15,13 +15,13 @@ namespace eng
 namespace eng::level
 {
 	struct DirectorySingleton;
-	struct LoadRequestEvent;
+	struct LoadRequest;
 }
 
 namespace dbg::level
 {
-	struct OpenRequestEvent;
-	struct WindowComponent;
+	struct OpenRequest;
+	struct OpenWindowComponent;
 }
 
 namespace dbg::level
@@ -33,11 +33,11 @@ namespace dbg::level
 			// Resources
 			eng::InputManager,
 			// Components
-			dbg::level::WindowComponent,
+			dbg::level::OpenWindowComponent,
 			ecs::NameComponent,
 			// Events
-			eng::level::LoadRequestEvent,
-			const dbg::level::OpenRequestEvent,
+			eng::level::LoadRequest,
+			const dbg::level::OpenRequest,
 			// Singletons
 			const eng::level::DirectorySingleton>;
 

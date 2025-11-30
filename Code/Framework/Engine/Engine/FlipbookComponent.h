@@ -6,7 +6,7 @@
 
 namespace eng
 {
-	struct FlipbookComponent : public ecs::Component<FlipbookComponent>
+	struct FlipbookComponent final : public ecs::Component<FlipbookComponent>
 	{
 		str::Guid m_Flipbook = { };
 		Vector2u m_Size = Vector2u::Zero;

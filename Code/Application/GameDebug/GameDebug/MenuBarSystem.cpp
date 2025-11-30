@@ -11,8 +11,9 @@
 #include "Engine/AssetManager.h"
 #include "Engine/InputManager.h"
 #include "Engine/TableHeadmaster.h"
-#include "Engine/TablesReloadedEvent.h"
-#include "GameDebug/LevelOpenComponents.h"
+#include "Engine/TablesReloaded.h"
+#include "GameDebug/LevelOpenRequest.h"
+#include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "GameDebug/SettingsComponents.h"
 
@@ -21,8 +22,6 @@
 #include "imgui/Inspector.h"
 
 #include <windows.h>
-
-// #todo: disable on release builds
 
 namespace
 {
@@ -86,7 +85,7 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::MenuItem("Reload Tables"))
 			{
-				world.AddEvent<eng::TablesReloadedEvent>();
+				world.AddEvent<eng::TablesReloaded>();
 				auto& tableHeadmaster = world.WriteResource<eng::TableHeadmaster>();
 				tableHeadmaster.Reload();
 			}

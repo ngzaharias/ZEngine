@@ -17,12 +17,12 @@ namespace eng
 
 namespace eng::application
 {
-	struct CloseRequestEvent;
+	struct CloseRequest;
 }
 
 namespace eng::level
 {
-	struct LoadRequestEvent;
+	struct LoadRequest;
 }
 
 namespace eng::settings
@@ -53,8 +53,8 @@ namespace gui::game_menu
 			ecs::NameComponent,
 			const gui::game_menu::WindowComponent,
 			// Events
-			eng::application::CloseRequestEvent,
-			eng::level::LoadRequestEvent,
+			eng::application::CloseRequest,
+			eng::level::LoadRequest,
 			gui::game_menu::CloseRequest,
 			const gui::game_menu::ExitGameRequest,
 			const gui::game_menu::ExitToMenuRequest,

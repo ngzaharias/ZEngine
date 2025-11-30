@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/NetworkChangeRequestEvent.h"
+#include "Engine/NetworkChangeRequest.h"
 #include "Engine/NetworkManager.h"
 #include "GameClient/GameStateChangeFinished.h"
 #include "GameClient/GameStateChangeRequest.h"
@@ -21,7 +21,7 @@ void gamestate::NetworkHostSystem::Update(World& world, const GameTime& gameTime
 		if (std::holds_alternative<gamestate::NetworkHost>(stateComponent.m_State))
 		{
 			const auto& request = std::get<gamestate::NetworkHost>(stateComponent.m_State);
-			auto& component = world.AddEvent<eng::network::ChangeRequestEvent>();
+			auto& component = world.AddEvent<eng::network::ChangeRequest>();
 
 			eng::network::Startup startup;
 			startup.m_Mode = request.m_Mode;
@@ -33,7 +33,7 @@ void gamestate::NetworkHostSystem::Update(World& world, const GameTime& gameTime
 		}
 	}
 
-	if (world.HasAny<eng::network::ChangeRequestEvent>())
+	if (world.HasAny<eng::network::ChangeRequest>())
 	{
 		const auto& stateComponent = world.ReadSingleton<gamestate::StateSingleton>();
 		if (std::holds_alternative<gamestate::NetworkHost>(stateComponent.m_State))

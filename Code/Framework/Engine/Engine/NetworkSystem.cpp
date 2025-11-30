@@ -5,8 +5,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/NetworkChangeFinishedEvent.h"
-#include "Engine/NetworkChangeRequestEvent.h"
+#include "Engine/NetworkChangeFinished.h"
+#include "Engine/NetworkChangeRequest.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/NetworkStateSingleton.h"
 #include "Network/Host.h"
@@ -47,7 +47,7 @@ void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 	auto& host = networkManager.GetHost();
 	auto& peer = networkManager.GetPeer();
 
-	for (const auto& eventData : world.Events<eng::network::ChangeRequestEvent>())
+	for (const auto& eventData : world.Events<eng::network::ChangeRequest>())
 	{
 		auto& stateComponent = world.WriteSingleton<eng::network::StateSingleton>();
 
@@ -78,6 +78,6 @@ void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 			}
 		}
 
-		world.AddEvent<eng::network::ChangeFinishedEvent>();
+		world.AddEvent<eng::network::ChangeFinished>();
 	}
 }

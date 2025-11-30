@@ -9,8 +9,8 @@
 
 namespace
 {
-	struct ComponentA : public ecs::Component<ComponentA> { };
-	struct ComponentB : public ecs::Component<ComponentB> { };
+	struct ComponentA final : public ecs::Component<ComponentA> { };
+	struct ComponentB final : public ecs::Component<ComponentB> { };
 
 	const int32 s_ComponentAId = ToTypeIndex<ComponentA, ecs::ComponentTag>();
 	const int32 s_ComponentBId = ToTypeIndex<ComponentB, ecs::ComponentTag>();

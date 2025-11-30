@@ -13,8 +13,8 @@ class GameTime {};
 
 namespace
 {
-	struct ComponentA : public ecs::Component<ComponentA> { };
-	struct ComponentB : public ecs::Component<ComponentB> { };
+	struct ComponentA final : public ecs::Component<ComponentA> { };
+	struct ComponentB final : public ecs::Component<ComponentB> { };
 }
 
 TEST_CASE("ecs::QueryRegistry. Include only ComponentA.")

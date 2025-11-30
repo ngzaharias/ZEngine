@@ -4,7 +4,7 @@
 
 namespace eng::level
 {
-	struct LoadRequestEvent;
+	struct LoadRequest;
 }
 
 namespace eng::settings
@@ -19,7 +19,7 @@ namespace eng::settings
 	public:
 		using World = ecs::WorldView<
 			// Events
-			eng::level::LoadRequestEvent,
+			eng::level::LoadRequest,
 			// Singletons
 			eng::settings::LaunchSingleton>;
 

@@ -5,8 +5,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/LevelLoadRequestEvent.h"
-#include "Engine/NetworkChangeRequestEvent.h"
+#include "Engine/LevelLoadRequest.h"
+#include "Engine/NetworkChangeRequest.h"
 #include "Engine/NetworkManager.h"
 #include "GameClient/GameStateChangeFinished.h"
 #include "GameClient/GameStateChangeRequest.h"
@@ -27,7 +27,7 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 			joinComponent.m_State = NetworkJoinSingleton::EState::Connect;
 
 			const auto& request = std::get<gamestate::NetworkJoin>(stateComponent.m_State);
-			auto& requestComponent = world.AddEvent<eng::network::ChangeRequestEvent>();
+			auto& requestComponent = world.AddEvent<eng::network::ChangeRequest>();
 
 			eng::network::Startup startup;
 			startup.m_Mode = request.m_Mode;
@@ -66,7 +66,7 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 
 		case NetworkJoinSingleton::EState::LoadLevel:
 		{
-			world.AddEvent<eng::level::LoadRequestEvent>();
+			world.AddEvent<eng::level::LoadRequest>();
 			writeComponent.m_State = NetworkJoinSingleton::EState::SyncWorld;
 		} break;
 

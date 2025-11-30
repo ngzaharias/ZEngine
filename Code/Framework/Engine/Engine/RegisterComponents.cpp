@@ -4,7 +4,7 @@
 #include "Core/MemBuffer.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
-#include "Engine/ApplicationCloseRequestEvent.h"
+#include "Engine/ApplicationCloseRequest.h"
 #include "Engine/AssetComponent.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraBound2DComponent.h"
@@ -22,14 +22,14 @@
 #include "Engine/LevelEntityComponent.h"
 #include "Engine/LevelLoadedComponent.h"
 #include "Engine/LevelLoadingComponent.h"
-#include "Engine/LevelLoadRequestEvent.h"
+#include "Engine/LevelLoadRequest.h"
 #include "Engine/LightAmbientComponent.h"
 #include "Engine/LightDirectionalComponent.h"
 #include "Engine/LightPointComponent.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/MusicSingleton.h"
-#include "Engine/NetworkChangeFinishedEvent.h"
-#include "Engine/NetworkChangeRequestEvent.h"
+#include "Engine/NetworkChangeFinished.h"
+#include "Engine/NetworkChangeRequest.h"
 #include "Engine/NetworkStateSingleton.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
@@ -47,7 +47,7 @@
 #include "Engine/SoundComponents.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshComponent.h"
-#include "Engine/TablesReloadedEvent.h"
+#include "Engine/TablesReloaded.h"
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/UserComponent.h"
@@ -72,10 +72,10 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::sound::SingleRequestComponent>();
 	entityWorld.RegisterComponent<eng::VisibilityComponent>();
 
-	entityWorld.RegisterEvent<eng::application::CloseRequestEvent>();
-	entityWorld.RegisterEvent<eng::network::ChangeFinishedEvent>();
-	entityWorld.RegisterEvent<eng::network::ChangeRequestEvent>();
-	entityWorld.RegisterEvent<eng::TablesReloadedEvent>();
+	entityWorld.RegisterEvent<eng::application::CloseRequest>();
+	entityWorld.RegisterEvent<eng::network::ChangeFinished>();
+	entityWorld.RegisterEvent<eng::network::ChangeRequest>();
+	entityWorld.RegisterEvent<eng::TablesReloaded>();
 
 	entityWorld.RegisterSingleton<eng::FrameBufferSingleton>();
 	entityWorld.RegisterSingleton<eng::LinesSingleton>();
@@ -120,7 +120,7 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	entityWorld.RegisterComponent<net::ReplicationComponent>();
 	entityWorld.RegisterComponent<net::UserComponent>();
 
-	entityWorld.RegisterEvent<eng::level::LoadRequestEvent>();
+	entityWorld.RegisterEvent<eng::level::LoadRequest>();
 
 	// singletons
 	entityWorld.RegisterSingleton<eng::level::DirectorySingleton>();

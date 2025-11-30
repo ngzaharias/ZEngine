@@ -5,7 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/LevelLoadedComponent.h"
-#include "Engine/LevelLoadRequestEvent.h"
+#include "Engine/LevelLoadRequest.h"
 #include "GameDebug/MenuBarComponents.h"
 
 void dbg::level::ReloadSystem::Update(World& world, const GameTime& gameTime)
@@ -17,7 +17,7 @@ void dbg::level::ReloadSystem::Update(World& world, const GameTime& gameTime)
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 		{
 			const auto& levelComponent = world.ReadComponent<eng::level::LoadedComponent>(entity);
-			world.AddEvent<eng::level::LoadRequestEvent>(levelComponent.m_Name);
+			world.AddEvent<eng::level::LoadRequest>(levelComponent.m_Name);
 		}
 	}
 }

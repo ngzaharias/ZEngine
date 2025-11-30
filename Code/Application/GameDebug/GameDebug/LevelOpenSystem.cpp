@@ -7,8 +7,9 @@
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
 #include "Engine/LevelDirectorySingleton.h"
-#include "Engine/LevelLoadRequestEvent.h"
-#include "GameDebug/LevelOpenComponents.h"
+#include "Engine/LevelLoadRequest.h"
+#include "GameDebug/LevelOpenRequest.h"
+#include "GameDebug/LevelOpenWindowComponent.h"
 #include "Input/Key.h"
 #include "Math/Math.h"
 #include "Math/Vector.h"
@@ -36,12 +37,12 @@ void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const bool hasWindow = world.HasAny<ecs::query::Include<dbg::level::WindowComponent>>();
+	const bool hasWindow = world.HasAny<ecs::query::Include<dbg::level::OpenWindowComponent>>();
 	if (!hasWindow && world.HasAny<dbg::level::OpenRequest>())
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, s_Title);
-		world.AddComponent<dbg::level::WindowComponent>(windowEntity);
+		world.AddComponent<dbg::level::OpenWindowComponent>(windowEntity);
 
 		ImGui::OpenPopup(s_Title);
 
@@ -55,13 +56,13 @@ void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	if (world.HasAny<ecs::query::Removed<dbg::level::WindowComponent>>())
+	if (world.HasAny<ecs::query::Removed<dbg::level::OpenWindowComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<dbg::level::WindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<dbg::level::OpenWindowComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags =
 			ImGuiWindowFlags_NoCollapse |
@@ -92,7 +93,7 @@ void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 
 					if (ImGui::Button(name.ToChar(), { width, 0 }))
 					{
-						world.AddEvent<eng::level::LoadRequestEvent>(name);
+						world.AddEvent<eng::level::LoadRequest>(name);
 						ImGui::CloseCurrentPopup();
 					}
 

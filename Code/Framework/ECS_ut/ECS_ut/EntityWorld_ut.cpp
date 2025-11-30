@@ -13,14 +13,14 @@ namespace
 	bool m_IsSystemAShutdown = false;
 	bool m_IsSystemBShutdown = false;
 
-	struct ComponentA : public ecs::Component<ComponentA>
+	struct ComponentA final : public ecs::Component<ComponentA>
 	{
 		ComponentA() = default;
 		ComponentA(bool val) : m_Bool(val) { }
 		bool m_Bool = false;
 	};
 
-	struct ComponentB : public ecs::Component<ComponentB>
+	struct ComponentB final : public ecs::Component<ComponentB>
 	{
 		ComponentB() = default;
 		ComponentB(int32 val) : m_Int32(val) { }

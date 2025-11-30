@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/ApplicationCloseRequestEvent.h"
+#include "Engine/ApplicationCloseRequest.h"
 
 game::Application::Application()
 	: eng::Application()
@@ -117,7 +117,7 @@ bool game::Application::ShouldClose()
 	if (base::ShouldClose())
 		return true;
 
-	using World = ecs::WorldView<eng::application::CloseRequestEvent>;
+	using World = ecs::WorldView<eng::application::CloseRequest>;
 	World world = m_GameClient.m_EntityWorld.GetWorldView<World>();
-	return world.HasAny<eng::application::CloseRequestEvent>();
+	return world.HasAny<eng::application::CloseRequest>();
 }

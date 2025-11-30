@@ -8,7 +8,7 @@ namespace eng
 {
 	class ThemeTable;
 	class UIManager;
-	struct TablesReloadedEvent;
+	struct TablesReloaded;
 }
 
 namespace eng::settings
@@ -26,7 +26,7 @@ namespace gui
 			eng::UIManager,
 			const eng::ThemeTable,
 			// Events
-			const eng::TablesReloadedEvent,
+			const eng::TablesReloaded,
 			// Singletons
 			const eng::settings::GameplaySingleton>;
 

@@ -5,7 +5,7 @@
 namespace eng::level
 {
 	struct LoadedComponent;
-	struct LoadRequestEvent;
+	struct LoadRequest;
 }
 
 namespace dbg::level
@@ -19,7 +19,7 @@ namespace dbg::level
 	{
 	public:
 		using World = ecs::WorldView<
-			eng::level::LoadRequestEvent,
+			eng::level::LoadRequest,
 			const eng::level::LoadedComponent,
 			const dbg::level::ReloadRequest>;
 

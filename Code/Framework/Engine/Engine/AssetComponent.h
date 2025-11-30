@@ -11,7 +11,7 @@ namespace eng
 namespace eng
 {
 	// \brief 
-	struct AssetComponent : public ecs::Component<AssetComponent>
+	struct AssetComponent final : public ecs::Component<AssetComponent>
 	{
 		Set<str::Guid> m_Assets = {};
 		Map<str::Guid, eng::Asset*> m_Loaded = {};
