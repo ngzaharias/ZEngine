@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Hidden/HiddenObjectComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
-#include "GameUI/LevelCompleteComponents.h"
+#include "GameUI/LevelCompleteWindowComponent.h"
 
 void gui::hidden::LevelSystem::Update(World& world, const GameTime& gameTime)
 {

@@ -2,8 +2,11 @@
 #include "GameUI/DCMainMenu.h"
 
 #include "ECS/EntityWorld.h"
-#include "GameUI/MainMenuComponents.h"
-#include "GameUI/SettingsMenuComponents.h"
+#include "GameUI/MainMenuContinueGameRequest.h"
+#include "GameUI/MainMenuExitGameRequest.h"
+#include "GameUI/MainMenuLoadGameRequest.h"
+#include "GameUI/MainMenuNewGameRequest.h"
+#include "GameUI/SettingsMenuOpenRequest.h"
 
 #include <NsCore/ReflectionImplement.h>
 

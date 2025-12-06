@@ -5,7 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
-#include "GameUI/GameMenuComponents.h"
+#include "GameUI/GameMenuOpenRequest.h"
 #include "GameUI/InputComponents.h"
 
 namespace 

@@ -11,7 +11,11 @@
 #include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCGameMenu.h"
-#include "GameUI/GameMenuComponents.h"
+#include "GameUI/GameMenuCloseRequest.h"
+#include "GameUI/GameMenuExitGameRequest.h"
+#include "GameUI/GameMenuExitToMenuRequest.h"
+#include "GameUI/GameMenuOpenRequest.h"
+#include "GameUI/GameMenuWindowComponent.h"
 
 namespace
 {

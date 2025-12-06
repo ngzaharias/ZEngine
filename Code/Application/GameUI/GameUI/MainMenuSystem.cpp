@@ -10,7 +10,11 @@
 #include "Engine/UIManager.h"
 #include "Engine/VersionComponent.h"
 #include "GameUI/DCMainMenu.h"
-#include "GameUI/MainMenuComponents.h"
+#include "GameUI/MainMenuContinueGameRequest.h"
+#include "GameUI/MainMenuExitGameRequest.h"
+#include "GameUI/MainMenuLoadGameRequest.h"
+#include "GameUI/MainMenuNewGameRequest.h"
+#include "GameUI/MainMenuWindowComponent.h"
 
 namespace
 {

@@ -10,7 +10,10 @@
 #include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCLevelComplete.h"
-#include "GameUI/LevelCompleteComponents.h"
+#include "GameUI/LevelCompleteExitGameRequest.h"
+#include "GameUI/LevelCompleteExitToMenuRequest.h"
+#include "GameUI/LevelCompleteResetGameRequest.h"
+#include "GameUI/LevelCompleteWindowComponent.h"
 
 namespace
 {

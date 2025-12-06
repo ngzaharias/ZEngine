@@ -8,7 +8,7 @@
 #include "Engine/UIManager.h"
 #include "GameUI/DCLoadingScreen.h"
 #include "GameUI/HintTable.h"
-#include "GameUI/LoadingComponents.h"
+#include "GameUI/LoadingCloseRequest.h"
 
 namespace
 {

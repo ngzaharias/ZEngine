@@ -19,6 +19,7 @@
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
 #include "GameShared/RegisterComponents.h"
+#include "GameUI/RegisterModule.h"
 #include "Hexmap/RegisterModule.h"
 #include "Hidden/RegisterModule.h"
 #include "Softbody/RegisterModule.h"
@@ -85,6 +86,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 
 	// modules
 	{
+		gui::RegisterModule(m_EntityWorld);
 		hexmap::RegisterModule(m_EntityWorld);
 		hidden::RegisterModule(m_EntityWorld);
 		softbody::RegisterModule(m_EntityWorld);

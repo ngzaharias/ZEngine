@@ -1,5 +1,5 @@
 #include "GameUIPCH.h"
-#include "GameUI/MainMenuComponents.h"
+#include "GameUI/MainMenuWindowComponent.h"
 
 #include "Engine/Visitor.h"
 

@@ -10,7 +10,6 @@ game::Application::Application()
 	: eng::Application()
 	, m_GameClient()
 	, m_GameServer()
-	, m_GameUI(m_GameClient.m_EntityWorld)
 	, m_GameDebug(m_GameClient.m_EntityWorld, m_GameServer.m_EntityWorld)
 {
 }
@@ -42,15 +41,8 @@ void game::Application::Register()
 		m_PrototypeManager,
 		m_ComponentSerializer };
 
-	gui::Dependencies guiDependencies = {
-		m_PrototypeManager,
-		m_TableHeadmaster,
-		m_GameClient.m_UIManager,
-		m_WindowManager };
-
 	m_GameClient.Register(clientDependencies);
 	m_GameServer.Register(serverDependencies);
-	m_GameUI.Register(guiDependencies);
 	m_GameDebug.Register();
 }
 
@@ -64,7 +56,6 @@ void game::Application::Initialise()
 
 	m_GameClient.Initialise();
 	m_GameServer.Initialise();
-	m_GameUI.Initialise();
 	m_GameDebug.Initialise();
 }
 
@@ -73,7 +64,6 @@ void game::Application::Shutdown()
 	PROFILE_FUNCTION();
 
 	m_GameDebug.Shutdown();
-	m_GameUI.Shutdown();
 	m_GameServer.Shutdown();
 	m_GameClient.Shutdown();
 
@@ -101,7 +91,6 @@ void game::Application::Update(const GameTime& gameTime)
 
 	m_GameClient.Update(gameTime);
 	m_GameServer.Update(gameTime);
-	m_GameUI.Update(gameTime);
 	m_GameDebug.Update(gameTime);
 }
 

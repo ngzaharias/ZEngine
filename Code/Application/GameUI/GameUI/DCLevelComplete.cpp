@@ -2,7 +2,9 @@
 #include "GameUI/DCLevelComplete.h"
 
 #include "ECS/EntityWorld.h"
-#include "GameUI/LevelCompleteComponents.h"
+#include "GameUI/LevelCompleteExitGameRequest.h"
+#include "GameUI/LevelCompleteExitToMenuRequest.h"
+#include "GameUI/LevelCompleteResetGameRequest.h"
 
 #include <NsCore/ReflectionImplement.h>
 

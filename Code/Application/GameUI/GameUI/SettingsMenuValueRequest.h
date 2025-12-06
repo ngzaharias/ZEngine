@@ -2,16 +2,12 @@
 
 #include "Core/Guid.h"
 #include "Core/Optional.h"
-#include "ECS/Component.h"
+#include "ECS/Event.h"
 #include "Engine/WindowModeEnum.h"
 #include "Math/Vector.h"
 
 namespace gui::settings_menu
 {
-	struct WindowComponent final : public ecs::Component<WindowComponent> { };
-
-	struct CloseRequest final : public ecs::Event<CloseRequest> { };
-	struct OpenRequest final : public ecs::Event<OpenRequest> { };
 	struct ValueRequest final : public ecs::Event<ValueRequest> 
 	{ 
 		// audio
