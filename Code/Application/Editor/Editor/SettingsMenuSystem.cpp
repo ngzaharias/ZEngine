@@ -5,7 +5,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/SettingsComponents.h"
+#include "Editor/SettingsLocalSingleton.h"
 #include "GameDebug/MenuBarComponents.h"
 
 #include "imgui/imgui.h"

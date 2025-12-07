@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/SettingsComponents.h"
+#include "Editor/SettingsLocalSingleton.h"
 
 #include "Engine/Visitor.h"
 #include "imgui/Inspector.h"

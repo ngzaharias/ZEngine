@@ -3,7 +3,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
-#include "Editor/SettingsComponents.h"
+#include "Editor/SettingsLocalSingleton.h"
 #include "imgui/Identifier.h"
 
 namespace ecs

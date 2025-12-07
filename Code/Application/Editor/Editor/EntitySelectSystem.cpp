@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/EntitySelectComponent.h"
+#include "Editor/EntitySelectSingleton.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/CameraProjectionComponent.h"

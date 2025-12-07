@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Path.h"
-#include "ECS/Component.h"
 #include "ECS/Singleton.h"
 #include "Editor/GizmoSettings.h"
 

@@ -5,7 +5,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/SettingsComponents.h"
+#include "Editor/SettingsLocalSingleton.h"
 #include "Editor/TextureHelpers.h"
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
