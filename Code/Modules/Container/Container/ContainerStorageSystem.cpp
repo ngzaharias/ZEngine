@@ -1,12 +1,12 @@
-#include "GameClientPCH.h"
-#include "GameClient/ContainerStorageSystem.h"
+#include "ContainerPCH.h"
+#include "Container/ContainerStorageSystem.h"
 
+#include "Container/ContainerComponents.h"
 #include "Core/Algorithms.h"
 #include "Core/Optional.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/ContainerComponents.h"
 
 namespace
 {

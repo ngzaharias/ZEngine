@@ -6,9 +6,6 @@
 #include "Engine/RenderSystem.h"
 #include "Engine/ReplicationHost.h"
 #include "GameClient/AccelerationSystem.h"
-#include "GameClient/ContainerMemberSystem.h"
-#include "GameClient/ContainerOwnerSystem.h"
-#include "GameClient/ContainerStorageSystem.h"
 #include "GameClient/DragMovementSystem.h"
 #include "GameClient/DragSelectionSystem.h"
 #include "GameClient/GameStateSystem.h"
@@ -27,11 +24,6 @@
 void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterSystem<client::SettingsSystem>();
-	entityWorld.RegisterSystem<container::StorageSystem>();
-	// #todo: container::MemberSystem depends on container::StorageSystem
-	entityWorld.RegisterSystem<container::MemberSystem>();
-	// #todo: container::OwnerSystem depends on container::StorageSystem
-	entityWorld.RegisterSystem<container::OwnerSystem>();
 	entityWorld.RegisterSystem<drag::MovementSystem>();
 	entityWorld.RegisterSystem<drag::SelectionSystem>();
 	entityWorld.RegisterSystem<gamestate::NetworkHostSystem>();

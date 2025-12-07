@@ -1,13 +1,13 @@
 #include <Catch2/catch.hpp>
 
+#include "Container/ContainerComponents.h"
+#include "Container/ContainerMemberSystem.h"
+#include "Container/ContainerOwnerSystem.h"
+#include "Container/ContainerStorageSystem.h"
 #include "Core/GameTime.h"
 #include "Core/Types.h"
 #include "ECS/UTHelpers.h"
 #include "ECS/WorldView.h"
-#include "GameClient/ContainerComponents.h"
-#include "GameClient/ContainerMemberSystem.h"
-#include "GameClient/ContainerOwnerSystem.h"
-#include "GameClient/ContainerStorageSystem.h"
 
 namespace
 {

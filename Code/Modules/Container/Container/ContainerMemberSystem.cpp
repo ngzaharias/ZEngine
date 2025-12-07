@@ -1,12 +1,12 @@
-#include "GameClientPCH.h"
-#include "GameClient/ContainerMemberSystem.h"
+#include "ContainerPCH.h"
+#include "Container/ContainerMemberSystem.h"
 
+#include "Container/ContainerComponents.h"
 #include "Core/Algorithms.h"
 #include "Core/Optional.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/ContainerComponents.h"
 
 void container::MemberSystem::Update(World& world, const GameTime& gameTime)
 {

@@ -8,6 +8,7 @@
 #include "Core/Variant.h"
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
+#include "ECS/Singleton.h"
 
 namespace container
 {

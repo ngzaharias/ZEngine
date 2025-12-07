@@ -1,11 +1,11 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/ContainerSystem.h"
 
+#include "Container/ContainerComponents.h"
 #include "Core/String.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/ContainerComponents.h"
 #include "GameDebug/MenuBarComponents.h"
 #include "Math/Vector.h"
 
