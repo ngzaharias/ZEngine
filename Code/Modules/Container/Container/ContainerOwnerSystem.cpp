@@ -1,7 +1,8 @@
 #include "ContainerPCH.h"
 #include "Container/ContainerOwnerSystem.h"
 
-#include "Container/ContainerComponents.h"
+#include "Container/ContainerOwnerComponent.h"
+#include "Container/ContainerStorageChangesSingleton.h"
 #include "Core/Algorithms.h"
 #include "Core/Optional.h"
 #include "ECS/EntityWorld.h"
