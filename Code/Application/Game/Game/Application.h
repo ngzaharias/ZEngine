@@ -30,6 +30,6 @@ namespace game
 	protected:
 		client::GameClient m_GameClient;
 		debug::GameDebug m_GameDebug;
-		svr::GameServer m_GameServer;
+		server::GameServer m_GameServer;
 	};
 }

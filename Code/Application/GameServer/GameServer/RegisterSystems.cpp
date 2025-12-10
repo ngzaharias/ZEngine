@@ -7,7 +7,7 @@
 #include "GameServer/ReplicationSystem.h"
 #include "GameServer/UserSystem.h"
 
-void svr::RegisterSystems(ecs::EntityWorld& entityWorld)
+void server::RegisterSystems(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterSystem<net::ReplicationSystem>();
 	entityWorld.RegisterSystem<net::UserSystem>();

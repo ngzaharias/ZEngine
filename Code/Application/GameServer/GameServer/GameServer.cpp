@@ -11,12 +11,12 @@
 #include "GameServer/RegisterSystems.h"
 #include "GameShared/RegisterComponents.h"
 
-svr::GameServer::GameServer()
+server::GameServer::GameServer()
 	: m_ReplicationHost(m_EntityWorld)
 {
 }
 
-void svr::GameServer::Register(const Dependencies& dependencies)
+void server::GameServer::Register(const Dependencies& dependencies)
 {
 	// managers
 	{
@@ -44,22 +44,22 @@ void svr::GameServer::Register(const Dependencies& dependencies)
 
 	// server
 	{
-		svr::RegisterComponents(m_EntityWorld);
-		svr::RegisterSystems(m_EntityWorld);
+		server::RegisterComponents(m_EntityWorld);
+		server::RegisterSystems(m_EntityWorld);
 	}
 }
 
-void svr::GameServer::Initialise()
+void server::GameServer::Initialise()
 {
 	m_EntityWorld.Initialise();
 }
 
-void svr::GameServer::Shutdown()
+void server::GameServer::Shutdown()
 {
 	m_EntityWorld.Shutdown();
 }
 
-void svr::GameServer::Update(const GameTime& gameTime)
+void server::GameServer::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 

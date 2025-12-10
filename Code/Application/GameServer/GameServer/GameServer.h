@@ -18,7 +18,7 @@ namespace net
 	class ComponentSerializer;
 }
 
-namespace svr
+namespace server
 {
 	struct Dependencies
 	{

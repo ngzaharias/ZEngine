@@ -3,6 +3,6 @@
 
 #include "ECS/EntityWorld.h"
 
-void svr::RegisterComponents(ecs::EntityWorld& entityWorld)
+void server::RegisterComponents(ecs::EntityWorld& entityWorld)
 {
 }

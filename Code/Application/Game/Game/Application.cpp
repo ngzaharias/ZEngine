@@ -34,7 +34,7 @@ void game::Application::Register()
 		m_WindowManager,
 		m_ComponentSerializer };
 
-	svr::Dependencies serverDependencies = {
+	server::Dependencies serverDependencies = {
 		m_AssetManager,
 		m_NetworkManager,
 		m_PhysicsManager,

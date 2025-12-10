@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace svr
+namespace server
 {
 	void RegisterComponents(ecs::EntityWorld& entityWorld);
 }
