@@ -9,7 +9,7 @@ namespace debug::settings
 {
 	struct WindowComponent final : public ecs::Component<WindowComponent>
 	{
-		clt::settings::DebugSingleton m_Client;
+		client::settings::DebugSingleton m_Client;
 		eng::settings::DebugSingleton m_Engine;
 		::hidden::settings::DebugSingleton m_Hidden;
 	};

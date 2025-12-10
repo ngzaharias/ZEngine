@@ -24,7 +24,7 @@ namespace net
 	class ComponentSerializer;
 }
 
-namespace clt
+namespace client
 {
 	struct Dependencies
 	{

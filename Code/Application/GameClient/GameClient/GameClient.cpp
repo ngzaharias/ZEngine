@@ -34,14 +34,14 @@ namespace
 	const str::Name strNoesis = NAME("Noesis");
 }
 
-clt::GameClient::GameClient()
+client::GameClient::GameClient()
 	: m_InputManager()
 	, m_UIManager(m_EntityWorld)
 	, m_ReplicationPeer(m_EntityWorld)
 {
 }
 
-void clt::GameClient::Register(const Dependencies& dependencies)
+void client::GameClient::Register(const Dependencies& dependencies)
 {
 	// resources
 	{
@@ -81,8 +81,8 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 
 	// client
 	{
-		clt::RegisterComponents(m_EntityWorld);
-		clt::RegisterSystems(m_EntityWorld);
+		client::RegisterComponents(m_EntityWorld);
+		client::RegisterSystems(m_EntityWorld);
 	}
 
 	// modules
@@ -99,7 +99,7 @@ void clt::GameClient::Register(const Dependencies& dependencies)
 	}
 }
 
-void clt::GameClient::Initialise()
+void client::GameClient::Initialise()
 {
 	m_EntityWorld.Initialise();
 
@@ -115,7 +115,7 @@ void clt::GameClient::Initialise()
 	}
 }
 
-void clt::GameClient::Shutdown()
+void client::GameClient::Shutdown()
 {
 	m_InputManager.RemoveLayer(strNoesis);
 	m_UIManager.Shutdown();
@@ -123,7 +123,7 @@ void clt::GameClient::Shutdown()
 	m_EntityWorld.Shutdown();
 }
 
-void clt::GameClient::PreUpdate(const GameTime& gameTime)
+void client::GameClient::PreUpdate(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -131,7 +131,7 @@ void clt::GameClient::PreUpdate(const GameTime& gameTime)
 	m_InputManager.Update(inputWorld);
 }
 
-void clt::GameClient::Update(const GameTime& gameTime)
+void client::GameClient::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -139,7 +139,7 @@ void clt::GameClient::Update(const GameTime& gameTime)
 	m_UIManager.Update(gameTime);
 }
 
-void clt::GameClient::PostUpdate(const GameTime& gameTime)
+void client::GameClient::PostUpdate(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 }

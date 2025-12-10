@@ -2,7 +2,7 @@
 
 #include "ECS/System.h"
 
-namespace clt::settings
+namespace client::settings
 {
 	struct DebugSingleton;
 }
@@ -23,7 +23,7 @@ namespace debug::settings
 	{
 	public:
 		using World = ecs::WorldView<
-			clt::settings::DebugSingleton,
+			client::settings::DebugSingleton,
 			eng::settings::DebugSingleton,
 			::hidden::settings::DebugSingleton>;
 

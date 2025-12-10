@@ -23,7 +23,7 @@ void game::Application::Register()
 	PROFILE_FUNCTION();
 	eng::Application::Register();
 
-	clt::Dependencies clientDependencies = {
+	client::Dependencies clientDependencies = {
 		m_AssetManager, 
 		m_ImguiManager,
 		m_NetworkManager,

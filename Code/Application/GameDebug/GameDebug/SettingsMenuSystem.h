@@ -5,7 +5,7 @@
 #include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
-namespace clt::settings
+namespace client::settings
 {
 	struct DebugSingleton;
 }
@@ -47,7 +47,7 @@ namespace debug::settings
 			ecs::NameComponent,
 			debug::settings::WindowComponent,
 			// Singletons
-			clt::settings::DebugSingleton,
+			client::settings::DebugSingleton,
 			eng::settings::DebugSingleton,
 			::hidden::settings::DebugSingleton>;
 

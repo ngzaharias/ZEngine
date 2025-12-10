@@ -2,7 +2,7 @@
 
 #include "ECS/System.h"
 
-namespace clt::settings
+namespace client::settings
 {
 	struct DebugSingleton;
 }
@@ -45,7 +45,7 @@ namespace hexmap
 			const hexmap::RootComponent,
 			// Singletons
 			eng::LinesSingleton,
-			const clt::settings::DebugSingleton>;
+			const client::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace clt
+namespace client
 {
 	void RegisterComponents(ecs::EntityWorld& entityWorld);
 }

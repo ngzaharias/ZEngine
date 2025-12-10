@@ -28,7 +28,7 @@ namespace game
 		bool ShouldClose() override;
 
 	protected:
-		clt::GameClient m_GameClient;
+		client::GameClient m_GameClient;
 		debug::GameDebug m_GameDebug;
 		svr::GameServer m_GameServer;
 	};

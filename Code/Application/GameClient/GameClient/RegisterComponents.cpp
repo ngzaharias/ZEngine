@@ -17,7 +17,7 @@
 #include "GameClient/ProjectileTrajectoryComponent.h"
 #include "GameClient/SettingsDebugComponent.h"
 
-void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
+void client::RegisterComponents(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterComponent<drag::IsSelectableComponent>();
 	entityWorld.RegisterComponent<drag::SelectionComponent>();
@@ -32,7 +32,7 @@ void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterEvent<gamestate::ChangeFinished>();
 	entityWorld.RegisterEvent<gamestate::ChangeRequest>();
 
-	entityWorld.RegisterSingleton<clt::settings::DebugSingleton>();
+	entityWorld.RegisterSingleton<client::settings::DebugSingleton>();
 	entityWorld.RegisterSingleton<gamestate::NetworkJoinSingleton>();
 	entityWorld.RegisterSingleton<gamestate::StateSingleton>();
 	entityWorld.RegisterSingleton<projectile::ChangesSingleton>();

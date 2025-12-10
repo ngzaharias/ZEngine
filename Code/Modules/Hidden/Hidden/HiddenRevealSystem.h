@@ -3,7 +3,7 @@
 #include "ECS/Entity.h"
 #include "ECS/System.h"
 
-namespace clt::settings
+namespace client::settings
 {
 	struct DebugComponent;
 }

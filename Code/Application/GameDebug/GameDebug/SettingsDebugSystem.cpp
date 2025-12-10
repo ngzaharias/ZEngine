@@ -21,7 +21,7 @@ void debug::settings::DebugSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(world.WriteSingleton<clt::settings::DebugSingleton>());
+	visitor.Read(world.WriteSingleton<client::settings::DebugSingleton>());
 	visitor.Read(world.WriteSingleton<eng::settings::DebugSingleton>());
 	visitor.Read(world.WriteSingleton<hidden::settings::DebugSingleton>());
 
@@ -34,7 +34,7 @@ void debug::settings::DebugSystem::Initialise(World& world)
 void debug::settings::DebugSystem::Update(World& world, const GameTime& gameTime)
 {
 	const bool hasChanged =
-		world.HasAny<clt::settings::DebugSingleton>() ||
+		world.HasAny<client::settings::DebugSingleton>() ||
 		world.HasAny<eng::settings::DebugSingleton>() ||
 		world.HasAny<hidden::settings::DebugSingleton>();
 	if (hasChanged)
@@ -42,7 +42,7 @@ void debug::settings::DebugSystem::Update(World& world, const GameTime& gameTime
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(world.ReadSingleton<clt::settings::DebugSingleton>());
+		visitor.Write(world.ReadSingleton<client::settings::DebugSingleton>());
 		visitor.Write(world.ReadSingleton<eng::settings::DebugSingleton>());
 		visitor.Write(world.ReadSingleton<hidden::settings::DebugSingleton>());
 		visitor.SaveToFile(filepath);

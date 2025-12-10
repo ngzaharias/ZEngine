@@ -21,7 +21,7 @@
 #include "GameClient/VelocitySystem.h"
 #include "GameClient/VisualSystem.h"
 
-void clt::RegisterSystems(ecs::EntityWorld& entityWorld)
+void client::RegisterSystems(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterSystem<client::SettingsSystem>();
 	entityWorld.RegisterSystem<drag::MovementSystem>();
