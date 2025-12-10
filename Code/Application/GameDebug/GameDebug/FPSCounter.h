@@ -1,6 +1,6 @@
 #pragma once
 
-namespace dbg
+namespace debug
 {
 	class FPSCounter
 	{

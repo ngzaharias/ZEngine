@@ -2,7 +2,7 @@
 
 #include "ECS/Event.h"
 
-namespace dbg::level
+namespace debug::level
 {
 	struct OpenRequest final : public ecs::Event<OpenRequest> { };
 }

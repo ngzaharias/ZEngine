@@ -43,7 +43,7 @@ namespace
 			Vector3f::One);
 	}
 
-	using World = dbg::PhysicsSystem::World;
+	using World = debug::PhysicsSystem::World;
 	void RenderShape(World& world, const physx::PxActor& actor, const physx::PxShape& shape, const physx::PxTransform& actorTransform)
 	{
 		auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
@@ -79,7 +79,7 @@ namespace
 	}
 }
 
-void dbg::PhysicsSystem::Update(World& world, const GameTime& gameTime)
+void debug::PhysicsSystem::Update(World& world, const GameTime& gameTime)
 {
 	const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	if (!settings.m_ArePhysicsEnabled)

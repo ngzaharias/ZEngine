@@ -32,7 +32,7 @@ namespace
 		return std::format("{}: {}", label, index);
 	}
 
-	const char* ToName(const dbg::Shape& value)
+	const char* ToName(const debug::Shape& value)
 	{
 		return core::VariantMatch(value,
 			[](const AABB2f&) { return "AABB2f"; },
@@ -43,7 +43,7 @@ namespace
 			[](const Triangle2f&) { return "Triangle2f"; });
 	}
 
-	bool IsColliding(const dbg::Shape& a, const dbg::Shape& b)
+	bool IsColliding(const debug::Shape& a, const debug::Shape& b)
 	{
 		return std::visit([](const auto& a, const auto& b) -> bool
 			{
@@ -51,7 +51,7 @@ namespace
 			}, a, b);
 	}
 
-	void InspectShape(dbg::Shape& value)
+	void InspectShape(debug::Shape& value)
 	{
 		ImGui::Indent();
 
@@ -108,7 +108,7 @@ namespace
 		ImGui::Unindent();
 	}
 
-	void DrawShape(dbg::Shape& value)
+	void DrawShape(debug::Shape& value)
 	{
 		core::VariantMatch(value,
 		[&](auto& data)
@@ -117,7 +117,7 @@ namespace
 		});
 	}
 
-	using World = dbg::ShapeSystem::World;
+	using World = debug::ShapeSystem::World;
 
 	void DrawMenuBar(World& world, const ecs::Entity& entity)
 	{
@@ -125,7 +125,7 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& window = world.WriteComponent<dbg::ShapeWindowComponent>(entity);
+		auto& window = world.WriteComponent<debug::ShapeWindowComponent>(entity);
 
 		if (ImGui::CollapsingHeader("Shape A"))
 		{
@@ -144,7 +144,7 @@ namespace
 
 	void DrawPlotter(World& world, const ecs::Entity& entity)
 	{
-		auto& window = world.WriteComponent<dbg::ShapeWindowComponent>(entity);
+		auto& window = world.WriteComponent<debug::ShapeWindowComponent>(entity);
 
 		const ImGuiGraphFlags flags = ImGuiGraphFlags_Grid | ImGuiGraphFlags_TextX | ImGuiGraphFlags_TextY;
 		const Vector2f size = ImGui::GetContentRegionAvail();
@@ -165,35 +165,35 @@ namespace
 	}
 }
 
-void dbg::ShapeSystem::Update(World& world, const GameTime& gameTime)
+void debug::ShapeSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	constexpr Vector2f s_DefaultPos = Vector2f(100.f, 100.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(300.f, 200.f);
 
-	for (const auto& request : world.Events<dbg::ShapeWindowRequest>())
+	for (const auto& request : world.Events<debug::ShapeWindowRequest>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Collision Tester");
 
-		auto& window = world.AddComponent<dbg::ShapeWindowComponent>(windowEntity);
+		auto& window = world.AddComponent<debug::ShapeWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Collision Tester", identifier);
 		window.m_InspectorLabel = ToLabel("Inspector##collision", identifier);
 		window.m_PlottingLabel = ToLabel("Plotter##collision", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const dbg::ShapeWindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const debug::ShapeWindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<dbg::ShapeWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<debug::ShapeWindowComponent>(entity, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::ShapeWindowComponent>>())
+	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<debug::ShapeWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<dbg::ShapeWindowComponent>(windowEntity);
+		auto& window = world.WriteComponent<debug::ShapeWindowComponent>(windowEntity);
 
 		bool isWindowOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);

@@ -8,7 +8,7 @@ namespace eng
 	class InputManager;
 }
 
-namespace dbg
+namespace debug
 {
 	class InputSystem final : public ecs::System
 	{

@@ -8,11 +8,11 @@
 #include "Engine/LevelLoadRequest.h"
 #include "GameDebug/DebugLevelReloadRequest.h"
 
-void dbg::level::ReloadSystem::Update(World& world, const GameTime& gameTime)
+void debug::level::ReloadSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<dbg::level::ReloadRequest>())
+	if (world.HasAny<debug::level::ReloadRequest>())
 	{
 		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 		{

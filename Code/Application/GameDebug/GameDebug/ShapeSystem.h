@@ -9,7 +9,7 @@ namespace ecs
 	struct NameComponent;
 }
 
-namespace dbg
+namespace debug
 {
 	struct ShapeWindowComponent;
 	struct ShapeWindowRequest;
@@ -18,9 +18,9 @@ namespace dbg
 	{
 	public:
 		using World = ecs::WorldView<
-			dbg::ShapeWindowComponent,
+			debug::ShapeWindowComponent,
 			ecs::NameComponent,
-			const dbg::ShapeWindowRequest>;
+			const debug::ShapeWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

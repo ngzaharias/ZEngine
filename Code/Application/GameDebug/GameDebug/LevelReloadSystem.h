@@ -8,12 +8,12 @@ namespace eng::level
 	struct LoadRequest;
 }
 
-namespace dbg::level
+namespace debug::level
 {
 	struct ReloadRequest;
 }
 
-namespace dbg::level
+namespace debug::level
 {
 	class ReloadSystem final : public ecs::System
 	{
@@ -21,7 +21,7 @@ namespace dbg::level
 		using World = ecs::WorldView<
 			eng::level::LoadRequest,
 			const eng::level::LoadedComponent,
-			const dbg::level::ReloadRequest>;
+			const debug::level::ReloadRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

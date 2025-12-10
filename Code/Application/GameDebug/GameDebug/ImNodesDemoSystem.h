@@ -8,7 +8,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace dbg
+namespace debug
 {
 	struct ImNodesDemoRequest;
 
@@ -18,8 +18,8 @@ namespace dbg
 	{
 	public:
 		using World = ecs::WorldView<
-			dbg::ImNodesDemoWindowComponent,
-			const dbg::ImNodesDemoRequest>;
+			debug::ImNodesDemoWindowComponent,
+			const debug::ImNodesDemoRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

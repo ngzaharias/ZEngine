@@ -15,7 +15,7 @@ namespace
 	const str::StringView strFilename = "DebugSettings.toml";
 }
 
-void dbg::settings::DebugSystem::Initialise(World& world)
+void debug::settings::DebugSystem::Initialise(World& world)
 {
 	const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
@@ -31,7 +31,7 @@ void dbg::settings::DebugSystem::Initialise(World& world)
 #endif
 }
 
-void dbg::settings::DebugSystem::Update(World& world, const GameTime& gameTime)
+void debug::settings::DebugSystem::Update(World& world, const GameTime& gameTime)
 {
 	const bool hasChanged =
 		world.HasAny<clt::settings::DebugSingleton>() ||

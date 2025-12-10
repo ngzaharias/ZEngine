@@ -2,7 +2,7 @@
 
 #include "ECS/Component.h"
 
-namespace dbg::level
+namespace debug::level
 {
 	struct OpenWindowComponent final : public ecs::Component<OpenWindowComponent> { };
 }

@@ -21,15 +21,15 @@ namespace
 	constexpr Vector2f s_DefaultSize = Vector2f(600.f, 0.f);
 }
 
-void dbg::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
+void debug::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
-	const bool hasWindow = world.HasAny<ecs::query::Include<dbg::settings::WindowComponent>>();
-	if (!hasWindow && world.HasAny<dbg::settings::WindowRequest>())
+	const bool hasWindow = world.HasAny<ecs::query::Include<debug::settings::WindowComponent>>();
+	if (!hasWindow && world.HasAny<debug::settings::WindowRequest>())
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Debug Settings");
 
-		auto& window = world.AddComponent<dbg::settings::WindowComponent>(windowEntity);
+		auto& window = world.AddComponent<debug::settings::WindowComponent>(windowEntity);
 		window.m_Client = world.ReadSingleton<clt::settings::DebugSingleton>();
 		window.m_Engine = world.ReadSingleton<eng::settings::DebugSingleton>();
 		window.m_Hidden = world.ReadSingleton<hidden::settings::DebugSingleton>();
@@ -37,11 +37,11 @@ void dbg::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::OpenPopup("Debug Settings##gamedebug");
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<dbg::settings::WindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<debug::settings::WindowComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoCollapse;
 
-		auto& window = world.WriteComponent<dbg::settings::WindowComponent>(entity);
+		auto& window = world.WriteComponent<debug::settings::WindowComponent>(entity);
 
 		const Vector2f viewportSize = ImGui::GetWindowViewport()->Size;
 		const Vector2f viewportCentre = (viewportSize * 0.5f);

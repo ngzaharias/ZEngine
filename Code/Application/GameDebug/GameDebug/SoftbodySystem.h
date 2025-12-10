@@ -17,7 +17,7 @@ namespace softbody
 	struct ChainComponent;
 }
 
-namespace dbg
+namespace debug
 {
 	class SoftbodySystem final : public ecs::System
 	{

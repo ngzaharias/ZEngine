@@ -59,7 +59,7 @@ namespace
 	}
 }
 
-void dbg::MenuBarSystem::Initialise(World& world)
+void debug::MenuBarSystem::Initialise(World& world)
 {
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::MenuBar;
@@ -72,13 +72,13 @@ void dbg::MenuBarSystem::Initialise(World& world)
 	input.AppendLayer(strInput, layer);
 }
 
-void dbg::MenuBarSystem::Shutdown(World& world)
+void debug::MenuBarSystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.RemoveLayer(strInput);
 }
 
-void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
+void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -91,9 +91,9 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("Open Level", "Ctrl+O"))
-				world.AddEvent<dbg::level::OpenRequest>();
+				world.AddEvent<debug::level::OpenRequest>();
 			if (ImGui::MenuItem("Reload Level", "Ctrl+R"))
-				world.AddEvent<dbg::level::ReloadRequest>();
+				world.AddEvent<debug::level::ReloadRequest>();
 			
 			ImGui::Separator();
 
@@ -116,7 +116,7 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("Settings"))
 		{
 			if (ImGui::MenuItem("Debug"))
-				world.AddEvent<dbg::settings::WindowRequest>();
+				world.AddEvent<debug::settings::WindowRequest>();
 			if (ImGui::MenuItem("Editor"))
 				world.AddEvent<editor::settings::WindowRequest>();
 			ImGui::EndMenu();
@@ -127,27 +127,27 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		//if (ImGui::BeginMenu("Cheats"))
 		//{
 		//	if (ImGui::MenuItem("Reveal All"))
-		//		world.AddEvent<dbg::cheats::RevealAll>();
+		//		world.AddEvent<debug::cheats::RevealAll>();
 		//	if (ImGui::MenuItem("Reveal All (-1)"))
-		//		world.AddEvent<dbg::cheats::RevealAll>(-1);
+		//		world.AddEvent<debug::cheats::RevealAll>(-1);
 		//}
 
 		if (ImGui::BeginMenu("Debuggers"))
 		{
 			if (ImGui::MenuItem("Container"))
-				world.AddEvent<dbg::ContainerWindowRequest>();
+				world.AddEvent<debug::ContainerWindowRequest>();
 			if (ImGui::MenuItem("Entities", "Ctrl+Shift+F11"))
-				world.AddEvent<dbg::EntityWindowRequest>();
+				world.AddEvent<debug::EntityWindowRequest>();
 			if (ImGui::MenuItem("Network"))
-				world.AddEvent<dbg::NetworkWindowRequest>();
+				world.AddEvent<debug::NetworkWindowRequest>();
 			if (ImGui::MenuItem("Optick (external)"))
 				LaunchExe(str::Path(str::EPath::ThirdParty, "optick/1.3.1/Optick.exe"));
 			if (ImGui::MenuItem("Shapes"))
-				world.AddEvent<dbg::ShapeWindowRequest>();
+				world.AddEvent<debug::ShapeWindowRequest>();
 			if (ImGui::MenuItem("Splines"))
-				world.AddEvent<dbg::SplineWindowRequest>();
+				world.AddEvent<debug::SplineWindowRequest>();
 			if (ImGui::MenuItem("Render: Frame Buffer"))
-				world.AddEvent<dbg::BufferWindowRequest>();
+				world.AddEvent<debug::BufferWindowRequest>();
 
 			ImGui::EndMenu();
 		}
@@ -179,11 +179,11 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("Windows"))
 		{
 			if (ImGui::MenuItem("Demo: ImGui"))
-				world.AddEvent<dbg::ImGuiDemoRequest>();
+				world.AddEvent<debug::ImGuiDemoRequest>();
 			if (ImGui::MenuItem("Demo: ImNodes"))
-				world.AddEvent<dbg::ImNodesDemoRequest>();
+				world.AddEvent<debug::ImNodesDemoRequest>();
 			if (ImGui::MenuItem("Demo: Inspector"))
-				world.AddEvent<dbg::InspectorDemoRequest>();
+				world.AddEvent<debug::InspectorDemoRequest>();
 
 			ImGui::EndMenu();
 		}
@@ -194,10 +194,10 @@ void dbg::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
 		if (input.IsPressed(strOpen))
-			world.AddEvent<dbg::level::OpenRequest>();
+			world.AddEvent<debug::level::OpenRequest>();
 		if (input.IsPressed(strReload))
-			world.AddEvent<dbg::level::ReloadRequest>();
+			world.AddEvent<debug::level::ReloadRequest>();
 		if (input.IsPressed(strSave))
-			world.AddEvent<dbg::level::SaveRequest>();
+			world.AddEvent<debug::level::SaveRequest>();
 	}
 }

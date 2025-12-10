@@ -10,7 +10,7 @@ namespace eng
 	struct VersionSingleton;
 }
 
-namespace dbg
+namespace debug
 {
 	class OverlaySystem final : public ecs::System
 	{
@@ -24,6 +24,6 @@ namespace dbg
 		void Update(World& world, const GameTime& gameTime);
 
 	private:
-		dbg::FPSCounter m_FPSCounter;
+		debug::FPSCounter m_FPSCounter;
 	};
 }

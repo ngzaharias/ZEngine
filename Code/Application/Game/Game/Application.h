@@ -29,7 +29,7 @@ namespace game
 
 	protected:
 		clt::GameClient m_GameClient;
-		dbg::GameDebug m_GameDebug;
+		debug::GameDebug m_GameDebug;
 		svr::GameServer m_GameServer;
 	};
 }

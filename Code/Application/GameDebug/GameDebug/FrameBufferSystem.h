@@ -3,7 +3,7 @@
 #include "ECS/Component.h"
 #include "ECS/System.h"
 
-namespace dbg
+namespace debug
 {
 	struct BufferWindowRequest;
 }
@@ -13,7 +13,7 @@ namespace eng
 	struct FrameBufferSingleton;
 }
 
-namespace dbg
+namespace debug
 {
 	struct FrameBufferSingleton;
 
@@ -24,8 +24,8 @@ namespace dbg
 	public:
 		using World = ecs::WorldView<
 			// Components
-			dbg::BufferWindowComponent,
-			const dbg::BufferWindowRequest,
+			debug::BufferWindowComponent,
+			const debug::BufferWindowRequest,
 			// Singletons
 			const eng::FrameBufferSingleton>;
 

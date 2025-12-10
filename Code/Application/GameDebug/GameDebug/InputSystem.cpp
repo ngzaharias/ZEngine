@@ -12,7 +12,7 @@ namespace
 	const str::Name strImGui = str::Name::Create("ImGui");
 }
 
-void dbg::InputSystem::Initialise(World& world)
+void debug::InputSystem::Initialise(World& world)
 {
 	auto& imgui = world.WriteResource<eng::ImguiManager>();
 	auto& input = world.WriteResource<eng::InputManager>();
@@ -23,7 +23,7 @@ void dbg::InputSystem::Initialise(World& world)
 	input.AppendLayer(strImGui, layer);
 }
 
-void dbg::InputSystem::Shutdown(World& world)
+void debug::InputSystem::Shutdown(World& world)
 {
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.RemoveLayer(strImGui);

@@ -33,16 +33,16 @@ namespace
 	const str::Name strClose = str::Name::Create("LevelOpen_Close");
 }
 
-void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
+void debug::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const bool hasWindow = world.HasAny<ecs::query::Include<dbg::level::OpenWindowComponent>>();
-	if (!hasWindow && world.HasAny<dbg::level::OpenRequest>())
+	const bool hasWindow = world.HasAny<ecs::query::Include<debug::level::OpenWindowComponent>>();
+	if (!hasWindow && world.HasAny<debug::level::OpenRequest>())
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, s_Title);
-		world.AddComponent<dbg::level::OpenWindowComponent>(windowEntity);
+		world.AddComponent<debug::level::OpenWindowComponent>(windowEntity);
 
 		ImGui::OpenPopup(s_Title);
 
@@ -56,13 +56,13 @@ void dbg::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	if (world.HasAny<ecs::query::Removed<dbg::level::OpenWindowComponent>>())
+	if (world.HasAny<ecs::query::Removed<debug::level::OpenWindowComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<dbg::level::OpenWindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<debug::level::OpenWindowComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags =
 			ImGuiWindowFlags_NoCollapse |

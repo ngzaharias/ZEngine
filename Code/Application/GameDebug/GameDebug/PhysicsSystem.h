@@ -15,7 +15,7 @@ namespace eng::settings
 	struct DebugSingleton;
 }
 
-namespace dbg
+namespace debug
 {
 	class PhysicsSystem final : public ecs::System
 	{

@@ -16,7 +16,7 @@
 #include "Math/SplineMath.h"
 #include "Softbody/SoftbodyChainComponent.h"
 
-void dbg::SoftbodySystem::Update(World& world, const GameTime& gameTime)
+void debug::SoftbodySystem::Update(World& world, const GameTime& gameTime)
 {
 	const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	if (!settings.m_AreSoftbodyEnabled)

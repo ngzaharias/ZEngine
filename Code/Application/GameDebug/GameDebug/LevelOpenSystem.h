@@ -18,13 +18,13 @@ namespace eng::level
 	struct LoadRequest;
 }
 
-namespace dbg::level
+namespace debug::level
 {
 	struct OpenRequest;
 	struct OpenWindowComponent;
 }
 
-namespace dbg::level
+namespace debug::level
 {
 	class OpenSystem final : public ecs::System
 	{
@@ -33,11 +33,11 @@ namespace dbg::level
 			// Resources
 			eng::InputManager,
 			// Components
-			dbg::level::OpenWindowComponent,
+			debug::level::OpenWindowComponent,
 			ecs::NameComponent,
 			// Events
 			eng::level::LoadRequest,
-			const dbg::level::OpenRequest,
+			const debug::level::OpenRequest,
 			// Singletons
 			const eng::level::DirectorySingleton>;
 

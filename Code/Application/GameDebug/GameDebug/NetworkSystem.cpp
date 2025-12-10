@@ -18,7 +18,7 @@
 #include "imgui/imgui_user.h"
 
 
-void dbg::NetworkSystem::Update(World& world, const GameTime& gameTime)
+void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -27,19 +27,19 @@ void dbg::NetworkSystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(100.f, 100.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(300.f, 200.f);
 
-	for (const auto& request : world.Events<dbg::NetworkWindowRequest>())
+	for (const auto& request : world.Events<debug::NetworkWindowRequest>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Debug: Network Window");
 
-		auto& window = world.AddComponent<dbg::NetworkWindowComponent>(windowEntity);
+		auto& window = world.AddComponent<debug::NetworkWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<dbg::NetworkWindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<debug::NetworkWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<dbg::NetworkWindowComponent>(entity);
+		auto& window = world.WriteComponent<debug::NetworkWindowComponent>(entity);
 		const str::String label = std::format("Network Debugger : {}", window.m_Identifier);
 
 		bool isOpen = true;

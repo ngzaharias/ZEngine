@@ -5,7 +5,7 @@
 #include "GameClient/SettingsDebugComponent.h"
 #include "Hidden/HiddenDebugSettingsSingleton.h"
 
-namespace dbg::settings
+namespace debug::settings
 {
 	struct WindowComponent final : public ecs::Component<WindowComponent>
 	{

@@ -2,7 +2,7 @@
 
 #include "ECS/Event.h"
 
-namespace dbg
+namespace debug
 {
 	struct ImNodesDemoRequest final : public ecs::Event<ImNodesDemoRequest> { };
 }

@@ -19,12 +19,12 @@ namespace container
 	struct StorageDestroyResultComponent;
 }
 
-namespace dbg
+namespace debug
 {
 	struct ContainerWindowRequestComponent;
 }
 
-namespace dbg
+namespace debug
 {
 	struct ContainerWindowComponent final : public ecs::Component<ContainerWindowComponent> 
 	{ 
@@ -41,13 +41,13 @@ namespace dbg
 			container::MemberMoveRequestComponent,
 			container::StorageCreateRequestComponent,
 			container::StorageDestroyRequestComponent,
-			dbg::ContainerWindowComponent,
+			debug::ContainerWindowComponent,
 			const container::MemberAddResultComponent,
 			const container::MemberMoveResultComponent,
 			const container::StorageComponent,
 			const container::StorageCreateResultComponent,
 			const container::StorageDestroyResultComponent,
-			const dbg::ContainerWindowRequestComponent>;
+			const debug::ContainerWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

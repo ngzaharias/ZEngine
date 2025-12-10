@@ -2,7 +2,7 @@
 
 #include "ECS/Event.h"
 
-namespace dbg
+namespace debug
 {
 	struct ShapeWindowRequest final : public ecs::Event<ShapeWindowRequest> { };
 }

@@ -2,7 +2,7 @@
 
 #include "ECS/Component.h"
 
-namespace dbg::hidden
+namespace debug::hidden
 {
 	struct ObjectComponent final : public ecs::Component<ObjectComponent>
 	{ 

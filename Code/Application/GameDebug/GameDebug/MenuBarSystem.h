@@ -2,7 +2,7 @@
 
 #include "ECS/System.h"
 
-namespace dbg
+namespace debug
 {
 	struct BufferWindowRequest;
 	struct ContainerWindowRequest;
@@ -16,7 +16,7 @@ namespace dbg
 	struct SplineWindowRequest;
 }
 
-namespace dbg::level
+namespace debug::level
 {
 	struct OpenRequest;
 	struct ReloadRequest;
@@ -24,7 +24,7 @@ namespace dbg::level
 	struct SaveAsRequest;
 }
 
-namespace dbg::settings
+namespace debug::settings
 {
 	struct WindowRequest;
 }
@@ -55,7 +55,7 @@ namespace eng
 	struct TablesReloaded;
 }
 
-namespace dbg
+namespace debug
 {
 	class MenuBarSystem final : public ecs::System
 	{
@@ -66,21 +66,21 @@ namespace dbg
 			eng::TableHeadmaster,
 			const eng::InputManager,
 			// Events
-			dbg::BufferWindowRequest,
-			dbg::ContainerWindowRequest,
-			dbg::EntityWindowRequest,
-			dbg::FlipbookWindowRequest,
-			dbg::ImGuiDemoRequest,
-			dbg::ImNodesDemoRequest,
-			dbg::InspectorDemoRequest,
-			dbg::level::OpenRequest,
-			dbg::level::ReloadRequest,
-			dbg::level::SaveAsRequest,
-			dbg::level::SaveRequest,
-			dbg::NetworkWindowRequest,
-			dbg::settings::WindowRequest,
-			dbg::ShapeWindowRequest,
-			dbg::SplineWindowRequest,
+			debug::BufferWindowRequest,
+			debug::ContainerWindowRequest,
+			debug::EntityWindowRequest,
+			debug::FlipbookWindowRequest,
+			debug::ImGuiDemoRequest,
+			debug::ImNodesDemoRequest,
+			debug::InspectorDemoRequest,
+			debug::level::OpenRequest,
+			debug::level::ReloadRequest,
+			debug::level::SaveAsRequest,
+			debug::level::SaveRequest,
+			debug::NetworkWindowRequest,
+			debug::settings::WindowRequest,
+			debug::ShapeWindowRequest,
+			debug::SplineWindowRequest,
 			editor::AssetBrowserWindowRequest,
 			editor::EntityWindowRequest,
 			editor::FlipbookWindowRequest,

@@ -17,7 +17,7 @@ namespace hidden::settings
 	struct DebugSingleton;
 }
 
-namespace dbg::settings
+namespace debug::settings
 {
 	class DebugSystem final : public ecs::System
 	{

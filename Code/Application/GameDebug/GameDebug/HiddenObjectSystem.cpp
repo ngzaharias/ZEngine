@@ -14,7 +14,7 @@
 #include "Hidden/HiddenObjectComponent.h"
 #include "Math/AABB.h"
 
-void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
+void debug::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -26,10 +26,10 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 			const ::hidden::ObjectComponent, 
 			const eng::level::EntityComponent, 
 			const eng::TransformComponent>
-			::Exclude<const dbg::hidden::ObjectComponent>;
+			::Exclude<const debug::hidden::ObjectComponent>;
 		for (const ecs::Entity& entity : world.Query<AddQuery>())
 		{
-			auto& parentDebug = world.AddComponent<dbg::hidden::ObjectComponent>(entity);
+			auto& parentDebug = world.AddComponent<debug::hidden::ObjectComponent>(entity);
 			parentDebug.m_Child = world.CreateEntity();
 
 			auto& childLevel = world.AddComponent<eng::level::EntityComponent>(parentDebug.m_Child);
@@ -46,11 +46,11 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 		}
 
 		using SpriteQuery = ecs::query
-			::Include<const ::hidden::ObjectComponent, const dbg::hidden::ObjectComponent>
+			::Include<const ::hidden::ObjectComponent, const debug::hidden::ObjectComponent>
 			::Updated<const eng::SpriteComponent>;
 		for (const ecs::Entity& entity : world.Query<SpriteQuery>())
 		{
-			const auto& parentDebug = world.ReadComponent<dbg::hidden::ObjectComponent>(entity);
+			const auto& parentDebug = world.ReadComponent<debug::hidden::ObjectComponent>(entity);
 			const auto& parentObject = world.ReadComponent<::hidden::ObjectComponent>(entity);
 			const auto& parentSprite = world.ReadComponent<eng::SpriteComponent>(entity);
 
@@ -59,11 +59,11 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 		}
 
 		using TransformQuery = ecs::query
-			::Include<const dbg::hidden::ObjectComponent>
+			::Include<const debug::hidden::ObjectComponent>
 			::Updated<eng::TransformComponent>;
 		for (const ecs::Entity& entity : world.Query<TransformQuery>())
 		{
-			const auto& parentDebug = world.ReadComponent<dbg::hidden::ObjectComponent>(entity);
+			const auto& parentDebug = world.ReadComponent<debug::hidden::ObjectComponent>(entity);
 			const auto& parentTransform = world.ReadComponent<eng::TransformComponent>(entity);
 
 			auto& childTransform = world.WriteComponent<eng::TransformComponent>(parentDebug.m_Child);
@@ -75,11 +75,11 @@ void dbg::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 	else
 	{
 		using Query = ecs::query
-			::Include<const ::hidden::ObjectComponent, const dbg::hidden::ObjectComponent>;
+			::Include<const ::hidden::ObjectComponent, const debug::hidden::ObjectComponent>;
 		for (const ecs::Entity& entity : world.Query<Query>())
 		{
-			const auto& object = world.ReadComponent<dbg::hidden::ObjectComponent>(entity);
-			world.RemoveComponent<dbg::hidden::ObjectComponent>(entity);
+			const auto& object = world.ReadComponent<debug::hidden::ObjectComponent>(entity);
+			world.RemoveComponent<debug::hidden::ObjectComponent>(entity);
 			world.DestroyEntity(object.m_Child);
 		}
 	}

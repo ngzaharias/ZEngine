@@ -31,10 +31,10 @@ namespace
 		return std::format("{}: {}", label, index);
 	}
 
-	using World = dbg::SplineSystem::World;
+	using World = debug::SplineSystem::World;
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& window = world.WriteComponent<dbg::SplineWindowComponent>(entity);
+		auto& window = world.WriteComponent<debug::SplineWindowComponent>(entity);
 
 		imgui::Inspector inspector;
 		if (inspector.Begin("inspector"))
@@ -46,14 +46,14 @@ namespace
 
 	void DrawPlotter(World& world, const ecs::Entity& entity)
 	{
-		auto& window = world.WriteComponent<dbg::SplineWindowComponent>(entity);
+		auto& window = world.WriteComponent<debug::SplineWindowComponent>(entity);
 
 		const ImGuiGraphFlags flags = ImGuiGraphFlags_Grid | ImGuiGraphFlags_TextX | ImGuiGraphFlags_TextY;
 		const Vector2f size = ImGui::GetContentRegionAvail();
 		if (imgui::BeginGraph("##graph", size, flags))
 		{
 			core::VariantMatch(window.m_Spline,
-				[&](dbg::BezierQuadratic& data)
+				[&](debug::BezierQuadratic& data)
 				{
 					imgui::GraphPoint(data.c);
 					imgui::GraphPoint(data.p1);
@@ -67,7 +67,7 @@ namespace
 						imgui::GraphLine(p1, p2);
 					}
 				},
-				[&](dbg::BezierCubic& data)
+				[&](debug::BezierCubic& data)
 				{
 					imgui::GraphPoint(data.c1);
 					imgui::GraphPoint(data.c2);
@@ -82,7 +82,7 @@ namespace
 						imgui::GraphLine(p1, p2);
 					}
 				},
-				[&](dbg::CatmullRom& data)
+				[&](debug::CatmullRom& data)
 				{
 					imgui::GraphPoint(data.c1);
 					imgui::GraphPoint(data.c2);
@@ -97,7 +97,7 @@ namespace
 						imgui::GraphLine(p1, p2);
 					}
 				},
-				[&](dbg::Hermite& data)
+				[&](debug::Hermite& data)
 				{
 					imgui::GraphPoint(data.p1);
 					imgui::GraphPoint(data.p2);
@@ -118,33 +118,33 @@ namespace
 	}
 }
 
-void dbg::SplineSystem::Update(World& world, const GameTime& gameTime)
+void debug::SplineSystem::Update(World& world, const GameTime& gameTime)
 {
 	constexpr Vector2f s_DefaultPos = Vector2f(100.f, 100.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(300.f, 200.f);
 
-	for (const auto& request : world.Events<dbg::SplineWindowRequest>())
+	for (const auto& request : world.Events<debug::SplineWindowRequest>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Spline Tester");
 
-		auto& window = world.AddComponent<dbg::SplineWindowComponent>(windowEntity);
+		auto& window = world.AddComponent<debug::SplineWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Spline Tester", identifier);
 		window.m_InspectorLabel = ToLabel("Inspector##collision", identifier);
 		window.m_PlottingLabel = ToLabel("Plotter##collision", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const dbg::SplineWindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const debug::SplineWindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<dbg::SplineWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<debug::SplineWindowComponent>(entity, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::SplineWindowComponent>>())
+	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<debug::SplineWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<dbg::SplineWindowComponent>(windowEntity);
+		auto& window = world.WriteComponent<debug::SplineWindowComponent>(windowEntity);
 
 		bool isWindowOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);

@@ -88,13 +88,13 @@ namespace
 	}
 }
 
-dbg::EntitySystem::EntitySystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
+debug::EntitySystem::EntitySystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
 	: m_ClientWorld(clientWorld)
 	, m_ServerWorld(serverWorld)
 {
 }
 
-void dbg::EntitySystem::Update(World& world, const GameTime& gameTime)
+void debug::EntitySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -103,28 +103,28 @@ void dbg::EntitySystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(100.f, 100.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(300.f, 200.f);
 
-	for (const auto& request : world.Events<dbg::EntityWindowRequest>())
+	for (const auto& request : world.Events<debug::EntityWindowRequest>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Entity Debugger");
 
-		auto& window = world.AddComponent<dbg::EntityWindowComponent>(windowEntity);
+		auto& window = world.AddComponent<debug::EntityWindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Entity Debugger##entitydebugger", identifier);
 		window.m_EntitiesLabel = ToLabel("Entities##entitydebugger", identifier);
 		window.m_ComponentsLabel = ToLabel("Components##entitydebugger", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const dbg::EntityWindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const debug::EntityWindowComponent>>())
 	{
-		auto& window = world.ReadComponent<dbg::EntityWindowComponent>(entity, false);
+		auto& window = world.ReadComponent<debug::EntityWindowComponent>(entity, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::EntityWindowComponent>>())
+	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<debug::EntityWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<dbg::EntityWindowComponent>(windowEntity);
+		auto& window = world.WriteComponent<debug::EntityWindowComponent>(windowEntity);
 
 		bool isOpen = true;
 		bool isClient = true;

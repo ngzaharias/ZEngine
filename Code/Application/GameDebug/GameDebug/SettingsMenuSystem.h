@@ -10,7 +10,7 @@ namespace clt::settings
 	struct DebugSingleton;
 }
 
-namespace dbg::settings
+namespace debug::settings
 {
 	struct WindowComponent;
 }
@@ -35,7 +35,7 @@ namespace hidden::settings
 	struct DebugSingleton;
 }
 
-namespace dbg::settings
+namespace debug::settings
 {
 	class MenuSystem final : public ecs::System
 	{
@@ -45,7 +45,7 @@ namespace dbg::settings
 			eng::WindowManager,
 			// Components
 			ecs::NameComponent,
-			dbg::settings::WindowComponent,
+			debug::settings::WindowComponent,
 			// Singletons
 			clt::settings::DebugSingleton,
 			eng::settings::DebugSingleton,

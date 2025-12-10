@@ -47,32 +47,32 @@ namespace
 	}
 }
 
-void dbg::ContainerSystem::Update(World& world, const GameTime& gameTime)
+void debug::ContainerSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	constexpr Vector2f s_DefaultPos = Vector2f(100.f, 350.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(300.f, 200.f);
 
-	for (const auto& request : world.Events<dbg::ContainerWindowRequest>())
+	for (const auto& request : world.Events<debug::ContainerWindowRequest>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 
-		auto& window = world.AddComponent<dbg::ContainerWindowComponent>(windowEntity);
+		auto& window = world.AddComponent<debug::ContainerWindowComponent>(windowEntity);
 		window.m_Label = ToLabel("Container Debugger", identifier);
 		window.m_Identifier = identifier;
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const dbg::ContainerWindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const debug::ContainerWindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<dbg::ContainerWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<debug::ContainerWindowComponent>(entity, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<dbg::ContainerWindowComponent>>())
+	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<debug::ContainerWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<dbg::ContainerWindowComponent>(windowEntity);
+		auto& window = world.WriteComponent<debug::ContainerWindowComponent>(windowEntity);
 		const ecs::Entity& storageSelected = window.m_Storage;
 
 		if (world.HasComponent<container::StorageCreateResultComponent>(windowEntity))

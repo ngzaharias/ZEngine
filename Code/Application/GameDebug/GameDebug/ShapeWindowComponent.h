@@ -9,7 +9,7 @@
 #include "Math/Segment.h"
 #include "Math/Triangle.h"
 
-namespace dbg
+namespace debug
 {
 	using Shape = Variant<
 		AABB2f,

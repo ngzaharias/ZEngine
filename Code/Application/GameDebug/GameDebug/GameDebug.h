@@ -7,7 +7,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace dbg
+namespace debug
 {
 	class GameDebug final
 	{

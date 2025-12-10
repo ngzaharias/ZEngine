@@ -13,7 +13,7 @@ namespace ecs
 	struct NameComponent;
 }
 
-namespace dbg
+namespace debug
 {
 	struct NetworkWindowComponent;
 	struct NetworkWindowRequest;
@@ -22,10 +22,10 @@ namespace dbg
 	{
 	public:
 		using World = ecs::WorldView<
-			dbg::NetworkWindowComponent,
+			debug::NetworkWindowComponent,
 			ecs::NameComponent,
 			gamestate::ChangeRequest,
-			const dbg::NetworkWindowRequest>;
+			const debug::NetworkWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

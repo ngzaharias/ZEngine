@@ -2,7 +2,7 @@
 
 #include "ECS/System.h"
 
-namespace dbg::hidden
+namespace debug::hidden
 {
 	struct ObjectComponent;
 }
@@ -29,14 +29,14 @@ namespace hidden::settings
 	struct DebugSingleton;
 }
 
-namespace dbg::hidden
+namespace debug::hidden
 {
 	class ObjectSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
 			// Components
-			dbg::hidden::ObjectComponent,
+			debug::hidden::ObjectComponent,
 			eng::level::EntityComponent,
 			eng::SpriteComponent,
 			eng::TransformComponent,

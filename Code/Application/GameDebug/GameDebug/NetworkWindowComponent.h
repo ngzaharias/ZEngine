@@ -3,7 +3,7 @@
 #include "Core/String.h"
 #include "ECS/Component.h"
 
-namespace dbg
+namespace debug
 {
 	struct NetworkWindowComponent final : public ecs::Component<NetworkWindowComponent>
 	{

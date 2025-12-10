@@ -2,7 +2,7 @@
 
 #include "ECS/Event.h"
 
-namespace dbg::settings
+namespace debug::settings
 {
 	struct WindowRequest final : public ecs::Event<WindowRequest> { };
 }

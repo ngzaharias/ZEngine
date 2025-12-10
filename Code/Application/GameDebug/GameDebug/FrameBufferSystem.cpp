@@ -12,17 +12,17 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
 
-void dbg::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
+void debug::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	constexpr Vector2f s_DefaultPos = Vector2f(100.f, 350.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(300.f, 200.f);
 
-	for (const auto& request : world.Events<dbg::BufferWindowRequest>())
-		world.AddComponent<dbg::BufferWindowComponent>(world.CreateEntity());
+	for (const auto& request : world.Events<debug::BufferWindowRequest>())
+		world.AddComponent<debug::BufferWindowComponent>(world.CreateEntity());
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<dbg::BufferWindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<debug::BufferWindowComponent>>())
 	{
 		const str::String label = "Render: Frame Buffer##" + std::to_string(entity.GetIndex());
 

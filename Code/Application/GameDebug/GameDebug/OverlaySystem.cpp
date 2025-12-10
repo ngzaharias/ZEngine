@@ -19,7 +19,7 @@
 #include "imgui/imgui_user.h"
 #include "imguizmo/ImGuizmo.h"
 
-void dbg::OverlaySystem::Update(World& world, const GameTime& gameTime)
+void debug::OverlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
