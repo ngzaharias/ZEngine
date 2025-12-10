@@ -3,7 +3,7 @@
 #include "Core/String.h"
 #include "ECS/Component.h"
 #include "Engine/SettingsDebugSingleton.h"
-#include "GameClient/SettingsComponents.h"
+#include "GameClient/SettingsDebugComponent.h"
 #include "Hidden/HiddenDebugSettingsSingleton.h"
 
 namespace dbg::settings

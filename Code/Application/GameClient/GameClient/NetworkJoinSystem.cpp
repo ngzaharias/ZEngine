@@ -12,7 +12,7 @@
 #include "GameClient/GameStateChangeRequest.h"
 #include "GameClient/GameStateNetworkJoinSingleton.h"
 #include "GameClient/GameStateStateSingleton.h"
-#include "GameClient/ModalComponents.h"
+#include "GameClient/ModalMessageComponent.h"
 
 void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime)
 {

@@ -5,7 +5,8 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/StaticMeshComponent.h"
-#include "GameClient/ProjectileComponents.h"
+#include "GameClient/ProjectileChangesSingleton.h"
+#include "GameClient/ProjectileCreateRequestComponent.h"
 
 void visual::VisualSystem::Update(World& world, const GameTime& gameTime)
 {

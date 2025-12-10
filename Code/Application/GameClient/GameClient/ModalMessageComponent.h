@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/String.h"
 #include "ECS/Component.h"
 
 namespace gui::modal

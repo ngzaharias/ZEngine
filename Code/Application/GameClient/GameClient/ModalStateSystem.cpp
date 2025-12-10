@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/ModalComponents.h"
+#include "GameClient/ModalMessageComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"

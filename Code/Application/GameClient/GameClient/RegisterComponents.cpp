@@ -7,10 +7,15 @@
 #include "GameClient/GameStateChangeRequest.h"
 #include "GameClient/GameStateNetworkJoinSingleton.h"
 #include "GameClient/GameStateStateSingleton.h"
-#include "GameClient/ModalComponents.h"
-#include "GameClient/MovementComponents.h"
-#include "GameClient/ProjectileComponents.h"
-#include "GameClient/SettingsComponents.h"
+#include "GameClient/ModalMessageComponent.h"
+#include "GameClient/MovementAccelerationComponent.h"
+#include "GameClient/MovementVelocityComponent.h"
+#include "GameClient/ProjectileChangesSingleton.h"
+#include "GameClient/ProjectileCreateRequestComponent.h"
+#include "GameClient/ProjectileCreateResultComponent.h"
+#include "GameClient/ProjectileSpawnComponent.h"
+#include "GameClient/ProjectileTrajectoryComponent.h"
+#include "GameClient/SettingsDebugComponent.h"
 
 void clt::RegisterComponents(ecs::EntityWorld& entityWorld)
 {

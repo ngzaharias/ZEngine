@@ -7,8 +7,10 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 
-#include "GameClient/MovementComponents.h"
-#include "GameClient/ProjectileComponents.h"
+#include "GameClient/MovementVelocityComponent.h"
+#include "GameClient/ProjectileChangesSingleton.h"
+#include "GameClient/ProjectileCreateRequestComponent.h"
+#include "GameClient/ProjectileTrajectoryComponent.h"
 
 void projectile::TrajectorySystem::Update(World& world, const GameTime& gameTime)
 {

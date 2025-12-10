@@ -6,7 +6,9 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/TransformComponent.h"
-#include "GameClient/ProjectileComponents.h"
+#include "GameClient/ProjectileChangesSingleton.h"
+#include "GameClient/ProjectileCreateRequestComponent.h"
+#include "GameClient/ProjectileTrajectoryComponent.h"
 #include "Math/Quaternion.h"
 
 void transform::TransformSystem::Update(World& world, const GameTime& gameTime)

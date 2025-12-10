@@ -3,12 +3,14 @@
 
 #include "Core/Algorithms.h"
 #include "Core/GameTime.h"
-
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-
-#include "GameClient/ProjectileComponents.h"
+#include "GameClient/ProjectileChangesSingleton.h"
+#include "GameClient/ProjectileCreateRequestComponent.h"
+#include "GameClient/ProjectileCreateResultComponent.h"
+#include "GameClient/ProjectileSpawnComponent.h"
+#include "GameClient/ProjectileTrajectoryComponent.h"
 
 namespace
 {

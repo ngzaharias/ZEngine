@@ -1,5 +1,5 @@
 #include "GameClientPCH.h"
-#include "GameClient/SettingsComponents.h"
+#include "GameClient/SettingsDebugComponent.h"
 
 #include "Engine/Visitor.h"
 #include "imgui/Inspector.h"

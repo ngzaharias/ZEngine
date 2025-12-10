@@ -5,8 +5,9 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/MovementComponents.h"
-#include "GameClient/ProjectileComponents.h"
+#include "GameClient/MovementAccelerationComponent.h"
+#include "GameClient/ProjectileChangesSingleton.h"
+#include "GameClient/ProjectileCreateRequestComponent.h"
 
 void movement::AccelerationSystem::Update(World& world, const GameTime& gameTime)
 {
