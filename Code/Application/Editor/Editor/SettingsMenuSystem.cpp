@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Editor/SettingsLocalSingleton.h"
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/EditorSettingsWindowRequest.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"

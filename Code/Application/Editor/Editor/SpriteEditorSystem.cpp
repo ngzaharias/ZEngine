@@ -13,7 +13,7 @@
 #include "Engine/InputManager.h"
 #include "Engine/InspectorHelpers.h"
 #include "Engine/Texture2DAsset.h"
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/EditorSpriteWindowRequest.h"
 #include "Math/AABB.h"
 
 #include "imgui/imgui.h"

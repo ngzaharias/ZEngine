@@ -6,8 +6,8 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameDebug/MenuBarComponents.h"
-#include "GameDebug/SplineComponents.h"
+#include "GameDebug/DebugSplineWindowRequest.h"
+#include "GameDebug/SplineWindowComponent.h"
 #include "Math/Algorithms.h"
 #include "Math/SplineMath.h"
 

@@ -1,5 +1,5 @@
 #include "GameDebugPCH.h"
-#include "GameDebug/SplineComponents.h"
+#include "GameDebug/SplineWindowComponent.h"
 
 #include "imgui/Inspector.h"
 

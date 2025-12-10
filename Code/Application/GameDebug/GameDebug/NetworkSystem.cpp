@@ -9,8 +9,8 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "GameClient/GameStateChangeRequest.h"
-#include "GameDebug/MenuBarComponents.h"
-#include "GameDebug/NetworkComponents.h"
+#include "GameDebug/DebugNetworkWindowRequest.h"
+#include "GameDebug/NetworkWindowComponent.h"
 #include "Math/Math.h"
 
 #include "imgui/imgui.h"

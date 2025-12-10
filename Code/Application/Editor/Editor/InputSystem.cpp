@@ -7,7 +7,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/EditorInputWindowRequest.h"
 #include "Input/Key.h"
 
 #include "imgui/imgui.h"

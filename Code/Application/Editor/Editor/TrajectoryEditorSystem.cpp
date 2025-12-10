@@ -12,7 +12,7 @@
 #include "Engine/TrajectoryAsset.h"
 #include "GameClient/ProjectileCreateRequestComponent.h"
 #include "GameClient/ProjectileCreateResultComponent.h"
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/EditorTrajectoryWindowRequest.h"
 #include "Math/Math.h"
 #include "Math/Vector.h"
 #include "Math/VectorMath.h"

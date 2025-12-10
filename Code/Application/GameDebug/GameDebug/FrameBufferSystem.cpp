@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/FrameBufferSingleton.h"
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/DebugBufferWindowRequest.h"
 #include "Math/Vector.h"
 
 #include "imgui/imgui.h"

@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/DebugImNodesDemoRequest.h"
 #include "Math/Vector.h"
 
 #include <imnodes/imnodes_example.h>

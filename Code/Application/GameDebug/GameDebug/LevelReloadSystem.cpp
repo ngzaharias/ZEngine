@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/LevelLoadedComponent.h"
 #include "Engine/LevelLoadRequest.h"
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/DebugLevelReloadRequest.h"
 
 void dbg::level::ReloadSystem::Update(World& world, const GameTime& gameTime)
 {

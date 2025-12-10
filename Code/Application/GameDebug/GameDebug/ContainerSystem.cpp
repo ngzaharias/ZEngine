@@ -14,7 +14,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/DebugContainerWindowRequest.h"
 #include "Math/Vector.h"
 
 #include "imgui/imgui.h"

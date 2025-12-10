@@ -7,7 +7,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/EditorAssetBrowserWindowRequest.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"

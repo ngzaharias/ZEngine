@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/String.h"
 #include "Core/Variant.h"
 #include "ECS/Component.h"
 #include "Math/AABB.h"

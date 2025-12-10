@@ -11,8 +11,7 @@
 #include "Engine/FileHelpers.h"
 #include "Engine/InputManager.h"
 #include "Engine/Texture2DAsset.h"
-
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/EditorTextureWindowRequest.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"

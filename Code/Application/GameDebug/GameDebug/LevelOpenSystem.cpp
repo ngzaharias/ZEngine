@@ -8,7 +8,7 @@
 #include "Engine/InputManager.h"
 #include "Engine/LevelDirectorySingleton.h"
 #include "Engine/LevelLoadRequest.h"
-#include "GameDebug/LevelOpenRequest.h"
+#include "GameDebug/DebugLevelOpenRequest.h"
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "Input/Key.h"
 #include "Math/Math.h"

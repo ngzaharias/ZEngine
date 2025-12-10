@@ -7,7 +7,8 @@
 #include "ECS/WorldView.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "GameClient/SettingsDebugComponent.h"
-#include "GameDebug/SettingsComponents.h"
+#include "GameDebug/SettingsWindowComponent.h"
+#include "GameDebug/SettingsWindowRequest.h"
 #include "Hidden/HiddenDebugSettingsSingleton.h"
 
 #include "imgui/imgui.h"

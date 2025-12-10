@@ -25,7 +25,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Visitor.h"
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/EditorEntityWindowRequest.h"
 #include "Hidden/HiddenCountComponent.h"
 #include "Hidden/HiddenGroupComponent.h"
 #include "Hidden/HiddenObjectComponent.h"

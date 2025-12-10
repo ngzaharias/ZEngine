@@ -6,8 +6,8 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameDebug/MenuBarComponents.h"
-#include "GameDebug/ShapeComponents.h"
+#include "GameDebug/DebugShapeWindowRequest.h"
+#include "GameDebug/ShapeWindowComponent.h"
 #include "Math/CollisionMath.h"
 
 #include "imgui/imgui.h"

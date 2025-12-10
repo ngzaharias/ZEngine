@@ -8,7 +8,7 @@
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/Texture2DAsset.h"
-#include "GameDebug/MenuBarComponents.h"
+#include "GameDebug/EditorFlipbookWindowRequest.h"
 #include "Math/AABB.h"
 
 #include "imgui/imgui.h"
