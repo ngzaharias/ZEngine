@@ -9,6 +9,8 @@ namespace client::settings
 
 namespace ecs
 {
+	template <typename... TTypes>
+	class WorldView;
 	struct NameComponent;
 }
 
@@ -19,15 +21,15 @@ namespace eng
 	struct TransformComponent;
 }
 
+namespace eng::level
+{
+	struct EntityComponent;
+}
+
 namespace hexmap
 {
 	struct LayerComponent;
 	struct RootComponent;
-}
-
-namespace eng::level
-{
-	struct EntityComponent;
 }
 
 namespace hexmap

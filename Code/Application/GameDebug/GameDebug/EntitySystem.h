@@ -11,6 +11,8 @@
 namespace ecs
 {
 	class EntityWorld;
+	template <typename... TTypes>
+	class WorldView;
 	struct NameComponent;
 }
 

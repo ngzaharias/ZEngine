@@ -7,6 +7,8 @@
 
 namespace ecs
 {
+	template <typename... TTypes>
+	class WorldView;
 	struct Entity;
 }
 

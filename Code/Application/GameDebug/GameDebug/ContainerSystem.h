@@ -24,6 +24,12 @@ namespace debug
 	struct ContainerWindowRequestComponent;
 }
 
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
+
 namespace debug
 {
 	struct ContainerWindowComponent final : public ecs::Component<ContainerWindowComponent> 

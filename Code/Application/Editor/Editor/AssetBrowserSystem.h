@@ -2,11 +2,12 @@
 
 #include "ECS/System.h"
 #include "Engine/AssetManager.h"
-
 #include "imgui/Identifier.h"
 
 namespace ecs
 {
+	template <typename... TTypes>
+	class WorldView;
 	struct NameComponent;
 }
 

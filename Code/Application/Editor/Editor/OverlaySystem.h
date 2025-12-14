@@ -3,6 +3,12 @@
 #include "ECS/Component.h"
 #include "ECS/System.h"
 
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
+
 namespace eng
 {
 	class WindowManager;

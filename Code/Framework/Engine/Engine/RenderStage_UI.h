@@ -3,6 +3,12 @@
 #include "ECS/EntityWorld.h"
 #include "Engine/RenderStage.h"
 
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
+
 namespace eng
 {
 	class AssetManager;

@@ -2,6 +2,12 @@
 
 #include "ECS/System.h"
 
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
+
 namespace gui::level_complete
 {
 	struct WindowComponent;

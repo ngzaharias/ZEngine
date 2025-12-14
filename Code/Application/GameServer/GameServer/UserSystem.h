@@ -7,8 +7,11 @@
 #include "ECS/System.h"
 #include "Network/UserId.h"
 
+
 namespace ecs
 {
+	template <typename... TTypes>
+	class WorldView;
 	struct NameComponent;
 }
 

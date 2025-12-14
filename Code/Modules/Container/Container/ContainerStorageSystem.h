@@ -23,6 +23,12 @@ namespace container
 	struct StorageDestroyResultComponent;
 }
 
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
+
 namespace container
 {
 	/// \brief Handles creating/destroying of storage entity and its components.

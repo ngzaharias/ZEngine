@@ -29,6 +29,12 @@ namespace debug::settings
 	struct WindowRequest;
 }
 
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
+
 namespace editor
 {
 	struct AssetBrowserWindowRequest;

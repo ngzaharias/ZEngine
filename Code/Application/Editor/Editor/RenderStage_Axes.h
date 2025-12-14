@@ -1,9 +1,14 @@
 #pragma once
 
 #include "Core/Colour.h"
-#include "ECS/EntityWorld.h"
 #include "Engine/RenderStage.h"
 #include "Math/Vector.h"
+
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
 
 namespace editor::settings
 {

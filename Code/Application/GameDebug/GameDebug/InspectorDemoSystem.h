@@ -6,6 +6,8 @@
 namespace ecs
 {
 	class EntityWorld;
+	template <typename... TTypes>
+	class WorldView;
 }
 
 namespace debug

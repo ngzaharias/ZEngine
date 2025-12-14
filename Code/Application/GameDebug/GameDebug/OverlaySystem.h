@@ -4,6 +4,12 @@
 #include "ECS/System.h"
 #include "GameDebug/FPSCounter.h"
 
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
+
 namespace eng
 {
 	class WindowManager;

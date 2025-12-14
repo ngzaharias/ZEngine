@@ -7,6 +7,12 @@ namespace debug::hidden
 	struct ObjectComponent;
 }
 
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
+
 namespace eng
 {
 	struct LinesSingleton;

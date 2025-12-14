@@ -7,6 +7,12 @@ namespace client::settings
 	struct DebugSingleton;
 }
 
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
+
 namespace eng::settings
 {
 	struct DebugSingleton;

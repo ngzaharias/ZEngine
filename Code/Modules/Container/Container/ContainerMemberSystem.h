@@ -11,6 +11,12 @@ namespace container
 	struct StorageComponent;
 }
 
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
+
 namespace container
 {
 	/// \brief Handles adding/removing of member component on an entity.

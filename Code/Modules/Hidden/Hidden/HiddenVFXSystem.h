@@ -3,8 +3,11 @@
 #include "ECS/Entity.h"
 #include "ECS/System.h"
 
+
 namespace ecs
 {
+	template <typename... TTypes>
+	class WorldView;
 	struct NameComponent;
 }
 

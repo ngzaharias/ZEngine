@@ -8,6 +8,12 @@ namespace debug
 	struct BufferWindowRequest;
 }
 
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
+
 namespace eng
 {
 	struct FrameBufferSingleton;
