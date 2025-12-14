@@ -1,77 +1,38 @@
 #pragma once
 
 #include "Core/Algorithms.h"
+#include "Core/Array.h"
 #include "Core/Assert.h"
 #include "Core/Guid.h"
 #include "Core/Map.h"
 #include "Core/Name.h"
+#include "Core/Path.h"
 #include "Core/Set.h"
-#include "Core/StringHelpers.h"
-#include "Core/TypeTraits.h"
-#include "ECS/Component.h"
+#include "Core/TypeInfo.h"
 #include "Engine/Asset.h"
-#include "Engine/TypeInfo.h"
+#include "Engine/AssetEntry.h"
+#include "Engine/AssetFile.h"
+#include "Engine/AssetRef.h"
 #include "Engine/Visitor.h"
 
-namespace ecs
-{
-	class EntityWorld;
-}
+#include <mutex>
 
 namespace eng
 {
 	class AssetLoader;
-	class AssetManager;
 	class Visitor;
+	struct Asset;
 }
 
 namespace eng
 {
-	struct AssetFile
-	{
-		str::Guid m_Guid = { };
-		str::Name m_Name = { };
-		str::Path m_Path = { };
-		str::Name m_Type = { };
-	};
-
-	struct AssetMethods
-	{
-		using Initialise = void(eng::Asset&, const eng::AssetLoader&);
-		Initialise* m_Initialise = nullptr;
-		using Shutdown = void(eng::Asset&, const eng::AssetLoader&);
-		Shutdown* m_Shutdown = nullptr;
-
-		using Save = bool(eng::Asset&, const eng::AssetLoader&, eng::Visitor&);
-		Save* m_Save = nullptr;
-		using Load = bool(eng::Asset&, const eng::AssetLoader&, eng::Visitor&);
-		Load* m_Load = nullptr;
-		using Import = bool(eng::Asset&, const eng::AssetLoader&, eng::Visitor&);
-		Import* m_Import = nullptr;
-	};
-
-	struct AssetEntry
-	{
-		eng::AssetLoader* m_Loader = nullptr;
-		eng::AssetMethods m_Methods = {};
-
-		using Load = void(eng::AssetManager&, const str::Path&);
-		Load* m_Load = nullptr;
-	};
-
-	struct AssetRef
-	{
-		eng::Asset* m_Asset = nullptr;
-		int32 m_Count = 0;
-	};
-
 	class AssetManager final
 	{
 	public:
 		static constexpr const char* s_Extension = ".asset";
 
 		using FileMap = Map<str::Guid, eng::AssetFile>;
-		using RefMap = Map<str::Guid, AssetRef>;
+		using RefMap = Map<str::Guid, eng::AssetRef>;
 		using Registry = Map<str::Name, eng::AssetEntry>;
 		using TypeIds = Map<TypeId, str::Name>;
 		using TypeMap = Map<str::Name, Set<str::Guid>>;

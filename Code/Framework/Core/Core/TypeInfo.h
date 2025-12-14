@@ -1,6 +1,10 @@
 #pragma once
 
+#include "Core/Hash.h"
+
 using int32 = int32_t;
+using uint32 = uint32_t;
+using TypeId = uint32;
 
 namespace _private
 {
@@ -15,6 +19,18 @@ namespace _private
 	};
 }
 
+template<typename Type>
+constexpr TypeId ToTypeId()
+{
+	return str::ToHash(__FUNCSIG__);
+}
+
+template<typename Type>
+constexpr TypeId ToTypeId(const Type& value)
+{
+	return str::ToHash(__FUNCSIG__);
+}
+
 template<typename Type, typename Tag>
 int32 ToTypeIndex()
 {
@@ -26,7 +42,7 @@ template<typename Type>
 const char* ToTypeName()
 {
 	// #note: MSVC returns "class <TYPE>", "struct <TYPE>" or "<TYPE>"
-	// will also include namespaces (including anonymous).
+	// will also include namespace (including anonymous).
 	static const char* value = typeid(Type).name();
 	return value;
 }

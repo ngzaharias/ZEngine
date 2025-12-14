@@ -3,8 +3,8 @@
 #include "Core/Map.h"
 #include "Core/Set.h"
 #include "Core/SparseArray.h"
+#include "Core/TypeInfo.h"
 #include "ECS/Entity.h"
-#include "Engine/TypeInfo.h"
 #include "Network/PeerId.h"
 
 class GameTime;
