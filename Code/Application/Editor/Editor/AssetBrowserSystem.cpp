@@ -6,6 +6,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Editor/AssetBrowserWindowComponent.h"
 #include "Engine/AssetManager.h"
 #include "GameDebug/EditorAssetBrowserWindowRequest.h"
 

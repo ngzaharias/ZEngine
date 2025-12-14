@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Core/String.h"
-#include "ECS/Component.h"
 #include "ECS/System.h"
 #include "Engine/AssetManager.h"
 
@@ -12,7 +10,6 @@ namespace ecs
 	struct NameComponent;
 }
 
-
 namespace eng
 {
 	class AssetManager;
@@ -21,19 +18,12 @@ namespace eng
 
 namespace editor
 {
+	struct AssetBrowserWindowComponent;
 	struct AssetBrowserWindowRequest;
 }
 
 namespace editor
 {
-	struct AssetBrowserWindowComponent final : public ecs::Component<AssetBrowserWindowComponent>
-	{
-		int32 m_Identifier = 0;
-		str::String m_Label = {};
-
-		Array<eng::AssetFile> m_Sorted = {};
-	};
-
 	class AssetBrowserSystem final : public ecs::System
 	{
 	public:

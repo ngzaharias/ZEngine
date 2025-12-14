@@ -5,6 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Editor/AssetBrowserSystem.h"
+#include "Editor/AssetBrowserWindowComponent.h"
 #include "Editor/AssetReloadSystem.h"
 #include "Editor/CameraSystem.h"
 #include "Editor/EntityEditorSystem.h"
