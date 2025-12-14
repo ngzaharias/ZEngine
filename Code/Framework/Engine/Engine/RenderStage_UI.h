@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ECS/EntityWorld.h"
-#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
 
 namespace eng

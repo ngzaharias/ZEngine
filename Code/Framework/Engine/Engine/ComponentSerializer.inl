@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ECS/EntityWorld.h"
 #include "Engine/ReplicationComponent.h"
 
 namespace net

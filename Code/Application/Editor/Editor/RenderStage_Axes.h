@@ -2,7 +2,6 @@
 
 #include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
-#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
 #include "Math/Vector.h"
 

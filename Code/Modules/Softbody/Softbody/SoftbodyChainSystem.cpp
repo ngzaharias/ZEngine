@@ -3,6 +3,7 @@
 
 #include "Core/Colour.h"
 #include "Core/GameTime.h"
+#include "ECS/WorldView.h"
 #include "ECS/QueryTypes.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/CameraProjectionComponent.h"

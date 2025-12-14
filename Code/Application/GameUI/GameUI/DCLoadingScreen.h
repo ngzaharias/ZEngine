@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Core/String.h"
-#include "ECS/EntityWorld.h"
-#include "ECS/WorldView.h"
 #include "Engine/UIDataContext.h"
 
 #include <NsApp/DelegateCommand.h>

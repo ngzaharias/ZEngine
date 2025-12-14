@@ -1,11 +1,15 @@
 #pragma once
 
-#include "ECS/EntityWorld.h"
-#include "ECS/WorldView.h"
 #include "Engine/UIDataContext.h"
 
 #include <NsApp/DelegateCommand.h>
 #include <NsGui/BaseCommand.h>
+
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
 
 namespace eng
 {

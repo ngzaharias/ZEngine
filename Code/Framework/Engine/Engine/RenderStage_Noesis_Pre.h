@@ -1,8 +1,12 @@
 #pragma once
 
-#include "ECS/EntityWorld.h"
-#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
+
+namespace ecs
+{
+	template <typename... TTypes>
+	class WorldView;
+}
 
 namespace eng
 {

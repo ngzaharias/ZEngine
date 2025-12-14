@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Map.h"
-#include "ECS/EntityWorld.h"
 
 #include <NsCore/BaseComponent.h>
 #include <NsCore/Delegate.h>
@@ -15,6 +14,11 @@ class GameTime;
 template<typename Type>
 class Set;
 class Vector2f;
+
+namespace ecs
+{
+	class EntityWorld;
+}
 
 namespace eng
 {

@@ -5,7 +5,7 @@
 #include "Core/SparseArray.h"
 #include "Core/TypeInfo.h"
 #include "ECS/Component.h"
-#include "ECS/EntityWorld.h"
+#include "ECS/QueryRegistry.h"
 
 class MemBuffer;
 

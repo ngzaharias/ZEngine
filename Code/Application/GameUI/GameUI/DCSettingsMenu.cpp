@@ -4,6 +4,7 @@
 #include "Core/Algorithms.h"
 #include "Core/EnumHelpers.h"
 #include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
 #include "Engine/SettingsAudioSingleton.h"
 #include "Engine/SettingsCameraSingleton.h"
 #include "Engine/SettingsGameplaySingleton.h"

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/Entity.h"
+#include "ECS/EntityWorld.h"
 #include "ECS/QueryRegistry.h"
 
 template <typename... TTypes>
