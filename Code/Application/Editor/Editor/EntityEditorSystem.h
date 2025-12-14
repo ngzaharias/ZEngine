@@ -1,12 +1,7 @@
 #pragma once
 
-#include "Core/String.h"
-#include "ECS/Component.h"
-#include "ECS/Entity.h"
 #include "ECS/System.h"
 #include "imgui/Identifier.h"
-
-#include <vector>
 
 namespace ecs
 {
@@ -15,7 +10,10 @@ namespace ecs
 
 namespace editor
 {
+	struct EntitySaveComponent;
 	struct EntitySelectSingleton;
+	struct EntityWindowComponent;
+	struct EntityWindowRequest;
 }
 
 namespace editor::settings
@@ -51,19 +49,6 @@ namespace hidden
 
 namespace editor
 {
-	struct EntityWindowRequest;
-
-	struct EntitySaveComponent final : public ecs::Component<EntitySaveComponent> { };
-
-	struct EntityWindowComponent final : public ecs::Component<EntityWindowComponent>
-	{
-		int32 m_Identifier = 0;
-
-		str::String m_DockspaceLabel = {};
-		str::String m_EntitiesLabel = {};
-		str::String m_InspectorLabel = {};
-	};
-
 	class EntityEditorSystem final : public ecs::System
 	{
 	public:

@@ -1,13 +1,20 @@
 #pragma once
 
-#include "ECS/Component.h"
 #include "ECS/System.h"
-#include "Engine/FlipbookAsset.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
 {
 	struct NameComponent;
+}
+
+namespace editor
+{
+	struct FlipbookAssetOpenComponent;
+	struct FlipbookAssetSaveComponent;
+	struct FlipbookBatchingComponent;
+	struct FlipbookWindowComponent;
+	struct FlipbookWindowRequest;
 }
 
 namespace eng
@@ -17,41 +24,6 @@ namespace eng
 
 namespace editor
 {
-	struct FlipbookWindowRequest;
-
-	struct FlipbookAssetOpenComponent final : public ecs::Component<FlipbookAssetOpenComponent> { };
-	struct FlipbookAssetSaveComponent final : public ecs::Component<FlipbookAssetSaveComponent> { };
-	struct FlipbookBatchingComponent final : public ecs::Component<FlipbookBatchingComponent>
-	{
-		/// \brief How many iterations are done along X and Y.
-		/// X is iterated again for each iteration of Y.
-		Vector2u m_Iterations = Vector2u(1, 1);
-		/// \brief Initial position of the batching pass.
-		Vector2f m_Initial = Vector2f(100.f);
-		/// \brief The stride between each frame.
-		Vector2f m_Stride = Vector2f(100.f);
-
-		/// \brief The size of each frame.
-		Vector2f m_Size = Vector2f(100.f);
-		/// \brief The number of frames.
-		int32 m_Count = 1;
-
-		/// \brief If it should be previewed.
-		bool m_IsPreviewing = true;
-	};
-
-	struct FlipbookWindowComponent final : public ecs::Component<FlipbookWindowComponent>
-	{
-		int32 m_Identifier = 0;
-		eng::FlipbookAsset m_Asset = {};
-
-		str::String m_BatchingLabel = {};
-		str::String m_DockspaceLabel = {};
-		str::String m_InspectorLabel = {};
-		str::String m_PreviewerLabel = {};
-		str::String m_TextureLabel = {};
-	};
-
 	class FlipbookEditorSystem final : public ecs::System
 	{
 	public:

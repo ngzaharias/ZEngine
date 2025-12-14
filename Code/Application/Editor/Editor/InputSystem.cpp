@@ -6,6 +6,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Editor/InputWindowComponent.h"
 #include "Engine/InputManager.h"
 #include "GameDebug/EditorInputWindowRequest.h"
 #include "Input/Key.h"

@@ -1,9 +1,6 @@
 #pragma once
 
-#include "ECS/EntityWorld.h"
 #include "ECS/System.h"
-#include "ECS/WorldView.h"
-#include "Editor/SettingsLocalSingleton.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
@@ -13,19 +10,13 @@ namespace ecs
 
 namespace editor::settings
 {
+	struct LocalSingleton;
+	struct WindowComponent;
 	struct WindowRequest;
 }
 
 namespace editor::settings
 {
-	struct WindowComponent final : public ecs::Component<WindowComponent>
-	{
-		int32 m_Identifier = 0;
-		str::String m_Label = {};
-
-		LocalSingleton m_Local = {};
-	};
-
 	class MenuSystem final : public ecs::System
 	{
 	public:

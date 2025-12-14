@@ -1,12 +1,17 @@
 #pragma once
 
-#include "ECS/Component.h"
 #include "ECS/System.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
 {
 	struct NameComponent;
+}
+
+namespace editor
+{
+	struct InputWindowComponent;
+	struct InputWindowRequest;
 }
 
 namespace eng
@@ -16,13 +21,6 @@ namespace eng
 
 namespace editor
 {
-	struct InputWindowRequest;
-
-	struct InputWindowComponent final : public ecs::Component<InputWindowComponent>
-	{
-		int32 m_Identifier = 0;
-		str::String m_Label = {};
-	};
 
 	class InputSystem final : public ecs::System
 	{
