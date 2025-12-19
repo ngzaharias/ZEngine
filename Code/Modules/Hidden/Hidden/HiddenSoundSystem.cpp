@@ -5,7 +5,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/SoundComponents.h"
+#include "Engine/SoundSequenceRequestComponent.h"
 #include "Hidden/HiddenRevealComponent.h"
 
 namespace

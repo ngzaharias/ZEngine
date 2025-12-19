@@ -5,6 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "GameDebug/DebugInspectorDemoRequest.h"
+#include "GameDebug/InspectorDemoWindowComponent.h"
 #include "Math/Vector.h"
 
 #include "imgui/imgui.h"

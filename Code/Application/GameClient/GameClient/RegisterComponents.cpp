@@ -2,7 +2,8 @@
 #include "GameClient/RegisterComponents.h"
 
 #include "ECS/EntityWorld.h"
-#include "GameClient/DragComponents.h"
+#include "GameClient/DragIsSelectableComponent.h"
+#include "GameClient/DragSelectionComponent.h"
 #include "GameClient/GameStateChangeFinished.h"
 #include "GameClient/GameStateChangeRequest.h"
 #include "GameClient/GameStateNetworkJoinSingleton.h"

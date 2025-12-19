@@ -6,7 +6,9 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/SoundAssets.h"
-#include "Engine/SoundComponents.h"
+#include "Engine/SoundSequenceBufferSingleton.h"
+#include "Engine/SoundSequenceComponent.h"
+#include "Engine/SoundSequenceRequestComponent.h"
 
 void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 {

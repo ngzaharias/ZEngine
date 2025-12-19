@@ -6,7 +6,8 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/FrameBufferSingleton.h"
-#include "GameDebug/DebugBufferWindowRequest.h"
+#include "GameDebug/DebugFrameBufferWindowRequest.h"
+#include "GameDebug/FrameBufferWindowComponent.h"
 #include "Math/Vector.h"
 
 #include "imgui/imgui.h"
@@ -19,10 +20,10 @@ void debug::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(100.f, 350.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(300.f, 200.f);
 
-	for (const auto& request : world.Events<debug::BufferWindowRequest>())
-		world.AddComponent<debug::BufferWindowComponent>(world.CreateEntity());
+	for (const auto& request : world.Events<debug::FrameBufferWindowComponent>())
+		world.AddComponent<debug::FrameBufferWindowComponent>(world.CreateEntity());
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<debug::BufferWindowComponent>>())
+	for (const ecs::Entity& entity : world.Query<ecs::query::Include<debug::FrameBufferWindowComponent>>())
 	{
 		const str::String label = "Render: Frame Buffer##" + std::to_string(entity.GetIndex());
 

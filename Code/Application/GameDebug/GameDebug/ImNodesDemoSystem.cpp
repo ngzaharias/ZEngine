@@ -5,6 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "GameDebug/DebugImNodesDemoRequest.h"
+#include "GameDebug/ImNodesDemoWindowComponent.h"
 #include "Math/Vector.h"
 
 #include <imnodes/imnodes_example.h>

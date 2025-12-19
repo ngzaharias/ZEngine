@@ -12,6 +12,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "GameDebug/DebugEntityWindowRequest.h"
+#include "GameDebug/EntityWindowComponent.h"
 #include "Math/Vector.h"
 
 #include "imgui/imgui.h"

@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Core/Array.h"
-#include "ECS/Component.h"
 #include "ECS/System.h"
-#include "Engine/Texture2DAsset.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
@@ -11,6 +8,16 @@ namespace ecs
 	template <typename... TTypes>
 	class WorldView;
 	struct NameComponent;
+}
+
+namespace editor
+{
+	struct TextureAssetImportComponent;
+	struct TextureAssetNewComponent;
+	struct TextureAssetOpenComponent;
+	struct TextureAssetSaveComponent;
+	struct TextureWindowComponent;
+	struct TextureWindowRequest;
 }
 
 namespace editor::settings
@@ -26,23 +33,6 @@ namespace eng
 
 namespace editor
 {
-	struct TextureWindowRequest;
-
-	struct TextureAssetImportComponent final : public ecs::Component<TextureAssetImportComponent> { };
-	struct TextureAssetNewComponent final : public ecs::Component<TextureAssetNewComponent> { };
-	struct TextureAssetOpenComponent final : public ecs::Component<TextureAssetOpenComponent> { };
-	struct TextureAssetSaveComponent final : public ecs::Component<TextureAssetSaveComponent> { };
-
-	struct TextureWindowComponent final : public ecs::Component<TextureWindowComponent>
-	{
-		int32 m_Identifier = 0;
-		eng::Texture2DAsset m_Asset = {};
-
-		str::String m_DockspaceLabel = {};
-		str::String m_InspectorLabel = {};
-		str::String m_PreviewerLabel = {};
-	};
-
 	class TextureEditorSystem final : public ecs::System
 	{
 	public:

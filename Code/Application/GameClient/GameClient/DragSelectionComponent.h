@@ -3,11 +3,10 @@
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
 #include "Math/Plane.h"
+#include "Math/Vector.h"
 
 namespace drag
 {
-	struct IsSelectableComponent final : public ecs::Component<IsSelectableComponent> {};
-
 	struct SelectionComponent final : public ecs::Component<SelectionComponent>
 	{
 		ecs::Entity m_CameraEntity = { };

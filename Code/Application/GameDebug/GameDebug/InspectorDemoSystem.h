@@ -1,7 +1,12 @@
 #pragma once
 
-#include "ECS/Component.h"
 #include "ECS/System.h"
+
+namespace debug
+{
+	struct InspectorDemoRequest;
+	struct InspectorDemoWindowComponent;
+}
 
 namespace ecs
 {
@@ -12,10 +17,6 @@ namespace ecs
 
 namespace debug
 {
-	struct InspectorDemoRequest;
-
-	struct InspectorDemoWindowComponent final : public ecs::Component<InspectorDemoWindowComponent> { };
-
 	class InspectorDemoSystem final : public ecs::System
 	{
 	public:

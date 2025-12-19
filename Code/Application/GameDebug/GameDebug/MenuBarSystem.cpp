@@ -12,9 +12,9 @@
 #include "Engine/InputManager.h"
 #include "Engine/TableHeadmaster.h"
 #include "Engine/TablesReloaded.h"
-#include "GameDebug/DebugBufferWindowRequest.h"
 #include "GameDebug/DebugContainerWindowRequest.h"
 #include "GameDebug/DebugEntityWindowRequest.h"
+#include "GameDebug/DebugFrameBufferWindowRequest.h"
 #include "GameDebug/DebugImGuiDemoRequest.h"
 #include "GameDebug/DebugImNodesDemoRequest.h"
 #include "GameDebug/DebugInspectorDemoRequest.h"
@@ -147,7 +147,7 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 			if (ImGui::MenuItem("Splines"))
 				world.AddEvent<debug::SplineWindowRequest>();
 			if (ImGui::MenuItem("Render: Frame Buffer"))
-				world.AddEvent<debug::BufferWindowRequest>();
+				world.AddEvent<debug::FrameBufferWindowRequest>();
 
 			ImGui::EndMenu();
 		}

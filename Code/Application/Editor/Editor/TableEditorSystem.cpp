@@ -6,6 +6,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Editor/TableWindowComponent.h"
 #include "GameDebug/EditorTableWindowRequest.h"
 
 #include "imgui/imgui.h"

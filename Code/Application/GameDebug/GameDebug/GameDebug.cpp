@@ -4,11 +4,12 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "GameDebug/ContainerWindowComponent.h"
 #include "GameDebug/ContainerSystem.h"
-#include "GameDebug/DebugBufferWindowRequest.h"
 #include "GameDebug/DebugClientWindowRequest.h"
 #include "GameDebug/DebugContainerWindowRequest.h"
 #include "GameDebug/DebugEntityWindowRequest.h"
+#include "GameDebug/DebugFrameBufferWindowRequest.h"
 #include "GameDebug/DebugImGuiDemoRequest.h"
 #include "GameDebug/DebugImNodesDemoRequest.h"
 #include "GameDebug/DebugInspectorDemoRequest.h"
@@ -30,13 +31,18 @@
 #include "GameDebug/EditorTextureWindowRequest.h"
 #include "GameDebug/EditorTrajectoryWindowRequest.h"
 #include "GameDebug/EntitySystem.h"
+#include "GameDebug/EntityWindowComponent.h"
 #include "GameDebug/FrameBufferSystem.h"
+#include "GameDebug/FrameBufferWindowComponent.h"
 #include "GameDebug/HiddenObjectComponent.h"
 #include "GameDebug/HiddenObjectSystem.h"
 #include "GameDebug/ImGuiDemoSystem.h"
+#include "GameDebug/ImGuiDemoWindowComponent.h"
 #include "GameDebug/ImNodesDemoSystem.h"
+#include "GameDebug/ImNodesDemoWindowComponent.h"
 #include "GameDebug/InputSystem.h"
 #include "GameDebug/InspectorDemoSystem.h"
+#include "GameDebug/InspectorDemoWindowComponent.h"
 #include "GameDebug/LevelOpenSystem.h"
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/LevelReloadSystem.h"
@@ -65,9 +71,9 @@ debug::GameDebug::GameDebug(
 
 void debug::GameDebug::Register()
 {
-	m_ClientWorld.RegisterComponent<debug::BufferWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::ContainerWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::EntityWindowComponent>();
+	m_ClientWorld.RegisterComponent<debug::FrameBufferWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::hidden::ObjectComponent>();
 	m_ClientWorld.RegisterComponent<debug::ImGuiDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::ImNodesDemoWindowComponent>();
@@ -78,10 +84,10 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<debug::SplineWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::settings::WindowComponent>();
 
-	m_ClientWorld.RegisterEvent<debug::BufferWindowRequest>();
 	m_ClientWorld.RegisterEvent<debug::ClientWindowRequest>();
 	m_ClientWorld.RegisterEvent<debug::ContainerWindowRequest>();
 	m_ClientWorld.RegisterEvent<debug::EntityWindowRequest>();
+	m_ClientWorld.RegisterEvent<debug::FrameBufferWindowRequest>();
 	m_ClientWorld.RegisterEvent<debug::ImGuiDemoRequest>();
 	m_ClientWorld.RegisterEvent<debug::ImNodesDemoRequest>();
 	m_ClientWorld.RegisterEvent<debug::InspectorDemoRequest>();

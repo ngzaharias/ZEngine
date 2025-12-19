@@ -1,11 +1,6 @@
 #pragma once
 
-#include "Core/Array.h"
-#include "Core/Trajectory.h"
-#include "ECS/Component.h"
 #include "ECS/System.h"
-#include "Engine/TrajectoryAsset.h"
-#include "Math/Vector.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
@@ -13,6 +8,14 @@ namespace ecs
 	template <typename... TTypes>
 	class WorldView;
 	struct NameComponent;
+}
+
+namespace editor
+{
+	struct TrajectoryAssetOpenComponent;
+	struct TrajectoryAssetSaveComponent;
+	struct TrajectoryWindowComponent;
+	struct TrajectoryWindowRequest;
 }
 
 namespace eng
@@ -27,20 +30,6 @@ namespace projectile
 
 namespace editor
 {
-	struct TrajectoryWindowRequest;
-
-	struct TrajectoryAssetOpenComponent final : public ecs::Component<TrajectoryAssetOpenComponent> { };
-	struct TrajectoryAssetSaveComponent final : public ecs::Component<TrajectoryAssetSaveComponent> { };
-	struct TrajectoryWindowComponent final : public ecs::Component<TrajectoryWindowComponent> 
-	{ 
-		int32 m_Identifier = 0;
-		eng::TrajectoryAsset m_Asset = {};
-
-		str::String m_DockspaceLabel = {};
-		str::String m_InspectorLabel = {};
-		str::String m_PlottingLabel = {};
-	};
-
 	class TrajectoryEditorSystem final : public ecs::System
 	{
 	public:

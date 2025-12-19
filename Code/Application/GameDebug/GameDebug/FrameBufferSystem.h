@@ -1,11 +1,12 @@
 #pragma once
 
-#include "ECS/Component.h"
 #include "ECS/System.h"
 
 namespace debug
 {
-	struct BufferWindowRequest;
+	struct FrameBufferSingleton;
+	struct FrameBufferWindowComponent;
+	struct FrameBufferWindowRequest;
 }
 
 namespace ecs
@@ -21,17 +22,14 @@ namespace eng
 
 namespace debug
 {
-	struct FrameBufferSingleton;
-
-	struct BufferWindowComponent final : public ecs::Component<BufferWindowComponent> { };
-
 	class FrameBufferSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView<
 			// Components
-			debug::BufferWindowComponent,
-			const debug::BufferWindowRequest,
+			debug::FrameBufferWindowComponent,
+			// Events
+			const debug::FrameBufferWindowRequest,
 			// Singletons
 			const eng::FrameBufferSingleton>;
 

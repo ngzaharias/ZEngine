@@ -11,7 +11,10 @@
 #include "Engine/AudioHelpers.h"
 #include "Engine/SettingsAudioSingleton.h"
 #include "Engine/SoundAssets.h"
-#include "Engine/SoundComponents.h"
+#include "Engine/SoundObjectComponent.h"
+#include "Engine/SoundRandomBufferSingleton.h"
+#include "Engine/SoundSequenceBufferSingleton.h"
+#include "Engine/SoundSingleRequestComponent.h"
 
 #include <NsGUI/IntegrationAPI.h>
 #include <NsGUI/Uri.h>

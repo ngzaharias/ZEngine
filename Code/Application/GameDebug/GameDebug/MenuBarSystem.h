@@ -4,10 +4,10 @@
 
 namespace debug
 {
-	struct BufferWindowRequest;
 	struct ContainerWindowRequest;
 	struct EntityWindowRequest;
 	struct FlipbookWindowRequest;
+	struct FrameBufferWindowRequest;
 	struct ImGuiDemoRequest;
 	struct ImNodesDemoRequest;
 	struct InspectorDemoRequest;
@@ -72,10 +72,10 @@ namespace debug
 			eng::TableHeadmaster,
 			const eng::InputManager,
 			// Events
-			debug::BufferWindowRequest,
 			debug::ContainerWindowRequest,
 			debug::EntityWindowRequest,
 			debug::FlipbookWindowRequest,
+			debug::FrameBufferWindowRequest,
 			debug::ImGuiDemoRequest,
 			debug::ImNodesDemoRequest,
 			debug::InspectorDemoRequest,

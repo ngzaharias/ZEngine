@@ -7,7 +7,9 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/SoundAssets.h"
-#include "Engine/SoundComponents.h"
+#include "Engine/SoundRandomBufferSingleton.h"
+#include "Engine/SoundRandomComponent.h"
+#include "Engine/SoundRandomRequestComponent.h"
 
 namespace
 {

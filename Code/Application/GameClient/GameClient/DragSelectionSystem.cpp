@@ -14,7 +14,8 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "GameClient/DragComponents.h"
+#include "GameClient/DragIsSelectableComponent.h"
+#include "GameClient/DragSelectionComponent.h"
 #include "Math/CollisionMath.h"
 #include "Math/Ray.h"
 
