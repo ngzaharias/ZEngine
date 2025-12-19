@@ -142,6 +142,7 @@ template <typename... TTypes>
 template<class TEvent>
 auto ecs::WorldView<TTypes...>::Events() ->  const Array<TEvent>&
 {
+	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
 	return m_EntityWorld.m_EntityStorage.GetEvents<TEvent>();
 }
 
