@@ -46,7 +46,10 @@ namespace ecs
 		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
 
 		template<class TComponent>
-		auto GetComponent(const ecs::Entity& entity, const bool alive = true) -> TComponent&;
+		auto GetComponent(const ecs::Entity& entity, const bool alive = true) const -> TComponent&;
+
+		template<class TComponent>
+		auto TryComponent(const ecs::Entity& entity, const bool alive = true) const -> TComponent*;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event

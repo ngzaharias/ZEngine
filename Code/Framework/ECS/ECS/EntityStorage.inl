@@ -19,7 +19,7 @@ bool ecs::EntityStorage::HasComponent(const ecs::Entity& entity, const bool aliv
 }
 
 template<class TComponent>
-auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const bool alive /*= true*/) -> TComponent&
+auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const bool alive /*= true*/) const -> TComponent&
 {
 	using Storage = ecs::ComponentStorage<TComponent>;
 
@@ -29,6 +29,19 @@ auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const bool aliv
 		: m_DeadComponents.Get(id);
 	Storage* storage = static_cast<Storage*>(istorage);
 	return storage->Get(entity);
+}
+
+template<class TComponent>
+auto ecs::EntityStorage::TryComponent(const ecs::Entity& entity, const bool alive /*= true*/) const -> TComponent*
+{
+	using Storage = ecs::ComponentStorage<TComponent>;
+
+	const ecs::ComponentId id = ToTypeIndex<TComponent, ecs::ComponentTag>();
+	ecs::IComponentStorage* istorage = alive
+		? m_AliveComponents.Get(id)
+		: m_DeadComponents.Get(id);
+	Storage* storage = static_cast<Storage*>(istorage);
+	return storage->Try(entity);
 }
 
 template<class TEvent>
