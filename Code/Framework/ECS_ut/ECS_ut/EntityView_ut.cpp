@@ -52,4 +52,6 @@ TEST_CASE("ecs::EntityView. Test.")
 
 		ecs::Entity entity = view;
 	}
+
+	using List = ecs::query::IncludeAccess<Query>;
 }

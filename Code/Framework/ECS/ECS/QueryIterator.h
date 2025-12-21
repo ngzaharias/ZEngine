@@ -7,10 +7,10 @@ namespace ecs
 {
 	class EntityWorld;
 
-	template<typename TQuery>
+	template<typename TRequired, typename TOptional>
 	struct QueryIterator
 	{
-		using EntityView = ecs::EntityView;
+		using EntityView = ecs::EntityView_t<TRequired, TOptional>;
 		using Iterator = ecs::QueryGroup::const_iterator;
 
 		auto operator*() -> EntityView

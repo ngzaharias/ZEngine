@@ -10,16 +10,19 @@ namespace ecs
 	template<typename TQuery>
 	struct QueryRange
 	{
+		using Required = ecs::query::IncludeAccess<TQuery>::NonConst;
+		using Optional = ecs::query::OptionalAccess<TQuery>::NonConst;
+
 		operator const ecs::QueryGroup& () const { return m_Data; }
 
-		auto begin() -> QueryIterator<TQuery>
+		auto begin()
 		{
-			return QueryIterator<TQuery>{ std::begin(m_Data), m_World };
+			return QueryIterator<Required, Optional>{ std::begin(m_Data), m_World };
 		}
 
-		auto end() -> QueryIterator<TQuery>
+		auto end()
 		{
-			return QueryIterator<TQuery>{ std::end(m_Data), m_World };
+			return QueryIterator<Required, Optional>{ std::end(m_Data), m_World };
 		}
 
 		ecs::EntityWorld& m_World;

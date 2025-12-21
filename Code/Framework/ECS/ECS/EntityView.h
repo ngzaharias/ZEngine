@@ -3,6 +3,8 @@
 #include "Core/TypeList.h"
 #include "ECS/Entity.h"
 
+#include <tuple>
+
 namespace ecs
 {
 	class EntityWorld;
@@ -22,7 +24,6 @@ namespace ecs
 	public:
 		template <typename... Types>
 		using Required = EntityView_t<decltype(TRequiredList::template Append<Types...>()), TOptionalList>;
-
 		template <typename... Types>
 		using Optional = EntityView_t<TRequiredList, decltype(TOptionalList::template Append<Types...>())>;
 
@@ -45,6 +46,9 @@ namespace ecs
 	private:
 		ecs::Entity m_Entity;
 		ecs::EntityWorld& m_World;
+
+		std::tuple<TRequired*...> m_Required;
+		std::tuple<TOptional*...> m_Optional;
 	};
 
 	using EntityView = ecs::EntityView_t<TypeList<>, TypeList<>>;
