@@ -58,7 +58,7 @@ void eng::camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Move2DComponent, const eng::camera::ProjectionComponent>;
 
 	const auto& cameraSettings = world.ReadSingleton<eng::settings::CameraSingleton>();
-	for (const ecs::Entity& entity : world.Query<CameraQuery>())
+	for (auto&& view : world.Query<CameraQuery>())
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
 
@@ -78,7 +78,7 @@ void eng::camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 
 		if (!math::IsNearly(direction, Vector3f::Zero))
 		{
-			auto& transform = world.WriteComponent<eng::TransformComponent>(entity);
+			auto& transform = view.WriteRequired<eng::TransformComponent>();
 			const Quaternion rotation = Quaternion::FromRotator(transform.m_Rotate);
 			transform.m_Translate += (direction * speed) * rotation;
 		}

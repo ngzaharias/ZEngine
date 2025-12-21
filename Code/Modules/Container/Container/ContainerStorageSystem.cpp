@@ -168,16 +168,16 @@ void container::StorageSystem::Update(World& world, const GameTime& gameTime)
 	ProcessStorageRequests(world);
 
 	// cleanup results on the next frame
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::MemberAddResultComponent>>())
-		world.RemoveComponent<container::MemberAddResultComponent>(entity);
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::MemberMoveResultComponent>>())
-		world.RemoveComponent<container::MemberMoveResultComponent>(entity);
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::MemberRemoveResultComponent>>())
-		world.RemoveComponent<container::MemberRemoveResultComponent>(entity);
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::StorageCreateResultComponent>>())
-		world.RemoveComponent<container::StorageCreateResultComponent>(entity);
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<container::StorageDestroyResultComponent>>())
-		world.RemoveComponent<container::StorageDestroyResultComponent>(entity);
+	for (auto&& view : world.Query<ecs::query::Include<container::MemberAddResultComponent>>())
+		world.RemoveComponent<container::MemberAddResultComponent>(view);
+	for (auto&& view : world.Query<ecs::query::Include<container::MemberMoveResultComponent>>())
+		world.RemoveComponent<container::MemberMoveResultComponent>(view);
+	for (auto&& view : world.Query<ecs::query::Include<container::MemberRemoveResultComponent>>())
+		world.RemoveComponent<container::MemberRemoveResultComponent>(view);
+	for (auto&& view : world.Query<ecs::query::Include<container::StorageCreateResultComponent>>())
+		world.RemoveComponent<container::StorageCreateResultComponent>(view);
+	for (auto&& view : world.Query<ecs::query::Include<container::StorageDestroyResultComponent>>())
+		world.RemoveComponent<container::StorageDestroyResultComponent>(view);
 }
 
 void container::StorageSystem::ProcessMemberAddRequests(World& world)
@@ -280,12 +280,15 @@ void container::StorageSystem::ProcessStorageRequests(World& world)
 {
 	auto& storageChangesComponent = world.WriteSingleton<container::StorageChangesSingleton>();
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const container::StorageCreateRequestComponent>>())
+	using CreateQuery = ecs::query
+		::Added<const container::StorageCreateRequestComponent>
+		::Include<const container::StorageCreateRequestComponent>;
+	for (auto&& view : world.Query<CreateQuery>())
 	{
-		const EError error = VerifyStorageCreate(world, entity, storageChangesComponent);
-		const auto& requestComponent = world.ReadComponent<container::StorageCreateRequestComponent>(entity);
+		const EError error = VerifyStorageCreate(world, view, storageChangesComponent);
+		const auto& requestComponent = view.ReadRequired<container::StorageCreateRequestComponent>();
 
-		auto& resultComponent = world.AddComponent<container::StorageCreateResultComponent>(entity);
+		auto& resultComponent = world.AddComponent<container::StorageCreateResultComponent>(view);
 		resultComponent.m_TransactionId = requestComponent.m_TransactionId;
 		resultComponent.m_Error = error;
 
@@ -308,11 +311,13 @@ void container::StorageSystem::ProcessStorageRequests(World& world)
 	}
 
 	// #todo: destroy storage when owner is destroyed?
-
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const container::StorageDestroyRequestComponent>>())
+	using DestroyQuery = ecs::query
+		::Added<const container::StorageDestroyRequestComponent>
+		::Include<const container::StorageDestroyRequestComponent>;
+	for (auto&& view : world.Query<DestroyQuery>())
 	{
-		const EError error = VerifyStorageDestroy(world, entity, storageChangesComponent);
-		const auto& requestComponent = world.ReadComponent<container::StorageDestroyRequestComponent>(entity);
+		const EError error = VerifyStorageDestroy(world, view, storageChangesComponent);
+		const auto& requestComponent = view.ReadRequired<container::StorageDestroyRequestComponent>();
 
 		if (error == EError::None)
 		{
@@ -326,7 +331,7 @@ void container::StorageSystem::ProcessStorageRequests(World& world)
 			destroyData.m_Type = storageComponent.m_Type;
 		}
 
-		auto& resultComponent = world.AddComponent<container::StorageDestroyResultComponent>(entity);
+		auto& resultComponent = world.AddComponent<container::StorageDestroyResultComponent>(view);
 		resultComponent.m_TransactionId = requestComponent.m_TransactionId;
 		resultComponent.m_Storage = requestComponent.m_Storage;
 		resultComponent.m_Error = error;

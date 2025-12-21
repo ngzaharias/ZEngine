@@ -44,15 +44,15 @@ void editor::InputSystem::Update(World& world, const GameTime& gameTime)
 		window.m_Label = ToLabel("Input Editor##input", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::InputWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::InputWindowComponent>>())
 	{
-		auto& window = world.ReadComponent<editor::InputWindowComponent>(entity, false);
+		auto& window = world.ReadComponent<editor::InputWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::InputWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::InputWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<editor::InputWindowComponent>(windowEntity);
+		auto& window = view.WriteRequired<editor::InputWindowComponent>();
 
 		bool isOpen = true;
 		bool isClient = true;
@@ -97,6 +97,6 @@ void editor::InputSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (!isOpen)
-			world.DestroyEntity(windowEntity);
+			world.DestroyEntity(view);
 	}
 }

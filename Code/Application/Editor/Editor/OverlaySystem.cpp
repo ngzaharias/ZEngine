@@ -58,8 +58,8 @@ void editor::OverlaySystem::Update(World& world, const GameTime& gameTime)
 	if (ImGui::Begin("Camera##editor", nullptr, s_Flags))
 	{
 		ecs::Entity cameraEntity = {};
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::camera::EditorComponent>>())
-			cameraEntity = entity;
+		for (auto&& view : world.Query<ecs::query::Include<const eng::camera::EditorComponent>>())
+			cameraEntity = view;
 
 		if (!cameraEntity.IsUnassigned())
 		{

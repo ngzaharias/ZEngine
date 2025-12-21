@@ -74,15 +74,15 @@ void editor::AssetBrowserSystem::Update(World& world, const GameTime& gameTime)
 		Sort(window.m_Sorted);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::AssetBrowserWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::AssetBrowserWindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<editor::AssetBrowserWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<editor::AssetBrowserWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::AssetBrowserWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::AssetBrowserWindowComponent>>())
 	{
-		auto& windowComponent = world.WriteComponent<editor::AssetBrowserWindowComponent>(windowEntity);
+		auto& windowComponent = view.WriteRequired<editor::AssetBrowserWindowComponent>();
 
 		bool isWindowOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
@@ -104,6 +104,6 @@ void editor::AssetBrowserSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (!isWindowOpen)
-			world.DestroyEntity(windowEntity);
+			world.DestroyEntity(view);
 	}
 }

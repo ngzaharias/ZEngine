@@ -22,10 +22,10 @@ void movement::VelocitySystem::Update(World& world, const GameTime& gameTime)
 		velocityComponent.m_Speed = requestComponent.m_Velocity.m_Initial;
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<movement::VelocityComponent, const movement::AccelerationComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<movement::VelocityComponent, const movement::AccelerationComponent>>())
 	{
-		const auto& accelerationComponent = world.ReadComponent<movement::AccelerationComponent>(entity);
-		auto& velocityComponent = world.WriteComponent<movement::VelocityComponent>(entity);
+		const auto& accelerationComponent = view.ReadRequired<movement::AccelerationComponent>();
+		auto& velocityComponent = view.WriteRequired<movement::VelocityComponent>();
 		velocityComponent.m_Speed += accelerationComponent.m_Acceleration * gameTime.m_DeltaTime;
 		velocityComponent.m_Speed = math::Clamp(velocityComponent.m_Speed, accelerationComponent.m_Minimum, accelerationComponent.m_Maximum);
 	}

@@ -16,8 +16,8 @@ void hidden::PhysicsSystem::Update(World& world, const GameTime& gameTime)
 		::Added<const hidden::RevealComponent>
 		::Include<const eng::PhysicsComponent>;
 
-	for (const ecs::Entity& entity : world.Query<Query>())
+	for (auto&& view : world.Query<Query>())
 	{
-		world.RemoveComponent<eng::PhysicsComponent>(entity);
+		world.RemoveComponent<eng::PhysicsComponent>(view);
 	}
 }

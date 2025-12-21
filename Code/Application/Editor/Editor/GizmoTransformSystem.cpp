@@ -140,10 +140,15 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 		}
 
 		const Vector2u& windowSize = window->GetSize();
-		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::EditorComponent, const eng::camera::ProjectionComponent>>())
+		using Query = ecs::query
+			::Include<
+			const eng::camera::EditorComponent,
+			const eng::camera::ProjectionComponent,
+			const eng::TransformComponent>;
+		for (auto&& view : world.Query<Query>())
 		{
-			const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+			const auto& cameraProjection = view.ReadRequired<eng::camera::ProjectionComponent>();
+			const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 			const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraProjection.m_Projection, windowSize);
 			const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();

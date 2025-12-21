@@ -123,10 +123,10 @@ void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent, 
 			const eng::TransformComponent>;
-		for (const ecs::Entity& cameraEntity : world.Query<Query>())
+		for (auto&& view : world.Query<Query>())
 		{
-			const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+			const auto& cameraComponent = view.ReadRequired<eng::camera::ProjectionComponent>();
+			const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 			const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraComponent.m_Projection, windowSize);
 			const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();

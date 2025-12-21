@@ -174,22 +174,18 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const voxel::ChunkComponent>::Exclude<const eng::DynamicMeshComponent>>())
-		world.AddComponent<eng::DynamicMeshComponent>(entity);
+	for (auto&& view : world.Query<ecs::query::Include<const voxel::ChunkComponent>::Exclude<const eng::DynamicMeshComponent>>())
+		world.AddComponent<eng::DynamicMeshComponent>(view);
 
 	using ChunkAddedQuery = ecs::query::Added<const voxel::ChunkComponent>::Include<const eng::DynamicMeshComponent>;
 	using MeshAddedQuery = ecs::query::Added<const eng::DynamicMeshComponent>::Include<const voxel::ChunkComponent>;
 	using ChangedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const voxel::ChunkComponent, const voxel::ChunkChangedFrameComponent>;
 	using LoadedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const voxel::ChunkComponent, const voxel::ChunkLoadedFrameComponent>;
 
-	for (const ecs::Entity& entity : world.Query<ChunkAddedQuery>())
-		entitiesToUpdate.Add(entity);
-	for (const ecs::Entity& entity : world.Query<MeshAddedQuery>())
-		entitiesToUpdate.Add(entity);
-	for (const ecs::Entity& entity : world.Query<ChangedQuery>())
-		entitiesToUpdate.Add(entity);
-	for (const ecs::Entity& entity : world.Query<LoadedQuery>())
-		entitiesToUpdate.Add(entity);
+	entitiesToUpdate.Add(world.Query<ChunkAddedQuery>());
+	entitiesToUpdate.Add(world.Query<MeshAddedQuery>());
+	entitiesToUpdate.Add(world.Query<ChangedQuery>());
+	entitiesToUpdate.Add(world.Query<LoadedQuery>());
 
 	for (const ecs::Entity& entity : entitiesToUpdate)
 	{

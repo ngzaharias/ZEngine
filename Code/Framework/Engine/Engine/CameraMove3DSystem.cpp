@@ -64,9 +64,9 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Move3DComponent, const eng::camera::ProjectionComponent>;
 
 	const auto& cameraSettings = world.ReadSingleton<eng::settings::CameraSingleton>();
-	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
+	for (auto&& view : world.Query<CameraQuery>())
 	{
-		const auto& readTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& readTransform = view.ReadRequired<eng::TransformComponent>();
 		{
 			const auto& input = world.ReadResource<eng::InputManager>();
 
@@ -90,7 +90,7 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 
 			if (!math::IsNearly(readTransform.m_Translate, translate))
 			{
-				auto& writeTransform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
+				auto& writeTransform = view.WriteRequired<eng::TransformComponent>();
 				writeTransform.m_Translate = translate;
 			}
 
@@ -101,7 +101,7 @@ void eng::camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 				rotator.m_Yaw = -input.m_MouseDelta.x * cameraSettings.m_RotateSpeed.m_Yaw;
 
 				// #todo: V-Sync causes the game to rotate faster than when it is disabled
-				auto& writeTransform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
+				auto& writeTransform = view.WriteRequired<eng::TransformComponent>();
 				writeTransform.m_Rotate += rotator;
 			}
 		}

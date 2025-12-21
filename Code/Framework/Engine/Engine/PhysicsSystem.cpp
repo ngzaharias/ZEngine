@@ -251,22 +251,22 @@ void eng::PhysicsSystem::ProcessUpdated(World& world)
 
 	using Query = ecs::query
 		::Include<eng::PhysicsComponent, eng::TransformComponent>;
-	for (const ecs::Entity& entity : world.Query<Query>())
+	for (auto&& view : world.Query<Query>())
 	{
-		const auto& physicsComponent = world.ReadComponent<eng::PhysicsComponent>(entity);
+		const auto& physicsComponent = view.ReadRequired<eng::PhysicsComponent>();
 		if (!std::holds_alternative<eng::RigidDynamic>(physicsComponent.m_Rigidbody))
 			continue;
 
 		const auto& rigidDynamic = std::get<eng::RigidDynamic>(physicsComponent.m_Rigidbody);
 		if (!rigidDynamic.eKINEMATIC)
 		{
-			auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);
+			auto& transformComponent = view.WriteRequired<eng::TransformComponent>();
 			const physx::PxVec3 translate = physicsComponent.m_PxRigidActor->getGlobalPose().p;
 			transformComponent.m_Translate = Vector3f(translate.x, translate.y, translate.z);
 		}
 		else
 		{
-			const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(entity);
+			const auto& transformComponent = view.ReadRequired<eng::TransformComponent>();
 			const physx::PxTransform transform = eng::physics::ToTransform(
 				transformComponent.m_Translate, 
 				transformComponent.m_Rotate);
@@ -278,9 +278,9 @@ void eng::PhysicsSystem::ProcessUpdated(World& world)
 
 void eng::PhysicsSystem::ProcessRemoved(World& world)
 {
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::PhysicsComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<eng::PhysicsComponent>>())
 	{
-		auto& component = world.WriteComponent<eng::PhysicsComponent>(entity, false);
+		auto& component = world.WriteComponent<eng::PhysicsComponent>(view, false);
 		if (!component.m_PxRigidActor)
 			continue;
 

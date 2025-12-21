@@ -85,23 +85,23 @@ void debug::PhysicsSystem::Update(World& world, const GameTime& gameTime)
 	if (!settings.m_ArePhysicsEnabled)
 		return;
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::PhysicsComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const eng::PhysicsComponent>>())
 	{
-		const auto& component = world.ReadComponent<eng::PhysicsComponent>(entity);
+		const auto& component = view.ReadRequired<eng::PhysicsComponent>();
 		for (const physx::PxShape* shape : component.m_PxShapes)
 			RenderShape(world, *component.m_PxRigidActor, *shape, component.m_PxRigidActor->getGlobalPose());
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::RigidStaticComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const eng::RigidStaticComponent>>())
 	{
-		const auto& component = world.ReadComponent<eng::RigidStaticComponent>(entity);
+		const auto& component = view.ReadRequired<eng::RigidStaticComponent>();
 		for (const physx::PxShape* shape : component.m_Shapes)
 			RenderShape(world, *component.m_Actor, *shape, component.m_Actor->getGlobalPose());
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::RigidDynamicComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const eng::RigidDynamicComponent>>())
 	{
-		const auto& component = world.ReadComponent<eng::RigidDynamicComponent>(entity);
+		const auto& component = view.ReadRequired<eng::RigidDynamicComponent>();
 		for (const physx::PxShape* shape : component.m_Shapes)
 			RenderShape(world, *component.m_Actor, *shape, component.m_Actor->getGlobalPose());
 	}

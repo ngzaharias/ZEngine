@@ -25,7 +25,7 @@ namespace
 
 void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::settings_menu::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Added<gui::settings_menu::WindowComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.CreateWidget(strSettingsMenu_xaml, true);
@@ -33,7 +33,7 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 		dataContext.Initialise(world);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<gui::settings_menu::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<gui::settings_menu::WindowComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strSettingsMenu_xaml);
@@ -44,8 +44,8 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 
 	if (world.HasAny<gui::settings_menu::CloseRequest>())
 	{
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::settings_menu::WindowComponent>>())
-			world.DestroyEntity(entity);
+		for (auto&& view : world.Query<ecs::query::Include<gui::settings_menu::WindowComponent>>())
+			world.DestroyEntity(view);
 	}
 
 	if (world.HasAny<gui::settings_menu::OpenRequest>())

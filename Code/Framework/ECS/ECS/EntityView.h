@@ -31,11 +31,19 @@ namespace ecs
 
 		operator ecs::Entity() { return m_Entity; }
 
+		const ecs::Entity& GetEntity() const
+		{
+			return m_Entity;
+		}
+
 		template<typename TComponent>
 		auto ReadRequired() const -> const TComponent&;
 
 		template<typename TComponent>
 		auto WriteRequired()->TComponent&;
+
+		template<typename TComponent>
+		bool HasOptional() const;
 
 		template<typename TComponent>
 		auto ReadOptional() const -> const TComponent*;

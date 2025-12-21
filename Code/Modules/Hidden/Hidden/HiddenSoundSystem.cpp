@@ -28,12 +28,14 @@ void hidden::SoundSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const hidden::RevealComponent>::Exclude<const eng::SavegameComponent>>())
+	// #crash:
+	for (auto&& view : world.Query<ecs::query::Added<const hidden::RevealComponent>::Exclude<const eng::SavegameComponent>>())
 	{
 		auto& soundComponent = world.AddComponent<eng::sound::SequenceRequestComponent>(m_SoundEntity);
 		soundComponent.m_Asset = strSoundSequence;
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::sound::SequenceRequestComponent>>())
+	// #crash:
+	for (auto&& view : world.Query<ecs::query::Include<const eng::sound::SequenceRequestComponent>>())
 		world.RemoveComponent<eng::sound::SequenceRequestComponent>(m_SoundEntity);
 }

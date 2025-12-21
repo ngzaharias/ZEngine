@@ -14,9 +14,9 @@ void debug::level::ReloadSystem::Update(World& world, const GameTime& gameTime)
 
 	if (world.HasAny<debug::level::ReloadRequest>())
 	{
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 		{
-			const auto& levelComponent = world.ReadComponent<eng::level::LoadedComponent>(entity);
+			const auto& levelComponent = view.ReadRequired<eng::level::LoadedComponent>();
 			world.AddEvent<eng::level::LoadRequest>(levelComponent.m_Name);
 		}
 	}

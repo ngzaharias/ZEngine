@@ -30,12 +30,12 @@ void transform::TransformSystem::ProjectileRequests(World& world)
 		transformComponent.m_Scale = requestComponent.m_Transform.m_Scale;
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<eng::TransformComponent, const projectile::TrajectoryComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<eng::TransformComponent, const projectile::TrajectoryComponent>>())
 	{
-		const auto& trajectoryComponent = world.ReadComponent<projectile::TrajectoryComponent>(entity);
+		const auto& trajectoryComponent = view.ReadRequired<projectile::TrajectoryComponent>();
 		const float distance = trajectoryComponent.m_Distance / trajectoryComponent.m_Scale;
 
-		auto& transformComponent = world.WriteComponent<eng::TransformComponent>(entity);
+		auto& transformComponent = view.WriteRequired<eng::TransformComponent>();
 		transformComponent.m_Translate = trajectoryComponent.m_Trajectory.AtDistance(distance);
 		transformComponent.m_Translate *= trajectoryComponent.m_Scale;
 		transformComponent.m_Translate += trajectoryComponent.m_Origin;

@@ -19,13 +19,15 @@ namespace
 		const auto& themes = world.ReadResource<eng::ThemeTable>();
 		const auto& settings = world.ReadSingleton<eng::settings::GameplaySingleton>();
 
-		using Query = ecs::query::Include<const eng::SpriteComponent, const hidden::ObjectComponent>;
-		for (const ecs::Entity& entity : world.Query<Query>())
+		using Query = ecs::query
+			::Include<const eng::SpriteComponent, const hidden::ObjectComponent>
+			::Optional<const hidden::RevealComponent>;
+		for (auto&& view : world.Query<Query>())
 		{
 			const eng::Theme& theme = themes.GetTheme(settings.m_Theme);
-			const bool wasRevealed = world.HasComponent<hidden::RevealComponent>(entity);
+			const bool wasRevealed = view.HasOptional<hidden::RevealComponent>();
 
-			auto& sprite = world.WriteComponent<eng::SpriteComponent>(entity);
+			auto& sprite = view.WriteRequired<eng::SpriteComponent>();
 			sprite.m_Colour = wasRevealed
 				? theme.m_Highlight
 				: theme.m_Background0;
@@ -42,13 +44,14 @@ void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 
 	using ObjectQuery = ecs::query
 		::Added<const hidden::ObjectComponent>
-		::Include<const eng::SpriteComponent>;
-	for (const ecs::Entity& entity : world.Query<ObjectQuery>())
+		::Include<const eng::SpriteComponent>
+		::Optional<const hidden::RevealComponent>;
+	for (auto&& view : world.Query<ObjectQuery>())
 	{
 		const eng::Theme& theme = themes.GetTheme(settings.m_Theme);
-		const bool wasRevealed = world.HasComponent<hidden::RevealComponent>(entity);
+		const bool wasRevealed = view.HasOptional<hidden::RevealComponent>();
 
-		auto& sprite = world.WriteComponent<eng::SpriteComponent>(entity);
+		auto& sprite = view.WriteRequired<eng::SpriteComponent>();
 		sprite.m_Colour = wasRevealed
 			? theme.m_Highlight
 			: theme.m_Background0;
@@ -57,11 +60,11 @@ void hidden::SpriteSystem::Update(World& world, const GameTime& gameTime)
 	using RevealQuery = ecs::query
 		::Added<const hidden::RevealComponent>
 		::Include<const eng::SpriteComponent>;
-	for (const ecs::Entity& entity : world.Query<RevealQuery>())
+	for (auto&& view : world.Query<RevealQuery>())
 	{
 		const eng::Theme& theme = themes.GetTheme(settings.m_Theme);
 
-		auto& sprite = world.WriteComponent<eng::SpriteComponent>(entity);
+		auto& sprite = view.WriteRequired<eng::SpriteComponent>();
 		sprite.m_Colour = theme.m_Highlight;
 	}
 

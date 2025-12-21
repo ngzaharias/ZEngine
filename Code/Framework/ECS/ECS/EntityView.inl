@@ -13,7 +13,6 @@ template<typename ...TRequired, typename ...TOptional>
 template<typename TComponent>
 auto ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::ReadRequired() const -> const TComponent&
 {
-	//return m_World.ReadComponent<TComponent>(m_Entity);
 	return *std::get<TComponent*>(m_Required);
 }
 
@@ -26,12 +25,16 @@ auto ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::WriteReq
 
 template<typename ...TRequired, typename ...TOptional>
 template<typename TComponent>
+bool ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::HasOptional() const
+{
+	return std::get<TComponent*>(m_Optional);
+}
+
+template<typename ...TRequired, typename ...TOptional>
+template<typename TComponent>
 auto ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::ReadOptional() const -> const TComponent*
 {
 	return std::get<TComponent*>(m_Optional);
-	//return m_World.HasComponent<TComponent>(m_Entity)
-	//	? &m_World.ReadComponent<TComponent>(m_Entity)
-	//	: nullptr;
 }
 
 template<typename ...TRequired, typename ...TOptional>

@@ -328,22 +328,22 @@ void editor::FlipbookEditorSystem::Update(World& world, const GameTime& gameTime
 		window.m_TextureLabel   = ToLabel("Texture##flipbook", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::FlipbookWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::FlipbookWindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<editor::FlipbookWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<editor::FlipbookWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::FlipbookWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::FlipbookWindowComponent>>())
 	{
-		auto& windowComponent = world.WriteComponent<editor::FlipbookWindowComponent>(windowEntity);
+		auto& windowComponent = view.WriteRequired<editor::FlipbookWindowComponent>();
 
 		bool isOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(windowComponent.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
 		{
-			DrawMenuBar(world, windowEntity);
+			DrawMenuBar(world, view);
 
 			const ImGuiID dockspaceId = ImGui::GetID(windowComponent.m_DockspaceLabel.c_str());
 			if (!ImGui::DockBuilderGetNode(dockspaceId))
@@ -366,25 +366,25 @@ void editor::FlipbookEditorSystem::Update(World& world, const GameTime& gameTime
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_BatchingLabel.c_str()))
-			DrawBatcher(world, windowEntity);
+			DrawBatcher(world, view);
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_TextureLabel.c_str()))
-			DrawTexture(world, windowEntity);
+			DrawTexture(world, view);
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_InspectorLabel.c_str()))
-			DrawInspector(world, windowEntity);
+			DrawInspector(world, view);
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_PreviewerLabel.c_str()))
-			DrawPreviewer(world, windowEntity);
+			DrawPreviewer(world, view);
 		ImGui::End();
 
-		DrawPopupOpen(world, windowEntity);
-		DrawPopupSave(world, windowEntity);
+		DrawPopupOpen(world, view);
+		DrawPopupSave(world, view);
 
 		if (!isOpen)
-			world.DestroyEntity(windowEntity);
+			world.DestroyEntity(view);
 	}
 }

@@ -41,9 +41,12 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const auto& audioSettings = world.ReadSingleton<eng::settings::AudioSingleton>();
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SingleRequestComponent>>())
+	using SingleQuery = ecs::query
+		::Added<const eng::sound::SingleRequestComponent>
+		::Include<const eng::sound::SingleRequestComponent>;
+	for (auto&& view : world.Query<SingleQuery>())
 	{
-		const auto& requestComponent = world.ReadComponent<eng::sound::SingleRequestComponent>(entity);
+		const auto& requestComponent = view.ReadRequired<eng::sound::SingleRequestComponent>();
 		m_Requests.Append(requestComponent.m_Asset);
 	}
 
@@ -85,16 +88,16 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 	}
 	m_Requests.RemoveAll();
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::sound::ObjectComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const eng::sound::ObjectComponent>>())
 	{
-		const auto& object = world.ReadComponent<eng::sound::ObjectComponent>(entity);
+		const auto& object = view.ReadRequired<eng::sound::ObjectComponent>();
 		if (object.m_Sound->getStatus() == sf::Sound::Stopped)
-			world.DestroyEntity(entity);
+			world.DestroyEntity(view);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::sound::ObjectComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<eng::sound::ObjectComponent>>())
 	{
-		auto& object = world.WriteComponent<eng::sound::ObjectComponent>(entity, false);
+		auto& object = world.WriteComponent<eng::sound::ObjectComponent>(view, false);
 		delete object.m_Sound;
 
 		auto& assetManager = world.WriteResource<eng::AssetManager>();

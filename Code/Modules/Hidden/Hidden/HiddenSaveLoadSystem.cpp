@@ -26,9 +26,9 @@ void hidden::SaveLoadSystem::Update(World& world, const GameTime& gameTime)
 	if (world.HasAny<ecs::query::Updated<const hidden::GroupComponent>>())
 	{
 		eng::Visitor visitor;
-		for (const ecs::Entity entity : world.Query<ecs::query::Include<const hidden::GroupComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<const hidden::GroupComponent>>())
 		{
-			const auto& component = world.ReadComponent<hidden::GroupComponent>(entity);
+			const auto& component = view.ReadRequired<hidden::GroupComponent>();
 			visitor.Write(strRevealed, component.m_Revealed);
 		}
 
@@ -50,13 +50,13 @@ void hidden::SaveLoadSystem::Update(World& world, const GameTime& gameTime)
 		Array<str::Guid> revealed;
 		visitor.Read(strRevealed, revealed, {});
 
-		for (const ecs::Entity& entity : world.Query<Query>())
+		for (auto&& view : world.Query<Query>())
 		{
-			const auto& component = world.ReadComponent<eng::PrototypeComponent>(entity);
+			const auto& component = view.ReadRequired<eng::PrototypeComponent>();
 			if (enumerate::Contains(revealed, component.m_Guid))
 			{
-				world.AddComponent<eng::SavegameComponent>(entity);
-				world.AddComponent<hidden::RevealComponent>(entity);
+				world.AddComponent<eng::SavegameComponent>(view);
+				world.AddComponent<hidden::RevealComponent>(view);
 			}
 		}
 	}

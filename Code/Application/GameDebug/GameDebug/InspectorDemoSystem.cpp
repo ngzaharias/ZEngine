@@ -22,12 +22,12 @@ void debug::InspectorDemoSystem::Update(World& world, const GameTime& gameTime)
 	for (const auto& request : world.Events<debug::InspectorDemoRequest>())
 		world.AddComponent<debug::InspectorDemoWindowComponent>(world.CreateEntity());
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const debug::InspectorDemoWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const debug::InspectorDemoWindowComponent>>())
 	{
 		bool isWindowOpen = true;
 		imgui::InspectorDemo(isWindowOpen);
 
 		if (!isWindowOpen)
-			world.DestroyEntity(entity);
+			world.DestroyEntity(view);
 	}
 }

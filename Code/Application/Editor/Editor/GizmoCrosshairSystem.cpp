@@ -21,9 +21,9 @@ void editor::gizmo::CrosshairSystem::Update(World& world, const GameTime& gameTi
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
 		return;
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& transform = world.ReadComponent<eng::TransformComponent>(entity);
+		const auto& transform = view.ReadRequired<eng::TransformComponent>();
 
 		const Quaternion rotate = Quaternion::FromRotator(transform.m_Rotate);
 		const Vector3f& translate = transform.m_Translate;
@@ -33,12 +33,12 @@ void editor::gizmo::CrosshairSystem::Update(World& world, const GameTime& gameTi
 
 		const Vector3f position = translate + forward * 30.f;
 
-		auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
-		linesComponent.AddLine(
+		auto& linesSingleton = world.WriteSingleton<eng::LinesSingleton>();
+		linesSingleton.AddLine(
 			position - right * 0.1f,
 			position + right * 0.1f,
 			Colour::White);
-		linesComponent.AddLine(
+		linesSingleton.AddLine(
 			position - upward * 0.1f,
 			position + upward * 0.1f,
 			Colour::White);

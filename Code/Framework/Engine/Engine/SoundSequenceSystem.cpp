@@ -17,9 +17,13 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 	auto& bufferComponent = world.WriteSingleton<eng::sound::SequenceBufferSingleton>();
 	bufferComponent.m_Requests.RemoveAll();
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::SequenceRequestComponent>>())
+	using Query = ecs::query
+		::Added<const eng::sound::SequenceRequestComponent>
+		::Include<const eng::sound::SequenceRequestComponent>
+		::Optional<const eng::sound::SequenceComponent>;
+	for (auto&& view : world.Query<Query>())
 	{
-		const auto& requestComponent = world.ReadComponent<eng::sound::SequenceRequestComponent>(entity);
+		const auto& requestComponent = view.ReadRequired<eng::sound::SequenceRequestComponent>();
 		if (!requestComponent.m_Asset.IsValid())
 			continue;
 
@@ -30,9 +34,9 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 		{
 			const int32 count = sequenceAsset->m_Handles.GetCount();
 
-			auto& sequenceComponent = world.HasComponent<eng::sound::SequenceComponent>(entity)
-				? world.WriteComponent<eng::sound::SequenceComponent>(entity)
-				: world.AddComponent<eng::sound::SequenceComponent>(entity);
+			auto& sequenceComponent = !view.HasOptional<eng::sound::SequenceComponent>()
+				? world.AddComponent<eng::sound::SequenceComponent>(view)
+				: *view.WriteOptional<eng::sound::SequenceComponent>();
 			if (sequenceComponent.m_Asset != requestComponent.m_Asset)
 			{
 				sequenceComponent.m_Index = 0;

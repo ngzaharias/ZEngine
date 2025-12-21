@@ -156,22 +156,22 @@ void editor::TableEditorSystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::TableWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::TableWindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<editor::TableWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<editor::TableWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TableWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::TableWindowComponent>>())
 	{
-		auto& windowComponent = world.WriteComponent<editor::TableWindowComponent>(windowEntity);
+		auto& windowComponent = view.WriteRequired<editor::TableWindowComponent>();
 
 		bool isOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(windowComponent.m_WindowLabel.c_str(), &isOpen, s_WindowFlags))
 		{
-			DrawMenuBar(world, windowEntity);
+			DrawMenuBar(world, view);
 
 			const ImGuiID dockspaceId = ImGui::GetID(windowComponent.m_WindowLabel.c_str());
 			if (!ImGui::DockBuilderGetNode(dockspaceId))
@@ -191,14 +191,14 @@ void editor::TableEditorSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_BrowserLabel.c_str()))
-			DrawBrowser(world, windowEntity);
+			DrawBrowser(world, view);
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_InspectorLabel.c_str()))
-			DrawInspector(world, windowEntity);
+			DrawInspector(world, view);
 		ImGui::End();
 
 		if (!isOpen)
-			world.DestroyEntity(windowEntity);
+			world.DestroyEntity(view);
 	}
 }

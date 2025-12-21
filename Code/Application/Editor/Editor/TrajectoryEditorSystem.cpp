@@ -227,22 +227,22 @@ void editor::TrajectoryEditorSystem::Update(World& world, const GameTime& gameTi
 		window.m_PlottingLabel = ToLabel("Plotter##trajectory", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::TrajectoryWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::TrajectoryWindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<editor::TrajectoryWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<editor::TrajectoryWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::TrajectoryWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::TrajectoryWindowComponent>>())
 	{
-		auto& windowComponent = world.WriteComponent<editor::TrajectoryWindowComponent>(windowEntity);
+		auto& windowComponent = view.WriteRequired<editor::TrajectoryWindowComponent>();
 
 		bool isOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(windowComponent.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
 		{
-			DrawMenuBar(world, windowEntity);
+			DrawMenuBar(world, view);
 
 			const ImGuiID dockspaceId = ImGui::GetID(windowComponent.m_DockspaceLabel.c_str());
 			if (!ImGui::DockBuilderGetNode(dockspaceId))
@@ -262,20 +262,20 @@ void editor::TrajectoryEditorSystem::Update(World& world, const GameTime& gameTi
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_InspectorLabel.c_str()))
-			DrawInspector(world, windowEntity);
+			DrawInspector(world, view);
 		ImGui::End();
 
 		if (ImGui::Begin(windowComponent.m_PlottingLabel.c_str()))
-			DrawPlotter(world, windowEntity);
+			DrawPlotter(world, view);
 		ImGui::End();
 
-		DrawPopupOpen(world, windowEntity);
-		DrawPopupSave(world, windowEntity);
+		DrawPopupOpen(world, view);
+		DrawPopupSave(world, view);
 
 		if (!isOpen)
-			world.DestroyEntity(windowEntity);
+			world.DestroyEntity(view);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::CreateResultComponent>>())
-		world.DestroyEntity(entity);
+	for (auto&& view : world.Query<ecs::query::Include<projectile::CreateResultComponent>>())
+		world.DestroyEntity(view);
 }

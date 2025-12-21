@@ -40,8 +40,8 @@ void projectile::SpawnSystem::Update(World& world, const GameTime& gameTime)
 	ProcessCreate(world);
 	ProcessDestroy(world);
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::CreateResultComponent>>())
-		world.RemoveComponent<projectile::CreateResultComponent>(entity);
+	for (auto&& view : world.Query<ecs::query::Include<projectile::CreateResultComponent>>())
+		world.RemoveComponent<projectile::CreateResultComponent>(view);
 }
 
 void projectile::SpawnSystem::ProcessCreate(World& world)
@@ -83,32 +83,32 @@ void projectile::SpawnSystem::ProcessDestroy(World& world)
 void projectile::SpawnSystem::ProcessLifetime(World& world, const GameTime& gameTime)
 {
 	auto& changesComponent = world.WriteSingleton<projectile::ChangesSingleton>();
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::SpawnComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<projectile::SpawnComponent>>())
 	{
-		auto& spawnComponent = world.WriteComponent<projectile::SpawnComponent>(entity);
+		auto& spawnComponent = view.WriteRequired<projectile::SpawnComponent>();
 		spawnComponent.m_Lifetime += gameTime.m_DeltaTime;
 
 		if (spawnComponent.m_Lifetime >= spawnComponent.m_Timeout)
 		{
-			const EError error = VerifyDestroy(entity, changesComponent);
+			const EError error = VerifyDestroy(view, changesComponent);
 			if (error == EError::None)
 			{
 				Destroyed& destroyData = changesComponent.m_Destroyed.Emplace();
-				destroyData.m_Projectile = entity;
+				destroyData.m_Projectile = view;
 			}
 		}
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const projectile::TrajectoryComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const projectile::TrajectoryComponent>>())
 	{
-		const auto& trajectoryComponent = world.ReadComponent<projectile::TrajectoryComponent>(entity);
+		const auto& trajectoryComponent = view.ReadRequired<projectile::TrajectoryComponent>();
 		if (trajectoryComponent.m_Distance >= trajectoryComponent.m_Trajectory.GetLength() * trajectoryComponent.m_Scale)
 		{
-			const EError error = VerifyDestroy(entity, changesComponent);
+			const EError error = VerifyDestroy(view, changesComponent);
 			if (error == EError::None)
 			{
 				Destroyed& destroyData = changesComponent.m_Destroyed.Emplace();
-				destroyData.m_Projectile = entity;
+				destroyData.m_Projectile = view;
 			}
 		}
 	}

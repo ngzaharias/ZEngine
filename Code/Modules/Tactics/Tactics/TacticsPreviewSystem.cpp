@@ -17,9 +17,9 @@ namespace
 	using World = tactics::PreviewSystem::World;
 	Vector3f GetTileSize(World& world)
 	{
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const tilemap::GridComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<const tilemap::GridComponent>>())
 		{
-			const auto& grid = world.ReadComponent<tilemap::GridComponent>(entity);
+			const auto& grid = view.ReadRequired<tilemap::GridComponent>();
 			return grid.m_TileSize;
 		}
 		return Vector3f::Zero;
@@ -30,14 +30,15 @@ void tactics::PreviewSystem::Update(World& world, const GameTime& gameTime)
 {
 	using Query = ecs::query
 		::Include<
+		const eng::TransformComponent,
 		const tactics::AbilityComponent,
 		const tactics::SelectedComponent>;
-	for (const ecs::Entity& agentEntity : world.Query<Query>())
+	for (auto&& view : world.Query<Query>())
 	{
 		const Vector3f tileSize = GetTileSize(world);
 		const auto& abilityTable = world.ReadResource<tactics::AbilityTable>();
-		const auto& abilityComponent = world.ReadComponent<tactics::AbilityComponent>(agentEntity);
-		const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(agentEntity);
+		const auto& abilityComponent = view.ReadRequired<tactics::AbilityComponent>();
+		const auto& transformComponent = view.ReadRequired<eng::TransformComponent>();
 
 		auto& lines = world.WriteSingleton<eng::LinesSingleton>();
 		for (const str::Name& name : abilityComponent.m_Abilities)

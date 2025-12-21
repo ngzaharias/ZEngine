@@ -169,9 +169,9 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 		window.m_InspectorLabel = ToLabel("Inspector##entityeditor", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::EntityWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::EntityWindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<editor::EntityWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<editor::EntityWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
@@ -217,9 +217,9 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::Begin(windowComponent.m_EntitiesLabel.c_str(), nullptr, s_WindowFlags))
 		{
 			str::Name levelName = {};
-			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::EntityComponent>>())
+			for (auto&& view : world.Query<ecs::query::Include<const eng::level::EntityComponent>>())
 			{
-				const auto& level = world.ReadComponent<eng::level::EntityComponent>(entity);
+				const auto& level = view.ReadRequired<eng::level::EntityComponent>();
 				levelName = level.m_Name;
 			}
 
@@ -250,30 +250,29 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 				ImGui::EndMenuBar();
 			}
 
-			using Query = ecs::query::Include<const eng::PrototypeComponent>;
-			for (const ecs::Entity& entity : world.Query<Query>())
+			using Query = ecs::query
+				::Include<const eng::PrototypeComponent>
+				::Optional<const ecs::NameComponent>;
+			for (auto&& view : world.Query<Query>())
 			{
-				imgui::RaiiID id(entity.GetIndex());
+				imgui::RaiiID id(view.GetEntity().GetIndex());
 
 				const char* name = "<unknown>";;
-				if (m_World.HasComponent<ecs::NameComponent>(entity))
-				{
-					const auto& component = m_World.ReadComponent<ecs::NameComponent>(entity);
-					name = component.m_Name.c_str();
-				}
+				if (const auto* component = view.ReadOptional<ecs::NameComponent>())
+					name = component->m_Name.c_str();
 
-				const bool isSelected = entity == selectComponent.m_Entity;
+				const bool isSelected = view == selectComponent.m_Entity;
 				if (ImGui::Selectable(name, isSelected))
 				{
 					auto& writeComponent = world.WriteSingleton<editor::EntitySelectSingleton>();
-					writeComponent.m_Entity = entity;
+					writeComponent.m_Entity = view;
 				}
 
 				ImGui::OpenPopupOnItemClick(name);
 				if (ImGui::BeginPopup(name))
 				{
 					if (ImGui::Selectable("Destroy"))
-						world.DestroyEntity(entity);
+						world.DestroyEntity(view);
 					ImGui::EndPopup();
 				}
 			}

@@ -106,8 +106,8 @@ void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
 
 
 	ecs::Entity cameraEntity = {};
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::camera::EditorComponent>>())
-		cameraEntity = entity;
+	for (auto&& view : world.Query<ecs::query::Include<const eng::camera::EditorComponent>>())
+		cameraEntity = view;
 
 	if (!cameraEntity.IsUnassigned())
 	{
@@ -122,9 +122,9 @@ void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
 			input.m_MousePosition);
 
 		Array<Selection> selected = {};
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::EntityComponent, const eng::TransformComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<const eng::level::EntityComponent, const eng::TransformComponent>>())
 		{
-			const Optional<AABB3f> aabb = GetEntityBounds(world, entity);
+			const Optional<AABB3f> aabb = GetEntityBounds(world, view);
 			if (!aabb)
 				continue;
 
@@ -132,7 +132,7 @@ void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
 			if (!math::Intersection(ray, *aabb, intersectPos))
 				continue;
 
-			selected.Emplace(entity, math::DistanceSqr(ray.m_Position, intersectPos));
+			selected.Emplace(view, math::DistanceSqr(ray.m_Position, intersectPos));
 
 			auto& lines = world.WriteSingleton<eng::LinesSingleton>();
 			lines.AddSphere(intersectPos, 100.f, Colour::Red);

@@ -26,10 +26,10 @@ void projectile::TrajectorySystem::Update(World& world, const GameTime& gameTime
 		trajectoryComponent.m_Scale = requestComponent.m_Trajectory.m_Scale;
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<projectile::TrajectoryComponent, const movement::VelocityComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<projectile::TrajectoryComponent, const movement::VelocityComponent>>())
 	{
-		const auto& velocityComponent = world.ReadComponent<movement::VelocityComponent>(entity);
-		auto& trajectoryComponent = world.WriteComponent<projectile::TrajectoryComponent>(entity);
+		const auto& velocityComponent = view.ReadRequired<movement::VelocityComponent>();
+		auto& trajectoryComponent = view.WriteRequired<projectile::TrajectoryComponent>();
 		trajectoryComponent.m_Distance += velocityComponent.m_Speed * gameTime.m_DeltaTime;
 	}
 }

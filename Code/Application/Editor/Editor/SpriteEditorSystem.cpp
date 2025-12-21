@@ -399,22 +399,22 @@ void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 		window.m_TextureLabel   = ToLabel("Texture##sprite", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::SpriteWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::SpriteWindowComponent>>())
 	{
-		auto& window = world.ReadComponent<editor::SpriteWindowComponent>(entity, false);
+		auto& window = world.ReadComponent<editor::SpriteWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<editor::SpriteWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::SpriteWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<editor::SpriteWindowComponent>(windowEntity);
+		auto& window = view.WriteRequired<editor::SpriteWindowComponent>();
 
 		bool isOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(window.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
 		{
-			DrawMenuBar(world, windowEntity);
+			DrawMenuBar(world, view);
 
 			const ImGuiID dockspaceId = ImGui::GetID(window.m_DockspaceLabel.c_str());
 			if (!ImGui::DockBuilderGetNode(dockspaceId))
@@ -436,23 +436,23 @@ void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (ImGui::Begin(window.m_TextureLabel.c_str()))
-			DrawTexture(world, windowEntity);
+			DrawTexture(world, view);
 		ImGui::End();
 
 		if (ImGui::Begin(window.m_InspectorLabel.c_str()))
-			DrawInspector(world, windowEntity);
+			DrawInspector(world, view);
 		ImGui::End();
 
 		if (ImGui::Begin(window.m_PreviewerLabel.c_str()))
-			DrawPreviewer(world, windowEntity);
+			DrawPreviewer(world, view);
 		ImGui::End();
 
-		Asset_New(world, windowEntity);
-		Asset_Open(world, windowEntity);
-		Asset_Save(world, windowEntity);
+		Asset_New(world, view);
+		Asset_Open(world, view);
+		Asset_Save(world, view);
 
 		if (!isOpen)
-			world.DestroyEntity(windowEntity);
+			world.DestroyEntity(view);
 
 		if (window.m_Asset.m_Shader != window.m_ShaderLoaded)
 		{

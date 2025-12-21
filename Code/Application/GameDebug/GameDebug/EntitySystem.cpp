@@ -117,15 +117,15 @@ void debug::EntitySystem::Update(World& world, const GameTime& gameTime)
 		window.m_ComponentsLabel = ToLabel("Components##entitydebugger", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const debug::EntityWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const debug::EntityWindowComponent>>())
 	{
-		auto& window = world.ReadComponent<debug::EntityWindowComponent>(entity, false);
+		auto& window = world.ReadComponent<debug::EntityWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<debug::EntityWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<debug::EntityWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<debug::EntityWindowComponent>(windowEntity);
+		auto& window = view.WriteRequired<debug::EntityWindowComponent>();
 
 		bool isOpen = true;
 		bool isClient = true;
@@ -190,6 +190,6 @@ void debug::EntitySystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (!isOpen)
-			world.DestroyEntity(windowEntity);
+			world.DestroyEntity(view);
 	}
 }

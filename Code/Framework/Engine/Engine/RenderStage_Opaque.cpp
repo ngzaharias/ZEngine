@@ -148,19 +148,19 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 		// Ambient Lights
 		{
-			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::light::AmbientComponent>>())
+			for (auto&& view : world.Query<ecs::query::Include<const eng::light::AmbientComponent>>())
 			{
-				const auto& lightComponent = world.ReadComponent<eng::light::AmbientComponent>(entity);
+				const auto& lightComponent = view.ReadRequired<eng::light::AmbientComponent>();
 				stageData.m_LightAmbient_Colour.Append(lightComponent.m_Colour);
 			}
 		}
 
 		// Directional Lights
 		{
-			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::light::DirectionalComponent, const eng::TransformComponent>>())
+			for (auto&& view : world.Query<ecs::query::Include<const eng::light::DirectionalComponent, const eng::TransformComponent>>())
 			{
-				const auto& lightComponent = world.ReadComponent<eng::light::DirectionalComponent>(entity);
-				const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(entity);
+				const auto& lightComponent = view.ReadRequired<eng::light::DirectionalComponent>();
+				const auto& lightTransform = view.ReadRequired<eng::TransformComponent>();
 				const Matrix3x3 rotation = Matrix3x3::FromRotate(lightTransform.m_Rotate);
 
 				stageData.m_LightDirectional_Colour.Append(lightComponent.m_Colour);
@@ -170,10 +170,10 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 		// Point Lights
 		{
-			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::light::PointComponent, const eng::TransformComponent>>())
+			for (auto&& view : world.Query<ecs::query::Include<const eng::light::PointComponent, const eng::TransformComponent>>())
 			{
-				const auto& lightComponent = world.ReadComponent<eng::light::PointComponent>(entity);
-				const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(entity);
+				const auto& lightComponent = view.ReadRequired<eng::light::PointComponent>();
+				const auto& lightTransform = view.ReadRequired<eng::TransformComponent>();
 
 				stageData.m_LightPoint_Range.Append(lightComponent.m_Range);
 				stageData.m_LightPoint_Colour.Append(lightComponent.m_Colour);
