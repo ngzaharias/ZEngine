@@ -15,23 +15,27 @@ namespace ecs::query
 		typename TRemoved = TypeList<>,
 		typename TUpdated = TypeList<>,
 		typename TInclude = TypeList<>,
+		typename TOptional = TypeList<>,
 		typename TExclude = TypeList<>>
 	struct Builder
 	{
 		template <typename... Types>
-		using Added = Builder<decltype(TAdded::template Append<Types...>()), TRemoved, TUpdated, TInclude, TExclude>;
+		using Added = Builder<decltype(TAdded::template Append<Types...>()), TRemoved, TUpdated, TInclude, TOptional, TExclude>;
 
 		template <typename... Types>
-		using Removed = Builder<TAdded, decltype(TRemoved::template Append<Types...>()), TUpdated, TInclude, TExclude>;
+		using Removed = Builder<TAdded, decltype(TRemoved::template Append<Types...>()), TUpdated, TInclude, TOptional, TExclude>;
 
 		template <typename... Types>
-		using Updated = Builder<TAdded, TRemoved, decltype(TUpdated::template Append<Types...>()), TInclude, TExclude>;
+		using Updated = Builder<TAdded, TRemoved, decltype(TUpdated::template Append<Types...>()), TInclude, TOptional, TExclude>;
 
 		template <typename... Types>
 		using Include = Builder<TAdded, TRemoved, TUpdated, decltype(TInclude::template Append<Types...>()), TExclude>;
 
 		template <typename... Types>
-		using Exclude = Builder<TAdded, TRemoved, TUpdated, TInclude, decltype(TExclude::template Append<Types...>())>;
+		using Optional = Builder<TAdded, TRemoved, TUpdated, TInclude, decltype(TOptional::template Append<Types...>()), TExclude>;
+
+		template <typename... Types>
+		using Exclude = Builder<TAdded, TRemoved, TUpdated, TInclude, TOptional, decltype(TExclude::template Append<Types...>())>;
 	};
 
 	template <typename... Types>
@@ -47,6 +51,9 @@ namespace ecs::query
 	using Include = Builder<>::Include<Types...>;
 
 	template <typename... Types>
+	using Optional = Builder<>::Optional<Types...>;
+
+	template <typename... Types>
 	using Exclude = Builder<>::Exclude<Types...>;
 
 	//////////////////////////////////////////////////////////////////////////
@@ -57,13 +64,14 @@ namespace ecs::query
 	template <typename TQuery>
 	struct Access;
 
-	template <typename TAdded, typename TRemoved, typename TUpdated, typename TInclude, typename TExclude>
-	struct Access<Builder<TAdded, TRemoved, TUpdated, TInclude, TExclude>>
+	template<typename TAdded, typename TRemoved, typename TUpdated, typename TInclude, typename TOptional, typename TExclude>
+	struct Access<Builder<TAdded, TRemoved, TUpdated, TInclude, TOptional, TExclude>>
 	{
 		using Added = TAdded;
 		using Removed = TRemoved;
 		using Updated = TUpdated;
 		using Include = TInclude;
+		using Optional = TOptional;
 		using Exclude = TExclude;
 	};
 
@@ -75,6 +83,8 @@ namespace ecs::query
 	using UpdatedAccess = typename Access<TQuery>::Updated;
 	template <typename TQuery>
 	using IncludeAccess = typename Access<TQuery>::Include;
+	template <typename TQuery>
+	using OptionalAccess = typename Access<TQuery>::Optional;
 	template <typename TQuery>
 	using ExcludeAccess = typename Access<TQuery>::Exclude;
 }
