@@ -13,10 +13,18 @@ class GameTime;
 
 namespace ecs
 {
+	template<typename...>
+	class EntityView_t;
 	struct Entity;
+}
 
+namespace ecs
+{
 	class EntityWorld final
 	{
+		template<typename...>
+		friend class EntityView_t;
+
 	public:
 		EntityWorld();
 
@@ -24,8 +32,6 @@ namespace ecs
 		void Shutdown();
 
 		void Update(const GameTime& gameTime);
-
-		bool IsInitialised() const;
 
 		template<class TType>
 		bool IsRegistered() const;
@@ -112,6 +118,19 @@ namespace ecs
 
 		template<class TSystem>
 		auto GetSystem() -> TSystem&;
+
+	private:
+		//////////////////////////////////////////////////////////////////////////
+		// EntityView
+
+		template <typename TComponent>
+		auto GetComponentForView(const ecs::Entity& entity) const->TComponent*;
+		template <typename...TComponents>
+		auto GetComponentsForView(const ecs::Entity& entity) const->std::tuple<TComponents*...>;
+		template <typename TComponent>
+		auto TryComponentForView(const ecs::Entity& entity) const->TComponent*;
+		template <typename...TComponents>
+		auto TryComponentsForView(const ecs::Entity& entity) const->std::tuple<TComponents*...>;
 
 	public:
 		ecs::FrameBuffer m_FrameBuffer;
