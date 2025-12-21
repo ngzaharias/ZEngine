@@ -8,6 +8,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/CameraMove2DComponent.h"
 #include "Engine/CameraHelpers.h"
+#include "Engine/CameraProjectionComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/SettingsCameraSingleton.h"
 #include "Engine/TransformComponent.h"

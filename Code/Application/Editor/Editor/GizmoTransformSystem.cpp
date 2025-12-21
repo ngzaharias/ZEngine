@@ -6,6 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Editor/EntitySelectSingleton.h"
 #include "Editor/SettingsLocalSingleton.h"
+#include "Engine/CameraEditorComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/CameraProjectionComponent.h"
 #include "Engine/InputManager.h"
