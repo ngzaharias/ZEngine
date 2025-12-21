@@ -45,7 +45,7 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strVoxelShader);
 	const auto* texture = assetManager.ReadAsset<eng::Texture2DAsset>(strVoxelTexture);

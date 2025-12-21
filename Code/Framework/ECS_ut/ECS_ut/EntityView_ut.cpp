@@ -4,6 +4,8 @@
 #include "ECS/Component.h"
 #include "ECS/EntityView.h"
 #include "ECS/EntityWorld.h"
+#include "ECS/QueryTypes.h"
+#include "ECS/WorldView.h"
 
 namespace
 {
@@ -14,22 +16,38 @@ namespace
 TEST_CASE("ecs::EntityView. Test.")
 {
 	ecs::Entity entity;
-	ecs::EntityWorld world;
-	world.RegisterComponent<ComponentA>();
-	world.RegisterComponent<ComponentB>();
-	world.Initialise();
+	ecs::EntityWorld entityWorld;
+	entityWorld.RegisterComponent<ComponentA>();
+	entityWorld.RegisterComponent<ComponentB>();
+	entityWorld.Initialise();
 
-	entity = world.CreateEntity();
-	world.AddComponent<ComponentA>(entity);
-	world.Update({});
+	entity = entityWorld.CreateEntity();
+	entityWorld.AddComponent<ComponentA>(entity);
+	entityWorld.AddComponent<ComponentB>(entity);
+	entityWorld.Update({});
 
 	using View = ecs::EntityView
 		::Required<ComponentA>
 		::Optional<ComponentB>;
-	View view = world.EntityView<View>(entity);
+	View view = entityWorld.EntityView<View>(entity);
 
 	const auto& readCompA = view.ReadRequired<ComponentA>();
 	const auto* readCompB = view.ReadOptional<ComponentB>();
 	auto& writeCompA = view.WriteRequired<ComponentA>();
 	auto* writeCompB = view.WriteOptional<ComponentB>();
+
+	using World = ecs::WorldView<
+		ComponentA,
+		ComponentB>;
+
+	using Query = ecs::query::Include<
+		ComponentA,
+		ComponentB>;
+
+	World world = entityWorld.WorldView<World>();
+	for (auto&& view : world.QueryB<Query>())
+	{
+		auto& componentA = view.ReadRequired<ComponentA>();
+		auto& componentB = view.ReadRequired<ComponentB>();
+	}
 }

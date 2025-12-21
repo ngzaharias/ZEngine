@@ -34,7 +34,7 @@ TEntityView ecs::EntityWorld::EntityView(const ecs::Entity& entity)
 }
 
 template<class TWorldView>
-TWorldView ecs::EntityWorld::GetWorldView()
+TWorldView ecs::EntityWorld::WorldView()
 {
 	return TWorldView(*this);
 }

@@ -89,7 +89,7 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(strModel);
 	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);

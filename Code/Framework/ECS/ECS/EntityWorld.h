@@ -34,7 +34,7 @@ namespace ecs
 		TEntityView EntityView(const ecs::Entity& entity);
 
 		template<class TWorldView>
-		TWorldView GetWorldView();
+		TWorldView WorldView();
 
 		//////////////////////////////////////////////////////////////////////////
 		// Entity

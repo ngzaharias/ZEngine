@@ -47,7 +47,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	if (!debugSettings.m_AreLinesEnabled)

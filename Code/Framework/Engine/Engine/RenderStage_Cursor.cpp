@@ -50,7 +50,7 @@ void eng::RenderStage_Cursor::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);
 	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(strMesh);

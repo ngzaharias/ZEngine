@@ -50,7 +50,7 @@ TEST_CASE("ecs::WorldView. CreateEntity.")
 	using WorldView = ecs::WorldView<>;
 
 	ecs::EntityWorld entityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	CHECK(worldView.CreateEntity() == ecs::Entity(1));
 	CHECK(worldView.CreateEntity() == ecs::Entity(2));
@@ -64,7 +64,7 @@ TEST_CASE("ecs::WorldView. DestroyEntity.")
 	using WorldView = ecs::WorldView<>;
 
 	ecs::EntityWorld entityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	ecs::Entity entity = worldView.CreateEntity();
 	entityWorld.Update({});
@@ -96,7 +96,7 @@ TEST_CASE("ecs::WorldView. IsAlive.")
 	using WorldView = ecs::WorldView<>;
 
 	ecs::EntityWorld entityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	ecs::Entity entity;
 	CHECK(!worldView.IsAlive(entity));
@@ -116,7 +116,7 @@ TEST_CASE("ecs::WorldView. AddComponent.")
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 	ecs::Entity entity = worldView.CreateEntity();
 
 	CHECK_NOTHROW(worldView.AddComponent<ComponentA>(entity));
@@ -132,7 +132,7 @@ TEST_CASE("ecs::WorldView. RemoveComponent.")
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	ecs::Entity entity = worldView.CreateEntity();
 	worldView.AddComponent<ComponentA>(entity);
@@ -152,7 +152,7 @@ TEST_CASE("ecs::WorldView. HasComponent.")
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	CHECK(!worldView.HasComponent<ComponentA>(raii.m_EntityA));
 	CHECK(!worldView.HasComponent<ComponentB>(raii.m_EntityA));
@@ -171,7 +171,7 @@ TEST_CASE("ecs::WorldView. ReadComponent.")
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	worldView.AddComponent<ComponentB>(raii.m_EntityA);
@@ -187,7 +187,7 @@ TEST_CASE("ecs::WorldView. WriteComponent.")
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	worldView.AddComponent<ComponentB>(raii.m_EntityA);
@@ -203,7 +203,7 @@ TEST_CASE("ecs::WorldView. ReadSingleton.")
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	CHECK_NOTHROW(worldView.ReadSingleton<SingletonA>());
 	CHECK_NOTHROW(worldView.ReadSingleton<SingletonB>());
@@ -215,7 +215,7 @@ TEST_CASE("ecs::WorldView. WriteSingleton.")
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	CHECK_NOTHROW(worldView.WriteSingleton<SingletonA>());
 	CHECK_NOTHROW(worldView.WriteSingleton<SingletonB>());
@@ -227,7 +227,7 @@ TEST_CASE("ecs::WorldView. ReadResource.")
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	CHECK_NOTHROW(worldView.ReadResource<ResourceA>());
 	CHECK_NOTHROW(worldView.ReadResource<ResourceB>());
@@ -239,7 +239,7 @@ TEST_CASE("ecs::WorldView. WriteResource.")
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	CHECK_NOTHROW(worldView.WriteResource<ResourceA>());
 	CHECK_NOTHROW(worldView.WriteResource<ResourceB>());
@@ -251,7 +251,7 @@ TEST_CASE("ecs::WorldView. Components that are added to an entity are present in
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	worldView.AddComponent<ComponentB>(raii.m_EntityB);
@@ -278,7 +278,7 @@ TEST_CASE("ecs::WorldView. Components that are removed from an entity are presen
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	worldView.AddComponent<ComponentB>(raii.m_EntityB);
@@ -311,7 +311,7 @@ TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using ReadComponen
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	worldView.AddComponent<ComponentB>(raii.m_EntityB);
@@ -336,7 +336,7 @@ TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using WriteCompone
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	worldView.AddComponent<ComponentB>(raii.m_EntityB);
@@ -369,7 +369,7 @@ TEST_CASE("ecs::WorldView. Components that are added to an entity are present in
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	worldView.AddComponent<ComponentB>(raii.m_EntityB);
@@ -399,7 +399,7 @@ TEST_CASE("ecs::WorldView. Components that are removed from an entity are presen
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	// #note: singleton component count towards being excluded
 	CHECK(worldView.Query<ecs::query::Exclude<ComponentA>>().GetCount() == 4);
@@ -424,7 +424,7 @@ TEST_CASE("ecs::WorldView. Components that are added and its entity is destroyed
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	worldView.DestroyEntity(raii.m_EntityA);
@@ -440,7 +440,7 @@ TEST_CASE("ecs::WorldView. Components that are updated and removed in the same f
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	entityWorld.Update({});
@@ -460,7 +460,7 @@ TEST_CASE("ecs::WorldView. Components that are updated the frame after a compone
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	entityWorld.Update({});
@@ -481,7 +481,7 @@ TEST_CASE("ecs::WorldView. Components that are updated and its entity is destroy
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	entityWorld.Update({});
@@ -501,7 +501,7 @@ TEST_CASE("ecs::WorldView. Components that are updated the frame after an entity
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
-	WorldView worldView = entityWorld.GetWorldView<WorldView>();
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	entityWorld.Update({});

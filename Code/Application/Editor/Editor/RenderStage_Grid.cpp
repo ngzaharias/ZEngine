@@ -79,7 +79,7 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	const auto& localSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
 	const auto& gizmos = localSettings.m_Gizmos;

@@ -58,7 +58,7 @@ void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	if (world.HasAny<editor::settings::LocalSingleton>())
 	{
 		const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();

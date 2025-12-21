@@ -38,7 +38,7 @@ namespace
 
 void eng::RenderStage_Shadow::Initialise(ecs::EntityWorld& entityWorld)
 {
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 
 	// texture and buffer
 	{
@@ -82,7 +82,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto& bufferComponent = world.ReadSingleton<eng::FrameBufferSingleton>();
 
