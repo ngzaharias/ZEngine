@@ -1,8 +1,10 @@
 #pragma once
 
 #include "ECS/Entity.h"
+#include "ECS/EntityView.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryRegistry.h"
+#include "ECS/QueryRange.h"
 
 template <typename... TTypes>
 ecs::WorldView<TTypes...>::WorldView(ecs::EntityWorld& entityWorld)
@@ -119,7 +121,7 @@ auto ecs::WorldView<TTypes...>::WriteSingleton() -> TSingleton&
 
 template <typename... TTypes>
 template<class TType>
-auto ecs::WorldView<TTypes...>::HasAny() ->  bool
+auto ecs::WorldView<TTypes...>::HasAny() -> bool
 {
 	if constexpr (std::is_base_of<ecs::Event<TType>, TType>::value)
 	{
@@ -140,12 +142,11 @@ auto ecs::WorldView<TTypes...>::HasAny() ->  bool
 
 template <typename... TTypes>
 template<class TEvent>
-auto ecs::WorldView<TTypes...>::Events() ->  const Array<TEvent>&
+auto ecs::WorldView<TTypes...>::Events() -> const Array<TEvent>&
 {
 	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
 	return m_EntityWorld.m_EntityStorage.GetEvents<TEvent>();
 }
-
 template <typename... TTypes>
 template<class TQuery>
 auto ecs::WorldView<TTypes...>::Query() ->  const Set<Entity>&
@@ -153,4 +154,13 @@ auto ecs::WorldView<TTypes...>::Query() ->  const Set<Entity>&
 	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
 	const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
 	return queryGroup;
+}
+
+template <typename... TTypes>
+template<class TQuery>
+auto ecs::WorldView<TTypes...>::QueryB()
+{
+	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
+	const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
+	return ecs::QueryRange<TQuery>{ m_EntityWorld, queryGroup };
 }

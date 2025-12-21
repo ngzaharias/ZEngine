@@ -85,7 +85,9 @@ namespace ecs
 		auto Events() ->  const Array<TEvent>&;
 
 		template<class TQuery>
-		auto Query() ->  const Set<Entity>&;
+		auto Query() -> const Set<Entity>&;
+		template<class TQuery>
+		auto QueryB();
 
 	private:
 		ecs::EntityWorld& m_EntityWorld;

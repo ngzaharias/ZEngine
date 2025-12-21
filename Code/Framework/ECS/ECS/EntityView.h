@@ -26,6 +26,8 @@ namespace ecs
 		template <typename... Types>
 		using Optional = EntityView_t<TRequiredList, decltype(TOptionalList::template Append<Types...>())>;
 
+		EntityView_t(const ecs::Entity& entity, ecs::EntityWorld& world);
+
 		template<typename TComponent>
 		auto ReadRequired() const -> const TComponent&;
 
@@ -37,9 +39,6 @@ namespace ecs
 
 		template<typename TComponent>
 		auto WriteOptional() -> TComponent*;
-
-	private:
-		EntityView_t(const ecs::Entity& entity, ecs::EntityWorld& world);
 
 	private:
 		ecs::Entity m_Entity;
