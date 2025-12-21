@@ -121,6 +121,26 @@ auto ecs::WorldView<TTypes...>::WriteSingleton() -> TSingleton&
 
 template <typename... TTypes>
 template<class TType>
+auto ecs::WorldView<TTypes...>::Count() -> int32
+{
+	if constexpr (std::is_base_of<ecs::Event<TType>, TType>::value)
+	{
+		return m_EntityWorld.m_EntityStorage.GetEvents<TType>().GetCount();
+	}
+	else if constexpr (std::is_base_of<ecs::Singleton<TType>, TType>::value)
+	{
+		static_assert(false, "Unsupported.");
+	}
+	else
+	{
+		static const ecs::QueryId queryId = ecs::QueryProxy<TType>::Id();
+		const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
+		return queryGroup.GetCount();
+	}
+}
+
+template <typename... TTypes>
+template<class TType>
 auto ecs::WorldView<TTypes...>::HasAny() -> bool
 {
 	if constexpr (std::is_base_of<ecs::Event<TType>, TType>::value)
@@ -147,18 +167,10 @@ auto ecs::WorldView<TTypes...>::Events() -> const Array<TEvent>&
 	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
 	return m_EntityWorld.m_EntityStorage.GetEvents<TEvent>();
 }
-template <typename... TTypes>
-template<class TQuery>
-auto ecs::WorldView<TTypes...>::Query() ->  const Set<Entity>&
-{
-	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
-	const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
-	return queryGroup;
-}
 
 template <typename... TTypes>
 template<class TQuery>
-auto ecs::WorldView<TTypes...>::QueryB()
+auto ecs::WorldView<TTypes...>::Query() -> ecs::QueryRange<TQuery>
 {
 	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
 	const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);

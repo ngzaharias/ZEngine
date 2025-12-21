@@ -10,9 +10,13 @@ namespace ecs
 {
 	class EntityWorld;
 	class QueryRegistry;
-
 	struct Entity;
+	template<typename TQuery>
+	struct QueryRange;
+}
 
+namespace ecs
+{
 	template <typename... TTypes>
 	class WorldView final
 	{
@@ -79,15 +83,16 @@ namespace ecs
 		// Query
 
 		template<class TType>
-		auto HasAny() ->  bool;
+		auto Count() -> int32;
+
+		template<class TType>
+		auto HasAny() -> bool;
 
 		template<class TEvent>
-		auto Events() ->  const Array<TEvent>&;
+		auto Events() -> const Array<TEvent>&;
 
 		template<class TQuery>
-		auto Query() -> const Set<Entity>&;
-		template<class TQuery>
-		auto QueryB();
+		auto Query() -> ecs::QueryRange<TQuery>;
 
 	private:
 		ecs::EntityWorld& m_EntityWorld;

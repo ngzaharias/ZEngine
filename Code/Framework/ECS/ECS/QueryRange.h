@@ -10,6 +10,8 @@ namespace ecs
 	template<typename TQuery>
 	struct QueryRange
 	{
+		operator const ecs::QueryGroup& () const { return m_Data; }
+
 		auto begin() -> QueryIterator<TQuery>
 		{
 			return QueryIterator<TQuery>{ std::begin(m_Data), m_World };

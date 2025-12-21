@@ -28,6 +28,8 @@ namespace ecs
 
 		EntityView_t(const ecs::Entity& entity, ecs::EntityWorld& world);
 
+		operator ecs::Entity() { return m_Entity; }
+
 		template<typename TComponent>
 		auto ReadRequired() const -> const TComponent&;
 

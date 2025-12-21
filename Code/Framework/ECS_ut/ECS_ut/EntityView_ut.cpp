@@ -45,9 +45,11 @@ TEST_CASE("ecs::EntityView. Test.")
 		ComponentB>;
 
 	World world = entityWorld.WorldView<World>();
-	for (auto&& view : world.QueryB<Query>())
+	for (auto&& view : world.Query<Query>())
 	{
 		auto& componentA = view.ReadRequired<ComponentA>();
 		auto& componentB = view.ReadRequired<ComponentB>();
+
+		ecs::Entity entity = view;
 	}
 }
