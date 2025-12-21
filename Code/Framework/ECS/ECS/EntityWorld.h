@@ -30,6 +30,9 @@ namespace ecs
 		template<class TType>
 		bool IsRegistered() const;
 
+		template<class TEntityView>
+		TEntityView EntityView(const ecs::Entity& entity);
+
 		template<class TWorldView>
 		TWorldView GetWorldView();
 
