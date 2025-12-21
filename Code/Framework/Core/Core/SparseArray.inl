@@ -88,6 +88,24 @@ const Value& SparseArray<Key, Value>::Get(const Key& key) const
 }
 
 template<typename Key, typename Value>
+Value* SparseArray<Key, Value>::Try(const Key& key)
+{
+	const int32 sparseIndex = GetIndex(key);
+	if (sparseIndex >= m_Sparse.GetCount())
+		return nullptr;
+	return &m_Values[m_Sparse[sparseIndex]];
+}
+
+template<typename Key, typename Value>
+const Value* SparseArray<Key, Value>::Try(const Key& key) const
+{
+	const int32 sparseIndex = GetIndex(key);
+	if (sparseIndex >= m_Sparse.GetCount())
+		return nullptr;
+	return &m_Values[m_Sparse[sparseIndex]];
+}
+
+template<typename Key, typename Value>
 const Array<Key>& SparseArray<Key, Value>::GetKeys() const
 {
 	return m_Dense;

@@ -19,6 +19,18 @@ inline const TComponent& ecs::ComponentStorage<TComponent>::Get(const ecs::Entit
 }
 
 template<typename TComponent>
+inline TComponent* ecs::ComponentStorage<TComponent>::Try(const ecs::Entity& entity)
+{
+	return m_Data.Try(entity);
+}
+
+template<typename TComponent>
+inline const TComponent* ecs::ComponentStorage<TComponent>::Try(const ecs::Entity& entity) const
+{
+	return m_Data.Try(entity);
+}
+
+template<typename TComponent>
 inline Array<TComponent>& ecs::ComponentStorage<TComponent>::GetValues()
 {
 	return m_Data.GetValues();

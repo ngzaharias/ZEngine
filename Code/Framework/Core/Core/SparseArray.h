@@ -41,6 +41,13 @@ public:
 	/// An exception std::out_of_range is thrown if none exists.
 	const Value& Get(const Key& key) const;
 
+	/// \brief Tries to get an element from the container if one exists with that key.
+	/// An exception std::out_of_range is thrown if none exists.
+	Value* Try(const Key& key);
+	/// \brief Tries to get an element from the container if one exists with that key.
+	/// An exception std::out_of_range is thrown if none exists.
+	const Value* Try(const Key& key) const;
+
 	/// \brief Returns the dense array.
 	const Array<Key>& GetKeys() const;
 
