@@ -47,11 +47,15 @@ void projectile::SpawnSystem::Update(World& world, const GameTime& gameTime)
 void projectile::SpawnSystem::ProcessCreate(World& world)
 {
 	auto& changesComponent = world.WriteSingleton<projectile::ChangesSingleton>();
-	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const projectile::CreateRequestComponent>>())
-	{
-		const auto& requestComponent = world.ReadComponent<projectile::CreateRequestComponent>(requestEntity);
 
-		auto& resultComponent = world.AddComponent<projectile::CreateResultComponent>(requestEntity);
+	using Query = ecs::query
+		::Added<const projectile::CreateRequestComponent>
+		::Include<const projectile::CreateRequestComponent>;
+	for (auto&& view : world.Query<Query>())
+	{
+		const auto& requestComponent = view.ReadRequired<projectile::CreateRequestComponent>();
+
+		auto& resultComponent = world.AddComponent<projectile::CreateResultComponent>(view);
 		resultComponent.m_TransactionId = requestComponent.m_TransactionId;
 
 		// #todo: error
@@ -68,7 +72,7 @@ void projectile::SpawnSystem::ProcessCreate(World& world)
 			// add to frame data so we add the other components
 			Created& createData = changesComponent.m_Created.Emplace();
 			createData.m_Projectile = projectileEntity;
-			createData.m_Request = requestEntity;
+			createData.m_Request = view;
 		}
 	}
 }

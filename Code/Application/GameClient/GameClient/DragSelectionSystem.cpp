@@ -56,10 +56,10 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 	const auto& sceneComponent = world.ReadSingleton<eng::PhysicsSceneSingleton>();
 	auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
-		const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraProjection = view.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 		{
 			const auto& input = world.ReadResource<eng::InputManager>();
@@ -105,7 +105,7 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 						nameComponent.m_Name = "Drag Entity";
 
 						auto& dragComponent = world.AddComponent<drag::SelectionComponent>(dragEntity);
-						dragComponent.m_CameraEntity = cameraEntity;
+						dragComponent.m_CameraEntity = view;
 						dragComponent.m_SelectedEntity = selectedEntity;
 						dragComponent.m_TranslatePlane = Plane3f(-ray.m_Direction, hitPosition);
 						dragComponent.m_TranslateOffset = transformComponent.m_Translate - hitPosition;
@@ -115,10 +115,10 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	for (const ecs::Entity& dragEntity : world.Query<ecs::query::Include<const drag::SelectionComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const drag::SelectionComponent>>())
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
 		if (!input.IsHeld(strSelect))
-			world.DestroyEntity(dragEntity);
+			world.DestroyEntity(view);
 	}
 }

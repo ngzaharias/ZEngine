@@ -71,26 +71,35 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 	glFrontFace(GL_CW);
 
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, eng::TransformComponent>>())
+	
+	using CameraQuery = ecs::query
+		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
+		::Optional<const eng::camera::EditorComponent>;
+	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		const bool isEditorCamera = cameraView.HasOptional<eng::camera::EditorComponent>();
 		if (isEditorActive != isEditorCamera)
 			continue;
 
-		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 		const Matrix4x4 cameraProj = camera::GetProjection(cameraComponent.m_Projection, windowSize);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 		glUseProgram(shader->m_ProgramId);
 
-		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<eng::DynamicMeshComponent, eng::TransformComponent, voxel::ChunkComponent>>())
+		using RenderQuery = ecs::query
+			::Include<
+			const eng::DynamicMeshComponent,
+			const eng::TransformComponent,
+			const voxel::ChunkComponent>;
+		for (auto&& renderView : world.Query<RenderQuery>())
 		{
-			const auto& voxelComponent = world.ReadComponent<voxel::ChunkComponent>(voxelEntity);
-			const auto& voxelDynamicMesh = world.ReadComponent<eng::DynamicMeshComponent>(voxelEntity);
-			const auto& voxelTransform = world.ReadComponent<eng::TransformComponent>(voxelEntity);
+			const auto& voxelComponent = renderView.ReadRequired<voxel::ChunkComponent>();
+			const auto& voxelDynamicMesh = renderView.ReadRequired<eng::DynamicMeshComponent>();
+			const auto& voxelTransform = renderView.ReadRequired<eng::TransformComponent>();
 
 			const Matrix4x4 voxelModel = voxelTransform.ToTransform();
 

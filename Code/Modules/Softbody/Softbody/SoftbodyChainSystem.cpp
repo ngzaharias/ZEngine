@@ -80,13 +80,13 @@ void softbody::ChainSystem::Update(World& world, const GameTime& gameTime)
 		return;
 
 	const Vector2u& windowSize = window->GetSize();
-	for (const ecs::Entity& chainEntity : world.Query<ecs::query::Include<const eng::TransformComponent, const softbody::ChainComponent>>())
+	for (auto&& chainView : world.Query<ecs::query::Include<const eng::TransformComponent, const softbody::ChainComponent>>())
 	{
-		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+		for (auto&& cameraView : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 		{
 			const auto& input = world.ReadResource<eng::InputManager>();
-			const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+			const auto& cameraProjection = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+			const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 			const Plane3f plane = Plane3f(Vector3f::AxisZ, Vector3f::Zero);
 			const Ray3f ray = eng::camera::ScreenToRay(
@@ -98,13 +98,13 @@ void softbody::ChainSystem::Update(World& world, const GameTime& gameTime)
 			Vector3f intersectPos;
 			if (math::Intersection(ray, plane, intersectPos))
 			{
-				auto& chainTransform = world.WriteComponent<eng::TransformComponent>(chainEntity);
+				auto& chainTransform = chainView.WriteRequired<eng::TransformComponent>();
 				chainTransform.m_Translate = intersectPos;
 			}
 		}
 
-		auto& chain = world.WriteComponent<softbody::ChainComponent>(chainEntity);
-		const auto& transform = world.ReadComponent<eng::TransformComponent>(chainEntity);
+		auto& chain = chainView.WriteRequired<softbody::ChainComponent>();
+		const auto& transform = chainView.ReadRequired<eng::TransformComponent>();
 		if (!chain.m_Links.IsEmpty())
 		{
 			// update first node

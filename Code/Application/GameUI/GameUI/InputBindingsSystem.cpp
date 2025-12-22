@@ -35,9 +35,9 @@ void gui::input::BindingsSystem::Update(World& world, const GameTime& gameTime)
 	}
 
 	const auto& input = world.ReadResource<eng::InputManager>();
-	for (const ecs::Entity& bindingEntity : world.Query<ecs::query::Include<const gui::input::BindingsComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const gui::input::BindingsComponent>>())
 	{
-		const auto& bindings = world.ReadComponent<gui::input::BindingsComponent>(bindingEntity);
+		const auto& bindings = view.ReadRequired<gui::input::BindingsComponent>();
 		for (const gui::input::ECommand& command : bindings.m_Commands)
 		{
 			if (command == ECommand::GameMenu && input.IsPressed(strGameMenu))

@@ -183,12 +183,16 @@ void container::StorageSystem::Update(World& world, const GameTime& gameTime)
 void container::StorageSystem::ProcessMemberAddRequests(World& world)
 {
 	auto& changesComponent = world.WriteSingleton<container::StorageChangesSingleton>();
-	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const container::MemberAddRequestComponent>>())
+	
+	using AddedQuery = ecs::query
+		::Added<const container::MemberAddRequestComponent>
+		::Include<const container::MemberAddRequestComponent>;
+	for (auto&& view : world.Query<AddedQuery>())
 	{
-		const EError error = VerifyMemberAdd(world, requestEntity, changesComponent);
+		const EError error = VerifyMemberAdd(world, view, changesComponent);
 
-		const auto& requestComponent = world.ReadComponent<container::MemberAddRequestComponent>(requestEntity);
-		auto& resultComponent = world.AddComponent<container::MemberAddResultComponent>(requestEntity);
+		const auto& requestComponent = view.ReadRequired<container::MemberAddRequestComponent>();
+		auto& resultComponent = world.AddComponent<container::MemberAddResultComponent>(view);
 		resultComponent.m_TransactionId = requestComponent.m_TransactionId;
 		resultComponent.m_Member = requestComponent.m_Member;
 		resultComponent.m_Error = error;
@@ -212,12 +216,16 @@ void container::StorageSystem::ProcessMemberAddRequests(World& world)
 void container::StorageSystem::ProcessMemberMoveRequests(World& world)
 {
 	auto& changesComponent = world.WriteSingleton<container::StorageChangesSingleton>();
-	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const container::MemberMoveRequestComponent>>())
+	
+	using AddedQuery = ecs::query
+		::Added<const container::MemberMoveRequestComponent>
+		::Include<const container::MemberMoveRequestComponent>;
+	for (auto&& view : world.Query<AddedQuery>())
 	{
-		const EError error = VerifyMemberMove(world, requestEntity, changesComponent);
+		const EError error = VerifyMemberMove(world, view, changesComponent);
 
-		const auto& requestComponent = world.ReadComponent<container::MemberMoveRequestComponent>(requestEntity);
-		auto& resultComponent = world.AddComponent<container::MemberMoveResultComponent>(requestEntity);
+		const auto& requestComponent = view.ReadRequired<container::MemberMoveRequestComponent>();
+		auto& resultComponent = world.AddComponent<container::MemberMoveResultComponent>(view);
 		resultComponent.m_TransactionId = requestComponent.m_TransactionId;
 		resultComponent.m_Member = requestComponent.m_Member;
 		resultComponent.m_Error = error;
@@ -240,12 +248,16 @@ void container::StorageSystem::ProcessMemberMoveRequests(World& world)
 void container::StorageSystem::ProcessMemberRemoveRequests(World& world)
 {
 	auto& changesComponent = world.WriteSingleton<container::StorageChangesSingleton>();
-	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Added<const container::MemberRemoveRequestComponent>>())
+	
+	using AddedQuery = ecs::query
+		::Added<const container::MemberRemoveRequestComponent>
+		::Include<const container::MemberRemoveRequestComponent>;
+	for (auto&& view : world.Query<AddedQuery>())
 	{
-		const EError error = VerifyMemberRemove(world, requestEntity, changesComponent);
+		const EError error = VerifyMemberRemove(world, view, changesComponent);
 
-		const auto& requestComponent = world.ReadComponent<container::MemberRemoveRequestComponent>(requestEntity);
-		auto& resultComponent = world.AddComponent<container::MemberRemoveResultComponent>(requestEntity);
+		const auto& requestComponent = view.ReadRequired<container::MemberRemoveRequestComponent>();
+		auto& resultComponent = world.AddComponent<container::MemberRemoveResultComponent>(view);
 		resultComponent.m_TransactionId = requestComponent.m_TransactionId;
 		resultComponent.m_Member = requestComponent.m_Member;
 		resultComponent.m_Error = error;
@@ -264,15 +276,15 @@ void container::StorageSystem::ProcessMemberRemoveRequests(World& world)
 
 	// #todo: only dead entities
 	// member lifetime is external so we need to listen to it being destroyed
-	for (const ecs::Entity& memberEntity : world.Query<ecs::query::Removed<const container::MemberComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const container::MemberComponent>>())
 	{
 		// if storage was also destroyed in the previous frame
-		const auto& memberComponent = world.ReadComponent<container::MemberComponent>(memberEntity, false);
+		const auto& memberComponent = world.ReadComponent<container::MemberComponent>(view, false);
 		if (!world.IsAlive(memberComponent.m_Storage))
 			continue;
 
 		auto& storageComponent = world.WriteComponent<container::StorageComponent>(memberComponent.m_Storage);
-		storageComponent.m_Members.Remove(memberEntity);
+		storageComponent.m_Members.Remove(view);
 	}
 }
 

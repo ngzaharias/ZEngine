@@ -33,9 +33,9 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 		return;
 
 	const auto& input = world.ReadResource<eng::InputManager>();
-	for (const ecs::Entity& dragEntity : world.Query<ecs::query::Include<const drag::SelectionComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const drag::SelectionComponent>>())
 	{
-		const auto& dragComponent = world.ReadComponent<drag::SelectionComponent>(dragEntity);
+		const auto& dragComponent = view.ReadRequired<drag::SelectionComponent>();
 		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(dragComponent.m_CameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(dragComponent.m_CameraEntity);
 

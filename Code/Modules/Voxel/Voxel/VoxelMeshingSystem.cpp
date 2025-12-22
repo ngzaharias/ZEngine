@@ -150,14 +150,14 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	Set<ecs::Entity> entitiesToUpdate;
-	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Include<const voxel::ModifyComponent>>())
+	for (auto&& requestView : world.Query<ecs::query::Include<const voxel::ModifyComponent>>())
 	{
-		const auto& modifyComponent = world.ReadComponent<voxel::ModifyComponent>(requestEntity);
+		const auto& modifyComponent = requestView.ReadRequired<voxel::ModifyComponent>();
 		for (const voxel::Modify& request : modifyComponent.m_Changes)
 		{
-			for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
+			for (auto&& chunkView : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
 			{
-				const auto& transform = world.ReadComponent<eng::TransformComponent>(voxelEntity);
+				const auto& transform = chunkView.ReadRequired<eng::TransformComponent>();
 
 				const Vector3i requestPos = math::ToGridPos(request.m_WorldPos - transform.m_Translate, voxel::s_ChunkSize1D);
 				if (requestPos != Vector3i::Zero)
@@ -166,10 +166,10 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 				const Vector3f worldPos = request.m_WorldPos - transform.m_Translate;
 				const Vector3i innerPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
 				const int32 innerIndex = ToInnerIndex(innerPos);
-				auto& chunk = world.WriteComponent<voxel::ChunkComponent>(voxelEntity);
+				auto& chunk = chunkView.WriteRequired<voxel::ChunkComponent>();
 				chunk.m_Data[innerIndex] = request.m_Data;
 
-				entitiesToUpdate.Add(voxelEntity);
+				entitiesToUpdate.Add(chunkView);
 			}
 		}
 	}

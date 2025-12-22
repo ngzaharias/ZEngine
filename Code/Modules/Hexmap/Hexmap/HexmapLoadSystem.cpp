@@ -23,12 +23,15 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 
 	// load
 	using RootQuery = ecs::query
-		::Updated<hexmap::RootComponent>
-		::Include<eng::level::EntityComponent>;
-	for (const ecs::Entity& rootEntity : world.Query<ecs::query::Updated<hexmap::RootComponent>>())
+		::Updated<
+		hexmap::RootComponent>
+		::Include<
+		const eng::level::EntityComponent,
+		const hexmap::RootComponent>;
+	for (auto&& rootView : world.Query<RootQuery>())
 	{
-		const auto& root = world.ReadComponent<hexmap::RootComponent>(rootEntity);
-		const auto& level = world.ReadComponent<eng::level::EntityComponent>(rootEntity);
+		const auto& root = rootView.ReadRequired<hexmap::RootComponent>();
+		const auto& level = rootView.ReadRequired<eng::level::EntityComponent>();
 
 		const HexPos hexMin = hexagon::ToOffset(root.m_Zone.m_Min, root.m_HexRadius);
 		const HexPos hexMax = hexagon::ToOffset(root.m_Zone.m_Max, root.m_HexRadius);
@@ -43,10 +46,10 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 		}
 
 		Set<LayerPos> loaded;
-		for (const ecs::Entity& layerEntity : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::LayerComponent>>())
+		for (auto&& layerView : world.Query<ecs::query::Include<const eng::TransformComponent, const hexmap::LayerComponent>>())
 		{
-			const auto& transform = world.ReadComponent<eng::TransformComponent>(layerEntity);
-			const auto& layer = world.ReadComponent<hexmap::LayerComponent>(layerEntity);
+			const auto& transform = layerView.ReadRequired<eng::TransformComponent>();
+			const auto& layer = layerView.ReadRequired<hexmap::LayerComponent>();
 
 			if (inRange.Contains(layer.m_Origin))
 			{
@@ -54,7 +57,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 			}
 			else
 			{
-				world.DestroyEntity(layerEntity);
+				world.DestroyEntity(layerView);
 			}
 		}
 
@@ -68,7 +71,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 			const ecs::Entity entity = world.CreateEntity();
 			auto& layer = world.AddComponent<hexmap::LayerComponent>(entity);
 			layer.m_Origin = layerPos;
-			layer.m_Root = rootEntity;
+			layer.m_Root = rootView;
 			layer.m_HexCount = root.m_HexCount;
 
 			const int32 count = root.m_HexCount.x * root.m_HexCount.y;

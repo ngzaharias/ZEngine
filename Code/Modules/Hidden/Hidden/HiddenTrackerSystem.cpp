@@ -22,15 +22,15 @@ void hidden::TrackerSystem::Update(World& world, const GameTime& gameTime)
 			::Added<const hidden::RevealComponent>
 			::Include<const eng::PrototypeComponent>;
 
-		for (const ecs::Entity& objectEntity : world.Query<RevealedQuery>())
+		for (auto&& objectView : world.Query<RevealedQuery>())
 		{
-			const auto& objectComponent = world.ReadComponent<eng::PrototypeComponent>(objectEntity);
-			for (const ecs::Entity& groupEntity : world.Query<GroupQuery>())
+			const auto& objectComponent = objectView.ReadRequired<eng::PrototypeComponent>();
+			for (auto&& groupView : world.Query<GroupQuery>())
 			{
-				const auto& groupComponent = world.ReadComponent<hidden::GroupComponent>(groupEntity);
+				const auto& groupComponent = groupView.ReadRequired<hidden::GroupComponent>();
 				if (enumerate::Contains(groupComponent.m_Objects, objectComponent.m_Guid))
 				{
-					auto& component = world.WriteComponent<hidden::GroupComponent>(groupEntity);
+					auto& component = groupView.WriteRequired<hidden::GroupComponent>();
 					if (!enumerate::Contains(component.m_Revealed, objectComponent.m_Guid))
 						component.m_Revealed.Append(objectComponent.m_Guid);
 				}

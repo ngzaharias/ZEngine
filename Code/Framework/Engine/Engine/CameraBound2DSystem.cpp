@@ -25,11 +25,11 @@ void eng::camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Bound2DComponent, const eng::camera::ProjectionComponent>;
 
 	const Vector2u& windowSize = window->GetSize();
-	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
+	for (auto&& view : world.Query<CameraQuery>())
 	{
-		const auto& bound2d = world.ReadComponent<eng::camera::Bound2DComponent>(cameraEntity);
-		const auto& projection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& readTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& bound2d = view.ReadRequired<eng::camera::Bound2DComponent>();
+		const auto& projection = view.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& readTransform = view.ReadRequired<eng::TransformComponent>();
 
 		if (std::holds_alternative<eng::camera::Orthographic>(projection.m_Projection))
 		{
@@ -52,7 +52,7 @@ void eng::camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 
 			if (!math::IsNearly(readTransform.m_Translate, translate))
 			{
-				auto& writeTransform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
+				auto& writeTransform = view.WriteRequired<eng::TransformComponent>();
 				writeTransform.m_Translate = translate;
 			}
 		}

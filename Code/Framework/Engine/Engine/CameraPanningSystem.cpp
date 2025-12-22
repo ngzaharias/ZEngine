@@ -49,12 +49,16 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Pan3DComponent, const eng::camera::ProjectionComponent>;
-
 	const Vector2u& windowSize = window->GetSize();
-	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
+
+	using CameraQuery = ecs::query
+		::Include<
+		eng::TransformComponent, 
+		const eng::camera::Pan3DComponent, 
+		const eng::camera::ProjectionComponent>;
+	for (auto&& view : world.Query<CameraQuery>())
 	{
-		const auto& projection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
+		const auto& projection = view.ReadRequired<eng::camera::ProjectionComponent>();
 
 		const auto& input = world.ReadResource<eng::InputManager>();
 		if (input.IsHeld(strSelect))
@@ -70,7 +74,7 @@ void eng::camera::PanningSystem::Update(World& world, const GameTime& gameTime)
 				windowSize,
 				input.m_MouseDelta);
 
-			auto& transform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
+			auto& transform = view.WriteRequired<eng::TransformComponent>();
 			const Quaternion rotation = Quaternion::FromRotator(transform.m_Rotate);
 			const Vector3f delta = (worldPosB - worldPosA) * rotation;
 			transform.m_Translate += delta;

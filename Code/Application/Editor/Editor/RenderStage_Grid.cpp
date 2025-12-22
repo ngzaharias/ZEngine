@@ -112,15 +112,18 @@ void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
 		glDisable(GL_CULL_FACE);
 	}
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+	using Query = ecs::query
+		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
+		::Optional<const eng::camera::EditorComponent>;
+	for (auto&& view : world.Query<Query>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		const bool isEditorCamera = view.HasOptional<eng::camera::EditorComponent>();
 		if (isEditorActive != isEditorCamera)
 			continue;
 
-		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = view.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 		const Vector3f translate = cameraTransform.m_Translate.X0Z();
 

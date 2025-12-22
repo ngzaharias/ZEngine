@@ -55,9 +55,9 @@ namespace
 	{
 		Array<ecs::Entity> voxelEntities;
 		auto& lines = world.WriteSingleton<eng::LinesSingleton>();
-		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
 		{
-			const auto& transform = world.ReadComponent<eng::TransformComponent>(voxelEntity);
+			const auto& transform = view.ReadRequired<eng::TransformComponent>();
 			const AABB3f aabb = AABB3f(transform.m_Translate, transform.m_Translate + Vector3f(voxel::s_ChunkSize1D));
 
 			Vector3f intersectPos;
@@ -68,7 +68,7 @@ namespace
 				transform.m_Translate + Vector3f(voxel::s_ChunkSize1D * 0.5f),
 				voxel::s_ChunkSize1D * 0.51f,
 				Vector4f(1.f));
-			voxelEntities.Append(voxelEntity);
+			voxelEntities.Append(view);
 		}
 
 		const path::Raytracer raytracer(segment.m_PointA, segment.m_PointB, voxel::s_BlockSize1D);

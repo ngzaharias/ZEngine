@@ -33,25 +33,27 @@ void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 	using CameraQuery = ecs::query
 		::Include<
 		const eng::camera::ProjectionComponent,
-		const eng::TransformComponent>;
-	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
+		const eng::TransformComponent>
+		::Optional<
+		const eng::camera::EditorComponent>;
+	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		const bool isEditorCamera = cameraView.HasOptional<eng::camera::EditorComponent>();
 		if (isEditorActive != isEditorCamera)
 			continue;
 
-		const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraProjection = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 		using GridQuery = ecs::query
 			::Include<
 			const eng::TransformComponent,
 			const tilemap::GridComponent>;
-		for (const ecs::Entity& gridEntity : world.Query<GridQuery>())
+		for (auto&& gridView : world.Query<GridQuery>())
 		{
-			const auto& gridComponent = world.ReadComponent<tilemap::GridComponent>(gridEntity);
-			const auto& gridTransform = world.ReadComponent<eng::TransformComponent>(gridEntity);
+			const auto& gridComponent = gridView.ReadRequired<tilemap::GridComponent>();
+			const auto& gridTransform = gridView.ReadRequired<eng::TransformComponent>();
 			const Quaternion rotate = Quaternion::FromRotator(gridTransform.m_Rotate);
 			const Vector3f normal = Vector3f::AxisZ * rotate;
 

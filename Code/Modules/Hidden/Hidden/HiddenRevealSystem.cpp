@@ -71,10 +71,14 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 	const auto& settings = world.ReadSingleton<hidden::settings::DebugSingleton>();
 	const auto& physics = world.ReadSingleton<eng::PhysicsSceneSingleton>();
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+	using Query = ecs::query
+		::Include <
+		const eng::camera::ProjectionComponent,
+		const eng::TransformComponent>;
+	for (auto&& view : world.Query<Query>())
 	{
-		const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraProjection = view.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 		{
 			const auto& input = world.ReadResource<eng::InputManager>();
