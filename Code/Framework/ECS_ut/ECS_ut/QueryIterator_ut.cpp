@@ -33,11 +33,10 @@ TEST_CASE("ecs::QueryIterator. Test.")
 	Set<ecs::Entity> entities;
 	entities.Add(entity);
 
-	using QueryA = ecs::query::Include<ComponentA>;
-	using QueryB = ecs::query::Optional<ComponentA, ComponentB, ComponentC>;
-	using Required = ecs::query::IncludeAccess<QueryA>;
-	using Optional = ecs::query::OptionalAccess<QueryB>;
-	ecs::QueryIterator<Required, Optional> iterator{ entities.cbegin(), world };
+	using Query = ecs::query
+		::Include<ComponentA>
+		::Optional<ComponentA, ComponentB, ComponentC>;
+	ecs::QueryIterator<Query> iterator{ entities.cbegin(), world };
 	auto view = *iterator;
 	
 	auto& componentA = view.ReadRequired<ComponentA>();

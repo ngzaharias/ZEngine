@@ -7,15 +7,18 @@ namespace ecs
 {
 	class EntityWorld;
 
-	template<typename TRequired, typename TOptional>
+	template<typename TQuery>
 	struct QueryIterator
 	{
-		using EntityView = ecs::EntityView_t<TRequired, TOptional>;
+		using Required = ecs::query::IncludeAccess<TQuery>::NonConst;
+		using Optional = ecs::query::OptionalAccess<TQuery>::NonConst;
+
+		using EntityView = ecs::EntityView_t<Required, Optional>;
 		using Iterator = ecs::QueryGroup::const_iterator;
 
 		auto operator*() -> EntityView
 		{
-			return EntityView(*m_Iterator, m_World);
+			return EntityView(m_World, *m_Iterator);
 		}
 
 		auto operator++() -> QueryIterator&
