@@ -28,6 +28,9 @@ namespace ecs
 		operator WorldView<TOthers...>&();
 
 	public:
+		template<class TEntityView>
+		TEntityView EntityView(const ecs::Entity& entity);
+
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 

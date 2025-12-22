@@ -21,6 +21,13 @@ ecs::WorldView<TTypes...>::operator ecs::WorldView<TOthers...>&()
 }
 
 template <typename... TTypes>
+template<class TEntityView>
+TEntityView ecs::WorldView<TTypes...>::EntityView(const ecs::Entity& entity)
+{
+	return TEntityView(m_EntityWorld, entity);
+}
+
+template <typename... TTypes>
 bool ecs::WorldView<TTypes...>::IsAlive(const Entity& entity) const
 {
 	return m_EntityWorld.IsAlive(entity);

@@ -27,12 +27,6 @@ bool ecs::EntityWorld::IsRegistered() const
 	}
 }
 
-template<class TEntityView>
-TEntityView ecs::EntityWorld::EntityView(const ecs::Entity& entity)
-{
-	return TEntityView(entity, *this);
-}
-
 template<class TWorldView>
 TWorldView ecs::EntityWorld::WorldView()
 {
