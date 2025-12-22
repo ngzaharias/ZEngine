@@ -25,7 +25,7 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
 	using AddedQuery = ecs::query
 		::Added<gui::main_menu::WindowComponent>
-		::Include<gui::main_menu::WindowComponent>;
+		::Include<const gui::main_menu::WindowComponent>;
 	for (auto&& view : world.Query<AddedQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();

@@ -250,7 +250,7 @@ void eng::PhysicsSystem::ProcessUpdated(World& world)
 	PROFILE_FUNCTION();
 
 	using Query = ecs::query
-		::Include<eng::PhysicsComponent, eng::TransformComponent>;
+		::Include<eng::TransformComponent, const eng::PhysicsComponent>;
 	for (auto&& view : world.Query<Query>())
 	{
 		const auto& physicsComponent = view.ReadRequired<eng::PhysicsComponent>();

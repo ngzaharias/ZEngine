@@ -134,7 +134,7 @@ void debug::ContainerSystem::Update(World& world, const GameTime& gameTime)
 			{
 				if (ImGui::Selectable("Unassigned"))
 					window.m_Storage = ecs::Entity::Unassigned;
-				for (auto&& storageView : world.Query<ecs::query::Include<container::StorageComponent>>())
+				for (auto&& storageView : world.Query<ecs::query::Include<const container::StorageComponent>>())
 				{
 					const str::String storageLabel = ToString(storageView);
 					if (ImGui::Selectable(storageLabel.c_str()))

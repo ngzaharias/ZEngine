@@ -20,7 +20,7 @@ void gui::loading::LoadingSystem::Update(World& world, const GameTime& gameTime)
 {
 	using AddedQuery = ecs::query
 		::Added<eng::level::LoadingComponent>
-		::Include<eng::level::LoadingComponent>;
+		::Include<const eng::level::LoadingComponent>;
 	for (auto&& view : world.Query<AddedQuery>())
 	{
 		const auto& loadingComponent = view.ReadRequired<eng::level::LoadingComponent>();

@@ -119,7 +119,8 @@ void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
 
 		const uint32 vertexCount = m_Vertices.GetCount();
 
-		using Query = ecs::query::Include<
+		using Query = ecs::query
+			::Include<
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent, 
 			const eng::TransformComponent>;

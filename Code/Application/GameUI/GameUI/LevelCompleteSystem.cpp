@@ -49,7 +49,7 @@ void gui::level_complete::MenuSystem::Update(World& world, const GameTime& gameT
 		const auto& settings = world.ReadSingleton<eng::settings::LaunchSingleton>();
 		world.AddEvent<eng::level::LoadRequest>(settings.m_Level);
 
-		for (auto&& view : world.Query<ecs::query::Include<gui::level_complete::WindowComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<const gui::level_complete::WindowComponent>>())
 			world.DestroyEntity(view);
 	}
 

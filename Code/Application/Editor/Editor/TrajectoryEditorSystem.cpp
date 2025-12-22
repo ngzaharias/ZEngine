@@ -276,6 +276,6 @@ void editor::TrajectoryEditorSystem::Update(World& world, const GameTime& gameTi
 			world.DestroyEntity(view);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Include<projectile::CreateResultComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const projectile::CreateResultComponent>>())
 		world.DestroyEntity(view);
 }

@@ -149,9 +149,8 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 			{
 				using RenderQuery = ecs::query
 					::Include<
-					eng::StaticMeshComponent,
-					eng::TransformComponent>;
-
+					const eng::StaticMeshComponent,
+					const eng::TransformComponent>;
 				for (auto&& renderView : world.Query<RenderQuery>())
 				{
 					const auto& meshComponent = renderView.ReadRequired<eng::StaticMeshComponent>();

@@ -168,15 +168,15 @@ void container::StorageSystem::Update(World& world, const GameTime& gameTime)
 	ProcessStorageRequests(world);
 
 	// cleanup results on the next frame
-	for (auto&& view : world.Query<ecs::query::Include<container::MemberAddResultComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const container::MemberAddResultComponent>>())
 		world.RemoveComponent<container::MemberAddResultComponent>(view);
-	for (auto&& view : world.Query<ecs::query::Include<container::MemberMoveResultComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const container::MemberMoveResultComponent>>())
 		world.RemoveComponent<container::MemberMoveResultComponent>(view);
-	for (auto&& view : world.Query<ecs::query::Include<container::MemberRemoveResultComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const container::MemberRemoveResultComponent>>())
 		world.RemoveComponent<container::MemberRemoveResultComponent>(view);
-	for (auto&& view : world.Query<ecs::query::Include<container::StorageCreateResultComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const container::StorageCreateResultComponent>>())
 		world.RemoveComponent<container::StorageCreateResultComponent>(view);
-	for (auto&& view : world.Query<ecs::query::Include<container::StorageDestroyResultComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const container::StorageDestroyResultComponent>>())
 		world.RemoveComponent<container::StorageDestroyResultComponent>(view);
 }
 

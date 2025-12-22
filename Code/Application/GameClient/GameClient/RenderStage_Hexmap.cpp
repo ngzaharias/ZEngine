@@ -133,8 +133,8 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 
 		using RenderQuery = ecs::query
 			::Include<
-			hexmap::LayerComponent,
-			eng::TransformComponent>;
+			const eng::TransformComponent,
+			const hexmap::LayerComponent>;
 
 		for (auto&& renderView : world.Query<RenderQuery>())
 		{

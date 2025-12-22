@@ -31,11 +31,8 @@ void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 		return;
 
 	using CameraQuery = ecs::query
-		::Include<
-		const eng::camera::ProjectionComponent,
-		const eng::TransformComponent>
-		::Optional<
-		const eng::camera::EditorComponent>;
+		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
+		::Optional<const eng::camera::EditorComponent>;
 	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;

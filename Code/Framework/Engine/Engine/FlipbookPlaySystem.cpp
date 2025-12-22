@@ -22,8 +22,7 @@ void eng::FlipbookPlaySystem::Update(World& world, const GameTime& gameTime)
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 
 	using Query = ecs::query
-		::Include<
-		eng::FlipbookComponent>;
+		::Include<eng::FlipbookComponent>;
 	for (auto&& view : world.Query<Query>())
 	{
 		auto& flipbookComponent = view.WriteRequired<eng::FlipbookComponent>();

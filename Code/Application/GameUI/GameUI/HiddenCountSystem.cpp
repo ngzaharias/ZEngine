@@ -18,7 +18,7 @@ void gui::hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 {
 	using AddedQuery = ecs::query
 		::Added<::hidden::CountComponent>
-		::Include<::hidden::CountComponent>;
+		::Include<const ::hidden::CountComponent>;
 	for (auto&& view : world.Query<AddedQuery>())
 	{
 		const auto& counter = view.ReadRequired<::hidden::CountComponent>();
@@ -31,7 +31,7 @@ void gui::hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 
 	using UpdatedQuery = ecs::query
 		::Updated<::hidden::CountComponent>
-		::Include<::hidden::CountComponent>;
+		::Include<const ::hidden::CountComponent>;
 	for (auto&& view : world.Query<UpdatedQuery>())
 	{
 		const auto& counter = view.ReadRequired<::hidden::CountComponent>();

@@ -90,7 +90,7 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 
 	if (input.IsHeld(strSelect))
 	{
-		using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::ProjectionComponent>;
+		using CameraQuery = ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>;
 		for (auto&& cameraView : world.Query<CameraQuery>())
 		{
 			const auto& cameraProjection = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
@@ -106,7 +106,7 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 			Vector3f intersectPos;
 			if (math::Intersection(ray, plane, intersectPos))
 			{
-				for (auto&& layerView : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::LayerComponent>>())
+				for (auto&& layerView : world.Query<ecs::query::Include<hexmap::LayerComponent>>())
 				{
 					const auto& layer = layerView.ReadRequired<hexmap::LayerComponent>();
 					const auto& root = world.ReadComponent<hexmap::RootComponent>(layer.m_Root);

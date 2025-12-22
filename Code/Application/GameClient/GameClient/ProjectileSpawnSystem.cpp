@@ -40,7 +40,7 @@ void projectile::SpawnSystem::Update(World& world, const GameTime& gameTime)
 	ProcessCreate(world);
 	ProcessDestroy(world);
 
-	for (auto&& view : world.Query<ecs::query::Include<projectile::CreateResultComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const projectile::CreateResultComponent>>())
 		world.RemoveComponent<projectile::CreateResultComponent>(view);
 }
 
