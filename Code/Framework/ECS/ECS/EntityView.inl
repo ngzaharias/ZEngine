@@ -1,12 +1,26 @@
 #pragma once
 
-template<typename ...TRequired, typename ...TOptional>
-ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::EntityView_t(const ecs::Entity& entity, ecs::EntityWorld& world)
-	: m_Entity(entity)
-	, m_World(world)
+namespace _private
 {
-	m_Required = m_World.template GetComponentsForView<TRequired...>(m_Entity);
-	m_Optional = m_World.template TryComponentsForView<TOptional...>(m_Entity);
+}
+
+template<typename ...TRequired, typename ...TOptional>
+ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::EntityView_t(ecs::EntityWorld& world, const ecs::Entity& entity)
+	: m_World(world)
+	, m_Entity(entity)
+	, m_Required(m_World.template GetComponentsForView<TRequired...>(m_Entity))
+	, m_Optional(m_World.template TryComponentsForView<TOptional...>(m_Entity))
+{
+}
+
+template<typename ...TRequired, typename ...TOptional>
+template<typename TOtherRequired, typename TOtherOptional>
+ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::EntityView_t(const EntityView_t<TOtherRequired, TOtherOptional>& rhs)
+	: m_World(rhs.m_World)
+	, m_Entity(rhs.m_Entity)
+{
+	((std::get<TRequired*>(m_Required) = std::get<TRequired*>(rhs.m_Required)), ...);
+	((std::get<TOptional*>(m_Optional) = std::get<TOptional*>(rhs.m_Optional)), ...);
 }
 
 template<typename ...TRequired, typename ...TOptional>

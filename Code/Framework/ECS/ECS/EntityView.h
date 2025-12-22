@@ -15,6 +15,8 @@ namespace ecs
 	template<typename ...TRequired, typename ...TOptional>
 	class EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>
 	{
+		template<typename...>
+		friend class EntityView_t;
 		friend class EntityWorld;
 
 	private:
@@ -27,14 +29,14 @@ namespace ecs
 		template <typename... Types>
 		using Optional = EntityView_t<TRequiredList, decltype(TOptionalList::template Append<Types...>())>;
 
-		EntityView_t(const ecs::Entity& entity, ecs::EntityWorld& world);
+		EntityView_t(ecs::EntityWorld& world, const ecs::Entity& entity);
+
+		template<typename TOtherRequired, typename TOtherOptional>
+		EntityView_t(const EntityView_t<TOtherRequired, TOtherOptional>& rhs);
 
 		operator ecs::Entity() { return m_Entity; }
 
-		const ecs::Entity& GetEntity() const
-		{
-			return m_Entity;
-		}
+		const ecs::Entity& GetEntity() const { return m_Entity; }
 
 		template<typename TComponent>
 		auto ReadRequired() const -> const TComponent&;
@@ -52,8 +54,8 @@ namespace ecs
 		auto WriteOptional() -> TComponent*;
 
 	private:
-		ecs::Entity m_Entity;
 		ecs::EntityWorld& m_World;
+		ecs::Entity m_Entity;
 
 		std::tuple<TRequired*...> m_Required;
 		std::tuple<TOptional*...> m_Optional;
