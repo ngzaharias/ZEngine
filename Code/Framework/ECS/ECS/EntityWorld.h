@@ -33,10 +33,10 @@ namespace ecs
 
 		void Update(const GameTime& gameTime);
 
-		template<class TType>
+		template<typename TType>
 		bool IsRegistered() const;
 
-		template<class TWorldView>
+		template<typename TWorldView>
 		TWorldView WorldView();
 
 		//////////////////////////////////////////////////////////////////////////

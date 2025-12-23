@@ -1,6 +1,6 @@
 #pragma once
 
-template<class TType>
+template <typename TType>
 bool ecs::EntityWorld::IsRegistered() const
 {
 	static_assert(!std::is_const<TType>::value, "Type cannot be const.");
@@ -27,7 +27,7 @@ bool ecs::EntityWorld::IsRegistered() const
 	}
 }
 
-template<class TWorldView>
+template <typename TWorldView>
 TWorldView ecs::EntityWorld::WorldView()
 {
 	return TWorldView(*this);
@@ -49,7 +49,7 @@ inline void ecs::EntityWorld::DestroyEntity(const ecs::Entity& entity)
 	m_FrameBuffer.DestroyEntity(entity);
 }
 
-template<class TComponent>
+template <typename TComponent>
 void ecs::EntityWorld::RegisterComponent()
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
@@ -65,7 +65,7 @@ void ecs::EntityWorld::RegisterComponent()
 	m_FrameBuffer.RegisterComponent<TComponent>();
 }
 
-template<class TComponent, typename... TArgs>
+template <typename TComponent, typename... TArgs>
 auto ecs::EntityWorld::AddComponent(const ecs::Entity& entity, TArgs&&... args) -> decltype(auto)
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
@@ -79,7 +79,7 @@ auto ecs::EntityWorld::AddComponent(const ecs::Entity& entity, TArgs&&... args) 
 	return m_FrameBuffer.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
 }
 
-template<class TComponent>
+template <typename TComponent>
 void ecs::EntityWorld::RemoveComponent(const ecs::Entity& entity)
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
@@ -92,7 +92,7 @@ void ecs::EntityWorld::RemoveComponent(const ecs::Entity& entity)
 	m_FrameBuffer.RemoveComponent<TComponent>(entity);
 }
 
-template<class TComponent>
+template <typename TComponent>
 bool ecs::EntityWorld::HasComponent(const ecs::Entity& entity, const bool alive /*= true*/) const
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
@@ -104,7 +104,7 @@ bool ecs::EntityWorld::HasComponent(const ecs::Entity& entity, const bool alive 
 	return m_EntityStorage.HasComponent<TComponent>(entity, alive);
 }
 
-template<class TComponent>
+template <typename TComponent>
 auto ecs::EntityWorld::ReadComponent(const ecs::Entity& entity, const bool alive /*= true*/) -> const TComponent&
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
@@ -116,7 +116,7 @@ auto ecs::EntityWorld::ReadComponent(const ecs::Entity& entity, const bool alive
 	return m_EntityStorage.GetComponent<TComponent>(entity, alive);
 }
 
-template<class TComponent>
+template <typename TComponent>
 auto ecs::EntityWorld::WriteComponent(const ecs::Entity& entity, const bool alive /*= true*/) -> TComponent&
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
@@ -131,7 +131,7 @@ auto ecs::EntityWorld::WriteComponent(const ecs::Entity& entity, const bool aliv
 	return m_EntityStorage.GetComponent<TComponent>(entity, alive);
 }
 
-template<class TEvent>
+template <typename TEvent>
 void ecs::EntityWorld::RegisterEvent()
 {
 	static_assert(!std::is_const<TEvent>::value, "Type cannot be const.");
@@ -147,7 +147,7 @@ void ecs::EntityWorld::RegisterEvent()
 	m_FrameBuffer.RegisterEvent<TEvent>();
 }
 
-template<class TEvent, typename... TArgs>
+template <typename TEvent, typename... TArgs>
 auto ecs::EntityWorld::AddEvent(TArgs&&... args) -> decltype(auto)
 {
 	static_assert(!std::is_const<TEvent>::value, "Type cannot be const.");
@@ -159,7 +159,7 @@ auto ecs::EntityWorld::AddEvent(TArgs&&... args) -> decltype(auto)
 	return m_FrameBuffer.AddEvent<TEvent>(std::forward<TArgs>(args)...);
 }
 
-template<class TResource>
+template <typename TResource>
 void ecs::EntityWorld::RegisterResource(TResource& resource)
 {
 	static_assert(!std::is_const<TResource>::value, "Type cannot be const.");
@@ -170,7 +170,7 @@ void ecs::EntityWorld::RegisterResource(TResource& resource)
 	return m_ResourceRegistry.Register<TResource>(resource);
 }
 
-template<class TResource>
+template <typename TResource>
 auto ecs::EntityWorld::ReadResource() -> const TResource&
 {
 	static_assert(!std::is_const<TResource>::value, "Type cannot be const.");
@@ -181,7 +181,7 @@ auto ecs::EntityWorld::ReadResource() -> const TResource&
 	return m_ResourceRegistry.Get<TResource>();
 }
 
-template<class TResource>
+template <typename TResource>
 auto ecs::EntityWorld::WriteResource() -> TResource&
 {
 	static_assert(!std::is_const<TResource>::value, "Type cannot be const.");
@@ -192,7 +192,7 @@ auto ecs::EntityWorld::WriteResource() -> TResource&
 	return m_ResourceRegistry.Get<TResource>();
 }
 
-template<class TSingleton, typename... TArgs>
+template <typename TSingleton, typename... TArgs>
 void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
 {
 	static_assert(!std::is_const<TSingleton>::value, "Type cannot be const.");
@@ -207,7 +207,7 @@ void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
 	m_EntityStorage.RegisterSingleton<TSingleton>(std::forward<TArgs>(args)...);
 }
 
-template<class TSingleton>
+template <typename TSingleton>
 auto ecs::EntityWorld::ReadSingleton() -> const TSingleton&
 {
 	static_assert(!std::is_const<TSingleton>::value, "Type cannot be const.");
@@ -219,7 +219,7 @@ auto ecs::EntityWorld::ReadSingleton() -> const TSingleton&
 	return m_EntityStorage.GetSingleton<TSingleton>();
 }
 
-template<class TSingleton>
+template <typename TSingleton>
 auto ecs::EntityWorld::WriteSingleton() -> TSingleton&
 {
 	static_assert(!std::is_const<TSingleton>::value, "Type cannot be const.");
@@ -233,7 +233,7 @@ auto ecs::EntityWorld::WriteSingleton() -> TSingleton&
 	return m_EntityStorage.GetSingleton<TSingleton>();
 }
 
-template<class TSystem, typename... TArgs>
+template <typename TSystem, typename... TArgs>
 void ecs::EntityWorld::RegisterSystem(TArgs&&... args)
 {
 	static_assert(!std::is_const<TSystem>::value, "Type cannot be const.");
@@ -246,7 +246,7 @@ void ecs::EntityWorld::RegisterSystem(TArgs&&... args)
 	m_SystemRegistry.Register<TSystem>(std::forward<TArgs>(args)...);
 }
 
-template<class TSystem>
+template <typename TSystem>
 void ecs::EntityWorld::RegisterSystemPriority(const int32 priority)
 {
 	static_assert(!std::is_const<TSystem>::value, "Type cannot be const.");
@@ -257,7 +257,7 @@ void ecs::EntityWorld::RegisterSystemPriority(const int32 priority)
 	m_SystemRegistry.RegisterPriority<TSystem>(priority);
 }
 
-template<class TSystem>
+template <typename TSystem>
 auto ecs::EntityWorld::GetSystem() -> TSystem&
 {
 	static_assert(!std::is_const<TSystem>::value, "Type cannot be const.");
