@@ -185,22 +185,22 @@ void debug::ShapeSystem::Update(World& world, const GameTime& gameTime)
 		window.m_PlottingLabel = ToLabel("Plotter##collision", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const debug::ShapeWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const debug::ShapeWindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<debug::ShapeWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<debug::ShapeWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<debug::ShapeWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<debug::ShapeWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<debug::ShapeWindowComponent>(windowEntity);
+		auto& window = view.WriteRequired<debug::ShapeWindowComponent>();
 
 		bool isWindowOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(window.m_DockspaceLabel.c_str(), &isWindowOpen, s_WindowFlags))
 		{
-			DrawMenuBar(world, windowEntity);
+			DrawMenuBar(world, view);
 
 			const ImGuiID dockspaceId = ImGui::GetID(window.m_DockspaceLabel.c_str());
 			if (!ImGui::DockBuilderGetNode(dockspaceId))
@@ -220,14 +220,14 @@ void debug::ShapeSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (ImGui::Begin(window.m_InspectorLabel.c_str()))
-			DrawInspector(world, windowEntity);
+			DrawInspector(world, view);
 		ImGui::End();
 
 		if (ImGui::Begin(window.m_PlottingLabel.c_str()))
-			DrawPlotter(world, windowEntity);
+			DrawPlotter(world, view);
 		ImGui::End();
 
 		if (!isWindowOpen)
-			world.DestroyEntity(windowEntity);
+			world.DestroyEntity(view);
 	}
 }

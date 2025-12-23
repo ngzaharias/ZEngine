@@ -47,7 +47,7 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	if (!debugSettings.m_AreLinesEnabled)
@@ -79,15 +79,19 @@ void eng::RenderStage_Lines::Render(ecs::EntityWorld& entityWorld)
 		glBindVertexArray(m_AttributeObject);
 
 		const uint32 vertexCount = readComponent.m_Vertices.GetCount();
-		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+
+		using Query = ecs::query
+			::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
+			::Optional<const eng::camera::EditorComponent>;
+		for (auto&& view : world.Query<Query>())
 		{
 			const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-			const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+			const bool isEditorCamera = view.HasOptional<eng::camera::EditorComponent>();
 			if (isEditorActive != isEditorCamera)
 				continue;
 
-			const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+			const auto& cameraComponent = view.ReadRequired<eng::camera::ProjectionComponent>();
+			const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 			const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraComponent.m_Projection, windowSize);
 			const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();

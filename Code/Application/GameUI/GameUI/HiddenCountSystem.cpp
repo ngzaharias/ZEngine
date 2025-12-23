@@ -16,9 +16,12 @@ namespace
 
 void gui::hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 {
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<::hidden::CountComponent>>())
+	using AddedQuery = ecs::query
+		::Added<::hidden::CountComponent>
+		::Include<const ::hidden::CountComponent>;
+	for (auto&& view : world.Query<AddedQuery>())
 	{
-		const auto& counter = world.ReadComponent<::hidden::CountComponent>(entity);
+		const auto& counter = view.ReadRequired<::hidden::CountComponent>();
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.CreateWidget(strHiddenCount_xaml);
 		auto& dataContext = uiManager.WriteDataContext<gui::DCHiddenCount>(strHiddenCount_xaml);
@@ -26,9 +29,12 @@ void gui::hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 		dataContext.SetObjectTotal(counter.m_Objects);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Updated<::hidden::CountComponent>>())
+	using UpdatedQuery = ecs::query
+		::Updated<::hidden::CountComponent>
+		::Include<const ::hidden::CountComponent>;
+	for (auto&& view : world.Query<UpdatedQuery>())
 	{
-		const auto& counter = world.ReadComponent<::hidden::CountComponent>(entity);
+		const auto& counter = view.ReadRequired<::hidden::CountComponent>();
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		auto& dataContext = uiManager.WriteDataContext<gui::DCHiddenCount>(strHiddenCount_xaml);
 
@@ -36,7 +42,7 @@ void gui::hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 		dataContext.SetObjectTotal(counter.m_Objects);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<::hidden::CountComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<::hidden::CountComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strHiddenCount_xaml);

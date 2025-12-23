@@ -62,7 +62,7 @@ void debug::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 		input.RemoveLayer(strInput);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<debug::level::OpenWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<debug::level::OpenWindowComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags =
 			ImGuiWindowFlags_NoCollapse |
@@ -107,6 +107,6 @@ void debug::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 
 		const auto& input = world.ReadResource<eng::InputManager>();
 		if (!isWindowOpen || input.IsPressed(strClose))
-			world.DestroyEntity(entity);
+			world.DestroyEntity(view);
 	}
 }

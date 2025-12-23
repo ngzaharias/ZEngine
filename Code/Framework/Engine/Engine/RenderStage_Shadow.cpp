@@ -38,7 +38,7 @@ namespace
 
 void eng::RenderStage_Shadow::Initialise(ecs::EntityWorld& entityWorld)
 {
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 
 	// texture and buffer
 	{
@@ -82,7 +82,7 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto& bufferComponent = world.ReadSingleton<eng::FrameBufferSingleton>();
 
@@ -107,21 +107,29 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 	}
 
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+
+	using CameraQuery = ecs::query
+		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
+		::Optional<const eng::camera::EditorComponent>;
+	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		const bool isEditorCamera = cameraView.HasOptional<eng::camera::EditorComponent>();
 		if (isEditorActive != isEditorCamera)
 			continue;
 
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 		const Matrix3x3 cameraRotate = Matrix3x3::FromRotate(cameraTransform.m_Rotate);
 		const Vector3f cameraFoward = Vector3f::AxisZ * cameraRotate;
 
-		for (const ecs::Entity& lightEntity : world.Query<ecs::query::Include<const eng::light::DirectionalComponent, const eng::TransformComponent>>())
+		using LightQuery = ecs::query
+			::Include<
+			const eng::light::DirectionalComponent, 
+			const eng::TransformComponent>;
+		for (auto&& lightView : world.Query<LightQuery>())
 		{
-			const auto& lightComponent = world.ReadComponent<eng::light::DirectionalComponent>(lightEntity);
-			const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(lightEntity);
+			const auto& lightComponent = lightView.ReadRequired<eng::light::DirectionalComponent>();
+			const auto& lightTransform = lightView.ReadRequired<eng::TransformComponent>();
 
 			camera::Orthographic orthographic;
 
@@ -139,17 +147,16 @@ void eng::RenderStage_Shadow::Render(ecs::EntityWorld& entityWorld)
 
 			// static mesh
 			{
-				using Query = ecs::query
+				using RenderQuery = ecs::query
 					::Include<
-					eng::StaticMeshComponent,
-					eng::TransformComponent>;
-
-				for (const ecs::Entity& renderEntity : world.Query<Query>())
+					const eng::StaticMeshComponent,
+					const eng::TransformComponent>;
+				for (auto&& renderView : world.Query<RenderQuery>())
 				{
-					const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(renderEntity);
+					const auto& meshComponent = renderView.ReadRequired<eng::StaticMeshComponent>();
 
 					RenderBatchID& id = batchIDs.Emplace();
-					id.m_Entity = renderEntity;
+					id.m_Entity = renderView;
 					id.m_ShaderId = strDepthShader;
 					id.m_StaticMeshId = meshComponent.m_StaticMesh;
 				}

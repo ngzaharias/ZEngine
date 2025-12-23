@@ -34,6 +34,9 @@ namespace ecs
 		inline TComponent& Get(const ecs::Entity& entity);
 		inline const TComponent& Get(const ecs::Entity& entity) const;
 
+		inline TComponent* Try(const ecs::Entity& entity);
+		inline const TComponent* Try(const ecs::Entity& entity) const;
+
 		inline Array<TComponent>& GetValues();
 		inline const Array<TComponent>& GetValues() const;
 

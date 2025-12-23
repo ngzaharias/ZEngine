@@ -27,8 +27,14 @@ bool ecs::EntityWorld::IsRegistered() const
 	}
 }
 
+template<class TEntityView>
+TEntityView ecs::EntityWorld::EntityView(const ecs::Entity& entity)
+{
+	return TEntityView(entity, *this);
+}
+
 template<class TWorldView>
-TWorldView ecs::EntityWorld::GetWorldView()
+TWorldView ecs::EntityWorld::WorldView()
 {
 	return TWorldView(*this);
 }
@@ -266,4 +272,32 @@ auto ecs::EntityWorld::GetSystem() -> TSystem&
 
 	Z_PANIC(IsRegistered<TSystem>(), "System isn't registered!");
 	return m_SystemRegistry.GetSystem<TSystem>();
+}
+
+template <typename TComponent>
+auto ecs::EntityWorld::GetComponentForView(const ecs::Entity& entity) const -> TComponent*
+{
+	return &m_EntityStorage.GetComponent<TComponent>(entity, true);
+}
+
+template <typename...TComponents>
+auto ecs::EntityWorld::GetComponentsForView(const ecs::Entity& entity) const -> std::tuple<TComponents*...>
+{
+	std::tuple<TComponents*...> components;
+	((std::get<TComponents*>(components) = GetComponentForView<TComponents>(entity)), ...);
+	return components;
+}
+
+template <typename TComponent>
+auto ecs::EntityWorld::TryComponentForView(const ecs::Entity& entity) const -> TComponent*
+{
+	return m_EntityStorage.TryComponent<TComponent>(entity, true);
+}
+
+template <typename...TComponents>
+auto ecs::EntityWorld::TryComponentsForView(const ecs::Entity& entity) const -> std::tuple<TComponents*...>
+{
+	std::tuple<TComponents*...> components;
+	((std::get<TComponents*>(components) = TryComponentForView<TComponents>(entity)), ...);
+	return components;
 }

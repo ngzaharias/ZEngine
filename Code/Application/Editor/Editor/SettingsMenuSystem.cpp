@@ -36,19 +36,19 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 		window.m_Local = world.ReadSingleton<editor::settings::LocalSingleton>();
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const editor::settings::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::settings::WindowComponent>>())
 	{
-		auto& window = world.ReadComponent<editor::settings::WindowComponent>(entity, false);
+		auto& window = world.ReadComponent<editor::settings::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<editor::settings::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::settings::WindowComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags =
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_MenuBar;
 
-		auto& windowComponent = world.WriteComponent<editor::settings::WindowComponent>(entity);
+		auto& windowComponent = view.WriteRequired<editor::settings::WindowComponent>();
 
 		bool isWindowOpen = true;
 		if (ImGui::Begin(windowComponent.m_Label.c_str(), &isWindowOpen, s_WindowFlags))
@@ -74,6 +74,6 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 		ImGui::End();
 
 		if (!isWindowOpen)
-			world.DestroyEntity(entity);
+			world.DestroyEntity(view);
 	}
 }

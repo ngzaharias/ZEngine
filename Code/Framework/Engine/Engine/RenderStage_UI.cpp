@@ -89,7 +89,7 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(strModel);
 	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);
@@ -116,15 +116,19 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 	glFrontFace(GL_CW);
 
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+	
+	using CameraQuery = ecs::query
+		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
+		::Optional<const eng::camera::EditorComponent>;
+	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		const bool isEditorCamera = cameraView.HasOptional<eng::camera::EditorComponent>();
 		if (isEditorActive != isEditorCamera)
 			continue;
 
-		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 		const Matrix4x4 cameraProj = camera::GetProjection(cameraComponent.m_Projection, windowSize);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
@@ -132,15 +136,14 @@ void eng::RenderStage_UI::Render(ecs::EntityWorld& entityWorld)
 		glUseProgram(shader->m_ProgramId);
 		glBindVertexArray(m_AttributeObject);
 
-		using Query = ecs::query
+		using RenderQuery = ecs::query
 			::Include<
-			eng::TextComponent,
-			eng::TransformComponent>;
-
-		for (const ecs::Entity& textEntity : world.Query<Query>())
+			const eng::TextComponent,
+			const eng::TransformComponent>;
+		for (auto&& renderView : world.Query<RenderQuery>())
 		{
-			const auto& textComponent = world.ReadComponent<eng::TextComponent>(textEntity);
-			const auto& textTransform = world.ReadComponent<eng::TransformComponent>(textEntity);
+			const auto& textComponent = renderView.ReadRequired<eng::TextComponent>();
+			const auto& textTransform = renderView.ReadRequired<eng::TransformComponent>();
 			const auto& binding = mesh->m_Binding;
 
 			int32 instanceCount = static_cast<int32>(textComponent.m_Text.size());

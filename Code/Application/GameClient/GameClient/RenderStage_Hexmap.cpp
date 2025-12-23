@@ -80,7 +80,7 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(strMesh);
 	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);
@@ -110,15 +110,19 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 	glFrontFace(GL_CW);
 
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+
+	using CameraQuery = ecs::query
+		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
+		::Optional<const eng::camera::EditorComponent>;
+	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		const bool isEditorCamera = cameraView.HasOptional<eng::camera::EditorComponent>();
 		if (isEditorActive != isEditorCamera)
 			continue;
 
-		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 		const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraComponent.m_Projection, windowSize);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
@@ -127,19 +131,19 @@ void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
 		Array<Vector4f>  m_TexParams;
 		Array<Vector3f>  m_Colours;
 
-		using Query = ecs::query
+		using RenderQuery = ecs::query
 			::Include<
-			hexmap::LayerComponent,
-			eng::TransformComponent>;
+			const eng::TransformComponent,
+			const hexmap::LayerComponent>;
 
-		for (const ecs::Entity& renderEntity : world.Query<Query>())
+		for (auto&& renderView : world.Query<RenderQuery>())
 		{
-			const auto& layer = world.ReadComponent<hexmap::LayerComponent>(renderEntity);
+			const auto& layer = renderView.ReadRequired<hexmap::LayerComponent>();
 			if (!world.IsAlive(layer.m_Root))
 				continue;
 
 			const auto& root = world.ReadComponent<hexmap::RootComponent>(layer.m_Root);
-			const auto& transform = world.ReadComponent<eng::TransformComponent>(renderEntity);
+			const auto& transform = renderView.ReadRequired<eng::TransformComponent>();
 
 			const Vector2f spriteSize = s_SpriteSize;
 			const Vector2f textureSize = Vector2f((float)texture->m_Width, (float)texture->m_Height);

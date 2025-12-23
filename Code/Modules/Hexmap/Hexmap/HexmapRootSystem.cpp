@@ -91,9 +91,9 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 		const auto& input = world.ReadResource<eng::InputManager>();
 		if (input.m_ScrollDelta.y != 0)
 		{
-			for (const ecs::Entity& rootEntity : world.Query<ecs::query::Include<hexmap::RootComponent>>())
+			for (auto&& view : world.Query<ecs::query::Include<hexmap::RootComponent>>())
 			{
-				auto& root = world.WriteComponent<hexmap::RootComponent>(rootEntity);
+				auto& root = view.WriteRequired<hexmap::RootComponent>();
 				root.m_Zoom -= input.m_ScrollDelta.y * 0.1f;
 				root.m_Zoom = math::Clamp(root.m_Zoom, 0.f, 1.f);
 			}
@@ -107,14 +107,14 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 	const bool transformChanged = world.HasAny<ecs::query::Updated<eng::TransformComponent>::Include<eng::camera::ProjectionComponent>>();
 	if (hasChanged || cameraAdded || cameraChanged || transformAdded || transformChanged)
 	{
-		for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, eng::TransformComponent>>())
+		for (auto&& cameraView : world.Query<ecs::query::Include<eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 		{
-			for (const ecs::Entity& rootEntity : world.Query<ecs::query::Include<hexmap::RootComponent>>())
-			{
-				const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
-				auto& camera = world.WriteComponent<eng::camera::ProjectionComponent>(cameraEntity);
-				auto& root = world.WriteComponent<hexmap::RootComponent>(rootEntity);
+			const auto& transform = cameraView.ReadRequired<eng::TransformComponent>();
+			auto& camera = cameraView.WriteRequired<eng::camera::ProjectionComponent>();
 
+			for (auto&& rootView : world.Query<ecs::query::Include<hexmap::RootComponent>>())
+			{
+				auto& root = rootView.WriteRequired<hexmap::RootComponent>();
 				if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
 				{
 					constexpr float zoomMin = 1000.f;

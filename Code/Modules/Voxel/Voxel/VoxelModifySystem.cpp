@@ -54,21 +54,21 @@ namespace
 	Vector3f Raycast(voxel::ModifySystem::World& world, const Segment3f& segment)
 	{
 		Array<ecs::Entity> voxelEntities;
-		auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
-		for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
+		auto& lines = world.WriteSingleton<eng::LinesSingleton>();
+		for (auto&& view : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
 		{
-			const auto& transform = world.ReadComponent<eng::TransformComponent>(voxelEntity);
+			const auto& transform = view.ReadRequired<eng::TransformComponent>();
 			const AABB3f aabb = AABB3f(transform.m_Translate, transform.m_Translate + Vector3f(voxel::s_ChunkSize1D));
 
 			Vector3f intersectPos;
 			if (!math::Intersection(aabb, segment, intersectPos))
 				continue;
 
-			linesComponent.AddAABB(
+			lines.AddAABB(
 				transform.m_Translate + Vector3f(voxel::s_ChunkSize1D * 0.5f),
 				voxel::s_ChunkSize1D * 0.51f,
 				Vector4f(1.f));
-			voxelEntities.Append(voxelEntity);
+			voxelEntities.Append(view);
 		}
 
 		const path::Raytracer raytracer(segment.m_PointA, segment.m_PointB, voxel::s_BlockSize1D);
@@ -151,11 +151,11 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
-		const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraProjection = view.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 		constexpr float s_Distance = 100000.f;
 		const Ray3f ray = eng::camera::ScreenToRay(
@@ -169,47 +169,47 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 		const Vector3i gridPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
 		const Vector3f alignPos = math::ToWorldPos(gridPos, voxel::s_BlockSize1D);
 
-		auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
-		linesComponent.AddAABB(alignPos, voxel::s_BlockSize1D * 0.5f, Vector4f(1.f));
+		auto& lines = world.WriteSingleton<eng::LinesSingleton>();
+		lines.AddAABB(alignPos, voxel::s_BlockSize1D * 0.5f, Vector4f(1.f));
 
-		auto& settingsComponent = world.WriteSingleton<voxel::ModifySettingsSingleton>();
+		auto& settings = world.WriteSingleton<voxel::ModifySettingsSingleton>();
 		if (input.IsPressed(strRadius0))
-			settingsComponent.m_Radius = 0;
+			settings.m_Radius = 0;
 		if (input.IsPressed(strRadius1))
-			settingsComponent.m_Radius = 1;
+			settings.m_Radius = 1;
 		if (input.IsPressed(strRadius2))
-			settingsComponent.m_Radius = 2;
+			settings.m_Radius = 2;
 		if (input.IsPressed(strRadius3))
-			settingsComponent.m_Radius = 3;
+			settings.m_Radius = 3;
 		if (input.IsPressed(strRadius4))
-			settingsComponent.m_Radius = 4;
+			settings.m_Radius = 4;
 		if (input.IsPressed(strRadius5))
-			settingsComponent.m_Radius = 5;
+			settings.m_Radius = 5;
 		if (input.IsPressed(strRadius6))
-			settingsComponent.m_Radius = 6;
+			settings.m_Radius = 6;
 
 		if (input.IsPressed(strVoxel0))
-			settingsComponent.m_Type = voxel::EType::None;
+			settings.m_Type = voxel::EType::None;
 		if (input.IsPressed(strVoxel1))
-			settingsComponent.m_Type = voxel::EType::Black;
+			settings.m_Type = voxel::EType::Black;
 		if (input.IsPressed(strVoxel2))
-			settingsComponent.m_Type = voxel::EType::Green;
+			settings.m_Type = voxel::EType::Green;
 		if (input.IsPressed(strVoxel3))
-			settingsComponent.m_Type = voxel::EType::Grey;
+			settings.m_Type = voxel::EType::Grey;
 		if (input.IsPressed(strVoxel4))
-			settingsComponent.m_Type = voxel::EType::Orange;
+			settings.m_Type = voxel::EType::Orange;
 		if (input.IsPressed(strVoxel5))
-			settingsComponent.m_Type = voxel::EType::Purple;
+			settings.m_Type = voxel::EType::Purple;
 		if (input.IsPressed(strVoxel6))
-			settingsComponent.m_Type = voxel::EType::Red;
+			settings.m_Type = voxel::EType::Red;
 
 		if (input.IsPressed(strSelect))
 		{
 			const ecs::Entity entity = world.CreateEntity();
 			auto& requestComponent = world.AddComponent<voxel::ModifyComponent>(entity);
 
-			const int32 radius = settingsComponent.m_Radius;
-			const voxel::EType type = settingsComponent.m_Type;
+			const int32 radius = settings.m_Radius;
+			const voxel::EType type = settings.m_Type;
 			for (const Vector3i& index : enumerate::Vector(Vector3i(-radius), Vector3i(+radius)))
 			{
 				const Vector3f offset = Vector3f(
@@ -222,6 +222,6 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const voxel::ModifyComponent>>())
-		world.DestroyEntity(entity);
+	for (auto&& view : world.Query<ecs::query::Include<const voxel::ModifyComponent>>())
+		world.DestroyEntity(view);
 }

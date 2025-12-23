@@ -23,9 +23,9 @@ void debug::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
 	for (const auto& request : world.Events<debug::FrameBufferWindowRequest>())
 		world.AddComponent<debug::FrameBufferWindowComponent>(world.CreateEntity());
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<debug::FrameBufferWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<debug::FrameBufferWindowComponent>>())
 	{
-		const str::String label = "Render: Frame Buffer##" + std::to_string(entity.GetIndex());
+		const str::String label = "Render: Frame Buffer##" + std::to_string(view.GetEntity().GetIndex());
 
 		bool isOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
@@ -40,6 +40,6 @@ void debug::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (!isOpen)
-			world.DestroyEntity(entity);
+			world.DestroyEntity(view);
 	}
 }

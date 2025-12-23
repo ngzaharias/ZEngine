@@ -47,13 +47,13 @@ void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
 		const eng::TransformComponent>
 		::Exclude<
 		const eng::camera::EditorComponent>;
-	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
+	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
 		if (!inputManager.IsPressed(strSelect))
 			continue;
 
-		const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraProjection = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 		// mouse
 		constexpr float distance = 100000.f;
@@ -87,10 +87,10 @@ void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
 			world.AddComponent<tactics::SelectedComponent>(agentEntity);
 
 		// remove previous selection
-		for (const ecs::Entity& selectedEntity : world.Query<ecs::query::Include<const tactics::SelectedComponent>>())
+		for (auto&& selectedView : world.Query<ecs::query::Include<const tactics::SelectedComponent>>())
 		{
-			if (selectedEntity != agentEntity)
-				world.RemoveComponent<tactics::SelectedComponent>(selectedEntity);
+			if (selectedView != agentEntity)
+				world.RemoveComponent<tactics::SelectedComponent>(selectedView);
 		}
 	}
 }

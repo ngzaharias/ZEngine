@@ -23,9 +23,13 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 	auto& bufferComponent = world.WriteSingleton<eng::sound::RandomBufferSingleton>();
 	bufferComponent.m_Requests.RemoveAll();
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const eng::sound::RandomRequestComponent>>())
+	using Query = ecs::query
+		::Added<const eng::sound::RandomRequestComponent>
+		::Include<const eng::sound::RandomRequestComponent>
+		::Optional<const eng::sound::RandomComponent>;
+	for (auto&& view : world.Query<Query>())
 	{
-		const auto& requestComponent = world.ReadComponent<eng::sound::RandomRequestComponent>(entity);
+		const auto& requestComponent = view.ReadRequired<eng::sound::RandomRequestComponent>();
 		if (!requestComponent.m_Asset.IsValid())
 			continue;
 
@@ -36,9 +40,9 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 		{
 			const int32 count = randomAsset->m_Handles.GetCount();
 
-			auto& sequenceComponent = world.HasComponent<eng::sound::RandomComponent>(entity)
-				? world.WriteComponent<eng::sound::RandomComponent>(entity)
-				: world.AddComponent<eng::sound::RandomComponent>(entity);
+			auto& sequenceComponent = !view.HasOptional<eng::sound::RandomComponent>()
+				? world.AddComponent<eng::sound::RandomComponent>(view)
+				: *view.WriteOptional<eng::sound::RandomComponent>();
 			sequenceComponent.m_Index = random::Range(0, count - 1);
 			sequenceComponent.m_Asset = requestComponent.m_Asset;
 

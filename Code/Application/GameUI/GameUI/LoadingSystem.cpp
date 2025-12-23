@@ -18,9 +18,12 @@ namespace
 
 void gui::loading::LoadingSystem::Update(World& world, const GameTime& gameTime)
 {
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::level::LoadingComponent>>())
+	using AddedQuery = ecs::query
+		::Added<eng::level::LoadingComponent>
+		::Include<const eng::level::LoadingComponent>;
+	for (auto&& view : world.Query<AddedQuery>())
 	{
-		const auto& loadingComponent = world.ReadComponent<eng::level::LoadingComponent>(entity);
+		const auto& loadingComponent = view.ReadRequired<eng::level::LoadingComponent>();
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		const str::Name& widget = !loadingComponent.m_IsSplash
 			? strLoading_xaml
@@ -33,7 +36,7 @@ void gui::loading::LoadingSystem::Update(World& world, const GameTime& gameTime)
 		dcLoading.SetHint(hint.m_Text.c_str());
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::level::LoadingComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<eng::level::LoadingComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strLoading_xaml);
@@ -43,9 +46,9 @@ void gui::loading::LoadingSystem::Update(World& world, const GameTime& gameTime)
 	// Events
 	for (const auto& request : world.Events<gui::loading::CloseRequest>())
 	{
-		for (const ecs::Entity& levelEntity : world.Query<ecs::query::Include<eng::level::LoadingComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<eng::level::LoadingComponent>>())
 		{
-			auto& loadingComponent = world.WriteComponent<eng::level::LoadingComponent>(levelEntity);
+			auto& loadingComponent = view.WriteRequired<eng::level::LoadingComponent>();
 			loadingComponent.m_FadeOutTimer = loadingComponent.m_FadeOutTime;
 		}
 	}

@@ -37,7 +37,7 @@ void editor::CameraSystem::Update(World& world, const GameTime& gameTime)
 	}
 	else if (hasEditorCamera && !debugSettings.m_IsEditorModeEnabled)
 	{
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::camera::EditorComponent>>())
-			world.DestroyEntity(entity);
+		for (auto&& view : world.Query<ecs::query::Include<const eng::camera::EditorComponent>>())
+			world.DestroyEntity(view);
 	}
 }

@@ -7,8 +7,9 @@
 #include "ECS/WorldView.h"
 #include "Editor/SettingsLocalSingleton.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraEditorComponent.h"
 #include "Engine/CameraHelpers.h"
+#include "Engine/CameraProjectionComponent.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/TransformComponent.h"
@@ -58,7 +59,7 @@ void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	if (world.HasAny<editor::settings::LocalSingleton>())
 	{
 		const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
@@ -118,14 +119,15 @@ void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
 
 		const uint32 vertexCount = m_Vertices.GetCount();
 
-		using Query = ecs::query::Include<
+		using Query = ecs::query
+			::Include<
 			const eng::camera::EditorComponent,
 			const eng::camera::ProjectionComponent, 
 			const eng::TransformComponent>;
-		for (const ecs::Entity& cameraEntity : world.Query<Query>())
+		for (auto&& view : world.Query<Query>())
 		{
-			const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+			const auto& cameraComponent = view.ReadRequired<eng::camera::ProjectionComponent>();
+			const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 			const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraComponent.m_Projection, windowSize);
 			const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();

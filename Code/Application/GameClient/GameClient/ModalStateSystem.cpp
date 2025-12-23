@@ -21,16 +21,19 @@ void gui::modal::StateSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<const gui::modal::MessageComponent>>())
+	using AddedQuery = ecs::query
+		::Added<const gui::modal::MessageComponent>
+		::Include<const gui::modal::MessageComponent>;
+	for (auto&& view : world.Query<AddedQuery>())
 	{
-		const auto& component = world.ReadComponent<gui::modal::MessageComponent>(entity);
+		const auto& component = view.ReadRequired<gui::modal::MessageComponent>();
 		const char* title = GetSafeTitle(component.m_Title);
 		ImGui::OpenPopup(title);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const gui::modal::MessageComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const gui::modal::MessageComponent>>())
 	{
-		const auto& component = world.ReadComponent<gui::modal::MessageComponent>(entity);
+		const auto& component = view.ReadRequired<gui::modal::MessageComponent>();
 		const char* title = GetSafeTitle(component.m_Title);
 		if (ImGui::BeginPopupModal(title))
 		{
@@ -38,7 +41,7 @@ void gui::modal::StateSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::Button("Ok"))
 			{
-				world.DestroyEntity(entity);
+				world.DestroyEntity(view);
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();

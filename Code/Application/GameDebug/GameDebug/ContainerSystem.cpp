@@ -65,34 +65,41 @@ void debug::ContainerSystem::Update(World& world, const GameTime& gameTime)
 		window.m_Identifier = identifier;
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const debug::ContainerWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const debug::ContainerWindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<debug::ContainerWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<debug::ContainerWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<debug::ContainerWindowComponent>>())
+	using UpdateQuery = ecs::query
+		::Include<
+		debug::ContainerWindowComponent>
+		::Optional<
+		const container::MemberAddResultComponent,
+		const container::MemberMoveResultComponent,
+		const container::StorageCreateResultComponent,
+		const container::StorageDestroyResultComponent>;
+	for (auto&& windowView : world.Query<UpdateQuery>())
 	{
-		auto& window = world.WriteComponent<debug::ContainerWindowComponent>(windowEntity);
+		auto& window = windowView.WriteRequired<debug::ContainerWindowComponent>();
 		const ecs::Entity& storageSelected = window.m_Storage;
 
-		if (world.HasComponent<container::StorageCreateResultComponent>(windowEntity))
+		if (const auto* resultComponent = windowView.ReadOptional<container::StorageCreateResultComponent>())
 		{
-			const auto& resultComponent = world.ReadComponent<container::StorageCreateResultComponent>(windowEntity);
-			window.m_Storage = resultComponent.m_Storage;
-			world.RemoveComponent<container::StorageCreateRequestComponent>(windowEntity);
+			window.m_Storage = resultComponent->m_Storage;
+			world.RemoveComponent<container::StorageCreateRequestComponent>(windowView);
 		}
 
-		if (world.HasComponent<container::StorageDestroyResultComponent>(windowEntity))
+		if (windowView.HasOptional<container::StorageDestroyResultComponent>())
 		{
 			window.m_Storage = ecs::Entity::Unassigned;
-			world.RemoveComponent<container::StorageDestroyRequestComponent>(windowEntity);
+			world.RemoveComponent<container::StorageDestroyRequestComponent>(windowView);
 		}
 
-		if (world.HasComponent<container::MemberAddResultComponent>(windowEntity))
-			world.RemoveComponent<container::MemberAddRequestComponent>(windowEntity);
-		if (world.HasComponent<container::MemberMoveResultComponent>(windowEntity))
-			world.RemoveComponent<container::MemberMoveRequestComponent>(windowEntity);
+		if (windowView.HasOptional<container::MemberAddResultComponent>())
+			world.RemoveComponent<container::MemberAddRequestComponent>(windowView);
+		if (windowView.HasOptional<container::MemberMoveResultComponent>())
+			world.RemoveComponent<container::MemberMoveRequestComponent>(windowView);
 
 		bool isWindowOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
@@ -100,18 +107,18 @@ void debug::ContainerSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::Begin(window.m_Label.c_str(), &isWindowOpen, s_WindowFlags))
 		{
 			if (ImGui::Button("Create Storage"))
-				world.AddComponent<container::StorageCreateRequestComponent>(windowEntity);
+				world.AddComponent<container::StorageCreateRequestComponent>(windowView);
 			ImGui::SameLine();
 			if (ImGui::Button("Destroy Storage"))
 			{
-				auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(windowEntity);
+				auto& requestComponent = world.AddComponent<container::StorageDestroyRequestComponent>(windowView);
 				requestComponent.m_Storage = window.m_Storage;
 			}
 
 			if (ImGui::Button("Create Member"))
 			{
 				const ecs::Entity memberEntity = world.CreateEntity();
-				auto& requestComponent = world.AddComponent<container::MemberAddRequestComponent>(windowEntity);
+				auto& requestComponent = world.AddComponent<container::MemberAddRequestComponent>(windowView);
 				requestComponent.m_Storage = window.m_Storage;
 				requestComponent.m_Member = memberEntity;
 			}
@@ -127,11 +134,11 @@ void debug::ContainerSystem::Update(World& world, const GameTime& gameTime)
 			{
 				if (ImGui::Selectable("Unassigned"))
 					window.m_Storage = ecs::Entity::Unassigned;
-				for (const ecs::Entity& storageEntity : world.Query<ecs::query::Include<container::StorageComponent>>())
+				for (auto&& storageView : world.Query<ecs::query::Include<const container::StorageComponent>>())
 				{
-					const str::String storageLabel = ToString(storageEntity);
+					const str::String storageLabel = ToString(storageView);
 					if (ImGui::Selectable(storageLabel.c_str()))
-						window.m_Storage = storageEntity;
+						window.m_Storage = storageView;
 				}
 				ImGui::EndCombo();
 			}
@@ -179,7 +186,7 @@ void debug::ContainerSystem::Update(World& world, const GameTime& gameTime)
 
 							if (!data.m_Member.IsUnassigned())
 							{
-								auto& requestComponent = world.AddComponent<container::MemberMoveRequestComponent>(windowEntity);
+								auto& requestComponent = world.AddComponent<container::MemberMoveRequestComponent>(windowView);
 								requestComponent.m_Storage = storageSelected;
 								requestComponent.m_Member = data.m_Member;
 							}
@@ -192,7 +199,7 @@ void debug::ContainerSystem::Update(World& world, const GameTime& gameTime)
 			ImGui::End();
 
 			if (!isWindowOpen)
-				world.DestroyEntity(windowEntity);
+				world.DestroyEntity(windowView);
 		}
 	}
 }

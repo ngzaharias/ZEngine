@@ -10,7 +10,7 @@ void eng::RenderStage_Noesis_Post::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	auto& uiManager = world.WriteResource<eng::UIManager>();
 	uiManager.RenderFinish();
 }

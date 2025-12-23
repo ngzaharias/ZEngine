@@ -62,24 +62,24 @@ void eng::AssetSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::FlipbookComponent>>())
-		ProcessEntity(world, entity);
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::SpriteComponent>>())
-		ProcessEntity(world, entity);
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<eng::StaticMeshComponent>>())
-		ProcessEntity(world, entity);
+	for (auto&& view : world.Query<ecs::query::Added<eng::FlipbookComponent>>())
+		ProcessEntity(world, view);
+	for (auto&& view : world.Query<ecs::query::Added<eng::SpriteComponent>>())
+		ProcessEntity(world, view);
+	for (auto&& view : world.Query<ecs::query::Added<eng::StaticMeshComponent>>())
+		ProcessEntity(world, view);
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Updated<eng::FlipbookComponent>>())
-		ProcessEntity(world, entity);
-	for (const ecs::Entity& entity : world.Query<ecs::query::Updated<eng::SpriteComponent>>())
-		ProcessEntity(world, entity);
-	for (const ecs::Entity& entity : world.Query<ecs::query::Updated<eng::StaticMeshComponent>>())
-		ProcessEntity(world, entity);
+	for (auto&& view : world.Query<ecs::query::Updated<eng::FlipbookComponent>>())
+		ProcessEntity(world, view);
+	for (auto&& view : world.Query<ecs::query::Updated<eng::SpriteComponent>>())
+		ProcessEntity(world, view);
+	for (auto&& view : world.Query<ecs::query::Updated<eng::StaticMeshComponent>>())
+		ProcessEntity(world, view);
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::FlipbookComponent>>())
-		ProcessEntity(world, entity);
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::SpriteComponent>>())
-		ProcessEntity(world, entity);
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<eng::StaticMeshComponent>>())
-		ProcessEntity(world, entity);
+	for (auto&& view : world.Query<ecs::query::Removed<eng::FlipbookComponent>>())
+		ProcessEntity(world, view);
+	for (auto&& view : world.Query<ecs::query::Removed<eng::SpriteComponent>>())
+		ProcessEntity(world, view);
+	for (auto&& view : world.Query<ecs::query::Removed<eng::StaticMeshComponent>>())
+		ProcessEntity(world, view);
 }

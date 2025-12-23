@@ -37,11 +37,11 @@ void debug::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::OpenPopup("Debug Settings##gamedebug");
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<debug::settings::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<debug::settings::WindowComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoCollapse;
 
-		auto& window = world.WriteComponent<debug::settings::WindowComponent>(entity);
+		auto& window = view.WriteRequired<debug::settings::WindowComponent>();
 
 		const Vector2f viewportSize = ImGui::GetWindowViewport()->Size;
 		const Vector2f viewportCentre = (viewportSize * 0.5f);
@@ -69,6 +69,6 @@ void debug::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		}
 
 		if (!isWindowOpen)
-			world.DestroyEntity(entity);
+			world.DestroyEntity(view);
 	}
 }

@@ -18,16 +18,16 @@ void hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 	{
 		int32 objects = 0;
 		int32 revealed = 0;
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const hidden::GroupComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<const hidden::GroupComponent>>())
 		{
-			const auto& group = world.ReadComponent<hidden::GroupComponent>(entity);
+			const auto& group = view.ReadRequired<hidden::GroupComponent>();
 			objects += group.m_Objects.GetCount();
 			revealed += group.m_Revealed.GetCount();
 		}
 
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<hidden::CountComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<hidden::CountComponent>>())
 		{
-			auto& count = world.WriteComponent<hidden::CountComponent>(entity);
+			auto& count = view.WriteRequired<hidden::CountComponent>();
 			count.m_Objects = objects;
 			count.m_Revealed = revealed;
 		}

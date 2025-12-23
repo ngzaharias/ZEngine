@@ -37,9 +37,9 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 		window.m_Identifier = identifier;
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<debug::NetworkWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<debug::NetworkWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<debug::NetworkWindowComponent>(entity);
+		auto& window = view.WriteRequired<debug::NetworkWindowComponent>();
 		const str::String label = std::format("Network Debugger : {}", window.m_Identifier);
 
 		bool isOpen = true;
@@ -116,6 +116,6 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (!isOpen)
-			world.DestroyEntity(entity);
+			world.DestroyEntity(view);
 	}
 }

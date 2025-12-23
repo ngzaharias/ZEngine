@@ -136,15 +136,15 @@ void debug::SplineSystem::Update(World& world, const GameTime& gameTime)
 		window.m_PlottingLabel = ToLabel("Plotter##collision", identifier);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<const debug::SplineWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const debug::SplineWindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<debug::SplineWindowComponent>(entity, false);
+		const auto& window = world.ReadComponent<debug::SplineWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (const ecs::Entity& windowEntity : world.Query<ecs::query::Include<debug::SplineWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<debug::SplineWindowComponent>>())
 	{
-		auto& window = world.WriteComponent<debug::SplineWindowComponent>(windowEntity);
+		auto& window = view.WriteRequired<debug::SplineWindowComponent>();
 
 		bool isWindowOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
@@ -169,14 +169,14 @@ void debug::SplineSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::End();
 
 		if (ImGui::Begin(window.m_InspectorLabel.c_str()))
-			DrawInspector(world, windowEntity);
+			DrawInspector(world, view);
 		ImGui::End();
 
 		if (ImGui::Begin(window.m_PlottingLabel.c_str()))
-			DrawPlotter(world, windowEntity);
+			DrawPlotter(world, view);
 		ImGui::End();
 
 		if (!isWindowOpen)
-			world.DestroyEntity(windowEntity);
+			world.DestroyEntity(view);
 	}
 }

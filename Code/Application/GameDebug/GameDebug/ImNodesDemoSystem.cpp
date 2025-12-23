@@ -20,12 +20,12 @@ void debug::ImNodesDemoSystem::Update(World& world, const GameTime& gameTime)
 	for (const auto& request : world.Events<debug::ImNodesDemoRequest>())
 		world.AddComponent<debug::ImNodesDemoWindowComponent>(world.CreateEntity());
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const debug::ImNodesDemoWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const debug::ImNodesDemoWindowComponent>>())
 	{
 		bool isWindowOpen = true;
 		ImNodes::ShowDemoWindow(&isWindowOpen);
 
 		if (!isWindowOpen)
-			world.DestroyEntity(entity);
+			world.DestroyEntity(view);
 	}
 }

@@ -74,7 +74,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
@@ -96,15 +96,19 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 	glFrontFace(GL_CW);
 
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+	
+	using CameraQuery = ecs::query
+		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
+		::Optional<const eng::camera::EditorComponent>;
+	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		const bool isEditorCamera = cameraView.HasOptional<eng::camera::EditorComponent>();
 		if (isEditorActive != isEditorCamera)
 			continue;
 
-		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 		const Matrix4x4 cameraProj = camera::GetProjection(cameraComponent.m_Projection, windowSize);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
@@ -113,21 +117,20 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 		// sprite
 		{
-			using Query = ecs::query
+			using RenderQuery = ecs::query
 				::Include<
-				eng::SpriteComponent,
-				eng::TransformComponent>;
-
-			for (const ecs::Entity& renderEntity : world.Query<Query>())
+				const eng::SpriteComponent,
+				const eng::TransformComponent>;
+			for (auto&& renderView : world.Query<RenderQuery>())
 			{
-				const auto& spriteComponent = world.ReadComponent<eng::SpriteComponent>(renderEntity);
-				const auto& spriteTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
+				const auto& spriteComponent = renderView.ReadRequired<eng::SpriteComponent>();
+				const auto& spriteTransform = renderView.ReadRequired<eng::TransformComponent>();
 				const auto* spriteAsset = assetManager.ReadAsset<eng::SpriteAsset>(spriteComponent.m_Sprite);
 				if (!spriteAsset)
 					continue;
 
 				RenderBatchID id;
-				id.m_Entity = renderEntity;
+				id.m_Entity = renderView;
 				id.m_Depth = math::DistanceSqr(spriteTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_ShaderId = spriteAsset->m_Shader;
 				id.m_StaticMeshId = strQuadMesh;
@@ -138,15 +141,14 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 
 		// flipbook
 		{
-			using Query = ecs::query
+			using RenderQuery = ecs::query
 				::Include<
-				eng::FlipbookComponent,
-				eng::TransformComponent>;
-
-			for (const ecs::Entity& renderEntity : world.Query<Query>())
+				const eng::FlipbookComponent,
+				const eng::TransformComponent>;
+			for (auto&& renderView : world.Query<RenderQuery>())
 			{
-				const auto& flipbookComponent = world.ReadComponent<eng::FlipbookComponent>(renderEntity);
-				const auto& flipbookTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
+				const auto& flipbookComponent = renderView.ReadRequired<eng::FlipbookComponent>();
+				const auto& flipbookTransform = renderView.ReadRequired<eng::TransformComponent>();
 				const auto* flipbookAsset = assetManager.ReadAsset<eng::FlipbookAsset>(flipbookComponent.m_Flipbook);
 				if (!flipbookAsset || flipbookAsset->m_Frames.IsEmpty())
 					continue;
@@ -158,7 +160,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					continue;
 
 				RenderBatchID& id = batchIDs.Emplace();
-				id.m_Entity = renderEntity;
+				id.m_Entity = renderView;
 				id.m_Depth = math::DistanceSqr(flipbookTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_ShaderId = flipbookAsset->m_Shader;
 				id.m_StaticMeshId = strQuadMesh;

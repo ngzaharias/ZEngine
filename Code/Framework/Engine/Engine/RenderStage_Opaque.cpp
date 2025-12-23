@@ -80,7 +80,7 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.GetWorldView<World>();
+	World world = entityWorld.WorldView<World>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
 	if (!window)
@@ -100,15 +100,19 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 	glFrontFace(GL_CW);
 
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
-	for (const ecs::Entity& cameraEntity : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+
+	using CameraQuery = ecs::query
+		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
+		::Optional<const eng::camera::EditorComponent>;
+	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
 		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = world.HasComponent<eng::camera::EditorComponent>(cameraEntity);
+		const bool isEditorCamera = cameraView.HasOptional<eng::camera::EditorComponent>();
 		if (isEditorActive != isEditorCamera)
 			continue;
 
-		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraComponent = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 		const Matrix4x4 cameraProj = camera::GetProjection(cameraComponent.m_Projection, windowSize);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
@@ -117,18 +121,17 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 		// static mesh
 		{
-			using Query = ecs::query
+			using RenderQuery = ecs::query
 				::Include<
-				eng::StaticMeshComponent,
-				eng::TransformComponent>;
-
-			for (const ecs::Entity& renderEntity : world.Query<Query>())
+				const eng::StaticMeshComponent,
+				const eng::TransformComponent>;
+			for (auto&& renderView : world.Query<RenderQuery>())
 			{
-				const auto& meshComponent = world.ReadComponent<eng::StaticMeshComponent>(renderEntity);
-				const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(renderEntity);
+				const auto& meshComponent = renderView.ReadRequired<eng::StaticMeshComponent>();
+				const auto& meshTransform = renderView.ReadRequired<eng::TransformComponent>();
 
 				RenderBatchID& id = batchIDs.Emplace();
-				id.m_Entity = renderEntity;
+				id.m_Entity = renderView;
 				id.m_Depth = math::DistanceSqr(meshTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_TextureId = { };
 				id.m_ShaderId = strPhongShader;
@@ -148,19 +151,19 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 		// Ambient Lights
 		{
-			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::light::AmbientComponent>>())
+			for (auto&& view : world.Query<ecs::query::Include<const eng::light::AmbientComponent>>())
 			{
-				const auto& lightComponent = world.ReadComponent<eng::light::AmbientComponent>(entity);
+				const auto& lightComponent = view.ReadRequired<eng::light::AmbientComponent>();
 				stageData.m_LightAmbient_Colour.Append(lightComponent.m_Colour);
 			}
 		}
 
 		// Directional Lights
 		{
-			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::light::DirectionalComponent, const eng::TransformComponent>>())
+			for (auto&& view : world.Query<ecs::query::Include<const eng::light::DirectionalComponent, const eng::TransformComponent>>())
 			{
-				const auto& lightComponent = world.ReadComponent<eng::light::DirectionalComponent>(entity);
-				const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(entity);
+				const auto& lightComponent = view.ReadRequired<eng::light::DirectionalComponent>();
+				const auto& lightTransform = view.ReadRequired<eng::TransformComponent>();
 				const Matrix3x3 rotation = Matrix3x3::FromRotate(lightTransform.m_Rotate);
 
 				stageData.m_LightDirectional_Colour.Append(lightComponent.m_Colour);
@@ -170,10 +173,10 @@ void eng::RenderStage_Opaque::Render(ecs::EntityWorld& entityWorld)
 
 		// Point Lights
 		{
-			for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::light::PointComponent, const eng::TransformComponent>>())
+			for (auto&& view : world.Query<ecs::query::Include<const eng::light::PointComponent, const eng::TransformComponent>>())
 			{
-				const auto& lightComponent = world.ReadComponent<eng::light::PointComponent>(entity);
-				const auto& lightTransform = world.ReadComponent<eng::TransformComponent>(entity);
+				const auto& lightComponent = view.ReadRequired<eng::light::PointComponent>();
+				const auto& lightTransform = view.ReadRequired<eng::TransformComponent>();
 
 				stageData.m_LightPoint_Range.Append(lightComponent.m_Range);
 				stageData.m_LightPoint_Colour.Append(lightComponent.m_Colour);

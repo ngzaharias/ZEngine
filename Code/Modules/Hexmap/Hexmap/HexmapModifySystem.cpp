@@ -90,11 +90,11 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 
 	if (input.IsHeld(strSelect))
 	{
-		using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::ProjectionComponent>;
-		for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
+		using CameraQuery = ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>;
+		for (auto&& cameraView : world.Query<CameraQuery>())
 		{
-			const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-			const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+			const auto& cameraProjection = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+			const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 			const Plane3f plane = Plane3f(Vector3f::AxisY, Vector3f::Zero);
 			const Ray3f ray = eng::camera::ScreenToRay(
@@ -106,9 +106,9 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 			Vector3f intersectPos;
 			if (math::Intersection(ray, plane, intersectPos))
 			{
-				for (const ecs::Entity& layerEntity : world.Query<ecs::query::Include<eng::TransformComponent, hexmap::LayerComponent>>())
+				for (auto&& layerView : world.Query<ecs::query::Include<hexmap::LayerComponent>>())
 				{
-					const auto& layer = world.ReadComponent<hexmap::LayerComponent>(layerEntity);
+					const auto& layer = layerView.ReadRequired<hexmap::LayerComponent>();
 					const auto& root = world.ReadComponent<hexmap::RootComponent>(layer.m_Root);
 
 					const HexPos hexPos = hexagon::ToOffset(intersectPos.XZ(), root.m_HexRadius);
@@ -122,7 +122,7 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 					const Vector2i localPos = hexPos - min;
 					const int32 index = math::To1Dimension(localPos, root.m_HexCount.x);
 
-					auto& write = world.WriteComponent<hexmap::LayerComponent>(layerEntity);
+					auto& write = layerView.WriteRequired<hexmap::LayerComponent>();
 					write.m_HexData[index] = { value };
 				}
 			}

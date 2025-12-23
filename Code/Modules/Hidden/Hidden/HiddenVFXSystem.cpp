@@ -23,11 +23,18 @@ void hidden::VFXSystem::Update(World& world, const GameTime& gameTime)
 
 	return;
 
-	for (const ecs::Entity& objectEntity : world.Query<ecs::query::Added<const hidden::RevealComponent>>())
+	using Query = ecs::query
+		::Added<
+		const hidden::RevealComponent>
+		::Include<
+		const ecs::NameComponent,
+		const eng::level::EntityComponent,
+		const eng::TransformComponent>;
+	for (auto&& view : world.Query<Query>())
 	{
-		const auto& objectName = world.ReadComponent<ecs::NameComponent>(objectEntity);
-		const auto& objectLevel = world.ReadComponent<eng::level::EntityComponent>(objectEntity);
-		const auto& objectTransform = world.ReadComponent<eng::TransformComponent>(objectEntity);
+		const auto& objectName = view.ReadRequired<ecs::NameComponent>();
+		const auto& objectLevel = view.ReadRequired<eng::level::EntityComponent>();
+		const auto& objectTransform = view.ReadRequired<eng::TransformComponent>();
 
 		const ecs::Entity vfxEntity = world.CreateEntity();
 		world.AddComponent<hidden::VFXComponent>(vfxEntity);
@@ -49,10 +56,10 @@ void hidden::VFXSystem::Update(World& world, const GameTime& gameTime)
 		flipbook.m_TimeStart = gameTime.m_TotalTime;
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::FlipbookComponent, const hidden::VFXComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const eng::FlipbookComponent, const hidden::VFXComponent>>())
 	{
-		const auto& flipbook = world.ReadComponent<eng::FlipbookComponent>(entity);
+		const auto& flipbook = view.ReadRequired<eng::FlipbookComponent>();
 		if (gameTime.m_TotalTime - flipbook.m_TimeStart > 10.f)
-			world.DestroyEntity(entity);
+			world.DestroyEntity(view);
 	}
 }

@@ -27,16 +27,19 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-	using CameraQuery = ecs::query::Include<eng::camera::ProjectionComponent, const eng::camera::Zoom2DComponent>;
-
+	const Vector2u& windowSize = window->GetSize();
 	const auto& cameraSettings = world.ReadSingleton<eng::settings::CameraSingleton>();
 
-	const Vector2u& windowSize = window->GetSize();
-	for (const ecs::Entity& cameraEntity : world.Query<CameraQuery>())
+	using CameraQuery = ecs::query
+		::Include<
+		eng::camera::ProjectionComponent, 
+		const eng::camera::Zoom2DComponent,
+		const eng::TransformComponent>;
+	for (auto&& view : world.Query<CameraQuery>())
 	{
-		const auto& readZoom = world.ReadComponent<eng::camera::Zoom2DComponent>(cameraEntity);
-		const auto& readProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& readTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& readZoom = view.ReadRequired<eng::camera::Zoom2DComponent>();
+		const auto& readProjection = view.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& readTransform = view.ReadRequired<eng::TransformComponent>();
 
 		if (std::holds_alternative<eng::camera::Orthographic>(readProjection.m_Projection))
 		{
@@ -48,13 +51,13 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 				size -= input.m_ScrollDelta.y * cameraSettings.m_ZoomAmount;
 				size = math::Clamp(size, readZoom.m_Min, readZoom.m_Max);
 
-				auto& writeZoom = world.WriteComponent<eng::camera::Zoom2DComponent>(cameraEntity);
+				auto& writeZoom = view.WriteRequired<eng::camera::Zoom2DComponent>();
 				writeZoom.m_Target = { input.m_MousePosition, size };
 			}
 
 			if (readZoom.m_Target)
 			{
-				auto& writeProj = world.WriteComponent<eng::camera::ProjectionComponent>(cameraEntity);
+				auto& writeProj = view.WriteRequired<eng::camera::ProjectionComponent>();
 				auto& writeOrtho = std::get<eng::camera::Orthographic>(writeProj.m_Projection);
 
 				const auto& target = *readZoom.m_Target;
@@ -73,13 +76,13 @@ void eng::camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 					target.m_Position);
 
 				// we calculate the delta on the mouse pos and add it back onto the translate
-				auto& writeTransform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
+				auto& writeTransform = view.WriteRequired<eng::TransformComponent>();
 				writeTransform.m_Translate += preZoom - postZoom;
 			}
 
 			if (readZoom.m_Target && math::IsNearly(readOrtho.m_Size, readZoom.m_Target->m_Size))
 			{
-				auto& writeZoom = world.WriteComponent<eng::camera::Zoom2DComponent>(cameraEntity);
+				auto& writeZoom = view.WriteRequired<eng::camera::Zoom2DComponent>();
 				writeZoom.m_Target = {};
 			}
 		}

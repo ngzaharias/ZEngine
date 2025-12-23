@@ -150,14 +150,14 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	Set<ecs::Entity> entitiesToUpdate;
-	for (const ecs::Entity& requestEntity : world.Query<ecs::query::Include<const voxel::ModifyComponent>>())
+	for (auto&& requestView : world.Query<ecs::query::Include<const voxel::ModifyComponent>>())
 	{
-		const auto& modifyComponent = world.ReadComponent<voxel::ModifyComponent>(requestEntity);
+		const auto& modifyComponent = requestView.ReadRequired<voxel::ModifyComponent>();
 		for (const voxel::Modify& request : modifyComponent.m_Changes)
 		{
-			for (const ecs::Entity& voxelEntity : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
+			for (auto&& chunkView : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
 			{
-				const auto& transform = world.ReadComponent<eng::TransformComponent>(voxelEntity);
+				const auto& transform = chunkView.ReadRequired<eng::TransformComponent>();
 
 				const Vector3i requestPos = math::ToGridPos(request.m_WorldPos - transform.m_Translate, voxel::s_ChunkSize1D);
 				if (requestPos != Vector3i::Zero)
@@ -166,30 +166,26 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 				const Vector3f worldPos = request.m_WorldPos - transform.m_Translate;
 				const Vector3i innerPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
 				const int32 innerIndex = ToInnerIndex(innerPos);
-				auto& chunk = world.WriteComponent<voxel::ChunkComponent>(voxelEntity);
+				auto& chunk = chunkView.WriteRequired<voxel::ChunkComponent>();
 				chunk.m_Data[innerIndex] = request.m_Data;
 
-				entitiesToUpdate.Add(voxelEntity);
+				entitiesToUpdate.Add(chunkView);
 			}
 		}
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Include<const voxel::ChunkComponent>::Exclude<const eng::DynamicMeshComponent>>())
-		world.AddComponent<eng::DynamicMeshComponent>(entity);
+	for (auto&& view : world.Query<ecs::query::Include<const voxel::ChunkComponent>::Exclude<const eng::DynamicMeshComponent>>())
+		world.AddComponent<eng::DynamicMeshComponent>(view);
 
 	using ChunkAddedQuery = ecs::query::Added<const voxel::ChunkComponent>::Include<const eng::DynamicMeshComponent>;
 	using MeshAddedQuery = ecs::query::Added<const eng::DynamicMeshComponent>::Include<const voxel::ChunkComponent>;
 	using ChangedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const voxel::ChunkComponent, const voxel::ChunkChangedFrameComponent>;
 	using LoadedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const voxel::ChunkComponent, const voxel::ChunkLoadedFrameComponent>;
 
-	for (const ecs::Entity& entity : world.Query<ChunkAddedQuery>())
-		entitiesToUpdate.Add(entity);
-	for (const ecs::Entity& entity : world.Query<MeshAddedQuery>())
-		entitiesToUpdate.Add(entity);
-	for (const ecs::Entity& entity : world.Query<ChangedQuery>())
-		entitiesToUpdate.Add(entity);
-	for (const ecs::Entity& entity : world.Query<LoadedQuery>())
-		entitiesToUpdate.Add(entity);
+	entitiesToUpdate.Add(world.Query<ChunkAddedQuery>());
+	entitiesToUpdate.Add(world.Query<MeshAddedQuery>());
+	entitiesToUpdate.Add(world.Query<ChangedQuery>());
+	entitiesToUpdate.Add(world.Query<LoadedQuery>());
 
 	for (const ecs::Entity& entity : entitiesToUpdate)
 	{

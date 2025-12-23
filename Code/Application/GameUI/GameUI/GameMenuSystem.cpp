@@ -25,7 +25,7 @@ namespace
 
 void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::game_menu::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Added<gui::game_menu::WindowComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.CreateWidget(strGameMenu_xaml, true);
@@ -38,7 +38,7 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<gui::game_menu::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<gui::game_menu::WindowComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strGameMenu_xaml);
@@ -52,8 +52,8 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 	if (world.HasAny<gui::game_menu::CloseRequest>())
 	{
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::game_menu::WindowComponent>>())
-			world.DestroyEntity(entity);
+		for (auto&& view : world.Query<ecs::query::Include<gui::game_menu::WindowComponent>>())
+			world.DestroyEntity(view);
 	}
 
 	if (world.HasAny<gui::game_menu::ExitGameRequest>())

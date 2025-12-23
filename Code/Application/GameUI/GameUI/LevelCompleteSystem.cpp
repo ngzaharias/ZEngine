@@ -24,13 +24,13 @@ namespace
 
 void gui::level_complete::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
-	for (const ecs::Entity& entity : world.Query<ecs::query::Added<gui::level_complete::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Added<gui::level_complete::WindowComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.CreateWidget(strLevelComplete_xaml, true);
 	}
 
-	for (const ecs::Entity& entity : world.Query<ecs::query::Removed<gui::level_complete::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<gui::level_complete::WindowComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strLevelComplete_xaml);
@@ -49,8 +49,8 @@ void gui::level_complete::MenuSystem::Update(World& world, const GameTime& gameT
 		const auto& settings = world.ReadSingleton<eng::settings::LaunchSingleton>();
 		world.AddEvent<eng::level::LoadRequest>(settings.m_Level);
 
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::level_complete::WindowComponent>>())
-			world.DestroyEntity(entity);
+		for (auto&& view : world.Query<ecs::query::Include<const gui::level_complete::WindowComponent>>())
+			world.DestroyEntity(view);
 	}
 
 	if (world.HasAny<gui::level_complete::ResetGameRequest>())
@@ -58,13 +58,13 @@ void gui::level_complete::MenuSystem::Update(World& world, const GameTime& gameT
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 		std::remove(filepath.ToChar());
 
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 		{
-			const auto& levelComponent = world.ReadComponent<eng::level::LoadedComponent>(entity);
+			const auto& levelComponent = view.ReadRequired<eng::level::LoadedComponent>();
 			world.AddEvent<eng::level::LoadRequest>(levelComponent.m_Name);
 		}
 
-		for (const ecs::Entity& entity : world.Query<ecs::query::Include<gui::level_complete::WindowComponent>>())
-			world.DestroyEntity(entity);
+		for (auto&& view : world.Query<ecs::query::Include<gui::level_complete::WindowComponent>>())
+			world.DestroyEntity(view);
 	}
 }

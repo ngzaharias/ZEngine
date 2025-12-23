@@ -127,7 +127,7 @@ void client::GameClient::PreUpdate(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto inputWorld = m_EntityWorld.GetWorldView<eng::InputManager::World>();
+	auto inputWorld = m_EntityWorld.WorldView<eng::InputManager::World>();
 	m_InputManager.Update(inputWorld);
 }
 
