@@ -271,7 +271,8 @@ auto ecs::EntityWorld::GetSystem() -> TSystem&
 template <typename TComponent>
 auto ecs::EntityWorld::GetComponentForView(const ecs::Entity& entity) const -> TComponent*
 {
-	return &m_EntityStorage.GetComponent<TComponent>(entity, true);
+	using NonConst = std::remove_const<TComponent>::type;
+	return &m_EntityStorage.GetComponent<NonConst>(entity, true);
 }
 
 template <typename...TComponents>
@@ -285,7 +286,8 @@ auto ecs::EntityWorld::GetComponentsForView(const ecs::Entity& entity) const -> 
 template <typename TComponent>
 auto ecs::EntityWorld::TryComponentForView(const ecs::Entity& entity) const -> TComponent*
 {
-	return m_EntityStorage.TryComponent<TComponent>(entity, true);
+	using NonConst = std::remove_const<TComponent>::type;
+	return m_EntityStorage.TryComponent<NonConst>(entity, true);
 }
 
 template <typename...TComponents>
