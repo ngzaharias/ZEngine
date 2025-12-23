@@ -79,9 +79,9 @@ TEST_CASE("ecs::EntityView. Test.")
 	for (auto&& view : world.Query<Query>())
 	{
 		auto& writeCompA = view.ReadRequired<ComponentA>();
-		const auto& readCompB = view.ReadRequired<ComponentB>();
+		const auto& readCompB = view.ReadRequired<const ComponentB>();
 		auto* writeCompC = view.WriteOptional<ComponentC>();
-		const auto* readCompD = view.ReadOptional<ComponentD>();
+		const auto* readCompD = view.ReadOptional<const ComponentD>();
 
 		REQUIRE(writeCompC);
 		REQUIRE(readCompD);

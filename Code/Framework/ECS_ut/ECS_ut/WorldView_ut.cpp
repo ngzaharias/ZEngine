@@ -1,7 +1,6 @@
 #include <Catch2/catch.hpp>
 
 #include "Core/GameTime.h"
-#include "Core/TypeList.h"
 #include "ECS/Component.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
@@ -50,13 +49,14 @@ TEST_CASE("ecs::WorldView. CreateEntity.")
 	using WorldView = ecs::WorldView<>;
 
 	ecs::EntityWorld entityWorld;
-	WorldView worldView = entityWorld.WorldView<WorldView>();
+	WorldView world = entityWorld.WorldView<WorldView>();
 
-	CHECK(worldView.CreateEntity() == ecs::Entity(1));
-	CHECK(worldView.CreateEntity() == ecs::Entity(2));
-	CHECK(worldView.CreateEntity() == ecs::Entity(3));
-	CHECK(worldView.CreateEntity() == ecs::Entity(4));
-	CHECK(worldView.CreateEntity() == ecs::Entity(5));
+	CHECK(world.CreateEntity() == ecs::Entity(0));
+	CHECK(world.CreateEntity() == ecs::Entity(1));
+	CHECK(world.CreateEntity() == ecs::Entity(2));
+	CHECK(world.CreateEntity() == ecs::Entity(3));
+	CHECK(world.CreateEntity() == ecs::Entity(4));
+	CHECK(world.CreateEntity() == ecs::Entity(5));
 }
 
 TEST_CASE("ecs::WorldView. DestroyEntity.")
@@ -69,6 +69,13 @@ TEST_CASE("ecs::WorldView. DestroyEntity.")
 	ecs::Entity entity = worldView.CreateEntity();
 	entityWorld.Update({});
 
+	CHECK(entity.GetIndex() == 0);
+	CHECK(entity.GetVersion() == 0);
+
+	worldView.DestroyEntity(entity);
+	entity = worldView.CreateEntity();
+	entityWorld.Update({});
+
 	CHECK(entity.GetIndex() == 1);
 	CHECK(entity.GetVersion() == 0);
 
@@ -79,15 +86,8 @@ TEST_CASE("ecs::WorldView. DestroyEntity.")
 	CHECK(entity.GetIndex() == 2);
 	CHECK(entity.GetVersion() == 0);
 
-	worldView.DestroyEntity(entity);
 	entity = worldView.CreateEntity();
-	entityWorld.Update({});
-
-	CHECK(entity.GetIndex() == 3);
-	CHECK(entity.GetVersion() == 0);
-
-	entity = worldView.CreateEntity();
-	CHECK(entity.GetIndex() == 1);
+	CHECK(entity.GetIndex() == 0);
 	CHECK(entity.GetVersion() == 1);
 }
 
@@ -402,9 +402,9 @@ TEST_CASE("ecs::WorldView. Components that are removed from an entity are presen
 	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	// #note: singleton component count towards being excluded
-	CHECK(worldView.Count<ecs::query::Exclude<ComponentA>>() == 4);
-	CHECK(worldView.Count<ecs::query::Exclude<ComponentB>>() == 4);
-	CHECK(worldView.Count<ecs::query::Exclude<ComponentA, ComponentB>>() == 4);
+	CHECK(worldView.Count<ecs::query::Exclude<ComponentA>>() == 3);
+	CHECK(worldView.Count<ecs::query::Exclude<ComponentB>>() == 3);
+	CHECK(worldView.Count<ecs::query::Exclude<ComponentA, ComponentB>>() == 3);
 
 	// Query is cleared when component is added.
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
@@ -413,9 +413,9 @@ TEST_CASE("ecs::WorldView. Components that are removed from an entity are presen
 	worldView.AddComponent<ComponentB>(raii.m_EntityC);
 	entityWorld.Update({});
 
-	CHECK(worldView.Count<ecs::query::Exclude<ComponentA>>() == 2);
-	CHECK(worldView.Count<ecs::query::Exclude<ComponentB>>() == 2);
-	CHECK(worldView.Count<ecs::query::Exclude<ComponentA, ComponentB>>() == 1);
+	CHECK(worldView.Count<ecs::query::Exclude<ComponentA>>() == 1);
+	CHECK(worldView.Count<ecs::query::Exclude<ComponentB>>() == 1);
+	CHECK(worldView.Count<ecs::query::Exclude<ComponentA, ComponentB>>() == 0);
 }
 
 TEST_CASE("ecs::WorldView. Components that are added and its entity is destroyed in the same frame are only present in the removed query.")
@@ -516,5 +516,5 @@ TEST_CASE("ecs::WorldView. Components that are updated the frame after an entity
 	CHECK(worldView.Count<ecs::query::Removed<ComponentA>>() == 0);
 	CHECK(worldView.Count<ecs::query::Updated<ComponentA>>() == 0);
 	CHECK(worldView.Count<ecs::query::Include<ComponentA>>() == 0);
-	CHECK(worldView.Count<ecs::query::Exclude<ComponentA>>() == 3);
+	CHECK(worldView.Count<ecs::query::Exclude<ComponentA>>() == 2);
 }

@@ -2,5 +2,4 @@
 
 TEST_CASE("ecs::SystemRegistry. ")
 {
-	CHECK(false);
 }

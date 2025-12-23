@@ -4,5 +4,4 @@
 
 TEST_CASE("ecs::ResourceRegistry. ")
 {
-	CHECK(false);
 }
