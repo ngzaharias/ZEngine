@@ -1,12 +1,7 @@
 #pragma once
 
+#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
 
 namespace eng
 {
@@ -19,7 +14,8 @@ namespace eng
 	class RenderStage_Noesis_Pre final : public eng::RenderStage
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView
+			::Write<
 			eng::UIManager,
 			eng::WindowManager>;
 

@@ -1,15 +1,10 @@
 #pragma once
 
+#include "ECS/WorldView.h"
 #include "Engine/UIDataContext.h"
 
 #include <NsApp/DelegateCommand.h>
 #include <NsGui/BaseCommand.h>
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
 
 namespace eng
 {
@@ -45,15 +40,14 @@ namespace gui
 	class DCSettingsMenu final : public eng::UIDataContext
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			const eng::ThemeTable,
-			const eng::WindowManager,
-			// Singletons
-			const eng::settings::AudioSingleton,
-			const eng::settings::CameraSingleton,
-			const eng::settings::GameplaySingleton,
-			const eng::settings::WindowSingleton>;
+		using World = ecs::WorldView
+			::Read<
+			eng::settings::AudioSingleton,
+			eng::settings::CameraSingleton,
+			eng::settings::GameplaySingleton,
+			eng::settings::WindowSingleton,
+			eng::ThemeTable,
+			eng::WindowManager>;
 
 		DCSettingsMenu();
 		~DCSettingsMenu() override;

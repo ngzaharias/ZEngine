@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace hidden
 {
@@ -19,9 +14,11 @@ namespace hidden
 	class CountSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			::hidden::CountComponent,
-			const ::hidden::GroupComponent>;
+		using World = ecs::WorldView
+			::Write<
+			::hidden::CountComponent>
+			::Read<
+			::hidden::GroupComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -5,15 +5,10 @@
 #include "Core/Variant.h"
 #include "ECS/Component.h"
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 
 #include <mutex>
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
 
 namespace eng
 {
@@ -48,8 +43,8 @@ namespace editor
 	class AssetReloadSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// resources
+		using World = ecs::WorldView
+			::Write<
 			eng::AssetManager>;
 
 		void Initialise(World& world);

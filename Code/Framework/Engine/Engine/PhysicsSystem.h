@@ -2,13 +2,12 @@
 
 #include "Core/Delegate.h"
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 #include <PhysX/PxSimulationEventCallback.h>
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct Entity;
 }
 
@@ -39,17 +38,15 @@ namespace eng
 	class PhysicsSystem final : public ecs::System, public physx::PxSimulationEventCallback
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
+		using World = ecs::WorldView::Write<
 			eng::AssetManager,
 			eng::PhysicsManager,
-			// Components
+			eng::PhysicsSceneSingleton,
 			eng::RigidDynamicComponent,
 			eng::RigidStaticComponent,
-			eng::TransformComponent,
-			const eng::PhysicsComponent,
-			// Singletons
-			eng::PhysicsSceneSingleton>;
+			eng::TransformComponent>
+			::Read<
+			eng::PhysicsComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

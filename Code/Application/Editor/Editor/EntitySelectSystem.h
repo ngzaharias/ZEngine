@@ -2,12 +2,7 @@
 
 #include "ECS/Component.h"
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace editor
 {
@@ -41,21 +36,20 @@ namespace editor
 	class EntitySelectSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::InputManager,
-			const eng::AssetManager,
-			const eng::WindowManager,
-			// Components
-			const eng::camera::EditorComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::SpriteComponent,
-			const eng::TransformComponent,
-			const eng::VisibilityComponent,
-			// Singletons
+		using World = ecs::WorldView
+			::Write<
 			editor::EntitySelectSingleton,
-			eng::LinesSingleton,
-			const eng::settings::DebugSingleton>;
+			eng::InputManager,
+			eng::LinesSingleton>
+			::Read<
+			eng::AssetManager,
+			eng::camera::EditorComponent,
+			eng::camera::ProjectionComponent,
+			eng::settings::DebugSingleton,
+			eng::SpriteComponent,
+			eng::TransformComponent,
+			eng::VisibilityComponent,
+			eng::WindowManager>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

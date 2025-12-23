@@ -3,6 +3,7 @@
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
 namespace container
@@ -25,29 +26,25 @@ namespace debug
 	struct ContainerWindowRequestComponent;
 }
 
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
-
 namespace debug
 {
 	class ContainerSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView
+			::Write<
 			container::MemberAddRequestComponent,
 			container::MemberMoveRequestComponent,
 			container::StorageCreateRequestComponent,
 			container::StorageDestroyRequestComponent,
-			debug::ContainerWindowComponent,
-			const container::MemberAddResultComponent,
-			const container::MemberMoveResultComponent,
-			const container::StorageComponent,
-			const container::StorageCreateResultComponent,
-			const container::StorageDestroyResultComponent,
-			const debug::ContainerWindowRequestComponent>;
+			debug::ContainerWindowComponent>
+			::Read<
+			container::MemberAddResultComponent,
+			container::MemberMoveResultComponent,
+			container::StorageComponent,
+			container::StorageCreateResultComponent,
+			container::StorageDestroyResultComponent,
+			debug::ContainerWindowRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

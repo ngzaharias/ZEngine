@@ -2,11 +2,10 @@
 
 #include "Core/Guid.h"
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -33,17 +32,16 @@ namespace eng::sound
 	class PlaySystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
+		using World = ecs::WorldView
+			::Write<
 			eng::AssetManager,
-			// Components
 			ecs::NameComponent,
-			eng::sound::ObjectComponent,
-			const eng::sound::SingleRequestComponent,
-			// Singletons
-			const eng::settings::AudioSingleton,
-			const eng::sound::RandomBufferSingleton,
-			const eng::sound::SequenceBufferSingleton>;
+			eng::sound::ObjectComponent>
+			::Read<
+			eng::settings::AudioSingleton,
+			eng::sound::RandomBufferSingleton,
+			eng::sound::SequenceBufferSingleton,
+			eng::sound::SingleRequestComponent>;
 
 		void Initialise(World& world);
 

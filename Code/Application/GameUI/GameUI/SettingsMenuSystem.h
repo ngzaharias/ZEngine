@@ -1,15 +1,11 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
+	class ThemeTable;
 	class UIManager;
 	class WindowManager;
 }
@@ -35,20 +31,20 @@ namespace gui::settings_menu
 	class MenuSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::UIManager,
-			eng::WindowManager,
-			// Components
-			gui::settings_menu::WindowComponent,
-			const gui::settings_menu::CloseRequest,
-			const gui::settings_menu::OpenRequest,
-			const gui::settings_menu::ValueRequest,
-			// Singletons
+		using World = ecs::WorldView
+			::Write<
 			eng::settings::AudioSingleton,
 			eng::settings::CameraSingleton,
 			eng::settings::GameplaySingleton,
-			eng::settings::WindowSingleton>;
+			eng::settings::WindowSingleton,
+			eng::ThemeTable,
+			eng::UIManager,
+			eng::WindowManager,
+			gui::settings_menu::WindowComponent>
+			::Read<
+			gui::settings_menu::CloseRequest,
+			gui::settings_menu::OpenRequest,
+			gui::settings_menu::ValueRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

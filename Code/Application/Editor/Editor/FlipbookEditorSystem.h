@@ -1,12 +1,11 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -29,16 +28,16 @@ namespace editor
 	class FlipbookEditorSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// managers
-			eng::AssetManager,
-			// components
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
 			editor::FlipbookAssetOpenComponent,
 			editor::FlipbookAssetSaveComponent,
 			editor::FlipbookBatchingComponent,
 			editor::FlipbookWindowComponent,
-			const editor::FlipbookWindowRequest>;
+			eng::AssetManager>
+			::Read<
+			editor::FlipbookWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

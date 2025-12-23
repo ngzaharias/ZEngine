@@ -10,8 +10,8 @@ namespace ecs
 	template<typename TQuery>
 	struct QueryIterator
 	{
-		using Required = ecs::query::IncludeAccess<TQuery>;
-		using Optional = ecs::query::OptionalAccess<TQuery>;
+		using Required = ecs::query::IncludeAccess<TQuery>::NonConst;
+		using Optional = ecs::query::OptionalAccess<TQuery>::NonConst;
 
 		using EntityView = ecs::EntityView_t<Required, Optional>;
 		using Iterator = ecs::QueryGroup::const_iterator;

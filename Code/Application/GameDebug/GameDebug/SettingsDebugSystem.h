@@ -1,16 +1,11 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace client::settings
 {
 	struct DebugSingleton;
-}
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
 }
 
 namespace eng::settings
@@ -28,7 +23,8 @@ namespace debug::settings
 	class DebugSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView
+			::Write<
 			client::settings::DebugSingleton,
 			eng::settings::DebugSingleton,
 			::hidden::settings::DebugSingleton>;

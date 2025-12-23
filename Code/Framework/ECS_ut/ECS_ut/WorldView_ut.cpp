@@ -46,7 +46,7 @@ namespace
 
 TEST_CASE("ecs::WorldView. CreateEntity.")
 {
-	using WorldView = ecs::WorldView<>;
+	using WorldView = ecs::WorldView;
 
 	ecs::EntityWorld entityWorld;
 	WorldView world = entityWorld.WorldView<WorldView>();
@@ -61,7 +61,7 @@ TEST_CASE("ecs::WorldView. CreateEntity.")
 
 TEST_CASE("ecs::WorldView. DestroyEntity.")
 {
-	using WorldView = ecs::WorldView<>;
+	using WorldView = ecs::WorldView;
 
 	ecs::EntityWorld entityWorld;
 	WorldView worldView = entityWorld.WorldView<WorldView>();
@@ -93,7 +93,7 @@ TEST_CASE("ecs::WorldView. DestroyEntity.")
 
 TEST_CASE("ecs::WorldView. IsAlive.")
 {
-	using WorldView = ecs::WorldView<>;
+	using WorldView = ecs::WorldView;
 
 	ecs::EntityWorld entityWorld;
 	WorldView worldView = entityWorld.WorldView<WorldView>();
@@ -112,7 +112,8 @@ TEST_CASE("ecs::WorldView. IsAlive.")
 
 TEST_CASE("ecs::WorldView. AddComponent.")
 {
-	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -128,7 +129,8 @@ TEST_CASE("ecs::WorldView. AddComponent.")
 
 TEST_CASE("ecs::WorldView. RemoveComponent.")
 {
-	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -148,7 +150,8 @@ TEST_CASE("ecs::WorldView. RemoveComponent.")
 
 TEST_CASE("ecs::WorldView. HasComponent.")
 {
-	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -167,7 +170,8 @@ TEST_CASE("ecs::WorldView. HasComponent.")
 
 TEST_CASE("ecs::WorldView. ReadComponent.")
 {
-	using WorldView = ecs::WorldView<const ComponentA, const ComponentB>;
+	using WorldView = ecs::WorldView
+		::Read<ComponentA, ComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -183,7 +187,8 @@ TEST_CASE("ecs::WorldView. ReadComponent.")
 
 TEST_CASE("ecs::WorldView. WriteComponent.")
 {
-	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -199,7 +204,8 @@ TEST_CASE("ecs::WorldView. WriteComponent.")
 
 TEST_CASE("ecs::WorldView. ReadSingleton.")
 {
-	using WorldView = ecs::WorldView<const SingletonA, const SingletonB>;
+	using WorldView = ecs::WorldView
+		::Read<SingletonA, SingletonB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -211,7 +217,8 @@ TEST_CASE("ecs::WorldView. ReadSingleton.")
 
 TEST_CASE("ecs::WorldView. WriteSingleton.")
 {
-	using WorldView = ecs::WorldView<SingletonA, SingletonB>;
+	using WorldView = ecs::WorldView
+		::Write<SingletonA, SingletonB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -223,7 +230,8 @@ TEST_CASE("ecs::WorldView. WriteSingleton.")
 
 TEST_CASE("ecs::WorldView. ReadResource.")
 {
-	using WorldView = ecs::WorldView<const ResourceA, const ResourceB>;
+	using WorldView = ecs::WorldView
+		::Read<ResourceA, ResourceB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -235,7 +243,8 @@ TEST_CASE("ecs::WorldView. ReadResource.")
 
 TEST_CASE("ecs::WorldView. WriteResource.")
 {
-	using WorldView = ecs::WorldView<ResourceA, ResourceB>;
+	using WorldView = ecs::WorldView
+		::Write<ResourceA, ResourceB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -247,7 +256,8 @@ TEST_CASE("ecs::WorldView. WriteResource.")
 
 TEST_CASE("ecs::WorldView. Components that are added to an entity are present in the added query.")
 {
-	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -274,7 +284,8 @@ TEST_CASE("ecs::WorldView. Components that are added to an entity are present in
 
 TEST_CASE("ecs::WorldView. Components that are removed from an entity are present in the removed query.")
 {
-	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -307,7 +318,8 @@ TEST_CASE("ecs::WorldView. Components that are removed from an entity are presen
 
 TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using ReadComponent.")
 {
-	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -332,7 +344,8 @@ TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using ReadComponen
 
 TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using WriteComponent.")
 {
-	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -365,7 +378,8 @@ TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using WriteCompone
 
 TEST_CASE("ecs::WorldView. Components that are added to an entity are present in the include query.")
 {
-	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -395,7 +409,8 @@ TEST_CASE("ecs::WorldView. Components that are added to an entity are present in
 
 TEST_CASE("ecs::WorldView. Components that are removed from an entity are present in the exclude query.")
 {
-	using WorldView = ecs::WorldView<ComponentA, ComponentB>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -420,7 +435,8 @@ TEST_CASE("ecs::WorldView. Components that are removed from an entity are presen
 
 TEST_CASE("ecs::WorldView. Components that are added and its entity is destroyed in the same frame are only present in the removed query.")
 {
-	using WorldView = ecs::WorldView<ComponentA>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -436,7 +452,8 @@ TEST_CASE("ecs::WorldView. Components that are added and its entity is destroyed
 
 TEST_CASE("ecs::WorldView. Components that are updated and removed in the same frame are only present in the removed query.")
 {
-	using WorldView = ecs::WorldView<ComponentA>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -456,7 +473,8 @@ TEST_CASE("ecs::WorldView. Components that are updated and removed in the same f
 
 TEST_CASE("ecs::WorldView. Components that are updated the frame after a component was removed isn't present in either query.")
 {
-	using WorldView = ecs::WorldView<ComponentA>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -477,7 +495,8 @@ TEST_CASE("ecs::WorldView. Components that are updated the frame after a compone
 
 TEST_CASE("ecs::WorldView. Components that are updated and its entity is destroyed in the same frame are only present in the removed query.")
 {
-	using WorldView = ecs::WorldView<ComponentA>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
@@ -497,7 +516,8 @@ TEST_CASE("ecs::WorldView. Components that are updated and its entity is destroy
 
 TEST_CASE("ecs::WorldView. Components that are updated the frame after an entity is destroyed aren't present in any query.")
 {
-	using WorldView = ecs::WorldView<ComponentA>;
+	using WorldView = ecs::WorldView
+		::Write<ComponentA>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;

@@ -1,12 +1,11 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -36,21 +35,19 @@ namespace editor
 	class TextureEditorSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::AssetManager,
-			const eng::InputManager,
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
+			editor::settings::LocalSingleton,
 			editor::TextureAssetImportComponent,
 			editor::TextureAssetNewComponent,
 			editor::TextureAssetOpenComponent,
 			editor::TextureAssetSaveComponent,
 			editor::TextureWindowComponent,
-			// Events
-			const editor::TextureWindowRequest,
-			// Singletons
-			editor::settings::LocalSingleton>;
+			eng::AssetManager>
+			::Read<
+			editor::TextureWindowRequest,
+			eng::InputManager>;
 
 		void Update(World& world, const GameTime& gameTime);
 

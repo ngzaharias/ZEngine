@@ -1,16 +1,11 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace debug::hidden
 {
 	struct ObjectComponent;
-}
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
 }
 
 namespace eng
@@ -40,16 +35,16 @@ namespace debug::hidden
 	class ObjectSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			debug::hidden::ObjectComponent,
 			eng::level::EntityComponent,
-			eng::SpriteComponent,
-			eng::TransformComponent,
-			const ::hidden::ObjectComponent,
-			// Singletons
 			eng::LinesSingleton,
-			const ::hidden::settings::DebugSingleton>;
+			eng::SpriteComponent,
+			eng::TransformComponent>
+			::Read<
+			::hidden::ObjectComponent,
+			::hidden::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

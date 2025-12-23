@@ -1,13 +1,9 @@
 #pragma once
 
-#include "ECS/Forward.h"
-
 class GameTime;
 
 namespace ecs
 {
-	class EntityWorld;
-
 	class System
 	{
 	public:

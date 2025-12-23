@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -34,19 +29,18 @@ namespace voxel
 	class ModifySystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			const eng::InputManager,
-			const eng::WindowManager,
-			// Components
+		using World = ecs::WorldView
+			::Write<
+			eng::LinesSingleton,
 			eng::TextComponent,
 			eng::TransformComponent,
 			voxel::ModifyComponent,
-			const eng::camera::ProjectionComponent,
-			const voxel::ChunkComponent,
-			// Singletons
-			eng::LinesSingleton,
-			voxel::ModifySettingsSingleton>;
+			voxel::ModifySettingsSingleton>
+			::Read<
+			eng::camera::ProjectionComponent,
+			eng::InputManager,
+			eng::WindowManager,
+			voxel::ChunkComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

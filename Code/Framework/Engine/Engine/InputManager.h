@@ -4,16 +4,11 @@
 #include "Core/Map.h"
 #include "Core/Name.h"
 #include "Core/Set.h"
+#include "ECS/WorldView.h"
 #include "Input/Key.h"
 #include "Input/Layer.h"
 #include "Input/Value.h"
 #include "Math/Vector.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
 
 namespace eng
 {
@@ -35,8 +30,9 @@ namespace eng
 	class InputManager final
 	{
 	public:
-		using World = ecs::WorldView<
-			const eng::WindowManager>;
+		using World = ecs::WorldView
+			::Read<
+			eng::WindowManager>;
 
 		void Update(World& world);
 

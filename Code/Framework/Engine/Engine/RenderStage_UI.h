@@ -1,13 +1,8 @@
 #pragma once
 
 #include "ECS/EntityWorld.h"
+#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
 
 namespace eng
 {
@@ -38,17 +33,16 @@ namespace eng
 	class RenderStage_UI final : public eng::RenderStage
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::AssetManager,
-			const eng::WindowManager,
-			// Components
-			const eng::camera::EditorComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::TextComponent,
-			const eng::TransformComponent,
-			// Singletons
-			const eng::settings::DebugSingleton>;
+		using World = ecs::WorldView
+			::Write<
+			eng::AssetManager>
+			::Read<
+			eng::camera::EditorComponent,
+			eng::camera::ProjectionComponent,
+			eng::settings::DebugSingleton,
+			eng::TextComponent,
+			eng::TransformComponent,
+			eng::WindowManager>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -19,7 +14,8 @@ namespace debug
 	class InputSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView
+			::Write<
 			eng::ImguiManager,
 			eng::InputManager>;
 

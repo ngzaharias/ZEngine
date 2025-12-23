@@ -1,9 +1,8 @@
 #include "ECS/SystemRegistry.h"
 
-#include "ECS/System.h"
-
 #include "Core/Algorithms.h"
 #include "Core/Profiler.h"
+
 #include <algorithm>
 
 namespace

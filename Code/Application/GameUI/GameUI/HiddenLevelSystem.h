@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace gui::level_complete
 {
@@ -24,10 +19,12 @@ namespace gui::hidden
 	class LevelSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			gui::level_complete::WindowComponent,
-			const ::hidden::ObjectComponent,
-			const ::hidden::RevealComponent>;
+		using World = ecs::WorldView
+			::Write<
+			gui::level_complete::WindowComponent>
+			::Read<
+			::hidden::ObjectComponent,
+			::hidden::RevealComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

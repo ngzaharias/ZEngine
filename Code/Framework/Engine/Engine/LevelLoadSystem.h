@@ -2,11 +2,10 @@
 
 #include "ECS/Entity.h"
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -35,18 +34,15 @@ namespace eng::level
 	class LoadSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::PrototypeManager,
-			// components
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
+			eng::level::DirectorySingleton,
 			eng::level::EntityComponent,
 			eng::level::LoadedComponent,
 			eng::level::LoadingComponent,
-			// Events
 			eng::level::LoadRequest,
-			// Singletons
-			eng::level::DirectorySingleton>;
+			eng::PrototypeManager>;
 		
 		LoadSystem(ecs::EntityWorld& entityWorld);
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace debug
 {
@@ -27,12 +28,6 @@ namespace debug::level
 namespace debug::settings
 {
 	struct WindowRequest;
-}
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
 }
 
 namespace editor
@@ -66,12 +61,8 @@ namespace debug
 	class MenuBarSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::AssetManager,
-			eng::TableHeadmaster,
-			const eng::InputManager,
-			// Events
+		using World = ecs::WorldView
+			::Write<
 			debug::ContainerWindowRequest,
 			debug::EntityWindowRequest,
 			debug::FlipbookWindowRequest,
@@ -96,7 +87,11 @@ namespace debug
 			editor::TableWindowRequest,
 			editor::TextureWindowRequest,
 			editor::TrajectoryWindowRequest,
-			eng::TablesReloaded>;
+			eng::AssetManager,
+			eng::TableHeadmaster,
+			eng::TablesReloaded>
+			::Read<
+			eng::InputManager>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

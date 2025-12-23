@@ -4,12 +4,7 @@
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -32,13 +27,13 @@ namespace editor::gizmo
 	class CrosshairSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Components
-			const eng::camera::ProjectionComponent,
-			const eng::TransformComponent,
-			// Singletons
-			eng::LinesSingleton,
-			const editor::settings::LocalSingleton>;
+		using World = ecs::WorldView
+			::Write<
+			eng::LinesSingleton>
+			::Read<
+			editor::settings::LocalSingleton,
+			eng::camera::ProjectionComponent,
+			eng::TransformComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace client::settings
 {
@@ -9,8 +10,6 @@ namespace client::settings
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -37,17 +36,17 @@ namespace hexmap
 	class LoadSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
 			eng::level::EntityComponent,
+			eng::LinesSingleton,
 			eng::StaticMeshComponent,
 			eng::TransformComponent,
-			hexmap::LayerComponent,
-			const hexmap::RootComponent,
-			// Singletons
-			eng::LinesSingleton,
-			const client::settings::DebugSingleton>;
+			hexmap::LayerComponent>
+			::Read<
+			client::settings::DebugSingleton,
+			hexmap::RootComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

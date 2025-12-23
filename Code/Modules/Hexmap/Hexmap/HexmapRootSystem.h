@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -30,14 +25,14 @@ namespace hexmap
 	class RootSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			const eng::InputManager,
-			const eng::WindowManager,
-			// Components
-			hexmap::RootComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::TransformComponent>;
+		using World = ecs::WorldView
+			::Write<
+			hexmap::RootComponent>
+			::Read<
+			eng::camera::ProjectionComponent,
+			eng::InputManager,
+			eng::TransformComponent,
+			eng::WindowManager>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

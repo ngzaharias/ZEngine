@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace net
 {
@@ -19,11 +14,10 @@ namespace net
 	class ReplicationSystem : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			net::ReplicationHost,
-			// Components
-			net::HostReplicationComponent>;
+		using World = ecs::WorldView
+			::Write<
+			net::HostReplicationComponent,
+			net::ReplicationHost>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
 namespace client::settings
@@ -15,8 +16,6 @@ namespace debug::settings
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -40,16 +39,14 @@ namespace debug::settings
 	class MenuSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::WindowManager,
-			// Components
-			ecs::NameComponent,
-			debug::settings::WindowComponent,
-			// Singletons
+		using World = ecs::WorldView
+			::Write<
+			::hidden::settings::DebugSingleton,
 			client::settings::DebugSingleton,
+			debug::settings::WindowComponent,
+			ecs::NameComponent,
 			eng::settings::DebugSingleton,
-			::hidden::settings::DebugSingleton>;
+			eng::WindowManager>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

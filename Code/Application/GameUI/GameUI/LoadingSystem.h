@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -33,13 +28,13 @@ namespace gui::loading
 	class LoadingSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::UIManager,
-			const gui::HintTable,
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			eng::level::LoadingComponent,
-			const gui::loading::CloseRequest>;
+			eng::UIManager>
+			::Read<
+			gui::HintTable,
+			gui::loading::CloseRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

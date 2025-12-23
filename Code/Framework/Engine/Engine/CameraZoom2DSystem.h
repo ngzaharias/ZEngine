@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -28,16 +23,15 @@ namespace eng::camera
 	class Zoom2DSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			const eng::InputManager,
-			const eng::WindowManager,
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			eng::camera::ProjectionComponent,
-			eng::TransformComponent,
-			const eng::camera::Zoom2DComponent,
-			// Singletons
-			const eng::settings::CameraSingleton>;
+			eng::TransformComponent>
+			::Read<
+			eng::camera::Zoom2DComponent,
+			eng::InputManager,
+			eng::settings::CameraSingleton,
+			eng::WindowManager>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

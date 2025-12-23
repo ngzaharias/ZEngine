@@ -2,12 +2,7 @@
 
 #include "Core/Array.h"
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -21,7 +16,8 @@ namespace eng
 	class RenderSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView
+			::Write<
 			eng::WindowManager>;
 
 		RenderSystem(ecs::EntityWorld& entityWorld);

@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -26,14 +21,14 @@ namespace client
 	class SettingsSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			const eng::WindowManager,
-			// Singletons
+		using World = ecs::WorldView
+			::Write<
 			eng::settings::AudioSingleton,
 			eng::settings::CameraSingleton,
 			eng::settings::GameplaySingleton,
-			eng::settings::WindowSingleton>;
+			eng::settings::WindowSingleton>
+			::Read<
+			eng::WindowManager>;
 
 		void Initialise(World& world);
 

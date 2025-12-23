@@ -1,12 +1,7 @@
 #pragma once
 
+#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
 
 namespace eng
 {
@@ -40,21 +35,20 @@ namespace eng
 	class RenderStage_Opaque final : public eng::RenderStage
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
+		using World = ecs::WorldView
+			::Write<
 			eng::AssetManager,
-			const eng::WindowManager,
-			// Components
-			const eng::camera::EditorComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::light::AmbientComponent,
-			const eng::light::DirectionalComponent,
-			const eng::light::PointComponent,
-			const eng::StaticMeshComponent,
-			const eng::TransformComponent,
-			// Singletons
-			eng::FrameBufferSingleton,
-			const eng::settings::DebugSingleton>;
+			eng::FrameBufferSingleton>
+			::Read<
+			eng::camera::EditorComponent,
+			eng::camera::ProjectionComponent,
+			eng::light::AmbientComponent,
+			eng::light::DirectionalComponent,
+			eng::light::PointComponent,
+			eng::settings::DebugSingleton,
+			eng::StaticMeshComponent,
+			eng::TransformComponent,
+			eng::WindowManager>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

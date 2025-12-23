@@ -2,12 +2,10 @@
 
 #include "ECS/Entity.h"
 #include "ECS/System.h"
-
+#include "ECS/WorldView.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -33,13 +31,15 @@ namespace hidden
 	class VFXSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
 			eng::FlipbookComponent,
 			eng::level::EntityComponent,
 			eng::TransformComponent,
-			hidden::VFXComponent,
-			const hidden::RevealComponent>;
+			hidden::VFXComponent>
+			::Read<
+			hidden::RevealComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -3,12 +3,7 @@
 #include "Core/Array.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace container
 {
@@ -20,12 +15,12 @@ namespace container
 	class OwnerSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Components
-			container::OwnerComponent,
-			const container::StorageComponent,
-			// Singletons
-			const container::StorageChangesSingleton>;
+		using World = ecs::WorldView
+			::Write<
+			container::OwnerComponent>
+			::Read<
+			container::StorageComponent,
+			container::StorageChangesSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 

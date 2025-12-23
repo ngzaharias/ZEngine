@@ -49,6 +49,6 @@ TEST_CASE("ecs::QueryRange. Test.")
 	REQUIRE(componentB);
 	CHECK(!componentB->m_Bool);
 
-	auto* componentC = view.ReadOptional<const ComponentC>();
+	auto* componentC = view.ReadOptional<ComponentC>();
 	CHECK(!componentC);
 }

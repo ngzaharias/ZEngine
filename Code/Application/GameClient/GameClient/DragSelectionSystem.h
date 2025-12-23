@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace drag
 {
@@ -10,8 +11,6 @@ namespace drag
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -34,19 +33,18 @@ namespace drag
 	class SelectionSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			const eng::InputManager,
-			const eng::WindowManager,
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			drag::SelectionComponent,
 			ecs::NameComponent,
-			const drag::IsSelectableComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::TransformComponent,
-			// Singletons
-			eng::LinesSingleton,
-			const eng::PhysicsSceneSingleton>;
+			eng::LinesSingleton>
+			::Read<
+			drag::IsSelectableComponent,
+			eng::camera::ProjectionComponent,
+			eng::InputManager,
+			eng::PhysicsSceneSingleton,
+			eng::TransformComponent,
+			eng::WindowManager>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

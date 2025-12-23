@@ -1,11 +1,10 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -33,17 +32,17 @@ namespace editor
 	class CameraSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
 			eng::camera::EditorComponent,
 			eng::camera::Move3DComponent,
 			eng::camera::Pan3DComponent,
 			eng::camera::ProjectionComponent,
 			eng::camera::Zoom2DComponent,
-			eng::TransformComponent,
-			// Singletons
-			const eng::settings::DebugSingleton>;
+			eng::TransformComponent>
+			::Read<
+			eng::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

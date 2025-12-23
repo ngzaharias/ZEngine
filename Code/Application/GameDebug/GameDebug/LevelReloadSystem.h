@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng::level
 {
@@ -24,10 +19,12 @@ namespace debug::level
 	class ReloadSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			eng::level::LoadRequest,
-			const eng::level::LoadedComponent,
-			const debug::level::ReloadRequest>;
+		using World = ecs::WorldView
+			::Write<
+			eng::level::LoadRequest>
+			::Read<
+			debug::level::ReloadRequest,
+			eng::level::LoadedComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

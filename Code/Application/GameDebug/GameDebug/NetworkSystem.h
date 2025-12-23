@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
 namespace gamestate
@@ -10,8 +11,6 @@ namespace gamestate
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -23,11 +22,13 @@ namespace debug
 	class NetworkSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView
+			::Write<
 			debug::NetworkWindowComponent,
 			ecs::NameComponent,
-			gamestate::ChangeRequest,
-			const debug::NetworkWindowRequest>;
+			gamestate::ChangeRequest>
+			::Read<
+			debug::NetworkWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

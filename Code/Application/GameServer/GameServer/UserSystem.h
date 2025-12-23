@@ -5,13 +5,12 @@
 #include "Core/Map.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "Network/UserId.h"
 
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -34,14 +33,12 @@ namespace net
 	class UserSystem : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			net::ReplicationHost,
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
 			eng::NetworkManager,
+			net::ReplicationHost,
 			net::UserComponent,
-			// Singletons
 			net::UserMapSingleton>;
 
 		void Initialise(World& world);

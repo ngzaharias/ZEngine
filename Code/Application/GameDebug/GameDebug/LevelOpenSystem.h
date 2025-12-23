@@ -1,11 +1,10 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -31,17 +30,15 @@ namespace debug::level
 	class OpenSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::InputManager,
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			debug::level::OpenWindowComponent,
 			ecs::NameComponent,
-			// Events
-			eng::level::LoadRequest,
-			const debug::level::OpenRequest,
-			// Singletons
-			const eng::level::DirectorySingleton>;
+			eng::InputManager,
+			eng::level::LoadRequest>
+			::Read<
+			debug::level::OpenRequest,
+			eng::level::DirectorySingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

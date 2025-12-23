@@ -5,12 +5,11 @@
 #include "Core/Name.h"
 #include "ECS/Component.h"
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -25,11 +24,12 @@ namespace editor
 	class TableEditorSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// components
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
-			editor::TableWindowComponent,
-			const editor::TableWindowRequest>;
+			editor::TableWindowComponent>
+			::Read<
+			editor::TableWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

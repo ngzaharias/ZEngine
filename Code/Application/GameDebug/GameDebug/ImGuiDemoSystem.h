@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace debug
 {
@@ -11,8 +12,6 @@ namespace debug
 namespace ecs
 {
 	class EntityWorld;
-	template <typename... TTypes>
-	class WorldView;
 }
 
 namespace debug
@@ -20,9 +19,11 @@ namespace debug
 	class ImGuiDemoSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			debug::ImGuiDemoWindowComponent,
-			const debug::ImGuiDemoRequest>;
+		using World = ecs::WorldView
+			::Write<
+			debug::ImGuiDemoWindowComponent>
+			::Read<
+			debug::ImGuiDemoRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

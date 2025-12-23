@@ -6,7 +6,10 @@
 namespace ecs
 {
 	class EntityWorld;
+}
 
+namespace ecs
+{
 	template<typename TQuery>
 	struct QueryRange
 	{

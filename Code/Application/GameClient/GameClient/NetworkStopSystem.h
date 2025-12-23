@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng::network
 {
@@ -25,13 +20,13 @@ namespace gamestate
 	class NetworkStopSystem : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			eng::network::ChangeRequest,
-			gamestate::ChangeFinished,
-			const eng::network::ChangeFinished,
-			// Singletons
-			const gamestate::StateSingleton>;
+			gamestate::ChangeFinished>
+			::Read<
+			eng::network::ChangeFinished,
+			gamestate::StateSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

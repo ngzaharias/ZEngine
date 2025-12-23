@@ -2,12 +2,7 @@
 
 #include "ECS/Entity.h"
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -25,10 +20,12 @@ namespace hidden
 	class PhysicsSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			eng::PhysicsComponent,
-			const hidden::ObjectComponent,
-			const hidden::RevealComponent>;
+		using World = ecs::WorldView
+			::Write<
+			eng::PhysicsComponent>
+			::Read<
+			hidden::ObjectComponent,
+			hidden::RevealComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

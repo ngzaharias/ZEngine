@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -43,21 +38,19 @@ namespace gui::main_menu
 	class MenuSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::UIManager,
-			// Components
-			const gui::main_menu::ContinueGameRequest,
-			const gui::main_menu::WindowComponent,
-			// Events
+		using World = ecs::WorldView
+			::Write<
 			eng::application::CloseRequest,
 			eng::level::LoadRequest,
-			gui::settings::OpenRequest,
-			const gui::main_menu::ExitGameRequest,
-			const gui::main_menu::LoadGameRequest,
-			const gui::main_menu::NewGameRequest,
-			// Singletons
-			const eng::VersionSingleton>;
+			eng::UIManager,
+			gui::settings::OpenRequest>
+			::Read<
+			eng::VersionSingleton,
+			gui::main_menu::ContinueGameRequest,
+			gui::main_menu::ExitGameRequest,
+			gui::main_menu::LoadGameRequest,
+			gui::main_menu::NewGameRequest,
+			gui::main_menu::WindowComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

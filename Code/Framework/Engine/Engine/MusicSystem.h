@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -24,12 +19,12 @@ namespace eng
 	class MusicSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
+		using World = ecs::WorldView
+			::Write<
 			eng::AssetManager,
-			// Singletons
-			eng::MusicSingleton,
-			const eng::settings::AudioSingleton>;
+			eng::MusicSingleton>
+			::Read<
+			eng::settings::AudioSingleton>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

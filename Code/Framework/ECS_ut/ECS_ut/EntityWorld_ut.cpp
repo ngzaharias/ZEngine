@@ -33,7 +33,7 @@ namespace
 	class SystemA : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<>;
+		using World = ecs::WorldView;
 
 		void Initialise() override { m_IsInitialised = true; m_IsSystemAShutdown = false; }
 		void Shutdown() override { m_IsSystemAShutdown = true; }
@@ -47,7 +47,7 @@ namespace
 	class SystemB : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<>;
+		using World = ecs::WorldView;
 
 		void Initialise() override { m_IsInitialised = true; m_IsSystemBShutdown = false; }
 		void Shutdown() override { m_IsSystemBShutdown = true; }

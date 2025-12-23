@@ -1,12 +1,7 @@
 #pragma once
 
+#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
 
 namespace eng
 {
@@ -37,18 +32,17 @@ namespace eng
 	class RenderStage_Voxels final : public eng::RenderStage
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::AssetManager,
-			const eng::WindowManager,
-			// Components
-			const eng::camera::EditorComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::TransformComponent,
-			const eng::DynamicMeshComponent,
-			const voxel::ChunkComponent,
-			// Singletons
-			const eng::settings::DebugSingleton>;
+		using World = ecs::WorldView
+			::Write<
+			eng::AssetManager>
+			::Read<
+			eng::camera::EditorComponent,
+			eng::camera::ProjectionComponent,
+			eng::DynamicMeshComponent,
+			eng::settings::DebugSingleton,
+			eng::TransformComponent,
+			eng::WindowManager,
+			voxel::ChunkComponent>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

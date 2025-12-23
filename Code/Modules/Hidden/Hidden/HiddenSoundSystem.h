@@ -2,11 +2,10 @@
 
 #include "ECS/Entity.h"
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -30,11 +29,13 @@ namespace hidden
 	class SoundSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
-			eng::sound::SequenceRequestComponent,
-			const eng::SavegameComponent,
-			const hidden::RevealComponent>;
+			eng::sound::SequenceRequestComponent>
+			::Read<
+			eng::SavegameComponent,
+			hidden::RevealComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

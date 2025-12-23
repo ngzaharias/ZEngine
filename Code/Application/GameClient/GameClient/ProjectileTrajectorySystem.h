@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace movement
 {
@@ -26,13 +21,13 @@ namespace projectile
 	class TrajectorySystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Components
-			projectile::TrajectoryComponent,
-			const movement::VelocityComponent,
-			const projectile::CreateRequestComponent,
-			// Singletons
-			const projectile::ChangesSingleton>;
+		using World = ecs::WorldView
+			::Write<
+			projectile::TrajectoryComponent>
+			::Read<
+			movement::VelocityComponent,
+			projectile::ChangesSingleton,
+			projectile::CreateRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

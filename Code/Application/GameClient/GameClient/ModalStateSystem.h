@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace gui::modal
 {
@@ -15,7 +10,8 @@ namespace gui::modal
 	class StateSystem : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<const gui::modal::MessageComponent>;
+		using World = ecs::WorldView
+			::Read<gui::modal::MessageComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

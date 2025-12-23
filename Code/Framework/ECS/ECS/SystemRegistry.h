@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Array.h"
 #include "Core/SparseArray.h"
 #include "ECS/System.h"
 #include "ECS/SystemEntry.h"
@@ -10,7 +11,11 @@ namespace ecs
 {
 	class EntityWorld;
 	class System;
+	struct SystemTag;
+}
 
+namespace ecs
+{
 	class SystemRegistry
 	{
 	public:

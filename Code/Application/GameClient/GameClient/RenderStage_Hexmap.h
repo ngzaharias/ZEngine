@@ -1,12 +1,11 @@
 #pragma once
 
+#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
 
 namespace ecs
 {
 	class EntityWorld;
-	template <typename... TTypes>
-	class WorldView;
 }
 
 namespace eng
@@ -35,18 +34,17 @@ namespace hexmap
 	class RenderStage final : public eng::RenderStage
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::AssetManager,
-			const eng::WindowManager,
-			// Components
-			const eng::camera::EditorComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::TransformComponent,
-			const hexmap::LayerComponent,
-			const hexmap::RootComponent,
-			// Singletons
-			const eng::settings::DebugSingleton>;
+		using World = ecs::WorldView
+			::Write<
+			eng::AssetManager>
+			::Read<
+			eng::camera::EditorComponent,
+			eng::camera::ProjectionComponent,
+			eng::settings::DebugSingleton,
+			eng::TransformComponent,
+			eng::WindowManager,
+			hexmap::LayerComponent,
+			hexmap::RootComponent>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

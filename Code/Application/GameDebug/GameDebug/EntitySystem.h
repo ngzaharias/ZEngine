@@ -1,13 +1,12 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
 {
 	class EntityWorld;
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -22,10 +21,12 @@ namespace debug
 	class EntitySystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
+		using World = ecs::WorldView
+			::Write<
 			debug::EntityWindowComponent,
-			ecs::NameComponent,
-			const debug::EntityWindowRequest>;
+			ecs::NameComponent>
+			::Read<
+			debug::EntityWindowRequest>;
 
 		EntitySystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld);
 

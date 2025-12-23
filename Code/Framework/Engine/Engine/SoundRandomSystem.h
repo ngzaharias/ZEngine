@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -25,14 +20,13 @@ namespace eng::sound
 	class RandomSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
+		using World = ecs::WorldView
+			::Write<
 			eng::AssetManager,
-			// Components
-			eng::sound::RandomComponent,
-			const eng::sound::RandomRequestComponent,
-			// Singletons
-			eng::sound::RandomBufferSingleton>;
+			eng::sound::RandomBufferSingleton,
+			eng::sound::RandomComponent>
+			::Read<
+			eng::sound::RandomRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

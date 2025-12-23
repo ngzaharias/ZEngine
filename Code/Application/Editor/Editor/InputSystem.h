@@ -1,12 +1,11 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -27,13 +26,13 @@ namespace editor
 	class InputSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Managers
-			eng::InputManager,
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
 			editor::InputWindowComponent,
-			const editor::InputWindowRequest>;
+			eng::InputManager>
+			::Read<
+			editor::InputWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

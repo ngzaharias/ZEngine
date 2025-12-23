@@ -4,12 +4,7 @@
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace editor
 {
@@ -46,19 +41,18 @@ namespace editor::gizmo
 	class TransformSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			const eng::InputManager,
-			const eng::WindowManager,
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			eng::PhysicsComponent,
-			eng::TransformComponent,
-			const eng::camera::EditorComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::settings::DebugSingleton,
-			// Singletons
-			const editor::EntitySelectSingleton,
-			const editor::settings::LocalSingleton>;
+			eng::TransformComponent>
+			::Read<
+			editor::EntitySelectSingleton,
+			editor::settings::LocalSingleton,
+			eng::camera::EditorComponent,
+			eng::camera::ProjectionComponent,
+			eng::InputManager,
+			eng::settings::DebugSingleton,
+			eng::WindowManager>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

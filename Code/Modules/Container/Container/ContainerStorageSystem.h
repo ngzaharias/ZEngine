@@ -3,6 +3,7 @@
 #include "Core/Array.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace container
 {
@@ -23,35 +24,29 @@ namespace container
 	struct StorageDestroyResultComponent;
 }
 
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
-
 namespace container
 {
 	/// \brief Handles creating/destroying of storage entity and its components.
 	class StorageSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			container::MemberAddResultComponent,
 			container::MemberMoveResultComponent,
 			container::MemberRemoveResultComponent,
+			container::StorageChangesSingleton,
 			container::StorageComponent,
 			container::StorageCreateResultComponent,
-			container::StorageDestroyResultComponent,
-			const container::MemberAddRequestComponent,
-			const container::MemberComponent,
-			const container::MemberMoveRequestComponent,
-			const container::MemberRemoveRequestComponent,
-			const container::OwnerComponent,
-			const container::StorageCreateRequestComponent,
-			const container::StorageDestroyRequestComponent,
-			// Singletons
-			container::StorageChangesSingleton>;
+			container::StorageDestroyResultComponent>
+			::Read<
+			container::MemberAddRequestComponent,
+			container::MemberComponent,
+			container::MemberMoveRequestComponent,
+			container::MemberRemoveRequestComponent,
+			container::OwnerComponent,
+			container::StorageCreateRequestComponent,
+			container::StorageDestroyRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

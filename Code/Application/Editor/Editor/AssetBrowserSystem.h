@@ -1,13 +1,12 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -28,13 +27,13 @@ namespace editor
 	class AssetBrowserSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// resources
-			const eng::AssetManager,
-			// components
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
-			editor::AssetBrowserWindowComponent,
-			const editor::AssetBrowserWindowRequest>;
+			editor::AssetBrowserWindowComponent>
+			::Read<
+			eng::AssetManager,
+			editor::AssetBrowserWindowRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

@@ -2,12 +2,7 @@
 
 #include "Core/Array.h"
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -31,14 +26,13 @@ namespace eng::network
 	class NetworkSystem : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::NetworkManager,
-			// Events
+		using World = ecs::WorldView
+			::Write<
 			eng::network::ChangeFinished,
-			const eng::network::ChangeRequest,
-			// Singletons
-			eng::network::StateSingleton>;
+			eng::network::StateSingleton,
+			eng::NetworkManager>
+			::Read<
+			eng::network::ChangeRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 

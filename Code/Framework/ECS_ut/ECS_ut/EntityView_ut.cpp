@@ -32,9 +32,8 @@ TEST_CASE("ecs::EntityView. Test.")
 	entityWorld.AddComponent<ComponentD>(entity);
 	entityWorld.Update({});
 	
-	using World = ecs::WorldView<
-		ComponentA, ComponentB,
-		ComponentC, ComponentD>;
+	using World = ecs::WorldView
+		::Write<ComponentA, ComponentB, ComponentC, ComponentD>;
 	World world = entityWorld.WorldView<World>();
 
 	using ViewA = ecs::EntityView
@@ -79,9 +78,9 @@ TEST_CASE("ecs::EntityView. Test.")
 	for (auto&& view : world.Query<Query>())
 	{
 		auto& writeCompA = view.ReadRequired<ComponentA>();
-		const auto& readCompB = view.ReadRequired<const ComponentB>();
+		const auto& readCompB = view.ReadRequired<ComponentB>();
 		auto* writeCompC = view.WriteOptional<ComponentC>();
-		const auto* readCompD = view.ReadOptional<const ComponentD>();
+		const auto* readCompD = view.ReadOptional<ComponentD>();
 
 		REQUIRE(writeCompC);
 		REQUIRE(readCompD);

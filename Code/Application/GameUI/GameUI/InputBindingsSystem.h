@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -28,12 +23,12 @@ namespace gui::input
 	class BindingsSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			const eng::InputManager,
-			// Components
-			gui::game_menu::OpenRequest,
-			const gui::input::BindingsComponent>;
+		using World = ecs::WorldView
+			::Write<
+			gui::game_menu::OpenRequest>
+			::Read<
+			eng::InputManager,
+			gui::input::BindingsComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

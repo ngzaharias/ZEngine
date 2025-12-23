@@ -1,12 +1,7 @@
 #pragma once
 
+#include "ECS/WorldView.h"
 #include "Engine/RenderStage.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
 
 namespace editor::settings
 {
@@ -39,17 +34,16 @@ namespace editor
 	class RenderStage_Grid final : public eng::RenderStage
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::AssetManager,
-			const eng::WindowManager,
-			// Components
-			const eng::camera::EditorComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::TransformComponent,
-			// Singletons
-			const editor::settings::LocalSingleton,
-			const eng::settings::DebugSingleton>;
+		using World = ecs::WorldView
+			::Write<
+			eng::AssetManager>
+			::Read<
+			editor::settings::LocalSingleton,
+			eng::camera::EditorComponent,
+			eng::camera::ProjectionComponent,
+			eng::settings::DebugSingleton,
+			eng::TransformComponent,
+			eng::WindowManager>;
 
 		void Initialise(ecs::EntityWorld& entityWorld) override;
 		void Shutdown(ecs::EntityWorld& entityWorld) override;

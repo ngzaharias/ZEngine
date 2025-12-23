@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -27,15 +22,14 @@ namespace eng::camera
 	class Move3DSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			const eng::InputManager,
-			// Components
-			eng::TransformComponent,
-			const eng::camera::Move3DComponent,
-			const eng::camera::ProjectionComponent,
-			// Singletons
-			const eng::settings::CameraSingleton>;
+		using World = ecs::WorldView
+			::Write<
+			eng::TransformComponent>
+			::Read<
+			eng::camera::Move3DComponent,
+			eng::camera::ProjectionComponent,
+			eng::InputManager,
+			eng::settings::CameraSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

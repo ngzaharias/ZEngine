@@ -1,8 +1,15 @@
 #pragma once
 
+#include "Core/TypeList.h"
+#include "Core/Types.h"
+#include "ECS/Entity.h"
+#include "ECS/EntityView.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/QueryRange.h"
+#include "ECS/QueryRegistry.h"
+
 template<typename Type>
 class Array;
-
 template<typename Type>
 class Set;
 
@@ -17,15 +24,32 @@ namespace ecs
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView final
-	{
-	public:
-		explicit WorldView(ecs::EntityWorld& entityWorld);
-		WorldView(const WorldView&) = delete;
+	template <typename...>
+	class WorldView_t;
 
-		template<typename... TOthers>
-		operator WorldView<TOthers...>&();
+	template <typename... TWrite, typename... TRead>
+	class WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>
+	{
+		template<typename...>
+		friend class WorldView_t;
+
+	private:
+		using TWriteList = TypeList<TWrite...>;
+		using TReadList = TypeList<TRead...>;
+
+	public:
+		template <typename... Types>
+		using Write = WorldView_t<decltype(TWriteList::template Append<Types...>()), TReadList>;
+		template <typename... Types>
+		using Read = WorldView_t<TWriteList, decltype(TReadList::template Append<Types...>())>;
+
+		WorldView_t(ecs::EntityWorld& entityWorld);
+
+		//template <typename... TOthers>
+		//WorldView_t(const WorldView_t<TOthers...>& rhs);
+
+		template <typename... TOthers>
+		operator WorldView_t<TOthers...>() const;
 
 	public:
 		template<class TEntityView>
@@ -34,29 +58,29 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
-		bool IsAlive(const Entity& entity) const;
+		bool IsAlive(const ecs::Entity& entity) const;
 
 		auto CreateEntity() -> ecs::Entity;
 
-		void DestroyEntity(const Entity& entity);
+		void DestroyEntity(const ecs::Entity& entity);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Component
 
 		template<class TComponent, typename... TArgs>
-		auto AddComponent(const Entity& entity, TArgs&&... args)->decltype(auto);
+		auto AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto);
 
 		template<class TComponent>
-		void RemoveComponent(const Entity& entity);
+		void RemoveComponent(const ecs::Entity& entity);
 
 		template<class TComponent>
-		bool HasComponent(const Entity& entity, const bool alive = true) const;
+		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
 
 		template<class TComponent>
-		auto ReadComponent(const Entity& entity, const bool alive = true)->const TComponent&;
+		auto ReadComponent(const ecs::Entity& entity, const bool alive = true)->const TComponent&;
 
 		template<class TComponent>
-		auto WriteComponent(const Entity& entity, const bool alive = true)->TComponent&;
+		auto WriteComponent(const ecs::Entity& entity, const bool alive = true)->TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event
@@ -101,6 +125,8 @@ namespace ecs
 		ecs::EntityWorld& m_EntityWorld;
 		ecs::QueryRegistry& m_QueryRegistry;
 	};
+
+	using WorldView = ecs::WorldView_t<TypeList<>, TypeList<>>;
 }
 
 #include "WorldView.inl"

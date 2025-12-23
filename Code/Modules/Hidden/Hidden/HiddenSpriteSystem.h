@@ -2,12 +2,7 @@
 
 #include "ECS/Entity.h"
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -32,16 +27,15 @@ namespace hidden
 	class SpriteSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			const eng::ThemeTable,
-			// Components
-			eng::SpriteComponent,
-			const eng::TablesReloaded,
-			const hidden::ObjectComponent,
-			const hidden::RevealComponent,
-			// Singletons
-			const eng::settings::GameplaySingleton>;
+		using World = ecs::WorldView
+			::Write<
+			eng::SpriteComponent>
+			::Read<
+			eng::settings::GameplaySingleton,
+			eng::TablesReloaded,
+			eng::ThemeTable,
+			hidden::ObjectComponent,
+			hidden::RevealComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

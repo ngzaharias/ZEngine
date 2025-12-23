@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -30,14 +25,14 @@ namespace softbody
 	class ChainSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
+		using World = ecs::WorldView
+			::Write<
 			eng::InputManager,
-			const eng::WindowManager,
-			// Components
 			eng::TransformComponent,
-			softbody::ChainComponent,
-			const eng::camera::ProjectionComponent>;
+			softbody::ChainComponent>
+			::Read<
+			eng::camera::ProjectionComponent,
+			eng::WindowManager>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

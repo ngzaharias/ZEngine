@@ -1,12 +1,11 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
 {
-	template <typename... TTypes>
-	class WorldView;
 	struct NameComponent;
 }
 
@@ -54,20 +53,19 @@ namespace editor
 	class EntityEditorSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			const eng::AssetManager,
-			const eng::InputManager,
-			// Components
+		using World = ecs::WorldView
+			::Write<
 			ecs::NameComponent,
 			editor::EntitySaveComponent,
-			editor::EntityWindowComponent,
-			const editor::EntityWindowRequest,
-			const eng::level::EntityComponent,
-			const eng::PrototypeComponent,
-			// Singletons
 			editor::EntitySelectSingleton,
-			editor::settings::LocalSingleton>;
+			editor::EntityWindowComponent,
+			editor::settings::LocalSingleton>
+			::Read<
+			editor::EntityWindowRequest,
+			eng::AssetManager,
+			eng::InputManager,
+			eng::level::EntityComponent,
+			eng::PrototypeComponent>;
 
 		EntityEditorSystem(ecs::EntityWorld& world);
 

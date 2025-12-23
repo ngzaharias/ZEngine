@@ -2,16 +2,11 @@
 
 #include "ECS/Entity.h"
 #include "ECS/System.h"
+#include "ECS/WorldView.h"
 
 namespace client::settings
 {
 	struct DebugComponent;
-}
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
 }
 
 namespace eng
@@ -45,20 +40,19 @@ namespace hidden
 	class RevealSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView <
-			// Resources
-			const eng::InputManager,
-			const eng::WindowManager,
-			// Components
-			eng::RigidStaticComponent,
-			hidden::RevealComponent,
-			const eng::camera::ProjectionComponent,
-			const eng::TransformComponent,
-			const hidden::ObjectComponent,
-			// Singletons
+		using World = ecs::WorldView
+			::Write<
 			eng::LinesSingleton,
-			const eng::PhysicsSceneSingleton,
-			const hidden::settings::DebugSingleton>;
+			eng::RigidStaticComponent,
+			hidden::RevealComponent>
+			::Read<
+			eng::camera::ProjectionComponent,
+			eng::InputManager,
+			eng::PhysicsSceneSingleton,
+			eng::TransformComponent,
+			eng::WindowManager,
+			hidden::ObjectComponent,
+			hidden::settings::DebugSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace editor::settings
 {
@@ -18,8 +13,8 @@ namespace editor::settings
 	class LocalSystem final : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Singletons
+		using World = ecs::WorldView
+			::Write<
 			editor::settings::LocalSingleton>;
 
 		void Initialise(World& world);

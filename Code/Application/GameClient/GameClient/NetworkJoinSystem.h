@@ -1,12 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
-
-namespace ecs
-{
-	template <typename... TTypes>
-	class WorldView;
-}
+#include "ECS/WorldView.h"
 
 namespace eng
 {
@@ -46,20 +41,18 @@ namespace gamestate
 	class NetworkJoinSystem : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView<
-			// Resources
-			eng::NetworkManager,
-			// Components
-			gui::modal::MessageComponent,
-			const net::UserComponent,
-			// Events
+		using World = ecs::WorldView
+			::Write<
 			eng::level::LoadRequest,
 			eng::network::ChangeRequest,
+			eng::NetworkManager,
 			gamestate::ChangeFinished,
-			const eng::network::ChangeFinished,
-			// Singletons
 			gamestate::NetworkJoinSingleton,
-			const gamestate::StateSingleton>;
+			gui::modal::MessageComponent>
+			::Read<
+			eng::network::ChangeFinished,
+			gamestate::StateSingleton,
+			net::UserComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
