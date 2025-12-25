@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/String.h"
+#include "Core/TypeInfo.h"
 #include "ECS/ComponentId.h"
 
 class GameTime;
@@ -18,8 +19,8 @@ namespace ecs
 		ecs::System* m_System = nullptr;
 		str::String m_Name = { };
 
-		Set<int32> m_DependencyRead = {};
-		Set<int32> m_DependencyWrite = {};
+		Set<TypeId> m_DependencyRead = {};
+		Set<TypeId> m_DependencyWrite = {};
 
 		using Initialise = void(ecs::EntityWorld&, ecs::System&);
 		using Shutdown = void(ecs::EntityWorld&, ecs::System&);

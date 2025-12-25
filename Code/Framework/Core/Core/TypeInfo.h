@@ -35,17 +35,17 @@ constexpr TypeHash ToTypeHash(const Type& value)
 	return str::ToHash(__FUNCSIG__);
 }
 
-template<typename Type, typename Tag>
+template<typename Type, typename Tag = TypeTag>
 TypeId ToTypeId()
 {
 	static const TypeId value = _private::TypeIndex::Next<Tag>();
 	return value;
 }
 
-template <typename... TTypes>
+template <typename... TTypes, typename Tag = TypeTag>
 void ToTypeId(Set<TypeId>& values, TypeList<TTypes...>)
 {
-	(values.Add(ToTypeId<TTypes, TypeTag>()), ...);
+	(values.Add(ToTypeId<TTypes, Tag>()), ...);
 }
 
 template<typename Type>
