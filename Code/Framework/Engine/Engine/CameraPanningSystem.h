@@ -12,9 +12,12 @@ namespace eng
 
 namespace eng::camera
 {
-	struct PanningComponent;
+	struct Pan3DComponent;
 	struct ProjectionComponent;
+}
 
+namespace eng::camera
+{
 	class PanningSystem final : public ecs::System
 	{
 	public:
@@ -22,7 +25,7 @@ namespace eng::camera
 			::Write<
 			eng::TransformComponent>
 			::Read<
-			eng::camera::PanningComponent,
+			eng::camera::Pan3DComponent,
 			eng::camera::ProjectionComponent,
 			eng::InputManager,
 			eng::WindowManager>;

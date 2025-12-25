@@ -7,7 +7,6 @@ namespace eng
 {
 	class AssetManager;
 	struct AssetComponent;
-	struct AssetLoadedEvent;
 	struct FlipbookComponent;
 	struct SpriteComponent;
 	struct StaticMeshComponent;
@@ -23,7 +22,6 @@ namespace eng
 			eng::AssetComponent,
 			eng::AssetManager>
 			::Read<
-			eng::AssetLoadedEvent,
 			eng::FlipbookComponent,
 			eng::SpriteComponent,
 			eng::StaticMeshComponent>;

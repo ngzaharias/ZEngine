@@ -7,7 +7,6 @@ namespace debug
 {
 	struct ContainerWindowRequest;
 	struct EntityWindowRequest;
-	struct FlipbookWindowRequest;
 	struct FrameBufferWindowRequest;
 	struct ImGuiDemoRequest;
 	struct ImNodesDemoRequest;
@@ -65,7 +64,6 @@ namespace debug
 			::Write<
 			debug::ContainerWindowRequest,
 			debug::EntityWindowRequest,
-			debug::FlipbookWindowRequest,
 			debug::FrameBufferWindowRequest,
 			debug::ImGuiDemoRequest,
 			debug::ImNodesDemoRequest,

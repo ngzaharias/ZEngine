@@ -24,8 +24,8 @@ namespace debug
 			::Write<
 			debug::FrameBufferWindowComponent>
 			::Read<
-			const debug::FrameBufferWindowRequest,
-			const eng::FrameBufferSingleton>;
+			debug::FrameBufferWindowRequest,
+			eng::FrameBufferSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

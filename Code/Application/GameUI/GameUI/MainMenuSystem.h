@@ -28,11 +28,6 @@ namespace gui::main_menu
 	struct WindowComponent;
 }
 
-namespace gui::settings
-{
-	struct OpenRequest;
-}
-
 namespace gui::main_menu
 {
 	class MenuSystem final : public ecs::System
@@ -42,8 +37,7 @@ namespace gui::main_menu
 			::Write<
 			eng::application::CloseRequest,
 			eng::level::LoadRequest,
-			eng::UIManager,
-			gui::settings::OpenRequest>
+			eng::UIManager>
 			::Read<
 			eng::VersionSingleton,
 			gui::main_menu::ContinueGameRequest,
