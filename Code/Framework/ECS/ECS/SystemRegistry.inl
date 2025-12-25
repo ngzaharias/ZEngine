@@ -18,6 +18,8 @@ void ecs::SystemRegistry::Register(TArgs&&... args)
 
 	ToTypeId(entry.m_DependencyRead, typename TSystem::World::TReadList{});
 	ToTypeId(entry.m_DependencyWrite, typename TSystem::World::TWriteList{});
+	for (const TypeId typeId : entry.m_DependencyRead)
+		m_Edges[typeId].Add(systemId);
 
 	entry.m_Initialise = &InitialiseFunction<TSystem>;
 	entry.m_Shutdown = &ShutdownFunction<TSystem>;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Array.h"
+#include "Core/Map.h"
 #include "Core/SparseArray.h"
 #include "Core/TypeInfo.h"
 #include "ECS/Component.h"
@@ -20,6 +21,10 @@ namespace ecs
 
 namespace ecs
 {
+	using SystemEdges = Map<TypeId, Set<ecs::SystemId>>;
+	using SystemEntries = SparseArray<ecs::SystemId, ecs::SystemEntry>;
+	using SystemOrder = Array<ecs::SystemEntry*>;
+
 	class SystemRegistry
 	{
 	public:
@@ -40,6 +45,9 @@ namespace ecs
 		template<class TSystem>
 		TSystem& GetSystem();
 
+		const SystemEdges& GetEdges() const { return m_Edges; }
+		const SystemEntries& GetEntries() const { return m_Entries; }
+
 	private:
 		template<typename TSystem>
 		static void InitialiseFunction(ecs::EntityWorld& entityWorld, ecs::System& system);
@@ -49,8 +57,9 @@ namespace ecs
 		static void UpdateFunction(ecs::EntityWorld& entityWorld, ecs::System& system, const GameTime& gameTime);
 
 	private:
-		Array<ecs::SystemEntry*> m_Priorities = { };
-		SparseArray<ecs::SystemId, ecs::SystemEntry> m_Entries = { };
+		SystemEdges m_Edges = {};
+		SystemEntries m_Entries = {};
+		SystemOrder m_Order = {};
 	};
 }
 
