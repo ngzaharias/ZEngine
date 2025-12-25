@@ -1,7 +1,15 @@
 #pragma once
 
 #include "Core/SparseArray.h"
+#include "Core/TypeInfo.h"
+#include "ECS/ComponentId.h"
+#include "ECS/ComponentStorage.h"
+#include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
+#include "ECS/Event.h"
+#include "ECS/EventStorage.h"
+#include "ECS/Singleton.h"
+#include "ECS/SingletonStorage.h"
 
 namespace ecs
 {

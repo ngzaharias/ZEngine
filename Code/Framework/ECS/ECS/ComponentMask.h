@@ -1,18 +1,15 @@
 #pragma once
 
-#include "ECS/Component.h"
+#include "Core/TypeInfo.h"
+#include "Core/TypeList.h"
+#include "Core/Types.h"
+#include "ECS/ComponentId.h"
+#include "ECS/ComponentTag.h"
 
 #include <bitset>
 
-using int32 = int32_t;
-
-template <typename... Types>
-struct TypeList;
-
 namespace ecs
 {
-	using ComponentId = int32;
-
 	// multiples of 64
 	constexpr int32 COMPONENTS_MAX = 4 * 64;
 

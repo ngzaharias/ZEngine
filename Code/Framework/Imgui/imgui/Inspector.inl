@@ -2,6 +2,7 @@
 
 #include "Core/Algorithms.h"
 #include "Core/EnumHelpers.h"
+#include "Core/TypeInfo.h"
 #include "Core/TypeName.h"
 #include "Core/TypeTraits.h"
 #include "Core/VariantHelpers.h"
@@ -126,7 +127,7 @@ void imgui::Inspector::AddPayload(TPayload& payload)
 	using NonConst = std::remove_const<TPayload>::type;
 	Z_PANIC(!HasPayload<NonConst>(), "Payload has already been added!");
 
-	const int32 payloadId = ToTypeIndex<NonConst, imgui::InspectorTag>();
+	const int32 payloadId = ToTypeId<NonConst, imgui::InspectorTag>();
 	m_Payload.Emplace(payloadId, (void*)&payload);
 }
 
@@ -134,7 +135,7 @@ template<class TPayload>
 bool imgui::Inspector::HasPayload()
 {
 	using NonConst = std::remove_const<TPayload>::type;
-	const int32 payloadId = ToTypeIndex<NonConst, imgui::InspectorTag>();
+	const int32 payloadId = ToTypeId<NonConst, imgui::InspectorTag>();
 	return m_Payload.Contains(payloadId);
 }
 
@@ -144,7 +145,7 @@ auto imgui::Inspector::GetPayload()->TPayload&
 	using NonConst = std::remove_const<TPayload>::type;
 	Z_PANIC(HasPayload<NonConst>(), "Payload hasn't been added!");
 
-	const int32 payloadId = ToTypeIndex<NonConst, imgui::InspectorTag>();
+	const int32 payloadId = ToTypeId<NonConst, imgui::InspectorTag>();
 	return *static_cast<NonConst*>(m_Payload.Get(payloadId));
 }
 

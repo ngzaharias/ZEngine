@@ -2,6 +2,10 @@
 
 #include "Core/Array.h"
 #include "Core/SparseArray.h"
+#include "Core/TypeInfo.h"
+#include "ECS/Component.h"
+#include "ECS/ComponentId.h"
+#include "ECS/ComponentTag.h"
 #include "ECS/System.h"
 #include "ECS/SystemEntry.h"
 

@@ -1,9 +1,5 @@
 #pragma once
 
-namespace _private
-{
-}
-
 template<typename ...TRequired, typename ...TOptional>
 ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::EntityView_t(ecs::EntityWorld& world, const ecs::Entity& entity)
 	: m_World(world)

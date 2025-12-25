@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/SparseArray.h"
+#include "Core/TypeInfo.h"
 
 namespace ecs
 {

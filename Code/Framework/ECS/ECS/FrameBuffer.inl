@@ -6,7 +6,7 @@
 template<class TComponent>
 void ecs::FrameBuffer::RegisterComponent()
 {
-	const ecs::ComponentId id = ToTypeIndex<TComponent, ecs::ComponentTag>();
+	const ecs::ComponentId id = ToTypeId<TComponent, ecs::ComponentTag>();
 	m_Components.Set(id, new ecs::ComponentStorage<TComponent>());
 }
 
@@ -15,7 +15,7 @@ auto ecs::FrameBuffer::AddComponent(const ecs::Entity& entity, TArgs&&... args)-
 {
 	using Storage = ecs::ComponentStorage<TComponent>;
 
-	const ecs::ComponentId id = ToTypeIndex<TComponent, ecs::ComponentTag>();
+	const ecs::ComponentId id = ToTypeId<TComponent, ecs::ComponentTag>();
 	m_EntityChanges[entity].m_Added.Raise(id);
 
 	ecs::IComponentStorage* istorage = m_Components.Get(id);
@@ -26,21 +26,21 @@ auto ecs::FrameBuffer::AddComponent(const ecs::Entity& entity, TArgs&&... args)-
 template<class TComponent>
 void ecs::FrameBuffer::RemoveComponent(const ecs::Entity& entity)
 {
-	const ecs::ComponentId id = ToTypeIndex<TComponent, ecs::ComponentTag>();
+	const ecs::ComponentId id = ToTypeId<TComponent, ecs::ComponentTag>();
 	m_EntityChanges[entity].m_Removed.Raise(id);
 }
 
 template<class TComponent>
 void ecs::FrameBuffer::UpdateComponent(const ecs::Entity& entity)
 {
-	const ecs::ComponentId id = ToTypeIndex<TComponent, ecs::ComponentTag>();
+	const ecs::ComponentId id = ToTypeId<TComponent, ecs::ComponentTag>();
 	m_EntityChanges[entity].m_Updated.Raise(id);
 }
 
 template<class TEvent>
 void ecs::FrameBuffer::RegisterEvent()
 {
-	const ecs::EventId id = ToTypeIndex<TEvent, ecs::EventTag>();
+	const ecs::EventId id = ToTypeId<TEvent, ecs::EventTag>();
 	m_Events.Set(id, new ecs::EventStorage<TEvent>());
 }
 
@@ -49,7 +49,7 @@ auto ecs::FrameBuffer::AddEvent(TArgs&&... args)->decltype(auto)
 {
 	using Storage = ecs::EventStorage<TEvent>;
 
-	const ecs::EventId id = ToTypeIndex<TEvent, ecs::EventTag>();
+	const ecs::EventId id = ToTypeId<TEvent, ecs::EventTag>();
 	ecs::IEventStorage* istorage = m_Events.Get(id);
 	Storage* storage = static_cast<Storage*>(istorage);
 	return storage->Emplace(std::forward<TArgs>(args)...);
@@ -58,6 +58,6 @@ auto ecs::FrameBuffer::AddEvent(TArgs&&... args)->decltype(auto)
 template<class TSingleton>
 void ecs::FrameBuffer::UpdateSingleton()
 {
-	const ecs::EventId id = ToTypeIndex<TSingleton, ecs::SingletonTag>();
+	const ecs::EventId id = ToTypeId<TSingleton, ecs::SingletonTag>();
 	m_Singletons.Add(id);
 }

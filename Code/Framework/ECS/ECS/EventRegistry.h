@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/SparseArray.h"
-
+#include "Core/TypeInfo.h"
 #include "ECS/Event.h"
 #include "ECS/EventEntry.h"
 

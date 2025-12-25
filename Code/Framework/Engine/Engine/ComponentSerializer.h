@@ -45,7 +45,7 @@ namespace net
 
 	public:
 		Array<net::ComponentEntry> m_Entries;
-		Map<TypeId, ecs::ComponentId> m_TypeIdToLocal;
+		Map<TypeHash, ecs::ComponentId> m_TypeHashToLocal;
 		Map<ecs::ComponentId, ecs::ComponentId> m_WorldToLocal;
 	};
 }

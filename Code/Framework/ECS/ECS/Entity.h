@@ -1,7 +1,6 @@
 #pragma once
 
-using uint32 = uint32_t;
-using uint64 = uint64_t;
+#include "Core/Types.h"
 
 namespace ecs
 {

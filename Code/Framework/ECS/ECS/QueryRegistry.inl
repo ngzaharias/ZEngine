@@ -1,10 +1,5 @@
 #pragma once
 
-#include "Core/TypeInfo.h"
-#include "Core/TypeList.h"
-#include "ECS/ComponentMask.h"
-#include "ECS/QueryTypes.h"
-
 template<class TQuery>
 const ecs::QueryId ecs::QueryProxy<TQuery>::m_QueryId = ecs::QueryProxy<TQuery>::Id();
 
@@ -15,7 +10,7 @@ inline ecs::QueryId ecs::QueryProxy<TQuery>::Id()
 	if (!isRegistered)
 	{
 		isRegistered = true;
-		const ecs::QueryId queryId = ToTypeIndex<TQuery, ecs::QueryTag>();
+		const ecs::QueryId queryId = ToTypeId<TQuery, ecs::QueryTag>();
 
 		ecs::QueryMask queryMask;
 		queryMask.m_AddedMask = ecs::ToComponentMask(ecs::query::AddedAccess<TQuery>{});

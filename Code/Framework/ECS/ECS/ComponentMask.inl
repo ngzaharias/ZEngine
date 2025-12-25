@@ -99,10 +99,10 @@ inline bool ecs::ComponentMask::HasNone(const ComponentMask& rhs) const
 //////////////////////////////////////////////////////////////////////////
 
 template<typename TComponent>
-inline int32 ecs::ToComponentId()
+inline ecs::ComponentId ecs::ToComponentId()
 {
 	using NonConst = std::remove_const<TComponent>::type;
-	return ToTypeIndex<NonConst, ecs::ComponentTag>();
+	return ToTypeId<NonConst, ecs::ComponentTag>();
 }
 
 template<typename ...TComponents>

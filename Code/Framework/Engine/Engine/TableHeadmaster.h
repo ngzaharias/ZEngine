@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Core/Name.h"
 #include "Core/SparseArray.h"
+#include "Core/TypeInfo.h"
 #include "Engine/TableEntry.h"
 
 namespace str

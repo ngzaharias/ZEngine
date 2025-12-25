@@ -12,8 +12,8 @@ namespace
 	struct ComponentA final : public ecs::Component<ComponentA> { };
 	struct ComponentB final : public ecs::Component<ComponentB> { };
 
-	const int32 s_ComponentAId = ToTypeIndex<ComponentA, ecs::ComponentTag>();
-	const int32 s_ComponentBId = ToTypeIndex<ComponentB, ecs::ComponentTag>();
+	const ecs::ComponentId s_ComponentAId = ToTypeId<ComponentA, ecs::ComponentTag>();
+	const ecs::ComponentId s_ComponentBId = ToTypeId<ComponentB, ecs::ComponentTag>();
 }
 
 TEST_CASE("ecs::query::Access. Added only ComponentA.")

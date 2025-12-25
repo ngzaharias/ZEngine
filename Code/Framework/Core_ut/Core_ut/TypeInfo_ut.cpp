@@ -7,38 +7,38 @@ namespace first
 	template<typename Type, typename Tag>
 	int32 MyFunction()
 	{
-		return ToTypeIndex<Type, Tag>();
+		return ToTypeId<Type, Tag>();
 	};
 }
 
 namespace second
 {
 	template<typename Type, typename Tag>
-	int32 MyFunction()
+	TypeId MyFunction()
 	{
-		return ToTypeIndex<Type, Tag>();
+		return ToTypeId<Type, Tag>();
 	};
 }
 
-TEST_CASE("TypeIndex. ToTypeIndex.")
+TEST_CASE("TypeIndex. ToTypeId.")
 {
 	struct A {}; struct B {}; struct C {}; struct TagA {};
 	struct D {}; struct E {}; struct F {}; struct TagB {};
 
-	CHECK(ToTypeIndex<A, TagA>() == 0);
-	CHECK(ToTypeIndex<A, TagA>() == 0);
-	CHECK(ToTypeIndex<B, TagA>() == 1);
-	CHECK(ToTypeIndex<C, TagA>() == 2);
+	CHECK(ToTypeId<A, TagA>() == 0);
+	CHECK(ToTypeId<A, TagA>() == 0);
+	CHECK(ToTypeId<B, TagA>() == 1);
+	CHECK(ToTypeId<C, TagA>() == 2);
 
-	CHECK(ToTypeIndex<D, TagB>() == 0);
-	CHECK(ToTypeIndex<E, TagB>() == 1);
-	CHECK(ToTypeIndex<F, TagB>() == 2);
+	CHECK(ToTypeId<D, TagB>() == 0);
+	CHECK(ToTypeId<E, TagB>() == 1);
+	CHECK(ToTypeId<F, TagB>() == 2);
 
-	CHECK(ToTypeIndex<D, TagA>() == 3);
-	CHECK(ToTypeIndex<E, TagA>() == 4);
-	CHECK(ToTypeIndex<F, TagA>() == 5);
+	CHECK(ToTypeId<D, TagA>() == 3);
+	CHECK(ToTypeId<E, TagA>() == 4);
+	CHECK(ToTypeId<F, TagA>() == 5);
 
-	CHECK(ToTypeIndex<A, TagA>() == 0);
+	CHECK(ToTypeId<A, TagA>() == 0);
 
 	CHECK(first::MyFunction<A, TagA>() == 0);
 	CHECK(second::MyFunction<A, TagA>() == 0);

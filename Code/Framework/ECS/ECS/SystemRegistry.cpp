@@ -1,7 +1,10 @@
 #include "ECS/SystemRegistry.h"
 
 #include "Core/Algorithms.h"
+#include "Core/Map.h"
 #include "Core/Profiler.h"
+#include "Core/Set.h"
+#include "ECS/Component.h"
 
 #include <algorithm>
 

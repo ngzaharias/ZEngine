@@ -7,20 +7,20 @@ ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WorldView_t(ecs::Enti
 {
 }
 
-//template <typename... TWrite, typename... TRead>
-//template <typename... TOthers>
-//ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WorldView_t(const WorldView_t<TOthers...>& rhs)
-//	: m_EntityWorld(rhs.m_EntityWorld)
-//	, m_QueryRegistry(rhs.m_QueryRegistry)
-//{
-//}
-
 template <typename... TWrite, typename... TRead>
 template <typename... TOthers>
-ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::operator WorldView_t<TOthers...>() const
+ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WorldView_t(const WorldView_t<TOthers...>& rhs)
+	: m_EntityWorld(rhs.m_EntityWorld)
+	, m_QueryRegistry(rhs.m_QueryRegistry)
 {
-	return WorldView_t<TOthers...>(*this);
 }
+
+//template <typename... TWrite, typename... TRead>
+//template <typename... TOthers>
+//ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::operator WorldView_t<TOthers...>() const
+//{
+//	return WorldView_t<TOthers...>(*this);
+//}
 
 template <typename... TWrite, typename... TRead>
 template<class TEntityView>
@@ -147,7 +147,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasAny() -> bool
 	}
 	else if constexpr (std::is_base_of<ecs::Singleton<TType>, TType>::value)
 	{
-		const ecs::SingletonId id = ToTypeIndex<TType, ecs::SingletonTag>();
+		const ecs::SingletonId id = ToTypeId<TType, ecs::SingletonTag>();
 		return m_EntityWorld.m_EntityStorage.m_SingletonsUpdated.Contains(id);
 	}
 	else

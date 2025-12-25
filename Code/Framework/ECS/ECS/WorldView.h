@@ -30,6 +30,7 @@ namespace ecs
 	template <typename... TWrite, typename... TRead>
 	class WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>
 	{
+		friend class SystemRegistry;
 		template<typename...>
 		friend class WorldView_t;
 
@@ -45,11 +46,11 @@ namespace ecs
 
 		WorldView_t(ecs::EntityWorld& entityWorld);
 
-		//template <typename... TOthers>
-		//WorldView_t(const WorldView_t<TOthers...>& rhs);
-
 		template <typename... TOthers>
-		operator WorldView_t<TOthers...>() const;
+		WorldView_t(const WorldView_t<TOthers...>& rhs);
+
+		//template <typename... TOthers>
+		//operator WorldView_t<TOthers...>() const;
 
 	public:
 		template<class TEntityView>

@@ -3,16 +3,16 @@
 template<typename TAsset, typename TLoader, typename... TArgs>
 void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 {
-	static_assert(std::is_convertible<TAsset*, eng::Asset*>::value, "Asset must inherit from eng::Asset using the [public] keyword!");
-	static_assert(std::is_base_of<eng::Asset, TAsset>::value, "Asset isn't a base of eng::Asset!");
+	static_assert(std::is_convertible<TAsset*, eng::Asset*>::value, "Type must inherit from eng::Asset using the [public] keyword!");
+	static_assert(std::is_base_of<eng::Asset, TAsset>::value, "Type isn't a base of eng::Asset!");
 
-	static_assert(std::is_convertible<TLoader*, eng::AssetLoader*>::value, "Loader must inherit from eng::AssetLoader using the [public] keyword!");
-	static_assert(std::is_base_of<eng::AssetLoader, TLoader>::value, "Loader isn't a base of eng::AssetLoader!");
+	static_assert(std::is_convertible<TLoader*, eng::AssetLoader*>::value, "Type must inherit from eng::AssetLoader using the [public] keyword!");
+	static_assert(std::is_base_of<eng::AssetLoader, TLoader>::value, "Type isn't a base of eng::AssetLoader!");
 
-	Z_PANIC(!enumerate::Contains(m_Registry, type), "Asset type '{}' has already been registered!", ToTypeName<TAsset>());
+	Z_PANIC(!enumerate::Contains(m_Registry, type), "Type '{}' has already been registered!", ToTypeName<TAsset>());
 
-	constexpr TypeId typeId = ToTypeId<TAsset>();
-	m_TypeIds[typeId] = type;
+	constexpr TypeHash typeHash = ToTypeHash<TAsset>();
+	m_TypeHashs[typeHash] = type;
 
 	eng::AssetEntry& entry = m_Registry[type];
 	entry.m_Loader = new TLoader(std::forward<TArgs>(args)...);
@@ -55,8 +55,8 @@ bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
 {
 	PROFILE_FUNCTION();
 
-	constexpr TypeId typeId = ToTypeId<TAsset>();
-	const str::Name& type = m_TypeIds.Get(typeId);
+	constexpr TypeHash typeHash = ToTypeHash<TAsset>();
+	const str::Name& type = m_TypeHashs.Get(typeHash);
 	const eng::AssetEntry& entry = m_Registry.Get(type);
 
 	if (!asset.m_Guid.IsValid())
@@ -94,8 +94,8 @@ bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
 template<class TAsset>
 bool eng::AssetManager::ImportAsset(TAsset& asset, const str::Path& filepath)
 {
-	constexpr TypeId typeId = ToTypeId<TAsset>();
-	const str::Name& type = m_TypeIds.Get(typeId);
+	constexpr TypeHash typeHash = ToTypeHash<TAsset>();
+	const str::Name& type = m_TypeHashs.Get(typeHash);
 	const eng::AssetEntry& entry = m_Registry.Get(type);
 
 	asset.m_Guid = str::Guid::Generate();

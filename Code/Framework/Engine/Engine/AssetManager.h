@@ -7,11 +7,13 @@
 #include "Core/Map.h"
 #include "Core/Name.h"
 #include "Core/Path.h"
+#include "Core/Profiler.h"
 #include "Core/Set.h"
 #include "Core/TypeInfo.h"
 #include "Engine/Asset.h"
 #include "Engine/AssetEntry.h"
 #include "Engine/AssetFile.h"
+#include "Engine/AssetLoader.h"
 #include "Engine/AssetRef.h"
 #include "Engine/Visitor.h"
 
@@ -34,7 +36,7 @@ namespace eng
 		using FileMap = Map<str::Guid, eng::AssetFile>;
 		using RefMap = Map<str::Guid, eng::AssetRef>;
 		using Registry = Map<str::Name, eng::AssetEntry>;
-		using TypeIds = Map<TypeId, str::Name>;
+		using TypeHashs = Map<TypeHash, str::Name>;
 		using TypeMap = Map<str::Name, Set<str::Guid>>;
 
 	public:
@@ -122,7 +124,7 @@ namespace eng
 		FileMap m_FileMap = { };
 		RefMap m_RefMap = { };
 		Registry m_Registry = { };
-		TypeIds m_TypeIds = { };
+		TypeHashs m_TypeHashs = { };
 		TypeMap m_TypeMap = { };
 	};
 }

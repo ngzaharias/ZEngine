@@ -23,13 +23,13 @@ namespace net
 {
 	struct PeerReplicationData
 	{
-		PeerId m_PeerId;
+		net::PeerId m_PeerId;
 		Set<ecs::Entity> m_EntitiesReplicated;
 		Set<ecs::Entity> m_EntitiesToCreate;
 		Set<ecs::Entity> m_EntitiesToUpdate;
 		Set<ecs::Entity> m_EntitiesToDestroy;
-		Map<ecs::Entity, Set<TypeId>> m_ComponentsAdded;
-		Map<ecs::Entity, Set<TypeId>> m_ComponentsRemoved;
+		Map<ecs::Entity, Set<TypeHash>> m_ComponentsAdded;
+		Map<ecs::Entity, Set<TypeHash>> m_ComponentsRemoved;
 	};
 
 	class ReplicationHost
@@ -61,7 +61,7 @@ namespace net
 
 	private:
 		ecs::EntityWorld& m_EntityWorld;
-		SparseArray<PeerId, PeerReplicationData> m_PeerReplicationData;
+		SparseArray<net::PeerId, net::PeerReplicationData> m_PeerReplicationData;
 	};
 }
 

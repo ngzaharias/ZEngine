@@ -36,9 +36,9 @@ namespace net
 template<typename TComponent, typename TSerializer>
 void net::ComponentSerializer::RegisterComponent()
 {
-	const ecs::ComponentId worldId = ToTypeIndex<TComponent, ecs::ComponentTag>();
-	const ecs::ComponentId localId = ToTypeIndex<TComponent, net::ComponentTag>();
-	const TypeId typeId = ToTypeId<TComponent>();
+	const ecs::ComponentId worldId = ToTypeId<TComponent, ecs::ComponentTag>();
+	const ecs::ComponentId localId = ToTypeId<TComponent, net::ComponentTag>();
+	const TypeHash typeHash = ToTypeHash<TComponent>();
 
 	if (localId >= m_Entries.GetCount())
 		m_Entries.Resize(localId + 1);
@@ -53,6 +53,6 @@ void net::ComponentSerializer::RegisterComponent()
 	entry.m_UpdatedId = ecs::QueryProxy<ecs::query::Updated<TComponent>::Include<net::ReplicationComponent>>::Id();
 	entry.m_ComponentId = localId;
 
-	m_TypeIdToLocal[typeId] = localId;
+	m_TypeHashToLocal[typeHash] = localId;
 	m_WorldToLocal[worldId] = localId;
 }
