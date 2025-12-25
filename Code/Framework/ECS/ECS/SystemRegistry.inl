@@ -50,16 +50,16 @@ template<typename TSystem>
 void ecs::SystemRegistry::InitialiseFunction(ecs::EntityWorld& entityWorld, ecs::System& system)
 {
 	using WorldView = TSystem::World;
-	if constexpr (core::IsDetected<detail::HasInitialiseMethod, TSystem, WorldView>::value)
+	WorldView worldView(entityWorld);
+	
+	auto& tSystem = static_cast<TSystem&>(system);
+	if constexpr (requires { tSystem.Initialise(worldView); })
 	{
-		WorldView worldView(entityWorld);
-
-		auto& tSystem = static_cast<TSystem&>(system);
 		tSystem.Initialise(worldView);
 	}
 	else
 	{
-		system.Initialise();
+		tSystem.Initialise();
 	}
 }
 
@@ -67,16 +67,16 @@ template<typename TSystem>
 void ecs::SystemRegistry::ShutdownFunction(ecs::EntityWorld& entityWorld, ecs::System& system)
 {
 	using WorldView = TSystem::World;
-	if constexpr (core::IsDetected<detail::HasShutdownMethod, TSystem, WorldView>::value)
+	WorldView worldView(entityWorld);
+	
+	auto& tSystem = static_cast<TSystem&>(system);
+	if constexpr (requires { tSystem.Shutdown(worldView); })
 	{
-		WorldView worldView(entityWorld);
-
-		auto& tSystem = static_cast<TSystem&>(system);
 		tSystem.Shutdown(worldView);
 	}
 	else
 	{
-		system.Shutdown();
+		tSystem.Shutdown();
 	}
 }
 
@@ -84,15 +84,15 @@ template<typename TSystem>
 void ecs::SystemRegistry::UpdateFunction(ecs::EntityWorld& entityWorld, ecs::System& system, const GameTime& gameTime)
 {
 	using WorldView = TSystem::World;
-	if constexpr (core::IsDetected<detail::HasUpdateMethod, TSystem, WorldView>::value)
+	WorldView worldView(entityWorld);
+	
+	auto& tSystem = static_cast<TSystem&>(system);
+	if constexpr (requires{ tSystem.Update(worldView, gameTime); })
 	{
-		WorldView worldView(entityWorld);
-
-		auto& tSystem = static_cast<TSystem&>(system);
 		tSystem.Update(worldView, gameTime);
 	}
 	else
 	{
-		system.Update(gameTime);
+		tSystem.Update(gameTime);
 	}
 }

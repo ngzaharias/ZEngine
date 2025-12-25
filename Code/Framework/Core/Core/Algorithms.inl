@@ -1,35 +1,22 @@
 #pragma once
 
 #include "Core/Tuple.h"
-#include "Core/TypeTraits.h"
 
 #include <algorithm>
 #include <iterator>
 
-namespace detail
-{
-	template<typename Range, typename Type>
-	using HasContainsMethod = decltype(std::declval<Range&>().Contains(std::declval<Type&>()));
-
-	template<typename Range, typename Type>
-	using HasStdCountMethod = decltype(std::declval<Range&>().count(std::declval<Type&>()));
-
-	template<typename Range, typename Type>
-	using HasStdFindMethod = decltype(std::declval<Range&>().find(std::declval<Type&>()));
-}
-
 template<typename Range, typename Type>
 bool enumerate::Contains(const Range& range, const Type& item)
 {
-	if constexpr (core::IsDetected<detail::HasContainsMethod, Range, Type>::value)
+	if constexpr (requires { range.Contains(item); })
 	{
 		return range.Contains(item);
 	}
-	else if constexpr (core::IsDetected<detail::HasStdCountMethod, Range, Type>::value)
+	else if constexpr (requires { range.count(item); })
 	{
 		return range.count(item) > 0;
 	}
-	else if constexpr (core::IsDetected<detail::HasStdFindMethod, Range, Type>::value)
+	else if constexpr (requires { range.find(item); })
 	{
 		return range.find(item) != range.end();
 	}

@@ -1,22 +1,5 @@
 #pragma once
 
-#include "Core/Profiler.h"
-#include "Engine/AssetLoader.h"
-
-namespace _private
-{
-	template<typename TAsset, typename TLoader>
-	using HasInitialiseMethod = decltype(std::declval<TLoader>().Initialise(std::declval<TAsset&>()));
-	template<typename TAsset, typename TLoader>
-	using HasShutdownMethod = decltype(std::declval<TLoader>().Shutdown(std::declval<TAsset&>()));
-	template<typename TAsset, typename TLoader>
-	using HasSaveMethod = decltype(std::declval<TLoader>().Save(std::declval<TAsset&>(), std::declval<eng::Visitor&>()));
-	template<typename TAsset, typename TLoader>
-	using HasLoadMethod = decltype(std::declval<TLoader>().Load(std::declval<TAsset&>(), std::declval<eng::Visitor&>()));
-	template<typename TAsset, typename TLoader>
-	using HasImportMethod = decltype(std::declval<TLoader>().Import(std::declval<TAsset&>(), std::declval<eng::Visitor&>()));
-}
-
 template<typename TAsset, typename TLoader, typename... TArgs>
 void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 {
@@ -37,15 +20,15 @@ void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 	entry.m_Load = &ScheduleLoad<TAsset>;
 
 	eng::AssetMethods& methods = entry.m_Methods;
-	if constexpr (core::IsDetected<_private::HasInitialiseMethod, TAsset, TLoader>::value)
+	if constexpr (requires (TAsset a, TLoader l) { l.Initialise(a); })
 		methods.m_Initialise = &InitialiseMethod<TAsset, TLoader>;
-	if constexpr (core::IsDetected<_private::HasShutdownMethod, TAsset, TLoader>::value)
+	if constexpr (requires (TAsset a, TLoader l) { l.Shutdown(a); })
 		methods.m_Shutdown = &ShutdownMethod<TAsset, TLoader>;
-	if constexpr (core::IsDetected<_private::HasSaveMethod, TAsset, TLoader>::value)
+	if constexpr (requires (TAsset a, TLoader l, eng::Visitor v) { l.Save(a, v); })
 		methods.m_Save = &SaveMethod<TAsset, TLoader>;
-	if constexpr (core::IsDetected<_private::HasLoadMethod, TAsset, TLoader>::value)
+	if constexpr (requires (TAsset a, TLoader l, eng::Visitor v) { l.Load(a, v); })
 		methods.m_Load = &LoadMethod<TAsset, TLoader>;
-	if constexpr (core::IsDetected<_private::HasImportMethod, TAsset, TLoader>::value)
+	if constexpr (requires (TAsset a, TLoader l, eng::Visitor v) { l.Import(a, v); })
 		methods.m_Import = &ImportMethod<TAsset, TLoader>;
 }
 
