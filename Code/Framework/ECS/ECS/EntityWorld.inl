@@ -63,6 +63,8 @@ void ecs::EntityWorld::RegisterComponent()
 	m_ComponentRegistry.Register<TComponent>();
 	m_EntityStorage.RegisterComponent<TComponent>();
 	m_FrameBuffer.RegisterComponent<TComponent>();
+
+	m_TypeMap[ToTypeId<TComponent>()] = ToTypeName<TComponent>();
 }
 
 template <typename TComponent, typename... TArgs>
@@ -145,6 +147,8 @@ void ecs::EntityWorld::RegisterEvent()
 	m_EventRegistry.Register<TEvent>();
 	m_EntityStorage.RegisterEvent<TEvent>();
 	m_FrameBuffer.RegisterEvent<TEvent>();
+
+	m_TypeMap[ToTypeId<TEvent>()] = ToTypeName<TEvent>();
 }
 
 template <typename TEvent, typename... TArgs>
@@ -167,7 +171,9 @@ void ecs::EntityWorld::RegisterResource(TResource& resource)
 	static_assert(!std::is_pointer_v<TResource>, "Type cannot be a pointer.");
 
 	Z_PANIC(!IsRegistered<TResource>(), "Resource is already registered!");
-	return m_ResourceRegistry.Register<TResource>(resource);
+	m_ResourceRegistry.Register<TResource>(resource);
+
+	m_TypeMap[ToTypeId<TResource>()] = ToTypeName<TResource>();
 }
 
 template <typename TResource>
@@ -205,6 +211,8 @@ void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
 
 	m_SingletonRegistry.Register<TSingleton>();
 	m_EntityStorage.RegisterSingleton<TSingleton>(std::forward<TArgs>(args)...);
+
+	m_TypeMap[ToTypeId<TSingleton>()] = ToTypeName<TSingleton>();
 }
 
 template <typename TSingleton>
@@ -244,6 +252,8 @@ void ecs::EntityWorld::RegisterSystem(TArgs&&... args)
 
 	Z_PANIC(!IsRegistered<TSystem>(), "System is already registered!");
 	m_SystemRegistry.Register<TSystem>(std::forward<TArgs>(args)...);
+
+	m_TypeMap[ToTypeId<TSystem>()] = ToTypeName<TSystem>();
 }
 
 template <typename TSystem>
