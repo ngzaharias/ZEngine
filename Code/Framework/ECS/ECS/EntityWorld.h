@@ -40,6 +40,8 @@ namespace ecs
 		template<typename TWorldView>
 		TWorldView WorldView();
 
+		str::String LogDependencies() const;
+
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 

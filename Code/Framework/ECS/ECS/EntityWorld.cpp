@@ -39,3 +39,22 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
 }
+
+str::String ecs::EntityWorld::LogDependencies() const
+{
+	const ecs::SystemEntries& entries = m_SystemRegistry.GetEntries();
+
+	str::String output;
+	output.reserve(entries.GetCount() * 256);
+	for (const ecs::SystemEntry& entry : entries.GetValues())
+	{
+		output += std::format("\n\n{}", entry.m_Name);
+		output += std::format("\n\tWrite:");
+		for (const TypeId typeId : entry.m_DependencyWrite)
+			output += std::format("\n\t\t{}", m_TypeMap.Get(typeId));
+		output += std::format("\n\tRead:");
+		for (const TypeId typeId : entry.m_DependencyRead)
+			output += std::format("\n\t\t{}", m_TypeMap.Get(typeId));
+	}
+	return output;
+}
