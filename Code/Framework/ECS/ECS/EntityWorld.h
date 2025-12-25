@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Map.h"
 #include "ECS/ComponentRegistry.h"
 #include "ECS/EntityStorage.h"
 #include "ECS/EventRegistry.h"
@@ -139,6 +140,8 @@ namespace ecs
 		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SingletonRegistry m_SingletonRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
+
+		Map<TypeId, str::String> m_TypeMap = {};
 	};
 }
 
