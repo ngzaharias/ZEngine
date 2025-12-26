@@ -1,8 +1,9 @@
 #pragma once
 
+#include "Core/Array.h"
 #include "Core/Colour.h"
+#include "ECS/System.h"
 #include "ECS/WorldView.h"
-#include "Engine/RenderStage.h"
 #include "Math/Vector.h"
 
 namespace editor::settings
@@ -23,25 +24,33 @@ namespace eng::camera
 	struct ProjectionComponent;
 }
 
+namespace render
+{
+	struct OpaqueComponent;
+	struct ShadowComponent;
+}
+
 namespace editor
 {
-	class RenderStage_Axes final : public eng::RenderStage
+	class RenderAxesSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::AssetManager>
+			//eng::AssetManager,
+			render::OpaqueComponent>
 			::Read<
 			editor::settings::LocalSingleton,
 			eng::camera::EditorComponent,
 			eng::camera::ProjectionComponent,
 			eng::TransformComponent,
-			eng::WindowManager>;
+			eng::WindowManager,
+			render::ShadowComponent>;
 
-		void Initialise(ecs::EntityWorld& entityWorld) override;
-		void Shutdown(ecs::EntityWorld& entityWorld) override;
+		void Initialise(World& world);
+		void Shutdown(World& world);
 
-		void Render(ecs::EntityWorld& entityWorld) override;
+		void Update(World& world, const GameTime& gameTime);
 
 	private:
 		void UpdateBuffers(const bool showX, const bool showY, const bool showZ);

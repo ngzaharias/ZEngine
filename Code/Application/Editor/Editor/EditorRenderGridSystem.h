@@ -1,7 +1,7 @@
 #pragma once
 
+#include "ECS/System.h"
 #include "ECS/WorldView.h"
-#include "Engine/RenderStage.h"
 
 namespace editor::settings
 {
@@ -26,29 +26,34 @@ namespace eng::settings
 	struct DebugSingleton;
 }
 
+namespace render
+{
+	struct OpaqueComponent;
+	struct ShadowComponent;
+}
+
 namespace editor
 {
-	class AssetManager;
-	struct TransformComponent;
-
-	class RenderStage_Grid final : public eng::RenderStage
+	class RenderGridSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::AssetManager>
+			//eng::AssetManager,
+			render::OpaqueComponent>
 			::Read<
 			editor::settings::LocalSingleton,
 			eng::camera::EditorComponent,
 			eng::camera::ProjectionComponent,
 			eng::settings::DebugSingleton,
 			eng::TransformComponent,
-			eng::WindowManager>;
+			eng::WindowManager,
+			render::ShadowComponent>;
 
-		void Initialise(ecs::EntityWorld& entityWorld) override;
-		void Shutdown(ecs::EntityWorld& entityWorld) override;
+		void Initialise(World& world);
+		void Shutdown(World& world);
 
-		void Render(ecs::EntityWorld& entityWorld) override;
+		void Update(World& world, const GameTime& gameTime);
 
 	private:
 		uint32 m_AttributeObject = 0;

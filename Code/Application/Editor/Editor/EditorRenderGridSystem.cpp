@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/RenderStage_Grid.h"
+#include "Editor/EditorRenderGridSystem.h"
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
@@ -16,6 +16,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "Math/Matrix.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -38,10 +39,10 @@ namespace
 		Vector2f(0.f, 1.f),
 		Vector2f(1.f, 1.f),
 		Vector2f(1.f, 0.f) };
-	const Array<uint32> s_Indices = { 0, 1, 2, 0, 2, 3};
+	const Array<uint32> s_Indices = { 0, 1, 2, 0, 2, 3 };
 }
 
-void editor::RenderStage_Grid::Initialise(ecs::EntityWorld& entityWorld)
+void editor::RenderGridSystem::Initialise(World& world)
 {
 	glGenVertexArrays(1, &m_AttributeObject);
 	glBindVertexArray(m_AttributeObject);
@@ -65,21 +66,20 @@ void editor::RenderStage_Grid::Initialise(ecs::EntityWorld& entityWorld)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.RequestAsset(strShader);
 }
 
-void editor::RenderStage_Grid::Shutdown(ecs::EntityWorld& entityWorld)
+void editor::RenderGridSystem::Shutdown(World& world)
 {
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.ReleaseAsset(strShader);
 }
 
-void editor::RenderStage_Grid::Render(ecs::EntityWorld& entityWorld)
+void editor::RenderGridSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.WorldView<World>();
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	const auto& localSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
 	const auto& gizmos = localSettings.m_Gizmos;

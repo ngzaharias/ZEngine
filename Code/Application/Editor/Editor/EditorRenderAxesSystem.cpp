@@ -1,5 +1,5 @@
 #include "EditorPCH.h"
-#include "Editor/RenderStage_Axes.h"
+#include "Editor/EditorRenderAxesSystem.h"
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
@@ -15,6 +15,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "Math/Matrix.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -29,37 +30,36 @@ namespace
 	const str::Guid strLinesShader = GUID("dad72cc07659496b83b1c5a85a4b3695");
 }
 
-void editor::RenderStage_Axes::Initialise(ecs::EntityWorld& entityWorld)
+void editor::RenderAxesSystem::Initialise(World& world)
 {
 	glGenVertexArrays(1, &m_AttributeObject);
 	glBindVertexArray(m_AttributeObject);
 	glGenBuffers(1, &m_VertexBuffer);
 	glGenBuffers(1, &m_ColourBuffer);
 
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.RequestAsset(strLinesShader);
 
-	const auto& settings = entityWorld.ReadSingleton<editor::settings::LocalSingleton>();
+	const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
 	const auto& gizmos = settings.m_Gizmos;
 	const auto& value = gizmos.m_CoordAxes;
 	UpdateBuffers(value.m_ShowX, value.m_ShowY, value.m_ShowZ);
 }
 
-void editor::RenderStage_Axes::Shutdown(ecs::EntityWorld& entityWorld)
+void editor::RenderAxesSystem::Shutdown(World& world)
 {
 	glDeleteVertexArrays(1, &m_AttributeObject);
 	glDeleteBuffers(1, &m_VertexBuffer);
 	glDeleteBuffers(1, &m_ColourBuffer);
 
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.ReleaseAsset(strLinesShader);
 }
 
-void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
+void editor::RenderAxesSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.WorldView<World>();
 	if (world.HasAny<editor::settings::LocalSingleton>())
 	{
 		const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
@@ -122,7 +122,7 @@ void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
 		using Query = ecs::query
 			::Include<
 			const eng::camera::EditorComponent,
-			const eng::camera::ProjectionComponent, 
+			const eng::camera::ProjectionComponent,
 			const eng::TransformComponent>;
 		for (auto&& view : world.Query<Query>())
 		{
@@ -149,7 +149,7 @@ void editor::RenderStage_Axes::Render(ecs::EntityWorld& entityWorld)
 	}
 }
 
-void editor::RenderStage_Axes::UpdateBuffers(const bool showX, const bool showY, const bool showZ)
+void editor::RenderAxesSystem::UpdateBuffers(const bool showX, const bool showY, const bool showZ)
 {
 	m_Vertices.RemoveAll();
 	m_Colours.RemoveAll();
