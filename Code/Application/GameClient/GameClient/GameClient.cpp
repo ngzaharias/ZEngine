@@ -68,11 +68,11 @@ void client::GameClient::Register(const Dependencies& dependencies)
 
 	// engine
 	{
-		eng::RegisterClientComponents(m_EntityWorld);
-		eng::RegisterClientSystems(m_EntityWorld);
-		
 		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
 		eng::RegisterSharedSystems(m_EntityWorld);
+
+		eng::RegisterClientComponents(m_EntityWorld);
+		eng::RegisterClientSystems(m_EntityWorld);
 	}
 
 	// shared
