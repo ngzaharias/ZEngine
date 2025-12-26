@@ -3,7 +3,6 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "Engine/RenderSystem.h"
 #include "Engine/ReplicationHost.h"
 #include "GameClient/AccelerationSystem.h"
 #include "GameClient/DragMovementSystem.h"
@@ -15,7 +14,6 @@
 #include "GameClient/NetworkStopSystem.h"
 #include "GameClient/ProjectileSpawnSystem.h"
 #include "GameClient/ProjectileTrajectorySystem.h"
-#include "GameClient/RenderStage_Hexmap.h"
 #include "GameClient/SettingsSystem.h"
 #include "GameClient/TransformSystem.h"
 #include "GameClient/VelocitySystem.h"

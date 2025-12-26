@@ -1,5 +1,5 @@
-#include "GameClientPCH.h"
-#include "GameClient/RenderStage_Hexmap.h"
+#include "HexmapPCH.h"
+#include "Hexmap/HexmapRenderSystem.h"
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
@@ -32,55 +32,36 @@ namespace
 	const str::Guid strMesh = str::Guid::Create("ecf9330f287d40fea37789491c3c32a3");
 	const str::Guid strShader = str::Guid::Create("94eb696e6c1841309a2071df1f0f1823");
 	const str::Guid strTexture = str::Guid::Create("3c8610fc623e4496951dcefeaf0495ab");
-
-	struct Sort
-	{
-		bool operator()(const eng::RenderBatchID& a, const eng::RenderBatchID& b)
-		{
-			// all translucent objects must be sorted by depth first
-			if (a.m_Depth != b.m_Depth)
-				return a.m_Depth > b.m_Depth;
-
-			if (a.m_ShaderId != b.m_ShaderId)
-				return a.m_ShaderId < b.m_ShaderId;
-
-			if (a.m_TextureId != b.m_TextureId)
-				return a.m_TextureId < b.m_TextureId;
-
-			return a.m_StaticMeshId < b.m_StaticMeshId;
-		}
-	};
 }
 
-void hexmap::RenderStage::Initialise(ecs::EntityWorld& entityWorld)
+void hexmap::RenderSystem::Initialise(World& world)
 {
 	glGenBuffers(1, &m_ColourBuffer);
 	glGenBuffers(1, &m_ModelBuffer);
 	glGenBuffers(1, &m_TexParamBuffer);
 
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.RequestAsset(strMesh);
 	assetManager.RequestAsset(strShader);
 	assetManager.RequestAsset(strTexture);
 }
 
-void hexmap::RenderStage::Shutdown(ecs::EntityWorld& entityWorld)
+void hexmap::RenderSystem::Shutdown(World& world)
 {
 	glDeleteBuffers(1, &m_ColourBuffer);
 	glDeleteBuffers(1, &m_ModelBuffer);
 	glDeleteBuffers(1, &m_TexParamBuffer);
 
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.ReleaseAsset(strMesh);
 	assetManager.ReleaseAsset(strShader);
 	assetManager.ReleaseAsset(strTexture);
 }
 
-void hexmap::RenderStage::Render(ecs::EntityWorld& entityWorld)
+void hexmap::RenderSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(strMesh);
 	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);

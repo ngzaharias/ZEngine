@@ -1,12 +1,7 @@
 #pragma once
 
+#include "ECS/System.h"
 #include "ECS/WorldView.h"
-#include "Engine/RenderStage.h"
-
-namespace ecs
-{
-	class EntityWorld;
-}
 
 namespace eng
 {
@@ -30,13 +25,23 @@ namespace hexmap
 {
 	struct LayerComponent;
 	struct RootComponent;
+}
 
-	class RenderStage final : public eng::RenderStage
+namespace render
+{
+	struct OpaqueComponent;
+	struct ShadowComponent;
+}
+
+namespace hexmap
+{
+	class RenderSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::AssetManager>
+			//eng::AssetManager,
+			render::OpaqueComponent>
 			::Read<
 			eng::camera::EditorComponent,
 			eng::camera::ProjectionComponent,
@@ -44,12 +49,13 @@ namespace hexmap
 			eng::TransformComponent,
 			eng::WindowManager,
 			hexmap::LayerComponent,
-			hexmap::RootComponent>;
+			hexmap::RootComponent,
+			render::ShadowComponent>;
 
-		void Initialise(ecs::EntityWorld& entityWorld) override;
-		void Shutdown(ecs::EntityWorld& entityWorld) override;
+		void Initialise(World& world);
+		void Shutdown(World& world);
 
-		void Render(ecs::EntityWorld& entityWorld) override;
+		void Update(World& world, const GameTime& gameTime);
 
 	private:
 		uint32 m_ColourBuffer = 0;

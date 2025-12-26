@@ -15,6 +15,8 @@ project "Hexmap"
 	includedirs 
 	{ 
 		"%{wks.location}/../3rdParty/",
+		"%{wks.location}/../3rdParty/glew/2.1.0/Include/",
+		"%{wks.location}/../3rdParty/glfw/3.3.4/Include/",
 		"%{wks.location}/../3rdParty/imgui/1.91/Include/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
@@ -24,6 +26,7 @@ project "Hexmap"
 		"%{wks.location}/../Code/Framework/Imgui/",
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
+		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Modules/Hexmap/",
 	}
 
@@ -34,4 +37,5 @@ project "Hexmap"
 		"Engine", 
 		"Imgui", 
 		"Math", 
+		"Render", 
 	}
