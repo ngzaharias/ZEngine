@@ -62,9 +62,9 @@ namespace
 		}
 
 		Array<ecs::SystemId> order;
-		order.Resize(stack.GetCount());
+		order.Reserve(stack.GetCount());
 		for (auto&& [i, systemId] : enumerate::Reverse(stack))
-			order[i] = stack[i];
+			order.Append(stack[i]);
 		return order;
 	}
 }
@@ -74,10 +74,13 @@ void ecs::SystemRegistry::Initialise(ecs::EntityWorld& entityWorld)
 	PROFILE_FUNCTION();
 
 	// topological sort systems
+	Z_LOG(ELog::Debug, "===== SORTING SYSTEMS =====");
 	const Array<ecs::SystemId> order = TopologicalSort(*this);
 	for (const ecs::SystemId systemId : order)
-		m_Order.Append(&m_Entries.Get(systemId));
-
+	{
+		const auto* entry = m_Order.Append(&m_Entries.Get(systemId));
+		Z_LOG(ELog::Debug, "{}", entry->m_Name);
+	}
 	//for (ecs::SystemEntry& entry : m_Entries.GetValues())
 	//	m_Order.Append(&entry);
 
