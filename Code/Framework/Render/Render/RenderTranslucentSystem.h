@@ -40,7 +40,7 @@ namespace render
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::AssetManager,
+			//eng::AssetManager,
 			render::TranslucentComponent>
 			::Read<
 			eng::camera::EditorComponent,

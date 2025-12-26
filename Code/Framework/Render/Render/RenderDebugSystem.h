@@ -35,8 +35,8 @@ namespace render
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::AssetManager,
-			eng::LinesSingleton,
+			//eng::AssetManager,
+			//eng::LinesSingleton,
 			render::OpaqueComponent>
 			::Read<
 			eng::camera::EditorComponent,

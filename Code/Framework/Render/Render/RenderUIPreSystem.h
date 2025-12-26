@@ -21,9 +21,11 @@ namespace render
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::UIManager,
-			eng::WindowManager,
-			render::UIPreComponent>;
+			//eng::UIManager,
+			render::UIPreComponent>
+			::Read<
+			eng::WindowManager>;
+
 
 		void Update(World& world, const GameTime& gameTime);
 	};

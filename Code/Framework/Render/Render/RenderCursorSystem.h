@@ -23,7 +23,7 @@ namespace render
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::AssetManager,
+			//eng::AssetManager,
 			render::CursorComponent>
 			::Read<
 			eng::InputManager,

@@ -22,7 +22,7 @@ namespace render
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::UIManager,
+			//eng::UIManager,
 			render::UIPostComponent>
 			::Read<
 			render::TranslucentComponent>;
