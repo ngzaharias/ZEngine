@@ -1,7 +1,8 @@
-#include "EnginePCH.h"
-#include "Engine/RenderStage_Voxels.h"
+#include "RenderPCH.h"
+#include "Render/RenderVoxelSystem.h"
 
 #include "Core/Algorithms.h"
+#include "Core/Guid.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -16,6 +17,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "Math/Matrix.h"
 #include "Voxel/VoxelChunkComponent.h"
 
 #include <GLEW/glew.h>
@@ -27,25 +29,24 @@ namespace
 	const str::Guid strVoxelTexture = GUID("f87d23dd5e7b4d6dbff88b0eb676f80c");
 }
 
-void eng::RenderStage_Voxels::Initialise(ecs::EntityWorld& entityWorld)
+void render::VoxelSystem::Initialise(World& world)
 {
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.RequestAsset(strVoxelShader);
 	assetManager.RequestAsset(strVoxelTexture);
 }
 
-void eng::RenderStage_Voxels::Shutdown(ecs::EntityWorld& entityWorld)
+void render::VoxelSystem::Shutdown(World& world)
 {
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.ReleaseAsset(strVoxelShader);
 	assetManager.ReleaseAsset(strVoxelTexture);
 }
 
-void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
+void render::VoxelSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strVoxelShader);
 	const auto* texture = assetManager.ReadAsset<eng::Texture2DAsset>(strVoxelTexture);
@@ -85,7 +86,7 @@ void eng::RenderStage_Voxels::Render(ecs::EntityWorld& entityWorld)
 		const auto& cameraComponent = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
 		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
-		const Matrix4x4 cameraProj = camera::GetProjection(cameraComponent.m_Projection, windowSize);
+		const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraComponent.m_Projection, windowSize);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 		glUseProgram(shader->m_ProgramId);

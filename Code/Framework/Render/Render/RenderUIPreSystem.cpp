@@ -1,6 +1,7 @@
-#include "EnginePCH.h"
-#include "Engine/RenderStage_Noesis_Pre.h"
+#include "RenderPCH.h"
+#include "Render/RenderUIPreSystem.h"
 
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -16,11 +17,10 @@ namespace
 	constexpr Colour s_ClearColour = Colour(0.24f);
 }
 
-void eng::RenderStage_Noesis_Pre::Render(ecs::EntityWorld& entityWorld)
+void render::UIPreSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.WorldView<World>();
 	auto& uiManager = world.WriteResource<eng::UIManager>();
 	uiManager.RenderBegin();
 

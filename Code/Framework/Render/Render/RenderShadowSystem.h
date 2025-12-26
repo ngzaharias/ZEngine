@@ -1,7 +1,7 @@
 #pragma once
 
+#include "ECS/System.h"
 #include "ECS/WorldView.h"
-#include "Engine/RenderStage.h"
 
 namespace eng
 {
@@ -27,30 +27,41 @@ namespace eng::settings
 	struct DebugSingleton;
 }
 
-namespace eng
+namespace render
 {
-	class RenderStage_Shadow final : public RenderStage
+	struct Batch;
+	struct BatchId;
+	struct Data;
+	struct ShadowComponent;
+	struct UIPreComponent;
+}
+
+namespace render
+{
+	class ShadowSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
 			eng::AssetManager,
-			eng::FrameBufferSingleton>
+			eng::FrameBufferSingleton,
+			render::ShadowComponent>
 			::Read<
 			eng::camera::EditorComponent,
 			eng::camera::ProjectionComponent,
 			eng::light::DirectionalComponent,
 			eng::settings::DebugSingleton,
 			eng::StaticMeshComponent,
-			eng::TransformComponent>;
+			eng::TransformComponent,
+			render::UIPreComponent>;
 
-		void Initialise(ecs::EntityWorld& entityWorld) override;
-		void Shutdown(ecs::EntityWorld& entityWorld) override;
+		void Initialise(World& world);
+		void Shutdown(World& world);
 
-		void Render(ecs::EntityWorld& entityWorld) override;
+		void Update(World& world, const GameTime& gameTime);
 
 	private:
-		void RenderBatch(World& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData);
+		void RenderBatch(World& world, const render::BatchId& id, const render::Batch& batch, const render::Data& data);
 
 	private:
 		uint32 m_ModelBuffer = 0;

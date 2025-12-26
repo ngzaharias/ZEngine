@@ -1,5 +1,5 @@
-#include "EnginePCH.h"
-#include "Engine/RenderStage_Translucent.h"
+#include "RenderPCH.h"
+#include "Render/RenderTranslucentSystem.h"
 
 #include "Core/Algorithms.h"
 #include "Core/Colour.h"
@@ -23,6 +23,9 @@
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "Render/RenderBatch.h"
+#include "Render/RenderBatchId.h"
+#include "Render/RenderData.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -33,7 +36,7 @@ namespace
 
 	struct Sort
 	{
-		bool operator()(const eng::RenderBatchID& a, const eng::RenderBatchID& b)
+		bool operator()(const render::BatchId& a, const render::BatchId& b)
 		{
 			// all translucent objects must be sorted by depth first
 			if (a.m_Depth != b.m_Depth)
@@ -50,31 +53,30 @@ namespace
 	};
 }
 
-void eng::RenderStage_Translucent::Initialise(ecs::EntityWorld& entityWorld)
+void render::TranslucentSystem::Initialise(World& world)
 {
 	glGenBuffers(1, &m_ColourBuffer);
 	glGenBuffers(1, &m_ModelBuffer);
 	glGenBuffers(1, &m_TexParamBuffer);
 
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.RequestAsset(strQuadMesh);
 }
 
-void eng::RenderStage_Translucent::Shutdown(ecs::EntityWorld& entityWorld)
+void render::TranslucentSystem::Shutdown(World& world)
 {
 	glDeleteBuffers(1, &m_ColourBuffer);
 	glDeleteBuffers(1, &m_ModelBuffer);
 	glDeleteBuffers(1, &m_TexParamBuffer);
 
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.ReleaseAsset(strQuadMesh);
 }
 
-void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
+void render::TranslucentSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
@@ -110,10 +112,10 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 		const auto& cameraComponent = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
 		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
-		const Matrix4x4 cameraProj = camera::GetProjection(cameraComponent.m_Projection, windowSize);
+		const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraComponent.m_Projection, windowSize);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
-		Array<RenderBatchID> batchIDs;
+		Array<render::BatchId> ids;
 
 		// sprite
 		{
@@ -129,13 +131,13 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				if (!spriteAsset)
 					continue;
 
-				RenderBatchID id;
+				render::BatchId id;
 				id.m_Entity = renderView;
 				id.m_Depth = math::DistanceSqr(spriteTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_ShaderId = spriteAsset->m_Shader;
 				id.m_StaticMeshId = strQuadMesh;
 				id.m_TextureId = spriteAsset->m_Texture2D;
-				batchIDs.Append(id);
+				ids.Append(id);
 			}
 		}
 
@@ -159,7 +161,7 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 				if (!flipbookAsset->m_Texture2D.IsValid())
 					continue;
 
-				RenderBatchID& id = batchIDs.Emplace();
+				render::BatchId& id = ids.Emplace();
 				id.m_Entity = renderView;
 				id.m_Depth = math::DistanceSqr(flipbookTransform.m_Translate, cameraTransform.m_Translate);
 				id.m_ShaderId = flipbookAsset->m_Shader;
@@ -168,28 +170,28 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 			}
 		}
 
-		if (batchIDs.IsEmpty())
+		if (ids.IsEmpty())
 			continue;
 
-		std::sort(batchIDs.begin(), batchIDs.end(), Sort());
+		std::sort(ids.begin(), ids.end(), Sort());
 
-		RenderBatchID batchID = batchIDs.GetFirst();
-		RenderBatchData batchData;
-		RenderStageData stageData = { cameraProj, cameraView };
+		render::BatchId lastId = ids.GetFirst();
+		render::Batch batch;
+		render::Data data = { cameraProj, cameraView };
 
-		for (const RenderBatchID& id : batchIDs)
+		for (const render::BatchId& id : ids)
 		{
 			const bool isSameBatch =
-				id.m_ShaderId == batchID.m_ShaderId &&
-				id.m_TextureId == batchID.m_TextureId &&
-				id.m_StaticMeshId == batchID.m_StaticMeshId;
+				id.m_ShaderId == id.m_ShaderId &&
+				id.m_TextureId == id.m_TextureId &&
+				id.m_StaticMeshId == id.m_StaticMeshId;
 
 			if (!isSameBatch)
 			{
-				RenderBatch(world, batchID, batchData, stageData);
-				batchData.m_Colours.RemoveAll();
-				batchData.m_Models.RemoveAll();
-				batchData.m_TexParams.RemoveAll();
+				RenderBatch(world, id, batch, data);
+				batch.m_Colours.RemoveAll();
+				batch.m_Models.RemoveAll();
+				batch.m_TexParams.RemoveAll();
 			}
 
 			if (world.HasComponent<eng::VisibilityComponent>(id.m_Entity))
@@ -231,9 +233,9 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					spriteSize.x / textureSize.x,
 					spriteSize.y / textureSize.y);
 
-				batchData.m_Colours.Append(Colour::White);
-				batchData.m_Models.Append(model);
-				batchData.m_TexParams.Emplace(
+				batch.m_Colours.Append(Colour::White);
+				batch.m_Models.Append(model);
+				batch.m_TexParams.Emplace(
 					texcoordOffset.x, texcoordOffset.y,
 					texcoordScale.x, texcoordScale.y);
 			}
@@ -269,41 +271,41 @@ void eng::RenderStage_Translucent::Render(ecs::EntityWorld& entityWorld)
 					spriteSize.x / textureSize.x,
 					spriteSize.y / textureSize.y);
 
-				batchData.m_Colours.Append(spriteComponent.m_Colour.value_or(Colour::White));
-				batchData.m_Models.Append(model);
-				batchData.m_TexParams.Emplace(
+				batch.m_Colours.Append(spriteComponent.m_Colour.value_or(Colour::White));
+				batch.m_Models.Append(model);
+				batch.m_TexParams.Emplace(
 					texcoordOffset.x, texcoordOffset.y,
 					texcoordScale.x, texcoordScale.y);
 			}
 
 			// do last
-			batchID = id;
+			lastId = id;
 		}
 
-		RenderBatch(world, batchID, batchData, stageData);
+		RenderBatch(world, lastId, batch, data);
 	}
 }
 
-void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData)
+void render::TranslucentSystem::RenderBatch(World& world, const render::BatchId& id, const render::Batch& batch, const render::Data& data)
 {
 	PROFILE_FUNCTION();
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(batchID.m_StaticMeshId);
-	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(batchID.m_ShaderId);
-	const auto* texture = assetManager.ReadAsset<eng::Texture2DAsset>(batchID.m_TextureId);
+	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(id.m_StaticMeshId);
+	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(id.m_ShaderId);
+	const auto* texture = assetManager.ReadAsset<eng::Texture2DAsset>(id.m_TextureId);
 	if (!mesh || !shader || !texture)
 		return;
 	if (texture->m_TextureId == 0)
 		return;
-	if (batchData.m_Models.IsEmpty())
+	if (batch.m_Models.IsEmpty())
 		return;
 
 	glUseProgram(shader->m_ProgramId);
 
 	{
 		const int32 i = 0;
-		const int32 instanceCount = batchData.m_Models.GetCount();
+		const int32 instanceCount = batch.m_Models.GetCount();
 		const auto& binding = mesh->m_Binding;
 
 		glBindVertexArray(binding.m_AttributeObject);
@@ -349,7 +351,7 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_TexParamBuffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(Vector4f) * instanceCount, &batchData.m_TexParams[i], GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(Vector4f) * instanceCount, &batch.m_TexParams[i], GL_DYNAMIC_DRAW);
 
 			const uint32 location = *shader->i_TexParams;
 			glEnableVertexAttribArray(location);
@@ -363,7 +365,7 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 			// #todo: only call glBufferData if we need to shrink/grow the buffer, use glSubBufferData instead
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_ColourBuffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(Colour) * instanceCount, &batchData.m_Colours[i], GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(Colour) * instanceCount, &batch.m_Colours[i], GL_DYNAMIC_DRAW);
 
 			const uint32 location = *shader->i_Colour;
 			glEnableVertexAttribArray(location);
@@ -378,7 +380,7 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 			// #todo: glMapBuffer ?
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_ModelBuffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(Matrix4x4) * instanceCount, &batchData.m_Models[i], GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(Matrix4x4) * instanceCount, &batch.m_Models[i], GL_DYNAMIC_DRAW);
 
 			const uint32 location = *shader->i_Model;
 			glEnableVertexAttribArray(location + 0);
@@ -398,13 +400,13 @@ void eng::RenderStage_Translucent::RenderBatch(World& world, const RenderBatchID
 		if (shader->u_CameraProj)
 		{
 			const uint32 location = *shader->u_CameraProj;
-			glUniformMatrix4fv(location, 1, false, &stageData.m_CameraProj.m_Data[0][0]);
+			glUniformMatrix4fv(location, 1, false, &data.m_CameraProj.m_Data[0][0]);
 		}
 
 		if (shader->u_CameraView)
 		{
 			const uint32 location = *shader->u_CameraView;
-			glUniformMatrix4fv(location, 1, false, &stageData.m_CameraView.m_Data[0][0]);
+			glUniformMatrix4fv(location, 1, false, &data.m_CameraView.m_Data[0][0]);
 		}
 
 		glActiveTexture(GL_TEXTURE0);

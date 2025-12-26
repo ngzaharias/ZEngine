@@ -14,7 +14,6 @@
 #include "Engine/MusicSystem.h"
 #include "Engine/NetworkSystem.h"
 #include "Engine/PhysicsSystem.h"
-#include "Engine/RenderSystem.h"
 #include "Engine/ReplicationHost.h"
 #include "Engine/ReplicationPeer.h"
 #include "Engine/SoundPlaySystem.h"
@@ -36,7 +35,6 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::FlipbookPlaySystem>();
 	entityWorld.RegisterSystem<eng::MusicSystem>();
 	entityWorld.RegisterSystem<eng::network::NetworkSystem>();
-	entityWorld.RegisterSystem<eng::RenderSystem>(entityWorld);
 	entityWorld.RegisterSystem<eng::settings::LaunchSystem>();
 	entityWorld.RegisterSystem<eng::sound::PlaySystem>();
 	entityWorld.RegisterSystem<eng::sound::RandomSystem>();
@@ -57,9 +55,6 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystemPriority<eng::camera::Move3DSystem>(4000);
 	entityWorld.RegisterSystemPriority<eng::camera::PanningSystem>(4000);
 	entityWorld.RegisterSystemPriority<eng::camera::Bound2DSystem>(4001);
-
-	// render system needs to run after most systems
-	entityWorld.RegisterSystemPriority<eng::RenderSystem>(5000);
 }
 
 void eng::RegisterServerSystems(ecs::EntityWorld& entityWorld)

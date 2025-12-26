@@ -60,6 +60,7 @@ project "Game"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Network/",
+		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Modules/Container/",
 		"%{wks.location}/../Code/Modules/Hexmap/",
 		"%{wks.location}/../Code/Modules/Hidden/",
@@ -110,6 +111,7 @@ project "Game"
 		"Imgui",
 		"Math",
 		"Network",
+		"Render",
 		"Steam",
 
 		"Container",

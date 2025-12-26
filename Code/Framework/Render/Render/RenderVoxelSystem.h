@@ -1,7 +1,7 @@
 #pragma once
 
+#include "ECS/System.h"
 #include "ECS/WorldView.h"
-#include "Engine/RenderStage.h"
 
 namespace eng
 {
@@ -22,19 +22,26 @@ namespace eng::settings
 	struct DebugSingleton;
 }
 
+namespace render
+{
+	struct OpaqueComponent;
+	struct ShadowComponent;
+}
+
 namespace voxel
 {
 	struct ChunkComponent;
 }
 
-namespace eng
+namespace render
 {
-	class RenderStage_Voxels final : public eng::RenderStage
+	class VoxelSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::AssetManager>
+			eng::AssetManager,
+			render::OpaqueComponent>
 			::Read<
 			eng::camera::EditorComponent,
 			eng::camera::ProjectionComponent,
@@ -42,11 +49,12 @@ namespace eng
 			eng::settings::DebugSingleton,
 			eng::TransformComponent,
 			eng::WindowManager,
+			render::ShadowComponent,
 			voxel::ChunkComponent>;
 
-		void Initialise(ecs::EntityWorld& entityWorld) override;
-		void Shutdown(ecs::EntityWorld& entityWorld) override;
+		void Initialise(World& world);
+		void Shutdown(World& world);
 
-		void Render(ecs::EntityWorld& entityWorld) override;
+		void Update(World& world, const GameTime& gameTime);
 	};
 }

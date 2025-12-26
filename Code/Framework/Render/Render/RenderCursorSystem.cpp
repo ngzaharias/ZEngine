@@ -1,7 +1,8 @@
-#include "EnginePCH.h"
-#include "Engine/RenderStage_Cursor.h"
+#include "RenderPCH.h"
+#include "Render/RenderCursorSystem.h"
 
 #include "Core/Algorithms.h"
+#include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -30,27 +31,26 @@ namespace
 	const str::Guid strTexture = GUID("319277084bf14d798b940cbc1c6e3825");
 }
 
-void eng::RenderStage_Cursor::Initialise(ecs::EntityWorld& entityWorld)
+void render::CursorSystem::Initialise(World& world)
 {
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.RequestAsset(strShader);
 	assetManager.RequestAsset(strMesh);
 	assetManager.RequestAsset(strTexture);
 }
 
-void eng::RenderStage_Cursor::Shutdown(ecs::EntityWorld& entityWorld)
+void render::CursorSystem::Shutdown(World& world)
 {
-	auto& assetManager = entityWorld.WriteResource<eng::AssetManager>();
+	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.ReleaseAsset(strShader);
 	assetManager.ReleaseAsset(strMesh);
 	assetManager.ReleaseAsset(strTexture);
 }
 
-void eng::RenderStage_Cursor::Render(ecs::EntityWorld& entityWorld)
+void render::CursorSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	World world = entityWorld.WorldView<World>();
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(strShader);
 	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(strMesh);
@@ -103,7 +103,7 @@ void eng::RenderStage_Cursor::Render(ecs::EntityWorld& entityWorld)
 			glVertexAttribDivisor(location, GL_FALSE);
 		}
 
-		const Matrix4x4 cameraProj = eng::camera::GetProjection(camera::UserInterface{}, windowSize);
+		const Matrix4x4 cameraProj = eng::camera::GetProjection(eng::camera::UserInterface{}, windowSize);
 		const Matrix4x4 transform = Matrix4x4::FromTransform(
 			Vector3f(inputManager.m_MousePosition, 0.f) + Vector3f(10.f, 14.f, 0.f),
 			Vector3f(32.f / 100.f, 32.f / 100.f, 1.f));

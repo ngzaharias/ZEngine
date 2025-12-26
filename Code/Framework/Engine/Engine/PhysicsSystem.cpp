@@ -257,6 +257,9 @@ void eng::PhysicsSystem::ProcessUpdated(World& world)
 		if (!std::holds_alternative<eng::RigidDynamic>(physicsComponent.m_Rigidbody))
 			continue;
 
+		if (!physicsComponent.m_PxRigidActor)
+			continue;
+
 		const auto& rigidDynamic = std::get<eng::RigidDynamic>(physicsComponent.m_Rigidbody);
 		if (!rigidDynamic.eKINEMATIC)
 		{

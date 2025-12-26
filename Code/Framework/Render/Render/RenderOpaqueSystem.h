@@ -1,7 +1,7 @@
 #pragma once
 
+#include "ECS/System.h"
 #include "ECS/WorldView.h"
-#include "Engine/RenderStage.h"
 
 namespace eng
 {
@@ -30,15 +30,25 @@ namespace eng::settings
 	struct DebugSingleton;
 }
 
-namespace eng
+namespace render
 {
-	class RenderStage_Opaque final : public eng::RenderStage
+	struct Batch;
+	struct BatchId;
+	struct Data;
+	struct OpaqueComponent;
+	struct ShadowComponent;
+}
+
+namespace render
+{
+	class OpaqueSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
 			eng::AssetManager,
-			eng::FrameBufferSingleton>
+			eng::FrameBufferSingleton,
+			render::OpaqueComponent>
 			::Read<
 			eng::camera::EditorComponent,
 			eng::camera::ProjectionComponent,
@@ -48,15 +58,16 @@ namespace eng
 			eng::settings::DebugSingleton,
 			eng::StaticMeshComponent,
 			eng::TransformComponent,
-			eng::WindowManager>;
+			eng::WindowManager,
+			render::ShadowComponent>;
 
-		void Initialise(ecs::EntityWorld& entityWorld) override;
-		void Shutdown(ecs::EntityWorld& entityWorld) override;
+		void Initialise(World& world);
+		void Shutdown(World& world);
 
-		void Render(ecs::EntityWorld& entityWorld) override;
+		void Update(World& world, const GameTime& gameTime);
 
 	private:
-		void RenderBatch(World& world, const RenderBatchID& batchID, const RenderBatchData& batchData, const RenderStageData& stageData);
+		void RenderBatch(World& world, const render::BatchId& id, const render::Batch& batch, const render::Data& data);
 
 	private:
 		uint32 m_ColourBuffer = 0;
