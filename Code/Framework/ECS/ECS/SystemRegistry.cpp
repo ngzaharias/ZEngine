@@ -11,40 +11,44 @@
 
 namespace
 {
-	const Set<ecs::SystemId> s_Empty;
+	const Set<TypeId> s_Empty;
 
-	bool Comparator(const ecs::SystemEntry* a, const ecs::SystemEntry* b)
+	bool IsDependency(const ecs::ETypeBase value)
 	{
-		return a->m_Priority < b->m_Priority;
+		switch (value)
+		{
+		case ecs::ETypeBase::Component:
+		case ecs::ETypeBase::Singleton:
+			return true;
+		default:
+			return false;
+		}
 	}
 
 	// https://www.geeksforgeeks.org/dsa/topological-sort-using-dfs/
-	void TopologicalSort(const ecs::EntityWorld& world, const ecs::SystemId parentId, Map<ecs::SystemId, bool>& visited, Array<ecs::SystemId>& stack, const int32 depth)
+	void TopologicalSort(const ecs::EntityWorld& world, const TypeId parentId, Map<TypeId, bool>& visited, Array<TypeId>& stack, const int32 depth)
 	{
 		const ecs::SystemRegistry& registry = world.m_SystemRegistry;
-		const ecs::SystemEdges& edges = registry.GetEdges();
+		const ecs::SystemDependencies& writes = registry.GetWrites();
+		const ecs::SystemDependencies& reads = registry.GetReads();
 		const ecs::SystemEntries& entries = registry.GetEntries();
 		const ecs::SystemEntry& entry = entries.Get(parentId);
 
-		str::String indent;
-		for (int32 i = 0; i < depth; ++i)
-			indent += '\t';
-
-		Z_LOG(ELog::Debug, "{}{}", indent, entry.m_Name);
+		const ecs::TypeInfo& parentInfo = world.m_TypeMap.Get(parentId);
 
 		visited.Get(parentId) = true;
 
-		for (const TypeId typeId : entry.m_DependencyWrite)
+		// To ensure the order is correct we must recursively add the systems that have a dependency on us.
+		// if we added the systems that we depend on, then it is possible that a system will be added too early
+		// and mess up the order for another system that hasn't been added yet.
+		for (const TypeId componentId : entry.m_DependencyWrite)
 		{
-			const Set<ecs::SystemId>& childIds = edges.Get(typeId, s_Empty);
+			const ecs::TypeInfo& typeInfo = world.m_TypeMap.Get(componentId);
+			if (!IsDependency(typeInfo.m_Base))
+				continue;
 
-			if (!childIds.IsEmpty())
-			{
-				const str::String& name = world.m_TypeMap.Get(typeId);
-				Z_LOG(ELog::Debug, "{}\tWrite({})", indent, name);
-			}
-
-			for (const ecs::SystemId childId : childIds)
+			const Set<TypeId>& childIds = reads.Get(componentId, s_Empty);
+			for (const TypeId childId : childIds)
 			{
 				if (visited.Get(childId))
 					continue;
@@ -56,30 +60,29 @@ namespace
 		stack.Append(parentId);
 	}
 
-	Array<ecs::SystemId> TopologicalSort(const ecs::EntityWorld& world)
+	Array<TypeId> TopologicalSort(const ecs::EntityWorld& world)
 	{
 		const ecs::SystemRegistry& registry = world.m_SystemRegistry;
-		const ecs::SystemEdges& edges = registry.GetEdges();
 		const ecs::SystemEntries& entries = registry.GetEntries();
 
-		Array<ecs::SystemId> stack;
+		Array<TypeId> stack;
 		stack.Reserve(entries.GetCount());
 
-		Map<ecs::SystemId, bool> visited;
-		for (auto&& [systemId, entry] : entries)
-			visited[systemId] = false;
+		Map<TypeId, bool> visited;
+		for (auto&& [typeId, entry] : entries)
+			visited[typeId] = false;
 
-		for (auto&& [systemId, entry] : entries)
+		for (auto&& [typeId, entry] : entries)
 		{
-			if (visited.Get(systemId))
+			if (visited.Get(typeId))
 				continue;
 
-			TopologicalSort(world, systemId, visited, stack, 0);
+			TopologicalSort(world, typeId, visited, stack, 0);
 		}
 
-		Array<ecs::SystemId> order;
+		Array<TypeId> order;
 		order.Reserve(stack.GetCount());
-		for (auto&& [i, systemId] : enumerate::Reverse(stack))
+		for (auto&& [i, typeId] : enumerate::Reverse(stack))
 			order.Append(stack[i]);
 		return order;
 	}
@@ -90,13 +93,13 @@ void ecs::SystemRegistry::Initialise(ecs::EntityWorld& world)
 	PROFILE_FUNCTION();
 
 	// topological sort systems
-	Z_LOG(ELog::Debug, "===== TOPOLOGICAL SORT =====");
-	const Array<ecs::SystemId> order = TopologicalSort(world);
 	Z_LOG(ELog::Debug, "===== SYSTEM ORDER =====");
-	for (const ecs::SystemId systemId : order)
+	const Array<TypeId> order = TopologicalSort(world);
+	for (const TypeId typeId : order)
 	{
-		const auto* entry = m_Order.Append(&m_Entries.Get(systemId));
-		Z_LOG(ELog::Debug, "{}", entry->m_Name);
+		const ecs::TypeInfo& info = world.m_TypeMap.Get(typeId);
+		Z_LOG(ELog::Debug, "{}", info.m_Name);
+		m_Order.Append(&m_Entries.Get(typeId));
 	}
 
 	for (ecs::SystemEntry* entry : m_Order)

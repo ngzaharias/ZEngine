@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Core/String.h"
 #include "Core/TypeInfo.h"
-#include "ECS/ComponentId.h"
 
 class GameTime;
 
@@ -10,23 +8,22 @@ namespace ecs
 {
 	class EntityWorld;
 	class System;
+}
 
-	using SystemId = int32;
-
+namespace ecs
+{
 	struct SystemEntry
 	{
-		int32 m_Priority = 0;
-		ecs::System* m_System = nullptr;
-		str::String m_Name = { };
-
-		Set<TypeId> m_DependencyRead = {};
-		Set<TypeId> m_DependencyWrite = {};
-
 		using Initialise = void(ecs::EntityWorld&, ecs::System&);
 		using Shutdown = void(ecs::EntityWorld&, ecs::System&);
 		using Update = void(ecs::EntityWorld&, ecs::System&, const GameTime&);
+		
+		ecs::System* m_System = nullptr;
 		Initialise* m_Initialise = nullptr;
 		Shutdown* m_Shutdown = nullptr;
 		Update* m_Update = nullptr;
+
+		Set<TypeId> m_DependencyRead = {};
+		Set<TypeId> m_DependencyWrite = {};
 	};
 }

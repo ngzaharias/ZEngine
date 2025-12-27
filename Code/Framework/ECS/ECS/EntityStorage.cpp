@@ -60,9 +60,9 @@ void ecs::EntityStorage::FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryR
 	}
 
 	// move events from buffer -> storage
-	for (auto&& [eventId, fStorage] : frameBuffer.m_Events)
+	for (auto&& [typeId, fStorage] : frameBuffer.m_Events)
 	{
-		ecs::IEventStorage* eStorage = m_Events.Get(eventId);
+		ecs::IEventStorage* eStorage = m_Events.Get(typeId);
 		fStorage->Move(*eStorage);
 		fStorage->RemoveAll();
 	}

@@ -35,7 +35,4 @@ void client::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<projectile::TrajectorySystem>();
 	entityWorld.RegisterSystem<transform::TransformSystem>();
 	entityWorld.RegisterSystem<visual::VisualSystem>();
-
-	// SettingsSystem system needs to run before WindowSystem
-	entityWorld.RegisterSystemPriority<client::SettingsSystem>(1);
 }

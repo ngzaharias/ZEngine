@@ -28,6 +28,7 @@ namespace
 
 net::ReplicationHost::ReplicationHost(ecs::EntityWorld& entityWorld)
 	: m_EntityWorld(entityWorld)
+	, m_PeerReplicationData()
 {
 }
 

@@ -103,9 +103,6 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::TableEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::TextureEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::TrajectoryEditorSystem>();
-
-	// needs to run before the render system but after the camera systems
-	m_ClientWorld.RegisterSystemPriority<editor::gizmo::CrosshairSystem>(4999);
 }
 
 void editor::Editor::Initialise()

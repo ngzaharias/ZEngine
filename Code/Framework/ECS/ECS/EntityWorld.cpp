@@ -9,6 +9,7 @@ ecs::EntityWorld::EntityWorld()
 	, m_EntityStorage()
 	, m_QueryRegistry()
 	, m_SystemRegistry()
+	, m_TypeMap()
 {
 	RegisterComponent<ecs::NameComponent>();
 }
@@ -46,15 +47,25 @@ str::String ecs::EntityWorld::LogDependencies() const
 
 	str::String output;
 	output.reserve(entries.GetCount() * 256);
-	for (const ecs::SystemEntry& entry : entries.GetValues())
+	for (auto&& [systemId, entry] : entries)
 	{
-		output += std::format("\n\n{}", entry.m_Name);
+		const ecs::TypeInfo& systemInfo = m_TypeMap.Get(systemId);
+
+		output += std::format("\n\n{}", systemInfo.m_Name);
+		
 		output += std::format("\n\tWrite:");
 		for (const TypeId typeId : entry.m_DependencyWrite)
-			output += std::format("\n\t\t{}", m_TypeMap.Get(typeId));
+		{
+			const ecs::TypeInfo& typeInfo = m_TypeMap.Get(typeId);
+			output += std::format("\n\t\t{}", typeInfo.m_Name);
+		}
+		
 		output += std::format("\n\tRead:");
 		for (const TypeId typeId : entry.m_DependencyRead)
-			output += std::format("\n\t\t{}", m_TypeMap.Get(typeId));
+		{
+			const ecs::TypeInfo& typeInfo = m_TypeMap.Get(typeId);
+			output += std::format("\n\t\t{}", typeInfo.m_Name);
+		}
 	}
 	return output;
 }

@@ -1,14 +1,12 @@
 #pragma once
 
 #include "Core/Map.h"
-#include "ECS/ComponentRegistry.h"
 #include "ECS/EntityStorage.h"
-#include "ECS/EventRegistry.h"
 #include "ECS/FrameBuffer.h"
 #include "ECS/QueryRegistry.h"
 #include "ECS/ResourceRegistry.h"
-#include "ECS/SingletonRegistry.h"
 #include "ECS/SystemRegistry.h"
+#include "ECS/TypeInfo.h"
 
 class GameTime;
 
@@ -33,6 +31,9 @@ namespace ecs
 		void Shutdown();
 
 		void Update(const GameTime& gameTime);
+
+		template<typename TType>
+		void RegisterType();
 
 		template<typename TType>
 		bool IsRegistered() const;
@@ -112,10 +113,6 @@ namespace ecs
 		template<class TSystem, typename... TArgs>
 		void RegisterSystem(TArgs&&... args);
 
-		/// \brief Sets a systems priority which influences when it will update.
-		template<class TSystem>
-		void RegisterSystemPriority(const int32 priority);
-
 		template<class TSystem>
 		auto GetSystem() -> TSystem&;
 
@@ -137,13 +134,10 @@ namespace ecs
 		ecs::EntityStorage m_EntityStorage;
 		ecs::QueryRegistry m_QueryRegistry;
 
-		ecs::ComponentRegistry m_ComponentRegistry;
-		ecs::EventRegistry m_EventRegistry;
 		ecs::ResourceRegistry m_ResourceRegistry;
-		ecs::SingletonRegistry m_SingletonRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
 
-		Map<TypeId, str::String> m_TypeMap = {};
+		Map<TypeId, ecs::TypeInfo> m_TypeMap;
 	};
 }
 

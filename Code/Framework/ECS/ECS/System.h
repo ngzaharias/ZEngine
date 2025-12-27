@@ -14,6 +14,4 @@ namespace ecs
 
 		virtual void Update(const GameTime& gameTime) { }
 	};
-
-	struct SystemTag {};
 }

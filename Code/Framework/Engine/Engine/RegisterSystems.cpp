@@ -42,19 +42,11 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::VersionSystem>();
 	entityWorld.RegisterSystem<eng::WindowSystem>();
 
-	// SettingsSystem system needs to run before WindowSystem
-	entityWorld.RegisterSystemPriority<eng::WindowSystem>(2);
-
-	// RandomSystem and SequenceSystem systems need to run before PlaySystem
-	entityWorld.RegisterSystemPriority<eng::sound::RandomSystem>(4000);
-	entityWorld.RegisterSystemPriority<eng::sound::SequenceSystem>(4000);
-	entityWorld.RegisterSystemPriority<eng::sound::PlaySystem>(4001);
-
-	// BehaviourSystem and PanningSystem need to run before BoundsSystem
-	entityWorld.RegisterSystemPriority<eng::camera::Move2DSystem>(4000);
-	entityWorld.RegisterSystemPriority<eng::camera::Move3DSystem>(4000);
-	entityWorld.RegisterSystemPriority<eng::camera::PanningSystem>(4000);
-	entityWorld.RegisterSystemPriority<eng::camera::Bound2DSystem>(4001);
+	// Move2DSystem, Move3DSystem and PanningSystem need to run before BoundsSystem
+	//entityWorld.RegisterSystemPriority<eng::camera::Move2DSystem>(4000);
+	//entityWorld.RegisterSystemPriority<eng::camera::Move3DSystem>(4000);
+	//entityWorld.RegisterSystemPriority<eng::camera::PanningSystem>(4000);
+	//entityWorld.RegisterSystemPriority<eng::camera::Bound2DSystem>(4001);
 }
 
 void eng::RegisterServerSystems(ecs::EntityWorld& entityWorld)
