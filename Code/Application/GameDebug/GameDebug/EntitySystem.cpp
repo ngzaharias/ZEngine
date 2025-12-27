@@ -83,8 +83,9 @@ namespace
 			if (!componentMask.Has(i))
 				continue;
 
-			const ecs::ComponentEntry& entry = world.m_ComponentRegistry.GetEntry(i);
-			imgui::BulletHeader(entry.m_Name.c_str());
+			const TypeId typeId = world.m_ComponentRemap.Get(i);
+			const ecs::TypeInfo& typeInfo = world.m_TypeMap.Get(typeId);
+			imgui::BulletHeader(typeInfo.m_Name.c_str());
 		}
 	}
 }

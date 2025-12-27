@@ -74,6 +74,10 @@ void ecs::EntityWorld::RegisterComponent()
 	RegisterType<TComponent>();
 	m_EntityStorage.RegisterComponent<TComponent>();
 	m_FrameBuffer.RegisterComponent<TComponent>();
+
+	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
+	const TypeId typeId = ToTypeId<TComponent>();
+	m_ComponentRemap[componentId] = typeId;
 }
 
 template <typename TComponent, typename... TArgs>

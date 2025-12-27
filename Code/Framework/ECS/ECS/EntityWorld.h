@@ -138,6 +138,7 @@ namespace ecs
 		ecs::SystemRegistry m_SystemRegistry;
 
 		Map<TypeId, ecs::TypeInfo> m_TypeMap;
+		Map<ecs::ComponentId, TypeId> m_ComponentRemap;
 	};
 }
 
