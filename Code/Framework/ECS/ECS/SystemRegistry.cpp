@@ -39,9 +39,9 @@ namespace
 		visited.Get(parentId) = true;
 
 		// To ensure the order is correct we must recursively add the systems that have a dependency on us.
-		// if we added the systems that we depend on, then it is possible that a system will be added too early
+		// Don't add the systems we depend on otherwise it is possible that a system will be added too early
 		// and mess up the order for another system that hasn't been added yet.
-		for (const TypeId componentId : entry.m_DependencyWrite)
+		for (const TypeId componentId : entry.m_Write)
 		{
 			const ecs::TypeInfo& typeInfo = world.m_TypeMap.Get(componentId);
 			if (!IsDependency(typeInfo.m_Base))
@@ -80,6 +80,7 @@ namespace
 			TopologicalSort(world, typeId, visited, stack, 0);
 		}
 
+		// systems are added in reverse order
 		Array<TypeId> order;
 		order.Reserve(stack.GetCount());
 		for (auto&& [i, typeId] : enumerate::Reverse(stack))
@@ -92,15 +93,10 @@ void ecs::SystemRegistry::Initialise(ecs::EntityWorld& world)
 {
 	PROFILE_FUNCTION();
 
-	// topological sort systems
-	Z_LOG(ELog::Debug, "===== SYSTEM ORDER =====");
+	// flatten system graph into a sorted order
 	const Array<TypeId> order = TopologicalSort(world);
 	for (const TypeId typeId : order)
-	{
-		const ecs::TypeInfo& info = world.m_TypeMap.Get(typeId);
-		Z_LOG(ELog::Debug, "{}", info.m_Name);
 		m_Order.Append(&m_Entries.Get(typeId));
-	}
 
 	for (ecs::SystemEntry* entry : m_Order)
 		entry->m_Initialise(world, *entry->m_System);

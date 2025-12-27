@@ -17,13 +17,14 @@ void ecs::SystemRegistry::Register(TArgs&&... args)
 	entry.m_Initialise = &InitialiseFunction<TSystem>;
 	entry.m_Shutdown = &ShutdownFunction<TSystem>;
 	entry.m_Update = &UpdateFunction<TSystem>;
+	entry.m_TypeId = systemId;
 
-	ToTypeId(entry.m_DependencyRead, typename TSystem::World::TReadList{});
-	ToTypeId(entry.m_DependencyWrite, typename TSystem::World::TWriteList{});
+	ToTypeId(entry.m_Read, typename TSystem::World::TReadList{});
+	ToTypeId(entry.m_Write, typename TSystem::World::TWriteList{});
 	
-	for (const TypeId typeId : entry.m_DependencyRead)
+	for (const TypeId typeId : entry.m_Read)
 		m_Reads[typeId].Add(systemId);
-	for (const TypeId typeId : entry.m_DependencyWrite)
+	for (const TypeId typeId : entry.m_Write)
 		m_Writes[typeId].Add(systemId);
 }
 

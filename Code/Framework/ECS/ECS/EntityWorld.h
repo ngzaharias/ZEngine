@@ -42,6 +42,7 @@ namespace ecs
 		TWorldView WorldView();
 
 		str::String LogDependencies() const;
+		str::String LogUpdateOrder() const;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Entity

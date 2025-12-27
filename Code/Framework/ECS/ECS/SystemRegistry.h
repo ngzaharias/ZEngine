@@ -42,6 +42,7 @@ namespace ecs
 		template<class TSystem>
 		TSystem& GetSystem();
 
+		const SystemOrder& GetOrder() const { return m_Order; }
 		const SystemEntries& GetEntries() const { return m_Entries; }
 		const SystemDependencies& GetReads() const { return m_Reads; }
 		const SystemDependencies& GetWrites() const { return m_Writes; }

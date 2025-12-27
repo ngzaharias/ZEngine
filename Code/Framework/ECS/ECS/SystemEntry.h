@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Set.h"
 #include "Core/TypeInfo.h"
 
 class GameTime;
@@ -23,7 +24,8 @@ namespace ecs
 		Shutdown* m_Shutdown = nullptr;
 		Update* m_Update = nullptr;
 
-		Set<TypeId> m_DependencyRead = {};
-		Set<TypeId> m_DependencyWrite = {};
+		TypeId m_TypeId = -1;
+		Set<TypeId> m_Read = {};
+		Set<TypeId> m_Write = {};
 	};
 }
