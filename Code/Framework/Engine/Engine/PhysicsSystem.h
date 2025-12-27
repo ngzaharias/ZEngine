@@ -38,7 +38,8 @@ namespace eng
 	class PhysicsSystem final : public ecs::System, public physx::PxSimulationEventCallback
 	{
 	public:
-		using World = ecs::WorldView::Write<
+		using World = ecs::WorldView
+			::Write<
 			eng::AssetManager,
 			eng::PhysicsManager,
 			eng::PhysicsSceneSingleton,

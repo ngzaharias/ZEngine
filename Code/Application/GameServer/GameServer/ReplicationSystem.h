@@ -6,7 +6,6 @@
 namespace net
 {
 	class ReplicationHost;
-	struct HostReplicationComponent;
 }
 
 namespace net
@@ -16,7 +15,6 @@ namespace net
 	public:
 		using World = ecs::WorldView
 			::Write<
-			net::HostReplicationComponent,
 			net::ReplicationHost>;
 
 		void Update(World& world, const GameTime& gameTime);
