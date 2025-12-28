@@ -160,11 +160,14 @@ void eng::AssetManager::LoadAsset(const str::Guid& guid)
 void eng::AssetManager::UnloadAsset(const str::Guid& guid)
 {
 	eng::AssetRef& ref = m_RefMap.Get(guid);
-	eng::Asset* asset = ref.m_Asset;
-	const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
-	if (entry.m_Methods.m_Shutdown)
-		entry.m_Methods.m_Shutdown(*asset, *entry.m_Loader);
+	if (eng::Asset* asset = ref.m_Asset)
+	{
+		const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
+		if (entry.m_Methods.m_Shutdown)
+			entry.m_Methods.m_Shutdown(*asset, *entry.m_Loader);
 
-	delete asset;
+		// #todo: cancel loading thread if one is active
+		delete asset;
+	}
 	m_RefMap.Remove(guid);
 }
