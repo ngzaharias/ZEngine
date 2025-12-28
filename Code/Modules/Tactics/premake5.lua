@@ -28,13 +28,3 @@ project "Tactics"
 		"%{wks.location}/../Code/Modules/Tactics/",
 		"%{wks.location}/../Code/Modules/Tilemap/",
 	}
-
-	links 
-	{ 
-		"Core", 
-		"ECS", 
-		"Engine", 
-		"Imgui", 
-		"Math", 
-		"Tilemap", 
-	}

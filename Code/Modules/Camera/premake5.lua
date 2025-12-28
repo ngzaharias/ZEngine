@@ -26,12 +26,3 @@ project "Camera"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Modules/Camera/",
 	}
-
-	links 
-	{ 
-		"Core", 
-		"ECS", 
-		"Engine", 
-		"ImGui", 
-		"Math", 
-	}

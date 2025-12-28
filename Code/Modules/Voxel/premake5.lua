@@ -28,12 +28,3 @@ project "Voxel"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Modules/Voxel/",
 	}
-
-	links 
-	{ 
-		"Core", 
-		"ECS", 
-		"Engine", 
-		"Imgui", 
-		"Math", 
-	}

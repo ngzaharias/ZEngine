@@ -26,12 +26,3 @@ project "Tilemap"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Modules/Tilemap/",
 	}
-
-	links 
-	{ 
-		"Core", 
-		"ECS", 
-		"Engine", 
-		"Imgui", 
-		"Math", 
-	}

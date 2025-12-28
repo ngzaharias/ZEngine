@@ -24,12 +24,3 @@ project "Container"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Modules/Container/",
 	}
-
-	links 
-	{ 
-		"Core", 
-		"ECS", 
-		"Engine", 
-		"Imgui", 
-		"Math", 
-	}
