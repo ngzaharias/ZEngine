@@ -17,9 +17,3 @@ project "Network"
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/Network/",
 	}
-
-	links 
-	{ 
-		"Core", 
-		"Math",
-	}

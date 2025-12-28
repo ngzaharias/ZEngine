@@ -57,10 +57,3 @@ project "Imgui"
 		"%{wks.location}/../Code/Framework/Math/",
 	}
 
-	links 
-	{ 
-		"Core", 
-		"ECS",
-		"Math",
-	}
-

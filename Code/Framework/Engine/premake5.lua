@@ -43,12 +43,3 @@ project "Engine"
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Modules/Voxel/",
 	}
-
-	links 
-	{ 
-		"Core", 
-		"Imgui", 
-		"Math", 
-		"Network", 
-		"Steam",
-	}

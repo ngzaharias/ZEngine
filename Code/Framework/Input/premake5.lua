@@ -16,9 +16,3 @@ project "Input"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 	}
-
-	links 
-	{ 
-		"Core",
-		"Math",
-	}

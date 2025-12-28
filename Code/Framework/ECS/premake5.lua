@@ -17,8 +17,3 @@ project "ECS"
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 	}
-
-	links 
-	{ 
-		"Core", 
-	}

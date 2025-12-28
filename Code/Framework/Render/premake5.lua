@@ -31,12 +31,3 @@ project "Render"
 		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Modules/Voxel/",
 	}
-
-	links 
-	{ 
-		"Core", 
-		"ECS", 
-		"Engine", 
-		"Imgui", 
-		"Math", 
-	}
