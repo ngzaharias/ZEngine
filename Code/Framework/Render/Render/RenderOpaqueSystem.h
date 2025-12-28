@@ -42,8 +42,8 @@ namespace render
 	public:
 		using World = ecs::WorldView
 			::Write<
-			//eng::AssetManager,
-			//eng::FrameBufferSingleton,
+			eng::AssetManager,
+			eng::FrameBufferSingleton,
 			render::OpaqueComponent>
 			::Read<
 			eng::ActiveComponent,

@@ -36,7 +36,7 @@ namespace hexmap
 	public:
 		using World = ecs::WorldView
 			::Write<
-			//eng::AssetManager,
+			eng::AssetManager,
 			render::OpaqueComponent>
 			::Read<
 			eng::ActiveComponent,

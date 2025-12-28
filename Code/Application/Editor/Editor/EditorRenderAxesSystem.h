@@ -33,7 +33,7 @@ namespace editor
 	public:
 		using World = ecs::WorldView
 			::Write<
-			//eng::AssetManager,
+			eng::AssetManager,
 			render::OpaqueComponent>
 			::Read<
 			editor::settings::LocalSingleton,
