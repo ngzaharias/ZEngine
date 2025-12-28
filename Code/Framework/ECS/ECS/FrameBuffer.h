@@ -8,9 +8,7 @@
 #include "ECS/ComponentStorage.h"
 #include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
-#include "ECS/Event.h"
 #include "ECS/EventStorage.h"
-#include "ECS/Singleton.h"
 
 namespace ecs
 {
@@ -28,8 +26,8 @@ namespace ecs
 
 		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
 		using EntityMap = Map<ecs::Entity, EntityChange>;
-		using Events = SparseArray<ecs::EventId, ecs::IEventStorage*>;
-		using Singletons = Set<ecs::SingletonId>;
+		using Events = SparseArray<TypeId, ecs::IEventStorage*>;
+		using Singletons = Set<TypeId>;
 
 	public:
 		//////////////////////////////////////////////////////////////////////////

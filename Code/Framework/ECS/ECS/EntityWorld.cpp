@@ -9,6 +9,7 @@ ecs::EntityWorld::EntityWorld()
 	, m_EntityStorage()
 	, m_QueryRegistry()
 	, m_SystemRegistry()
+	, m_TypeMap()
 {
 	RegisterComponent<ecs::NameComponent>();
 }
@@ -38,4 +39,47 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 	m_SystemRegistry.Update(*this, gameTime);
 
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
+}
+
+str::String ecs::EntityWorld::LogDependencies() const
+{
+	const ecs::SystemEntries& entries = m_SystemRegistry.GetEntries();
+
+	str::String output;
+	output.reserve(static_cast<size_t>(entries.GetCount()) * 256);
+	for (auto&& [systemId, entry] : entries)
+	{
+		const ecs::TypeInfo& systemInfo = m_TypeMap.Get(systemId);
+
+		output += std::format("{}\n", systemInfo.m_Name);
+		
+		output += std::format("\tWrite:\n");
+		for (const TypeId typeId : entry.m_Write)
+		{
+			const ecs::TypeInfo& typeInfo = m_TypeMap.Get(typeId);
+			output += std::format("\t\t{}\n", typeInfo.m_Name);
+		}
+		
+		output += std::format("\tRead:\n");
+		for (const TypeId typeId : entry.m_Read)
+		{
+			const ecs::TypeInfo& typeInfo = m_TypeMap.Get(typeId);
+			output += std::format("\t\t{}\n", typeInfo.m_Name);
+		}
+	}
+	return output;
+}
+
+str::String ecs::EntityWorld::LogUpdateOrder() const
+{
+	const ecs::SystemOrder& order = m_SystemRegistry.GetOrder();
+
+	str::String output;
+	output.reserve(static_cast<size_t>(order.GetCount()) * 256);
+	for (const ecs::SystemEntry* entry : order)
+	{
+		const ecs::TypeInfo& systemInfo = m_TypeMap.Get(entry->m_TypeId);
+		output += std::format("{}\n", systemInfo.m_Name);
+	}
+	return output;
 }

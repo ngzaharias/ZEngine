@@ -14,12 +14,6 @@
 
 namespace
 {
-	bool AreViewportsEnabled()
-	{
-		const ImGuiIO& io = ImGui::GetIO();
-		return (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) != 0;
-	}
-
 	bool IsGamepad(const input::EKey value)
 	{
 		return value >= input::EKey::Gamepad_A && value <= input::EKey::Gamepad_DPad_L;
@@ -94,6 +88,11 @@ void eng::ImguiManager::Initialise(const eng::Window& window)
 		// Modal
 		colours[ImGuiCol_ModalWindowDimBg] = ImVec4{ 0.f, 0.f, 0.f, 0.5f };
 	}
+
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 }
 
 void eng::ImguiManager::Shutdown()
@@ -111,40 +110,6 @@ void eng::ImguiManager::Shutdown()
 
 	ImNodes::DestroyContext();
 	ImGui::DestroyContext();
-}
-
-void eng::ImguiManager::PreUpdate()
-{
-	PROFILE_FUNCTION();
-
-	if (!m_Window)
-		return;
-
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-	ImGuizmo::BeginFrame();
-}
-
-void eng::ImguiManager::PostUpdate()
-{
-	PROFILE_FUNCTION();
-
-	if (!m_Window)
-		return;
-
-	// viewports
-	if (AreViewportsEnabled())
-	{
-		PROFILE_CUSTOM("ImGui::UpdatePlatformWindows");
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-
-		if (const auto* glfwWindow = dynamic_cast<const glfw::Window*>(m_Window))
-			glfwMakeContextCurrent(glfwWindow->GetWindow());
-	}
-
-	//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 }
 
 void eng::ImguiManager::ProcessInput(

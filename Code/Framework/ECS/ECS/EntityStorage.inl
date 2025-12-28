@@ -3,18 +3,18 @@
 template<class TComponent>
 void ecs::EntityStorage::RegisterComponent()
 {
-	const ecs::ComponentId id = ToTypeId<TComponent, ecs::ComponentTag>();
-	m_AliveComponents.Set(id, new ecs::ComponentStorage<TComponent>());
-	m_DeadComponents.Set(id, new ecs::ComponentStorage<TComponent>());
+	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
+	m_AliveComponents.Set(componentId, new ecs::ComponentStorage<TComponent>());
+	m_DeadComponents.Set(componentId, new ecs::ComponentStorage<TComponent>());
 }
 
 template<class TComponent>
 bool ecs::EntityStorage::HasComponent(const ecs::Entity& entity, const bool alive /*= true*/) const
 {
-	const ecs::ComponentId id = ToTypeId<TComponent, ecs::ComponentTag>();
+	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
 	const ecs::IComponentStorage* istorage = alive
-		? m_AliveComponents.Get(id)
-		: m_DeadComponents.Get(id);
+		? m_AliveComponents.Get(componentId)
+		: m_DeadComponents.Get(componentId);
 	return istorage->Contains(entity);
 }
 
@@ -23,10 +23,10 @@ auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const bool aliv
 {
 	using Storage = ecs::ComponentStorage<TComponent>;
 
-	const ecs::ComponentId id = ToTypeId<TComponent, ecs::ComponentTag>();
+	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
 	ecs::IComponentStorage* istorage = alive
-		? m_AliveComponents.Get(id)
-		: m_DeadComponents.Get(id);
+		? m_AliveComponents.Get(componentId)
+		: m_DeadComponents.Get(componentId);
 	Storage* storage = static_cast<Storage*>(istorage);
 	return storage->Get(entity);
 }
@@ -36,10 +36,10 @@ auto ecs::EntityStorage::TryComponent(const ecs::Entity& entity, const bool aliv
 {
 	using Storage = ecs::ComponentStorage<TComponent>;
 
-	const ecs::ComponentId id = ToTypeId<TComponent, ecs::ComponentTag>();
+	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
 	ecs::IComponentStorage* istorage = alive
-		? m_AliveComponents.Get(id)
-		: m_DeadComponents.Get(id);
+		? m_AliveComponents.Get(componentId)
+		: m_DeadComponents.Get(componentId);
 	Storage* storage = static_cast<Storage*>(istorage);
 	return storage->Try(entity);
 }
@@ -47,8 +47,8 @@ auto ecs::EntityStorage::TryComponent(const ecs::Entity& entity, const bool aliv
 template<class TEvent>
 void ecs::EntityStorage::RegisterEvent()
 {
-	const ecs::EventId id = ToTypeId<TEvent, ecs::EventTag>();
-	m_Events.Set(id, new ecs::EventStorage<TEvent>());
+	const TypeId typeId = ToTypeId<TEvent>();
+	m_Events.Set(typeId, new ecs::EventStorage<TEvent>());
 }
 
 template<class TEvent>
@@ -56,8 +56,8 @@ auto ecs::EntityStorage::GetEvents() const -> const Array<TEvent>&
 {
 	using Storage = ecs::EventStorage<TEvent>;
 
-	const ecs::EventId id = ToTypeId<TEvent, ecs::EventTag>();
-	const ecs::IEventStorage* istorage = m_Events.Get(id);
+	const TypeId typeId = ToTypeId<TEvent>();
+	const ecs::IEventStorage* istorage = m_Events.Get(typeId);
 	const Storage* storage = static_cast<const Storage*>(istorage);
 	return storage->GetValues();
 }
@@ -65,8 +65,8 @@ auto ecs::EntityStorage::GetEvents() const -> const Array<TEvent>&
 template<class TSingleton, typename... TArgs>
 void ecs::EntityStorage::RegisterSingleton(TArgs&&... args)
 {
-	const ecs::SingletonId id = ToTypeId<TSingleton, ecs::SingletonTag>();
-	m_Singletons.Set(id, new ecs::SingletonStorage<TSingleton>(std::forward<TArgs>(args)...));
+	const TypeId typeId = ToTypeId<TSingleton>();
+	m_Singletons.Set(typeId, new ecs::SingletonStorage<TSingleton>(std::forward<TArgs>(args)...));
 }
 
 template<class TSingleton>
@@ -74,8 +74,8 @@ auto ecs::EntityStorage::GetSingleton() -> TSingleton&
 {
 	using Storage = ecs::SingletonStorage<TSingleton>;
 
-	const ecs::SingletonId id = ToTypeId<TSingleton, ecs::SingletonTag>();
-	ecs::ISingletonStorage* istorage = m_Singletons.Get(id);
+	const TypeId typeId = ToTypeId<TSingleton>();
+	ecs::ISingletonStorage* istorage = m_Singletons.Get(typeId);
 	Storage* storage = static_cast<Storage*>(istorage);
 	return storage->GetData();
 }

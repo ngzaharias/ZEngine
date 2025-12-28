@@ -23,6 +23,7 @@
 #include "GameUI/RegisterModule.h"
 #include "Hexmap/RegisterModule.h"
 #include "Hidden/RegisterModule.h"
+#include "Render/RegisterModule.h"
 #include "Softbody/RegisterModule.h"
 #include "Tabletop/RegisterModule.h"
 #include "Tactics/RegisterModule.h"
@@ -67,11 +68,11 @@ void client::GameClient::Register(const Dependencies& dependencies)
 
 	// engine
 	{
-		eng::RegisterClientComponents(m_EntityWorld);
-		eng::RegisterClientSystems(m_EntityWorld);
-
 		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
 		eng::RegisterSharedSystems(m_EntityWorld);
+
+		eng::RegisterClientComponents(m_EntityWorld);
+		eng::RegisterClientSystems(m_EntityWorld);
 	}
 
 	// shared
@@ -91,6 +92,7 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		gui::RegisterModule(m_EntityWorld);
 		hexmap::RegisterModule(m_EntityWorld);
 		hidden::RegisterModule(m_EntityWorld);
+		render::RegisterModule(m_EntityWorld);
 		softbody::RegisterModule(m_EntityWorld);
 		tabletop::RegisterModule(m_EntityWorld);
 		tactics::RegisterModule(m_EntityWorld);

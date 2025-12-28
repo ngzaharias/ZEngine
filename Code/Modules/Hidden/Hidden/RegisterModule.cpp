@@ -22,18 +22,6 @@
 
 void hidden::RegisterModule(ecs::EntityWorld& entityWorld)
 {
-	// systems
-	{
-		entityWorld.RegisterSystem<hidden::CountSystem>();
-		entityWorld.RegisterSystem<hidden::PhysicsSystem>();
-		entityWorld.RegisterSystem<hidden::RevealSystem>();
-		entityWorld.RegisterSystem<hidden::SaveLoadSystem>();
-		entityWorld.RegisterSystem<hidden::SoundSystem>();
-		entityWorld.RegisterSystem<hidden::SpriteSystem>();
-		entityWorld.RegisterSystem<hidden::TrackerSystem>();
-		entityWorld.RegisterSystem<hidden::VFXSystem>();
-	}
-
 	// components
 	{
 		entityWorld.RegisterComponent<hidden::CountComponent>();
@@ -46,6 +34,18 @@ void hidden::RegisterModule(ecs::EntityWorld& entityWorld)
 	// singletons
 	{
 		entityWorld.RegisterSingleton<hidden::settings::DebugSingleton>();
+	}
+
+	// systems
+	{
+		entityWorld.RegisterSystem<hidden::CountSystem>();
+		entityWorld.RegisterSystem<hidden::PhysicsSystem>();
+		entityWorld.RegisterSystem<hidden::RevealSystem>();
+		entityWorld.RegisterSystem<hidden::SaveLoadSystem>();
+		entityWorld.RegisterSystem<hidden::SoundSystem>();
+		entityWorld.RegisterSystem<hidden::SpriteSystem>();
+		entityWorld.RegisterSystem<hidden::TrackerSystem>();
+		entityWorld.RegisterSystem<hidden::VFXSystem>();
 	}
 
 	// prototypes

@@ -68,8 +68,6 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::light::AmbientComponent>();
 	entityWorld.RegisterComponent<eng::light::DirectionalComponent>();
 	entityWorld.RegisterComponent<eng::light::PointComponent>();
-	entityWorld.RegisterComponent<eng::RigidDynamicComponent>();
-	entityWorld.RegisterComponent<eng::RigidStaticComponent>();
 	entityWorld.RegisterComponent<eng::SavegameComponent>();
 	entityWorld.RegisterComponent<eng::sound::ObjectComponent>();
 	entityWorld.RegisterComponent<eng::sound::RandomComponent>();
@@ -120,6 +118,8 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::Component
 	entityWorld.RegisterComponent<eng::level::LoadingComponent>();
 	entityWorld.RegisterComponent<eng::PhysicsComponent>();
 	entityWorld.RegisterComponent<eng::PrototypeComponent>();
+	entityWorld.RegisterComponent<eng::RigidDynamicComponent>();
+	entityWorld.RegisterComponent<eng::RigidStaticComponent>();
 	entityWorld.RegisterComponent<eng::SpriteComponent>();
 	entityWorld.RegisterComponent<eng::StaticMeshComponent>();
 	entityWorld.RegisterComponent<eng::TextComponent>();
