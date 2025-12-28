@@ -20,8 +20,9 @@ namespace eng
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::settings::WindowSingleton,
-			eng::WindowManager>;
+			eng::WindowManager>
+			::Read<
+			eng::settings::WindowSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

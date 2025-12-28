@@ -2,13 +2,12 @@
 
 #include "Core/Map.h"
 #include "Core/SparseArray.h"
-#include "ECS/Component.h"
+#include "ECS/ComponentId.h"
 #include "ECS/ComponentMask.h"
 #include "ECS/ComponentStorage.h"
+#include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
-#include "ECS/Event.h"
 #include "ECS/EventStorage.h"
-#include "ECS/Singleton.h"
 #include "ECS/SingletonStorage.h"
 
 namespace ecs
@@ -27,8 +26,8 @@ namespace ecs
 		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
 		using EntityMap = Map<ecs::Entity, ecs::ComponentMask>;
 		using EntitySet = Array<ecs::Entity>;
-		using Events = SparseArray<ecs::EventId, ecs::IEventStorage*>;
-		using Singletons = SparseArray<ecs::SingletonId, ecs::ISingletonStorage*>;
+		using Events = SparseArray<TypeId, ecs::IEventStorage*>;
+		using Singletons = SparseArray<TypeId, ecs::ISingletonStorage*>;
 
 	public:
 		//////////////////////////////////////////////////////////////////////////
@@ -80,7 +79,7 @@ namespace ecs
 		Events m_Events;
 		Singletons m_Singletons;
 
-		Set<ecs::SingletonId> m_SingletonsUpdated;
+		Set<TypeId> m_SingletonsUpdated;
 	};
 }
 

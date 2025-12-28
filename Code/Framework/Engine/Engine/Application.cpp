@@ -201,7 +201,6 @@ void eng::Application::PreUpdate(const GameTime& gameTime)
 
 	m_AssetManager.Update();
 	m_PlatformManager.Update(gameTime);
-	m_ImguiManager.PreUpdate();
 }
 
 void eng::Application::Update(const GameTime& gameTime)
@@ -213,8 +212,6 @@ void eng::Application::Update(const GameTime& gameTime)
 
 void eng::Application::PostUpdate(const GameTime& gameTime)
 {
-	m_ImguiManager.PostUpdate();
-
 	// do last
 	m_WindowManager.PostUpdate(gameTime);
 }

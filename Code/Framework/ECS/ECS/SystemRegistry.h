@@ -21,8 +21,8 @@ namespace ecs
 
 namespace ecs
 {
-	using SystemEdges = Map<TypeId, Set<ecs::SystemId>>;
-	using SystemEntries = SparseArray<ecs::SystemId, ecs::SystemEntry>;
+	using SystemDependencies = Map<TypeId, Set<TypeId>>;
+	using SystemEntries = SparseArray<TypeId, ecs::SystemEntry>;
 	using SystemOrder = Array<ecs::SystemEntry*>;
 
 	class SystemRegistry
@@ -40,13 +40,12 @@ namespace ecs
 		void Register(TArgs&&... args);
 
 		template<class TSystem>
-		void RegisterPriority(const int32 priority);
-
-		template<class TSystem>
 		TSystem& GetSystem();
 
-		const SystemEdges& GetEdges() const { return m_Edges; }
+		const SystemOrder& GetOrder() const { return m_Order; }
 		const SystemEntries& GetEntries() const { return m_Entries; }
+		const SystemDependencies& GetReads() const { return m_Reads; }
+		const SystemDependencies& GetWrites() const { return m_Writes; }
 
 	private:
 		template<typename TSystem>
@@ -57,9 +56,10 @@ namespace ecs
 		static void UpdateFunction(ecs::EntityWorld& entityWorld, ecs::System& system, const GameTime& gameTime);
 
 	private:
-		SystemEdges m_Edges = {};
-		SystemEntries m_Entries = {};
 		SystemOrder m_Order = {};
+		SystemEntries m_Entries = {};
+		SystemDependencies m_Reads = {};
+		SystemDependencies m_Writes = {};
 	};
 }
 

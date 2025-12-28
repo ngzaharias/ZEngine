@@ -8,6 +8,8 @@
 #include "Editor/AssetBrowserWindowComponent.h"
 #include "Editor/AssetReloadSystem.h"
 #include "Editor/CameraSystem.h"
+#include "Editor/EditorRenderAxesSystem.h"
+#include "Editor/EditorRenderGridSystem.h"
 #include "Editor/EntityEditorSystem.h"
 #include "Editor/EntitySaveComponent.h"
 #include "Editor/EntitySelectSingleton.h"
@@ -23,8 +25,6 @@
 #include "Editor/InputSystem.h"
 #include "Editor/InputWindowComponent.h"
 #include "Editor/OverlaySystem.h"
-#include "Editor/RenderStage_Axes.h"
-#include "Editor/RenderStage_Grid.h"
 #include "Editor/SettingsLocalSingleton.h"
 #include "Editor/SettingsLocalSystem.h"
 #include "Editor/SettingsMenuSystem.h"
@@ -47,7 +47,6 @@
 #include "Editor/TrajectoryAssetSaveComponent.h"
 #include "Editor/TrajectoryEditorSystem.h"
 #include "Editor/TrajectoryWindowComponent.h"
-#include "Engine/RenderSystem.h"
 
 editor::Editor::Editor(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
 	: m_ClientWorld(clientWorld)
@@ -96,22 +95,14 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
 	m_ClientWorld.RegisterSystem<editor::InputSystem>();
 	m_ClientWorld.RegisterSystem<editor::OverlaySystem>();
+	m_ClientWorld.RegisterSystem<editor::RenderAxesSystem>();
+	m_ClientWorld.RegisterSystem<editor::RenderGridSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::LocalSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
 	m_ClientWorld.RegisterSystem<editor::SpriteEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::TableEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::TextureEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::TrajectoryEditorSystem>();
-
-	// needs to run before the render system but after the camera systems
-	m_ClientWorld.RegisterSystemPriority<editor::gizmo::CrosshairSystem>(4999);
-
-	// #todo: find a different place for this
-	{
-		auto& renderSystem = m_ClientWorld.GetSystem<eng::RenderSystem>();
-		renderSystem.RegisterStage<editor::RenderStage_Grid>();
-		renderSystem.RegisterStage<editor::RenderStage_Axes>();
-	}
 }
 
 void editor::Editor::Initialise()

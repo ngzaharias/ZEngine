@@ -5,107 +5,119 @@
 #include "Core/Profiler.h"
 #include "Core/Set.h"
 #include "ECS/Component.h"
+#include "ECS/EntityWorld.h"
 
 #include <algorithm>
 
 namespace
 {
-	const Set<ecs::SystemId> s_Empty;
+	const Set<TypeId> s_Empty;
 
-	bool Comparator(const ecs::SystemEntry* a, const ecs::SystemEntry* b)
+	bool IsDependency(const ecs::ETypeBase value)
 	{
-		return a->m_Priority < b->m_Priority;
+		switch (value)
+		{
+		case ecs::ETypeBase::Component:
+		case ecs::ETypeBase::Singleton:
+			return true;
+		default:
+			return false;
+		}
 	}
 
 	// https://www.geeksforgeeks.org/dsa/topological-sort-using-dfs/
-	void TopologicalSort(const ecs::SystemRegistry& registry, const ecs::SystemId parentId, Map<ecs::SystemId, bool>& visited, Array<ecs::SystemId>& stack)
+	void TopologicalSort(const ecs::EntityWorld& world, const TypeId parentId, Map<TypeId, bool>& visited, Array<TypeId>& stack, const int32 depth)
 	{
+		const ecs::SystemRegistry& registry = world.m_SystemRegistry;
+		const ecs::SystemDependencies& writes = registry.GetWrites();
+		const ecs::SystemDependencies& reads = registry.GetReads();
+		const ecs::SystemEntries& entries = registry.GetEntries();
+		const ecs::SystemEntry& entry = entries.Get(parentId);
+
+		const ecs::TypeInfo& parentInfo = world.m_TypeMap.Get(parentId);
+
 		visited.Get(parentId) = true;
 
-		const ecs::SystemEdges& edges = registry.GetEdges();
-		const ecs::SystemEntries& entries = registry.GetEntries();
-
-		const ecs::SystemEntry& entry = entries.Get(parentId);
-		for (const TypeId typeId : entry.m_DependencyWrite)
+		// To ensure the order is correct we must recursively add the systems that have a dependency on us.
+		// Don't add the systems we depend on otherwise it is possible that a system will be added too early
+		// and mess up the order for another system that hasn't been added yet.
+		for (const TypeId componentId : entry.m_Write)
 		{
-			const Set<ecs::SystemId>& childIds = edges.Get(typeId, s_Empty);
-			for (const ecs::SystemId childId : childIds)
+			const ecs::TypeInfo& typeInfo = world.m_TypeMap.Get(componentId);
+			if (!IsDependency(typeInfo.m_Base))
+				continue;
+
+			const Set<TypeId>& childIds = reads.Get(componentId, s_Empty);
+			for (const TypeId childId : childIds)
 			{
 				if (visited.Get(childId))
 					continue;
 
-				TopologicalSort(registry, childId, visited, stack);
+				TopologicalSort(world, childId, visited, stack, depth + 2);
 			}
 		}
 
 		stack.Append(parentId);
 	}
 
-	Array<ecs::SystemId> TopologicalSort(const ecs::SystemRegistry& registry)
+	Array<TypeId> TopologicalSort(const ecs::EntityWorld& world)
 	{
-		const ecs::SystemEdges& edges = registry.GetEdges();
+		const ecs::SystemRegistry& registry = world.m_SystemRegistry;
 		const ecs::SystemEntries& entries = registry.GetEntries();
 
-		Array<ecs::SystemId> stack;
+		Array<TypeId> stack;
 		stack.Reserve(entries.GetCount());
 
-		Map<ecs::SystemId, bool> visited;
-		for (auto&& [systemId, entry] : entries)
-			visited[systemId] = false;
+		Map<TypeId, bool> visited;
+		for (auto&& [typeId, entry] : entries)
+			visited[typeId] = false;
 
-		for (auto&& [systemId, entry] : entries)
+		for (auto&& [typeId, entry] : entries)
 		{
-			if (visited.Get(systemId))
+			if (visited.Get(typeId))
 				continue;
 
-			TopologicalSort(registry, systemId, visited, stack);
+			TopologicalSort(world, typeId, visited, stack, 0);
 		}
 
-		Array<ecs::SystemId> order;
+		// systems are added in reverse order
+		Array<TypeId> order;
 		order.Reserve(stack.GetCount());
-		for (auto&& [i, systemId] : enumerate::Reverse(stack))
+		for (auto&& [i, typeId] : enumerate::Reverse(stack))
 			order.Append(stack[i]);
 		return order;
 	}
 }
 
-void ecs::SystemRegistry::Initialise(ecs::EntityWorld& entityWorld)
+void ecs::SystemRegistry::Initialise(ecs::EntityWorld& world)
 {
 	PROFILE_FUNCTION();
 
-	// topological sort systems
-	Z_LOG(ELog::Debug, "===== SORTING SYSTEMS =====");
-	const Array<ecs::SystemId> order = TopologicalSort(*this);
-	for (const ecs::SystemId systemId : order)
-	{
-		const auto* entry = m_Order.Append(&m_Entries.Get(systemId));
-		Z_LOG(ELog::Debug, "{}", entry->m_Name);
-	}
-	//for (ecs::SystemEntry& entry : m_Entries.GetValues())
-	//	m_Order.Append(&entry);
-
-	//std::sort(m_Order.begin(), m_Order.end(), Comparator);
+	// flatten system graph into a sorted order
+	const Array<TypeId> order = TopologicalSort(world);
+	for (const TypeId typeId : order)
+		m_Order.Append(&m_Entries.Get(typeId));
 
 	for (ecs::SystemEntry* entry : m_Order)
-		entry->m_Initialise(entityWorld, *entry->m_System);
+		entry->m_Initialise(world, *entry->m_System);
 }
 
-void ecs::SystemRegistry::Shutdown(ecs::EntityWorld& entityWorld)
+void ecs::SystemRegistry::Shutdown(ecs::EntityWorld& world)
 {
 	PROFILE_FUNCTION();
 
 	for (auto&& [i, entry] : enumerate::Reverse(m_Order))
 	{
-		entry->m_Shutdown(entityWorld, *entry->m_System);
+		entry->m_Shutdown(world, *entry->m_System);
 		delete entry->m_System;
 	}
 	m_Entries.RemoveAll();
 }
 
-void ecs::SystemRegistry::Update(ecs::EntityWorld& entityWorld, const GameTime& gameTime)
+void ecs::SystemRegistry::Update(ecs::EntityWorld& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	for (ecs::SystemEntry* entry : m_Order)
-		entry->m_Update(entityWorld, *entry->m_System, gameTime);
+		entry->m_Update(world, *entry->m_System, gameTime);
 }

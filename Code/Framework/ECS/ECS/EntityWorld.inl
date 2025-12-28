@@ -1,30 +1,41 @@
 #pragma once
 
 template <typename TType>
+void ecs::EntityWorld::RegisterType()
+{
+	const TypeId typeId = ToTypeId<TType>();
+	ecs::TypeInfo& info = m_TypeMap[typeId];
+	info.m_Name = ToTypeName<TType>();
+
+	if constexpr (std::is_base_of<ecs::Component<TType>, TType>::value)
+	{
+		info.m_Base = ecs::ETypeBase::Component;
+	}
+	else if constexpr (std::is_base_of<ecs::Event<TType>, TType>::value)
+	{
+		info.m_Base = ecs::ETypeBase::Event;
+	}
+	else if constexpr (std::is_base_of<ecs::Singleton<TType>, TType>::value)
+	{
+		info.m_Base = ecs::ETypeBase::Singleton;
+	}
+	else if constexpr (std::is_base_of<ecs::System, TType>::value)
+	{
+		info.m_Base = ecs::ETypeBase::System;
+	}
+	else
+	{
+		info.m_Base = ecs::ETypeBase::Resource;
+	}
+}
+
+template <typename TType>
 bool ecs::EntityWorld::IsRegistered() const
 {
 	static_assert(!std::is_const<TType>::value, "Type cannot be const.");
 
-	if constexpr (std::is_base_of<ecs::Component<TType>, TType>::value)
-	{
-		return m_ComponentRegistry.IsRegistered<TType>();
-	}
-	else if constexpr (std::is_base_of<ecs::Event<TType>, TType>::value)
-	{
-		return m_EventRegistry.IsRegistered<TType>();
-	}
-	else if constexpr (std::is_base_of<ecs::Singleton<TType>, TType>::value)
-	{
-		return m_SingletonRegistry.IsRegistered<TType>();
-	}
-	else if constexpr (std::is_base_of<ecs::System, TType>::value)
-	{
-		return m_SystemRegistry.IsRegistered<TType>();
-	}
-	else
-	{
-		return m_ResourceRegistry.IsRegistered<TType>();
-	}
+	const TypeId typeId = ToTypeId<TType>();
+	return m_TypeMap.Contains(typeId);
 }
 
 template <typename TWorldView>
@@ -60,11 +71,13 @@ void ecs::EntityWorld::RegisterComponent()
 
 	Z_PANIC(!IsRegistered<TComponent>(), "Component is already registered!");
 
-	m_ComponentRegistry.Register<TComponent>();
+	RegisterType<TComponent>();
 	m_EntityStorage.RegisterComponent<TComponent>();
 	m_FrameBuffer.RegisterComponent<TComponent>();
 
-	m_TypeMap[ToTypeId<TComponent>()] = ToTypeName<TComponent>();
+	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
+	const TypeId typeId = ToTypeId<TComponent>();
+	m_ComponentRemap[componentId] = typeId;
 }
 
 template <typename TComponent, typename... TArgs>
@@ -144,11 +157,9 @@ void ecs::EntityWorld::RegisterEvent()
 
 	Z_PANIC(!IsRegistered<TEvent>(), "Event is already registered!");
 
-	m_EventRegistry.Register<TEvent>();
+	RegisterType<TEvent>();
 	m_EntityStorage.RegisterEvent<TEvent>();
 	m_FrameBuffer.RegisterEvent<TEvent>();
-
-	m_TypeMap[ToTypeId<TEvent>()] = ToTypeName<TEvent>();
 }
 
 template <typename TEvent, typename... TArgs>
@@ -171,9 +182,9 @@ void ecs::EntityWorld::RegisterResource(TResource& resource)
 	static_assert(!std::is_pointer_v<TResource>, "Type cannot be a pointer.");
 
 	Z_PANIC(!IsRegistered<TResource>(), "Resource is already registered!");
+	
+	RegisterType<TResource>();
 	m_ResourceRegistry.Register<TResource>(resource);
-
-	m_TypeMap[ToTypeId<TResource>()] = ToTypeName<TResource>();
 }
 
 template <typename TResource>
@@ -209,10 +220,8 @@ void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
 
 	Z_PANIC(!IsRegistered<TSingleton>(), "Singleton is already registered!");
 
-	m_SingletonRegistry.Register<TSingleton>();
+	RegisterType<TSingleton>();
 	m_EntityStorage.RegisterSingleton<TSingleton>(std::forward<TArgs>(args)...);
-
-	m_TypeMap[ToTypeId<TSingleton>()] = ToTypeName<TSingleton>();
 }
 
 template <typename TSingleton>
@@ -251,20 +260,9 @@ void ecs::EntityWorld::RegisterSystem(TArgs&&... args)
 	static_assert(std::is_convertible<TSystem*, ecs::System*>::value, "Type must inherit using the [public] keyword!");
 
 	Z_PANIC(!IsRegistered<TSystem>(), "System is already registered!");
+
+	RegisterType<TSystem>();
 	m_SystemRegistry.Register<TSystem>(std::forward<TArgs>(args)...);
-
-	m_TypeMap[ToTypeId<TSystem>()] = ToTypeName<TSystem>();
-}
-
-template <typename TSystem>
-void ecs::EntityWorld::RegisterSystemPriority(const int32 priority)
-{
-	static_assert(!std::is_const<TSystem>::value, "Type cannot be const.");
-	static_assert(!std::is_reference_v<TSystem>, "Type cannot be a reference.");
-	static_assert(!std::is_pointer_v<TSystem>, "Type cannot be a pointer.");
-
-	Z_PANIC(IsRegistered<TSystem>(), "System isn't registered!");
-	m_SystemRegistry.RegisterPriority<TSystem>(priority);
 }
 
 template <typename TSystem>

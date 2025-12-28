@@ -3,41 +3,36 @@
 template<class TSystem>
 bool ecs::SystemRegistry::IsRegistered() const
 {
-	const ecs::SystemId systemId = ToTypeId<TSystem, ecs::SystemTag>();
-	return m_Entries.Contains(systemId);
+	const TypeId typeId = ToTypeId<TSystem>();
+	return m_Entries.Contains(typeId);
 }
 
 template<class TSystem, typename... TArgs>
 void ecs::SystemRegistry::Register(TArgs&&... args)
 {
-	const ecs::SystemId systemId = ToTypeId<TSystem, ecs::SystemTag>();
+	const TypeId systemId = ToTypeId<TSystem>();
+	
 	ecs::SystemEntry& entry = m_Entries.Emplace(systemId);
 	entry.m_System = new TSystem(std::forward<TArgs>(args)...);
-	entry.m_Priority = systemId;
-	entry.m_Name = ToTypeName<TSystem>();
-
-	ToTypeId(entry.m_DependencyRead, typename TSystem::World::TReadList{});
-	ToTypeId(entry.m_DependencyWrite, typename TSystem::World::TWriteList{});
-	for (const TypeId typeId : entry.m_DependencyRead)
-		m_Edges[typeId].Add(systemId);
-
 	entry.m_Initialise = &InitialiseFunction<TSystem>;
 	entry.m_Shutdown = &ShutdownFunction<TSystem>;
 	entry.m_Update = &UpdateFunction<TSystem>;
-}
+	entry.m_TypeId = systemId;
 
-template<class TSystem>
-void ecs::SystemRegistry::RegisterPriority(const int32 priority)
-{
-	const ecs::SystemId systemId = ToTypeId<TSystem, ecs::SystemTag>();
-	m_Entries.Get(systemId).m_Priority = priority;
+	ToTypeId(entry.m_Read, typename TSystem::World::TReadList{});
+	ToTypeId(entry.m_Write, typename TSystem::World::TWriteList{});
+	
+	for (const TypeId typeId : entry.m_Read)
+		m_Reads[typeId].Add(systemId);
+	for (const TypeId typeId : entry.m_Write)
+		m_Writes[typeId].Add(systemId);
 }
 
 template<class TSystem>
 TSystem& ecs::SystemRegistry::GetSystem()
 {
-	const ecs::SystemId systemId = ToTypeId<TSystem, ecs::SystemTag>();
-	const ecs::SystemEntry& entry = m_Entries.Get(systemId);
+	const TypeId typeId = ToTypeId<TSystem>();
+	const ecs::SystemEntry& entry = m_Entries.Get(typeId);
 	return *static_cast<TSystem*>(entry.m_System);
 }
 

@@ -14,12 +14,6 @@
 
 void voxel::RegisterModule(ecs::EntityWorld& entityWorld)
 {
-	// systems
-	{
-		entityWorld.RegisterSystem<voxel::MeshingSystem>();
-		entityWorld.RegisterSystem<voxel::ModifySystem>();
-	}
-
 	// components
 	{
 		entityWorld.RegisterComponent<voxel::ChunkChangedFrameComponent>();
@@ -31,6 +25,12 @@ void voxel::RegisterModule(ecs::EntityWorld& entityWorld)
 	// singletons
 	{
 		entityWorld.RegisterSingleton<voxel::ModifySettingsSingleton>();
+	}
+
+	// systems
+	{
+		entityWorld.RegisterSystem<voxel::MeshingSystem>();
+		entityWorld.RegisterSystem<voxel::ModifySystem>();
 	}
 
 	// prototype
