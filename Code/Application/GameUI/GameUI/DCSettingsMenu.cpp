@@ -1,12 +1,12 @@
 #include "GameUIPCH.h"
 #include "GameUI/DCSettingsMenu.h"
 
+#include "Camera/CameraSettingsSingleton.h"
 #include "Core/Algorithms.h"
 #include "Core/EnumHelpers.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/SettingsAudioSingleton.h"
-#include "Engine/SettingsCameraSingleton.h"
 #include "Engine/SettingsGameplaySingleton.h"
 #include "Engine/SettingsWindowSingleton.h"
 #include "Engine/ThemeTable.h"
@@ -43,7 +43,7 @@ gui::DCSettingsMenu::~DCSettingsMenu()
 void gui::DCSettingsMenu::Initialise(World& world)
 {
 	const auto& audio = world.ReadSingleton<eng::settings::AudioSingleton>();
-	const auto& camera = world.ReadSingleton<eng::settings::CameraSingleton>();
+	const auto& camera = world.ReadSingleton<camera::SettingsSingleton>();
 	const auto& gameplay = world.ReadSingleton<eng::settings::GameplaySingleton>();
 	const auto& themes = world.ReadResource<eng::ThemeTable>();
 	const auto& window = world.ReadSingleton<eng::settings::WindowSingleton>();

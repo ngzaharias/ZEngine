@@ -1,6 +1,11 @@
 #include "EditorPCH.h"
 #include "Editor/EntityEditorSystem.h"
 
+#include "Camera/CameraBound2DComponent.h"
+#include "Camera/CameraMove2DComponent.h"
+#include "Camera/CameraMove3DComponent.h"
+#include "Camera/CameraPan3DComponent.h"
+#include "Camera/CameraZoom2DComponent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
@@ -10,13 +15,7 @@
 #include "Editor/EntityWindowComponent.h"
 #include "Editor/SettingsLocalSingleton.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraBound2DComponent.h"
-#include "Engine/CameraEditorComponent.h"
-#include "Engine/CameraMove2DComponent.h"
-#include "Engine/CameraMove3DComponent.h"
-#include "Engine/CameraPan3DComponent.h"
-#include "Engine/CameraProjectionComponent.h"
-#include "Engine/CameraZoom2DComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/InputManager.h"
 #include "Engine/InspectorHelpers.h"
@@ -233,8 +232,8 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 					if (ImGui::MenuItem("Camera"))
 					{
 						const ecs::Entity entity = CreateEntity(m_World, windowView, "Camera", levelName);
-						m_World.AddComponent<eng::camera::Move3DComponent>(entity);
-						m_World.AddComponent<eng::camera::ProjectionComponent>(entity);
+						m_World.AddComponent<camera::Move3DComponent>(entity);
+						m_World.AddComponent<eng::CameraComponent>(entity);
 					}
 
 					if (ImGui::MenuItem("Sprite"))
@@ -310,12 +309,12 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 					if (ImGui::BeginMenu("Components"))
 					{
 						SelectComponent<ecs::NameComponent>(m_World, selected);
-						SelectComponent<eng::camera::Bound2DComponent>(m_World, selected);
-						SelectComponent<eng::camera::Move2DComponent>(m_World, selected);
-						SelectComponent<eng::camera::Move3DComponent>(m_World, selected);
-						SelectComponent<eng::camera::Pan3DComponent>(m_World, selected);
-						SelectComponent<eng::camera::ProjectionComponent>(m_World, selected);
-						SelectComponent<eng::camera::Zoom2DComponent>(m_World, selected);
+						SelectComponent<camera::Bound2DComponent>(m_World, selected);
+						SelectComponent<camera::Move2DComponent>(m_World, selected);
+						SelectComponent<camera::Move3DComponent>(m_World, selected);
+						SelectComponent<camera::Pan3DComponent>(m_World, selected);
+						SelectComponent<camera::Zoom2DComponent>(m_World, selected);
+						SelectComponent<eng::CameraComponent>(m_World, selected);
 						SelectComponent<eng::PhysicsComponent>(m_World, selected);
 						SelectComponent<eng::PrototypeComponent>(m_World, selected);
 						SelectComponent<eng::SpriteComponent>(m_World, selected);
@@ -340,12 +339,12 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 					InspectComponent<ecs::NameComponent>(m_World, selected, inspector);
 					InspectComponent<eng::TransformComponent>(m_World, selected, inspector);
 
-					InspectComponent<eng::camera::Bound2DComponent>(m_World, selected, inspector);
-					InspectComponent<eng::camera::Move2DComponent>(m_World, selected, inspector);
-					InspectComponent<eng::camera::Move3DComponent>(m_World, selected, inspector);
-					InspectComponent<eng::camera::Pan3DComponent>(m_World, selected, inspector);
-					InspectComponent<eng::camera::ProjectionComponent>(m_World, selected, inspector);
-					InspectComponent<eng::camera::Zoom2DComponent>(m_World, selected, inspector);
+					InspectComponent<camera::Bound2DComponent>(m_World, selected, inspector);
+					InspectComponent<camera::Move2DComponent>(m_World, selected, inspector);
+					InspectComponent<camera::Move3DComponent>(m_World, selected, inspector);
+					InspectComponent<camera::Pan3DComponent>(m_World, selected, inspector);
+					InspectComponent<camera::Zoom2DComponent>(m_World, selected, inspector);
+					InspectComponent<eng::CameraComponent>(m_World, selected, inspector);
 					InspectComponent<eng::PhysicsComponent>(m_World, selected, inspector);
 					InspectComponent<eng::PrototypeComponent>(m_World, selected, inspector);
 					InspectComponent<eng::SpriteComponent>(m_World, selected, inspector);
@@ -401,12 +400,12 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 						visitor.Write("m_Guid", readPrototype.m_Guid);
 						visitor.Write("m_Name", readName.m_Name);
 
-						SaveComponent<eng::camera::Bound2DComponent>(m_World, selected, visitor);
-						SaveComponent<eng::camera::Move2DComponent>(m_World, selected, visitor);
-						SaveComponent<eng::camera::Move3DComponent>(m_World, selected, visitor);
-						SaveComponent<eng::camera::Pan3DComponent>(m_World, selected, visitor);
-						SaveComponent<eng::camera::ProjectionComponent>(m_World, selected, visitor);
-						SaveComponent<eng::camera::Zoom2DComponent>(m_World, selected, visitor);
+						SaveComponent<camera::Bound2DComponent>(m_World, selected, visitor);
+						SaveComponent<camera::Move2DComponent>(m_World, selected, visitor);
+						SaveComponent<camera::Move3DComponent>(m_World, selected, visitor);
+						SaveComponent<camera::Pan3DComponent>(m_World, selected, visitor);
+						SaveComponent<camera::Zoom2DComponent>(m_World, selected, visitor);
+						SaveComponent<eng::CameraComponent>(m_World, selected, visitor);
 						SaveComponent<eng::PhysicsComponent>(m_World, selected, visitor);
 						SaveComponent<eng::SpriteComponent>(m_World, selected, visitor);
 						SaveComponent<eng::TransformComponent>(m_World, selected, visitor);

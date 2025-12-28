@@ -47,11 +47,11 @@ namespace eng
 		void AddCircle(const Vector3f& translate, const Circle2f& circle, const float steps, const Colour& colour);
 
 		/// \brief Adds a frustum.
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Vector2u& size, const Colour& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::Projection& projection, const Vector2u& size, const Colour& colour);
 		/// \brief Adds a frustum.
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Vector2u& size, const Colour& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::Orthographic& projection, const Vector2u& size, const Colour& colour);
 		/// \brief Adds a frustum.
-		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Vector2u& size, const Colour& colour);
+		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::Perspective& projection, const Vector2u& size, const Colour& colour);
 		/// \brief Adds a frustum.
 		void AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::UserInterface& projection, const Vector2u& size, const Colour& colour);
 

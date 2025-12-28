@@ -6,9 +6,8 @@
 #include "ECS/WorldView.h"
 #include "Editor/EntitySelectSingleton.h"
 #include "Editor/SettingsLocalSingleton.h"
-#include "Engine/CameraEditorComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
@@ -142,18 +141,18 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 		const Vector2u& windowSize = window->GetSize();
 		using Query = ecs::query
 			::Include<
-			const eng::camera::EditorComponent,
-			const eng::camera::ProjectionComponent,
+			const eng::ActiveComponent,
+			const eng::CameraComponent,
 			const eng::TransformComponent>;
 		for (auto&& view : world.Query<Query>())
 		{
-			const auto& cameraProjection = view.ReadRequired<eng::camera::ProjectionComponent>();
+			const auto& cameraProjection = view.ReadRequired<eng::CameraComponent>();
 			const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
-			const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraProjection.m_Projection, windowSize);
+			const Matrix4x4 cameraProj = eng::GetProjection(cameraProjection.m_Projection, windowSize);
 			const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
-			const bool isOrthographic = std::holds_alternative<eng::camera::Orthographic>(cameraProjection.m_Projection);
+			const bool isOrthographic = std::holds_alternative<eng::Orthographic>(cameraProjection.m_Projection);
 			ImGuizmo::SetOrthographic(isOrthographic);
 			ImGuizmo::SetDrawlist();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);

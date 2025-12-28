@@ -7,14 +7,12 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
+	struct ActiveComponent;
+	struct CameraComponent;
+	struct EditorComponent;
 	struct LinesSingleton;
 	struct TextComponent;
 	struct TransformComponent;
-}
-
-namespace eng::camera
-{
-	struct ProjectionComponent;
 }
 
 namespace voxel
@@ -37,7 +35,9 @@ namespace voxel
 			voxel::ModifyComponent,
 			voxel::ModifySettingsSingleton>
 			::Read<
-			eng::camera::ProjectionComponent,
+			eng::ActiveComponent,
+			eng::CameraComponent,
+			eng::EditorComponent,
 			eng::InputManager,
 			eng::WindowManager,
 			voxel::ChunkComponent>;

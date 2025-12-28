@@ -6,8 +6,8 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/PhysicsSceneComponent.h"
@@ -56,60 +56,63 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 	const auto& sceneComponent = world.ReadSingleton<eng::PhysicsSceneSingleton>();
 	auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
 
-	for (auto&& view : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+	using Query = ecs::query
+		::Include<
+		const eng::ActiveComponent,
+		const eng::CameraComponent,
+		const eng::TransformComponent>;
+
+	for (auto&& view : world.Query<Query>())
 	{
-		const auto& cameraProjection = view.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& input = world.ReadResource<eng::InputManager>();
+		const auto& cameraProjection = view.ReadRequired<eng::CameraComponent>();
 		const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
+		// mouse
+		constexpr float distance = 100000.f;
+		const Ray3f ray = eng::ScreenToRay(
+			cameraProjection,
+			cameraTransform,
+			*window,
+			input.m_MousePosition);
+
+		const physx::PxVec3 position = { 
+			ray.m_Position.x,
+			ray.m_Position.y,
+			ray.m_Position.z };
+		const physx::PxVec3 direction = { 
+			ray.m_Direction.x,
+			ray.m_Direction.y,
+			ray.m_Direction.z };
+
+		physx::PxRaycastBuffer hitcall;
+		sceneComponent.m_PhysicsScene->raycast(position, direction, distance, hitcall);
+		if (hitcall.hasAnyHits())
 		{
-			const auto& input = world.ReadResource<eng::InputManager>();
+			const physx::PxRaycastHit& closestHit = hitcall.block;
+			const Vector3f hitPosition = Vector3f(closestHit.position.x, closestHit.position.y, closestHit.position.z);
 
-			// mouse
-			constexpr float distance = 100000.f;
-			const Ray3f ray = eng::camera::ScreenToRay(
-				cameraProjection,
-				cameraTransform,
-				*window,
-				input.m_MousePosition);
-
-			const physx::PxVec3 position = { 
-				ray.m_Position.x,
-				ray.m_Position.y,
-				ray.m_Position.z };
-			const physx::PxVec3 direction = { 
-				ray.m_Direction.x,
-				ray.m_Direction.y,
-				ray.m_Direction.z };
-
-			physx::PxRaycastBuffer hitcall;
-			sceneComponent.m_PhysicsScene->raycast(position, direction, distance, hitcall);
-			if (hitcall.hasAnyHits())
+			const ecs::Entity selectedEntity = reinterpret_cast<uint64>(closestHit.actor->userData);
+			const bool hasSelectable = world.HasComponent<drag::IsSelectableComponent>(selectedEntity);
+			const bool hasTransform = world.HasComponent<eng::TransformComponent>(selectedEntity);
+			if (hasSelectable && hasTransform)
 			{
-				const physx::PxRaycastHit& closestHit = hitcall.block;
-				const Vector3f hitPosition = Vector3f(closestHit.position.x, closestHit.position.y, closestHit.position.z);
+				constexpr float s_Extents = 100.1f;
 
-				const ecs::Entity selectedEntity = reinterpret_cast<uint64>(closestHit.actor->userData);
-				const bool hasSelectable = world.HasComponent<drag::IsSelectableComponent>(selectedEntity);
-				const bool hasTransform = world.HasComponent<eng::TransformComponent>(selectedEntity);
-				if (hasSelectable && hasTransform)
+				const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(selectedEntity);
+				linesComponent.AddAABB(transformComponent.m_Translate, s_Extents, Colour::Magenta);
+
+				if (input.IsPressed(strSelect))
 				{
-					constexpr float s_Extents = 100.1f;
+					const ecs::Entity dragEntity = world.CreateEntity();
+					auto& nameComponent = world.AddComponent<ecs::NameComponent>(dragEntity);
+					nameComponent.m_Name = "Drag Entity";
 
-					const auto& transformComponent = world.ReadComponent<eng::TransformComponent>(selectedEntity);
-					linesComponent.AddAABB(transformComponent.m_Translate, s_Extents, Colour::Magenta);
-
-					if (input.IsPressed(strSelect))
-					{
-						const ecs::Entity dragEntity = world.CreateEntity();
-						auto& nameComponent = world.AddComponent<ecs::NameComponent>(dragEntity);
-						nameComponent.m_Name = "Drag Entity";
-
-						auto& dragComponent = world.AddComponent<drag::SelectionComponent>(dragEntity);
-						dragComponent.m_CameraEntity = view;
-						dragComponent.m_SelectedEntity = selectedEntity;
-						dragComponent.m_TranslatePlane = Plane3f(-ray.m_Direction, hitPosition);
-						dragComponent.m_TranslateOffset = transformComponent.m_Translate - hitPosition;
-					}
+					auto& dragComponent = world.AddComponent<drag::SelectionComponent>(dragEntity);
+					dragComponent.m_CameraEntity = view;
+					dragComponent.m_SelectedEntity = selectedEntity;
+					dragComponent.m_TranslatePlane = Plane3f(-ray.m_Direction, hitPosition);
+					dragComponent.m_TranslateOffset = transformComponent.m_Translate - hitPosition;
 				}
 			}
 		}

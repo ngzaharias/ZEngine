@@ -6,9 +6,8 @@
 #include "ECS/WorldView.h"
 #include "Editor/EntitySelectSingleton.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraEditorComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/LevelEntityComponent.h"
 #include "Engine/LinesComponent.h"
@@ -104,18 +103,19 @@ void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-
-	ecs::Entity cameraEntity = {};
-	for (auto&& view : world.Query<ecs::query::Include<const eng::camera::EditorComponent>>())
-		cameraEntity = view;
-
-	if (!cameraEntity.IsUnassigned())
+	using Query = ecs::query
+		::Include<
+		const eng::ActiveComponent,
+		const eng::CameraComponent,
+		const eng::EditorComponent,
+		const eng::TransformComponent>;
+	for (auto&& view : world.Query<Query>())
 	{
-		const auto& cameraProjection = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+		const auto& cameraProjection = view.ReadRequired<eng::CameraComponent>();
+		const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 		const auto& input = world.ReadResource<eng::InputManager>();
-		const Ray3f ray = eng::camera::ScreenToRay(
+		const Ray3f ray = eng::ScreenToRay(
 			cameraProjection,
 			cameraTransform,
 			*window,

@@ -7,12 +7,10 @@
 namespace eng
 {
 	class WindowManager;
+	struct ActiveComponent;
+	struct CameraComponent;
+	struct EditorComponent;
 	struct TransformComponent;
-}
-
-namespace eng::camera
-{
-	struct ProjectionComponent;
 }
 
 namespace eng::settings
@@ -27,9 +25,11 @@ namespace editor
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::camera::ProjectionComponent,
+			eng::CameraComponent,
 			eng::TransformComponent>
 			::Read<
+			eng::ActiveComponent,
+			eng::EditorComponent,
 			eng::settings::DebugSingleton,
 			eng::WindowManager>;
 

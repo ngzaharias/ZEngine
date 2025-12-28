@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
@@ -31,9 +31,9 @@ namespace
 	const str::Name strInput = str::Name::Create("HiddenReveal");
 	const str::Name strSelect = str::Name::Create("HiddenReveal_Select");
 
-	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
+	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::CameraComponent& camera, const eng::TransformComponent& transform)
 	{
-		if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
+		if (std::holds_alternative<eng::Orthographic>(camera.m_Projection))
 		{
 			const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
 			return Vector3f::AxisZ * cameraRotate;
@@ -72,12 +72,13 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 	const auto& physics = world.ReadSingleton<eng::PhysicsSceneSingleton>();
 
 	using Query = ecs::query
-		::Include <
-		const eng::camera::ProjectionComponent,
+		::Include<
+		const eng::ActiveComponent,
+		const eng::CameraComponent,
 		const eng::TransformComponent>;
 	for (auto&& view : world.Query<Query>())
 	{
-		const auto& cameraProjection = view.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraProjection = view.ReadRequired<eng::CameraComponent>();
 		const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 		{
@@ -85,7 +86,7 @@ void hidden::RevealSystem::Update(World& world, const GameTime& gameTime)
 
 			// mouse
 			constexpr float s_Distance = 100000.f;
-			const Ray3f ray = eng::camera::ScreenToRay(
+			const Ray3f ray = eng::ScreenToRay(
 				cameraProjection,
 				cameraTransform,
 				*window,

@@ -4,8 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/CameraEditorComponent.h"
-#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -41,12 +40,15 @@ void editor::OverlaySystem::Update(World& world, const GameTime& gameTime)
 
 	ImGui::SetNextWindowBgAlpha(0.2f);
 	ImGui::SetNextWindowClass(&windowClass);
-	ImGui::SetNextWindowPos(viewportPos + Vector2f(viewportSize.x * 0.5f - 32.f, 32.f));
-	ImGui::SetNextWindowSize(Vector2f(80.f, 16.f));
+	ImGui::SetNextWindowPos(viewportPos + Vector2f(viewportSize.x * 0.5f - 45.f, 32.f));
+	ImGui::SetNextWindowSize(Vector2f(90.f, 16.f));
 	if (ImGui::Begin("Game Mode##editor", nullptr, s_Flags))
 	{
 		auto& settings = world.WriteSingleton<eng::settings::DebugSingleton>();
-		if (ImGui::Selectable("Game Mode", !settings.m_IsEditorModeEnabled))
+		const char* label = settings.m_IsEditorModeEnabled
+			? "Editor Mode"
+			: " Game Mode";
+		if (ImGui::Selectable(label, !settings.m_IsEditorModeEnabled))
 			settings.m_IsEditorModeEnabled = !settings.m_IsEditorModeEnabled;
 	}
 	ImGui::End();
@@ -57,23 +59,29 @@ void editor::OverlaySystem::Update(World& world, const GameTime& gameTime)
 	ImGui::SetNextWindowSize(Vector2f(100.f, 100.f));
 	if (ImGui::Begin("Camera##editor", nullptr, s_Flags))
 	{
+		using CameraQuery = ecs::query
+			::Include<
+			const eng::ActiveComponent,
+			const eng::CameraComponent,
+			const eng::EditorComponent>;
+
 		ecs::Entity cameraEntity = {};
-		for (auto&& view : world.Query<ecs::query::Include<const eng::camera::EditorComponent>>())
+		for (auto&& view : world.Query<CameraQuery>())
 			cameraEntity = view;
 
 		if (!cameraEntity.IsUnassigned())
 		{
-			Optional<eng::camera::Projection> projection = {};
-			const auto& readCamera = world.ReadComponent<eng::camera::ProjectionComponent>(cameraEntity);
-			if (std::holds_alternative<eng::camera::Orthographic>(readCamera.m_Projection))
+			Optional<eng::Projection> projection = {};
+			const auto& readCamera = world.ReadComponent<eng::CameraComponent>(cameraEntity);
+			if (std::holds_alternative<eng::Orthographic>(readCamera.m_Projection))
 			{
 				if (ImGui::Button("Orthographic"))
-					projection = eng::camera::Perspective{};
+					projection = eng::Perspective{};
 			}
 			else
 			{
 				if (ImGui::Button("Perspective"))
-					projection = eng::camera::Orthographic{};
+					projection = eng::Orthographic{};
 			}
 
 			Optional<Rotator> rotation = {};
@@ -97,7 +105,7 @@ void editor::OverlaySystem::Update(World& world, const GameTime& gameTime)
 
 			if (projection)
 			{
-				auto& writeCamera = world.WriteComponent<eng::camera::ProjectionComponent>(cameraEntity);
+				auto& writeCamera = world.WriteComponent<eng::CameraComponent>(cameraEntity);
 				writeCamera.m_Projection = *projection;
 			}
 

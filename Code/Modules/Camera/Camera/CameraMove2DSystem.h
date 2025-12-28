@@ -3,20 +3,20 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace camera
+{
+	struct Move2DComponent;
+	struct SettingsSingleton;
+}
+
 namespace eng
 {
 	class InputManager;
 	struct TransformComponent;
 }
 
-namespace eng::settings
+namespace camera
 {
-	struct CameraSingleton;
-}
-
-namespace eng::camera
-{
-	struct Move2DComponent;
 
 	class Move2DSystem final : public ecs::System
 	{
@@ -26,8 +26,8 @@ namespace eng::camera
 			eng::InputManager,
 			eng::TransformComponent>
 			::Read<
-			eng::camera::Move2DComponent,
-			eng::settings::CameraSingleton>;
+			camera::Move2DComponent,
+			camera::SettingsSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -20,15 +20,11 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
+	struct ActiveComponent;
+	struct CameraComponent;
 	struct PhysicsComponent;
 	struct TransformComponent;
 	struct VersionComponent;
-}
-
-namespace eng::camera
-{
-	struct EditorComponent;
-	struct ProjectionComponent;
 }
 
 namespace eng::settings
@@ -48,8 +44,8 @@ namespace editor::gizmo
 			::Read<
 			editor::EntitySelectSingleton,
 			editor::settings::LocalSingleton,
-			eng::camera::EditorComponent,
-			eng::camera::ProjectionComponent,
+			eng::ActiveComponent,
+			eng::CameraComponent,
 			eng::InputManager,
 			eng::settings::DebugSingleton,
 			eng::WindowManager>;

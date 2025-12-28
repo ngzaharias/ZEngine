@@ -7,9 +7,8 @@
 #include "ECS/WorldView.h"
 #include "Editor/SettingsLocalSingleton.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraEditorComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/SettingsDebugSingleton.h"
@@ -113,22 +112,19 @@ void editor::RenderGridSystem::Update(World& world, const GameTime& gameTime)
 	}
 
 	using Query = ecs::query
-		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
-		::Optional<const eng::camera::EditorComponent>;
+		::Include<
+		const eng::ActiveComponent, 
+		const eng::CameraComponent, 
+		const eng::TransformComponent>;
 	for (auto&& view : world.Query<Query>())
 	{
-		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = view.HasOptional<eng::camera::EditorComponent>();
-		if (isEditorActive != isEditorCamera)
-			continue;
-
-		const auto& cameraComponent = view.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraComponent = view.ReadRequired<eng::CameraComponent>();
 		const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 		const Vector3f translate = cameraTransform.m_Translate.X0Z();
 
 		const Vector2u& windowSize = window->GetSize();
-		const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraComponent.m_Projection, windowSize);
+		const Matrix4x4 cameraProj = eng::GetProjection(cameraComponent.m_Projection, windowSize);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 		const Matrix4x4 modelTran = Matrix4x4::FromTranslate(translate);
 

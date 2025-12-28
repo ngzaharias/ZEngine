@@ -3,30 +3,30 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace camera
+{
+	struct Pan3DComponent;
+}
+
 namespace eng
 {
 	class InputManager;
 	class WindowManager;
+	struct CameraComponent;
 	struct TransformComponent;
 }
 
-namespace eng::camera
+namespace camera
 {
-	struct Pan3DComponent;
-	struct ProjectionComponent;
-}
-
-namespace eng::camera
-{
-	class PanningSystem final : public ecs::System
+	class Pan3DSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
 			eng::TransformComponent>
 			::Read<
-			eng::camera::Pan3DComponent,
-			eng::camera::ProjectionComponent,
+			camera::Pan3DComponent,
+			eng::CameraComponent,
 			eng::InputManager,
 			eng::WindowManager>;
 

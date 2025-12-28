@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "ECS/QueryTypes.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -42,9 +42,9 @@ namespace
 		return positionA - directionB * constraint;
 	}
 
-	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
+	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::CameraComponent& camera, const eng::TransformComponent& transform)
 	{
-		if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
+		if (std::holds_alternative<eng::Orthographic>(camera.m_Projection))
 		{
 			const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
 			return Vector3f::AxisZ * cameraRotate;
@@ -82,14 +82,19 @@ void softbody::ChainSystem::Update(World& world, const GameTime& gameTime)
 	const Vector2u& windowSize = window->GetSize();
 	for (auto&& chainView : world.Query<ecs::query::Include<const eng::TransformComponent, const softbody::ChainComponent>>())
 	{
-		for (auto&& cameraView : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+		using CameraQuery = ecs::query
+			::Include<
+			const eng::ActiveComponent,
+			const eng::CameraComponent,
+			const eng::TransformComponent>;
+		for (auto&& cameraView : world.Query<CameraQuery>())
 		{
 			const auto& input = world.ReadResource<eng::InputManager>();
-			const auto& cameraProjection = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+			const auto& cameraProjection = cameraView.ReadRequired<eng::CameraComponent>();
 			const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 			const Plane3f plane = Plane3f(Vector3f::AxisZ, Vector3f::Zero);
-			const Ray3f ray = eng::camera::ScreenToRay(
+			const Ray3f ray = eng::ScreenToRay(
 				cameraProjection,
 				cameraTransform,
 				*window,

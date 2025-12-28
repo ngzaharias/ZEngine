@@ -5,7 +5,7 @@
 #include "Math/Math.h"
 #include "Math/Vector.h"
 
-namespace eng::camera
+namespace camera
 {
 	struct Target
 	{
@@ -16,7 +16,6 @@ namespace eng::camera
 	/// \brief
 	struct Zoom2DComponent final : public ecs::Component<Zoom2DComponent>
 	{
-
 		float m_Max = KINDA_LARGE_FLOAT;
 		float m_Min = 1.f;
 

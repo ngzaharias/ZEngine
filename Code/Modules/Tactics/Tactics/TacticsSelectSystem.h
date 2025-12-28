@@ -7,14 +7,10 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
+	struct ActiveComponent;
+	struct CameraComponent;
 	struct PhysicsSceneSingleton;
 	struct TransformComponent;
-}
-
-namespace eng::camera
-{
-	struct EditorComponent;
-	struct ProjectionComponent;
 }
 
 namespace eng::settings
@@ -38,15 +34,16 @@ namespace tactics
 	{
 	public:
 		using World = ecs::WorldView
+			::Write<
+			tactics::SelectedComponent>
 			::Read<
-			eng::camera::EditorComponent,
-			eng::camera::ProjectionComponent,
+			eng::ActiveComponent,
+			eng::CameraComponent,
 			eng::InputManager,
 			eng::PhysicsSceneSingleton,
 			eng::settings::DebugSingleton,
 			eng::TransformComponent,
 			eng::WindowManager,
-			tactics::SelectedComponent,
 			tilemap::AgentComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

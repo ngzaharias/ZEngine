@@ -4,8 +4,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
@@ -43,21 +43,20 @@ void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
 
 	using CameraQuery = ecs::query
 		::Include<
-		const eng::camera::ProjectionComponent,
-		const eng::TransformComponent>
-		::Exclude<
-		const eng::camera::EditorComponent>;
+		const eng::ActiveComponent,
+		const eng::CameraComponent,
+		const eng::TransformComponent>;
 	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
 		if (!inputManager.IsPressed(strSelect))
 			continue;
 
-		const auto& cameraProjection = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraProjection = cameraView.ReadRequired<eng::CameraComponent>();
 		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 		// mouse
 		constexpr float distance = 100000.f;
-		const Ray3f ray = eng::camera::ScreenToRay(
+		const Ray3f ray = eng::ScreenToRay(
 			cameraProjection,
 			cameraTransform,
 			*window,

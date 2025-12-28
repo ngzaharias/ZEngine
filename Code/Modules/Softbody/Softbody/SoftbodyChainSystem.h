@@ -7,12 +7,9 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
+	struct ActiveComponent;
+	struct CameraComponent;
 	struct TransformComponent;
-}
-
-namespace eng::camera
-{
-	struct ProjectionComponent;
 }
 
 namespace softbody
@@ -31,7 +28,8 @@ namespace softbody
 			eng::TransformComponent,
 			softbody::ChainComponent>
 			::Read<
-			eng::camera::ProjectionComponent,
+			eng::ActiveComponent,
+			eng::CameraComponent,
 			eng::WindowManager>;
 
 		void Update(World& world, const GameTime& gameTime);

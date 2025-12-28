@@ -7,13 +7,7 @@
 #include "Engine/ApplicationCloseRequest.h"
 #include "Engine/AssetComponent.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraBound2DComponent.h"
-#include "Engine/CameraEditorComponent.h"
-#include "Engine/CameraMove2DComponent.h"
-#include "Engine/CameraMove3DComponent.h"
-#include "Engine/CameraPan3DComponent.h"
-#include "Engine/CameraProjectionComponent.h"
-#include "Engine/CameraZoom2DComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/ComponentSerializer.h"
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/FlipbookComponent.h"
@@ -39,7 +33,6 @@
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/SavegameComponent.h"
 #include "Engine/SettingsAudioSingleton.h"
-#include "Engine/SettingsCameraSingleton.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/SettingsGameplaySingleton.h"
 #include "Engine/SettingsLaunchSingleton.h"
@@ -87,7 +80,6 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSingleton<eng::MusicSingleton>();
 	entityWorld.RegisterSingleton<eng::network::StateSingleton>();
 	entityWorld.RegisterSingleton<eng::settings::AudioSingleton>();
-	entityWorld.RegisterSingleton<eng::settings::CameraSingleton>();
 	entityWorld.RegisterSingleton<eng::settings::DebugSingleton>();
 	entityWorld.RegisterSingleton<eng::settings::GameplaySingleton>();
 	entityWorld.RegisterSingleton<eng::settings::LaunchSingleton>();
@@ -104,14 +96,10 @@ void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::ComponentSerializer& serializer)
 {
 	// components
+	entityWorld.RegisterComponent<eng::ActiveComponent>();
 	entityWorld.RegisterComponent<eng::AssetComponent>();
-	entityWorld.RegisterComponent<eng::camera::Bound2DComponent>();
-	entityWorld.RegisterComponent<eng::camera::EditorComponent>();
-	entityWorld.RegisterComponent<eng::camera::Move2DComponent>();
-	entityWorld.RegisterComponent<eng::camera::Move3DComponent>();
-	entityWorld.RegisterComponent<eng::camera::Pan3DComponent>();
-	entityWorld.RegisterComponent<eng::camera::ProjectionComponent>();
-	entityWorld.RegisterComponent<eng::camera::Zoom2DComponent>();
+	entityWorld.RegisterComponent<eng::CameraComponent>();
+	entityWorld.RegisterComponent<eng::EditorComponent>();
 	entityWorld.RegisterComponent<eng::FlipbookComponent>();
 	entityWorld.RegisterComponent<eng::level::EntityComponent>();
 	entityWorld.RegisterComponent<eng::level::LoadedComponent>();

@@ -5,12 +5,7 @@
 #include "Core/Profiler.h"
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraBound2DComponent.h"
-#include "Engine/CameraMove2DComponent.h"
-#include "Engine/CameraMove3DComponent.h"
-#include "Engine/CameraPan3DComponent.h"
-#include "Engine/CameraZoom2DComponent.h"
-#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/ColourTable.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/FlipbookAsset.h"
@@ -154,12 +149,7 @@ void eng::Application::Register()
 
 	// prototypes
 	{
-		m_PrototypeManager.Register<eng::camera::Bound2DComponent>();
-		m_PrototypeManager.Register<eng::camera::Move2DComponent>();
-		m_PrototypeManager.Register<eng::camera::Move3DComponent>();
-		m_PrototypeManager.Register<eng::camera::Pan3DComponent>();
-		m_PrototypeManager.Register<eng::camera::ProjectionComponent>();
-		m_PrototypeManager.Register<eng::camera::Zoom2DComponent>();
+		m_PrototypeManager.Register<eng::CameraComponent>();
 		m_PrototypeManager.Register<eng::FlipbookComponent>();
 		m_PrototypeManager.Register<eng::light::AmbientComponent>();
 		m_PrototypeManager.Register<eng::light::DirectionalComponent>();

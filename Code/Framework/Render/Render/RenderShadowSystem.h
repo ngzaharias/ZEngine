@@ -6,15 +6,11 @@
 namespace eng
 {
 	class AssetManager;
+	struct ActiveComponent;
+	struct CameraComponent;
 	struct FrameBufferSingleton;
 	struct StaticMeshComponent;
 	struct TransformComponent;
-}
-
-namespace eng::camera
-{
-	struct EditorComponent;
-	struct ProjectionComponent;
 }
 
 namespace eng::light
@@ -47,8 +43,8 @@ namespace render
 			//eng::FrameBufferSingleton,
 			render::ShadowComponent>
 			::Read<
-			eng::camera::EditorComponent,
-			eng::camera::ProjectionComponent,
+			eng::ActiveComponent,
+			eng::CameraComponent,
 			eng::light::DirectionalComponent,
 			eng::settings::DebugSingleton,
 			eng::StaticMeshComponent,

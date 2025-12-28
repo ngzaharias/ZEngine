@@ -1,16 +1,16 @@
-#include "EnginePCH.h"
-#include "Engine/CameraMove2DSystem.h"
+#include "CameraPCH.h"
+#include "Camera/CameraMove2DSystem.h"
 
+#include "Camera/CameraMove2DComponent.h"
+#include "Camera/CameraSettingsSingleton.h"
 #include "Core/GameTime.h"
 #include "Core/VariantHelpers.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/CameraMove2DComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
 #include "Engine/InputManager.h"
-#include "Engine/SettingsCameraSingleton.h"
 #include "Engine/TransformComponent.h"
 #include "Math/Math.h"
 #include "Math/Quaternion.h"
@@ -28,11 +28,11 @@ namespace
 	const str::Name strSpeedUpB = str::Name::Create("CameraMove2D_SpeedUpB");
 }
 
-void eng::camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
+void camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<eng::camera::Move2DComponent>>())
+	if (world.HasAny<ecs::query::Added<camera::Move2DComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -49,15 +49,19 @@ void eng::camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<eng::camera::Move2DComponent>>())
+	if (world.HasAny<ecs::query::Removed<camera::Move2DComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
 	}
 
-	using CameraQuery = ecs::query::Include<eng::TransformComponent, const eng::camera::Move2DComponent, const eng::camera::ProjectionComponent>;
+	using CameraQuery = ecs::query
+		::Include<
+		eng::TransformComponent, 
+		const camera::Move2DComponent, 
+		const eng::CameraComponent>;
 
-	const auto& cameraSettings = world.ReadSingleton<eng::settings::CameraSingleton>();
+	const auto& settings = world.ReadSingleton<camera::SettingsSingleton>();
 	for (auto&& view : world.Query<CameraQuery>())
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
@@ -70,7 +74,7 @@ void eng::camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 		if (direction != Vector3f::Zero)
 			direction.Normalize();
 
-		float speed = cameraSettings.m_TranslateSpeed * gameTime.m_DeltaTime;
+		float speed = settings.m_TranslateSpeed * gameTime.m_DeltaTime;
 		if (input.IsHeld(strSpeedUpA))
 			speed *= 3.f;
 		if (input.IsHeld(strSpeedUpB))

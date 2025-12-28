@@ -7,7 +7,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/PhysicsSceneComponent.h"
@@ -36,10 +36,10 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 	for (auto&& view : world.Query<ecs::query::Include<const drag::SelectionComponent>>())
 	{
 		const auto& dragComponent = view.ReadRequired<drag::SelectionComponent>();
-		const auto& cameraComponent = world.ReadComponent<eng::camera::ProjectionComponent>(dragComponent.m_CameraEntity);
+		const auto& cameraComponent = world.ReadComponent<eng::CameraComponent>(dragComponent.m_CameraEntity);
 		const auto& cameraTransform = world.ReadComponent<eng::TransformComponent>(dragComponent.m_CameraEntity);
 
-		const Ray3f ray = eng::camera::ScreenToRay(
+		const Ray3f ray = eng::ScreenToRay(
 			cameraComponent, 
 			cameraTransform,
 			*window,

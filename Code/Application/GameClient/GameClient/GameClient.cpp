@@ -1,6 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/GameClient.h"
 
+#include "Camera/RegisterModule.h"
 #include "Container/RegisterModule.h"
 #include "ECS/WorldView.h"
 #include "Engine/AchievementTable.h"
@@ -88,6 +89,7 @@ void client::GameClient::Register(const Dependencies& dependencies)
 
 	// modules
 	{
+		camera::RegisterModule(m_EntityWorld);
 		container::RegisterModule(m_EntityWorld);
 		gui::RegisterModule(m_EntityWorld);
 		hexmap::RegisterModule(m_EntityWorld);

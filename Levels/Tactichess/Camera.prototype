@@ -1,16 +1,15 @@
 m_Guid = '672fe6dfc75d4bf5a1c3f150056dec63'
 m_Name = 'Camera'
 
+['eng::CameraComponent'.m_Projection.Orthographic]
+m_ClippingFar = 1e+05
+m_ClippingNear = 30.0
+m_Size = 1000.0
+
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = 40.30068588256836, Y = 23.61754035949707, Z = -100.0 }
 
-['eng::camera::Move2DComponent']
-
-['eng::camera::Pan3DComponent']
-
-['eng::camera::ProjectionComponent'.m_Projection.Orthographic]
-m_ClippingFar = 1e+05
-m_ClippingNear = 30.0
-m_Size = 1000.0
+['camera::Move2DComponent']
+['camera::Pan3DComponent']

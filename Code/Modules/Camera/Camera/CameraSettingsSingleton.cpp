@@ -1,5 +1,5 @@
-#include "EnginePCH.h"
-#include "Engine/SettingsCameraSingleton.h"
+#include "CameraPCH.h"
+#include "Camera/CameraSettingsSingleton.h"
 
 #include "Engine/Visitor.h"
 
@@ -12,7 +12,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::settings::CameraSingleton& value) const
+void eng::Visitor::ReadCustom(camera::SettingsSingleton& value) const
 {
 	Read(strRotateSpeed, value.m_RotateSpeed, value.m_RotateSpeed);
 	Read(strTranslateSpeed, value.m_TranslateSpeed, value.m_TranslateSpeed);
@@ -20,7 +20,7 @@ void eng::Visitor::ReadCustom(eng::settings::CameraSingleton& value) const
 	Read(strZoomSpeed, value.m_ZoomSpeed, value.m_ZoomSpeed);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::settings::CameraSingleton& value)
+void eng::Visitor::WriteCustom(const camera::SettingsSingleton& value)
 {
 	Write(strRotateSpeed, value.m_RotateSpeed);
 	Write(strTranslateSpeed, value.m_TranslateSpeed);

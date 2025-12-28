@@ -3,6 +3,11 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace camera
+{
+	struct SettingsSingleton;
+}
+
 namespace eng
 {
 	class WindowManager;
@@ -11,7 +16,6 @@ namespace eng
 namespace eng::settings
 {
 	struct AudioSingleton;
-	struct CameraSingleton;
 	struct GameplaySingleton;
 	struct WindowSingleton;
 }
@@ -23,8 +27,8 @@ namespace client
 	public:
 		using World = ecs::WorldView
 			::Write<
+			camera::SettingsSingleton,
 			eng::settings::AudioSingleton,
-			eng::settings::CameraSingleton,
 			eng::settings::GameplaySingleton,
 			eng::settings::WindowSingleton>
 			::Read<

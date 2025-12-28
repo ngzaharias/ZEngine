@@ -3,6 +3,13 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace camera
+{
+	struct Move3DComponent;
+	struct Pan3DComponent;
+	struct Zoom2DComponent;
+}
+
 namespace ecs
 {
 	struct NameComponent;
@@ -10,16 +17,10 @@ namespace ecs
 
 namespace eng
 {
-	struct TransformComponent;
-}
-
-namespace eng::camera
-{
+	struct ActiveComponent;
+	struct CameraComponent;
 	struct EditorComponent;
-	struct Move3DComponent;
-	struct Pan3DComponent;
-	struct ProjectionComponent;
-	struct Zoom2DComponent;
+	struct TransformComponent;
 }
 
 namespace eng::settings
@@ -34,15 +35,18 @@ namespace editor
 	public:
 		using World = ecs::WorldView
 			::Write<
+			camera::Move3DComponent,
+			camera::Pan3DComponent,
+			camera::Zoom2DComponent,
 			ecs::NameComponent,
-			eng::camera::EditorComponent,
-			eng::camera::Move3DComponent,
-			eng::camera::Pan3DComponent,
-			eng::camera::ProjectionComponent,
-			eng::camera::Zoom2DComponent,
+			eng::ActiveComponent,
+			eng::CameraComponent,
+			eng::EditorComponent,
 			eng::TransformComponent>
 			::Read<
 			eng::settings::DebugSingleton>;
+
+		void Initialise(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

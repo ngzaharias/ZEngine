@@ -4,8 +4,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -30,9 +30,9 @@ namespace
 	const str::Name strHexmap5 = str::Name::Create("HexmapModify_Hexmap5");
 	const str::Name strSelect = str::Name::Create("HexmapModify_Select");
 
-	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
+	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::CameraComponent& camera, const eng::TransformComponent& transform)
 	{
-		if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
+		if (std::holds_alternative<eng::Orthographic>(camera.m_Projection))
 		{
 			const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
 			return Vector3f::AxisZ * cameraRotate;
@@ -90,14 +90,18 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 
 	if (input.IsHeld(strSelect))
 	{
-		using CameraQuery = ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>;
+		using CameraQuery = ecs::query
+			::Include<
+			const eng::ActiveComponent, 
+			const eng::CameraComponent, 
+			const eng::TransformComponent>;
 		for (auto&& cameraView : world.Query<CameraQuery>())
 		{
-			const auto& cameraProjection = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+			const auto& cameraProjection = cameraView.ReadRequired<eng::CameraComponent>();
 			const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 			const Plane3f plane = Plane3f(Vector3f::AxisY, Vector3f::Zero);
-			const Ray3f ray = eng::camera::ScreenToRay(
+			const Ray3f ray = eng::ScreenToRay(
 				cameraProjection,
 				cameraTransform,
 				*window,

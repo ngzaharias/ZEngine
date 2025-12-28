@@ -14,16 +14,13 @@ namespace eng
 	class AssetManager;
 	class InputManager;
 	class WindowManager;
+	struct ActiveComponent;
+	struct CameraComponent;
+	struct EditorComponent;
 	struct LinesSingleton;
 	struct SpriteComponent;
 	struct TransformComponent;
 	struct VisibilityComponent;
-}
-
-namespace eng::camera
-{
-	struct EditorComponent;
-	struct ProjectionComponent;
 }
 
 namespace eng::settings
@@ -43,8 +40,9 @@ namespace editor
 			eng::LinesSingleton>
 			::Read<
 			eng::AssetManager,
-			eng::camera::EditorComponent,
-			eng::camera::ProjectionComponent,
+			eng::ActiveComponent,
+			eng::CameraComponent,
+			eng::EditorComponent,
 			eng::settings::DebugSingleton,
 			eng::SpriteComponent,
 			eng::TransformComponent,

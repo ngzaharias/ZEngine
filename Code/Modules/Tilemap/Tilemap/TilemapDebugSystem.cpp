@@ -4,9 +4,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/CameraEditorComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
@@ -31,16 +30,13 @@ void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 		return;
 
 	using CameraQuery = ecs::query
-		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
-		::Optional<const eng::camera::EditorComponent>;
+		::Include<
+		const eng::ActiveComponent,
+		const eng::CameraComponent,
+		const eng::TransformComponent>;
 	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
-		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = cameraView.HasOptional<eng::camera::EditorComponent>();
-		if (isEditorActive != isEditorCamera)
-			continue;
-
-		const auto& cameraProjection = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraProjection = cameraView.ReadRequired<eng::CameraComponent>();
 		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
 		using GridQuery = ecs::query
@@ -55,7 +51,7 @@ void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 			const Vector3f normal = Vector3f::AxisZ * rotate;
 
 			const Plane3f plane = Plane3f(normal, gridTransform.m_Translate);
-			const Ray3f ray = eng::camera::ScreenToRay(
+			const Ray3f ray = eng::ScreenToRay(
 				cameraProjection,
 				cameraTransform,
 				*window,

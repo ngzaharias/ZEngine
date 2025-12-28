@@ -7,9 +7,8 @@
 #include "ECS/WorldView.h"
 #include "Editor/SettingsLocalSingleton.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraEditorComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/TransformComponent.h"
@@ -121,15 +120,15 @@ void editor::RenderAxesSystem::Update(World& world, const GameTime& gameTime)
 
 		using Query = ecs::query
 			::Include<
-			const eng::camera::EditorComponent,
-			const eng::camera::ProjectionComponent,
+			const eng::ActiveComponent,
+			const eng::CameraComponent,
 			const eng::TransformComponent>;
 		for (auto&& view : world.Query<Query>())
 		{
-			const auto& cameraComponent = view.ReadRequired<eng::camera::ProjectionComponent>();
+			const auto& cameraComponent = view.ReadRequired<eng::CameraComponent>();
 			const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
-			const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraComponent.m_Projection, windowSize);
+			const Matrix4x4 cameraProj = eng::GetProjection(cameraComponent.m_Projection, windowSize);
 			const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 			if (shader->u_CameraProj)

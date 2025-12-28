@@ -1,8 +1,8 @@
 m_Guid = "547bef2699ee41ea99cf83d1f39ee548"
 m_Name = "Camera"
 
-['eng::camera::Move3DComponent']
-['eng::camera::ProjectionComponent']
+['camera::Move3DComponent']
+['eng::CameraComponent']
 
 ['eng::TransformComponent']
 m_Translate = { X = 360.0, Y = 617.0, Z = -505.0 }

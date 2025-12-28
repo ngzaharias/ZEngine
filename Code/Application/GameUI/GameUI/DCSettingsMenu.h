@@ -6,6 +6,11 @@
 #include <NsApp/DelegateCommand.h>
 #include <NsGui/BaseCommand.h>
 
+namespace camera
+{
+	struct SettingsSingleton;
+}
+
 namespace eng
 {
 	class ThemeTable;
@@ -15,7 +20,6 @@ namespace eng
 namespace eng::settings
 {
 	struct AudioSingleton;
-	struct CameraSingleton;
 	struct GameplaySingleton;
 	struct WindowSingleton;
 }
@@ -42,8 +46,8 @@ namespace gui
 	public:
 		using World = ecs::WorldView
 			::Read<
+			camera::SettingsSingleton,
 			eng::settings::AudioSingleton,
-			eng::settings::CameraSingleton,
 			eng::settings::GameplaySingleton,
 			eng::settings::WindowSingleton,
 			eng::ThemeTable,

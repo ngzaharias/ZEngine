@@ -1,7 +1,7 @@
 m_Guid = "5faa6f80407d40c89404c58b5caf4d95"
 m_Name = "Camera"
 
-['eng::camera::ProjectionComponent'.m_Projection.Orthographic]
+['eng::CameraComponent'.m_Projection.Orthographic]
 m_ClippingFar = 1e+05
 m_ClippingNear = 30.0
 m_Size = 2600.0

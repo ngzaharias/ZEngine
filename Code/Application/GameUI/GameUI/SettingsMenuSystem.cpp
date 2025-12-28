@@ -1,12 +1,12 @@
 #include "GameUIPCH.h"
 #include "GameUI/SettingsMenuSystem.h"
 
+#include "Camera/CameraSettingsSingleton.h"
 #include "Core/Name.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/SettingsAudioSingleton.h"
-#include "Engine/SettingsCameraSingleton.h"
 #include "Engine/SettingsGameplaySingleton.h"
 #include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/SettingsWindowSingleton.h"
@@ -67,11 +67,11 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 
 		// gameplay
 		if (eventData.m_MoveSpeed)
-			world.WriteSingleton<eng::settings::CameraSingleton>().m_TranslateSpeed = *eventData.m_MoveSpeed;
+			world.WriteSingleton<camera::SettingsSingleton>().m_TranslateSpeed = *eventData.m_MoveSpeed;
 		if (eventData.m_ZoomRate)
-			world.WriteSingleton<eng::settings::CameraSingleton>().m_ZoomAmount = *eventData.m_ZoomRate;
+			world.WriteSingleton<camera::SettingsSingleton>().m_ZoomAmount = *eventData.m_ZoomRate;
 		if (eventData.m_ZoomSpeed)
-			world.WriteSingleton<eng::settings::CameraSingleton>().m_ZoomSpeed = *eventData.m_ZoomSpeed;
+			world.WriteSingleton<camera::SettingsSingleton>().m_ZoomSpeed = *eventData.m_ZoomSpeed;
 		if (eventData.m_Theme)
 			world.WriteSingleton<eng::settings::GameplaySingleton>().m_Theme = *eventData.m_Theme;
 

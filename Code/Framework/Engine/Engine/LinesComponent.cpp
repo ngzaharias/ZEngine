@@ -299,12 +299,12 @@ void eng::LinesSingleton::AddCircle(const Vector3f& translate, const Circle2f& c
 	AddLine(pointA, pointB, colour);
 }
 
-void eng::LinesSingleton::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Projection& projection, const Vector2u& size, const Colour& colour)
+void eng::LinesSingleton::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::Projection& projection, const Vector2u& size, const Colour& colour)
 {
 	std::visit([&](auto projection) { AddFrustrum(translate, rotate, projection, size, colour); }, projection);
 }
 
-void eng::LinesSingleton::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Orthographic& projection, const Vector2u& size, const Colour& colour)
+void eng::LinesSingleton::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::Orthographic& projection, const Vector2u& size, const Colour& colour)
 {
 	// #todo: pass in width & height
 	const float aspect = (float)size.x / (float)size.y;
@@ -344,7 +344,7 @@ void eng::LinesSingleton::AddFrustrum(const Vector3f& translate, const Rotator& 
 	AddLine(corners[3], corners[7], colour);
 }
 
-void eng::LinesSingleton::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::camera::Perspective& projection, const Vector2u& size, const Colour& colour)
+void eng::LinesSingleton::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::Perspective& projection, const Vector2u& size, const Colour& colour)
 {
 	// #todo: pass in width & height
 	const float ratio = (float)size.x / (float)size.y;

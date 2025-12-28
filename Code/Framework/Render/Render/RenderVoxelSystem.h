@@ -7,14 +7,10 @@ namespace eng
 {
 	class AssetManager;
 	class WindowManager;
+	struct ActiveComponent;
+	struct CameraComponent;
 	struct TransformComponent;
 	struct DynamicMeshComponent;
-}
-
-namespace eng::camera
-{
-	struct EditorComponent;
-	struct ProjectionComponent;
 }
 
 namespace eng::settings
@@ -43,8 +39,8 @@ namespace render
 			//eng::AssetManager,
 			render::OpaqueComponent>
 			::Read<
-			eng::camera::EditorComponent,
-			eng::camera::ProjectionComponent,
+			eng::ActiveComponent,
+			eng::CameraComponent,
 			eng::DynamicMeshComponent,
 			eng::settings::DebugSingleton,
 			eng::TransformComponent,

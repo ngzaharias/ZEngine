@@ -2,7 +2,7 @@
 
 #include "ECS/Component.h"
 
-namespace eng::camera
+namespace camera
 {
 	/// \brief
 	struct Move2DComponent final : public ecs::Component<Move2DComponent>

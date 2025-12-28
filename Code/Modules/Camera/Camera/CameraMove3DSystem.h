@@ -3,32 +3,32 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace camera
+{
+	struct Move3DComponent;
+	struct SettingsSingleton;
+}
+
 namespace eng
 {
 	class InputManager;
-	class WindowManager;
 	struct CameraComponent;
-	struct LinesSingleton;
-	struct NameComponent;
 	struct TransformComponent;
 }
 
-namespace drag
+namespace camera
 {
-	struct SelectionComponent;
-
-	class MovementSystem final : public ecs::System
+	class Move3DSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::LinesSingleton,
 			eng::TransformComponent>
 			::Read<
-			drag::SelectionComponent,
+			camera::Move3DComponent,
+			camera::SettingsSingleton,
 			eng::CameraComponent,
-			eng::InputManager,
-			eng::WindowManager>;
+			eng::InputManager>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

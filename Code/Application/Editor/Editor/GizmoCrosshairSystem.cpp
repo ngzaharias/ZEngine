@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Editor/SettingsLocalSingleton.h"
-#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Math/Quaternion.h"
@@ -21,7 +21,13 @@ void editor::gizmo::CrosshairSystem::Update(World& world, const GameTime& gameTi
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
 		return;
 
-	for (auto&& view : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+	using Query = ecs::query
+		::Include<
+		const eng::ActiveComponent,
+		const eng::CameraComponent,
+		const eng::TransformComponent>;
+
+	for (auto&& view : world.Query<Query>())
 	{
 		const auto& transform = view.ReadRequired<eng::TransformComponent>();
 

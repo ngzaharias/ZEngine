@@ -7,12 +7,9 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
+	struct ActiveComponent;
+	struct CameraComponent;
 	struct TransformComponent;
-}
-
-namespace eng::camera
-{
-	struct ProjectionComponent;
 }
 
 namespace hexmap
@@ -30,7 +27,8 @@ namespace hexmap
 			::Write<
 			hexmap::LayerComponent>
 			::Read<
-			eng::camera::ProjectionComponent,
+			eng::ActiveComponent,
+			eng::CameraComponent,
 			eng::InputManager,
 			eng::TransformComponent,
 			eng::WindowManager,

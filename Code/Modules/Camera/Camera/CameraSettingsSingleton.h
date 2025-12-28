@@ -2,12 +2,11 @@
 
 #include "ECS/Singleton.h"
 #include "Math/Rotator.h"
-#include "Math/Vector.h"
 
-namespace eng::settings
+namespace camera
 {
 	/// \brief Shared camera settings for all local users that is saved to a config file.
-	struct CameraSingleton final : public ecs::Singleton<CameraSingleton>
+	struct SettingsSingleton final : public ecs::Singleton<SettingsSingleton>
 	{
 		Rotator m_RotateSpeed = Rotator(0.2f);
 		float m_TranslateSpeed = 1000.f;

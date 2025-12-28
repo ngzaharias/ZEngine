@@ -4,7 +4,7 @@
 #include "Math/Math.h"
 #include "Math/Vector.h"
 
-namespace eng::camera
+namespace camera
 {
 	/// \brief
 	struct Bound2DComponent final : public ecs::Component<Bound2DComponent>

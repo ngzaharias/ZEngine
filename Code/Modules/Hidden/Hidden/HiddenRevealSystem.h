@@ -13,15 +13,12 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
+	struct ActiveComponent;
+	struct CameraComponent;
 	struct LinesSingleton;
 	struct PhysicsSceneSingleton;
 	struct RigidStaticComponent;
 	struct TransformComponent;
-}
-
-namespace eng::camera
-{
-	struct ProjectionComponent;
 }
 
 namespace hidden
@@ -46,7 +43,8 @@ namespace hidden
 			eng::RigidStaticComponent,
 			hidden::RevealComponent>
 			::Read<
-			eng::camera::ProjectionComponent,
+			eng::ActiveComponent,
+			eng::CameraComponent,
 			eng::InputManager,
 			eng::PhysicsSceneSingleton,
 			eng::TransformComponent,

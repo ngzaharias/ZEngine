@@ -1,5 +1,5 @@
-#include "EnginePCH.h"
-#include "Engine/CameraBound2DComponent.h"
+#include "CameraPCH.h"
+#include "Camera/CameraBound2DComponent.h"
 
 #include "Engine/Visitor.h"
 #include "imgui/Inspector.h"
@@ -11,19 +11,19 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::camera::Bound2DComponent& value) const
+void eng::Visitor::ReadCustom(camera::Bound2DComponent& value) const
 {
 	Read(strMax, value.m_Max, value.m_Max);
 	Read(strMin, value.m_Min, value.m_Min);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::camera::Bound2DComponent& value) 
+void eng::Visitor::WriteCustom(const camera::Bound2DComponent& value) 
 { 
 	Write(strMax, value.m_Max);
 	Write(strMin, value.m_Min);
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::camera::Bound2DComponent& value)
+bool imgui::Inspector::WriteCustom(camera::Bound2DComponent& value)
 {
 	bool result = false;
 	result |= Write("m_Max", value.m_Max);

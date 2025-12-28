@@ -6,9 +6,8 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraEditorComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/ColourHelpers.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/ShaderAsset.h"
@@ -93,19 +92,16 @@ void hexmap::RenderSystem::Update(World& world, const GameTime& gameTime)
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 
 	using CameraQuery = ecs::query
-		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
-		::Optional<const eng::camera::EditorComponent>;
+		::Include<
+		const eng::ActiveComponent,
+		const eng::CameraComponent,
+		const eng::TransformComponent>;
 	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
-		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = cameraView.HasOptional<eng::camera::EditorComponent>();
-		if (isEditorActive != isEditorCamera)
-			continue;
-
-		const auto& cameraComponent = cameraView.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraComponent = cameraView.ReadRequired<eng::CameraComponent>();
 		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 
-		const Matrix4x4 cameraProj = eng::camera::GetProjection(cameraComponent.m_Projection, windowSize);
+		const Matrix4x4 cameraProj = eng::GetProjection(cameraComponent.m_Projection, windowSize);
 		const Matrix4x4 cameraView = cameraTransform.ToTransform().Inversed();
 
 		Array<Matrix4x4> m_Models;

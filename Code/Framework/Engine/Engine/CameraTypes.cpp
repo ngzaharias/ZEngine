@@ -14,19 +14,19 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::camera::Cinematic& value) const
+void eng::Visitor::ReadCustom(eng::Cinematic& value) const
 {
 	Read(strClippingNear, value.m_ClippingNear, value.m_ClippingNear);
 	Read(strClippingFar, value.m_ClippingFar, value.m_ClippingFar);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::camera::Cinematic& value)
+void eng::Visitor::WriteCustom(const eng::Cinematic& value)
 {
 	Write(strClippingNear, value.m_ClippingNear);
 	Write(strClippingFar, value.m_ClippingFar);
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::camera::Cinematic& value)
+bool imgui::Inspector::WriteCustom(eng::Cinematic& value)
 {
 	bool result = false;
 	result |= Write("m_ClippingNear", value.m_ClippingNear);
@@ -35,21 +35,21 @@ bool imgui::Inspector::WriteCustom(eng::camera::Cinematic& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::camera::Orthographic& value) const
+void eng::Visitor::ReadCustom(eng::Orthographic& value) const
 {
 	Read(strClippingNear, value.m_ClippingNear, value.m_ClippingNear);
 	Read(strClippingFar, value.m_ClippingFar, value.m_ClippingFar);
 	Read(strSize, value.m_Size, value.m_Size);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::camera::Orthographic& value)
+void eng::Visitor::WriteCustom(const eng::Orthographic& value)
 {
 	Write(strClippingNear, value.m_ClippingNear);
 	Write(strClippingFar, value.m_ClippingFar);
 	Write(strSize, value.m_Size);
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::camera::Orthographic& value)
+bool imgui::Inspector::WriteCustom(eng::Orthographic& value)
 {
 	bool result = false;
 	result |= Write("m_ClippingNear", value.m_ClippingNear);
@@ -59,7 +59,7 @@ bool imgui::Inspector::WriteCustom(eng::camera::Orthographic& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::camera::Perspective& value) const
+void eng::Visitor::ReadCustom(eng::Perspective& value) const
 {
 	Read(strClippingNear, value.m_ClippingNear, value.m_ClippingNear);
 	Read(strClippingFar, value.m_ClippingFar, value.m_ClippingFar);
@@ -67,7 +67,7 @@ void eng::Visitor::ReadCustom(eng::camera::Perspective& value) const
 	Read(strFoVAxis, value.m_FoVAxis, value.m_FoVAxis);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::camera::Perspective& value)
+void eng::Visitor::WriteCustom(const eng::Perspective& value)
 {
 	Write(strClippingNear, value.m_ClippingNear);
 	Write(strClippingFar, value.m_ClippingFar);
@@ -75,7 +75,7 @@ void eng::Visitor::WriteCustom(const eng::camera::Perspective& value)
 	Write(strFoVAxis, value.m_FoVAxis);
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::camera::Perspective& value)
+bool imgui::Inspector::WriteCustom(eng::Perspective& value)
 {
 	bool result = false;
 	result |= Write("m_ClippingNear", value.m_ClippingNear);
@@ -86,15 +86,15 @@ bool imgui::Inspector::WriteCustom(eng::camera::Perspective& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::camera::UserInterface& value) const
+void eng::Visitor::ReadCustom(eng::UserInterface& value) const
 {
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::camera::UserInterface& value)
+void eng::Visitor::WriteCustom(const eng::UserInterface& value)
 {
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::camera::UserInterface& value)
+bool imgui::Inspector::WriteCustom(eng::UserInterface& value)
 {
 	return false;
 }

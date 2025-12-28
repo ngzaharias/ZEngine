@@ -7,8 +7,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/TextComponent.h"
@@ -97,9 +97,9 @@ namespace
 		return segment.m_PointB;
 	}
 
-	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::camera::ProjectionComponent& camera, const eng::TransformComponent& transform)
+	Vector3f ToMouseDirection(const Vector3f& mousePosition, const eng::CameraComponent& camera, const eng::TransformComponent& transform)
 	{
-		if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
+		if (std::holds_alternative<eng::Orthographic>(camera.m_Projection))
 		{
 			const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
 			return Vector3f::AxisZ * cameraRotate;
@@ -151,14 +151,21 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-	for (auto&& view : world.Query<ecs::query::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>>())
+	using Query = ecs::query
+		::Include<
+		const eng::ActiveComponent,
+		const eng::CameraComponent,
+		const eng::TransformComponent>
+		::Exclude<
+		const eng::EditorComponent>;
+	for (auto&& view : world.Query<Query>())
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
-		const auto& cameraProjection = view.ReadRequired<eng::camera::ProjectionComponent>();
+		const auto& cameraProjection = view.ReadRequired<eng::CameraComponent>();
 		const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 		constexpr float s_Distance = 100000.f;
-		const Ray3f ray = eng::camera::ScreenToRay(
+		const Ray3f ray = eng::ScreenToRay(
 			cameraProjection,
 			cameraTransform,
 			*window,

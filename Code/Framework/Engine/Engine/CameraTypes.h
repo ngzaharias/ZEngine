@@ -4,7 +4,7 @@
 #include "Math/Math.h"
 #include "Math/Vector.h"
 
-namespace eng::camera
+namespace eng
 {
 	enum class EAxis
 	{

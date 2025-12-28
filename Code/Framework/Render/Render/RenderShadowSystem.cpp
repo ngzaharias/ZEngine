@@ -6,9 +6,8 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraEditorComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/CameraProjectionComponent.h"
 #include "Engine/ColourHelpers.h"
 #include "Engine/FrameBufferSingleton.h"
 #include "Engine/LightAmbientComponent.h"
@@ -109,15 +108,12 @@ void render::ShadowSystem::Update(World& world, const GameTime& gameTime)
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 
 	using CameraQuery = ecs::query
-		::Include<const eng::camera::ProjectionComponent, const eng::TransformComponent>
-		::Optional<const eng::camera::EditorComponent>;
+		::Include<
+		const eng::ActiveComponent,
+		const eng::CameraComponent,
+		const eng::TransformComponent>;
 	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
-		const bool isEditorActive = debugSettings.m_IsEditorModeEnabled;
-		const bool isEditorCamera = cameraView.HasOptional<eng::camera::EditorComponent>();
-		if (isEditorActive != isEditorCamera)
-			continue;
-
 		const auto& cameraTransform = cameraView.ReadRequired<eng::TransformComponent>();
 		const Matrix3x3 cameraRotate = Matrix3x3::FromRotate(cameraTransform.m_Rotate);
 		const Vector3f cameraFoward = Vector3f::AxisZ * cameraRotate;
@@ -131,7 +127,7 @@ void render::ShadowSystem::Update(World& world, const GameTime& gameTime)
 			const auto& lightComponent = lightView.ReadRequired<eng::light::DirectionalComponent>();
 			const auto& lightTransform = lightView.ReadRequired<eng::TransformComponent>();
 
-			eng::camera::Orthographic orthographic;
+			eng::Orthographic orthographic;
 
 			const float distForward = math::Lerp(orthographic.m_ClippingNear, orthographic.m_ClippingFar, 0.5f);
 			const Matrix3x3 lightRotate = Matrix3x3::FromRotate(lightTransform.m_Rotate);
@@ -140,7 +136,7 @@ void render::ShadowSystem::Update(World& world, const GameTime& gameTime)
 			const Vector3f offset = (cameraFoward * 1000.f) + (-lightFoward * distForward);
 			const Vector3f translate = cameraTransform.m_Translate + offset;
 
-			const Matrix4x4 lightProj = eng::camera::GetProjection(orthographic, bufferComponent.m_ShadowSize);
+			const Matrix4x4 lightProj = eng::GetProjection(orthographic, bufferComponent.m_ShadowSize);
 			const Matrix4x4 lightView = lightTransform.ToTransform().Inversed();
 
 			Array<render::BatchId> ids;

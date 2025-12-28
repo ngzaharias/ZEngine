@@ -2,11 +2,13 @@
 #include "Engine/CameraHelpers.h"
 
 #include "Core/Assert.h"
-#include "Engine/CameraProjectionComponent.h"
+#include "Engine/CameraComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Math/Math.h"
 #include "Math/Matrix.h"
+#include "Math/Ray.h"
+#include "Math/Vector.h"
 
 #include <algorithm>
 
@@ -16,20 +18,20 @@
 // http://learnwebgl.brown37.net/08_projections/projections_ortho.html
 // http://learnwebgl.brown37.net/08_projections/projections_perspective.html
 
-Matrix4x4 eng::camera::GetProjection(const Projection& value, const Vector2u& windowSize)
+Matrix4x4 eng::GetProjection(const eng::Projection& value, const Vector2u& windowSize)
 {
 	Matrix4x4 projection = Matrix4x4::Identity;
 	std::visit([&](auto data) { projection = GetProjection(data, windowSize); }, value);
 	return projection;
 }
 
-Matrix4x4 eng::camera::GetProjection(const Cinematic& settings, const Vector2u& windowSize)
+Matrix4x4 eng::GetProjection(const eng::Cinematic& settings, const Vector2u& windowSize)
 {
 	Z_PANIC(false, "");
 	return Matrix4x4::Identity;
 }
 
-Matrix4x4 eng::camera::GetProjection(const Orthographic& settings, const Vector2u& windowSize)
+Matrix4x4 eng::GetProjection(const eng::Orthographic& settings, const Vector2u& windowSize)
 {
 	const float aspect = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
 	const float near = math::Max(settings.m_ClippingNear, 0.1f);
@@ -53,7 +55,7 @@ Matrix4x4 eng::camera::GetProjection(const Orthographic& settings, const Vector2
 #endif
 }
 
-Matrix4x4 eng::camera::GetProjection(const Perspective& settings, const Vector2u& windowSize)
+Matrix4x4 eng::GetProjection(const eng::Perspective& settings, const Vector2u& windowSize)
 {
 	const float aspect = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
 	const float near = math::Max(settings.m_ClippingNear, 0.1f);
@@ -82,7 +84,7 @@ Matrix4x4 eng::camera::GetProjection(const Perspective& settings, const Vector2u
 #endif
 }
 
-Matrix4x4 eng::camera::GetProjection(const UserInterface& settings, const Vector2u& windowSize)
+Matrix4x4 eng::GetProjection(const eng::UserInterface& settings, const Vector2u& windowSize)
 {
 	const float right = (float)windowSize.x;
 	const float bottom = (float)windowSize.y;
@@ -107,12 +109,12 @@ Matrix4x4 eng::camera::GetProjection(const UserInterface& settings, const Vector
 #endif
 }
 
-Vector3f eng::camera::ScreenToDirection(
-	const Projection& projection,
+Vector3f eng::ScreenToDirection(
+	const eng::Projection& projection,
 	const Matrix4x4& transform, 
 	const Vector3f& screenPos)
 {
-	if (std::holds_alternative<eng::camera::Orthographic>(projection))
+	if (std::holds_alternative<eng::Orthographic>(projection))
 	{
 		const Quaternion cameraRotate = Quaternion::FromMatrix(transform);
 		return Vector3f::AxisZ * cameraRotate;
@@ -122,12 +124,12 @@ Vector3f eng::camera::ScreenToDirection(
 	return (screenPos - translate).Normalized();
 }
 
-Vector3f eng::camera::ScreenToDirection(
-	const eng::camera::ProjectionComponent& camera, 
+Vector3f eng::ScreenToDirection(
+	const eng::CameraComponent& camera, 
 	const eng::TransformComponent& transform, 
 	const Vector3f& screenPos)
 {
-	if (std::holds_alternative<eng::camera::Orthographic>(camera.m_Projection))
+	if (std::holds_alternative<eng::Orthographic>(camera.m_Projection))
 	{
 		const Quaternion cameraRotate = Quaternion::FromRotator(transform.m_Rotate);
 		return Vector3f::AxisZ * cameraRotate;
@@ -136,20 +138,20 @@ Vector3f eng::camera::ScreenToDirection(
 	return (screenPos - transform.m_Translate).Normalized();
 }
 
-Ray3f eng::camera::ScreenToRay(
-	const Projection& projection,
+Ray3f eng::ScreenToRay(
+	const eng::Projection& projection,
 	const Matrix4x4& transform,
 	const Vector2u& windowSize,
 	const Vector2f& pixelPos)
 {
 	Ray3f ray;
-	ray.m_Position = eng::camera::ScreenToWorld(projection, transform, windowSize, pixelPos);
-	ray.m_Direction = eng::camera::ScreenToDirection(projection, transform, ray.m_Position);
+	ray.m_Position = eng::ScreenToWorld(projection, transform, windowSize, pixelPos);
+	ray.m_Direction = eng::ScreenToDirection(projection, transform, ray.m_Position);
 	return ray;
 }
 
-Ray3f eng::camera::ScreenToRay(
-	const eng::camera::ProjectionComponent& camera,
+Ray3f eng::ScreenToRay(
+	const eng::CameraComponent& camera,
 	const eng::TransformComponent& transform,
 	const eng::Window& window,
 	const Vector2f& pixelPos)
@@ -158,13 +160,13 @@ Ray3f eng::camera::ScreenToRay(
 	const Vector2u& windowSize = window.GetSize();
 
 	Ray3f ray;
-	ray.m_Position = eng::camera::ScreenToWorld(camera.m_Projection, cameraView, windowSize, pixelPos);
-	ray.m_Direction = eng::camera::ScreenToDirection(camera, transform, ray.m_Position);
+	ray.m_Position = eng::ScreenToWorld(camera.m_Projection, cameraView, windowSize, pixelPos);
+	ray.m_Direction = eng::ScreenToDirection(camera, transform, ray.m_Position);
 	return ray;
 }
 
-Vector3f eng::camera::ScreenToWorld(
-	const Projection& projection, 
+Vector3f eng::ScreenToWorld(
+	const eng::Projection& projection,
 	const Matrix4x4& transform, 
 	const Vector2u& windowSize, 
 	const Vector2f& pixelPos)
@@ -172,8 +174,8 @@ Vector3f eng::camera::ScreenToWorld(
 	return ScreenToWorld(projection, transform, windowSize, pixelPos, 0.f);
 }
 
-Vector3f eng::camera::ScreenToWorld(
-	const Projection& projection, 
+Vector3f eng::ScreenToWorld(
+	const eng::Projection& projection,
 	const Matrix4x4& transform, 
 	const Vector2u& windowSize, 
 	const Vector2f& pixelPos, 
@@ -201,8 +203,8 @@ Vector3f eng::camera::ScreenToWorld(
 	return localPos * transform;
 }
 
-Vector3f eng::camera::ScreenToWorld(
-	const eng::camera::ProjectionComponent& camera,
+Vector3f eng::ScreenToWorld(
+	const eng::CameraComponent& camera,
 	const eng::TransformComponent& transform,
 	const eng::Window& window,
 	const Vector2f& pixelPos)
@@ -210,8 +212,8 @@ Vector3f eng::camera::ScreenToWorld(
 	return ScreenToWorld(camera.m_Projection, transform.ToTransform(), window.GetSize(), pixelPos, 0.f);
 }
 
-Vector3f eng::camera::ScreenToWorld(
-	const eng::camera::ProjectionComponent& camera,
+Vector3f eng::ScreenToWorld(
+	const eng::CameraComponent& camera,
 	const eng::TransformComponent& transform,
 	const eng::Window& window,
 	const Vector2f& pixelPos,

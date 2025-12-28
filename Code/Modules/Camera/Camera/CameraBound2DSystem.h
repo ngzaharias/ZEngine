@@ -3,17 +3,20 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace camera
+{
+	struct Bound2DComponent;
+}
+
 namespace eng
 {
 	class WindowManager;
+	struct CameraComponent;
 	struct TransformComponent;
 }
 
-namespace eng::camera
+namespace camera
 {
-	struct Bound2DComponent;
-	struct ProjectionComponent;
-
 	class Bound2DSystem final : public ecs::System
 	{
 	public:
@@ -21,8 +24,8 @@ namespace eng::camera
 			::Write<
 			eng::TransformComponent>
 			::Read<
-			eng::camera::Bound2DComponent,
-			eng::camera::ProjectionComponent,
+			camera::Bound2DComponent,
+			eng::CameraComponent,
 			eng::WindowManager>;
 
 		void Update(World& world, const GameTime& gameTime);

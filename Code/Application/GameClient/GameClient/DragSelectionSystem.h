@@ -18,14 +18,11 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
+	struct ActiveComponent;
+	struct CameraComponent;
 	struct LinesSingleton;
 	struct PhysicsSceneSingleton;
 	struct TransformComponent;
-}
-
-namespace eng::camera
-{
-	struct ProjectionComponent;
 }
 
 namespace drag
@@ -40,7 +37,8 @@ namespace drag
 			eng::LinesSingleton>
 			::Read<
 			drag::IsSelectableComponent,
-			eng::camera::ProjectionComponent,
+			eng::ActiveComponent,
+			eng::CameraComponent,
 			eng::InputManager,
 			eng::PhysicsSceneSingleton,
 			eng::TransformComponent,

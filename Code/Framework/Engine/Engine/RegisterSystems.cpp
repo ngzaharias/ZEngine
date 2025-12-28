@@ -4,11 +4,6 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetSystem.h"
-#include "Engine/CameraBound2DSystem.h"
-#include "Engine/CameraMove2DSystem.h"
-#include "Engine/CameraMove3DSystem.h"
-#include "Engine/CameraPanningSystem.h"
-#include "Engine/CameraZoom2DSystem.h"
 #include "Engine/FlipbookPlaySystem.h"
 #include "Engine/LevelLoadSystem.h"
 #include "Engine/MusicSystem.h"
@@ -27,11 +22,6 @@
 void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterSystem<eng::AssetSystem>();
-	entityWorld.RegisterSystem<eng::camera::Bound2DSystem>();
-	entityWorld.RegisterSystem<eng::camera::Move2DSystem>();
-	entityWorld.RegisterSystem<eng::camera::Move3DSystem>();
-	entityWorld.RegisterSystem<eng::camera::PanningSystem>();
-	entityWorld.RegisterSystem<eng::camera::Zoom2DSystem>();
 	entityWorld.RegisterSystem<eng::FlipbookPlaySystem>();
 	entityWorld.RegisterSystem<eng::MusicSystem>();
 	entityWorld.RegisterSystem<eng::network::NetworkSystem>();

@@ -8,13 +8,10 @@
 
 namespace eng
 {
+	struct ActiveComponent;
+	struct CameraComponent;
 	struct LinesSingleton;
 	struct TransformComponent;
-}
-
-namespace eng::camera
-{
-	struct  ProjectionComponent;
 }
 
 namespace editor::settings
@@ -32,7 +29,7 @@ namespace editor::gizmo
 			eng::LinesSingleton>
 			::Read<
 			editor::settings::LocalSingleton,
-			eng::camera::ProjectionComponent,
+			eng::CameraComponent,
 			eng::TransformComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

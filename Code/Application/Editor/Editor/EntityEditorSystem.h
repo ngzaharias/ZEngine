@@ -26,15 +26,11 @@ namespace eng
 {
 	class AssetManager;
 	class InputManager;
+	struct CameraComponent;
 	struct PhysicsComponent;
 	struct PrototypeComponent;
 	struct SpriteComponent;
 	struct TransformComponent;
-}
-
-namespace eng::camera
-{
-	struct ProjectionComponent;
 }
 
 namespace eng::level

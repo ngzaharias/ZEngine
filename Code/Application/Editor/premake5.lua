@@ -58,6 +58,7 @@ project "Editor"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Framework/Render/",
+		"%{wks.location}/../Code/Modules/Camera/",
 		"%{wks.location}/../Code/Modules/Container/",
 		"%{wks.location}/../Code/Modules/Hexmap/",
 		"%{wks.location}/../Code/Modules/Hidden/",
@@ -112,6 +113,7 @@ project "Editor"
 		"Render",
 		"Steam",
 
+		"Camera",
 		"Container",
 		"Hexmap",
 		"Hidden",
