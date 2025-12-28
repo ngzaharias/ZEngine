@@ -41,23 +41,3 @@ project "GameDebug"
 		"%{wks.location}/../Code/Modules/Tabletop/",
 		"%{wks.location}/../Code/Modules/Voxel/",
 	}
-
-	links 
-	{ 
-		"Core", 
-		"Engine", 
-		"GameClient", 
-		"GameServer", 
-		"GameShared", 
-		"GameUI", 
-		"Imgui", 
-		"Math", 
-		"Network",
-
-		"Container",
-		"Hexmap",
-		"Hidden",
-		"Softbody",
-		"Tabletop",
-		"Voxel",
-	}

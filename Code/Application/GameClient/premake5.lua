@@ -44,16 +44,3 @@ project "GameClient"
 		"%{wks.location}/../Code/Modules/Tilemap/",
 		"%{wks.location}/../Code/Modules/Voxel/",
 	}
-
-	links 
-	{ 
-		"Camera", 
-		"Core", 
-		"ECS", 
-		"Engine", 
-		"GameShared", 
-		"Imgui", 
-		"Math", 
-		"Network",
-		"Render",
-	}

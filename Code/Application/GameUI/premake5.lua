@@ -30,14 +30,3 @@ project "GameUI"
 		"%{wks.location}/../Code/Modules/Camera/",
 		"%{wks.location}/../Code/Modules/Hidden/",
 	}
-
-	links 
-	{ 
-		"Camera", 
-		"Core", 
-		"ECS", 
-		"Engine", 
-		"GameClient", 
-		"Imgui", 
-		"Math",
-	}

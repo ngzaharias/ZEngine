@@ -27,13 +27,3 @@ project "GameServer"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Network/",
 	}
-
-	links 
-	{ 
-		"Core", 
-		"ECS", 
-		"Engine", 
-		"GameShared", 
-		"Math", 
-		"Network" 
-	}
