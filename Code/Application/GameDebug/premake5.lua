@@ -40,4 +40,5 @@ project "GameDebug"
 		"%{wks.location}/../Code/Modules/Softbody/",
 		"%{wks.location}/../Code/Modules/Tabletop/",
 		"%{wks.location}/../Code/Modules/Voxel/",
+		"%{wks.location}/../Code/Tools/SpriteEditor/",
 	}

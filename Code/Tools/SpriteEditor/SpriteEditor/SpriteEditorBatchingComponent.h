@@ -4,9 +4,9 @@
 #include "ECS/Component.h"
 #include "Math/Vector.h"
 
-namespace editor
+namespace editor::sprite
 {
-	struct SpriteBatchingComponent final : public ecs::Component<SpriteBatchingComponent>
+	struct BatchingComponent final : public ecs::Component<BatchingComponent>
 	{
 		/// \brief How many iterations are done along X and Y.
 		/// X is iterated again for each iteration of Y.

@@ -1,6 +1,6 @@
 project "Container_ut"
 	kind "ConsoleApp"
-	location "%{wks.location}/Application/Container_ut"
+	location "%{wks.location}/Modules/Container_ut"
 
 	defines { "Z_UNIT_TEST" }
 

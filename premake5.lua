@@ -74,6 +74,11 @@ workspace "ZEngine"
 		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.h",
 		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.cpp",
 		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.inl",
+		"%{wks.location}/../Code/Tools/%{prj.name}/*.natvis",
+		"%{wks.location}/../Code/Tools/%{prj.name}/premake5.*",
+		"%{wks.location}/../Code/Tools/%{prj.name}/%{prj.name}/**.h",
+		"%{wks.location}/../Code/Tools/%{prj.name}/%{prj.name}/**.cpp",
+		"%{wks.location}/../Code/Tools/%{prj.name}/%{prj.name}/**.inl",
 	}
 
 	vpaths 
@@ -111,7 +116,9 @@ workspace "ZEngine"
 		include "Code/Modules/Tactics/premake5.lua"
 		include "Code/Modules/Tilemap/premake5.lua"
 		include "Code/Modules/Voxel/premake5.lua"
-	group "ut"
+	group "Tools"
+		include "Code/Tools/SpriteEditor/premake5.lua"
+	group "UnitTests"
 		include "Code/Application/GameClient_ut/premake5.lua"
 		include "Code/Framework/Core_ut/premake5.lua"
 		include "Code/Framework/ECS_ut/premake5.lua"

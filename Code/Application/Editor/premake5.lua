@@ -62,6 +62,7 @@ project "Editor"
 		"%{wks.location}/../Code/Modules/Container/",
 		"%{wks.location}/../Code/Modules/Hidden/",
 		"%{wks.location}/../Code/Modules/Softbody/",
+		"%{wks.location}/../Code/Tools/SpriteEditor/",
 	}
 
 	libdirs 
@@ -93,21 +94,27 @@ project "Editor"
 
 	links 
 	{ 
-		"Core",
-		"ECS",
-		"Engine",
+		-- Application
 		"Game",
 		"GameClient",
 		"GameDebug",
 		"GameServer",
 		"GameShared",
 		"GameUI",
+
+		-- Bindings
+		"Steam",
+
+		-- Framework
+		"Core",
+		"ECS",
+		"Engine",
 		"Imgui",
 		"Math",
 		"Network",
 		"Render",
-		"Steam",
 
+		-- Modules
 		"Camera",
 		"Container",
 		"Hexmap",
@@ -118,6 +125,10 @@ project "Editor"
 		"Tilemap",
 		"Voxel",
 
+		-- Tools
+		"SpriteEditor",
+
+		-- 3rdParty
 		"assimp.lib",
 		"freetype.lib",
 		"glew32.lib",

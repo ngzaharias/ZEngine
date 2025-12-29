@@ -36,13 +36,17 @@ namespace editor
 	struct FlipbookWindowRequest;
 	struct InputWindowRequest;
 	struct SettingsWindowRequest;
-	struct SpriteWindowRequest;
 	struct TableWindowRequest;
 	struct TextureWindowRequest;
 	struct TrajectoryWindowRequest;
 }
 
 namespace editor::settings
+{
+	struct WindowRequest;
+}
+
+namespace editor::sprite
 {
 	struct WindowRequest;
 }
@@ -81,7 +85,7 @@ namespace debug
 			editor::FlipbookWindowRequest,
 			editor::InputWindowRequest,
 			editor::settings::WindowRequest,
-			editor::SpriteWindowRequest,
+			editor::sprite::WindowRequest,
 			editor::TableWindowRequest,
 			editor::TextureWindowRequest,
 			editor::TrajectoryWindowRequest,

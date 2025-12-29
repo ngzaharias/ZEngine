@@ -29,13 +29,13 @@
 #include "GameDebug/EditorFlipbookWindowRequest.h"
 #include "GameDebug/EditorInputWindowRequest.h"
 #include "GameDebug/EditorSettingsWindowRequest.h"
-#include "GameDebug/EditorSpriteWindowRequest.h"
 #include "GameDebug/EditorTableWindowRequest.h"
 #include "GameDebug/EditorTextureWindowRequest.h"
 #include "GameDebug/EditorTrajectoryWindowRequest.h"
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/SettingsWindowComponent.h"
 #include "GameDebug/SettingsWindowRequest.h"
+#include "SpriteEditor/SpriteEditorWindowRequest.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -163,7 +163,7 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 			if (ImGui::MenuItem("Input Editor"))
 				world.AddEvent<editor::InputWindowRequest>();
 			if (ImGui::MenuItem("Sprite Editor"))
-				world.AddEvent<editor::SpriteWindowRequest>();
+				world.AddEvent<editor::sprite::WindowRequest>();
 			if (ImGui::MenuItem("Table Editor"))
 				world.AddEvent<editor::TableWindowRequest>();
 			if (ImGui::MenuItem("Texture Editor"))

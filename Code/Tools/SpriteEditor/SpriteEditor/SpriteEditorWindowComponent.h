@@ -5,9 +5,9 @@
 #include "ECS/Component.h"
 #include "Engine/SpriteAsset.h"
 
-namespace editor
+namespace editor::sprite
 {
-	struct SpriteWindowComponent final : public ecs::Component<SpriteWindowComponent>
+	struct WindowComponent final : public ecs::Component<WindowComponent>
 	{
 		int32 m_Identifier = 0;
 

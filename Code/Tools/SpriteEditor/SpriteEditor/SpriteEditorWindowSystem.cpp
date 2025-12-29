@@ -1,25 +1,25 @@
-#include "EditorPCH.h"
-#include "Editor/SpriteEditorSystem.h"
+#include "SpriteEditorPCH.h"
+#include "SpriteEditor/SpriteEditorWindowSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/SettingsLocalSingleton.h"
-#include "Editor/SpriteAssetNewComponent.h"
-#include "Editor/SpriteAssetOpenComponent.h"
-#include "Editor/SpriteAssetSaveComponent.h"
-#include "Editor/SpriteBatchingComponent.h"
-#include "Editor/SpriteWindowComponent.h"
-#include "Editor/TextureHelpers.h"
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
-#include "Engine/ShaderAsset.h"
 #include "Engine/InputManager.h"
 #include "Engine/InspectorHelpers.h"
+#include "Engine/ShaderAsset.h"
 #include "Engine/Texture2DAsset.h"
-#include "GameDebug/EditorSpriteWindowRequest.h"
+#include "Engine/TextureHelpers.h"
 #include "Math/AABB.h"
+#include "SpriteEditor/SpriteEditorAssetNewComponent.h"
+#include "SpriteEditor/SpriteEditorAssetOpenComponent.h"
+#include "SpriteEditor/SpriteEditorAssetSaveComponent.h"
+#include "SpriteEditor/SpriteEditorBatchingComponent.h"
+#include "SpriteEditor/SpriteEditorSettingsSingleton.h"
+#include "SpriteEditor/SpriteEditorWindowComponent.h"
+#include "SpriteEditor/SpriteEditorWindowRequest.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_graph.h"
@@ -38,7 +38,7 @@ namespace
 	const str::Name strOpen = str::Name::Create("SpriteEditor_Open");
 	const str::Name strSave = str::Name::Create("SpriteEditor_Save");
 
-	using World = editor::SpriteEditorSystem::World;
+	using World = editor::sprite::WindowSystem::World;
 
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
 		ImGuiDockNodeFlags_NoCloseButton |
@@ -53,19 +53,13 @@ namespace
 		return std::format("{}: {}", label, index);
 	}
 
-	Vector2f ToPosition(const uint32 index, const editor::SpriteBatchingComponent& data)
+	Vector2f ToPosition(const uint32 index, const editor::sprite::BatchingComponent& data)
 	{
 		const uint32 x = (index % data.m_Iterations.x);
 		const uint32 y = (index / data.m_Iterations.x) % data.m_Iterations.y;
 		return Vector2f(
 			data.m_Initial.x + (data.m_Stride.x * x),
 			data.m_Initial.y + (data.m_Stride.y * y));
-	}
-
-	bool HasInput(World& world, const str::Name& name)
-	{
-		const auto& input = world.ReadResource<eng::InputManager>();
-		return input.IsPressed(name);
 	}
 
 	void DrawMenuBar(World& world, const ecs::Entity& entity)
@@ -75,23 +69,31 @@ namespace
 			if (ImGui::BeginMenu("File"))
 			{
 				if (ImGui::MenuItem("New", "Ctrl+N"))
-					world.AddComponent<editor::SpriteAssetNewComponent>(entity);
+					world.AddComponent<editor::sprite::AssetNewComponent>(entity);
 
 				if (ImGui::MenuItem("Open", "Ctrl+O"))
-					world.AddComponent<editor::SpriteAssetOpenComponent>(entity);
+					world.AddComponent<editor::sprite::AssetOpenComponent>(entity);
 
 				if (ImGui::MenuItem("Save", "Ctrl+S"))
-					world.AddComponent<editor::SpriteAssetSaveComponent>(entity);
+					world.AddComponent<editor::sprite::AssetSaveComponent>(entity);
 
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
 		}
+
+		const auto& input = world.ReadResource<eng::InputManager>();
+		if (input.IsPressed(strNew))
+			world.AddComponent<editor::sprite::AssetNewComponent>(entity);
+		if (input.IsPressed(strOpen))
+			world.AddComponent<editor::sprite::AssetOpenComponent>(entity);
+		if (input.IsPressed(strSave))
+			world.AddComponent<editor::sprite::AssetSaveComponent>(entity);
 	};
 
 	void DrawBatcher(World& world, const ecs::Entity& entity)
 	{
-		auto& batch = world.WriteComponent<editor::SpriteBatchingComponent>(entity);
+		auto& batch = world.WriteComponent<editor::sprite::BatchingComponent>(entity);
 
 		ImGui::TextDisabled("Display:");
 		ImGui::Checkbox("m_IsPreviewing", &batch.m_IsPreviewing);
@@ -101,20 +103,20 @@ namespace
 		ImGui::TextDisabled("Options:");
 		if (ImGui::Button("Extract"))
 		{
-			const auto& readSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
-			const auto& readWindow = world.ReadComponent<editor::SpriteWindowComponent>(entity);
+			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
+			const auto& window = world.ReadComponent<editor::sprite::WindowComponent>(entity);
 
-			eng::SelectFolderSettings settings;
-			settings.m_Title = "Save Sprites";
-			settings.m_Path = readSettings.m_Sprite.m_Extract;
+			eng::SelectFolderSettings fileSettings;
+			fileSettings.m_Title = "Save Sprites";
+			fileSettings.m_Path = settings.m_Extract;
 
-			const str::Path folderpath = eng::SelectFolderDialog(settings);
+			const str::Path folderpath = eng::SelectFolderDialog(fileSettings);
 			if (!folderpath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteSingleton<editor::settings::LocalSingleton>();
-				writeSettings.m_Sprite.m_Extract = folderpath;
+				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
+				writeSettings.m_Extract = folderpath;
 
-				auto& writeWindow = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
 
 				str::String name;
@@ -165,7 +167,7 @@ namespace
 
 	void DrawInspector(World& world, const ecs::Entity& entity)
 	{
-		auto& window = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+		auto& window = world.WriteComponent<editor::sprite::WindowComponent>(entity);
 		eng::SpriteAsset& sprite = window.m_Asset;
 
 		str::Guid spritePrev = sprite.m_Guid;
@@ -190,12 +192,11 @@ namespace
 
 	void Asset_New(World& world, const ecs::Entity& entity)
 	{
-		if (world.HasComponent<editor::SpriteAssetNewComponent>(entity))
-			world.RemoveComponent<editor::SpriteAssetNewComponent>(entity);
-
-		if (HasInput(world, strNew) || world.HasComponent<editor::SpriteAssetNewComponent>(entity))
+		if (world.HasComponent<editor::sprite::AssetNewComponent>(entity))
 		{
-			auto& window = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+			world.RemoveComponent<editor::sprite::AssetNewComponent>(entity);
+			
+			auto& window = world.WriteComponent<editor::sprite::WindowComponent>(entity);
 			if (!window.m_Asset.m_Guid.IsValid())
 			{
 				window.m_Asset.m_Shader = uuidShader;
@@ -214,26 +215,27 @@ namespace
 		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
 		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
 
-		if (world.HasComponent<editor::SpriteAssetOpenComponent>(entity))
-			world.RemoveComponent<editor::SpriteAssetOpenComponent>(entity);
-
-		if (HasInput(world, strOpen) || world.HasComponent<editor::SpriteAssetOpenComponent>(entity))
+		if (world.HasComponent<editor::sprite::AssetOpenComponent>(entity))
 		{
-			const auto& readSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
+			world.RemoveComponent<editor::sprite::AssetOpenComponent>(entity);
 
-			eng::SelectFileSettings settings;
-			settings.m_Title = "Open Sprite";
-			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
-			settings.m_Path = readSettings.m_Sprite.m_Open;
+			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
 
-			const str::Path filepath = eng::SelectFileDialog(settings);
+			eng::SelectFileSettings fileSettings;
+			fileSettings.m_Title = "Open Sprite";
+			fileSettings.m_Filters = { "Assets (*.asset)", "*.asset" };
+			fileSettings.m_Path = settings.m_Open;
+
+			const str::Path filepath = eng::SelectFileDialog(fileSettings);
 			if (!filepath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteSingleton<editor::settings::LocalSingleton>();
-				writeSettings.m_Sprite.m_Open = filepath.GetDirectory();
+				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
+				writeSettings.m_Open = filepath.GetDirectory();
 
-				auto& writeWindow = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
+
+				// #todo:
 				//assetManager.LoadAsset(writeWindow.m_Asset, filepath);
 			}
 		}
@@ -245,30 +247,29 @@ namespace
 		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
 		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
 
-		if (world.HasComponent<editor::SpriteAssetSaveComponent>(entity))
-			world.RemoveComponent<editor::SpriteAssetSaveComponent>(entity);
-
-		if (HasInput(world, strSave) || world.HasComponent<editor::SpriteAssetSaveComponent>(entity))
+		if (world.HasComponent<editor::sprite::AssetSaveComponent>(entity))
 		{
-			const auto& readSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
-			const auto& readWindow = world.ReadComponent<editor::SpriteWindowComponent>(entity);
-			const str::Name& name = readWindow.m_Asset.m_Name;
+			world.RemoveComponent<editor::sprite::AssetSaveComponent>(entity);
 
-			eng::SaveFileSettings settings;
-			settings.m_Title = "Save Sprite";
-			settings.m_Filters = { "Assets (*.asset)", "*.asset" };
-			settings.m_Path = str::Path(
-				readSettings.m_Sprite.m_Save,
-				readWindow.m_Asset.m_Name,
+			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
+			const auto& window = world.ReadComponent<editor::sprite::WindowComponent>(entity);
+			const str::Name& name = window.m_Asset.m_Name;
+
+			eng::SaveFileSettings fileSettings;
+			fileSettings.m_Title = "Save Sprite";
+			fileSettings.m_Filters = { "Assets (*.asset)", "*.asset" };
+			fileSettings.m_Path = str::Path(
+				settings.m_Save, 
+				window.m_Asset.m_Name, 
 				eng::AssetManager::s_Extension);
 
-			const str::Path filepath = eng::SaveFileDialog(settings);
+			const str::Path filepath = eng::SaveFileDialog(fileSettings);
 			if (!filepath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteSingleton<editor::settings::LocalSingleton>();
-				writeSettings.m_Sprite.m_Save = filepath.GetDirectory();
+				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
+				writeSettings.m_Save = filepath.GetDirectory();
 
-				auto& writeWindow = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
 				assetManager.SaveAsset(writeWindow.m_Asset, filepath);
 			}
@@ -277,7 +278,7 @@ namespace
 
 	void DrawPreviewer(World& world, const ecs::Entity& entity)
 	{
-		auto& window = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+		auto& window = world.WriteComponent<editor::sprite::WindowComponent>(entity);
 		eng::SpriteAsset& sprite = window.m_Asset;
 		if (!sprite.m_Texture2D.IsValid())
 			return;
@@ -290,7 +291,7 @@ namespace
 		const Vector2f spritePos = Vector2f((float)sprite.m_Position.x, (float)sprite.m_Position.y);
 		const Vector2f spriteSize = Vector2f((float)sprite.m_Size.x, (float)sprite.m_Size.y);
 		const Vector2f regionSize = ImGui::GetContentRegionAvail();
-		const Vector2f imageSize = editor::FitImageToRegion(spriteSize, regionSize);
+		const Vector2f imageSize = eng::FitImageToRegion(spriteSize, regionSize);
 
 		Vector2f uv0 = spritePos;
 		Vector2f uv1 = spritePos + spriteSize;
@@ -303,7 +304,7 @@ namespace
 
 	void DrawTexture(World& world, const ecs::Entity& entity)
 	{
-		auto& window = world.WriteComponent<editor::SpriteWindowComponent>(entity);
+		auto& window = world.WriteComponent<editor::sprite::WindowComponent>(entity);
 		eng::SpriteAsset& sprite = window.m_Asset;
 		if (!sprite.m_Texture2D.IsValid())
 			return;
@@ -315,7 +316,7 @@ namespace
 
 		const Vector2f textureSize = Vector2f((float)textureAsset->m_Width, (float)textureAsset->m_Height);
 		const ImVec2 regionSize = ImGui::GetContentRegionAvail();
-		const Vector2f imageSize = editor::FitImageToRegion(textureSize, regionSize);
+		const Vector2f imageSize = eng::FitImageToRegion(textureSize, regionSize);
 		const ImVec2 regionMin = ImGui::GetCursorScreenPos();
 		const ImVec2 regionMax = ImVec2(regionMin.x + imageSize.x, regionMin.y + imageSize.y);
 
@@ -338,7 +339,7 @@ namespace
 		}
 
 		// draw sprites to be extracted
-		const auto& batch = world.ReadComponent<editor::SpriteBatchingComponent>(entity);
+		const auto& batch = world.ReadComponent<editor::sprite::BatchingComponent>(entity);
 		if (batch.m_IsPreviewing)
 		{
 			for (int32 i = 0; i < batch.m_Count; ++i)
@@ -356,11 +357,11 @@ namespace
 	};
 }
 
-void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
+void editor::sprite::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<editor::SpriteWindowComponent>>())
+	if (world.HasAny<ecs::query::Added<editor::sprite::WindowComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::EditorUI;
@@ -375,7 +376,7 @@ void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<editor::SpriteWindowComponent>>())
+	if (world.HasAny<ecs::query::Removed<editor::sprite::WindowComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
@@ -384,14 +385,14 @@ void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);
 
-	for (const auto& request : world.Events<editor::SpriteWindowRequest>())
+	for (const auto& request : world.Events<editor::sprite::WindowRequest>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Sprite Editor");
-		world.AddComponent<editor::SpriteBatchingComponent>(windowEntity);
+		world.AddComponent<editor::sprite::BatchingComponent>(windowEntity);
 
-		auto& window = world.AddComponent<editor::SpriteWindowComponent>(windowEntity);
+		auto& window = world.AddComponent<editor::sprite::WindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Sprite Editor##sprite", identifier);
 		window.m_InspectorLabel = ToLabel("Inspector##sprite", identifier);
@@ -399,15 +400,15 @@ void editor::SpriteEditorSystem::Update(World& world, const GameTime& gameTime)
 		window.m_TextureLabel   = ToLabel("Texture##sprite", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::SpriteWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::sprite::WindowComponent>>())
 	{
-		auto& window = world.ReadComponent<editor::SpriteWindowComponent>(view, false);
+		auto& window = world.ReadComponent<editor::sprite::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Include<editor::SpriteWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::sprite::WindowComponent>>())
 	{
-		auto& window = view.WriteRequired<editor::SpriteWindowComponent>();
+		auto& window = view.WriteRequired<editor::sprite::WindowComponent>();
 
 		bool isOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);

@@ -26,7 +26,6 @@
 #include "GameDebug/EditorFlipbookWindowRequest.h"
 #include "GameDebug/EditorInputWindowRequest.h"
 #include "GameDebug/EditorSettingsWindowRequest.h"
-#include "GameDebug/EditorSpriteWindowRequest.h"
 #include "GameDebug/EditorTableWindowRequest.h"
 #include "GameDebug/EditorTextureWindowRequest.h"
 #include "GameDebug/EditorTrajectoryWindowRequest.h"
@@ -105,7 +104,6 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterEvent<editor::FlipbookWindowRequest>();
 	m_ClientWorld.RegisterEvent<editor::InputWindowRequest>();
 	m_ClientWorld.RegisterEvent<editor::settings::WindowRequest>();
-	m_ClientWorld.RegisterEvent<editor::SpriteWindowRequest>();
 	m_ClientWorld.RegisterEvent<editor::TableWindowRequest>();
 	m_ClientWorld.RegisterEvent<editor::TextureWindowRequest>();
 	m_ClientWorld.RegisterEvent<editor::TrajectoryWindowRequest>();

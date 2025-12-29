@@ -28,12 +28,6 @@
 #include "Editor/SettingsLocalSystem.h"
 #include "Editor/SettingsMenuSystem.h"
 #include "Editor/SettingsWindowComponent.h"
-#include "Editor/SpriteAssetNewComponent.h"
-#include "Editor/SpriteAssetOpenComponent.h"
-#include "Editor/SpriteAssetSaveComponent.h"
-#include "Editor/SpriteBatchingComponent.h"
-#include "Editor/SpriteEditorSystem.h"
-#include "Editor/SpriteWindowComponent.h"
 #include "Editor/TableEditorSystem.h"
 #include "Editor/TableWindowComponent.h"
 #include "Editor/TextureAssetImportComponent.h"
@@ -46,6 +40,7 @@
 #include "Editor/TrajectoryAssetSaveComponent.h"
 #include "Editor/TrajectoryEditorSystem.h"
 #include "Editor/TrajectoryWindowComponent.h"
+#include "SpriteEditor/RegisterModule.h"
 
 editor::Editor::Editor(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
 	: m_ClientWorld(clientWorld)
@@ -66,11 +61,6 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::FlipbookWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::InputWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
-	m_ClientWorld.RegisterComponent<editor::SpriteAssetNewComponent>();
-	m_ClientWorld.RegisterComponent<editor::SpriteAssetOpenComponent>();
-	m_ClientWorld.RegisterComponent<editor::SpriteAssetSaveComponent>();
-	m_ClientWorld.RegisterComponent<editor::SpriteBatchingComponent>();
-	m_ClientWorld.RegisterComponent<editor::SpriteWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::TableWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::TextureAssetImportComponent>();
 	m_ClientWorld.RegisterComponent<editor::TextureAssetNewComponent>();
@@ -97,10 +87,11 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::RenderGridSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::LocalSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
-	m_ClientWorld.RegisterSystem<editor::SpriteEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::TableEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::TextureEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::TrajectoryEditorSystem>();
+
+	editor::sprite::RegisterModule(m_ClientWorld);
 }
 
 void editor::Editor::Initialise()
