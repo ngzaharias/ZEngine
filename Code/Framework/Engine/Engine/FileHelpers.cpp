@@ -177,11 +177,18 @@ str::Path eng::SaveFileDialog(const SaveFileSettings& settings)
 	std::vector<std::string> filters;
 	filters.insert(filters.end(), settings.m_Filters.begin(), settings.m_Filters.end());
 
-	pfd::opt option = pfd::opt::none;
+	pfd::opt options = pfd::opt::none;
 	if (settings.m_Overwrite)
-		option = pfd::opt::force_overwrite;
+		options = options | pfd::opt::force_overwrite;
+	if (!settings.m_Path.empty())
+		options = options | pfd::opt::force_path;
 
-	pfd::save_file saveFile = pfd::save_file(settings.m_Title, settings.m_Path, filters, option);
+	pfd::save_file saveFile = pfd::save_file(
+		settings.m_Title, 
+		settings.m_Path, 
+		filters, 
+		options);
+
 	return saveFile.result();
 }
 
@@ -190,11 +197,15 @@ str::Path eng::SelectFileDialog(const SelectFileSettings& settings)
 	std::vector<std::string> filters;
 	filters.insert(filters.end(), settings.m_Filters.begin(), settings.m_Filters.end());
 
+	pfd::opt options = pfd::opt::none;
+	if (!settings.m_Path.empty())
+		options = options | pfd::opt::force_path;
+
 	pfd::open_file openFile = pfd::open_file(
-		settings.m_Title,
-		settings.m_Path,
-		filters,
-		pfd::opt::none);
+		settings.m_Title, 
+		settings.m_Path, 
+		filters, 
+		options);
 
 	str::Path path;
 	for (const auto& name : openFile.result())
@@ -207,11 +218,15 @@ Array<str::Path> eng::SelectFilesDialog(const SelectFilesSettings& settings)
 	std::vector<std::string> filters;
 	filters.insert(filters.end(), settings.m_Filters.begin(), settings.m_Filters.end());
 
+	pfd::opt options = pfd::opt::multiselect;
+	if (!settings.m_Path.empty())
+		options = options | pfd::opt::force_path;
+
 	pfd::open_file openFile = pfd::open_file(
 		settings.m_Title,
 		settings.m_Path,
 		filters,
-		pfd::opt::multiselect);
+		options);
 
 	Array<str::Path> filepaths;
 	for (const auto& name : openFile.result())
@@ -221,9 +236,14 @@ Array<str::Path> eng::SelectFilesDialog(const SelectFilesSettings& settings)
 
 str::Path eng::SelectFolderDialog(const SelectFolderSettings& settings)
 {
+	pfd::opt options = pfd::opt::none;
+	if (!settings.m_Path.empty())
+		options = options | pfd::opt::force_path;
+
 	pfd::select_folder selectFile = pfd::select_folder(
 		settings.m_Title, 
-		settings.m_Path);
+		settings.m_Path,
+		options);
 
 	return selectFile.result();
 }
