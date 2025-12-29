@@ -10,12 +10,12 @@
 #include "Editor/TextureAssetNewComponent.h"
 #include "Editor/TextureAssetOpenComponent.h"
 #include "Editor/TextureAssetSaveComponent.h"
-#include "Editor/TextureHelpers.h"
 #include "Editor/TextureWindowComponent.h"
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/InputManager.h"
 #include "Engine/Texture2DAsset.h"
+#include "Engine/TextureHelpers.h"
 #include "GameDebug/EditorTextureWindowRequest.h"
 
 #include "imgui/imgui.h"
@@ -205,7 +205,7 @@ namespace
 
 		const Vector2f textureSize = Vector2f((float)texture.m_Width, (float)texture.m_Height);
 		const Vector2f regionSize = ImGui::GetContentRegionAvail();
-		const Vector2f imageSize = editor::FitImageToRegion(textureSize, regionSize);
+		const Vector2f imageSize = eng::FitImageToRegion(textureSize, regionSize);
 
 		imgui::Image(texture.m_TextureId, imageSize);
 	};
