@@ -1,6 +1,7 @@
 #include "CameraPCH.h"
 #include "Camera/RegisterModule.h"
 
+#include "Camera/CameraActivationSystem.h"
 #include "Camera/CameraBound2DComponent.h"
 #include "Camera/CameraBound2DSystem.h"
 #include "Camera/CameraMove2DComponent.h"
@@ -34,6 +35,7 @@ void camera::RegisterModule(ecs::EntityWorld& entityWorld)
 
 	// systems
 	{
+		entityWorld.RegisterSystem<camera::ActivationSystem>();
 		entityWorld.RegisterSystem<camera::Bound2DSystem>();
 		entityWorld.RegisterSystem<camera::Move2DSystem>();
 		entityWorld.RegisterSystem<camera::Move3DSystem>();

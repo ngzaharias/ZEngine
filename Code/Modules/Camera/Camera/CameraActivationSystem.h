@@ -28,9 +28,9 @@ namespace eng::settings
 	struct DebugSingleton;
 }
 
-namespace editor
+namespace camera
 {
-	class CameraSystem final : public ecs::System
+	class ActivationSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView

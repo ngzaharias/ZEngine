@@ -1,5 +1,5 @@
-#include "EditorPCH.h"
-#include "Editor/CameraSystem.h"
+#include "CameraPCH.h"
+#include "Camera/CameraActivationSystem.h"
 
 #include "Camera/CameraMove3DComponent.h"
 #include "Camera/CameraPan3DComponent.h"
@@ -12,11 +12,9 @@
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/TransformComponent.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_user.h"
-
-void editor::CameraSystem::Initialise(World& world)
+void camera::ActivationSystem::Initialise(World& world)
 {
+#ifdef Z_EDITOR
 	const ecs::Entity entity = world.CreateEntity();
 	world.AddComponent<ecs::NameComponent>(entity, "Editor Camera");
 	world.AddComponent<camera::Move3DComponent>(entity);
@@ -28,9 +26,10 @@ void editor::CameraSystem::Initialise(World& world)
 	auto& transform = world.AddComponent<eng::TransformComponent>(entity);
 	transform.m_Rotate = Rotator(+20.f, -45.f, 0.f);
 	transform.m_Translate = Vector3f(+1000.f, +500.f, -1000.f);
+#endif
 }
 
-void editor::CameraSystem::Update(World& world, const GameTime& gameTime)
+void camera::ActivationSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 

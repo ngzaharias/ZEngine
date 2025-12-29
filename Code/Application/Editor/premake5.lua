@@ -60,13 +60,8 @@ project "Editor"
 		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Modules/Camera/",
 		"%{wks.location}/../Code/Modules/Container/",
-		"%{wks.location}/../Code/Modules/Hexmap/",
 		"%{wks.location}/../Code/Modules/Hidden/",
 		"%{wks.location}/../Code/Modules/Softbody/",
-		"%{wks.location}/../Code/Modules/Tabletop/",
-		"%{wks.location}/../Code/Modules/Tactics/",
-		"%{wks.location}/../Code/Modules/Tilemap/",
-		"%{wks.location}/../Code/Modules/Voxel/",
 	}
 
 	libdirs 

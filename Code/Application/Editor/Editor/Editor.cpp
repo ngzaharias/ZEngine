@@ -7,7 +7,6 @@
 #include "Editor/AssetBrowserSystem.h"
 #include "Editor/AssetBrowserWindowComponent.h"
 #include "Editor/AssetReloadSystem.h"
-#include "Editor/CameraSystem.h"
 #include "Editor/EditorRenderAxesSystem.h"
 #include "Editor/EditorRenderGridSystem.h"
 #include "Editor/EntityEditorSystem.h"
@@ -87,7 +86,6 @@ void editor::Editor::Register()
 
 	m_ClientWorld.RegisterSystem<editor::AssetBrowserSystem>();
 	m_ClientWorld.RegisterSystem<editor::AssetReloadSystem>();
-	m_ClientWorld.RegisterSystem<editor::CameraSystem>();
 	m_ClientWorld.RegisterSystem<editor::EntityEditorSystem>(m_ClientWorld);
 	m_ClientWorld.RegisterSystem<editor::EntitySelectSystem>();
 	m_ClientWorld.RegisterSystem<editor::FlipbookEditorSystem>();
