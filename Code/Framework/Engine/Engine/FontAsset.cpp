@@ -60,30 +60,56 @@ void eng::Visitor::WriteCustom(const ::Character& value)
 	Write(strSourceFile, value.m_SourceFile);
 }
 
-bool eng::FontAssetLoader::Save(FontAsset& asset, eng::Visitor& visitor) const
+bool eng::FontAssetLoader::Import(eng::FontAsset& asset, const str::Path& filepath) const
 {
-	visitor.Write(strWidth, asset.m_Width);
-	visitor.Write(strHeight, asset.m_Height);
-	visitor.Write(strPixelRange, asset.m_PixelRange);
-
-	if (!asset.m_Glyphs.IsEmpty())
+	FT_Library library;
+	if (const FT_Error error = FT_Init_FreeType(&library))
 	{
-		Array<Character> characters;
-		for (auto&& [charcode, glyph] : asset.m_Glyphs)
-		{
-			::Character& character = characters.Emplace();
-			character.m_AdvanceX = glyph.m_AdvanceX;
-			character.m_AdvanceY = glyph.m_AdvanceY;
-			character.m_Character = str::String(1, charcode);
-			character.m_SourceFile = glyph.m_SourceFile;
-		}
-		visitor.Write(strCharacters, characters);
+		Z_LOG(ELog::Debug, "Unable to initialize font library!");
+		return false;
 	}
+
+	FT_Face face;
+	if (const FT_Error error = FT_New_Face(library, filepath.ToChar(), -1, &face))
+	{
+		switch (error)
+		{
+		case FT_Err_Unknown_File_Format:
+			Z_LOG(ELog::Debug, "Unsupported font format.");
+			break;
+		}
+
+		return false;
+	}
+
+	const int32 fontCount = face->num_faces;
+	for (int32 fontIndex = 0; fontIndex < fontCount; ++fontIndex)
+	{
+		FT_New_Face(library, filepath.ToChar(), fontIndex, &face);
+		FT_Select_Charmap(face, FT_ENCODING_UNICODE);
+
+		FT_ULong charcode;
+		FT_UInt glyphIndex;
+		charcode = FT_Get_First_Char(face, &glyphIndex);
+		for (; glyphIndex != 0; charcode = FT_Get_Next_Char(face, charcode, &glyphIndex))
+		{
+			if (const FT_Error error = FT_Load_Glyph(face, glyphIndex, 0))
+				continue;
+
+			eng::Charcode key = static_cast<char>(charcode);
+			eng::Glyph& glyph = asset.m_Glyphs.Emplace(key);
+			glyph.m_AdvanceX = face->glyph->advance.x;
+			glyph.m_AdvanceY = face->glyph->advance.y;
+			glyph.m_SourceFile = filepath;
+		}
+	}
+
+	// #todo: generate charcode textures
 
 	return true;
 }
 
-bool eng::FontAssetLoader::Load(FontAsset& asset, eng::Visitor& visitor) const
+bool eng::FontAssetLoader::Load(eng::FontAsset& asset, eng::Visitor& visitor) const
 {
 	// #todo: assert file exists
 	// #todo: fallback to default on failure
@@ -142,51 +168,25 @@ bool eng::FontAssetLoader::Load(FontAsset& asset, eng::Visitor& visitor) const
 	return true;
 }
 
-bool eng::FontAssetLoader::Import(FontAsset& asset, const str::Path& filepath) const
+bool eng::FontAssetLoader::Save(eng::FontAsset& asset, eng::Visitor& visitor) const
 {
-	FT_Library library;
-	if (const FT_Error error = FT_Init_FreeType(&library))
-	{
-		Z_LOG(ELog::Debug, "Unable to initialize font library!");
-		return false;
-	}
+	visitor.Write(strWidth, asset.m_Width);
+	visitor.Write(strHeight, asset.m_Height);
+	visitor.Write(strPixelRange, asset.m_PixelRange);
 
-	FT_Face face;
-	if (const FT_Error error = FT_New_Face(library, filepath.ToChar(), -1, &face))
+	if (!asset.m_Glyphs.IsEmpty())
 	{
-		switch (error)
+		Array<Character> characters;
+		for (auto&& [charcode, glyph] : asset.m_Glyphs)
 		{
-		case FT_Err_Unknown_File_Format:
-			Z_LOG(ELog::Debug, "Unsupported font format.");
-			break;
+			::Character& character = characters.Emplace();
+			character.m_AdvanceX = glyph.m_AdvanceX;
+			character.m_AdvanceY = glyph.m_AdvanceY;
+			character.m_Character = str::String(1, charcode);
+			character.m_SourceFile = glyph.m_SourceFile;
 		}
-
-		return false;
+		visitor.Write(strCharacters, characters);
 	}
-
-	const int32 fontCount = face->num_faces;
-	for (int32 fontIndex = 0; fontIndex < fontCount; ++fontIndex)
-	{
-		FT_New_Face(library, filepath.ToChar(), fontIndex, &face);
-		FT_Select_Charmap(face, FT_ENCODING_UNICODE);
-
-		FT_ULong charcode;
-		FT_UInt glyphIndex;
-		charcode = FT_Get_First_Char(face, &glyphIndex);
-		for (; glyphIndex != 0; charcode = FT_Get_Next_Char(face, charcode, &glyphIndex))
-		{
-			if (const FT_Error error = FT_Load_Glyph(face, glyphIndex, 0))
-				continue;
-
-			eng::Charcode key = static_cast<char>(charcode);
-			eng::Glyph& glyph = asset.m_Glyphs.Emplace(key);
-			glyph.m_AdvanceX = face->glyph->advance.x;
-			glyph.m_AdvanceY = face->glyph->advance.y;
-			glyph.m_SourceFile = filepath;
-		}
-	}
-
-	// #todo: generate charcode textures
 
 	return true;
 }

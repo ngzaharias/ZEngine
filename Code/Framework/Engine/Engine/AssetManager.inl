@@ -17,28 +17,22 @@ void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 	eng::AssetEntry& entry = m_Registry[type];
 	entry.m_Loader = new TLoader(std::forward<TArgs>(args)...);
 	entry.m_Loader->m_AssetManager = this;
-	entry.m_Load = &ScheduleLoad<TAsset>;
+	entry.m_Schedule = &ScheduleLoad<TAsset>;
 
 	eng::AssetMethods& methods = entry.m_Methods;
-	if constexpr (requires (TAsset a, TLoader l) { l.Initialise(a); })
-		methods.m_Initialise = &InitialiseMethod<TAsset, TLoader>;
-	if constexpr (requires (TAsset a, TLoader l) { l.Shutdown(a); })
-		methods.m_Shutdown = &ShutdownMethod<TAsset, TLoader>;
-	if constexpr (requires (TAsset a, TLoader l, eng::Visitor v) { l.Save(a, v); })
-		methods.m_Save = &SaveMethod<TAsset, TLoader>;
-	if constexpr (requires (TAsset a, TLoader l, eng::Visitor v) { l.Load(a, v); })
-		methods.m_Load = &LoadMethod<TAsset, TLoader>;
+	if constexpr (requires (TAsset a, TLoader l) { l.Bind(a); })
+		methods.m_Bind = &BindMethod<TAsset, TLoader>;
+	if constexpr (requires (TAsset a, TLoader l) { l.Unbind(a); })
+		methods.m_Unbind = &UnbindMethod<TAsset, TLoader>;
+
 	if constexpr (requires (TAsset a, TLoader l, eng::Visitor v) { l.Import(a, v); })
 		methods.m_Import = &ImportMethod<TAsset, TLoader>;
-}
-
-template<class TAsset>
-TAsset* eng::AssetManager::WriteAsset(const str::Guid& guid)
-{
-	const auto find = m_RefMap.Find(guid);
-	if (find != m_RefMap.end())
-		return static_cast<const TAsset*>(find->second.m_Asset);
-	return nullptr;
+	if constexpr (requires (TAsset a, TLoader l, eng::Visitor v) { l.Load(a, v); })
+		methods.m_Load = &LoadMethod<TAsset, TLoader>;
+	if constexpr (requires (TAsset a, TLoader l, eng::Visitor v) { l.Save(a, v); })
+		methods.m_Save = &SaveMethod<TAsset, TLoader>;
+	if constexpr (requires (TAsset a, TLoader l) { l.Unload(a); })
+		methods.m_Unload = &UnloadMethod<TAsset, TLoader>;
 }
 
 template<class TAsset>
@@ -51,7 +45,63 @@ const TAsset* eng::AssetManager::ReadAsset(const str::Guid& guid) const
 }
 
 template<class TAsset>
-bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
+TAsset* eng::AssetManager::WriteAsset(const str::Guid& guid)
+{
+	const auto find = m_RefMap.Find(guid);
+	if (find != m_RefMap.end())
+		return static_cast<TAsset*>(find->second.m_Asset);
+	return nullptr;
+}
+
+template<class TAsset>
+bool eng::AssetManager::ImportFromFile(TAsset& asset, const str::Path& filepath)
+{
+	constexpr TypeHash typeHash = ToTypeHash<TAsset>();
+	const str::Name& type = m_TypeHashs.Get(typeHash);
+	const eng::AssetEntry& entry = m_Registry.Get(type);
+
+	asset.m_Guid = str::Guid::Generate();
+	asset.m_Name = NAME(filepath.GetFileNameNoExtension());
+	asset.m_Type = type;
+
+	eng::Visitor visitor;
+	visitor.LoadFromFile(filepath);
+	if (!entry.m_Methods.m_Import || !entry.m_Methods.m_Import(asset, *entry.m_Loader, visitor))
+	{
+		Z_LOG(ELog::Assert, "Asset failed to import from '{}'!", filepath.ToChar());
+		return false;
+	}
+
+	eng::AssetFile& file = m_FileMap[asset.m_Guid];
+	file.m_Guid = asset.m_Guid;
+	file.m_Name = asset.m_Name;
+	file.m_Path = filepath;
+	file.m_Type = type;
+	return true;
+}
+
+template<class TAsset>
+bool eng::AssetManager::LoadFromFile(TAsset& asset, const str::Path& filepath)
+{
+	PROFILE_FUNCTION();
+
+	eng::Visitor visitor;
+	if (!visitor.LoadFromFile(filepath))
+		return false;
+
+	visitor.Read("m_Guid", asset.m_Guid, asset.m_Guid);
+	visitor.Read("m_Name", asset.m_Name, asset.m_Name);
+	visitor.Read("m_Type", asset.m_Type, asset.m_Type);
+
+	const eng::AssetEntry& entry = m_Registry.Get(asset.m_Type);
+	if (!entry.m_Methods.m_Load)
+		return false;
+
+	return entry.m_Methods.m_Load(asset, *entry.m_Loader, visitor);
+}
+
+template<class TAsset>
+bool eng::AssetManager::SaveToFile(TAsset& asset, const str::Path& filepath)
 {
 	PROFILE_FUNCTION();
 
@@ -91,33 +141,6 @@ bool eng::AssetManager::SaveAsset(TAsset& asset, const str::Path& filepath)
 	return true;
 }
 
-template<class TAsset>
-bool eng::AssetManager::ImportAsset(TAsset& asset, const str::Path& filepath)
-{
-	constexpr TypeHash typeHash = ToTypeHash<TAsset>();
-	const str::Name& type = m_TypeHashs.Get(typeHash);
-	const eng::AssetEntry& entry = m_Registry.Get(type);
-
-	asset.m_Guid = str::Guid::Generate();
-	asset.m_Name = NAME(filepath.GetFileNameNoExtension());
-	asset.m_Type = type;
-
-	eng::Visitor visitor;
-	visitor.LoadFromFile(filepath);
-	if (!entry.m_Methods.m_Import || !entry.m_Methods.m_Import(asset, *entry.m_Loader, visitor))
-	{
-		Z_LOG(ELog::Assert, "Asset failed to import from '{}'!", filepath.ToChar());
-		return false;
-	}
-
-	eng::AssetFile& file = m_FileMap[asset.m_Guid];
-	file.m_Guid = asset.m_Guid;
-	file.m_Name = asset.m_Name;
-	file.m_Path = filepath;
-	file.m_Type = type;
-	return true;
-}
-
 template<typename TAsset>
 void eng::AssetManager::LoadDeferred(const str::Path filepath)
 {
@@ -127,17 +150,8 @@ void eng::AssetManager::LoadDeferred(const str::Path filepath)
 template<typename TAsset>
 void eng::AssetManager::LoadImmediate(const str::Path& filepath)
 {
-	eng::Visitor visitor;
-	if (!visitor.LoadFromFile(filepath))
-		return;
-
 	TAsset* asset = new TAsset();
-	visitor.Read("m_Guid", asset->m_Guid, asset->m_Guid);
-	visitor.Read("m_Name", asset->m_Name, asset->m_Name);
-	visitor.Read("m_Type", asset->m_Type, asset->m_Type);
-
-	const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
-	if (entry.m_Methods.m_Load && !entry.m_Methods.m_Load(*asset, *entry.m_Loader, visitor))
+	if (!LoadFromFile(*asset, filepath))
 	{
 		delete asset;
 		return;
@@ -163,27 +177,27 @@ void eng::AssetManager::ScheduleLoad(eng::AssetManager& manager, const str::Path
 }
 
 template<typename TAsset, typename TLoader>
-void eng::AssetManager::InitialiseMethod(eng::Asset& asset, const eng::AssetLoader& loader)
+void eng::AssetManager::BindMethod(eng::Asset& asset, const eng::AssetLoader& loader)
 {
 	const TLoader& tLoader = static_cast<const TLoader&>(loader);
 	TAsset& tAsset = static_cast<TAsset&>(asset);
-	tLoader.Initialise(tAsset);
+	tLoader.Bind(tAsset);
 }
 
 template<typename TAsset, typename TLoader>
-void eng::AssetManager::ShutdownMethod(eng::Asset& asset, const eng::AssetLoader& loader)
+void eng::AssetManager::UnbindMethod(eng::Asset& asset, const eng::AssetLoader& loader)
 {
 	const TLoader& tLoader = static_cast<const TLoader&>(loader);
 	TAsset& tAsset = static_cast<TAsset&>(asset);
-	tLoader.Shutdown(tAsset);
+	tLoader.Unbind(tAsset);
 }
 
 template<typename TAsset, typename TLoader>
-bool eng::AssetManager::SaveMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor)
+bool eng::AssetManager::ImportMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor)
 {
 	const TLoader& tLoader = static_cast<const TLoader&>(loader);
 	TAsset& tAsset = static_cast<TAsset&>(asset);
-	return tLoader.Save(tAsset, visitor);
+	return tLoader.Import(tAsset, visitor);
 }
 
 template<typename TAsset, typename TLoader>
@@ -195,9 +209,17 @@ bool eng::AssetManager::LoadMethod(eng::Asset& asset, const eng::AssetLoader& lo
 }
 
 template<typename TAsset, typename TLoader>
-bool eng::AssetManager::ImportMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor)
+bool eng::AssetManager::SaveMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor)
 {
 	const TLoader& tLoader = static_cast<const TLoader&>(loader);
 	TAsset& tAsset = static_cast<TAsset&>(asset);
-	return tLoader.Import(tAsset, visitor);
+	return tLoader.Save(tAsset, visitor);
+}
+
+template<typename TAsset, typename TLoader>
+bool eng::AssetManager::UnloadMethod(eng::Asset& asset, const eng::AssetLoader& loader)
+{
+	const TLoader& tLoader = static_cast<const TLoader&>(loader);
+	TAsset& tAsset = static_cast<TAsset&>(asset);
+	return tLoader.Unload(tAsset);
 }

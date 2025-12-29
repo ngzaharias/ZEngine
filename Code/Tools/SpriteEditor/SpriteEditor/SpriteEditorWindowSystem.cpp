@@ -133,7 +133,7 @@ namespace
 					asset.m_Name = str::Name::Create(name);
 					asset.m_Position = ToPosition(i, batch);
 
-					assetManager.SaveAsset(asset, filepath);
+					assetManager.SaveToFile(asset, filepath);
 				}
 			}
 		}
@@ -232,11 +232,9 @@ namespace
 				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
 				writeSettings.m_Open = filepath.GetDirectory();
 
-				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
-
-				// #todo:
-				//assetManager.LoadAsset(writeWindow.m_Asset, filepath);
+				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
+				assetManager.LoadFromFile(writeWindow.m_Asset, filepath);
 			}
 		}
 	};
@@ -271,7 +269,7 @@ namespace
 
 				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				assetManager.SaveAsset(writeWindow.m_Asset, filepath);
+				assetManager.SaveToFile(writeWindow.m_Asset, filepath);
 			}
 		}
 	};

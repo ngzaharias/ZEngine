@@ -23,10 +23,10 @@ namespace eng
 	class SpriteAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		void Initialise(eng::SpriteAsset& asset) const;
-		void Shutdown(eng::SpriteAsset& asset) const;
+		void Bind(eng::SpriteAsset& asset) const;
+		void Unbind(eng::SpriteAsset& asset) const;
 
-		bool Save(SpriteAsset& asset, eng::Visitor& visitor) const;
-		bool Load(SpriteAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::SpriteAsset& asset, eng::Visitor& visitor) const;
+		bool Save(eng::SpriteAsset& asset, eng::Visitor& visitor) const;
 	};
 }

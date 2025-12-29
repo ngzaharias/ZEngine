@@ -25,7 +25,7 @@ namespace
 		if (!asset.m_TextureData)
 		{
 			const char* failureReason = stbi_failure_reason();
-			Z_LOG(ELog::Assert, "Asset failed to Texture2D! Path [{}] \nReason: {}", filepath.ToChar(), failureReason);
+			Z_LOG(ELog::Assert, "Failed to load Texture2D! Reason: {} \nPath: {}", filepath.ToChar(), failureReason);
 			return false;
 		}
 
@@ -33,7 +33,7 @@ namespace
 	}
 }
 
-void eng::Texture2DAssetLoader::Initialise(eng::Texture2DAsset& asset) const
+void eng::Texture2DAssetLoader::Bind(eng::Texture2DAsset& asset) const
 {
 	PROFILE_FUNCTION();
 	Z_PANIC(core::IsMainThread(), "OpenGL functions must be called from the main thread!");
@@ -50,15 +50,31 @@ void eng::Texture2DAssetLoader::Initialise(eng::Texture2DAsset& asset) const
 	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-void eng::Texture2DAssetLoader::Shutdown(eng::Texture2DAsset& asset) const
+void eng::Texture2DAssetLoader::Unbind(eng::Texture2DAsset& asset) const
 {
+	PROFILE_FUNCTION();
+	Z_PANIC(core::IsMainThread(), "OpenGL functions must be called from the main thread!");
+
 	glDeleteTextures(1, &asset.m_TextureId);
 }
 
-bool eng::Texture2DAssetLoader::Save(eng::Texture2DAsset& asset, eng::Visitor& visitor) const
+bool eng::Texture2DAssetLoader::Import(eng::Texture2DAsset& asset, const str::Path& filepath) const
 {
-	visitor.Write(strSourceFile, asset.m_SourceFile);
-	return true;
+	PROFILE_FUNCTION();
+
+	// #hack: no good way to do relative paths
+	str::Path rootDirectory = eng::GetCurrentFilepath();
+	rootDirectory = rootDirectory.GetParent();
+	rootDirectory = rootDirectory.GetParent();
+	rootDirectory = rootDirectory.GetParent();
+	rootDirectory = rootDirectory.GetParent();
+
+	str::String relativePath = str::String(filepath);
+	str::TrimLeft(relativePath, rootDirectory);
+	relativePath = ".." + relativePath;
+	asset.m_SourceFile = relativePath;
+
+	return LoadImage(asset, filepath);
 }
 
 bool eng::Texture2DAssetLoader::Load(eng::Texture2DAsset& asset, eng::Visitor& visitor) const
@@ -77,19 +93,16 @@ bool eng::Texture2DAssetLoader::Load(eng::Texture2DAsset& asset, eng::Visitor& v
 	return LoadImage(asset, filepath);
 }
 
-bool eng::Texture2DAssetLoader::Import(eng::Texture2DAsset& asset, const str::Path& filepath) const
+bool eng::Texture2DAssetLoader::Save(eng::Texture2DAsset& asset, eng::Visitor& visitor) const
 {
-	// #hack: no good way to do relative paths
-	str::Path rootDirectory = eng::GetCurrentFilepath();
-	rootDirectory = rootDirectory.GetParent();
-	rootDirectory = rootDirectory.GetParent();
-	rootDirectory = rootDirectory.GetParent();
-	rootDirectory = rootDirectory.GetParent();
+	PROFILE_FUNCTION();
+	visitor.Write(strSourceFile, asset.m_SourceFile);
+	return true;
+}
 
-	str::String relativePath = str::String(filepath);
-	str::TrimLeft(relativePath, rootDirectory);
-	relativePath = ".." + relativePath;
-	asset.m_SourceFile = relativePath;
-
-	return LoadImage(asset, filepath);
+bool eng::Texture2DAssetLoader::Unload(eng::Texture2DAsset& asset) const
+{
+	PROFILE_FUNCTION();
+	stbi_image_free(asset.m_TextureData);
+	return true;
 }

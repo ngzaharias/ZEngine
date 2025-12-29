@@ -111,7 +111,7 @@ namespace
 
 				auto& writeWindow = world.WriteComponent<editor::TextureWindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				assetManager.ImportAsset(writeWindow.m_Asset, filepath);
+				assetManager.ImportFromFile(writeWindow.m_Asset, filepath);
 			}
 		}
 	};
@@ -193,7 +193,7 @@ namespace
 
 				auto& writeWindow = world.WriteComponent<editor::TextureWindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				assetManager.SaveAsset(writeWindow.m_Asset, filepath);
+				assetManager.SaveToFile(writeWindow.m_Asset, filepath);
 			}
 		}
 	};

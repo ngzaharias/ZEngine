@@ -60,19 +60,21 @@ namespace eng
 		/// \brief Unloads and then loads all assets without changing the ref counts.
 		void ReloadAssets();
 
-		/// \brief Tries to fetch a non-const asset.
-		/// Will return nullptr if the asset isn't loaded.
-		template<class TAsset>
-		TAsset* WriteAsset(const str::Guid& guid);
 		/// \brief Tries to fetch a const asset.
 		/// Will return nullptr if the asset isn't loaded.
 		template<class TAsset>
 		const TAsset* ReadAsset(const str::Guid& guid) const;
+		/// \brief Tries to fetch a non-const asset.
+		/// Will return nullptr if the asset isn't loaded.
+		template<class TAsset>
+		TAsset* WriteAsset(const str::Guid& guid);
 
 		template<class TAsset>
-		bool SaveAsset(TAsset& asset, const str::Path& filepath);
+		bool ImportFromFile(TAsset& asset, const str::Path& filepath);
 		template<class TAsset>
-		bool ImportAsset(TAsset& asset, const str::Path& filepath);
+		bool LoadFromFile(TAsset& asset, const str::Path& filepath);
+		template<class TAsset>
+		bool SaveToFile(TAsset& asset, const str::Path& filepath);
 
 		auto GetFileMap() const -> const FileMap&;
 		auto GetTypeMap() const -> const TypeMap&;
@@ -101,21 +103,25 @@ namespace eng
 		template<typename TAsset>
 		static void ScheduleLoad(eng::AssetManager& manager, const str::Path& filepath);
 
-		/// \brief Function that can be used to initialise an asset after it has been loaded.
+		/// \brief Function that can be used to bind an asset after it has been loaded.
 		template<typename TAsset, typename TLoader>
-		static void InitialiseMethod(eng::Asset& asset, const eng::AssetLoader& loader);
-		/// \brief Function that can be used to shutdown an asset before it is unloaded.
+		static void BindMethod(eng::Asset& asset, const eng::AssetLoader& loader);
+		/// \brief Function that can be used to unbind an asset before it is unloaded.
 		template<typename TAsset, typename TLoader>
-		static void ShutdownMethod(eng::Asset& asset, const eng::AssetLoader& loader);
-		/// \brief Function that can be used to save the asset to a visitor.
-		template<typename TAsset, typename TLoader>
-		static bool SaveMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
-		/// \brief Function that can be used to load the asset from a visitor.
-		template<typename TAsset, typename TLoader>
-		static bool LoadMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
+		static void UnbindMethod(eng::Asset& asset, const eng::AssetLoader& loader);
+
 		/// \brief Function that can be used to import an asset from a file.
 		template<typename TAsset, typename TLoader>
 		static bool ImportMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
+		/// \brief Function that can be used to load the asset from a visitor.
+		template<typename TAsset, typename TLoader>
+		static bool LoadMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
+		/// \brief Function that can be used to save the asset to a visitor.
+		template<typename TAsset, typename TLoader>
+		static bool SaveMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
+		/// \brief Function that can be used to unload the asset from the engine.
+		template<typename TAsset, typename TLoader>
+		static bool UnloadMethod(eng::Asset& asset, const eng::AssetLoader& loader);
 
 	private:
 		std::mutex m_Mutex;

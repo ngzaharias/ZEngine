@@ -20,7 +20,7 @@ eng::PhysicsMaterialAssetLoader::PhysicsMaterialAssetLoader(eng::PhysicsManager&
 { 
 }
 
-bool eng::PhysicsMaterialAssetLoader::Load(PhysicsMaterialAsset& asset, eng::Visitor& visitor) const
+bool eng::PhysicsMaterialAssetLoader::Load(eng::PhysicsMaterialAsset& asset, eng::Visitor& visitor) const
 {
 	visitor.Read(strDynamicFriction, asset.m_DynamicFriction, 0.f);
 	visitor.Read(strRestituation, asset.m_Restituation, 0.f);
@@ -31,5 +31,11 @@ bool eng::PhysicsMaterialAssetLoader::Load(PhysicsMaterialAsset& asset, eng::Vis
 		asset.m_StaticFriction, 
 		asset.m_DynamicFriction, 
 		asset.m_Restituation);
+	return true;
+}
+
+bool eng::PhysicsMaterialAssetLoader::Unload(eng::PhysicsMaterialAsset& asset) const
+{
+	asset.m_Material->release();
 	return true;
 }

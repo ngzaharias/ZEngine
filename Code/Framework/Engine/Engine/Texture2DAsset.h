@@ -26,11 +26,12 @@ namespace eng
 	class Texture2DAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		void Initialise(eng::Texture2DAsset& asset) const;
-		void Shutdown(eng::Texture2DAsset& asset) const;
+		void Bind(eng::Texture2DAsset& asset) const;
+		void Unbind(eng::Texture2DAsset& asset) const;
 
-		bool Save(eng::Texture2DAsset& asset, eng::Visitor& visitor) const;
-		bool Load(eng::Texture2DAsset& asset, eng::Visitor& visitor) const;
 		bool Import(eng::Texture2DAsset& asset, const str::Path& filepath) const;
+		bool Load(eng::Texture2DAsset& asset, eng::Visitor& visitor) const;
+		bool Save(eng::Texture2DAsset& asset, eng::Visitor& visitor) const;
+		bool Unload(eng::Texture2DAsset& asset) const;
 	};
 }

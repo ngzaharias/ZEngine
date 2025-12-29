@@ -20,7 +20,7 @@ namespace eng
 		eng::AssetLoader* m_Loader = nullptr;
 		eng::AssetMethods m_Methods = {};
 
-		using Load = void(eng::AssetManager&, const str::Path&);
-		Load* m_Load = nullptr;
+		using Schedule = void(eng::AssetManager&, const str::Path&);
+		Schedule* m_Schedule = nullptr;
 	};
 }

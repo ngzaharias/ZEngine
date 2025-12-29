@@ -1,9 +1,10 @@
 #include "EnginePCH.h"
 #include "Engine/StaticMeshAsset.h"
 
+#include "Core/Algorithms.h"
+#include "Core/Thread.h"
 #include "Engine/AssetManager.h"
 #include "Engine/Visitor.h"
-#include "Core/Algorithms.h"
 
 #include <assimp/BaseImporter.h>
 #include <assimp/Importer.hpp>
@@ -17,10 +18,12 @@ namespace
 	const str::Name strSourceFile = NAME("m_SourceFile");
 }
 
-bool eng::StaticMeshAssetLoader::Bind(eng::StaticMeshAsset& asset)
+bool eng::StaticMeshAssetLoader::Bind(eng::StaticMeshAsset& asset) const
 {
+	PROFILE_FUNCTION();
+	Z_PANIC(core::IsMainThread(), "OpenGL functions must be called from the main thread!");
+	
 	auto& binding = asset.m_Binding;
-
 	glGenVertexArrays(1, &binding.m_AttributeObject);
 	glBindVertexArray(binding.m_AttributeObject);
 
@@ -52,8 +55,20 @@ bool eng::StaticMeshAssetLoader::Bind(eng::StaticMeshAsset& asset)
 	return true;
 }
 
-bool eng::StaticMeshAssetLoader::Load(StaticMeshAsset& asset, eng::Visitor& visitor) const
+bool eng::StaticMeshAssetLoader::Unbind(eng::StaticMeshAsset& asset) const
 {
+	PROFILE_FUNCTION();
+	Z_PANIC(core::IsMainThread(), "OpenGL functions must be called from the main thread!");
+
+	auto& binding = asset.m_Binding;
+	glDeleteVertexArrays(1, &binding.m_AttributeObject);
+	return true;
+}
+
+bool eng::StaticMeshAssetLoader::Load(eng::StaticMeshAsset& asset, eng::Visitor& visitor) const
+{
+	PROFILE_FUNCTION();
+
 	visitor.Read(strSourceFile, asset.m_SourceFile, {});
 
 	// #todo: error message
@@ -166,8 +181,5 @@ bool eng::StaticMeshAssetLoader::Load(StaticMeshAsset& asset, eng::Visitor& visi
 				asset.m_TexCoords3.Emplace(coord->x, coord->y);
 		}
 	}
-
-	Bind(asset);
-
 	return true;
 }

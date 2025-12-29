@@ -141,7 +141,7 @@ uint32 eng::ShaderAssetLoader::Compile(uint32 shaderType, const str::StringView&
 	return shaderId;
 }
 
-bool eng::ShaderAssetLoader::Load(ShaderAsset& asset, eng::Visitor& visitor) const
+bool eng::ShaderAssetLoader::Load(eng::ShaderAsset& asset, eng::Visitor& visitor) const
 {
 	Programs programs;
 	visitor.Read(strPrograms, programs, {});

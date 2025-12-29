@@ -38,8 +38,8 @@ void eng::AssetManager::Update()
 			const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
 
 			// #note: don't lock mutex before calling initialise since asset loaders can request other assets
-			if (entry.m_Methods.m_Initialise)
-				entry.m_Methods.m_Initialise(*asset, *entry.m_Loader);
+			if (entry.m_Methods.m_Bind)
+				entry.m_Methods.m_Bind(*asset, *entry.m_Loader);
 
 			m_RefMap[asset->m_Guid].m_Asset = asset;
 		}
@@ -85,12 +85,12 @@ void eng::AssetManager::ReloadAsset(const str::Guid& guid)
 	if (file != m_FileMap.end() && ref != m_RefMap.end())
 	{
 		const eng::AssetEntry& entry = m_Registry.Get(file->second.m_Type);
-		if (entry.m_Methods.m_Shutdown)
-			entry.m_Methods.m_Shutdown(*ref->second.m_Asset, *entry.m_Loader);
+		if (entry.m_Methods.m_Unbind)
+			entry.m_Methods.m_Unbind(*ref->second.m_Asset, *entry.m_Loader);
 
 		ref->second.m_Asset = nullptr;
 
-		entry.m_Load(*this, file->second.m_Path);
+		entry.m_Schedule(*this, file->second.m_Path);
 	}
 }
 
@@ -154,7 +154,7 @@ void eng::AssetManager::LoadAsset(const str::Guid& guid)
 		return;
 
 	const eng::AssetEntry& entry = m_Registry.Get(file->second.m_Type);
-	entry.m_Load(*this, file->second.m_Path);
+	entry.m_Schedule(*this, file->second.m_Path);
 }
 
 void eng::AssetManager::UnloadAsset(const str::Guid& guid)
@@ -163,10 +163,10 @@ void eng::AssetManager::UnloadAsset(const str::Guid& guid)
 	if (eng::Asset* asset = ref.m_Asset)
 	{
 		const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
-		if (entry.m_Methods.m_Shutdown)
-			entry.m_Methods.m_Shutdown(*asset, *entry.m_Loader);
+		if (entry.m_Methods.m_Unload)
+			entry.m_Methods.m_Unload(*asset, *entry.m_Loader);
 
-		// #todo: cancel loading thread if one is active
+		// #todo: cancel loading if one is active
 		delete asset;
 	}
 	m_RefMap.Remove(guid);

@@ -35,8 +35,8 @@ namespace eng
 	class FontAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Save(FontAsset& asset, eng::Visitor& visitor) const;
-		bool Load(FontAsset& asset, eng::Visitor& visitor) const;
-		bool Import(FontAsset& asset, const str::Path& filepath) const;
+		bool Import(eng::FontAsset& asset, const str::Path& filepath) const;
+		bool Load(eng::FontAsset& asset, eng::Visitor& visitor) const;
+		bool Save(eng::FontAsset& asset, eng::Visitor& visitor) const;
 	};
 }

@@ -217,7 +217,7 @@ namespace
 			if (!filepath.IsEmpty())
 			{
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				assetManager.SaveAsset(windowComponent.m_Asset, filepath);
+				assetManager.SaveToFile(windowComponent.m_Asset, filepath);
 			}
 
 			world.RemoveComponent<editor::FlipbookAssetSaveComponent>(entity);

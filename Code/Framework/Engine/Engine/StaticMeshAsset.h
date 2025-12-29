@@ -45,8 +45,9 @@ namespace eng
 	class StaticMeshAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		static bool Bind(eng::StaticMeshAsset& asset);
+		bool Bind(eng::StaticMeshAsset& asset) const;
+		bool Unbind(eng::StaticMeshAsset& asset) const;
 
-		bool Load(StaticMeshAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::StaticMeshAsset& asset, eng::Visitor& visitor) const;
 	};
 }
