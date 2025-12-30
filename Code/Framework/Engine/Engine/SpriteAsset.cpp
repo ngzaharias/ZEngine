@@ -20,18 +20,21 @@ namespace
 
 void eng::SpriteAssetLoader::Bind(eng::SpriteAsset& asset) const
 {
+	PROFILE_FUNCTION();
 	m_AssetManager->RequestAsset(asset.m_Shader);
 	m_AssetManager->RequestAsset(asset.m_Texture2D);
 }
 
 void eng::SpriteAssetLoader::Unbind(eng::SpriteAsset& asset) const
 {
+	PROFILE_FUNCTION();
 	m_AssetManager->ReleaseAsset(asset.m_Shader);
 	m_AssetManager->ReleaseAsset(asset.m_Texture2D);
 }
 
 bool eng::SpriteAssetLoader::Load(eng::SpriteAsset& asset, eng::Visitor& visitor) const
 {
+	PROFILE_FUNCTION();
 	visitor.Read(strPosition, asset.m_Position, asset.m_Position);
 	visitor.Read(strShader, asset.m_Shader, uuidShader);
 	visitor.Read(strSize, asset.m_Size, asset.m_Size);
@@ -41,6 +44,7 @@ bool eng::SpriteAssetLoader::Load(eng::SpriteAsset& asset, eng::Visitor& visitor
 
 bool eng::SpriteAssetLoader::Save(eng::SpriteAsset& asset, eng::Visitor& visitor) const
 {
+	PROFILE_FUNCTION();
 	visitor.Write(strPosition, asset.m_Position);
 	visitor.Write(strShader, asset.m_Shader);
 	visitor.Write(strSize, asset.m_Size);

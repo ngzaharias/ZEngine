@@ -165,7 +165,7 @@ void eng::AssetManager::LoadImmediate(const str::Path& filepath)
 template<typename TAsset>
 void eng::AssetManager::ScheduleLoad(eng::AssetManager& manager, const str::Path& filepath)
 {
-	if (std::is_base_of<eng::DeferredLoad, TAsset>::value)
+	if constexpr (std::is_base_of<eng::DeferredLoad, TAsset>::value)
 	{
 		std::thread thread(&eng::AssetManager::LoadDeferred<TAsset>, &manager, filepath);
 		thread.detach();

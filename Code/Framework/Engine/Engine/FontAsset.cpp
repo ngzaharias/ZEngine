@@ -62,6 +62,8 @@ void eng::Visitor::WriteCustom(const ::Character& value)
 
 bool eng::FontAssetLoader::Import(eng::FontAsset& asset, const str::Path& filepath) const
 {
+	PROFILE_FUNCTION();
+
 	FT_Library library;
 	if (const FT_Error error = FT_Init_FreeType(&library))
 	{
@@ -113,6 +115,7 @@ bool eng::FontAssetLoader::Load(eng::FontAsset& asset, eng::Visitor& visitor) co
 {
 	// #todo: assert file exists
 	// #todo: fallback to default on failure
+	PROFILE_FUNCTION();
 
 	visitor.Read(strWidth, asset.m_Width, 0);
 	visitor.Read(strHeight, asset.m_Height, 0);
@@ -170,6 +173,7 @@ bool eng::FontAssetLoader::Load(eng::FontAsset& asset, eng::Visitor& visitor) co
 
 bool eng::FontAssetLoader::Save(eng::FontAsset& asset, eng::Visitor& visitor) const
 {
+	PROFILE_FUNCTION();
 	visitor.Write(strWidth, asset.m_Width);
 	visitor.Write(strHeight, asset.m_Height);
 	visitor.Write(strPixelRange, asset.m_PixelRange);

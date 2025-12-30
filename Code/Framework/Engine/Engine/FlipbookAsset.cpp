@@ -35,18 +35,21 @@ void eng::Visitor::WriteCustom(const eng::FlipbookFrame& value)
 
 void eng::FlipbookAssetLoader::Bind(eng::FlipbookAsset& asset) const
 {
+	PROFILE_FUNCTION();
 	m_AssetManager->RequestAsset(asset.m_Shader);
 	m_AssetManager->RequestAsset(asset.m_Texture2D);
 }
 
 void eng::FlipbookAssetLoader::Unbind(eng::FlipbookAsset& asset) const
 {
+	PROFILE_FUNCTION();
 	m_AssetManager->ReleaseAsset(asset.m_Shader);
 	m_AssetManager->ReleaseAsset(asset.m_Texture2D);
 }
 
 bool eng::FlipbookAssetLoader::Save(eng::FlipbookAsset& asset, eng::Visitor& visitor) const
 {
+	PROFILE_FUNCTION();
 	visitor.Write(strFps, asset.m_FPS);
 	visitor.Write(strFrames, asset.m_Frames);
 	visitor.Write(strIsLooping, asset.m_IsLooping);
@@ -57,6 +60,7 @@ bool eng::FlipbookAssetLoader::Save(eng::FlipbookAsset& asset, eng::Visitor& vis
 
 bool eng::FlipbookAssetLoader::Load(eng::FlipbookAsset& asset, eng::Visitor& visitor) const
 {
+	PROFILE_FUNCTION();
 	visitor.Read(strFps, asset.m_FPS, s_DefaultAsset.m_FPS);
 	visitor.Read(strFrames, asset.m_Frames, s_DefaultAsset.m_Frames);
 	visitor.Read(strIsLooping, asset.m_IsLooping, s_DefaultAsset.m_IsLooping);
