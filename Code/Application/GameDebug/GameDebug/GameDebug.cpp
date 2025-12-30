@@ -23,11 +23,7 @@
 #include "GameDebug/DebugSplineWindowRequest.h"
 #include "GameDebug/EditorAssetBrowserWindowRequest.h"
 #include "GameDebug/EditorEntityWindowRequest.h"
-#include "GameDebug/EditorInputWindowRequest.h"
 #include "GameDebug/EditorSettingsWindowRequest.h"
-#include "GameDebug/EditorTableWindowRequest.h"
-#include "GameDebug/EditorTextureWindowRequest.h"
-#include "GameDebug/EditorTrajectoryWindowRequest.h"
 #include "GameDebug/EntitySystem.h"
 #include "GameDebug/EntityWindowComponent.h"
 #include "GameDebug/FrameBufferSystem.h"
@@ -100,11 +96,7 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterEvent<debug::SplineWindowRequest>();
 	m_ClientWorld.RegisterEvent<editor::AssetBrowserWindowRequest>();
 	m_ClientWorld.RegisterEvent<editor::EntityWindowRequest>();
-	m_ClientWorld.RegisterEvent<editor::InputWindowRequest>();
 	m_ClientWorld.RegisterEvent<editor::settings::WindowRequest>();
-	m_ClientWorld.RegisterEvent<editor::TableWindowRequest>();
-	m_ClientWorld.RegisterEvent<editor::TextureWindowRequest>();
-	m_ClientWorld.RegisterEvent<editor::TrajectoryWindowRequest>();
 
 	m_ClientWorld.RegisterSystem<debug::ContainerSystem>();
 	m_ClientWorld.RegisterSystem<debug::EntitySystem>(m_ClientWorld, m_ServerWorld);

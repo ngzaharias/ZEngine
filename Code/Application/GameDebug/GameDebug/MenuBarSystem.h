@@ -33,16 +33,7 @@ namespace editor
 {
 	struct AssetBrowserWindowRequest;
 	struct EntityWindowRequest;
-	struct InputWindowRequest;
 	struct SettingsWindowRequest;
-	struct TableWindowRequest;
-	struct TextureWindowRequest;
-	struct TrajectoryWindowRequest;
-}
-
-namespace editor::settings
-{
-	struct WindowRequest;
 }
 
 namespace editor::flipbook
@@ -50,7 +41,32 @@ namespace editor::flipbook
 	struct WindowRequest;
 }
 
+namespace editor::input
+{
+	struct WindowRequest;
+}
+
+namespace editor::settings
+{
+	struct WindowRequest;
+}
+
 namespace editor::sprite
+{
+	struct WindowRequest;
+}
+
+namespace editor::table
+{
+	struct WindowRequest;
+}
+
+namespace editor::texture
+{
+	struct WindowRequest;
+}
+
+namespace editor::trajectory
 {
 	struct WindowRequest;
 }
@@ -87,12 +103,12 @@ namespace debug
 			editor::AssetBrowserWindowRequest,
 			editor::EntityWindowRequest,
 			editor::flipbook::WindowRequest,
-			editor::InputWindowRequest,
+			editor::input::WindowRequest,
 			editor::settings::WindowRequest,
 			editor::sprite::WindowRequest,
-			editor::TableWindowRequest,
-			editor::TextureWindowRequest,
-			editor::TrajectoryWindowRequest,
+			editor::table::WindowRequest,
+			editor::texture::WindowRequest,
+			editor::trajectory::WindowRequest,
 			eng::AssetManager,
 			eng::TableHeadmaster,
 			eng::TablesReloaded>

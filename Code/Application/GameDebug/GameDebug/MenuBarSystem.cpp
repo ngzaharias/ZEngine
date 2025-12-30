@@ -26,16 +26,16 @@
 #include "GameDebug/DebugSplineWindowRequest.h"
 #include "GameDebug/EditorAssetBrowserWindowRequest.h"
 #include "GameDebug/EditorEntityWindowRequest.h"
-#include "GameDebug/EditorInputWindowRequest.h"
 #include "GameDebug/EditorSettingsWindowRequest.h"
-#include "GameDebug/EditorTableWindowRequest.h"
-#include "GameDebug/EditorTextureWindowRequest.h"
-#include "GameDebug/EditorTrajectoryWindowRequest.h"
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/SettingsWindowComponent.h"
 #include "GameDebug/SettingsWindowRequest.h"
 #include "FlipbookEditor/FlipbookEditorWindowRequest.h"
+#include "InputEditor/InputEditorWindowRequest.h"
 #include "SpriteEditor/SpriteEditorWindowRequest.h"
+#include "TableEditor/TableEditorWindowRequest.h"
+#include "TextureEditor/TextureEditorWindowRequest.h"
+#include "TrajectoryEditor/TrajectoryEditorWindowRequest.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -161,15 +161,15 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 			if (ImGui::MenuItem("Flipbook Editor"))
 				world.AddEvent<editor::flipbook::WindowRequest>();
 			if (ImGui::MenuItem("Input Editor"))
-				world.AddEvent<editor::InputWindowRequest>();
+				world.AddEvent<editor::input::WindowRequest>();
 			if (ImGui::MenuItem("Sprite Editor"))
 				world.AddEvent<editor::sprite::WindowRequest>();
 			if (ImGui::MenuItem("Table Editor"))
-				world.AddEvent<editor::TableWindowRequest>();
+				world.AddEvent<editor::table::WindowRequest>();
 			if (ImGui::MenuItem("Texture Editor"))
-				world.AddEvent<editor::TextureWindowRequest>();
+				world.AddEvent<editor::texture::WindowRequest>();
 			if (ImGui::MenuItem("Trajectory Editor"))
-				world.AddEvent<editor::TrajectoryWindowRequest>();
+				world.AddEvent<editor::trajectory::WindowRequest>();
 			if (ImGui::MenuItem("UI Editor (external)"))
 				LaunchExe(str::Path(str::EPath::Assets, "UI/ZEngine.noesis"));
 

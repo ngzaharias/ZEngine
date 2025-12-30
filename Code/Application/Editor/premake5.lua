@@ -50,8 +50,12 @@ project "Editor"
 		"%{wks.location}/../Code/Application/GameShared/",
 		"%{wks.location}/../Code/Application/GameUI/",
 		"%{wks.location}/../Code/Bindings/Steam/",
+		"%{wks.location}/../Code/Editors/InputEditor/",
 		"%{wks.location}/../Code/Editors/FlipbookEditor/",
 		"%{wks.location}/../Code/Editors/SpriteEditor/",
+		"%{wks.location}/../Code/Editors/TableEditor/",
+		"%{wks.location}/../Code/Editors/TextureEditor/",
+		"%{wks.location}/../Code/Editors/TrajectoryEditor/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Engine/",
@@ -107,8 +111,12 @@ project "Editor"
 		"Steam",
 
 		-- Editors
+		"InputEditor",
 		"FlipbookEditor",
 		"SpriteEditor",
+		"TableEditor",
+		"TextureEditor",
+		"TrajectoryEditor",
 
 		-- Framework
 		"Core",

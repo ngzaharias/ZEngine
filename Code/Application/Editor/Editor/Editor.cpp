@@ -16,27 +16,17 @@
 #include "Editor/EntityWindowComponent.h"
 #include "Editor/GizmoCrosshairSystem.h"
 #include "Editor/GizmoTransformSystem.h"
-#include "Editor/InputSystem.h"
-#include "Editor/InputWindowComponent.h"
 #include "Editor/OverlaySystem.h"
 #include "Editor/SettingsLocalSingleton.h"
 #include "Editor/SettingsLocalSystem.h"
 #include "Editor/SettingsMenuSystem.h"
 #include "Editor/SettingsWindowComponent.h"
-#include "Editor/TableEditorSystem.h"
-#include "Editor/TableWindowComponent.h"
-#include "Editor/TextureAssetImportComponent.h"
-#include "Editor/TextureAssetNewComponent.h"
-#include "Editor/TextureAssetOpenComponent.h"
-#include "Editor/TextureAssetSaveComponent.h"
-#include "Editor/TextureEditorSystem.h"
-#include "Editor/TextureWindowComponent.h"
-#include "Editor/TrajectoryAssetOpenComponent.h"
-#include "Editor/TrajectoryAssetSaveComponent.h"
-#include "Editor/TrajectoryEditorSystem.h"
-#include "Editor/TrajectoryWindowComponent.h"
+#include "InputEditor/RegisterModule.h"
 #include "FlipbookEditor/RegisterModule.h"
 #include "SpriteEditor/RegisterModule.h"
+#include "TableEditor/RegisterModule.h"
+#include "TextureEditor/RegisterModule.h"
+#include "TrajectoryEditor/RegisterModule.h"
 
 editor::Editor::Editor(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
 	: m_ClientWorld(clientWorld)
@@ -51,17 +41,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::AssetBrowserWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::EntitySaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::EntityWindowComponent>();
-	m_ClientWorld.RegisterComponent<editor::InputWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
-	m_ClientWorld.RegisterComponent<editor::TableWindowComponent>();
-	m_ClientWorld.RegisterComponent<editor::TextureAssetImportComponent>();
-	m_ClientWorld.RegisterComponent<editor::TextureAssetNewComponent>();
-	m_ClientWorld.RegisterComponent<editor::TextureAssetOpenComponent>();
-	m_ClientWorld.RegisterComponent<editor::TextureAssetSaveComponent>();
-	m_ClientWorld.RegisterComponent<editor::TextureWindowComponent>();
-	m_ClientWorld.RegisterComponent<editor::TrajectoryAssetOpenComponent>();
-	m_ClientWorld.RegisterComponent<editor::TrajectoryAssetSaveComponent>();
-	m_ClientWorld.RegisterComponent<editor::TrajectoryWindowComponent>();
 
 	m_ClientWorld.RegisterSingleton<editor::EntitySelectSingleton>();
 	m_ClientWorld.RegisterSingleton<editor::settings::LocalSingleton>();
@@ -72,18 +52,18 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::EntitySelectSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
-	m_ClientWorld.RegisterSystem<editor::InputSystem>();
 	m_ClientWorld.RegisterSystem<editor::OverlaySystem>();
 	m_ClientWorld.RegisterSystem<editor::RenderAxesSystem>();
 	m_ClientWorld.RegisterSystem<editor::RenderGridSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::LocalSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
-	m_ClientWorld.RegisterSystem<editor::TableEditorSystem>();
-	m_ClientWorld.RegisterSystem<editor::TextureEditorSystem>();
-	m_ClientWorld.RegisterSystem<editor::TrajectoryEditorSystem>();
 
 	editor::flipbook::RegisterModule(m_ClientWorld);
+	editor::input::RegisterModule(m_ClientWorld);
 	editor::sprite::RegisterModule(m_ClientWorld);
+	editor::table::RegisterModule(m_ClientWorld);
+	editor::texture::RegisterModule(m_ClientWorld);
+	editor::trajectory::RegisterModule(m_ClientWorld);
 }
 
 void editor::Editor::Initialise()
