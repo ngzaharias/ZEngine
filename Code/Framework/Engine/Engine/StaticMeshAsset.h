@@ -25,7 +25,7 @@ namespace eng
 		uint32 m_IndexBuffer = 0;
 	};
 
-	struct StaticMeshAsset : public eng::Asset
+	struct StaticMeshAsset : public eng::Asset, eng::DeferredLoad
 	{
 		str::Path m_SourceFile = { };
 
