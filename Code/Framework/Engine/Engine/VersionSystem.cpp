@@ -15,6 +15,8 @@ namespace
 
 void eng::VersionSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& component = world.WriteSingleton<eng::VersionSingleton>();
 
 	// #todo: do not allow system commands in shipped games

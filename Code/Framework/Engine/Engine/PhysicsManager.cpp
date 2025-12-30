@@ -38,6 +38,8 @@ namespace physx
 
 void eng::PhysicsManager::Initialise()
 {
+	PROFILE_FUNCTION();
+
 	physx::gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, physx::gAllocator, physx::gError);
 
 	m_Debugger = physx::PxCreatePvd(*physx::gFoundation);
@@ -49,6 +51,8 @@ void eng::PhysicsManager::Initialise()
 
 void eng::PhysicsManager::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	m_Debugger->disconnect();
 
 	m_Physics->release();

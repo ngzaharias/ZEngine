@@ -105,6 +105,8 @@ void client::GameClient::Register(const Dependencies& dependencies)
 
 void client::GameClient::Initialise()
 {
+	PROFILE_FUNCTION();
+
 	m_EntityWorld.Initialise();
 
 	// ui
@@ -121,6 +123,8 @@ void client::GameClient::Initialise()
 
 void client::GameClient::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	m_InputManager.RemoveLayer(strNoesis);
 	m_UIManager.Shutdown();
 

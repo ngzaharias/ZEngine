@@ -8,6 +8,8 @@
 
 void eng::TableHeadmaster::Initialise(const str::Path& folderPath)
 {
+	PROFILE_FUNCTION();
+
 	m_FolderPath = folderPath;
 	for (const eng::TableEntry& entry : m_Entries.GetValues())
 	{
@@ -23,6 +25,8 @@ void eng::TableHeadmaster::Initialise(const str::Path& folderPath)
 
 void eng::TableHeadmaster::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	for (const eng::TableEntry& entry : m_Entries.GetValues())
 		delete entry.m_Manager;
 	m_Entries.RemoveAll();

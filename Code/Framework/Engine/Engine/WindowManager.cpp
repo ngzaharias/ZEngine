@@ -21,6 +21,8 @@ namespace
 
 void eng::WindowManager::Initialise()
 {
+	PROFILE_FUNCTION();
+
 	Z_LOG(ELog::Debug, "Window: Initialise - GLFW.");
 
 	glfwSetErrorCallback(glfw_error_callback);
@@ -111,6 +113,8 @@ void eng::WindowManager::Initialise()
 
 void eng::WindowManager::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	for (eng::Window* window : m_Windows)
 		delete window;
 	m_Windows.RemoveAll();

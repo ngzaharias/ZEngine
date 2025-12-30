@@ -14,6 +14,8 @@
 
 void net::UserSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& networkManager = world.WriteResource<eng::NetworkManager>();
 	auto& adaptor = networkManager.GetAdaptor();
 
@@ -26,6 +28,8 @@ void net::UserSystem::Initialise(World& world)
 
 void net::UserSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	m_Collection.Disconnect();
 }
 

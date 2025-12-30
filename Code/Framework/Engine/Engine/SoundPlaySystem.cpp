@@ -22,7 +22,10 @@
 
 void eng::sound::PlaySystem::Initialise(World& world)
 {
-	Noesis::GUI::SetPlayAudioCallback(this, [](void* user, const Noesis::Uri& uri, float volume)
+	PROFILE_FUNCTION();
+
+	Noesis::GUI::SetPlayAudioCallback(this, 
+		[](void* user, const Noesis::Uri& uri, float volume)
 		{
 			auto* self = reinterpret_cast<eng::sound::PlaySystem*>(user);
 			const Noesis::String string = uri.ToString();

@@ -16,6 +16,8 @@ namespace
 
 void eng::settings::LaunchSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	const str::Path filepath = str::Path(str::EPath::Levels, strFilename);
 	auto& settings = world.WriteSingleton<eng::settings::LaunchSingleton>();
 

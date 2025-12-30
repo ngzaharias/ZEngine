@@ -42,6 +42,8 @@ gui::DCSettingsMenu::~DCSettingsMenu()
 
 void gui::DCSettingsMenu::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	const auto& audio = world.ReadSingleton<eng::settings::AudioSingleton>();
 	const auto& camera = world.ReadSingleton<camera::SettingsSingleton>();
 	const auto& gameplay = world.ReadSingleton<eng::settings::GameplaySingleton>();

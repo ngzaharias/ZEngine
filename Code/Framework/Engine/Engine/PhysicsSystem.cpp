@@ -136,6 +136,8 @@ namespace physx
 
 void eng::PhysicsSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& physicsManager = world.WriteResource<eng::PhysicsManager>();
 	physx::PxPhysics& physics = physicsManager.GetPhysics();
 
@@ -155,6 +157,8 @@ void eng::PhysicsSystem::Initialise(World& world)
 
 void eng::PhysicsSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.ReleaseAsset(strDefaultMaterial);
 }

@@ -63,6 +63,8 @@ namespace
 }
 void editor::gizmo::TransformSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::EditorUI;
 	layer.m_Bindings.Emplace(strTransform, input::EKey::F1);
@@ -77,6 +79,8 @@ void editor::gizmo::TransformSystem::Initialise(World& world)
 
 void editor::gizmo::TransformSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.RemoveLayer(strInput);
 }

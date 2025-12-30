@@ -13,6 +13,8 @@ namespace
 
 void editor::sprite::SettingsSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 	eng::Visitor visitor;

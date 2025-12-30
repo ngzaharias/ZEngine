@@ -28,6 +28,8 @@ namespace
 
 void client::SettingsSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	auto& audioSettings = world.WriteSingleton<eng::settings::AudioSingleton>();
 	auto& cameraSettings = world.WriteSingleton<camera::SettingsSingleton>();

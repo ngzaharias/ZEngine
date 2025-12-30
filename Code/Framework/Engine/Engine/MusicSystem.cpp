@@ -17,6 +17,8 @@ namespace
 
 void eng::MusicSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& musicComponent = world.WriteSingleton<eng::MusicSingleton>();
 	musicComponent.m_Music = new sf::Music();
 
@@ -36,6 +38,8 @@ void eng::MusicSystem::Initialise(World& world)
 
 void eng::MusicSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& component = world.WriteSingleton<eng::MusicSingleton>();
 	delete component.m_Music;
 

@@ -61,6 +61,8 @@ namespace
 
 void debug::MenuBarSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	input::Layer layer;
 	layer.m_Priority = eng::EInputPriority::MenuBar;
 	layer.m_Bindings.Emplace(strOpen,   input::EKey::O, input::EKey::Control_L);
@@ -74,6 +76,8 @@ void debug::MenuBarSystem::Initialise(World& world)
 
 void debug::MenuBarSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.RemoveLayer(strInput);
 }

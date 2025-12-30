@@ -182,6 +182,8 @@ eng::UIManager::UIManager(ecs::EntityWorld& entityWorld)
 
 void eng::UIManager::Initialise(const eng::Window& window)
 {
+	PROFILE_FUNCTION();
+
 	m_Window = &window;
 
 	// A logging handler is installed here. You can also install a custom error handler and memory
@@ -222,6 +224,8 @@ void eng::UIManager::Initialise(const eng::Window& window)
 
 void eng::UIManager::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	if (!m_Window)
 		return;
 

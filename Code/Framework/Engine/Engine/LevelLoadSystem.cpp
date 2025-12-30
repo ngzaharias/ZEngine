@@ -32,6 +32,8 @@ eng::level::LoadSystem::LoadSystem(ecs::EntityWorld& entityWorld)
 
 void eng::level::LoadSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& directoryComponent = world.WriteSingleton<eng::level::DirectorySingleton>();
 
 	str::Path subpath;

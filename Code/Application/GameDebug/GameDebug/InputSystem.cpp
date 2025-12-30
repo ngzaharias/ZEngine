@@ -14,6 +14,8 @@ namespace
 
 void debug::InputSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& imgui = world.WriteResource<eng::ImguiManager>();
 	auto& input = world.WriteResource<eng::InputManager>();
 
@@ -25,6 +27,8 @@ void debug::InputSystem::Initialise(World& world)
 
 void debug::InputSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.RemoveLayer(strImGui);
 }

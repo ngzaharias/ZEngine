@@ -31,6 +31,8 @@ namespace
 
 void editor::RenderAxesSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	glGenVertexArrays(1, &m_AttributeObject);
 	glBindVertexArray(m_AttributeObject);
 	glGenBuffers(1, &m_VertexBuffer);
@@ -47,6 +49,8 @@ void editor::RenderAxesSystem::Initialise(World& world)
 
 void editor::RenderAxesSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	glDeleteVertexArrays(1, &m_AttributeObject);
 	glDeleteBuffers(1, &m_VertexBuffer);
 	glDeleteBuffers(1, &m_ColourBuffer);

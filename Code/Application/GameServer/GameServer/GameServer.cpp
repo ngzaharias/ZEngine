@@ -51,11 +51,15 @@ void server::GameServer::Register(const Dependencies& dependencies)
 
 void server::GameServer::Initialise()
 {
+	PROFILE_FUNCTION();
+
 	m_EntityWorld.Initialise();
 }
 
 void server::GameServer::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	m_EntityWorld.Shutdown();
 }
 

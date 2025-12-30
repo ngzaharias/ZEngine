@@ -72,12 +72,16 @@ namespace
 
 void editor::EntitySelectSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.AppendLayer(strInput, input::Layer{ eng::EInputPriority::EditorWorld });
 }
 
 void editor::EntitySelectSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& input = world.WriteResource<eng::InputManager>();
 	input.RemoveLayer(strInput);
 }

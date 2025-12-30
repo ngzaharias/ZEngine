@@ -43,6 +43,8 @@ namespace
 
 void editor::RenderGridSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	glGenVertexArrays(1, &m_AttributeObject);
 	glBindVertexArray(m_AttributeObject);
 
@@ -71,6 +73,8 @@ void editor::RenderGridSystem::Initialise(World& world)
 
 void editor::RenderGridSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.ReleaseAsset(strShader);
 }

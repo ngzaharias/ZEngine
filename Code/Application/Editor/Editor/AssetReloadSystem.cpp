@@ -41,6 +41,8 @@ namespace
 
 void editor::AssetReloadSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	std::thread thread(&editor::AssetReloadSystem::Execute, this);
 	thread.detach();
 }
