@@ -57,6 +57,8 @@ namespace
 
 void render::OpaqueSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	glGenBuffers(1, &m_ColourBuffer);
 	glGenBuffers(1, &m_ModelBuffer);
 	glGenBuffers(1, &m_TexParamBuffer);
@@ -69,6 +71,8 @@ void render::OpaqueSystem::Initialise(World& world)
 
 void render::OpaqueSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	glDeleteBuffers(1, &m_ColourBuffer);
 	glDeleteBuffers(1, &m_ModelBuffer);
 	glDeleteBuffers(1, &m_TexParamBuffer);

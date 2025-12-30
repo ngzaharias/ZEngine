@@ -23,6 +23,8 @@ namespace
 
 void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	using AddedQuery = ecs::query
 		::Added<gui::main_menu::WindowComponent>
 		::Include<const gui::main_menu::WindowComponent>;

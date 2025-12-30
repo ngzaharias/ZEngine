@@ -18,6 +18,8 @@ namespace
 
 void gui::loading::LoadingSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	using AddedQuery = ecs::query
 		::Added<eng::level::LoadingComponent>
 		::Include<const eng::level::LoadingComponent>;

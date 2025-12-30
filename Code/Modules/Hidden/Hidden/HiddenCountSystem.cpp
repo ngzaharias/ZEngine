@@ -9,6 +9,8 @@
 
 void hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	bool hasChanged = false;
 	hasChanged |= world.HasAny<ecs::query::Added<hidden::CountComponent>>();
 	hasChanged |= world.HasAny<ecs::query::Added<hidden::GroupComponent>>();

@@ -22,6 +22,8 @@
 
 void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	const auto& inputManager = world.ReadResource<eng::InputManager>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();

@@ -11,6 +11,8 @@
 
 void container::OwnerSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	ProcessStorageChanges(world);
 }
 

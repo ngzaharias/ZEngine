@@ -40,6 +40,8 @@ namespace
 
 void render::ShadowSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	// texture and buffer
 	{
 		auto& bufferComponent = world.WriteSingleton<eng::FrameBufferSingleton>();
@@ -71,6 +73,8 @@ void render::ShadowSystem::Initialise(World& world)
 
 void render::ShadowSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& bufferComponent = world.WriteSingleton<eng::FrameBufferSingleton>();
 
 	glDeleteFramebuffers(1, &bufferComponent.m_ShadowBuffer);

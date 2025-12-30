@@ -2,6 +2,7 @@
 
 #include "Core/Assert.h"
 #include "Core/GameTime.h"
+#include "Core/Profiler.h"
 #include "Network/Adaptor.h"
 #include "Network/Config.h"
 
@@ -18,6 +19,8 @@ net::Peer::Peer(net::Adaptor& adaptor, net::Config& config)
 
 void net::Peer::Startup(const str::String& ipAddress, const int32 port, const float time)
 {
+	PROFILE_FUNCTION();
+
 	m_Collection =
 	{
 		m_Adaptor.m_OnServerClientConnected.Connect(*this, &net::Peer::OnClientConnected),
@@ -27,6 +30,8 @@ void net::Peer::Startup(const str::String& ipAddress, const int32 port, const fl
 
 void net::Peer::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	m_Collection.Disconnect();
 
 	if (IsRunning())
@@ -46,6 +51,7 @@ void net::Peer::Disconnect()
 
 void net::Peer::Update(const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
 }
 
 void net::Peer::SendMessage(void* message)

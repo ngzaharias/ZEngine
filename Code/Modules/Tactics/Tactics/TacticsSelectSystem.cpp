@@ -30,6 +30,8 @@ namespace
 
 void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	if (debugSettings.m_IsEditorModeEnabled)
 		return;

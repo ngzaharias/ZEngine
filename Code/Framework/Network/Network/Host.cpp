@@ -2,6 +2,7 @@
 
 #include "Core/Assert.h"
 #include "Core/GameTime.h"
+#include "Core/Profiler.h"
 #include "Network/Adaptor.h"
 #include "Network/Config.h"
 #include "Network/UserId.h"
@@ -22,6 +23,8 @@ net::Host::Host(net::Adaptor& adaptor, net::Config& config)
 
 void net::Host::Startup(const str::String& ipAddress, const int32 port, const float time)
 {
+	PROFILE_FUNCTION();
+
 	m_Collection =
 	{
 		m_Adaptor.m_OnServerClientConnected.Connect(*this, &net::Host::OnClientConnected),
@@ -31,11 +34,14 @@ void net::Host::Startup(const str::String& ipAddress, const int32 port, const fl
 
 void net::Host::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	m_Collection.Disconnect();
 }
 
 void net::Host::Update(const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
 }
 
 void net::Host::SendMessage(const net::PeerId& peerId, void* message)

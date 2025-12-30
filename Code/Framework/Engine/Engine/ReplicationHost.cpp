@@ -34,10 +34,12 @@ net::ReplicationHost::ReplicationHost(ecs::EntityWorld& entityWorld)
 
 void net::ReplicationHost::Initialise()
 {
+	PROFILE_FUNCTION();
 }
 
 void net::ReplicationHost::Shutdown()
 {
+	PROFILE_FUNCTION();
 }
 
 void net::ReplicationHost::Update(const GameTime& gameTime)

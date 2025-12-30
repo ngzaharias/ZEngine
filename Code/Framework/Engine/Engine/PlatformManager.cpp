@@ -7,6 +7,8 @@
 
 void eng::PlatformManager::Initialise()
 {
+	PROFILE_FUNCTION();
+
 	m_SteamManager = new steam::Manager();
 	if (m_SteamManager->Initialise())
 	{
@@ -20,6 +22,8 @@ void eng::PlatformManager::Initialise()
 
 void eng::PlatformManager::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	if (m_SteamManager->Shutdown())
 	{
 		Z_LOG(ELog::Debug, "Platform: Shutdown - Steamworks.");
@@ -31,6 +35,8 @@ void eng::PlatformManager::Shutdown()
 
 void eng::PlatformManager::Update(const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	m_SteamManager->Update();
 }
 

@@ -13,6 +13,8 @@ namespace
 
 void editor::texture::SettingsSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 	eng::Visitor visitor;
@@ -22,6 +24,8 @@ void editor::texture::SettingsSystem::Initialise(World& world)
 
 void editor::texture::SettingsSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	if (world.HasAny<editor::texture::SettingsSingleton>())
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);

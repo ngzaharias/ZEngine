@@ -18,10 +18,12 @@ net::ReplicationPeer::ReplicationPeer(ecs::EntityWorld& entityWorld)
 
 void net::ReplicationPeer::Initialise()
 {
+	PROFILE_FUNCTION();
 }
 
 void net::ReplicationPeer::Shutdown()
 {
+	PROFILE_FUNCTION();
 }
 
 void net::ReplicationPeer::Update(const GameTime& gameTime)

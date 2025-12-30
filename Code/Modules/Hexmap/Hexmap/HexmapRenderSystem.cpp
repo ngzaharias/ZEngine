@@ -35,6 +35,8 @@ namespace
 
 void hexmap::RenderSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	glGenBuffers(1, &m_ColourBuffer);
 	glGenBuffers(1, &m_ModelBuffer);
 	glGenBuffers(1, &m_TexParamBuffer);
@@ -47,6 +49,8 @@ void hexmap::RenderSystem::Initialise(World& world)
 
 void hexmap::RenderSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	glDeleteBuffers(1, &m_ColourBuffer);
 	glDeleteBuffers(1, &m_ModelBuffer);
 	glDeleteBuffers(1, &m_TexParamBuffer);

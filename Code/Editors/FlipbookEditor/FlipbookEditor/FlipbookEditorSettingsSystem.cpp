@@ -22,6 +22,8 @@ void editor::flipbook::SettingsSystem::Initialise(World& world)
 
 void editor::flipbook::SettingsSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	if (world.HasAny<editor::flipbook::SettingsSingleton>())
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);

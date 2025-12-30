@@ -18,6 +18,8 @@
 
 void debug::SoftbodySystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	if (!settings.m_AreSoftbodyEnabled)
 		return;

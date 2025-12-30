@@ -25,6 +25,8 @@ void editor::settings::LocalSystem::Initialise(World& world)
 
 void editor::settings::LocalSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	if (world.HasAny<editor::settings::LocalSingleton>())
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);

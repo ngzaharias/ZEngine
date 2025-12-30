@@ -10,6 +10,8 @@
 
 void tactics::InputSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	if (world.HasAny<ecs::query::Added<tilemap::AgentComponent>>())
 	{
 		input::Layer layer;

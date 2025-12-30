@@ -17,6 +17,8 @@ namespace
 
 void debug::settings::DebugSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 	eng::Visitor visitor;
@@ -33,6 +35,8 @@ void debug::settings::DebugSystem::Initialise(World& world)
 
 void debug::settings::DebugSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	const bool hasChanged =
 		world.HasAny<client::settings::DebugSingleton>() ||
 		world.HasAny<eng::settings::DebugSingleton>() ||

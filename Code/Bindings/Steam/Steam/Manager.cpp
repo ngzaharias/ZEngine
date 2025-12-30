@@ -1,9 +1,12 @@
 #include "Steam/Manager.h"
 
+#include "Core/Profiler.h"
 #include "Steam/Achievements.h"
 
 bool steam::Manager::Initialise()
 {
+	PROFILE_FUNCTION();
+
 	if (SteamAPI_Init())
 	{
 		m_IsConnected = true;
@@ -15,6 +18,8 @@ bool steam::Manager::Initialise()
 
 bool steam::Manager::Shutdown()
 {
+	PROFILE_FUNCTION();
+
 	if (!m_IsConnected)
 		return false;
 
@@ -29,6 +34,8 @@ bool steam::Manager::Shutdown()
 
 void steam::Manager::Update()
 {
+	PROFILE_FUNCTION();
+
 	SteamAPI_RunCallbacks();
 }
 

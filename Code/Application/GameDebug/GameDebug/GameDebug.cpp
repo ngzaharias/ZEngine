@@ -121,12 +121,15 @@ void debug::GameDebug::Register()
 
 void debug::GameDebug::Initialise()
 {
+	PROFILE_FUNCTION();
 }
 
 void debug::GameDebug::Shutdown()
 {
+	PROFILE_FUNCTION();
 }
 
 void debug::GameDebug::Update(const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
 }

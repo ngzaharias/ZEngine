@@ -62,6 +62,8 @@ namespace
 
 	Array<TypeId> TopologicalSort(const ecs::EntityWorld& world)
 	{
+		PROFILE_FUNCTION();
+
 		const ecs::SystemRegistry& registry = world.m_SystemRegistry;
 		const ecs::SystemEntries& entries = registry.GetEntries();
 

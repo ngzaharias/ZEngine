@@ -28,6 +28,8 @@ namespace
 
 void tactics::PreviewSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	using Query = ecs::query
 		::Include<
 		const eng::TransformComponent,

@@ -23,6 +23,8 @@ namespace
 
 void debug::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	const bool hasWindow = world.HasAny<ecs::query::Include<debug::settings::WindowComponent>>();
 	if (!hasWindow && world.HasAny<debug::settings::WindowRequest>())
 	{

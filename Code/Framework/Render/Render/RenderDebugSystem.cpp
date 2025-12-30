@@ -26,6 +26,8 @@ namespace
 
 void render::DebugSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	glGenVertexArrays(1, &m_AttributeObject);
 	glBindVertexArray(m_AttributeObject);
 	glGenBuffers(1, &m_VertexBuffer);
@@ -36,6 +38,8 @@ void render::DebugSystem::Initialise(World& world)
 
 void render::DebugSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	glDeleteVertexArrays(1, &m_AttributeObject);
 	glDeleteBuffers(1, &m_VertexBuffer);
 

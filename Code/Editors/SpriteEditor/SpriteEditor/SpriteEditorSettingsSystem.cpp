@@ -22,6 +22,8 @@ void editor::sprite::SettingsSystem::Initialise(World& world)
 
 void editor::sprite::SettingsSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	if (world.HasAny<editor::sprite::SettingsSingleton>())
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);

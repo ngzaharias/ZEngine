@@ -24,6 +24,8 @@ namespace
 
 void gui::level_complete::MenuSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	for (auto&& view : world.Query<ecs::query::Added<gui::level_complete::WindowComponent>>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();

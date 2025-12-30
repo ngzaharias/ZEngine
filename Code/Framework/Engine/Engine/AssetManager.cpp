@@ -16,16 +16,21 @@ namespace
 
 void eng::AssetManager::Initialise()
 {
+	PROFILE_FUNCTION();
+
 	const str::Path assets = str::GetPath(str::EPath::Assets);
 	LoadFilepath(assets, true);
 }
 
 void eng::AssetManager::Shutdown()
 {
+	PROFILE_FUNCTION();
 }
 
 void eng::AssetManager::Update()
 {
+	PROFILE_FUNCTION();
+
 	if (!m_Loaded.IsEmpty())
 	{
 		m_Mutex.lock();

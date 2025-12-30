@@ -16,6 +16,8 @@ namespace
 
 void gui::hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	using AddedQuery = ecs::query
 		::Added<::hidden::CountComponent>
 		::Include<const ::hidden::CountComponent>;

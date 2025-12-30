@@ -150,6 +150,8 @@ void editor::RenderAxesSystem::Update(World& world, const GameTime& gameTime)
 
 void editor::RenderAxesSystem::UpdateBuffers(const bool showX, const bool showY, const bool showZ)
 {
+	PROFILE_FUNCTION();
+
 	m_Vertices.RemoveAll();
 	m_Colours.RemoveAll();
 	if (showX)

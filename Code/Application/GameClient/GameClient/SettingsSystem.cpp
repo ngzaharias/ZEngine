@@ -51,6 +51,8 @@ void client::SettingsSystem::Initialise(World& world)
 
 void client::SettingsSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	const bool hasChanged =
 		world.HasAny<eng::settings::AudioSingleton>() || 
 		world.HasAny<camera::SettingsSingleton>() ||

@@ -12,6 +12,8 @@
 
 void container::MemberSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	ProcessAddRequests(world);
 	ProcessMoveRequests(world);
 	ProcessRemoveRequests(world);

@@ -30,6 +30,8 @@ namespace
 
 void render::VoxelSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.RequestAsset(strVoxelShader);
 	assetManager.RequestAsset(strVoxelTexture);
@@ -37,6 +39,8 @@ void render::VoxelSystem::Initialise(World& world)
 
 void render::VoxelSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.ReleaseAsset(strVoxelShader);
 	assetManager.ReleaseAsset(strVoxelTexture);

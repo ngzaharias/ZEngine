@@ -10,6 +10,8 @@ eng::NetworkManager::NetworkManager(net::ComponentSerializer& serializer)
 
 void eng::NetworkManager::Update(const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	// host first, then peer
 	m_Peer.Update(gameTime);
 	m_Host.Update(gameTime);

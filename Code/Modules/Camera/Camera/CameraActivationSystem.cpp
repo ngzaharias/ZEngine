@@ -14,6 +14,8 @@
 
 void camera::ActivationSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 #ifdef Z_EDITOR
 	const ecs::Entity entity = world.CreateEntity();
 	world.AddComponent<ecs::NameComponent>(entity, "Editor Camera");

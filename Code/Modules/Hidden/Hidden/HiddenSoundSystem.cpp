@@ -15,12 +15,16 @@ namespace
 
 void hidden::SoundSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	m_SoundEntity = world.CreateEntity();
 	world.AddComponent<ecs::NameComponent>(m_SoundEntity, "Hidden Sound");
 }
 
 void hidden::SoundSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	world.DestroyEntity(m_SoundEntity);
 }
 

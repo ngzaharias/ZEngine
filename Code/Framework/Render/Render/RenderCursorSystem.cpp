@@ -33,6 +33,8 @@ namespace
 
 void render::CursorSystem::Initialise(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.RequestAsset(strShader);
 	assetManager.RequestAsset(strMesh);
@@ -41,6 +43,8 @@ void render::CursorSystem::Initialise(World& world)
 
 void render::CursorSystem::Shutdown(World& world)
 {
+	PROFILE_FUNCTION();
+
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.ReleaseAsset(strShader);
 	assetManager.ReleaseAsset(strMesh);

@@ -154,6 +154,8 @@ namespace
 
 void container::StorageSystem::Update(World& world, const GameTime& gameTime)
 {
+	PROFILE_FUNCTION();
+
 	// clear values from previous frame
 	auto& changesComponent = world.WriteSingleton<container::StorageChangesSingleton>();
 	changesComponent.m_MemberAdded.RemoveAll();
