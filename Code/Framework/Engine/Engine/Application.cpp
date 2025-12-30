@@ -87,6 +87,18 @@ eng::Application::~Application()
 
 void eng::Application::Execute(int argc, char* argv[])
 {
+	// profiling
+	bool isWaitingForProfiler = false;
+	while (isWaitingForProfiler)
+	{
+		PROFILE_TICK("MainThread");
+
+		if (!profile::IsActive())
+			continue;
+
+		isWaitingForProfiler = false;
+	}
+
 	Register();
 	Initialise();
 
@@ -94,18 +106,9 @@ void eng::Application::Execute(int argc, char* argv[])
 
 	double currTime = 0.0;
 	double lastTime = 0.0;
-	bool isWaitingForProfiler = false;
 	while (true)
 	{
 		PROFILE_TICK("MainThread");
-
-		// profiling
-		{
-			if (isWaitingForProfiler && !profile::IsActive())
-				continue;
-
-			isWaitingForProfiler = false;
-		}
 
 		lastTime = currTime;
 		currTime = glfwGetTime();
