@@ -266,6 +266,8 @@ void glfw::Window::PreUpdate(const GameTime& gameTime)
 		}
 	}
 
+	// #todo: handle case where screen is locked whilst game is running
+
 	Vector2f mousePos;
 	mousePos.x = static_cast<float>(posX);
 	mousePos.y = static_cast<float>(posY);
