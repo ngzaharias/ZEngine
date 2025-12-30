@@ -27,6 +27,7 @@ project "GameDebug"
 		"%{wks.location}/../Code/Application/GameServer/",
 		"%{wks.location}/../Code/Application/GameShared/",
 		"%{wks.location}/../Code/Application/GameUI/",
+		"%{wks.location}/../Code/Editors/FlipbookEditor/",
 		"%{wks.location}/../Code/Editors/SpriteEditor/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",

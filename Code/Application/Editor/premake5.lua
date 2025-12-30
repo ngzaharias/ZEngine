@@ -50,6 +50,7 @@ project "Editor"
 		"%{wks.location}/../Code/Application/GameShared/",
 		"%{wks.location}/../Code/Application/GameUI/",
 		"%{wks.location}/../Code/Bindings/Steam/",
+		"%{wks.location}/../Code/Editors/FlipbookEditor/",
 		"%{wks.location}/../Code/Editors/SpriteEditor/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
@@ -106,6 +107,7 @@ project "Editor"
 		"Steam",
 
 		-- Editors
+		"FlipbookEditor",
 		"SpriteEditor",
 
 		-- Framework

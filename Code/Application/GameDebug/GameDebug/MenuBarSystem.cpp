@@ -26,7 +26,6 @@
 #include "GameDebug/DebugSplineWindowRequest.h"
 #include "GameDebug/EditorAssetBrowserWindowRequest.h"
 #include "GameDebug/EditorEntityWindowRequest.h"
-#include "GameDebug/EditorFlipbookWindowRequest.h"
 #include "GameDebug/EditorInputWindowRequest.h"
 #include "GameDebug/EditorSettingsWindowRequest.h"
 #include "GameDebug/EditorTableWindowRequest.h"
@@ -35,6 +34,7 @@
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/SettingsWindowComponent.h"
 #include "GameDebug/SettingsWindowRequest.h"
+#include "FlipbookEditor/FlipbookEditorWindowRequest.h"
 #include "SpriteEditor/SpriteEditorWindowRequest.h"
 
 #include "imgui/imgui.h"
@@ -159,7 +159,7 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 			if (ImGui::MenuItem("Entity Editor"))
 				world.AddEvent<editor::EntityWindowRequest>();
 			if (ImGui::MenuItem("Flipbook Editor"))
-				world.AddEvent<editor::FlipbookWindowRequest>();
+				world.AddEvent<editor::flipbook::WindowRequest>();
 			if (ImGui::MenuItem("Input Editor"))
 				world.AddEvent<editor::InputWindowRequest>();
 			if (ImGui::MenuItem("Sprite Editor"))

@@ -4,9 +4,9 @@
 #include "ECS/Component.h"
 #include "Engine/FlipbookAsset.h"
 
-namespace editor
+namespace editor::flipbook
 {
-	struct FlipbookWindowComponent final : public ecs::Component<FlipbookWindowComponent>
+	struct WindowComponent final : public ecs::Component<WindowComponent>
 	{
 		int32 m_Identifier = 0;
 		eng::FlipbookAsset m_Asset = {};

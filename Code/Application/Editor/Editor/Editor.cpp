@@ -14,11 +14,6 @@
 #include "Editor/EntitySelectSingleton.h"
 #include "Editor/EntitySelectSystem.h"
 #include "Editor/EntityWindowComponent.h"
-#include "Editor/FlipbookAssetOpenComponent.h"
-#include "Editor/FlipbookAssetSaveComponent.h"
-#include "Editor/FlipbookBatchingComponent.h"
-#include "Editor/FlipbookEditorSystem.h"
-#include "Editor/FlipbookWindowComponent.h"
 #include "Editor/GizmoCrosshairSystem.h"
 #include "Editor/GizmoTransformSystem.h"
 #include "Editor/InputSystem.h"
@@ -40,6 +35,7 @@
 #include "Editor/TrajectoryAssetSaveComponent.h"
 #include "Editor/TrajectoryEditorSystem.h"
 #include "Editor/TrajectoryWindowComponent.h"
+#include "FlipbookEditor/RegisterModule.h"
 #include "SpriteEditor/RegisterModule.h"
 
 editor::Editor::Editor(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
@@ -55,10 +51,6 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::AssetBrowserWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::EntitySaveComponent>();
 	m_ClientWorld.RegisterComponent<editor::EntityWindowComponent>();
-	m_ClientWorld.RegisterComponent<editor::FlipbookAssetOpenComponent>();
-	m_ClientWorld.RegisterComponent<editor::FlipbookAssetSaveComponent>();
-	m_ClientWorld.RegisterComponent<editor::FlipbookBatchingComponent>();
-	m_ClientWorld.RegisterComponent<editor::FlipbookWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::InputWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::TableWindowComponent>();
@@ -78,7 +70,6 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::AssetReloadSystem>();
 	m_ClientWorld.RegisterSystem<editor::EntityEditorSystem>(m_ClientWorld);
 	m_ClientWorld.RegisterSystem<editor::EntitySelectSystem>();
-	m_ClientWorld.RegisterSystem<editor::FlipbookEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
 	m_ClientWorld.RegisterSystem<editor::InputSystem>();
@@ -91,6 +82,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::TextureEditorSystem>();
 	m_ClientWorld.RegisterSystem<editor::TrajectoryEditorSystem>();
 
+	editor::flipbook::RegisterModule(m_ClientWorld);
 	editor::sprite::RegisterModule(m_ClientWorld);
 }
 

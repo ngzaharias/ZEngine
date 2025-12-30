@@ -3,9 +3,9 @@
 #include "ECS/Component.h"
 #include "Math/Vector.h"
 
-namespace editor
+namespace editor::flipbook
 {
-	struct FlipbookBatchingComponent final : public ecs::Component<FlipbookBatchingComponent>
+	struct BatchingComponent final : public ecs::Component<BatchingComponent>
 	{
 		/// \brief How many iterations are done along X and Y.
 		/// X is iterated again for each iteration of Y.
