@@ -14,7 +14,7 @@
 namespace
 {
 	const str::Name strFragment = NAME("m_Fragment");
-	const str::Name strPrograms = NAME("Programs");
+	const str::Name strGeometry = NAME("m_Geometry");
 	const str::Name strVertex = NAME("m_Vertex");
 
 	GLenum glCheckError_(const char* file, int line)
@@ -38,24 +38,12 @@ namespace
 		return errorCode;
 	}
 #define glCheckError() glCheckError_(__FILE__, __LINE__) 
-
-	struct Programs
-	{
-		str::String m_Fragment = { };
-		str::String m_Geometry = { };
-		str::String m_Vertex = { };
-	};
-}
-
-template<>
-void eng::Visitor::ReadCustom(Programs& value) const
-{
-	Read(strFragment, value.m_Fragment, {});
-	Read(strVertex, value.m_Vertex, {});
 }
 
 void eng::ShaderAssetLoader::Bindings(const uint32 programId, ShaderAsset& asset)
 {
+	PROFILE_FUNCTION();
+
 	auto ATTRIBUTE = [&programId](const char* name, Optional<uint32>& out_Value)
 	{
 		const int32 location = glGetAttribLocation(programId, name);
@@ -114,6 +102,8 @@ void eng::ShaderAssetLoader::Bindings(const uint32 programId, ShaderAsset& asset
 
 uint32 eng::ShaderAssetLoader::Compile(uint32 shaderType, const str::StringView& data)
 {
+	PROFILE_FUNCTION();
+
 	uint32 shaderId = glCreateShader(shaderType);
 
 	int32 dataSize = static_cast<int32>(data.size());
@@ -141,31 +131,30 @@ uint32 eng::ShaderAssetLoader::Compile(uint32 shaderType, const str::StringView&
 	return shaderId;
 }
 
-bool eng::ShaderAssetLoader::Load(eng::ShaderAsset& asset, eng::Visitor& visitor) const
+bool eng::ShaderAssetLoader::Bind(eng::ShaderAsset& asset) const
 {
-	Programs programs;
-	visitor.Read(strPrograms, programs, {});
+	PROFILE_FUNCTION();
 
 	asset.m_ProgramId = glCreateProgram();
 
 	uint32 fragmentShaderId = 0;
-	if (!programs.m_Fragment.empty())
+	if (!asset.m_Fragment.empty())
 	{
-		fragmentShaderId = Compile(GL_FRAGMENT_SHADER, programs.m_Fragment);
+		fragmentShaderId = Compile(GL_FRAGMENT_SHADER, asset.m_Fragment);
 		glAttachShader(asset.m_ProgramId, fragmentShaderId);
 	}
 
 	uint32 geometryShaderId = 0;
-	if (!programs.m_Geometry.empty())
+	if (!asset.m_Geometry.empty())
 	{
-		geometryShaderId = Compile(GL_GEOMETRY_SHADER, programs.m_Geometry);
+		geometryShaderId = Compile(GL_GEOMETRY_SHADER, asset.m_Geometry);
 		glAttachShader(asset.m_ProgramId, geometryShaderId);
 	}
 
 	uint32 vertexShaderId = 0;
-	if (!programs.m_Vertex.empty())
+	if (!asset.m_Vertex.empty())
 	{
-		vertexShaderId = Compile(GL_VERTEX_SHADER, programs.m_Vertex);
+		vertexShaderId = Compile(GL_VERTEX_SHADER, asset.m_Vertex);
 		glAttachShader(asset.m_ProgramId, vertexShaderId);
 	}
 
@@ -176,7 +165,26 @@ bool eng::ShaderAssetLoader::Load(eng::ShaderAsset& asset, eng::Visitor& visitor
 		glDeleteShader(vertexShaderId);
 	if (fragmentShaderId)
 		glDeleteShader(fragmentShaderId);
+	if (geometryShaderId)
+		glDeleteShader(geometryShaderId);
 
 	Bindings(asset.m_ProgramId, asset);
+	return true;
+}
+
+bool eng::ShaderAssetLoader::Unbind(eng::ShaderAsset& asset) const
+{
+	PROFILE_FUNCTION();
+
+	glDeleteProgram(asset.m_ProgramId);
+	return true;
+}
+
+bool eng::ShaderAssetLoader::Load(eng::ShaderAsset& asset, eng::Visitor& visitor) const
+{
+	PROFILE_FUNCTION();
+	visitor.Read(strFragment, asset.m_Fragment, {});
+	visitor.Read(strGeometry, asset.m_Geometry, {});
+	visitor.Read(strVertex, asset.m_Vertex, {});
 	return true;
 }

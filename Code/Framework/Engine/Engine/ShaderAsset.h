@@ -14,8 +14,12 @@ namespace eng
 
 namespace eng
 {
-	struct ShaderAsset : public eng::Asset
+	struct ShaderAsset : public eng::Asset, eng::DeferredLoad
 	{
+		str::String m_Fragment = { };
+		str::String m_Geometry = { };
+		str::String m_Vertex = { };
+
 		uint32 m_ProgramId = 0;
 
 		// Per Vertex (Attributes)
@@ -67,6 +71,9 @@ namespace eng
 	public:
 		static void Bindings(const uint32 programId, ShaderAsset& asset);
 		static uint32 Compile(uint32 shaderType, const str::StringView& data);
+
+		bool Bind(eng::ShaderAsset& asset) const;
+		bool Unbind(eng::ShaderAsset& asset) const;
 
 		bool Load(eng::ShaderAsset& asset, eng::Visitor& visitor) const;
 	};
