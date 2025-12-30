@@ -50,6 +50,7 @@ project "Editor"
 		"%{wks.location}/../Code/Application/GameShared/",
 		"%{wks.location}/../Code/Application/GameUI/",
 		"%{wks.location}/../Code/Bindings/Steam/",
+		"%{wks.location}/../Code/Editors/SpriteEditor/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Engine/",
@@ -62,7 +63,6 @@ project "Editor"
 		"%{wks.location}/../Code/Modules/Container/",
 		"%{wks.location}/../Code/Modules/Hidden/",
 		"%{wks.location}/../Code/Modules/Softbody/",
-		"%{wks.location}/../Code/Tools/SpriteEditor/",
 	}
 
 	libdirs 
@@ -105,6 +105,9 @@ project "Editor"
 		-- Bindings
 		"Steam",
 
+		-- Editors
+		"SpriteEditor",
+
 		-- Framework
 		"Core",
 		"ECS",
@@ -124,9 +127,6 @@ project "Editor"
 		"Tactics",
 		"Tilemap",
 		"Voxel",
-
-		-- Tools
-		"SpriteEditor",
 
 		-- 3rdParty
 		"assimp.lib",

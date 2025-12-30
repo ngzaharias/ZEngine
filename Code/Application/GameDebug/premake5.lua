@@ -27,6 +27,7 @@ project "GameDebug"
 		"%{wks.location}/../Code/Application/GameServer/",
 		"%{wks.location}/../Code/Application/GameShared/",
 		"%{wks.location}/../Code/Application/GameUI/",
+		"%{wks.location}/../Code/Editors/SpriteEditor/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Engine/",
@@ -40,5 +41,4 @@ project "GameDebug"
 		"%{wks.location}/../Code/Modules/Softbody/",
 		"%{wks.location}/../Code/Modules/Tabletop/",
 		"%{wks.location}/../Code/Modules/Voxel/",
-		"%{wks.location}/../Code/Tools/SpriteEditor/",
 	}

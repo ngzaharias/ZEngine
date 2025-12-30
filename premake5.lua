@@ -59,6 +59,11 @@ workspace "ZEngine"
 		"%{wks.location}/../Code/Application/%{prj.name}/%{prj.name}/**.h",
 		"%{wks.location}/../Code/Application/%{prj.name}/%{prj.name}/**.cpp",
 		"%{wks.location}/../Code/Application/%{prj.name}/%{prj.name}/**.inl",
+		"%{wks.location}/../Code/Editors/%{prj.name}/*.natvis",
+		"%{wks.location}/../Code/Editors/%{prj.name}/premake5.*",
+		"%{wks.location}/../Code/Editors/%{prj.name}/%{prj.name}/**.h",
+		"%{wks.location}/../Code/Editors/%{prj.name}/%{prj.name}/**.cpp",
+		"%{wks.location}/../Code/Editors/%{prj.name}/%{prj.name}/**.inl",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/*.natvis",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/premake5.*",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/%{prj.name}/**.h",
@@ -74,11 +79,6 @@ workspace "ZEngine"
 		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.h",
 		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.cpp",
 		"%{wks.location}/../Code/Modules/%{prj.name}/%{prj.name}/**.inl",
-		"%{wks.location}/../Code/Tools/%{prj.name}/*.natvis",
-		"%{wks.location}/../Code/Tools/%{prj.name}/premake5.*",
-		"%{wks.location}/../Code/Tools/%{prj.name}/%{prj.name}/**.h",
-		"%{wks.location}/../Code/Tools/%{prj.name}/%{prj.name}/**.cpp",
-		"%{wks.location}/../Code/Tools/%{prj.name}/%{prj.name}/**.inl",
 	}
 
 	vpaths 
@@ -97,6 +97,8 @@ workspace "ZEngine"
 		include "Code/Application/GameUI/premake5.lua"
 	group "Bindings"
 		include "Code/Bindings/Steam/premake5.lua"
+	group "Editors"
+		include "Code/Editors/SpriteEditor/premake5.lua"
 	group "Framework"
 		include "Code/Framework/Core/premake5.lua"
 		include "Code/Framework/ECS/premake5.lua"
