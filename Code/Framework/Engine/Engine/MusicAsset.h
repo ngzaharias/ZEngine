@@ -13,9 +13,9 @@ namespace eng
 
 namespace eng
 {
-	struct MusicAsset : public eng::Asset
+	struct MusicAsset : public eng::Asset, eng::DeferredLoad
 	{
-		sf::Music m_MusicBuffer = { };
+		sf::Music* m_Buffer = nullptr;
 		str::Path m_SourceFile = { };
 	};
 
@@ -23,5 +23,6 @@ namespace eng
 	{
 	public:
 		bool Load(eng::MusicAsset& asset, eng::Visitor& visitor) const;
+		bool Unload(eng::MusicAsset& asset) const;
 	};
 }
