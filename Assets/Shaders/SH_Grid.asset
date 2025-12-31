@@ -2,8 +2,6 @@ m_Guid = "f681f1dfc59e40f7864f01d1efbe1d84"
 m_Name = "SH_Grid"
 m_Type = "Shader"
 
-[Programs]
-
 m_Vertex = """
 #version 330 core
 

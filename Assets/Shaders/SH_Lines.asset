@@ -2,8 +2,6 @@ m_Guid = "dad72cc07659496b83b1c5a85a4b3695"
 m_Name = "SH_Lines"
 m_Type = "Shader"
 
-[Programs]
-
 m_Vertex = """
 #version 330 core
 

@@ -2,8 +2,6 @@ m_Guid = "a926fe4131fa440b8dd72086d3258b75"
 m_Name = "SH_Unlit"
 m_Type = "Shader"
 
-[Programs]
-
 m_Vertex = """
 #version 410 core
 
