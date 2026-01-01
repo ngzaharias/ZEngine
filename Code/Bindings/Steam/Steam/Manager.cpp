@@ -1,5 +1,6 @@
 #include "Steam/Manager.h"
 
+#include "Core/Log.h"
 #include "Core/Profiler.h"
 #include "Steam/Achievements.h"
 
@@ -9,6 +10,14 @@ bool steam::Manager::Initialise()
 
 	if (SteamAPI_Init())
 	{
+		SteamNetworkingUtils()->InitRelayNetworkAccess();
+		SteamNetworkingUtils()->SetDebugOutputFunction(k_ESteamNetworkingSocketsDebugOutputType_Msg,
+			[](ESteamNetworkingSocketsDebugOutputType, const char* msg)
+			{
+				//Z_LOG(ELog::Network, "{}", msg);
+			}
+		);
+
 		m_IsConnected = true;
 		m_Achievements = new steam::Achievements();
 	}

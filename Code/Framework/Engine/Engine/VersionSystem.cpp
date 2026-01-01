@@ -17,9 +17,12 @@ void eng::VersionSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
+#ifdef Z_RELEASE
+	return;
+#endif
+
 	auto& component = world.WriteSingleton<eng::VersionSingleton>();
 
-	// #todo: do not allow system commands in shipped games
 	char buffer[256];
 	if (FILE* pipe = _popen(strBranch, "r"))
 	{

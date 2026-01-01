@@ -20,6 +20,7 @@ void ecs::EntityWorld::Initialise()
 
 	m_QueryRegistry.Initialise();
 	m_SystemRegistry.Initialise(*this);
+	Z_LOG(ELog::Debug, "{}", LogUpdateOrder());
 
 	// flush the initialise
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
