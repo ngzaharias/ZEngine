@@ -126,18 +126,25 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 				SteamErrMsg errMsg = { 0 };
 				if (SteamGameServer_InitEx(unIP, gamePort, usQueryPort, eMode, version, &errMsg) == k_ESteamAPIInitResult_OK)
 				{
+					Z_LOG(ELog::Network, "Server Started");
+
 					SteamGameServer()->LogOnAnonymous();
 					//m_ListenSocket = SteamGameServerNetworkingSockets()->CreateListenSocketIP(addr, 0, nullptr);
 					m_ListenSocket = SteamGameServerNetworkingSockets()->CreateListenSocketP2P(0, 0, nullptr);
 					m_NetPollGroup = SteamGameServerNetworkingSockets()->CreatePollGroup();
-
-					Z_LOG(ELog::Network, "Server Started");
 				}
 			}
 
 			if (ImGui::Button("stop server"))
 			{
+				Z_LOG(ELog::Network, "Server Stopped");
+				SteamNetworkingSockets()->CloseListenSocket(m_ListenSocket);
+				SteamNetworkingSockets()->DestroyPollGroup(m_NetPollGroup);
+				SteamGameServer()->LogOff();
+				SteamGameServer_Shutdown();
 
+				m_NetPollGroup = k_HSteamNetPollGroup_Invalid;
+				m_ListenSocket = k_HSteamListenSocket_Invalid;
 			}
 
 			if (ImGui::Button("join server"))
@@ -163,6 +170,9 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::Button("leave server"))
 			{
+				//SteamTimeline()->EndGamePhase();
+				SteamNetworkingSockets()->CloseConnection(m_Connection, 0, nullptr, false);
+				m_Connection = k_HSteamNetConnection_Invalid;
 			}
 
 			if (ImGui::Button("message to server"))
