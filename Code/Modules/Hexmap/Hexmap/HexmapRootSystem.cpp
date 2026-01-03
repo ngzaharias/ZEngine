@@ -116,7 +116,7 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 		for (auto&& cameraView : world.Query<Query>())
 		{
 			const auto& transform = cameraView.ReadRequired<eng::TransformComponent>();
-			auto& camera = cameraView.WriteRequired<eng::CameraComponent>();
+			const auto& camera = cameraView.ReadRequired<eng::CameraComponent>();
 
 			for (auto&& rootView : world.Query<ecs::query::Include<hexmap::RootComponent>>())
 			{
@@ -126,8 +126,14 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 					constexpr float zoomMin = 1000.f;
 					constexpr float zoomMax = 6000.f;
 
-					auto& projection = std::get<eng::Orthographic>(camera.m_Projection);
-					projection.m_Size = math::Lerp(zoomMin, zoomMax, root.m_Zoom);
+					const auto& projection = std::get<eng::Orthographic>(camera.m_Projection);
+					const float size = math::Lerp(zoomMin, zoomMax, root.m_Zoom);
+					if (projection.m_Size != size)
+					{
+						auto& writeCamera = cameraView.WriteRequired<eng::CameraComponent>();
+						auto& writeProj = std::get<eng::Orthographic>(writeCamera.m_Projection);
+						writeProj.m_Size = size;
+					}
 				}
 
 				root.m_Zone = GetCameraZone(camera, transform, windowSize);

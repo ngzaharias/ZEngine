@@ -103,7 +103,7 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 
 	for (auto&& view : world.Query<ecs::query::Include<debug::NetworkWindowComponent>>())
 	{
-		auto& window = view.WriteRequired<debug::NetworkWindowComponent>();
+		const auto& window = view.ReadRequired<debug::NetworkWindowComponent>();
 		const str::String label = std::format("Network Debugger : {}", window.m_Identifier);
 
 		bool isOpen = true;
