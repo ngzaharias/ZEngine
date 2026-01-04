@@ -1,4 +1,4 @@
-#include "GameDebugPCH.h"
+﻿#include "GameDebugPCH.h"
 #include "GameDebug/NetworkSystem.h"
 
 #include "Core/GameTime.h"
@@ -49,6 +49,11 @@ namespace
 		}
 		return true;
 	}
+}
+
+debug::NetworkSystem::NetworkSystem()
+	: m_CallbackLobbyDataUpdated(this, &NetworkSystem::OnLobbyDataUpdatedCallback)
+{
 }
 
 void debug::NetworkSystem::Initialise(World& world)
@@ -157,7 +162,6 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 				}
 				else
 				{
-					CSteamID userId = SteamUser()->GetSteamID();
 					CSteamID serverId = SteamGameServer()->GetSteamID();
 					SteamNetworkingIdentity identity;
 					identity.SetSteamID(serverId);
@@ -170,7 +174,6 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::Button("leave server"))
 			{
-				//SteamTimeline()->EndGamePhase();
 				SteamNetworkingSockets()->CloseConnection(m_Connection, 0, nullptr, false);
 				m_Connection = k_HSteamNetConnection_Invalid;
 			}
@@ -180,73 +183,34 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 				SendServerData(m_Connection, nullptr, 0);
 			}
 
-			/*
-			ImGui::InputText("##client_address", &window.m_ClientAddress);
-			ImGui::SameLine();
-			ImGui::InputInt("##client_port", &window.m_ClientPort);
+			ImGui::Separator();
+			ImGui::Separator();
+			ImGui::Separator();
 
-			ImGui::InputText("##server_address", &window.m_ServerAddress);
-			ImGui::SameLine();
-			ImGui::InputInt("##server_port", &window.m_ServerPort);
-
-			if (ImGui::Button("Standalone"))
+			if (ImGui::Button("start lobby"))
 			{
-				gamestate::NetworkHost request;
-				request.m_Mode = net::EMode::Standalone;
-				request.m_ClientAddress = window.m_ClientAddress;
-				request.m_ClientPort = window.m_ClientPort;
-				request.m_ServerAddress = window.m_ServerAddress;
-				request.m_ServerPort = window.m_ServerPort;
-
-				auto& requestComponent = world.AddEvent<gamestate::ChangeRequest>();
-				requestComponent.m_Queue.Append(request);
+				Z_LOG(ELog::Network, "Lobby Started");
+				SteamAPICall_t hSteamAPICall = SteamMatchmaking()->CreateLobby(k_ELobbyTypePublic, 4);
+				m_SteamCallResultLobbyCreated.Set(hSteamAPICall, this, &NetworkSystem::OnLobbyCreated);
 			}
 
-			if (ImGui::Button("Remote Client"))
+			if (ImGui::Button("find lobby"))
 			{
-				gamestate::NetworkJoin request;
-				request.m_Mode = net::EMode::RemoteClient;
-				request.m_ClientAddress = window.m_ClientAddress;
-				request.m_ClientPort = window.m_ClientPort;
-				request.m_ServerAddress = window.m_ServerAddress;
-				request.m_ServerPort = window.m_ServerPort;
-
-				auto& requestComponent = world.AddEvent<gamestate::ChangeRequest>();
-				requestComponent.m_Queue.Append(request);
+				SteamAPICall_t hSteamAPICall = SteamMatchmaking()->RequestLobbyList();
+				m_SteamCallResultLobbyMatchList.Set(hSteamAPICall, this, &debug::NetworkSystem::OnLobbyMatchListCallback);
 			}
 
-			if (ImGui::Button("Listen Server"))
+			if (ImGui::CollapsingHeader("join lobby"))
 			{
-				gamestate::NetworkHost request;
-				request.m_Mode = net::EMode::ListenServer;
-				request.m_ClientAddress = window.m_ClientAddress;
-				request.m_ClientPort = window.m_ClientPort;
-				request.m_ServerAddress = window.m_ServerAddress;
-				request.m_ServerPort = window.m_ServerPort;
-
-				auto& requestComponent = world.AddEvent<gamestate::ChangeRequest>();
-				requestComponent.m_Queue.Append(request);
+				ImGui::Indent();
+				for (const NetworkLobby& lobby : m_Lobbies)
+				{
+					if (ImGui::Button(lobby.m_Name.c_str()))
+						SteamMatchmaking()->JoinLobby(lobby.m_SteamId);
+				}
+				ImGui::Unindent();
 			}
 
-			if (ImGui::Button("Dedicated Server"))
-			{
-				gamestate::NetworkHost request;
-				request.m_Mode = net::EMode::DedicatedServer;
-				request.m_ClientAddress = window.m_ClientAddress;
-				request.m_ClientPort = window.m_ClientPort;
-				request.m_ServerAddress = window.m_ServerAddress;
-				request.m_ServerPort = window.m_ServerPort;
-
-				auto& requestComponent = world.AddEvent<gamestate::ChangeRequest>();
-				requestComponent.m_Queue.Append(request);
-			}
-
-			if (ImGui::Button("Shutdown"))
-			{
-				auto& requestComponent = world.AddEvent<gamestate::ChangeRequest>();
-				requestComponent.m_Queue.Append(gamestate::NetworkStop{});
-			}
-			*/
 		}
 		ImGui::End();
 
@@ -282,4 +246,56 @@ void debug::NetworkSystem::OnSteamServersConnected(SteamServersConnected_t* pCal
 	SteamGameServer()->SetServerName("Koala's Game");
 	SteamGameServer()->SetMapName("TestLevel");
 	SteamGameServer()->SetMaxPlayerCount(4);
+}
+
+void debug::NetworkSystem::OnLobbyCreated(LobbyCreated_t* pCallback, bool bIOFailure)
+{
+	if (pCallback->m_eResult == k_EResultOK)
+	{
+		m_LobbyId = pCallback->m_ulSteamIDLobby;
+		SteamMatchmaking()->SetLobbyData(m_LobbyId, "name", "My Lobby");
+	}
+}
+
+void debug::NetworkSystem::OnLobbyMatchListCallback(LobbyMatchList_t* pCallback, bool bIOFailure)
+{
+	m_Lobbies.RemoveAll();
+
+	// lobbies are returned in order of closeness to the user, so add them to the list in that order
+	for (uint32 iLobby = 0; iLobby < pCallback->m_nLobbiesMatching; iLobby++)
+	{
+		NetworkLobby& lobby = m_Lobbies.Emplace();
+		lobby.m_SteamId = SteamMatchmaking()->GetLobbyByIndex(iLobby);
+		lobby.m_Name = SteamMatchmaking()->GetLobbyData(lobby.m_SteamId, "name");
+
+		if (lobby.m_Name.empty())
+			SteamMatchmaking()->RequestLobbyData(lobby.m_SteamId);
+	}
+}
+
+void debug::NetworkSystem::OnLobbyDataUpdatedCallback(LobbyDataUpdate_t* pCallback)
+{
+	for (NetworkLobby& lobby : m_Lobbies)
+	{
+		if (pCallback->m_ulSteamIDLobby == lobby.m_SteamId)
+		{
+			lobby.m_Name = SteamMatchmaking()->GetLobbyData(lobby.m_SteamId, "name");
+			break;
+		}
+	}
+}
+
+void debug::NetworkSystem::OnLobbyEntered(LobbyEnter_t* cb)
+{
+	if (cb->m_EChatRoomEnterResponse != k_EChatRoomEnterResponseSuccess)
+	{
+		Z_LOG(ELog::Network, "Failed to join lobby.");
+		return;
+	}
+
+	const CSteamID lobbyId = cb->m_ulSteamIDLobby;
+	const CSteamID hostId = SteamMatchmaking()->GetLobbyOwner(lobbyId);
+
+	Z_LOG(ELog::Network, "Joined lobby {}.", lobbyId.ConvertToUint64());
+	Z_LOG(ELog::Network, "Lobby host {}.", hostId.ConvertToUint64());
 }
