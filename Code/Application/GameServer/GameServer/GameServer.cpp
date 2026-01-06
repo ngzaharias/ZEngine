@@ -9,7 +9,6 @@
 #include "Engine/RegisterSystems.h"
 #include "GameServer/RegisterComponents.h"
 #include "GameServer/RegisterSystems.h"
-#include "GameShared/RegisterComponents.h"
 
 server::GameServer::GameServer()
 	: m_ReplicationHost(m_EntityWorld)
@@ -35,11 +34,6 @@ void server::GameServer::Register(const Dependencies& dependencies)
 
 		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
 		eng::RegisterSharedSystems(m_EntityWorld);
-	}
-
-	// shared
-	{
-		shd::RegisterComponents(m_EntityWorld, dependencies.m_Serializer);
 	}
 
 	// server

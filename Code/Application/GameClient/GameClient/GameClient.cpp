@@ -20,7 +20,6 @@
 #include "Engine/WindowManager.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
-#include "GameShared/RegisterComponents.h"
 #include "GameUI/RegisterModule.h"
 #include "Hexmap/RegisterModule.h"
 #include "Hidden/RegisterModule.h"
@@ -74,11 +73,6 @@ void client::GameClient::Register(const Dependencies& dependencies)
 
 		eng::RegisterClientComponents(m_EntityWorld);
 		eng::RegisterClientSystems(m_EntityWorld);
-	}
-
-	// shared
-	{
-		shd::RegisterComponents(m_EntityWorld, dependencies.m_Serializer);
 	}
 
 	// client
