@@ -43,7 +43,7 @@ namespace ecs
 		void RegisterComponent();
 
 		template<class TComponent, typename... TArgs>
-		auto AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto);
+		auto AddComponent(const ecs::Entity& entity, TArgs&&... args)->TComponent&;
 
 		template<class TComponent>
 		void RemoveComponent(const ecs::Entity& entity);

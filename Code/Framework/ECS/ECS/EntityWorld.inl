@@ -81,7 +81,7 @@ void ecs::EntityWorld::RegisterComponent()
 }
 
 template <typename TComponent, typename... TArgs>
-auto ecs::EntityWorld::AddComponent(const ecs::Entity& entity, TArgs&&... args) -> decltype(auto)
+auto ecs::EntityWorld::AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");

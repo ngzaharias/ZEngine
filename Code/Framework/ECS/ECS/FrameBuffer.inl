@@ -11,7 +11,7 @@ void ecs::FrameBuffer::RegisterComponent()
 }
 
 template<class TComponent, typename... TArgs>
-auto ecs::FrameBuffer::AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto)
+auto ecs::FrameBuffer::AddComponent(const ecs::Entity& entity, TArgs&&... args)->TComponent&
 {
 	using Storage = ecs::ComponentStorage<TComponent>;
 
