@@ -8,7 +8,6 @@
 #include "Engine/AssetComponent.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
-#include "Engine/ComponentSerializer.h"
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/FrameBufferSingleton.h"
@@ -93,7 +92,7 @@ void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSingleton<net::UserMapSingleton>();
 }
 
-void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::ComponentSerializer& serializer)
+void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld)
 {
 	// components
 	entityWorld.RegisterComponent<eng::ActiveComponent>();

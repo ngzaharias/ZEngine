@@ -64,5 +64,3 @@ namespace net
 		SparseArray<net::PeerId, net::PeerReplicationData> m_PeerReplicationData;
 	};
 }
-
-#include "ReplicationHost.inl"

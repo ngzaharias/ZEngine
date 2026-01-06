@@ -36,7 +36,6 @@ namespace client
 		eng::PrototypeManager& m_PrototypeManager;
 		eng::TableHeadmaster& m_TableHeadmaster;
 		eng::WindowManager& m_WindowManager;
-		net::ComponentSerializer& m_Serializer;
 	};
 
 	class GameClient final

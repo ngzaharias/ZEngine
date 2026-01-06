@@ -23,7 +23,6 @@ void server::GameServer::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
-		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
 		m_EntityWorld.RegisterResource(m_ReplicationHost);
 	}
 
@@ -32,7 +31,7 @@ void server::GameServer::Register(const Dependencies& dependencies)
 		eng::RegisterServerComponents(m_EntityWorld);
 		eng::RegisterServerSystems(m_EntityWorld);
 
-		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
+		eng::RegisterSharedComponents(m_EntityWorld);
 		eng::RegisterSharedSystems(m_EntityWorld);
 	}
 

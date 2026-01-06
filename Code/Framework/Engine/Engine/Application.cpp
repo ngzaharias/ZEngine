@@ -71,12 +71,11 @@ namespace
 eng::Application::Application()
 	: m_AssetManager()
 	, m_ImguiManager()
-	, m_NetworkManager(m_ComponentSerializer)
+	, m_NetworkManager()
 	, m_PhysicsManager()
 	, m_PlatformManager()
 	, m_PrototypeManager()
 	, m_WindowManager()
-	, m_ComponentSerializer()
 {
 	srand((unsigned int)time(NULL));
 }

@@ -3,7 +3,7 @@
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
-#include "Engine/ComponentSerializer.h"
+#include "Engine/ComponentRegistry.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/ReplicationComponent.h"
 #include "Network/Adaptor.h"
@@ -83,10 +83,10 @@ void net::ReplicationPeer::OnAddComponent(const net::AddComponentMessage* messag
 	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
 	const auto& networkManager = m_EntityWorld.ReadResource<eng::NetworkManager>();
-	const auto& serializer = networkManager.GetSerializer();
+	const auto& componentRegistry = networkManager.GetComponentRegistry();
 
 	const ecs::Entity& peerHandle = m_HostToPeer[message->m_Entity];
-	const auto& entry = serializer.m_Entries[message->m_ComponentId];
+	const net::ComponentEntry& entry = componentRegistry.m_Entries.Get(message->m_ComponentId);
 	entry.m_Add(m_EntityWorld, peerHandle, message->m_Data);
 }
 
@@ -96,11 +96,11 @@ void net::ReplicationPeer::OnUpdateComponent(const net::UpdateComponentMessage* 
 	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
 	const auto& networkManager = m_EntityWorld.ReadResource<eng::NetworkManager>();
-	const auto& serializer = networkManager.GetSerializer();
+	const auto& componentRegistry = networkManager.GetComponentRegistry();
 
 	const ecs::Entity& peerHandle = m_HostToPeer[message->m_Entity];
-	const auto& entry = serializer.m_Entries[message->m_ComponentId];
-	entry.m_Read(m_EntityWorld, peerHandle, message->m_Data);
+	const net::ComponentEntry& entry = componentRegistry.m_Entries.Get(message->m_ComponentId);
+	entry.m_Write(m_EntityWorld, peerHandle, message->m_Data);
 }
 
 void net::ReplicationPeer::OnRemoveComponent(const net::RemoveComponentMessage* message)
@@ -109,9 +109,9 @@ void net::ReplicationPeer::OnRemoveComponent(const net::RemoveComponentMessage* 
 	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
 	const auto& networkManager = m_EntityWorld.ReadResource<eng::NetworkManager>();
-	const auto& serializer = networkManager.GetSerializer();
+	const auto& componentRegistry = networkManager.GetComponentRegistry();
 
 	const ecs::Entity& peerHandle = m_HostToPeer[message->m_Entity];
-	const auto& entry = serializer.m_Entries[message->m_ComponentId];
+	const net::ComponentEntry& entry = componentRegistry.m_Entries.Get(message->m_ComponentId);
 	entry.m_Remove(m_EntityWorld, peerHandle);
 }

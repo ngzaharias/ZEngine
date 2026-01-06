@@ -54,7 +54,6 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
 		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
 		m_EntityWorld.RegisterResource(dependencies.m_WindowManager);
-		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
 		m_EntityWorld.RegisterResource(m_InputManager);
 		m_EntityWorld.RegisterResource(m_UIManager);
 		m_EntityWorld.RegisterResource(m_ReplicationPeer);
@@ -68,7 +67,7 @@ void client::GameClient::Register(const Dependencies& dependencies)
 
 	// engine
 	{
-		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
+		eng::RegisterSharedComponents(m_EntityWorld);
 		eng::RegisterSharedSystems(m_EntityWorld);
 
 		eng::RegisterClientComponents(m_EntityWorld);

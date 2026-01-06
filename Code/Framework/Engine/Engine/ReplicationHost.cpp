@@ -2,24 +2,16 @@
 #include "Engine/ReplicationHost.h"
 
 #include "Core/Algorithms.h"
+#include "ECS/EntityWorld.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/ReplicationComponent.h"
-#include "Engine/ComponentSerializer.h"
+#include "Engine/ComponentRegistry.h"
 #include "Network/Host.h"
 #include "Network/Messages.h"
 #include "Network/Types.h"
 
 namespace
 {
-	constexpr net::PeerId s_HostPeerId = net::PeerId(0);
-
-	bool IsLocalClient(const net::PeerId& peerId, const net::EMode mode)
-	{
-		return peerId == s_HostPeerId
-			&& (mode == net::EMode::Standalone 
-			 || mode == net::EMode::ListenServer);
-	}
-
 	net::Entity ToNetEntity(const ecs::Entity& entity)
 	{
 		return net::Entity(entity.m_Value);
@@ -47,8 +39,7 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const auto& networkManager = m_EntityWorld.ReadResource<eng::NetworkManager>();
-	const auto& serializer = networkManager.GetSerializer();
-	const int32 serializeCount = serializer.m_Entries.GetCount();
+	const auto& componentRegistry = networkManager.GetComponentRegistry();
 
 	for (auto&& [peerId, replicationData] : m_PeerReplicationData)
 	{
@@ -69,12 +60,12 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 				if (!componentMask.Has(worldId))
 					continue;
 
-				const auto find = serializer.m_WorldToLocal.Find(worldId);
-				if (find == serializer.m_WorldToLocal.end())
+				const auto find = componentRegistry.m_WorldToLocal.Find(worldId);
+				if (find == componentRegistry.m_WorldToLocal.end())
 					continue;
 
 				const ecs::ComponentId localId = find->second;
-				const net::ComponentEntry& entry = serializer.m_Entries[localId];
+				const net::ComponentEntry& entry = componentRegistry.m_Entries.Get(localId);
 
 				AddComponent(peerId, entity, entry);
 			}
@@ -86,11 +77,11 @@ void net::ReplicationHost::Update(const GameTime& gameTime)
 			replicated.Remove(entity);
 		}
 
-		for (const net::ComponentEntry& entry : serializer.m_Entries)
+		for (auto&& [localId, entry] : componentRegistry.m_Entries)
 		{
-			const auto& toAdd = registry.GetGroup(entry.m_AddedId);
-			const auto& toRemove = registry.GetGroup(entry.m_RemovedId);
-			const auto& toUpdate = registry.GetGroup(entry.m_UpdatedId);
+			const ecs::QueryGroup& toAdd = registry.GetGroup(entry.m_AddedId);
+			const ecs::QueryGroup& toRemove = registry.GetGroup(entry.m_RemovedId);
+			const ecs::QueryGroup& toUpdate = registry.GetGroup(entry.m_UpdatedId);
 
 			// #note: this only handles components added AFTER an entity was marked for replication
 			for (const ecs::Entity& entity : toAdd)
@@ -230,7 +221,7 @@ void net::ReplicationHost::AddComponent(const net::PeerId& peerId, const ecs::En
 	auto* message = host.CreateMessage<AddComponentMessage>(peerId, EMessage::AddComponent);
 	message->m_Entity = ToNetEntity(entity);
 	message->m_ComponentId = entry.m_ComponentId;
-	entry.m_Write(m_EntityWorld, entity, message->m_Data);
+	entry.m_Read(m_EntityWorld, entity, message->m_Data);
 
 	host.SendMessage(peerId, message);
 }
@@ -255,7 +246,7 @@ void net::ReplicationHost::UpdateComponent(const net::PeerId& peerId, const ecs:
 	auto* message = host.CreateMessage<UpdateComponentMessage>(peerId, EMessage::UpdateComponent);
 	message->m_Entity = ToNetEntity(entity);
 	message->m_ComponentId = entry.m_ComponentId;
-	entry.m_Write(m_EntityWorld, entity, message->m_Data);
+	entry.m_Read(m_EntityWorld, entity, message->m_Data);
 
 	host.SendMessage(peerId, message);
 }

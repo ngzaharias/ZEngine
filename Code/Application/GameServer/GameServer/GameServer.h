@@ -13,11 +13,6 @@ namespace eng
 	class PrototypeManager;
 }
 
-namespace net
-{
-	class ComponentSerializer;
-}
-
 namespace server
 {
 	struct Dependencies
@@ -26,7 +21,6 @@ namespace server
 		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
 		eng::PrototypeManager& m_PrototypeManager;
-		net::ComponentSerializer& m_Serializer;
 	};
 
 	class GameServer final

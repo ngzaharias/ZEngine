@@ -31,15 +31,13 @@ void game::Application::Register()
 		m_PlatformManager,
 		m_PrototypeManager,
 		m_TableHeadmaster,
-		m_WindowManager,
-		m_ComponentSerializer };
+		m_WindowManager };
 
 	server::Dependencies serverDependencies = {
 		m_AssetManager,
 		m_NetworkManager,
 		m_PhysicsManager,
-		m_PrototypeManager,
-		m_ComponentSerializer };
+		m_PrototypeManager };
 
 	m_GameClient.Register(clientDependencies);
 	m_GameServer.Register(serverDependencies);
@@ -103,7 +101,7 @@ void game::Application::PostUpdate(const GameTime& gameTime)
 
 bool game::Application::ShouldClose()
 {
-	if (base::ShouldClose())
+	if (eng::Application::ShouldClose())
 		return true;
 
 	using World = ecs::WorldView::Write<eng::application::CloseRequest>;

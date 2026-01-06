@@ -9,8 +9,6 @@ namespace game
 {
 	class Application : public eng::Application
 	{
-		using base = eng::Application;
-
 	public:
 		Application();
 		~Application() override;
