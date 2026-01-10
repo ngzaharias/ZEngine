@@ -176,15 +176,15 @@ TEST_CASE("str::Guid. Create(str::StringView).")
 		CHECK(guid.m_Data.m_U8[0] == 255);
 	}
 
-	INFO("String case doesn't change the value.");
 	{
+		INFO("String case doesn't change the value.");
 		str::Guid guidA = str::Guid::Create("000000ff000000000000000000000000");
 		str::Guid guidB = str::Guid::Create("000000FF000000000000000000000000");
 		CHECK(guidA == guidB);
 	}
 
-	INFO("Values outside 0-9 and A-F are set to 0.");
 	{
+		INFO("Values outside 0-9 and A-F are set to 0.");
 		str::Guid guid = str::Guid::Create("0G0H0I0J000000000000000000000000");
 		CHECK(guid.m_Data.m_U8[0] == 0);
 		CHECK(guid.m_Data.m_U8[1] == 0);
