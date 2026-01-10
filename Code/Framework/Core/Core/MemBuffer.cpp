@@ -50,12 +50,12 @@ int32 MemBuffer::GetCount() const
 	return m_Data.GetCount(); 
 }
 
-MemBuffer::Data& MemBuffer::GetData() 
+uint8* MemBuffer::GetData()
 { 
-	return m_Data; 
+	return m_Data.GetData(); 
 }
 
-const MemBuffer::Data& MemBuffer::GetData() const 
+const uint8* MemBuffer::GetData() const
 { 
-	return m_Data; 
+	return m_Data.GetData();
 }
