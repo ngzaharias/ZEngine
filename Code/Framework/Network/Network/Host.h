@@ -1,57 +1,46 @@
 #pragma once
 
 #include "Core/Array.h"
-#include "Core/Delegate.h"
 #include "Core/Set.h"
 #include "Core/String.h"
 #include "Core/Types.h"
 #include "Network/Messages.h"
 #include "Network/PeerId.h"
 
+#pragma warning(push)
+#pragma warning(disable: 4996)
+#include "Steam/steam_api.h"
+#pragma warning(pop)
+
 class GameTime;
 
 namespace net
 {
-	class Adaptor;
-
-	struct Config;
-	struct UserId;
-
-	class Host
+	class Host final
 	{
 	public:
-		Host(net::Adaptor& adaptor, net::Config& config);
-
-		void Startup(const str::String& ipAddress, const int32 port, const float time);
+		void Startup();
 		void Shutdown();
 
 		void Update(const GameTime& gameTime);
 
-		template<typename TMessage>
-		TMessage* CreateMessage(const net::PeerId& peerId, const EMessage type);
-
-		void SendMessage(const net::PeerId& peerId, void* message);
-
-		bool IsRunning() const { return false; };
-		const Set<net::PeerId>& GetConnectedPeers() const { return m_PeersConnected; }
+		void BroadcastMessage(void* message);
 
 	protected:
 		void ProcessMessage(const net::PeerId& peerId, const void* message);
 
-		void OnClientConnected(const net::PeerId& peerId);
-		void OnClientDisconnected(const net::PeerId& peerId);
-
-	public:
-		Delegate<void(const net::PeerId& peerId, const void* message)> m_OnProcessMessage;
+	private:
+		STEAM_CALLBACK(Host, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
 	protected:
-		net::Adaptor& m_Adaptor;
-		net::Config& m_Config;
-
-		DelegateCollection m_Collection = { };
-		Set<net::PeerId> m_PeersConnected = { };
-		Set<net::PeerId> m_PeersDisconnected = { };
 		int32 m_MaxPeers = 64;
+		Set<net::PeerId> m_PeersConnected = {};
+		Set<net::PeerId> m_PeersDisconnected = {};
+
+		Array<HSteamNetConnection> m_Connections = {};
+		HSteamListenSocket m_ListenSocketId = k_HSteamListenSocket_Invalid;
+		HSteamListenSocket m_ListenSocketIp = k_HSteamListenSocket_Invalid;
+		HSteamNetPollGroup m_NetPollGroup = k_HSteamNetPollGroup_Invalid;
 	};
 }
 

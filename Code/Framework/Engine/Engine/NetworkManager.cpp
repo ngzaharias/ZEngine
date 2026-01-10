@@ -2,8 +2,8 @@
 #include "Engine/NetworkManager.h"
 
 eng::NetworkManager::NetworkManager()
-	: m_Host(m_Adaptor, m_Config)
-	, m_Peer(m_Adaptor, m_Config)
+	: m_Host()
+	, m_Peer()
 {
 }
 

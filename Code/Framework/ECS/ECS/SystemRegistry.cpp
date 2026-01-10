@@ -41,13 +41,13 @@ namespace
 		// To ensure the order is correct we must recursively add the systems that have a dependency on us.
 		// Don't add the systems we depend on otherwise it is possible that a system will be added too early
 		// and mess up the order for another system that hasn't been added yet.
-		for (const TypeId componentId : entry.m_Write)
+		for (const TypeId typeId : entry.m_Write)
 		{
-			const ecs::TypeInfo& typeInfo = world.m_TypeMap.Get(componentId);
+			const ecs::TypeInfo& typeInfo = world.m_TypeMap.Get(typeId);
 			if (!IsDependency(typeInfo.m_Base))
 				continue;
 
-			const Set<TypeId>& childIds = reads.Get(componentId, s_Empty);
+			const Set<TypeId>& childIds = reads.Get(typeId, s_Empty);
 			for (const TypeId childId : childIds)
 			{
 				if (visited.Get(childId))

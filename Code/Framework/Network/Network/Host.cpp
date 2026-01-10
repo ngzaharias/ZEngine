@@ -3,63 +3,136 @@
 #include "Core/Assert.h"
 #include "Core/GameTime.h"
 #include "Core/Profiler.h"
-#include "Network/Adaptor.h"
-#include "Network/Config.h"
-#include "Network/UserId.h"
 
 // https://github.com/ValveSoftware/GameNetworkingSockets
 // https://keithjohnston.wordpress.com/2014/02/17/nat-punch-through-for-multiplayer-games/
 
 namespace
 {
-	constexpr int32 s_ChannelIndex = EnumToValue(net::EChannel::Reliable);
+	bool SendMessage(HSteamNetConnection connection, const void* pData, uint32 nSizeOfData)
+	{
+		int nSendFlags = k_nSteamNetworkingSend_Unreliable;
+		EResult res = SteamNetworkingSockets()->SendMessageToConnection(connection, pData, nSizeOfData, nSendFlags, nullptr);
+		switch (res)
+		{
+		case k_EResultOK:
+		case k_EResultIgnored:
+			break;
+
+		case k_EResultInvalidParam:
+			Z_LOG(ELog::Network, "Host: Failed sending data to server: Invalid connection handle, or the individual message is too big.\n");
+			return false;
+		case k_EResultInvalidState:
+			Z_LOG(ELog::Network, "Host: Failed sending data to server: Connection is in an invalid state.\n");
+			return false;
+		case k_EResultNoConnection:
+			Z_LOG(ELog::Network, "Host: Failed sending data to server: Connection has ended.\n");
+			return false;
+		case k_EResultLimitExceeded:
+			Z_LOG(ELog::Network, "Host: Failed sending data to server: There was already too much data queued to be sent.\n");
+			return false;
+		default:
+		{
+			Z_LOG(ELog::Network, "Host: SendMessageToConnection returned {}.", static_cast<int32>(res));
+			return false;
+		}
+		}
+		return true;
+	}
 }
 
-net::Host::Host(net::Adaptor& adaptor, net::Config& config)
-	: m_Adaptor(adaptor)
-	, m_Config(config)
-{
-}
-
-void net::Host::Startup(const str::String& ipAddress, const int32 port, const float time)
+void net::Host::Startup()
 {
 	PROFILE_FUNCTION();
+	Z_LOG(ELog::Network, "Host: Startup.");
 
-	m_Collection =
-	{
-		m_Adaptor.m_OnServerClientConnected.Connect(*this, &net::Host::OnClientConnected),
-		m_Adaptor.m_OnServerClientDisconnected.Connect(*this, &net::Host::OnClientDisconnected)
-	};
+	SteamNetworkingIPAddr addr;
+	addr.Clear();
+	addr.m_port = 27020;
+
+	m_ListenSocketId = SteamNetworkingSockets()->CreateListenSocketP2P(0, 0, nullptr);
+	m_ListenSocketIp = SteamNetworkingSockets()->CreateListenSocketIP(addr, 0, nullptr);
+	m_NetPollGroup = SteamNetworkingSockets()->CreatePollGroup();
 }
 
 void net::Host::Shutdown()
 {
 	PROFILE_FUNCTION();
+	Z_LOG(ELog::Network, "Host: Shutdown");
 
-	m_Collection.Disconnect();
+	SteamNetworkingSockets()->CloseListenSocket(m_ListenSocketId);
+	SteamNetworkingSockets()->CloseListenSocket(m_ListenSocketIp);
+	SteamNetworkingSockets()->DestroyPollGroup(m_NetPollGroup);
+
+	m_ListenSocketId = k_HSteamListenSocket_Invalid;
+	m_ListenSocketIp = k_HSteamListenSocket_Invalid;
+	m_NetPollGroup = k_HSteamNetPollGroup_Invalid;
 }
 
 void net::Host::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (m_NetPollGroup)
+	{
+		SteamNetworkingMessage_t* msgs[128];
+		int numMessages = SteamNetworkingSockets()->ReceiveMessagesOnPollGroup(m_NetPollGroup, msgs, 128);
+		for (int i = 0; i < numMessages; i++)
+		{
+			SteamNetworkingMessage_t* message = msgs[i];
+			Z_LOG(ELog::Network, "Host: Received Message.");
+			message->Release();
+		}
+	}
 }
 
-void net::Host::SendMessage(const net::PeerId& peerId, void* message)
+void net::Host::BroadcastMessage(void* message)
 {
+	for (const HSteamNetConnection connection : m_Connections)
+	{
+		::SendMessage(connection, nullptr, 0);
+	}
 }
 
 void net::Host::ProcessMessage(const net::PeerId& peerId, const void* message)
 {
 }
 
-void net::Host::OnClientConnected(const net::PeerId& peerId)
+void net::Host::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t* pCallback)
 {
-	Z_LOG(ELog::Network, "Host: Peer [{}] connected.", peerId.m_Value);
-	m_PeersConnected.Add(peerId);
-}
+	const HSteamNetConnection connection = pCallback->m_hConn;
+	const SteamNetConnectionInfo_t info = pCallback->m_info;
+	if (!info.m_hListenSocket)
+		return;
 
-void net::Host::OnClientDisconnected(const net::PeerId& peerId)
-{
-	Z_LOG(ELog::Network, "Host: Peer [{}] disconnected.", peerId.m_Value);
-	m_PeersConnected.Remove(peerId);
+	const ESteamNetworkingConnectionState eOldState = pCallback->m_eOldState;
+	const ESteamNetworkingConnectionState eNewState = info.m_eState;
+
+	const bool isConnecting =
+		eOldState != k_ESteamNetworkingConnectionState_Connecting &&
+		eNewState == k_ESteamNetworkingConnectionState_Connecting;
+	if (isConnecting)
+	{
+		const EResult res = SteamNetworkingSockets()->AcceptConnection(connection);
+		if (res != k_EResultOK)
+		{
+			Z_LOG(ELog::Network, "Host: Rejected Peer. {}.", static_cast<int32>(res));
+			SteamNetworkingSockets()->CloseConnection(connection, k_ESteamNetConnectionEnd_AppException_Generic, "Failed to accept connection", false);
+			return;
+		}
+
+		Z_LOG(ELog::Network, "Host: Accepted Peer.", static_cast<int32>(res));
+		SteamNetworkingSockets()->SetConnectionPollGroup(connection, m_NetPollGroup);
+		SteamNetworkingSockets()->SendMessageToConnection(connection, nullptr, 0, k_nSteamNetworkingSend_Reliable, nullptr);
+		m_Connections.Append(connection);
+	}
+
+	const bool isDisconnecting =
+		eOldState != k_ESteamNetworkingConnectionState_ClosedByPeer &&
+		eNewState == k_ESteamNetworkingConnectionState_ClosedByPeer;
+	if (isDisconnecting)
+	{
+		const auto find = std::find(m_Connections.begin(), m_Connections.end(), connection);
+		m_Connections.RemoveAt(find);
+	}
 }

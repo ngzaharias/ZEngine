@@ -3,71 +3,106 @@
 #include "Core/Assert.h"
 #include "Core/GameTime.h"
 #include "Core/Profiler.h"
-#include "Network/Adaptor.h"
-#include "Network/Config.h"
 
 namespace
 {
-	constexpr int32 s_ChannelIndex = EnumToValue(net::EChannel::Reliable);
-}
-
-net::Peer::Peer(net::Adaptor& adaptor, net::Config& config)
-	: m_Adaptor(adaptor)
-	, m_Config(config)
-{
-}
-
-void net::Peer::Startup(const str::String& ipAddress, const int32 port, const float time)
-{
-	PROFILE_FUNCTION();
-
-	m_Collection =
+	bool SendMessage(HSteamNetConnection connection, const void* pData, uint32 nSizeOfData)
 	{
-		m_Adaptor.m_OnServerClientConnected.Connect(*this, &net::Peer::OnClientConnected),
-		m_Adaptor.m_OnServerClientDisconnected.Connect(*this, &net::Peer::OnClientDisconnected),
-	};
-}
+		int nSendFlags = k_nSteamNetworkingSend_Unreliable;
+		EResult res = SteamNetworkingSockets()->SendMessageToConnection(connection, pData, nSizeOfData, nSendFlags, nullptr);
+		switch (res)
+		{
+		case k_EResultOK:
+		case k_EResultIgnored:
+			break;
 
-void net::Peer::Shutdown()
-{
-	PROFILE_FUNCTION();
-
-	m_Collection.Disconnect();
-
-	if (IsRunning())
-	{
-		if (IsConnected() || IsConnecting())
-			Disconnect();
+		case k_EResultInvalidParam:
+			Z_LOG(ELog::Network, "Peer: Failed sending data to server: Invalid connection handle, or the individual message is too big.\n");
+			return false;
+		case k_EResultInvalidState:
+			Z_LOG(ELog::Network, "Peer: Failed sending data to server: Connection is in an invalid state.\n");
+			return false;
+		case k_EResultNoConnection:
+			Z_LOG(ELog::Network, "Peer: Failed sending data to server: Connection has ended.\n");
+			return false;
+		case k_EResultLimitExceeded:
+			Z_LOG(ELog::Network, "Peer: Failed sending data to server: There was already too much data queued to be sent.\n");
+			return false;
+		default:
+		{
+			Z_LOG(ELog::Network, "Peer: SendMessageToConnection returned {}.", static_cast<int32>(res));
+			return false;
+		}
+		}
+		return true;
 	}
 }
 
-void net::Peer::Connect(const str::String& ipAddress, const int32 port)
+void net::Peer::Connect()
 {
+	PROFILE_FUNCTION();
+	Z_LOG(ELog::Network, "Peer: Connect.");
+
+	SteamNetworkingIPAddr addr{};
+	addr.ParseString("127.0.0.1:27020");
+	m_Connection = SteamNetworkingSockets()->ConnectByIPAddress(addr, 0, nullptr);
+
+	//SteamNetworkingIdentity identity;
+	//identity.SetSteamID(SteamUser()->GetSteamID());
+	//m_Connection = SteamNetworkingSockets()->ConnectP2P(identity, 0, 0, nullptr);
 }
 
 void net::Peer::Disconnect()
 {
+	PROFILE_FUNCTION();
+	Z_LOG(ELog::Network, "Peer: Disconnect.");
+
+	SteamNetworkingSockets()->CloseConnection(m_Connection, 0, nullptr, false);
+	m_Connection = k_HSteamNetConnection_Invalid;
 }
 
 void net::Peer::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (m_Connection != k_HSteamNetConnection_Invalid)
+	{
+		SteamNetworkingMessage_t* msgs[32];
+		int res = SteamNetworkingSockets()->ReceiveMessagesOnConnection(m_Connection, msgs, 32);
+		for (int i = 0; i < res; i++)
+		{
+			SteamNetworkingMessage_t* message = msgs[i];
+			Z_LOG(ELog::Network, "Peer: Received Message.");
+			message->Release();
+		}
+	}
 }
 
 void net::Peer::SendMessage(void* message)
 {
+	::SendMessage(m_Connection, nullptr, 0);
 }
 
 void net::Peer::ProcessMessage(const void* message)
 {
 }
 
-void net::Peer::OnClientConnected(const PeerId& peerId)
+void net::Peer::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t* pCallback)
 {
-	Z_LOG(ELog::Network, "Peer: Connected to server.");
-}
+	const HSteamNetConnection connection = pCallback->m_hConn;
+	const SteamNetConnectionInfo_t info = pCallback->m_info;
+	if (info.m_hListenSocket)
+		return;
 
-void net::Peer::OnClientDisconnected(const PeerId& peerId)
-{
-	Z_LOG(ELog::Network, "Peer: Disconnected from server.");
+	const ESteamNetworkingConnectionState eOldState = pCallback->m_eOldState;
+	const ESteamNetworkingConnectionState eNewState = info.m_eState;
+
+	const bool hasConnected =
+		eOldState != k_ESteamNetworkingConnectionState_Connected &&
+		eNewState == k_ESteamNetworkingConnectionState_Connected;
+	if (hasConnected)
+	{
+		Z_LOG(ELog::Network, "Peer: Connected.");
+		SteamNetworkingSockets()->SendMessageToConnection(connection, nullptr, 0, k_nSteamNetworkingSend_Reliable, nullptr);
+	}
 }

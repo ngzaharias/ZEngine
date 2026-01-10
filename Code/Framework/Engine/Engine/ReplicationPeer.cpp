@@ -6,7 +6,6 @@
 #include "Engine/ComponentRegistry.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/ReplicationComponent.h"
-#include "Network/Adaptor.h"
 #include "Network/Messages.h"
 #include "Network/Peer.h"
 #include "Network/PeerId.h"
