@@ -3,6 +3,8 @@
 #include "Core/Set.h"
 #include "Core/Types.h"
 
+#define CLASS_TEST_CASE(name) TEST_CASE("Set. " name, "[Set]")
+
 namespace
 {
 	struct MyStruct
@@ -12,14 +14,14 @@ namespace
 	};
 }
 
-TEST_CASE("Set. Default constructor.")
+CLASS_TEST_CASE("Default constructor.")
 {
 	Set<int32> mySet;
 
 	CHECK(mySet.GetCount() == 0);
 }
 
-TEST_CASE("Set. Copy constructor.")
+CLASS_TEST_CASE("Copy constructor.")
 {
 	Set<int32> mySetA = { 1, 2, 3 };
 	Set<int32> mySetB = mySetA;
@@ -30,7 +32,7 @@ TEST_CASE("Set. Copy constructor.")
 	CHECK(mySetB.Contains(3));
 }
 
-TEST_CASE("Set. Move constructor.")
+CLASS_TEST_CASE("Move constructor.")
 {
 	Set<int32> mySetA = { 1, 2, 3 };
 	Set<int32> mySetB = std::move(mySetA);
@@ -41,7 +43,7 @@ TEST_CASE("Set. Move constructor.")
 	CHECK(mySetB.Contains(3));
 }
 
-TEST_CASE("Set. initializer_list constructor.")
+CLASS_TEST_CASE("initializer_list constructor.")
 {
 	Set<int32> mySet = { 1, 2, 3 };
 
@@ -51,7 +53,7 @@ TEST_CASE("Set. initializer_list constructor.")
 	CHECK(mySet.Contains(3));
 }
 
-TEST_CASE("Set. operator=(Set&&).")
+CLASS_TEST_CASE("operator=(Set&&).")
 {
 	Set<int32> mySetA = { 1, 2, 3 };
 	Set<int32> mySetB;
@@ -63,7 +65,7 @@ TEST_CASE("Set. operator=(Set&&).")
 	CHECK(mySetB.Contains(3));
 }
 
-TEST_CASE("Set. operator=(const Set&).")
+CLASS_TEST_CASE("operator=(const Set&).")
 {
 	Set<int32> mySetA = { 1, 2, 3 };
 	Set<int32> mySetB;
@@ -75,7 +77,7 @@ TEST_CASE("Set. operator=(const Set&).")
 	CHECK(mySetB.Contains(3));
 }
 
-TEST_CASE("Set. operator=(initializer_list&&).")
+CLASS_TEST_CASE("operator=(initializer_list&&).")
 {
 	Set<int32> mySet;
 	mySet = { 1, 2, 3 };
@@ -86,7 +88,7 @@ TEST_CASE("Set. operator=(initializer_list&&).")
 	CHECK(mySet.Contains(3));
 }
 
-TEST_CASE("Set. IsEmpty.")
+CLASS_TEST_CASE("IsEmpty.")
 {
 	Set<int32> mySet;
 	CHECK(mySet.IsEmpty());
@@ -95,7 +97,7 @@ TEST_CASE("Set. IsEmpty.")
 	CHECK(!mySet.IsEmpty());
 }
 
-TEST_CASE("Set. GetCount.")
+CLASS_TEST_CASE("GetCount.")
 {
 	Set<int32> mySet;
 	CHECK(mySet.GetCount() == 0);
@@ -109,7 +111,7 @@ TEST_CASE("Set. GetCount.")
 	CHECK(mySet.GetCount() == 3);
 }
 
-TEST_CASE("Set. Contains.")
+CLASS_TEST_CASE("Contains.")
 {
 	Set<int32> mySet = { 1, 3 };
 
@@ -117,7 +119,7 @@ TEST_CASE("Set. Contains.")
 	CHECK(!mySet.Contains(2));
 }
 
-TEST_CASE("Set. Add copy value.")
+CLASS_TEST_CASE("Add copy value.")
 {
 	Set<int32> mySet;
 	mySet.Add(1);
@@ -126,7 +128,7 @@ TEST_CASE("Set. Add copy value.")
 	CHECK(mySet.Contains(1));
 }
 
-TEST_CASE("Set. Add move value.")
+CLASS_TEST_CASE("Add move value.")
 {
 	MyStruct myStruct = { 1 };
 	Set<MyStruct> mySet;
@@ -136,7 +138,7 @@ TEST_CASE("Set. Add move value.")
 	CHECK(mySet.Contains({ 1 }));
 }
 
-TEST_CASE("Set. Add copy range.")
+CLASS_TEST_CASE("Add copy range.")
 {
 	Set<int32> mySetA;
 	Set<int32> mySetB = { 3, 4, 5 };
@@ -148,7 +150,7 @@ TEST_CASE("Set. Add copy range.")
 	CHECK(mySetA.Contains(5));
 }
 
-TEST_CASE("Set. Add move range.")
+CLASS_TEST_CASE("Add move range.")
 {
 	Set<int32> mySetA;
 	Set<int32> mySetB = { 3, 4, 5 };
@@ -160,7 +162,7 @@ TEST_CASE("Set. Add move range.")
 	CHECK(mySetA.Contains(5));
 }
 
-TEST_CASE("Set. Remove value.")
+CLASS_TEST_CASE("Remove value.")
 {
 	Set<int32> mySet = { 1, 2, 3 };
 	mySet.Remove(2);
@@ -171,7 +173,7 @@ TEST_CASE("Set. Remove value.")
 	CHECK(mySet.Contains(3));
 }
 
-TEST_CASE("Set. Remove range.")
+CLASS_TEST_CASE("Remove range.")
 {
 	Set<int32> mySetA = { 1, 2, 3 };
 	Set<int32> mySetB = { 1, 4 };
@@ -183,7 +185,7 @@ TEST_CASE("Set. Remove range.")
 	CHECK(mySetA.Contains(3));
 }
 
-TEST_CASE("Set. RemoveAll.")
+CLASS_TEST_CASE("RemoveAll.")
 {
 	Set<int32> mySet = { 1, 2, 3 };
 	mySet.RemoveAll();
@@ -194,7 +196,7 @@ TEST_CASE("Set. RemoveAll.")
 	CHECK(!mySet.Contains(3));
 }
 
-TEST_CASE("Set. Range-based for loop pre-increment.")
+CLASS_TEST_CASE("Range-based for loop pre-increment.")
 {
 
 	Set<int32> mySet = { 1, 2, 3 };
@@ -205,7 +207,7 @@ TEST_CASE("Set. Range-based for loop pre-increment.")
 	CHECK(++iterator == mySet.end());
 }
 
-TEST_CASE("Set. Range-based for loop post-increment.")
+CLASS_TEST_CASE("Range-based for loop post-increment.")
 {
 
 	Set<int32> mySet = { 1, 2, 3 };
@@ -216,7 +218,7 @@ TEST_CASE("Set. Range-based for loop post-increment.")
 	CHECK(iterator == mySet.end());
 }
 
-TEST_CASE("Set. Range-based for loop.")
+CLASS_TEST_CASE("Range-based for loop.")
 {
 	Set<int32> mySet = { 1, 2, 3 };
 	int32 i = -1;

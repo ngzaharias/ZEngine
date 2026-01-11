@@ -4,6 +4,8 @@
 #include "Core/MemBuffer.h"
 #include "Math/Vector.h"
 
+#define CLASS_TEST_CASE(name) TEST_CASE("MemBuffer. " name, "[MemBuffer]")
+
 namespace
 {
 	struct Trivial
@@ -32,7 +34,7 @@ void MemBuffer::Write(const NonTrivial& value)
 	Write(value.m_Data);
 }
 
-TEST_CASE("MemBuffer. bool.")
+CLASS_TEST_CASE("Read and Write to bool.")
 {
 	MemBuffer buffer;
 	{
@@ -46,7 +48,7 @@ TEST_CASE("MemBuffer. bool.")
 	}
 }
 
-TEST_CASE("MemBuffer. float.")
+CLASS_TEST_CASE("Read and Write to float.")
 {
 	MemBuffer buffer;
 	{
@@ -60,7 +62,7 @@ TEST_CASE("MemBuffer. float.")
 	}
 }
 
-TEST_CASE("MemBuffer. double.")
+CLASS_TEST_CASE("Read and Write to double.")
 {
 	MemBuffer buffer;
 	{
@@ -74,7 +76,7 @@ TEST_CASE("MemBuffer. double.")
 	}
 }
 
-TEST_CASE("MemBuffer. int8.")
+CLASS_TEST_CASE("Read and Write to int8.")
 {
 	MemBuffer buffer;
 	{
@@ -88,7 +90,7 @@ TEST_CASE("MemBuffer. int8.")
 	}
 }
 
-TEST_CASE("MemBuffer. int16.")
+CLASS_TEST_CASE("Read and Write to int16.")
 {
 	MemBuffer buffer;
 	{
@@ -102,7 +104,7 @@ TEST_CASE("MemBuffer. int16.")
 	}
 }
 
-TEST_CASE("MemBuffer. int32.")
+CLASS_TEST_CASE("Read and Write to int32.")
 {
 	MemBuffer buffer;
 	{
@@ -116,7 +118,7 @@ TEST_CASE("MemBuffer. int32.")
 	}
 }
 
-TEST_CASE("MemBuffer. uint8.")
+CLASS_TEST_CASE("Read and Write to uint8.")
 {
 	MemBuffer buffer;
 	{
@@ -130,7 +132,7 @@ TEST_CASE("MemBuffer. uint8.")
 	}
 }
 
-TEST_CASE("MemBuffer. uint16.")
+CLASS_TEST_CASE("Read and Write to uint16.")
 {
 	MemBuffer buffer;
 	{
@@ -144,7 +146,7 @@ TEST_CASE("MemBuffer. uint16.")
 	}
 }
 
-TEST_CASE("MemBuffer. uint32.")
+CLASS_TEST_CASE("Read and Write to uint32.")
 {
 	MemBuffer buffer;
 	{
@@ -158,7 +160,7 @@ TEST_CASE("MemBuffer. uint32.")
 	}
 }
 
-TEST_CASE("MemBuffer. Vector2f.")
+CLASS_TEST_CASE("Read and Write to Vector2f.")
 {
 	MemBuffer buffer;
 	{
@@ -172,7 +174,7 @@ TEST_CASE("MemBuffer. Vector2f.")
 	}
 }
 
-TEST_CASE("MemBuffer. Vector3f.")
+CLASS_TEST_CASE("Read and Write to Vector3f.")
 {
 	MemBuffer buffer;
 	{
@@ -186,7 +188,7 @@ TEST_CASE("MemBuffer. Vector3f.")
 	}
 }
 
-TEST_CASE("MemBuffer. Vector4f.")
+CLASS_TEST_CASE("Read and Write to Vector4f.")
 {
 	MemBuffer buffer;
 	{
@@ -200,7 +202,7 @@ TEST_CASE("MemBuffer. Vector4f.")
 	}
 }
 
-TEST_CASE("MemBuffer. Vector2i.")
+CLASS_TEST_CASE("Read and Write to Vector2i.")
 {
 	MemBuffer buffer;
 	{
@@ -214,7 +216,7 @@ TEST_CASE("MemBuffer. Vector2i.")
 	}
 }
 
-TEST_CASE("MemBuffer. Vector3i.")
+CLASS_TEST_CASE("Read and Write to Vector3i.")
 {
 	MemBuffer buffer;
 	{
@@ -228,7 +230,7 @@ TEST_CASE("MemBuffer. Vector3i.")
 	}
 }
 
-TEST_CASE("MemBuffer. Vector2u.")
+CLASS_TEST_CASE("Read and Write to Vector2u.")
 {
 	MemBuffer buffer;
 	{
@@ -242,7 +244,7 @@ TEST_CASE("MemBuffer. Vector2u.")
 	}
 }
 
-TEST_CASE("MemBuffer. Guid.")
+CLASS_TEST_CASE("Read and Write to Guid.")
 {
 	const str::Guid guidA = GUID("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 	const str::Guid guidB = GUID("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
@@ -259,7 +261,7 @@ TEST_CASE("MemBuffer. Guid.")
 	}
 }
 
-TEST_CASE("MemBuffer. String.")
+CLASS_TEST_CASE("Read and Write to String.")
 {
 	MemBuffer buffer;
 	{
@@ -273,7 +275,7 @@ TEST_CASE("MemBuffer. String.")
 	}
 }
 
-TEST_CASE("MemBuffer. Trivial.")
+CLASS_TEST_CASE("Read and Write to Trivial.")
 {
 	MemBuffer buffer;
 
@@ -291,7 +293,7 @@ TEST_CASE("MemBuffer. Trivial.")
 	}
 }
 
-TEST_CASE("MemBuffer. NonTrivial.")
+CLASS_TEST_CASE("Read and Write to NonTrivial.")
 {
 	MemBuffer buffer;
 

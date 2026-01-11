@@ -4,6 +4,8 @@
 #include "Core/Slice.h"
 #include "Core/Types.h"
 
+#define CLASS_TEST_CASE(name) TEST_CASE("Array. " name, "[Array]")
+
 namespace
 {
 	struct MyStruct
@@ -12,14 +14,14 @@ namespace
 	};
 }
 
-TEST_CASE("Array. Default constructor.")
+CLASS_TEST_CASE("Default constructor.")
 {
 	Array<int32> myArray;
 
 	CHECK(myArray.GetCount() == 0);
 }
 
-TEST_CASE("Array. Copy constructor.")
+CLASS_TEST_CASE("Copy constructor.")
 {
 	Array<int32> myArrayA = { 1, 2, 3 };
 	Array<int32> myArrayB = myArrayA;
@@ -30,7 +32,7 @@ TEST_CASE("Array. Copy constructor.")
 	CHECK(myArrayB[2] == 3);
 }
 
-TEST_CASE("Array. Move constructor.")
+CLASS_TEST_CASE("Move constructor.")
 {
 	Array<int32> myArrayA = { 1, 2, 3 };
 	Array<int32> myArrayB = std::move(myArrayA);
@@ -41,7 +43,7 @@ TEST_CASE("Array. Move constructor.")
 	CHECK(myArrayB[2] == 3);
 }
 
-TEST_CASE("Array. initializer_list constructor.")
+CLASS_TEST_CASE("initializer_list constructor.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 
@@ -51,7 +53,7 @@ TEST_CASE("Array. initializer_list constructor.")
 	CHECK(myArray[2] == 3);
 }
 
-TEST_CASE("Array. operator=.")
+CLASS_TEST_CASE("operator = .")
 {
 	Array<int32> myArrayA = { 1, 2, 3 };
 	Array<int32> myArrayB = { 4, 5, 6 };
@@ -63,7 +65,7 @@ TEST_CASE("Array. operator=.")
 	CHECK(myArrayA[2] == 6);
 }
 
-TEST_CASE("Array. operator[].")
+CLASS_TEST_CASE("operator[].")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 	myArray[0] = 4;
@@ -76,7 +78,7 @@ TEST_CASE("Array. operator[].")
 	CHECK(myArray[2] == 6);
 }
 
-TEST_CASE("Array. operator[] const.")
+CLASS_TEST_CASE("operator[] const.")
 {
 	const Array<int32> myArray = { 1, 2, 3 };
 
@@ -86,7 +88,7 @@ TEST_CASE("Array. operator[] const.")
 	CHECK(myArray[2] == 3);
 }
 
-TEST_CASE("Array. operator Slice<T>.")
+CLASS_TEST_CASE("operator Slice<T>.")
 {
 	const Array<int32> myArray = { 1, 2, 3 };
 	Slice<const int32> mySlice = myArray;
@@ -96,7 +98,7 @@ TEST_CASE("Array. operator Slice<T>.")
 	CHECK(mySlice[2] == 3);
 }
 
-TEST_CASE("Array. operator Slice<T> const.")
+CLASS_TEST_CASE("operator Slice<T> const.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 	Slice<int32> mySlice = myArray;
@@ -106,7 +108,7 @@ TEST_CASE("Array. operator Slice<T> const.")
 	CHECK(mySlice[2] == 3);
 }
 
-TEST_CASE("Array. IsEmpty.")
+CLASS_TEST_CASE("IsEmpty.")
 {
 	Array<int32> myArray;
 	CHECK(myArray.IsEmpty());
@@ -115,7 +117,7 @@ TEST_CASE("Array. IsEmpty.")
 	CHECK(!myArray.IsEmpty());
 }
 
-TEST_CASE("Array. GetCapacity.")
+CLASS_TEST_CASE("GetCapacity.")
 {
 	Array<int32> myArray;
 	CHECK(myArray.GetCapacity() == 0);
@@ -129,7 +131,7 @@ TEST_CASE("Array. GetCapacity.")
 	CHECK(myArray.GetCapacity() == 6);
 }
 
-TEST_CASE("Array. GetCount.")
+CLASS_TEST_CASE("GetCount.")
 {
 	Array<int32> myArray;
 	CHECK(myArray.GetCount() == 0);
@@ -143,12 +145,15 @@ TEST_CASE("Array. GetCount.")
 	CHECK(myArray.GetCount() == 6);
 }
 
-TEST_CASE("Array. GetData.")
+CLASS_TEST_CASE("GetData.")
 {
-	CHECK(false);
+	Array<int32> myArray = { 0, 1, 2 };
+	CHECK(myArray.GetData()[0] == 0);
+	CHECK(myArray.GetData()[1] == 1);
+	CHECK(myArray.GetData()[2] == 2);
 }
 
-TEST_CASE("Array. Resize.")
+CLASS_TEST_CASE("Resize.")
 {
 	Array<int32> myArray;
 	CHECK(myArray.GetCount() == 0);
@@ -157,7 +162,7 @@ TEST_CASE("Array. Resize.")
 	CHECK(myArray.GetCount() == 3);
 }
 
-TEST_CASE("Array. Reserve.")
+CLASS_TEST_CASE("Reserve.")
 {
 	Array<int32> myArray;
 	CHECK(myArray.GetCapacity() == 0);
@@ -166,25 +171,25 @@ TEST_CASE("Array. Reserve.")
 	CHECK(myArray.GetCapacity() == 3);
 }
 
-TEST_CASE("Array. GetFirst.")
+CLASS_TEST_CASE("GetFirst.")
 {
 	const Array<int32> myArray = { 1, 2, 3 };
 	CHECK(myArray.GetFirst() == 1);
 }
 
-TEST_CASE("Array. GetLast.")
+CLASS_TEST_CASE("GetLast.")
 {
 	const Array<int32> myArray = { 1, 2, 3 };
 	CHECK(myArray.GetLast() == 3);
 }
 
-TEST_CASE("Array. Pop.")
+CLASS_TEST_CASE("Pop.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 	CHECK(myArray.Pop() == 3);
 }
 
-TEST_CASE("Array. Append copy value.")
+CLASS_TEST_CASE("Append copy value.")
 {
 	MyStruct myStruct = { 1 };
 	Array<MyStruct> myArray;
@@ -194,7 +199,7 @@ TEST_CASE("Array. Append copy value.")
 	CHECK(myArray[0].m_Int32 == 1);
 }
 
-TEST_CASE("Array. Append move value.")
+CLASS_TEST_CASE("Append move value.")
 {
 	MyStruct myStruct = { 1 };
 	Array<MyStruct> myArray;
@@ -204,7 +209,7 @@ TEST_CASE("Array. Append move value.")
 	CHECK(myArray[0].m_Int32 == 1);
 }
 
-TEST_CASE("Array. Append copy range.")
+CLASS_TEST_CASE("Append copy range.")
 {
 	Array<int32> myArrayA;
 	Array<int32> myArrayB = { 3, 4, 5 };
@@ -216,7 +221,7 @@ TEST_CASE("Array. Append copy range.")
 	CHECK(myArrayA[2] == 5);
 }
 
-TEST_CASE("Array. Append move range.")
+CLASS_TEST_CASE("Append move range.")
 {
 	Array<int32> myArrayA;
 	Array<int32> myArrayB = { 3, 4, 5 };
@@ -228,7 +233,7 @@ TEST_CASE("Array. Append move range.")
 	CHECK(myArrayA[2] == 5);
 }
 
-TEST_CASE("Array. Append initializer_list.")
+CLASS_TEST_CASE("Append initializer_list.")
 {
 	Array<int32> myArray;
 	myArray.Append({ 3, 4, 5 });
@@ -239,7 +244,7 @@ TEST_CASE("Array. Append initializer_list.")
 	CHECK(myArray[2] == 5);
 }
 
-TEST_CASE("Array. Emplace")
+CLASS_TEST_CASE("Emplace")
 {
 	Array<MyStruct> myArray;
 	myArray.Emplace(1);
@@ -248,7 +253,7 @@ TEST_CASE("Array. Emplace")
 	CHECK(myArray[0].m_Int32 == 1);
 }
 
-TEST_CASE("Array. Insert copy value.")
+CLASS_TEST_CASE("Insert copy value.")
 {
 	MyStruct myStructA = { 1 };
 	MyStruct myStructB = { 2 };
@@ -264,7 +269,7 @@ TEST_CASE("Array. Insert copy value.")
 	CHECK(myArray[2].m_Int32 == 1);
 }
 
-TEST_CASE("Array. Insert move value.")
+CLASS_TEST_CASE("Insert move value.")
 {
 	MyStruct myStructA = { 1 };
 	MyStruct myStructB = { 2 };
@@ -280,7 +285,7 @@ TEST_CASE("Array. Insert move value.")
 	CHECK(myArray[2].m_Int32 == 1);
 }
 
-TEST_CASE("Array. RemoveAt first by index.")
+CLASS_TEST_CASE("RemoveAt first by index.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4, 5 };
 	myArray.RemoveAt(0);
@@ -292,7 +297,7 @@ TEST_CASE("Array. RemoveAt first by index.")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array. RemoveAt middle by index.")
+CLASS_TEST_CASE("RemoveAt middle by index.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveAt(2);
@@ -304,7 +309,7 @@ TEST_CASE("Array. RemoveAt middle by index.")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array. RemoveAt last by index.")
+CLASS_TEST_CASE("RemoveAt last by index.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveAt(4);
@@ -316,7 +321,7 @@ TEST_CASE("Array. RemoveAt last by index.")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array. RemoveAt first by iterator.")
+CLASS_TEST_CASE("RemoveAt first by iterator.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4, 5 };
 	myArray.RemoveAt(myArray.begin());
@@ -328,7 +333,7 @@ TEST_CASE("Array. RemoveAt first by iterator.")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array. RemoveAt middle by iterator.")
+CLASS_TEST_CASE("RemoveAt middle by iterator.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveAt(myArray.begin() + 2);
@@ -340,7 +345,7 @@ TEST_CASE("Array. RemoveAt middle by iterator.")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array. RemoveAt last by iterator.")
+CLASS_TEST_CASE("RemoveAt last by iterator.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveAt(myArray.begin() + 4);
@@ -352,7 +357,7 @@ TEST_CASE("Array. RemoveAt last by iterator.")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array. RemoveOrderedAt first by index.")
+CLASS_TEST_CASE("RemoveOrderedAt first by index.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4, 5 };
 	myArray.RemoveOrderedAt(0);
@@ -364,7 +369,7 @@ TEST_CASE("Array. RemoveOrderedAt first by index.")
 	CHECK(myArray[3] == 5);
 }
 
-TEST_CASE("Array. RemoveOrderedAt middle by index.")
+CLASS_TEST_CASE("RemoveOrderedAt middle by index.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveOrderedAt(2);
@@ -376,7 +381,7 @@ TEST_CASE("Array. RemoveOrderedAt middle by index.")
 	CHECK(myArray[3] == 5);
 }
 
-TEST_CASE("Array. RemoveOrderedAt last by index.")
+CLASS_TEST_CASE("RemoveOrderedAt last by index.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveOrderedAt(4);
@@ -388,7 +393,7 @@ TEST_CASE("Array. RemoveOrderedAt last by index.")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array. RemoveOrderedAt first by iterator.")
+CLASS_TEST_CASE("RemoveOrderedAt first by iterator.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4, 5 };
 	myArray.RemoveOrderedAt(myArray.begin());
@@ -400,7 +405,7 @@ TEST_CASE("Array. RemoveOrderedAt first by iterator.")
 	CHECK(myArray[3] == 5);
 }
 
-TEST_CASE("Array. RemoveOrderedAt middle by iterator.")
+CLASS_TEST_CASE("RemoveOrderedAt middle by iterator.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4, 5 };
 	myArray.RemoveOrderedAt(myArray.begin() + 2);
@@ -412,7 +417,7 @@ TEST_CASE("Array. RemoveOrderedAt middle by iterator.")
 	CHECK(myArray[3] == 5);
 }
 
-TEST_CASE("Array. RemoveOrderedAt last by iterator.")
+CLASS_TEST_CASE("RemoveOrderedAt last by iterator.")
 {
 	Array<int32> myArray = { 1, 2, 3, 4 ,5 };
 	myArray.RemoveOrderedAt(myArray.begin() + 4);
@@ -424,7 +429,7 @@ TEST_CASE("Array. RemoveOrderedAt last by iterator.")
 	CHECK(myArray[3] == 4);
 }
 
-TEST_CASE("Array. RemoveLast.")
+CLASS_TEST_CASE("RemoveLast.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 	myArray.RemoveLast();
@@ -434,7 +439,7 @@ TEST_CASE("Array. RemoveLast.")
 	CHECK(myArray[1] == 2);
 }
 
-TEST_CASE("Array. RemoveAll.")
+CLASS_TEST_CASE("RemoveAll.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 	myArray.RemoveAll();
@@ -442,7 +447,7 @@ TEST_CASE("Array. RemoveAll.")
 	CHECK(myArray.GetCount() == 0);
 }
 
-TEST_CASE("Array. Iterator pre-increment.")
+CLASS_TEST_CASE("Iterator pre - increment.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 
@@ -453,7 +458,7 @@ TEST_CASE("Array. Iterator pre-increment.")
 	CHECK(++iterator == myArray.end());
 }
 
-TEST_CASE("Array. Iterator post-increment.")
+CLASS_TEST_CASE("Iterator post - increment.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 
@@ -464,7 +469,7 @@ TEST_CASE("Array. Iterator post-increment.")
 	CHECK(iterator == myArray.end());
 }
 
-TEST_CASE("Array. Iterator range-based for loop.")
+CLASS_TEST_CASE("Iterator range-based for loop.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 

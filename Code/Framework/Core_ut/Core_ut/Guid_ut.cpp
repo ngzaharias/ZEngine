@@ -1,8 +1,11 @@
 #include "CorePCH.h"
 
 #include "Core/Guid.h"
+#include "Core/Log.h"
 
-TEST_CASE("str::Guid. Default constructor.")
+#define CLASS_TEST_CASE(name) TEST_CASE("str::Guid. " name, "[str::Guid]")
+
+CLASS_TEST_CASE("Default constructor.")
 {
 	str::Guid guid;
 	CHECK(guid == str::Guid::Unassigned);
@@ -33,7 +36,7 @@ TEST_CASE("str::Guid. Default constructor.")
 	CHECK(guid.m_Data.m_U8[15] == 0);
 }
 
-TEST_CASE("str::Guid. Value constructor.")
+CLASS_TEST_CASE("Value constructor.")
 {
 	{
 		str::Guid guid({ 0, 0 });
@@ -130,7 +133,7 @@ TEST_CASE("str::Guid. Value constructor.")
 	}
 }
 
-TEST_CASE("str::Guid. ToString.")
+CLASS_TEST_CASE("ToString.")
 {
 	{
 		str::String guid = str::Guid::Unassigned.ToString();
@@ -148,7 +151,7 @@ TEST_CASE("str::Guid. ToString.")
 	}
 }
 
-TEST_CASE("str::Guid. IsValid.")
+CLASS_TEST_CASE("IsValid.")
 {
 	CHECK_FALSE(str::Guid::Unassigned.IsValid());
 	CHECK(str::Guid({ 1, 0 }).IsValid());
@@ -159,8 +162,11 @@ TEST_CASE("str::Guid. IsValid.")
 	CHECK(str::Guid::Create("FF000000000000000000000000000000").IsValid());
 }
 
-TEST_CASE("str::Guid. Create(str::StringView).")
+CLASS_TEST_CASE("Create(str::StringView).")
 {
+	// logger needs to be initialised else it crashes
+	core::LogInitialise();
+
 	{
 		str::Guid guid = str::Guid::Create("00000000000000000000000000000000");
 		CHECK(guid == str::Guid::Unassigned);
@@ -193,7 +199,7 @@ TEST_CASE("str::Guid. Create(str::StringView).")
 	}
 }
 
-TEST_CASE("str::Guid. Generate.")
+CLASS_TEST_CASE("Generate.")
 {
 	for (int32 i = 0; i < 1000; ++i)
 	{

@@ -2,7 +2,9 @@
 
 #include "Core/Address.h"
 
-TEST_CASE("str::Address. Push/Pop.")
+#define CLASS_TEST_CASE(name) TEST_CASE("str::Address. " name, "[str::Address]")
+
+CLASS_TEST_CASE("Push/Pop.")
 {
 	str::Address address;
 	CHECK(address.GetFull() == "");

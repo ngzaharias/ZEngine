@@ -3,6 +3,8 @@
 #include "Core/Flags.h"
 #include "Math/Math.h"
 
+#define CLASS_TEST_CASE(name) TEST_CASE("Flags. " name, "[Flags]")
+
 namespace
 {
 	enum MyEnum
@@ -16,14 +18,14 @@ namespace
 	using MyFlags = Flags<MyEnum>;
 }
 
-TEST_CASE("Flags. Has(Enum).")
+CLASS_TEST_CASE("Has(Enum).")
 {
 	const MyFlags flags = MyFlags(MyEnum::A);
 	CHECK(flags.Has(MyEnum::A));
 	CHECK(!flags.Has(MyEnum::B));
 }
 
-TEST_CASE("Flags. HasAll(Flags).")
+CLASS_TEST_CASE("HasAll(Flags).")
 {
 	MyFlags flagsA; flagsA.Raise(MyEnum::A); flagsA.Raise(MyEnum::B); flagsA.Raise(MyEnum::D);
 	MyFlags flagsB; flagsB.Raise(MyEnum::A); flagsB.Raise(MyEnum::B);
@@ -32,7 +34,7 @@ TEST_CASE("Flags. HasAll(Flags).")
 	CHECK(!flagsA.HasAll(flagsC));
 }
 
-TEST_CASE("Flags. HasAny().")
+CLASS_TEST_CASE("HasAny().")
 {
 	const MyFlags flagsA = MyFlags(MyEnum::A);
 	const MyFlags flagsB = {};
@@ -40,7 +42,7 @@ TEST_CASE("Flags. HasAny().")
 	CHECK(!flagsB.HasAny());
 }
 
-TEST_CASE("Flags. HasAny(Flags).")
+CLASS_TEST_CASE("HasAny(Flags).")
 {
 	MyFlags flagsA; flagsA.Raise(MyEnum::A); flagsA.Raise(MyEnum::D);
 	MyFlags flagsB; flagsB.Raise(MyEnum::A); flagsB.Raise(MyEnum::B);
@@ -49,14 +51,14 @@ TEST_CASE("Flags. HasAny(Flags).")
 	CHECK(!flagsA.HasAny(flagsC));
 }
 
-TEST_CASE("Flags. HasOnly(Enum).")
+CLASS_TEST_CASE("HasOnly(Enum).")
 {
 	const MyFlags flags = MyFlags(MyEnum::A);
 	CHECK(flags.HasOnly(MyEnum::A));
 	CHECK(!flags.HasOnly(MyEnum::B));
 }
 
-TEST_CASE("Flags. HasOnly(Flags).")
+CLASS_TEST_CASE("HasOnly(Flags).")
 {
 	MyFlags flagsA; flagsA.Raise(MyEnum::A); flagsA.Raise(MyEnum::B);
 	MyFlags flagsB; flagsB.Raise(MyEnum::A); flagsB.Raise(MyEnum::B);
@@ -65,7 +67,7 @@ TEST_CASE("Flags. HasOnly(Flags).")
 	CHECK(!flagsA.HasOnly(flagsC));
 }
 
-TEST_CASE("Flags. HasNone().")
+CLASS_TEST_CASE("HasNone().")
 {
 	const MyFlags flagsA = {};
 	const MyFlags flagsB = MyFlags(MyEnum::A);
@@ -73,7 +75,7 @@ TEST_CASE("Flags. HasNone().")
 	CHECK(!flagsB.HasNone());
 }
 
-TEST_CASE("Flags. Clear(Enum).")
+CLASS_TEST_CASE("Clear(Enum).")
 {
 	MyFlags flags; flags.Raise(MyEnum::A); flags.Raise(MyEnum::B);
 	REQUIRE(flags.Has(MyEnum::A));
@@ -83,7 +85,7 @@ TEST_CASE("Flags. Clear(Enum).")
 	CHECK(flags.Has(MyEnum::B));
 }
 
-TEST_CASE("Flags. Clear(Flags).")
+CLASS_TEST_CASE("Clear(Flags).")
 {
 	MyFlags flagsA; flagsA.Raise(MyEnum::A); flagsA.Raise(MyEnum::B);
 	MyFlags flagsB; flagsB.Raise(MyEnum::A); flagsB.Raise(MyEnum::C);
@@ -94,7 +96,7 @@ TEST_CASE("Flags. Clear(Flags).")
 	CHECK(flagsA.Has(MyEnum::B));
 }
 
-TEST_CASE("Flags. ClearAll().")
+CLASS_TEST_CASE("ClearAll().")
 {
 	MyFlags flags; flags.Raise(MyEnum::A); flags.Raise(MyEnum::B);
 	REQUIRE(flags.Has(MyEnum::A));
@@ -104,7 +106,7 @@ TEST_CASE("Flags. ClearAll().")
 	CHECK(!flags.Has(MyEnum::B));
 }
 
-TEST_CASE("Flags. Raise(Enum).")
+CLASS_TEST_CASE("Raise(Enum).")
 {
 	MyFlags flags = MyFlags(MyEnum::B);
 	REQUIRE(!flags.Has(MyEnum::A));
@@ -114,7 +116,7 @@ TEST_CASE("Flags. Raise(Enum).")
 	CHECK(flags.Has(MyEnum::B));
 }
 
-TEST_CASE("Flags. Raise(Flags).")
+CLASS_TEST_CASE("Raise(Flags).")
 {
 	MyFlags flagsA; flagsA.Raise(MyEnum::B); flagsA.Raise(MyEnum::C);
 	MyFlags flagsB; flagsB.Raise(MyEnum::A); flagsB.Raise(MyEnum::B);
@@ -125,7 +127,7 @@ TEST_CASE("Flags. Raise(Flags).")
 	CHECK(flagsA.Has(MyEnum::B));
 }
 
-TEST_CASE("Flags. RaiseAll().")
+CLASS_TEST_CASE("RaiseAll().")
 {
 	MyFlags flags = MyFlags(MyEnum::A);
 	REQUIRE(flags.Has(MyEnum::A));
@@ -141,7 +143,7 @@ TEST_CASE("Flags. RaiseAll().")
 	CHECK(flags.Has(MyEnum::E));
 }
 
-TEST_CASE("Flags. Set(Enum, bool).")
+CLASS_TEST_CASE("Set(Enum, bool).")
 {
 	MyFlags flags = MyFlags(MyEnum::A);
 	REQUIRE(flags.Has(MyEnum::A));
@@ -152,7 +154,7 @@ TEST_CASE("Flags. Set(Enum, bool).")
 	CHECK(flags.Has(MyEnum::B));
 }
 
-TEST_CASE("Flags. Toggle(Enum).")
+CLASS_TEST_CASE("Toggle(Enum).")
 {
 	MyFlags flags = MyFlags(MyEnum::A);
 	REQUIRE(flags.Has(MyEnum::A));

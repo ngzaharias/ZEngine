@@ -4,7 +4,9 @@
 #include "Core/Slice.h"
 #include "Core/Types.h"
 
-TEST_CASE("Slice. Constructors.")
+#define CLASS_TEST_CASE(name) TEST_CASE("Slice. " name, "[Slice]")
+
+CLASS_TEST_CASE("Constructors.")
 {
 	{
 		INFO("Default Constructor");
@@ -47,7 +49,7 @@ TEST_CASE("Slice. Constructors.")
 	}
 }
 
-TEST_CASE("Slice. operator=.")
+CLASS_TEST_CASE("operator=.")
 {
 	{
 		INFO("Slice");
@@ -65,7 +67,7 @@ TEST_CASE("Slice. operator=.")
 	}
 }
 
-TEST_CASE("Slice. operator[].")
+CLASS_TEST_CASE("operator[].")
 {
 	{
 		INFO("Slice<Type>");
@@ -120,7 +122,7 @@ TEST_CASE("Slice. operator[].")
 	}
 }
 
-TEST_CASE("Slice. operator Slice<const Type>.")
+CLASS_TEST_CASE("operator Slice<const Type>.")
 {
 	Array<int32> myArray = { 1, 2, 3 };
 	Slice<int32> mySliceA = myArray;
@@ -129,7 +131,7 @@ TEST_CASE("Slice. operator Slice<const Type>.")
 	CHECK(mySliceB.GetCount() == 3);
 }
 
-TEST_CASE("Slice. IsEmpty.")
+CLASS_TEST_CASE("IsEmpty.")
 {
 	Slice<int32> mySlice;
 	CHECK(mySlice.IsEmpty());
@@ -144,7 +146,7 @@ TEST_CASE("Slice. IsEmpty.")
 	CHECK(!mySlice.IsEmpty());
 }
 
-TEST_CASE("Slice. IsNull.")
+CLASS_TEST_CASE("IsNull.")
 {
 	Slice<int32> mySlice;
 	CHECK(mySlice.IsNull());
@@ -158,7 +160,7 @@ TEST_CASE("Slice. IsNull.")
 	CHECK(!mySlice.IsNull());
 }
 
-TEST_CASE("Slice. GetCount.")
+CLASS_TEST_CASE("GetCount.")
 {
 	Slice<int32> mySlice;
 	CHECK(mySlice.GetCount() == 0);

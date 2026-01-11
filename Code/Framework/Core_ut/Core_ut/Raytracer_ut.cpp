@@ -4,7 +4,9 @@
 #include "Core/Raytracer.h"
 #include "Math/Vector.h"
 
-TEST_CASE("path::Raytracer. Iterator.")
+#define CLASS_TEST_CASE(name) TEST_CASE("path::Raytracer. " name, "[path::Raytracer]")
+
+CLASS_TEST_CASE("Iterator.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 1.f;
@@ -23,7 +25,7 @@ TEST_CASE("path::Raytracer. Iterator.")
 	CHECK(values[4].x == 4);
 }
 
-TEST_CASE("path::Raytracer. Cellsize half.")
+CLASS_TEST_CASE("Cellsize half.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 0.5f;
@@ -42,7 +44,7 @@ TEST_CASE("path::Raytracer. Cellsize half.")
 	CHECK(values[4].x == 4);
 }
 
-TEST_CASE("path::Raytracer. Cellsize 1.")
+CLASS_TEST_CASE("Cellsize 1.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 1.f;
@@ -61,7 +63,7 @@ TEST_CASE("path::Raytracer. Cellsize 1.")
 	CHECK(values[4].x == 4);
 }
 
-TEST_CASE("path::Raytracer. Cellsize 2.")
+CLASS_TEST_CASE("Cellsize 2.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 2.f;
@@ -80,7 +82,7 @@ TEST_CASE("path::Raytracer. Cellsize 2.")
 	CHECK(values[4].x == 4);
 }
 
-TEST_CASE("path::Raytracer. -X-Axis.")
+CLASS_TEST_CASE ("- X - Axis.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 0.5f;
@@ -99,7 +101,7 @@ TEST_CASE("path::Raytracer. -X-Axis.")
 	CHECK(values[4].x == -4);
 }
 
-TEST_CASE("path::Raytracer. +X-Axis.")
+CLASS_TEST_CASE ("+ X - Axis.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 0.5f;
@@ -118,7 +120,7 @@ TEST_CASE("path::Raytracer. +X-Axis.")
 	CHECK(values[4].x == 4);
 }
 
-TEST_CASE("path::Raytracer. -Y-Axis.")
+CLASS_TEST_CASE ("- Y - Axis.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 0.5f;
@@ -137,7 +139,7 @@ TEST_CASE("path::Raytracer. -Y-Axis.")
 	CHECK(values[4].y == -4);
 }
 
-TEST_CASE("path::Raytracer. +Y-Axis.")
+CLASS_TEST_CASE ("+ Y - Axis.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 0.5f;
@@ -156,7 +158,7 @@ TEST_CASE("path::Raytracer. +Y-Axis.")
 	CHECK(values[4].y == 4);
 }
 
-TEST_CASE("path::Raytracer. -Z-Axis.")
+CLASS_TEST_CASE ("- Z - Axis.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 0.5f;
@@ -175,7 +177,7 @@ TEST_CASE("path::Raytracer. -Z-Axis.")
 	CHECK(values[4].z == -4);
 }
 
-TEST_CASE("path::Raytracer. +Z-Axis.")
+CLASS_TEST_CASE ("+ Z - Axis.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 0.5f;
@@ -194,7 +196,7 @@ TEST_CASE("path::Raytracer. +Z-Axis.")
 	CHECK(values[4].z == 4);
 }
 
-TEST_CASE("path::Raytracer. XYZ.")
+CLASS_TEST_CASE("XYZ.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 0.5f;
@@ -215,7 +217,7 @@ TEST_CASE("path::Raytracer. XYZ.")
 	CHECK(values[6] == Vector3i(2, 2, 2));
 }
 
-TEST_CASE("path::Raytracer. Real World Example.")
+CLASS_TEST_CASE("Real World Example.")
 {
 	path::Raytracer tracer;
 	tracer.m_CellSize = 2.f;
