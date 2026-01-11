@@ -9,28 +9,27 @@
 #include "Engine/ReplicationHost.h"
 #include "Engine/UserComponent.h"
 #include "Engine/UserMapSingleton.h"
-#include "Network/Adaptor.h"
 #include "Network/Host.h"
 
 void net::UserSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
-	auto& networkManager = world.WriteResource<eng::NetworkManager>();
-	auto& adaptor = networkManager.GetAdaptor();
+	//auto& networkManager = world.WriteResource<eng::NetworkManager>();
+	//auto& adaptor = networkManager.GetAdaptor();
 
-	m_Collection =
-	{
-		adaptor.m_OnServerClientConnected.Connect(*this, &net::UserSystem::OnClientConnected),
-		adaptor.m_OnServerClientDisconnected.Connect(*this, &net::UserSystem::OnClientDisconnected),
-	};
+	//m_Collection =
+	//{
+	//	adaptor.m_OnServerClientConnected.Connect(*this, &net::UserSystem::OnClientConnected),
+	//	adaptor.m_OnServerClientDisconnected.Connect(*this, &net::UserSystem::OnClientDisconnected),
+	//};
 }
 
 void net::UserSystem::Shutdown(World& world)
 {
 	PROFILE_FUNCTION();
 
-	m_Collection.Disconnect();
+	//m_Collection.Disconnect();
 }
 
 void net::UserSystem::Update(World& world, const GameTime& gameTime)

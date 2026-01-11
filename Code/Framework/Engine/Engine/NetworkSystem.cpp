@@ -51,11 +51,11 @@ void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 	{
 		auto& stateComponent = world.WriteSingleton<eng::network::StateSingleton>();
 
-		if (IsClient(stateComponent.m_Mode))
-			peer.Shutdown();
+		//if (IsClient(stateComponent.m_Mode))
+		//	peer.Shutdown();
 
-		if (IsServer(stateComponent.m_Mode))
-			host.Shutdown();
+		//if (IsServer(stateComponent.m_Mode))
+		//	host.Shutdown();
 
 		if (std::holds_alternative<eng::network::Startup>(eventData.m_Request))
 		{
@@ -68,14 +68,14 @@ void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 			stateComponent.m_ServerAddress = request.m_ServerAddress;
 			stateComponent.m_ServerPort = request.m_ServerPort;
 
-			if (IsServer(stateComponent.m_Mode))
-				host.Startup(stateComponent.m_ServerAddress, stateComponent.m_ServerPort, gameTime.m_TotalTime);
+			//if (IsServer(stateComponent.m_Mode))
+			//	host.Startup(stateComponent.m_ServerAddress, stateComponent.m_ServerPort, gameTime.m_TotalTime);
 
-			if (IsClient(stateComponent.m_Mode))
-			{
-				peer.Startup(stateComponent.m_ClientAddress, stateComponent.m_ClientPort, gameTime.m_TotalTime);
-				peer.Connect(stateComponent.m_ServerAddress, stateComponent.m_ServerPort);
-			}
+			//if (IsClient(stateComponent.m_Mode))
+			//{
+			//	peer.Startup(stateComponent.m_ClientAddress, stateComponent.m_ClientPort, gameTime.m_TotalTime);
+			//	peer.Connect(stateComponent.m_ServerAddress, stateComponent.m_ServerPort);
+			//}
 		}
 
 		world.AddEvent<eng::network::ChangeFinished>();

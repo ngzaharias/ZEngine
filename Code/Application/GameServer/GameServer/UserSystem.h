@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Core/Array.h"
-#include "Core/Delegate.h"
 #include "Core/Map.h"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 #include "Network/UserId.h"
-
 
 namespace ecs
 {
@@ -51,7 +49,6 @@ namespace net
 		void OnClientDisconnected(const net::PeerId& peerId);
 
 	private:
-		DelegateCollection m_Collection = { };
 		Map<net::UserId, bool> m_Requests;
 	};
 }

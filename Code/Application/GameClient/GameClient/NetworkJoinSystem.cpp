@@ -47,21 +47,21 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 		{
 		case NetworkJoinSingleton::EState::Connect:
 		{
-			const auto& networkManager = world.ReadResource< eng::NetworkManager>();
-			const auto& networkPeer = networkManager.GetPeer();
-			if (networkPeer.IsConnected())
-			{
-				writeComponent.m_State = NetworkJoinSingleton::EState::LoadLevel;
-			}
-			else if (networkPeer.HasConnectionFailed())
-			{
-				writeComponent.m_Result = NetworkJoinSingleton::EResult::Failure;
-				writeComponent.m_State = NetworkJoinSingleton::EState::Finished;
+			//const auto& networkManager = world.ReadResource< eng::NetworkManager>();
+			//const auto& networkPeer = networkManager.GetPeer();
+			//if (networkPeer.IsConnected())
+			//{
+			//	writeComponent.m_State = NetworkJoinSingleton::EState::LoadLevel;
+			//}
+			//else if (networkPeer.HasConnectionFailed())
+			//{
+			//	writeComponent.m_Result = NetworkJoinSingleton::EResult::Failure;
+			//	writeComponent.m_State = NetworkJoinSingleton::EState::Finished;
 
-				auto& messageComponent = world.AddComponent<gui::modal::MessageComponent>(world.CreateEntity());
-				messageComponent.m_Title = "Network: Error";
-				messageComponent.m_Message = "Failed to Connect to Server";
-			}
+			//	auto& messageComponent = world.AddComponent<gui::modal::MessageComponent>(world.CreateEntity());
+			//	messageComponent.m_Title = "Network: Error";
+			//	messageComponent.m_Message = "Failed to Connect to Server";
+			//}
 		} break;
 
 		case NetworkJoinSingleton::EState::LoadLevel:

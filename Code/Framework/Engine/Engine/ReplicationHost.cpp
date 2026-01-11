@@ -194,59 +194,59 @@ bool net::ReplicationHost::IsReplicated(const PeerId& peerId, const ecs::Entity&
 
 void net::ReplicationHost::CreateEntity(const net::PeerId& peerId, const ecs::Entity& entity)
 {
-	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
-	auto& host = networkManager.GetHost();
+	//auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
+	//auto& host = networkManager.GetHost();
 
-	auto* message = host.CreateMessage<CreateEntityMessage>(peerId, EMessage::CreateEntity);
-	message->m_Entity = entity.m_Value;
-	host.SendMessage(peerId, message);
+	//auto* message = host.CreateMessage<CreateEntityMessage>(peerId, EMessage::CreateEntity);
+	//message->m_Entity = entity.m_Value;
+	//host.SendMessage(peerId, message);
 }
 
 void net::ReplicationHost::DestroyEntity(const net::PeerId& peerId, const ecs::Entity& entity)
 {
-	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
-	auto& host = networkManager.GetHost();
+	//auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
+	//auto& host = networkManager.GetHost();
 
-	auto* message = host.CreateMessage<DestroyEntityMessage>(peerId, EMessage::DestroyEntity);
-	message->m_Entity = entity.m_Value;
+	//auto* message = host.CreateMessage<DestroyEntityMessage>(peerId, EMessage::DestroyEntity);
+	//message->m_Entity = entity.m_Value;
 
-	host.SendMessage(peerId, message);
+	//host.SendMessage(peerId, message);
 }
 
 void net::ReplicationHost::AddComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
-	auto& host = networkManager.GetHost();
+	//auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
+	//auto& host = networkManager.GetHost();
 
-	auto* message = host.CreateMessage<AddComponentMessage>(peerId, EMessage::AddComponent);
-	message->m_Entity = ToNetEntity(entity);
-	message->m_ComponentId = entry.m_ComponentId;
-	entry.m_Read(m_EntityWorld, entity, message->m_Data);
+	//auto* message = host.CreateMessage<AddComponentMessage>(peerId, EMessage::AddComponent);
+	//message->m_Entity = ToNetEntity(entity);
+	//message->m_ComponentId = entry.m_ComponentId;
+	//entry.m_Read(m_EntityWorld, entity, message->m_Data);
 
-	host.SendMessage(peerId, message);
+	//host.SendMessage(peerId, message);
 }
 
 void net::ReplicationHost::RemoveComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
-	auto& host = networkManager.GetHost();
+	//auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
+	//auto& host = networkManager.GetHost();
 
-	auto* message = host.CreateMessage<RemoveComponentMessage>(peerId, EMessage::RemoveComponent);
-	message->m_Entity = ToNetEntity(entity);
-	message->m_ComponentId = entry.m_ComponentId;
+	//auto* message = host.CreateMessage<RemoveComponentMessage>(peerId, EMessage::RemoveComponent);
+	//message->m_Entity = ToNetEntity(entity);
+	//message->m_ComponentId = entry.m_ComponentId;
 
-	host.SendMessage(peerId, message);
+	//host.SendMessage(peerId, message);
 }
 
 void net::ReplicationHost::UpdateComponent(const net::PeerId& peerId, const ecs::Entity& entity, const net::ComponentEntry& entry)
 {
-	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
-	auto& host = networkManager.GetHost();
+	//auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
+	//auto& host = networkManager.GetHost();
 
-	auto* message = host.CreateMessage<UpdateComponentMessage>(peerId, EMessage::UpdateComponent);
-	message->m_Entity = ToNetEntity(entity);
-	message->m_ComponentId = entry.m_ComponentId;
-	entry.m_Read(m_EntityWorld, entity, message->m_Data);
+	//auto* message = host.CreateMessage<UpdateComponentMessage>(peerId, EMessage::UpdateComponent);
+	//message->m_Entity = ToNetEntity(entity);
+	//message->m_ComponentId = entry.m_ComponentId;
+	//entry.m_Read(m_EntityWorld, entity, message->m_Data);
 
-	host.SendMessage(peerId, message);
+	//host.SendMessage(peerId, message);
 }
