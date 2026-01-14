@@ -96,7 +96,10 @@ void net::Peer::OnLobbyJoinRequested(GameLobbyJoinRequested_t* pCallback)
 {
 	Z_LOG(ELog::Network, "Peer: Join Request.");
 	CSteamID hostId = pCallback->m_steamIDFriend;
-	SteamMatchmaking()->JoinLobby(hostId);
+
+	SteamNetworkingIdentity identity;
+	identity.SetSteamID(hostId);
+	m_Connection = SteamNetworkingSockets()->ConnectP2P(identity, 0, 0, nullptr);
 }
 
 void net::Peer::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t* pCallback)
