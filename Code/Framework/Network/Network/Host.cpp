@@ -55,9 +55,6 @@ void net::Host::Startup()
 	m_NetPollGroup = SteamNetworkingSockets()->CreatePollGroup();
 
 	SteamMatchmaking()->CreateLobby(k_ELobbyTypeFriendsOnly, 4);
-
-	//SteamFriends()->SetRichPresence("status", "In Game");
-	//SteamFriends()->SetRichPresence("connect", "my_join_token_or_ip");
 }
 
 void net::Host::Shutdown()
