@@ -2,6 +2,8 @@
 
 #include "Core/EnumHelpers.h"
 
+#define HELPER_TEST_CASE(name) TEST_CASE("enum::" name, "[enum]")
+
 namespace
 {
 	enum class EnumA
@@ -14,12 +16,12 @@ namespace
 	};
 }
 
-TEST_CASE("enum::EnumToCount. Get number of values in the enum.")
+HELPER_TEST_CASE("EnumToCount. Get number of values in the enum.")
 {
 	CHECK(EnumToCount<EnumA>() == 5);
 }
 
-TEST_CASE("enum::EnumToIndex. Convert enum value to index integer.")
+HELPER_TEST_CASE("EnumToIndex. Convert enum value to index integer.")
 {
 	CHECK(EnumToIndex(EnumA::First) == 0);
 	CHECK(EnumToIndex(EnumA::Second) == 1);
@@ -28,12 +30,12 @@ TEST_CASE("enum::EnumToIndex. Convert enum value to index integer.")
 	CHECK(EnumToIndex(EnumA::Leet) == 4);
 }
 
-TEST_CASE("enum::EnumToString. Convert enum type to string.")
+HELPER_TEST_CASE("EnumToString. Convert enum type to string.")
 {
 	CHECK(EnumToString<EnumA>() == "EnumA");
 }
 
-TEST_CASE("enum::EnumToString. Convert enum value to string.")
+HELPER_TEST_CASE("EnumToString. Convert enum value to string.")
 {
 	CHECK(EnumToString(EnumA::First) == "First");
 	CHECK(EnumToString(EnumA::Second) == "Second");
@@ -42,7 +44,7 @@ TEST_CASE("enum::EnumToString. Convert enum value to string.")
 	CHECK(EnumToString(EnumA::Leet) == "Leet");
 }
 
-TEST_CASE("enum::EnumToValue. Convert enum value to integer value.")
+HELPER_TEST_CASE("EnumToValue. Convert enum value to integer value.")
 {
 	CHECK(EnumToValue(EnumA::First) == 1);
 	CHECK(EnumToValue(EnumA::Second) == 2);
@@ -51,7 +53,7 @@ TEST_CASE("enum::EnumToValue. Convert enum value to integer value.")
 	CHECK(EnumToValue(EnumA::Leet) == 128);
 }
 
-TEST_CASE("enum::IndexToEnum. Convert integer index to enum value.")
+HELPER_TEST_CASE("IndexToEnum. Convert integer index to enum value.")
 {
 	CHECK(IndexToEnum<EnumA>(0) == EnumA::First);
 	CHECK(IndexToEnum<EnumA>(1) == EnumA::Second);
@@ -60,7 +62,7 @@ TEST_CASE("enum::IndexToEnum. Convert integer index to enum value.")
 	CHECK(IndexToEnum<EnumA>(4) == EnumA::Leet);
 }
 
-TEST_CASE("enum::StringToEnum. Convert string to enum value.")
+HELPER_TEST_CASE("StringToEnum. Convert string to enum value.")
 {
 	CHECK(StringToEnum<EnumA>("First") == EnumA::First);
 	CHECK(StringToEnum<EnumA>("Second") == EnumA::Second);
@@ -69,7 +71,7 @@ TEST_CASE("enum::StringToEnum. Convert string to enum value.")
 	CHECK(StringToEnum<EnumA>("Leet") == EnumA::Leet);
 }
 
-TEST_CASE("enum::ValueToEnum. Convert integer value to enum value.")
+HELPER_TEST_CASE("ValueToEnum. Convert integer value to enum value.")
 {
 	CHECK(ValueToEnum<EnumA>(1) == EnumA::First);
 	CHECK(ValueToEnum<EnumA>(2) == EnumA::Second);

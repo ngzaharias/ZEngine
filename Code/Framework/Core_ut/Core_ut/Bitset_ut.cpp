@@ -2,7 +2,9 @@
 
 #include "Core/Bitset.h"
 
-TEST_CASE("Bitset. operator[].")
+#define CLASS_TEST_CASE(name) TEST_CASE("Bitset. " name, "[Bitset]")
+
+CLASS_TEST_CASE("operator[].")
 {
 	Bitset bitset;
 

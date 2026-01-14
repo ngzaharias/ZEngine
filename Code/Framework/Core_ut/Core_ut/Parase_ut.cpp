@@ -4,7 +4,9 @@
 #include "Core/String.h"
 #include "Core/StringView.h"
 
-TEST_CASE("str::Parse. double.")
+#define HELPER_TEST_CASE(name) TEST_CASE("str::Parse. " name, "[str::Parse]")
+
+HELPER_TEST_CASE("StringView to double.")
 {
 	CHECK(str::Parse<double>("1") == 1.);
 	CHECK(str::Parse<double>(".1") == 0.1);
@@ -19,7 +21,7 @@ TEST_CASE("str::Parse. double.")
 	CHECK(str::Parse<double>("-3.3") == -3.3);
 }
 
-TEST_CASE("str::Parse. float.")
+HELPER_TEST_CASE("StringView to float.")
 {
 	CHECK(str::Parse<float>("1") == 1.f);
 	CHECK(str::Parse<float>(".1") == 0.1f);
@@ -44,7 +46,7 @@ TEST_CASE("str::Parse. float.")
 	CHECK(str::Parse<float>("-3.33f") == -3.33f);
 }
 
-TEST_CASE("str::Parse. int8.")
+HELPER_TEST_CASE("StringView to int8.")
 {
 	CHECK(str::Parse<int8>("0") == 0);
 	CHECK(str::Parse<int8>("1") == 1);
@@ -53,7 +55,7 @@ TEST_CASE("str::Parse. int8.")
 	CHECK(str::Parse<int8>("-1") == -1);
 }
 
-TEST_CASE("str::Parse. int16.")
+HELPER_TEST_CASE("StringView to int16.")
 {
 	CHECK(str::Parse<int16>("0") == 0);
 	CHECK(str::Parse<int16>("1") == 1);
@@ -62,7 +64,7 @@ TEST_CASE("str::Parse. int16.")
 	CHECK(str::Parse<int16>("-1") == -1);
 }
 
-TEST_CASE("str::Parse. int32.")
+HELPER_TEST_CASE("StringView to int32.")
 {
 	CHECK(str::Parse<int32>("0") == 0);
 	CHECK(str::Parse<int32>("1") == 1);
@@ -71,7 +73,7 @@ TEST_CASE("str::Parse. int32.")
 	CHECK(str::Parse<int32>("-1") == -1);
 }
 
-TEST_CASE("str::Parse. int64.")
+HELPER_TEST_CASE("StringView to int64.")
 {
 	CHECK(str::Parse<int64>("0") == 0);
 	CHECK(str::Parse<int64>("1") == 1);
@@ -80,35 +82,35 @@ TEST_CASE("str::Parse. int64.")
 	CHECK(str::Parse<int64>("-1") == -1);
 }
 
-TEST_CASE("str::Parse. uint8.")
+HELPER_TEST_CASE("StringView to uint8.")
 {
 	CHECK(str::Parse<uint8>("0") == 0);
 	CHECK(str::Parse<uint8>("1") == 1);
 	CHECK(str::Parse<uint8>("+1") == 1);
 }
 
-TEST_CASE("str::Parse. uint16.")
+HELPER_TEST_CASE("StringView to uint16.")
 {
 	CHECK(str::Parse<uint16>("0") == 0);
 	CHECK(str::Parse<uint16>("1") == 1);
 	CHECK(str::Parse<uint16>("+1") == 1);
 }
 
-TEST_CASE("str::Parse. uint32.")
+HELPER_TEST_CASE("StringView to uint32.")
 {
 	CHECK(str::Parse<uint32>("0") == 0);
 	CHECK(str::Parse<uint32>("1") == 1);
 	CHECK(str::Parse<uint32>("+1") == 1);
 }
 
-TEST_CASE("str::Parse. uint64.")
+HELPER_TEST_CASE("StringView to uint64.")
 {
 	CHECK(str::Parse<uint64>("0") == 0);
 	CHECK(str::Parse<uint64>("1") == 1);
 	CHECK(str::Parse<uint64>("+1") == 1);
 }
 
-TEST_CASE("str::Parse. StringView.")
+HELPER_TEST_CASE("StringView to StringView.")
 {
 	const str::String string = " 1.2345f ";
 	const str::StringView stringView = str::StringView(&string[1]).substr(0, 7);

@@ -24,15 +24,19 @@ namespace enumerate
 	template<typename Range>
 	void Intersection(const Range& inputA, const Range& inputB, Range& output);
 
+	/// \brief Returns an iterator for the range starting at the first value and going forwards.
 	template<typename Range>
 	constexpr auto BeginForward(Range&& value) -> decltype(auto);
 
+	/// \brief Returns an iterator for the range starting at the last value and going backwards.
 	template<typename Range>
 	constexpr auto BeginReverse(Range&& value) -> decltype(auto);
 
+	/// \brief Returns an iterator to mark the end of the range when iterating forwards.
 	template<typename Range>
 	constexpr auto EndForward(Range&& value) -> decltype(auto);
 
+	/// \brief Returns an iterator to mark the end of the range when iterating backwards.
 	template<typename Range>
 	constexpr auto EndReverse(Range&& value) -> decltype(auto);
 

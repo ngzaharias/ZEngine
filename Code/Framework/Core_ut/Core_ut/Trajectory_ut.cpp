@@ -3,7 +3,9 @@
 #include "Core/Trajectory.h"
 #include "Math/Vector.h"
 
-TEST_CASE("path::Trajectory. Default.")
+#define CLASS_TEST_CASE(name) TEST_CASE("path::Trajectory. " name, "[path::Trajectory]")
+
+CLASS_TEST_CASE("Default.")
 {
 	path::Trajectory trajectory;
 	CHECK(trajectory.GetLength() == 0.f);
@@ -13,7 +15,7 @@ TEST_CASE("path::Trajectory. Default.")
 	CHECK(trajectory.AtPercentage(1.f).x == Approx(0.f));
 }
 
-TEST_CASE("path::Trajectory. Bezier3.")
+CLASS_TEST_CASE("Bezier3.")
 {
 	{
 		INFO("Simple");
@@ -34,7 +36,7 @@ TEST_CASE("path::Trajectory. Bezier3.")
 	}
 }
 
-TEST_CASE("path::Trajectory. Bezier4.")
+CLASS_TEST_CASE("Bezier4.")
 {
 	{
 		INFO("Simple");
@@ -56,7 +58,7 @@ TEST_CASE("path::Trajectory. Bezier4.")
 	}
 }
 
-TEST_CASE("path::Trajectory. Points.")
+CLASS_TEST_CASE("Points.")
 {
 	{
 		INFO("Even distribution.");

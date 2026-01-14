@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#define CLASS_TEST_CASE(name) TEST_CASE("Delegate. " name, "[Delegate]")
+
 namespace
 {
 	static Array<int32> s_Variables = 0;
@@ -21,7 +23,7 @@ namespace
 	};
 }
 
-TEST_CASE("Delegate. Connect a function with no arguments.")
+CLASS_TEST_CASE("Connect a function with no arguments.")
 {
 	s_Variables.RemoveAll();
 
@@ -33,7 +35,7 @@ TEST_CASE("Delegate. Connect a function with no arguments.")
 	CHECK(s_Variables[0] == 1);
 }
 
-TEST_CASE("Delegate. Connect a function with one argument.")
+CLASS_TEST_CASE("Connect a function with one argument.")
 {
 	s_Variables.RemoveAll();
 
@@ -45,7 +47,7 @@ TEST_CASE("Delegate. Connect a function with one argument.")
 	CHECK(s_Variables[0] == 3);
 }
 
-TEST_CASE("Delegate. Connect a object and method.")
+CLASS_TEST_CASE("Connect a objectand method.")
 {
 	MyStruct objectA;
 	const MyStruct objectB;
@@ -61,7 +63,7 @@ TEST_CASE("Delegate. Connect a object and method.")
 	CHECK(objectB.m_Variables[0] == 1);
 }
 
-TEST_CASE("Delegate. Connect the same function multiple times to the same delegate.")
+CLASS_TEST_CASE("Connect the same function multiple times to the same delegate.")
 {
 	s_Variables.RemoveAll();
 
@@ -77,7 +79,7 @@ TEST_CASE("Delegate. Connect the same function multiple times to the same delega
 	CHECK(s_Variables[2] == 1);
 }
 
-TEST_CASE("Delegate. Connect multiple functions to the same delegate.")
+CLASS_TEST_CASE("Connect multiple functions to the same delegate.")
 {
 	s_Variables.RemoveAll();
 
@@ -93,7 +95,7 @@ TEST_CASE("Delegate. Connect multiple functions to the same delegate.")
 	CHECK(s_Variables[2] == 3);
 }
 
-TEST_CASE("Delegate. A connection can be disconnected.")
+CLASS_TEST_CASE("A connection can be disconnected.")
 {
 	s_Variables.RemoveAll();
 
@@ -108,7 +110,7 @@ TEST_CASE("Delegate. A connection can be disconnected.")
 	CHECK(s_Variables[0] == 1);
 }
 
-TEST_CASE("Delegate. A disconnection doesn't alter the call order of the other connections.")
+CLASS_TEST_CASE("A disconnection doesn't alter the call order of the other connections.")
 {
 	s_Variables.RemoveAll();
 
@@ -129,7 +131,7 @@ TEST_CASE("Delegate. A disconnection doesn't alter the call order of the other c
 	CHECK(s_Variables[4] == 3);
 }
 
-TEST_CASE("Delegate. DelegateHandles can capture multiple.")
+CLASS_TEST_CASE("DelegateHandles can capture multiple.")
 {
 	s_Variables.RemoveAll();
 

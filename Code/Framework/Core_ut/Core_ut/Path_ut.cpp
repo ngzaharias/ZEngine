@@ -4,7 +4,9 @@
 
 #include <filesystem>
 
-TEST_CASE("str::Path. HasExtension.")
+#define CLASS_TEST_CASE(name) TEST_CASE("str::Path. " name, "[str::Path]")
+
+CLASS_TEST_CASE("HasExtension.")
 {
 	CHECK(!str::Path("foo/bar").HasExtension());
 	CHECK(!str::Path("foo/bar/").HasExtension());
@@ -12,7 +14,7 @@ TEST_CASE("str::Path. HasExtension.")
 	CHECK(str::Path("foo/bar.txt").HasExtension());
 }
 
-TEST_CASE("str::Path. IsDirectory.")
+CLASS_TEST_CASE("IsDirectory.")
 {
 	CHECK(str::Path("/foo").IsDirectory());
 	CHECK(str::Path("foo/").IsDirectory());
@@ -22,14 +24,14 @@ TEST_CASE("str::Path. IsDirectory.")
 	CHECK(!str::Path("foo/bar.txt").IsDirectory());
 }
 
-TEST_CASE("str::Path. IsEmpty.")
+CLASS_TEST_CASE("IsEmpty.")
 {
 	CHECK(str::Path().IsEmpty());
 	CHECK(str::Path("").IsEmpty());
 	CHECK(!str::Path("foo/bar.txt").IsEmpty());
 }
 
-TEST_CASE("str::Path. GetDirectory.")
+CLASS_TEST_CASE("GetDirectory.")
 {
 	CHECK(str::Path("/foo").GetDirectory() == "/foo");
 	CHECK(str::Path("foo/").GetDirectory() == "foo/");
@@ -37,25 +39,25 @@ TEST_CASE("str::Path. GetDirectory.")
 	CHECK(str::Path("foo/bar.txt").GetDirectory() == "foo/");
 }
 
-TEST_CASE("str::Path. GetFileExtension.")
+CLASS_TEST_CASE("GetFileExtension.")
 {
 	CHECK(str::Path("bar.txt").GetFileExtension() == ".txt");
 	CHECK(str::Path("foo/bar.txt").GetFileExtension() == ".txt");
 }
 
-TEST_CASE("str::Path. GetFileName.")
+CLASS_TEST_CASE("GetFileName.")
 {
 	CHECK(str::Path("bar.txt").GetFileName() == "bar.txt");
 	CHECK(str::Path("foo/bar.txt").GetFileName() == "bar.txt");
 }
 
-TEST_CASE("str::Path. GetFileNameNoExtension.")
+CLASS_TEST_CASE("GetFileNameNoExtension.")
 {
 	CHECK(str::Path("bar.txt").GetFileNameNoExtension() == "bar");
 	CHECK(str::Path("foo/bar.txt").GetFileNameNoExtension() == "bar");
 }
 
-TEST_CASE("str::Path. GetParent.")
+CLASS_TEST_CASE("GetParent.")
 {
 	CHECK(str::Path("/foo").GetParent() == "");
 	CHECK(str::Path("foo/").GetParent() == "");
@@ -63,7 +65,7 @@ TEST_CASE("str::Path. GetParent.")
 	CHECK(str::Path("foo/bar.txt").GetParent() == "foo");
 }
 
-TEST_CASE("str::Path. GetStem.")
+CLASS_TEST_CASE("GetStem.")
 {
 	CHECK(str::Path("/foo").GetStem() == "foo");
 	CHECK(str::Path("foo/").GetStem() == "");
@@ -71,7 +73,7 @@ TEST_CASE("str::Path. GetStem.")
 	CHECK(str::Path("foo/bar.txt").GetStem() == "bar.txt");
 }
 
-TEST_CASE("str::Path. Clear.")
+CLASS_TEST_CASE("Clear.")
 {
 	str::Path path = "foo/bar.txt";
 	REQUIRE(!path.IsEmpty());

@@ -2,6 +2,8 @@
 
 #include "Core/TypeInfo.h"
 
+#define HELPER_TEST_CASE(name) TEST_CASE("TypeInfo. " name, "[TypeInfo]")
+
 namespace first
 {
 	template<typename Type, typename Tag>
@@ -20,7 +22,7 @@ namespace second
 	};
 }
 
-TEST_CASE("TypeIndex. ToTypeId.")
+HELPER_TEST_CASE("ToTypeId.")
 {
 	struct A {}; struct B {}; struct C {}; struct TagA {};
 	struct D {}; struct E {}; struct F {}; struct TagB {};

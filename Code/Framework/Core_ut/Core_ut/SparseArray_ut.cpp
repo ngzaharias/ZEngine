@@ -4,6 +4,8 @@
 #include "Core/SparseArray.h"
 #include "Core/Types.h"
 
+#define CLASS_TEST_CASE(name) TEST_CASE("SparseArray. " name, "[SparseArray]")
+
 namespace
 {
 	struct MyStruct
@@ -15,7 +17,7 @@ namespace
 	};
 }
 
-TEST_CASE("SparseArray. Contains.")
+CLASS_TEST_CASE("Contains.")
 {
 	SparseArray<int32, float> myArray;
 	CHECK(!myArray.Contains(0));
@@ -26,7 +28,7 @@ TEST_CASE("SparseArray. Contains.")
 	CHECK(!myArray.Contains(1));
 }
 
-TEST_CASE("SparseArray. GetCapacity.")
+CLASS_TEST_CASE("GetCapacity.")
 {
 	SparseArray<int32, float> myArray;
 	CHECK(myArray.GetCapacity() == 0);
@@ -43,7 +45,7 @@ TEST_CASE("SparseArray. GetCapacity.")
 	CHECK(myArray.GetCapacity() == 6);
 }
 
-TEST_CASE("SparseArray. GetCount.")
+CLASS_TEST_CASE("GetCount.")
 {
 	SparseArray<int32, float> myArray;
 	CHECK(myArray.GetCount() == 0);
@@ -60,7 +62,7 @@ TEST_CASE("SparseArray. GetCount.")
 	CHECK(myArray.GetCount() == 4);
 }
 
-TEST_CASE("SparseArray. GetIndex for integral types returns its value.")
+CLASS_TEST_CASE("GetIndex for integral types returns its value.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Set(0, 0.f);
@@ -72,7 +74,7 @@ TEST_CASE("SparseArray. GetIndex for integral types returns its value.")
 	CHECK(myArray.GetIndex(9) == 9);
 }
 
-TEST_CASE("SparseArray. GetIndex for custom types uses its GetIndex method.")
+CLASS_TEST_CASE("GetIndex for custom types uses its GetIndex method.")
 {
 	SparseArray<MyStruct, float> myArray;
 	myArray.Set(MyStruct{ 0 }, 0.f);
@@ -84,7 +86,7 @@ TEST_CASE("SparseArray. GetIndex for custom types uses its GetIndex method.")
 	CHECK(myArray.GetIndex(MyStruct{ 9 }) == 9);
 }
 
-TEST_CASE("SparseArray. Get.")
+CLASS_TEST_CASE("Get.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Set(0, 1.337f);
@@ -92,7 +94,7 @@ TEST_CASE("SparseArray. Get.")
 	CHECK(myArray.Get(0) == 1.337f);
 }
 
-TEST_CASE("SparseArray. Emplace.")
+CLASS_TEST_CASE("Emplace.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Emplace(0, 1.f);
@@ -111,7 +113,7 @@ TEST_CASE("SparseArray. Emplace.")
 	//CHECK_THROWS(myArray.Emplace(INT32_MAX, 4.f));
 }
 
-TEST_CASE("SparseArray. Set.")
+CLASS_TEST_CASE("Set.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Set(0, 1.f);
@@ -133,7 +135,7 @@ TEST_CASE("SparseArray. Set.")
 	//CHECK_THROWS(myArray.Set(INT32_MAX, 4.f));
 }
 
-TEST_CASE("SparseArray. Set using move.")
+CLASS_TEST_CASE("Set using move.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Set(0, std::move(1.f));
@@ -155,7 +157,7 @@ TEST_CASE("SparseArray. Set using move.")
 	//CHECK_THROWS(myArray.Set(INT32_MAX, 4.f));
 }
 
-TEST_CASE("SparseArray. Removing from the first should do a swap with the last item in the list.")
+CLASS_TEST_CASE("Removing from the first should do a swap with the last item in the list.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Set(0, 1.f);
@@ -171,7 +173,7 @@ TEST_CASE("SparseArray. Removing from the first should do a swap with the last i
 	CHECK(myArray.Contains(999));
 }
 
-TEST_CASE("SparseArray. Removing from the middle should do a swap with the last item in the list.")
+CLASS_TEST_CASE("Removing from the middle should do a swap with the last item in the list.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Set(0, 1.f);
@@ -187,7 +189,7 @@ TEST_CASE("SparseArray. Removing from the middle should do a swap with the last 
 	REQUIRE(myArray.Contains(999));
 }
 
-TEST_CASE("SparseArray. Removing from the end should just pop the last item in the array.")
+CLASS_TEST_CASE("Removing from the end should just pop the last item in the array.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Set(0, 1.f);
@@ -203,7 +205,7 @@ TEST_CASE("SparseArray. Removing from the end should just pop the last item in t
 	REQUIRE(!myArray.Contains(999));
 }
 
-TEST_CASE("SparseArray. RemoveAll.")
+CLASS_TEST_CASE("RemoveAll.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Set(0, 1.f);
@@ -216,7 +218,7 @@ TEST_CASE("SparseArray. RemoveAll.")
 	CHECK(myArray.GetCount() == 0);
 }
 
-TEST_CASE("SparseArray. Reserve.")
+CLASS_TEST_CASE("Reserve.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Reserve(10);
@@ -224,7 +226,7 @@ TEST_CASE("SparseArray. Reserve.")
 	CHECK(myArray.GetCapacity() == 10);
 }
 
-TEST_CASE("SparseArray. Key: Custom.")
+CLASS_TEST_CASE("Key: Custom.")
 {
 	SparseArray<MyStruct, float> myArray;
 	myArray.Emplace({ 0 }, 1.f);
@@ -261,7 +263,7 @@ TEST_CASE("SparseArray. Key: Custom.")
 	CHECK(myArray.GetCount() == 0);
 }
 
-TEST_CASE("SparseArray. Key: Int32.")
+CLASS_TEST_CASE("Key: Int32.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Emplace(0, 1.f);
@@ -298,7 +300,7 @@ TEST_CASE("SparseArray. Key: Int32.")
 	CHECK(myArray.GetCount() == 0);
 }
 
-TEST_CASE("SparseArray. Iterator.")
+CLASS_TEST_CASE("Iterator.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Set(0, 1.f);
@@ -350,7 +352,7 @@ TEST_CASE("SparseArray. Iterator.")
 	}
 }
 
-TEST_CASE("SparseArray. Range-based for loop.")
+CLASS_TEST_CASE("Range-based for loop.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Set(0, 1.f);
@@ -374,7 +376,7 @@ TEST_CASE("SparseArray. Range-based for loop.")
 		CHECK(iterator.m_Value == 1337.f);
 }
 
-TEST_CASE("SparseArray. Range-based for loop with structured binding.")
+CLASS_TEST_CASE("Range-based for loop with structured binding.")
 {
 	SparseArray<int32, float> myArray;
 	myArray.Set(0, 1.f);

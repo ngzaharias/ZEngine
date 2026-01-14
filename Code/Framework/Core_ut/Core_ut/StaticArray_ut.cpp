@@ -3,13 +3,15 @@
 #include "Core/StaticArray.h"
 #include "Core/Types.h"
 
-TEST_CASE("StaticArray. Default constructor.")
+#define CLASS_TEST_CASE(name) TEST_CASE("StaticArray. " name, "[StaticArray]")
+
+CLASS_TEST_CASE("Default constructor.")
 {
 	StaticArray<int32, 3> myArray;
 	CHECK(myArray.GetCount() == 3);
 }
 
-TEST_CASE("StaticArray. Value constructor.")
+CLASS_TEST_CASE("Value constructor.")
 {
 	StaticArray<int32, 3> myArray(3);
 	CHECK(myArray.GetCount() == 3);
@@ -18,7 +20,7 @@ TEST_CASE("StaticArray. Value constructor.")
 	CHECK(myArray[2] == 3);
 }
 
-TEST_CASE("StaticArray. Move constructor.")
+CLASS_TEST_CASE("Move constructor.")
 {
 	StaticArray<int32, 3> myArrayA = { 1, 2, 3 };
 	StaticArray<int32, 3> myArrayB = std::move(myArrayA);
@@ -28,7 +30,7 @@ TEST_CASE("StaticArray. Move constructor.")
 	CHECK(myArrayB[2] == 3);
 }
 
-TEST_CASE("StaticArray. Copy constructor.")
+CLASS_TEST_CASE("Copy constructor.")
 {
 	StaticArray<int32, 3> myArrayA = { 1, 2, 3 };
 	StaticArray<int32, 3> myArrayB = myArrayA;
@@ -38,7 +40,7 @@ TEST_CASE("StaticArray. Copy constructor.")
 	CHECK(myArrayB[2] == 3);
 }
 
-TEST_CASE("StaticArray. initializer_list constructor.")
+CLASS_TEST_CASE("initializer_list constructor.")
 {
 	StaticArray<int32, 3> myArray = { 1, 2, 3 };
 	CHECK(myArray.GetCount() == 3);
@@ -47,7 +49,7 @@ TEST_CASE("StaticArray. initializer_list constructor.")
 	CHECK(myArray[2] == 3);
 }
 
-TEST_CASE("StaticArray. GetCount.")
+CLASS_TEST_CASE("GetCount.")
 {
 	constexpr int32 big = 500'000'000;
 	StaticArray<int32, 3> myArrayA;
