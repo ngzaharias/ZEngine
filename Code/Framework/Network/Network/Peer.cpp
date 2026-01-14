@@ -87,6 +87,18 @@ void net::Peer::ProcessMessage(const void* message)
 {
 }
 
+void net::Peer::OnGameJoinRequested(GameRichPresenceJoinRequested_t* pCallback)
+{
+	Z_LOG(ELog::Network, "Peer: Join Request.");
+}
+
+void net::Peer::OnLobbyJoinRequested(GameLobbyJoinRequested_t* pCallback)
+{
+	Z_LOG(ELog::Network, "Peer: Join Request.");
+	CSteamID hostId = pCallback->m_steamIDFriend;
+	SteamMatchmaking()->JoinLobby(hostId);
+}
+
 void net::Peer::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t* pCallback)
 {
 	const HSteamNetConnection connection = pCallback->m_hConn;

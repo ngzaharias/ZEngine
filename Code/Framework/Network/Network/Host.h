@@ -30,7 +30,8 @@ namespace net
 		void ProcessMessage(const net::PeerId& peerId, const void* message);
 
 	private:
-		STEAM_CALLBACK(Host, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
+		STEAM_CALLBACK(net::Host, OnLobbyCreated, LobbyCreated_t);
+		STEAM_CALLBACK(net::Host, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
 	protected:
 		int32 m_MaxPeers = 64;
@@ -38,6 +39,8 @@ namespace net
 		Set<net::PeerId> m_PeersDisconnected = {};
 
 		Array<HSteamNetConnection> m_Connections = {};
+
+		CSteamID m_LobbyId = {};
 		HSteamListenSocket m_ListenSocketId = k_HSteamListenSocket_Invalid;
 		HSteamListenSocket m_ListenSocketIp = k_HSteamListenSocket_Invalid;
 		HSteamNetPollGroup m_NetPollGroup = k_HSteamNetPollGroup_Invalid;

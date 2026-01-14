@@ -53,6 +53,11 @@ void net::Host::Startup()
 	m_ListenSocketId = SteamNetworkingSockets()->CreateListenSocketP2P(0, 0, nullptr);
 	m_ListenSocketIp = SteamNetworkingSockets()->CreateListenSocketIP(addr, 0, nullptr);
 	m_NetPollGroup = SteamNetworkingSockets()->CreatePollGroup();
+
+	SteamMatchmaking()->CreateLobby(k_ELobbyTypeFriendsOnly, 4);
+
+	//SteamFriends()->SetRichPresence("status", "In Game");
+	//SteamFriends()->SetRichPresence("connect", "my_join_token_or_ip");
 }
 
 void net::Host::Shutdown()
@@ -63,6 +68,7 @@ void net::Host::Shutdown()
 	SteamNetworkingSockets()->CloseListenSocket(m_ListenSocketId);
 	SteamNetworkingSockets()->CloseListenSocket(m_ListenSocketIp);
 	SteamNetworkingSockets()->DestroyPollGroup(m_NetPollGroup);
+	SteamMatchmaking()->LeaveLobby(m_LobbyId);
 
 	m_ListenSocketId = k_HSteamListenSocket_Invalid;
 	m_ListenSocketIp = k_HSteamListenSocket_Invalid;
@@ -96,6 +102,16 @@ void net::Host::BroadcastMessage(void* message)
 
 void net::Host::ProcessMessage(const net::PeerId& peerId, const void* message)
 {
+}
+
+void net::Host::OnLobbyCreated(LobbyCreated_t* pCallback)
+{
+	if (pCallback->m_eResult != k_EResultOK)
+		return;
+
+	Z_LOG(ELog::Network, "Host: Lobby Created.");
+	m_LobbyId = pCallback->m_ulSteamIDLobby;
+	SteamFriends()->ActivateGameOverlayInviteDialog(m_LobbyId);
 }
 
 void net::Host::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t* pCallback)

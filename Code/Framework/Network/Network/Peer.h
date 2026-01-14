@@ -30,7 +30,9 @@ namespace net
 		void ProcessMessage(const void* message);
 
 	private:
-		STEAM_CALLBACK(Peer, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
+		STEAM_CALLBACK(net::Peer, OnGameJoinRequested, GameRichPresenceJoinRequested_t);
+		STEAM_CALLBACK(net::Peer, OnLobbyJoinRequested, GameLobbyJoinRequested_t);
+		STEAM_CALLBACK(net::Peer, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
 	protected:
 		HSteamNetConnection m_Connection = k_HSteamNetConnection_Invalid;
