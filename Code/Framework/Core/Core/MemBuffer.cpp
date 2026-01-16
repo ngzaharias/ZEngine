@@ -2,6 +2,33 @@
 
 #include "Core/String.h"
 
+void MemBuffer::Clear()
+{
+	m_Data.RemoveAll();
+	m_ReadPosition = 0;
+	m_WritePosition = 0;
+}
+
+uint32 MemBuffer::GetBytes() const
+{
+	return static_cast<int32>(m_Data.GetCount());
+}
+
+int32 MemBuffer::GetCount() const
+{
+	return m_Data.GetCount();
+}
+
+uint8* MemBuffer::GetData()
+{
+	return m_Data.GetData();
+}
+
+const uint8* MemBuffer::GetData() const
+{
+	return m_Data.GetData();
+}
+
 void MemBuffer::Read(str::Path& data) const
 {
 	str::String string;
@@ -43,19 +70,4 @@ void MemBuffer::Write(const void* data, uint32 bytes)
 	memcpy(m_Data.GetData() + m_WritePosition, data, bytes);
 
 	m_WritePosition = m_Data.GetCount();
-}
-
-int32 MemBuffer::GetCount() const 
-{ 
-	return m_Data.GetCount(); 
-}
-
-uint8* MemBuffer::GetData()
-{ 
-	return m_Data.GetData(); 
-}
-
-const uint8* MemBuffer::GetData() const
-{ 
-	return m_Data.GetData();
 }

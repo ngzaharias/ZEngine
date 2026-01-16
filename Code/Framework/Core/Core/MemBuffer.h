@@ -11,10 +11,13 @@ using uint32 = uint32_t;
 class MemBuffer
 {
 public:
+	uint32 GetBytes() const;
 	int32 GetCount() const;
 
 	uint8* GetData();
 	const uint8* GetData() const;
+
+	void Reset();
 
 public:
 	// Read
@@ -30,6 +33,13 @@ public:
 	void Write(const str::Path& data);
 	void Write(const str::String& data);
 	void Write(const void* data, uint32 bytes);
+
+private:
+	template<typename Type>
+	inline void ReadCustom(Type& data) const;
+
+	template<typename Type>
+	inline void WriteCustom(const Type& data);
 
 private:
 	mutable uint32 m_ReadPosition = 0;
