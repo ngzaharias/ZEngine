@@ -18,6 +18,14 @@ net::ReplicationPeer::ReplicationPeer(ecs::EntityWorld& entityWorld)
 void net::ReplicationPeer::Initialise()
 {
 	PROFILE_FUNCTION();
+
+	auto& networkManager = m_EntityWorld.WriteResource<eng::NetworkManager>();
+	auto& peer = networkManager.GetPeer();
+
+	m_Collections =
+	{
+		peer.m_OnProcessMessages.Connect(*this, &net::ReplicationPeer::OnProcessMessages),
+	};
 }
 
 void net::ReplicationPeer::Shutdown()
@@ -47,8 +55,19 @@ void net::ReplicationPeer::OnClientDisconnected(const net::PeerId& peerId)
 	m_HasDisconnected = true;
 }
 
-void net::ReplicationPeer::OnProcessMessage(const void* message)
+void net::ReplicationPeer::OnProcessMessages(const Array<const net::Message*>& messages)
 {
+	for (const net::Message* message : messages)
+	{
+		switch (message->m_Type)
+		{
+		case net::EMessage::DebugCommand:
+		{
+			const auto* command = static_cast<const net::DebugCommandMessage*>(message);
+			Z_LOG(ELog::Debug, "{}", command->m_Data);
+		} break;
+		}
+	}
 }
 
 void net::ReplicationPeer::OnCreateEntity(const net::CreateEntityMessage* message)

@@ -2,8 +2,10 @@
 
 #include "Core/EnumHelpers.h"
 #include "Core/MemBuffer.h"
+#include "Core/String.h"
 #include "Core/Types.h"
 #include "Network/Entity.h"
+#include "Network/Message.h"
 
 namespace net
 {
@@ -14,8 +16,11 @@ namespace net
 		Ping,
 	};
 
-	enum class EMessage
+	enum EMessage : uint32
 	{
+		Unassigned = 0,
+
+		DebugCommand,
 		ServerCommand,
 
 		CreateEntity,
@@ -26,36 +31,41 @@ namespace net
 		RemoveComponent,
 	};
 
-	struct ServerCommandMessage
+	struct DebugCommandMessage : net::Message
+	{
+		str::String m_Data = {};
+	};
+
+	struct ServerCommandMessage : net::Message
 	{
 		ECommand m_Data = ECommand::None;
 	};
 
-	struct CreateEntityMessage
+	struct CreateEntityMessage : net::Message
 	{
 		net::Entity m_Entity = {};
 	};
 
-	struct DestroyEntityMessage
+	struct DestroyEntityMessage : net::Message
 	{
 		net::Entity m_Entity = {};
 	};
 
-	struct AddComponentMessage
+	struct AddComponentMessage : net::Message
 	{
 		net::Entity m_Entity = {};
 		int32 m_ComponentId = -1;
 		MemBuffer m_Data;
 	};
 
-	struct UpdateComponentMessage
+	struct UpdateComponentMessage : net::Message
 	{
 		net::Entity m_Entity = {};
 		int32 m_ComponentId = -1;
 		MemBuffer m_Data = {};
 	};
 
-	struct RemoveComponentMessage
+	struct RemoveComponentMessage : net::Message
 	{
 		net::Entity m_Entity = {};
 		int32 m_ComponentId = -1;

@@ -68,8 +68,15 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 			if (ImGui::Button("host: broadcast message"))
 			{
 				auto& manager = world.WriteResource<eng::NetworkManager>();
-				manager.GetHost().BroadcastMessage(nullptr);
+				auto& host = manager.GetHost();
+
+				auto* message = host.RequestMessage<net::DebugCommandMessage>(net::EMessage::DebugCommand);
+				message->m_Data = window.m_Message;
+				host.BroadcastMessage(message);
+				host.ReleaseMessage(message);
 			}
+			ImGui::SameLine();
+			imgui::InputText("##message", window.m_Message);
 
 			ImGui::Separator();
 

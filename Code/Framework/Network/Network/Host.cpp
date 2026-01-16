@@ -3,6 +3,7 @@
 #include "Core/Assert.h"
 #include "Core/GameTime.h"
 #include "Core/Profiler.h"
+#include "Network/Message.h"
 
 // https://github.com/ValveSoftware/GameNetworkingSockets
 // https://keithjohnston.wordpress.com/2014/02/17/nat-punch-through-for-multiplayer-games/
@@ -41,6 +42,11 @@ namespace
 	}
 }
 
+net::Host::Host(net::MessageFactory& messageFactory)
+	: m_MessageFactory(messageFactory)
+{
+}
+
 void net::Host::Startup()
 {
 	PROFILE_FUNCTION();
@@ -70,6 +76,7 @@ void net::Host::Shutdown()
 	m_ListenSocketId = k_HSteamListenSocket_Invalid;
 	m_ListenSocketIp = k_HSteamListenSocket_Invalid;
 	m_NetPollGroup = k_HSteamNetPollGroup_Invalid;
+	m_LobbyId = {};
 }
 
 void net::Host::Update(const GameTime& gameTime)
@@ -83,17 +90,31 @@ void net::Host::Update(const GameTime& gameTime)
 		for (int i = 0; i < numMessages; i++)
 		{
 			SteamNetworkingMessage_t* message = msgs[i];
+
 			Z_LOG(ELog::Network, "Host: Received Message.");
 			message->Release();
 		}
 	}
 }
 
-void net::Host::BroadcastMessage(void* message)
+void net::Host::ReleaseMessage(const net::Message* message)
 {
+	m_MessageFactory.Release(message);
+}
+
+void net::Host::BroadcastMessage(const net::Message* message)
+{
+	Z_PANIC(message && message->m_Type != 0, "");
+
+	MemBuffer buffer;
+	buffer.Write(message->m_Type);
+	m_MessageFactory.Write(*message, buffer);
+
+	void* data = buffer.GetData();
+	uint32 bytes = buffer.GetBytes();
 	for (const HSteamNetConnection connection : m_Connections)
 	{
-		::SendMessage(connection, nullptr, 0);
+		::SendMessage(connection, data, bytes);
 	}
 }
 
@@ -136,7 +157,7 @@ void net::Host::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCall
 
 		Z_LOG(ELog::Network, "Host: Accepted Peer.", static_cast<int32>(res));
 		SteamNetworkingSockets()->SetConnectionPollGroup(connection, m_NetPollGroup);
-		SteamNetworkingSockets()->SendMessageToConnection(connection, nullptr, 0, k_nSteamNetworkingSend_Reliable, nullptr);
+		//SteamNetworkingSockets()->SendMessageToConnection(connection, nullptr, 0, k_nSteamNetworkingSend_Reliable, nullptr);
 		m_Connections.Append(connection);
 	}
 

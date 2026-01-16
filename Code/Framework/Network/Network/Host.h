@@ -3,8 +3,9 @@
 #include "Core/Array.h"
 #include "Core/Set.h"
 #include "Core/String.h"
+#include "Core/TypeInfo.h"
 #include "Core/Types.h"
-#include "Network/Messages.h"
+#include "Network/MessageFactory.h"
 #include "Network/PeerId.h"
 
 #pragma warning(push)
@@ -16,15 +17,26 @@ class GameTime;
 
 namespace net
 {
+	struct Message;
+}
+
+namespace net
+{
 	class Host final
 	{
 	public:
+		Host(net::MessageFactory& messageFactory);
+
 		void Startup();
 		void Shutdown();
 
 		void Update(const GameTime& gameTime);
 
-		void BroadcastMessage(void* message);
+		template<typename TMessage>
+		TMessage* RequestMessage(const uint32 type);
+		void ReleaseMessage(const net::Message* message);
+
+		void BroadcastMessage(const net::Message* message);
 
 	protected:
 		void ProcessMessage(const net::PeerId& peerId, const void* message);
@@ -34,9 +46,7 @@ namespace net
 		STEAM_CALLBACK(net::Host, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
 	protected:
-		int32 m_MaxPeers = 64;
-		Set<net::PeerId> m_PeersConnected = {};
-		Set<net::PeerId> m_PeersDisconnected = {};
+		net::MessageFactory& m_MessageFactory;
 
 		Array<HSteamNetConnection> m_Connections = {};
 

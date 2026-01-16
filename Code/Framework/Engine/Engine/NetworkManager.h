@@ -29,5 +29,6 @@ namespace eng
 		net::Peer m_Peer;
 
 		net::ComponentRegistry m_ComponentRegistry;
+		net::MessageFactory m_MessageFactory;
 	};
 }

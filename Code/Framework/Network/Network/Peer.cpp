@@ -3,6 +3,8 @@
 #include "Core/Assert.h"
 #include "Core/GameTime.h"
 #include "Core/Profiler.h"
+#include "Core/TypeInfo.h"
+#include "Network/Messages.h"
 
 namespace
 {
@@ -38,6 +40,11 @@ namespace
 	}
 }
 
+net::Peer::Peer(net::MessageFactory& messageFactory)
+	: m_MessageFactory(messageFactory)
+{
+}
+
 void net::Peer::Connect()
 {
 	PROFILE_FUNCTION();
@@ -68,14 +75,36 @@ void net::Peer::Update(const GameTime& gameTime)
 	if (m_Connection != k_HSteamNetConnection_Invalid)
 	{
 		SteamNetworkingMessage_t* msgs[32];
-		int res = SteamNetworkingSockets()->ReceiveMessagesOnConnection(m_Connection, msgs, 32);
-		for (int i = 0; i < res; i++)
+		const int32 count = SteamNetworkingSockets()->ReceiveMessagesOnConnection(m_Connection, msgs, 32);
+		for (int32 i = 0; i < count; i++)
 		{
-			SteamNetworkingMessage_t* message = msgs[i];
-			Z_LOG(ELog::Network, "Peer: Received Message.");
-			message->Release();
+			SteamNetworkingMessage_t* steamMessage = msgs[i];
+
+			uint32 type = 0;
+			m_MessageBuffer.Reset();
+			m_MessageBuffer.Write(steamMessage->GetData(), steamMessage->GetSize());
+			m_MessageBuffer.Read(type);
+
+			net::Message* message = m_MessageFactory.Request(type);
+			m_MessageFactory.Read(*message, m_MessageBuffer);
+			m_MessageQueue.Append(message);
+
+			steamMessage->Release();
 		}
+
+		// once we've gathered all messages, publish them
+		m_OnProcessMessages.Publish(m_MessageQueue);
+
+		// release all messages that were created
+		for (const net::Message* message : m_MessageQueue)
+			m_MessageFactory.Release(message);
+		m_MessageQueue.RemoveAll();
 	}
+}
+
+void net::Peer::ReleaseMessage(const net::Message* message)
+{
+	m_MessageFactory.Release(message);
 }
 
 void net::Peer::SendMessage(void* message)
