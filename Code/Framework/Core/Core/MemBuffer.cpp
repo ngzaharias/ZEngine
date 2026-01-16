@@ -2,7 +2,7 @@
 
 #include "Core/String.h"
 
-void MemBuffer::Clear()
+void MemBuffer::Reset()
 {
 	m_Data.RemoveAll();
 	m_ReadPosition = 0;
