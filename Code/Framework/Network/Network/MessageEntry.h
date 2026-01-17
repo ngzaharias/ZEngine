@@ -4,6 +4,7 @@ class MemBuffer;
 
 namespace net
 {
+	enum class EMessage;
 	struct Message;
 }
 
@@ -11,7 +12,7 @@ namespace net
 {
 	struct MessageEntry
 	{
-		using New = net::Message*(const uint32);
+		using New = net::Message*(const net::EMessage);
 		using Read = void(net::Message&, const MemBuffer&);
 		using Write = void(const net::Message&, MemBuffer&);
 

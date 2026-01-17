@@ -80,7 +80,7 @@ void net::Peer::Update(const GameTime& gameTime)
 		{
 			SteamNetworkingMessage_t* steamMessage = msgs[i];
 
-			uint32 type = 0;
+			net::EMessage type = net::EMessage::Unassigned;
 			m_MessageBuffer.Reset();
 			m_MessageBuffer.Write(steamMessage->GetData(), steamMessage->GetSize());
 			m_MessageBuffer.Read(type);

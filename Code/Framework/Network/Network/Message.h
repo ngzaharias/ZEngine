@@ -6,6 +6,7 @@ namespace net
 	{
 		virtual ~Message() = default;
 
+		// net::EMessage
 		uint32 m_Type = 0;
 	};
 }

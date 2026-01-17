@@ -3,6 +3,7 @@
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
+#include "ECS/TypeFactory.h"
 #include "Engine/ComponentRegistry.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/ReplicationComponent.h"
@@ -59,13 +60,30 @@ void net::ReplicationPeer::OnProcessMessages(const Array<const net::Message*>& m
 {
 	for (const net::Message* message : messages)
 	{
-		switch (message->m_Type)
+		switch (static_cast<net::EMessage>(message->m_Type))
 		{
 		case net::EMessage::DebugCommand:
 		{
 			const auto* command = static_cast<const net::DebugCommandMessage*>(message);
 			Z_LOG(ELog::Debug, "{}", command->m_Data);
 		} break;
+
+		case EMessage::CreateEntity:
+			OnCreateEntity(static_cast<const net::CreateEntityMessage*>(message));
+			break;
+		case EMessage::DestroyEntity:
+			OnDestroyEntity(static_cast<const net::DestroyEntityMessage*>(message));
+			break;
+
+		case EMessage::AddComponent:
+			OnAddComponent(static_cast<const net::AddComponentMessage*>(message));
+			break;
+		case EMessage::RemoveComponent:
+			OnRemoveComponent(static_cast<const net::RemoveComponentMessage*>(message));
+			break;
+		case EMessage::UpdateComponent:
+			OnUpdateComponent(static_cast<const net::UpdateComponentMessage*>(message));
+			break;
 		}
 	}
 }
@@ -75,11 +93,11 @@ void net::ReplicationPeer::OnCreateEntity(const net::CreateEntityMessage* messag
 	Z_LOG(ELog::Network, "Peer: CreateEntityMessage");
 	Z_ASSERT(!enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] has already been added on peer!", message->m_Entity.m_Value);
 
-	const net::Entity hostHandle = message->m_Entity;
-	const ecs::Entity peerHandle = m_EntityWorld.CreateEntity();
+	const net::Entity hostEntity = message->m_Entity;
+	const ecs::Entity peerEntity = m_EntityWorld.CreateEntity();
 
-	m_HostToPeer[hostHandle] = peerHandle;
-	m_PeerToHost[peerHandle] = hostHandle;
+	m_HostToPeer[hostEntity] = peerEntity;
+	m_PeerToHost[peerEntity] = hostEntity;
 }
 
 void net::ReplicationPeer::OnDestroyEntity(const net::DestroyEntityMessage* message)
@@ -87,12 +105,12 @@ void net::ReplicationPeer::OnDestroyEntity(const net::DestroyEntityMessage* mess
 	Z_LOG(ELog::Network, "Peer: DestroyEntityMessage");
 	Z_ASSERT(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity [{}] doesn't exist on peer!", message->m_Entity.m_Value);
 
-	const net::Entity& hostHandle = message->m_Entity;
-	const ecs::Entity& peerHandle = m_HostToPeer[hostHandle];
+	const net::Entity& hostEntity = message->m_Entity;
+	const ecs::Entity& peerEntity = m_HostToPeer[hostEntity];
 
-	m_EntityWorld.DestroyEntity(peerHandle);
-	m_PeerToHost.Remove(peerHandle);
-	m_HostToPeer.Remove(hostHandle);
+	m_EntityWorld.DestroyEntity(peerEntity);
+	m_PeerToHost.Remove(peerEntity);
+	m_HostToPeer.Remove(hostEntity);
 }
 
 void net::ReplicationPeer::OnAddComponent(const net::AddComponentMessage* message)

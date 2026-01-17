@@ -6,6 +6,7 @@
 
 namespace net
 {
+	enum class EMessage;
 	struct Message;
 }
 
@@ -15,9 +16,9 @@ namespace net
 	{
 	public:
 		template <typename TMessage>
-		void Register(uint32 type);
+		void Register(const net::EMessage type);
 
-		net::Message* Request(const uint32 type);
+		net::Message* Request(const net::EMessage type);
 		void Release(const net::Message* message);
 
 		void Read(net::Message& data, const MemBuffer& buffer);
@@ -26,14 +27,14 @@ namespace net
 
 	private:
 		template<typename TMessage>
-		static net::Message* NewMethod(const uint32 type);
+		static net::Message* NewMethod(const net::EMessage type);
 		template<typename TMessage>
 		static void ReadMethod(net::Message& data, const MemBuffer& buffer);
 		template<typename TMessage>
 		static void WriteMethod(const net::Message& data, MemBuffer& buffer);
 
 	private:
-		Map<uint32, net::MessageEntry> m_EntryMap = {};
+		Map<net::EMessage, net::MessageEntry> m_EntryMap = {};
 	};
 }
 

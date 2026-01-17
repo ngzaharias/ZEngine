@@ -1,6 +1,6 @@
 
 template <typename TMessage>
-void net::MessageFactory::Register(uint32 type)
+void net::MessageFactory::Register(const net::EMessage type)
 {
 	net::MessageEntry& entry = m_EntryMap[type];
 	entry.m_New = &NewMethod<TMessage>;
@@ -9,10 +9,10 @@ void net::MessageFactory::Register(uint32 type)
 }
 
 template<typename TMessage>
-net::Message* net::MessageFactory::NewMethod(const uint32 type)
+net::Message* net::MessageFactory::NewMethod(const net::EMessage type)
 {
 	TMessage* message = new TMessage();
-	message->m_Type = type;
+	message->m_Type = static_cast<uint32>(type);
 	return message;
 }
 

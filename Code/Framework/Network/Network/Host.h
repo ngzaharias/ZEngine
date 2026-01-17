@@ -33,7 +33,7 @@ namespace net
 		void Update(const GameTime& gameTime);
 
 		template<typename TMessage>
-		TMessage* RequestMessage(const uint32 type);
+		TMessage* RequestMessage(const net::EMessage type);
 		void ReleaseMessage(const net::Message* message);
 
 		void BroadcastMessage(const net::Message* message);

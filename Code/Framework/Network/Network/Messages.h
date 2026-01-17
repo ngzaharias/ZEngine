@@ -3,6 +3,7 @@
 #include "Core/EnumHelpers.h"
 #include "Core/MemBuffer.h"
 #include "Core/String.h"
+#include "Core/TypeInfo.h"
 #include "Core/Types.h"
 #include "Network/Entity.h"
 #include "Network/Message.h"
@@ -16,7 +17,7 @@ namespace net
 		Ping,
 	};
 
-	enum EMessage : uint32
+	enum class EMessage
 	{
 		Unassigned = 0,
 
@@ -53,21 +54,23 @@ namespace net
 
 	struct AddComponentMessage : net::Message
 	{
+		TypeId m_TypeId = -1;
+
 		net::Entity m_Entity = {};
-		int32 m_ComponentId = -1;
-		MemBuffer m_Data;
+		MemBuffer m_Data = {};
 	};
 
 	struct UpdateComponentMessage : net::Message
 	{
+		TypeId m_TypeId = -1;
+
 		net::Entity m_Entity = {};
-		int32 m_ComponentId = -1;
 		MemBuffer m_Data = {};
 	};
 
 	struct RemoveComponentMessage : net::Message
 	{
+		TypeId m_TypeId = -1;
 		net::Entity m_Entity = {};
-		int32 m_ComponentId = -1;
 	};
 }
