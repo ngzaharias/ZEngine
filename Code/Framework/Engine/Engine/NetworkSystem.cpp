@@ -7,9 +7,9 @@
 #include "ECS/WorldView.h"
 #include "Engine/NetworkChangeFinished.h"
 #include "Engine/NetworkChangeRequest.h"
-#include "Engine/NetworkManager.h"
 #include "Engine/NetworkStateSingleton.h"
 #include "Network/Host.h"
+#include "Network/NetworkManager.h"
 #include "Network/Peer.h"
 
 namespace
@@ -43,7 +43,7 @@ void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& networkManager = world.WriteResource<eng::NetworkManager>();
+	auto& networkManager = world.WriteResource<net::NetworkManager>();
 	auto& host = networkManager.GetHost();
 	auto& peer = networkManager.GetPeer();
 

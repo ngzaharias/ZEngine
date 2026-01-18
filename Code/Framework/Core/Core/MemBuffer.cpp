@@ -29,6 +29,17 @@ const uint8* MemBuffer::GetData() const
 	return m_Data.GetData();
 }
 
+void MemBuffer::Read(MemBuffer& data) const
+{
+	int32 count;
+	Read(count);
+
+	data.m_Data.Increase(count);
+	for (int32 i = 0; i < count; ++i)
+		data.m_Data.Append(m_Data[m_ReadPosition + i]);
+	m_ReadPosition += count;
+}
+
 void MemBuffer::Read(str::Path& data) const
 {
 	str::String string;
@@ -45,6 +56,23 @@ void MemBuffer::Read(str::String& data) const
 	Read((void*)data.data(), sizeof(char) * count);
 }
 
+void MemBuffer::Read(void* data, uint32 bytes) const
+{
+	memcpy(data, m_Data.GetData() + m_ReadPosition, bytes);
+	m_ReadPosition += bytes;
+}
+
+void MemBuffer::Write(const MemBuffer& data)
+{
+	const int32 count = data.GetCount();
+	Write(count);
+
+	m_Data.Increase(count);
+	for (int32 i = 0; i < count; ++i)
+		m_Data.Append(data.m_Data[i]);
+	m_WritePosition += count;
+}
+
 void MemBuffer::Write(const str::Path& data)
 {
 	const str::String string = str::String(data.ToView());
@@ -56,12 +84,6 @@ void MemBuffer::Write(const str::String& data)
 	const uint32 count = static_cast<uint32>(data.size());
 	Write(count);
 	Write((const void*)data.data(), sizeof(char) * count);
-}
-
-void MemBuffer::Read(void* data, uint32 bytes) const
-{
-	memcpy(data, m_Data.GetData() + m_ReadPosition, bytes);
-	m_ReadPosition += bytes;
 }
 
 void MemBuffer::Write(const void* data, uint32 bytes)

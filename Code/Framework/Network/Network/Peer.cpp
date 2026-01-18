@@ -4,7 +4,7 @@
 #include "Core/GameTime.h"
 #include "Core/Profiler.h"
 #include "Core/TypeInfo.h"
-#include "Network/Messages.h"
+#include "Network/MessageEnum.h"
 
 namespace
 {
@@ -107,13 +107,18 @@ void net::Peer::ReleaseMessage(const net::Message* message)
 	m_MessageFactory.Release(message);
 }
 
-void net::Peer::SendMessage(void* message)
+void net::Peer::SendMessage(const net::Message* message)
 {
-	::SendMessage(m_Connection, nullptr, 0);
-}
+	Z_PANIC(message && message->m_Type != 0, "");
 
-void net::Peer::ProcessMessage(const void* message)
-{
+	MemBuffer buffer;
+	buffer.Write(message->m_Type);
+	m_MessageFactory.Write(*message, buffer);
+
+	void* data = buffer.GetData();
+	uint32 bytes = buffer.GetBytes();
+
+	::SendMessage(m_Connection, data, bytes);
 }
 
 void net::Peer::OnGameJoinRequested(GameRichPresenceJoinRequested_t* pCallback)
@@ -147,6 +152,5 @@ void net::Peer::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCall
 	if (hasConnected)
 	{
 		Z_LOG(ELog::Network, "Peer: Connected.");
-		SteamNetworkingSockets()->SendMessageToConnection(connection, nullptr, 0, k_nSteamNetworkingSend_Reliable, nullptr);
 	}
 }

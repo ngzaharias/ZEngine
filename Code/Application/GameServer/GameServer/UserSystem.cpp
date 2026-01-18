@@ -4,18 +4,18 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
+#include "ECS/ReplicationHost.h"
 #include "ECS/WorldView.h"
-#include "Engine/NetworkManager.h"
-#include "Engine/ReplicationHost.h"
 #include "Engine/UserComponent.h"
 #include "Engine/UserMapSingleton.h"
 #include "Network/Host.h"
+#include "Network/NetworkManager.h"
 
 void net::UserSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
-	//auto& networkManager = world.WriteResource<eng::NetworkManager>();
+	//auto& networkManager = world.WriteResource<net::NetworkManager>();
 	//auto& adaptor = networkManager.GetAdaptor();
 
 	//m_Collection =
@@ -39,7 +39,7 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 	const auto& userMapComponent = world.ReadSingleton<net::UserMapSingleton>();
 	for (auto&& [userId, wantsConnected] : m_Requests)
 	{
-		auto& replicationHost = world.WriteResource<net::ReplicationHost>();
+		auto& replicationHost = world.WriteResource<ecs::ReplicationHost>();
 
 		const bool isConnected = userMapComponent.m_UserToEntity.Contains(userId);
 		if (wantsConnected && !isConnected)
@@ -58,8 +58,8 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 			mapComponent.m_EntityToUser.Set(userEntity, userId);
 			mapComponent.m_UserToEntity.Set(userId, userEntity);
 
-			replicationHost.RegisterPeer(userId.GetPeerId());
-			replicationHost.StartReplicateToPeer(userId.GetPeerId(), userEntity);
+			//replicationHost.RegisterPeer(userId.GetPeerId());
+			//replicationHost.StartReplicateToPeer(userId.GetPeerId(), userEntity);
 		}
 		else if (!wantsConnected && isConnected)
 		{
@@ -70,8 +70,8 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 			mapComponent.m_EntityToUser.Remove(userEntity);
 			mapComponent.m_UserToEntity.Remove(userId);
 
-			replicationHost.StopReplicateToPeer(userId.GetPeerId(), userEntity);
-			replicationHost.UnregisterPeer(userId.GetPeerId());
+			//replicationHost.StopReplicateToPeer(userId.GetPeerId(), userEntity);
+			//replicationHost.UnregisterPeer(userId.GetPeerId());
 		}
 	}
 	m_Requests.RemoveAll();

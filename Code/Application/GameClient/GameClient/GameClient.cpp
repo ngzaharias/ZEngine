@@ -3,12 +3,12 @@
 
 #include "Camera/RegisterModule.h"
 #include "Container/RegisterModule.h"
+#include "ECS/TypeRegistry.h"
 #include "ECS/WorldView.h"
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
 #include "Engine/ColourTable.h"
 #include "Engine/ImguiManager.h"
-#include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PlatformManager.h"
 #include "Engine/PrototypeManager.h"
@@ -23,6 +23,7 @@
 #include "GameUI/RegisterModule.h"
 #include "Hexmap/RegisterModule.h"
 #include "Hidden/RegisterModule.h"
+#include "Network/NetworkManager.h"
 #include "Render/RegisterModule.h"
 #include "Softbody/RegisterModule.h"
 #include "Tabletop/RegisterModule.h"
@@ -46,6 +47,7 @@ void client::GameClient::Register(const Dependencies& dependencies)
 {
 	// resources
 	{
+		m_EntityWorld.RegisterResource(dependencies.m_TypeRegistry);
 		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
 		m_EntityWorld.RegisterResource(dependencies.m_ImguiManager);
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);

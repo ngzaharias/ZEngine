@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Engine/ComponentRegistry.h"
 #include "Network/Host.h"
 #include "Network/Peer.h"
+#include "Network/MessageFactory.h"
 
 class GameTime;
 
-namespace eng
+namespace net
 {
 	class NetworkManager final
 	{
@@ -21,14 +21,13 @@ namespace eng
 		net::Peer& GetPeer() { return m_Peer; }
 		const net::Peer& GetPeer() const { return m_Peer; }
 
-		net::ComponentRegistry& GetComponentRegistry() { return m_ComponentRegistry; }
-		const net::ComponentRegistry& GetComponentRegistry() const { return m_ComponentRegistry; }
+		net::MessageFactory& GetMessageFactory() { return m_MessageFactory; }
+		const net::MessageFactory& GetMessageFactory() const { return m_MessageFactory; }
 
 	private:
 		net::Host m_Host;
 		net::Peer m_Peer;
 
-		net::ComponentRegistry m_ComponentRegistry;
 		net::MessageFactory m_MessageFactory;
 	};
 }

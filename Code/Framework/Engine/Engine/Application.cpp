@@ -15,7 +15,6 @@
 #include "Engine/LightDirectionalComponent.h"
 #include "Engine/LightPointComponent.h"
 #include "Engine/MusicAsset.h"
-#include "Engine/NetworkManager.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PhysicsMaterialAsset.h"
@@ -35,6 +34,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Window.h"
+#include "Network/NetworkManager.h"
 
 #include <GLFW/glfw3.h>
 

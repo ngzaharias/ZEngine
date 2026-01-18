@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Core/Array.h"
+#include "Core/Delegate.h"
 #include "Core/Set.h"
-#include "Core/String.h"
 #include "Core/TypeInfo.h"
-#include "Core/Types.h"
+#include "Network/Message.h"
 #include "Network/MessageFactory.h"
 #include "Network/PeerId.h"
 
@@ -33,20 +33,25 @@ namespace net
 		void Update(const GameTime& gameTime);
 
 		template<typename TMessage>
+		TMessage* RequestMessage(const uint32 type);
+		template<typename TMessage>
 		TMessage* RequestMessage(const net::EMessage type);
+
 		void ReleaseMessage(const net::Message* message);
 
 		void BroadcastMessage(const net::Message* message);
-
-	protected:
-		void ProcessMessage(const net::PeerId& peerId, const void* message);
 
 	private:
 		STEAM_CALLBACK(net::Host, OnLobbyCreated, LobbyCreated_t);
 		STEAM_CALLBACK(net::Host, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
+	public:
+		Delegate<void(const Array<const net::Message*>& messages)> m_OnProcessMessages;
+
 	protected:
+		MemBuffer m_MessageBuffer;
 		net::MessageFactory& m_MessageFactory;
+		Array<const net::Message*> m_MessageQueue;
 
 		Array<HSteamNetConnection> m_Connections = {};
 

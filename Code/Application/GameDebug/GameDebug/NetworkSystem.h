@@ -4,17 +4,17 @@
 #include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
-namespace gamestate
-{
-	struct ChangeRequest;
-}
-
 namespace ecs
 {
 	struct NameComponent;
 }
 
-namespace eng
+namespace gamestate
+{
+	struct ChangeRequest;
+}
+
+namespace net
 {
 	class NetworkManager;
 }
@@ -31,8 +31,8 @@ namespace debug
 			::Write<
 			debug::NetworkWindowComponent,
 			ecs::NameComponent,
-			eng::NetworkManager,
-			gamestate::ChangeRequest>
+			gamestate::ChangeRequest,
+			net::NetworkManager>
 			::Read<
 			debug::NetworkWindowRequest>;
 

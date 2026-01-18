@@ -1,14 +1,15 @@
 #include "GameServerPCH.h"
 #include "GameServer/GameServer.h"
 
+#include "ECS/TypeRegistry.h"
 #include "Engine/AssetManager.h"
-#include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
 #include "GameServer/RegisterComponents.h"
 #include "GameServer/RegisterSystems.h"
+#include "Network/NetworkManager.h"
 
 server::GameServer::GameServer()
 	: m_ReplicationHost(m_EntityWorld)
@@ -19,6 +20,7 @@ void server::GameServer::Register(const Dependencies& dependencies)
 {
 	// managers
 	{
+		m_EntityWorld.RegisterResource(dependencies.m_TypeRegistry);
 		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);

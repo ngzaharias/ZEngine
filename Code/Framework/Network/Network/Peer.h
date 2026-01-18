@@ -2,10 +2,9 @@
 
 #include "Core/Array.h"
 #include "Core/Delegate.h"
-#include "Core/String.h"
-#include "Core/Types.h"
+#include "Core/MemBuffer.h"
+#include "Network/Message.h"
 #include "Network/MessageFactory.h"
-#include "Network/Messages.h"
 #include "Network/PeerId.h"
 
 #pragma warning(push)
@@ -28,13 +27,12 @@ namespace net
 		void Update(const GameTime& gameTime);
 
 		template<typename TMessage>
+		TMessage* RequestMessage(const uint32 type);
+		template<typename TMessage>
 		TMessage* RequestMessage(const net::EMessage type);
 		void ReleaseMessage(const net::Message* message);
 
-		void SendMessage(void* message);
-
-	protected:
-		void ProcessMessage(const void* message);
+		void SendMessage(const net::Message* message);
 
 	private:
 		STEAM_CALLBACK(net::Peer, OnGameJoinRequested, GameRichPresenceJoinRequested_t);

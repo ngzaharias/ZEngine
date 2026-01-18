@@ -145,9 +145,15 @@ void Array<Type>::Resize(const int32 newSize, const Type& value)
 }
 
 template<typename Type>
-void Array<Type>::Reserve(const int32 count)
+void Array<Type>::Increase(const int32 newCapacity)
 {
-	m_Values.reserve(count);
+	m_Values.reserve(m_Values.size() + newCapacity);
+}
+
+template<typename Type>
+void Array<Type>::Reserve(const int32 newCapacity)
+{
+	m_Values.reserve(newCapacity);
 }
 
 template<typename Type>

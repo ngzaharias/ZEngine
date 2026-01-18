@@ -6,10 +6,10 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/NetworkChangeRequest.h"
-#include "Engine/NetworkManager.h"
 #include "GameClient/GameStateChangeFinished.h"
 #include "GameClient/GameStateChangeRequest.h"
 #include "GameClient/GameStateStateSingleton.h"
+#include "Network/NetworkManager.h"
 
 void gamestate::NetworkStopSystem::Update(World& world, const GameTime& gameTime)
 {

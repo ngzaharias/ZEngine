@@ -3,7 +3,7 @@
 #include "Core/Assert.h"
 #include "Core/GameTime.h"
 #include "Core/Profiler.h"
-#include "Network/Message.h"
+#include "Network/MessageEnum.h"
 
 // https://github.com/ValveSoftware/GameNetworkingSockets
 // https://keithjohnston.wordpress.com/2014/02/17/nat-punch-through-for-multiplayer-games/
@@ -83,17 +83,33 @@ void net::Host::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (m_NetPollGroup)
+	if (m_NetPollGroup != k_HSteamNetPollGroup_Invalid)
 	{
 		SteamNetworkingMessage_t* msgs[128];
-		int numMessages = SteamNetworkingSockets()->ReceiveMessagesOnPollGroup(m_NetPollGroup, msgs, 128);
-		for (int i = 0; i < numMessages; i++)
+		const int32 count = SteamNetworkingSockets()->ReceiveMessagesOnPollGroup(m_NetPollGroup, msgs, 128);
+		for (int32 i = 0; i < count; i++)
 		{
-			SteamNetworkingMessage_t* message = msgs[i];
+			SteamNetworkingMessage_t* steamMessage = msgs[i];
 
-			Z_LOG(ELog::Network, "Host: Received Message.");
-			message->Release();
+			net::EMessage type = net::EMessage::Unassigned;
+			m_MessageBuffer.Reset();
+			m_MessageBuffer.Write(steamMessage->GetData(), steamMessage->GetSize());
+			m_MessageBuffer.Read(type);
+
+			net::Message* message = m_MessageFactory.Request(type);
+			m_MessageFactory.Read(*message, m_MessageBuffer);
+			m_MessageQueue.Append(message);
+
+			steamMessage->Release();
 		}
+
+		// once we've gathered all messages, publish them
+		m_OnProcessMessages.Publish(m_MessageQueue);
+
+		// release all messages that were created
+		for (const net::Message* message : m_MessageQueue)
+			m_MessageFactory.Release(message);
+		m_MessageQueue.RemoveAll();
 	}
 }
 
@@ -116,10 +132,6 @@ void net::Host::BroadcastMessage(const net::Message* message)
 	{
 		::SendMessage(connection, data, bytes);
 	}
-}
-
-void net::Host::ProcessMessage(const net::PeerId& peerId, const void* message)
-{
 }
 
 void net::Host::OnLobbyCreated(LobbyCreated_t* pCallback)
@@ -157,7 +169,6 @@ void net::Host::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCall
 
 		Z_LOG(ELog::Network, "Host: Accepted Peer.", static_cast<int32>(res));
 		SteamNetworkingSockets()->SetConnectionPollGroup(connection, m_NetPollGroup);
-		//SteamNetworkingSockets()->SendMessageToConnection(connection, nullptr, 0, k_nSteamNetworkingSend_Reliable, nullptr);
 		m_Connections.Append(connection);
 	}
 

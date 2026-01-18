@@ -4,21 +4,17 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace eng
-{
-	class NetworkManager;
-}
-
-namespace net
-{
-	struct PeerId;
-}
-
 namespace eng::network
 {
 	struct ChangeFinished;
 	struct ChangeRequest;
 	struct StateSingleton;
+}
+
+namespace net
+{
+	class NetworkManager;
+	struct PeerId;
 }
 
 namespace eng::network
@@ -30,7 +26,7 @@ namespace eng::network
 			::Write<
 			eng::network::ChangeFinished,
 			eng::network::StateSingleton,
-			eng::NetworkManager>
+			net::NetworkManager>
 			::Read<
 			eng::network::ChangeRequest>;
 

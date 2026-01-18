@@ -23,6 +23,7 @@ public:
 	// Read
 	template<typename Type>
 	void Read(Type& data) const;
+	void Read(MemBuffer& data) const;
 	void Read(str::Path& data) const;
 	void Read(str::String& data) const;
 	void Read(void* data, uint32 bytes) const;
@@ -30,6 +31,7 @@ public:
 	// Write
 	template<typename Type>
 	void Write(const Type& data);
+	void Write(const MemBuffer& data);
 	void Write(const str::Path& data);
 	void Write(const str::String& data);
 	void Write(const void* data, uint32 bytes);

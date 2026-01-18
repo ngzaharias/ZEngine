@@ -4,16 +4,18 @@
 #include "Core/GameTime.h"
 #include "Core/Parse.h"
 #include "Math/Vector.h"
+#include "ECS/DebugEvent.h"
 #include "ECS/EntityWorld.h"
+#include "ECS/Messages.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/NetworkManager.h"
 #include "GameClient/GameStateChangeRequest.h"
 #include "GameDebug/DebugNetworkWindowRequest.h"
 #include "GameDebug/NetworkWindowComponent.h"
 #include "Math/Math.h"
 #include "Network/Host.h"
+#include "Network/NetworkManager.h"
 #include "Network/Peer.h"
 
 #include "imgui/imgui.h"
@@ -55,25 +57,20 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::Button("host: startup"))
 			{
-				auto& manager = world.WriteResource<eng::NetworkManager>();
+				auto& manager = world.WriteResource<net::NetworkManager>();
 				manager.GetHost().Startup();
 			}
 
 			if (ImGui::Button("host: shutdown"))
 			{
-				auto& manager = world.WriteResource<eng::NetworkManager>();
+				auto& manager = world.WriteResource<net::NetworkManager>();
 				manager.GetHost().Shutdown();
 			}
 
-			if (ImGui::Button("host: broadcast message"))
+			if (ImGui::Button("host: send message"))
 			{
-				auto& manager = world.WriteResource<eng::NetworkManager>();
-				auto& host = manager.GetHost();
-
-				auto* message = host.RequestMessage<net::DebugCommandMessage>(net::EMessage::DebugCommand);
-				message->m_Data = window.m_Message;
-				host.BroadcastMessage(message);
-				host.ReleaseMessage(message);
+				auto& eventData = world.AddEvent<ecs::DebugEvent>();
+				eventData.m_Data = "PING FROM HOST";
 			}
 			ImGui::SameLine();
 			imgui::InputText("##message", window.m_Message);
@@ -82,20 +79,22 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::Button("peer: connect"))
 			{
-				auto& manager = world.WriteResource<eng::NetworkManager>();
+				auto& manager = world.WriteResource<net::NetworkManager>();
 				manager.GetPeer().Connect();
 			}
 
 			if (ImGui::Button("peer: disconnect"))
 			{
-				auto& manager = world.WriteResource<eng::NetworkManager>();
+				auto& manager = world.WriteResource<net::NetworkManager>();
 				manager.GetPeer().Disconnect();
 			}
 
 			if (ImGui::Button("peer: send message"))
 			{
-				auto& manager = world.WriteResource<eng::NetworkManager>();
-				manager.GetPeer().SendMessage(nullptr);
+				auto& a = world.AddEvent<ecs::DebugEvent>();
+				a.m_Data = "A";
+				auto& b = world.AddEvent<ecs::DebugEvent>();
+				b.m_Data = "B";
 			}
 		}
 		ImGui::End();

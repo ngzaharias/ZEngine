@@ -2,8 +2,10 @@
 #include "Engine/RegisterComponents.h"
 
 #include "Core/MemBuffer.h"
+#include "ECS/DebugEvent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
+#include "ECS/ReplicationComponent.h"
 #include "Engine/ApplicationCloseRequest.h"
 #include "Engine/AssetComponent.h"
 #include "Engine/AssetManager.h"
@@ -27,7 +29,6 @@
 #include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/PrototypeManager.h"
-#include "Engine/ReplicationComponent.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/SavegameComponent.h"
@@ -95,6 +96,7 @@ void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld)
 {
 	// components
+	entityWorld.RegisterComponent<ecs::ReplicationComponent>();
 	entityWorld.RegisterComponent<eng::ActiveComponent>();
 	entityWorld.RegisterComponent<eng::AssetComponent>();
 	entityWorld.RegisterComponent<eng::CameraComponent>();
@@ -111,9 +113,9 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::StaticMeshComponent>();
 	entityWorld.RegisterComponent<eng::TextComponent>();
 	entityWorld.RegisterComponent<eng::TransformComponent>();
-	entityWorld.RegisterComponent<net::ReplicationComponent>();
 	entityWorld.RegisterComponent<net::UserComponent>();
 
+	entityWorld.RegisterEvent<ecs::DebugEvent>();
 	entityWorld.RegisterEvent<eng::level::LoadRequest>();
 
 	// singletons

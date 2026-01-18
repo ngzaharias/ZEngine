@@ -12,7 +12,7 @@ template<typename TMessage>
 net::Message* net::MessageFactory::NewMethod(const net::EMessage type)
 {
 	TMessage* message = new TMessage();
-	message->m_Type = static_cast<uint32>(type);
+	message->m_Type = type;
 	return message;
 }
 

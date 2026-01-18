@@ -9,18 +9,14 @@
 
 namespace ecs
 {
+	class ReplicationHost;
 	struct NameComponent;
-}
-
-namespace eng
-{
-	class NetworkManager;
 }
 
 namespace net
 {
 	class Host;
-	class ReplicationHost;
+	class NetworkManager;
 	struct UserComponent;
 	struct UserMapSingleton;
 }
@@ -34,8 +30,8 @@ namespace net
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			eng::NetworkManager,
-			net::ReplicationHost,
+			ecs::ReplicationHost,
+			net::NetworkManager,
 			net::UserComponent,
 			net::UserMapSingleton>;
 
@@ -44,7 +40,6 @@ namespace net
 
 		void Update(World& world, const GameTime& gameTime);
 
-	private:
 		void OnClientConnected(const net::PeerId& peerId);
 		void OnClientDisconnected(const net::PeerId& peerId);
 

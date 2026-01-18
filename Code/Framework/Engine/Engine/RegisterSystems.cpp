@@ -9,8 +9,6 @@
 #include "Engine/MusicSystem.h"
 #include "Engine/NetworkSystem.h"
 #include "Engine/PhysicsSystem.h"
-#include "Engine/ReplicationHost.h"
-#include "Engine/ReplicationPeer.h"
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SettingsLaunchSystem.h"
 #include "Engine/SoundPlaySystem.h"

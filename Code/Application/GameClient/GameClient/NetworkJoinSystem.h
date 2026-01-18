@@ -3,11 +3,6 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace eng
-{
-	class NetworkManager;
-}
-
 namespace eng::level
 {
 	struct LoadRequest;
@@ -26,6 +21,7 @@ namespace gui::modal
 
 namespace net
 {
+	class NetworkManager;
 	struct UserComponent;
 }
 
@@ -45,10 +41,10 @@ namespace gamestate
 			::Write<
 			eng::level::LoadRequest,
 			eng::network::ChangeRequest,
-			eng::NetworkManager,
 			gamestate::ChangeFinished,
 			gamestate::NetworkJoinSingleton,
-			gui::modal::MessageComponent>
+			gui::modal::MessageComponent,
+			net::NetworkManager>
 			::Read<
 			eng::network::ChangeFinished,
 			gamestate::StateSingleton,

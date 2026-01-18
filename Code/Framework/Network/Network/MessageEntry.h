@@ -4,7 +4,7 @@ class MemBuffer;
 
 namespace net
 {
-	enum class EMessage;
+	enum EMessage : uint32;
 	struct Message;
 }
 

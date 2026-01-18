@@ -7,12 +7,12 @@
 #include "ECS/WorldView.h"
 #include "Engine/LevelLoadRequest.h"
 #include "Engine/NetworkChangeRequest.h"
-#include "Engine/NetworkManager.h"
 #include "GameClient/GameStateChangeFinished.h"
 #include "GameClient/GameStateChangeRequest.h"
 #include "GameClient/GameStateNetworkJoinSingleton.h"
 #include "GameClient/GameStateStateSingleton.h"
 #include "GameClient/ModalMessageComponent.h"
+#include "Network/NetworkManager.h"
 
 void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -47,7 +47,7 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 		{
 		case NetworkJoinSingleton::EState::Connect:
 		{
-			//const auto& networkManager = world.ReadResource< eng::NetworkManager>();
+			//const auto& networkManager = world.ReadResource< net::NetworkManager>();
 			//const auto& networkPeer = networkManager.GetPeer();
 			//if (networkPeer.IsConnected())
 			//{

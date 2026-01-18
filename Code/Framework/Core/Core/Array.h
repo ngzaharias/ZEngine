@@ -57,6 +57,8 @@ public:
 	/// If the current size is less than, then elements are appended using the specified value.
 	void Resize(const int32 newSize, const Type& value);
 
+	/// \brief Increases the container to at least X size without appending elements.
+	void Increase(const int32 newCapacity);
 	/// \brief Reserves the container to at least X size without appending elements.
 	void Reserve(const int32 newCapacity);
 
