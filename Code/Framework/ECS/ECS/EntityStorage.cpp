@@ -22,12 +22,6 @@ void ecs::EntityStorage::FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryR
 	}
 
 	{
-		PROFILE_CUSTOM("Remove previous events.");
-		for (ecs::IEventStorage* storage : m_Events.GetValues())
-			storage->RemoveAll();
-	}
-
-	{
 		PROFILE_CUSTOM("Remove dead entities from queries.");
 		for (const ecs::Entity& entity : m_DeadEntities)
 		{
@@ -64,16 +58,6 @@ void ecs::EntityStorage::FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryR
 		for (auto&& [componentId, fStorage] : frameBuffer.m_Components)
 		{
 			ecs::IComponentStorage* eStorage = m_AliveComponents.Get(componentId);
-			fStorage->Move(*eStorage);
-			fStorage->RemoveAll();
-		}
-	}
-
-	{
-		PROFILE_CUSTOM("Move events from buffer -> storage.");
-		for (auto&& [typeId, fStorage] : frameBuffer.m_Events)
-		{
-			ecs::IEventStorage* eStorage = m_Events.Get(typeId);
 			fStorage->Move(*eStorage);
 			fStorage->RemoveAll();
 		}

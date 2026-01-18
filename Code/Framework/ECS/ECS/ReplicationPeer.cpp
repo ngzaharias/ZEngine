@@ -35,6 +35,20 @@ void ecs::ReplicationPeer::Shutdown()
 void ecs::ReplicationPeer::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	MemBuffer data;
+	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
+	const auto& buffer = m_EntityWorld.m_EventSync;
+	for (auto&& [typeId, container] : buffer.GetAll())
+	{
+		const int32 count = container->GetCount();
+		for (int32 i = 0; i < count; ++i)
+		{
+			data.Reset();
+			container->ReadAt(data, i);
+			EventAdd(typeId, data);
+		}
+	}
 }
 
 void ecs::ReplicationPeer::OnProcessMessages(const Array<const net::Message*>& messages)
@@ -130,20 +144,16 @@ void ecs::ReplicationPeer::OnComponentRemove(const ecs::ComponentRemoveMessage* 
 //////////////////////////////////////////////////////////////////////////
 // Event
 
-void ecs::ReplicationPeer::EventAdd(const ecs::TypeEvent& entry)
+void ecs::ReplicationPeer::EventAdd(const ecs::EventId typeId, const MemBuffer& buffer)
 {
 	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
 	auto& peer = manager.GetPeer();
 
 	auto* message = peer.RequestMessage<ecs::EventAddMessage>(ecs::EMessage::EventAdd);
-	message->m_TypeId = entry.m_TypeId;
-	entry.m_Read(m_EntityWorld, message->m_Data);
+	message->m_TypeId = typeId;
+	message->m_Data.Write(buffer);
 
-	if (message->m_Data.GetCount() > 0)
-	{
-		peer.SendMessage(message);
-	}
-
+	peer.SendMessage(message);
 	peer.ReleaseMessage(message);
 }
 

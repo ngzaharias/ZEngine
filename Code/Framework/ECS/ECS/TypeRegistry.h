@@ -20,11 +20,13 @@ namespace ecs
 	class TypeRegistry final
 	{
 	public:
-		using ComponentMap = Map<TypeId, ecs::TypeComponent>;
-		using EventMap = Map<TypeId, ecs::TypeEvent>;
-		using ResourceMap = Map<TypeId, ecs::TypeResource>;
-		using SingletonMap = Map<TypeId, ecs::TypeSingleton>;
-		using SystemMap = Map<TypeId, ecs::TypeSystem>;
+		using ComponentMap = Map<ecs::ComponentId, ecs::TypeComponent>;
+		using EventMap = Map<ecs::EventId, ecs::TypeEvent>;
+		using ResourceMap = Map<ecs::ResourceId, ecs::TypeResource>;
+		using SingletonMap = Map<ecs::SingletonId, ecs::TypeSingleton>;
+		using SystemMap = Map<ecs::SystemId, ecs::TypeSystem>;
+
+		const ecs::TypeEvent& GetTypeEvent(const ecs::EventId& typeId) const;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Component
@@ -60,9 +62,6 @@ namespace ecs
 
 		template<typename TEvent>
 		static void AddEvent(ecs::EntityWorld& world, const MemBuffer& buffer);
-
-		template<typename TEvent>
-		static void ReadEvent(ecs::EntityWorld& world, MemBuffer& buffer);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Resource

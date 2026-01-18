@@ -1,4 +1,3 @@
-#pragma once
 
 template<class TComponent>
 void ecs::EntityStorage::RegisterComponent()
@@ -42,24 +41,6 @@ auto ecs::EntityStorage::TryComponent(const ecs::Entity& entity, const bool aliv
 		: m_DeadComponents.Get(componentId);
 	Storage* storage = static_cast<Storage*>(istorage);
 	return storage->Try(entity);
-}
-
-template<class TEvent>
-void ecs::EntityStorage::RegisterEvent()
-{
-	const TypeId typeId = ToTypeId<TEvent>();
-	m_Events.Set(typeId, new ecs::EventStorage<TEvent>());
-}
-
-template<class TEvent>
-auto ecs::EntityStorage::GetEvents() const -> const Array<TEvent>&
-{
-	using Storage = ecs::EventStorage<TEvent>;
-
-	const TypeId typeId = ToTypeId<TEvent>();
-	const ecs::IEventStorage* istorage = m_Events.Get(typeId);
-	const Storage* storage = static_cast<const Storage*>(istorage);
-	return storage->GetValues();
 }
 
 template<class TSingleton, typename... TArgs>

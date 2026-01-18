@@ -56,7 +56,6 @@ void ecs::TypeRegistry::RegisterEvent()
 
 	ecs::TypeEvent entry;
 	entry.m_Add = &AddEvent<TEvent>;
-	entry.m_Read = &ReadEvent<TEvent>;
 
 	entry.m_Name = TypeName<TEvent>();
 	entry.m_TypeId = ToTypeId<TEvent, ecs::EventTag>();
@@ -67,11 +66,8 @@ void ecs::TypeRegistry::RegisterEvent()
 template<typename TEvent>
 void ecs::TypeRegistry::AddEvent(ecs::EntityWorld& world, const MemBuffer& buffer)
 {
-}
-
-template<typename TEvent>
-void ecs::TypeRegistry::ReadEvent(ecs::EntityWorld& world, MemBuffer& buffer)
-{
+	TEvent& event = world.AddEvent<TEvent>();
+	buffer.Read(event);
 }
 
 //////////////////////////////////////////////////////////////////////////

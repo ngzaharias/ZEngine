@@ -8,7 +8,6 @@
 #include "Engine/LevelLoadRequest.h"
 #include "Engine/NetworkChangeRequest.h"
 #include "GameClient/GameStateChangeFinished.h"
-#include "GameClient/GameStateChangeRequest.h"
 #include "GameClient/GameStateNetworkJoinSingleton.h"
 #include "GameClient/GameStateStateSingleton.h"
 #include "GameClient/ModalMessageComponent.h"

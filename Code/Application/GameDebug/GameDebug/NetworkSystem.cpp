@@ -10,7 +10,6 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/GameStateChangeRequest.h"
 #include "GameDebug/DebugNetworkWindowRequest.h"
 #include "GameDebug/NetworkWindowComponent.h"
 #include "Math/Math.h"

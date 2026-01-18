@@ -1,49 +1,26 @@
 #pragma once
 
-#include "Core/SparseArray.h"
-#include "Core/TypeInfo.h"
-#include "ECS/ComponentId.h"
-#include "ECS/ComponentStorage.h"
-#include "ECS/ComponentTag.h"
-#include "ECS/Entity.h"
-#include "ECS/Event.h"
-#include "ECS/EventStorage.h"
-#include "ECS/Singleton.h"
-#include "ECS/SingletonStorage.h"
+#include "ECS/EventBuffer.h"
 
 namespace ecs
 {
-	class IEventStorage
+	class EventStorage
 	{
 		friend class EntityWorld;
 
 	public:
-		virtual ~IEventStorage() = default;
+		template<class TEvent>
+		void RegisterEvent();
 
-		virtual void Move(IEventStorage& destination) = 0;
-		virtual void RemoveAll() = 0;
-	};
-
-	template<typename TEvent>
-	class EventStorage : public IEventStorage
-	{
-		friend class EntityWorld;
-
-	public:
-		~EventStorage() override = default;
-
-		inline Array<TEvent>& GetValues();
-		inline const Array<TEvent>& GetValues() const;
-
-		template<typename... TArgs>
-		inline TEvent& Emplace(TArgs&& ...args);
-
-		inline void Move(IEventStorage& destination) override;
-
-		inline void RemoveAll() override;
+		template<class TEvent>
+		auto GetEvents() const -> const Array<TEvent>&;
 
 	private:
-		Array<TEvent> m_Data = { };
+		void ConsumeAll(ecs::EventBuffer& buffer);
+		void RemoveAll();
+
+	private:
+		ecs::EventBuffer m_Buffer;
 	};
 }
 

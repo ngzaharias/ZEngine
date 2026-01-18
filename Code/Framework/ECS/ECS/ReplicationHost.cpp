@@ -140,17 +140,17 @@ void ecs::ReplicationHost::ComponentRemove(const ecs::Entity& entity, const ecs:
 //////////////////////////////////////////////////////////////////////////
 // Event
 
-void ecs::ReplicationHost::EventAdd(const ecs::TypeEvent& entry)
+void ecs::ReplicationHost::EventAdd(const ecs::EventId typeId, const MemBuffer& buffer)
 {
 	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
-	auto& host = manager.GetHost();
+	auto& peer = manager.GetPeer();
 
-	auto* message = host.RequestMessage<ecs::EventAddMessage>(ecs::EMessage::EventAdd);
-	message->m_TypeId = entry.m_TypeId;
-	entry.m_Read(m_EntityWorld, message->m_Data);
+	auto* message = peer.RequestMessage<ecs::EventAddMessage>(ecs::EMessage::EventAdd);
+	message->m_TypeId = typeId;
+	message->m_Data.Write(buffer);
 
-	host.BroadcastMessage(message);
-	host.ReleaseMessage(message);
+	peer.SendMessage(message);
+	peer.ReleaseMessage(message);
 }
 
 void ecs::ReplicationHost::OnEventAdd(const ecs::EventAddMessage* message)

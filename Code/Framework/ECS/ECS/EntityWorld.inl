@@ -1,4 +1,3 @@
-#pragma once
 
 template <typename TType>
 void ecs::EntityWorld::RegisterType()
@@ -44,6 +43,9 @@ TWorldView ecs::EntityWorld::WorldView()
 	return TWorldView(*this);
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Entity
+
 inline bool ecs::EntityWorld::IsAlive(const ecs::Entity& entity) const
 {
 	return m_EntityStorage.IsAlive(entity);
@@ -59,6 +61,9 @@ inline void ecs::EntityWorld::DestroyEntity(const ecs::Entity& entity)
 	Z_PANIC(IsAlive(entity), "Entity isn't alive!");
 	m_FrameBuffer.DestroyEntity(entity);
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Component
 
 template <typename TComponent>
 void ecs::EntityWorld::RegisterComponent()
@@ -146,6 +151,9 @@ auto ecs::EntityWorld::WriteComponent(const ecs::Entity& entity, const bool aliv
 	return m_EntityStorage.GetComponent<TComponent>(entity, alive);
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Event
+
 template <typename TEvent>
 void ecs::EntityWorld::RegisterEvent()
 {
@@ -158,12 +166,16 @@ void ecs::EntityWorld::RegisterEvent()
 	Z_PANIC(!IsRegistered<TEvent>(), "Event is already registered!");
 
 	RegisterType<TEvent>();
-	m_EntityStorage.RegisterEvent<TEvent>();
-	m_FrameBuffer.RegisterEvent<TEvent>();
+	m_EventBuffer.RegisterEvent<TEvent>();
+	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
+	{
+		m_EventSync.RegisterEvent<TEvent>();
+	}
+	m_EventStorage.RegisterEvent<TEvent>();
 }
 
 template <typename TEvent, typename... TArgs>
-auto ecs::EntityWorld::AddEvent(TArgs&&... args) -> decltype(auto)
+auto ecs::EntityWorld::AddEvent(TArgs&&... args) -> TEvent&
 {
 	static_assert(!std::is_const<TEvent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TEvent>, "Type cannot be a reference.");
@@ -171,8 +183,19 @@ auto ecs::EntityWorld::AddEvent(TArgs&&... args) -> decltype(auto)
 	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
 
 	Z_PANIC(IsRegistered<TEvent>(), "Event isn't registered!");
-	return m_FrameBuffer.AddEvent<TEvent>(std::forward<TArgs>(args)...);
+
+	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
+	{
+		return m_EventSync.AddEvent<TEvent>(std::forward<TArgs>(args)...);
+	}
+	else
+	{
+		return m_EventBuffer.AddEvent<TEvent>(std::forward<TArgs>(args)...);
+	}
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Resource
 
 template <typename TResource>
 void ecs::EntityWorld::RegisterResource(TResource& resource)
@@ -208,6 +231,9 @@ auto ecs::EntityWorld::WriteResource() -> TResource&
 	Z_PANIC(IsRegistered<TResource>(), "Resource isn't registered!");
 	return m_ResourceRegistry.Get<TResource>();
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Singleton
 
 template <typename TSingleton, typename... TArgs>
 void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
@@ -250,6 +276,9 @@ auto ecs::EntityWorld::WriteSingleton() -> TSingleton&
 	return m_EntityStorage.GetSingleton<TSingleton>();
 }
 
+//////////////////////////////////////////////////////////////////////////
+// System
+
 template <typename TSystem, typename... TArgs>
 void ecs::EntityWorld::RegisterSystem(TArgs&&... args)
 {
@@ -275,6 +304,9 @@ auto ecs::EntityWorld::GetSystem() -> TSystem&
 	Z_PANIC(IsRegistered<TSystem>(), "System isn't registered!");
 	return m_SystemRegistry.GetSystem<TSystem>();
 }
+
+//////////////////////////////////////////////////////////////////////////
+// EntityView
 
 template <typename TComponent>
 auto ecs::EntityWorld::GetComponentForView(const ecs::Entity& entity) const -> TComponent*

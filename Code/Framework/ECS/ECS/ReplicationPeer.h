@@ -4,9 +4,11 @@
 #include "Core/Delegate.h"
 #include "Core/Map.h"
 #include "ECS/Entity.h"
+#include "ECS/EventId.h"
 #include "Network/Entity.h"
 
 class GameTime;
+class MemBuffer;
 
 namespace ecs
 {
@@ -61,7 +63,7 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Event
 
-		void EventAdd(const ecs::TypeEvent& entry);
+		void EventAdd(const ecs::EventId typeId, const MemBuffer& buffer);
 
 		void OnEventAdd(const ecs::EventAddMessage* message);
 

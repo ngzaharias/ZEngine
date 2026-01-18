@@ -8,7 +8,9 @@
 #include "ECS/ComponentStorage.h"
 #include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
+#include "ECS/EventId.h"
 #include "ECS/EventStorage.h"
+#include "ECS/EventTag.h"
 
 namespace ecs
 {
@@ -20,16 +22,15 @@ namespace ecs
 		bool m_IsDestroy = false;
 	};
 
-	class FrameBuffer
+	class FrameBuffer final
 	{
 		friend class EntityStorage;
 
+	public:
 		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
 		using EntityMap = Map<ecs::Entity, EntityChange>;
-		using Events = SparseArray<TypeId, ecs::IEventStorage*>;
 		using Singletons = Set<TypeId>;
 
-	public:
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
@@ -52,15 +53,6 @@ namespace ecs
 		void UpdateComponent(const ecs::Entity& entity);
 
 		//////////////////////////////////////////////////////////////////////////
-		// Event
-
-		template<class TEvent>
-		void RegisterEvent();
-
-		template<class TEvent, typename... TArgs>
-		auto AddEvent(TArgs&&... args)->decltype(auto);
-
-		//////////////////////////////////////////////////////////////////////////
 		// Singletons
 
 		template<class TSingleton>
@@ -72,7 +64,6 @@ namespace ecs
 
 		Components m_Components = { };
 		EntityMap m_EntityChanges = { };
-		Events m_Events = { };
 		Singletons m_Singletons = { };
 	};
 }

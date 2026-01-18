@@ -1,7 +1,6 @@
-#pragma once
 
-// No need to do component verification since all that 
-// should have been handled by the EntityWorld
+//////////////////////////////////////////////////////////////////////////
+// Component
 
 template<class TComponent>
 void ecs::FrameBuffer::RegisterComponent()
@@ -37,23 +36,8 @@ void ecs::FrameBuffer::UpdateComponent(const ecs::Entity& entity)
 	m_EntityChanges[entity].m_Updated.Raise(componentId);
 }
 
-template<class TEvent>
-void ecs::FrameBuffer::RegisterEvent()
-{
-	const TypeId typeId = ToTypeId<TEvent>();
-	m_Events.Set(typeId, new ecs::EventStorage<TEvent>());
-}
-
-template<class TEvent, typename... TArgs>
-auto ecs::FrameBuffer::AddEvent(TArgs&&... args)->decltype(auto)
-{
-	using Storage = ecs::EventStorage<TEvent>;
-
-	const TypeId typeId = ToTypeId<TEvent>();
-	ecs::IEventStorage* istorage = m_Events.Get(typeId);
-	Storage* storage = static_cast<Storage*>(istorage);
-	return storage->Emplace(std::forward<TArgs>(args)...);
-}
+//////////////////////////////////////////////////////////////////////////
+// Singletons
 
 template<class TSingleton>
 void ecs::FrameBuffer::UpdateSingleton()

@@ -1,5 +1,10 @@
 #include "ECS/TypeRegistry.h"
 
+const ecs::TypeEvent& ecs::TypeRegistry::GetTypeEvent(const ecs::EventId& typeId) const
+{
+	return m_EventMap.Get(typeId);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Component
 

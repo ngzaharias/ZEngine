@@ -2,9 +2,13 @@
 
 #include "Core/Map.h"
 #include "ECS/EntityStorage.h"
+#include "ECS/EventBuffer.h"
+#include "ECS/EventStorage.h"
 #include "ECS/FrameBuffer.h"
+#include "ECS/IsReplicated.h"
 #include "ECS/QueryRegistry.h"
 #include "ECS/ResourceRegistry.h"
+#include "ECS/Singleton.h"
 #include "ECS/SystemRegistry.h"
 #include "ECS/TypeInfo.h"
 
@@ -40,6 +44,9 @@ namespace ecs
 
 		template<typename TWorldView>
 		TWorldView WorldView();
+
+		void FlushData();
+		void FlushSync();
 
 		str::String LogDependencies() const;
 		str::String LogUpdateOrder() const;
@@ -81,7 +88,7 @@ namespace ecs
 		void RegisterEvent();
 
 		template<class TEvent, typename... TArgs>
-		auto AddEvent(TArgs&&... args)->decltype(auto);
+		auto AddEvent(TArgs&&... args)->TEvent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Resource
@@ -134,6 +141,10 @@ namespace ecs
 		ecs::FrameBuffer m_FrameBuffer;
 		ecs::EntityStorage m_EntityStorage;
 		ecs::QueryRegistry m_QueryRegistry;
+
+		ecs::EventBuffer m_EventBuffer;
+		ecs::EventBuffer m_EventSync;
+		ecs::EventStorage m_EventStorage;
 
 		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;

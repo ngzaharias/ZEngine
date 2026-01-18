@@ -31,7 +31,6 @@ namespace debug
 			::Write<
 			debug::NetworkWindowComponent,
 			ecs::NameComponent,
-			gamestate::ChangeRequest,
 			net::NetworkManager>
 			::Read<
 			debug::NetworkWindowRequest>;

@@ -6,9 +6,11 @@
 #include "Core/SparseArray.h"
 #include "Core/TypeInfo.h"
 #include "ECS/Entity.h"
+#include "ECS/EventId.h"
 #include "Network/PeerId.h"
 
 class GameTime;
+class MemBuffer;
 
 namespace ecs
 {
@@ -69,7 +71,7 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Event
 
-		void EventAdd(const ecs::TypeEvent& entry);
+		void EventAdd(const ecs::EventId typeId, const MemBuffer& buffer);
 
 		void OnEventAdd(const ecs::EventAddMessage* message);
 
