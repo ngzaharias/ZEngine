@@ -12,15 +12,25 @@ namespace ecs
 		template<class TEvent>
 		void RegisterEvent();
 
+		template<class TEvent, typename... TArgs>
+		auto AddEvent(TArgs&&... args)->TEvent&;
+
 		template<class TEvent>
-		auto GetEvents() const -> const Array<TEvent>&;
+		bool HasEvents() const;
+
+		template<class TEvent>
+		auto GetEvents() const -> decltype(auto);
 
 	private:
-		void ConsumeAll(ecs::EventBuffer& buffer);
-		void RemoveAll();
+		void FlushChanges();
 
 	private:
-		ecs::EventBuffer m_Buffer;
+		// events that were added locally and are being processed this frame
+		ecs::EventBuffer m_BufferLocalCurr;
+		// events that were added locally and will be processed next frame
+		ecs::EventBuffer m_BufferLocalNext;
+		// events that were added remotely and are being processed this frame
+		ecs::EventBuffer m_BufferRemoteCurr;
 	};
 }
 

@@ -2,7 +2,6 @@
 
 #include "Core/Map.h"
 #include "ECS/EntityStorage.h"
-#include "ECS/EventBuffer.h"
 #include "ECS/EventStorage.h"
 #include "ECS/FrameBuffer.h"
 #include "ECS/IsReplicated.h"
@@ -142,8 +141,6 @@ namespace ecs
 		ecs::EntityStorage m_EntityStorage;
 		ecs::QueryRegistry m_QueryRegistry;
 
-		ecs::EventBuffer m_EventBuffer;
-		ecs::EventBuffer m_EventSync;
 		ecs::EventStorage m_EventStorage;
 
 		ecs::ResourceRegistry m_ResourceRegistry;

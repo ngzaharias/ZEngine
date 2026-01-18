@@ -143,7 +143,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasAny() -> bool
 {
 	if constexpr (std::is_base_of<ecs::Event<TType>, TType>::value)
 	{
-		return !m_EntityWorld.m_EventStorage.GetEvents<TType>().IsEmpty();
+		return m_EntityWorld.m_EventStorage.HasEvents<TType>();
 	}
 	else if constexpr (std::is_base_of<ecs::Singleton<TType>, TType>::value)
 	{
@@ -160,7 +160,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasAny() -> bool
 
 template <typename... TWrite, typename... TRead>
 template<class TEvent>
-auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Events() -> const Array<TEvent>&
+auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Events() -> decltype(auto)
 {
 	return m_EntityWorld.m_EventStorage.GetEvents<TEvent>();
 }

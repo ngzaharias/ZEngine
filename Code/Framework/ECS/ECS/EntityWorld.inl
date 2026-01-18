@@ -166,11 +166,6 @@ void ecs::EntityWorld::RegisterEvent()
 	Z_PANIC(!IsRegistered<TEvent>(), "Event is already registered!");
 
 	RegisterType<TEvent>();
-	m_EventBuffer.RegisterEvent<TEvent>();
-	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
-	{
-		m_EventSync.RegisterEvent<TEvent>();
-	}
 	m_EventStorage.RegisterEvent<TEvent>();
 }
 
@@ -184,14 +179,7 @@ auto ecs::EntityWorld::AddEvent(TArgs&&... args) -> TEvent&
 
 	Z_PANIC(IsRegistered<TEvent>(), "Event isn't registered!");
 
-	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
-	{
-		return m_EventSync.AddEvent<TEvent>(std::forward<TArgs>(args)...);
-	}
-	else
-	{
-		return m_EventBuffer.AddEvent<TEvent>(std::forward<TArgs>(args)...);
-	}
+	return m_EventStorage.AddEvent<TEvent>(std::forward<TArgs>(args)...);
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -117,7 +117,7 @@ namespace ecs
 		auto HasAny() -> bool;
 
 		template<class TEvent>
-		auto Events() -> const Array<TEvent>&;
+		auto Events() -> decltype(auto);
 
 		template<class TQuery>
 		auto Query() -> ecs::QueryRange<TQuery>;

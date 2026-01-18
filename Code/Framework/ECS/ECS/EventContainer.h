@@ -9,7 +9,7 @@ namespace ecs
 {
 	class IEventContainer
 	{
-		friend class EntityWorld;
+		friend class EventStorage;
 
 	public:
 		virtual ~IEventContainer() = default;
@@ -27,7 +27,7 @@ namespace ecs
 	template<typename TEvent>
 	class EventContainer : public IEventContainer
 	{
-		friend class EntityWorld;
+		friend class EventStorage;
 
 	public:
 		~EventContainer() override = default;

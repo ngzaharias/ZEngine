@@ -2,24 +2,20 @@
 
 #include "Core/Profiler.h"
 
-void ecs::EventStorage::ConsumeAll(ecs::EventBuffer& buffer)
+void ecs::EventStorage::FlushChanges()
 {
 	PROFILE_FUNCTION();
 
-	for (auto&& [typeId, rhs] : buffer.GetAll())
-	{
-		ecs::IEventContainer* lhs = m_Buffer.GetAt(typeId);
-		rhs->MoveAll(*lhs);
-		rhs->RemoveAll();
-	}
-}
-
-void ecs::EventStorage::RemoveAll()
-{
-	PROFILE_FUNCTION();
-
-	for (auto&& [typeId, container] : m_Buffer.GetAll())
-	{
+	for (auto&& [typeId, container] : m_BufferLocalCurr.GetAll())
 		container->RemoveAll();
+
+	for (auto&& [typeId, container] : m_BufferRemoteCurr.GetAll())
+		container->RemoveAll();
+
+	for (auto&& [typeId, rhs] : m_BufferLocalNext.GetAll())
+	{
+		ecs::IEventContainer& lhs = m_BufferLocalCurr.GetAt(typeId);
+		rhs->MoveAll(lhs);
+		rhs->RemoveAll();
 	}
 }

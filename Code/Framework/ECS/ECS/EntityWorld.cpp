@@ -40,10 +40,7 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 	m_SystemRegistry.Update(*this, gameTime);
 
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
-
-	m_EventStorage.RemoveAll();
-	m_EventStorage.ConsumeAll(m_EventBuffer);
-	m_EventStorage.ConsumeAll(m_EventSync);
+	m_EventStorage.FlushChanges();
 }
 
 str::String ecs::EntityWorld::LogDependencies() const

@@ -12,16 +12,24 @@ namespace ecs
 	public:
 		using Containers = SparseArray<ecs::EventId, ecs::IEventContainer*>;
 
-		ecs::IEventContainer* GetAt(const ecs::EventId typeId);
-		const ecs::IEventContainer* GetAt(const ecs::EventId typeId) const;
+		ecs::IEventContainer& GetAt(const ecs::EventId typeId);
+		const ecs::IEventContainer& GetAt(const ecs::EventId typeId) const;
 
 		template<typename TEvent>
-		ecs::EventContainer<TEvent>* GetAt();
+		ecs::EventContainer<TEvent>& GetAt();
 		template<typename TEvent>
-		const ecs::EventContainer<TEvent>* GetAt() const;
+		const ecs::EventContainer<TEvent>& GetAt() const;
 
 		Containers& GetAll();
 		const Containers& GetAll() const;
+
+		ecs::IEventContainer* TryAt(const ecs::EventId typeId);
+		const ecs::IEventContainer* TryAt(const ecs::EventId typeId) const;
+
+		template<typename TEvent>
+		ecs::EventContainer<TEvent>* TryAt();
+		template<typename TEvent>
+		const ecs::EventContainer<TEvent>* TryAt() const;
 
 		template<class TEvent>
 		void RegisterEvent();
