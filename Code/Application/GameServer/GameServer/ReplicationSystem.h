@@ -5,17 +5,11 @@
 
 namespace net
 {
-	class ReplicationHost;
-}
-
-namespace net
-{
 	class ReplicationSystem : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
-			::Write<
-			net::ReplicationHost>;
+			::Write<>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
