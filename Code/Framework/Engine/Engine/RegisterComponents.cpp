@@ -24,9 +24,6 @@
 #include "Engine/LightPointComponent.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/MusicSingleton.h"
-#include "Engine/NetworkChangeFinished.h"
-#include "Engine/NetworkChangeRequest.h"
-#include "Engine/NetworkStateSingleton.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/PrototypeManager.h"
@@ -72,14 +69,11 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::VisibilityComponent>();
 
 	entityWorld.RegisterEvent<eng::application::CloseRequest>();
-	entityWorld.RegisterEvent<eng::network::ChangeFinished>();
-	entityWorld.RegisterEvent<eng::network::ChangeRequest>();
 	entityWorld.RegisterEvent<eng::TablesReloaded>();
 
 	entityWorld.RegisterSingleton<eng::FrameBufferSingleton>();
 	entityWorld.RegisterSingleton<eng::LinesSingleton>();
 	entityWorld.RegisterSingleton<eng::MusicSingleton>();
-	entityWorld.RegisterSingleton<eng::network::StateSingleton>();
 	entityWorld.RegisterSingleton<eng::settings::AudioSingleton>();
 	entityWorld.RegisterSingleton<eng::settings::DebugSingleton>();
 	entityWorld.RegisterSingleton<eng::settings::GameplaySingleton>();

@@ -6,7 +6,6 @@
 #include "GameClient/DragSelectionComponent.h"
 #include "GameClient/GameStateChangeFinished.h"
 #include "GameClient/GameStateChangeRequest.h"
-#include "GameClient/GameStateNetworkJoinSingleton.h"
 #include "GameClient/GameStateStateSingleton.h"
 #include "GameClient/ModalMessageComponent.h"
 #include "GameClient/MovementAccelerationComponent.h"
@@ -34,7 +33,6 @@ void client::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterEvent<gamestate::ChangeRequest>();
 
 	entityWorld.RegisterSingleton<client::settings::DebugSingleton>();
-	entityWorld.RegisterSingleton<gamestate::NetworkJoinSingleton>();
 	entityWorld.RegisterSingleton<gamestate::StateSingleton>();
 	entityWorld.RegisterSingleton<projectile::ChangesSingleton>();
 }
