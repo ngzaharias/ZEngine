@@ -1,5 +1,11 @@
 
 template <typename TMessage>
+void net::MessageFactory::Register(const uint32 type)
+{
+	Register<TMessage>(static_cast<net::EMessage>(type));
+}
+
+template <typename TMessage>
 void net::MessageFactory::Register(const net::EMessage type)
 {
 	net::MessageEntry& entry = m_EntryMap[type];
@@ -17,15 +23,13 @@ net::Message* net::MessageFactory::NewMethod(const net::EMessage type)
 }
 
 template<typename TMessage>
-void net::MessageFactory::ReadMethod(net::Message& data, const MemBuffer& buffer)
+void net::MessageFactory::ReadMethod(net::Message& message, const MemBuffer& data)
 {
-	TMessage& message = static_cast<TMessage&>(data);
-	buffer.Read(message);
+	data.Read(static_cast<TMessage&>(message));
 }
 
 template<typename TMessage>
-void net::MessageFactory::WriteMethod(const net::Message& data, MemBuffer& buffer)
+void net::MessageFactory::WriteMethod(const net::Message& message, MemBuffer& data)
 {
-	const TMessage& message = static_cast<const TMessage&>(data);
-	buffer.Write(message);
+	data.Write(static_cast<const TMessage&>(message));
 }

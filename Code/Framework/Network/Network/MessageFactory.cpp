@@ -13,16 +13,16 @@ void net::MessageFactory::Release(const net::Message* message)
 	delete message;
 }
 
-void net::MessageFactory::Read(net::Message& data, const MemBuffer& buffer)
+void net::MessageFactory::Read(net::Message& message, const MemBuffer& data)
 {
-	const net::EMessage type = static_cast<net::EMessage>(data.m_Type);
+	const net::EMessage type = static_cast<net::EMessage>(message.m_Type);
 	const net::MessageEntry& entry = m_EntryMap.Get(type);
-	entry.m_Read(data, buffer);
+	entry.m_Read(message, data);
 }
 
-void net::MessageFactory::Write(const net::Message& data, MemBuffer& buffer)
+void net::MessageFactory::Write(const net::Message& message, MemBuffer& data)
 {
-	const net::EMessage type = static_cast<net::EMessage>(data.m_Type);
+	const net::EMessage type = static_cast<net::EMessage>(message.m_Type);
 	const net::MessageEntry& entry = m_EntryMap.Get(type);
-	entry.m_Write(data, buffer);
+	entry.m_Write(message, data);
 }
