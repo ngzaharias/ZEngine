@@ -318,7 +318,7 @@ CLASS_TEST_CASE("Read and Write to MemBuffer.")
 	// write
 	{
 		MemBuffer bufferB;
-		const bool object = true;
+		const str::String object = "Foo";
 		bufferB.Write(object);
 		bufferA.Write(bufferB);
 	}
@@ -326,7 +326,7 @@ CLASS_TEST_CASE("Read and Write to MemBuffer.")
 	// write
 	{
 		MemBuffer bufferC;
-		const bool object = false;
+		const str::String object = "Bar";
 		bufferC.Write(object);
 		bufferA.Write(bufferC);
 	}
@@ -334,18 +334,18 @@ CLASS_TEST_CASE("Read and Write to MemBuffer.")
 	// read
 	{
 		MemBuffer bufferB;
-		bool object = false;
+		str::String object;
 		bufferA.Read(bufferB);
 		bufferB.Read(object);
-		CHECK(object == true);
+		CHECK(object == "Foo");
 	}
 
 	// read
 	{
 		MemBuffer bufferC;
-		bool object = true;
+		str::String object;
 		bufferA.Read(bufferC);
 		bufferC.Read(object);
-		CHECK(object == false);
+		CHECK(object == "Bar");
 	}
 }

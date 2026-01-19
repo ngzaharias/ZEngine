@@ -29,31 +29,31 @@ const uint8* MemBuffer::GetData() const
 	return m_Data.GetData();
 }
 
-void MemBuffer::Read(MemBuffer& data) const
+void MemBuffer::Read(MemBuffer& value) const
 {
 	int32 count;
 	Read(count);
 
-	data.m_Data.Increase(count);
-	for (int32 i = 0; i < count; ++i)
-		data.m_Data.Append(m_Data[m_ReadPosition + i]);
+	const uint8* data = GetData();
+	data = &data[m_ReadPosition];
+	value.Write((const void*)data, count);
 	m_ReadPosition += count;
 }
 
-void MemBuffer::Read(str::Path& data) const
+void MemBuffer::Read(str::Path& value) const
 {
 	str::String string;
 	Read(string);
-	data = string;
+	value = string;
 }
 
-void MemBuffer::Read(str::String& data) const
+void MemBuffer::Read(str::String& value) const
 {
 	uint32 count = 0;
 	Read(count);
 
-	data.resize(count);
-	Read((void*)data.data(), sizeof(char) * count);
+	value.resize(count);
+	Read((void*)value.data(), sizeof(char) * count);
 }
 
 void MemBuffer::Read(void* data, uint32 bytes) const
@@ -62,28 +62,23 @@ void MemBuffer::Read(void* data, uint32 bytes) const
 	m_ReadPosition += bytes;
 }
 
-void MemBuffer::Write(const MemBuffer& data)
+void MemBuffer::Write(const MemBuffer& value)
 {
-	const int32 count = data.GetCount();
-	Write(count);
-
-	m_Data.Increase(count);
-	for (int32 i = 0; i < count; ++i)
-		m_Data.Append(data.m_Data[i]);
-	m_WritePosition += count;
+	Write(value.GetCount());
+	Write((const void*)value.GetData(), value.GetCount());
 }
 
-void MemBuffer::Write(const str::Path& data)
+void MemBuffer::Write(const str::Path& value)
 {
-	const str::String string = str::String(data.ToView());
+	const str::String string = str::String(value.ToView());
 	Write(string);
 }
 
-void MemBuffer::Write(const str::String& data)
+void MemBuffer::Write(const str::String& value)
 {
-	const uint32 count = static_cast<uint32>(data.size());
+	const uint32 count = static_cast<uint32>(value.size());
 	Write(count);
-	Write((const void*)data.data(), sizeof(char) * count);
+	Write((const void*)value.data(), sizeof(char) * count);
 }
 
 void MemBuffer::Write(const void* data, uint32 bytes)
