@@ -18,8 +18,8 @@ namespace ecs
 
 		virtual void MoveAll(IEventContainer& destination) = 0;
 
-		virtual void ReadAt(MemBuffer& buffer, int32 index) = 0;
-		virtual void ReadAll(MemBuffer& buffer) = 0;
+		virtual void ReadAt(MemBuffer& buffer, int32 index) const = 0;
+		virtual void ReadAll(MemBuffer& buffer) const = 0;
 
 		virtual void RemoveAll() = 0;
 	};
@@ -42,8 +42,8 @@ namespace ecs
 
 		inline void MoveAll(IEventContainer& destination) override;
 
-		inline void ReadAt(MemBuffer& buffer, int32 index) override;
-		inline void ReadAll(MemBuffer& buffer) override;
+		inline void ReadAt(MemBuffer& buffer, int32 index) const override;
+		inline void ReadAll(MemBuffer& buffer) const override;
 
 		inline void RemoveAll() override;
 

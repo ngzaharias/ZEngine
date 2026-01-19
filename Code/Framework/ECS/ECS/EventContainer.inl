@@ -33,7 +33,7 @@ inline void ecs::EventContainer<TEvent>::MoveAll(IEventContainer& destination)
 }
 
 template<typename TEvent>
-inline void ecs::EventContainer<TEvent>::ReadAt(MemBuffer& buffer, int32 index)
+inline void ecs::EventContainer<TEvent>::ReadAt(MemBuffer& buffer, int32 index) const
 {
 	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
 	{
@@ -42,7 +42,7 @@ inline void ecs::EventContainer<TEvent>::ReadAt(MemBuffer& buffer, int32 index)
 }
 
 template<typename TEvent>
-inline void ecs::EventContainer<TEvent>::ReadAll(MemBuffer& buffer)
+inline void ecs::EventContainer<TEvent>::ReadAll(MemBuffer& buffer) const
 {
 	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
 	{
