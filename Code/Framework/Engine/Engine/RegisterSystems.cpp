@@ -31,12 +31,6 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::sound::SequenceSystem>();
 	entityWorld.RegisterSystem<eng::VersionSystem>();
 	entityWorld.RegisterSystem<eng::WindowSystem>();
-
-	// Move2DSystem, Move3DSystem and PanningSystem need to run before BoundsSystem
-	//entityWorld.RegisterSystemPriority<eng::camera::Move2DSystem>(4000);
-	//entityWorld.RegisterSystemPriority<eng::camera::Move3DSystem>(4000);
-	//entityWorld.RegisterSystemPriority<eng::camera::PanningSystem>(4000);
-	//entityWorld.RegisterSystemPriority<eng::camera::Bound2DSystem>(4001);
 }
 
 void eng::RegisterServerSystems(ecs::EntityWorld& entityWorld)
