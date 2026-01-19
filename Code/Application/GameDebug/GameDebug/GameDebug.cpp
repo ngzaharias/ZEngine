@@ -3,6 +3,7 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
+#include "ECS/TypeRegistry.h"
 #include "ECS/WorldView.h"
 #include "GameDebug/ContainerWindowComponent.h"
 #include "GameDebug/ContainerSystem.h"
@@ -41,8 +42,9 @@
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/LevelReloadSystem.h"
 #include "GameDebug/MenuBarSystem.h"
-#include "GameDebug/NetworkWindowComponent.h"
+#include "GameDebug/NetworkEvent.h"
 #include "GameDebug/NetworkSystem.h"
+#include "GameDebug/NetworkWindowComponent.h"
 #include "GameDebug/OverlaySystem.h"
 #include "GameDebug/PhysicsSystem.h"
 #include "GameDebug/SettingsWindowComponent.h"
@@ -89,6 +91,8 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterEvent<debug::level::ReloadRequest>();
 	m_ClientWorld.RegisterEvent<debug::level::SaveAsRequest>();
 	m_ClientWorld.RegisterEvent<debug::level::SaveRequest>();
+	m_ClientWorld.RegisterEvent<debug::NetworkEvent>();
+	m_ServerWorld.RegisterEvent<debug::NetworkEvent>();
 	m_ClientWorld.RegisterEvent<debug::NetworkWindowRequest>();
 	m_ClientWorld.RegisterEvent<debug::ServerWindowRequest>();
 	m_ClientWorld.RegisterEvent<debug::settings::WindowRequest>();
@@ -109,7 +113,7 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<debug::level::OpenSystem>();
 	m_ClientWorld.RegisterSystem<debug::level::ReloadSystem>();
 	m_ClientWorld.RegisterSystem<debug::MenuBarSystem>();
-	m_ClientWorld.RegisterSystem<debug::NetworkSystem>();
+	m_ClientWorld.RegisterSystem<debug::NetworkSystem>(m_ClientWorld, m_ServerWorld);
 	m_ClientWorld.RegisterSystem<debug::OverlaySystem>();
 	m_ClientWorld.RegisterSystem<debug::PhysicsSystem>();
 	m_ClientWorld.RegisterSystem<debug::settings::DebugSystem>();
@@ -117,6 +121,10 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<debug::ShapeSystem>();
 	m_ClientWorld.RegisterSystem<debug::SoftbodySystem>();
 	m_ClientWorld.RegisterSystem<debug::SplineSystem>();
+
+	// types
+	auto& registry = m_ClientWorld.WriteResource<ecs::TypeRegistry>();
+	registry.RegisterEvent<debug::NetworkEvent>();
 }
 
 void debug::GameDebug::Initialise()

@@ -4,9 +4,9 @@
 #include "ECS/Event.h"
 #include "ECS/IsReplicated.h"
 
-namespace ecs
+namespace debug
 {
-	struct DebugEvent final : public ecs::Event<DebugEvent>, ecs::IsReplicated
+	struct NetworkEvent final : public ecs::Event<NetworkEvent>, ecs::IsReplicated
 	{
 		str::String m_Data = {};
 	};

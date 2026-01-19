@@ -2,11 +2,9 @@
 #include "Engine/RegisterComponents.h"
 
 #include "Core/MemBuffer.h"
-#include "ECS/DebugEvent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/ReplicationComponent.h"
-#include "ECS/TypeRegistry.h"
 #include "Engine/ApplicationCloseRequest.h"
 #include "Engine/AssetComponent.h"
 #include "Engine/AssetManager.h"
@@ -110,15 +108,10 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::TransformComponent>();
 	entityWorld.RegisterComponent<net::UserComponent>();
 
-	entityWorld.RegisterEvent<ecs::DebugEvent>();
 	entityWorld.RegisterEvent<eng::level::LoadRequest>();
 
 	// singletons
 	entityWorld.RegisterSingleton<eng::level::DirectorySingleton>();
 	entityWorld.RegisterSingleton<eng::PhysicsSceneSingleton>();
 	entityWorld.RegisterSingleton<eng::VersionSingleton>();
-
-	// types
-	auto& registry = entityWorld.WriteResource<ecs::TypeRegistry>();
-	registry.RegisterEvent<ecs::DebugEvent>();
 }

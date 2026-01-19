@@ -4,13 +4,13 @@
 #include "Core/GameTime.h"
 #include "Core/Parse.h"
 #include "Math/Vector.h"
-#include "ECS/DebugEvent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/Messages.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "GameDebug/DebugNetworkWindowRequest.h"
+#include "GameDebug/NetworkEvent.h"
 #include "GameDebug/NetworkWindowComponent.h"
 #include "Math/Math.h"
 #include "Network/Host.h"
@@ -18,6 +18,13 @@
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
+
+
+debug::NetworkSystem::NetworkSystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
+	: m_ClientWorld(clientWorld)
+	, m_ServerWorld(serverWorld)
+{
+}
 
 void debug::NetworkSystem::Initialise(World& world)
 {
@@ -67,11 +74,9 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::Button("host: send message"))
 			{
-				auto& eventData = world.AddEvent<ecs::DebugEvent>();
-				eventData.m_Data = "PING FROM HOST";
+				auto& request = m_ServerWorld.AddEvent<debug::NetworkEvent>();
+				request.m_Data = "PING FROM HOST";
 			}
-			ImGui::SameLine();
-			imgui::InputText("##message", window.m_Message);
 
 			ImGui::Separator();
 
@@ -89,15 +94,23 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::Button("peer: send message"))
 			{
-				auto& a = world.AddEvent<ecs::DebugEvent>();
-				a.m_Data = "A";
-				auto& b = world.AddEvent<ecs::DebugEvent>();
-				b.m_Data = "B";
+				auto& request = m_ClientWorld.AddEvent<debug::NetworkEvent>();
+				request.m_Data = "PING FROM PEER";
 			}
 		}
 		ImGui::End();
 
 		if (!isOpen)
 			world.DestroyEntity(view);
+	}
+
+	{
+		World clientWorld = m_ClientWorld.WorldView<World>();
+		for (const auto& request : clientWorld.Events<debug::NetworkEvent>())
+			Z_LOG(ELog::Debug, "Client: {}", request.m_Data);
+
+		World serverWorld = m_ServerWorld.WorldView<World>();
+		for (const auto& request : serverWorld.Events<debug::NetworkEvent>())
+			Z_LOG(ELog::Debug, "Server: {}", request.m_Data);
 	}
 }
