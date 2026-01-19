@@ -20,10 +20,10 @@ void ecs::TypeRegistry::RegisterComponent()
 }
 
 template<typename TComponent>
-void ecs::TypeRegistry::AddComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& buffer)
+void ecs::TypeRegistry::AddComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data)
 {
 	auto& component = world.AddComponent<TComponent>(entity);
-	buffer.Read(component);
+	data.Read(component);
 }
 
 template<typename TComponent>
@@ -33,17 +33,17 @@ void ecs::TypeRegistry::RemoveComponent(ecs::EntityWorld& world, const ecs::Enti
 }
 
 template<typename TComponent>
-void ecs::TypeRegistry::ReadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, MemBuffer& buffer)
+void ecs::TypeRegistry::ReadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, MemBuffer& data)
 {
 	const auto& component = world.ReadComponent<TComponent>(entity);
-	buffer.Write(component);
+	data.Write(component);
 }
 
 template<typename TComponent>
-void ecs::TypeRegistry::WriteComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& buffer)
+void ecs::TypeRegistry::WriteComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data)
 {
 	auto& component = world.WriteComponent<TComponent>(entity);
-	buffer.Read(component);
+	data.Read(component);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,19 +55,19 @@ void ecs::TypeRegistry::RegisterEvent()
 	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
 
 	ecs::TypeEvent entry;
-	entry.m_Add = &AddEvent<TEvent>;
+	entry.m_Add = &AddEventMethod<TEvent>;
 
-	entry.m_Name = TypeName<TEvent>();
+	entry.m_Name = ToTypeName<TEvent>();
 	entry.m_TypeId = ToTypeId<TEvent, ecs::EventTag>();
 
 	m_EventMap.Insert(entry.m_TypeId, entry);
 }
 
 template<typename TEvent>
-void ecs::TypeRegistry::AddEvent(ecs::EntityWorld& world, const MemBuffer& buffer)
+void ecs::TypeRegistry::AddEventMethod(ecs::EventBuffer& buffer, const MemBuffer& data)
 {
-	TEvent& event = world.AddEvent<TEvent>();
-	buffer.Read(event);
+	TEvent& event = buffer.AddEvent<TEvent>();
+	data.Read(event);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -97,17 +97,17 @@ void ecs::TypeRegistry::RegisterSingleton()
 }
 
 template<typename TSingleton>
-void ecs::TypeRegistry::ReadSingleton(ecs::EntityWorld& world, MemBuffer& buffer)
+void ecs::TypeRegistry::ReadSingleton(ecs::EntityWorld& world, MemBuffer& data)
 {
 	auto& singleton = world.ReadSingleton<TSingleton>();
-	buffer.Write(singleton);
+	data.Write(singleton);
 }
 
 template<typename TSingleton>
-void ecs::TypeRegistry::WriteSingleton(ecs::EntityWorld& world, const MemBuffer& buffer)
+void ecs::TypeRegistry::WriteSingleton(ecs::EntityWorld& world, const MemBuffer& data)
 {
 	auto& singleton = world.WriteSingleton<TSingleton>();
-	buffer.Read(singleton);
+	data.Read(singleton);
 }
 
 //////////////////////////////////////////////////////////////////////////

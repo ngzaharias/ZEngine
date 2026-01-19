@@ -34,23 +34,23 @@ namespace ecs
 		template <typename TComponent>
 		void RegisterComponent();
 
-		void AddComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& buffer) const;
+		void AddComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
 
-		void UpdateComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& buffer) const;
+		void UpdateComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
 
 		void RemoveComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
 
 		template<typename TComponent>
-		static void AddComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& buffer);
+		static void AddComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data);
 
 		template<typename TComponent>
 		static void RemoveComponent(ecs::EntityWorld& world, const ecs::Entity& entity);
 
 		template<typename TComponent>
-		static void ReadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, MemBuffer& buffer);
+		static void ReadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, MemBuffer& data);
 
 		template<typename TComponent>
-		static void WriteComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& buffer);
+		static void WriteComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event
@@ -58,10 +58,10 @@ namespace ecs
 		template <typename TEvent>
 		void RegisterEvent();
 
-		void AddEvent(ecs::EntityWorld& world, const ecs::EventId typeId, const MemBuffer& buffer) const;
+		void AddEvent(ecs::EventBuffer& buffer, const ecs::EventId typeId, const MemBuffer& data) const;
 
 		template<typename TEvent>
-		static void AddEvent(ecs::EntityWorld& world, const MemBuffer& buffer);
+		static void AddEventMethod(ecs::EventBuffer& buffer, const MemBuffer& data);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Resource
@@ -75,13 +75,13 @@ namespace ecs
 		template <typename TSingleton>
 		void RegisterSingleton();
 
-		void UpdateSingleton(ecs::EntityWorld& world, const ecs::SingletonId typeId, const MemBuffer& buffer) const;
+		void UpdateSingleton(ecs::EntityWorld& world, const ecs::SingletonId typeId, const MemBuffer& data) const;
 
 		template<typename TSingleton>
-		static void ReadSingleton(ecs::EntityWorld& world, MemBuffer& buffer);
+		static void ReadSingleton(ecs::EntityWorld& world, MemBuffer& data);
 
 		template<typename TSingleton>
-		static void WriteSingleton(ecs::EntityWorld& world, const MemBuffer& buffer);
+		static void WriteSingleton(ecs::EntityWorld& world, const MemBuffer& data);
 
 		//////////////////////////////////////////////////////////////////////////
 		// System

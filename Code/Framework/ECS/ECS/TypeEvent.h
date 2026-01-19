@@ -7,14 +7,14 @@ class MemBuffer;
 
 namespace ecs
 {
-	class EntityWorld;
+	class EventBuffer;
 }
 
 namespace ecs
 {
 	struct TypeEvent
 	{
-		using Add = void(ecs::EntityWorld&, const MemBuffer&);
+		using Add = void(ecs::EventBuffer&, const MemBuffer&);
 
 		Add* m_Add = nullptr;
 
