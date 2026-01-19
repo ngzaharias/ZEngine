@@ -3,8 +3,8 @@
 #include "Core/Array.h"
 #include "Core/Delegate.h"
 #include "Core/MemBuffer.h"
+#include "Network/Factory.h"
 #include "Network/Message.h"
-#include "Network/MessageFactory.h"
 #include "Network/PeerId.h"
 
 #pragma warning(push)
@@ -19,7 +19,7 @@ namespace net
 	class Peer final
 	{
 	public:
-		Peer(net::MessageFactory& messageFactory);
+		Peer(net::Factory& factory);
 
 		void Connect();
 		void Disconnect();
@@ -30,6 +30,7 @@ namespace net
 		TMessage* RequestMessage(const uint32 type);
 		template<typename TMessage>
 		TMessage* RequestMessage(const net::EMessage type);
+
 		void ReleaseMessage(const net::Message* message);
 
 		void SendMessage(const net::Message* message);
@@ -43,9 +44,10 @@ namespace net
 		Delegate<void(const Array<const net::Message*>& messages)> m_OnProcessMessages;
 
 	protected:
-		MemBuffer m_MessageBuffer;
-		net::MessageFactory& m_MessageFactory;
-		Array<const net::Message*> m_MessageQueue;
+		net::Factory& m_Factory;
+
+		MemBuffer m_Buffer;
+		Array<const net::Message*> m_Queue;
 
 		HSteamNetConnection m_Connection = k_HSteamNetConnection_Invalid;
 	};

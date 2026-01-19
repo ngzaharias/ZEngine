@@ -21,7 +21,7 @@ namespace gui::modal
 
 namespace net
 {
-	class NetworkManager;
+	class Peer;
 	struct UserComponent;
 }
 
@@ -43,11 +43,11 @@ namespace gamestate
 			eng::network::ChangeRequest,
 			gamestate::ChangeFinished,
 			gamestate::NetworkJoinSingleton,
-			gui::modal::MessageComponent,
-			net::NetworkManager>
+			gui::modal::MessageComponent>
 			::Read<
 			eng::network::ChangeFinished,
 			gamestate::StateSingleton,
+			net::Peer,
 			net::UserComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

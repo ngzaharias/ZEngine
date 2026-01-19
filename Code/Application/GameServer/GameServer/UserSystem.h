@@ -16,7 +16,6 @@ namespace ecs
 namespace net
 {
 	class Host;
-	class NetworkManager;
 	struct UserComponent;
 	struct UserMapSingleton;
 }
@@ -31,7 +30,7 @@ namespace net
 			::Write<
 			ecs::NameComponent,
 			ecs::ReplicationHost,
-			net::NetworkManager,
+			net::Host,
 			net::UserComponent,
 			net::UserMapSingleton>;
 

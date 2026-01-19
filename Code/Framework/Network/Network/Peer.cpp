@@ -40,8 +40,8 @@ namespace
 	}
 }
 
-net::Peer::Peer(net::MessageFactory& messageFactory)
-	: m_MessageFactory(messageFactory)
+net::Peer::Peer(net::Factory& factory)
+	: m_Factory(factory)
 {
 }
 
@@ -81,30 +81,30 @@ void net::Peer::Update(const GameTime& gameTime)
 			SteamNetworkingMessage_t* steamMessage = msgs[i];
 
 			net::EMessage type = net::EMessage::Unassigned;
-			m_MessageBuffer.Reset();
-			m_MessageBuffer.Write(steamMessage->GetData(), steamMessage->GetSize());
-			m_MessageBuffer.Read(type);
+			m_Buffer.Reset();
+			m_Buffer.Write(steamMessage->GetData(), steamMessage->GetSize());
+			m_Buffer.Read(type);
 
-			net::Message* message = m_MessageFactory.Request(type);
-			m_MessageFactory.Read(*message, m_MessageBuffer);
-			m_MessageQueue.Append(message);
+			net::Message* message = m_Factory.Request(type);
+			m_Factory.Read(*message, m_Buffer);
+			m_Queue.Append(message);
 
 			steamMessage->Release();
 		}
 
 		// once we've gathered all messages, publish them
-		m_OnProcessMessages.Publish(m_MessageQueue);
+		m_OnProcessMessages.Publish(m_Queue);
 
 		// release all messages that were created
-		for (const net::Message* message : m_MessageQueue)
-			m_MessageFactory.Release(message);
-		m_MessageQueue.RemoveAll();
+		for (const net::Message* message : m_Queue)
+			m_Factory.Release(message);
+		m_Queue.RemoveAll();
 	}
 }
 
 void net::Peer::ReleaseMessage(const net::Message* message)
 {
-	m_MessageFactory.Release(message);
+	m_Factory.Release(message);
 }
 
 void net::Peer::SendMessage(const net::Message* message)
@@ -113,7 +113,7 @@ void net::Peer::SendMessage(const net::Message* message)
 
 	MemBuffer buffer;
 	buffer.Write(message->m_Type);
-	m_MessageFactory.Write(*message, buffer);
+	m_Factory.Write(*message, buffer);
 
 	void* data = buffer.GetData();
 	uint32 bytes = buffer.GetBytes();

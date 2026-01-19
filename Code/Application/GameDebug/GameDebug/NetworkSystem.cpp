@@ -14,7 +14,6 @@
 #include "GameDebug/NetworkWindowComponent.h"
 #include "Math/Math.h"
 #include "Network/Host.h"
-#include "Network/NetworkManager.h"
 #include "Network/Peer.h"
 
 #include "imgui/imgui.h"
@@ -56,14 +55,14 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::Button("host: startup"))
 			{
-				auto& manager = world.WriteResource<net::NetworkManager>();
-				manager.GetHost().Startup();
+				auto& host = world.WriteResource<net::Host>();
+				host.Startup();
 			}
 
 			if (ImGui::Button("host: shutdown"))
 			{
-				auto& manager = world.WriteResource<net::NetworkManager>();
-				manager.GetHost().Shutdown();
+				auto& host = world.WriteResource<net::Host>();
+				host.Shutdown();
 			}
 
 			if (ImGui::Button("host: send message"))
@@ -78,14 +77,14 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::Button("peer: connect"))
 			{
-				auto& manager = world.WriteResource<net::NetworkManager>();
-				manager.GetPeer().Connect();
+				auto& peer = world.WriteResource<net::Peer>();
+				peer.Connect();
 			}
 
 			if (ImGui::Button("peer: disconnect"))
 			{
-				auto& manager = world.WriteResource<net::NetworkManager>();
-				manager.GetPeer().Disconnect();
+				auto& peer = world.WriteResource<net::Peer>();
+				peer.Disconnect();
 			}
 
 			if (ImGui::Button("peer: send message"))

@@ -13,7 +13,6 @@ namespace eng::network
 
 namespace net
 {
-	class NetworkManager;
 	struct PeerId;
 }
 
@@ -25,8 +24,7 @@ namespace eng::network
 		using World = ecs::WorldView
 			::Write<
 			eng::network::ChangeFinished,
-			eng::network::StateSingleton,
-			net::NetworkManager>
+			eng::network::StateSingleton>
 			::Read<
 			eng::network::ChangeRequest>;
 

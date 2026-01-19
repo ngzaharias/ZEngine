@@ -4,7 +4,6 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/Messages.h"
 #include "ECS/TypeRegistry.h"
-#include "Network/NetworkManager.h"
 #include "Network/Host.h"
 
 namespace
@@ -24,9 +23,7 @@ void ecs::ReplicationHost::Initialise()
 {
 	PROFILE_FUNCTION();
 
-	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
-	auto& host = manager.GetHost();
-
+	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	m_Collection =
 	{
 		host.m_OnProcessMessages.Connect(*this, &ecs::ReplicationHost::OnProcessMessages),
@@ -87,9 +84,7 @@ void ecs::ReplicationHost::OnProcessMessages(const Array<const net::Message*>& m
 
 void ecs::ReplicationHost::EntityCreate(const ecs::Entity& entity)
 {
-	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
-	auto& host = manager.GetHost();
-
+	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::EntityCreateMessage>(ecs::EMessage::EntityCreate);
 	message->m_Entity = entity.m_Value;
 	host.BroadcastMessage(message);
@@ -98,9 +93,7 @@ void ecs::ReplicationHost::EntityCreate(const ecs::Entity& entity)
 
 void ecs::ReplicationHost::EntityDestroy(const ecs::Entity& entity)
 {
-	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
-	auto& host = manager.GetHost();
-
+	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::EntityDestroyMessage>(ecs::EMessage::EntityDestroy);
 	message->m_Entity = entity.m_Value;
 
@@ -113,9 +106,7 @@ void ecs::ReplicationHost::EntityDestroy(const ecs::Entity& entity)
 
 void ecs::ReplicationHost::ComponentAdd(const ecs::Entity& entity, const ecs::TypeComponent& entry)
 {
-	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
-	auto& host = manager.GetHost();
-
+	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::ComponentAddMessage>(ecs::EMessage::ComponentAdd);
 	message->m_Entity = ToNetEntity(entity);
 	message->m_TypeId = entry.m_TypeId;
@@ -127,9 +118,7 @@ void ecs::ReplicationHost::ComponentAdd(const ecs::Entity& entity, const ecs::Ty
 
 void ecs::ReplicationHost::ComponentUpdate(const ecs::Entity& entity, const ecs::TypeComponent& entry)
 {
-	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
-	auto& host = manager.GetHost();
-
+	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::ComponentUpdateMessage>(ecs::EMessage::ComponentUpdate);
 	message->m_Entity = ToNetEntity(entity);
 	message->m_TypeId = entry.m_TypeId;
@@ -142,9 +131,7 @@ void ecs::ReplicationHost::ComponentUpdate(const ecs::Entity& entity, const ecs:
 
 void ecs::ReplicationHost::ComponentRemove(const ecs::Entity& entity, const ecs::TypeComponent& entry)
 {
-	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
-	auto& host = manager.GetHost();
-
+	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::ComponentRemoveMessage>(ecs::EMessage::ComponentRemove);
 	message->m_Entity = ToNetEntity(entity);
 	message->m_TypeId = entry.m_TypeId;
@@ -158,15 +145,13 @@ void ecs::ReplicationHost::ComponentRemove(const ecs::Entity& entity, const ecs:
 
 void ecs::ReplicationHost::EventAdd(const ecs::EventId typeId, const MemBuffer& data)
 {
-	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
-	auto& peer = manager.GetPeer();
-
-	auto* message = peer.RequestMessage<ecs::EventAddMessage>(ecs::EMessage::EventAdd);
+	auto& host = m_EntityWorld.WriteResource<net::Host>();
+	auto* message = host.RequestMessage<ecs::EventAddMessage>(ecs::EMessage::EventAdd);
 	message->m_TypeId = typeId;
 	message->m_Data.Write(data);
 
-	peer.SendMessage(message);
-	peer.ReleaseMessage(message);
+	host.BroadcastMessage(message);
+	host.ReleaseMessage(message);
 }
 
 void ecs::ReplicationHost::OnEventAdd(const ecs::EventAddMessage* message)
@@ -185,9 +170,7 @@ void ecs::ReplicationHost::OnEventAdd(const ecs::EventAddMessage* message)
 
 void ecs::ReplicationHost::SingletonUpdate(const ecs::TypeSingleton& entry)
 {
-	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
-	auto& host = manager.GetHost();
-
+	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::SingletonUpdateMessage>(ecs::EMessage::SingletonUpdate);
 	message->m_TypeId = entry.m_TypeId;
 	entry.m_Read(m_EntityWorld, message->m_Data);

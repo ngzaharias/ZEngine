@@ -4,8 +4,8 @@
 #include "Core/Delegate.h"
 #include "Core/Set.h"
 #include "Core/TypeInfo.h"
+#include "Network/Factory.h"
 #include "Network/Message.h"
-#include "Network/MessageFactory.h"
 #include "Network/PeerId.h"
 
 #pragma warning(push)
@@ -25,7 +25,7 @@ namespace net
 	class Host final
 	{
 	public:
-		Host(net::MessageFactory& messageFactory);
+		Host(net::Factory& factory);
 
 		void Startup();
 		void Shutdown();
@@ -49,9 +49,10 @@ namespace net
 		Delegate<void(const Array<const net::Message*>& messages)> m_OnProcessMessages;
 
 	protected:
-		MemBuffer m_MessageBuffer;
-		net::MessageFactory& m_MessageFactory;
-		Array<const net::Message*> m_MessageQueue;
+		net::Factory& m_Factory;
+
+		MemBuffer m_Buffer;
+		Array<const net::Message*> m_Queue;
 
 		Array<HSteamNetConnection> m_Connections = {};
 

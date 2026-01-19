@@ -4,7 +4,6 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/Messages.h"
 #include "ECS/TypeRegistry.h"
-#include "Network/NetworkManager.h"
 #include "Network/Peer.h"
 
 ecs::ReplicationPeer::ReplicationPeer(ecs::EntityWorld& entityWorld)
@@ -16,9 +15,7 @@ void ecs::ReplicationPeer::Initialise()
 {
 	PROFILE_FUNCTION();
 
-	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
-	auto& peer = manager.GetPeer();
-
+	auto& peer = m_EntityWorld.WriteResource<net::Peer>();
 	m_Collection =
 	{
 		peer.m_OnProcessMessages.Connect(*this, &ecs::ReplicationPeer::OnProcessMessages),
@@ -149,8 +146,7 @@ void ecs::ReplicationPeer::OnComponentRemove(const ecs::ComponentRemoveMessage* 
 
 void ecs::ReplicationPeer::EventAdd(const ecs::EventId typeId, const MemBuffer& data)
 {
-	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
-	auto& peer = manager.GetPeer();
+	auto& peer = m_EntityWorld.WriteResource<net::Peer>();
 
 	auto* message = peer.RequestMessage<ecs::EventAddMessage>(ecs::EMessage::EventAdd);
 	message->m_TypeId = typeId;

@@ -8,7 +8,6 @@
 #include "Engine/NetworkChangeRequest.h"
 #include "GameClient/GameStateChangeFinished.h"
 #include "GameClient/GameStateStateSingleton.h"
-#include "Network/NetworkManager.h"
 
 void gamestate::NetworkHostSystem::Update(World& world, const GameTime& gameTime)
 {

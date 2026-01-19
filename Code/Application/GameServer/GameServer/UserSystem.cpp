@@ -9,19 +9,16 @@
 #include "Engine/UserComponent.h"
 #include "Engine/UserMapSingleton.h"
 #include "Network/Host.h"
-#include "Network/NetworkManager.h"
 
 void net::UserSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
-	//auto& networkManager = world.WriteResource<net::NetworkManager>();
-	//auto& adaptor = networkManager.GetAdaptor();
-
+	//auto& host = world.WriteResource<net::Host>();
 	//m_Collection =
 	//{
-	//	adaptor.m_OnServerClientConnected.Connect(*this, &net::UserSystem::OnClientConnected),
-	//	adaptor.m_OnServerClientDisconnected.Connect(*this, &net::UserSystem::OnClientDisconnected),
+	//	host.m_OnServerClientConnected.Connect(*this, &net::UserSystem::OnClientConnected),
+	//	host.m_OnServerClientDisconnected.Connect(*this, &net::UserSystem::OnClientDisconnected),
 	//};
 }
 

@@ -16,7 +16,8 @@ namespace gamestate
 
 namespace net
 {
-	class NetworkManager;
+	class Host;
+	class Peer;
 }
 
 namespace debug
@@ -31,7 +32,8 @@ namespace debug
 			::Write<
 			debug::NetworkWindowComponent,
 			ecs::NameComponent,
-			net::NetworkManager>
+			net::Host,
+			net::Peer>
 			::Read<
 			debug::NetworkWindowRequest>;
 

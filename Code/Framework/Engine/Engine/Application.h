@@ -3,12 +3,12 @@
 #include "ECS/TypeRegistry.h"
 #include "Engine/AssetManager.h"
 #include "Engine/ImguiManager.h"
+#include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PlatformManager.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/TableHeadmaster.h"
 #include "Engine/WindowManager.h"
-#include "Network/NetworkManager.h"
 
 class GameTime;
 
@@ -43,11 +43,11 @@ namespace eng
 		ecs::TypeRegistry m_TypeRegistry;
 		eng::AssetManager m_AssetManager;
 		eng::ImguiManager m_ImguiManager;
+		eng::NetworkManager m_NetworkManager;
 		eng::PhysicsManager m_PhysicsManager;
 		eng::PlatformManager m_PlatformManager;
 		eng::PrototypeManager m_PrototypeManager;
 		eng::TableHeadmaster m_TableHeadmaster;
 		eng::WindowManager m_WindowManager;
-		net::NetworkManager m_NetworkManager;
 	};
 }

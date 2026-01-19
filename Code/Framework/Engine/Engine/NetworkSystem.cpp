@@ -9,7 +9,6 @@
 #include "Engine/NetworkChangeRequest.h"
 #include "Engine/NetworkStateSingleton.h"
 #include "Network/Host.h"
-#include "Network/NetworkManager.h"
 #include "Network/Peer.h"
 
 namespace
@@ -42,10 +41,6 @@ namespace
 void eng::network::NetworkSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
-
-	auto& networkManager = world.WriteResource<net::NetworkManager>();
-	auto& host = networkManager.GetHost();
-	auto& peer = networkManager.GetPeer();
 
 	for (const auto& eventData : world.Events<eng::network::ChangeRequest>())
 	{

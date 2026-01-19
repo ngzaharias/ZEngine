@@ -11,7 +11,6 @@
 #include "GameClient/GameStateNetworkJoinSingleton.h"
 #include "GameClient/GameStateStateSingleton.h"
 #include "GameClient/ModalMessageComponent.h"
-#include "Network/NetworkManager.h"
 
 void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -46,13 +45,12 @@ void gamestate::NetworkJoinSystem::Update(World& world, const GameTime& gameTime
 		{
 		case NetworkJoinSingleton::EState::Connect:
 		{
-			//const auto& networkManager = world.ReadResource< net::NetworkManager>();
-			//const auto& networkPeer = networkManager.GetPeer();
-			//if (networkPeer.IsConnected())
+			//const auto& peer = world.ReadResource<net::Peer>();
+			//if (peer.IsConnected())
 			//{
 			//	writeComponent.m_State = NetworkJoinSingleton::EState::LoadLevel;
 			//}
-			//else if (networkPeer.HasConnectionFailed())
+			//else if (peer.HasConnectionFailed())
 			//{
 			//	writeComponent.m_Result = NetworkJoinSingleton::EResult::Failure;
 			//	writeComponent.m_State = NetworkJoinSingleton::EState::Finished;

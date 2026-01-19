@@ -16,17 +16,12 @@ namespace eng
 {
 	class AssetManager;
 	class ImguiManager;
+	class NetworkManager;
 	class PhysicsManager;
 	class PlatformManager;
 	class PrototypeManager;
 	class TableHeadmaster;
 	class WindowManager;
-}
-
-namespace net
-{
-	class ComponentSerializer;
-	class NetworkManager;
 }
 
 namespace client
@@ -36,12 +31,12 @@ namespace client
 		ecs::TypeRegistry& m_TypeRegistry;
 		eng::AssetManager& m_AssetManager;
 		eng::ImguiManager& m_ImguiManager;
+		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
 		eng::PlatformManager& m_PlatformManager;
 		eng::PrototypeManager& m_PrototypeManager;
 		eng::TableHeadmaster& m_TableHeadmaster;
 		eng::WindowManager& m_WindowManager;
-		net::NetworkManager& m_NetworkManager;
 	};
 
 	class GameClient final

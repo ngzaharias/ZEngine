@@ -9,6 +9,7 @@
 #include "Engine/AssetManager.h"
 #include "Engine/ColourTable.h"
 #include "Engine/ImguiManager.h"
+#include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PlatformManager.h"
 #include "Engine/PrototypeManager.h"
@@ -23,7 +24,6 @@
 #include "GameUI/RegisterModule.h"
 #include "Hexmap/RegisterModule.h"
 #include "Hidden/RegisterModule.h"
-#include "Network/NetworkManager.h"
 #include "Render/RegisterModule.h"
 #include "Softbody/RegisterModule.h"
 #include "Tabletop/RegisterModule.h"
@@ -51,6 +51,9 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
 		m_EntityWorld.RegisterResource(dependencies.m_ImguiManager);
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
+		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetFactory());
+		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetHost());
+		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetPeer());
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PlatformManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);

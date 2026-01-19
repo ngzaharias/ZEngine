@@ -12,7 +12,7 @@ namespace net
 
 namespace net
 {
-	class MessageFactory final
+	class Factory final
 	{
 	public:
 		template <typename TMessage>
@@ -40,4 +40,4 @@ namespace net
 	};
 }
 
-#include "MessageFactory.inl"
+#include "Factory.inl"

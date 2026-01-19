@@ -3,13 +3,13 @@ template<typename TMessage>
 TMessage* net::Peer::RequestMessage(const uint32 type)
 {
 	const net::EMessage etype = static_cast<net::EMessage>(type);
-	net::Message* message = m_MessageFactory.Request(etype);
+	net::Message* message = m_Factory.Request(etype);
 	return static_cast<TMessage*>(message);
 }
 
 template<typename TMessage>
 TMessage* net::Peer::RequestMessage(const net::EMessage type)
 {
-	net::Message* message = m_MessageFactory.Request(type);
+	net::Message* message = m_Factory.Request(type);
 	return static_cast<TMessage*>(message);
 }

@@ -27,19 +27,19 @@ void game::Application::Register()
 		m_TypeRegistry,
 		m_AssetManager,
 		m_ImguiManager,
+		m_NetworkManager,
 		m_PhysicsManager,
 		m_PlatformManager,
 		m_PrototypeManager,
 		m_TableHeadmaster,
-		m_WindowManager,
-		m_NetworkManager };
+		m_WindowManager };
 
 	server::Dependencies serverDependencies = {
 		m_TypeRegistry,
 		m_AssetManager,
+		m_NetworkManager,
 		m_PhysicsManager,
-		m_PrototypeManager,
-		m_NetworkManager };
+		m_PrototypeManager };
 
 	m_GameClient.Register(clientDependencies);
 	m_GameServer.Register(serverDependencies);

@@ -6,6 +6,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/ReplicationComponent.h"
+#include "ECS/TypeRegistry.h"
 #include "Engine/ApplicationCloseRequest.h"
 #include "Engine/AssetComponent.h"
 #include "Engine/AssetManager.h"
@@ -122,4 +123,8 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSingleton<eng::level::DirectorySingleton>();
 	entityWorld.RegisterSingleton<eng::PhysicsSceneSingleton>();
 	entityWorld.RegisterSingleton<eng::VersionSingleton>();
+
+	// types
+	auto& registry = entityWorld.WriteResource<ecs::TypeRegistry>();
+	registry.RegisterEvent<ecs::DebugEvent>();
 }

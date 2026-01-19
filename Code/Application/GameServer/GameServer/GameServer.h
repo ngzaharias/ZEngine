@@ -13,13 +13,9 @@ namespace ecs
 namespace eng
 {
 	class AssetManager;
+	class NetworkManager;
 	class PhysicsManager;
 	class PrototypeManager;
-}
-
-namespace net
-{
-	class NetworkManager;
 }
 
 namespace server
@@ -28,9 +24,9 @@ namespace server
 	{
 		ecs::TypeRegistry& m_TypeRegistry;
 		eng::AssetManager& m_AssetManager;
+		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
 		eng::PrototypeManager& m_PrototypeManager;
-		net::NetworkManager& m_NetworkManager;
 	};
 
 	class GameServer final

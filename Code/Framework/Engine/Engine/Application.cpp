@@ -3,6 +3,9 @@
 
 #include "Core/GameTime.h"
 #include "Core/Profiler.h"
+#include "ECS/DebugEvent.h"
+#include "ECS/Messages.h"
+#include "ECS/TypeRegistry.h"
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
@@ -34,7 +37,6 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Window.h"
-#include "Network/NetworkManager.h"
 
 #include <GLFW/glfw3.h>
 
