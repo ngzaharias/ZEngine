@@ -40,7 +40,7 @@ void ecs::EventBuffer::RegisterEvent()
 }
 
 template<class TEvent, typename... TArgs>
-auto ecs::EventBuffer::AddEvent(TArgs&&... args)->TEvent&
+auto ecs::EventBuffer::AddEvent(TArgs&&... args) -> TEvent&
 {
 	ecs::EventContainer<TEvent>& container = GetAt<TEvent>();
 	return container.Emplace(std::forward<TArgs>(args)...);

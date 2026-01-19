@@ -35,7 +35,7 @@ namespace ecs
 		void RegisterEvent();
 
 		template<class TEvent, typename... TArgs>
-		auto AddEvent(TArgs&&... args)->TEvent&;
+		auto AddEvent(TArgs&&... args) -> TEvent&;
 
 	private:
 		Containers m_Containers = { };
