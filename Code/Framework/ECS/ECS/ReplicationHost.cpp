@@ -42,6 +42,22 @@ void ecs::ReplicationHost::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	MemBuffer data;
+	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
+	const auto& storage = m_EntityWorld.m_EventStorage;
+
+	// #hack: we iterate the keys of the remote buffer but fetch from the local buffer
+	for (const ecs::EventId& typeId : storage.m_BufferRemoteCurr.GetAll().GetKeys())
+	{
+		const ecs::IEventContainer& container = storage.m_BufferLocalCurr.GetAt(typeId);
+		const int32 count = container.GetCount();
+		for (int32 i = 0; i < count; ++i)
+		{
+			data.Reset();
+			container.ReadAt(data, i);
+			EventAdd(typeId, data);
+		}
+	}
 }
 
 void ecs::ReplicationHost::OnProcessMessages(const Array<const net::Message*>& messages)
@@ -140,14 +156,14 @@ void ecs::ReplicationHost::ComponentRemove(const ecs::Entity& entity, const ecs:
 //////////////////////////////////////////////////////////////////////////
 // Event
 
-void ecs::ReplicationHost::EventAdd(const ecs::EventId typeId, const MemBuffer& buffer)
+void ecs::ReplicationHost::EventAdd(const ecs::EventId typeId, const MemBuffer& data)
 {
 	auto& manager = m_EntityWorld.WriteResource<net::NetworkManager>();
 	auto& peer = manager.GetPeer();
 
 	auto* message = peer.RequestMessage<ecs::EventAddMessage>(ecs::EMessage::EventAdd);
 	message->m_TypeId = typeId;
-	message->m_Data.Write(buffer);
+	message->m_Data.Write(data);
 
 	peer.SendMessage(message);
 	peer.ReleaseMessage(message);
@@ -156,7 +172,12 @@ void ecs::ReplicationHost::EventAdd(const ecs::EventId typeId, const MemBuffer& 
 void ecs::ReplicationHost::OnEventAdd(const ecs::EventAddMessage* message)
 {
 	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
-	registry.AddEvent(m_EntityWorld, message->m_TypeId, message->m_Data);
+	ecs::EventStorage& storage = m_EntityWorld.m_EventStorage;
+	ecs::EventBuffer& buffer = storage.m_BufferRemoteCurr;
+
+	MemBuffer data;
+	message->m_Data.Read(data);
+	registry.AddEvent(buffer, message->m_TypeId, data);
 }
 
 //////////////////////////////////////////////////////////////////////////

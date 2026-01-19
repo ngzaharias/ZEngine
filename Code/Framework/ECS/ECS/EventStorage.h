@@ -7,6 +7,8 @@ namespace ecs
 	class EventStorage
 	{
 		friend class EntityWorld;
+		friend class ReplicationHost;
+		friend class ReplicationPeer;
 
 	public:
 		template<class TEvent>

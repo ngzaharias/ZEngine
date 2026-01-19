@@ -63,7 +63,7 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Event
 
-		void EventAdd(const ecs::EventId typeId, const MemBuffer& buffer);
+		void EventAdd(const ecs::EventId typeId, const MemBuffer& data);
 
 		void OnEventAdd(const ecs::EventAddMessage* message);
 
