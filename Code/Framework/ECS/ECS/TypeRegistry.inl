@@ -8,39 +8,44 @@ void ecs::TypeRegistry::RegisterComponent()
 	static_assert(std::is_base_of<ecs::Component<TComponent>, TComponent>::value, "Type doesn't inherit from ecs::Component.");
 
 	ecs::TypeComponent entry;
-	entry.m_Add = &AddComponent<TComponent>;
-	entry.m_Remove = &RemoveComponent<TComponent>;
-	entry.m_Read = &ReadComponent<TComponent>;
-	entry.m_Write = &WriteComponent<TComponent>;
+	entry.m_Add = &AddComponentMethod<TComponent>;
+	entry.m_Remove = &RemoveComponentMethod<TComponent>;
+	entry.m_Read = &ReadComponentMethod<TComponent>;
+	entry.m_Write = &WriteComponentMethod<TComponent>;
 
-	entry.m_Name = TypeName<TComponent>();
+	entry.m_Name = ToTypeName<TComponent>();
 	entry.m_TypeId = ToTypeId<TComponent, ecs::ComponentTag>();
+
+	entry.m_AddedId = ecs::QueryProxy<ecs::query::Added<TComponent>::Include<ecs::ReplicationComponent>>::Id();
+	entry.m_RemovedId = ecs::QueryProxy<ecs::query::Removed<TComponent>::Include<ecs::ReplicationComponent>>::Id();
+	entry.m_UpdatedId = ecs::QueryProxy<ecs::query::Updated<TComponent>::Include<ecs::ReplicationComponent>>::Id();
+	entry.m_IsReplicated = std::is_base_of<ecs::IsReplicated, TComponent>::value;
 
 	m_ComponentMap.Insert(entry.m_TypeId, entry);
 }
 
 template<typename TComponent>
-void ecs::TypeRegistry::AddComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data)
+void ecs::TypeRegistry::AddComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data)
 {
 	auto& component = world.AddComponent<TComponent>(entity);
 	data.Read(component);
 }
 
 template<typename TComponent>
-void ecs::TypeRegistry::RemoveComponent(ecs::EntityWorld& world, const ecs::Entity& entity)
+void ecs::TypeRegistry::RemoveComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity)
 {
 	world.RemoveComponent<TComponent>(entity);
 }
 
 template<typename TComponent>
-void ecs::TypeRegistry::ReadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, MemBuffer& data)
+void ecs::TypeRegistry::ReadComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, MemBuffer& data)
 {
 	const auto& component = world.ReadComponent<TComponent>(entity);
 	data.Write(component);
 }
 
 template<typename TComponent>
-void ecs::TypeRegistry::WriteComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data)
+void ecs::TypeRegistry::WriteComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data)
 {
 	auto& component = world.WriteComponent<TComponent>(entity);
 	data.Read(component);
@@ -90,21 +95,23 @@ template <typename TSingleton>
 void ecs::TypeRegistry::RegisterSingleton()
 {
 	ecs::TypeSingleton entry;
-	entry.m_Name = TypeName<TSingleton>();
+	entry.m_Name = ToTypeName<TSingleton>();
 	entry.m_TypeId = ToTypeId<TSingleton, ecs::SingletonTag>();
+	entry.m_Read = &ReadSingletonMethod<TSingleton>;
+	entry.m_Write = &WriteSingletonMethod<TSingleton>;
 
 	m_SingletonMap.Insert(entry.m_TypeId, entry);
 }
 
 template<typename TSingleton>
-void ecs::TypeRegistry::ReadSingleton(ecs::EntityWorld& world, MemBuffer& data)
+void ecs::TypeRegistry::ReadSingletonMethod(ecs::EntityWorld& world, MemBuffer& data)
 {
 	auto& singleton = world.ReadSingleton<TSingleton>();
 	data.Write(singleton);
 }
 
 template<typename TSingleton>
-void ecs::TypeRegistry::WriteSingleton(ecs::EntityWorld& world, const MemBuffer& data)
+void ecs::TypeRegistry::WriteSingletonMethod(ecs::EntityWorld& world, const MemBuffer& data)
 {
 	auto& singleton = world.WriteSingleton<TSingleton>();
 	data.Read(singleton);
@@ -117,7 +124,7 @@ template <typename TSystem>
 void ecs::TypeRegistry::RegisterSystem()
 {
 	ecs::TypeSystem entry;
-	entry.m_Name = TypeName<TSystem>();
+	entry.m_Name = ToTypeName<TSystem>();
 	entry.m_TypeId = ToTypeId<TSystem, ecs::SystemTag>();
 
 	m_SystemMap.Insert(entry.m_TypeId, entry);

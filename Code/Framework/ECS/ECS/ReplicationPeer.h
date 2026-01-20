@@ -42,6 +42,8 @@ namespace ecs
 		void Update(const GameTime& gameTime);
 
 	private:
+		void ProcessEvents();
+
 		void OnProcessMessages(const Array<const net::Message*>& messages);
 
 		//////////////////////////////////////////////////////////////////////////

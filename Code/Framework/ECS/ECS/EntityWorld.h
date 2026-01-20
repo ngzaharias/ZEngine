@@ -75,10 +75,12 @@ namespace ecs
 		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
 
 		template<class TComponent>
-		auto ReadComponent(const ecs::Entity& entity, const bool alive = true)->const TComponent&;
+		auto ReadComponent(const ecs::Entity& entity, const bool alive = true) -> const TComponent&;
 
 		template<class TComponent>
-		auto WriteComponent(const ecs::Entity& entity, const bool alive = true)->TComponent&;
+		auto WriteComponent(const ecs::Entity& entity, const bool alive = true) -> TComponent&;
+
+		auto GetComponentMask(const ecs::Entity& entity) -> const ecs::ComponentMask&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event

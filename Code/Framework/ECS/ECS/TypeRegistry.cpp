@@ -5,6 +5,27 @@ const ecs::TypeEvent& ecs::TypeRegistry::GetTypeEvent(const ecs::EventId& typeId
 	return m_EventMap.Get(typeId);
 }
 
+const ecs::TypeComponent& ecs::TypeRegistry::GetTypeComponent(const ecs::ComponentId& typeId) const
+{
+	return m_ComponentMap.Get(typeId);
+}
+
+const ecs::TypeEvent* ecs::TypeRegistry::TryTypeEvent(const ecs::EventId& typeId) const
+{
+	const auto find = m_EventMap.Find(typeId);
+	return find != m_EventMap.end() 
+		? &find->second 
+		: nullptr;
+}
+
+const ecs::TypeComponent* ecs::TypeRegistry::TryTypeComponent(const ecs::ComponentId& typeId) const
+{
+	const auto find = m_ComponentMap.Find(typeId);
+	return find != m_ComponentMap.end()
+		? &find->second
+		: nullptr;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Component
 

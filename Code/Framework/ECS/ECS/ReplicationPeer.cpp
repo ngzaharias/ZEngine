@@ -33,6 +33,13 @@ void ecs::ReplicationPeer::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	ProcessEvents();
+}
+
+void ecs::ReplicationPeer::ProcessEvents()
+{
+	PROFILE_FUNCTION();
+
 	MemBuffer data;
 	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
 	const auto& storage = m_EntityWorld.m_EventStorage;
@@ -53,6 +60,8 @@ void ecs::ReplicationPeer::Update(const GameTime& gameTime)
 
 void ecs::ReplicationPeer::OnProcessMessages(const Array<const net::Message*>& messages)
 {
+	PROFILE_FUNCTION();
+
 	for (const net::Message* message : messages)
 	{
 		switch (static_cast<ecs::EMessage>(message->m_Type))
@@ -67,11 +76,11 @@ void ecs::ReplicationPeer::OnProcessMessages(const Array<const net::Message*>& m
 		case ecs::EMessage::ComponentAdd:
 			OnComponentAdd(static_cast<const ecs::ComponentAddMessage*>(message));
 			break;
-		case ecs::EMessage::ComponentRemove:
-			OnComponentRemove(static_cast<const ecs::ComponentRemoveMessage*>(message));
-			break;
 		case ecs::EMessage::ComponentUpdate:
 			OnComponentUpdate(static_cast<const ecs::ComponentUpdateMessage*>(message));
+			break;
+		case ecs::EMessage::ComponentRemove:
+			OnComponentRemove(static_cast<const ecs::ComponentRemoveMessage*>(message));
 			break;
 
 		case ecs::EMessage::EventAdd:
@@ -92,7 +101,7 @@ void ecs::ReplicationPeer::OnEntityCreate(const ecs::EntityCreateMessage* messag
 {
 	Z_PANIC(!enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity {} has already been added on peer!", message->m_Entity.m_Value);
 
-	const net::Entity hostEntity = message->m_Entity;
+	const net::Entity& hostEntity = message->m_Entity;
 	const ecs::Entity peerEntity = m_EntityWorld.CreateEntity();
 
 	m_HostToPeer[hostEntity] = peerEntity;

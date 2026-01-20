@@ -28,15 +28,12 @@ namespace net
 
 namespace ecs
 {
-	struct PeerReplicationData
+	struct ReplicationData
 	{
-		net::PeerId m_PeerId;
-		Set<ecs::Entity> m_EntitiesReplicated;
 		Set<ecs::Entity> m_EntitiesToCreate;
 		Set<ecs::Entity> m_EntitiesToUpdate;
 		Set<ecs::Entity> m_EntitiesToDestroy;
-		Map<ecs::Entity, Set<TypeHash>> m_ComponentsAdded;
-		Map<ecs::Entity, Set<TypeHash>> m_ComponentsRemoved;
+		Set<ecs::Entity> m_EntitiesReplicated;
 	};
 
 	class ReplicationHost
@@ -49,7 +46,14 @@ namespace ecs
 
 		void Update(const GameTime& gameTime);
 
+		void StartReplicate(const ecs::Entity& entity);
+		void StopReplicate(const ecs::Entity& entity);
+		bool IsReplicated(const ecs::Entity& entity);
+
 	private:
+		void ProcessEntities();
+		void ProcessEvents();
+
 		void OnProcessMessages(const Array<const net::Message*>& messages);
 
 		//////////////////////////////////////////////////////////////////////////
@@ -82,6 +86,8 @@ namespace ecs
 
 	private:
 		ecs::EntityWorld& m_EntityWorld;
+
 		DelegateCollection m_Collection;
+		ReplicationData m_ReplicationData;
 	};
 }

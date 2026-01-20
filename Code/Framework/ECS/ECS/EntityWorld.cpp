@@ -43,6 +43,11 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 	m_EventStorage.FlushChanges();
 }
 
+auto ecs::EntityWorld::GetComponentMask(const ecs::Entity& entity) -> const ecs::ComponentMask&
+{
+	return m_EntityStorage.m_AliveEntities.Get(entity);
+}
+
 str::String ecs::EntityWorld::LogDependencies() const
 {
 	const ecs::SystemEntries& entries = m_SystemRegistry.GetEntries();

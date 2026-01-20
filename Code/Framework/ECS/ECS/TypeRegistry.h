@@ -7,6 +7,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/EventTag.h"
 #include "ECS/ResourceTag.h"
+#include "ECS/ReplicationComponent.h"
 #include "ECS/SingletonTag.h"
 #include "ECS/SystemTag.h"
 #include "ECS/TypeComponent.h"
@@ -27,6 +28,10 @@ namespace ecs
 		using SystemMap = Map<ecs::SystemId, ecs::TypeSystem>;
 
 		const ecs::TypeEvent& GetTypeEvent(const ecs::EventId& typeId) const;
+		const ecs::TypeComponent& GetTypeComponent(const ecs::ComponentId& typeId) const;
+
+		const ecs::TypeEvent* TryTypeEvent(const ecs::EventId& typeId) const;
+		const ecs::TypeComponent* TryTypeComponent(const ecs::ComponentId& typeId) const;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Component
@@ -41,16 +46,16 @@ namespace ecs
 		void RemoveComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
 
 		template<typename TComponent>
-		static void AddComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data);
+		static void AddComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data);
 
 		template<typename TComponent>
-		static void RemoveComponent(ecs::EntityWorld& world, const ecs::Entity& entity);
+		static void RemoveComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity);
 
 		template<typename TComponent>
-		static void ReadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, MemBuffer& data);
+		static void ReadComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, MemBuffer& data);
 
 		template<typename TComponent>
-		static void WriteComponent(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data);
+		static void WriteComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event
@@ -78,10 +83,10 @@ namespace ecs
 		void UpdateSingleton(ecs::EntityWorld& world, const ecs::SingletonId typeId, const MemBuffer& data) const;
 
 		template<typename TSingleton>
-		static void ReadSingleton(ecs::EntityWorld& world, MemBuffer& data);
+		static void ReadSingletonMethod(ecs::EntityWorld& world, MemBuffer& data);
 
 		template<typename TSingleton>
-		static void WriteSingleton(ecs::EntityWorld& world, const MemBuffer& data);
+		static void WriteSingletonMethod(ecs::EntityWorld& world, const MemBuffer& data);
 
 		//////////////////////////////////////////////////////////////////////////
 		// System

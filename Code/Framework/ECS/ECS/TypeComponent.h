@@ -27,5 +27,10 @@ namespace ecs
 
 		str::String m_Name = {};
 		ecs::ComponentId m_TypeId = -1;
+
+		ecs::QueryId m_AddedId = -1;
+		ecs::QueryId m_RemovedId = -1;
+		ecs::QueryId m_UpdatedId = -1;
+		bool m_IsReplicated = false;
 	};
 }
