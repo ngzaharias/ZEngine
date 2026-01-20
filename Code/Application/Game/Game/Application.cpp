@@ -54,9 +54,9 @@ void game::Application::Initialise()
 	m_GameServer.m_ReplicationHost.Initialise();
 	m_GameClient.m_ReplicationPeer.Initialise();
 
+	m_GameDebug.Initialise();
 	m_GameClient.Initialise();
 	m_GameServer.Initialise();
-	m_GameDebug.Initialise();
 }
 
 void game::Application::Shutdown()
@@ -64,11 +64,11 @@ void game::Application::Shutdown()
 	PROFILE_FUNCTION();
 
 	m_GameDebug.Shutdown();
-	m_GameServer.Shutdown();
 	m_GameClient.Shutdown();
+	m_GameServer.Shutdown();
 
-	m_GameClient.m_ReplicationPeer.Shutdown();
 	m_GameServer.m_ReplicationHost.Shutdown();
+	m_GameClient.m_ReplicationPeer.Shutdown();
 
 	eng::Application::Shutdown();
 }
@@ -89,9 +89,10 @@ void game::Application::Update(const GameTime& gameTime)
 	m_GameServer.m_ReplicationHost.Update(gameTime);
 	m_GameClient.m_ReplicationPeer.Update(gameTime);
 
+	// debug first, then client, then server
+	m_GameDebug.Update(gameTime);
 	m_GameClient.Update(gameTime);
 	m_GameServer.Update(gameTime);
-	m_GameDebug.Update(gameTime);
 }
 
 void game::Application::PostUpdate(const GameTime& gameTime)
