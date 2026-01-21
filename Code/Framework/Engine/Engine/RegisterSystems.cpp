@@ -21,7 +21,6 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::AssetSystem>();
 	entityWorld.RegisterSystem<eng::FlipbookPlaySystem>();
 	entityWorld.RegisterSystem<eng::MusicSystem>();
-	entityWorld.RegisterSystem<eng::settings::LaunchSystem>();
 	entityWorld.RegisterSystem<eng::sound::PlaySystem>();
 	entityWorld.RegisterSystem<eng::sound::RandomSystem>();
 	entityWorld.RegisterSystem<eng::sound::SequenceSystem>();
@@ -37,4 +36,5 @@ void eng::RegisterSharedSystems(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterSystem<eng::level::LoadSystem>(entityWorld);
 	entityWorld.RegisterSystem<eng::PhysicsSystem>();
+	entityWorld.RegisterSystem<eng::settings::LaunchSystem>();
 }

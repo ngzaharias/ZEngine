@@ -20,7 +20,7 @@ namespace net
 	struct UserMapSingleton;
 }
 
-namespace net
+namespace server
 {
 	/// \brief Responsible for creating/destroying an entity/component per user that connects/disconnects.
 	class UserSystem : public ecs::System

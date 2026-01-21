@@ -8,6 +8,6 @@
 
 void server::RegisterSystems(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.RegisterSystem<net::ReplicationSystem>();
-	entityWorld.RegisterSystem<net::UserSystem>();
+	entityWorld.RegisterSystem<server::ReplicationSystem>();
+	entityWorld.RegisterSystem<server::UserSystem>();
 }

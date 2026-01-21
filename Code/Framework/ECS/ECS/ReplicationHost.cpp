@@ -6,6 +6,7 @@
 #include "ECS/Messages.h"
 #include "ECS/ReplicationComponent.h"
 #include "ECS/TypeRegistry.h"
+#include "ECS/WorldView.h"
 #include "Network/Host.h"
 
 namespace
@@ -28,6 +29,8 @@ void ecs::ReplicationHost::Initialise()
 	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	m_Collection =
 	{
+		host.m_OnPeerConnected.Connect(*this, &ecs::ReplicationHost::OnPeerConnected),
+		host.m_OnPeerDisconnected.Connect(*this, &ecs::ReplicationHost::OnPeerDisconnected),
 		host.m_OnProcessMessages.Connect(*this, &ecs::ReplicationHost::OnProcessMessages),
 	};
 }
@@ -45,25 +48,49 @@ void ecs::ReplicationHost::Update(const GameTime& gameTime)
 	ProcessEvents();
 }
 
-void ecs::ReplicationHost::StartReplicate(const ecs::Entity& entity)
+void ecs::ReplicationHost::RegisterPeer(const net::PeerId& peerId)
 {
-	Z_PANIC(!IsReplicated(entity), "Trying to start replication of an entity that is already replicated!");
+	Z_PANIC(!IsRegistered(peerId), "Peer is already registered!");
 
-	m_ReplicationData.m_EntitiesToCreate.Add(entity);
+	ReplicationData replicationData;
+	replicationData.m_PeerId = peerId;
+	m_ReplicationMap.Insert(peerId, std::move(replicationData));
 }
 
-void ecs::ReplicationHost::StopReplicate(const ecs::Entity& entity)
+void ecs::ReplicationHost::UnregisterPeer(const net::PeerId& peerId)
 {
-	Z_PANIC(IsReplicated(entity), "Trying to stop replication of an entity that isn't replicated!");
-
-	m_ReplicationData.m_EntitiesToDestroy.Add(entity);
+	Z_PANIC(IsRegistered(peerId), "Peer isn't registered!");
+	m_ReplicationMap.Remove(peerId);
 }
 
-bool ecs::ReplicationHost::IsReplicated(const ecs::Entity& entity)
+void ecs::ReplicationHost::StartReplicate(const net::PeerId& peerId, const ecs::Entity& entity)
 {
-	return m_ReplicationData.m_EntitiesReplicated.Contains(entity);
+	Z_PANIC(!IsReplicated(peerId, entity), "Trying to start replication of an entity that is already replicated!");
+
+	ReplicationData& replicationData = m_ReplicationMap.Get(peerId);
+	replicationData.m_ToCreate.Add(entity);
 }
 
+void ecs::ReplicationHost::StopReplicate(const net::PeerId& peerId, const ecs::Entity& entity)
+{
+	Z_PANIC(IsReplicated(peerId, entity), "Trying to stop replication of an entity that isn't replicated!");
+
+	ReplicationData& replicationData = m_ReplicationMap.Get(peerId);
+	replicationData.m_ToDestroy.Add(entity);
+}
+
+bool ecs::ReplicationHost::IsRegistered(const net::PeerId& peerId)
+{
+	return m_ReplicationMap.Contains(peerId);
+}
+
+bool ecs::ReplicationHost::IsReplicated(const net::PeerId& peerId, const ecs::Entity& entity)
+{
+	const ReplicationData& replicationData = m_ReplicationMap.Get(peerId);
+	return replicationData.m_Replicated.Contains(entity);
+}
+
+// #todo: entities created/destroyed
 void ecs::ReplicationHost::ProcessEntities()
 {
 	PROFILE_FUNCTION();
@@ -71,55 +98,55 @@ void ecs::ReplicationHost::ProcessEntities()
 	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
 	const auto& queries = m_EntityWorld.m_QueryRegistry;
 
-	// process first so we don't update an entity that is being destroyed
-	for (const ecs::Entity& entity : m_ReplicationData.m_EntitiesToDestroy)
+	for (auto&& [peerId, replicationData] : m_ReplicationMap)
 	{
-		EntityDestroy(entity);
-	}
+		// entities that were removed from replication this frame
+		for (const ecs::Entity& entity : replicationData.m_ToDestroy)
+		{
+			EntityDestroy(peerId, entity);
+		}
 
-	// process second so that the entities created this frame aren't double updated
-	for (ecs::ComponentId typeId = 0; typeId < ecs::COMPONENTS_MAX; ++typeId)
-	{
-		const ecs::TypeComponent* entry = registry.TryTypeComponent(typeId);
-		if (!entry || !entry->m_IsReplicated)
-			continue;
-
-		Set<ecs::Entity> toAdd, toUpdate, toRemove;
-		const Set<ecs::Entity>& replicated = m_ReplicationData.m_EntitiesReplicated;
-		enumerate::Intersection(replicated, queries.GetGroup(entry->m_AddedId), toAdd);
-		enumerate::Intersection(replicated, queries.GetGroup(entry->m_UpdatedId), toUpdate);
-		enumerate::Intersection(replicated, queries.GetGroup(entry->m_RemovedId), toRemove);
-
-		// #note: this only handles component AFTER an entity was marked for replication
-		for (const ecs::Entity& entity : toRemove)
-			ComponentRemove(entity, *entry);
-		for (const ecs::Entity& entity : toUpdate)
-			ComponentUpdate(entity, *entry);
-		for (const ecs::Entity& entity : toAdd)
-			ComponentAdd(entity, *entry);
-	}
-
-	// process last so that the entity is added to the update list for the next frame
-	for (const ecs::Entity& entity : m_ReplicationData.m_EntitiesToCreate)
-	{
-		EntityCreate(entity);
-
-		const ecs::ComponentMask& componentMask = m_EntityWorld.GetComponentMask(entity);
 		for (ecs::ComponentId typeId = 0; typeId < ecs::COMPONENTS_MAX; ++typeId)
 		{
-			if (!componentMask.Has(typeId))
+			const ecs::TypeComponent* entry = registry.TryTypeComponent(typeId);
+			if (!entry || !entry->m_IsReplicated)
 				continue;
 
-			const ecs::TypeComponent& entry = registry.GetTypeComponent(typeId);
-			if (!entry.m_IsReplicated)
-				continue;
+			Set<ecs::Entity> toAdd, toUpdate, toRemove;
+			const Set<ecs::Entity>& replicated = replicationData.m_Replicated;
+			enumerate::Intersection(replicated, queries.GetGroup(entry->m_AddedId), toAdd);
+			enumerate::Intersection(replicated, queries.GetGroup(entry->m_UpdatedId), toUpdate);
+			enumerate::Intersection(replicated, queries.GetGroup(entry->m_RemovedId), toRemove);
 
-			ComponentAdd(entity, entry);
+			// #note: this only handles component AFTER an entity was marked for replication
+			for (const ecs::Entity& entity : toAdd)
+				ComponentAdd(peerId, entity, *entry);
+			for (const ecs::Entity& entity : toUpdate)
+				ComponentUpdate(peerId, entity, *entry);
+			for (const ecs::Entity& entity : toRemove)
+				ComponentRemove(peerId, entity, *entry);
 		}
-	}
 
-	m_ReplicationData.m_EntitiesToCreate.RemoveAll();
-	m_ReplicationData.m_EntitiesToDestroy.RemoveAll();
+		// entities that were added to replication this frame
+		const Set<ecs::Entity>& created = replicationData.m_ToCreate;
+		for (const ecs::Entity& entity : created)
+		{
+			EntityCreate(peerId, entity);
+		}
+		// ...and their components
+		for (ecs::ComponentId typeId = 0; typeId < ecs::COMPONENTS_MAX; ++typeId)
+		{
+			const ecs::TypeComponent* entry = registry.TryTypeComponent(typeId);
+			if (!entry || !entry->m_IsReplicated)
+				continue;
+
+			Set<ecs::Entity> toAdd;
+			enumerate::Intersection(created, queries.GetGroup(entry->m_IncludeId), toAdd);
+		}
+
+		replicationData.m_ToCreate.RemoveAll();
+		replicationData.m_ToDestroy.RemoveAll();
+	}
 }
 
 void ecs::ReplicationHost::ProcessEvents()
@@ -130,18 +157,31 @@ void ecs::ReplicationHost::ProcessEvents()
 	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
 	const auto& storage = m_EntityWorld.m_EventStorage;
 
-	// #hack: we iterate the keys of the remote buffer but fetch from the local buffer
-	for (const ecs::EventId& typeId : storage.m_BufferRemoteCurr.GetAll().GetKeys())
+	for (auto&& [peerId, replicationData] : m_ReplicationMap)
 	{
-		const ecs::IEventContainer& container = storage.m_BufferLocalCurr.GetAt(typeId);
-		const int32 count = container.GetCount();
-		for (int32 i = 0; i < count; ++i)
+		// #hack: we iterate the keys of the remote buffer but fetch from the local buffer
+		for (const ecs::EventId& typeId : storage.m_BufferRemoteCurr.GetAll().GetKeys())
 		{
-			data.Reset();
-			container.ReadAt(data, i);
-			EventAdd(typeId, data);
+			const ecs::IEventContainer& container = storage.m_BufferLocalCurr.GetAt(typeId);
+			const int32 count = container.GetCount();
+			for (int32 i = 0; i < count; ++i)
+			{
+				data.Reset();
+				container.ReadAt(data, i);
+				EventAdd(peerId, typeId, data);
+			}
 		}
 	}
+}
+
+void ecs::ReplicationHost::OnPeerConnected(const net::PeerId& peerId)
+{
+	RegisterPeer(peerId);
+}
+
+void ecs::ReplicationHost::OnPeerDisconnected(const net::PeerId& peerId)
+{
+	UnregisterPeer(peerId);
 }
 
 void ecs::ReplicationHost::OnProcessMessages(const Array<const net::Message*>& messages)
@@ -171,10 +211,10 @@ void ecs::ReplicationHost::OnProcessMessages(const Array<const net::Message*>& m
 //////////////////////////////////////////////////////////////////////////
 // Entity
 
-void ecs::ReplicationHost::EntityCreate(const ecs::Entity& entity)
+void ecs::ReplicationHost::EntityCreate(const net::PeerId& peerId, const ecs::Entity& entity)
 {
-	m_ReplicationData.m_EntitiesReplicated.Add(entity);
-	m_EntityWorld.AddComponent<ecs::ReplicationComponent>(entity);
+	ReplicationData& replicationData = m_ReplicationMap.Get(peerId);
+	replicationData.m_Replicated.Add(entity);
 
 	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::EntityCreateMessage>(ecs::EMessage::EntityCreate);
@@ -184,10 +224,10 @@ void ecs::ReplicationHost::EntityCreate(const ecs::Entity& entity)
 	host.ReleaseMessage(message);
 }
 
-void ecs::ReplicationHost::EntityDestroy(const ecs::Entity& entity)
+void ecs::ReplicationHost::EntityDestroy(const net::PeerId& peerId, const ecs::Entity& entity)
 {
-	m_ReplicationData.m_EntitiesReplicated.Remove(entity);
-	m_EntityWorld.RemoveComponent<ecs::ReplicationComponent>(entity);
+	ReplicationData& replicationData = m_ReplicationMap.Get(peerId);
+	replicationData.m_Replicated.Remove(entity);
 
 	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::EntityDestroyMessage>(ecs::EMessage::EntityDestroy);
@@ -200,7 +240,7 @@ void ecs::ReplicationHost::EntityDestroy(const ecs::Entity& entity)
 //////////////////////////////////////////////////////////////////////////
 // Component
 
-void ecs::ReplicationHost::ComponentAdd(const ecs::Entity& entity, const ecs::TypeComponent& entry)
+void ecs::ReplicationHost::ComponentAdd(const net::PeerId& peerId, const ecs::Entity& entity, const ecs::TypeComponent& entry)
 {
 	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::ComponentAddMessage>(ecs::EMessage::ComponentAdd);
@@ -212,7 +252,7 @@ void ecs::ReplicationHost::ComponentAdd(const ecs::Entity& entity, const ecs::Ty
 	host.ReleaseMessage(message);
 }
 
-void ecs::ReplicationHost::ComponentUpdate(const ecs::Entity& entity, const ecs::TypeComponent& entry)
+void ecs::ReplicationHost::ComponentUpdate(const net::PeerId& peerId, const ecs::Entity& entity, const ecs::TypeComponent& entry)
 {
 	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::ComponentUpdateMessage>(ecs::EMessage::ComponentUpdate);
@@ -224,8 +264,7 @@ void ecs::ReplicationHost::ComponentUpdate(const ecs::Entity& entity, const ecs:
 	host.ReleaseMessage(message);
 }
 
-
-void ecs::ReplicationHost::ComponentRemove(const ecs::Entity& entity, const ecs::TypeComponent& entry)
+void ecs::ReplicationHost::ComponentRemove(const net::PeerId& peerId, const ecs::Entity& entity, const ecs::TypeComponent& entry)
 {
 	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::ComponentRemoveMessage>(ecs::EMessage::ComponentRemove);
@@ -239,7 +278,7 @@ void ecs::ReplicationHost::ComponentRemove(const ecs::Entity& entity, const ecs:
 //////////////////////////////////////////////////////////////////////////
 // Event
 
-void ecs::ReplicationHost::EventAdd(const ecs::EventId typeId, const MemBuffer& data)
+void ecs::ReplicationHost::EventAdd(const net::PeerId& peerId, const ecs::EventId typeId, const MemBuffer& data)
 {
 	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::EventAddMessage>(ecs::EMessage::EventAdd);
@@ -264,7 +303,7 @@ void ecs::ReplicationHost::OnEventAdd(const ecs::EventAddMessage* message)
 //////////////////////////////////////////////////////////////////////////
 // Singleton
 
-void ecs::ReplicationHost::SingletonUpdate(const ecs::TypeSingleton& entry)
+void ecs::ReplicationHost::SingletonUpdate(const net::PeerId& peerId, const ecs::TypeSingleton& entry)
 {
 	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::SingletonUpdateMessage>(ecs::EMessage::SingletonUpdate);

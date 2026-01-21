@@ -16,9 +16,10 @@ void ecs::TypeRegistry::RegisterComponent()
 	entry.m_Name = ToTypeName<TComponent>();
 	entry.m_TypeId = ToTypeId<TComponent, ecs::ComponentTag>();
 
-	entry.m_AddedId = ecs::QueryProxy<ecs::query::Added<TComponent>::Include<ecs::ReplicationComponent>>::Id();
-	entry.m_RemovedId = ecs::QueryProxy<ecs::query::Removed<TComponent>::Include<ecs::ReplicationComponent>>::Id();
-	entry.m_UpdatedId = ecs::QueryProxy<ecs::query::Updated<TComponent>::Include<ecs::ReplicationComponent>>::Id();
+	entry.m_AddedId = ecs::QueryProxy<ecs::query::Added<TComponent>>::Id();
+	entry.m_UpdatedId = ecs::QueryProxy<ecs::query::Updated<TComponent>>::Id();
+	entry.m_RemovedId = ecs::QueryProxy<ecs::query::Removed<TComponent>>::Id();
+	entry.m_IncludeId = ecs::QueryProxy<ecs::query::Include<TComponent>>::Id();
 	entry.m_IsReplicated = std::is_base_of<ecs::IsReplicated, TComponent>::value;
 
 	m_ComponentMap.Insert(entry.m_TypeId, entry);

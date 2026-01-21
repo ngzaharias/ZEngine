@@ -10,26 +10,26 @@
 #include "Engine/UserMapSingleton.h"
 #include "Network/Host.h"
 
-void net::UserSystem::Initialise(World& world)
+void server::UserSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
 	//auto& host = world.WriteResource<net::Host>();
 	//m_Collection =
 	//{
-	//	host.m_OnServerClientConnected.Connect(*this, &net::UserSystem::OnClientConnected),
-	//	host.m_OnServerClientDisconnected.Connect(*this, &net::UserSystem::OnClientDisconnected),
+	//	host.m_OnServerClientConnected.Connect(*this, &server::UserSystem::OnClientConnected),
+	//	host.m_OnServerClientDisconnected.Connect(*this, &server::UserSystem::OnClientDisconnected),
 	//};
 }
 
-void net::UserSystem::Shutdown(World& world)
+void server::UserSystem::Shutdown(World& world)
 {
 	PROFILE_FUNCTION();
 
 	//m_Collection.Disconnect();
 }
 
-void net::UserSystem::Update(World& world, const GameTime& gameTime)
+void server::UserSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -74,13 +74,13 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 	m_Requests.RemoveAll();
 }
 
-void net::UserSystem::OnClientConnected(const net::PeerId& peerId)
+void server::UserSystem::OnClientConnected(const net::PeerId& peerId)
 {
 	net::UserId userId = net::UserId(0, peerId);
 	m_Requests.Set(userId, true);
 }
 
-void net::UserSystem::OnClientDisconnected(const net::PeerId& peerId)
+void server::UserSystem::OnClientDisconnected(const net::PeerId& peerId)
 {
 	net::UserId userId = net::UserId(0, peerId);
 	m_Requests.Set(userId, false);

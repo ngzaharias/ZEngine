@@ -128,10 +128,25 @@ void net::Host::BroadcastMessage(const net::Message* message)
 
 	void* data = buffer.GetData();
 	uint32 bytes = buffer.GetBytes();
-	for (const HSteamNetConnection connection : m_Connections)
+	for (auto&& [peerId, peerData] : m_PeerMap)
 	{
-		::SendMessage(connection, data, bytes);
+		::SendMessage(peerData.m_Connection, data, bytes);
 	}
+}
+
+void net::Host::SendMessage(const net::PeerId& peerId, const net::Message* message)
+{
+	Z_PANIC(message && message->m_Type != 0, "");
+
+	MemBuffer buffer;
+	buffer.Write(message->m_Type);
+	m_Factory.Write(*message, buffer);
+
+	void* data = buffer.GetData();
+	uint32 bytes = buffer.GetBytes();
+
+	const net::PeerData& peerData = m_PeerMap.Get(peerId);
+	::SendMessage(peerData.m_Connection, data, bytes);
 }
 
 void net::Host::OnLobbyCreated(LobbyCreated_t* pCallback)
@@ -169,7 +184,13 @@ void net::Host::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCall
 
 		Z_LOG(ELog::Network, "Host: Accepted Peer.", static_cast<int32>(res));
 		SteamNetworkingSockets()->SetConnectionPollGroup(connection, m_NetPollGroup);
-		m_Connections.Append(connection);
+
+		net::PeerId peerId;
+		net::PeerData peerData;
+		peerData.m_Connection = connection;
+		m_PeerMap.Insert(peerId, peerData);
+
+		m_OnPeerConnected.Publish(peerId);
 	}
 
 	const bool isDisconnecting =
@@ -177,7 +198,13 @@ void net::Host::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCall
 		eNewState == k_ESteamNetworkingConnectionState_ClosedByPeer;
 	if (isDisconnecting)
 	{
-		const auto find = std::find(m_Connections.begin(), m_Connections.end(), connection);
-		m_Connections.RemoveAt(find);
+		for (auto&& [peerId, peerData] : m_PeerMap)
+		{
+			if (connection != peerData.m_Connection)
+				continue;
+
+			m_PeerMap.Remove(peerId);
+			m_OnPeerDisconnected.Publish(peerId);
+		}
 	}
 }

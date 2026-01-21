@@ -22,8 +22,15 @@ namespace net
 
 namespace net
 {
+	struct PeerData
+	{
+		HSteamNetConnection m_Connection = k_HSteamNetConnection_Invalid;
+	};
+
 	class Host final
 	{
+		using PeerMap = Map<net::PeerId, net::PeerData>;
+
 	public:
 		Host(net::Factory& factory);
 
@@ -40,21 +47,25 @@ namespace net
 		void ReleaseMessage(const net::Message* message);
 
 		void BroadcastMessage(const net::Message* message);
+		void SendMessage(const net::PeerId& peerId, const net::Message* message);
 
 	private:
 		STEAM_CALLBACK(net::Host, OnLobbyCreated, LobbyCreated_t);
 		STEAM_CALLBACK(net::Host, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
 	public:
-		Delegate<void(const Array<const net::Message*>& messages)> m_OnProcessMessages;
+		Delegate<void(const net::PeerId&)> m_OnPeerConnected;
+		Delegate<void(const net::PeerId&)> m_OnPeerDisconnected;
+
+		Delegate<void(const Array<const net::Message*>&)> m_OnProcessMessages;
 
 	protected:
 		net::Factory& m_Factory;
 
-		MemBuffer m_Buffer;
-		Array<const net::Message*> m_Queue;
+		MemBuffer m_Buffer = {};
+		Array<const net::Message*> m_Queue = {};
 
-		Array<HSteamNetConnection> m_Connections = {};
+		PeerMap m_PeerMap = {};
 
 		CSteamID m_LobbyId = {};
 		HSteamListenSocket m_ListenSocketId = k_HSteamListenSocket_Invalid;
