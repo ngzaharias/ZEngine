@@ -7,7 +7,6 @@
 #include "ECS/ComponentStorage.h"
 #include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
-#include "ECS/SingletonStorage.h"
 
 namespace ecs
 {
@@ -25,7 +24,6 @@ namespace ecs
 		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
 		using EntityMap = Map<ecs::Entity, ecs::ComponentMask>;
 		using EntitySet = Array<ecs::Entity>;
-		using Singletons = SparseArray<TypeId, ecs::ISingletonStorage*>;
 
 	public:
 		//////////////////////////////////////////////////////////////////////////
@@ -48,15 +46,6 @@ namespace ecs
 		template<class TComponent>
 		auto TryComponent(const ecs::Entity& entity, const bool alive = true) const -> TComponent*;
 
-		//////////////////////////////////////////////////////////////////////////
-		// Singleton
-
-		template<class TSingleton, typename... TArgs>
-		void RegisterSingleton(TArgs&&... args);
-
-		template<class TSingleton>
-		auto GetSingleton() -> TSingleton&;
-
 	private:
 		void FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryRegistry& queryRegistry);
 
@@ -65,9 +54,6 @@ namespace ecs
 		Components m_DeadComponents;
 		EntityMap m_AliveEntities;
 		EntitySet m_DeadEntities;
-		Singletons m_Singletons;
-
-		Set<TypeId> m_SingletonsUpdated;
 	};
 }
 

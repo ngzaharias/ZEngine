@@ -147,8 +147,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasAny() -> bool
 	}
 	else if constexpr (std::is_base_of<ecs::Singleton<TType>, TType>::value)
 	{
-		const TypeId typeId = ToTypeId<TType>();
-		return m_EntityWorld.m_EntityStorage.m_SingletonsUpdated.Contains(typeId);
+		return m_EntityWorld.m_SingletonStorage.WasUpdated<TType>();
 	}
 	else
 	{

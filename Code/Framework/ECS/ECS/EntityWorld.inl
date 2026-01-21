@@ -235,7 +235,7 @@ void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
 	Z_PANIC(!IsRegistered<TSingleton>(), "Singleton is already registered!");
 
 	RegisterType<TSingleton>();
-	m_EntityStorage.RegisterSingleton<TSingleton>(std::forward<TArgs>(args)...);
+	m_SingletonStorage.RegisterSingleton<TSingleton>(std::forward<TArgs>(args)...);
 }
 
 template <typename TSingleton>
@@ -247,7 +247,7 @@ auto ecs::EntityWorld::ReadSingleton() -> const TSingleton&
 	static_assert(std::is_base_of<ecs::Singleton<TSingleton>, TSingleton>::value, "Type doesn't inherit from ecs::Singleton.");
 
 	Z_PANIC(IsRegistered<TSingleton>(), "Singleton isn't registered!");
-	return m_EntityStorage.GetSingleton<TSingleton>();
+	return m_SingletonStorage.GetSingleton<TSingleton>();
 }
 
 template <typename TSingleton>
@@ -260,8 +260,8 @@ auto ecs::EntityWorld::WriteSingleton() -> TSingleton&
 
 	Z_PANIC(IsRegistered<TSingleton>(), "Singleton isn't registered!");
 
-	m_FrameBuffer.UpdateSingleton<TSingleton>();
-	return m_EntityStorage.GetSingleton<TSingleton>();
+	m_SingletonStorage.UpdateSingleton<TSingleton>();
+	return m_SingletonStorage.GetSingleton<TSingleton>();
 }
 
 //////////////////////////////////////////////////////////////////////////

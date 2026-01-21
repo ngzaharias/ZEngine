@@ -42,21 +42,3 @@ auto ecs::EntityStorage::TryComponent(const ecs::Entity& entity, const bool aliv
 	Storage* storage = static_cast<Storage*>(istorage);
 	return storage->Try(entity);
 }
-
-template<class TSingleton, typename... TArgs>
-void ecs::EntityStorage::RegisterSingleton(TArgs&&... args)
-{
-	const TypeId typeId = ToTypeId<TSingleton>();
-	m_Singletons.Set(typeId, new ecs::SingletonStorage<TSingleton>(std::forward<TArgs>(args)...));
-}
-
-template<class TSingleton>
-auto ecs::EntityStorage::GetSingleton() -> TSingleton&
-{
-	using Storage = ecs::SingletonStorage<TSingleton>;
-
-	const TypeId typeId = ToTypeId<TSingleton>();
-	ecs::ISingletonStorage* istorage = m_Singletons.Get(typeId);
-	Storage* storage = static_cast<Storage*>(istorage);
-	return storage->GetData();
-}

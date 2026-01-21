@@ -1,31 +1,46 @@
 #pragma once
 
-#include "Core/SparseArray.h"
-#include "ECS/Entity.h"
+#include "Core/Set.h"
+#include "ECS/SingletonContainer.h"
+#include "ECS/SingletonId.h"
 
 namespace ecs
 {
-	class ISingletonStorage
+	class SingletonStorage
 	{
 		friend class EntityWorld;
 
-	public:
-		virtual ~ISingletonStorage() = default;
-	};
-
-	template<typename TSingleton>
-	class SingletonStorage : public ISingletonStorage
-	{
-		friend class EntityWorld;
+		using Containers = SparseArray<ecs::SingletonId, ecs::ISingletonContainer*>;
+		using Updated = Set<ecs::SingletonId>;
 
 	public:
-		~SingletonStorage() override = default;
+		ecs::ISingletonContainer& GetAt(const ecs::SingletonId typeId);
+		const ecs::ISingletonContainer& GetAt(const ecs::SingletonId typeId) const;
 
-		inline TSingleton& GetData();
-		inline const TSingleton& GetData() const;
+		template<typename TSingleton>
+		ecs::SingletonContainer<TSingleton>& GetAt();
+		template<typename TSingleton>
+		const ecs::SingletonContainer<TSingleton>& GetAt() const;
+
+		template<typename TSingleton>
+		bool WasUpdated() const;
+
+		template<typename TSingleton>
+		void RegisterSingleton();
+
+		template<typename TSingleton>
+		auto GetSingleton() -> TSingleton&;
+
+		template<typename TSingleton>
+		void UpdateSingleton();
 
 	private:
-		TSingleton m_Data = { };
+		void FlushChanges();
+
+	public:
+		Containers m_Containers = {};
+		Updated m_UpdatedCurr = {};
+		Updated m_UpdatedNext = {};
 	};
 }
 

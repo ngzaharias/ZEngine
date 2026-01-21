@@ -38,7 +38,7 @@ namespace ecs
 		auto AddEvent(TArgs&&... args) -> TEvent&;
 
 	private:
-		Containers m_Containers = { };
+		Containers m_Containers = {};
 	};
 }
 

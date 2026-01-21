@@ -29,12 +29,12 @@ namespace ecs
 	public:
 		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
 		using EntityMap = Map<ecs::Entity, EntityChange>;
-		using Singletons = Set<TypeId>;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
-		auto CreateEntity()->ecs::Entity;
+		auto CreateEntity() -> ecs::Entity;
+
 		void DestroyEntity(const ecs::Entity& entity);
 
 		//////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ namespace ecs
 		void RegisterComponent();
 
 		template<class TComponent, typename... TArgs>
-		auto AddComponent(const ecs::Entity& entity, TArgs&&... args)->TComponent&;
+		auto AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&;
 
 		template<class TComponent>
 		void RemoveComponent(const ecs::Entity& entity);
@@ -52,19 +52,12 @@ namespace ecs
 		template<class TComponent>
 		void UpdateComponent(const ecs::Entity& entity);
 
-		//////////////////////////////////////////////////////////////////////////
-		// Singletons
-
-		template<class TSingleton>
-		void UpdateSingleton();
-
 	private:
 		ecs::Entity m_HandlesUnused = { 0, 0 };
 		Array<ecs::Entity> m_HandlesRecycled = { };
 
 		Components m_Components = { };
 		EntityMap m_EntityChanges = { };
-		Singletons m_Singletons = { };
 	};
 }
 

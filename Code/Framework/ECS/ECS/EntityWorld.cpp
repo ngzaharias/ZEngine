@@ -41,6 +41,7 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 
 	m_EntityStorage.FlushChanges(m_FrameBuffer, m_QueryRegistry);
 	m_EventStorage.FlushChanges();
+	m_SingletonStorage.FlushChanges();
 }
 
 auto ecs::EntityWorld::GetComponentMask(const ecs::Entity& entity) -> const ecs::ComponentMask&

@@ -127,10 +127,4 @@ void ecs::EntityStorage::FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryR
 		}
 		frameBuffer.m_EntityChanges.RemoveAll();
 	}
-
-	{
-		PROFILE_CUSTOM("Updated singletons.");
-		std::swap(m_SingletonsUpdated, frameBuffer.m_Singletons);
-		frameBuffer.m_Singletons.RemoveAll();
-	}
 }

@@ -1,7 +1,4 @@
 
-//////////////////////////////////////////////////////////////////////////
-// Component
-
 template<class TComponent>
 void ecs::FrameBuffer::RegisterComponent()
 {
@@ -34,14 +31,4 @@ void ecs::FrameBuffer::UpdateComponent(const ecs::Entity& entity)
 {
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
 	m_EntityChanges[entity].m_Updated.Raise(componentId);
-}
-
-//////////////////////////////////////////////////////////////////////////
-// Singletons
-
-template<class TSingleton>
-void ecs::FrameBuffer::UpdateSingleton()
-{
-	const TypeId typeId = ToTypeId<TSingleton>();
-	m_Singletons.Add(typeId);
 }

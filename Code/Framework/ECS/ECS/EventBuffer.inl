@@ -1,4 +1,3 @@
-#pragma once
 
 template<typename TEvent>
 ecs::EventContainer<TEvent>& ecs::EventBuffer::GetAt()

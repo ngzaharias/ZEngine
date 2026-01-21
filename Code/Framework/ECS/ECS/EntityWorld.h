@@ -8,6 +8,7 @@
 #include "ECS/QueryRegistry.h"
 #include "ECS/ResourceRegistry.h"
 #include "ECS/Singleton.h"
+#include "ECS/SingletonStorage.h"
 #include "ECS/SystemRegistry.h"
 #include "ECS/TypeInfo.h"
 
@@ -144,6 +145,7 @@ namespace ecs
 		ecs::QueryRegistry m_QueryRegistry;
 
 		ecs::EventStorage m_EventStorage;
+		ecs::SingletonStorage m_SingletonStorage;
 
 		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
