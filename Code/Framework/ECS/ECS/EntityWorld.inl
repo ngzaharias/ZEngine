@@ -53,13 +53,13 @@ inline bool ecs::EntityWorld::IsAlive(const ecs::Entity& entity) const
 
 inline auto ecs::EntityWorld::CreateEntity() -> ecs::Entity
 {
-	return m_FrameBuffer.CreateEntity();
+	return m_EntityStorage.m_Buffer.CreateEntity();
 }
 
 inline void ecs::EntityWorld::DestroyEntity(const ecs::Entity& entity)
 {
 	Z_PANIC(IsAlive(entity), "Entity isn't alive!");
-	m_FrameBuffer.DestroyEntity(entity);
+	m_EntityStorage.m_Buffer.DestroyEntity(entity);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,7 +78,6 @@ void ecs::EntityWorld::RegisterComponent()
 
 	RegisterType<TComponent>();
 	m_EntityStorage.RegisterComponent<TComponent>();
-	m_FrameBuffer.RegisterComponent<TComponent>();
 
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
 	const TypeId typeId = ToTypeId<TComponent>();
@@ -96,7 +95,7 @@ auto ecs::EntityWorld::AddComponent(const ecs::Entity& entity, TArgs&&... args) 
 	Z_PANIC(!entity.IsUnassigned(), "Entity is unassigned!");
 	Z_PANIC(IsRegistered<TComponent>(), "Component isn't registered!");
 
-	return m_FrameBuffer.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
+	return m_EntityStorage.m_Buffer.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
 }
 
 template <typename TComponent>
@@ -109,7 +108,7 @@ void ecs::EntityWorld::RemoveComponent(const ecs::Entity& entity)
 	Z_PANIC(IsAlive(entity), "Entity isn't alive!");
 	Z_PANIC(HasComponent<TComponent>(entity), "Entity doesn't have this component!");
 
-	m_FrameBuffer.RemoveComponent<TComponent>(entity);
+	m_EntityStorage.m_Buffer.RemoveComponent<TComponent>(entity);
 }
 
 template <typename TComponent>
@@ -147,7 +146,7 @@ auto ecs::EntityWorld::WriteComponent(const ecs::Entity& entity, const bool aliv
 	Z_PANIC(HasComponent<TComponent>(entity, alive), "Entity doesn't have this component!");
 
 	if (alive)
-		m_FrameBuffer.UpdateComponent<TComponent>(entity);
+		m_EntityStorage.m_Buffer.UpdateComponent<TComponent>(entity);
 	return m_EntityStorage.GetComponent<TComponent>(entity, alive);
 }
 

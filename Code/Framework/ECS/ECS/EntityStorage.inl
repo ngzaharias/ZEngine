@@ -5,6 +5,7 @@ void ecs::EntityStorage::RegisterComponent()
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
 	m_AliveComponents.Set(componentId, new ecs::ComponentStorage<TComponent>());
 	m_DeadComponents.Set(componentId, new ecs::ComponentStorage<TComponent>());
+	m_Buffer.RegisterComponent<TComponent>();
 }
 
 template<class TComponent>

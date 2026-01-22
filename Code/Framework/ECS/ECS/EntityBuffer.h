@@ -4,31 +4,20 @@
 #include "Core/Map.h"
 #include "Core/SparseArray.h"
 #include "ECS/ComponentId.h"
-#include "ECS/ComponentMask.h"
 #include "ECS/ComponentStorage.h"
 #include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
-#include "ECS/EventId.h"
-#include "ECS/EventStorage.h"
-#include "ECS/EventTag.h"
+#include "ECS/EntityChange.h"
 
 namespace ecs
 {
-	struct EntityChange
-	{
-		ecs::ComponentMask m_Added;
-		ecs::ComponentMask m_Removed;
-		ecs::ComponentMask m_Updated;
-		bool m_IsDestroy = false;
-	};
-
-	class FrameBuffer final
+	class EntityBuffer final
 	{
 		friend class EntityStorage;
 
 	public:
 		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
-		using EntityMap = Map<ecs::Entity, EntityChange>;
+		using EntityMap = Map<ecs::Entity, ecs::EntityChange>;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
@@ -54,11 +43,11 @@ namespace ecs
 
 	private:
 		ecs::Entity m_HandlesUnused = { 0, 0 };
-		Array<ecs::Entity> m_HandlesRecycled = { };
+		Array<ecs::Entity> m_HandlesRecycled = {};
 
-		Components m_Components = { };
-		EntityMap m_EntityChanges = { };
+		Components m_AddedComponents = {};
+		EntityMap m_EntityChanges = {};
 	};
 }
 
-#include "FrameBuffer.inl"
+#include "EntityBuffer.inl"

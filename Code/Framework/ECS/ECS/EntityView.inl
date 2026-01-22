@@ -30,7 +30,7 @@ template<typename ...TRequired, typename ...TOptional>
 template<typename TComponent>
 auto ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::WriteRequired() -> TComponent&
 {
-	m_World.m_FrameBuffer.UpdateComponent<TComponent>(m_Entity);
+	m_World.m_EntityStorage.m_Buffer.UpdateComponent<TComponent>(m_Entity);
 	return *std::get<TComponent*>(m_Required);
 }
 
@@ -54,6 +54,6 @@ auto ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::WriteOpt
 {
 	auto* component = std::get<TComponent*>(m_Optional);
 	if (component)
-		m_World.m_FrameBuffer.UpdateComponent<TComponent>(m_Entity);
+		m_World.m_EntityStorage.m_Buffer.UpdateComponent<TComponent>(m_Entity);
 	return component;
 }

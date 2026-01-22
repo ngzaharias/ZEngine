@@ -7,6 +7,7 @@
 #include "ECS/ComponentStorage.h"
 #include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
+#include "ECS/EntityBuffer.h"
 
 namespace ecs
 {
@@ -47,9 +48,11 @@ namespace ecs
 		auto TryComponent(const ecs::Entity& entity, const bool alive = true) const -> TComponent*;
 
 	private:
-		void FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryRegistry& queryRegistry);
+		void FlushChanges(ecs::QueryRegistry& queryRegistry);
 
 	public:
+		ecs::EntityBuffer m_Buffer;
+
 		Components m_AliveComponents;
 		Components m_DeadComponents;
 		EntityMap m_AliveEntities;

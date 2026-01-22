@@ -1,6 +1,6 @@
-#include "ECS/FrameBuffer.h"
+#include "ECS/EntityBuffer.h"
 
-auto ecs::FrameBuffer::CreateEntity() -> ecs::Entity
+auto ecs::EntityBuffer::CreateEntity() -> ecs::Entity
 {
 	ecs::Entity entity = { };
 	if (!m_HandlesRecycled.IsEmpty())
@@ -24,7 +24,7 @@ auto ecs::FrameBuffer::CreateEntity() -> ecs::Entity
 	return entity;
 }
 
-void ecs::FrameBuffer::DestroyEntity(const ecs::Entity& entity)
+void ecs::EntityBuffer::DestroyEntity(const ecs::Entity& entity)
 {
 	m_EntityChanges[entity].m_IsDestroy = true;
 }

@@ -3,7 +3,6 @@
 #include "Core/Map.h"
 #include "ECS/EntityStorage.h"
 #include "ECS/EventStorage.h"
-#include "ECS/FrameBuffer.h"
 #include "ECS/IsReplicated.h"
 #include "ECS/QueryRegistry.h"
 #include "ECS/ResourceRegistry.h"
@@ -140,13 +139,11 @@ namespace ecs
 		auto TryComponentsForView(const ecs::Entity& entity) const->std::tuple<TComponents*...>;
 
 	public:
-		ecs::FrameBuffer m_FrameBuffer;
 		ecs::EntityStorage m_EntityStorage;
-		ecs::QueryRegistry m_QueryRegistry;
-
 		ecs::EventStorage m_EventStorage;
 		ecs::SingletonStorage m_SingletonStorage;
 
+		ecs::QueryRegistry m_QueryRegistry;
 		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
 
