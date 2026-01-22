@@ -15,9 +15,12 @@ namespace ecs
 	{
 		friend class EntityStorage;
 
-	public:
 		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
 		using EntityMap = Map<ecs::Entity, ecs::EntityChange>;
+		using Handles = Array<ecs::Entity>;
+
+	public:
+		EntityBuffer(const uint8 source);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
@@ -42,11 +45,11 @@ namespace ecs
 		void UpdateComponent(const ecs::Entity& entity);
 
 	private:
-		ecs::Entity m_HandlesUnused = { 0, 0 };
-		Array<ecs::Entity> m_HandlesRecycled = {};
+		ecs::Entity m_HandleNext = ecs::Entity(1, 0);
 
 		Components m_AddedComponents = {};
 		EntityMap m_EntityChanges = {};
+		Handles m_HandlesRecycled = {};
 	};
 }
 

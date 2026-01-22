@@ -1,8 +1,13 @@
 #include "ECS/EntityBuffer.h"
 
+ecs::EntityBuffer::EntityBuffer(const uint8 source)
+	: m_HandleNext(1, source, 0)
+{
+}
+
 auto ecs::EntityBuffer::CreateEntity() -> ecs::Entity
 {
-	ecs::Entity entity = { };
+	ecs::Entity entity;
 	if (!m_HandlesRecycled.IsEmpty())
 	{
 		const ecs::Entity recycled = m_HandlesRecycled.GetFirst();
@@ -14,10 +19,10 @@ auto ecs::EntityBuffer::CreateEntity() -> ecs::Entity
 	}
 	else
 	{
-		entity = m_HandlesUnused;
+		entity = m_HandleNext;
 		const uint32 index = entity.GetIndex() + 1;
 		const uint32 version = 0;
-		m_HandlesUnused = ecs::Entity(index, version);
+		m_HandleNext = ecs::Entity(index, version);
 	}
 
 	m_EntityChanges.Insert(entity, ecs::EntityChange());

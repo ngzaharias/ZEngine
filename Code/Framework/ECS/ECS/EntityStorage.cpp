@@ -3,6 +3,12 @@
 #include "Core/Profiler.h"
 #include "ECS/QueryRegistry.h"
 
+ecs::EntityStorage::EntityStorage()
+	: m_MainBuffer(ecs::Entity::MainId)
+	, m_SyncBuffer(ecs::Entity::SyncId)
+{
+}
+
 bool ecs::EntityStorage::IsAlive(const ecs::Entity& entity) const
 {
 	return m_AliveEntities.Contains(entity);
@@ -30,8 +36,8 @@ void ecs::EntityStorage::FlushChanges(ecs::QueryRegistry& queryRegistry)
 				queryGroup.Remove(entity);
 			}
 
-			m_Buffer.m_HandlesRecycled.Append(entity);
-			m_Buffer.m_EntityChanges.Remove(entity);
+			m_MainBuffer.m_HandlesRecycled.Append(entity);
+			m_MainBuffer.m_EntityChanges.Remove(entity);
 		}
 		m_DeadEntities.RemoveAll();
 	}
@@ -54,7 +60,7 @@ void ecs::EntityStorage::FlushChanges(ecs::QueryRegistry& queryRegistry)
 
 	{
 		PROFILE_CUSTOM("Move added components from buffer -> alive.");
-		for (auto&& [componentId, fStorage] : m_Buffer.m_AddedComponents)
+		for (auto&& [componentId, fStorage] : m_MainBuffer.m_AddedComponents)
 		{
 			ecs::IComponentStorage* eStorage = m_AliveComponents.Get(componentId);
 			fStorage->Move(*eStorage);
@@ -68,7 +74,7 @@ void ecs::EntityStorage::FlushChanges(ecs::QueryRegistry& queryRegistry)
 		// updates queries
 		// inserts new entities
 		// moves components from alive -> dead
-		for (auto&& [entity, changes] : m_Buffer.m_EntityChanges)
+		for (auto&& [entity, changes] : m_MainBuffer.m_EntityChanges)
 		{
 			ecs::ComponentMask& componentMask = m_AliveEntities[entity];
 			componentMask |= changes.m_Added;
@@ -124,6 +130,6 @@ void ecs::EntityStorage::FlushChanges(ecs::QueryRegistry& queryRegistry)
 				m_DeadEntities.Append(entity);
 			}
 		}
-		m_Buffer.m_EntityChanges.RemoveAll();
+		m_MainBuffer.m_EntityChanges.RemoveAll();
 	}
 }

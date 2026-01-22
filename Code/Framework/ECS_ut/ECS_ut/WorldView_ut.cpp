@@ -46,17 +46,15 @@ namespace
 
 TEST_CASE("ecs::WorldView. CreateEntity.")
 {
-	using WorldView = ecs::WorldView;
-
 	ecs::EntityWorld entityWorld;
-	WorldView world = entityWorld.WorldView<WorldView>();
+	ecs::WorldView world = entityWorld.WorldView<ecs::WorldView>();
 
-	CHECK(world.CreateEntity() == ecs::Entity(0));
 	CHECK(world.CreateEntity() == ecs::Entity(1));
 	CHECK(world.CreateEntity() == ecs::Entity(2));
 	CHECK(world.CreateEntity() == ecs::Entity(3));
 	CHECK(world.CreateEntity() == ecs::Entity(4));
 	CHECK(world.CreateEntity() == ecs::Entity(5));
+	CHECK(world.CreateEntity() == ecs::Entity(6));
 }
 
 TEST_CASE("ecs::WorldView. DestroyEntity.")
@@ -69,13 +67,6 @@ TEST_CASE("ecs::WorldView. DestroyEntity.")
 	ecs::Entity entity = worldView.CreateEntity();
 	entityWorld.Update({});
 
-	CHECK(entity.GetIndex() == 0);
-	CHECK(entity.GetVersion() == 0);
-
-	worldView.DestroyEntity(entity);
-	entity = worldView.CreateEntity();
-	entityWorld.Update({});
-
 	CHECK(entity.GetIndex() == 1);
 	CHECK(entity.GetVersion() == 0);
 
@@ -86,8 +77,15 @@ TEST_CASE("ecs::WorldView. DestroyEntity.")
 	CHECK(entity.GetIndex() == 2);
 	CHECK(entity.GetVersion() == 0);
 
+	worldView.DestroyEntity(entity);
 	entity = worldView.CreateEntity();
-	CHECK(entity.GetIndex() == 0);
+	entityWorld.Update({});
+
+	CHECK(entity.GetIndex() == 3);
+	CHECK(entity.GetVersion() == 0);
+
+	entity = worldView.CreateEntity();
+	CHECK(entity.GetIndex() == 1);
 	CHECK(entity.GetVersion() == 1);
 }
 

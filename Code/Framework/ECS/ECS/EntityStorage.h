@@ -27,6 +27,8 @@ namespace ecs
 		using EntitySet = Array<ecs::Entity>;
 
 	public:
+		EntityStorage();
+
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
@@ -51,7 +53,8 @@ namespace ecs
 		void FlushChanges(ecs::QueryRegistry& queryRegistry);
 
 	public:
-		ecs::EntityBuffer m_Buffer;
+		ecs::EntityBuffer m_MainBuffer;
+		ecs::EntityBuffer m_SyncBuffer;
 
 		Components m_AliveComponents;
 		Components m_DeadComponents;
