@@ -6,15 +6,15 @@ void ecs::EventStorage::FlushChanges()
 {
 	PROFILE_FUNCTION();
 
-	for (auto&& [typeId, container] : m_BufferLocalCurr.GetAll())
+	for (auto&& [typeId, container] : m_MainBufferCurr.GetAll())
 		container->RemoveAll();
 
-	for (auto&& [typeId, container] : m_BufferRemoteCurr.GetAll())
+	for (auto&& [typeId, container] : m_SyncBufferCurr.GetAll())
 		container->RemoveAll();
 
-	for (auto&& [typeId, rhs] : m_BufferLocalNext.GetAll())
+	for (auto&& [typeId, rhs] : m_MainBufferNext.GetAll())
 	{
-		ecs::IEventContainer& lhs = m_BufferLocalCurr.GetAt(typeId);
+		ecs::IEventContainer& lhs = m_MainBufferCurr.GetAt(typeId);
 		rhs->MoveAll(lhs);
 		rhs->RemoveAll();
 	}

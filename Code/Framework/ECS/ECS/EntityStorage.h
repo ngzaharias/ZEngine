@@ -27,18 +27,28 @@ namespace ecs
 		using EntitySet = Array<ecs::Entity>;
 
 	public:
-		EntityStorage();
+		EntityStorage(ecs::QueryRegistry& queryRegistry);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
 		bool IsAlive(const ecs::Entity& entity) const;
 
+		auto CreateEntity() -> ecs::Entity;
+
+		void DestroyEntity(const ecs::Entity& entity);
+
 		//////////////////////////////////////////////////////////////////////////
 		// Component
 
 		template<class TComponent>
 		void RegisterComponent();
+
+		template<class TComponent, typename... TArgs>
+		auto AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&;
+
+		template<class TComponent>
+		void RemoveComponent(const ecs::Entity& entity);
 
 		template<class TComponent>
 		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
@@ -50,11 +60,12 @@ namespace ecs
 		auto TryComponent(const ecs::Entity& entity, const bool alive = true) const -> TComponent*;
 
 	private:
-		void FlushChanges(ecs::QueryRegistry& queryRegistry);
+		void FlushChanges();
 
 	public:
 		ecs::EntityBuffer m_MainBuffer;
 		ecs::EntityBuffer m_SyncBuffer;
+		ecs::QueryRegistry& m_QueryRegistry;
 
 		Components m_AliveComponents;
 		Components m_DeadComponents;

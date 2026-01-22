@@ -20,15 +20,15 @@ auto ecs::EntityBuffer::AddComponent(const ecs::Entity& entity, TArgs&&... args)
 }
 
 template<class TComponent>
-void ecs::EntityBuffer::RemoveComponent(const ecs::Entity& entity)
-{
-	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	m_EntityChanges[entity].m_Removed.Raise(componentId);
-}
-
-template<class TComponent>
 void ecs::EntityBuffer::UpdateComponent(const ecs::Entity& entity)
 {
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
 	m_EntityChanges[entity].m_Updated.Raise(componentId);
+}
+
+template<class TComponent>
+void ecs::EntityBuffer::RemoveComponent(const ecs::Entity& entity)
+{
+	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
+	m_EntityChanges[entity].m_Removed.Raise(componentId);
 }

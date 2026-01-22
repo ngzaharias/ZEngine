@@ -7,7 +7,8 @@ class MemBuffer;
 
 namespace ecs
 {
-	class EntityWorld;
+	class EntityBuffer;
+	class EntityStorage;
 	struct Entity;
 }
 
@@ -15,10 +16,10 @@ namespace ecs
 {
 	struct TypeComponent
 	{
-		using Add = void(ecs::EntityWorld&, const ecs::Entity&, const MemBuffer&);
-		using Remove = void(ecs::EntityWorld&, const ecs::Entity&);
-		using Read = void(ecs::EntityWorld&, const ecs::Entity&, MemBuffer&);
-		using Write = void(ecs::EntityWorld&, const ecs::Entity&, const MemBuffer&);
+		using Add = void(ecs::EntityBuffer&, const ecs::Entity&, const MemBuffer&);
+		using Remove = void(ecs::EntityBuffer&, const ecs::Entity&);
+		using Read = void(ecs::EntityStorage&, const ecs::Entity&, MemBuffer&);
+		using Write = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
 
 		Add* m_Add = nullptr;
 		Remove* m_Remove = nullptr;

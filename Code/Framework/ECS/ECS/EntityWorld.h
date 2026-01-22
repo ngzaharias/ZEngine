@@ -44,9 +44,6 @@ namespace ecs
 		template<typename TWorldView>
 		TWorldView WorldView();
 
-		void FlushData();
-		void FlushSync();
-
 		str::String LogDependencies() const;
 		str::String LogUpdateOrder() const;
 
@@ -66,7 +63,7 @@ namespace ecs
 		void RegisterComponent();
 
 		template<class TComponent, typename... TArgs>
-		auto AddComponent(const ecs::Entity& entity, TArgs&&... args)->TComponent&;
+		auto AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&;
 
 		template<class TComponent>
 		void RemoveComponent(const ecs::Entity& entity);

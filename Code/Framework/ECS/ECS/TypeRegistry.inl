@@ -26,29 +26,29 @@ void ecs::TypeRegistry::RegisterComponent()
 }
 
 template<typename TComponent>
-void ecs::TypeRegistry::AddComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data)
+void ecs::TypeRegistry::AddComponentMethod(ecs::EntityBuffer& buffer, const ecs::Entity& entity, const MemBuffer& data)
 {
-	auto& component = world.AddComponent<TComponent>(entity);
+	auto& component = buffer.AddComponent<TComponent>(entity);
 	data.Read(component);
 }
 
 template<typename TComponent>
-void ecs::TypeRegistry::RemoveComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity)
+void ecs::TypeRegistry::RemoveComponentMethod(ecs::EntityBuffer& buffer, const ecs::Entity& entity)
 {
-	world.RemoveComponent<TComponent>(entity);
+	buffer.RemoveComponent<TComponent>(entity);
 }
 
 template<typename TComponent>
-void ecs::TypeRegistry::ReadComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, MemBuffer& data)
+void ecs::TypeRegistry::ReadComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, MemBuffer& data)
 {
-	const auto& component = world.ReadComponent<TComponent>(entity);
+	const auto& component = storage.GetComponent<TComponent>(entity);
 	data.Write(component);
 }
 
 template<typename TComponent>
-void ecs::TypeRegistry::WriteComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data)
+void ecs::TypeRegistry::WriteComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data)
 {
-	auto& component = world.WriteComponent<TComponent>(entity);
+	auto& component = storage.GetComponent<TComponent>(entity);
 	data.Read(component);
 }
 

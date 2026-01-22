@@ -53,13 +53,12 @@ inline bool ecs::EntityWorld::IsAlive(const ecs::Entity& entity) const
 
 inline auto ecs::EntityWorld::CreateEntity() -> ecs::Entity
 {
-	return m_EntityStorage.m_MainBuffer.CreateEntity();
+	return m_EntityStorage.CreateEntity();
 }
 
 inline void ecs::EntityWorld::DestroyEntity(const ecs::Entity& entity)
 {
-	Z_PANIC(IsAlive(entity), "Entity isn't alive!");
-	m_EntityStorage.m_MainBuffer.DestroyEntity(entity);
+	m_EntityStorage.DestroyEntity(entity);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,7 +94,7 @@ auto ecs::EntityWorld::AddComponent(const ecs::Entity& entity, TArgs&&... args) 
 	Z_PANIC(!entity.IsUnassigned(), "Entity is unassigned!");
 	Z_PANIC(IsRegistered<TComponent>(), "Component isn't registered!");
 
-	return m_EntityStorage.m_MainBuffer.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
+	return m_EntityStorage.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
 }
 
 template <typename TComponent>
@@ -108,7 +107,7 @@ void ecs::EntityWorld::RemoveComponent(const ecs::Entity& entity)
 	Z_PANIC(IsAlive(entity), "Entity isn't alive!");
 	Z_PANIC(HasComponent<TComponent>(entity), "Entity doesn't have this component!");
 
-	m_EntityStorage.m_MainBuffer.RemoveComponent<TComponent>(entity);
+	m_EntityStorage.RemoveComponent<TComponent>(entity);
 }
 
 template <typename TComponent>

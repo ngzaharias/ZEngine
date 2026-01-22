@@ -2,25 +2,25 @@
 template<class TEvent>
 void ecs::EventStorage::RegisterEvent()
 {
-	m_BufferLocalCurr.RegisterEvent<TEvent>();
-	m_BufferLocalNext.RegisterEvent<TEvent>();
+	m_MainBufferCurr.RegisterEvent<TEvent>();
+	m_MainBufferNext.RegisterEvent<TEvent>();
 	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
-		m_BufferRemoteCurr.RegisterEvent<TEvent>();
+		m_SyncBufferCurr.RegisterEvent<TEvent>();
 }
 
 template <typename TEvent, typename... TArgs>
 auto ecs::EventStorage::AddEvent(TArgs&&... args) -> TEvent&
 {
-	return m_BufferLocalNext.AddEvent<TEvent>(std::forward<TArgs>(args)...);
+	return m_MainBufferNext.AddEvent<TEvent>(std::forward<TArgs>(args)...);
 }
 
 template<class TEvent>
 bool ecs::EventStorage::HasEvents() const
 {
 	using Container = ecs::EventContainer<TEvent>;
-	const Container& local = m_BufferLocalCurr.GetAt<TEvent>();
-	const Container* remote = m_BufferRemoteCurr.TryAt<TEvent>();
-	return local.GetCount() > 0 || (remote && remote->GetCount() > 0);
+	const Container& main = m_MainBufferCurr.GetAt<TEvent>();
+	const Container* sync = m_SyncBufferCurr.TryAt<TEvent>();
+	return main.GetCount() > 0 || (sync && sync->GetCount() > 0);
 }
 
 template<class TEvent>
@@ -32,10 +32,10 @@ auto ecs::EventStorage::GetEvents() const -> decltype(auto)
 	{
 		auto operator*() -> const TEvent&
 		{
-			const int32 localIndex = m_Index - m_Stride;
-			return localIndex >= 0
-				? m_Local.m_Data[localIndex]
-				: m_Remote->m_Data[m_Index];
+			const int32 syncIndex = m_Index - m_Stride;
+			return syncIndex < m_Stride
+				? m_Main.m_Data[m_Index]
+				: m_Sync->m_Data[syncIndex];
 		}
 
 		auto operator++() -> Iterator&
@@ -49,8 +49,8 @@ auto ecs::EventStorage::GetEvents() const -> decltype(auto)
 			return m_Index != rhs.m_Index;
 		}
 
-		Container& m_Local;
-		Container* m_Remote;
+		Container& m_Main;
+		Container* m_Sync;
 
 		int32 m_Index = 0;
 		int32 m_Offset = 0;
@@ -61,27 +61,26 @@ auto ecs::EventStorage::GetEvents() const -> decltype(auto)
 	{
 		auto begin() -> Iterator
 		{
-			const int32 stride = m_Remote ? m_Remote->GetCount() : 0;
 			return Iterator{
-				.m_Local = m_Local, 
-				.m_Remote = m_Remote, 
-				.m_Stride = stride };
+				.m_Main = m_Main, 
+				.m_Sync = m_Sync,
+				.m_Stride = m_Main.GetCount() };
 		}
 
 		auto end() -> Iterator
 		{
-			const int32 local = m_Local.GetCount();
-			const int32 remote = m_Remote ? m_Remote->GetCount() : 0;
+			const int32 main = m_Main.GetCount();
+			const int32 sync = m_Sync ? m_Sync->GetCount() : 0;
 			return Iterator{ 
-				.m_Local = m_Local, 
-				.m_Index = local + remote };
+				.m_Main = m_Main, 
+				.m_Index = main + sync };
 		}
 
-		Container& m_Local;
-		Container* m_Remote;
+		Container& m_Main;
+		Container* m_Sync;
 	};
 
 	return Wrapper{
-		.m_Local = m_BufferLocalCurr.GetAt<TEvent>(),
-		.m_Remote = m_BufferRemoteCurr.TryAt<TEvent>() };
+		.m_Main = m_MainBufferCurr.GetAt<TEvent>(),
+		.m_Sync = m_SyncBufferCurr.TryAt<TEvent>() };
 }

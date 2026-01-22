@@ -28,11 +28,11 @@ namespace ecs
 
 	private:
 		// events that were added locally and are being processed this frame
-		ecs::EventBuffer m_BufferLocalCurr;
+		ecs::EventBuffer m_MainBufferCurr;
 		// events that were added locally and will be processed next frame
-		ecs::EventBuffer m_BufferLocalNext;
+		ecs::EventBuffer m_MainBufferNext;
 		// events that were added remotely and are being processed this frame
-		ecs::EventBuffer m_BufferRemoteCurr;
+		ecs::EventBuffer m_SyncBufferCurr;
 	};
 }
 

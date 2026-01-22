@@ -5,7 +5,7 @@
 #include "ECS/System.h"
 
 ecs::EntityWorld::EntityWorld()
-	: m_EntityStorage()
+	: m_EntityStorage(m_QueryRegistry)
 	, m_EventStorage()
 	, m_SingletonStorage()
 	, m_QueryRegistry()
@@ -26,7 +26,7 @@ void ecs::EntityWorld::Initialise()
 	//Z_LOG(ELog::Debug, "{}", LogUpdateOrder());
 
 	// flush the initialise
-	m_EntityStorage.FlushChanges(m_QueryRegistry);
+	m_EntityStorage.FlushChanges();
 }
 
 void ecs::EntityWorld::Shutdown()
@@ -42,7 +42,7 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 
 	m_SystemRegistry.Update(*this, gameTime);
 
-	m_EntityStorage.FlushChanges(m_QueryRegistry);
+	m_EntityStorage.FlushChanges();
 	m_EventStorage.FlushChanges();
 	m_SingletonStorage.FlushChanges();
 }

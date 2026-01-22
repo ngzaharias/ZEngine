@@ -4,6 +4,8 @@
 #include "Core/MemBuffer.h"
 #include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
+#include "ECS/EntityBuffer.h"
+#include "ECS/EntityStorage.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/EventTag.h"
 #include "ECS/ResourceTag.h"
@@ -39,23 +41,23 @@ namespace ecs
 		template <typename TComponent>
 		void RegisterComponent();
 
-		void AddComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
+		void AddComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
 
-		void UpdateComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
+		void UpdateComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
 
-		void RemoveComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
-
-		template<typename TComponent>
-		static void AddComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data);
+		void RemoveComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
 
 		template<typename TComponent>
-		static void RemoveComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity);
+		static void AddComponentMethod(ecs::EntityBuffer& buffer, const ecs::Entity& entity, const MemBuffer& data);
 
 		template<typename TComponent>
-		static void ReadComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, MemBuffer& data);
+		static void RemoveComponentMethod(ecs::EntityBuffer& buffer, const ecs::Entity& entity);
 
 		template<typename TComponent>
-		static void WriteComponentMethod(ecs::EntityWorld& world, const ecs::Entity& entity, const MemBuffer& data);
+		static void ReadComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, MemBuffer& data);
+
+		template<typename TComponent>
+		static void WriteComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event

@@ -29,22 +29,22 @@ const ecs::TypeComponent* ecs::TypeRegistry::TryTypeComponent(const ecs::Compone
 //////////////////////////////////////////////////////////////////////////
 // Component
 
-void ecs::TypeRegistry::AddComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const
+void ecs::TypeRegistry::AddComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const
 {
 	const ecs::TypeComponent& entry = m_ComponentMap.Get(typeId);
-	entry.m_Add(world, entity, data);
+	entry.m_Add(buffer, entity, data);
 }
 
-void ecs::TypeRegistry::UpdateComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const
+void ecs::TypeRegistry::UpdateComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const
 {
 	const ecs::TypeComponent& entry = m_ComponentMap.Get(typeId);
-	entry.m_Write(world, entity, data);
+	entry.m_Write(storage, entity, data);
 }
 
-void ecs::TypeRegistry::RemoveComponent(ecs::EntityWorld& world, const ecs::ComponentId typeId, const ecs::Entity& entity) const
+void ecs::TypeRegistry::RemoveComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId typeId, const ecs::Entity& entity) const
 {
 	const ecs::TypeComponent& entry = m_ComponentMap.Get(typeId);
-	entry.m_Remove(world, entity);
+	entry.m_Remove(buffer, entity);
 }
 
 //////////////////////////////////////////////////////////////////////////

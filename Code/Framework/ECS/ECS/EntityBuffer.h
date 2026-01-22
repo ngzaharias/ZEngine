@@ -14,6 +14,7 @@ namespace ecs
 	class EntityBuffer final
 	{
 		friend class EntityStorage;
+		friend class ReplicationPeer;
 
 		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
 		using EntityMap = Map<ecs::Entity, ecs::EntityChange>;
@@ -39,10 +40,10 @@ namespace ecs
 		auto AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&;
 
 		template<class TComponent>
-		void RemoveComponent(const ecs::Entity& entity);
+		void UpdateComponent(const ecs::Entity& entity);
 
 		template<class TComponent>
-		void UpdateComponent(const ecs::Entity& entity);
+		void RemoveComponent(const ecs::Entity& entity);
 
 	private:
 		ecs::Entity m_HandleNext = ecs::Entity(1, 0);

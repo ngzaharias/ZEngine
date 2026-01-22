@@ -9,6 +9,18 @@ void ecs::EntityStorage::RegisterComponent()
 	m_SyncBuffer.RegisterComponent<TComponent>();
 }
 
+template <typename TComponent, typename... TArgs>
+auto ecs::EntityStorage::AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&
+{
+	return m_MainBuffer.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
+}
+
+template <typename TComponent>
+void ecs::EntityStorage::RemoveComponent(const ecs::Entity& entity)
+{
+	m_MainBuffer.RemoveComponent<TComponent>(entity);
+}
+
 template<class TComponent>
 bool ecs::EntityStorage::HasComponent(const ecs::Entity& entity, const bool alive /*= true*/) const
 {
