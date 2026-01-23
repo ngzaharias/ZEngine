@@ -9,7 +9,7 @@ namespace ecs
 	constexpr uint64 s_VersionMask = 0x0000000000FFFFFF;
 	constexpr uint64 s_VersionOffset = 32;
 	constexpr uint64 s_OwnershipMask = 0x00000000000000FF;
-	constexpr uint64 s_OwnershipOffset = 54;
+	constexpr uint64 s_OwnershipOffset = 56;
 
 	struct Entity
 	{
@@ -63,6 +63,11 @@ namespace ecs
 		{
 			const uint64 ownership = (m_Value >> s_OwnershipOffset) & s_OwnershipMask;
 			return static_cast<int32>(ownership);
+		}
+
+		uint64 GetValue() const
+		{
+			return m_Value;
 		}
 
 		uint64 m_Value = 0;
