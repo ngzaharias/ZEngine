@@ -1,10 +1,3 @@
-#pragma once
-
-template<typename TEvent>
-inline Array<TEvent>& ecs::EventContainer<TEvent>::GetValues()
-{
-	return m_Data;
-}
 
 template<typename TEvent>
 inline const Array<TEvent>& ecs::EventContainer<TEvent>::GetValues() const
@@ -30,6 +23,7 @@ inline void ecs::EventContainer<TEvent>::MoveAll(IEventContainer& destination)
 {
 	auto& container = static_cast<ecs::EventContainer<TEvent>&>(destination);
 	container.m_Data.Append(std::move(m_Data));
+	m_Data.RemoveAll();
 }
 
 template<typename TEvent>

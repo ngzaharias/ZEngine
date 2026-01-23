@@ -32,13 +32,12 @@ namespace ecs
 	public:
 		~EventContainer() override = default;
 
-		inline Array<TEvent>& GetValues();
-		inline const Array<TEvent>& GetValues() const;
-
 		template<typename... TArgs>
 		inline TEvent& Emplace(TArgs&& ...args);
 
 		inline int32 GetCount() const;
+
+		inline const Array<TEvent>& GetValues() const;
 
 		inline void MoveAll(IEventContainer& destination) override;
 
