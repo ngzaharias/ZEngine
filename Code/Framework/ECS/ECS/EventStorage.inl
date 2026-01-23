@@ -2,24 +2,24 @@
 template<class TEvent>
 void ecs::EventStorage::RegisterEvent()
 {
-	m_MainBufferCurr.RegisterEvent<TEvent>();
-	m_MainBufferNext.RegisterEvent<TEvent>();
+	m_MainBuffer.RegisterEvent<TEvent>();
+	m_NextBuffer.RegisterEvent<TEvent>();
 	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
-		m_SyncBufferCurr.RegisterEvent<TEvent>();
+		m_SyncBuffer.RegisterEvent<TEvent>();
 }
 
 template <typename TEvent, typename... TArgs>
 auto ecs::EventStorage::AddEvent(TArgs&&... args) -> TEvent&
 {
-	return m_MainBufferNext.AddEvent<TEvent>(std::forward<TArgs>(args)...);
+	return m_NextBuffer.AddEvent<TEvent>(std::forward<TArgs>(args)...);
 }
 
 template<class TEvent>
 bool ecs::EventStorage::HasEvents() const
 {
 	using Container = ecs::EventContainer<TEvent>;
-	const Container& main = m_MainBufferCurr.GetAt<TEvent>();
-	const Container* sync = m_SyncBufferCurr.TryAt<TEvent>();
+	const Container& main = m_MainBuffer.GetAt<TEvent>();
+	const Container* sync = m_SyncBuffer.TryAt<TEvent>();
 	return main.GetCount() > 0 || (sync && sync->GetCount() > 0);
 }
 
@@ -33,7 +33,7 @@ auto ecs::EventStorage::GetEvents() const -> decltype(auto)
 		auto operator*() -> const TEvent&
 		{
 			const int32 syncIndex = m_Index - m_Stride;
-			return syncIndex < m_Stride
+			return syncIndex < 0
 				? m_Main.m_Data[m_Index]
 				: m_Sync->m_Data[syncIndex];
 		}
@@ -62,7 +62,7 @@ auto ecs::EventStorage::GetEvents() const -> decltype(auto)
 		auto begin() -> Iterator
 		{
 			return Iterator{
-				.m_Main = m_Main, 
+				.m_Main = m_Main,
 				.m_Sync = m_Sync,
 				.m_Stride = m_Main.GetCount() };
 		}
@@ -71,8 +71,8 @@ auto ecs::EventStorage::GetEvents() const -> decltype(auto)
 		{
 			const int32 main = m_Main.GetCount();
 			const int32 sync = m_Sync ? m_Sync->GetCount() : 0;
-			return Iterator{ 
-				.m_Main = m_Main, 
+			return Iterator{
+				.m_Main = m_Main,
 				.m_Index = main + sync };
 		}
 
@@ -81,6 +81,6 @@ auto ecs::EventStorage::GetEvents() const -> decltype(auto)
 	};
 
 	return Wrapper{
-		.m_Main = m_MainBufferCurr.GetAt<TEvent>(),
-		.m_Sync = m_SyncBufferCurr.TryAt<TEvent>() };
+		.m_Main = m_MainBuffer.GetAt<TEvent>(),
+		.m_Sync = m_SyncBuffer.TryAt<TEvent>() };
 }

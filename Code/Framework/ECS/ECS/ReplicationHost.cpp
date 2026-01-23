@@ -160,9 +160,11 @@ void ecs::ReplicationHost::ProcessEvents()
 	for (auto&& [peerId, replicationData] : m_ReplicationMap)
 	{
 		// #hack: we iterate the keys of the remote buffer but fetch from the local buffer
-		for (const ecs::EventId& typeId : storage.m_SyncBufferCurr.GetAll().GetKeys())
+		const ecs::EventBuffer& mainBuffer = storage.GetMainBuffer();
+		const ecs::EventBuffer& syncBuffer = storage.GetSyncBuffer();
+		for (const ecs::EventId& typeId : syncBuffer.GetAll().GetKeys())
 		{
-			const ecs::IEventContainer& container = storage.m_MainBufferCurr.GetAt(typeId);
+			const ecs::IEventContainer& container = mainBuffer.GetAt(typeId);
 			const int32 count = container.GetCount();
 			for (int32 i = 0; i < count; ++i)
 			{
@@ -293,7 +295,7 @@ void ecs::ReplicationHost::OnEventAdd(const ecs::EventAddMessage* message)
 {
 	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
 	ecs::EventStorage& storage = m_EntityWorld.m_EventStorage;
-	ecs::EventBuffer& buffer = storage.m_SyncBufferCurr;
+	ecs::EventBuffer& buffer = storage.GetSyncBuffer();
 
 	MemBuffer data;
 	message->m_Data.Read(data);

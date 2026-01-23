@@ -6,10 +6,6 @@ namespace ecs
 {
 	class EventStorage
 	{
-		friend class EntityWorld;
-		friend class ReplicationHost;
-		friend class ReplicationPeer;
-
 	public:
 		template<class TEvent>
 		void RegisterEvent();
@@ -23,16 +19,24 @@ namespace ecs
 		template<class TEvent>
 		auto GetEvents() const -> decltype(auto);
 
-	private:
+		auto GetMainBuffer() -> ecs::EventBuffer&;
+		auto GetMainBuffer() const -> const ecs::EventBuffer&;
+
+		auto GetNextBuffer() -> ecs::EventBuffer&;
+		auto GetNextBuffer() const -> const ecs::EventBuffer&;
+
+		auto GetSyncBuffer() -> ecs::EventBuffer&;
+		auto GetSyncBuffer() const -> const ecs::EventBuffer&;
+
 		void FlushChanges();
 
 	private:
-		// events that were added locally and are being processed this frame
-		ecs::EventBuffer m_MainBufferCurr;
-		// events that were added locally and will be processed next frame
-		ecs::EventBuffer m_MainBufferNext;
-		// events that were added remotely and are being processed this frame
-		ecs::EventBuffer m_SyncBufferCurr;
+		// events that were added locally on the previous frame
+		ecs::EventBuffer m_MainBuffer;
+		// events that were added locally for the next frame
+		ecs::EventBuffer m_NextBuffer;
+		// events that were added remotely for the next frame
+		ecs::EventBuffer m_SyncBuffer;
 	};
 }
 
