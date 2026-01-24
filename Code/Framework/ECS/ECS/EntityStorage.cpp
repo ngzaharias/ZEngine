@@ -34,9 +34,9 @@ void ecs::EntityStorage::FlushChanges()
 
 	{
 		PROFILE_CUSTOM("Merge sync buffer into main buffer.");
-		for (auto&& [componentId, fStorage] : m_SyncBuffer.m_AddedComponents)
+		for (auto&& [componentId, fStorage] : m_SyncBuffer.m_Components)
 		{
-			ecs::IComponentStorage* eStorage = m_MainBuffer.m_AddedComponents.Get(componentId);
+			ecs::IComponentContainer* eStorage = m_MainBuffer.m_Components.Get(componentId);
 			fStorage->Move(*eStorage);
 			fStorage->RemoveAll();
 		}
@@ -53,7 +53,7 @@ void ecs::EntityStorage::FlushChanges()
 
 	{
 		PROFILE_CUSTOM("Remove dead components.");
-		for (ecs::IComponentStorage* storage : m_DeadComponents.GetValues())
+		for (ecs::IComponentContainer* storage : m_DeadComponents.GetValues())
 			storage->RemoveAll();
 	}
 
@@ -67,8 +67,7 @@ void ecs::EntityStorage::FlushChanges()
 				queryGroup.Remove(entity);
 			}
 
-			m_MainBuffer.m_HandlesRecycled.Append(entity);
-			m_MainBuffer.m_EntityChanges.Remove(entity);
+			m_MainBuffer.RecycleEntity(entity);
 		}
 		m_DeadEntities.RemoveAll();
 	}
@@ -91,9 +90,9 @@ void ecs::EntityStorage::FlushChanges()
 
 	{
 		PROFILE_CUSTOM("Move added components from buffer -> alive.");
-		for (auto&& [componentId, fStorage] : m_MainBuffer.m_AddedComponents)
+		for (auto&& [componentId, fStorage] : m_MainBuffer.m_Components)
 		{
-			ecs::IComponentStorage* eStorage = m_AliveComponents.Get(componentId);
+			ecs::IComponentContainer* eStorage = m_AliveComponents.Get(componentId);
 			fStorage->Move(*eStorage);
 			fStorage->RemoveAll();
 		}
@@ -123,7 +122,7 @@ void ecs::EntityStorage::FlushChanges()
 					if (!changes.m_Removed.Has(componentId))
 						continue;
 
-					ecs::IComponentStorage* dStorage = m_DeadComponents.Get(componentId);
+					ecs::IComponentContainer* dStorage = m_DeadComponents.Get(componentId);
 					aStorage->Move(entity, *dStorage);
 				}
 

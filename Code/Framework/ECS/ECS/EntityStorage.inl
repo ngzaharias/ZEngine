@@ -3,8 +3,8 @@ template<class TComponent>
 void ecs::EntityStorage::RegisterComponent()
 {
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	m_AliveComponents.Set(componentId, new ecs::ComponentStorage<TComponent>());
-	m_DeadComponents.Set(componentId, new ecs::ComponentStorage<TComponent>());
+	m_AliveComponents.Set(componentId, new ecs::ComponentContainer<TComponent>());
+	m_DeadComponents.Set(componentId, new ecs::ComponentContainer<TComponent>());
 	m_MainBuffer.RegisterComponent<TComponent>();
 	m_SyncBuffer.RegisterComponent<TComponent>();
 }
@@ -25,7 +25,7 @@ template<class TComponent>
 bool ecs::EntityStorage::HasComponent(const ecs::Entity& entity, const bool alive /*= true*/) const
 {
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	const ecs::IComponentStorage* istorage = alive
+	const ecs::IComponentContainer* istorage = alive
 		? m_AliveComponents.Get(componentId)
 		: m_DeadComponents.Get(componentId);
 	return istorage->Contains(entity);
@@ -34,10 +34,10 @@ bool ecs::EntityStorage::HasComponent(const ecs::Entity& entity, const bool aliv
 template<class TComponent>
 auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const bool alive /*= true*/) const -> TComponent&
 {
-	using Storage = ecs::ComponentStorage<TComponent>;
+	using Storage = ecs::ComponentContainer<TComponent>;
 
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	ecs::IComponentStorage* istorage = alive
+	ecs::IComponentContainer* istorage = alive
 		? m_AliveComponents.Get(componentId)
 		: m_DeadComponents.Get(componentId);
 	Storage* storage = static_cast<Storage*>(istorage);
@@ -47,10 +47,10 @@ auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const bool aliv
 template<class TComponent>
 auto ecs::EntityStorage::TryComponent(const ecs::Entity& entity, const bool alive /*= true*/) const -> TComponent*
 {
-	using Storage = ecs::ComponentStorage<TComponent>;
+	using Storage = ecs::ComponentContainer<TComponent>;
 
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	ecs::IComponentStorage* istorage = alive
+	ecs::IComponentContainer* istorage = alive
 		? m_AliveComponents.Get(componentId)
 		: m_DeadComponents.Get(componentId);
 	Storage* storage = static_cast<Storage*>(istorage);

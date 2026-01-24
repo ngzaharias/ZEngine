@@ -1,7 +1,10 @@
 #include "ECS/EntityBuffer.h"
 
-ecs::EntityBuffer::EntityBuffer(const uint8 source)
-	: m_HandleNext(1, source, 0)
+//////////////////////////////////////////////////////////////////////////
+// Entity
+
+ecs::EntityBuffer::EntityBuffer(const uint8 ownershipId)
+	: m_Owner(ownershipId)
 {
 }
 
@@ -13,16 +16,14 @@ auto ecs::EntityBuffer::CreateEntity() -> ecs::Entity
 		const ecs::Entity recycled = m_HandlesRecycled.GetFirst();
 		m_HandlesRecycled.RemoveAt(0);
 
-		const uint32 index = recycled.GetIndex();
-		const uint32 version = recycled.GetVersion() + 1;
-		entity = ecs::Entity(index, version);
+		entity = ecs::Entity(
+			recycled.GetIndex(), 
+			recycled.GetVersion() + 1,
+			m_Owner);
 	}
 	else
 	{
-		entity = m_HandleNext;
-		const uint32 index = entity.GetIndex() + 1;
-		const uint32 version = 0;
-		m_HandleNext = ecs::Entity(index, version);
+		entity = ecs::Entity(m_Index++, 0, m_Owner);
 	}
 
 	m_EntityChanges.Insert(entity, ecs::EntityChange());
@@ -32,4 +33,60 @@ auto ecs::EntityBuffer::CreateEntity() -> ecs::Entity
 void ecs::EntityBuffer::DestroyEntity(const ecs::Entity& entity)
 {
 	m_EntityChanges[entity].m_IsDestroy = true;
+}
+
+void ecs::EntityBuffer::RecycleEntity(const ecs::Entity& entity)
+{
+	m_EntityChanges.Remove(entity);
+	m_HandlesRecycled.Append(entity);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Changes
+
+ecs::EntityBuffer::Changes& ecs::EntityBuffer::GetChanges()
+{
+	return m_EntityChanges;
+}
+
+const ecs::EntityBuffer::Changes& ecs::EntityBuffer::GetChanges() const
+{
+	return m_EntityChanges;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Container
+
+ecs::EntityBuffer::Containers& ecs::EntityBuffer::GetContainers()
+{
+	return m_Components;
+}
+
+const ecs::EntityBuffer::Containers& ecs::EntityBuffer::GetContainers() const
+{
+	return m_Components;
+}
+
+ecs::IComponentContainer& ecs::EntityBuffer::GetContainerAt(const ecs::ComponentId typeId)
+{
+	return *m_Components.Get(typeId);
+}
+
+const ecs::IComponentContainer& ecs::EntityBuffer::GetContainerAt(const ecs::ComponentId typeId) const
+{
+	return *m_Components.Get(typeId);
+}
+
+ecs::IComponentContainer* ecs::EntityBuffer::TryContainerAt(const ecs::ComponentId typeId)
+{
+	return m_Components.Contains(typeId)
+		? m_Components.Get(typeId)
+		: nullptr;
+}
+
+const ecs::IComponentContainer* ecs::EntityBuffer::TryContainerAt(const ecs::ComponentId typeId) const
+{
+	return m_Components.Contains(typeId)
+		? m_Components.Get(typeId)
+		: nullptr;
 }

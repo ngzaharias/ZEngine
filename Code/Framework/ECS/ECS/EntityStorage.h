@@ -2,9 +2,9 @@
 
 #include "Core/Map.h"
 #include "Core/SparseArray.h"
+#include "ECS/ComponentContainer.h"
 #include "ECS/ComponentId.h"
 #include "ECS/ComponentMask.h"
-#include "ECS/ComponentStorage.h"
 #include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
 #include "ECS/EntityBuffer.h"
@@ -22,7 +22,7 @@ namespace ecs
 	{
 		friend class EntityWorld;
 
-		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
+		using Components = SparseArray<ecs::ComponentId, ecs::IComponentContainer*>;
 		using EntityMap = Map<ecs::Entity, ecs::ComponentMask>;
 		using EntitySet = Array<ecs::Entity>;
 
