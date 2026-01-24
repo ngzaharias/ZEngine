@@ -1,377 +1,710 @@
 #include <Catch2/catch.hpp>
 
-#include "Core/Types.h"
 #include "ECS/Component.h"
 #include "ECS/EntityWorld.h"
+#include "ECS/Event.h"
+#include "ECS/Singleton.h"
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
+
+#define CLASS_TEST_CASE(name) TEST_CASE("ecs::EntityWorld. " name, "[ecs::EntityWorld]")
 
 class GameTime { };
 
 namespace
 {
-	bool m_IsSystemAShutdown = false;
-	bool m_IsSystemBShutdown = false;
+	int32 m_SystemLastUpdated = 0;
+	bool m_IsSystemInitialised = false;
+	bool m_IsSystemUpdated = false;
+	bool m_IsSystemShutdown = false;
 
-	struct ComponentA final : public ecs::Component<ComponentA>
+	struct Component final : public ecs::Component<Component>
 	{
-		ComponentA() = default;
-		ComponentA(bool val) : m_Bool(val) { }
+		Component() = default;
+		Component(bool val) : m_Bool(val) { }
 		bool m_Bool = false;
 	};
 
-	struct ComponentB final : public ecs::Component<ComponentB>
-	{
-		ComponentB() = default;
-		ComponentB(int32 val) : m_Int32(val) { }
-		int32 m_Int32 = 0;
+	struct Event final : public ecs::Event<Event> 
+	{ 
+		bool m_Bool = false;
 	};
 
-	class ResourceA { };
-	class ResourceB { };
+	class Resource 
+	{ 
+	public: 
+		bool m_Bool = false; 
+	};
 
-	class SystemA : public ecs::System
+	struct Singleton final : public ecs::Singleton<Singleton> 
+	{ 
+		bool m_Bool = false; 
+	};
+
+	class System : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView;
 
-		void Initialise() override { m_IsInitialised = true; m_IsSystemAShutdown = false; }
-		void Shutdown() override { m_IsSystemAShutdown = true; }
-		void Update(World& entityWorld, const GameTime& gameTime) { m_IsUpdated = true; }
+		void Initialise() override { m_IsSystemInitialised = true; }
+		void Shutdown() override { m_IsSystemShutdown = true; }
+		void Update(World& world, const GameTime& gameTime) { m_IsSystemUpdated = true; }
+	};
 
+	class SystemA : public ecs::System
+	{
 	public:
-		bool m_IsInitialised = false;
-		bool m_IsUpdated = false;
+		using World = ecs::WorldView::Write<Component>;
+		void Update(World& world, const GameTime& gameTime) { m_SystemLastUpdated = 1; }
 	};
 
 	class SystemB : public ecs::System
 	{
 	public:
-		using World = ecs::WorldView;
-
-		void Initialise() override { m_IsInitialised = true; m_IsSystemBShutdown = false; }
-		void Shutdown() override { m_IsSystemBShutdown = true; }
-		void Update(World& entityWorld, const GameTime& gameTime) { m_IsUpdated = true; }
-
-	public:
-		bool m_IsInitialised = false;
-		bool m_IsUpdated = false;
+		using World = ecs::WorldView::Read<Component>;
+		void Update(World& world, const GameTime& gameTime) { m_SystemLastUpdated = 2; }
 	};
 }
 
-TEST_CASE("ecs::EntityWorld. Register Components.")
+CLASS_TEST_CASE("IsRegistered will return true for a component that is registered.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterComponent<ComponentA>();
-	entityWorld.RegisterComponent<ComponentB>();
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+	CHECK(world.IsRegistered<Component>());
 }
 
-TEST_CASE("ecs::EntityWorld. Register Systems.")
+CLASS_TEST_CASE("IsRegistered will return false for a component that isn't registered.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterSystem<SystemA>();
-	entityWorld.RegisterSystem<SystemB>();
+	ecs::EntityWorld world;
+	CHECK(!world.IsRegistered<Component>());
 }
 
-TEST_CASE("ecs::EntityWorld. Initialise a single system.")
+CLASS_TEST_CASE("IsRegistered will return true for a event that is registered.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterSystem<SystemA>();
-	const auto& system = entityWorld.GetSystem<SystemA>();
-
-	CHECK(!system.m_IsInitialised);
-
-	entityWorld.Initialise();
-
-	CHECK(system.m_IsInitialised);
+	ecs::EntityWorld world;
+	world.RegisterEvent<Event>();
+	CHECK(world.IsRegistered<Event>());
 }
 
-TEST_CASE("ecs::EntityWorld. Initialise multiple systems.")
+CLASS_TEST_CASE("IsRegistered will return false for a event that isn't registered.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterSystem<SystemA>();
-	entityWorld.RegisterSystem<SystemB>();
-	const auto& systemA = entityWorld.GetSystem<SystemA>();
-	const auto& systemB = entityWorld.GetSystem<SystemB>();
-
-	CHECK(!systemA.m_IsInitialised);
-	CHECK(!systemB.m_IsInitialised);
-
-	entityWorld.Initialise();
-
-	CHECK(systemA.m_IsInitialised);
-	CHECK(systemB.m_IsInitialised);
+	ecs::EntityWorld world;
+	CHECK(!world.IsRegistered<Event>());
 }
 
-TEST_CASE("ecs::EntityWorld. Destroy a single system.")
+CLASS_TEST_CASE("IsRegistered will return true for a resource that is registered.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterSystem<SystemA>();
-	entityWorld.Initialise();
-
-	const auto& system = entityWorld.GetSystem<SystemA>();
-	CHECK(!m_IsSystemAShutdown);
-
-	entityWorld.Shutdown();
-
-	CHECK(m_IsSystemAShutdown);
+	Resource resource;
+	ecs::EntityWorld world;
+	world.RegisterResource(resource);
+	CHECK(world.IsRegistered<Resource>());
 }
 
-TEST_CASE("ecs::EntityWorld. Destroy multiple systems.")
+CLASS_TEST_CASE("IsRegistered will return false for a Resource that isn't registered.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterSystem<SystemA>();
-	entityWorld.RegisterSystem<SystemB>();
-	entityWorld.Initialise();
-
-	const auto& systemA = entityWorld.GetSystem<SystemA>();
-	const auto& systemB = entityWorld.GetSystem<SystemB>();
-	CHECK(!m_IsSystemAShutdown);
-	CHECK(!m_IsSystemBShutdown);
-
-	entityWorld.Shutdown();
-
-	CHECK(m_IsSystemAShutdown);
-	CHECK(m_IsSystemBShutdown);
+	ecs::EntityWorld world;
+	CHECK(!world.IsRegistered<Resource>());
 }
 
-TEST_CASE("ecs::EntityWorld. Update single system.")
+CLASS_TEST_CASE("IsRegistered will return true for a singleton that is registered.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterSystem<SystemA>();
-	entityWorld.Initialise();
-
-	const auto& system = entityWorld.GetSystem<SystemA>();
-	CHECK(!system.m_IsUpdated);
-
-	entityWorld.Update({});
-
-	CHECK(system.m_IsUpdated);
+	ecs::EntityWorld world;
+	world.RegisterSingleton<Singleton>();
+	CHECK(world.IsRegistered<Singleton>());
 }
 
-TEST_CASE("ecs::EntityWorld. Update multiple systems.")
+CLASS_TEST_CASE("IsRegistered will return false for a Singleton that isn't registered.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterSystem<SystemA>();
-	entityWorld.RegisterSystem<SystemB>();
-	entityWorld.Initialise();
-
-	const auto& systemA = entityWorld.GetSystem<SystemA>();
-	const auto& systemB = entityWorld.GetSystem<SystemB>();
-	CHECK(!systemA.m_IsUpdated);
-	CHECK(!systemB.m_IsUpdated);
-
-	entityWorld.Update({});
-
-	CHECK(systemA.m_IsUpdated);
-	CHECK(systemB.m_IsUpdated);
+	ecs::EntityWorld world;
+	CHECK(!world.IsRegistered<Singleton>());
 }
 
-TEST_CASE("ecs::EntityWorld. CreateEntity.")
+CLASS_TEST_CASE("IsRegistered will return true for a system that is registered.")
 {
-	ecs::EntityWorld entityWorld;
-	CHECK(entityWorld.CreateEntity() == ecs::Entity(1));
-	CHECK(entityWorld.CreateEntity() == ecs::Entity(2));
-	CHECK(entityWorld.CreateEntity() == ecs::Entity(3));
-	CHECK(entityWorld.CreateEntity() == ecs::Entity(4));
-	CHECK(entityWorld.CreateEntity() == ecs::Entity(5));
-	CHECK(entityWorld.CreateEntity() == ecs::Entity(6));
+	ecs::EntityWorld world;
+	world.RegisterSystem<System>();
+	CHECK(world.IsRegistered<System>());
 }
 
-TEST_CASE("ecs::EntityWorld. DestroyEntity.")
+CLASS_TEST_CASE("IsRegistered will return false for a system that isn't registered.")
 {
-	ecs::EntityWorld entityWorld;
-	ecs::Entity entity = entityWorld.CreateEntity();
-	entityWorld.Update({});
+	ecs::EntityWorld world;
+	CHECK(!world.IsRegistered<System>());
+}
 
+CLASS_TEST_CASE("Initialise will call initialise on registered systems.")
+{
+	m_IsSystemInitialised = false;
+	ecs::EntityWorld world;
+	world.RegisterSystem<System>();
+
+	world.Initialise();
+	CHECK(m_IsSystemInitialised);
+}
+
+CLASS_TEST_CASE("Initialise won't call initialise on unregistered systems.")
+{
+	m_IsSystemInitialised = false;
+	ecs::EntityWorld world;
+
+	world.Initialise();
+	CHECK(!m_IsSystemInitialised);
+}
+
+CLASS_TEST_CASE("Shutdown will call shutdown on registered systems.")
+{
+	m_IsSystemShutdown = false;
+	ecs::EntityWorld world;
+	world.RegisterSystem<System>();
+	world.Initialise();
+
+	world.Shutdown();
+	CHECK(m_IsSystemShutdown);
+}
+
+CLASS_TEST_CASE("Shutdown won't call shutdown if the world wasn't initialised.")
+{
+	m_IsSystemShutdown = false;
+	ecs::EntityWorld world;
+	world.RegisterSystem<System>();
+
+	world.Shutdown();
+	CHECK(!m_IsSystemShutdown);
+}
+
+CLASS_TEST_CASE("Shutdown won't call shutdown on unregistered systems.")
+{
+	m_IsSystemShutdown = false;
+	ecs::EntityWorld world;
+	world.Initialise();
+
+	world.Shutdown();
+	CHECK(!m_IsSystemShutdown);
+}
+
+CLASS_TEST_CASE("Update will call update on registered systems.")
+{
+	m_IsSystemUpdated = false;
+	ecs::EntityWorld world;
+	world.RegisterSystem<System>();
+	world.Initialise();
+
+	world.Update({});
+	CHECK(m_IsSystemUpdated);
+}
+
+CLASS_TEST_CASE("Update won't call update on unregistered systems.")
+{
+	m_IsSystemUpdated = false;
+	ecs::EntityWorld world;
+	world.Initialise();
+
+	world.Update({});
+	CHECK(!m_IsSystemUpdated);
+}
+
+CLASS_TEST_CASE("Update will call update on systems that write to a component before a system that reads from the component.")
+{
+	m_SystemLastUpdated = 0;
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+	world.RegisterSystem<SystemA>();
+	world.RegisterSystem<SystemB>();
+	world.Initialise();
+
+	world.Update({});
+	CHECK(m_SystemLastUpdated == 2);
+}
+
+CLASS_TEST_CASE("IsAlive returns false on an entity that was just created.")
+{
+	ecs::EntityWorld world;
+	ecs::Entity entity = world.CreateEntity();
+	CHECK(!world.IsAlive(entity));
+}
+
+CLASS_TEST_CASE("IsAlive returns true on an entity that was created and then the the world is updated.")
+{
+	ecs::EntityWorld world;
+	ecs::Entity entity = world.CreateEntity();
+
+	world.Update({});
+	CHECK(world.IsAlive(entity));
+}
+
+CLASS_TEST_CASE("IsAlive returns true on an entity after it was just destroyed.")
+{
+	ecs::EntityWorld world;
+	ecs::Entity entity = world.CreateEntity();
+
+	world.Update({});
+	world.DestroyEntity(entity);
+	CHECK(world.IsAlive(entity));
+}
+
+CLASS_TEST_CASE("IsAlive returns false on an entity that was destroyed and then the the world is updated.")
+{
+	ecs::EntityWorld world;
+	ecs::Entity entity = world.CreateEntity();
+
+	world.Update({});
+	world.DestroyEntity(entity);
+	world.Update({});
+	CHECK(!world.IsAlive(entity));
+}
+
+CLASS_TEST_CASE("CreateEntity constructs a valid entity.")
+{
+	ecs::EntityWorld world;
+	ecs::Entity entity = world.CreateEntity();
+	CHECK(!entity.IsUnassigned());
+}
+
+CLASS_TEST_CASE("CreateEntity constructs an entity using the main id.")
+{
+	ecs::EntityWorld world;
+	ecs::Entity entity = world.CreateEntity();
+	CHECK(entity.GetOwnership() == 0);
+}
+
+CLASS_TEST_CASE("DestroyEntity marks an entity for destruction.")
+{
+	ecs::EntityWorld world;
+	ecs::Entity entity = world.CreateEntity();
+	world.Update({});
+
+	CHECK_NOTHROW(world.DestroyEntity(entity));
+}
+
+CLASS_TEST_CASE("DestroyEntity will only destroy the entity after update was called.")
+{
+	ecs::EntityWorld world;
+	ecs::Entity entity = world.CreateEntity();
+	world.Update({});
+
+	world.DestroyEntity(entity);
+	world.Update({});
+	CHECK(!world.IsAlive(entity));
+}
+
+CLASS_TEST_CASE("DestroyEntity doesn't change the values of an entity.")
+{
+	ecs::EntityWorld world;
+	ecs::Entity entity = world.CreateEntity();
+	world.Update({});
+
+	world.DestroyEntity(entity);
 	CHECK(entity.GetIndex() == 1);
 	CHECK(entity.GetVersion() == 0);
-
-	entityWorld.DestroyEntity(entity);
-	entity = entityWorld.CreateEntity();
-	entityWorld.Update({});
-
-	CHECK(entity.GetIndex() == 2);
-	CHECK(entity.GetVersion() == 0);
-
-	entityWorld.DestroyEntity(entity);
-	entity = entityWorld.CreateEntity();
-	entityWorld.Update({});
-
-	CHECK(entity.GetIndex() == 3);
-	CHECK(entity.GetVersion() == 0);
-
-	entity = entityWorld.CreateEntity();
-	CHECK(entity.GetIndex() == 1);
-	CHECK(entity.GetVersion() == 1);
+	CHECK(entity.GetOwnership() == 0);
 }
 
-TEST_CASE("ecs::EntityWorld. IsAlive.")
+CLASS_TEST_CASE("RegisterComponent will register a component with the world.")
 {
-	ecs::Entity entity;
-	ecs::EntityWorld entityWorld;
-
-	CHECK(!entityWorld.IsAlive(entity));
-	entity = entityWorld.CreateEntity();
-	entityWorld.Update({});
-
-	CHECK(entityWorld.IsAlive(entity));
-	entityWorld.DestroyEntity(entity);
-	entityWorld.Update({});
-
-	CHECK(!entityWorld.IsAlive(entity));
+	ecs::EntityWorld world;
+	CHECK_NOTHROW(world.RegisterComponent<Component>());
 }
 
-TEST_CASE("ecs::EntityWorld. HasComponent.")
+CLASS_TEST_CASE("RegisterComponent will crash if the same component is registered twice.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterComponent<ComponentA>();
-	entityWorld.RegisterComponent<ComponentB>();
-	ecs::Entity entity = entityWorld.CreateEntity();
-
-	CHECK(!entityWorld.HasComponent<ComponentA>(entity));
-	CHECK(!entityWorld.HasComponent<ComponentB>(entity));
-
-	entityWorld.AddComponent<ComponentA>(entity);
-	entityWorld.AddComponent<ComponentB>(entity);
-	entityWorld.Update({});
-
-	CHECK(entityWorld.HasComponent<ComponentA>(entity));
-	CHECK(entityWorld.HasComponent<ComponentB>(entity));
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+	//CHECK_THROWS(world.RegisterComponent<Component>());
 }
 
-TEST_CASE("ecs::EntityWorld. GetComponent.")
+CLASS_TEST_CASE("AddComponent can add a component to an entity.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterComponent<ComponentA>();
-	entityWorld.RegisterComponent<ComponentB>();
-	ecs::Entity entity = entityWorld.CreateEntity();
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
 
-	//CHECK_THROWS(entityWorld.WriteComponent<ComponentA>(entity));
-	//CHECK_THROWS(entityWorld.WriteComponent<ComponentB>(entity));
-
-	entityWorld.AddComponent<ComponentA>(entity);
-	entityWorld.AddComponent<ComponentB>(entity);
-	entityWorld.Update({});
-
-	CHECK_NOTHROW(entityWorld.WriteComponent<ComponentA>(entity));
-	CHECK_NOTHROW(entityWorld.WriteComponent<ComponentB>(entity));
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<Component>(entity);
+	world.Update({});
+	CHECK(world.HasComponent<Component>(entity));
 }
 
-TEST_CASE("ecs::EntityWorld. Add a single component.")
+CLASS_TEST_CASE("AddComponent can construct a component using vardic arguments.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterComponent<ComponentA>();
-	entityWorld.RegisterComponent<ComponentB>();
-	ecs::Entity entity = entityWorld.CreateEntity();
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+	ecs::Entity entity = world.CreateEntity();
 
-	CHECK_NOTHROW(entityWorld.AddComponent<ComponentA>(entity));
-	entityWorld.Update({});
-
-	CHECK(entityWorld.HasComponent<ComponentA>(entity));
-	CHECK(!entityWorld.HasComponent<ComponentB>(entity));
-}
-
-TEST_CASE("ecs::EntityWorld. Add multiple components.")
-{
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterComponent<ComponentA>();
-	entityWorld.RegisterComponent<ComponentB>();
-	ecs::Entity entity = entityWorld.CreateEntity();
-
-	entityWorld.AddComponent<ComponentA>(entity);
-	entityWorld.Update({});
-	CHECK(entityWorld.HasComponent<ComponentA>(entity));
-
-	//entityWorld.AddComponent<ComponentA>(entity);
-	//CHECK_THROWS(entityWorld.Update({}));
-}
-
-TEST_CASE("ecs::EntityWorld. Add a component using vardic constructor.")
-{
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterComponent<ComponentA>();
-	entityWorld.RegisterComponent<ComponentB>();
-	ecs::Entity entity = entityWorld.CreateEntity();
-
-	const auto& componentA = entityWorld.AddComponent<ComponentA>(entity, true);
-	const auto& componentB = entityWorld.AddComponent<ComponentB>(entity, -1337);
+	const auto& componentA = world.AddComponent<Component>(entity, true);
 	CHECK(componentA.m_Bool == true);
-	CHECK(componentB.m_Int32 == -1337);
 }
 
-TEST_CASE("ecs::EntityWorld. Remove a single component.")
+CLASS_TEST_CASE("AddComponent will crash the game if called twice on the same entity.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterComponent<ComponentA>();
-	entityWorld.RegisterComponent<ComponentB>();
-	ecs::Entity entity = entityWorld.CreateEntity();
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
 
-	entityWorld.AddComponent<ComponentA>(entity);
-	entityWorld.AddComponent<ComponentB>(entity);
-	entityWorld.Update({});
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<Component>(entity);
+	world.Update({});
 
-	CHECK_NOTHROW(entityWorld.RemoveComponent<ComponentA>(entity));
-	entityWorld.Update({});
-
-	CHECK(!entityWorld.HasComponent<ComponentA>(entity, true));
-	CHECK(entityWorld.HasComponent<ComponentA>(entity, false));
-	CHECK(entityWorld.HasComponent<ComponentB>(entity, true));
-	CHECK(!entityWorld.HasComponent<ComponentB>(entity, false));
-	entityWorld.Update({});
-
-	CHECK(!entityWorld.HasComponent<ComponentA>(entity, true));
-	CHECK(!entityWorld.HasComponent<ComponentA>(entity, false));
-	CHECK(entityWorld.HasComponent<ComponentB>(entity, true));
-	CHECK(!entityWorld.HasComponent<ComponentB>(entity, false));
+	world.RemoveComponent<Component>(entity);
+	//CHECK_THROWS(world.RemoveComponent<Component>(entity));
+	//CHECK_THROWS(world.Update({}));
 }
 
-TEST_CASE("ecs::EntityWorld. Double.")
+CLASS_TEST_CASE("RemoveComponent will remove the component from an entity.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterComponent<ComponentA>();
-	entityWorld.RegisterComponent<ComponentB>();
-	ecs::Entity entity = entityWorld.CreateEntity();
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+	ecs::Entity entity = world.CreateEntity();
 
-	entityWorld.AddComponent<ComponentA>(entity);
-	entityWorld.AddComponent<ComponentB>(entity);
-	entityWorld.Update({});
+	world.AddComponent<Component>(entity);
+	world.Update({});
 
-	CHECK_NOTHROW(entityWorld.RemoveComponent<ComponentA>(entity));
-	entityWorld.Update({});
-
-	CHECK(!entityWorld.HasComponent<ComponentA>(entity, true));
-	CHECK(entityWorld.HasComponent<ComponentA>(entity, false));
-	entityWorld.Update({});
-
-	CHECK(!entityWorld.HasComponent<ComponentA>(entity, true));
-	CHECK(!entityWorld.HasComponent<ComponentA>(entity, false));
-
-	//entityWorld.RemoveComponent<ComponentA>(entity);
-	//CHECK_THROWS(entityWorld.Update({}));
+	CHECK_NOTHROW(world.RemoveComponent<Component>(entity));
+	CHECK_NOTHROW(world.Update({}));
 }
 
-TEST_CASE("ecs::EntityWorld. Add/Remove Component.")
+CLASS_TEST_CASE("AddComponent can be called again after the component was removed.")
 {
-	ecs::EntityWorld entityWorld;
-	entityWorld.RegisterComponent<ComponentA>();
-	entityWorld.RegisterComponent<ComponentB>();
-	ecs::Entity entity = entityWorld.CreateEntity();
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
 
-	CHECK(!entityWorld.HasComponent<ComponentA>(entity));
-	entityWorld.AddComponent<ComponentA>(entity);
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<Component>(entity);
+	world.Update({});
 
-	CHECK(!entityWorld.HasComponent<ComponentA>(entity));
-	entityWorld.Update({});
+	world.RemoveComponent<Component>(entity);
+	world.Update({});
 
-	CHECK(entityWorld.HasComponent<ComponentA>(entity));
-	entityWorld.RemoveComponent<ComponentA>(entity);
-	entityWorld.Update({});
+	world.AddComponent<Component>(entity);
+	world.Update({});
 
-	CHECK(!entityWorld.HasComponent<ComponentA>(entity));
-	entityWorld.AddComponent<ComponentA>(entity);
-	entityWorld.Update({});
+	CHECK(world.HasComponent<Component>(entity));
+}
 
-	CHECK(entityWorld.HasComponent<ComponentA>(entity));
-	entityWorld.Update({});
+CLASS_TEST_CASE("RemoveComponent will crash the game if called on an entity that doesn't have the component.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+
+	ecs::Entity entity = world.CreateEntity();
+	//CHECK_THROWS(world.RemoveComponent<Component>(entity));
+	//CHECK_THROWS(world.Update({}));
+}
+
+CLASS_TEST_CASE("HasComponent returns true if a component has been added to an entity.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+	ecs::Entity entity = world.CreateEntity();
+
+	world.AddComponent<Component>(entity);
+	world.Update({});
+
+	CHECK(world.HasComponent<Component>(entity));
+}
+
+CLASS_TEST_CASE("HasComponent returns false if a component hasn't been added to an entity.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+
+	ecs::Entity entity = world.CreateEntity();
+	CHECK(!world.HasComponent<Component>(entity));
+}
+
+CLASS_TEST_CASE("HasComponent returns true if a component was removed but the world hasn't updated yet.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<Component>(entity);
+	world.Update({});
+	world.RemoveComponent<Component>(entity);
+	CHECK(world.HasComponent<Component>(entity));
+}
+
+CLASS_TEST_CASE("HasComponent returns false if a component was added but the world hasn't updated yet.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<Component>(entity);
+	CHECK(!world.HasComponent<Component>(entity));
+}
+
+CLASS_TEST_CASE("ReadComponent returns a component that can't be modified.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<Component>(entity);
+	world.Update({});
+	auto& component = world.ReadComponent<Component>(entity);
+	// component.m_Bool = true; // doesn't compile
+}
+
+CLASS_TEST_CASE("ReadComponent crashes when the component hasn't been added to the entity.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+	ecs::Entity entity = world.CreateEntity();
+
+	//CHECK_THROWS(world.ReadComponent<Component>(entity));
+}
+
+CLASS_TEST_CASE("WriteComponent returns a component that can be modified.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<Component>(entity);
+	world.Update({});
+
+	auto& component = world.WriteComponent<Component>(entity);
+	component.m_Bool = true;
+	CHECK(component.m_Bool);
+}
+
+CLASS_TEST_CASE("WriteComponent crashes when the component hasn't been added to the entity.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+	ecs::Entity entity = world.CreateEntity();
+
+	//CHECK_THROWS(world.WriteComponent<Component>(entity));
+}
+
+CLASS_TEST_CASE("GetComponentMask returns a mask with the component added.")
+{
+	const ecs::ComponentId typeId = ToTypeId<Component, ecs::ComponentTag>();
+
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<Component>(entity);
+	world.Update({});
+	CHECK(world.GetComponentMask(entity).Has(typeId));
+}
+
+CLASS_TEST_CASE("GetComponentMask returns an empty mask if an entity has no components.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.Update({});
+	CHECK(world.GetComponentMask(entity).HasNone());
+}
+
+CLASS_TEST_CASE("GetComponentMask returns an empty mask when a component was added to an entity but hasn't updated the world.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.Update({});
+
+	world.AddComponent<Component>(entity);
+	CHECK(world.GetComponentMask(entity).HasNone());
+}
+
+CLASS_TEST_CASE("GetComponentMask crashes the game when called on an entity that isn't alive.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<Component>(entity);
+	//CHECK_THROWS(world.GetComponentMask(entity).HasNone());
+}
+
+CLASS_TEST_CASE("RegisterEvent will register an event with the world.")
+{
+	ecs::EntityWorld world;
+	CHECK_NOTHROW(world.RegisterEvent<Event>());
+}
+
+CLASS_TEST_CASE("RegisterEvent will crash if the same event is registered twice.")
+{
+	ecs::EntityWorld world;
+	world.RegisterEvent<Event>();
+	//CHECK_THROWS(world.RegisterEvent<Event>());
+}
+
+CLASS_TEST_CASE("AddEvent will add an event to the world.")
+{
+	ecs::EntityWorld world;
+	world.RegisterEvent<Event>();
+
+	using WorldView = ecs::WorldView::Read<Event>;
+	WorldView view = world.WorldView<WorldView>();
+
+	int32 count = 0;
+	world.AddEvent<Event>();
+	world.Update({});
+	for (const Event& eventData : view.Events<Event>())
+		count++;
+	CHECK(count == 1);
+}
+
+CLASS_TEST_CASE("AddEvent will add an event to the world but the data won't be accessible before update is called.")
+{
+	ecs::EntityWorld world;
+	world.RegisterEvent<Event>();
+
+	using WorldView = ecs::WorldView::Read<Event>;
+	WorldView view = world.WorldView<WorldView>();
+
+	int32 count = 0;
+	world.AddEvent<Event>();
+	for (const Event& eventData : view.Events<Event>())
+		count++;
+	CHECK(count == 0);
+}
+
+CLASS_TEST_CASE("AddEvent can add multiple of the same event to the world at a time.")
+{
+	ecs::EntityWorld world;
+	world.RegisterEvent<Event>();
+
+	world.AddEvent<Event>();
+	world.AddEvent<Event>();
+	world.Update({});
+
+	using WorldView = ecs::WorldView::Read<Event>;
+	WorldView view = world.WorldView<WorldView>();
+	const auto& wrapper = view.Events<Event>();
+	CHECK(wrapper.m_Main.GetCount() == 2);
+}
+
+CLASS_TEST_CASE("AddEvent will crash the game if called on an unregistered event.")
+{
+	ecs::EntityWorld world;
+	//CHECK_THROWS(world.AddEvent<Event>());
+}
+
+CLASS_TEST_CASE("RegisterResource will register a resource with the world.")
+{
+	Resource resource;
+	ecs::EntityWorld world;
+	CHECK_NOTHROW(world.RegisterResource(resource));
+}
+
+CLASS_TEST_CASE("RegisterResource will crash if the same resource is registered twice.")
+{
+	Resource resource;
+	ecs::EntityWorld world;
+	world.RegisterResource(resource);
+	//CHECK_THROWS(world.RegisterResource(resource));
+}
+
+CLASS_TEST_CASE("ReadResource returns a resource that can't be modified.")
+{
+	Resource resource;
+	ecs::EntityWorld world;
+	world.RegisterResource(resource);
+
+	auto& read = world.ReadResource<Resource>();
+	// read.m_Bool = true; // doesn't compile
+}
+
+CLASS_TEST_CASE("ReadResource crashes when the resource hasn't been registered.")
+{
+	Resource resource;
+	ecs::EntityWorld world;
+	//CHECK_THROWS(world.ReadResource<Resource>());
+}
+
+CLASS_TEST_CASE("WriteResource returns a resource that can be modified.")
+{
+	Resource resource;
+	ecs::EntityWorld world;
+	world.RegisterResource(resource);
+
+	auto& write = world.WriteResource<Resource>();
+	write.m_Bool = true;
+	CHECK(write.m_Bool);
+}
+
+CLASS_TEST_CASE("WriteResource crashes when the resource hasn't been registered.")
+{
+	Resource resource;
+	ecs::EntityWorld world;
+	//CHECK_THROWS(world.WriteResource<Resource>());
+}
+
+CLASS_TEST_CASE("RegisterSingleton will register an singleton with the world.")
+{
+	ecs::EntityWorld world;
+	CHECK_NOTHROW(world.RegisterSingleton<Singleton>());
+}
+
+CLASS_TEST_CASE("RegisterSingleton will crash if the same singleton is registered twice.")
+{
+	ecs::EntityWorld world;
+	world.RegisterSingleton<Singleton>();
+	//CHECK_THROWS(world.RegisterSingleton<Singleton>());
+}
+
+CLASS_TEST_CASE("ReadSingleton returns a singleton that can't be modified.")
+{
+	ecs::EntityWorld world;
+	world.RegisterSingleton<Singleton>();
+
+	auto& singleton = world.ReadSingleton<Singleton>();
+	// singleton.m_Bool = true; // doesn't compile
+}
+
+CLASS_TEST_CASE("ReadSingleton crashes when the singleton hasn't been registered.")
+{
+	ecs::EntityWorld world;
+	//CHECK_THROWS(world.ReadSingleton<Singleton>());
+}
+
+CLASS_TEST_CASE("WriteSingleton returns a singleton that can be modified.")
+{
+	ecs::EntityWorld world;
+	world.RegisterSingleton<Singleton>();
+
+	auto& singleton = world.WriteSingleton<Singleton>();
+	singleton.m_Bool = true;
+	CHECK(singleton.m_Bool);
+}
+
+CLASS_TEST_CASE("WriteSingleton crashes when the singleton hasn't been registered.")
+{
+	ecs::EntityWorld world;
+	//CHECK_THROWS(world.WriteSingleton<Singleton>());
+}
+
+CLASS_TEST_CASE("RegisterSystem will register a system with the world.")
+{
+	ecs::EntityWorld world;
+	CHECK_NOTHROW(world.RegisterSystem<System>());
+}
+
+CLASS_TEST_CASE("RegisterSystem will crash if the same system is registered twice.")
+{
+	ecs::EntityWorld world;
+	world.RegisterSystem<System>();
+	//CHECK_THROWS(world.RegisterSystem<System>());
+}
+
+CLASS_TEST_CASE("GetSystem will return a registered system.")
+{
+	ecs::EntityWorld world;
+	world.RegisterSystem<System>();
+	CHECK_NOTHROW(world.GetSystem<System>());
+}
+
+CLASS_TEST_CASE("GetSystem will crash the game if called on an unregistered system.")
+{
+	ecs::EntityWorld world;
+	//CHECK_THROWS(world.GetSystem<System>());
+}
+
+CLASS_TEST_CASE("WorldView.")
+{
 }

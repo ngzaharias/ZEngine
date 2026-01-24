@@ -36,16 +36,7 @@ namespace ecs
 		void Update(const GameTime& gameTime);
 
 		template<typename TType>
-		void RegisterType();
-
-		template<typename TType>
 		bool IsRegistered() const;
-
-		template<typename TWorldView>
-		TWorldView WorldView();
-
-		str::String LogDependencies() const;
-		str::String LogUpdateOrder() const;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
@@ -122,7 +113,22 @@ namespace ecs
 		template<class TSystem>
 		auto GetSystem() -> TSystem&;
 
+		//////////////////////////////////////////////////////////////////////////
+		// WorldView
+
+		template<typename TWorldView>
+		TWorldView WorldView();
+
+		//////////////////////////////////////////////////////////////////////////
+		// Debug
+
+		str::String LogDependencies() const;
+		str::String LogUpdateOrder() const;
+
 	private:
+		template<typename TType>
+		void RegisterType();
+
 		//////////////////////////////////////////////////////////////////////////
 		// EntityView
 
