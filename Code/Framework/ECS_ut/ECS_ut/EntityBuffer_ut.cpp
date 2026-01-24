@@ -24,7 +24,7 @@ CLASS_TEST_CASE("The first call to CreateEntity constructs an entity that isn't 
 	CHECK(buffer.CreateEntity() != ecs::Entity::Unassigned);
 }
 
-CLASS_TEST_CASE("Each call to CreateEntity constructs an entity incrementing the index by 1 each time.")
+CLASS_TEST_CASE("CreateEntity constructs an entity incrementing the index by 1 each time.")
 {
 	ecs::EntityBuffer buffer;
 	CHECK(buffer.CreateEntity() == ecs::Entity(1));
