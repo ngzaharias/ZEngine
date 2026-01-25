@@ -19,18 +19,6 @@ inline int32 ecs::ComponentContainer<TComponent>::GetCount() const
 }
 
 template<typename TComponent>
-inline Array<TComponent>& ecs::ComponentContainer<TComponent>::GetValues()
-{
-	return m_Data.GetValues();
-}
-
-template<typename TComponent>
-inline const Array<TComponent>& ecs::ComponentContainer<TComponent>::GetValues() const
-{
-	return m_Data.GetValues();
-}
-
-template<typename TComponent>
 inline TComponent& ecs::ComponentContainer<TComponent>::Get(const ecs::Entity& entity)
 {
 	return m_Data.Get(entity);
@@ -40,6 +28,18 @@ template<typename TComponent>
 inline const TComponent& ecs::ComponentContainer<TComponent>::Get(const ecs::Entity& entity) const
 {
 	return m_Data.Get(entity);
+}
+
+template<typename TComponent>
+inline Array<TComponent>& ecs::ComponentContainer<TComponent>::GetAll()
+{
+	return m_Data.GetValues();
+}
+
+template<typename TComponent>
+inline const Array<TComponent>& ecs::ComponentContainer<TComponent>::GetAll() const
+{
+	return m_Data.GetValues();
 }
 
 template<typename TComponent>
@@ -67,26 +67,28 @@ inline TComponent& ecs::ComponentContainer<TComponent>::Set(const ecs::Entity& e
 }
 
 template<typename TComponent>
-inline void ecs::ComponentContainer<TComponent>::Move(IComponentContainer& destination)
+inline void ecs::ComponentContainer<TComponent>::Move(const ecs::Entity& entity, IComponentContainer& destination)
 {
-	auto& storage = static_cast<ecs::ComponentContainer<TComponent>&>(destination);
-	for (auto&& [entity, component] : m_Data)
-	{
-		Z_PANIC(!storage.Contains(entity), "Trying to add component to an entity that already has it!");
-		storage.Set(entity, std::move(component));
-	}
+	auto& container = static_cast<ecs::ComponentContainer<TComponent>&>(destination);
+	Z_PANIC(!container.Contains(entity), "Trying to add component to an entity that already has it!");
+
+	TComponent& component = Get(entity);
+	container.Set(entity, std::move(component));
+
+	Remove(entity);
 }
 
 template<typename TComponent>
-inline void ecs::ComponentContainer<TComponent>::Move(const ecs::Entity& entity, IComponentContainer& destination)
+inline void ecs::ComponentContainer<TComponent>::MoveAll(IComponentContainer& destination)
 {
-	auto& storage = static_cast<ecs::ComponentContainer<TComponent>&>(destination);
-	Z_PANIC(!storage.Contains(entity), "Trying to add component to an entity that already has it!");
+	auto& container = static_cast<ecs::ComponentContainer<TComponent>&>(destination);
+	for (auto&& [entity, component] : m_Data)
+	{
+		Z_PANIC(!container.Contains(entity), "Trying to add component to an entity that already has it!");
+		container.Set(entity, std::move(component));
+	}
 
-	TComponent& component = Get(entity);
-	storage.Set(entity, std::move(component));
-
-	Remove(entity);
+	RemoveAll();
 }
 
 template<typename TComponent>

@@ -18,9 +18,6 @@ namespace ecs
 		template<class TEvent, typename... TArgs>
 		auto AddEvent(TArgs&&... args)->TEvent&;
 
-		Containers& GetAll();
-		const Containers& GetAll() const;
-
 		ecs::IEventContainer& GetAt(const ecs::EventId typeId);
 		const ecs::IEventContainer& GetAt(const ecs::EventId typeId) const;
 
@@ -28,6 +25,9 @@ namespace ecs
 		ecs::EventContainer<TEvent>& GetAt();
 		template<typename TEvent>
 		const ecs::EventContainer<TEvent>& GetAt() const;
+
+		Containers& GetAll();
+		const Containers& GetAll() const;
 
 		ecs::IEventContainer* TryAt(const ecs::EventId typeId);
 		const ecs::IEventContainer* TryAt(const ecs::EventId typeId) const;

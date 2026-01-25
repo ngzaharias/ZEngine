@@ -16,8 +16,9 @@ namespace ecs
 
 		virtual int32 GetCount() const = 0;
 
-		virtual void Move(IComponentContainer& destination) = 0;
 		virtual void Move(const ecs::Entity& entity, IComponentContainer& destination) = 0;
+
+		virtual void MoveAll(IComponentContainer& destination) = 0;
 
 		virtual void Remove(const Entity& entity) = 0;
 		virtual void RemoveAll() = 0;
@@ -38,11 +39,11 @@ namespace ecs
 
 		inline int32 GetCount() const;
 
-		inline Array<TComponent>& GetValues();
-		inline const Array<TComponent>& GetValues() const;
-
 		inline TComponent& Get(const ecs::Entity& entity);
 		inline const TComponent& Get(const ecs::Entity& entity) const;
+
+		inline Array<TComponent>& GetAll();
+		inline const Array<TComponent>& GetAll() const;
 
 		inline TComponent* Try(const ecs::Entity& entity);
 		inline const TComponent* Try(const ecs::Entity& entity) const;
@@ -50,8 +51,8 @@ namespace ecs
 		inline TComponent& Set(const ecs::Entity& entity, TComponent&& value);
 		inline TComponent& Set(const ecs::Entity& entity, const TComponent& value);
 
-		inline void Move(IComponentContainer& destination) override;
 		inline void Move(const ecs::Entity& entity, IComponentContainer& destination) override;
+		inline void MoveAll(IComponentContainer& destination) override;
 
 		inline void Remove(const Entity& entity) override;
 		inline void RemoveAll() override;

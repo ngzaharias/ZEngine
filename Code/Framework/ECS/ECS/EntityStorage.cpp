@@ -37,8 +37,7 @@ void ecs::EntityStorage::FlushChanges()
 		for (auto&& [componentId, fStorage] : m_SyncBuffer.m_Components)
 		{
 			ecs::IComponentContainer* eStorage = m_MainBuffer.m_Components.Get(componentId);
-			fStorage->Move(*eStorage);
-			fStorage->RemoveAll();
+			fStorage->MoveAll(*eStorage);
 		}
 
 		for (auto&& [entity, fChange] : m_SyncBuffer.m_EntityChanges)
@@ -93,8 +92,7 @@ void ecs::EntityStorage::FlushChanges()
 		for (auto&& [componentId, fStorage] : m_MainBuffer.m_Components)
 		{
 			ecs::IComponentContainer* eStorage = m_AliveComponents.Get(componentId);
-			fStorage->Move(*eStorage);
-			fStorage->RemoveAll();
+			fStorage->MoveAll(*eStorage);
 		}
 	}
 

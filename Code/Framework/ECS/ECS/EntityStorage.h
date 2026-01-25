@@ -59,7 +59,8 @@ namespace ecs
 		template<class TComponent>
 		auto TryComponent(const ecs::Entity& entity, const bool alive = true) const -> TComponent*;
 
-	private:
+		//////////////////////////////////////////////////////////////////////////
+
 		void FlushChanges();
 
 	public:

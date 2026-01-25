@@ -510,7 +510,7 @@ CLASS_TEST_CASE("GetComponentMask returns an empty mask when a component was add
 	CHECK(world.GetComponentMask(entity).HasNone());
 }
 
-CLASS_TEST_CASE("GetComponentMask crashes the game when called on an entity that isn't alive.")
+CLASS_TEST_CASE("GetComponentMask crashes when called on an entity that isn't alive.")
 {
 	ecs::EntityWorld world;
 	world.RegisterComponent<Component>();
@@ -703,8 +703,4 @@ CLASS_TEST_CASE("GetSystem will crash the game if called on an unregistered syst
 {
 	ecs::EntityWorld world;
 	//CHECK_THROWS(world.GetSystem<System>());
-}
-
-CLASS_TEST_CASE("WorldView.")
-{
 }

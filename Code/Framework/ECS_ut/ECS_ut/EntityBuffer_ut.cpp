@@ -120,7 +120,7 @@ CLASS_TEST_CASE("Added components are stored inside a component container.")
 
 	const ecs::ComponentContainer<ComponentA>& container = buffer.GetContainerAt<ComponentA>();
 	REQUIRE(container.GetCount() == 1);
-	CHECK(container.GetValues()[0].m_Value == 1);
+	CHECK(container.GetAll()[0].m_Value == 1);
 }
 
 CLASS_TEST_CASE("Added components are marked on the changes map.")
