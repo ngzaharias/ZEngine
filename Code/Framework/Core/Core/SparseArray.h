@@ -56,13 +56,17 @@ public:
 	/// \brief Returns the values array.
 	const Array<Value>& GetValues() const;
 
-	/// \brief Sets a new element in the container that is constructed in-place.
+	/// \brief Inserts a new element that is constructed in-place if 
+	/// the container doesn't already contain an element with that key, 
+	/// otherwise it will replace the existing element.
 	template<typename... Args>
 	Value& Emplace(const Key& key, Args&& ...args);
 
-	/// \brief Sets a new element in the container using move operator.
+	/// \brief Inserts a new element if the container doesn't already contain an 
+	/// element with that key, otherwise it will replace the existing element.
 	Value& Set(const Key& key, Value&& value);
-	/// \brief Sets a new element in the container.
+	/// \brief Inserts a new element if the container doesn't already contain an 
+	/// element with that key, otherwise it will replace the existing element.
 	Value& Set(const Key& key, const Value& value);
 
 	/// \brief Removes a specified element from the container if one exists with that key.
