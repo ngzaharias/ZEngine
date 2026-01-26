@@ -7,6 +7,8 @@
 #include "ECS/ComponentMask.h"
 #include "ECS/QueryTypes.h"
 
+#define CLASS_TEST_CASE(name) TEST_CASE("ecs::QueryAccess. " name, "[ecs::QueryAccess]")
+
 namespace
 {
 	struct ComponentA final : public ecs::Component<ComponentA> { };
@@ -16,7 +18,7 @@ namespace
 	const ecs::ComponentId s_ComponentBId = ToTypeId<ComponentB, ecs::ComponentTag>();
 }
 
-TEST_CASE("ecs::query::Access. Added only ComponentA.")
+CLASS_TEST_CASE("Added only ComponentA.")
 {
 	using Query = ecs::query::Added<ComponentA>;
 
@@ -41,7 +43,7 @@ TEST_CASE("ecs::query::Access. Added only ComponentA.")
 	CHECK(excludeMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::query::Access. Added both ComponentA and  ComponentB.")
+CLASS_TEST_CASE("Added both ComponentAand ComponentB.")
 {
 	using Query = ecs::query::Added<ComponentA, ComponentB>;
 
@@ -66,7 +68,7 @@ TEST_CASE("ecs::query::Access. Added both ComponentA and  ComponentB.")
 	CHECK(excludeMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::query::Access. Removed only ComponentA.")
+CLASS_TEST_CASE("Removed only ComponentA.")
 {
 	using Query = ecs::query::Removed<ComponentA>;
 
@@ -91,7 +93,7 @@ TEST_CASE("ecs::query::Access. Removed only ComponentA.")
 	CHECK(excludeMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::query::Access. Removed both ComponentA and  ComponentB.")
+CLASS_TEST_CASE("Removed both ComponentAand ComponentB.")
 {
 	using Query = ecs::query::Removed<ComponentA, ComponentB>;
 
@@ -116,7 +118,7 @@ TEST_CASE("ecs::query::Access. Removed both ComponentA and  ComponentB.")
 	CHECK(excludeMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::query::Access. Updated only ComponentA.")
+CLASS_TEST_CASE("Updated only ComponentA.")
 {
 	using Query = ecs::query::Updated<ComponentA>;
 
@@ -141,7 +143,7 @@ TEST_CASE("ecs::query::Access. Updated only ComponentA.")
 	CHECK(excludeMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::query::Access. Updated both ComponentA and  ComponentB.")
+CLASS_TEST_CASE("Updated both ComponentAand ComponentB.")
 {
 	using Query = ecs::query::Updated<ComponentA, ComponentB>;
 
@@ -166,7 +168,7 @@ TEST_CASE("ecs::query::Access. Updated both ComponentA and  ComponentB.")
 	CHECK(excludeMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::query::Access. Include only ComponentA.")
+CLASS_TEST_CASE("Include only ComponentA.")
 {
 	using Query = ecs::query::Include<ComponentA>;
 
@@ -191,7 +193,7 @@ TEST_CASE("ecs::query::Access. Include only ComponentA.")
 	CHECK(excludeMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::query::Access. Include both ComponentA and ComponentB.")
+CLASS_TEST_CASE("Include both ComponentAand ComponentB.")
 {
 	using Query = ecs::query::Include<ComponentA, ComponentB>;
 
@@ -216,7 +218,7 @@ TEST_CASE("ecs::query::Access. Include both ComponentA and ComponentB.")
 	CHECK(excludeMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::query::Access. Exclude only ComponentA.")
+CLASS_TEST_CASE("Exclude only ComponentA.")
 {
 	using Query = ecs::query::Exclude<ComponentA>;
 
@@ -241,7 +243,7 @@ TEST_CASE("ecs::query::Access. Exclude only ComponentA.")
 	CHECK(excludeMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::query::Access. Exclude both ComponentA and ComponentC.")
+CLASS_TEST_CASE("Exclude both ComponentA and ComponentC.")
 {
 	using Query = ecs::query::Exclude<ComponentA, ComponentB>;
 

@@ -9,6 +9,8 @@
 #include "ECS/QueryIterator.h"
 #include "ECS/QueryTypes.h"
 
+#define CLASS_TEST_CASE(name) TEST_CASE("ecs::QueryIterator. " name, "[ecs::QueryIterator]")
+
 namespace
 {
 	struct ComponentA final : public ecs::Component<ComponentA> { bool m_Bool = true; };
@@ -16,7 +18,7 @@ namespace
 	struct ComponentC final : public ecs::Component<ComponentC> { };
 }
 
-TEST_CASE("ecs::QueryIterator. Test.")
+CLASS_TEST_CASE("Test.")
 {
 	ecs::Entity entity;
 	ecs::EntityWorld world;
