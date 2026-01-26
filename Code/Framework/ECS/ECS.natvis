@@ -3,7 +3,7 @@
   <Type Name="ecs::Entity">
     <Intrinsic Name="Index" Expression="(m_Value &amp; 0x00000000FFFFFFFF)"/>
     <Intrinsic Name="Version" Expression="(m_Value &gt;&gt; 32) &amp; 0x0000000000FFFFFF"/>
-    <Intrinsic Name="Ownership" Expression="(m_Value &gt;&gt; 54) &amp; 0x00000000000000FF"/>
+    <Intrinsic Name="Ownership" Expression="(m_Value &gt;&gt; 56) &amp; 0x00000000000000FF"/>
     <DisplayString Condition="m_Value == 0">[Unassigned]</DisplayString>
     <DisplayString>Index {Index()} | Version {Version()} | Ownership {Ownership()}</DisplayString>
     <Expand>
