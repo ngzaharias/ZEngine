@@ -10,6 +10,8 @@
 #include "Engine/RegisterSystems.h"
 #include "GameServer/RegisterComponents.h"
 #include "GameServer/RegisterSystems.h"
+#include "ServerNetwork/RegisterModule.h"
+#include "SharedNetwork/RegisterModule.h"
 
 server::GameServer::GameServer()
 	: m_ReplicationHost(m_EntityWorld)
@@ -44,6 +46,12 @@ void server::GameServer::Register(const Dependencies& dependencies)
 	{
 		server::RegisterComponents(m_EntityWorld);
 		server::RegisterSystems(m_EntityWorld);
+	}
+
+	// modules
+	{
+		server::network::RegisterModule(m_EntityWorld);
+		shared::network::RegisterModule(m_EntityWorld);
 	}
 }
 

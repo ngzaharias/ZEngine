@@ -26,4 +26,6 @@ project "GameServer"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Network/",
+		"%{wks.location}/../Code/Modules/ServerNetwork/",
+		"%{wks.location}/../Code/Modules/SharedNetwork/",
 	}

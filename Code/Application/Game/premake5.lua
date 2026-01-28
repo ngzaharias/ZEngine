@@ -61,9 +61,12 @@ project "Game"
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Modules/Camera/",
+		"%{wks.location}/../Code/Modules/ClientNetwork/",
 		"%{wks.location}/../Code/Modules/Container/",
 		"%{wks.location}/../Code/Modules/Hexmap/",
 		"%{wks.location}/../Code/Modules/Hidden/",
+		"%{wks.location}/../Code/Modules/ServerNetwork/",
+		"%{wks.location}/../Code/Modules/SharedNetwork/",
 		"%{wks.location}/../Code/Modules/Softbody/",
 		"%{wks.location}/../Code/Modules/Tabletop/",
 		"%{wks.location}/../Code/Modules/Tactics/",
@@ -100,29 +103,39 @@ project "Game"
 
 	links 
 	{ 
-		"Camera",
-		"Core",
-		"ECS",
-		"Engine",
+		-- Application
 		"GameClient",
 		"GameDebug",
 		"GameServer",
 		"GameUI",
+
+		-- Bindings
+		"Steam",
+
+		-- Framework
+		"Core",
+		"ECS",
+		"Engine",
 		"Imgui",
 		"Math",
 		"Network",
 		"Render",
-		"Steam",
 
+		-- Modules
+		"Camera",
+		"ClientNetwork",
 		"Container",
 		"Hexmap",
 		"Hidden",
+		"ServerNetwork",
+		"SharedNetwork",
 		"Softbody",
 		"Tabletop",
 		"Tactics",
 		"Tilemap",
 		"Voxel",
 
+		-- 3rdParty
 		"assimp.lib",
 		"freetype.lib",
 		"glew32.lib",
