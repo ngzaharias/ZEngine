@@ -24,6 +24,8 @@ namespace net
 		void Connect();
 		void Disconnect();
 
+		bool IsConnected() const;
+
 		void Update(const GameTime& gameTime);
 
 		template<typename TMessage>

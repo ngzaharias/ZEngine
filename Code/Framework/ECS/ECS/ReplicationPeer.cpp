@@ -33,6 +33,10 @@ void ecs::ReplicationPeer::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
+	const auto& peer = m_EntityWorld.ReadResource<net::Peer>();
+	if (!peer.IsConnected())
+		return;
+
 	ProcessEvents();
 
 	for (auto&& [peerEntity, hostEntity] : m_ToDestroy)

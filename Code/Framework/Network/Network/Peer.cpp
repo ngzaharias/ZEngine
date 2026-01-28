@@ -68,6 +68,11 @@ void net::Peer::Disconnect()
 	m_Connection = k_HSteamNetConnection_Invalid;
 }
 
+bool net::Peer::IsConnected() const
+{
+	return m_Connection != k_HSteamNetConnection_Invalid;
+}
+
 void net::Peer::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
