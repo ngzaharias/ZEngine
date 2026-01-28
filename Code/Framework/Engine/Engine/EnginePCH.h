@@ -8,6 +8,3 @@
 #include "Core/Log.h"
 #include "Core/Profiler.h"
 #include "Core/Types.h"
-
-// Engine
-#include "Engine/Visitor.h"
