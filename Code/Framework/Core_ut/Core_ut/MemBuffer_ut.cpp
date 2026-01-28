@@ -310,3 +310,42 @@ CLASS_TEST_CASE("Read and Write to NonTrivial.")
 		CHECK(object.m_Data == "Foo");
 	}
 }
+
+CLASS_TEST_CASE("Read and Write to MemBuffer.")
+{
+	MemBuffer bufferA;
+
+	// write
+	{
+		MemBuffer bufferB;
+		const str::String object = "Foo";
+		bufferB.Write(object);
+		bufferA.Write(bufferB);
+	}
+
+	// write
+	{
+		MemBuffer bufferC;
+		const str::String object = "Bar";
+		bufferC.Write(object);
+		bufferA.Write(bufferC);
+	}
+
+	// read
+	{
+		MemBuffer bufferB;
+		str::String object;
+		bufferA.Read(bufferB);
+		bufferB.Read(object);
+		CHECK(object == "Foo");
+	}
+
+	// read
+	{
+		MemBuffer bufferC;
+		str::String object;
+		bufferA.Read(bufferC);
+		bufferC.Read(object);
+		CHECK(object == "Bar");
+	}
+}

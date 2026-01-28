@@ -1,14 +1,12 @@
 #pragma once
 
+#include "ECS/TypeRegistry.h"
 #include "Engine/AssetManager.h"
-#include "Engine/ComponentSerializer.h"
 #include "Engine/ImguiManager.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PlatformManager.h"
 #include "Engine/PrototypeManager.h"
-#include "Engine/ReplicationHost.h"
-#include "Engine/ReplicationPeer.h"
 #include "Engine/TableHeadmaster.h"
 #include "Engine/WindowManager.h"
 
@@ -42,6 +40,7 @@ namespace eng
 		virtual bool ShouldClose();
 
 	protected:
+		ecs::TypeRegistry m_TypeRegistry;
 		eng::AssetManager m_AssetManager;
 		eng::ImguiManager m_ImguiManager;
 		eng::NetworkManager m_NetworkManager;
@@ -50,7 +49,5 @@ namespace eng
 		eng::PrototypeManager m_PrototypeManager;
 		eng::TableHeadmaster m_TableHeadmaster;
 		eng::WindowManager m_WindowManager;
-
-		net::ComponentSerializer m_ComponentSerializer;
 	};
 }

@@ -1,9 +1,15 @@
-#pragma once
-
-#include "Core/EnumHelpers.h"
 
 template<typename TMessage>
-TMessage* net::Peer::CreateMessage(const EMessage type)
+TMessage* net::Peer::RequestMessage(const uint32 type)
 {
-	return nullptr;
+	const net::EMessage etype = static_cast<net::EMessage>(type);
+	net::Message* message = m_Factory.Request(etype);
+	return static_cast<TMessage*>(message);
+}
+
+template<typename TMessage>
+TMessage* net::Peer::RequestMessage(const net::EMessage type)
+{
+	net::Message* message = m_Factory.Request(type);
+	return static_cast<TMessage*>(message);
 }

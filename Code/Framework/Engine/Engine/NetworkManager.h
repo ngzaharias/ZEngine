@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Engine/ComponentSerializer.h"
-#include "Network/Adaptor.h"
-#include "Network/Config.h"
 #include "Network/Host.h"
 #include "Network/Peer.h"
+#include "Network/Factory.h"
 
 class GameTime;
 
@@ -13,12 +11,14 @@ namespace eng
 	class NetworkManager final
 	{
 	public:
-		NetworkManager(net::ComponentSerializer& serializer);
+		NetworkManager();
+
+		void Initialise();
 
 		void Update(const GameTime& gameTime);
 
-		net::Adaptor& GetAdaptor() { return m_Adaptor; }
-		const net::Adaptor& GetAdaptor() const { return m_Adaptor; }
+		net::Factory& GetFactory() { return m_Factory; }
+		const net::Factory& GetFactory() const { return m_Factory; }
 
 		net::Host& GetHost() { return m_Host; }
 		const net::Host& GetHost() const { return m_Host; }
@@ -26,14 +26,8 @@ namespace eng
 		net::Peer& GetPeer() { return m_Peer; }
 		const net::Peer& GetPeer() const { return m_Peer; }
 
-		net::ComponentSerializer& GetSerializer() { return m_Serializer; }
-		const net::ComponentSerializer& GetSerializer() const { return m_Serializer; }
-
 	private:
-		net::ComponentSerializer& m_Serializer;
-
-		net::Adaptor m_Adaptor;
-		net::Config m_Config;
+		net::Factory m_Factory;
 		net::Host m_Host;
 		net::Peer m_Peer;
 	};

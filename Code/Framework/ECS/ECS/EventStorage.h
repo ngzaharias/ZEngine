@@ -1,49 +1,42 @@
 #pragma once
 
-#include "Core/SparseArray.h"
-#include "Core/TypeInfo.h"
-#include "ECS/ComponentId.h"
-#include "ECS/ComponentStorage.h"
-#include "ECS/ComponentTag.h"
-#include "ECS/Entity.h"
-#include "ECS/Event.h"
-#include "ECS/EventStorage.h"
-#include "ECS/Singleton.h"
-#include "ECS/SingletonStorage.h"
+#include "ECS/EventBuffer.h"
 
 namespace ecs
 {
-	class IEventStorage
+	class EventStorage
 	{
-		friend class EntityWorld;
-
 	public:
-		virtual ~IEventStorage() = default;
+		template<class TEvent>
+		void RegisterEvent();
 
-		virtual void Move(IEventStorage& destination) = 0;
-		virtual void RemoveAll() = 0;
-	};
+		template<class TEvent, typename... TArgs>
+		auto AddEvent(TArgs&&... args)->TEvent&;
 
-	template<typename TEvent>
-	class EventStorage : public IEventStorage
-	{
-		friend class EntityWorld;
+		template<class TEvent>
+		bool HasEvents() const;
 
-	public:
-		~EventStorage() override = default;
+		template<class TEvent>
+		auto GetEvents() const -> decltype(auto);
 
-		inline Array<TEvent>& GetValues();
-		inline const Array<TEvent>& GetValues() const;
+		auto GetMainBuffer() -> ecs::EventBuffer&;
+		auto GetMainBuffer() const -> const ecs::EventBuffer&;
 
-		template<typename... TArgs>
-		inline TEvent& Emplace(TArgs&& ...args);
+		auto GetNextBuffer() -> ecs::EventBuffer&;
+		auto GetNextBuffer() const -> const ecs::EventBuffer&;
 
-		inline void Move(IEventStorage& destination) override;
+		auto GetSyncBuffer() -> ecs::EventBuffer&;
+		auto GetSyncBuffer() const -> const ecs::EventBuffer&;
 
-		inline void RemoveAll() override;
+		void FlushChanges();
 
 	private:
-		Array<TEvent> m_Data = { };
+		// events that were added locally on the previous frame
+		ecs::EventBuffer m_MainBuffer;
+		// events that were added locally for the next frame
+		ecs::EventBuffer m_NextBuffer;
+		// events that were added remotely for the next frame
+		ecs::EventBuffer m_SyncBuffer;
 	};
 }
 

@@ -1,18 +1,30 @@
-#pragma once
 
 template<class TComponent>
 void ecs::EntityStorage::RegisterComponent()
 {
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	m_AliveComponents.Set(componentId, new ecs::ComponentStorage<TComponent>());
-	m_DeadComponents.Set(componentId, new ecs::ComponentStorage<TComponent>());
+	m_AliveComponents.Set(componentId, new ecs::ComponentContainer<TComponent>());
+	m_DeadComponents.Set(componentId, new ecs::ComponentContainer<TComponent>());
+	m_EntityBuffer.RegisterComponent<TComponent>();
+}
+
+template <typename TComponent, typename... TArgs>
+auto ecs::EntityStorage::AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&
+{
+	return m_EntityBuffer.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
+}
+
+template <typename TComponent>
+void ecs::EntityStorage::RemoveComponent(const ecs::Entity& entity)
+{
+	m_EntityBuffer.RemoveComponent<TComponent>(entity);
 }
 
 template<class TComponent>
 bool ecs::EntityStorage::HasComponent(const ecs::Entity& entity, const bool alive /*= true*/) const
 {
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	const ecs::IComponentStorage* istorage = alive
+	const ecs::IComponentContainer* istorage = alive
 		? m_AliveComponents.Get(componentId)
 		: m_DeadComponents.Get(componentId);
 	return istorage->Contains(entity);
@@ -21,10 +33,10 @@ bool ecs::EntityStorage::HasComponent(const ecs::Entity& entity, const bool aliv
 template<class TComponent>
 auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const bool alive /*= true*/) const -> TComponent&
 {
-	using Storage = ecs::ComponentStorage<TComponent>;
+	using Storage = ecs::ComponentContainer<TComponent>;
 
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	ecs::IComponentStorage* istorage = alive
+	ecs::IComponentContainer* istorage = alive
 		? m_AliveComponents.Get(componentId)
 		: m_DeadComponents.Get(componentId);
 	Storage* storage = static_cast<Storage*>(istorage);
@@ -34,48 +46,12 @@ auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const bool aliv
 template<class TComponent>
 auto ecs::EntityStorage::TryComponent(const ecs::Entity& entity, const bool alive /*= true*/) const -> TComponent*
 {
-	using Storage = ecs::ComponentStorage<TComponent>;
+	using Storage = ecs::ComponentContainer<TComponent>;
 
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	ecs::IComponentStorage* istorage = alive
+	ecs::IComponentContainer* istorage = alive
 		? m_AliveComponents.Get(componentId)
 		: m_DeadComponents.Get(componentId);
 	Storage* storage = static_cast<Storage*>(istorage);
 	return storage->Try(entity);
-}
-
-template<class TEvent>
-void ecs::EntityStorage::RegisterEvent()
-{
-	const TypeId typeId = ToTypeId<TEvent>();
-	m_Events.Set(typeId, new ecs::EventStorage<TEvent>());
-}
-
-template<class TEvent>
-auto ecs::EntityStorage::GetEvents() const -> const Array<TEvent>&
-{
-	using Storage = ecs::EventStorage<TEvent>;
-
-	const TypeId typeId = ToTypeId<TEvent>();
-	const ecs::IEventStorage* istorage = m_Events.Get(typeId);
-	const Storage* storage = static_cast<const Storage*>(istorage);
-	return storage->GetValues();
-}
-
-template<class TSingleton, typename... TArgs>
-void ecs::EntityStorage::RegisterSingleton(TArgs&&... args)
-{
-	const TypeId typeId = ToTypeId<TSingleton>();
-	m_Singletons.Set(typeId, new ecs::SingletonStorage<TSingleton>(std::forward<TArgs>(args)...));
-}
-
-template<class TSingleton>
-auto ecs::EntityStorage::GetSingleton() -> TSingleton&
-{
-	using Storage = ecs::SingletonStorage<TSingleton>;
-
-	const TypeId typeId = ToTypeId<TSingleton>();
-	ecs::ISingletonStorage* istorage = m_Singletons.Get(typeId);
-	Storage* storage = static_cast<Storage*>(istorage);
-	return storage->GetData();
 }

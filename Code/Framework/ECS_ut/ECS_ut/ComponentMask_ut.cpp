@@ -6,6 +6,8 @@
 #include "ECS/Component.h"
 #include "ECS/ComponentMask.h"
 
+#define CLASS_TEST_CASE(name) TEST_CASE("ecs::ComponentMask. " name, "[ecs::ComponentMask]")
+
 namespace
 {
 	struct ComponentA final : public ecs::Component<ComponentA> { };
@@ -15,49 +17,49 @@ namespace
 	const ecs::ComponentId s_ComponentBId = ToTypeId<ComponentB, ecs::ComponentTag>();
 }
 
-TEST_CASE("ecs::ComponentMask. No components.")
+CLASS_TEST_CASE("No components.")
 {
 	auto componentMask = ecs::ToComponentMask<>();
 	CHECK(componentMask.Has(s_ComponentAId) == false);
 	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::ComponentMask. Single component.")
+CLASS_TEST_CASE("Single component.")
 {
 	auto componentMask = ecs::ToComponentMask<ComponentA>();
 	CHECK(componentMask.Has(s_ComponentAId) == true);
 	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::ComponentMask. Multiple components.")
+CLASS_TEST_CASE("Multiple components.")
 {
 	auto componentMask = ecs::ToComponentMask<ComponentA, ComponentB>();
 	CHECK(componentMask.Has(s_ComponentAId) == true);
 	CHECK(componentMask.Has(s_ComponentBId) == true);
 }
 
-TEST_CASE("ecs::ComponentMask. TypeList with no components.")
+CLASS_TEST_CASE("TypeList with no components.")
 {
 	auto componentMask = ecs::ToComponentMask(TypeList<>{});
 	CHECK(componentMask.Has(s_ComponentAId) == false);
 	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::ComponentMask. TypeList with one component.")
+CLASS_TEST_CASE("TypeList with one component.")
 {
 	auto componentMask = ecs::ToComponentMask(TypeList<ComponentA>{});
 	CHECK(componentMask.Has(s_ComponentAId) == true);
 	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-TEST_CASE("ecs::ComponentMask. TypeList with multiple components.")
+CLASS_TEST_CASE("TypeList with multiple components.")
 {
 	auto componentMask = ecs::ToComponentMask(TypeList<ComponentA, ComponentB>{});
 	CHECK(componentMask.Has(s_ComponentAId) == true);
 	CHECK(componentMask.Has(s_ComponentBId) == true);
 }
 
-TEST_CASE("ecs::ComponentMask. Const and non-const result in the same mask.")
+CLASS_TEST_CASE("Const and non-const result in the same mask.")
 {
 	auto componentMaskA = ecs::ToComponentMask<ComponentA>();
 	auto componentMaskB = ecs::ToComponentMask<const ComponentA>();

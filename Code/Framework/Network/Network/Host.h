@@ -3,55 +3,74 @@
 #include "Core/Array.h"
 #include "Core/Delegate.h"
 #include "Core/Set.h"
-#include "Core/String.h"
-#include "Core/Types.h"
-#include "Network/Messages.h"
+#include "Core/TypeInfo.h"
+#include "Network/Factory.h"
+#include "Network/Message.h"
 #include "Network/PeerId.h"
+
+#pragma warning(push)
+#pragma warning(disable: 4996)
+#include "Steam/steam_api.h"
+#pragma warning(pop)
 
 class GameTime;
 
 namespace net
 {
-	class Adaptor;
+	struct Message;
+}
 
-	struct Config;
-	struct UserId;
-
-	class Host
+namespace net
+{
+	struct PeerData
 	{
-	public:
-		Host(net::Adaptor& adaptor, net::Config& config);
+		HSteamNetConnection m_Connection = k_HSteamNetConnection_Invalid;
+	};
 
-		void Startup(const str::String& ipAddress, const int32 port, const float time);
+	class Host final
+	{
+		using PeerMap = Map<net::PeerId, net::PeerData>;
+
+	public:
+		Host(net::Factory& factory);
+
+		void Startup();
 		void Shutdown();
 
 		void Update(const GameTime& gameTime);
 
 		template<typename TMessage>
-		TMessage* CreateMessage(const net::PeerId& peerId, const EMessage type);
+		TMessage* RequestMessage(const uint32 type);
+		template<typename TMessage>
+		TMessage* RequestMessage(const net::EMessage type);
 
-		void SendMessage(const net::PeerId& peerId, void* message);
+		void ReleaseMessage(const net::Message* message);
 
-		bool IsRunning() const { return false; };
-		const Set<net::PeerId>& GetConnectedPeers() const { return m_PeersConnected; }
+		void BroadcastMessage(const net::Message* message);
+		void SendMessage(const net::PeerId& peerId, const net::Message* message);
 
-	protected:
-		void ProcessMessage(const net::PeerId& peerId, const void* message);
-
-		void OnClientConnected(const net::PeerId& peerId);
-		void OnClientDisconnected(const net::PeerId& peerId);
+	private:
+		STEAM_CALLBACK(net::Host, OnLobbyCreated, LobbyCreated_t);
+		STEAM_CALLBACK(net::Host, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
 	public:
-		Delegate<void(const net::PeerId& peerId, const void* message)> m_OnProcessMessage;
+		Delegate<void(const net::PeerId&)> m_OnPeerConnected;
+		Delegate<void(const net::PeerId&)> m_OnPeerDisconnected;
+
+		Delegate<void(const Array<const net::Message*>&)> m_OnProcessMessages;
 
 	protected:
-		net::Adaptor& m_Adaptor;
-		net::Config& m_Config;
+		net::Factory& m_Factory;
 
-		DelegateCollection m_Collection = { };
-		Set<net::PeerId> m_PeersConnected = { };
-		Set<net::PeerId> m_PeersDisconnected = { };
-		int32 m_MaxPeers = 64;
+		MemBuffer m_Buffer = {};
+		Array<const net::Message*> m_Queue = {};
+
+		PeerMap m_PeerMap = {};
+
+		CSteamID m_LobbyId = {};
+		HSteamListenSocket m_ListenSocketId = k_HSteamListenSocket_Invalid;
+		HSteamListenSocket m_ListenSocketIp = k_HSteamListenSocket_Invalid;
+		HSteamNetPollGroup m_NetPollGroup = k_HSteamNetPollGroup_Invalid;
 	};
 }
 

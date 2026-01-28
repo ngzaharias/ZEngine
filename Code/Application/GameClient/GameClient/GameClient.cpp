@@ -3,6 +3,7 @@
 
 #include "Camera/RegisterModule.h"
 #include "Container/RegisterModule.h"
+#include "ECS/TypeRegistry.h"
 #include "ECS/WorldView.h"
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
@@ -20,7 +21,6 @@
 #include "Engine/WindowManager.h"
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
-#include "GameShared/RegisterComponents.h"
 #include "GameUI/RegisterModule.h"
 #include "Hexmap/RegisterModule.h"
 #include "Hidden/RegisterModule.h"
@@ -47,15 +47,18 @@ void client::GameClient::Register(const Dependencies& dependencies)
 {
 	// resources
 	{
+		m_EntityWorld.RegisterResource(dependencies.m_TypeRegistry);
 		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
 		m_EntityWorld.RegisterResource(dependencies.m_ImguiManager);
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
+		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetFactory());
+		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetHost());
+		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetPeer());
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PlatformManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
 		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
 		m_EntityWorld.RegisterResource(dependencies.m_WindowManager);
-		m_EntityWorld.RegisterResource(dependencies.m_Serializer);
 		m_EntityWorld.RegisterResource(m_InputManager);
 		m_EntityWorld.RegisterResource(m_UIManager);
 		m_EntityWorld.RegisterResource(m_ReplicationPeer);
@@ -69,16 +72,11 @@ void client::GameClient::Register(const Dependencies& dependencies)
 
 	// engine
 	{
-		eng::RegisterSharedComponents(m_EntityWorld, dependencies.m_Serializer);
+		eng::RegisterSharedComponents(m_EntityWorld);
 		eng::RegisterSharedSystems(m_EntityWorld);
 
 		eng::RegisterClientComponents(m_EntityWorld);
 		eng::RegisterClientSystems(m_EntityWorld);
-	}
-
-	// shared
-	{
-		shd::RegisterComponents(m_EntityWorld, dependencies.m_Serializer);
 	}
 
 	// client

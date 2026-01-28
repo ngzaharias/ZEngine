@@ -306,7 +306,6 @@ void eng::LinesSingleton::AddFrustrum(const Vector3f& translate, const Rotator& 
 
 void eng::LinesSingleton::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::Orthographic& projection, const Vector2u& size, const Colour& colour)
 {
-	// #todo: pass in width & height
 	const float aspect = (float)size.x / (float)size.y;
 	const float widthH = projection.m_Size * aspect * 0.5f;
 	const float heightH = projection.m_Size * 0.5f;
@@ -346,7 +345,6 @@ void eng::LinesSingleton::AddFrustrum(const Vector3f& translate, const Rotator& 
 
 void eng::LinesSingleton::AddFrustrum(const Vector3f& translate, const Rotator& rotate, const eng::Perspective& projection, const Vector2u& size, const Colour& colour)
 {
-	// #todo: pass in width & height
 	const float ratio = (float)size.x / (float)size.y;
 	const float fovy = math::ToRadians(projection.m_FieldOfView);
 

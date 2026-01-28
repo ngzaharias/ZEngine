@@ -47,7 +47,6 @@ project "Editor"
 		"%{wks.location}/../Code/Application/GameClient/",
 		"%{wks.location}/../Code/Application/GameDebug/",
 		"%{wks.location}/../Code/Application/GameServer/",
-		"%{wks.location}/../Code/Application/GameShared/",
 		"%{wks.location}/../Code/Application/GameUI/",
 		"%{wks.location}/../Code/Bindings/Steam/",
 		"%{wks.location}/../Code/Editors/InputEditor/",
@@ -104,7 +103,6 @@ project "Editor"
 		"GameClient",
 		"GameDebug",
 		"GameServer",
-		"GameShared",
 		"GameUI",
 
 		-- Bindings

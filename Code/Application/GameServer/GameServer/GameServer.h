@@ -1,9 +1,14 @@
 #pragma once
 
 #include "ECS/EntityWorld.h"
-#include "Engine/ReplicationHost.h"
+#include "ECS/ReplicationHost.h"
 
 class GameTime;
+
+namespace ecs
+{
+	class TypeRegistry;
+}
 
 namespace eng
 {
@@ -13,20 +18,15 @@ namespace eng
 	class PrototypeManager;
 }
 
-namespace net
-{
-	class ComponentSerializer;
-}
-
 namespace server
 {
 	struct Dependencies
 	{
+		ecs::TypeRegistry& m_TypeRegistry;
 		eng::AssetManager& m_AssetManager;
 		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
 		eng::PrototypeManager& m_PrototypeManager;
-		net::ComponentSerializer& m_Serializer;
 	};
 
 	class GameServer final
@@ -43,6 +43,6 @@ namespace server
 
 	public:
 		ecs::EntityWorld m_EntityWorld;
-		net::ReplicationHost m_ReplicationHost;
+		ecs::ReplicationHost m_ReplicationHost;
 	};
 }

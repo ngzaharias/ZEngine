@@ -1,33 +1,86 @@
-#pragma once
 
-template<typename TEvent>
-inline Array<TEvent>& ecs::EventStorage<TEvent>::GetValues()
+template<class TEvent>
+void ecs::EventStorage::RegisterEvent()
 {
-	return m_Data;
+	m_MainBuffer.RegisterEvent<TEvent>();
+	m_NextBuffer.RegisterEvent<TEvent>();
+	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
+		m_SyncBuffer.RegisterEvent<TEvent>();
 }
 
-template<typename TEvent>
-inline const Array<TEvent>& ecs::EventStorage<TEvent>::GetValues() const
+template <typename TEvent, typename... TArgs>
+auto ecs::EventStorage::AddEvent(TArgs&&... args) -> TEvent&
 {
-	return m_Data;
+	return m_NextBuffer.AddEvent<TEvent>(std::forward<TArgs>(args)...);
 }
 
-template<typename TEvent>
-template<typename... TArgs>
-inline TEvent& ecs::EventStorage<TEvent>::Emplace(TArgs&& ...args)
+template<class TEvent>
+bool ecs::EventStorage::HasEvents() const
 {
-	return m_Data.Emplace(std::forward<TArgs>(args)...);
+	using Container = ecs::EventContainer<TEvent>;
+	const Container& main = m_MainBuffer.GetAt<TEvent>();
+	const Container* sync = m_SyncBuffer.TryAt<TEvent>();
+	return main.GetCount() > 0 || (sync && sync->GetCount() > 0);
 }
 
-template<typename TEvent>
-inline void ecs::EventStorage<TEvent>::Move(IEventStorage& destination)
+template<class TEvent>
+auto ecs::EventStorage::GetEvents() const -> decltype(auto)
 {
-	auto& storage = static_cast<ecs::EventStorage<TEvent>&>(destination);
-	storage.m_Data = std::move(m_Data);
-}
+	using Container = const ecs::EventContainer<TEvent>;
 
-template<typename TEvent>
-inline void ecs::EventStorage<TEvent>::RemoveAll()
-{
-	m_Data.RemoveAll();
+	struct Iterator
+	{
+		auto operator*() -> const TEvent&
+		{
+			const int32 syncIndex = m_Index - m_Stride;
+			return syncIndex < 0
+				? m_Main.m_Data[m_Index]
+				: m_Sync->m_Data[syncIndex];
+		}
+
+		auto operator++() -> Iterator&
+		{
+			m_Index++;
+			return *this;
+		}
+
+		bool operator!=(const Iterator& rhs) const
+		{
+			return m_Index != rhs.m_Index;
+		}
+
+		Container& m_Main;
+		Container* m_Sync;
+
+		int32 m_Index = 0;
+		int32 m_Offset = 0;
+		int32 m_Stride = 0;
+	};
+
+	struct Wrapper
+	{
+		auto begin() -> Iterator
+		{
+			return Iterator{
+				.m_Main = m_Main,
+				.m_Sync = m_Sync,
+				.m_Stride = m_Main.GetCount() };
+		}
+
+		auto end() -> Iterator
+		{
+			const int32 main = m_Main.GetCount();
+			const int32 sync = m_Sync ? m_Sync->GetCount() : 0;
+			return Iterator{
+				.m_Main = m_Main,
+				.m_Index = main + sync };
+		}
+
+		Container& m_Main;
+		Container* m_Sync;
+	};
+
+	return Wrapper{
+		.m_Main = m_MainBuffer.GetAt<TEvent>(),
+		.m_Sync = m_SyncBuffer.TryAt<TEvent>() };
 }

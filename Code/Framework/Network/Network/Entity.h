@@ -12,15 +12,12 @@ namespace net
 		Entity(const uint64& value) : m_Value(value) { }
 		Entity(const Entity& entity) : m_Value(entity.m_Value) { }
 
-		bool IsUnassigned() const
-		{
-			return m_Value == UINT64_MAX;
-		}
+		bool IsUnassigned() const;
 
 		bool operator==(const Entity& rhs) const { return m_Value == rhs.m_Value; }
 		bool operator!=(const Entity& rhs) const { return !this->operator==(rhs); }
 		bool operator<(const Entity& rhs) const { return m_Value < rhs.m_Value; }
 
-		uint64 m_Value = UINT64_MAX;
+		uint64 m_Value = 0xFFFFFFFFFFFFFFFF;
 	};
 }

@@ -22,24 +22,28 @@ public:
 public:
 	// Read
 	template<typename Type>
-	void Read(Type& data) const;
-	void Read(str::Path& data) const;
-	void Read(str::String& data) const;
+	void Read(Type& value) const;
+	void Read(MemBuffer& value) const;
+	void Read(str::Path& value) const;
+	void Read(str::String& value) const;
+
 	void Read(void* data, uint32 bytes) const;
 
 	// Write
 	template<typename Type>
-	void Write(const Type& data);
-	void Write(const str::Path& data);
-	void Write(const str::String& data);
+	void Write(const Type& value);
+	void Write(const MemBuffer& value);
+	void Write(const str::Path& value);
+	void Write(const str::String& value);
+
 	void Write(const void* data, uint32 bytes);
 
 private:
 	template<typename Type>
-	inline void ReadCustom(Type& data) const;
+	inline void ReadCustom(Type& value) const;
 
 	template<typename Type>
-	inline void WriteCustom(const Type& data);
+	inline void WriteCustom(const Type& value);
 
 private:
 	mutable uint32 m_ReadPosition = 0;

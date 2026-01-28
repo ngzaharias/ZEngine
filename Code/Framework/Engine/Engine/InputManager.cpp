@@ -8,9 +8,6 @@
 #include "Engine/WindowManager.h"
 #include "Input/Binding.h"
 
-// #todo: remove
-#include "imgui/imgui.h"
-
 namespace
 {
 	constexpr input::Value s_Empty = {};

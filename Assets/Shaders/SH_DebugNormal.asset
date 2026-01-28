@@ -2,8 +2,6 @@ m_Guid = "4d92a62028dc4f2f992661373b413721"
 m_Name = "SH_DebugNormal"
 m_Type = "Shader"
 
-[Programs]
-
 m_Vertex = """
 #version 410 core
 

@@ -1,5 +1,7 @@
 #include <Catch2/catch.hpp>
 
-TEST_CASE("ecs::SystemRegistry. ")
+#define CLASS_TEST_CASE(name) TEST_CASE("ecs::SystemRegistry. " name, "[ecs::SystemRegistry]")
+
+CLASS_TEST_CASE("")
 {
 }

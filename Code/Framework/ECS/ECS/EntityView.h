@@ -2,6 +2,7 @@
 
 #include "Core/TypeList.h"
 #include "ECS/Entity.h"
+#include "ECS/EntityBuffer.h"
 
 #include <tuple>
 

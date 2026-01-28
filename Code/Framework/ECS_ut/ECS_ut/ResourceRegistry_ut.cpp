@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
 
-#include "ECS/ResourceRegistry.h"
+#define CLASS_TEST_CASE(name) TEST_CASE("ecs::ResourceRegistry. " name, "[ecs::ResourceRegistry]")
 
-TEST_CASE("ecs::ResourceRegistry. ")
+CLASS_TEST_CASE("")
 {
 }

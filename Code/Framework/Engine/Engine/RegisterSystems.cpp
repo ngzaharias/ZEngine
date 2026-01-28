@@ -7,10 +7,7 @@
 #include "Engine/FlipbookPlaySystem.h"
 #include "Engine/LevelLoadSystem.h"
 #include "Engine/MusicSystem.h"
-#include "Engine/NetworkSystem.h"
 #include "Engine/PhysicsSystem.h"
-#include "Engine/ReplicationHost.h"
-#include "Engine/ReplicationPeer.h"
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SettingsLaunchSystem.h"
 #include "Engine/SoundPlaySystem.h"
@@ -24,8 +21,6 @@ void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<eng::AssetSystem>();
 	entityWorld.RegisterSystem<eng::FlipbookPlaySystem>();
 	entityWorld.RegisterSystem<eng::MusicSystem>();
-	entityWorld.RegisterSystem<eng::network::NetworkSystem>();
-	entityWorld.RegisterSystem<eng::settings::LaunchSystem>();
 	entityWorld.RegisterSystem<eng::sound::PlaySystem>();
 	entityWorld.RegisterSystem<eng::sound::RandomSystem>();
 	entityWorld.RegisterSystem<eng::sound::SequenceSystem>();
@@ -41,4 +36,5 @@ void eng::RegisterSharedSystems(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterSystem<eng::level::LoadSystem>(entityWorld);
 	entityWorld.RegisterSystem<eng::PhysicsSystem>();
+	entityWorld.RegisterSystem<eng::settings::LaunchSystem>();
 }

@@ -2,8 +2,6 @@ m_Guid = "ba38d79a20274095b6b45ceca225cb3e"
 m_Name = "SH_Phong"
 m_Type = "Shader"
 
-[Programs]
-
 m_Vertex = """
 #version 410 core
 

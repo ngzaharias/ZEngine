@@ -2,8 +2,6 @@ m_Guid = "0205bbd9a15b459eaf0d810ebe98b8d8"
 m_Name = "SH_Text"
 m_Type = "Shader"
 
-[Programs]
-
 m_Vertex = """
 #version 330 core
 

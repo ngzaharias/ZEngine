@@ -7,6 +7,8 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 
+#define CLASS_TEST_CASE(name) TEST_CASE("ecs::EntityView. " name, "[ecs::EntityView]")
+
 namespace
 {
 	struct ComponentA final : public ecs::Component<ComponentA> { int m_Int = 1; };
@@ -15,7 +17,7 @@ namespace
 	struct ComponentD final : public ecs::Component<ComponentD> { int m_Int = 4; };
 }
 
-TEST_CASE("ecs::EntityView. Test.")
+CLASS_TEST_CASE("Test.")
 {
 	ecs::Entity entity;
 	ecs::EntityWorld entityWorld;

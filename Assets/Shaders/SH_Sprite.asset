@@ -2,8 +2,6 @@ m_Guid = "cbbb7d3ff44b45fdb9e5a207d92262fb"
 m_Name = "SH_Sprite"
 m_Type = "Shader"
 
-[Programs]
-
 m_Vertex = """
 #version 330 core
 

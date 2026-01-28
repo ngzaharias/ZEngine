@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Core/SparseArray.h"
-#include "Core/TypeInfo.h"
+#include "ECS/ResourceId.h"
+#include "ECS/ResourceTag.h"
 
 namespace ecs
 {
-	using ResourceId = int32;
-	struct ResourceTag {};
-
 	struct ResourceEntry
 	{
 		str::String m_Name = { };

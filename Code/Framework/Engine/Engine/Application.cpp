@@ -3,6 +3,8 @@
 
 #include "Core/GameTime.h"
 #include "Core/Profiler.h"
+#include "ECS/Messages.h"
+#include "ECS/TypeRegistry.h"
 #include "Engine/AchievementTable.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
@@ -15,7 +17,6 @@
 #include "Engine/LightDirectionalComponent.h"
 #include "Engine/LightPointComponent.h"
 #include "Engine/MusicAsset.h"
-#include "Engine/NetworkManager.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PhysicsMaterialAsset.h"
@@ -71,12 +72,11 @@ namespace
 eng::Application::Application()
 	: m_AssetManager()
 	, m_ImguiManager()
-	, m_NetworkManager(m_ComponentSerializer)
+	, m_NetworkManager()
 	, m_PhysicsManager()
 	, m_PlatformManager()
 	, m_PrototypeManager()
 	, m_WindowManager()
-	, m_ComponentSerializer()
 {
 	srand((unsigned int)time(NULL));
 }
@@ -182,6 +182,7 @@ void eng::Application::Initialise()
 
 	m_AssetManager.Initialise();
 	m_ImguiManager.Initialise(*m_WindowManager.GetWindow(0));
+	m_NetworkManager.Initialise();
 	m_PhysicsManager.Initialise();
 	m_PlatformManager.Initialise();
 	m_TableHeadmaster.Initialise(str::Path(str::EPath::Assets, "Tables"));

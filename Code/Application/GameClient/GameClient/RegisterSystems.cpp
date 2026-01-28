@@ -3,15 +3,11 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "Engine/ReplicationHost.h"
 #include "GameClient/AccelerationSystem.h"
 #include "GameClient/DragMovementSystem.h"
 #include "GameClient/DragSelectionSystem.h"
 #include "GameClient/GameStateSystem.h"
 #include "GameClient/ModalStateSystem.h"
-#include "GameClient/NetworkHostSystem.h"
-#include "GameClient/NetworkJoinSystem.h"
-#include "GameClient/NetworkStopSystem.h"
 #include "GameClient/ProjectileSpawnSystem.h"
 #include "GameClient/ProjectileTrajectorySystem.h"
 #include "GameClient/SettingsSystem.h"
@@ -24,9 +20,6 @@ void client::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<client::SettingsSystem>();
 	entityWorld.RegisterSystem<drag::MovementSystem>();
 	entityWorld.RegisterSystem<drag::SelectionSystem>();
-	entityWorld.RegisterSystem<gamestate::NetworkHostSystem>();
-	entityWorld.RegisterSystem<gamestate::NetworkJoinSystem>();
-	entityWorld.RegisterSystem<gamestate::NetworkStopSystem>();
 	entityWorld.RegisterSystem<gamestate::StateSystem>();
 	entityWorld.RegisterSystem<gui::modal::StateSystem>();
 	entityWorld.RegisterSystem<movement::AccelerationSystem>();

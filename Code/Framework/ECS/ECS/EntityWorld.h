@@ -2,9 +2,12 @@
 
 #include "Core/Map.h"
 #include "ECS/EntityStorage.h"
-#include "ECS/FrameBuffer.h"
+#include "ECS/EventStorage.h"
+#include "ECS/IsReplicated.h"
 #include "ECS/QueryRegistry.h"
 #include "ECS/ResourceRegistry.h"
+#include "ECS/Singleton.h"
+#include "ECS/SingletonStorage.h"
 #include "ECS/SystemRegistry.h"
 #include "ECS/TypeInfo.h"
 
@@ -33,16 +36,7 @@ namespace ecs
 		void Update(const GameTime& gameTime);
 
 		template<typename TType>
-		void RegisterType();
-
-		template<typename TType>
 		bool IsRegistered() const;
-
-		template<typename TWorldView>
-		TWorldView WorldView();
-
-		str::String LogDependencies() const;
-		str::String LogUpdateOrder() const;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
@@ -60,7 +54,7 @@ namespace ecs
 		void RegisterComponent();
 
 		template<class TComponent, typename... TArgs>
-		auto AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto);
+		auto AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&;
 
 		template<class TComponent>
 		void RemoveComponent(const ecs::Entity& entity);
@@ -69,10 +63,12 @@ namespace ecs
 		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
 
 		template<class TComponent>
-		auto ReadComponent(const ecs::Entity& entity, const bool alive = true)->const TComponent&;
+		auto ReadComponent(const ecs::Entity& entity, const bool alive = true) -> const TComponent&;
 
 		template<class TComponent>
-		auto WriteComponent(const ecs::Entity& entity, const bool alive = true)->TComponent&;
+		auto WriteComponent(const ecs::Entity& entity, const bool alive = true) -> TComponent&;
+
+		auto GetComponentMask(const ecs::Entity& entity) -> const ecs::ComponentMask&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event
@@ -81,7 +77,7 @@ namespace ecs
 		void RegisterEvent();
 
 		template<class TEvent, typename... TArgs>
-		auto AddEvent(TArgs&&... args)->decltype(auto);
+		auto AddEvent(TArgs&&... args)->TEvent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Resource
@@ -117,7 +113,22 @@ namespace ecs
 		template<class TSystem>
 		auto GetSystem() -> TSystem&;
 
+		//////////////////////////////////////////////////////////////////////////
+		// WorldView
+
+		template<typename TWorldView>
+		TWorldView WorldView();
+
+		//////////////////////////////////////////////////////////////////////////
+		// Debug
+
+		str::String LogDependencies() const;
+		str::String LogUpdateOrder() const;
+
 	private:
+		template<typename TType>
+		void RegisterType();
+
 		//////////////////////////////////////////////////////////////////////////
 		// EntityView
 
@@ -131,10 +142,11 @@ namespace ecs
 		auto TryComponentsForView(const ecs::Entity& entity) const->std::tuple<TComponents*...>;
 
 	public:
-		ecs::FrameBuffer m_FrameBuffer;
 		ecs::EntityStorage m_EntityStorage;
-		ecs::QueryRegistry m_QueryRegistry;
+		ecs::EventStorage m_EventStorage;
+		ecs::SingletonStorage m_SingletonStorage;
 
+		ecs::QueryRegistry m_QueryRegistry;
 		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
 

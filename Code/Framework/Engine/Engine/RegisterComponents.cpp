@@ -4,11 +4,11 @@
 #include "Core/MemBuffer.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
+#include "ECS/ReplicationComponent.h"
 #include "Engine/ApplicationCloseRequest.h"
 #include "Engine/AssetComponent.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
-#include "Engine/ComponentSerializer.h"
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/FrameBufferSingleton.h"
@@ -22,13 +22,9 @@
 #include "Engine/LightPointComponent.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/MusicSingleton.h"
-#include "Engine/NetworkChangeFinished.h"
-#include "Engine/NetworkChangeRequest.h"
-#include "Engine/NetworkStateSingleton.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
 #include "Engine/PrototypeManager.h"
-#include "Engine/ReplicationComponent.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/SavegameComponent.h"
@@ -55,6 +51,18 @@
 #include "Engine/VersionComponent.h"
 #include "Engine/VisibilityComponent.h"
 
+#include "Engine/Visitor.h"
+
+template<>
+void eng::Visitor::ReadCustom(ecs::ReplicationComponent& value) const
+{
+}
+
+template<>
+void eng::Visitor::WriteCustom(const ecs::ReplicationComponent& value)
+{
+}
+
 void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterComponent<eng::DynamicMeshComponent>();
@@ -71,18 +79,14 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::VisibilityComponent>();
 
 	entityWorld.RegisterEvent<eng::application::CloseRequest>();
-	entityWorld.RegisterEvent<eng::network::ChangeFinished>();
-	entityWorld.RegisterEvent<eng::network::ChangeRequest>();
 	entityWorld.RegisterEvent<eng::TablesReloaded>();
 
 	entityWorld.RegisterSingleton<eng::FrameBufferSingleton>();
 	entityWorld.RegisterSingleton<eng::LinesSingleton>();
 	entityWorld.RegisterSingleton<eng::MusicSingleton>();
-	entityWorld.RegisterSingleton<eng::network::StateSingleton>();
 	entityWorld.RegisterSingleton<eng::settings::AudioSingleton>();
 	entityWorld.RegisterSingleton<eng::settings::DebugSingleton>();
 	entityWorld.RegisterSingleton<eng::settings::GameplaySingleton>();
-	entityWorld.RegisterSingleton<eng::settings::LaunchSingleton>();
 	entityWorld.RegisterSingleton<eng::settings::WindowSingleton>();
 	entityWorld.RegisterSingleton<eng::sound::RandomBufferSingleton>();
 	entityWorld.RegisterSingleton<eng::sound::SequenceBufferSingleton>();
@@ -91,34 +95,49 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterSingleton<net::UserMapSingleton>();
+
+	// prototypes
+	{
+		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		manager.Register<ecs::ReplicationComponent>();
+	}
+
 }
 
-void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld, net::ComponentSerializer& serializer)
+void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld)
 {
 	// components
-	entityWorld.RegisterComponent<eng::ActiveComponent>();
-	entityWorld.RegisterComponent<eng::AssetComponent>();
-	entityWorld.RegisterComponent<eng::CameraComponent>();
-	entityWorld.RegisterComponent<eng::EditorComponent>();
-	entityWorld.RegisterComponent<eng::FlipbookComponent>();
-	entityWorld.RegisterComponent<eng::level::EntityComponent>();
-	entityWorld.RegisterComponent<eng::level::LoadedComponent>();
-	entityWorld.RegisterComponent<eng::level::LoadingComponent>();
-	entityWorld.RegisterComponent<eng::PhysicsComponent>();
-	entityWorld.RegisterComponent<eng::PrototypeComponent>();
-	entityWorld.RegisterComponent<eng::RigidDynamicComponent>();
-	entityWorld.RegisterComponent<eng::RigidStaticComponent>();
-	entityWorld.RegisterComponent<eng::SpriteComponent>();
-	entityWorld.RegisterComponent<eng::StaticMeshComponent>();
-	entityWorld.RegisterComponent<eng::TextComponent>();
-	entityWorld.RegisterComponent<eng::TransformComponent>();
-	entityWorld.RegisterComponent<net::ReplicationComponent>();
-	entityWorld.RegisterComponent<net::UserComponent>();
+	{
+		entityWorld.RegisterComponent<ecs::ReplicationComponent>();
+		entityWorld.RegisterComponent<eng::ActiveComponent>();
+		entityWorld.RegisterComponent<eng::AssetComponent>();
+		entityWorld.RegisterComponent<eng::CameraComponent>();
+		entityWorld.RegisterComponent<eng::EditorComponent>();
+		entityWorld.RegisterComponent<eng::FlipbookComponent>();
+		entityWorld.RegisterComponent<eng::level::EntityComponent>();
+		entityWorld.RegisterComponent<eng::level::LoadedComponent>();
+		entityWorld.RegisterComponent<eng::level::LoadingComponent>();
+		entityWorld.RegisterComponent<eng::PhysicsComponent>();
+		entityWorld.RegisterComponent<eng::PrototypeComponent>();
+		entityWorld.RegisterComponent<eng::RigidDynamicComponent>();
+		entityWorld.RegisterComponent<eng::RigidStaticComponent>();
+		entityWorld.RegisterComponent<eng::SpriteComponent>();
+		entityWorld.RegisterComponent<eng::StaticMeshComponent>();
+		entityWorld.RegisterComponent<eng::TextComponent>();
+		entityWorld.RegisterComponent<eng::TransformComponent>();
+		entityWorld.RegisterComponent<net::UserComponent>();
+	}
 
-	entityWorld.RegisterEvent<eng::level::LoadRequest>();
+	// events
+	{
+		entityWorld.RegisterEvent<eng::level::LoadRequest>();
+	}
 
 	// singletons
-	entityWorld.RegisterSingleton<eng::level::DirectorySingleton>();
-	entityWorld.RegisterSingleton<eng::PhysicsSceneSingleton>();
-	entityWorld.RegisterSingleton<eng::VersionSingleton>();
+	{
+		entityWorld.RegisterSingleton<eng::level::DirectorySingleton>();
+		entityWorld.RegisterSingleton<eng::PhysicsSceneSingleton>();
+		entityWorld.RegisterSingleton<eng::settings::LaunchSingleton>();
+		entityWorld.RegisterSingleton<eng::VersionSingleton>();
+	}
 }

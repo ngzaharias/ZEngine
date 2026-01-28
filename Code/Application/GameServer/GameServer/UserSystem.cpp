@@ -4,43 +4,39 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
+#include "ECS/ReplicationHost.h"
 #include "ECS/WorldView.h"
-#include "Engine/NetworkManager.h"
-#include "Engine/ReplicationHost.h"
 #include "Engine/UserComponent.h"
 #include "Engine/UserMapSingleton.h"
-#include "Network/Adaptor.h"
 #include "Network/Host.h"
 
-void net::UserSystem::Initialise(World& world)
+void server::UserSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
-	auto& networkManager = world.WriteResource<eng::NetworkManager>();
-	auto& adaptor = networkManager.GetAdaptor();
-
-	m_Collection =
-	{
-		adaptor.m_OnServerClientConnected.Connect(*this, &net::UserSystem::OnClientConnected),
-		adaptor.m_OnServerClientDisconnected.Connect(*this, &net::UserSystem::OnClientDisconnected),
-	};
+	//auto& host = world.WriteResource<net::Host>();
+	//m_Collection =
+	//{
+	//	host.m_OnServerClientConnected.Connect(*this, &server::UserSystem::OnClientConnected),
+	//	host.m_OnServerClientDisconnected.Connect(*this, &server::UserSystem::OnClientDisconnected),
+	//};
 }
 
-void net::UserSystem::Shutdown(World& world)
+void server::UserSystem::Shutdown(World& world)
 {
 	PROFILE_FUNCTION();
 
-	m_Collection.Disconnect();
+	//m_Collection.Disconnect();
 }
 
-void net::UserSystem::Update(World& world, const GameTime& gameTime)
+void server::UserSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	const auto& userMapComponent = world.ReadSingleton<net::UserMapSingleton>();
 	for (auto&& [userId, wantsConnected] : m_Requests)
 	{
-		auto& replicationHost = world.WriteResource<net::ReplicationHost>();
+		auto& replicationHost = world.WriteResource<ecs::ReplicationHost>();
 
 		const bool isConnected = userMapComponent.m_UserToEntity.Contains(userId);
 		if (wantsConnected && !isConnected)
@@ -59,8 +55,8 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 			mapComponent.m_EntityToUser.Set(userEntity, userId);
 			mapComponent.m_UserToEntity.Set(userId, userEntity);
 
-			replicationHost.RegisterPeer(userId.GetPeerId());
-			replicationHost.StartReplicateToPeer(userId.GetPeerId(), userEntity);
+			//replicationHost.RegisterPeer(userId.GetPeerId());
+			//replicationHost.StartReplicateToPeer(userId.GetPeerId(), userEntity);
 		}
 		else if (!wantsConnected && isConnected)
 		{
@@ -71,20 +67,20 @@ void net::UserSystem::Update(World& world, const GameTime& gameTime)
 			mapComponent.m_EntityToUser.Remove(userEntity);
 			mapComponent.m_UserToEntity.Remove(userId);
 
-			replicationHost.StopReplicateToPeer(userId.GetPeerId(), userEntity);
-			replicationHost.UnregisterPeer(userId.GetPeerId());
+			//replicationHost.StopReplicateToPeer(userId.GetPeerId(), userEntity);
+			//replicationHost.UnregisterPeer(userId.GetPeerId());
 		}
 	}
 	m_Requests.RemoveAll();
 }
 
-void net::UserSystem::OnClientConnected(const net::PeerId& peerId)
+void server::UserSystem::OnClientConnected(const net::PeerId& peerId)
 {
 	net::UserId userId = net::UserId(0, peerId);
 	m_Requests.Set(userId, true);
 }
 
-void net::UserSystem::OnClientDisconnected(const net::PeerId& peerId)
+void server::UserSystem::OnClientDisconnected(const net::PeerId& peerId)
 {
 	net::UserId userId = net::UserId(0, peerId);
 	m_Requests.Set(userId, false);

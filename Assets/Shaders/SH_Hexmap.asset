@@ -2,8 +2,6 @@ m_Guid = "94eb696e6c1841309a2071df1f0f1823"
 m_Name = "SH_Hexmap"
 m_Type = "Shader"
 
-[Programs]
-
 m_Vertex = """
 #version 330 core
 

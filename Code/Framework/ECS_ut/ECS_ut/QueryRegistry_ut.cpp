@@ -9,6 +9,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryRegistry.h"
 
+#define CLASS_TEST_CASE(name) TEST_CASE("ecs::QueryRegistry. " name, "[ecs::QueryRegistry]")
+
 class GameTime {};
 
 namespace
@@ -17,7 +19,7 @@ namespace
 	struct ComponentB final : public ecs::Component<ComponentB> { };
 }
 
-TEST_CASE("ecs::QueryRegistry. Include only ComponentA.")
+CLASS_TEST_CASE("Include only ComponentA.")
 {
 	ecs::QueryRegistry queryRegistry;
 	queryRegistry.Initialise();
@@ -26,7 +28,7 @@ TEST_CASE("ecs::QueryRegistry. Include only ComponentA.")
 	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
 }
 
-TEST_CASE("ecs::QueryRegistry. Include both ComponentA and ComponentC.")
+CLASS_TEST_CASE("Include both ComponentAand ComponentC.")
 {
 	ecs::QueryRegistry queryRegistry;
 	queryRegistry.Initialise();
@@ -35,7 +37,7 @@ TEST_CASE("ecs::QueryRegistry. Include both ComponentA and ComponentC.")
 	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
 }
 
-TEST_CASE("ecs::QueryRegistry. Exclude only ComponentA.")
+CLASS_TEST_CASE("Exclude only ComponentA.")
 {
 	ecs::QueryRegistry queryRegistry;
 	queryRegistry.Initialise();
@@ -44,7 +46,7 @@ TEST_CASE("ecs::QueryRegistry. Exclude only ComponentA.")
 	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
 }
 
-TEST_CASE("ecs::QueryRegistry. Exclude both ComponentA and ComponentB.")
+CLASS_TEST_CASE("Exclude both ComponentAand ComponentB.")
 {
 	ecs::QueryRegistry queryRegistry;
 	queryRegistry.Initialise();
@@ -53,7 +55,7 @@ TEST_CASE("ecs::QueryRegistry. Exclude both ComponentA and ComponentB.")
 	CHECK(queryRegistry.GetGroup<Query>().IsEmpty());
 }
 
-TEST_CASE("ecs::QueryRegistry. Include ComponentA and Exclude ComponentB.")
+CLASS_TEST_CASE("Include ComponentA and Exclude ComponentB.")
 {
 	ecs::QueryRegistry queryRegistry;
 	queryRegistry.Initialise();

@@ -2,8 +2,6 @@ m_Guid = "5ab1ac45783b4a54aa9892f6e36bc639"
 m_Name = "SH_DepthBuffer"
 m_Type = "Shader"
 
-[Programs]
-
 m_Vertex = """
 #version 330 core
 

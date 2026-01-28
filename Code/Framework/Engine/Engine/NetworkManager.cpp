@@ -1,11 +1,26 @@
 #include "EnginePCH.h"
 #include "Engine/NetworkManager.h"
 
-eng::NetworkManager::NetworkManager(net::ComponentSerializer& serializer)
-	: m_Serializer(serializer)
-	, m_Host(m_Adaptor, m_Config)
-	, m_Peer(m_Adaptor, m_Config)
+#include "Core/Profiler.h"
+#include "ECS/Messages.h"
+#include "Network/Host.h"
+#include "Network/Peer.h"
+
+eng::NetworkManager::NetworkManager()
+	: m_Host(m_Factory)
+	, m_Peer(m_Factory)
 {
+}
+
+void eng::NetworkManager::Initialise()
+{
+	m_Factory.Register<ecs::EntityCreateMessage>(ecs::EMessage::EntityCreate);
+	m_Factory.Register<ecs::EntityDestroyMessage>(ecs::EMessage::EntityDestroy);
+	m_Factory.Register<ecs::ComponentAddMessage>(ecs::EMessage::ComponentAdd);
+	m_Factory.Register<ecs::ComponentUpdateMessage>(ecs::EMessage::ComponentUpdate);
+	m_Factory.Register<ecs::ComponentRemoveMessage>(ecs::EMessage::ComponentRemove);
+	m_Factory.Register<ecs::EventAddMessage>(ecs::EMessage::EventAdd);
+	m_Factory.Register<ecs::SingletonUpdateMessage>(ecs::EMessage::SingletonUpdate);
 }
 
 void eng::NetworkManager::Update(const GameTime& gameTime)
@@ -13,6 +28,6 @@ void eng::NetworkManager::Update(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	// host first, then peer
-	m_Peer.Update(gameTime);
 	m_Host.Update(gameTime);
+	m_Peer.Update(gameTime);
 }

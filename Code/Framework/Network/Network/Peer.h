@@ -2,56 +2,54 @@
 
 #include "Core/Array.h"
 #include "Core/Delegate.h"
-#include "Core/String.h"
-#include "Core/Types.h"
-#include "Network/Messages.h"
+#include "Core/MemBuffer.h"
+#include "Network/Factory.h"
+#include "Network/Message.h"
 #include "Network/PeerId.h"
+
+#pragma warning(push)
+#pragma warning(disable: 4996)
+#include "Steam/steam_api.h"
+#pragma warning(pop)
 
 class GameTime;
 
 namespace net
 {
-	class Adaptor;
-
-	struct Config;
-
 	class Peer final
 	{
 	public:
-		Peer(net::Adaptor& adaptor, net::Config& config);
+		Peer(net::Factory& factory);
 
-		void Startup(const str::String& ipAddress, const int32 port, const float time);
-		void Shutdown();
-
-		void Connect(const str::String& ipAddress, const int32 port);
+		void Connect();
 		void Disconnect();
 
 		void Update(const GameTime& gameTime);
 
 		template<typename TMessage>
-		TMessage* CreateMessage(const net::EMessage type);
+		TMessage* RequestMessage(const uint32 type);
+		template<typename TMessage>
+		TMessage* RequestMessage(const net::EMessage type);
 
-		void SendMessage(void* message);
+		void ReleaseMessage(const net::Message* message);
 
-		bool HasConnectionFailed() const { return false; };
-		bool IsConnected() const { return false; };
-		bool IsConnecting() const { return false; };
-		bool IsRunning() const { return false; };
+		void SendMessage(const net::Message* message);
 
-	protected:
-		void ProcessMessage(const void* message);
-
-		void OnClientConnected(const net::PeerId& peerId);
-		void OnClientDisconnected(const net::PeerId& peerId);
+	private:
+		STEAM_CALLBACK(net::Peer, OnGameJoinRequested, GameRichPresenceJoinRequested_t);
+		STEAM_CALLBACK(net::Peer, OnLobbyJoinRequested, GameLobbyJoinRequested_t);
+		STEAM_CALLBACK(net::Peer, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
 	public:
-		Delegate<void(const void* message)> m_OnProcessMessage;
+		Delegate<void(const Array<const net::Message*>& messages)> m_OnProcessMessages;
 
 	protected:
-		net::Adaptor& m_Adaptor;
-		net::Config& m_Config;
+		net::Factory& m_Factory;
 
-		DelegateCollection m_Collection = { };
+		MemBuffer m_Buffer;
+		Array<const net::Message*> m_Queue;
+
+		HSteamNetConnection m_Connection = k_HSteamNetConnection_Invalid;
 	};
 }
 

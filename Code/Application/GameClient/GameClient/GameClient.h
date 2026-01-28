@@ -1,11 +1,16 @@
 #pragma once
 
 #include "ECS/EntityWorld.h"
+#include "ECS/ReplicationPeer.h"
 #include "Engine/InputManager.h"
-#include "Engine/ReplicationPeer.h"
 #include "Engine/UIManager.h"
 
 class GameTime;
+
+namespace ecs
+{
+	class TypeRegistry;
+}
 
 namespace eng
 {
@@ -19,15 +24,11 @@ namespace eng
 	class WindowManager;
 }
 
-namespace net
-{
-	class ComponentSerializer;
-}
-
 namespace client
 {
 	struct Dependencies
 	{
+		ecs::TypeRegistry& m_TypeRegistry;
 		eng::AssetManager& m_AssetManager;
 		eng::ImguiManager& m_ImguiManager;
 		eng::NetworkManager& m_NetworkManager;
@@ -36,7 +37,6 @@ namespace client
 		eng::PrototypeManager& m_PrototypeManager;
 		eng::TableHeadmaster& m_TableHeadmaster;
 		eng::WindowManager& m_WindowManager;
-		net::ComponentSerializer& m_Serializer;
 	};
 
 	class GameClient final
@@ -55,8 +55,8 @@ namespace client
 
 	public:
 		ecs::EntityWorld m_EntityWorld;
+		ecs::ReplicationPeer m_ReplicationPeer;
 		eng::InputManager m_InputManager;
 		eng::UIManager m_UIManager;
-		net::ReplicationPeer m_ReplicationPeer;
 	};
 }

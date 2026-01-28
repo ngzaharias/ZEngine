@@ -6,6 +6,8 @@
 #include "ECS/WorldView.h"
 #include "ECS/QueryRegistry.h"
 
+#define CLASS_TEST_CASE(name) TEST_CASE("ecs::WorldView. " name, "[ecs::WorldView]")
+
 namespace
 {
 	struct ComponentA final : public ecs::Component<ComponentA> {};
@@ -44,12 +46,10 @@ namespace
 	};
 }
 
-TEST_CASE("ecs::WorldView. CreateEntity.")
+CLASS_TEST_CASE("CreateEntity.")
 {
-	using WorldView = ecs::WorldView;
-
 	ecs::EntityWorld entityWorld;
-	WorldView world = entityWorld.WorldView<WorldView>();
+	ecs::WorldView world = entityWorld.WorldView<ecs::WorldView>();
 
 	CHECK(world.CreateEntity() == ecs::Entity(0));
 	CHECK(world.CreateEntity() == ecs::Entity(1));
@@ -59,7 +59,7 @@ TEST_CASE("ecs::WorldView. CreateEntity.")
 	CHECK(world.CreateEntity() == ecs::Entity(5));
 }
 
-TEST_CASE("ecs::WorldView. DestroyEntity.")
+CLASS_TEST_CASE("DestroyEntity.")
 {
 	using WorldView = ecs::WorldView;
 
@@ -91,7 +91,7 @@ TEST_CASE("ecs::WorldView. DestroyEntity.")
 	CHECK(entity.GetVersion() == 1);
 }
 
-TEST_CASE("ecs::WorldView. IsAlive.")
+CLASS_TEST_CASE("IsAlive.")
 {
 	using WorldView = ecs::WorldView;
 
@@ -110,7 +110,7 @@ TEST_CASE("ecs::WorldView. IsAlive.")
 	CHECK(!worldView.IsAlive(entity));
 }
 
-TEST_CASE("ecs::WorldView. AddComponent.")
+CLASS_TEST_CASE("AddComponent.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA, ComponentB>;
@@ -127,7 +127,7 @@ TEST_CASE("ecs::WorldView. AddComponent.")
 	CHECK(!worldView.HasComponent<ComponentB>(entity));
 }
 
-TEST_CASE("ecs::WorldView. RemoveComponent.")
+CLASS_TEST_CASE("RemoveComponent.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA, ComponentB>;
@@ -148,7 +148,7 @@ TEST_CASE("ecs::WorldView. RemoveComponent.")
 	CHECK(worldView.HasComponent<ComponentB>(entity));
 }
 
-TEST_CASE("ecs::WorldView. HasComponent.")
+CLASS_TEST_CASE("HasComponent.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA, ComponentB>;
@@ -168,7 +168,7 @@ TEST_CASE("ecs::WorldView. HasComponent.")
 	CHECK(worldView.HasComponent<ComponentB>(raii.m_EntityA));
 }
 
-TEST_CASE("ecs::WorldView. ReadComponent.")
+CLASS_TEST_CASE("ReadComponent.")
 {
 	using WorldView = ecs::WorldView
 		::Read<ComponentA, ComponentB>;
@@ -185,7 +185,7 @@ TEST_CASE("ecs::WorldView. ReadComponent.")
 	CHECK_NOTHROW(worldView.ReadComponent<ComponentB>(raii.m_EntityA));
 }
 
-TEST_CASE("ecs::WorldView. WriteComponent.")
+CLASS_TEST_CASE("WriteComponent.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA, ComponentB>;
@@ -202,7 +202,7 @@ TEST_CASE("ecs::WorldView. WriteComponent.")
 	CHECK_NOTHROW(worldView.WriteComponent<ComponentB>(raii.m_EntityA));
 }
 
-TEST_CASE("ecs::WorldView. ReadSingleton.")
+CLASS_TEST_CASE("ReadSingleton.")
 {
 	using WorldView = ecs::WorldView
 		::Read<SingletonA, SingletonB>;
@@ -215,7 +215,7 @@ TEST_CASE("ecs::WorldView. ReadSingleton.")
 	CHECK_NOTHROW(worldView.ReadSingleton<SingletonB>());
 }
 
-TEST_CASE("ecs::WorldView. WriteSingleton.")
+CLASS_TEST_CASE("WriteSingleton.")
 {
 	using WorldView = ecs::WorldView
 		::Write<SingletonA, SingletonB>;
@@ -228,7 +228,7 @@ TEST_CASE("ecs::WorldView. WriteSingleton.")
 	CHECK_NOTHROW(worldView.WriteSingleton<SingletonB>());
 }
 
-TEST_CASE("ecs::WorldView. ReadResource.")
+CLASS_TEST_CASE("ReadResource.")
 {
 	using WorldView = ecs::WorldView
 		::Read<ResourceA, ResourceB>;
@@ -241,7 +241,7 @@ TEST_CASE("ecs::WorldView. ReadResource.")
 	CHECK_NOTHROW(worldView.ReadResource<ResourceB>());
 }
 
-TEST_CASE("ecs::WorldView. WriteResource.")
+CLASS_TEST_CASE("WriteResource.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ResourceA, ResourceB>;
@@ -254,7 +254,7 @@ TEST_CASE("ecs::WorldView. WriteResource.")
 	CHECK_NOTHROW(worldView.WriteResource<ResourceB>());
 }
 
-TEST_CASE("ecs::WorldView. Components that are added to an entity are present in the added query.")
+CLASS_TEST_CASE("Components that are added to an entity are present in the added query.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA, ComponentB>;
@@ -282,7 +282,7 @@ TEST_CASE("ecs::WorldView. Components that are added to an entity are present in
 	CHECK(worldView.Count<ecs::query::Added<ComponentA, ComponentB>>() == 0);
 }
 
-TEST_CASE("ecs::WorldView. Components that are removed from an entity are present in the removed query.")
+CLASS_TEST_CASE("Components that are removed from an entity are present in the removed query.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA, ComponentB>;
@@ -316,7 +316,7 @@ TEST_CASE("ecs::WorldView. Components that are removed from an entity are presen
 	CHECK(worldView.Count<ecs::query::Removed<ComponentA, ComponentB>>() == 0);
 }
 
-TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using ReadComponent.")
+CLASS_TEST_CASE("Updated Query isn't triggered when using ReadComponent.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA, ComponentB>;
@@ -342,7 +342,7 @@ TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using ReadComponen
 	CHECK(worldView.Count<ecs::query::Updated<ComponentA, ComponentB>>() == 0);
 }
 
-TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using WriteComponent.")
+CLASS_TEST_CASE("Updated Query isn't triggered when using WriteComponent.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA, ComponentB>;
@@ -376,7 +376,7 @@ TEST_CASE("ecs::WorldView. Updated Query isn't triggered when using WriteCompone
 	CHECK(worldView.Count<ecs::query::Updated<ComponentA, ComponentB>>() == 0);
 }
 
-TEST_CASE("ecs::WorldView. Components that are added to an entity are present in the include query.")
+CLASS_TEST_CASE("Components that are added to an entity are present in the include query.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA, ComponentB>;
@@ -407,7 +407,7 @@ TEST_CASE("ecs::WorldView. Components that are added to an entity are present in
 	CHECK(worldView.Count<ecs::query::Include<ComponentA, ComponentB>>() == 0);
 }
 
-TEST_CASE("ecs::WorldView. Components that are removed from an entity are present in the exclude query.")
+CLASS_TEST_CASE("Components that are removed from an entity are present in the exclude query.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA, ComponentB>;
@@ -433,7 +433,7 @@ TEST_CASE("ecs::WorldView. Components that are removed from an entity are presen
 	CHECK(worldView.Count<ecs::query::Exclude<ComponentA, ComponentB>>() == 0);
 }
 
-TEST_CASE("ecs::WorldView. Components that are added and its entity is destroyed in the same frame are only present in the removed query.")
+CLASS_TEST_CASE("Components that are addedand its entity is destroyed in the same frame are only present in the removed query.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA>;
@@ -450,7 +450,7 @@ TEST_CASE("ecs::WorldView. Components that are added and its entity is destroyed
 	CHECK(worldView.Count<ecs::query::Removed<ComponentA>>() == 1);
 }
 
-TEST_CASE("ecs::WorldView. Components that are updated and removed in the same frame are only present in the removed query.")
+CLASS_TEST_CASE("Components that are updatedand removed in the same frame are only present in the removed query.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA>;
@@ -471,7 +471,7 @@ TEST_CASE("ecs::WorldView. Components that are updated and removed in the same f
 	CHECK(worldView.Count<ecs::query::Removed<ComponentA>>() == 1);
 }
 
-TEST_CASE("ecs::WorldView. Components that are updated the frame after a component was removed isn't present in either query.")
+CLASS_TEST_CASE("Components that are updated the frame after a component was removed isn't present in either query.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA>;
@@ -493,7 +493,7 @@ TEST_CASE("ecs::WorldView. Components that are updated the frame after a compone
 	CHECK(worldView.Count<ecs::query::Removed<ComponentA>>() == 0);
 }
 
-TEST_CASE("ecs::WorldView. Components that are updated and its entity is destroyed in the same frame are only present in the removed query.")
+CLASS_TEST_CASE("Components that are updatedand its entity is destroyed in the same frame are only present in the removed query.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA>;
@@ -514,7 +514,7 @@ TEST_CASE("ecs::WorldView. Components that are updated and its entity is destroy
 	CHECK(worldView.Count<ecs::query::Removed<ComponentA>>() == 1);
 }
 
-TEST_CASE("ecs::WorldView. Components that are updated the frame after an entity is destroyed aren't present in any query.")
+CLASS_TEST_CASE("Components that are updated the frame after an entity is destroyed aren't present in any query.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA>;

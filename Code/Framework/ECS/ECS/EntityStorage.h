@@ -2,13 +2,12 @@
 
 #include "Core/Map.h"
 #include "Core/SparseArray.h"
+#include "ECS/ComponentContainer.h"
 #include "ECS/ComponentId.h"
 #include "ECS/ComponentMask.h"
-#include "ECS/ComponentStorage.h"
 #include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
-#include "ECS/EventStorage.h"
-#include "ECS/SingletonStorage.h"
+#include "ECS/EntityBuffer.h"
 
 namespace ecs
 {
@@ -23,23 +22,40 @@ namespace ecs
 	{
 		friend class EntityWorld;
 
-		using Components = SparseArray<ecs::ComponentId, ecs::IComponentStorage*>;
+		using Components = SparseArray<ecs::ComponentId, ecs::IComponentContainer*>;
 		using EntityMap = Map<ecs::Entity, ecs::ComponentMask>;
 		using EntitySet = Array<ecs::Entity>;
-		using Events = SparseArray<TypeId, ecs::IEventStorage*>;
-		using Singletons = SparseArray<TypeId, ecs::ISingletonStorage*>;
 
 	public:
+		EntityStorage(ecs::QueryRegistry& queryRegistry);
+
+		void FlushChanges();
+
+		auto GetEntityBuffer() -> ecs::EntityBuffer&;
+		auto GetEntityBuffer() const -> const ecs::EntityBuffer&;
+
+		auto GetEntityMap() const -> const EntityMap&;
+
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
 		bool IsAlive(const ecs::Entity& entity) const;
+
+		auto CreateEntity() -> ecs::Entity;
+
+		void DestroyEntity(const ecs::Entity& entity);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Component
 
 		template<class TComponent>
 		void RegisterComponent();
+
+		template<class TComponent, typename... TArgs>
+		auto AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&;
+
+		template<class TComponent>
+		void RemoveComponent(const ecs::Entity& entity);
 
 		template<class TComponent>
 		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
@@ -50,36 +66,14 @@ namespace ecs
 		template<class TComponent>
 		auto TryComponent(const ecs::Entity& entity, const bool alive = true) const -> TComponent*;
 
-		//////////////////////////////////////////////////////////////////////////
-		// Event
-
-		template<class TEvent>
-		void RegisterEvent();
-
-		template<class TEvent>
-		auto GetEvents() const -> const Array<TEvent>&;
-
-		//////////////////////////////////////////////////////////////////////////
-		// Singleton
-
-		template<class TSingleton, typename... TArgs>
-		void RegisterSingleton(TArgs&&... args);
-
-		template<class TSingleton>
-		auto GetSingleton() -> TSingleton&;
-
 	private:
-		void FlushChanges(ecs::FrameBuffer& frameBuffer, ecs::QueryRegistry& queryRegistry);
+		ecs::EntityBuffer m_EntityBuffer;
+		ecs::QueryRegistry& m_QueryRegistry;
 
-	public:
 		Components m_AliveComponents;
 		Components m_DeadComponents;
 		EntityMap m_AliveEntities;
 		EntitySet m_DeadEntities;
-		Events m_Events;
-		Singletons m_Singletons;
-
-		Set<TypeId> m_SingletonsUpdated;
 	};
 }
 

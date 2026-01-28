@@ -2,8 +2,6 @@ m_Guid = "b7d0c9eb5380438ba90b9a344626134a"
 m_Name = "SH_Cursor"
 m_Type = "Shader"
 
-[Programs]
-
 m_Vertex = """
 #version 330 core
 

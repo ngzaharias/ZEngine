@@ -1,22 +1,35 @@
-#include "GameDebugPCH.h"
+﻿#include "GameDebugPCH.h"
 #include "GameDebug/NetworkSystem.h"
 
 #include "Core/GameTime.h"
 #include "Core/Parse.h"
 #include "Math/Vector.h"
 #include "ECS/EntityWorld.h"
+#include "ECS/Messages.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/GameStateChangeRequest.h"
 #include "GameDebug/DebugNetworkWindowRequest.h"
+#include "GameDebug/NetworkEvent.h"
 #include "GameDebug/NetworkWindowComponent.h"
 #include "Math/Math.h"
+#include "Network/Host.h"
+#include "Network/Peer.h"
 
 #include "imgui/imgui.h"
-#include "imgui/imgui_stdlib.h"
 #include "imgui/imgui_user.h"
 
+
+debug::NetworkSystem::NetworkSystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
+	: m_ClientWorld(clientWorld)
+	, m_ServerWorld(serverWorld)
+{
+}
+
+void debug::NetworkSystem::Initialise(World& world)
+{
+	world.AddEvent<debug::NetworkWindowRequest>();
+}
 
 void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -47,75 +60,57 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(label.c_str(), &isOpen, s_WindowFlags))
 		{
-			ImGui::InputText("##client_address", &window.m_ClientAddress);
-			ImGui::SameLine();
-			ImGui::InputInt("##client_port", &window.m_ClientPort);
-
-			ImGui::InputText("##server_address", &window.m_ServerAddress);
-			ImGui::SameLine();
-			ImGui::InputInt("##server_port", &window.m_ServerPort);
-
-			if (ImGui::Button("Standalone"))
+			if (ImGui::Button("host: startup"))
 			{
-				gamestate::NetworkHost request;
-				request.m_Mode = net::EMode::Standalone;
-				request.m_ClientAddress = window.m_ClientAddress;
-				request.m_ClientPort = window.m_ClientPort;
-				request.m_ServerAddress = window.m_ServerAddress;
-				request.m_ServerPort = window.m_ServerPort;
-
-				auto& requestComponent = world.AddEvent<gamestate::ChangeRequest>();
-				requestComponent.m_Queue.Append(request);
+				auto& host = world.WriteResource<net::Host>();
+				host.Startup();
 			}
 
-			if (ImGui::Button("Remote Client"))
+			if (ImGui::Button("host: shutdown"))
 			{
-				gamestate::NetworkJoin request;
-				request.m_Mode = net::EMode::RemoteClient;
-				request.m_ClientAddress = window.m_ClientAddress;
-				request.m_ClientPort = window.m_ClientPort;
-				request.m_ServerAddress = window.m_ServerAddress;
-				request.m_ServerPort = window.m_ServerPort;
-
-				auto& requestComponent = world.AddEvent<gamestate::ChangeRequest>();
-				requestComponent.m_Queue.Append(request);
+				auto& host = world.WriteResource<net::Host>();
+				host.Shutdown();
 			}
 
-			if (ImGui::Button("Listen Server"))
+			if (ImGui::Button("host: send message"))
 			{
-				gamestate::NetworkHost request;
-				request.m_Mode = net::EMode::ListenServer;
-				request.m_ClientAddress = window.m_ClientAddress;
-				request.m_ClientPort = window.m_ClientPort;
-				request.m_ServerAddress = window.m_ServerAddress;
-				request.m_ServerPort = window.m_ServerPort;
-
-				auto& requestComponent = world.AddEvent<gamestate::ChangeRequest>();
-				requestComponent.m_Queue.Append(request);
+				auto& request = m_ServerWorld.AddEvent<debug::NetworkEvent>();
+				request.m_Data = "PING FROM HOST";
 			}
 
-			if (ImGui::Button("Dedicated Server"))
-			{
-				gamestate::NetworkHost request;
-				request.m_Mode = net::EMode::DedicatedServer;
-				request.m_ClientAddress = window.m_ClientAddress;
-				request.m_ClientPort = window.m_ClientPort;
-				request.m_ServerAddress = window.m_ServerAddress;
-				request.m_ServerPort = window.m_ServerPort;
+			ImGui::Separator();
 
-				auto& requestComponent = world.AddEvent<gamestate::ChangeRequest>();
-				requestComponent.m_Queue.Append(request);
+			if (ImGui::Button("peer: connect"))
+			{
+				auto& peer = world.WriteResource<net::Peer>();
+				peer.Connect();
 			}
 
-			if (ImGui::Button("Shutdown"))
+			if (ImGui::Button("peer: disconnect"))
 			{
-				auto& requestComponent = world.AddEvent<gamestate::ChangeRequest>();
-				requestComponent.m_Queue.Append(gamestate::NetworkStop{});
+				auto& peer = world.WriteResource<net::Peer>();
+				peer.Disconnect();
+			}
+
+			if (ImGui::Button("peer: send message"))
+			{
+				auto& request = m_ClientWorld.AddEvent<debug::NetworkEvent>();
+				request.m_Data = "PING FROM PEER";
 			}
 		}
 		ImGui::End();
 
 		if (!isOpen)
 			world.DestroyEntity(view);
+	}
+
+	{
+		World clientWorld = m_ClientWorld.WorldView<World>();
+		for (const auto& request : clientWorld.Events<debug::NetworkEvent>())
+			Z_LOG(ELog::Debug, "Client: {}", request.m_Data);
+
+		World serverWorld = m_ServerWorld.WorldView<World>();
+		for (const auto& request : serverWorld.Events<debug::NetworkEvent>())
+			Z_LOG(ELog::Debug, "Server: {}", request.m_Data);
 	}
 }
