@@ -127,9 +127,12 @@ project "Editor"
 
 		-- Modules
 		"Camera",
+		"ClientCursor",
 		"Container",
 		"Hexmap",
 		"Hidden",
+		"ServerCursor",
+		"SharedCursor",
 		"Softbody",
 		"Tabletop",
 		"Tactics",
