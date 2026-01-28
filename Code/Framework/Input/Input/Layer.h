@@ -3,8 +3,16 @@
 #include "Core/Array.h"
 #include "Core/Delegate.h"
 #include "Core/Flags.h"
+#include "Core/Set.h"
 #include "Input/Binding.h"
 #include "Math/Math.h"
+
+class Vector2f;
+
+namespace input
+{
+	enum class EKey;
+}
 
 namespace input
 {
@@ -25,7 +33,6 @@ namespace input
 			Set<input::EKey>& held, 
 			Set<input::EKey>& pressed, 
 			Set<input::EKey>& released)>;
-
 
 		int32 m_Priority = 0;
 		Array<Binding> m_Bindings = {};

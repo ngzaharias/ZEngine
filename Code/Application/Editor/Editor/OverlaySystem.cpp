@@ -1,6 +1,7 @@
 #include "EditorPCH.h"
 #include "Editor/OverlaySystem.h"
 
+#include "Core/Optional.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"

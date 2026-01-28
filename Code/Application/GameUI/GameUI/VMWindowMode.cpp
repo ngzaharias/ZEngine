@@ -1,6 +1,9 @@
 #include "GameUIPCH.h"
 #include "GameUI/VMWindowMode.h"
 
+#include "Core/EnumHelpers.h"
+#include "Core/StringView.h"
+
 #include <NsCore/ReflectionImplement.h>
 
 gui::VMWindowMode::VMWindowMode(const eng::EWindowMode windowMode)

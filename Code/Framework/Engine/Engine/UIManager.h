@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Core/Array.h"
 #include "Core/Map.h"
+#include "Core/Name.h"
 
 #include <NsCore/BaseComponent.h>
 #include <NsCore/Delegate.h>

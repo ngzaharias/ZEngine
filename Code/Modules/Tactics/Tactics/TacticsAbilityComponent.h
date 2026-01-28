@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Array.h"
 #include "Core/Name.h"
 #include "ECS/Component.h"
 

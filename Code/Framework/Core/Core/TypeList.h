@@ -1,5 +1,7 @@
 #pragma once
 
+#include <type_traits>
+
 template <typename... Types>
 struct TypeList
 {

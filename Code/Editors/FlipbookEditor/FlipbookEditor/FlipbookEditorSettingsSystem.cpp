@@ -4,6 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/Visitor.h"
 #include "FlipbookEditor/FlipbookEditorSettingsSingleton.h"
 
 namespace
