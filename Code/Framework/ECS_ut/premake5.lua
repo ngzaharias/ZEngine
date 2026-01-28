@@ -23,21 +23,32 @@ project "ECS_ut"
 		"%{wks.location}/../3rdParty/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
+		"%{wks.location}/../Code/Framework/Network/",
 	}
 
 	libdirs 
 	{ 
 		"%{wks.location}/../3rdParty/optick/1.3.1/Library/",
+		"%{wks.location}/../3rdParty/SteamworksSDK/Library/",
 	}
 	
 	links 
 	{ 
+		-- Bindings
+		"Steam",
+
+		-- Framework
 		"Core",
 		"ECS",
+		"Network",	
+		
+		-- 3rdParty
 		"OptickCore.lib",
+		"steam_api64.lib",
 	}
 
 	postbuildcommands 
 	{ 
 		"{COPY} %{wks.location}/../3rdParty/optick/1.3.1/Binary/*.dll $(OutDir)",
+		"{COPY} %{wks.location}/../3rdParty/SteamworksSDK/Binary/*.dll $(OutDir)",
 	}

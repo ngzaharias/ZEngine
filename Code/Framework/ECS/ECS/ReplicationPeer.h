@@ -41,7 +41,6 @@ namespace ecs
 
 		void Update(const GameTime& gameTime);
 
-	private:
 		void ProcessEvents();
 
 		void OnProcessMessages(const Array<const net::Message*>& messages);
@@ -78,7 +77,8 @@ namespace ecs
 		ecs::EntityWorld& m_EntityWorld;
 		DelegateCollection m_Collection;
 
-		Map<ecs::Entity, net::Entity> m_PeerToHost;
 		Map<net::Entity, ecs::Entity> m_HostToPeer;
+		Map<ecs::Entity, net::Entity> m_PeerToHost;
+		Map<ecs::Entity, net::Entity> m_ToDestroy;
 	};
 }

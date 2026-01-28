@@ -51,12 +51,12 @@ CLASS_TEST_CASE("CreateEntity.")
 	ecs::EntityWorld entityWorld;
 	ecs::WorldView world = entityWorld.WorldView<ecs::WorldView>();
 
+	CHECK(world.CreateEntity() == ecs::Entity(0));
 	CHECK(world.CreateEntity() == ecs::Entity(1));
 	CHECK(world.CreateEntity() == ecs::Entity(2));
 	CHECK(world.CreateEntity() == ecs::Entity(3));
 	CHECK(world.CreateEntity() == ecs::Entity(4));
 	CHECK(world.CreateEntity() == ecs::Entity(5));
-	CHECK(world.CreateEntity() == ecs::Entity(6));
 }
 
 CLASS_TEST_CASE("DestroyEntity.")
@@ -69,6 +69,13 @@ CLASS_TEST_CASE("DestroyEntity.")
 	ecs::Entity entity = worldView.CreateEntity();
 	entityWorld.Update({});
 
+	CHECK(entity.GetIndex() == 0);
+	CHECK(entity.GetVersion() == 0);
+
+	worldView.DestroyEntity(entity);
+	entity = worldView.CreateEntity();
+	entityWorld.Update({});
+
 	CHECK(entity.GetIndex() == 1);
 	CHECK(entity.GetVersion() == 0);
 
@@ -79,15 +86,8 @@ CLASS_TEST_CASE("DestroyEntity.")
 	CHECK(entity.GetIndex() == 2);
 	CHECK(entity.GetVersion() == 0);
 
-	worldView.DestroyEntity(entity);
 	entity = worldView.CreateEntity();
-	entityWorld.Update({});
-
-	CHECK(entity.GetIndex() == 3);
-	CHECK(entity.GetVersion() == 0);
-
-	entity = worldView.CreateEntity();
-	CHECK(entity.GetIndex() == 1);
+	CHECK(entity.GetIndex() == 0);
 	CHECK(entity.GetVersion() == 1);
 }
 

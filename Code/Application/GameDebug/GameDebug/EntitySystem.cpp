@@ -36,14 +36,14 @@ namespace
 		return std::format("{}: {}", label, index);
 	}
 
-	void DebugEntity(ecs::EntityWorld& entityWorld, const ecs::Entity& entity, ecs::Entity& inout_Selected)
+	void DebugEntity(ecs::EntityWorld& world, const ecs::Entity& entity, ecs::Entity& inout_Selected)
 	{
 		int32 index = entity.GetIndex();
 		int32 salt = entity.GetVersion();
 		s_ScratchString = std::to_string(index) + ", " + std::to_string(salt);
-		if (entityWorld.HasComponent<ecs::NameComponent>(entity))
+		if (world.HasComponent<ecs::NameComponent>(entity))
 		{
-			const auto& nameComponent = entityWorld.ReadComponent<ecs::NameComponent>(entity);
+			const auto& nameComponent = world.ReadComponent<ecs::NameComponent>(entity);
 			if (!nameComponent.m_Name.empty())
 				s_ScratchString += " - " + nameComponent.m_Name;
 		}
@@ -53,11 +53,11 @@ namespace
 			inout_Selected = isSelected ? ecs::Entity::Unassigned : entity;
 	}
 
-	void DebugEntities(ecs::EntityWorld& entityWorld, ecs::Entity& inout_Selected)
+	void DebugEntities(ecs::EntityWorld& world, ecs::Entity& inout_Selected)
 	{
-		const auto& entities = entityWorld.m_EntityStorage.m_AliveEntities;
-		for (const auto& [debugEntity, componentMask] : entities)
-			DebugEntity(entityWorld, debugEntity, inout_Selected);
+		const auto& entities = world.m_EntityStorage.GetEntityMap();
+		for (const auto& [entity, mask] : entities)
+			DebugEntity(world, entity, inout_Selected);
 	}
 
 	void DebugComponents(ecs::EntityWorld& world, const ecs::Entity& entity)
@@ -77,7 +77,8 @@ namespace
 		ImGui::Text("%i, %i - %s", entity.GetIndex(), entity.GetVersion(), name);
 		ImGui::Separator();
 
-		const ecs::ComponentMask componentMask = world.m_EntityStorage.m_AliveEntities.Get(entity);
+		const auto& entities = world.m_EntityStorage.GetEntityMap();
+		const ecs::ComponentMask& componentMask = entities.Get(entity);
 		for (int32 i = 0; i < ecs::COMPONENTS_MAX; ++i)
 		{
 			if (!componentMask.Has(i))

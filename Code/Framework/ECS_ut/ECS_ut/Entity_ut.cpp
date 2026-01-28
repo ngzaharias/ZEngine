@@ -7,7 +7,7 @@
 CLASS_TEST_CASE("Can be default constructed.")
 {
 	const ecs::Entity entity = {};
-	CHECK(entity.GetValue() == 0);
+	CHECK(entity.GetValue() == 0xFFFFFFFFFFFFFFFF);
 }
 
 CLASS_TEST_CASE("Can be constructed with a uint64.")
@@ -30,7 +30,7 @@ CLASS_TEST_CASE("Can be constructed with an index and version.")
 	CHECK(entity.GetValue() == 0x0000000200000001);
 }
 
-CLASS_TEST_CASE("Can be constructed with an index, version and ownership.")
+CLASS_TEST_CASE("Can be constructed with an index, version and storage.")
 {
 	const ecs::Entity entity = ecs::Entity(1, 2, 3);
 	CHECK(entity.GetValue() == 0x0300000200000001);
@@ -39,17 +39,7 @@ CLASS_TEST_CASE("Can be constructed with an index, version and ownership.")
 CLASS_TEST_CASE("Has a static member called Unassigned which is the same as a default constructed entity.")
 {
 	const ecs::Entity entity = ecs::Entity::Unassigned;
-	CHECK(entity.GetValue() == 0);
-}
-
-CLASS_TEST_CASE("Has a static member called MainId.")
-{
-	CHECK(ecs::Entity::MainId == 0);
-}
-
-CLASS_TEST_CASE("Has a static member called SyncId.")
-{
-	CHECK(ecs::Entity::SyncId == 1);
+	CHECK(entity.GetValue() == 0xFFFFFFFFFFFFFFFF);
 }
 
 CLASS_TEST_CASE("operator bool returns true when called on an entity with a value.")
@@ -137,12 +127,6 @@ CLASS_TEST_CASE("GetVersion returns the same value it was constructed with.")
 	CHECK(entity.GetVersion() == 1);
 }
 
-CLASS_TEST_CASE("GetOwnership returns the same value it was constructed with.")
-{
-	const ecs::Entity entity = ecs::Entity(0, 0, 1);
-	CHECK(entity.GetOwnership() == 1);
-}
-
 CLASS_TEST_CASE("GetValue returns the same value it was constructed with.")
 {
 	const ecs::Entity entity = ecs::Entity(123456789);
@@ -159,12 +143,6 @@ CLASS_TEST_CASE("GetVersion uses bits 32-55.")
 {
 	const ecs::Entity entity = ecs::Entity(0x00FFFFFF00000000);
 	CHECK(entity.GetVersion() == 0x00FFFFFF);
-}
-
-CLASS_TEST_CASE("GetOwnership uses bits 56-63.")
-{
-	const ecs::Entity entity = ecs::Entity(0xFF00000000000000);
-	CHECK(entity.GetOwnership() == 0x000000FF);
 }
 
 CLASS_TEST_CASE("GetValue uses all bits.")

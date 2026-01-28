@@ -145,7 +145,10 @@ auto ecs::EntityWorld::WriteComponent(const ecs::Entity& entity, const bool aliv
 	Z_PANIC(HasComponent<TComponent>(entity, alive), "Entity doesn't have this component!");
 
 	if (alive)
-		m_EntityStorage.m_MainBuffer.UpdateComponent<TComponent>(entity);
+	{
+		ecs::EntityBuffer& buffer = m_EntityStorage.GetEntityBuffer();
+		buffer.UpdateComponent<TComponent>(entity);
+	}
 	return m_EntityStorage.GetComponent<TComponent>(entity, alive);
 }
 

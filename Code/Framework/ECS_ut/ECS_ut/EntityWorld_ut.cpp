@@ -260,13 +260,6 @@ CLASS_TEST_CASE("CreateEntity constructs a valid entity.")
 	CHECK(!entity.IsUnassigned());
 }
 
-CLASS_TEST_CASE("CreateEntity constructs an entity using the main id.")
-{
-	ecs::EntityWorld world;
-	ecs::Entity entity = world.CreateEntity();
-	CHECK(entity.GetOwnership() == 0);
-}
-
 CLASS_TEST_CASE("DestroyEntity marks an entity for destruction.")
 {
 	ecs::EntityWorld world;
@@ -294,9 +287,8 @@ CLASS_TEST_CASE("DestroyEntity doesn't change the values of an entity.")
 	world.Update({});
 
 	world.DestroyEntity(entity);
-	CHECK(entity.GetIndex() == 1);
+	CHECK(entity.GetIndex() == 0);
 	CHECK(entity.GetVersion() == 0);
-	CHECK(entity.GetOwnership() == 0);
 }
 
 CLASS_TEST_CASE("RegisterComponent will register a component with the world.")
@@ -340,24 +332,8 @@ CLASS_TEST_CASE("AddComponent will crash the game if called twice on the same en
 
 	ecs::Entity entity = world.CreateEntity();
 	world.AddComponent<Component>(entity);
-	world.Update({});
-
-	world.RemoveComponent<Component>(entity);
-	//CHECK_THROWS(world.RemoveComponent<Component>(entity));
+	//CHECK_THROWS(world.AddComponent<Component>(entity));
 	//CHECK_THROWS(world.Update({}));
-}
-
-CLASS_TEST_CASE("RemoveComponent will remove the component from an entity.")
-{
-	ecs::EntityWorld world;
-	world.RegisterComponent<Component>();
-	ecs::Entity entity = world.CreateEntity();
-
-	world.AddComponent<Component>(entity);
-	world.Update({});
-
-	CHECK_NOTHROW(world.RemoveComponent<Component>(entity));
-	CHECK_NOTHROW(world.Update({}));
 }
 
 CLASS_TEST_CASE("AddComponent can be called again after the component was removed.")
@@ -376,6 +352,19 @@ CLASS_TEST_CASE("AddComponent can be called again after the component was remove
 	world.Update({});
 
 	CHECK(world.HasComponent<Component>(entity));
+}
+
+CLASS_TEST_CASE("RemoveComponent will remove the component from an entity.")
+{
+	ecs::EntityWorld world;
+	world.RegisterComponent<Component>();
+	ecs::Entity entity = world.CreateEntity();
+
+	world.AddComponent<Component>(entity);
+	world.Update({});
+
+	CHECK_NOTHROW(world.RemoveComponent<Component>(entity));
+	CHECK_NOTHROW(world.Update({}));
 }
 
 CLASS_TEST_CASE("RemoveComponent will crash the game if called on an entity that doesn't have the component.")

@@ -5,20 +5,19 @@ void ecs::EntityStorage::RegisterComponent()
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
 	m_AliveComponents.Set(componentId, new ecs::ComponentContainer<TComponent>());
 	m_DeadComponents.Set(componentId, new ecs::ComponentContainer<TComponent>());
-	m_MainBuffer.RegisterComponent<TComponent>();
-	m_SyncBuffer.RegisterComponent<TComponent>();
+	m_EntityBuffer.RegisterComponent<TComponent>();
 }
 
 template <typename TComponent, typename... TArgs>
 auto ecs::EntityStorage::AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&
 {
-	return m_MainBuffer.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
+	return m_EntityBuffer.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
 }
 
 template <typename TComponent>
 void ecs::EntityStorage::RemoveComponent(const ecs::Entity& entity)
 {
-	m_MainBuffer.RemoveComponent<TComponent>(entity);
+	m_EntityBuffer.RemoveComponent<TComponent>(entity);
 }
 
 template<class TComponent>

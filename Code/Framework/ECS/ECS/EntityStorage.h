@@ -29,6 +29,13 @@ namespace ecs
 	public:
 		EntityStorage(ecs::QueryRegistry& queryRegistry);
 
+		void FlushChanges();
+
+		auto GetEntityBuffer() -> ecs::EntityBuffer&;
+		auto GetEntityBuffer() const -> const ecs::EntityBuffer&;
+
+		auto GetEntityMap() const -> const EntityMap&;
+
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
@@ -59,13 +66,8 @@ namespace ecs
 		template<class TComponent>
 		auto TryComponent(const ecs::Entity& entity, const bool alive = true) const -> TComponent*;
 
-		//////////////////////////////////////////////////////////////////////////
-
-		void FlushChanges();
-
-	public:
-		ecs::EntityBuffer m_MainBuffer;
-		ecs::EntityBuffer m_SyncBuffer;
+	private:
+		ecs::EntityBuffer m_EntityBuffer;
 		ecs::QueryRegistry& m_QueryRegistry;
 
 		Components m_AliveComponents;

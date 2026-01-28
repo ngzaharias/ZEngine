@@ -8,13 +8,11 @@ namespace ecs
 	constexpr uint64 s_IndexOffset = 0;
 	constexpr uint64 s_VersionMask = 0x0000000000FFFFFF;
 	constexpr uint64 s_VersionOffset = 32;
-	constexpr uint64 s_OwnershipMask = 0x00000000000000FF;
-	constexpr uint64 s_OwnershipOffset = 56;
+	constexpr uint64 s_StorageMask = 0x0000000000000FF;
+	constexpr uint64 s_StorageOffset = 56;
 
 	struct Entity
 	{
-		static const uint8 MainId;
-		static const uint8 SyncId;
 		static const Entity Unassigned;
 
 		Entity() = default;
@@ -28,11 +26,11 @@ namespace ecs
 			m_Value = a | b;
 		}
 
-		Entity(const uint32 index, const uint32 version, const uint8 ownership)
+		Entity(const uint32 index, const uint32 version, const uint8 storage)
 		{
 			const uint64 a = (index & s_IndexMask) << s_IndexOffset;
 			const uint64 b = (version & s_VersionMask) << s_VersionOffset;
-			const uint64 c = (ownership & s_OwnershipMask) << s_OwnershipOffset;
+			const uint64 c = (storage & s_StorageMask) << s_StorageOffset;
 			m_Value = a | b | c;
 		}
 
@@ -59,21 +57,13 @@ namespace ecs
 			return static_cast<int32>(version);
 		}
 
-		int32 GetOwnership() const
-		{
-			const uint64 ownership = (m_Value >> s_OwnershipOffset) & s_OwnershipMask;
-			return static_cast<int32>(ownership);
-		}
-
 		uint64 GetValue() const
 		{
 			return m_Value;
 		}
 
-		uint64 m_Value = 0;
+		uint64 m_Value = 0xFFFFFFFFFFFFFFFF;
 	};
 }
 
-inline constexpr uint8 ecs::Entity::MainId = 0;
-inline constexpr uint8 ecs::Entity::SyncId = 1;
 inline constexpr ecs::Entity ecs::Entity::Unassigned;

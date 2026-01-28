@@ -27,20 +27,12 @@ CLASS_TEST_CASE("The first call to CreateEntity constructs an entity that isn't 
 CLASS_TEST_CASE("CreateEntity constructs an entity incrementing the index by 1 each time.")
 {
 	ecs::EntityBuffer buffer;
+	CHECK(buffer.CreateEntity() == ecs::Entity(0));
 	CHECK(buffer.CreateEntity() == ecs::Entity(1));
 	CHECK(buffer.CreateEntity() == ecs::Entity(2));
 	CHECK(buffer.CreateEntity() == ecs::Entity(3));
 	CHECK(buffer.CreateEntity() == ecs::Entity(4));
 	CHECK(buffer.CreateEntity() == ecs::Entity(5));
-	CHECK(buffer.CreateEntity() == ecs::Entity(6));
-}
-
-CLASS_TEST_CASE("Can be constructed with a different ownership id and each entity created also has the same id.")
-{
-	ecs::EntityBuffer buffer = ecs::EntityBuffer(1);
-	CHECK(buffer.CreateEntity() == ecs::Entity(1, 0, 1));
-	CHECK(buffer.CreateEntity() == ecs::Entity(2, 0, 1));
-	CHECK(buffer.CreateEntity() == ecs::Entity(3, 0, 1));
 }
 
 CLASS_TEST_CASE("Entities that have been destroyed are marked in the changes map.")
@@ -58,19 +50,19 @@ CLASS_TEST_CASE("Entities that have been destroyed can be recycled on subsequent
 {
 	ecs::EntityBuffer buffer;
 	ecs::Entity entity = buffer.CreateEntity();
-	CHECK(entity.GetIndex() == 1);
+	CHECK(entity.GetIndex() == 0);
 	CHECK(entity.GetVersion() == 0);
 
 	buffer.DestroyEntity(entity);
 	buffer.RecycleEntity(entity);
 	entity = buffer.CreateEntity();
-	CHECK(entity.GetIndex() == 1);
+	CHECK(entity.GetIndex() == 0);
 	CHECK(entity.GetVersion() == 1);
 
 	buffer.DestroyEntity(entity);
 	buffer.RecycleEntity(entity);
 	entity = buffer.CreateEntity();
-	CHECK(entity.GetIndex() == 1);
+	CHECK(entity.GetIndex() == 0);
 	CHECK(entity.GetVersion() == 2);
 }
 
@@ -79,9 +71,9 @@ CLASS_TEST_CASE("Entities are generated with new indexes when there are no recyc
 	ecs::EntityBuffer buffer;
 	ecs::Entity entityA = buffer.CreateEntity();
 	ecs::Entity entityB = buffer.CreateEntity();
-	CHECK(entityA.GetIndex() == 1);
+	CHECK(entityA.GetIndex() == 0);
 	CHECK(entityA.GetVersion() == 0);
-	CHECK(entityB.GetIndex() == 2);
+	CHECK(entityB.GetIndex() == 1);
 	CHECK(entityB.GetVersion() == 0);
 
 	buffer.DestroyEntity(entityA);
@@ -91,13 +83,13 @@ CLASS_TEST_CASE("Entities are generated with new indexes when there are no recyc
 
 	entityA = buffer.CreateEntity();
 	entityB = buffer.CreateEntity();
-	CHECK(entityA.GetIndex() == 1);
+	CHECK(entityA.GetIndex() == 0);
 	CHECK(entityA.GetVersion() == 1);
-	CHECK(entityB.GetIndex() == 2);
+	CHECK(entityB.GetIndex() == 1);
 	CHECK(entityB.GetVersion() == 1);
 
 	ecs::Entity entityC = buffer.CreateEntity();
-	CHECK(entityC.GetIndex() == 3);
+	CHECK(entityC.GetIndex() == 2);
 	CHECK(entityC.GetVersion() == 0);
 }
 

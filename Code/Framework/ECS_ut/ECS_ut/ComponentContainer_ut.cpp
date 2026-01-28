@@ -17,7 +17,7 @@ namespace
 
 CLASS_TEST_CASE("Contains returns true if there is an entity with the component.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	container.Set(entity, {});
 	CHECK(container.Contains(entity));
@@ -25,14 +25,14 @@ CLASS_TEST_CASE("Contains returns true if there is an entity with the component.
 
 CLASS_TEST_CASE("Contains returns false if there isn't an entity with the component.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	CHECK(!container.Contains(entity));
 }
 
 CLASS_TEST_CASE("Contains can be called on a const reference of the container.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	const ecs::ComponentContainer<Component>& reference = container;
 	CHECK_NOTHROW(reference.Contains(entity));
@@ -40,7 +40,7 @@ CLASS_TEST_CASE("Contains can be called on a const reference of the container.")
 
 CLASS_TEST_CASE("Emplace constructs a component in place and adds it to the container using entity as its key.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	container.Emplace(entity);
 
@@ -50,7 +50,7 @@ CLASS_TEST_CASE("Emplace constructs a component in place and adds it to the cont
 
 CLASS_TEST_CASE("Emplace returns the component after construction so it can be modified further.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	{
 		auto& component = container.Emplace(entity);
@@ -77,7 +77,7 @@ CLASS_TEST_CASE("Emplace returns a reference to a component but isn't safe to us
 
 CLASS_TEST_CASE("Emplace can construct the component using vardic arguments.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	container.Emplace(entity, 1337);
 
@@ -114,7 +114,7 @@ CLASS_TEST_CASE("GetCount can be called on a const reference of the container.")
 
 CLASS_TEST_CASE("Get returns the component from the container that matches the entity.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	container.Emplace(entity);
 
@@ -124,14 +124,14 @@ CLASS_TEST_CASE("Get returns the component from the container that matches the e
 
 CLASS_TEST_CASE("Get crashes when called with an entity that doesn't exist in the container.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	//CHECK_THROWS(container.Get(entity));
 }
 
 CLASS_TEST_CASE("Get returns a modifiable component from the container.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	container.Emplace(entity);
 	{
@@ -146,7 +146,7 @@ CLASS_TEST_CASE("Get returns a modifiable component from the container.")
 
 CLASS_TEST_CASE("Get can be called on a const container.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	container.Emplace(entity);
 
@@ -157,7 +157,7 @@ CLASS_TEST_CASE("Get can be called on a const container.")
 
 CLASS_TEST_CASE("Get returns a const reference to a component when called on a const container.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	container.Emplace(entity);
 
@@ -198,7 +198,7 @@ CLASS_TEST_CASE("GetAll doesn't guarentee they are returned in the order they we
 
 CLASS_TEST_CASE("GetAll returns a const reference of values when called on a const container.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	const ecs::ComponentContainer<Component>& reference = container;
 	auto& values = reference.GetAll();
@@ -207,7 +207,7 @@ CLASS_TEST_CASE("GetAll returns a const reference of values when called on a con
 
 CLASS_TEST_CASE("Try returns the component from the container that matches the entity.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	container.Emplace(entity);
 
@@ -217,14 +217,14 @@ CLASS_TEST_CASE("Try returns the component from the container that matches the e
 
 CLASS_TEST_CASE("Try returns nullptr when called with an entity that doesn't exist in the container.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	CHECK(!container.Try(entity));
 }
 
 CLASS_TEST_CASE("Try returns a modifiable component from the container.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	container.Emplace(entity);
 	{
@@ -239,7 +239,7 @@ CLASS_TEST_CASE("Try returns a modifiable component from the container.")
 
 CLASS_TEST_CASE("Try can be called on a const container.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	container.Emplace(entity);
 
@@ -250,7 +250,7 @@ CLASS_TEST_CASE("Try can be called on a const container.")
 
 CLASS_TEST_CASE("Try returns a const reference to a component when called on a const container.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> container;
 	container.Emplace(entity);
 
@@ -265,7 +265,7 @@ CLASS_TEST_CASE("Set.")
 
 CLASS_TEST_CASE("Move transfers a single entity and component from one container to another.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> containerA;
 	ecs::ComponentContainer<Component> containerB;
 	containerA.Emplace(entity, 1);
@@ -308,7 +308,7 @@ CLASS_TEST_CASE("MoveAll transfers all entities and components from one containe
 
 CLASS_TEST_CASE("MoveAll removes the entities and components after they've been moved.")
 {
-	ecs::Entity entity;
+	ecs::Entity entity(1);
 	ecs::ComponentContainer<Component> containerA;
 	ecs::ComponentContainer<Component> containerB;
 	containerA.Emplace(entity, 1);

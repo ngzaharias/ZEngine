@@ -3,11 +3,6 @@
 //////////////////////////////////////////////////////////////////////////
 // Entity
 
-ecs::EntityBuffer::EntityBuffer(const uint8 ownershipId)
-	: m_Owner(ownershipId)
-{
-}
-
 auto ecs::EntityBuffer::CreateEntity() -> ecs::Entity
 {
 	ecs::Entity entity;
@@ -18,12 +13,11 @@ auto ecs::EntityBuffer::CreateEntity() -> ecs::Entity
 
 		entity = ecs::Entity(
 			recycled.GetIndex(), 
-			recycled.GetVersion() + 1,
-			m_Owner);
+			recycled.GetVersion() + 1);
 	}
 	else
 	{
-		entity = ecs::Entity(m_Index++, 0, m_Owner);
+		entity = ecs::Entity(m_Index++, 0);
 	}
 
 	m_EntityChanges.Insert(entity, ecs::EntityChange());

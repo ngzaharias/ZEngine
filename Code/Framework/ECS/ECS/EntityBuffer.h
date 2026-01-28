@@ -21,9 +21,6 @@ namespace ecs
 		using Handles = Array<ecs::Entity>;
 
 	public:
-		EntityBuffer() = default;
-		EntityBuffer(const uint8 ownershipId);
-
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
@@ -77,8 +74,7 @@ namespace ecs
 		const ecs::ComponentContainer<TComponent>* TryContainerAt() const;
 
 	private:
-		int32 m_Index = 1;
-		uint8 m_Owner = 0;
+		int32 m_Index = 0;
 
 		Containers m_Components = {};
 		Changes m_EntityChanges = {};

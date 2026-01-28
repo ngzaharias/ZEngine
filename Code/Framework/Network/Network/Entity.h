@@ -18,6 +18,6 @@ namespace net
 		bool operator!=(const Entity& rhs) const { return !this->operator==(rhs); }
 		bool operator<(const Entity& rhs) const { return m_Value < rhs.m_Value; }
 
-		uint64 m_Value = UINT64_MAX;
+		uint64 m_Value = 0xFFFFFFFFFFFFFFFF;
 	};
 }
