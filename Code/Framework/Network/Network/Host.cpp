@@ -13,7 +13,7 @@ namespace
 {
 	bool SendMessage(HSteamNetConnection connection, const void* pData, uint32 nSizeOfData)
 	{
-		int nSendFlags = k_nSteamNetworkingSend_Unreliable;
+		int nSendFlags = k_nSteamNetworkingSend_Reliable;
 		EResult res = SteamNetworkingSockets()->SendMessageToConnection(connection, pData, nSizeOfData, nSendFlags, nullptr);
 		switch (res)
 		{
