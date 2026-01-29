@@ -61,9 +61,12 @@ void client::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 	for (auto&& view : world.Query<PeerAddedQuery>())
 	{
 		const auto& peer = world.ReadResource<net::Peer>();
+		const net::PeerId peerId = peer.GetPeerId();
 		const auto& serverComponent = view.ReadRequired<shared::cursor::TransformComponent>();
-		if (serverComponent.m_PeerId == peer.GetPeerId())
+		if (serverComponent.m_PeerId == peerId)
 			continue;
+
+		Z_LOG(ELog::Debug, "Cursor: Added Cursor for Peer {}", peerId.GetIndex());
 
 		world.AddComponent<client::cursor::RenderComponent>(view);
 
