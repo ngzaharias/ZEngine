@@ -228,7 +228,10 @@ void net::Host::OnPeerDisconnected(HSteamNetConnection connection)
 		if (connection != peerData.m_Connection)
 			continue;
 
-		m_PeerMap.Remove(peerId);
 		m_OnPeerDisconnected.Publish(peerId);
+
+		// do last
+		m_PeerMap.Remove(peerId);
+		break;
 	}
 }
