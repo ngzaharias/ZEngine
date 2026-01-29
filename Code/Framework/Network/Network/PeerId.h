@@ -4,15 +4,15 @@
 
 namespace net
 {
-	/// \brief Represents a single computer that is connected a server.
-	/// Note: Only the first 16 bits are used.
+	/// \brief Represents a single computer that is connected to a host.
 	struct PeerId
 	{
+		// Value reserved for the host.
+		static const PeerId HostId;
 		static const PeerId Unassigned;
 
 		constexpr PeerId() = default;
 		constexpr PeerId(const int32 value) : m_Value(value) { }
-		constexpr PeerId(const PeerId& peerId) : m_Value(peerId.m_Value) { }
 
 		constexpr int32 GetIndex() const { return m_Value; }
 
@@ -23,4 +23,5 @@ namespace net
 	};
 }
 
-inline constexpr net::PeerId net::PeerId::Unassigned(INT32_MAX);
+inline constexpr net::PeerId net::PeerId::HostId(0);
+inline constexpr net::PeerId net::PeerId::Unassigned;

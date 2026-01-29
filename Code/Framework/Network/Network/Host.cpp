@@ -4,6 +4,7 @@
 #include "Core/GameTime.h"
 #include "Core/Profiler.h"
 #include "Network/MessageEnum.h"
+#include "Network/Messages.h"
 
 // https://github.com/ValveSoftware/GameNetworkingSockets
 // https://keithjohnston.wordpress.com/2014/02/17/nat-punch-through-for-multiplayer-games/
@@ -182,15 +183,7 @@ void net::Host::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCall
 			return;
 		}
 
-		Z_LOG(ELog::Network, "Host: Accepted Peer.", static_cast<int32>(res));
-		SteamNetworkingSockets()->SetConnectionPollGroup(connection, m_NetPollGroup);
-
-		net::PeerId peerId;
-		net::PeerData peerData;
-		peerData.m_Connection = connection;
-		m_PeerMap.Insert(peerId, peerData);
-
-		m_OnPeerConnected.Publish(peerId);
+		OnPeerConnected(connection);
 	}
 
 	const bool isDisconnecting =
@@ -198,13 +191,40 @@ void net::Host::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCall
 		eNewState == k_ESteamNetworkingConnectionState_ClosedByPeer;
 	if (isDisconnecting)
 	{
-		for (auto&& [peerId, peerData] : m_PeerMap)
-		{
-			if (connection != peerData.m_Connection)
-				continue;
+		OnPeerDisconnected(connection);
+	}
+}
 
-			m_PeerMap.Remove(peerId);
-			m_OnPeerDisconnected.Publish(peerId);
-		}
+void net::Host::OnPeerConnected(HSteamNetConnection connection)
+{
+	Z_LOG(ELog::Network, "Host: Accepted Peer.");
+	SteamNetworkingSockets()->SetConnectionPollGroup(connection, m_NetPollGroup);
+
+	net::PeerId peerId;
+	peerId.m_Value = m_PeerIndex++;
+
+	net::PeerData peerData;
+	peerData.m_Connection = connection;
+	m_PeerMap.Insert(peerId, peerData);
+
+	// initial message to peer to establish the connection
+	auto* message = RequestMessage<net::PeerHandshakeMessage>(net::EMessage::PeerHandshake);
+	message->m_PeerId = peerId;
+
+	SendMessage(peerId, message);
+	ReleaseMessage(message);
+
+	m_OnPeerConnected.Publish(peerId);
+}
+
+void net::Host::OnPeerDisconnected(HSteamNetConnection connection)
+{
+	for (auto&& [peerId, peerData] : m_PeerMap)
+	{
+		if (connection != peerData.m_Connection)
+			continue;
+
+		m_PeerMap.Remove(peerId);
+		m_OnPeerDisconnected.Publish(peerId);
 	}
 }

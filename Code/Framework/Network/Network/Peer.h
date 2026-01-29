@@ -16,6 +16,11 @@ class GameTime;
 
 namespace net
 {
+	struct PeerHandshakeMessage;
+}
+
+namespace net
+{
 	class Peer final
 	{
 	public:
@@ -42,6 +47,9 @@ namespace net
 		STEAM_CALLBACK(net::Peer, OnLobbyJoinRequested, GameLobbyJoinRequested_t);
 		STEAM_CALLBACK(net::Peer, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
+		void OnProcessMessages(const Array<const net::Message*>& messages);
+		void OnPeerHandshake(const net::PeerHandshakeMessage* message);
+
 	public:
 		Delegate<void(const Array<const net::Message*>& messages)> m_OnProcessMessages;
 
@@ -51,6 +59,7 @@ namespace net
 		MemBuffer m_Buffer;
 		Array<const net::Message*> m_Queue;
 
+		net::PeerId m_PeerId = net::PeerId::Unassigned;
 		HSteamNetConnection m_Connection = k_HSteamNetConnection_Invalid;
 	};
 }

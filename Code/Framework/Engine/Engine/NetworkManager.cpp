@@ -4,6 +4,7 @@
 #include "Core/Profiler.h"
 #include "ECS/Messages.h"
 #include "Network/Host.h"
+#include "Network/Messages.h"
 #include "Network/Peer.h"
 
 eng::NetworkManager::NetworkManager()
@@ -14,6 +15,7 @@ eng::NetworkManager::NetworkManager()
 
 void eng::NetworkManager::Initialise()
 {
+	m_Factory.Register<net::PeerHandshakeMessage>(net::EMessage::PeerHandshake);
 	m_Factory.Register<ecs::EntityCreateMessage>(ecs::EMessage::EntityCreate);
 	m_Factory.Register<ecs::EntityDestroyMessage>(ecs::EMessage::EntityDestroy);
 	m_Factory.Register<ecs::ComponentAddMessage>(ecs::EMessage::ComponentAdd);

@@ -5,6 +5,7 @@
 #include "Core/Profiler.h"
 #include "Core/TypeInfo.h"
 #include "Network/MessageEnum.h"
+#include "Network/Messages.h"
 
 namespace
 {
@@ -90,6 +91,7 @@ void net::Peer::Update(const GameTime& gameTime)
 			m_Buffer.Write(steamMessage->GetData(), steamMessage->GetSize());
 			m_Buffer.Read(type);
 
+			// messages will be released later
 			net::Message* message = m_Factory.Request(type);
 			m_Factory.Read(*message, m_Buffer);
 			m_Queue.Append(message);
@@ -98,7 +100,7 @@ void net::Peer::Update(const GameTime& gameTime)
 		}
 
 		// once we've gathered all messages, publish them
-		m_OnProcessMessages.Publish(m_Queue);
+		OnProcessMessages(m_Queue);
 
 		// release all messages that were created
 		for (const net::Message* message : m_Queue)
@@ -157,5 +159,31 @@ void net::Peer::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCall
 	if (hasConnected)
 	{
 		Z_LOG(ELog::Network, "Peer: Connected.");
+		m_Connection = connection;
 	}
+}
+
+void net::Peer::OnProcessMessages(const Array<const net::Message*>& messages)
+{
+	PROFILE_FUNCTION();
+
+	for (const net::Message* message : messages)
+	{
+		switch (static_cast<net::EMessage>(message->m_Type))
+		{
+		case net::EMessage::PeerHandshake:
+			OnPeerHandshake(static_cast<const net::PeerHandshakeMessage*>(message));
+			break;
+		}
+	}
+
+	m_OnProcessMessages.Publish(m_Queue);
+}
+
+void net::Peer::OnPeerHandshake(const net::PeerHandshakeMessage* message)
+{
+	PROFILE_FUNCTION();
+
+	Z_LOG(ELog::Network, "Peer: Handshake.");
+	m_PeerId = message->m_PeerId;
 }

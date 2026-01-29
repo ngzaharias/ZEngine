@@ -53,6 +53,9 @@ namespace net
 		STEAM_CALLBACK(net::Host, OnLobbyCreated, LobbyCreated_t);
 		STEAM_CALLBACK(net::Host, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
+		void OnPeerConnected(HSteamNetConnection connection);
+		void OnPeerDisconnected(HSteamNetConnection connection);
+
 	public:
 		Delegate<void(const net::PeerId&)> m_OnPeerConnected;
 		Delegate<void(const net::PeerId&)> m_OnPeerDisconnected;
@@ -65,6 +68,7 @@ namespace net
 		MemBuffer m_Buffer = {};
 		Array<const net::Message*> m_Queue = {};
 
+		int32 m_PeerIndex = 1;
 		PeerMap m_PeerMap = {};
 
 		CSteamID m_LobbyId = {};
