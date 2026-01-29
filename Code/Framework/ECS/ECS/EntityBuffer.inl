@@ -10,7 +10,7 @@ void ecs::EntityBuffer::RegisterComponent()
 }
 
 template<class TComponent, typename... TArgs>
-auto ecs::EntityBuffer::AddComponent(const ecs::Entity& entity, TArgs&&... args)->TComponent&
+auto ecs::EntityBuffer::AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&
 {
 	const ecs::ComponentId typeId = ToTypeId<TComponent, ecs::ComponentTag>();
 	m_EntityChanges[entity].m_Added.Raise(typeId);
@@ -31,6 +31,27 @@ void ecs::EntityBuffer::RemoveComponent(const ecs::Entity& entity)
 {
 	const ecs::ComponentId typeId = ToTypeId<TComponent, ecs::ComponentTag>();
 	m_EntityChanges[entity].m_Removed.Raise(typeId);
+}
+
+template<class TComponent>
+bool ecs::EntityBuffer::HasComponent(const ecs::Entity& entity)
+{
+	ecs::ComponentContainer<TComponent>& container = GetContainerAt<TComponent>();
+	return container.Contains(entity);
+}
+
+template<class TComponent>
+auto ecs::EntityBuffer::ReadComponent(const ecs::Entity& entity) -> const TComponent&
+{
+	ecs::ComponentContainer<TComponent>& container = GetContainerAt<TComponent>();
+	return container.Get(entity);
+}
+
+template<class TComponent>
+auto ecs::EntityBuffer::WriteComponent(const ecs::Entity& entity) -> TComponent&
+{
+	ecs::ComponentContainer<TComponent>& container = GetContainerAt<TComponent>();
+	return container.Get(entity);
 }
 
 //////////////////////////////////////////////////////////////////////////

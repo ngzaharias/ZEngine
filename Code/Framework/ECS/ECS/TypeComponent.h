@@ -16,13 +16,17 @@ namespace ecs
 {
 	struct TypeComponent
 	{
-		using Add = void(ecs::EntityBuffer&, const ecs::Entity&, const MemBuffer&);
-		using Remove = void(ecs::EntityBuffer&, const ecs::Entity&);
+		using Add = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
+		using Update = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
+		using Remove = void(ecs::EntityStorage&, const ecs::Entity&);
+
 		using Read = void(ecs::EntityStorage&, const ecs::Entity&, MemBuffer&);
 		using Write = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
 
 		Add* m_Add = nullptr;
+		Update* m_Update = nullptr;
 		Remove* m_Remove = nullptr;
+
 		Read* m_Read = nullptr;
 		Write* m_Write = nullptr;
 

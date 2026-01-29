@@ -41,21 +41,19 @@ namespace ecs
 		template <typename TComponent>
 		void RegisterComponent();
 
-		void AddComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
-
+		void AddComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
 		void UpdateComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
-
-		void RemoveComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
-
-		template<typename TComponent>
-		static void AddComponentMethod(ecs::EntityBuffer& buffer, const ecs::Entity& entity, const MemBuffer& data);
+		void RemoveComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
 
 		template<typename TComponent>
-		static void RemoveComponentMethod(ecs::EntityBuffer& buffer, const ecs::Entity& entity);
+		static void AddComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
+		template<typename TComponent>
+		static void UpdateComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
+		template<typename TComponent>
+		static void RemoveComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity);
 
 		template<typename TComponent>
 		static void ReadComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, MemBuffer& data);
-
 		template<typename TComponent>
 		static void WriteComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
 
