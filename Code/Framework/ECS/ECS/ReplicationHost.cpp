@@ -226,7 +226,7 @@ void ecs::ReplicationHost::EntityCreate(const net::PeerId& peerId, const ecs::En
 	auto* message = host.RequestMessage<ecs::EntityCreateMessage>(ecs::EMessage::EntityCreate);
 	message->m_Entity = entity.m_Value;
 
-	host.BroadcastMessage(message);
+	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);
 }
 
@@ -239,7 +239,7 @@ void ecs::ReplicationHost::EntityDestroy(const net::PeerId& peerId, const ecs::E
 	auto* message = host.RequestMessage<ecs::EntityDestroyMessage>(ecs::EMessage::EntityDestroy);
 	message->m_Entity = entity.m_Value;
 
-	host.BroadcastMessage(message);
+	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);
 }
 
@@ -254,7 +254,7 @@ void ecs::ReplicationHost::ComponentAdd(const net::PeerId& peerId, const ecs::En
 	message->m_TypeId = entry.m_TypeId;
 	entry.m_Read(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
 
-	host.BroadcastMessage(message);
+	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);
 }
 
@@ -266,7 +266,7 @@ void ecs::ReplicationHost::ComponentUpdate(const net::PeerId& peerId, const ecs:
 	message->m_TypeId = entry.m_TypeId;
 	entry.m_Read(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
 
-	host.BroadcastMessage(message);
+	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);
 }
 
@@ -277,7 +277,7 @@ void ecs::ReplicationHost::ComponentRemove(const net::PeerId& peerId, const ecs:
 	message->m_Entity = ToNetEntity(entity);
 	message->m_TypeId = entry.m_TypeId;
 
-	host.BroadcastMessage(message);
+	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);
 }
 
@@ -291,7 +291,7 @@ void ecs::ReplicationHost::EventAdd(const net::PeerId& peerId, const ecs::EventI
 	message->m_TypeId = typeId;
 	message->m_Data.Write(data);
 
-	host.BroadcastMessage(message);
+	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);
 }
 
@@ -316,6 +316,6 @@ void ecs::ReplicationHost::SingletonUpdate(const net::PeerId& peerId, const ecs:
 	message->m_TypeId = entry.m_TypeId;
 	entry.m_Read(m_EntityWorld, message->m_Data);
 
-	host.BroadcastMessage(message);
+	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);
 }
