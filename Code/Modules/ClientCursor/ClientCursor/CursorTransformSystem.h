@@ -3,6 +3,11 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace client::cursor
+{
+	struct RenderComponent;
+}
+
 namespace eng
 {
 	class InputManager;
@@ -21,6 +26,7 @@ namespace client::cursor
 	public:
 		using World = ecs::WorldView
 			::Write<
+			client::cursor::RenderComponent,
 			eng::TransformComponent,
 			shared::cursor::ClientTransformEvent>
 			::Read<
