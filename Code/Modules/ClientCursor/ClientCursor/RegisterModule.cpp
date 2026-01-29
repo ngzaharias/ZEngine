@@ -4,4 +4,5 @@
 #include "ECS/EntityWorld.h"
 
 void client::cursor::RegisterModule(ecs::EntityWorld& world)
+{
 }
