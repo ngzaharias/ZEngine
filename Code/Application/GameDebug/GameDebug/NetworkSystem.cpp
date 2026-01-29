@@ -72,6 +72,12 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 				host.Shutdown();
 			}
 
+			if (ImGui::Button("host: invite"))
+			{
+				auto& host = world.WriteResource<net::Host>();
+				host.InviteFriend();
+			}
+
 			if (ImGui::Button("host: send message"))
 			{
 				auto& request = m_ServerWorld.AddEvent<debug::NetworkEvent>();

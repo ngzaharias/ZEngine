@@ -150,6 +150,11 @@ void net::Host::SendMessage(const net::PeerId& peerId, const net::Message* messa
 	::SendMessage(peerData.m_Connection, data, bytes);
 }
 
+void net::Host::InviteFriend()
+{
+	SteamFriends()->ActivateGameOverlayInviteDialog(m_LobbyId);
+}
+
 void net::Host::OnLobbyCreated(LobbyCreated_t* pCallback)
 {
 	if (pCallback->m_eResult != k_EResultOK)

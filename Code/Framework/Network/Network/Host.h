@@ -49,6 +49,8 @@ namespace net
 		void BroadcastMessage(const net::Message* message);
 		void SendMessage(const net::PeerId& peerId, const net::Message* message);
 
+		void InviteFriend();
+
 	private:
 		STEAM_CALLBACK(net::Host, OnLobbyCreated, LobbyCreated_t);
 		STEAM_CALLBACK(net::Host, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
