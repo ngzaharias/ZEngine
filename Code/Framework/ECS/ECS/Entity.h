@@ -62,7 +62,7 @@ namespace ecs
 			return m_Value;
 		}
 
-		uint64 m_Value = 0xFFFFFFFFFFFFFFFF;
+		uint64 m_Value = UINT64_MAX;
 	};
 }
 
