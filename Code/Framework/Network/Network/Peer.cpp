@@ -189,6 +189,6 @@ void net::Peer::OnPeerHandshake(const net::PeerHandshakeMessage* message)
 {
 	PROFILE_FUNCTION();
 
-	Z_LOG(ELog::Network, "Peer: Handshake.");
 	m_PeerId = message->m_PeerId;
+	Z_LOG(ELog::Network, "Peer: Assigned PeerId {}.", m_PeerId.GetIndex());
 }

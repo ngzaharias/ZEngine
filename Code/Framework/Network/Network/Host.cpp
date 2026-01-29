@@ -201,7 +201,6 @@ void net::Host::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCall
 
 void net::Host::OnPeerConnected(HSteamNetConnection connection)
 {
-	Z_LOG(ELog::Network, "Host: Accepted Peer.");
 	SteamNetworkingSockets()->SetConnectionPollGroup(connection, m_NetPollGroup);
 
 	net::PeerId peerId;
@@ -219,6 +218,8 @@ void net::Host::OnPeerConnected(HSteamNetConnection connection)
 	ReleaseMessage(message);
 
 	m_OnPeerConnected.Publish(peerId);
+
+	Z_LOG(ELog::Network, "Host: Assigned PeerId {}.", peerId.GetIndex());
 }
 
 void net::Host::OnPeerDisconnected(HSteamNetConnection connection)
