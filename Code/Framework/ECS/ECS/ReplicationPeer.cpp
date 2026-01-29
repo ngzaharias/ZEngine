@@ -77,7 +77,8 @@ void ecs::ReplicationPeer::OnProcessMessages(const Array<const net::Message*>& m
 
 	for (const net::Message* message : messages)
 	{
-		switch (static_cast<ecs::EMessage>(message->m_Type))
+		const ecs::EMessage type = static_cast<ecs::EMessage>(message->m_Type);
+		switch (type)
 		{
 		case ecs::EMessage::EntityCreate:
 			OnEntityCreate(static_cast<const ecs::EntityCreateMessage*>(message));

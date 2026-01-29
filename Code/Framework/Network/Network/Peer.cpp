@@ -74,6 +74,11 @@ bool net::Peer::IsConnected() const
 	return m_Connection != k_HSteamNetConnection_Invalid;
 }
 
+net::PeerId net::Peer::GetPeerId() const
+{
+	return m_PeerId;
+}
+
 void net::Peer::Update(const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();

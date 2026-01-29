@@ -142,6 +142,9 @@ void ecs::ReplicationHost::ProcessEntities()
 
 			Set<ecs::Entity> toAdd;
 			enumerate::Intersection(created, queries.GetGroup(entry->m_IncludeId), toAdd);
+
+			for (const ecs::Entity& entity : toAdd)
+				ComponentAdd(peerId, entity, *entry);
 		}
 
 		replicationData.m_ToCreate.RemoveAll();
@@ -192,7 +195,8 @@ void ecs::ReplicationHost::OnProcessMessages(const Array<const net::Message*>& m
 
 	for (const net::Message* message : messages)
 	{
-		switch (static_cast<ecs::EMessage>(message->m_Type))
+		const ecs::EMessage type = static_cast<ecs::EMessage>(message->m_Type);
+		switch (type)
 		{
 		case ecs::EMessage::EntityCreate:
 		case ecs::EMessage::EntityDestroy:

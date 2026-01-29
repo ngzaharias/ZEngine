@@ -31,6 +31,8 @@ namespace net
 
 		bool IsConnected() const;
 
+		net::PeerId GetPeerId() const;
+
 		void Update(const GameTime& gameTime);
 
 		template<typename TMessage>

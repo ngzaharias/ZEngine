@@ -1,6 +1,7 @@
-#include "RenderPCH.h"
-#include "Render/RenderCursorSystem.h"
+#include "ClientCursorPCH.h"
+#include "ClientCursor/CursorRenderSystem.h"
 
+#include "ClientCursor/CursorRenderComponent.h"
 #include "Core/Algorithms.h"
 #include "Core/Colour.h"
 #include "ECS/EntityWorld.h"
@@ -9,10 +10,10 @@
 #include "Engine/AssetManager.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/CameraTypes.h"
-#include "Engine/InputManager.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/Texture2DAsset.h"
+#include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 
@@ -21,17 +22,12 @@
 
 namespace
 {
-	constexpr float s_Distance = 32.f;
-	constexpr Colour s_ColourX = Colour(0.58f, 0.23f, 0.29f);
-	constexpr Colour s_ColourY = Colour(0.38f, 0.52f, 0.16f);
-	constexpr Colour s_ColourZ = Colour(0.21f, 0.4f, 0.61f);
-
 	const str::Guid strMesh = GUID("e94876a8e4cc4d1684c85859b48a1af6");
 	const str::Guid strShader = GUID("b7d0c9eb5380438ba90b9a344626134a");
 	const str::Guid strTexture = GUID("319277084bf14d798b940cbc1c6e3825");
 }
 
-void render::CursorSystem::Initialise(World& world)
+void client::cursor::RenderSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
@@ -41,7 +37,7 @@ void render::CursorSystem::Initialise(World& world)
 	assetManager.RequestAsset(strTexture);
 }
 
-void render::CursorSystem::Shutdown(World& world)
+void client::cursor::RenderSystem::Shutdown(World& world)
 {
 	PROFILE_FUNCTION();
 
@@ -51,7 +47,7 @@ void render::CursorSystem::Shutdown(World& world)
 	assetManager.ReleaseAsset(strTexture);
 }
 
-void render::CursorSystem::Update(World& world, const GameTime& gameTime)
+void client::cursor::RenderSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -62,21 +58,25 @@ void render::CursorSystem::Update(World& world, const GameTime& gameTime)
 	if (!shader || !mesh || !texture)
 		return;
 
-	const auto& inputManager = world.ReadResource<eng::InputManager>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
 	if (!window)
 		return;
 
+	const Vector2u& windowSize = window->GetSize();
+	glViewport(0, 0, windowSize.x, windowSize.y);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+
+	using Query = ecs::query
+		::Include<
+		const client::cursor::RenderComponent,
+		const eng::TransformComponent>;
+	for (auto&& view : world.Query<Query>())
 	{
-		const Vector2u& windowSize = window->GetSize();
-		glViewport(0, 0, windowSize.x, windowSize.y);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_CULL_FACE);
-
 		glUseProgram(shader->m_ProgramId);
 		//glBindVertexArray(m_AttributeObject);
 
@@ -107,9 +107,12 @@ void render::CursorSystem::Update(World& world, const GameTime& gameTime)
 			glVertexAttribDivisor(location, GL_FALSE);
 		}
 
+		const auto& transformComponent = view.ReadRequired<eng::TransformComponent>();
+		const Vector3f& translate = transformComponent.m_Translate;
+
 		const Matrix4x4 cameraProj = eng::GetProjection(eng::UserInterface{}, windowSize);
 		const Matrix4x4 transform = Matrix4x4::FromTransform(
-			Vector3f(inputManager.m_MousePosition, 0.f) + Vector3f(10.f, 14.f, 0.f),
+			Vector3f(translate.x, translate.y, 0.f) + Vector3f(10.f, 14.f, 0.f),
 			Vector3f(32.f / 100.f, 32.f / 100.f, 1.f));
 
 		if (shader->u_CameraProj)

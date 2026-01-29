@@ -4,7 +4,6 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Render/RenderCursorComponent.h"
-#include "Render/RenderCursorSystem.h"
 #include "Render/RenderDebugComponent.h"
 #include "Render/RenderDebugSystem.h"
 #include "Render/RenderImGuiComponent.h"
@@ -37,7 +36,6 @@ void render::RegisterModule(ecs::EntityWorld& entityWorld)
 
 	// systems
 	{
-		entityWorld.RegisterSystem<render::CursorSystem>();
 		entityWorld.RegisterSystem<render::DebugSystem>();
 		entityWorld.RegisterSystem<render::ImGuiSystem>();
 		entityWorld.RegisterSystem<render::OpaqueSystem>();
