@@ -162,7 +162,6 @@ void net::Host::OnLobbyCreated(LobbyCreated_t* pCallback)
 
 	Z_LOG(ELog::Network, "Host: Lobby Created.");
 	m_LobbyId = pCallback->m_ulSteamIDLobby;
-	SteamFriends()->ActivateGameOverlayInviteDialog(m_LobbyId);
 }
 
 void net::Host::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t* pCallback)
