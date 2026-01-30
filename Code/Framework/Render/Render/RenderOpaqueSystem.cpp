@@ -190,13 +190,13 @@ void render::OpaqueSystem::Update(World& world, const GameTime& gameTime)
 		for (const render::BatchId& id : ids)
 		{
 			const bool isSameBatch =
-				id.m_ShaderId == id.m_ShaderId &&
-				id.m_TextureId == id.m_TextureId &&
-				id.m_StaticMeshId == id.m_StaticMeshId;
+				id.m_ShaderId == lastId.m_ShaderId &&
+				id.m_TextureId == lastId.m_TextureId &&
+				id.m_StaticMeshId == lastId.m_StaticMeshId;
 
 			if (!isSameBatch)
 			{
-				RenderBatch(world, id, batch, data);
+				RenderBatch(world, lastId, batch, data);
 				batch.m_Colours.RemoveAll();
 				batch.m_Models.RemoveAll();
 				batch.m_TexParams.RemoveAll();
