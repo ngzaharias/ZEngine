@@ -7,9 +7,9 @@ m_Vertex = """
 
 in vec3 a_Vertex;
 in vec2 a_TexCoords;
-in mat4 i_Model;
 
 in vec4 i_Colour;
+in mat4 i_Model;
 in vec4 i_TexParams;
 
 uniform mat4 u_CameraProj;
