@@ -85,6 +85,8 @@ namespace eng
 		const eng::AssetFile* GetAssetFile(const str::Guid& guid) const;
 
 	private:
+		/// \brief Binds the asset and stores it in the ref map.
+		void BindAsset(eng::Asset* asset);
 		/// \brief Creates and loads the asset.
 		void LoadAsset(const str::Guid& guid);
 		/// \brief Unloads and destroys the asset.
@@ -96,6 +98,7 @@ namespace eng
 		/// \brief Loads the asset immediately on the current thread.
 		template<typename TAsset>
 		void LoadImmediate(const str::Path& filepath);
+
 
 	private:
 		/// \brief Function that can be used to load an asset deferred or immediate based on the asset type.

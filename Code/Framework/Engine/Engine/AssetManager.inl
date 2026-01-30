@@ -144,7 +144,16 @@ bool eng::AssetManager::SaveToFile(TAsset& asset, const str::Path& filepath)
 template<typename TAsset>
 void eng::AssetManager::LoadDeferred(const str::Path filepath)
 {
-	LoadImmediate<TAsset>(filepath);
+	TAsset* asset = new TAsset();
+	if (!LoadFromFile(*asset, filepath))
+	{
+		delete asset;
+		return;
+	}
+
+	m_Mutex.lock();
+	m_Loaded.Append(asset);
+	m_Mutex.unlock();
 }
 
 template<typename TAsset>
@@ -157,9 +166,7 @@ void eng::AssetManager::LoadImmediate(const str::Path& filepath)
 		return;
 	}
 
-	m_Mutex.lock();
-	m_Loaded.Append(asset);
-	m_Mutex.unlock();
+	BindAsset(asset);
 }
 
 template<typename TAsset>
