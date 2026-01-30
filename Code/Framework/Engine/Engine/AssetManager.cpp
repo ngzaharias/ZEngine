@@ -39,15 +39,7 @@ void eng::AssetManager::Update()
 		m_Mutex.unlock();
 
 		for (eng::Asset* asset : loaded)
-		{
-			const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
-
-			// #note: don't lock mutex before calling initialise since asset loaders can request other assets
-			if (entry.m_Methods.m_Bind)
-				entry.m_Methods.m_Bind(*asset, *entry.m_Loader);
-
-			m_RefMap[asset->m_Guid].m_Asset = asset;
-		}
+			BindAsset(asset);
 	}
 }
 
@@ -150,6 +142,17 @@ const eng::AssetFile* eng::AssetManager::GetAssetFile(const str::Guid& guid) con
 	return file != m_FileMap.end()
 		? &file->second
 		: nullptr;
+}
+
+void eng::AssetManager::BindAsset(eng::Asset* asset)
+{
+	const eng::AssetEntry& entry = m_Registry.Get(asset->m_Type);
+
+	// #note: don't lock mutex before calling initialise since asset loaders can request other assets
+	if (entry.m_Methods.m_Bind)
+		entry.m_Methods.m_Bind(*asset, *entry.m_Loader);
+
+	m_RefMap[asset->m_Guid].m_Asset = asset;
 }
 
 void eng::AssetManager::LoadAsset(const str::Guid& guid)

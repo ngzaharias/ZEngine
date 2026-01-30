@@ -93,7 +93,10 @@ Value* SparseArray<Key, Value>::Try(const Key& key)
 	const int32 sparseIndex = GetIndex(key);
 	if (sparseIndex >= m_Sparse.GetCount())
 		return nullptr;
-	return &m_Values[m_Sparse[sparseIndex]];
+	const int32 valueIndex = m_Sparse[sparseIndex];
+	if (valueIndex < 0)
+		return nullptr;
+	return &m_Values[valueIndex];
 }
 
 template<typename Key, typename Value>
