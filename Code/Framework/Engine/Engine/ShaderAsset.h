@@ -40,6 +40,11 @@ namespace eng
 		Optional<uint32> u_CameraProj = {};
 		Optional<uint32> u_CameraView = {};
 
+		// - Colours
+		Optional<uint32> u_ColourA = { };
+		Optional<uint32> u_ColourB = { };
+		Optional<uint32> u_ColourC = { };
+
 		// - Light Ambient
 		Optional<uint32> u_LightAmbient_Colour = {};
 		

@@ -74,6 +74,11 @@ void eng::ShaderAssetLoader::Bindings(const uint32 programId, ShaderAsset& asset
 	UNIFORM("u_CameraProj", asset.u_CameraProj);
 	UNIFORM("u_CameraView", asset.u_CameraView);
 
+	// - Colours
+	UNIFORM("u_ColourA", asset.u_ColourA);
+	UNIFORM("u_ColourB", asset.u_ColourB);
+	UNIFORM("u_ColourC", asset.u_ColourC);
+
 	// - Light Ambient
 	UNIFORM("u_LightAmbient_Colour", asset.u_LightAmbient_Colour);
 

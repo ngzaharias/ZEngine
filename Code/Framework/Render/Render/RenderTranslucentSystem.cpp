@@ -13,11 +13,13 @@
 #include "Engine/FlipbookAsset.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
+#include "Engine/SettingsGameplaySingleton.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/SpriteAsset.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/Texture2DAsset.h"
+#include "Engine/ThemeTable.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Window.h"
@@ -291,6 +293,9 @@ void render::TranslucentSystem::RenderBatch(World& world, const render::BatchId&
 	PROFILE_FUNCTION();
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
+	const auto& themeTable = world.ReadResource<eng::ThemeTable>();
+	const auto& settings = world.ReadSingleton<eng::settings::GameplaySingleton>();
+
 	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(id.m_StaticMeshId);
 	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(id.m_ShaderId);
 	const auto* texture = assetManager.ReadAsset<eng::Texture2DAsset>(id.m_TextureId);
@@ -372,6 +377,28 @@ void render::TranslucentSystem::RenderBatch(World& world, const render::BatchId&
 			glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, sizeof(Colour), (void*)(0));
 			glVertexAttribDivisor(location, GL_TRUE);
 		}
+
+		if (shader->u_ColourA)
+		{
+			const eng::Theme& theme = themeTable.GetTheme(settings.m_Theme);
+			const uint32 location = *shader->u_ColourA;
+			glUniform4fv(location, 1, &theme.m_Background0.r);
+		}
+
+		if (shader->u_ColourB)
+		{
+			const eng::Theme& theme = themeTable.GetTheme(settings.m_Theme);
+			const uint32 location = *shader->u_ColourB;
+			glUniform4fv(location, 1, &theme.m_Outline.r);
+		}
+
+		if (shader->u_ColourC)
+		{
+			const eng::Theme& theme = themeTable.GetTheme(settings.m_Theme);
+			const uint32 location = *shader->u_ColourC;
+			glUniform4fv(location, 1, &theme.m_Highlight.r);
+		}
+
 
 		// models
 		if (shader->i_Model)
