@@ -1,0 +1,25 @@
+m_Guid = 'f3efea7d5c1242ede0b3669b044cb878'
+m_Name = 'Achievement_Clock'
+
+['eng::PhysicsComponent'.m_Rigidbody.RigidStatic]
+
+[['eng::PhysicsComponent'.m_Shapes]]
+
+	['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+	m_Channel = 0
+	m_Extents = { X = 133.0, Y = 255.0, Z = 1.0 }
+	m_Rotate = { Pitch = 0.0, Roll = 4.0, Yaw = 0.0 }
+	m_Translate = { X = -8.0, Y = 105.0, Z = 0.0 }
+
+[['eng::PhysicsComponent'.m_Shapes]]
+
+	['eng::PhysicsComponent'.m_Shapes.ShapeBox]
+	m_Channel = 0
+	m_Extents = { X = 66.0, Y = 143.0, Z = 1.0 }
+	m_Rotate = { Pitch = 0.0, Roll = 4.0, Yaw = 0.0 }
+	m_Translate = { X = 39.0, Y = -283.0, Z = 0.0 }
+
+['eng::TransformComponent']
+m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
+m_Translate = { X = -1699.764892578125, Y = 1461.3353271484375, Z = 0.0 }
