@@ -1,0 +1,58 @@
+m_Guid = "fd3908237757453582fa930a40233c0d"
+m_Name = "SH_HiddenBackground"
+m_Type = "Shader"
+
+m_Vertex = """
+#version 330 core
+
+in vec3 a_Vertex;
+in vec2 a_TexCoords;
+
+in mat4 i_Model;
+in vec4 i_TexParams;
+
+uniform mat4 u_CameraProj;
+uniform mat4 u_CameraView;
+uniform vec4 u_ColourA;
+uniform vec4 u_ColourB;
+
+out vec2 v_TexCoords;
+out vec4 v_ColourA;
+out vec4 v_ColourB;
+
+void main()
+{
+	mat4 transform = u_CameraProj * u_CameraView * i_Model;
+	gl_Position = transform * vec4(a_Vertex, 1.f);
+	v_TexCoords = a_TexCoords;
+	v_ColourA = u_ColourA;
+	v_ColourB = u_ColourB;
+	v_TexCoords.x *= i_TexParams.z;
+	v_TexCoords.y *= i_TexParams.w;
+	v_TexCoords.x += i_TexParams.x;
+	v_TexCoords.y += i_TexParams.y;
+}
+"""
+
+m_Fragment = """
+#version 330 core
+
+in vec2 v_TexCoords;
+in vec4 v_ColourA;
+in vec4 v_ColourB;
+
+out vec4 f_Colour;
+
+uniform sampler2D u_Texture;
+
+void main()
+{
+	f_Colour = texture(u_Texture, v_TexCoords);
+
+	float a = f_Colour.r;
+	float b = 1 - a;
+	f_Colour = v_ColourA * a + v_ColourB * b;
+	if (f_Colour.a <= 0)
+		discard;
+}
+"""
