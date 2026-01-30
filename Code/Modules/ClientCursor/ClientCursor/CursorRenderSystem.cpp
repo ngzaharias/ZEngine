@@ -25,6 +25,13 @@ namespace
 	const str::Guid strMesh = GUID("e94876a8e4cc4d1684c85859b48a1af6");
 	const str::Guid strShader = GUID("b7d0c9eb5380438ba90b9a344626134a");
 	const str::Guid strTexture = GUID("319277084bf14d798b940cbc1c6e3825");
+
+	constexpr Vector2f s_CursorSize = Vector2f(32.f, 32.f);
+	constexpr Vector3f s_CursorOffset = Vector3f(10.f, 14.f, 0.f);
+	constexpr Vector3f s_CursorScale = Vector3f(
+		s_CursorSize.x / 100.f,
+		s_CursorSize.y / 100.f,
+		1.f);
 }
 
 void client::cursor::RenderSystem::Initialise(World& world)
@@ -108,12 +115,10 @@ void client::cursor::RenderSystem::Update(World& world, const GameTime& gameTime
 		}
 
 		const auto& transformComponent = view.ReadRequired<eng::TransformComponent>();
-		const Vector3f& translate = transformComponent.m_Translate;
+		const Vector3f& translate = transformComponent.m_Translate + s_CursorOffset;
 
 		const Matrix4x4 cameraProj = eng::GetProjection(eng::UserInterface{}, windowSize);
-		const Matrix4x4 transform = Matrix4x4::FromTransform(
-			Vector3f(translate.x, translate.y, 0.f) + Vector3f(10.f, 14.f, 0.f),
-			Vector3f(32.f / 100.f, 32.f / 100.f, 1.f));
+		const Matrix4x4 transform = Matrix4x4::FromTransform(translate, s_CursorScale);
 
 		if (shader->u_CameraProj)
 		{
