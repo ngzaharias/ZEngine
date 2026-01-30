@@ -174,12 +174,12 @@ void render::ShadowSystem::Update(World& world, const GameTime& gameTime)
 			for (const render::BatchId& id : ids)
 			{
 				const bool isSameBatch =
-					id.m_ShaderId == id.m_ShaderId &&
-					id.m_StaticMeshId == id.m_StaticMeshId;
+					id.m_ShaderId == lastId.m_ShaderId &&
+					id.m_StaticMeshId == lastId.m_StaticMeshId;
 
 				if (!isSameBatch)
 				{
-					RenderBatch(world, id, batch, data);
+					RenderBatch(world, lastId, batch, data);
 					batch.m_Models.RemoveAll();
 				}
 
