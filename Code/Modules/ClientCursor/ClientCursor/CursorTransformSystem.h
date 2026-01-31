@@ -3,14 +3,10 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace client::cursor
-{
-	struct RenderComponent;
-}
-
 namespace eng
 {
 	class InputManager;
+	struct SpriteComponent;
 	struct TransformComponent;
 }
 
@@ -26,14 +22,11 @@ namespace client::cursor
 	public:
 		using World = ecs::WorldView
 			::Write<
-			client::cursor::RenderComponent,
+			eng::SpriteComponent,
 			eng::TransformComponent,
 			shared::cursor::ClientTransformEvent>
 			::Read<
 			eng::InputManager>;
-
-		void Initialise(World& world);
-		void Shutdown(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -3,14 +3,10 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace client::cursor
-{
-	struct RenderComponent;
-}
-
 namespace eng
 {
 	class AssetManager;
+	class InputManager;
 	class WindowManager;
 	struct TransformComponent;
 }
@@ -21,9 +17,9 @@ namespace render
 	struct ImGuiComponent;
 }
 
-namespace client::cursor
+namespace render
 {
-	class RenderSystem final : public ecs::System
+	class CursorSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
@@ -31,8 +27,7 @@ namespace client::cursor
 			eng::AssetManager,
 			render::CursorComponent>
 			::Read<
-			client::cursor::RenderComponent,
-			eng::TransformComponent,
+			eng::InputManager,
 			eng::WindowManager,
 			render::ImGuiComponent>;
 
