@@ -11,8 +11,10 @@
 #include "GameServer/RegisterComponents.h"
 #include "GameServer/RegisterSystems.h"
 #include "ServerCursor/RegisterModule.h"
+#include "ServerHidden/RegisterModule.h"
 #include "ServerNetwork/RegisterModule.h"
 #include "SharedCursor/RegisterModule.h"
+#include "SharedHidden/RegisterModule.h"
 #include "SharedNetwork/RegisterModule.h"
 
 server::GameServer::GameServer()
@@ -53,8 +55,10 @@ void server::GameServer::Register(const Dependencies& dependencies)
 	// modules
 	{
 		server::cursor::RegisterModule(m_EntityWorld);
+		server::hidden::RegisterModule(m_EntityWorld);
 		server::network::RegisterModule(m_EntityWorld);
 		shared::cursor::RegisterModule(m_EntityWorld);
+		shared::hidden::RegisterModule(m_EntityWorld);
 		shared::network::RegisterModule(m_EntityWorld);
 	}
 }

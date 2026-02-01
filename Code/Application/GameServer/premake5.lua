@@ -27,7 +27,9 @@ project "GameServer"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Modules/ServerCursor/",
+		"%{wks.location}/../Code/Modules/ServerHidden/",
 		"%{wks.location}/../Code/Modules/ServerNetwork/",
 		"%{wks.location}/../Code/Modules/SharedCursor/",
+		"%{wks.location}/../Code/Modules/SharedHidden/",
 		"%{wks.location}/../Code/Modules/SharedNetwork/",
 	}
