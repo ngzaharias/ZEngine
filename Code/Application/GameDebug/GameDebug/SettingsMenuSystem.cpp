@@ -1,6 +1,7 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/SettingsMenuSystem.h"
 
+#include "ClientHidden/HiddenDebugSingleton.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
@@ -9,7 +10,6 @@
 #include "GameClient/SettingsDebugComponent.h"
 #include "GameDebug/SettingsWindowComponent.h"
 #include "GameDebug/SettingsWindowRequest.h"
-#include "Hidden/HiddenDebugSettingsSingleton.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -32,9 +32,9 @@ void debug::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Debug Settings");
 
 		auto& window = world.AddComponent<debug::settings::WindowComponent>(windowEntity);
-		window.m_Client = world.ReadSingleton<client::settings::DebugSingleton>();
 		window.m_Engine = world.ReadSingleton<eng::settings::DebugSingleton>();
-		window.m_Hidden = world.ReadSingleton<hidden::settings::DebugSingleton>();
+		window.m_Client = world.ReadSingleton<client::settings::DebugSingleton>();
+		window.m_Hidden = world.ReadSingleton<client::hidden::DebugSingleton>();
 
 		ImGui::OpenPopup("Debug Settings##gamedebug");
 	}
@@ -57,14 +57,14 @@ void debug::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 			imgui::Inspector inspector;
 			if (inspector.Begin("##debugsettings"))
 			{
-				if (inspector.Write(window.m_Client))
-					world.WriteSingleton<client::settings::DebugSingleton>() = window.m_Client;
-				ImGui::Spacing();
 				if (inspector.Write(window.m_Engine))
 					world.WriteSingleton<eng::settings::DebugSingleton>() = window.m_Engine;
 				ImGui::Spacing();
+				if (inspector.Write(window.m_Client))
+					world.WriteSingleton<client::settings::DebugSingleton>() = window.m_Client;
+				ImGui::Spacing();
 				if (inspector.Write(window.m_Hidden))
-					world.WriteSingleton<hidden::settings::DebugSingleton>() = window.m_Hidden;
+					world.WriteSingleton<client::hidden::DebugSingleton>() = window.m_Hidden;
 				inspector.End();
 			}
 			ImGui::End();

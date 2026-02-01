@@ -2,6 +2,7 @@
 #include "GameUI/SettingsMenuSystem.h"
 
 #include "Camera/CameraSettingsSingleton.h"
+#include "ClientHidden/HiddenDebugSingleton.h"
 #include "Core/Name.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -16,7 +17,6 @@
 #include "GameUI/SettingsMenuOpenRequest.h"
 #include "GameUI/SettingsMenuValueRequest.h"
 #include "GameUI/SettingsMenuWindowComponent.h"
-#include "Hidden/HiddenDebugSettingsSingleton.h"
 
 namespace
 {

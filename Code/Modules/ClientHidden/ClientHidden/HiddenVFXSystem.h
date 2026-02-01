@@ -1,23 +1,23 @@
 #pragma once
 
+#include "ECS/Entity.h"
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
 namespace client::hidden
 {
-	struct DebugSingleton;
-	struct ObjectComponent;
+	struct RevealComponent;
+	struct VFXComponent;
 }
 
-namespace debug::hidden
+namespace ecs
 {
-	struct ObjectComponent;
+	struct NameComponent;
 }
 
 namespace eng
 {
-	struct LinesSingleton;
-	struct SpriteComponent;
+	struct FlipbookComponent;
 	struct TransformComponent;
 }
 
@@ -26,21 +26,20 @@ namespace eng::level
 	struct EntityComponent;
 }
 
-namespace debug::hidden
+namespace client::hidden
 {
-	class ObjectSystem final : public ecs::System
+	class VFXSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			debug::hidden::ObjectComponent,
+			client::hidden::VFXComponent,
+			ecs::NameComponent,
+			eng::FlipbookComponent,
 			eng::level::EntityComponent,
-			eng::LinesSingleton,
-			eng::SpriteComponent,
 			eng::TransformComponent>
 			::Read<
-			client::hidden::DebugSingleton,
-			client::hidden::ObjectComponent>;
+			client::hidden::RevealComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

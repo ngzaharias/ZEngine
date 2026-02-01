@@ -64,8 +64,8 @@ project "Editor"
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Modules/Camera/",
+		"%{wks.location}/../Code/Modules/ClientHidden/",
 		"%{wks.location}/../Code/Modules/Container/",
-		"%{wks.location}/../Code/Modules/Hidden/",
 		"%{wks.location}/../Code/Modules/Softbody/",
 	}
 
@@ -128,10 +128,10 @@ project "Editor"
 		-- Modules
 		"Camera",
 		"ClientCursor",
+		"ClientHidden",
 		"ClientNetwork",
 		"Container",
 		"Hexmap",
-		"Hidden",
 		"ServerCursor",
 		"ServerNetwork",
 		"SharedCursor",

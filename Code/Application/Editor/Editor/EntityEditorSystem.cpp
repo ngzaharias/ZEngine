@@ -6,6 +6,10 @@
 #include "Camera/CameraMove3DComponent.h"
 #include "Camera/CameraPan3DComponent.h"
 #include "Camera/CameraZoom2DComponent.h"
+#include "ClientHidden/HiddenCountComponent.h"
+#include "ClientHidden/HiddenGroupComponent.h"
+#include "ClientHidden/HiddenObjectComponent.h"
+#include "ClientHidden/HiddenRevealComponent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
@@ -27,10 +31,6 @@
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Visitor.h"
 #include "GameDebug/EditorEntityWindowRequest.h"
-#include "Hidden/HiddenCountComponent.h"
-#include "Hidden/HiddenGroupComponent.h"
-#include "Hidden/HiddenObjectComponent.h"
-#include "Hidden/HiddenRevealComponent.h"
 #include "Softbody/SoftbodyChainComponent.h"
 
 #include "imgui/imgui.h"
@@ -314,16 +314,16 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 						SelectComponent<camera::Move3DComponent>(m_World, selected);
 						SelectComponent<camera::Pan3DComponent>(m_World, selected);
 						SelectComponent<camera::Zoom2DComponent>(m_World, selected);
+						SelectComponent<client::hidden::CountComponent>(m_World, selected);
+						SelectComponent<client::hidden::GroupComponent>(m_World, selected);
+						SelectComponent<client::hidden::ObjectComponent>(m_World, selected);
+						SelectComponent<client::hidden::RevealComponent>(m_World, selected);
 						SelectComponent<eng::CameraComponent>(m_World, selected);
 						SelectComponent<eng::PhysicsComponent>(m_World, selected);
 						SelectComponent<eng::PrototypeComponent>(m_World, selected);
 						SelectComponent<eng::SpriteComponent>(m_World, selected);
 						SelectComponent<eng::TransformComponent>(m_World, selected);
 						SelectComponent<eng::VisibilityComponent>(m_World, selected);
-						SelectComponent<hidden::CountComponent>(m_World, selected);
-						SelectComponent<hidden::GroupComponent>(m_World, selected);
-						SelectComponent<hidden::ObjectComponent>(m_World, selected);
-						SelectComponent<hidden::RevealComponent>(m_World, selected);
 						SelectComponent<softbody::ChainComponent>(m_World, selected);
 						ImGui::EndMenu();
 					}
@@ -344,14 +344,14 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 					InspectComponent<camera::Move3DComponent>(m_World, selected, inspector);
 					InspectComponent<camera::Pan3DComponent>(m_World, selected, inspector);
 					InspectComponent<camera::Zoom2DComponent>(m_World, selected, inspector);
+					InspectComponent<client::hidden::CountComponent>(m_World, selected, inspector);
+					InspectComponent<client::hidden::GroupComponent>(m_World, selected, inspector);
+					InspectComponent<client::hidden::ObjectComponent>(m_World, selected, inspector);
+					InspectComponent<client::hidden::RevealComponent>(m_World, selected, inspector);
 					InspectComponent<eng::CameraComponent>(m_World, selected, inspector);
 					InspectComponent<eng::PhysicsComponent>(m_World, selected, inspector);
 					InspectComponent<eng::PrototypeComponent>(m_World, selected, inspector);
 					InspectComponent<eng::SpriteComponent>(m_World, selected, inspector);
-					InspectComponent<hidden::CountComponent>(m_World, selected, inspector);
-					InspectComponent<hidden::GroupComponent>(m_World, selected, inspector);
-					InspectComponent<hidden::ObjectComponent>(m_World, selected, inspector);
-					InspectComponent<hidden::RevealComponent>(m_World, selected, inspector);
 					InspectComponent<softbody::ChainComponent>(m_World, selected, inspector);
 					inspector.End();
 				}
@@ -405,14 +405,14 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 						SaveComponent<camera::Move3DComponent>(m_World, selected, visitor);
 						SaveComponent<camera::Pan3DComponent>(m_World, selected, visitor);
 						SaveComponent<camera::Zoom2DComponent>(m_World, selected, visitor);
+						SaveComponent<client::hidden::CountComponent>(m_World, selected, visitor);
+						SaveComponent<client::hidden::GroupComponent>(m_World, selected, visitor);
+						SaveComponent<client::hidden::ObjectComponent>(m_World, selected, visitor);
 						SaveComponent<eng::CameraComponent>(m_World, selected, visitor);
 						SaveComponent<eng::PhysicsComponent>(m_World, selected, visitor);
 						SaveComponent<eng::SpriteComponent>(m_World, selected, visitor);
 						SaveComponent<eng::TransformComponent>(m_World, selected, visitor);
 						SaveComponent<eng::VisibilityComponent>(m_World, selected, visitor);
-						SaveComponent<hidden::CountComponent>(m_World, selected, visitor);
-						SaveComponent<hidden::GroupComponent>(m_World, selected, visitor);
-						SaveComponent<hidden::ObjectComponent>(m_World, selected, visitor);
 
 						str::String string = visitor;
 						visitor.SaveToFile(filepath);

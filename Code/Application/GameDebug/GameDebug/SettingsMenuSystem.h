@@ -4,6 +4,11 @@
 #include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
+namespace client::hidden
+{
+	struct DebugSingleton;
+}
+
 namespace client::settings
 {
 	struct DebugSingleton;
@@ -29,11 +34,6 @@ namespace eng::settings
 	struct DebugSingleton;
 }
 
-namespace hidden::settings
-{
-	struct DebugSingleton;
-}
-
 namespace debug::settings
 {
 	class MenuSystem final : public ecs::System
@@ -41,7 +41,7 @@ namespace debug::settings
 	public:
 		using World = ecs::WorldView
 			::Write<
-			::hidden::settings::DebugSingleton,
+			client::hidden::DebugSingleton,
 			client::settings::DebugSingleton,
 			debug::settings::WindowComponent,
 			ecs::NameComponent,

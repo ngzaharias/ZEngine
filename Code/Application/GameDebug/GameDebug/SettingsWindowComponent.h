@@ -1,9 +1,9 @@
 #pragma once
 
+#include "ClientHidden/HiddenDebugSingleton.h"
 #include "ECS/Component.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "GameClient/SettingsDebugComponent.h"
-#include "Hidden/HiddenDebugSettingsSingleton.h"
 
 namespace debug::settings
 {
@@ -11,6 +11,6 @@ namespace debug::settings
 	{
 		client::settings::DebugSingleton m_Client;
 		eng::settings::DebugSingleton m_Engine;
-		::hidden::settings::DebugSingleton m_Hidden;
+		client::hidden::DebugSingleton m_Hidden;
 	};
 }

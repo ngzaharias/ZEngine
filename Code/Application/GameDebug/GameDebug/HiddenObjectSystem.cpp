@@ -1,6 +1,8 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/HiddenObjectSystem.h"
 
+#include "ClientHidden/HiddenDebugSingleton.h"
+#include "ClientHidden/HiddenObjectComponent.h"
 #include "Core/VariantHelpers.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -10,20 +12,18 @@
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "GameDebug/HiddenObjectComponent.h"
-#include "Hidden/HiddenDebugSettingsSingleton.h"
-#include "Hidden/HiddenObjectComponent.h"
 #include "Math/AABB.h"
 
 void debug::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& settings = world.ReadSingleton<::hidden::settings::DebugSingleton>();
+	const auto& settings = world.ReadSingleton<client::hidden::DebugSingleton>();
 	if (settings.m_IsObjectEnabled)
 	{
 		using AddQuery = ecs::query
 			::Include<
-			const ::hidden::ObjectComponent, 
+			const client::hidden::ObjectComponent, 
 			const eng::level::EntityComponent, 
 			const eng::SpriteComponent, 
 			const eng::TransformComponent>
@@ -43,7 +43,7 @@ void debug::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 			auto& childTransform = world.AddComponent<eng::TransformComponent>(parentDebug.m_Child);
 			childTransform = view.ReadRequired<eng::TransformComponent>();
 
-			const auto& parentObject = view.ReadRequired<::hidden::ObjectComponent>();
+			const auto& parentObject = view.ReadRequired<client::hidden::ObjectComponent>();
 			childSprite.m_Colour = Colour::Magenta;
 		}
 
@@ -51,13 +51,13 @@ void debug::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 			::Updated<
 			const eng::SpriteComponent>
 			::Include<
-			const ::hidden::ObjectComponent, 
+			const client::hidden::ObjectComponent,
 			const debug::hidden::ObjectComponent,
 			const eng::SpriteComponent>;
 		for (auto&& view : world.Query<SpriteQuery>())
 		{
 			const auto& parentDebug = view.ReadRequired<debug::hidden::ObjectComponent>();
-			const auto& parentObject = view.ReadRequired<::hidden::ObjectComponent>();
+			const auto& parentObject = view.ReadRequired<client::hidden::ObjectComponent>();
 			const auto& parentSprite = view.ReadRequired<eng::SpriteComponent>();
 
 			auto& childSprite = world.WriteComponent<eng::SpriteComponent>(parentDebug.m_Child);
@@ -84,7 +84,7 @@ void debug::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 	else
 	{
 		using Query = ecs::query
-			::Include<const ::hidden::ObjectComponent, const debug::hidden::ObjectComponent>;
+			::Include<const client::hidden::ObjectComponent, const debug::hidden::ObjectComponent>;
 		for (auto&& view : world.Query<Query>())
 		{
 			const auto& object = view.ReadRequired<debug::hidden::ObjectComponent>();

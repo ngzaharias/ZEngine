@@ -1,11 +1,11 @@
 #include "GameUIPCH.h"
 #include "GameUI/HiddenLevelSystem.h"
 
+#include "ClientHidden/HiddenObjectComponent.h"
+#include "ClientHidden/HiddenRevealComponent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Hidden/HiddenObjectComponent.h"
-#include "Hidden/HiddenRevealComponent.h"
 #include "GameUI/LevelCompleteWindowComponent.h"
 
 void gui::hidden::LevelSystem::Update(World& world, const GameTime& gameTime)
@@ -15,11 +15,11 @@ void gui::hidden::LevelSystem::Update(World& world, const GameTime& gameTime)
 	// level complete
 	{
 		using RevealedQuery = ecs::query
-			::Added<const ::hidden::RevealComponent>
-			::Include<const ::hidden::ObjectComponent>;
+			::Added<const client::hidden::RevealComponent>
+			::Include<const client::hidden::ObjectComponent>;
 		using RemainingQuery = ecs::query
-			::Include<const ::hidden::ObjectComponent>
-			::Exclude<const ::hidden::RevealComponent>;
+			::Include<const client::hidden::ObjectComponent>
+			::Exclude<const client::hidden::RevealComponent>;
 		if (world.HasAny<RevealedQuery>())
 		{
 			if (!world.HasAny<RemainingQuery>())

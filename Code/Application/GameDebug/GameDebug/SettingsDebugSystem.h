@@ -3,17 +3,17 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace client::hidden
+{
+	struct DebugSingleton;
+}
+
 namespace client::settings
 {
 	struct DebugSingleton;
 }
 
 namespace eng::settings
-{
-	struct DebugSingleton;
-}
-
-namespace hidden::settings
 {
 	struct DebugSingleton;
 }
@@ -25,9 +25,9 @@ namespace debug::settings
 	public:
 		using World = ecs::WorldView
 			::Write<
+			client::hidden::DebugSingleton,
 			client::settings::DebugSingleton,
-			eng::settings::DebugSingleton,
-			::hidden::settings::DebugSingleton>;
+			eng::settings::DebugSingleton>;
 
 		void Initialise(World& world);
 

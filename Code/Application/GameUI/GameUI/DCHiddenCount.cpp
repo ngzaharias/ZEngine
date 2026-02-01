@@ -1,9 +1,6 @@
 #include "GameUIPCH.h"
 #include "GameUI/DCHiddenCount.h"
 
-#include "ECS/EntityWorld.h"
-#include "Hidden/HiddenCountComponent.h"
-
 #include <NsCore/ReflectionImplement.h>
 
 gui::DCHiddenCount::DCHiddenCount()

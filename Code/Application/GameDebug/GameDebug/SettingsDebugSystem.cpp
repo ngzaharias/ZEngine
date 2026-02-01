@@ -1,6 +1,7 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/SettingsDebugSystem.h"
 
+#include "ClientHidden/HiddenDebugSingleton.h"
 #include "Core/Path.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -8,7 +9,6 @@
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/Visitor.h"
 #include "GameClient/SettingsDebugComponent.h"
-#include "Hidden/HiddenDebugSettingsSingleton.h"
 
 namespace
 {
@@ -23,9 +23,9 @@ void debug::settings::DebugSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(world.WriteSingleton<client::settings::DebugSingleton>());
 	visitor.Read(world.WriteSingleton<eng::settings::DebugSingleton>());
-	visitor.Read(world.WriteSingleton<hidden::settings::DebugSingleton>());
+	visitor.Read(world.WriteSingleton<client::settings::DebugSingleton>());
+	visitor.Read(world.WriteSingleton<client::hidden::DebugSingleton>());
 
 #ifdef Z_EDITOR
 	auto& component = world.WriteSingleton<eng::settings::DebugSingleton>();
@@ -38,17 +38,17 @@ void debug::settings::DebugSystem::Update(World& world, const GameTime& gameTime
 	PROFILE_FUNCTION();
 
 	const bool hasChanged =
-		world.HasAny<client::settings::DebugSingleton>() ||
 		world.HasAny<eng::settings::DebugSingleton>() ||
-		world.HasAny<hidden::settings::DebugSingleton>();
+		world.HasAny<client::settings::DebugSingleton>() ||
+		world.HasAny<client::hidden::DebugSingleton>();
 	if (hasChanged)
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(world.ReadSingleton<client::settings::DebugSingleton>());
 		visitor.Write(world.ReadSingleton<eng::settings::DebugSingleton>());
-		visitor.Write(world.ReadSingleton<hidden::settings::DebugSingleton>());
+		visitor.Write(world.ReadSingleton<client::settings::DebugSingleton>());
+		visitor.Write(world.ReadSingleton<client::hidden::DebugSingleton>());
 		visitor.SaveToFile(filepath);
 	}
 }

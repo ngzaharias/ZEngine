@@ -3,6 +3,7 @@
 
 #include "Camera/RegisterModule.h"
 #include "ClientCursor/RegisterModule.h"
+#include "ClientHidden/RegisterModule.h"
 #include "ClientNetwork/RegisterModule.h"
 #include "Container/RegisterModule.h"
 #include "ECS/TypeRegistry.h"
@@ -25,7 +26,6 @@
 #include "GameClient/RegisterSystems.h"
 #include "GameUI/RegisterModule.h"
 #include "Hexmap/RegisterModule.h"
-#include "Hidden/RegisterModule.h"
 #include "Render/RegisterModule.h"
 #include "SharedCursor/RegisterModule.h"
 #include "SharedNetwork/RegisterModule.h"
@@ -93,11 +93,11 @@ void client::GameClient::Register(const Dependencies& dependencies)
 	{
 		camera::RegisterModule(m_EntityWorld);
 		client::cursor::RegisterModule(m_EntityWorld);
+		client::hidden::RegisterModule(m_EntityWorld);
 		client::network::RegisterModule(m_EntityWorld);
 		container::RegisterModule(m_EntityWorld);
 		gui::RegisterModule(m_EntityWorld);
 		hexmap::RegisterModule(m_EntityWorld);
-		hidden::RegisterModule(m_EntityWorld);
 		render::RegisterModule(m_EntityWorld);
 		shared::cursor::RegisterModule(m_EntityWorld);
 		shared::network::RegisterModule(m_EntityWorld);
