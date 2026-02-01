@@ -63,7 +63,6 @@ namespace net
 		Delegate<void()> m_OnHostShutdown;
 		Delegate<void(const net::PeerId&)> m_OnPeerConnected;
 		Delegate<void(const net::PeerId&)> m_OnPeerDisconnected;
-
 		Delegate<void(const Array<const net::Message*>&)> m_OnProcessMessages;
 
 	protected:

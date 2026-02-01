@@ -50,13 +50,14 @@ namespace net
 		STEAM_CALLBACK(net::Peer, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
 		void OnConnected(const HSteamNetConnection connection);
+		void OnHandshake(const net::PeerHandshakeMessage* message);
 		void OnDisconnected(const HSteamNetConnection connection);
 		void OnProcessMessages(const Array<const net::Message*>& messages);
-		void OnPeerHandshake(const net::PeerHandshakeMessage* message);
 
 	public:
 		Delegate<void()> m_OnConnected;
-		Delegate<void()> m_OnDisconnected;
+		Delegate<void(const net::PeerId&)> m_OnHandshake;
+		Delegate<void(const net::PeerId&)> m_OnDisconnected;
 		Delegate<void(const Array<const net::Message*>& messages)> m_OnProcessMessages;
 
 	protected:

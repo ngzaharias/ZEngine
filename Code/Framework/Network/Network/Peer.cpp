@@ -183,18 +183,29 @@ void net::Peer::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCall
 void net::Peer::OnConnected(const HSteamNetConnection connection)
 {
 	Z_LOG(ELog::Network, "Peer: Connected.");
+
 	m_Connection = connection;
 	m_OnConnected.Publish();
 }
 
+void net::Peer::OnHandshake(const net::PeerHandshakeMessage* message)
+{
+	Z_LOG(ELog::Network, "Peer: Handshake.");
+
+	m_PeerId = message->m_PeerId;
+	m_OnHandshake.Publish(m_PeerId);
+}
+
+
 void net::Peer::OnDisconnected(const HSteamNetConnection connection)
 {
 	Z_LOG(ELog::Network, "Peer: Disconnected.");
+
+	m_OnDisconnected.Publish(m_PeerId);
 	SteamNetworkingSockets()->CloseConnection(connection, 0, nullptr, false);
 
 	m_PeerId = {};
 	m_Connection = k_HSteamNetConnection_Invalid;
-	m_OnDisconnected.Publish();
 }
 
 void net::Peer::OnProcessMessages(const Array<const net::Message*>& messages)
@@ -206,18 +217,10 @@ void net::Peer::OnProcessMessages(const Array<const net::Message*>& messages)
 		switch (static_cast<net::EMessage>(message->m_Type))
 		{
 		case net::EMessage::PeerHandshake:
-			OnPeerHandshake(static_cast<const net::PeerHandshakeMessage*>(message));
+			OnHandshake(static_cast<const net::PeerHandshakeMessage*>(message));
 			break;
 		}
 	}
 
 	m_OnProcessMessages.Publish(m_Queue);
-}
-
-void net::Peer::OnPeerHandshake(const net::PeerHandshakeMessage* message)
-{
-	PROFILE_FUNCTION();
-
-	m_PeerId = message->m_PeerId;
-	Z_LOG(ELog::Network, "Peer: Assigned PeerId {}.", m_PeerId.GetIndex());
 }
