@@ -11,6 +11,6 @@ namespace shared::cursor
 		, ecs::IsReplicated
 	{
 		net::PeerId m_PeerId = {};
-		Vector2f m_Translate = {};
+		Vector3f m_Translate = {};
 	};
 }

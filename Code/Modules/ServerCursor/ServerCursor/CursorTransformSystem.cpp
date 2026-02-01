@@ -13,7 +13,7 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 {
 	PROFILE_FUNCTION();
 
-	Map<net::PeerId, Vector2f> requests;
+	Map<net::PeerId, Vector3f> requests;
 	for (const auto& eventData : world.Events<shared::cursor::ClientTransformEvent>())
 	{
 		requests[eventData.m_PeerId] = eventData.m_Translate;

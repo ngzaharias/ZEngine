@@ -1,0 +1,7 @@
+m_Guid = 'c96bb93973cc4195fbaeca70bea25f4c'
+m_Name = 'SP_Cursor_Hand'
+m_Position = { X = 0.0, Y = 0.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 64.0, Y = 64.0 }
+m_Texture2D = '319277084bf14d798b940cbc1c6e3825'
+m_Type = 'Sprite'

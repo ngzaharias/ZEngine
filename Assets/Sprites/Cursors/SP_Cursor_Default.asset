@@ -1,0 +1,7 @@
+m_Guid = '9aacfb81dc064365d6ab5400264779a7'
+m_Name = 'SP_Cursor_Default'
+m_Position = { X = 0.0, Y = 0.0 }
+m_Shader = 'cbbb7d3ff44b45fdb9e5a207d92262fb'
+m_Size = { X = 64.0, Y = 64.0 }
+m_Texture2D = 'f61564fec770401c859e6aa608634340'
+m_Type = 'Sprite'

@@ -7,9 +7,10 @@ class Plane3f
 {
 public:
 	constexpr Plane3f() noexcept : m_Normal(), m_Point() { }
+	constexpr Plane3f(const Vector3f& normal) noexcept : m_Normal(normal), m_Point(Vector3f::Zero) { }
 	constexpr Plane3f(const Vector3f& normal, const Vector3f& point) noexcept : m_Normal(normal), m_Point(point) { }
 
 public:
-	Vector3f m_Normal;
-	Vector3f m_Point;
+	Vector3f m_Normal = {};
+	Vector3f m_Point = {};
 };
