@@ -216,6 +216,10 @@ auto ecs::EntityWorld::WriteResource() -> TResource&
 	static_assert(!std::is_const<TResource>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TResource>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TResource>, "Type cannot be a pointer.");
+	static_assert(!std::is_base_of<ecs::Component<TResource>, TResource>::value, "Type cannot be a Singleton.");
+	static_assert(!std::is_base_of<ecs::Event<TResource>, TResource>::value, "Type cannot be a Singleton.");
+	static_assert(!std::is_base_of<ecs::System, TResource>::value, "Type cannot be a System.");
+	static_assert(!std::is_base_of<ecs::Singleton<TResource>, TResource>::value, "Type cannot be a Singleton.");
 
 	Z_PANIC(IsRegistered<TResource>(), "Resource isn't registered!");
 	return m_ResourceRegistry.Get<TResource>();
@@ -289,6 +293,7 @@ auto ecs::EntityWorld::GetSystem() -> TSystem&
 	static_assert(!std::is_const<TSystem>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TSystem>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TSystem>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::System, TSystem>::value, "Type doesn't inherit from ecs::System.");
 
 	Z_PANIC(IsRegistered<TSystem>(), "System isn't registered!");
 	return m_SystemRegistry.GetSystem<TSystem>();
