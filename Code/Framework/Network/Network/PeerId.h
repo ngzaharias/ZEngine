@@ -14,10 +14,18 @@ namespace net
 		constexpr PeerId() = default;
 		constexpr PeerId(const int32 value) : m_Value(value) { }
 
-		constexpr int32 GetIndex() const { return m_Value; }
-
 		constexpr bool operator==(const PeerId& rhs) const { return m_Value == rhs.m_Value; }
 		constexpr bool operator<(const PeerId& rhs) const { return m_Value < rhs.m_Value; }
+
+		bool IsUnassigned() const
+		{
+			return *this == Unassigned;
+		}
+
+		constexpr int32 GetIndex() const 
+		{ 
+			return m_Value; 
+		}
 
 		int32 m_Value = INT32_MAX;
 	};
