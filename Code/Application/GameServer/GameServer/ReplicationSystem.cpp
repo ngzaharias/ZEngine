@@ -14,7 +14,6 @@ void server::ReplicationSystem::Initialise(World& world)
 	m_Collection =
 	{
 		host.m_OnPeerConnected.Connect(*this, &server::ReplicationSystem::OnPeerConnected),
-		host.m_OnPeerDisconnected.Connect(*this, &server::ReplicationSystem::OnPeerDisconnected),
 	};
 }
 
@@ -47,21 +46,10 @@ void server::ReplicationSystem::Update(World& world, const GameTime& gameTime)
 			replicationHost.StartReplicate(peerId, view);
 	}
 
-	for (const net::PeerId& peerId : m_PeersDisconnected)
-	{
-		for (auto&& view : world.Query<ecs::query::Include<ecs::ReplicationComponent>>())
-			replicationHost.StopReplicate(peerId, view);
-	}
-
 	m_PeersConnected.RemoveAll();
-	m_PeersDisconnected.RemoveAll();
 }
+
 void server::ReplicationSystem::OnPeerConnected(const net::PeerId& peerId)
 {
 	m_PeersConnected.Add(peerId);
-}
-
-void server::ReplicationSystem::OnPeerDisconnected(const net::PeerId& peerId)
-{
-	m_PeersDisconnected.Add(peerId);
 }

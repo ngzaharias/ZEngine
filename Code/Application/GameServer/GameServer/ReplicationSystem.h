@@ -35,12 +35,9 @@ namespace server
 
 	private:
 		void OnPeerConnected(const net::PeerId& peerId);
-		void OnPeerDisconnected(const net::PeerId& peerId);
 
 	private:
 		DelegateCollection m_Collection;
 		Set<net::PeerId> m_PeersConnected;
-		Set<net::PeerId> m_PeersDisconnected;
-
 	};
 }
