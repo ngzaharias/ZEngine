@@ -62,6 +62,8 @@ void net::Host::Startup()
 	m_NetPollGroup = SteamNetworkingSockets()->CreatePollGroup();
 
 	SteamMatchmaking()->CreateLobby(k_ELobbyTypeFriendsOnly, 4);
+
+	m_OnHostStartup.Publish();
 }
 
 void net::Host::Shutdown()
@@ -78,6 +80,8 @@ void net::Host::Shutdown()
 	m_ListenSocketIp = k_HSteamListenSocket_Invalid;
 	m_NetPollGroup = k_HSteamNetPollGroup_Invalid;
 	m_LobbyId = {};
+
+	m_OnHostShutdown.Publish();
 }
 
 void net::Host::Update(const GameTime& gameTime)

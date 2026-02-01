@@ -59,6 +59,8 @@ namespace net
 		void OnPeerDisconnected(HSteamNetConnection connection);
 
 	public:
+		Delegate<void()> m_OnHostStartup;
+		Delegate<void()> m_OnHostShutdown;
 		Delegate<void(const net::PeerId&)> m_OnPeerConnected;
 		Delegate<void(const net::PeerId&)> m_OnPeerDisconnected;
 
