@@ -25,7 +25,7 @@ namespace
 {
 	const str::Guid strSprite = GUID("9aacfb81dc064365d6ab5400264779a7");
 
-	constexpr Vector3f s_Offset = Vector3f(9.f, -12.f, 0.f);
+	constexpr Vector3f s_Offset = Vector3f(12.f, -20.f, 0.f);
 }
 
 void client::cursor::TransformSystem::Update(World& world, const GameTime& gameTime)
