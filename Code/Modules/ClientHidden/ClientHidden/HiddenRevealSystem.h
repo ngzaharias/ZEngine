@@ -24,8 +24,15 @@ namespace eng
 	struct CameraComponent;
 	struct LinesSingleton;
 	struct PhysicsSceneSingleton;
+	struct PrototypeComponent;
 	struct RigidStaticComponent;
 	struct TransformComponent;
+}
+
+namespace shared::hidden
+{
+	struct RevealedEvent;
+	struct SelectedEvent;
 }
 
 namespace client::hidden
@@ -37,7 +44,8 @@ namespace client::hidden
 			::Write<
 			client::hidden::RevealComponent,
 			eng::LinesSingleton,
-			eng::RigidStaticComponent>
+			eng::RigidStaticComponent,
+			shared::hidden::SelectedEvent>
 			::Read<
 			client::hidden::DebugSingleton,
 			client::hidden::ObjectComponent,
@@ -45,8 +53,10 @@ namespace client::hidden
 			eng::CameraComponent,
 			eng::InputManager,
 			eng::PhysicsSceneSingleton,
+			eng::PrototypeComponent,
 			eng::TransformComponent,
-			eng::WindowManager>;
+			eng::WindowManager,
+			shared::hidden::RevealedEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

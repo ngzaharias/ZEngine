@@ -13,6 +13,7 @@
 #include "Engine/InputManager.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
+#include "Engine/PrototypeComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -21,6 +22,8 @@
 #include "Math/CollisionMath.h"
 #include "Math/Ray.h"
 #include "Math/Sphere.h"
+#include "SharedHidden/HiddenRevealedEvent.h"
+#include "SharedHidden/HiddenSelectedEvent.h"
 
 #include <PhysX/PxRigidActor.h>
 #include <PhysX/PxScene.h>
@@ -68,21 +71,22 @@ void client::hidden::RevealSystem::Update(World& world, const GameTime& gameTime
 	if (!window)
 		return;
 
+	const auto& input = world.ReadResource<eng::InputManager>();
 	const auto& settings = world.ReadSingleton<client::hidden::DebugSingleton>();
 	const auto& physics = world.ReadSingleton<eng::PhysicsSceneSingleton>();
 
-	using Query = ecs::query
-		::Include<
-		const eng::ActiveComponent,
-		const eng::CameraComponent,
-		const eng::TransformComponent>;
-	for (auto&& view : world.Query<Query>())
+	Set<ecs::Entity> reveals;
+	if (input.IsPressed(strSelect))
 	{
-		const auto& cameraProjection = view.ReadRequired<eng::CameraComponent>();
-		const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
-
+		using CameraQuery = ecs::query
+			::Include<
+			const eng::ActiveComponent,
+			const eng::CameraComponent,
+			const eng::TransformComponent>;
+		for (auto&& view : world.Query<CameraQuery>())
 		{
-			const auto& input = world.ReadResource<eng::InputManager>();
+			const auto& cameraProjection = view.ReadRequired<eng::CameraComponent>();
+			const auto& cameraTransform = view.ReadRequired<eng::TransformComponent>();
 
 			// mouse
 			constexpr float s_Distance = 100000.f;
@@ -111,9 +115,15 @@ void client::hidden::RevealSystem::Update(World& world, const GameTime& gameTime
 				const ecs::Entity selectedEntity = reinterpret_cast<uint64>(closestHit.actor->userData);
 				if (world.HasComponent<client::hidden::ObjectComponent>(selectedEntity))
 				{
-					const bool isRevealed = world.HasComponent<hidden::RevealComponent>(selectedEntity);
-					if (!isRevealed && input.IsPressed(strSelect))
-						world.AddComponent<client::hidden::RevealComponent>(selectedEntity);
+					if (!world.HasComponent<client::hidden::RevealComponent>(selectedEntity))
+						reveals.Add(selectedEntity);
+
+					if (world.HasComponent<eng::PrototypeComponent>(selectedEntity))
+					{
+						const auto& prototypeComponent = world.ReadComponent<eng::PrototypeComponent>(selectedEntity);
+						auto& eventData = world.AddEvent<shared::hidden::SelectedEvent>();
+						eventData.m_Entity = prototypeComponent.m_Guid;
+					}
 				}
 
 				if (settings.m_IsInputEnabled)
@@ -131,5 +141,27 @@ void client::hidden::RevealSystem::Update(World& world, const GameTime& gameTime
 				}
 			}
 		}
+	}
+
+	for (const auto& eventData : world.Events<shared::hidden::RevealedEvent>())
+	{
+		using Query = ecs::query
+			::Include<
+			const client::hidden::ObjectComponent,
+			const eng::PrototypeComponent>
+			::Exclude<
+			const client::hidden::RevealComponent>;
+		for (auto&& view : world.Query<Query>())
+		{
+			const auto& prototypeComponent = view.ReadRequired<eng::PrototypeComponent>();
+			if (prototypeComponent.m_Guid == eventData.m_Entity)
+				reveals.Add(view);
+		}
+	}
+
+	for (const ecs::Entity& entity : reveals)
+	{
+		if (!world.HasComponent<client::hidden::RevealComponent>(entity))
+			world.AddComponent<client::hidden::RevealComponent>(entity);
 	}
 }

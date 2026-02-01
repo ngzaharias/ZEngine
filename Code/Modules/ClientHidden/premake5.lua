@@ -27,4 +27,5 @@ project "ClientHidden"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Modules/ClientHidden/",
+		"%{wks.location}/../Code/Modules/SharedHidden/",
 	}
