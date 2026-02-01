@@ -53,12 +53,12 @@ void client::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 
 		auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(view);
 		spriteComponent.m_Sprite = strSprite;
-		spriteComponent.m_Size = Vector2u(32, 32);
+		spriteComponent.m_Size = Vector2u(64, 64);
 
 		auto& clientComponent = world.AddComponent<eng::TransformComponent>(view);
 		clientComponent.m_Translate.x = serverComponent.m_Translate.x;
 		clientComponent.m_Translate.y = serverComponent.m_Translate.y;
-		clientComponent.m_Translate.z = 0.f;
+		clientComponent.m_Translate.z = -200.f;
 	}
 
 	using UpdateQuery = ecs::query
