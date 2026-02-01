@@ -34,17 +34,25 @@ void ecs::ReplicationPeer::Update(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const auto& peer = m_EntityWorld.ReadResource<net::Peer>();
-	if (!peer.IsConnected())
-		return;
-
-	ProcessEvents();
-
-	for (auto&& [peerEntity, hostEntity] : m_ToDestroy)
+	if (peer.IsConnected())
 	{
-		m_HostToPeer.Remove(hostEntity);
-		m_PeerToHost.Remove(peerEntity);
+		ProcessEvents();
+
+		for (auto&& [peerEntity, hostEntity] : m_ToDestroy)
+		{
+			m_HostToPeer.Remove(hostEntity);
+			m_PeerToHost.Remove(peerEntity);
+		}
+		m_ToDestroy.RemoveAll();
 	}
-	m_ToDestroy.RemoveAll();
+	else if (!m_PeerToHost.IsEmpty())
+	{
+		for (auto&& [entity, nentity] : m_PeerToHost)
+			m_EntityWorld.DestroyEntity(entity);
+
+		m_HostToPeer.RemoveAll();
+		m_PeerToHost.RemoveAll();
+	}
 }
 
 void ecs::ReplicationPeer::ProcessEvents()

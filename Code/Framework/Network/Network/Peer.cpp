@@ -49,6 +49,10 @@ net::Peer::Peer(net::Factory& factory)
 void net::Peer::Connect()
 {
 	PROFILE_FUNCTION();
+
+	if (IsConnected())
+		return;
+
 	Z_LOG(ELog::Network, "Peer: Connect.");
 
 	SteamNetworkingIPAddr addr{};
@@ -63,10 +67,11 @@ void net::Peer::Connect()
 void net::Peer::Disconnect()
 {
 	PROFILE_FUNCTION();
-	Z_LOG(ELog::Network, "Peer: Disconnect.");
+	
+	if (!IsConnected())
+		return;
 
-	SteamNetworkingSockets()->CloseConnection(m_Connection, 0, nullptr, false);
-	m_Connection = k_HSteamNetConnection_Invalid;
+	OnDisconnected(m_Connection);
 }
 
 bool net::Peer::IsConnected() const
@@ -163,9 +168,33 @@ void net::Peer::OnNetConnectionStatusChanged(SteamNetConnectionStatusChangedCall
 		eNewState == k_ESteamNetworkingConnectionState_Connected;
 	if (hasConnected)
 	{
-		Z_LOG(ELog::Network, "Peer: Connected.");
-		m_Connection = connection;
+		OnConnected(connection);
 	}
+
+	const bool hasDisconnected =
+		eOldState == k_ESteamNetworkingConnectionState_ClosedByPeer ||
+		eNewState == k_ESteamNetworkingConnectionState_ProblemDetectedLocally;
+	if (hasDisconnected)
+	{
+		OnDisconnected(connection);
+	}
+}
+
+void net::Peer::OnConnected(const HSteamNetConnection connection)
+{
+	Z_LOG(ELog::Network, "Peer: Connected.");
+	m_Connection = connection;
+	m_OnConnected.Publish();
+}
+
+void net::Peer::OnDisconnected(const HSteamNetConnection connection)
+{
+	Z_LOG(ELog::Network, "Peer: Disconnected.");
+	SteamNetworkingSockets()->CloseConnection(connection, 0, nullptr, false);
+
+	m_PeerId = {};
+	m_Connection = k_HSteamNetConnection_Invalid;
+	m_OnDisconnected.Publish();
 }
 
 void net::Peer::OnProcessMessages(const Array<const net::Message*>& messages)

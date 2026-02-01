@@ -49,10 +49,14 @@ namespace net
 		STEAM_CALLBACK(net::Peer, OnLobbyJoinRequested, GameLobbyJoinRequested_t);
 		STEAM_CALLBACK(net::Peer, OnNetConnectionStatusChanged, SteamNetConnectionStatusChangedCallback_t);
 
+		void OnConnected(const HSteamNetConnection connection);
+		void OnDisconnected(const HSteamNetConnection connection);
 		void OnProcessMessages(const Array<const net::Message*>& messages);
 		void OnPeerHandshake(const net::PeerHandshakeMessage* message);
 
 	public:
+		Delegate<void()> m_OnConnected;
+		Delegate<void()> m_OnDisconnected;
 		Delegate<void(const Array<const net::Message*>& messages)> m_OnProcessMessages;
 
 	protected:
