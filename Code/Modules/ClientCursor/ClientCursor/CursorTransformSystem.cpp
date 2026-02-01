@@ -83,6 +83,12 @@ void client::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 	for (auto&& cameraView : world.Query<CameraQuery>())
 	{
 		const auto& peer = world.ReadResource<net::Peer>();
+		if (!peer.IsConnected())
+			continue;
+
+		if (peer.GetPeerId().IsUnassigned())
+			continue;
+
 		const auto& input = world.ReadResource<eng::InputManager>();
 		const auto& camera = cameraView.ReadRequired<eng::CameraComponent>();
 		const auto& transform = cameraView.ReadRequired<eng::TransformComponent>();
