@@ -71,6 +71,10 @@ void net::Host::Shutdown()
 	PROFILE_FUNCTION();
 	Z_LOG(ELog::Network, "Host: Shutdown");
 
+	for (auto&& [peerId, peerData] : m_PeerMap)
+		m_OnPeerDisconnected.Publish(peerId);
+	m_PeerMap.RemoveAll();
+
 	SteamNetworkingSockets()->CloseListenSocket(m_ListenSocketId);
 	SteamNetworkingSockets()->CloseListenSocket(m_ListenSocketIp);
 	SteamNetworkingSockets()->DestroyPollGroup(m_NetPollGroup);

@@ -5,9 +5,24 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/ReplicationComponent.h"
 #include "ECS/WorldView.h"
+#include "Network/Host.h"
 #include "ServerCursor/CursorTransformSingleton.h"
 #include "SharedCursor/CursorClientTransformEvent.h"
 #include "SharedCursor/CursorTransformComponent.h"
+
+void server::cursor::TransformSystem::Initialise(World& world)
+{
+	auto& host = world.WriteResource<net::Host>();
+	m_Collection =
+	{
+		host.m_OnPeerDisconnected.Connect(*this, &server::cursor::TransformSystem::OnPeerDisconnected),
+	};
+}
+
+void server::cursor::TransformSystem::Shutdown(World& world)
+{
+	m_Collection.Disconnect();
+}
 
 void server::cursor::TransformSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -40,4 +55,25 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 			}
 		}
 	}
+
+	if (!m_Disconnects.IsEmpty())
+	{
+		auto& singleton = world.WriteSingleton<server::cursor::TransformSingleton>();
+		auto& peerData = singleton.m_Peers;
+		for (const net::PeerId& peerId : m_Disconnects)
+		{
+			auto find = peerData.Find(peerId);
+			if (find == peerData.end())
+				continue;
+
+			world.DestroyEntity(find->second);
+			peerData.Remove(peerId);
+		}
+		m_Disconnects.RemoveAll();
+	}
+}
+
+void server::cursor::TransformSystem::OnPeerDisconnected(const net::PeerId& peerId)
+{
+	m_Disconnects.Add(peerId);
 }

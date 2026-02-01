@@ -49,11 +49,10 @@ net::Peer::Peer(net::Factory& factory)
 void net::Peer::Connect()
 {
 	PROFILE_FUNCTION();
+	Z_LOG(ELog::Network, "Peer: Connect.");
 
 	if (IsConnected())
 		return;
-
-	Z_LOG(ELog::Network, "Peer: Connect.");
 
 	SteamNetworkingIPAddr addr{};
 	addr.ParseString("127.0.0.1:27020");
@@ -67,7 +66,8 @@ void net::Peer::Connect()
 void net::Peer::Disconnect()
 {
 	PROFILE_FUNCTION();
-	
+	Z_LOG(ELog::Network, "Peer: Disconnect.");
+
 	if (!IsConnected())
 		return;
 
