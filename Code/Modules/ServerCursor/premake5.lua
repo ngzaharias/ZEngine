@@ -26,5 +26,6 @@ project "ServerCursor"
 		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Modules/ServerCursor/",
+		"%{wks.location}/../Code/Modules/ServerNetwork/",
 		"%{wks.location}/../Code/Modules/SharedCursor/",
 	}

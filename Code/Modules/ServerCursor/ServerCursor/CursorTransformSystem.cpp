@@ -5,75 +5,53 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/ReplicationComponent.h"
 #include "ECS/WorldView.h"
-#include "Network/Host.h"
 #include "ServerCursor/CursorTransformSingleton.h"
+#include "ServerNetwork/NetworkPeerComponent.h"
 #include "SharedCursor/CursorClientTransformEvent.h"
 #include "SharedCursor/CursorTransformComponent.h"
-
-void server::cursor::TransformSystem::Initialise(World& world)
-{
-	auto& host = world.WriteResource<net::Host>();
-	m_Collection =
-	{
-		host.m_OnPeerDisconnected.Connect(*this, &server::cursor::TransformSystem::OnPeerDisconnected),
-	};
-}
-
-void server::cursor::TransformSystem::Shutdown(World& world)
-{
-	m_Collection.Disconnect();
-}
 
 void server::cursor::TransformSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	Map<net::PeerId, Vector3f> requests;
 	for (const auto& eventData : world.Events<shared::cursor::ClientTransformEvent>())
 	{
-		requests[eventData.m_PeerId] = eventData.m_Translate;
+		const auto& transformSingleton = world.ReadSingleton<server::cursor::TransformSingleton>();
+		const auto& peers = transformSingleton.m_Peers;
+		const auto find = peers.Find(eventData.m_PeerId);
+		if (find == peers.end())
+			continue;
+
+		const ecs::Entity entity = find->second;
+		auto& transformComponent = world.WriteComponent<shared::cursor::TransformComponent>(entity);
+		transformComponent.m_Translate = eventData.m_Translate;
 	}
 
-	if (!requests.IsEmpty())
+	for (auto&& view : world.Query<ecs::query::Added<server::network::PeerComponent>::Include<server::network::PeerComponent>>())
 	{
-		auto& singleton = world.WriteSingleton<server::cursor::TransformSingleton>();
-		for (auto&& [peerId, translate] : requests)
-		{
-			ecs::Entity& entity = singleton.m_Peers[peerId];
-			if (entity.IsUnassigned())
-			{
-				entity = world.CreateEntity();
-				world.AddComponent<ecs::ReplicationComponent>(entity);
-				auto& component = world.AddComponent<shared::cursor::TransformComponent>(entity);
-				component.m_PeerId = peerId;
-				component.m_Translate = translate;
-			}
-			else
-			{
-				auto& component = world.WriteComponent<shared::cursor::TransformComponent>(entity);
-				component.m_Translate = translate;
-			}
-		}
+		const auto& peerComponent = view.ReadRequired<server::network::PeerComponent>();
+		const net::PeerId peerId = peerComponent.m_PeerId;
+
+		const ecs::Entity entity = world.CreateEntity();
+		world.AddComponent<ecs::ReplicationComponent>(entity);
+
+		auto& transformComponent = world.AddComponent<shared::cursor::TransformComponent>(entity);
+		transformComponent.m_PeerId = peerId;
+
+		auto& transformSingleton = world.WriteSingleton<server::cursor::TransformSingleton>();
+		transformSingleton.m_Peers.Set(peerId, entity);
 	}
 
-	if (!m_Disconnects.IsEmpty())
+	for (auto&& view : world.Query<ecs::query::Removed<server::network::PeerComponent>::Include<server::network::PeerComponent>>())
 	{
-		auto& singleton = world.WriteSingleton<server::cursor::TransformSingleton>();
-		auto& peerData = singleton.m_Peers;
-		for (const net::PeerId& peerId : m_Disconnects)
-		{
-			auto find = peerData.Find(peerId);
-			if (find == peerData.end())
-				continue;
+		const auto& peerComponent = view.ReadRequired<server::network::PeerComponent>();
+		auto& transformSingleton = world.WriteSingleton<server::cursor::TransformSingleton>();
+		
+		const net::PeerId peerId = peerComponent.m_PeerId;
+		auto& peers = transformSingleton.m_Peers;
 
-			world.DestroyEntity(find->second);
-			peerData.Remove(peerId);
-		}
-		m_Disconnects.RemoveAll();
+		const ecs::Entity entity = peers.Get(peerId);
+		world.DestroyEntity(entity);
+		peers.Remove(peerId);
 	}
-}
-
-void server::cursor::TransformSystem::OnPeerDisconnected(const net::PeerId& peerId)
-{
-	m_Disconnects.Add(peerId);
 }
