@@ -54,67 +54,67 @@ namespace
 	const str::Name strSplash_xaml = NAME("Splash.xaml");
 }
 
-void gui::RegisterModule(ecs::EntityWorld& entityWorld)
+void gui::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<gui::game_menu::WindowComponent>();
-		entityWorld.RegisterComponent<gui::input::BindingsComponent>();
-		entityWorld.RegisterComponent<gui::level_complete::WindowComponent>();
-		entityWorld.RegisterComponent<gui::main_menu::WindowComponent>();
-		entityWorld.RegisterComponent<gui::settings_menu::WindowComponent>();
+		world.RegisterComponent<gui::game_menu::WindowComponent>();
+		world.RegisterComponent<gui::input::BindingsComponent>();
+		world.RegisterComponent<gui::level_complete::WindowComponent>();
+		world.RegisterComponent<gui::main_menu::WindowComponent>();
+		world.RegisterComponent<gui::settings_menu::WindowComponent>();
 	}
 
 	// events
 	{
-		entityWorld.RegisterEvent<gui::game_menu::CloseRequest>();
-		entityWorld.RegisterEvent<gui::game_menu::ExitGameRequest>();
-		entityWorld.RegisterEvent<gui::game_menu::ExitToMenuRequest>();
-		entityWorld.RegisterEvent<gui::game_menu::OpenRequest>();
-		entityWorld.RegisterEvent<gui::level_complete::ExitGameRequest>();
-		entityWorld.RegisterEvent<gui::level_complete::ExitToMenuRequest>();
-		entityWorld.RegisterEvent<gui::level_complete::ResetGameRequest>();
-		entityWorld.RegisterEvent<gui::loading::CloseRequest>();
-		entityWorld.RegisterEvent<gui::main_menu::ContinueGameRequest>();
-		entityWorld.RegisterEvent<gui::main_menu::ExitGameRequest>();
-		entityWorld.RegisterEvent<gui::main_menu::LoadGameRequest>();
-		entityWorld.RegisterEvent<gui::main_menu::NewGameRequest>();
-		entityWorld.RegisterEvent<gui::settings_menu::CloseRequest>();
-		entityWorld.RegisterEvent<gui::settings_menu::OpenRequest>();
-		entityWorld.RegisterEvent<gui::settings_menu::ValueRequest>();
+		world.RegisterEvent<gui::game_menu::CloseRequest>();
+		world.RegisterEvent<gui::game_menu::ExitGameRequest>();
+		world.RegisterEvent<gui::game_menu::ExitToMenuRequest>();
+		world.RegisterEvent<gui::game_menu::OpenRequest>();
+		world.RegisterEvent<gui::level_complete::ExitGameRequest>();
+		world.RegisterEvent<gui::level_complete::ExitToMenuRequest>();
+		world.RegisterEvent<gui::level_complete::ResetGameRequest>();
+		world.RegisterEvent<gui::loading::CloseRequest>();
+		world.RegisterEvent<gui::main_menu::ContinueGameRequest>();
+		world.RegisterEvent<gui::main_menu::ExitGameRequest>();
+		world.RegisterEvent<gui::main_menu::LoadGameRequest>();
+		world.RegisterEvent<gui::main_menu::NewGameRequest>();
+		world.RegisterEvent<gui::settings_menu::CloseRequest>();
+		world.RegisterEvent<gui::settings_menu::OpenRequest>();
+		world.RegisterEvent<gui::settings_menu::ValueRequest>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<gui::game_menu::MenuSystem>();
-		entityWorld.RegisterSystem<gui::hidden::CountSystem>();
-		entityWorld.RegisterSystem<gui::hidden::LevelSystem>();
-		entityWorld.RegisterSystem<gui::input::BindingsSystem>();
-		entityWorld.RegisterSystem<gui::level_complete::MenuSystem>();
-		entityWorld.RegisterSystem<gui::loading::LoadingSystem>();
-		entityWorld.RegisterSystem<gui::main_menu::MenuSystem>();
-		entityWorld.RegisterSystem<gui::settings_menu::MenuSystem>();
-		entityWorld.RegisterSystem<gui::ThemeSystem>();
+		world.RegisterSystem<gui::game_menu::MenuSystem>();
+		world.RegisterSystem<gui::hidden::CountSystem>();
+		world.RegisterSystem<gui::hidden::LevelSystem>();
+		world.RegisterSystem<gui::input::BindingsSystem>();
+		world.RegisterSystem<gui::level_complete::MenuSystem>();
+		world.RegisterSystem<gui::loading::LoadingSystem>();
+		world.RegisterSystem<gui::main_menu::MenuSystem>();
+		world.RegisterSystem<gui::settings_menu::MenuSystem>();
+		world.RegisterSystem<gui::ThemeSystem>();
 	}
 
 	// prototypes
 	{
-		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		auto& manager = world.WriteResource<eng::PrototypeManager>();
 		manager.Register<gui::input::BindingsComponent>();
 		manager.Register<gui::main_menu::WindowComponent>();
 	}
 
 	// tables
 	{
-		auto& headmaster = entityWorld.WriteResource<eng::TableHeadmaster>();
+		auto& headmaster = world.WriteResource<eng::TableHeadmaster>();
 		headmaster.Register<gui::HintTable>("Hints");
 
-		entityWorld.RegisterResource(headmaster.GetManager<gui::HintTable>());
+		world.RegisterResource(headmaster.GetManager<gui::HintTable>());
 	}
 
 	// ui
 	{
-		auto& manager = entityWorld.WriteResource<eng::UIManager>();
+		auto& manager = world.WriteResource<eng::UIManager>();
 		manager.RegisterDataContext<gui::DCGameMenu>(strGameMenu_xaml);
 		manager.RegisterDataContext<gui::DCHiddenCount>(strHiddenCount_xaml);
 		manager.RegisterDataContext<gui::DCLevelComplete>(strLevelComplete_xaml);

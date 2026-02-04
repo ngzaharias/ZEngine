@@ -21,30 +21,30 @@
 #include "Render/RenderUIPreSystem.h"
 #include "Render/RenderVoxelSystem.h"
 
-void render::RegisterModule(ecs::EntityWorld& entityWorld)
+void render::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<render::CursorComponent>();
-		entityWorld.RegisterComponent<render::DebugComponent>();
-		entityWorld.RegisterComponent<render::ImGuiComponent>();
-		entityWorld.RegisterComponent<render::OpaqueComponent>();
-		entityWorld.RegisterComponent<render::ShadowComponent>();
-		entityWorld.RegisterComponent<render::TranslucentComponent>();
-		entityWorld.RegisterComponent<render::UIPostComponent>();
-		entityWorld.RegisterComponent<render::UIPreComponent>();
+		world.RegisterComponent<render::CursorComponent>();
+		world.RegisterComponent<render::DebugComponent>();
+		world.RegisterComponent<render::ImGuiComponent>();
+		world.RegisterComponent<render::OpaqueComponent>();
+		world.RegisterComponent<render::ShadowComponent>();
+		world.RegisterComponent<render::TranslucentComponent>();
+		world.RegisterComponent<render::UIPostComponent>();
+		world.RegisterComponent<render::UIPreComponent>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<render::CursorSystem>();
-		entityWorld.RegisterSystem<render::DebugSystem>();
-		entityWorld.RegisterSystem<render::ImGuiSystem>();
-		entityWorld.RegisterSystem<render::OpaqueSystem>();
-		entityWorld.RegisterSystem<render::ShadowSystem>();
-		entityWorld.RegisterSystem<render::TranslucentSystem>();
-		entityWorld.RegisterSystem<render::UIPostSystem>();
-		entityWorld.RegisterSystem<render::UIPreSystem>();
-		entityWorld.RegisterSystem<render::VoxelSystem>();
+		world.RegisterSystem<render::CursorSystem>();
+		world.RegisterSystem<render::DebugSystem>();
+		world.RegisterSystem<render::ImGuiSystem>();
+		world.RegisterSystem<render::OpaqueSystem>();
+		world.RegisterSystem<render::ShadowSystem>();
+		world.RegisterSystem<render::TranslucentSystem>();
+		world.RegisterSystem<render::UIPostSystem>();
+		world.RegisterSystem<render::UIPreSystem>();
+		world.RegisterSystem<render::VoxelSystem>();
 	}
 }

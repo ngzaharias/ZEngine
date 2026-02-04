@@ -7,5 +7,5 @@ namespace ecs
 
 namespace editor::texture
 {
-	void RegisterModule(ecs::EntityWorld& entityWorld);
+	void RegisterModule(ecs::EntityWorld& world);
 }

@@ -7,21 +7,21 @@
 #include "Softbody/SoftbodyChainComponent.h"
 #include "Softbody/SoftbodyChainSystem.h"
 
-void softbody::RegisterModule(ecs::EntityWorld& entityWorld)
+void softbody::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<softbody::ChainComponent>();
+		world.RegisterComponent<softbody::ChainComponent>();
 	}	
 	
 	// systems
 	{
-		entityWorld.RegisterSystem<softbody::ChainSystem>();
+		world.RegisterSystem<softbody::ChainSystem>();
 	}
 
 	// prototypes
 	{
-		auto& prototypeManager = entityWorld.WriteResource<eng::PrototypeManager>();
-		prototypeManager.Register<softbody::ChainComponent>();
+		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		manager.Register<softbody::ChainComponent>();
 	}
 }

@@ -13,29 +13,29 @@
 #include "TextureEditor/TextureEditorWindowRequest.h"
 #include "TextureEditor/TextureEditorWindowSystem.h"
 
-void editor::texture::RegisterModule(ecs::EntityWorld& entityWorld)
+void editor::texture::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<editor::texture::AssetImportComponent>();
-		entityWorld.RegisterComponent<editor::texture::AssetNewComponent>();
-		entityWorld.RegisterComponent<editor::texture::AssetOpenComponent>();
-		entityWorld.RegisterComponent<editor::texture::AssetSaveComponent>();
-		entityWorld.RegisterComponent<editor::texture::WindowComponent>();
+		world.RegisterComponent<editor::texture::AssetImportComponent>();
+		world.RegisterComponent<editor::texture::AssetNewComponent>();
+		world.RegisterComponent<editor::texture::AssetOpenComponent>();
+		world.RegisterComponent<editor::texture::AssetSaveComponent>();
+		world.RegisterComponent<editor::texture::WindowComponent>();
 	}
 
 	// events
 	{
-		entityWorld.RegisterEvent<editor::texture::WindowRequest>();
+		world.RegisterEvent<editor::texture::WindowRequest>();
 	}
 
 	// singleton
 	{
-		entityWorld.RegisterSingleton<editor::texture::SettingsSingleton>();
+		world.RegisterSingleton<editor::texture::SettingsSingleton>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<editor::texture::WindowSystem>();
+		world.RegisterSystem<editor::texture::WindowSystem>();
 	}
 }

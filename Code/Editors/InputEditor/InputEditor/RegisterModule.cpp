@@ -7,24 +7,20 @@
 #include "InputEditor/InputEditorWindowRequest.h"
 #include "InputEditor/InputEditorWindowSystem.h"
 
-void editor::input::RegisterModule(ecs::EntityWorld& entityWorld)
+void editor::input::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<editor::input::WindowComponent>();
+		world.RegisterComponent<editor::input::WindowComponent>();
 	}
 
 	// events
 	{
-		entityWorld.RegisterEvent<editor::input::WindowRequest>();
-	}
-
-	// singleton
-	{
+		world.RegisterEvent<editor::input::WindowRequest>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<editor::input::WindowSystem>();
+		world.RegisterSystem<editor::input::WindowSystem>();
 	}
 }

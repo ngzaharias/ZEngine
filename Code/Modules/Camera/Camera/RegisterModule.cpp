@@ -17,35 +17,35 @@
 #include "ECS/WorldView.h"
 #include "Engine/PrototypeManager.h"
 
-void camera::RegisterModule(ecs::EntityWorld& entityWorld)
+void camera::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<camera::Bound2DComponent>();
-		entityWorld.RegisterComponent<camera::Move2DComponent>();
-		entityWorld.RegisterComponent<camera::Move3DComponent>();
-		entityWorld.RegisterComponent<camera::Pan3DComponent>();
-		entityWorld.RegisterComponent<camera::Zoom2DComponent>();
+		world.RegisterComponent<camera::Bound2DComponent>();
+		world.RegisterComponent<camera::Move2DComponent>();
+		world.RegisterComponent<camera::Move3DComponent>();
+		world.RegisterComponent<camera::Pan3DComponent>();
+		world.RegisterComponent<camera::Zoom2DComponent>();
 	}
 
 	// singletons
 	{
-		entityWorld.RegisterSingleton<camera::SettingsSingleton>();
+		world.RegisterSingleton<camera::SettingsSingleton>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<camera::ActivationSystem>();
-		entityWorld.RegisterSystem<camera::Bound2DSystem>();
-		entityWorld.RegisterSystem<camera::Move2DSystem>();
-		entityWorld.RegisterSystem<camera::Move3DSystem>();
-		entityWorld.RegisterSystem<camera::Pan3DSystem>();
-		entityWorld.RegisterSystem<camera::Zoom2DSystem>();
+		world.RegisterSystem<camera::ActivationSystem>();
+		world.RegisterSystem<camera::Bound2DSystem>();
+		world.RegisterSystem<camera::Move2DSystem>();
+		world.RegisterSystem<camera::Move3DSystem>();
+		world.RegisterSystem<camera::Pan3DSystem>();
+		world.RegisterSystem<camera::Zoom2DSystem>();
 	}
 
 	// prototypes
 	{
-		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		auto& manager = world.WriteResource<eng::PrototypeManager>();
 		manager.Register<camera::Bound2DComponent>();
 		manager.Register<camera::Move2DComponent>();
 		manager.Register<camera::Move3DComponent>();

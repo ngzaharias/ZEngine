@@ -7,5 +7,5 @@ namespace ecs
 
 namespace shared::cursor
 {
-	void RegisterModule(ecs::EntityWorld& entityWorld);
+	void RegisterModule(ecs::EntityWorld& world);
 }

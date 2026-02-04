@@ -12,25 +12,25 @@
 #include "Tactics/TacticsSelectedComponent.h"
 #include "Tactics/TacticsSelectSystem.h"
 
-void tactics::RegisterModule(ecs::EntityWorld& entityWorld)
+void tactics::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<tactics::AbilityComponent>();
-		entityWorld.RegisterComponent<tactics::SelectedComponent>();
+		world.RegisterComponent<tactics::AbilityComponent>();
+		world.RegisterComponent<tactics::SelectedComponent>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<tactics::InputSystem>();
-		entityWorld.RegisterSystem<tactics::PreviewSystem>();
-		entityWorld.RegisterSystem<tactics::SelectSystem>();
+		world.RegisterSystem<tactics::InputSystem>();
+		world.RegisterSystem<tactics::PreviewSystem>();
+		world.RegisterSystem<tactics::SelectSystem>();
 	}
 
 	// prototypes
 	{
-		auto& prototypeManager = entityWorld.WriteResource<eng::PrototypeManager>();
-		prototypeManager.Register<tactics::AbilityComponent>();
+		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		manager.Register<tactics::AbilityComponent>();
 	}
 
 	// tables
@@ -38,7 +38,6 @@ void tactics::RegisterModule(ecs::EntityWorld& entityWorld)
 		auto& headmaster = entityWorld.WriteResource<eng::TableHeadmaster>();
 		headmaster.Register<tactics::AbilityTable>("Abilities");
 
-		entityWorld.RegisterResource(headmaster.GetManager<tactics::AbilityTable>());
-
+		world.RegisterResource(headmaster.GetManager<tactics::AbilityTable>());
 	}
 }

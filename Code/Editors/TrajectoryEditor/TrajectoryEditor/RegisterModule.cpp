@@ -9,26 +9,22 @@
 #include "TrajectoryEditor/TrajectoryEditorWindowRequest.h"
 #include "TrajectoryEditor/TrajectoryEditorWindowSystem.h"
 
-void editor::trajectory::RegisterModule(ecs::EntityWorld& entityWorld)
+void editor::trajectory::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<editor::trajectory::AssetOpenComponent>();
-		entityWorld.RegisterComponent<editor::trajectory::AssetSaveComponent>();
-		entityWorld.RegisterComponent<editor::trajectory::WindowComponent>();
+		world.RegisterComponent<editor::trajectory::AssetOpenComponent>();
+		world.RegisterComponent<editor::trajectory::AssetSaveComponent>();
+		world.RegisterComponent<editor::trajectory::WindowComponent>();
 	}
 
 	// events
 	{
-		entityWorld.RegisterEvent<editor::trajectory::WindowRequest>();
-	}
-
-	// singleton
-	{
+		world.RegisterEvent<editor::trajectory::WindowRequest>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<editor::trajectory::WindowSystem>();
+		world.RegisterSystem<editor::trajectory::WindowSystem>();
 	}
 }

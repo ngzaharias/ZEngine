@@ -7,18 +7,18 @@
 #include "Tabletop/TabletopCardComponent.h"
 #include "Tabletop/TabletopDeckComponent.h"
 
-void tabletop::RegisterModule(ecs::EntityWorld& entityWorld)
+void tabletop::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<tabletop::CardComponent>();
-		entityWorld.RegisterComponent<tabletop::DeckComponent>();
+		world.RegisterComponent<tabletop::CardComponent>();
+		world.RegisterComponent<tabletop::DeckComponent>();
 	}
 
 	// prototypes
 	{
-		auto& prototypeManager = entityWorld.WriteResource<eng::PrototypeManager>();
-		prototypeManager.Register<tabletop::CardComponent>();
-		prototypeManager.Register<tabletop::DeckComponent>();
+		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		manager.Register<tabletop::CardComponent>();
+		manager.Register<tabletop::DeckComponent>();
 	}
 }

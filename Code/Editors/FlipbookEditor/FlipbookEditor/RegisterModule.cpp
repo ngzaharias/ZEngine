@@ -12,29 +12,29 @@
 #include "FlipbookEditor/FlipbookEditorWindowRequest.h"
 #include "FlipbookEditor/FlipbookEditorWindowSystem.h"
 
-void editor::flipbook::RegisterModule(ecs::EntityWorld& entityWorld)
+void editor::flipbook::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<editor::flipbook::AssetOpenComponent>();
-		entityWorld.RegisterComponent<editor::flipbook::AssetSaveComponent>();
-		entityWorld.RegisterComponent<editor::flipbook::BatchingComponent>();
-		entityWorld.RegisterComponent<editor::flipbook::WindowComponent>();
+		world.RegisterComponent<editor::flipbook::AssetOpenComponent>();
+		world.RegisterComponent<editor::flipbook::AssetSaveComponent>();
+		world.RegisterComponent<editor::flipbook::BatchingComponent>();
+		world.RegisterComponent<editor::flipbook::WindowComponent>();
 	}
 
 	// events
 	{
-		entityWorld.RegisterEvent<editor::flipbook::WindowRequest>();
+		world.RegisterEvent<editor::flipbook::WindowRequest>();
 	}
 
 	// singleton
 	{
-		entityWorld.RegisterSingleton<editor::flipbook::SettingsSingleton>();
+		world.RegisterSingleton<editor::flipbook::SettingsSingleton>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<editor::flipbook::SettingsSystem>();
-		entityWorld.RegisterSystem<editor::flipbook::WindowSystem>();
+		world.RegisterSystem<editor::flipbook::SettingsSystem>();
+		world.RegisterSystem<editor::flipbook::WindowSystem>();
 	}
 }

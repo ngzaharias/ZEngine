@@ -8,23 +8,23 @@
 #include "Tilemap/TilemapGridComponent.h"
 #include "Tilemap/TilemapDebugSystem.h"
 
-void tilemap::RegisterModule(ecs::EntityWorld& entityWorld)
+void tilemap::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<tilemap::AgentComponent>();
-		entityWorld.RegisterComponent<tilemap::GridComponent>();
+		world.RegisterComponent<tilemap::AgentComponent>();
+		world.RegisterComponent<tilemap::GridComponent>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<tilemap::DebugSystem>();
+		world.RegisterSystem<tilemap::DebugSystem>();
 	}
 
 	// prototypes
 	{
-		auto& prototypeManager = entityWorld.WriteResource<eng::PrototypeManager>();
-		prototypeManager.Register<tilemap::AgentComponent>();
-		prototypeManager.Register<tilemap::GridComponent>();
+		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		manager.Register<tilemap::AgentComponent>();
+		manager.Register<tilemap::GridComponent>();
 	}
 }

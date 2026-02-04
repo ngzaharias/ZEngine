@@ -13,30 +13,30 @@
 #include "SpriteEditor/SpriteEditorWindowRequest.h"
 #include "SpriteEditor/SpriteEditorWindowSystem.h"
 
-void editor::sprite::RegisterModule(ecs::EntityWorld& entityWorld)
+void editor::sprite::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<editor::sprite::AssetNewComponent>();
-		entityWorld.RegisterComponent<editor::sprite::AssetOpenComponent>();
-		entityWorld.RegisterComponent<editor::sprite::AssetSaveComponent>();
-		entityWorld.RegisterComponent<editor::sprite::BatchingComponent>();
-		entityWorld.RegisterComponent<editor::sprite::WindowComponent>();
+		world.RegisterComponent<editor::sprite::AssetNewComponent>();
+		world.RegisterComponent<editor::sprite::AssetOpenComponent>();
+		world.RegisterComponent<editor::sprite::AssetSaveComponent>();
+		world.RegisterComponent<editor::sprite::BatchingComponent>();
+		world.RegisterComponent<editor::sprite::WindowComponent>();
 	}
 
 	// events
 	{
-		entityWorld.RegisterEvent<editor::sprite::WindowRequest>();
+		world.RegisterEvent<editor::sprite::WindowRequest>();
 	}
 
 	// singleton
 	{
-		entityWorld.RegisterSingleton<editor::sprite::SettingsSingleton>();
+		world.RegisterSingleton<editor::sprite::SettingsSingleton>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<editor::sprite::SettingsSystem>();
-		entityWorld.RegisterSystem<editor::sprite::WindowSystem>();
+		world.RegisterSystem<editor::sprite::SettingsSystem>();
+		world.RegisterSystem<editor::sprite::WindowSystem>();
 	}
 }

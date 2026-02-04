@@ -12,30 +12,30 @@
 #include "Voxel/VoxelMeshingSystem.h"
 #include "Voxel/VoxelModifySystem.h"
 
-void voxel::RegisterModule(ecs::EntityWorld& entityWorld)
+void voxel::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<voxel::ChunkChangedFrameComponent>();
-		entityWorld.RegisterComponent<voxel::ChunkComponent>();
-		entityWorld.RegisterComponent<voxel::ChunkLoadedFrameComponent>();
-		entityWorld.RegisterComponent<voxel::ModifyComponent>();
+		world.RegisterComponent<voxel::ChunkChangedFrameComponent>();
+		world.RegisterComponent<voxel::ChunkComponent>();
+		world.RegisterComponent<voxel::ChunkLoadedFrameComponent>();
+		world.RegisterComponent<voxel::ModifyComponent>();
 	}
 
 	// singletons
 	{
-		entityWorld.RegisterSingleton<voxel::ModifySettingsSingleton>();
+		world.RegisterSingleton<voxel::ModifySettingsSingleton>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<voxel::MeshingSystem>();
-		entityWorld.RegisterSystem<voxel::ModifySystem>();
+		world.RegisterSystem<voxel::MeshingSystem>();
+		world.RegisterSystem<voxel::ModifySystem>();
 	}
 
 	// prototype
 	{
-		auto& prototypeManager = entityWorld.WriteResource<eng::PrototypeManager>();
-		prototypeManager.Register<voxel::ChunkComponent>();
+		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		manager.Register<voxel::ChunkComponent>();
 	}
 }

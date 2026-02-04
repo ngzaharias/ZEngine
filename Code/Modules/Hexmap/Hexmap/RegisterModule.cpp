@@ -11,25 +11,25 @@
 #include "Hexmap/HexmapRootComponent.h"
 #include "Hexmap/HexmapRootSystem.h"
 
-void hexmap::RegisterModule(ecs::EntityWorld& entityWorld)
+void hexmap::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<hexmap::LayerComponent>();
-		entityWorld.RegisterComponent<hexmap::RootComponent>();
+		world.RegisterComponent<hexmap::LayerComponent>();
+		world.RegisterComponent<hexmap::RootComponent>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<hexmap::LoadSystem>();
-		entityWorld.RegisterSystem<hexmap::ModifySystem>();
-		entityWorld.RegisterSystem<hexmap::RenderSystem>();
-		entityWorld.RegisterSystem<hexmap::RootSystem>();
+		world.RegisterSystem<hexmap::LoadSystem>();
+		world.RegisterSystem<hexmap::ModifySystem>();
+		world.RegisterSystem<hexmap::RenderSystem>();
+		world.RegisterSystem<hexmap::RootSystem>();
 	}
 
 	// prototypes
 	{
-		auto& prototypeManager = entityWorld.WriteResource<eng::PrototypeManager>();
-		prototypeManager.Register<hexmap::RootComponent>();
+		auto& manager = world.WriteResource<eng::PrototypeManager>();
+		manager.Register<hexmap::RootComponent>();
 	}
 }

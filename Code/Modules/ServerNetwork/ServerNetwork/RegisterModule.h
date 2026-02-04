@@ -7,5 +7,5 @@ namespace ecs
 
 namespace server::network
 {
-	void RegisterModule(ecs::EntityWorld& entityWorld);
+	void RegisterModule(ecs::EntityWorld& world);
 }

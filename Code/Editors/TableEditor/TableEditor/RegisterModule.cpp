@@ -7,24 +7,20 @@
 #include "TableEditor/TableEditorWindowRequest.h"
 #include "TableEditor/TableEditorWindowSystem.h"
 
-void editor::table::RegisterModule(ecs::EntityWorld& entityWorld)
+void editor::table::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
-		entityWorld.RegisterComponent<editor::table::WindowComponent>();
+		world.RegisterComponent<editor::table::WindowComponent>();
 	}
 
 	// events
 	{
-		entityWorld.RegisterEvent<editor::table::WindowRequest>();
-	}
-
-	// singleton
-	{
+		world.RegisterEvent<editor::table::WindowRequest>();
 	}
 
 	// systems
 	{
-		entityWorld.RegisterSystem<editor::table::WindowSystem>();
+		world.RegisterSystem<editor::table::WindowSystem>();
 	}
 }

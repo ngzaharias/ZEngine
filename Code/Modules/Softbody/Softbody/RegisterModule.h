@@ -7,5 +7,5 @@ namespace ecs
 
 namespace softbody
 {
-	void RegisterModule(ecs::EntityWorld& entityWorld);
+	void RegisterModule(ecs::EntityWorld& world);
 }
