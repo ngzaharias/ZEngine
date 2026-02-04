@@ -20,7 +20,7 @@ namespace
 
 	struct RAIIWrapper
 	{
-		RAIIWrapper() : m_Peer(m_World)
+		RAIIWrapper() : m_World(m_Registry), m_Peer(m_World)
 		{
 			m_World.RegisterResource(m_Registry);
 			m_World.RegisterComponent<Component>();
@@ -29,8 +29,8 @@ namespace
 		}
 
 		ecs::EntityWorld m_World;
-		ecs::TypeRegistry m_Registry;
 		ecs::ReplicationPeer m_Peer;
+		ecs::TypeRegistry m_Registry;
 	};
 }
 

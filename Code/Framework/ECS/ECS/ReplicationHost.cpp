@@ -305,17 +305,3 @@ void ecs::ReplicationHost::OnEventAdd(const ecs::EventAddMessage* message)
 	message->m_Data.Read(data);
 	registry.AddEvent(buffer, message->m_TypeId, data);
 }
-
-//////////////////////////////////////////////////////////////////////////
-// Singleton
-
-void ecs::ReplicationHost::SingletonUpdate(const net::PeerId& peerId, const ecs::TypeSingleton& entry)
-{
-	auto& host = m_EntityWorld.WriteResource<net::Host>();
-	auto* message = host.RequestMessage<ecs::SingletonUpdateMessage>(ecs::EMessage::SingletonUpdate);
-	message->m_TypeId = entry.m_TypeId;
-	entry.m_Read(m_EntityWorld, message->m_Data);
-
-	host.SendMessage(peerId, message);
-	host.ReleaseMessage(message);
-}

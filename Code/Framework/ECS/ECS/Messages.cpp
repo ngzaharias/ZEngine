@@ -86,19 +86,3 @@ void MemBuffer::WriteCustom(const ecs::EventAddMessage& value)
 	Write(value.m_TypeId);
 	Write(value.m_Data);
 }
-
-//////////////////////////////////////////////////////////////////////////
-// Singleton
-
-template<>
-void MemBuffer::ReadCustom(ecs::SingletonUpdateMessage& value) const
-{
-	Read(value.m_TypeId);
-	Read(value.m_Data);
-}
-template<>
-void MemBuffer::WriteCustom(const ecs::SingletonUpdateMessage& value)
-{
-	Write(value.m_TypeId);
-	Write(value.m_Data);
-}

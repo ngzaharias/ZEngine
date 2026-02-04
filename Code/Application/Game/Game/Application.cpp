@@ -8,8 +8,8 @@
 
 game::Application::Application()
 	: eng::Application()
-	, m_GameClient()
-	, m_GameServer()
+	, m_GameClient(m_TypeRegistry)
+	, m_GameServer(m_TypeRegistry)
 	, m_GameDebug(m_GameClient.m_EntityWorld, m_GameServer.m_EntityWorld)
 {
 }
@@ -24,7 +24,6 @@ void game::Application::Register()
 	eng::Application::Register();
 
 	client::Dependencies clientDependencies = {
-		m_TypeRegistry,
 		m_AssetManager,
 		m_ImguiManager,
 		m_NetworkManager,
@@ -35,7 +34,6 @@ void game::Application::Register()
 		m_WindowManager };
 
 	server::Dependencies serverDependencies = {
-		m_TypeRegistry,
 		m_AssetManager,
 		m_NetworkManager,
 		m_PhysicsManager,

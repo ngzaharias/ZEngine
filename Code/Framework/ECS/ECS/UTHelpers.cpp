@@ -3,6 +3,8 @@
 #include "Core/GameTime.h"
 
 ut::RAIIHelper::RAIIHelper()
+	: m_TypeRegistry()
+	, m_EntityWorld(m_TypeRegistry)
 {
 }
 

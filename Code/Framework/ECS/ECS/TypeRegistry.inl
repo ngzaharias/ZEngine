@@ -8,11 +8,14 @@ void ecs::TypeRegistry::RegisterComponent()
 	static_assert(std::is_base_of<ecs::Component<TComponent>, TComponent>::value, "Type doesn't inherit from ecs::Component.");
 
 	ecs::TypeComponent entry;
-	entry.m_Add = &AddComponentMethod<TComponent>;
-	entry.m_Update = &UpdateComponentMethod<TComponent>;
-	entry.m_Remove = &RemoveComponentMethod<TComponent>;
-	entry.m_Read = &ReadComponentMethod<TComponent>;
-	entry.m_Write = &WriteComponentMethod<TComponent>;
+	if constexpr (std::is_base_of<ecs::IsReplicated, TComponent>::value)
+	{
+		entry.m_Add = &AddComponentMethod<TComponent>;
+		entry.m_Update = &UpdateComponentMethod<TComponent>;
+		entry.m_Remove = &RemoveComponentMethod<TComponent>;
+		entry.m_Read = &ReadComponentMethod<TComponent>;
+		entry.m_Write = &WriteComponentMethod<TComponent>;
+	}
 
 	entry.m_Name = ToTypeName<TComponent>();
 	entry.m_TypeId = ToTypeId<TComponent, ecs::ComponentTag>();
@@ -85,7 +88,10 @@ void ecs::TypeRegistry::RegisterEvent()
 	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
 
 	ecs::TypeEvent entry;
-	entry.m_Add = &AddEventMethod<TEvent>;
+	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
+	{
+		entry.m_Add = &AddEventMethod<TEvent>;
+	}
 
 	entry.m_Name = ToTypeName<TEvent>();
 	entry.m_TypeId = ToTypeId<TEvent, ecs::EventTag>();
@@ -107,7 +113,7 @@ template <typename TResource>
 void ecs::TypeRegistry::RegisterResource()
 {
 	ecs::TypeResource entry;
-	entry.m_Name = TypeName<TResource>();
+	entry.m_Name = ToTypeName<TResource>();
 	entry.m_TypeId = ToTypeId<TResource, ecs::ResourceTag>();
 
 	m_ResourceMap.Insert(entry.m_TypeId, entry);
@@ -122,24 +128,7 @@ void ecs::TypeRegistry::RegisterSingleton()
 	ecs::TypeSingleton entry;
 	entry.m_Name = ToTypeName<TSingleton>();
 	entry.m_TypeId = ToTypeId<TSingleton, ecs::SingletonTag>();
-	entry.m_Read = &ReadSingletonMethod<TSingleton>;
-	entry.m_Write = &WriteSingletonMethod<TSingleton>;
-
 	m_SingletonMap.Insert(entry.m_TypeId, entry);
-}
-
-template<typename TSingleton>
-void ecs::TypeRegistry::ReadSingletonMethod(ecs::EntityWorld& world, MemBuffer& data)
-{
-	auto& singleton = world.ReadSingleton<TSingleton>();
-	data.Write(singleton);
-}
-
-template<typename TSingleton>
-void ecs::TypeRegistry::WriteSingletonMethod(ecs::EntityWorld& world, const MemBuffer& data)
-{
-	auto& singleton = world.WriteSingleton<TSingleton>();
-	data.Read(singleton);
 }
 
 //////////////////////////////////////////////////////////////////////////

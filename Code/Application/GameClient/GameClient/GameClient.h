@@ -28,7 +28,6 @@ namespace client
 {
 	struct Dependencies
 	{
-		ecs::TypeRegistry& m_TypeRegistry;
 		eng::AssetManager& m_AssetManager;
 		eng::ImguiManager& m_ImguiManager;
 		eng::NetworkManager& m_NetworkManager;
@@ -42,7 +41,7 @@ namespace client
 	class GameClient final
 	{
 	public:
-		GameClient();
+		GameClient(ecs::TypeRegistry& typeRegistry);
 
 		void Register(const Dependencies& dependencies);
 
@@ -54,6 +53,8 @@ namespace client
 		void PostUpdate(const GameTime& gameTime);
 
 	public:
+		ecs::TypeRegistry& m_TypeRegistry;
+
 		ecs::EntityWorld m_EntityWorld;
 		ecs::ReplicationPeer m_ReplicationPeer;
 		eng::InputManager m_InputManager;

@@ -2,6 +2,7 @@
 
 #include "Core/String.h"
 #include "ECS/ComponentId.h"
+#include "ECS/QueryId.h"
 
 class MemBuffer;
 

@@ -55,12 +55,3 @@ void ecs::TypeRegistry::AddEvent(ecs::EventBuffer& buffer, const ecs::EventId ty
 	const ecs::TypeEvent& entry = m_EventMap.Get(typeId);
 	entry.m_Add(buffer, data);
 }
-
-//////////////////////////////////////////////////////////////////////////
-// Singleton
-
-void ecs::TypeRegistry::UpdateSingleton(ecs::EntityWorld& world, const ecs::SingletonId typeId, const MemBuffer& data) const
-{
-	const ecs::TypeSingleton& entry = m_SingletonMap.Get(typeId);
-	entry.m_Write(world, data);
-}

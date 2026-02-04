@@ -85,10 +85,6 @@ namespace ecs
 		void EventAdd(const net::PeerId& peerId, const ecs::EventId typeId, const MemBuffer& data);
 		void OnEventAdd(const ecs::EventAddMessage* message);
 
-		//////////////////////////////////////////////////////////////////////////
-		// Singleton
-		void SingletonUpdate(const net::PeerId& peerId, const ecs::TypeSingleton& entry);
-
 	private:
 		ecs::EntityWorld& m_EntityWorld;
 

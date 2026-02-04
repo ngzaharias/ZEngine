@@ -4,8 +4,9 @@
 #include "ECS/NameComponent.h"
 #include "ECS/System.h"
 
-ecs::EntityWorld::EntityWorld()
-	: m_EntityStorage(m_QueryRegistry)
+ecs::EntityWorld::EntityWorld(ecs::TypeRegistry& typeRegistry)
+	: m_TypeRegistry(typeRegistry)
+	, m_EntityStorage(m_QueryRegistry)
 	, m_EventStorage()
 	, m_SingletonStorage()
 	, m_QueryRegistry()

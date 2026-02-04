@@ -22,7 +22,6 @@ namespace server
 {
 	struct Dependencies
 	{
-		ecs::TypeRegistry& m_TypeRegistry;
 		eng::AssetManager& m_AssetManager;
 		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
@@ -32,7 +31,7 @@ namespace server
 	class GameServer final
 	{
 	public:
-		GameServer();
+		GameServer(ecs::TypeRegistry& typeRegistry);
 
 		void Register(const Dependencies& dependencies);
 
@@ -42,6 +41,8 @@ namespace server
 		void Update(const GameTime& gameTime);
 
 	public:
+		ecs::TypeRegistry& m_TypeRegistry;
+
 		ecs::EntityWorld m_EntityWorld;
 		ecs::ReplicationHost m_ReplicationHost;
 	};

@@ -121,10 +121,6 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<debug::ShapeSystem>();
 	m_ClientWorld.RegisterSystem<debug::SoftbodySystem>();
 	m_ClientWorld.RegisterSystem<debug::SplineSystem>();
-
-	// types
-	auto& registry = m_ClientWorld.WriteResource<ecs::TypeRegistry>();
-	registry.RegisterEvent<debug::NetworkEvent>();
 }
 
 void debug::GameDebug::Initialise()

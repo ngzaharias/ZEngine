@@ -10,6 +10,7 @@
 #include "ECS/SingletonStorage.h"
 #include "ECS/SystemRegistry.h"
 #include "ECS/TypeInfo.h"
+#include "ECS/TypeRegistry.h"
 
 class GameTime;
 
@@ -28,7 +29,7 @@ namespace ecs
 		friend class EntityView_t;
 
 	public:
-		EntityWorld();
+		EntityWorld(ecs::TypeRegistry& typeRegistry);
 
 		void Initialise();
 		void Shutdown();
@@ -142,6 +143,7 @@ namespace ecs
 		auto TryComponentsForView(const ecs::Entity& entity) const->std::tuple<TComponents*...>;
 
 	public:
+		ecs::TypeRegistry& m_TypeRegistry;
 		ecs::EntityStorage m_EntityStorage;
 		ecs::EventStorage m_EventStorage;
 		ecs::SingletonStorage m_SingletonStorage;

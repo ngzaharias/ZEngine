@@ -41,8 +41,10 @@ namespace
 	const str::Name strNoesis = NAME("Noesis");
 }
 
-client::GameClient::GameClient()
-	: m_InputManager()
+client::GameClient::GameClient(ecs::TypeRegistry& typeRegistry)
+	: m_TypeRegistry(typeRegistry)
+	, m_EntityWorld(typeRegistry)
+	, m_InputManager()
 	, m_UIManager(m_EntityWorld)
 	, m_ReplicationPeer(m_EntityWorld)
 {
@@ -52,7 +54,6 @@ void client::GameClient::Register(const Dependencies& dependencies)
 {
 	// resources
 	{
-		m_EntityWorld.RegisterResource(dependencies.m_TypeRegistry);
 		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
 		m_EntityWorld.RegisterResource(dependencies.m_ImguiManager);
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
@@ -65,8 +66,9 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
 		m_EntityWorld.RegisterResource(dependencies.m_WindowManager);
 		m_EntityWorld.RegisterResource(m_InputManager);
-		m_EntityWorld.RegisterResource(m_UIManager);
 		m_EntityWorld.RegisterResource(m_ReplicationPeer);
+		m_EntityWorld.RegisterResource(m_TypeRegistry);
+		m_EntityWorld.RegisterResource(m_UIManager);
 
 		// tables
 		auto& headmaster = dependencies.m_TableHeadmaster;

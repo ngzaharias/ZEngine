@@ -20,8 +20,6 @@ namespace ecs
 		ComponentUpdate,
 
 		EventAdd,
-
-		SingletonUpdate,
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -66,15 +64,6 @@ namespace ecs
 	struct EventAddMessage final : public net::Message
 	{
 		ecs::EventId m_TypeId = -1;
-		MemBuffer m_Data = {};
-	};
-
-	//////////////////////////////////////////////////////////////////////////
-	// Singleton
-
-	struct SingletonUpdateMessage final : public net::Message
-	{
-		ecs::SingletonId m_TypeId = -1;
 		MemBuffer m_Data = {};
 	};
 }

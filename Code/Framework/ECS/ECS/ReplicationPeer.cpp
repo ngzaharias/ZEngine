@@ -108,10 +108,6 @@ void ecs::ReplicationPeer::OnProcessMessages(const Array<const net::Message*>& m
 		case ecs::EMessage::EventAdd:
 			OnEventAdd(static_cast<const ecs::EventAddMessage*>(message));
 			break;
-
-		case ecs::EMessage::SingletonUpdate:
-			OnSingletonUpdate(static_cast<const ecs::SingletonUpdateMessage*>(message));
-			break;
 		}
 	}
 }
@@ -228,13 +224,4 @@ void ecs::ReplicationPeer::OnEventAdd(const ecs::EventAddMessage* message)
 	MemBuffer data;
 	message->m_Data.Read(data);
 	registry.AddEvent(buffer, message->m_TypeId, data);
-}
-
-//////////////////////////////////////////////////////////////////////////
-// Singleton
-
-void ecs::ReplicationPeer::OnSingletonUpdate(const ecs::SingletonUpdateMessage* message)
-{
-	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
-	registry.UpdateSingleton(m_EntityWorld, message->m_TypeId, message->m_Data);
 }

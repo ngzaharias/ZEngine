@@ -31,6 +31,7 @@ namespace ut
 		template<class TComponent>
 		auto WriteComponent(const ecs::Entity& entity)->TComponent&;
 
+		ecs::TypeRegistry m_TypeRegistry;
 		ecs::EntityWorld m_EntityWorld;
 		Set<ecs::Entity> m_Entities = { };
 	};

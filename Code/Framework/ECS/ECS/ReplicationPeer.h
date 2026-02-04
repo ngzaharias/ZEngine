@@ -68,11 +68,6 @@ namespace ecs
 
 		void OnEventAdd(const ecs::EventAddMessage* message);
 
-		//////////////////////////////////////////////////////////////////////////
-		// Singleton
-
-		void OnSingletonUpdate(const ecs::SingletonUpdateMessage* message);
-
 	private:
 		ecs::EntityWorld& m_EntityWorld;
 		DelegateCollection m_Collection;

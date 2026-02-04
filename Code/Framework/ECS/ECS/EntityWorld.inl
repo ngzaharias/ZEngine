@@ -76,6 +76,7 @@ void ecs::EntityWorld::RegisterComponent()
 	Z_PANIC(!IsRegistered<TComponent>(), "Component is already registered!");
 
 	RegisterType<TComponent>();
+	m_TypeRegistry.RegisterComponent<TComponent>();
 	m_EntityStorage.RegisterComponent<TComponent>();
 
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
@@ -167,6 +168,7 @@ void ecs::EntityWorld::RegisterEvent()
 	Z_PANIC(!IsRegistered<TEvent>(), "Event is already registered!");
 
 	RegisterType<TEvent>();
+	m_TypeRegistry.RegisterEvent<TEvent>();
 	m_EventStorage.RegisterEvent<TEvent>();
 }
 
@@ -196,6 +198,7 @@ void ecs::EntityWorld::RegisterResource(TResource& resource)
 	Z_PANIC(!IsRegistered<TResource>(), "Resource is already registered!");
 	
 	RegisterType<TResource>();
+	m_TypeRegistry.RegisterResource<TResource>();
 	m_ResourceRegistry.Register<TResource>(resource);
 }
 
@@ -240,6 +243,7 @@ void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
 	Z_PANIC(!IsRegistered<TSingleton>(), "Singleton is already registered!");
 
 	RegisterType<TSingleton>();
+	m_TypeRegistry.RegisterSingleton<TSingleton>();
 	m_SingletonStorage.RegisterSingleton<TSingleton>(std::forward<TArgs>(args)...);
 }
 
@@ -284,6 +288,7 @@ void ecs::EntityWorld::RegisterSystem(TArgs&&... args)
 	Z_PANIC(!IsRegistered<TSystem>(), "System is already registered!");
 
 	RegisterType<TSystem>();
+	m_TypeRegistry.RegisterSystem<TSystem>();
 	m_SystemRegistry.Register<TSystem>(std::forward<TArgs>(args)...);
 }
 

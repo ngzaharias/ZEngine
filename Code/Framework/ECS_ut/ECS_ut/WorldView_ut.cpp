@@ -21,7 +21,7 @@ namespace
 
 	struct RAIIHelper
 	{
-		RAIIHelper()
+		RAIIHelper() : m_EntityWorld(m_TypeRegistry)
 		{
 			m_EntityWorld.RegisterComponent<ComponentA>();
 			m_EntityWorld.RegisterComponent<ComponentB>();
@@ -37,7 +37,8 @@ namespace
 			m_EntityWorld.Update({});
 		}
 
-		ecs::EntityWorld m_EntityWorld = {};
+		ecs::EntityWorld m_EntityWorld;
+		ecs::TypeRegistry m_TypeRegistry;
 		ecs::Entity m_EntityA = {};
 		ecs::Entity m_EntityB = {};
 		ecs::Entity m_EntityC = {};
@@ -48,7 +49,8 @@ namespace
 
 CLASS_TEST_CASE("CreateEntity.")
 {
-	ecs::EntityWorld entityWorld;
+	ecs::TypeRegistry registry;
+	ecs::EntityWorld entityWorld(registry);
 	ecs::WorldView world = entityWorld.WorldView<ecs::WorldView>();
 
 	CHECK(world.CreateEntity() == ecs::Entity(0));
@@ -63,7 +65,8 @@ CLASS_TEST_CASE("DestroyEntity.")
 {
 	using WorldView = ecs::WorldView;
 
-	ecs::EntityWorld entityWorld;
+	ecs::TypeRegistry registry;
+	ecs::EntityWorld entityWorld(registry);
 	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	ecs::Entity entity = worldView.CreateEntity();
@@ -95,7 +98,8 @@ CLASS_TEST_CASE("IsAlive.")
 {
 	using WorldView = ecs::WorldView;
 
-	ecs::EntityWorld entityWorld;
+	ecs::TypeRegistry registry;
+	ecs::EntityWorld entityWorld(registry);
 	WorldView worldView = entityWorld.WorldView<WorldView>();
 
 	ecs::Entity entity;

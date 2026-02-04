@@ -2,15 +2,22 @@
 
 #include "Core/Map.h"
 #include "Core/MemBuffer.h"
+#include "ECS/Component.h"
 #include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
 #include "ECS/EntityBuffer.h"
 #include "ECS/EntityStorage.h"
-#include "ECS/EntityWorld.h"
+#include "ECS/Event.h"
+#include "ECS/EventBuffer.h"
 #include "ECS/EventTag.h"
+#include "ECS/IsReplicated.h"
+#include "ECS/QueryRegistry.h"
 #include "ECS/ResourceTag.h"
 #include "ECS/ReplicationComponent.h"
+#include "ECS/Singleton.h"
+#include "ECS/SingletonStorage.h"
 #include "ECS/SingletonTag.h"
+#include "ECS/System.h"
 #include "ECS/SystemTag.h"
 #include "ECS/TypeComponent.h"
 #include "ECS/TypeEvent.h"
@@ -79,14 +86,6 @@ namespace ecs
 
 		template <typename TSingleton>
 		void RegisterSingleton();
-
-		void UpdateSingleton(ecs::EntityWorld& world, const ecs::SingletonId typeId, const MemBuffer& data) const;
-
-		template<typename TSingleton>
-		static void ReadSingletonMethod(ecs::EntityWorld& world, MemBuffer& data);
-
-		template<typename TSingleton>
-		static void WriteSingletonMethod(ecs::EntityWorld& world, const MemBuffer& data);
 
 		//////////////////////////////////////////////////////////////////////////
 		// System

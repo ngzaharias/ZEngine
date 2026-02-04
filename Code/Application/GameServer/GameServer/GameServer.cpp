@@ -17,8 +17,10 @@
 #include "SharedHidden/RegisterModule.h"
 #include "SharedNetwork/RegisterModule.h"
 
-server::GameServer::GameServer()
-	: m_ReplicationHost(m_EntityWorld)
+server::GameServer::GameServer(ecs::TypeRegistry& typeRegistry)
+	: m_TypeRegistry(typeRegistry)
+	, m_EntityWorld(typeRegistry)
+	, m_ReplicationHost(m_EntityWorld)
 {
 }
 
@@ -26,7 +28,6 @@ void server::GameServer::Register(const Dependencies& dependencies)
 {
 	// managers
 	{
-		m_EntityWorld.RegisterResource(dependencies.m_TypeRegistry);
 		m_EntityWorld.RegisterResource(dependencies.m_AssetManager);
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager);
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetFactory());
@@ -35,6 +36,7 @@ void server::GameServer::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
 		m_EntityWorld.RegisterResource(m_ReplicationHost);
+		m_EntityWorld.RegisterResource(m_TypeRegistry);
 	}
 
 	// engine

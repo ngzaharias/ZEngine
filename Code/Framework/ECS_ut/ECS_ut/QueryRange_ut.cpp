@@ -21,7 +21,8 @@ namespace
 CLASS_TEST_CASE("Test.")
 {
 	ecs::Entity entity;
-	ecs::EntityWorld world;
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
 	world.RegisterComponent<ComponentA>();
 	world.RegisterComponent<ComponentB>();
 	world.RegisterComponent<ComponentC>();

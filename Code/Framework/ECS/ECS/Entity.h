@@ -17,7 +17,7 @@ namespace ecs
 
 		Entity() = default;
 		Entity(const uint64& value) : m_Value(value) {}
-		Entity(const Entity& entity) : m_Value(entity.m_Value) {}
+		Entity(const Entity& entity) = default;
 
 		Entity(const uint32 index, const uint32 version) 
 		{ 
