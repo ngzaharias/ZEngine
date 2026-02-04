@@ -1,5 +1,5 @@
 #include "TilemapPCH.h"
-#include "Tilemap/RegisterModule.h"
+#include "Tilemap/TilemapRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
@@ -23,7 +23,7 @@ void tilemap::RegisterModule(ecs::EntityWorld& world)
 
 	// prototypes
 	{
-		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		auto& manager = world.WriteResource<eng::PrototypeManager>();
 		manager.Register<tilemap::AgentComponent>();
 		manager.Register<tilemap::GridComponent>();
 	}

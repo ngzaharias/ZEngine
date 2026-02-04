@@ -1,5 +1,5 @@
 #include "TacticsPCH.h"
-#include "Tactics/RegisterModule.h"
+#include "Tactics/TacticsRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
@@ -29,13 +29,13 @@ void tactics::RegisterModule(ecs::EntityWorld& world)
 
 	// prototypes
 	{
-		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		auto& manager = world.WriteResource<eng::PrototypeManager>();
 		manager.Register<tactics::AbilityComponent>();
 	}
 
 	// tables
 	{
-		auto& headmaster = entityWorld.WriteResource<eng::TableHeadmaster>();
+		auto& headmaster = world.WriteResource<eng::TableHeadmaster>();
 		headmaster.Register<tactics::AbilityTable>("Abilities");
 
 		world.RegisterResource(headmaster.GetManager<tactics::AbilityTable>());

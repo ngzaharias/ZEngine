@@ -1,4 +1,4 @@
-#include "SharedCursor/RegisterModule.h"
+#include "SharedCursor/CursorRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "SharedCursor/CursorClientTransformEvent.h"

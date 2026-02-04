@@ -1,5 +1,5 @@
 #include "SharedNetworkPCH.h"
-#include "SharedNetwork/RegisterModule.h"
+#include "SharedNetwork/NetworkRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 

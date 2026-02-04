@@ -1,5 +1,5 @@
 #include "TableEditorPCH.h"
-#include "TableEditor/RegisterModule.h"
+#include "TableEditor/TableEditorRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"

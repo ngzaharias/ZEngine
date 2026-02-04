@@ -1,5 +1,5 @@
 #include "TabletopPCH.h"
-#include "Tabletop/RegisterModule.h"
+#include "Tabletop/TabletopRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
@@ -17,7 +17,7 @@ void tabletop::RegisterModule(ecs::EntityWorld& world)
 
 	// prototypes
 	{
-		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		auto& manager = world.WriteResource<eng::PrototypeManager>();
 		manager.Register<tabletop::CardComponent>();
 		manager.Register<tabletop::DeckComponent>();
 	}

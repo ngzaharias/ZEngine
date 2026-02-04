@@ -1,5 +1,5 @@
 #include "TrajectoryEditorPCH.h"
-#include "TrajectoryEditor/RegisterModule.h"
+#include "TrajectoryEditor/TrajectoryEditorRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"

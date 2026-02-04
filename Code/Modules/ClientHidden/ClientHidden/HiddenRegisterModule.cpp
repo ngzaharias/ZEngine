@@ -1,5 +1,5 @@
 #include "ClientHiddenPCH.h"
-#include "ClientHidden/RegisterModule.h"
+#include "ClientHidden/HiddenRegisterModule.h"
 
 #include "ClientHidden/HiddenCountComponent.h"
 #include "ClientHidden/HiddenCountSystem.h"

@@ -1,5 +1,5 @@
 #include "HexmapPCH.h"
-#include "Hexmap/RegisterModule.h"
+#include "Hexmap/HexmapRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"

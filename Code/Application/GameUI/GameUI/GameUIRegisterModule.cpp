@@ -1,5 +1,5 @@
 #include "GameUIPCH.h"
-#include "GameUI/RegisterModule.h"
+#include "GameUI/GameUIRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"

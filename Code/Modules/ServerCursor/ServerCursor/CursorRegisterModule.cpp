@@ -1,5 +1,5 @@
 #include "ServerCursorPCH.h"
-#include "ServerCursor/RegisterModule.h"
+#include "ServerCursor/CursorRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/TypeRegistry.h"

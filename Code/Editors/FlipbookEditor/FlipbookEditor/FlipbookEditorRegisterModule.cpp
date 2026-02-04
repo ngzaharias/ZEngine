@@ -1,5 +1,5 @@
 #include "FlipbookEditorPCH.h"
-#include "FlipbookEditor/RegisterModule.h"
+#include "FlipbookEditor/FlipbookEditorRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"

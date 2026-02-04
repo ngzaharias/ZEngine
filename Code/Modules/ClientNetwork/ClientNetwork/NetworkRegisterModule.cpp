@@ -1,5 +1,5 @@
 #include "ClientNetworkPCH.h"
-#include "ClientNetwork/RegisterModule.h"
+#include "ClientNetwork/NetworkRegisterModule.h"
 
 #include "ClientNetwork/NetworkPeerComponent.h"
 #include "ClientNetwork/NetworkPeerSystem.h"

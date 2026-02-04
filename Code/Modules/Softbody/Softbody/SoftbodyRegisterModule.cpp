@@ -1,5 +1,5 @@
 #include "SoftbodyPCH.h"
-#include "Softbody/RegisterModule.h"
+#include "Softbody/SoftbodyRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
@@ -21,7 +21,7 @@ void softbody::RegisterModule(ecs::EntityWorld& world)
 
 	// prototypes
 	{
-		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		auto& manager = world.WriteResource<eng::PrototypeManager>();
 		manager.Register<softbody::ChainComponent>();
 	}
 }

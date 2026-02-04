@@ -1,5 +1,5 @@
 #include "RenderPCH.h"
-#include "Render/RegisterModule.h"
+#include "Render/RenderRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"

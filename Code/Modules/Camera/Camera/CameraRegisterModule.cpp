@@ -1,5 +1,5 @@
 #include "CameraPCH.h"
-#include "Camera/RegisterModule.h"
+#include "Camera/CameraRegisterModule.h"
 
 #include "Camera/CameraActivationSystem.h"
 #include "Camera/CameraBound2DComponent.h"

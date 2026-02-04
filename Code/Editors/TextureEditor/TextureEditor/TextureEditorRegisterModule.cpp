@@ -1,5 +1,5 @@
 #include "TextureEditorPCH.h"
-#include "TextureEditor/RegisterModule.h"
+#include "TextureEditor/TextureEditorRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"

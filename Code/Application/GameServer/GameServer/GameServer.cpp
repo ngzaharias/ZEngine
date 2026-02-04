@@ -10,12 +10,12 @@
 #include "Engine/RegisterSystems.h"
 #include "GameServer/RegisterComponents.h"
 #include "GameServer/RegisterSystems.h"
-#include "ServerCursor/RegisterModule.h"
-#include "ServerHidden/RegisterModule.h"
-#include "ServerNetwork/RegisterModule.h"
-#include "SharedCursor/RegisterModule.h"
-#include "SharedHidden/RegisterModule.h"
-#include "SharedNetwork/RegisterModule.h"
+#include "ServerCursor/CursorRegisterModule.h"
+#include "ServerHidden/HiddenRegisterModule.h"
+#include "ServerNetwork/NetworkRegisterModule.h"
+#include "SharedCursor/CursorRegisterModule.h"
+#include "SharedHidden/HiddenRegisterModule.h"
+#include "SharedNetwork/NetworkRegisterModule.h"
 
 server::GameServer::GameServer(ecs::TypeRegistry& typeRegistry)
 	: m_TypeRegistry(typeRegistry)

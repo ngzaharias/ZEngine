@@ -1,5 +1,5 @@
 #include "ContainerPCH.h"
-#include "Container/RegisterModule.h"
+#include "Container/ContainerRegisterModule.h"
 
 #include "Container/ContainerMemberAddRequestComponent.h"
 #include "Container/ContainerMemberAddResultComponent.h"

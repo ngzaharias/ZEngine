@@ -21,12 +21,12 @@
 #include "Editor/SettingsLocalSystem.h"
 #include "Editor/SettingsMenuSystem.h"
 #include "Editor/SettingsWindowComponent.h"
-#include "InputEditor/RegisterModule.h"
-#include "FlipbookEditor/RegisterModule.h"
-#include "SpriteEditor/RegisterModule.h"
-#include "TableEditor/RegisterModule.h"
-#include "TextureEditor/RegisterModule.h"
-#include "TrajectoryEditor/RegisterModule.h"
+#include "InputEditor/InputEditorRegisterModule.h"
+#include "FlipbookEditor/FlipbookEditorRegisterModule.h"
+#include "SpriteEditor/SpriteEditorRegisterModule.h"
+#include "TableEditor/TableEditorRegisterModule.h"
+#include "TextureEditor/TextureEditorRegisterModule.h"
+#include "TrajectoryEditor/TrajectoryEditorRegisterModule.h"
 
 editor::Editor::Editor(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
 	: m_ClientWorld(clientWorld)

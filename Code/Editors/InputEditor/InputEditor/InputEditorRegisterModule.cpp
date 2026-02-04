@@ -1,5 +1,5 @@
 #include "InputEditorPCH.h"
-#include "InputEditor/RegisterModule.h"
+#include "InputEditor/InputEditorRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"

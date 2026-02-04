@@ -1,5 +1,5 @@
 #include "VoxelPCH.h"
-#include "Voxel/RegisterModule.h"
+#include "Voxel/VoxelRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
@@ -35,7 +35,7 @@ void voxel::RegisterModule(ecs::EntityWorld& world)
 
 	// prototype
 	{
-		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
+		auto& manager = world.WriteResource<eng::PrototypeManager>();
 		manager.Register<voxel::ChunkComponent>();
 	}
 }

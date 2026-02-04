@@ -1,5 +1,5 @@
 #include "SpriteEditorPCH.h"
-#include "SpriteEditor/RegisterModule.h"
+#include "SpriteEditor/SpriteEditorRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"

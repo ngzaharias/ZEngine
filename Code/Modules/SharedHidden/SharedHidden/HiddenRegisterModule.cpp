@@ -1,5 +1,5 @@
 #include "SharedHiddenPCH.h"
-#include "SharedHidden/RegisterModule.h"
+#include "SharedHidden/HiddenRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
