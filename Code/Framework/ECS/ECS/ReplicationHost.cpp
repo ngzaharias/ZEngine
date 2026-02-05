@@ -251,7 +251,7 @@ void ecs::ReplicationHost::ComponentAdd(const net::PeerId& peerId, const ecs::En
 	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::ComponentAddMessage>(ecs::EMessage::ComponentAdd);
 	message->m_Entity = ToNetEntity(entity);
-	message->m_TypeId = entry.m_TypeId;
+	message->m_TypeId = entry.m_LocalId;
 	entry.m_Read(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
 
 	host.SendMessage(peerId, message);
@@ -263,7 +263,7 @@ void ecs::ReplicationHost::ComponentUpdate(const net::PeerId& peerId, const ecs:
 	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::ComponentUpdateMessage>(ecs::EMessage::ComponentUpdate);
 	message->m_Entity = ToNetEntity(entity);
-	message->m_TypeId = entry.m_TypeId;
+	message->m_TypeId = entry.m_LocalId;
 	entry.m_Read(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
 
 	host.SendMessage(peerId, message);
@@ -275,7 +275,7 @@ void ecs::ReplicationHost::ComponentRemove(const net::PeerId& peerId, const ecs:
 	auto& host = m_EntityWorld.WriteResource<net::Host>();
 	auto* message = host.RequestMessage<ecs::ComponentRemoveMessage>(ecs::EMessage::ComponentRemove);
 	message->m_Entity = ToNetEntity(entity);
-	message->m_TypeId = entry.m_TypeId;
+	message->m_TypeId = entry.m_LocalId;
 
 	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);

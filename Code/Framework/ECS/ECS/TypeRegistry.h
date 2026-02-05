@@ -12,15 +12,18 @@
 #include "ECS/EventTag.h"
 #include "ECS/IsReplicated.h"
 #include "ECS/QueryRegistry.h"
+#include "ECS/ResourceId.h"
 #include "ECS/ResourceTag.h"
 #include "ECS/ReplicationComponent.h"
 #include "ECS/Singleton.h"
 #include "ECS/SingletonStorage.h"
 #include "ECS/SingletonTag.h"
 #include "ECS/System.h"
+#include "ECS/SystemId.h"
 #include "ECS/SystemTag.h"
 #include "ECS/TypeComponent.h"
 #include "ECS/TypeEvent.h"
+#include "ECS/TypeInfo.h"
 #include "ECS/TypeResource.h"
 #include "ECS/TypeSingleton.h"
 #include "ECS/TypeSystem.h"
@@ -29,12 +32,18 @@ namespace ecs
 {
 	class TypeRegistry final
 	{
+		friend class EntityWorld;
+
 	public:
-		using ComponentMap = Map<ecs::ComponentId, ecs::TypeComponent>;
-		using EventMap = Map<ecs::EventId, ecs::TypeEvent>;
-		using ResourceMap = Map<ecs::ResourceId, ecs::TypeResource>;
-		using SingletonMap = Map<ecs::SingletonId, ecs::TypeSingleton>;
-		using SystemMap = Map<ecs::SystemId, ecs::TypeSystem>;
+		using TypeMap		= Map<TypeId,			ecs::TypeInfo>;
+		using ComponentMap	= Map<ecs::ComponentId, ecs::TypeComponent>;
+		using EventMap		= Map<ecs::EventId,		ecs::TypeEvent>;
+		using ResourceMap	= Map<ecs::ResourceId,	ecs::TypeResource>;
+		using SingletonMap	= Map<ecs::SingletonId, ecs::TypeSingleton>;
+		using SystemMap		= Map<ecs::SystemId,	ecs::TypeSystem>;
+
+		const TypeMap& GetTypeMap() const;
+		const ecs::TypeInfo& GetTypeInfo(const TypeId typeId) const;
 
 		const ecs::TypeEvent& GetTypeEvent(const ecs::EventId& typeId) const;
 		const ecs::TypeComponent& GetTypeComponent(const ecs::ComponentId& typeId) const;
@@ -94,11 +103,13 @@ namespace ecs
 		void RegisterSystem();
 
 	private:
-		ComponentMap m_ComponentMap = {};
-		EventMap m_EventMap = {};
-		ResourceMap m_ResourceMap = {};
-		SingletonMap m_SingletonMap = {};
-		SystemMap m_SystemMap = {};
+		TypeMap			m_TypeMap = {};
+
+		ComponentMap	m_ComponentMap = {};
+		EventMap		m_EventMap = {};
+		ResourceMap		m_ResourceMap = {};
+		SingletonMap	m_SingletonMap = {};
+		SystemMap		m_SystemMap = {};
 	};
 }
 

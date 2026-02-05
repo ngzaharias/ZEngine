@@ -77,6 +77,7 @@ namespace
 		ImGui::Text("%i, %i - %s", entity.GetIndex(), entity.GetVersion(), name);
 		ImGui::Separator();
 
+		const auto& registry = world.m_TypeRegistry;
 		const auto& entities = world.m_EntityStorage.GetEntityMap();
 		const ecs::ComponentMask& componentMask = entities.Get(entity);
 		for (int32 i = 0; i < ecs::COMPONENTS_MAX; ++i)
@@ -84,8 +85,8 @@ namespace
 			if (!componentMask.Has(i))
 				continue;
 
-			const TypeId typeId = world.m_ComponentRemap.Get(i);
-			const ecs::TypeInfo& typeInfo = world.m_TypeMap.Get(typeId);
+			const ecs::TypeComponent& componentInfo = registry.GetTypeComponent(i);
+			const ecs::TypeInfo& typeInfo = registry.GetTypeInfo(componentInfo.m_GlobalId);
 			imgui::BulletHeader(typeInfo.m_Name.c_str());
 		}
 	}

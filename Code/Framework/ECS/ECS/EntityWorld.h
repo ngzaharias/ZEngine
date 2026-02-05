@@ -127,9 +127,6 @@ namespace ecs
 		str::String LogUpdateOrder() const;
 
 	private:
-		template<typename TType>
-		void RegisterType();
-
 		//////////////////////////////////////////////////////////////////////////
 		// EntityView
 
@@ -151,9 +148,6 @@ namespace ecs
 		ecs::QueryRegistry m_QueryRegistry;
 		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
-
-		Map<TypeId, ecs::TypeInfo> m_TypeMap;
-		Map<ecs::ComponentId, TypeId> m_ComponentRemap;
 	};
 }
 

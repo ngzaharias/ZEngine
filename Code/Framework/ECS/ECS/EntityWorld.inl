@@ -1,40 +1,29 @@
 
 template <typename TType>
-void ecs::EntityWorld::RegisterType()
-{
-	const TypeId typeId = ToTypeId<TType>();
-	ecs::TypeInfo& info = m_TypeMap[typeId];
-	info.m_Name = ToTypeName<TType>();
-
-	if constexpr (std::is_base_of<ecs::Component<TType>, TType>::value)
-	{
-		info.m_Base = ecs::ETypeBase::Component;
-	}
-	else if constexpr (std::is_base_of<ecs::Event<TType>, TType>::value)
-	{
-		info.m_Base = ecs::ETypeBase::Event;
-	}
-	else if constexpr (std::is_base_of<ecs::Singleton<TType>, TType>::value)
-	{
-		info.m_Base = ecs::ETypeBase::Singleton;
-	}
-	else if constexpr (std::is_base_of<ecs::System, TType>::value)
-	{
-		info.m_Base = ecs::ETypeBase::System;
-	}
-	else
-	{
-		info.m_Base = ecs::ETypeBase::Resource;
-	}
-}
-
-template <typename TType>
 bool ecs::EntityWorld::IsRegistered() const
 {
 	static_assert(!std::is_const<TType>::value, "Type cannot be const.");
 
-	const TypeId typeId = ToTypeId<TType>();
-	return m_TypeMap.Contains(typeId);
+	if constexpr (std::is_base_of<ecs::Component<TType>, TType>::value)
+	{
+		return m_EntityStorage.IsRegistered<TType>();
+	}
+	else if constexpr (std::is_base_of<ecs::Event<TType>, TType>::value)
+	{
+		return m_EventStorage.IsRegistered<TType>();
+	}
+	else if constexpr (std::is_base_of<ecs::Singleton<TType>, TType>::value)
+	{
+		return m_SingletonStorage.IsRegistered<TType>();
+	}
+	else if constexpr (std::is_base_of<ecs::System, TType>::value)
+	{
+		return m_SystemRegistry.IsRegistered<TType>();
+	}
+	else
+	{
+		return m_ResourceRegistry.IsRegistered<TType>();
+	}
 }
 
 template <typename TWorldView>
@@ -75,13 +64,8 @@ void ecs::EntityWorld::RegisterComponent()
 
 	Z_PANIC(!IsRegistered<TComponent>(), "Component is already registered!");
 
-	RegisterType<TComponent>();
 	m_TypeRegistry.RegisterComponent<TComponent>();
 	m_EntityStorage.RegisterComponent<TComponent>();
-
-	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	const TypeId typeId = ToTypeId<TComponent>();
-	m_ComponentRemap[componentId] = typeId;
 }
 
 template <typename TComponent, typename... TArgs>
@@ -167,7 +151,6 @@ void ecs::EntityWorld::RegisterEvent()
 
 	Z_PANIC(!IsRegistered<TEvent>(), "Event is already registered!");
 
-	RegisterType<TEvent>();
 	m_TypeRegistry.RegisterEvent<TEvent>();
 	m_EventStorage.RegisterEvent<TEvent>();
 }
@@ -197,7 +180,6 @@ void ecs::EntityWorld::RegisterResource(TResource& resource)
 
 	Z_PANIC(!IsRegistered<TResource>(), "Resource is already registered!");
 	
-	RegisterType<TResource>();
 	m_TypeRegistry.RegisterResource<TResource>();
 	m_ResourceRegistry.Register<TResource>(resource);
 }
@@ -242,7 +224,6 @@ void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
 
 	Z_PANIC(!IsRegistered<TSingleton>(), "Singleton is already registered!");
 
-	RegisterType<TSingleton>();
 	m_TypeRegistry.RegisterSingleton<TSingleton>();
 	m_SingletonStorage.RegisterSingleton<TSingleton>(std::forward<TArgs>(args)...);
 }
@@ -287,9 +268,8 @@ void ecs::EntityWorld::RegisterSystem(TArgs&&... args)
 
 	Z_PANIC(!IsRegistered<TSystem>(), "System is already registered!");
 
-	RegisterType<TSystem>();
 	m_TypeRegistry.RegisterSystem<TSystem>();
-	m_SystemRegistry.Register<TSystem>(std::forward<TArgs>(args)...);
+	m_SystemRegistry.RegisterSystem<TSystem>(std::forward<TArgs>(args)...);
 }
 
 template <typename TSystem>

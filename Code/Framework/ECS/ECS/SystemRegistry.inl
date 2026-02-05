@@ -1,4 +1,3 @@
-#pragma once
 
 template<class TSystem>
 bool ecs::SystemRegistry::IsRegistered() const
@@ -8,7 +7,7 @@ bool ecs::SystemRegistry::IsRegistered() const
 }
 
 template<class TSystem, typename... TArgs>
-void ecs::SystemRegistry::Register(TArgs&&... args)
+void ecs::SystemRegistry::RegisterSystem(TArgs&&... args)
 {
 	const TypeId systemId = ToTypeId<TSystem>();
 	

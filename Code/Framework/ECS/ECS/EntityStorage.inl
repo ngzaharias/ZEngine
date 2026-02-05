@@ -1,10 +1,16 @@
 
 template<class TComponent>
+bool ecs::EntityStorage::IsRegistered() const
+{
+	return m_EntityBuffer.IsRegistered<TComponent>();
+}
+
+template<class TComponent>
 void ecs::EntityStorage::RegisterComponent()
 {
-	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	m_AliveComponents.Set(componentId, new ecs::ComponentContainer<TComponent>());
-	m_DeadComponents.Set(componentId, new ecs::ComponentContainer<TComponent>());
+	const ecs::ComponentId typeId = ToTypeId<TComponent, ecs::ComponentTag>();
+	m_AliveComponents.Set(typeId, new ecs::ComponentContainer<TComponent>());
+	m_DeadComponents.Set(typeId, new ecs::ComponentContainer<TComponent>());
 	m_EntityBuffer.RegisterComponent<TComponent>();
 }
 

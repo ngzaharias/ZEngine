@@ -1,5 +1,12 @@
 
 template<class TEvent>
+bool ecs::EventBuffer::IsRegistered() const
+{
+	const ecs::EventId typeId = ToTypeId<TEvent, ecs::EventTag>();
+	return m_Containers.Contains(typeId);
+}
+
+template<class TEvent>
 void ecs::EventBuffer::RegisterEvent()
 {
 	const ecs::EventId typeId = ToTypeId<TEvent, ecs::EventTag>();

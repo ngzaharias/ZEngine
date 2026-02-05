@@ -34,18 +34,26 @@ namespace ecs
 		// Component
 
 		template<class TComponent>
+		bool IsRegistered() const;
+
+		template<class TComponent>
 		void RegisterComponent();
 
 		template<class TComponent, typename... TArgs>
 		auto AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&;
+
 		template<class TComponent>
 		void UpdateComponent(const ecs::Entity& entity);
+
 		template<class TComponent>
 		void RemoveComponent(const ecs::Entity& entity);
+
 		template<class TComponent>
 		bool HasComponent(const ecs::Entity& entity);
+
 		template<class TComponent>
 		auto ReadComponent(const ecs::Entity& entity) -> const TComponent&;
+
 		template<class TComponent>
 		auto WriteComponent(const ecs::Entity& entity) -> TComponent&;
 

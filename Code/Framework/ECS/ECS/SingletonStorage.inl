@@ -23,6 +23,13 @@ bool ecs::SingletonStorage::WasUpdated() const
 }
 
 template<class TSingleton>
+bool ecs::SingletonStorage::IsRegistered() const
+{
+	const ecs::SingletonId typeId = ToTypeId<TSingleton, ecs::SingletonId>();
+	return m_Containers.Contains(typeId);
+}
+
+template<class TSingleton>
 void ecs::SingletonStorage::RegisterSingleton()
 {
 	const ecs::SingletonId typeId = ToTypeId<TSingleton, ecs::SingletonId>();

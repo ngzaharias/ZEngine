@@ -34,7 +34,8 @@ namespace
 		const ecs::SystemEntries& entries = registry.GetEntries();
 		const ecs::SystemEntry& entry = entries.Get(parentId);
 
-		const ecs::TypeInfo& parentInfo = world.m_TypeMap.Get(parentId);
+		const auto& typeMap = world.m_TypeRegistry.GetTypeMap();
+		const ecs::TypeInfo& parentInfo = typeMap.Get(parentId);
 
 		visited.Get(parentId) = true;
 
@@ -43,7 +44,7 @@ namespace
 		// and mess up the order for another system that hasn't been added yet.
 		for (const TypeId typeId : entry.m_Write)
 		{
-			const ecs::TypeInfo& typeInfo = world.m_TypeMap.Get(typeId);
+			const ecs::TypeInfo& typeInfo = typeMap.Get(typeId);
 			if (!IsDependency(typeInfo.m_Base))
 				continue;
 

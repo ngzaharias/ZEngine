@@ -7,7 +7,9 @@ namespace ecs
 {
 	struct TypeInfo
 	{
-		ETypeBase m_Base = {};
 		str::String m_Name = {};
+
+		ETypeBase m_Base = {};
+		TypeId m_LocalId = -1;
 	};
 }

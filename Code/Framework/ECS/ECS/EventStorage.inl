@@ -1,5 +1,11 @@
 
 template<class TEvent>
+bool ecs::EventStorage::IsRegistered() const
+{
+	return m_MainBuffer.IsRegistered<TEvent>();
+}
+
+template<class TEvent>
 void ecs::EventStorage::RegisterEvent()
 {
 	m_MainBuffer.RegisterEvent<TEvent>();

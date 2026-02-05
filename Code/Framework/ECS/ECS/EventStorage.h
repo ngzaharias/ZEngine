@@ -8,6 +8,9 @@ namespace ecs
 	{
 	public:
 		template<class TEvent>
+		bool IsRegistered() const;
+
+		template<class TEvent>
 		void RegisterEvent();
 
 		template<class TEvent, typename... TArgs>

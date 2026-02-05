@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Core/String.h"
-#include "ECS/ResourceId.h"
+#include "Core/TypeInfo.h"
 
 namespace ecs
 {
 	struct TypeResource
 	{
-		str::String m_Name = {};
-		ecs::ResourceId m_TypeId = -1;
+		TypeId m_GlobalId = -1;
+		TypeId m_LocalId = -1;
 	};
 }

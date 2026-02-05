@@ -37,7 +37,7 @@ namespace ecs
 		bool IsRegistered() const;
 
 		template<class TSystem, typename... TArgs>
-		void Register(TArgs&&... args);
+		void RegisterSystem(TArgs&&... args);
 
 		template<class TSystem>
 		TSystem& GetSystem();

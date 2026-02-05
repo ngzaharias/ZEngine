@@ -7,7 +7,23 @@ void ecs::TypeRegistry::RegisterComponent()
 {
 	static_assert(std::is_base_of<ecs::Component<TComponent>, TComponent>::value, "Type doesn't inherit from ecs::Component.");
 
-	ecs::TypeComponent entry;
+	const TypeId globalId = ToTypeId<TComponent>();
+	const TypeId localId = ToTypeId<TComponent, ecs::ComponentTag>();
+
+	ecs::TypeInfo& info = m_TypeMap[globalId];
+	info.m_Name = ToTypeName<TComponent>();
+	info.m_Base = ecs::ETypeBase::Component;
+	info.m_LocalId = localId;
+
+	ecs::TypeComponent& entry = m_ComponentMap[localId];
+	entry.m_GlobalId = globalId;
+	entry.m_LocalId = localId;
+	entry.m_AddedId = ecs::QueryProxy<ecs::query::Added<TComponent>>::Id();
+	entry.m_UpdatedId = ecs::QueryProxy<ecs::query::Updated<TComponent>>::Id();
+	entry.m_RemovedId = ecs::QueryProxy<ecs::query::Removed<TComponent>>::Id();
+	entry.m_IncludeId = ecs::QueryProxy<ecs::query::Include<TComponent>>::Id();
+	entry.m_IsReplicated = std::is_base_of<ecs::IsReplicated, TComponent>::value;
+
 	if constexpr (std::is_base_of<ecs::IsReplicated, TComponent>::value)
 	{
 		entry.m_Add = &AddComponentMethod<TComponent>;
@@ -16,17 +32,6 @@ void ecs::TypeRegistry::RegisterComponent()
 		entry.m_Read = &ReadComponentMethod<TComponent>;
 		entry.m_Write = &WriteComponentMethod<TComponent>;
 	}
-
-	entry.m_Name = ToTypeName<TComponent>();
-	entry.m_TypeId = ToTypeId<TComponent, ecs::ComponentTag>();
-
-	entry.m_AddedId = ecs::QueryProxy<ecs::query::Added<TComponent>>::Id();
-	entry.m_UpdatedId = ecs::QueryProxy<ecs::query::Updated<TComponent>>::Id();
-	entry.m_RemovedId = ecs::QueryProxy<ecs::query::Removed<TComponent>>::Id();
-	entry.m_IncludeId = ecs::QueryProxy<ecs::query::Include<TComponent>>::Id();
-	entry.m_IsReplicated = std::is_base_of<ecs::IsReplicated, TComponent>::value;
-
-	m_ComponentMap.Insert(entry.m_TypeId, entry);
 }
 
 template<typename TComponent>
@@ -87,16 +92,22 @@ void ecs::TypeRegistry::RegisterEvent()
 {
 	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
 
-	ecs::TypeEvent entry;
+	const TypeId globalId = ToTypeId<TEvent>();
+	const TypeId localId = ToTypeId<TEvent, ecs::EventTag>();
+
+	ecs::TypeInfo& info = m_TypeMap[globalId];
+	info.m_Name = ToTypeName<TEvent>();
+	info.m_Base = ecs::ETypeBase::Event;
+	info.m_LocalId = localId;
+
+	ecs::TypeEvent& entry = m_EventMap[localId];
+	entry.m_GlobalId = globalId;
+	entry.m_LocalId = localId;
+
 	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
 	{
 		entry.m_Add = &AddEventMethod<TEvent>;
 	}
-
-	entry.m_Name = ToTypeName<TEvent>();
-	entry.m_TypeId = ToTypeId<TEvent, ecs::EventTag>();
-
-	m_EventMap.Insert(entry.m_TypeId, entry);
 }
 
 template<typename TEvent>
@@ -112,11 +123,17 @@ void ecs::TypeRegistry::AddEventMethod(ecs::EventBuffer& buffer, const MemBuffer
 template <typename TResource>
 void ecs::TypeRegistry::RegisterResource()
 {
-	ecs::TypeResource entry;
-	entry.m_Name = ToTypeName<TResource>();
-	entry.m_TypeId = ToTypeId<TResource, ecs::ResourceTag>();
+	const TypeId globalId = ToTypeId<TResource>();
+	const TypeId localId = ToTypeId<TResource, ecs::ResourceTag>();
 
-	m_ResourceMap.Insert(entry.m_TypeId, entry);
+	ecs::TypeInfo& info = m_TypeMap[globalId];
+	info.m_Name = ToTypeName<TResource>();
+	info.m_Base = ecs::ETypeBase::Resource;
+	info.m_LocalId = localId;
+
+	ecs::TypeResource& entry = m_ResourceMap[localId];
+	entry.m_GlobalId = globalId;
+	entry.m_LocalId = localId;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -125,10 +142,17 @@ void ecs::TypeRegistry::RegisterResource()
 template <typename TSingleton>
 void ecs::TypeRegistry::RegisterSingleton()
 {
-	ecs::TypeSingleton entry;
-	entry.m_Name = ToTypeName<TSingleton>();
-	entry.m_TypeId = ToTypeId<TSingleton, ecs::SingletonTag>();
-	m_SingletonMap.Insert(entry.m_TypeId, entry);
+	const TypeId globalId = ToTypeId<TSingleton>();
+	const TypeId localId = ToTypeId<TSingleton, ecs::SingletonTag>();
+
+	ecs::TypeInfo& info = m_TypeMap[globalId];
+	info.m_Name = ToTypeName<TSingleton>();
+	info.m_Base = ecs::ETypeBase::Singleton;
+	info.m_LocalId = localId;
+
+	ecs::TypeSingleton& entry = m_SingletonMap[localId];
+	entry.m_GlobalId = globalId;
+	entry.m_LocalId = localId;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -137,9 +161,15 @@ void ecs::TypeRegistry::RegisterSingleton()
 template <typename TSystem>
 void ecs::TypeRegistry::RegisterSystem()
 {
-	ecs::TypeSystem entry;
-	entry.m_Name = ToTypeName<TSystem>();
-	entry.m_TypeId = ToTypeId<TSystem, ecs::SystemTag>();
+	const TypeId globalId = ToTypeId<TSystem>();
+	const TypeId localId = ToTypeId<TSystem, ecs::SystemTag>();
 
-	m_SystemMap.Insert(entry.m_TypeId, entry);
+	ecs::TypeInfo& info = m_TypeMap[globalId];
+	info.m_Name = ToTypeName<TSystem>();
+	info.m_Base = ecs::ETypeBase::System;
+	info.m_LocalId = localId;
+
+	ecs::TypeSystem& entry = m_SystemMap[localId];
+	entry.m_GlobalId = globalId;
+	entry.m_LocalId = localId;
 }

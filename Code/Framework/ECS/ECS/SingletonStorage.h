@@ -25,6 +25,9 @@ namespace ecs
 		template<typename TSingleton>
 		bool WasUpdated() const;
 
+		template<class TSystem>
+		bool IsRegistered() const;
+
 		template<typename TSingleton>
 		void RegisterSingleton();
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/String.h"
-#include "ECS/SingletonId.h"
+#include "Core/TypeInfo.h"
 
 class MemBuffer;
 
@@ -14,7 +14,7 @@ namespace ecs
 {
 	struct TypeSingleton
 	{
-		str::String m_Name = {};
-		ecs::SingletonId m_TypeId = -1;
+		TypeId m_GlobalId = -1;
+		TypeId m_LocalId = -1;
 	};
 }

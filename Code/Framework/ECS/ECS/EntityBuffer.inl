@@ -3,6 +3,13 @@
 // Component
 
 template<class TComponent>
+bool ecs::EntityBuffer::IsRegistered() const
+{
+	const ecs::ComponentId typeId = ToTypeId<TComponent, ecs::ComponentTag>();
+	return m_Components.Contains(typeId);
+}
+
+template<class TComponent>
 void ecs::EntityBuffer::RegisterComponent()
 {
 	const ecs::ComponentId typeId = ToTypeId<TComponent, ecs::ComponentTag>();

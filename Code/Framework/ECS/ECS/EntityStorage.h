@@ -49,6 +49,9 @@ namespace ecs
 		// Component
 
 		template<class TComponent>
+		bool IsRegistered() const;
+
+		template<class TComponent>
 		void RegisterComponent();
 
 		template<class TComponent, typename... TArgs>
