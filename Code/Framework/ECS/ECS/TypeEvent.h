@@ -16,6 +16,7 @@ namespace ecs
 	{
 		TypeId m_GlobalId = -1;
 		TypeId m_LocalId = -1;
+		bool m_IsReplicated = false;
 
 		using Add = void(ecs::EventBuffer&, const MemBuffer&);
 		Add* m_Add = nullptr;

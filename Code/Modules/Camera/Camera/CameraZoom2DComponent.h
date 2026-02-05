@@ -2,6 +2,7 @@
 
 #include "Core/Optional.h"
 #include "ECS/Component.h"
+#include "ECS/IsPrototype.h"
 #include "Math/Math.h"
 #include "Math/Vector.h"
 
@@ -15,6 +16,7 @@ namespace camera
 
 	/// \brief
 	struct Zoom2DComponent final : public ecs::Component<Zoom2DComponent>
+		, ecs::IsPrototype
 	{
 		float m_Max = KINDA_LARGE_FLOAT;
 		float m_Min = 1.f;

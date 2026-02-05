@@ -10,6 +10,7 @@
 #include "ECS/Event.h"
 #include "ECS/EventBuffer.h"
 #include "ECS/EventTag.h"
+#include "ECS/IsPrototype.h"
 #include "ECS/IsReplicated.h"
 #include "ECS/QueryRegistry.h"
 #include "ECS/ResourceId.h"

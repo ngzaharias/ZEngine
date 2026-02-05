@@ -2,6 +2,7 @@
 
 #include "Core/Array.h"
 #include "ECS/Component.h"
+#include "ECS/IsPrototype.h"
 #include "Math/Vector.h"
 
 namespace softbody
@@ -13,6 +14,7 @@ namespace softbody
 	};
 
 	struct ChainComponent final : public ecs::Component<ChainComponent>
+		, ecs::IsPrototype
 	{
 		// constraints
 		float m_Angle = math::ToRadians(0.f);

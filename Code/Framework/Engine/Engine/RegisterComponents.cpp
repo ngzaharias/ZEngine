@@ -95,13 +95,6 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterSingleton<net::UserMapSingleton>();
-
-	// prototypes
-	{
-		auto& manager = entityWorld.WriteResource<eng::PrototypeManager>();
-		manager.Register<ecs::ReplicationComponent>();
-	}
-
 }
 
 void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld)

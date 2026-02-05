@@ -22,6 +22,7 @@ void ecs::TypeRegistry::RegisterComponent()
 	entry.m_UpdatedId = ecs::QueryProxy<ecs::query::Updated<TComponent>>::Id();
 	entry.m_RemovedId = ecs::QueryProxy<ecs::query::Removed<TComponent>>::Id();
 	entry.m_IncludeId = ecs::QueryProxy<ecs::query::Include<TComponent>>::Id();
+	entry.m_IsPrototype = std::is_base_of<ecs::IsPrototype, TComponent>::value;
 	entry.m_IsReplicated = std::is_base_of<ecs::IsReplicated, TComponent>::value;
 
 	if constexpr (std::is_base_of<ecs::IsReplicated, TComponent>::value)
@@ -103,6 +104,7 @@ void ecs::TypeRegistry::RegisterEvent()
 	ecs::TypeEvent& entry = m_EventMap[localId];
 	entry.m_GlobalId = globalId;
 	entry.m_LocalId = localId;
+	entry.m_IsReplicated = std::is_base_of<ecs::IsReplicated, TEvent>::value;
 
 	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
 	{
