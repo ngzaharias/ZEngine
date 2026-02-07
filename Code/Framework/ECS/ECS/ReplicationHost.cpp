@@ -108,23 +108,23 @@ void ecs::ReplicationHost::ProcessEntities()
 
 		for (ecs::ComponentId typeId = 0; typeId < ecs::COMPONENTS_MAX; ++typeId)
 		{
-			const ecs::TypeComponent* entry = registry.TryTypeComponent(typeId);
-			if (!entry || !entry->m_IsReplicated)
+			const ecs::TypeComponent& entry = registry.GetComponentInfo(typeId);
+			if (!entry.m_IsReplicated)
 				continue;
 
 			Set<ecs::Entity> toAdd, toUpdate, toRemove;
 			const Set<ecs::Entity>& replicated = replicationData.m_Replicated;
-			enumerate::Intersection(replicated, queries.GetGroup(entry->m_AddedId), toAdd);
-			enumerate::Intersection(replicated, queries.GetGroup(entry->m_UpdatedId), toUpdate);
-			enumerate::Intersection(replicated, queries.GetGroup(entry->m_RemovedId), toRemove);
+			enumerate::Intersection(replicated, queries.GetGroup(entry.m_AddedId), toAdd);
+			enumerate::Intersection(replicated, queries.GetGroup(entry.m_UpdatedId), toUpdate);
+			enumerate::Intersection(replicated, queries.GetGroup(entry.m_RemovedId), toRemove);
 
 			// #note: this only handles component AFTER an entity was marked for replication
 			for (const ecs::Entity& entity : toAdd)
-				ComponentAdd(peerId, entity, *entry);
+				ComponentAdd(peerId, entity, entry);
 			for (const ecs::Entity& entity : toUpdate)
-				ComponentUpdate(peerId, entity, *entry);
+				ComponentUpdate(peerId, entity, entry);
 			for (const ecs::Entity& entity : toRemove)
-				ComponentRemove(peerId, entity, *entry);
+				ComponentRemove(peerId, entity, entry);
 		}
 
 		// entities that were added to replication this frame
@@ -136,15 +136,15 @@ void ecs::ReplicationHost::ProcessEntities()
 		// ...and their components
 		for (ecs::ComponentId typeId = 0; typeId < ecs::COMPONENTS_MAX; ++typeId)
 		{
-			const ecs::TypeComponent* entry = registry.TryTypeComponent(typeId);
-			if (!entry || !entry->m_IsReplicated)
+			const ecs::TypeComponent& entry = registry.GetComponentInfo(typeId);
+			if (!entry.m_IsReplicated)
 				continue;
 
 			Set<ecs::Entity> toAdd;
-			enumerate::Intersection(created, queries.GetGroup(entry->m_IncludeId), toAdd);
+			enumerate::Intersection(created, queries.GetGroup(entry.m_IncludeId), toAdd);
 
 			for (const ecs::Entity& entity : toAdd)
-				ComponentAdd(peerId, entity, *entry);
+				ComponentAdd(peerId, entity, entry);
 		}
 
 		replicationData.m_ToCreate.RemoveAll();
@@ -252,7 +252,7 @@ void ecs::ReplicationHost::ComponentAdd(const net::PeerId& peerId, const ecs::En
 	auto* message = host.RequestMessage<ecs::ComponentAddMessage>(ecs::EMessage::ComponentAdd);
 	message->m_Entity = ToNetEntity(entity);
 	message->m_TypeId = entry.m_LocalId;
-	entry.m_Read(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
+	entry.m_ReadData(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
 
 	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);
@@ -264,7 +264,7 @@ void ecs::ReplicationHost::ComponentUpdate(const net::PeerId& peerId, const ecs:
 	auto* message = host.RequestMessage<ecs::ComponentUpdateMessage>(ecs::EMessage::ComponentUpdate);
 	message->m_Entity = ToNetEntity(entity);
 	message->m_TypeId = entry.m_LocalId;
-	entry.m_Read(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
+	entry.m_ReadData(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
 
 	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);

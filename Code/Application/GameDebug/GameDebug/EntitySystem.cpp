@@ -80,12 +80,12 @@ namespace
 		const auto& registry = world.m_TypeRegistry;
 		const auto& entities = world.m_EntityStorage.GetEntityMap();
 		const ecs::ComponentMask& componentMask = entities.Get(entity);
-		for (int32 i = 0; i < ecs::COMPONENTS_MAX; ++i)
+		for (ecs::ComponentId typeId = 0; typeId < ecs::COMPONENTS_MAX; ++typeId)
 		{
-			if (!componentMask.Has(i))
+			if (!componentMask.Has(typeId))
 				continue;
 
-			const ecs::TypeComponent& componentInfo = registry.GetTypeComponent(i);
+			const ecs::TypeComponent& componentInfo = registry.GetComponentInfo(typeId);
 			const ecs::TypeInfo& typeInfo = registry.GetTypeInfo(componentInfo.m_GlobalId);
 			imgui::BulletHeader(typeInfo.m_Name.c_str());
 		}

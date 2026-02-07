@@ -2,6 +2,7 @@
 
 #include "Core/Map.h"
 #include "Core/MemBuffer.h"
+#include "Core/TypeName.h"
 #include "ECS/Component.h"
 #include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
@@ -46,11 +47,13 @@ namespace ecs
 		const TypeMap& GetTypeMap() const;
 		const ecs::TypeInfo& GetTypeInfo(const TypeId typeId) const;
 
+		const ComponentMap& GetComponentMap() const;
+		const ecs::TypeComponent& GetComponentInfo(const ecs::ComponentId& typeId) const;
+		const ecs::TypeComponent* TryComponentInfo(const ecs::ComponentId& typeId) const;
+
 		const ecs::TypeEvent& GetTypeEvent(const ecs::EventId& typeId) const;
-		const ecs::TypeComponent& GetTypeComponent(const ecs::ComponentId& typeId) const;
 
 		const ecs::TypeEvent* TryTypeEvent(const ecs::EventId& typeId) const;
-		const ecs::TypeComponent* TryTypeComponent(const ecs::ComponentId& typeId) const;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Component
@@ -58,21 +61,31 @@ namespace ecs
 		template <typename TComponent>
 		void RegisterComponent();
 
+		bool HasComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
+		void AddComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
 		void AddComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
+		void UpdateComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
 		void UpdateComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
 		void RemoveComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
+		void ReadComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, MemBuffer& data) const;
+		void WriteComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
 
 		template<typename TComponent>
-		static void AddComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
+		static bool HasComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity);
 		template<typename TComponent>
-		static void UpdateComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
+		static void AddComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
 		template<typename TComponent>
-		static void RemoveComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity);
-
+		static void AddComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity);
 		template<typename TComponent>
-		static void ReadComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, MemBuffer& data);
+		static void UpdateComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
 		template<typename TComponent>
-		static void WriteComponentMethod(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
+		static void UpdateComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity);
+		template<typename TComponent>
+		static void RemoveComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity);
+		template<typename TComponent>
+		static void ReadComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, MemBuffer& data);
+		template<typename TComponent>
+		static void WriteComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event

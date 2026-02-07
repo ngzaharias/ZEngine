@@ -19,26 +19,35 @@ namespace ecs
 	{
 		TypeId m_GlobalId = -1;
 		TypeId m_LocalId = -1;
+
 		ecs::QueryId m_AddedId = -1;
 		ecs::QueryId m_UpdatedId = -1;
 		ecs::QueryId m_RemovedId = -1;
 		ecs::QueryId m_IncludeId = -1;
+
 		bool m_IsPrototype = false;
 		bool m_IsReplicated = false;
 
-		using Add = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
-		Add* m_Add = nullptr;
+		using HasSolo = bool(ecs::EntityStorage&, const ecs::Entity&);
+		HasSolo* m_HasSolo = nullptr;
 
-		using Update = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
-		Update* m_Update = nullptr;
+		using AddSolo = void(ecs::EntityStorage&, const ecs::Entity&);
+		AddSolo* m_AddSolo = nullptr;
+		using AddData = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
+		AddData* m_AddData = nullptr;
 
-		using Remove = void(ecs::EntityStorage&, const ecs::Entity&);
-		Remove* m_Remove = nullptr;
+		using UpdateSolo = void(ecs::EntityStorage&, const ecs::Entity&);
+		UpdateSolo* m_UpdateSolo = nullptr;
+		using UpdateData = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
+		UpdateData* m_UpdateData = nullptr;
 
-		using Read = void(ecs::EntityStorage&, const ecs::Entity&, MemBuffer&);
-		Read* m_Read = nullptr;
+		using RemoveSolo = void(ecs::EntityStorage&, const ecs::Entity&);
+		RemoveSolo* m_RemoveSolo = nullptr;
 
-		using Write = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
-		Write* m_Write = nullptr;
+		using ReadData = void(ecs::EntityStorage&, const ecs::Entity&, MemBuffer&);
+		ReadData* m_ReadData = nullptr;
+
+		using WriteData = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
+		WriteData* m_WriteData = nullptr;
 	};
 }
