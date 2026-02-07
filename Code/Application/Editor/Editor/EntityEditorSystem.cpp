@@ -79,20 +79,30 @@ namespace
 		return input.IsPressed(name);
 	}
 
-	template<typename Component>
 	void SelectComponent(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
-		static const str::String label = str::String(TypeName<Component>::m_WithNamespace);
-
-		const bool hasComponent = world.HasComponent<Component>(entity);
-		imgui::Checkbox("##has", hasComponent);
-		ImGui::SameLine();
-		if (ImGui::MenuItem(label.c_str()))
+		ecs::EntityStorage& storage = world.m_EntityStorage;
+		const auto& registry = world.ReadResource<ecs::TypeRegistry>();
+		for (auto&& [localId, componentInfo] : registry.GetComponentMap())
 		{
-			if (!hasComponent)
-				world.AddComponent<Component>(entity);
-			else
-				world.RemoveComponent<Component>(entity);
+			if (!componentInfo.m_IsPrototype)
+				continue;
+
+			const ecs::TypeInfo& typeInfo = registry.GetTypeInfo(componentInfo.m_GlobalId);
+			const bool hasComponent = registry.HasComponent(storage, localId, entity);
+			imgui::Checkbox("##has", hasComponent);
+			ImGui::SameLine();
+			if (ImGui::MenuItem(typeInfo.m_Name.c_str()))
+			{
+				if (!hasComponent)
+				{
+					registry.AddComponent(storage, localId, entity);
+				}
+				else
+				{
+					registry.RemoveComponent(storage, localId, entity);
+				}
+			}
 		}
 	}
 
@@ -308,23 +318,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 				{
 					if (ImGui::BeginMenu("Components"))
 					{
-						SelectComponent<ecs::NameComponent>(m_World, selected);
-						SelectComponent<camera::Bound2DComponent>(m_World, selected);
-						SelectComponent<camera::Move2DComponent>(m_World, selected);
-						SelectComponent<camera::Move3DComponent>(m_World, selected);
-						SelectComponent<camera::Pan3DComponent>(m_World, selected);
-						SelectComponent<camera::Zoom2DComponent>(m_World, selected);
-						SelectComponent<client::hidden::CountComponent>(m_World, selected);
-						SelectComponent<client::hidden::GroupComponent>(m_World, selected);
-						SelectComponent<client::hidden::ObjectComponent>(m_World, selected);
-						SelectComponent<client::hidden::RevealComponent>(m_World, selected);
-						SelectComponent<eng::CameraComponent>(m_World, selected);
-						SelectComponent<eng::PhysicsComponent>(m_World, selected);
-						SelectComponent<eng::PrototypeComponent>(m_World, selected);
-						SelectComponent<eng::SpriteComponent>(m_World, selected);
-						SelectComponent<eng::TransformComponent>(m_World, selected);
-						SelectComponent<eng::VisibilityComponent>(m_World, selected);
-						SelectComponent<softbody::ChainComponent>(m_World, selected);
+						SelectComponent(m_World, selected);
 						ImGui::EndMenu();
 					}
 					ImGui::EndMenuBar();
@@ -337,6 +331,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 					// always first
 					InspectComponent<eng::VisibilityComponent>(m_World, selected, inspector);
 					InspectComponent<ecs::NameComponent>(m_World, selected, inspector);
+					InspectComponent<eng::PrototypeComponent>(m_World, selected, inspector);
 					InspectComponent<eng::TransformComponent>(m_World, selected, inspector);
 
 					InspectComponent<camera::Bound2DComponent>(m_World, selected, inspector);
@@ -350,7 +345,6 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 					InspectComponent<client::hidden::RevealComponent>(m_World, selected, inspector);
 					InspectComponent<eng::CameraComponent>(m_World, selected, inspector);
 					InspectComponent<eng::PhysicsComponent>(m_World, selected, inspector);
-					InspectComponent<eng::PrototypeComponent>(m_World, selected, inspector);
 					InspectComponent<eng::SpriteComponent>(m_World, selected, inspector);
 					InspectComponent<softbody::ChainComponent>(m_World, selected, inspector);
 					inspector.End();
