@@ -16,6 +16,8 @@ void eng::PrototypeManager::Register()
 	eng::PrototypeEntry& entry = m_EntryMap[typeName];
 	entry.m_Save = &SaveFunction<TPrototype>;
 	entry.m_Load = &LoadFunction<TPrototype>;
+
+	static_assert(std::is_base_of<ecs::IsPrototype, TPrototype>::value);
 }
 
 template<typename TPrototype>
