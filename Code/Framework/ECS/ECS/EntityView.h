@@ -35,7 +35,7 @@ namespace ecs
 		template<typename TOtherRequired, typename TOtherOptional>
 		EntityView_t(const EntityView_t<TOtherRequired, TOtherOptional>& rhs);
 
-		operator ecs::Entity() { return m_Entity; }
+		operator const ecs::Entity&() const { return m_Entity; }
 
 		const ecs::Entity& GetEntity() const { return m_Entity; }
 
@@ -43,7 +43,7 @@ namespace ecs
 		auto ReadRequired() const -> const TComponent&;
 
 		template<typename TComponent>
-		auto WriteRequired()->TComponent&;
+		auto WriteRequired() const -> TComponent&;
 
 		template<typename TComponent>
 		bool HasOptional() const;
@@ -52,7 +52,7 @@ namespace ecs
 		auto ReadOptional() const -> const TComponent*;
 
 		template<typename TComponent>
-		auto WriteOptional() -> TComponent*;
+		auto WriteOptional() const -> TComponent*;
 
 	private:
 		ecs::EntityWorld& m_World;
