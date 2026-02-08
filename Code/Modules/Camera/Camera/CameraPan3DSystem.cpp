@@ -63,6 +63,8 @@ void camera::Pan3DSystem::Update(World& world, const GameTime& gameTime)
 		const auto& camera = view.ReadRequired<eng::CameraComponent>();
 		const auto& transform = view.ReadRequired<eng::TransformComponent>();
 
+		const bool isOrthographic = std::holds_alternative<eng::Orthographic>(camera.m_Projection);
+		const float multiplier = isOrthographic ? 1.f : 20.f;
 		if (input.IsHeld(strSelect))
 		{
 			const Vector3f worldPosA = eng::ScreenToWorld(
@@ -78,7 +80,7 @@ void camera::Pan3DSystem::Update(World& world, const GameTime& gameTime)
 
 			const Quaternion rotation = Quaternion::FromRotator(transform.m_Rotate);
 			const Vector3f delta = (worldPosB - worldPosA) * rotation;
-			const Vector3f translate = transform.m_Translate + delta;
+			const Vector3f translate = transform.m_Translate + delta * multiplier;
 
 			if (!math::IsNearly(transform.m_Translate, translate))
 			{
