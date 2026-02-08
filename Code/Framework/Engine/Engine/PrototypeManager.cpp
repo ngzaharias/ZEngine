@@ -12,6 +12,23 @@ namespace
 	const str::StringView strName = "m_Name";
 }
 
+bool eng::PrototypeManager::SaveEntity(ecs::EntityWorld& world, const ecs::Entity& entity, const str::Path& filepath) const
+{
+	const auto& nameComponent = world.ReadComponent<ecs::NameComponent>(entity);
+	auto& prototypeComponent = world.WriteComponent<eng::PrototypeComponent>(entity);
+	prototypeComponent.m_Path = filepath;
+
+	eng::Visitor visitor;
+	visitor.Write("m_Guid", prototypeComponent.m_Guid);
+	visitor.Write("m_Name", nameComponent.m_Name);
+
+	for (auto&& [name, entry] : m_EntryMap)
+		entry.m_Save(world, entity, visitor);
+
+	str::String string = visitor;
+	return visitor.SaveToFile(filepath);
+}
+
 bool eng::PrototypeManager::LoadEntity(ecs::EntityWorld& world, const ecs::Entity& entity, const str::Path& filepath) const
 {
 	PROFILE_FUNCTION();
@@ -46,4 +63,10 @@ bool eng::PrototypeManager::LoadEntity(ecs::EntityWorld& world, const ecs::Entit
 	}
 
 	return true;
+}
+
+void eng::PrototypeManager::InspectEntity(ecs::EntityWorld& world, const ecs::Entity& entity, imgui::Inspector& insepctor) const
+{
+	for (auto&& [name, entry] : m_EntryMap)
+		entry.m_Inspect(world, entity, insepctor);
 }

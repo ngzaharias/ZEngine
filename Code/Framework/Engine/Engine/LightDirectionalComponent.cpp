@@ -2,6 +2,7 @@
 #include "Engine/LightDirectionalComponent.h"
 
 #include "Engine/Visitor.h"
+#include "imgui/Inspector.h"
 
 namespace 
 {
@@ -17,4 +18,11 @@ template<>
 void eng::Visitor::WriteCustom(const eng::light::DirectionalComponent& value)
 {
 	Write(strColour, value.m_Colour);
+}
+template<>
+bool imgui::Inspector::WriteCustom(eng::light::DirectionalComponent& value)
+{
+	bool result = false;
+	result |= Write("m_Colour", value.m_Colour);
+	return result;
 }

@@ -100,8 +100,8 @@ void gui::RegisterModule(ecs::EntityWorld& world)
 	// prototypes
 	{
 		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.Register<gui::input::BindingsComponent>();
-		manager.Register<gui::main_menu::WindowComponent>();
+		manager.RegisterComponent<gui::input::BindingsComponent>();
+		manager.RegisterComponent<gui::main_menu::WindowComponent>();
 	}
 
 	// tables

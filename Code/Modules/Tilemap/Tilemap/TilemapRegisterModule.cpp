@@ -24,7 +24,7 @@ void tilemap::RegisterModule(ecs::EntityWorld& world)
 	// prototypes
 	{
 		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.Register<tilemap::AgentComponent>();
-		manager.Register<tilemap::GridComponent>();
+		manager.RegisterComponent<tilemap::AgentComponent>();
+		manager.RegisterComponent<tilemap::GridComponent>();
 	}
 }

@@ -3,14 +3,16 @@
 
 #include "Core/Guid.h"
 #include "Engine/AssetManager.h"
-
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
 #include "imgui/Inspector.h"
 
 namespace
 {
+	const str::Name strFlipbook = NAME("Flipbook");
+	const str::Name strFont = NAME("Font");
 	const str::Name strSprite = NAME("Sprite");
+	const str::Name strStaticMesh = NAME("StaticMesh");
 	const str::Name strTexture2D = NAME("Texture2D");
 
 	bool Contains(const eng::AssetFile* file, const str::StringView& substring)
@@ -109,9 +111,24 @@ namespace
 	}
 }
 
+bool imgui::WriteFlipbook(const eng::AssetManager& manager, const char* label, str::Guid& value)
+{
+	return WriteAsset(manager, strFlipbook, label, value);
+}
+
+bool imgui::WriteFont(const eng::AssetManager& manager, const char* label, str::Guid& value)
+{
+	return WriteAsset(manager, strFont, label, value);
+}
+
 bool imgui::WriteSprite(const eng::AssetManager& manager, const char* label, str::Guid& value)
 {
 	return WriteAsset(manager, strSprite, label, value);
+}
+
+bool imgui::WriteStaticMesh(const eng::AssetManager& manager, const char* label, str::Guid& value)
+{
+	return WriteAsset(manager, strStaticMesh, label, value);
 }
 
 bool imgui::WriteTexture2D(const eng::AssetManager& manager, const char* label, str::Guid& value)

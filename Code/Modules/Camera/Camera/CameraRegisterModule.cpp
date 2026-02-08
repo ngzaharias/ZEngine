@@ -46,10 +46,10 @@ void camera::RegisterModule(ecs::EntityWorld& world)
 	// prototypes
 	{
 		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.Register<camera::Bound2DComponent>();
-		manager.Register<camera::Move2DComponent>();
-		manager.Register<camera::Move3DComponent>();
-		manager.Register<camera::Pan3DComponent>();
-		manager.Register<camera::Zoom2DComponent>();
+		manager.RegisterComponent<camera::Bound2DComponent>();
+		manager.RegisterComponent<camera::Move2DComponent>();
+		manager.RegisterComponent<camera::Move3DComponent>();
+		manager.RegisterComponent<camera::Pan3DComponent>();
+		manager.RegisterComponent<camera::Zoom2DComponent>();
 	}
 }

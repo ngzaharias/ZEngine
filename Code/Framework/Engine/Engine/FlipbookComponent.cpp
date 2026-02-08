@@ -1,7 +1,10 @@
 #include "EnginePCH.h"
 #include "Engine/FlipbookComponent.h"
 
+#include "Engine/AssetManager.h"
+#include "Engine/InspectorHelpers.h"
 #include "Engine/Visitor.h"
+#include "imgui/Inspector.h"
 
 namespace 
 {
@@ -32,4 +35,20 @@ void eng::Visitor::WriteCustom(const eng::FlipbookComponent& value)
 	Write(strTimeStart, value.m_TimeStart);
 	Write(strIsLooping, value.m_IsLooping);
 	Write(strIsPlaying, value.m_IsPlaying);
+}
+template<>
+bool imgui::Inspector::WriteCustom(eng::FlipbookComponent& value)
+{
+	bool result = false;
+	if (!HasPayload<eng::AssetManager>())
+	{
+		result |= Write("m_Flipbook", value.m_Flipbook);
+	}
+	else
+	{
+		const auto& manager = GetPayload<eng::AssetManager>();
+		result |= WriteFlipbook(manager, "m_Flipbook", value.m_Flipbook);
+	}
+	result |= Write("m_Size", value.m_Size);
+	return result;
 }

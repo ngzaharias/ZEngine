@@ -7,53 +7,53 @@
 
 #include <type_traits>
 
-template<typename TPrototype>
-void eng::PrototypeManager::Register()
+template<typename TComponent>
+void eng::PrototypeManager::RegisterComponent()
 {
-	const str::Name typeName = str::Name::Create(TypeName<TPrototype>::m_WithNamespace);
+	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
+	static_assert(std::is_base_of<ecs::Component<TComponent>, TComponent>::value, "Type doesn't inherit from ecs::Component.");
+	static_assert(std::is_base_of<ecs::IsPrototype, TComponent>::value, "Type doesn't inherit from ecs::IsPrototype.");
+
+	const str::Name typeName = str::Name::Create(TypeName<TComponent>::m_WithNamespace);
 	Z_PANIC(!m_EntryMap.Contains(typeName), "Type is already registered!");
 
 	eng::PrototypeEntry& entry = m_EntryMap[typeName];
-	entry.m_Save = &SaveFunction<TPrototype>;
-	entry.m_Load = &LoadFunction<TPrototype>;
-
-	static_assert(std::is_base_of<ecs::IsPrototype, TPrototype>::value);
+	entry.m_Save = &SaveComponent<TComponent>;
+	entry.m_Load = &LoadComponent<TComponent>;
+	entry.m_Inspect = &InspectComponent<TComponent>;
 }
 
-template<typename TPrototype>
-void eng::PrototypeManager::SaveFunction(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor)
+template<typename TComponent>
+void eng::PrototypeManager::SaveComponent(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor)
 {
-	using NonConst = std::remove_const<TPrototype>::type;
-	if constexpr (std::is_base_of<ecs::Component<NonConst>, NonConst>::value)
+	if (world.HasComponent<TComponent>(entity))
 	{
-		if (world.HasComponent<NonConst>(entity))
-		{
-			const auto& component = world.ReadComponent<NonConst>(entity);
-			visitor.Write(component);
-		}
-	}
-	else
-	{
-		static_assert(false, "Unsupported Type!");
+		static const str::StringView key = TypeName<TComponent>::m_WithNamespace;
+		const auto& component = world.ReadComponent<TComponent>(entity);
+		visitor.Write(key, component);
 	}
 }
 
-template<typename TPrototype>
-void eng::PrototypeManager::LoadFunction(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor)
+template<typename TComponent>
+void eng::PrototypeManager::LoadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor)
 {
-	using NonConst = std::remove_const<TPrototype>::type;
-	if constexpr (std::is_base_of<ecs::Component<NonConst>, NonConst>::value)
+	if (!world.IsRegistered<TComponent>())
+		return;
+
+	auto& component = world.HasComponent<TComponent>(entity)
+		? world.WriteComponent<TComponent>(entity)
+		: world.AddComponent<TComponent>(entity);
+	visitor.Read(component);
+}
+
+template<typename TComponent>
+void eng::PrototypeManager::InspectComponent(ecs::EntityWorld& world, const ecs::Entity& entity, imgui::Inspector& inspector)
+{
+	if (world.HasComponent<TComponent>(entity))
 	{
-		if (world.IsRegistered<NonConst>())
-		{
-			auto& component = world.HasComponent<NonConst>(entity)
-				? world.WriteComponent<NonConst>(entity)
-				: world.AddComponent<NonConst>(entity);
-			visitor.Read(component);
-		}
-	}
-	else
-	{
-		static_assert(false, "Unsupported Type!");
+		static const str::String label = str::String(TypeName<TComponent>::m_WithNamespace);
+		inspector.Write(label.c_str(), world.WriteComponent<TComponent>(entity));
 	}
 }

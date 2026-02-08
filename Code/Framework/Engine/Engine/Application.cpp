@@ -152,17 +152,17 @@ void eng::Application::Register()
 
 	// prototypes
 	{
-		m_PrototypeManager.Register<eng::CameraComponent>();
-		m_PrototypeManager.Register<eng::FlipbookComponent>();
-		m_PrototypeManager.Register<eng::light::AmbientComponent>();
-		m_PrototypeManager.Register<eng::light::DirectionalComponent>();
-		m_PrototypeManager.Register<eng::light::PointComponent>();
-		m_PrototypeManager.Register<eng::PhysicsComponent>();
-		m_PrototypeManager.Register<eng::SpriteComponent>();
-		m_PrototypeManager.Register<eng::StaticMeshComponent>();
-		m_PrototypeManager.Register<eng::TextComponent>();
-		m_PrototypeManager.Register<eng::TransformComponent>();
-		m_PrototypeManager.Register<eng::VisibilityComponent>();
+		m_PrototypeManager.RegisterComponent<eng::CameraComponent>();
+		m_PrototypeManager.RegisterComponent<eng::FlipbookComponent>();
+		m_PrototypeManager.RegisterComponent<eng::light::AmbientComponent>();
+		m_PrototypeManager.RegisterComponent<eng::light::DirectionalComponent>();
+		m_PrototypeManager.RegisterComponent<eng::light::PointComponent>();
+		m_PrototypeManager.RegisterComponent<eng::PhysicsComponent>();
+		m_PrototypeManager.RegisterComponent<eng::SpriteComponent>();
+		m_PrototypeManager.RegisterComponent<eng::StaticMeshComponent>();
+		m_PrototypeManager.RegisterComponent<eng::TextComponent>();
+		m_PrototypeManager.RegisterComponent<eng::TransformComponent>();
+		m_PrototypeManager.RegisterComponent<eng::VisibilityComponent>();
 	}
 
 	// tables

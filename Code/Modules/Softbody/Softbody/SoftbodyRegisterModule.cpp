@@ -22,6 +22,6 @@ void softbody::RegisterModule(ecs::EntityWorld& world)
 	// prototypes
 	{
 		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.Register<softbody::ChainComponent>();
+		manager.RegisterComponent<softbody::ChainComponent>();
 	}
 }

@@ -36,6 +36,6 @@ void voxel::RegisterModule(ecs::EntityWorld& world)
 	// prototype
 	{
 		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.Register<voxel::ChunkComponent>();
+		manager.RegisterComponent<voxel::ChunkComponent>();
 	}
 }

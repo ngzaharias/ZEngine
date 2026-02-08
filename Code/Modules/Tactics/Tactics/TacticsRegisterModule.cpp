@@ -30,7 +30,7 @@ void tactics::RegisterModule(ecs::EntityWorld& world)
 	// prototypes
 	{
 		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.Register<tactics::AbilityComponent>();
+		manager.RegisterComponent<tactics::AbilityComponent>();
 	}
 
 	// tables

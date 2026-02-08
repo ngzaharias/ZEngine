@@ -3,6 +3,7 @@
 
 #include "Core/EnumHelpers.h"
 #include "Engine/Visitor.h"
+#include "imgui/Inspector.h"
 
 namespace
 {
@@ -30,4 +31,9 @@ void eng::Visitor::WriteCustom(const voxel::ChunkComponent& value)
 		data.Emplace(index);
 	}
 	Write(strData, data);
+}
+template<>
+bool imgui::Inspector::WriteCustom(voxel::ChunkComponent& value)
+{
+	return false;
 }

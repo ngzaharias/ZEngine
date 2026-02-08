@@ -51,8 +51,13 @@ namespace
 	const str::Name strSprite = str::Name::Create("Sprite");
 
 	using World = editor::EntityEditorSystem::World;
+	using WindowView = ecs::EntityView
+		::Required<
+		editor::EntityWindowComponent>
+		::Optional<
+		editor::EntitySaveComponent>;
 
-	ecs::Entity CreateEntity(ecs::EntityWorld& world, const ecs::Entity& windowEntity, const str::StringView name, const str::Name& level)
+	ecs::Entity CreateEntity(ecs::EntityWorld& world, const str::StringView name, const str::Name& level)
 	{
 		const ecs::Entity entity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(entity, name);
@@ -62,8 +67,8 @@ namespace
 		auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
 		prototypeComponent.m_Guid = str::Guid::Generate();
 
-		auto& selectComponent = world.WriteSingleton<editor::EntitySelectSingleton>();
-		selectComponent.m_Entity = entity;
+		auto& select = world.WriteSingleton<editor::EntitySelectSingleton>();
+		select.m_Entity = entity;
 
 		return entity;
 	}
@@ -71,12 +76,6 @@ namespace
 	str::String ToLabel(const char* label, const int32 index)
 	{
 		return std::format("{}: {}", label, index);
-	}
-
-	bool HasInput(World& world, const str::Name& name)
-	{
-		const auto& input = world.ReadResource<eng::InputManager>();
-		return input.IsPressed(name);
 	}
 
 	void SelectComponent(ecs::EntityWorld& world, const ecs::Entity& entity)
@@ -106,24 +105,165 @@ namespace
 		}
 	}
 
-	template<typename Component>
-	void SaveComponent(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor)
+	void Draw_EntityMenu(ecs::EntityWorld& world, const str::Name& levelName)
 	{
-		if (world.HasComponent<Component>(entity))
+		if (ImGui::BeginMenuBar())
 		{
-			static const str::StringView key = TypeName<Component>::m_WithNamespace;
-			const auto& component = world.ReadComponent<Component>(entity);
-			visitor.Write(key, component);
+			if (ImGui::BeginMenu("Create"))
+			{
+				if (ImGui::MenuItem("Entity"))
+					CreateEntity(world, "Entity_", levelName);
+
+				if (ImGui::MenuItem("Camera"))
+				{
+					const ecs::Entity entity = CreateEntity(world, "Camera", levelName);
+					world.AddComponent<camera::Move3DComponent>(entity);
+					world.AddComponent<eng::CameraComponent>(entity);
+				}
+
+				if (ImGui::MenuItem("Sprite"))
+				{
+					const ecs::Entity entity = CreateEntity(world, "SP_", levelName);
+					world.AddComponent<eng::VisibilityComponent>(entity);
+					auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(entity);
+					spriteComponent.m_Sprite = str::Guid::Create("52ffdca6bc1d64230eda0e2056e9662b");
+				}
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenuBar();
 		}
 	}
 
-	template<typename Component>
-	void InspectComponent(ecs::EntityWorld& world, const ecs::Entity& entity, imgui::Inspector& inspector)
+	void Draw_EntityList(World& world)
 	{
-		if (world.HasComponent<Component>(entity))
+		const auto& select = world.ReadSingleton<editor::EntitySelectSingleton>();
+
+		using Query = ecs::query
+			::Include<const eng::PrototypeComponent>
+			::Optional<const ecs::NameComponent>;
+		for (auto&& view : world.Query<Query>())
 		{
-			static const str::String label = str::String(TypeName<Component>::m_WithNamespace);
-			inspector.Write(label.c_str(), world.WriteComponent<Component>(entity));
+			imgui::RaiiID id(view.GetEntity().GetIndex());
+
+			const char* name = "<unknown>";;
+			if (const auto* component = view.ReadOptional<ecs::NameComponent>())
+				name = component->m_Name.c_str();
+
+			const bool isSelected = view == select.m_Entity;
+			if (ImGui::Selectable(name, isSelected))
+			{
+				auto& select = world.WriteSingleton<editor::EntitySelectSingleton>();
+				select.m_Entity = view;
+			}
+
+			ImGui::OpenPopupOnItemClick(name);
+			if (ImGui::BeginPopup(name))
+			{
+				if (ImGui::Selectable("Destroy"))
+					world.DestroyEntity(view);
+				ImGui::EndPopup();
+			}
+		}
+	}
+
+	void Draw_EntityDrop(ecs::EntityWorld& world, const str::Name& levelName)
+	{
+		const auto* window = ImGui::GetCurrentWindow();
+
+		ImRect bb;
+		bb.Min = window->Pos;
+		bb.Max = bb.Min + window->Size;
+		if (ImGui::BeginDragDropTargetCustom(bb, window->ID))
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("eng::AssetFile"))
+			{
+				const eng::AssetFile& file = *(const eng::AssetFile*)payload->Data;
+				if (file.m_Type == strSprite)
+				{
+					const ecs::Entity entity = CreateEntity(world, file.m_Name, levelName);
+					world.AddComponent<eng::VisibilityComponent>(entity);
+					auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(entity);
+					spriteComponent.m_Sprite = file.m_Guid;
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
+	}
+
+	void Draw_Inspector(ecs::EntityWorld& world, const WindowView& view)
+	{
+		const auto& select = world.ReadSingleton<editor::EntitySelectSingleton>();
+		const auto& window = view.ReadRequired<editor::EntityWindowComponent>();
+
+		if (ImGui::Begin(window.m_InspectorLabel.c_str(), nullptr, ImGuiWindowFlags_MenuBar))
+		{
+			const ecs::Entity selected = select.m_Entity;
+			if (world.IsAlive(selected))
+			{
+				if (ImGui::BeginMenuBar())
+				{
+					if (ImGui::BeginMenu("Components"))
+					{
+						SelectComponent(world, selected);
+						ImGui::EndMenu();
+					}
+					ImGui::EndMenuBar();
+				}
+
+				imgui::Inspector inspector;
+				inspector.AddPayload(world.ReadResource<eng::AssetManager>());
+				if (inspector.Begin("##table"))
+				{
+					auto& manager = world.WriteResource<eng::PrototypeManager>();
+					manager.InspectEntity(world, selected, inspector);
+					inspector.End();
+				}
+			}
+		}
+		ImGui::End();
+	}
+
+	void Draw_SavePopup(ecs::EntityWorld& world, const WindowView& view)
+	{
+		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
+		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
+		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
+
+		if (view.HasOptional<editor::EntitySaveComponent>())
+			world.RemoveComponent<editor::EntitySaveComponent>(view);
+
+		const auto& input = world.ReadResource<eng::InputManager>();
+		if (input.IsPressed(strSave) || view.HasOptional<editor::EntitySaveComponent>())
+		{
+			const auto& select = world.ReadSingleton<editor::EntitySelectSingleton>();
+			const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
+
+			const ecs::Entity selected = select.m_Entity;
+			if (world.HasComponent<eng::PrototypeComponent>(selected))
+			{
+				const auto& prototype = world.ReadComponent<eng::PrototypeComponent>(selected);
+				const auto& name = world.ReadComponent<ecs::NameComponent>(selected);
+
+				str::Path filepath = prototype.m_Path;
+				if (filepath.IsEmpty())
+				{
+					eng::SaveFileSettings saveFile;
+					saveFile.m_Title = "Save Entity";
+					saveFile.m_Filters = { "Prototypes (*.prototype)", "*.prototype" };
+					saveFile.m_Path = str::Path(settings.m_Entity.m_Save, name.m_Name, eng::PrototypeManager::s_Extension);
+					filepath = eng::SaveFileDialog(saveFile);
+				}
+
+				if (!filepath.IsEmpty())
+				{
+					auto& settings = world.WriteSingleton<editor::settings::LocalSingleton>();
+					settings.m_Entity.m_Save = filepath.GetDirectory();
+
+					auto& manager = world.WriteResource<eng::PrototypeManager>();
+					manager.SaveEntity(world, selected, filepath);
+				}
+			}
 		}
 	}
 }
@@ -157,7 +297,6 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
 		ImGuiDockNodeFlags_NoCloseButton |
 		ImGuiDockNodeFlags_NoWindowMenuButton;
-	constexpr ImGuiTableFlags s_InspectorFlags = 0;
 	constexpr ImGuiWindowFlags s_WindowFlags =
 		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_MenuBar;
@@ -184,15 +323,14 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (auto&& windowView : world.Query<ecs::query::Include<editor::EntityWindowComponent>>())
+	for (auto&& windowView : world.Query<ecs::query::Include<editor::EntityWindowComponent>::Optional<editor::EntitySaveComponent>>())
 	{
-		const auto& selectComponent = world.ReadSingleton<editor::EntitySelectSingleton>();
-		auto& windowComponent = windowView.WriteRequired<editor::EntityWindowComponent>();
+		const auto& window = windowView.WriteRequired<editor::EntityWindowComponent>();
 
 		bool isOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
-		if (ImGui::Begin(windowComponent.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
+		if (ImGui::Begin(window.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
 		{
 			if (ImGui::BeginMenuBar())
 			{
@@ -206,7 +344,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 				ImGui::EndMenuBar();
 			}
 
-			const ImGuiID dockspaceId = ImGui::GetID(windowComponent.m_DockspaceLabel.c_str());
+			const ImGuiID dockspaceId = ImGui::GetID(window.m_DockspaceLabel.c_str());
 			if (!ImGui::DockBuilderGetNode(dockspaceId))
 			{
 				ImGui::DockBuilderRemoveNode(dockspaceId);
@@ -215,15 +353,15 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 
 				ImGuiID entitiesId, inspectorId;
 				ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.3f, &entitiesId, &inspectorId);
-				ImGui::DockBuilderDockWindow(windowComponent.m_EntitiesLabel.c_str(), entitiesId);
-				ImGui::DockBuilderDockWindow(windowComponent.m_InspectorLabel.c_str(), inspectorId);
+				ImGui::DockBuilderDockWindow(window.m_EntitiesLabel.c_str(), entitiesId);
+				ImGui::DockBuilderDockWindow(window.m_InspectorLabel.c_str(), inspectorId);
 				ImGui::DockBuilderFinish(dockspaceId);
 			}
 			ImGui::DockSpace(dockspaceId, ImVec2(0, 0), s_DockNodeFlags);
 		}
 		ImGui::End();
 
-		if (ImGui::Begin(windowComponent.m_EntitiesLabel.c_str(), nullptr, s_WindowFlags))
+		if (ImGui::Begin(window.m_EntitiesLabel.c_str(), nullptr, s_WindowFlags))
 		{
 			str::Name levelName = {};
 			for (auto&& view : world.Query<ecs::query::Include<const eng::level::EntityComponent>>())
@@ -232,188 +370,14 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 				levelName = level.m_Name;
 			}
 
-			if (ImGui::BeginMenuBar())
-			{
-				if (ImGui::BeginMenu("Create"))
-				{
-					if (ImGui::MenuItem("Entity"))
-						CreateEntity(m_World, windowView, "Entity_", levelName);
-
-					if (ImGui::MenuItem("Camera"))
-					{
-						const ecs::Entity entity = CreateEntity(m_World, windowView, "Camera", levelName);
-						m_World.AddComponent<camera::Move3DComponent>(entity);
-						m_World.AddComponent<eng::CameraComponent>(entity);
-					}
-
-					if (ImGui::MenuItem("Sprite"))
-					{
-						const ecs::Entity entity = CreateEntity(m_World, windowView, "SP_", levelName);
-						m_World.AddComponent<eng::VisibilityComponent>(entity);
-						auto& spriteComponent = m_World.AddComponent<eng::SpriteComponent>(entity);
-						spriteComponent.m_Sprite = str::Guid::Create("52ffdca6bc1d64230eda0e2056e9662b");
-					}
-					ImGui::EndMenu();
-				}
-
-				ImGui::EndMenuBar();
-			}
-
-			using Query = ecs::query
-				::Include<const eng::PrototypeComponent>
-				::Optional<const ecs::NameComponent>;
-			for (auto&& protoView : world.Query<Query>())
-			{
-				imgui::RaiiID id(protoView.GetEntity().GetIndex());
-
-				const char* name = "<unknown>";;
-				if (const auto* component = protoView.ReadOptional<ecs::NameComponent>())
-					name = component->m_Name.c_str();
-
-				const bool isSelected = protoView == selectComponent.m_Entity;
-				if (ImGui::Selectable(name, isSelected))
-				{
-					auto& writeComponent = world.WriteSingleton<editor::EntitySelectSingleton>();
-					writeComponent.m_Entity = protoView;
-				}
-
-				ImGui::OpenPopupOnItemClick(name);
-				if (ImGui::BeginPopup(name))
-				{
-					if (ImGui::Selectable("Destroy"))
-						world.DestroyEntity(protoView);
-					ImGui::EndPopup();
-				}
-			}
-
-			const auto* window = ImGui::GetCurrentWindow();
-
-			ImRect bb;
-			bb.Min = window->Pos;
-			bb.Max = bb.Min + window->Size;
-			if (ImGui::BeginDragDropTargetCustom(bb, window->ID))
-			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("eng::AssetFile"))
-				{
-					const eng::AssetFile& file = *(const eng::AssetFile*)payload->Data;
-					if (file.m_Type == strSprite)
-					{
-						const ecs::Entity entity = CreateEntity(m_World, windowView, file.m_Name, levelName);
-						m_World.AddComponent<eng::VisibilityComponent>(entity);
-						auto& spriteComponent = m_World.AddComponent<eng::SpriteComponent>(entity);
-						spriteComponent.m_Sprite = file.m_Guid;
-					}
-				}
-				ImGui::EndDragDropTarget();
-			}
+			Draw_EntityMenu(m_World, levelName);
+			Draw_EntityList(world);
+			Draw_EntityDrop(m_World, levelName);
 		}
 		ImGui::End();
 
-		if (ImGui::Begin(windowComponent.m_InspectorLabel.c_str(), nullptr, ImGuiWindowFlags_MenuBar))
-		{
-			const ecs::Entity selected = selectComponent.m_Entity;
-			if (world.IsAlive(selected))
-			{
-				if (ImGui::BeginMenuBar())
-				{
-					if (ImGui::BeginMenu("Components"))
-					{
-						SelectComponent(m_World, selected);
-						ImGui::EndMenu();
-					}
-					ImGui::EndMenuBar();
-				}
-
-				imgui::Inspector inspector;
-				inspector.AddPayload(world.ReadResource<eng::AssetManager>());
-				if (inspector.Begin("##table"))
-				{
-					// always first
-					InspectComponent<eng::VisibilityComponent>(m_World, selected, inspector);
-					InspectComponent<ecs::NameComponent>(m_World, selected, inspector);
-					InspectComponent<eng::PrototypeComponent>(m_World, selected, inspector);
-					InspectComponent<eng::TransformComponent>(m_World, selected, inspector);
-
-					InspectComponent<camera::Bound2DComponent>(m_World, selected, inspector);
-					InspectComponent<camera::Move2DComponent>(m_World, selected, inspector);
-					InspectComponent<camera::Move3DComponent>(m_World, selected, inspector);
-					InspectComponent<camera::Pan3DComponent>(m_World, selected, inspector);
-					InspectComponent<camera::Zoom2DComponent>(m_World, selected, inspector);
-					InspectComponent<client::hidden::CountComponent>(m_World, selected, inspector);
-					InspectComponent<client::hidden::GroupComponent>(m_World, selected, inspector);
-					InspectComponent<client::hidden::ObjectComponent>(m_World, selected, inspector);
-					InspectComponent<client::hidden::RevealComponent>(m_World, selected, inspector);
-					InspectComponent<eng::CameraComponent>(m_World, selected, inspector);
-					InspectComponent<eng::PhysicsComponent>(m_World, selected, inspector);
-					InspectComponent<eng::SpriteComponent>(m_World, selected, inspector);
-					InspectComponent<softbody::ChainComponent>(m_World, selected, inspector);
-					inspector.End();
-				}
-			}
-		}
-		ImGui::End();
-
-		// save pop-up
-		{
-			constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
-			constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
-			constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
-
-			if (world.HasComponent<editor::EntitySaveComponent>(windowView))
-				world.RemoveComponent<editor::EntitySaveComponent>(windowView);
-
-			if (HasInput(world, strSave) || world.HasComponent<editor::EntitySaveComponent>(windowView))
-			{
-				const auto& readSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
-				const auto& readWindow = world.ReadComponent<editor::EntityWindowComponent>(windowView);
-				const ecs::Entity selected = selectComponent.m_Entity;
-
-				if (m_World.HasComponent<eng::PrototypeComponent>(selected))
-				{
-					const auto& readPrototype = m_World.ReadComponent<eng::PrototypeComponent>(selected);
-					const auto& readName = m_World.ReadComponent<ecs::NameComponent>(selected);
-
-					str::Path filepath = readPrototype.m_Path;
-					if (filepath.IsEmpty())
-					{
-						eng::SaveFileSettings settings;
-						settings.m_Title = "Save Entity";
-						settings.m_Filters = { "Prototypes (*.prototype)", "*.prototype" };
-						settings.m_Path = str::Path(readSettings.m_Entity.m_Save, readName.m_Name, eng::PrototypeManager::s_Extension);
-						filepath = eng::SaveFileDialog(settings);
-					}
-
-					if (!filepath.IsEmpty())
-					{
-						auto& writePrototype = m_World.WriteComponent<eng::PrototypeComponent>(selected);
-						writePrototype.m_Path = filepath;
-						auto& writeSettings = world.WriteSingleton<editor::settings::LocalSingleton>();
-						writeSettings.m_Entity.m_Save = filepath.GetDirectory();
-
-						eng::Visitor visitor;
-						visitor.Write("m_Guid", readPrototype.m_Guid);
-						visitor.Write("m_Name", readName.m_Name);
-
-						SaveComponent<camera::Bound2DComponent>(m_World, selected, visitor);
-						SaveComponent<camera::Move2DComponent>(m_World, selected, visitor);
-						SaveComponent<camera::Move3DComponent>(m_World, selected, visitor);
-						SaveComponent<camera::Pan3DComponent>(m_World, selected, visitor);
-						SaveComponent<camera::Zoom2DComponent>(m_World, selected, visitor);
-						SaveComponent<client::hidden::CountComponent>(m_World, selected, visitor);
-						SaveComponent<client::hidden::GroupComponent>(m_World, selected, visitor);
-						SaveComponent<client::hidden::ObjectComponent>(m_World, selected, visitor);
-						SaveComponent<eng::CameraComponent>(m_World, selected, visitor);
-						SaveComponent<eng::PhysicsComponent>(m_World, selected, visitor);
-						SaveComponent<eng::SpriteComponent>(m_World, selected, visitor);
-						SaveComponent<eng::TransformComponent>(m_World, selected, visitor);
-						SaveComponent<eng::VisibilityComponent>(m_World, selected, visitor);
-
-						str::String string = visitor;
-						visitor.SaveToFile(filepath);
-					}
-				}
-			}
-		}
+		Draw_Inspector(m_World, windowView);
+		Draw_SavePopup(m_World, windowView);
 
 		if (!isOpen)
 			world.DestroyEntity(windowView);

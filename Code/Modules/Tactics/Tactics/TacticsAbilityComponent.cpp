@@ -2,6 +2,7 @@
 #include "Tactics/TacticsAbilityComponent.h"
 
 #include "Engine/Visitor.h"
+#include "imgui/Inspector.h"
 
 namespace
 {
@@ -17,4 +18,11 @@ template<>
 void eng::Visitor::WriteCustom(const tactics::AbilityComponent& value)
 {
 	Write(strAbilities, value.m_Abilities);
+}
+template<>
+bool imgui::Inspector::WriteCustom(tactics::AbilityComponent& value)
+{
+	bool result = false;
+	result |= Write("m_Abilities", value.m_Abilities);
+	return result;
 }

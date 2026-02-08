@@ -21,6 +21,7 @@ project "Container"
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Engine/",
+		"%{wks.location}/../Code/Framework/Imgui/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Modules/Container/",
 	}

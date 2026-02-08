@@ -51,8 +51,8 @@ void client::hidden::RegisterModule(ecs::EntityWorld& world)
 	// prototypes
 	{
 		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.Register<client::hidden::CountComponent>();
-		manager.Register<client::hidden::GroupComponent>();
-		manager.Register<client::hidden::ObjectComponent>();
+		manager.RegisterComponent<client::hidden::CountComponent>();
+		manager.RegisterComponent<client::hidden::GroupComponent>();
+		manager.RegisterComponent<client::hidden::ObjectComponent>();
 	}
 }

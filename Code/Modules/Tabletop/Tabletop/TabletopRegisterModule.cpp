@@ -18,7 +18,7 @@ void tabletop::RegisterModule(ecs::EntityWorld& world)
 	// prototypes
 	{
 		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.Register<tabletop::CardComponent>();
-		manager.Register<tabletop::DeckComponent>();
+		manager.RegisterComponent<tabletop::CardComponent>();
+		manager.RegisterComponent<tabletop::DeckComponent>();
 	}
 }

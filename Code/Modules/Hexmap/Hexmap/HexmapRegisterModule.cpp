@@ -30,6 +30,6 @@ void hexmap::RegisterModule(ecs::EntityWorld& world)
 	// prototypes
 	{
 		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.Register<hexmap::RootComponent>();
+		manager.RegisterComponent<hexmap::RootComponent>();
 	}
 }

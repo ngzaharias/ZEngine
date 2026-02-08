@@ -2,6 +2,7 @@
 #include "Tilemap/TilemapGridComponent.h"
 
 #include "Engine/Visitor.h"
+#include "imgui/Inspector.h"
 
 template<>
 void eng::Visitor::ReadCustom(tilemap::GridComponent& value) const
@@ -14,4 +15,12 @@ void eng::Visitor::WriteCustom(const tilemap::GridComponent& value)
 {
 	Write("m_GridSize", value.m_GridSize);
 	Write("m_TileSize", value.m_TileSize);
+}
+template<>
+bool imgui::Inspector::WriteCustom(tilemap::GridComponent& value)
+{
+	bool result = false;
+	result |= Write("m_GridSize", value.m_GridSize);
+	result |= Write("m_TileSize", value.m_TileSize);
+	return result;
 }
