@@ -63,8 +63,9 @@ void camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 
 	using CameraQuery = ecs::query
 		::Include<
-		eng::TransformComponent, 
-		const camera::Move3DComponent, 
+		eng::TransformComponent,
+		const camera::Move3DComponent,
+		const eng::ActiveComponent,
 		const eng::CameraComponent>;
 
 	const auto& settings = world.ReadSingleton<camera::SettingsSingleton>();

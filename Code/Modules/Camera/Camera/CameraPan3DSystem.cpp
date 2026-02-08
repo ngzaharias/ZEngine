@@ -53,10 +53,10 @@ void camera::Pan3DSystem::Update(World& world, const GameTime& gameTime)
 
 	using CameraQuery = ecs::query
 		::Include<
-		eng::TransformComponent, 
-		const camera::Pan3DComponent, 
+		eng::TransformComponent,
+		const camera::Pan3DComponent,
+		const eng::ActiveComponent,
 		const eng::CameraComponent>;
-
 	for (auto&& view : world.Query<CameraQuery>())
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();

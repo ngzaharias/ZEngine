@@ -59,6 +59,7 @@ void camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 		::Include<
 		eng::TransformComponent, 
 		const camera::Move2DComponent, 
+		const eng::ActiveComponent, 
 		const eng::CameraComponent>;
 
 	const auto& settings = world.ReadSingleton<camera::SettingsSingleton>();

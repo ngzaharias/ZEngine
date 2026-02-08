@@ -11,6 +11,7 @@ namespace camera
 namespace eng
 {
 	class WindowManager;
+	struct ActiveComponent;
 	struct CameraComponent;
 	struct TransformComponent;
 }
@@ -25,6 +26,7 @@ namespace camera
 			eng::TransformComponent>
 			::Read<
 			camera::Bound2DComponent,
+			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::WindowManager>;
 

@@ -13,6 +13,7 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
+	struct ActiveComponent;
 	struct CameraComponent;
 	struct TransformComponent;
 }
@@ -29,6 +30,7 @@ namespace camera
 			::Read<
 			camera::SettingsSingleton,
 			camera::Zoom2DComponent,
+			eng::ActiveComponent,
 			eng::InputManager,
 			eng::WindowManager>;
 

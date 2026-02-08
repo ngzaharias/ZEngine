@@ -12,6 +12,7 @@ namespace eng
 {
 	class InputManager;
 	class WindowManager;
+	struct ActiveComponent;
 	struct CameraComponent;
 	struct TransformComponent;
 }
@@ -26,6 +27,7 @@ namespace camera
 			eng::TransformComponent>
 			::Read<
 			camera::Pan3DComponent,
+			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::InputManager,
 			eng::WindowManager>;

@@ -24,8 +24,9 @@ void camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 
 	using CameraQuery = ecs::query
 		::Include<
-		eng::TransformComponent, 
-		const camera::Bound2DComponent, 
+		eng::TransformComponent,
+		const camera::Bound2DComponent,
+		const eng::ActiveComponent,
 		const eng::CameraComponent>;
 
 	const Vector2u& windowSize = window->GetSize();

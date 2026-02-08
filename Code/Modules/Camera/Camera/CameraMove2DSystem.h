@@ -12,6 +12,8 @@ namespace camera
 namespace eng
 {
 	class InputManager;
+	struct ActiveComponent;
+	struct CameraComponent;
 	struct TransformComponent;
 }
 
@@ -27,7 +29,9 @@ namespace camera
 			eng::TransformComponent>
 			::Read<
 			camera::Move2DComponent,
-			camera::SettingsSingleton>;
+			camera::SettingsSingleton,
+			eng::ActiveComponent,
+			eng::CameraComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

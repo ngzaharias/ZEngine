@@ -32,9 +32,10 @@ void camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 
 	using CameraQuery = ecs::query
 		::Include<
-		eng::CameraComponent, 
+		eng::TransformComponent,
 		const camera::Zoom2DComponent,
-		const eng::TransformComponent>;
+		const eng::ActiveComponent,
+		const eng::CameraComponent>;
 	for (auto&& view : world.Query<CameraQuery>())
 	{
 		const auto& readZoom = view.ReadRequired<camera::Zoom2DComponent>();
