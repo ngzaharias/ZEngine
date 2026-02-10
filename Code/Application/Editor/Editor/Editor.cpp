@@ -26,6 +26,7 @@
 #include "SpriteEditor/SpriteEditorRegisterModule.h"
 #include "TableEditor/TableEditorRegisterModule.h"
 #include "TextureEditor/TextureEditorRegisterModule.h"
+#include "ThemeEditor/ThemeEditorRegisterModule.h"
 #include "TrajectoryEditor/TrajectoryEditorRegisterModule.h"
 
 editor::Editor::Editor(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
@@ -63,6 +64,7 @@ void editor::Editor::Register()
 	editor::sprite::RegisterModule(m_ClientWorld);
 	editor::table::RegisterModule(m_ClientWorld);
 	editor::texture::RegisterModule(m_ClientWorld);
+	editor::theme::RegisterModule(m_ClientWorld);
 	editor::trajectory::RegisterModule(m_ClientWorld);
 }
 

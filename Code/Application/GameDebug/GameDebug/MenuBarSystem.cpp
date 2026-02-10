@@ -35,6 +35,7 @@
 #include "SpriteEditor/SpriteEditorWindowRequest.h"
 #include "TableEditor/TableEditorWindowRequest.h"
 #include "TextureEditor/TextureEditorWindowRequest.h"
+#include "ThemeEditor/ThemeEditorWindowRequest.h"
 #include "TrajectoryEditor/TrajectoryEditorWindowRequest.h"
 
 #include "imgui/imgui.h"
@@ -172,6 +173,8 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEvent<editor::table::WindowRequest>();
 			if (ImGui::MenuItem("Texture Editor"))
 				world.AddEvent<editor::texture::WindowRequest>();
+			if (ImGui::MenuItem("Theme Editor"))
+				world.AddEvent<editor::theme::WindowRequest>();
 			if (ImGui::MenuItem("Trajectory Editor"))
 				world.AddEvent<editor::trajectory::WindowRequest>();
 			if (ImGui::MenuItem("UI Editor (external)"))

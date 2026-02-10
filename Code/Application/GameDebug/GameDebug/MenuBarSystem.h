@@ -66,6 +66,11 @@ namespace editor::texture
 	struct WindowRequest;
 }
 
+namespace editor::theme
+{
+	struct WindowRequest;
+}
+
 namespace editor::trajectory
 {
 	struct WindowRequest;
@@ -108,6 +113,7 @@ namespace debug
 			editor::sprite::WindowRequest,
 			editor::table::WindowRequest,
 			editor::texture::WindowRequest,
+			editor::theme::WindowRequest,
 			editor::trajectory::WindowRequest,
 			eng::AssetManager,
 			eng::TableHeadmaster,

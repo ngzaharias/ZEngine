@@ -32,6 +32,7 @@ project "GameDebug"
 		"%{wks.location}/../Code/Editors/SpriteEditor/",
 		"%{wks.location}/../Code/Editors/TableEditor/",
 		"%{wks.location}/../Code/Editors/TextureEditor/",
+		"%{wks.location}/../Code/Editors/ThemeEditor/",
 		"%{wks.location}/../Code/Editors/TrajectoryEditor/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
