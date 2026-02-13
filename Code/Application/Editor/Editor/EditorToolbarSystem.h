@@ -3,9 +3,9 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace eng
+namespace eng::settings
 {
-	class AssetManager;
+	struct DebugSingleton;
 }
 
 namespace editor
@@ -14,7 +14,8 @@ namespace editor
 	{
 	public:
 		using World = ecs::WorldView
-			::Write<>
+			::Write<
+			eng::settings::DebugSingleton>
 			::Read<>;
 
 		void Update(World& world, const GameTime& gameTime);

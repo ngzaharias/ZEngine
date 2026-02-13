@@ -5,18 +5,10 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Editor/EditorIcons.h"
-#include "Engine/AssetManager.h"
-#include "Engine/CameraComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
-#include "Engine/SpriteAsset.h"
-#include "Engine/Texture2DAsset.h"
-#include "Engine/TransformComponent.h"
-#include "Math/Rotator.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
-
-#include <functional>
 
 namespace
 {
