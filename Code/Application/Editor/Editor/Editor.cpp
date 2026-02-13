@@ -7,8 +7,10 @@
 #include "Editor/AssetBrowserSystem.h"
 #include "Editor/AssetBrowserWindowComponent.h"
 #include "Editor/AssetReloadSystem.h"
+#include "Editor/EditorIconSystem.h"
 #include "Editor/EditorRenderAxesSystem.h"
 #include "Editor/EditorRenderGridSystem.h"
+#include "Editor/EditorToolbarSystem.h"
 #include "Editor/EntityEditorSystem.h"
 #include "Editor/EntitySaveComponent.h"
 #include "Editor/EntitySelectSingleton.h"
@@ -21,8 +23,8 @@
 #include "Editor/SettingsLocalSystem.h"
 #include "Editor/SettingsMenuSystem.h"
 #include "Editor/SettingsWindowComponent.h"
-#include "InputEditor/InputEditorRegisterModule.h"
 #include "FlipbookEditor/FlipbookEditorRegisterModule.h"
+#include "InputEditor/InputEditorRegisterModule.h"
 #include "SpriteEditor/SpriteEditorRegisterModule.h"
 #include "TableEditor/TableEditorRegisterModule.h"
 #include "TextureEditor/TextureEditorRegisterModule.h"
@@ -53,11 +55,13 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::EntitySelectSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
+	m_ClientWorld.RegisterSystem<editor::IconSystem>();
 	m_ClientWorld.RegisterSystem<editor::OverlaySystem>();
 	m_ClientWorld.RegisterSystem<editor::RenderAxesSystem>();
 	m_ClientWorld.RegisterSystem<editor::RenderGridSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::LocalSystem>();
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
+	m_ClientWorld.RegisterSystem<editor::ToolbarSystem>();
 
 	editor::flipbook::RegisterModule(m_ClientWorld);
 	editor::input::RegisterModule(m_ClientWorld);

@@ -57,7 +57,7 @@ namespace imgui
 
 	void Bullet();
 	bool BulletHeader(const char* label, const bool selected = false);
-	
+
 	bool Checkbox(const char* label, bool& value);
 	bool Checkbox(const char* label, const bool& value);
 
@@ -119,6 +119,7 @@ namespace imgui
 	void Grid(Vector2f graph_size, Vector2f spacing, Vector2f offset = Vector2f::Zero);
 
 	void Image(uint32 textureId, Vector2f image_size, Vector2f uv0 = Vector2f::Zero, Vector2f uv1 = Vector2f::One);
+	bool ImageButton(const char* label, const bool active, const uint32 textureId, const Vector2f& image_size, const Vector2f& uv0 = Vector2f::Zero, const Vector2f& uv1 = Vector2f::One);
 
 	void PlotLines(const char* label, Vector2f* values, int32 values_count, Vector2f graph_size = Vector2f::Zero, ImGuiPlotFlags flags = 0);
 

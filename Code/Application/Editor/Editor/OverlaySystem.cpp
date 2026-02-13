@@ -5,6 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Editor/EditorIcons.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/TransformComponent.h"
@@ -13,6 +14,22 @@
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
+
+namespace
+{
+	constexpr Rotator s_AxisPosX = Rotator(0.f, +90.f, 0.f);
+	constexpr Rotator s_AxisPosY = Rotator(-90.f, 0.f, 0.f);
+	constexpr Rotator s_AxisPosZ = Rotator(0.f, 0.f, 0.f);
+
+	bool ButtonIcon(const char* label, const char* tooltip, const editor::Icon& icon, const ImVec2& size, const bool active = false)
+	{
+		const bool result = imgui::ImageButton(label, active, icon.m_TextureId, size, icon.m_UV0, icon.m_UV1);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
+		ImGui::SetItemTooltip(tooltip);
+		ImGui::PopStyleVar();
+		return result;
+	}
+}
 
 void editor::OverlaySystem::Update(World& world, const GameTime& gameTime)
 {
@@ -41,26 +58,8 @@ void editor::OverlaySystem::Update(World& world, const GameTime& gameTime)
 
 	ImGui::SetNextWindowBgAlpha(0.2f);
 	ImGui::SetNextWindowClass(&windowClass);
-	ImGui::SetNextWindowPos(viewportPos + Vector2f(viewportSize.x * 0.5f - 45.f, 32.f));
-	ImGui::SetNextWindowSize(Vector2f(90.f, 16.f));
-	if (ImGui::Begin("Game Mode##editor", nullptr, s_Flags))
-	{
-		const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
-		const char* label = settings.m_IsEditorModeEnabled
-			? "Editor Mode"
-			: " Game Mode";
-		if (ImGui::Selectable(label, !settings.m_IsEditorModeEnabled))
-		{
-			auto& writeSettings = world.WriteSingleton<eng::settings::DebugSingleton>();
-			writeSettings.m_IsEditorModeEnabled = !settings.m_IsEditorModeEnabled;
-		}
-	}
-	ImGui::End();
-
-	ImGui::SetNextWindowBgAlpha(0.2f);
-	ImGui::SetNextWindowClass(&windowClass);
-	ImGui::SetNextWindowPos(viewportPos + Vector2f(viewportSize.x - 128.f, 32.f));
-	ImGui::SetNextWindowSize(Vector2f(100.f, 100.f));
+	ImGui::SetNextWindowPos(viewportPos + Vector2f(viewportSize.x - 128.f, 82.f));
+	ImGui::SetNextWindowSize(Vector2f(100.f, 132.f));
 	if (ImGui::Begin("Camera##editor", nullptr, s_Flags))
 	{
 		using CameraQuery = ecs::query
@@ -76,47 +75,49 @@ void editor::OverlaySystem::Update(World& world, const GameTime& gameTime)
 		if (!cameraEntity.IsUnassigned())
 		{
 			Optional<eng::Projection> projection = {};
-			const auto& readCamera = world.ReadComponent<eng::CameraComponent>(cameraEntity);
-			if (std::holds_alternative<eng::Orthographic>(readCamera.m_Projection))
+			const auto& camera = world.ReadComponent<eng::CameraComponent>(cameraEntity);
+			const auto& transform = world.ReadComponent<eng::TransformComponent>(cameraEntity);
+			if (std::holds_alternative<eng::Orthographic>(camera.m_Projection))
 			{
-				if (ImGui::Button("Orthographic"))
+				if (ButtonIcon("##camera", "Orthographic Camera", icon::VIEW_ORTHO, ImVec2(22, 22)))
 					projection = eng::Perspective{};
 			}
 			else
 			{
-				if (ImGui::Button("Perspective"))
+				if (ButtonIcon("##camera", "Perspective Camera", icon::VIEW_PERSP, ImVec2(22, 22)))
 					projection = eng::Orthographic{};
 			}
-
-			Optional<Rotator> rotation = {};
-			if (ImGui::Button("-X"))
-				rotation = Rotator(0.f, -90.f, 0.f);
 			ImGui::SameLine();
-			if (ImGui::Button("+X"))
-				rotation = Rotator(0.f, +90.f, 0.f);
-
-			if (ImGui::Button("-Y"))
-				rotation = Rotator(+90.f, 0.f, 0.f);
-			ImGui::SameLine();
-			if (ImGui::Button("+Y"))
-				rotation = Rotator(-90.f, 0.f, 0.f);
-
-			if (ImGui::Button("-Z"))
-				rotation = Rotator(0.f, 180.f, 0.f);
-			ImGui::SameLine();
-			if (ImGui::Button("+Z"))
-				rotation = Rotator(0.f, 0.f, 0.f);
 
 			if (projection)
 			{
-				auto& writeCamera = world.WriteComponent<eng::CameraComponent>(cameraEntity);
-				writeCamera.m_Projection = *projection;
+				auto& write = world.WriteComponent<eng::CameraComponent>(cameraEntity);
+				write.m_Projection = *projection;
 			}
+
+			Optional<Rotator> rotation = {};
+			const bool isAlignedX = transform.m_Rotate == s_AxisPosX;
+			if (ButtonIcon("##axis x", "Align Camera to X Axis", icon::AXIS_YZ, ImVec2(22, 22), isAlignedX))
+				rotation = s_AxisPosX;
+
+			ImGui::Dummy(ImVec2(30.f, 0.f));
+			ImGui::SameLine();
+
+			const bool isAlignedY = transform.m_Rotate == s_AxisPosY;
+			if (ButtonIcon("##axis y", "Align Camera to Y Axis", icon::AXIS_XZ, ImVec2(22, 22), isAlignedY))
+				rotation = Rotator(-90.f, 0.f, 0.f);
+
+			ImGui::Dummy(ImVec2(30.f, 0.f));
+			ImGui::SameLine();
+
+			const bool isAlignedZ = transform.m_Rotate == s_AxisPosZ;
+			if (ButtonIcon("##axis z", "Align Camera to Z Axis", icon::AXIS_XY, ImVec2(22, 22), isAlignedZ))
+				rotation = Rotator(0.f, 0.f, 0.f);
 
 			if (rotation)
 			{
-				auto& writeTransform = world.WriteComponent<eng::TransformComponent>(cameraEntity);
-				writeTransform.m_Rotate = *rotation;
+				auto& write = world.WriteComponent<eng::TransformComponent>(cameraEntity);
+				write.m_Rotate = *rotation;
 			}
 		}
 	}

@@ -534,6 +534,17 @@ void imgui::Image(uint32 textureId, Vector2f image_size, Vector2f uv0, Vector2f 
 	ImGui::Image(castedId, image_size, { uv0.x, uv1.y }, { uv1.x, uv0.y });
 }
 
+bool imgui::ImageButton(const char* label, const bool active, const uint32 textureId, const Vector2f& image_size, const Vector2f& uv0, const Vector2f& uv1)
+{
+	constexpr ImVec4 enabled = ImVec4(0.28f, 0.38f, 0.32f, 1.0f);
+	constexpr ImVec4 disabled = ImVec4(0.20f, 0.22f, 0.24f, 1.0f);
+
+	ImGui::PushStyleColor(ImGuiCol_Button, active ? enabled : disabled);
+	const bool result = ImGui::ImageButton(label, textureId, image_size, ImVec2(uv0.x, uv1.y), ImVec2(uv1.x, uv0.y));
+	ImGui::PopStyleColor();
+	return result;
+}
+
 void imgui::PlotLines(const char* label, Vector2f* values, int32 values_count, Vector2f graph_size, ImGuiPlotFlags flags)
 {
 	enum StorageIDs : ImGuiID
