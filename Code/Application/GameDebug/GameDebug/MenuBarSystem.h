@@ -35,11 +35,6 @@ namespace editor
 	struct SettingsWindowRequest;
 }
 
-namespace editor::flipbook
-{
-	struct WindowRequest;
-}
-
 namespace editor::input
 {
 	struct WindowRequest;
@@ -95,7 +90,6 @@ namespace debug
 			debug::ShapeWindowRequest,
 			debug::SplineWindowRequest,
 			editor::AssetBrowserWindowRequest,
-			editor::flipbook::WindowRequest,
 			editor::input::WindowRequest,
 			editor::settings::WindowRequest,
 			editor::table::WindowRequest,

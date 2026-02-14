@@ -14,8 +14,8 @@ namespace editor::flipbook
 	struct AssetOpenComponent;
 	struct AssetSaveComponent;
 	struct BatchingComponent;
+	struct OpenWindowEvent;
 	struct WindowComponent;
-	struct WindowRequest;
 }
 
 namespace eng
@@ -37,7 +37,7 @@ namespace editor::flipbook
 			editor::flipbook::WindowComponent,
 			eng::AssetManager>
 			::Read<
-			editor::flipbook::WindowRequest>;
+			editor::flipbook::OpenWindowEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

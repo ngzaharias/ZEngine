@@ -29,7 +29,6 @@
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/SettingsWindowComponent.h"
 #include "GameDebug/SettingsWindowRequest.h"
-#include "FlipbookEditor/FlipbookEditorWindowRequest.h"
 #include "InputEditor/InputEditorWindowRequest.h"
 #include "TableEditor/TableEditorWindowRequest.h"
 #include "ThemeEditor/ThemeEditorWindowRequest.h"
@@ -158,8 +157,6 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::MenuItem("Asset Browser"))
 				world.AddEvent<editor::AssetBrowserWindowRequest>();
-			if (ImGui::MenuItem("Flipbook Editor"))
-				world.AddEvent<editor::flipbook::WindowRequest>();
 			if (ImGui::MenuItem("Input Editor"))
 				world.AddEvent<editor::input::WindowRequest>();
 			if (ImGui::MenuItem("Table Editor"))
