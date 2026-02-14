@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Colour.h"
 #include "Math/Vector.h"
 
 namespace editor::settings
@@ -12,6 +13,10 @@ namespace editor::settings
 			bool m_ShowX = true;
 			bool m_ShowY = false;
 			bool m_ShowZ = true;
+
+			Colour m_ColourX = Colour(0.58f, 0.23f, 0.29f);
+			Colour m_ColourY = Colour(0.38f, 0.52f, 0.16f);
+			Colour m_ColourZ = Colour(0.21f, 0.4f, 0.61f);
 		};
 
 		struct Crosshair

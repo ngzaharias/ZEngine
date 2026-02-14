@@ -49,7 +49,7 @@ namespace editor
 		void Update(World& world, const GameTime& gameTime);
 
 	private:
-		void UpdateBuffers(const bool showX, const bool showY, const bool showZ);
+		void UpdateBuffers(World& world);
 
 	private:
 		uint32 m_AttributeObject = 0;

@@ -73,43 +73,48 @@ namespace
 	void Draw_Gizmos(World& world)
 	{
 		const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
-		const auto& gizmo = settings.m_Gizmos;
+		const auto& axes = settings.m_Gizmos.m_CoordAxes;
+		if (ButtonIcon("##axis", "Axes", icon::AXIS, ImVec2(22, 22), axes.m_IsEnabled))
 		{
-			const bool enabled = gizmo.m_FloorGrid.m_IsEnabled;
-			if (ButtonIcon("##grid", "Grid", icon::GRID, ImVec2(22, 22), enabled))
-			{
-				auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
-				write.m_Gizmos.m_FloorGrid.m_IsEnabled = !enabled;
-			}
-			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
-				ImGui::OpenPopup("grid popup");
-			if (ImGui::BeginPopup("grid popup"))
-			{
-				auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
-				ImGui::ColorEdit3("Colour  ", &write.m_Gizmos.m_FloorGrid.m_MajorColour.x, ImGuiColorEditFlags_NoInputs);
-				ImGui::EndPopup();
-			}
+			auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+			write.m_Gizmos.m_CoordAxes.m_IsEnabled = !axes.m_IsEnabled;
+		}
+		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+			ImGui::OpenPopup("axes");
+		if (ImGui::BeginPopup("axes"))
+		{
+			auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+			ImGui::PushStyleColor(ImGuiCol_CheckMark, axes.m_ColourX);
+			ImGui::Checkbox("##X", &write.m_Gizmos.m_CoordAxes.m_ShowX);
+			ImGui::PopStyleColor();
+			ImGui::SameLine();
+
+			ImGui::PushStyleColor(ImGuiCol_CheckMark, axes.m_ColourY);
+			ImGui::Checkbox("##Y", &write.m_Gizmos.m_CoordAxes.m_ShowY);
+			ImGui::PopStyleColor();
+			ImGui::SameLine();
+
+			ImGui::PushStyleColor(ImGuiCol_CheckMark, axes.m_ColourZ);
+			ImGui::Checkbox("##Z", &write.m_Gizmos.m_CoordAxes.m_ShowZ);
+			ImGui::PopStyleColor();
+
+			ImGui::EndPopup();
 		}
 		ImGui::SameLine();
+
+		const auto& grid = settings.m_Gizmos.m_FloorGrid;
+		if (ButtonIcon("##grid", "Grid", icon::GRID, ImVec2(22, 22), grid.m_IsEnabled))
 		{
-			const bool enabled = gizmo.m_CoordAxes.m_IsEnabled;
-			if (ButtonIcon("##axis", "Axis", icon::AXIS, ImVec2(22, 22), enabled))
-			{
-				auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
-				write.m_Gizmos.m_CoordAxes.m_IsEnabled = !enabled;
-			}
-			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
-				ImGui::OpenPopup("axis popup");
-			if (ImGui::BeginPopup("axis popup"))
-			{
-				auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
-				ImGui::Checkbox("X", &write.m_Gizmos.m_CoordAxes.m_ShowX);
-				ImGui::SameLine();
-				ImGui::Checkbox("Y", &write.m_Gizmos.m_CoordAxes.m_ShowY);
-				ImGui::SameLine();
-				ImGui::Checkbox("Z", &write.m_Gizmos.m_CoordAxes.m_ShowZ);
-				ImGui::EndPopup();
-			}
+			auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+			write.m_Gizmos.m_FloorGrid.m_IsEnabled = !grid.m_IsEnabled;
+		}
+		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+			ImGui::OpenPopup("grid");
+		if (ImGui::BeginPopup("grid"))
+		{
+			auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+			ImGui::ColorEdit3("Colour  ", &write.m_Gizmos.m_FloorGrid.m_MajorColour.x, ImGuiColorEditFlags_NoInputs);
+			ImGui::EndPopup();
 		}
 		ImGui::SameLine();
 	}

@@ -41,10 +41,7 @@ void editor::RenderAxesSystem::Initialise(World& world)
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
 	assetManager.RequestAsset(strLinesShader);
 
-	const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
-	const auto& gizmos = settings.m_Gizmos;
-	const auto& value = gizmos.m_CoordAxes;
-	UpdateBuffers(value.m_ShowX, value.m_ShowY, value.m_ShowZ);
+	UpdateBuffers(world);
 }
 
 void editor::RenderAxesSystem::Shutdown(World& world)
@@ -65,10 +62,7 @@ void editor::RenderAxesSystem::Update(World& world, const GameTime& gameTime)
 
 	if (world.HasAny<editor::settings::LocalSingleton>())
 	{
-		const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
-		const auto& gizmos = settings.m_Gizmos;
-		const auto& value = gizmos.m_CoordAxes;
-		UpdateBuffers(value.m_ShowX, value.m_ShowY, value.m_ShowZ);
+		UpdateBuffers(world);
 	}
 
 	const auto& localSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
@@ -152,34 +146,37 @@ void editor::RenderAxesSystem::Update(World& world, const GameTime& gameTime)
 	}
 }
 
-void editor::RenderAxesSystem::UpdateBuffers(const bool showX, const bool showY, const bool showZ)
+void editor::RenderAxesSystem::UpdateBuffers(World& world)
 {
 	PROFILE_FUNCTION();
 
+	const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
+	const auto& axes = settings.m_Gizmos.m_CoordAxes;
+
 	m_Vertices.RemoveAll();
 	m_Colours.RemoveAll();
-	if (showX)
+	if (axes.m_ShowX)
 	{
 		m_Vertices.Append(-Vector3f::AxisX * s_Distance);
 		m_Vertices.Append(+Vector3f::AxisX * s_Distance);
-		m_Colours.Append(s_ColourX);
-		m_Colours.Append(s_ColourX);
+		m_Colours.Append(axes.m_ColourX);
+		m_Colours.Append(axes.m_ColourX);
 	}
 
-	if (showY)
+	if (axes.m_ShowY)
 	{
 		m_Vertices.Append(-Vector3f::AxisY * s_Distance);
 		m_Vertices.Append(+Vector3f::AxisY * s_Distance);
-		m_Colours.Append(s_ColourY);
-		m_Colours.Append(s_ColourY);
+		m_Colours.Append(axes.m_ColourY);
+		m_Colours.Append(axes.m_ColourY);
 	}
 
-	if (showZ)
+	if (axes.m_ShowZ)
 	{
 		m_Vertices.Append(-Vector3f::AxisZ * s_Distance);
 		m_Vertices.Append(+Vector3f::AxisZ * s_Distance);
-		m_Colours.Append(s_ColourZ);
-		m_Colours.Append(s_ColourZ);
+		m_Colours.Append(axes.m_ColourZ);
+		m_Colours.Append(axes.m_ColourZ);
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);

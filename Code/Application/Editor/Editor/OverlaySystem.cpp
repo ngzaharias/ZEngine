@@ -58,7 +58,7 @@ void editor::OverlaySystem::Update(World& world, const GameTime& gameTime)
 
 	ImGui::SetNextWindowBgAlpha(0.2f);
 	ImGui::SetNextWindowClass(&windowClass);
-	ImGui::SetNextWindowPos(viewportPos + Vector2f(viewportSize.x - 128.f, 82.f));
+	ImGui::SetNextWindowPos(viewportPos + Vector2f(viewportSize.x - 128.f, 100.f));
 	ImGui::SetNextWindowSize(Vector2f(100.f, 132.f));
 	if (ImGui::Begin("Camera##editor", nullptr, s_Flags))
 	{
