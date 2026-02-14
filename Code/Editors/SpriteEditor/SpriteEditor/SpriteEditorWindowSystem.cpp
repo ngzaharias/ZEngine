@@ -17,9 +17,9 @@
 #include "SpriteEditor/SpriteEditorAssetOpenComponent.h"
 #include "SpriteEditor/SpriteEditorAssetSaveComponent.h"
 #include "SpriteEditor/SpriteEditorBatchingComponent.h"
+#include "SpriteEditor/SpriteEditorOpenWindowEvent.h"
 #include "SpriteEditor/SpriteEditorSettingsSingleton.h"
 #include "SpriteEditor/SpriteEditorWindowComponent.h"
-#include "SpriteEditor/SpriteEditorWindowRequest.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_graph.h"
@@ -383,7 +383,7 @@ void editor::sprite::WindowSystem::Update(World& world, const GameTime& gameTime
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);
 
-	for (const auto& request : world.Events<editor::sprite::WindowRequest>())
+	for (const auto& request : world.Events<editor::sprite::OpenWindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

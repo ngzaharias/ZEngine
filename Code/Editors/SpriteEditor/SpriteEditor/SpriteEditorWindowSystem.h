@@ -15,9 +15,9 @@ namespace editor::sprite
 	struct AssetOpenComponent;
 	struct AssetSaveComponent;
 	struct BatchingComponent;
+	struct OpenWindowEvent;
 	struct SettingsSingleton;
 	struct WindowComponent;
-	struct WindowRequest;
 }
 
 namespace eng
@@ -38,9 +38,9 @@ namespace editor::sprite
 			editor::sprite::AssetOpenComponent,
 			editor::sprite::AssetSaveComponent,
 			editor::sprite::BatchingComponent,
+			editor::sprite::OpenWindowEvent,
 			editor::sprite::SettingsSingleton,
 			editor::sprite::WindowComponent,
-			editor::sprite::WindowRequest,
 			eng::AssetManager>
 			::Read<
 			eng::InputManager>;

@@ -31,7 +31,6 @@
 #include "GameDebug/SettingsWindowRequest.h"
 #include "FlipbookEditor/FlipbookEditorWindowRequest.h"
 #include "InputEditor/InputEditorWindowRequest.h"
-#include "SpriteEditor/SpriteEditorWindowRequest.h"
 #include "TableEditor/TableEditorWindowRequest.h"
 #include "ThemeEditor/ThemeEditorWindowRequest.h"
 #include "TrajectoryEditor/TrajectoryEditorWindowRequest.h"
@@ -163,8 +162,6 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEvent<editor::flipbook::WindowRequest>();
 			if (ImGui::MenuItem("Input Editor"))
 				world.AddEvent<editor::input::WindowRequest>();
-			if (ImGui::MenuItem("Sprite Editor"))
-				world.AddEvent<editor::sprite::WindowRequest>();
 			if (ImGui::MenuItem("Table Editor"))
 				world.AddEvent<editor::table::WindowRequest>();
 			if (ImGui::MenuItem("Theme Editor"))

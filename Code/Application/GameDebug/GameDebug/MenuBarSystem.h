@@ -50,11 +50,6 @@ namespace editor::settings
 	struct WindowRequest;
 }
 
-namespace editor::sprite
-{
-	struct WindowRequest;
-}
-
 namespace editor::table
 {
 	struct WindowRequest;
@@ -103,7 +98,6 @@ namespace debug
 			editor::flipbook::WindowRequest,
 			editor::input::WindowRequest,
 			editor::settings::WindowRequest,
-			editor::sprite::WindowRequest,
 			editor::table::WindowRequest,
 			editor::theme::WindowRequest,
 			editor::trajectory::WindowRequest,
