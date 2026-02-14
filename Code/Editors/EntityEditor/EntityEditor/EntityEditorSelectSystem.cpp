@@ -1,23 +1,23 @@
-#include "EditorPCH.h"
-#include "Editor/EntitySelectSystem.h"
+#include "EntityEditorPCH.h"
+#include "EntityEditor/EntityEditorSelectSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/EntitySelectSingleton.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraHelpers.h"
 #include "Engine/CameraComponent.h"
+#include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
 #include "Engine/LevelEntityComponent.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
-#include "Engine/SpriteComponent.h"
 #include "Engine/SpriteAsset.h"
+#include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "EntityEditor/EntityEditorSelectSingleton.h"
 #include "Math/AABB.h"
 #include "Math/CollisionMath.h"
 #include "Math/Quaternion.h"
@@ -35,7 +35,7 @@ namespace
 		float m_DistanceSqr = FLT_MAX;
 	};
 
-	Optional<AABB3f> GetEntityBounds(editor::EntitySelectSystem::World& world, const ecs::Entity& entity)
+	Optional<AABB3f> GetEntityBounds(editor::entity::SelectSystem::World& world, const ecs::Entity& entity)
 	{
 		if (!world.HasComponent<eng::TransformComponent>(entity))
 			return {};
@@ -70,7 +70,7 @@ namespace
 	}
 }
 
-void editor::EntitySelectSystem::Initialise(World& world)
+void editor::entity::SelectSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
@@ -78,7 +78,7 @@ void editor::EntitySelectSystem::Initialise(World& world)
 	input.AppendLayer(strInput, input::Layer{ eng::EInputPriority::EditorWorld });
 }
 
-void editor::EntitySelectSystem::Shutdown(World& world)
+void editor::entity::SelectSystem::Shutdown(World& world)
 {
 	PROFILE_FUNCTION();
 
@@ -86,21 +86,20 @@ void editor::EntitySelectSystem::Shutdown(World& world)
 	input.RemoveLayer(strInput);
 }
 
-void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
+void editor::entity::SelectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<eng::settings::DebugSingleton>())
-	{
-		const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
-		auto& input = world.WriteResource<eng::InputManager>();
-		input::Layer& layer = input.ModifyLayer(strInput);
-		layer.m_Bindings.RemoveAll();
+	//if (world.HasAny<eng::settings::DebugSingleton>())
+	//{
+	//	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
+	//	auto& input = world.WriteResource<eng::InputManager>();
+	//	input::Layer& layer = input.ModifyLayer(strInput);
+	//	layer.m_Bindings.RemoveAll();
 
-		if (debugSettings.m_IsEditorModeEnabled)
-			layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_1, false);
-	}
-
+	//	if (debugSettings.m_IsEditorModeEnabled)
+	//		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_1, false);
+	//}
 
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
@@ -144,7 +143,7 @@ void editor::EntitySelectSystem::Update(World& world, const GameTime& gameTime)
 
 		if (input.IsPressed(strSelect))
 		{
-			auto& selectComponent = world.WriteSingleton<editor::EntitySelectSingleton>();
+			auto& selectComponent = world.WriteSingleton<editor::entity::SelectSingleton>();
 			if (!selected.IsEmpty())
 			{
 				std::sort(selected.begin(), selected.end(),

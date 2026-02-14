@@ -32,7 +32,6 @@ namespace debug::settings
 namespace editor
 {
 	struct AssetBrowserWindowRequest;
-	struct EntityWindowRequest;
 	struct SettingsWindowRequest;
 }
 
@@ -106,7 +105,6 @@ namespace debug
 			debug::ShapeWindowRequest,
 			debug::SplineWindowRequest,
 			editor::AssetBrowserWindowRequest,
-			editor::EntityWindowRequest,
 			editor::flipbook::WindowRequest,
 			editor::input::WindowRequest,
 			editor::settings::WindowRequest,

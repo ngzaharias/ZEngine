@@ -1,23 +1,11 @@
-#include "EditorPCH.h"
-#include "Editor/EntityEditorSystem.h"
+#include "EntityEditorPCH.h"
+#include "EntityEditor/EntityEditorWindowSystem.h"
 
-#include "Camera/CameraBound2DComponent.h"
-#include "Camera/CameraMove2DComponent.h"
 #include "Camera/CameraMove3DComponent.h"
-#include "Camera/CameraPan3DComponent.h"
-#include "Camera/CameraZoom2DComponent.h"
-#include "ClientHidden/HiddenCountComponent.h"
-#include "ClientHidden/HiddenGroupComponent.h"
-#include "ClientHidden/HiddenObjectComponent.h"
-#include "ClientHidden/HiddenRevealComponent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/EntitySaveComponent.h"
-#include "Editor/EntitySelectSingleton.h"
-#include "Editor/EntityWindowComponent.h"
-#include "Editor/SettingsLocalSingleton.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/FileHelpers.h"
@@ -30,8 +18,11 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Visitor.h"
-#include "GameDebug/EditorEntityWindowRequest.h"
-#include "Softbody/SoftbodyChainComponent.h"
+#include "EntityEditor/EntityEditorOpenWindowEvent.h"
+#include "EntityEditor/EntityEditorSaveComponent.h"
+#include "EntityEditor/EntityEditorSelectSingleton.h"
+#include "EntityEditor/EntityEditorSettingsSingleton.h"
+#include "EntityEditor/EntityEditorWindowComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -50,12 +41,12 @@ namespace
 	const str::Name strSave = str::Name::Create("EntityEditor_Save");
 	const str::Name strSprite = str::Name::Create("Sprite");
 
-	using World = editor::EntityEditorSystem::World;
+	using World = editor::entity::WindowSystem::World;
 	using WindowView = ecs::EntityView
 		::Required<
-		editor::EntityWindowComponent>
+		editor::entity::WindowComponent>
 		::Optional<
-		editor::EntitySaveComponent>;
+		editor::entity::SaveComponent>;
 
 	ecs::Entity CreateEntity(ecs::EntityWorld& world, const str::StringView name, const str::Name& level)
 	{
@@ -67,7 +58,7 @@ namespace
 		auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
 		prototypeComponent.m_Guid = str::Guid::Generate();
 
-		auto& select = world.WriteSingleton<editor::EntitySelectSingleton>();
+		auto& select = world.WriteSingleton<editor::entity::SelectSingleton>();
 		select.m_Entity = entity;
 
 		return entity;
@@ -137,7 +128,7 @@ namespace
 
 	void Draw_EntityList(World& world)
 	{
-		const auto& select = world.ReadSingleton<editor::EntitySelectSingleton>();
+		const auto& select = world.ReadSingleton<editor::entity::SelectSingleton>();
 
 		using Query = ecs::query
 			::Include<const eng::PrototypeComponent>
@@ -153,7 +144,7 @@ namespace
 			const bool isSelected = view == select.m_Entity;
 			if (ImGui::Selectable(name, isSelected))
 			{
-				auto& select = world.WriteSingleton<editor::EntitySelectSingleton>();
+				auto& select = world.WriteSingleton<editor::entity::SelectSingleton>();
 				select.m_Entity = view;
 			}
 
@@ -193,8 +184,8 @@ namespace
 
 	void Draw_Inspector(ecs::EntityWorld& world, const WindowView& view)
 	{
-		const auto& select = world.ReadSingleton<editor::EntitySelectSingleton>();
-		const auto& window = view.ReadRequired<editor::EntityWindowComponent>();
+		const auto& select = world.ReadSingleton<editor::entity::SelectSingleton>();
+		const auto& window = view.ReadRequired<editor::entity::WindowComponent>();
 
 		if (ImGui::Begin(window.m_InspectorLabel.c_str(), nullptr, ImGuiWindowFlags_MenuBar))
 		{
@@ -230,14 +221,14 @@ namespace
 		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
 		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
 
-		if (view.HasOptional<editor::EntitySaveComponent>())
-			world.RemoveComponent<editor::EntitySaveComponent>(view);
+		if (view.HasOptional<editor::entity::SaveComponent>())
+			world.RemoveComponent<editor::entity::SaveComponent>(view);
 
 		const auto& input = world.ReadResource<eng::InputManager>();
-		if (input.IsPressed(strSave) || view.HasOptional<editor::EntitySaveComponent>())
+		if (input.IsPressed(strSave) || view.HasOptional<editor::entity::SaveComponent>())
 		{
-			const auto& select = world.ReadSingleton<editor::EntitySelectSingleton>();
-			const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
+			const auto& select = world.ReadSingleton<editor::entity::SelectSingleton>();
+			const auto& settings = world.ReadSingleton<editor::entity::SettingsSingleton>();
 
 			const ecs::Entity selected = select.m_Entity;
 			if (world.HasComponent<eng::PrototypeComponent>(selected))
@@ -251,14 +242,14 @@ namespace
 					eng::SaveFileSettings saveFile;
 					saveFile.m_Title = "Save Entity";
 					saveFile.m_Filters = { "Prototypes (*.prototype)", "*.prototype" };
-					saveFile.m_Path = str::Path(settings.m_Entity.m_Save, name.m_Name, eng::PrototypeManager::s_Extension);
+					saveFile.m_Path = str::Path(settings.m_Save, name.m_Name, eng::PrototypeManager::s_Extension);
 					filepath = eng::SaveFileDialog(saveFile);
 				}
 
 				if (!filepath.IsEmpty())
 				{
-					auto& settings = world.WriteSingleton<editor::settings::LocalSingleton>();
-					settings.m_Entity.m_Save = filepath.GetDirectory();
+					auto& settings = world.WriteSingleton<editor::entity::SettingsSingleton>();
+					settings.m_Save = filepath.GetDirectory();
 
 					auto& manager = world.WriteResource<eng::PrototypeManager>();
 					manager.SaveEntity(world, selected, filepath);
@@ -268,16 +259,16 @@ namespace
 	}
 }
 
-editor::EntityEditorSystem::EntityEditorSystem(ecs::EntityWorld& world)
+editor::entity::WindowSystem::WindowSystem(ecs::EntityWorld& world)
 	: m_World(world)
 {
 }
 
-void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
+void editor::entity::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<editor::EntityWindowComponent>>())
+	if (world.HasAny<ecs::query::Added<editor::entity::WindowComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::EditorUI;
@@ -288,7 +279,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<editor::EntityWindowComponent>>())
+	if (world.HasAny<ecs::query::Removed<editor::entity::WindowComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
@@ -304,28 +295,28 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(800, 600.f);
 
-	for (const auto& request : world.Events<editor::EntityWindowRequest>())
+	for (const auto& request : world.Events<editor::entity::OpenWindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Entity Editor");
 
-		auto& window = world.AddComponent<editor::EntityWindowComponent>(windowEntity);
+		auto& window = world.AddComponent<editor::entity::WindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Entity Editor##entityeditor", identifier);
 		window.m_EntitiesLabel = ToLabel("Entities##entityeditor", identifier);
 		window.m_InspectorLabel = ToLabel("Inspector##entityeditor", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::EntityWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::entity::WindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<editor::EntityWindowComponent>(view, false);
+		const auto& window = world.ReadComponent<editor::entity::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (auto&& windowView : world.Query<ecs::query::Include<editor::EntityWindowComponent>::Optional<editor::EntitySaveComponent>>())
+	for (auto&& windowView : world.Query<ecs::query::Include<editor::entity::WindowComponent>::Optional<editor::entity::SaveComponent>>())
 	{
-		const auto& window = windowView.WriteRequired<editor::EntityWindowComponent>();
+		const auto& window = windowView.WriteRequired<editor::entity::WindowComponent>();
 
 		bool isOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
@@ -337,7 +328,7 @@ void editor::EntityEditorSystem::Update(World& world, const GameTime& gameTime)
 				if (ImGui::BeginMenu("File"))
 				{
 					if (ImGui::MenuItem("Save", "Ctrl + S"))
-						world.AddComponent<editor::EntitySaveComponent>(windowView);
+						world.AddComponent<editor::entity::SaveComponent>(windowView);
 
 					ImGui::EndMenu();
 				}

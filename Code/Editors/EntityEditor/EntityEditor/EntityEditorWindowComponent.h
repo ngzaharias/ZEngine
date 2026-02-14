@@ -3,9 +3,9 @@
 #include "Core/String.h"
 #include "ECS/Component.h"
 
-namespace editor
+namespace editor::entity
 {
-	struct EntityWindowComponent final : public ecs::Component<EntityWindowComponent>
+	struct WindowComponent final : public ecs::Component<WindowComponent>
 	{
 		int32 m_Identifier = 0;
 

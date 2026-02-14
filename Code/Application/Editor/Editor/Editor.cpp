@@ -11,11 +11,6 @@
 #include "Editor/EditorRenderAxesSystem.h"
 #include "Editor/EditorRenderGridSystem.h"
 #include "Editor/EditorToolbarSystem.h"
-#include "Editor/EntityEditorSystem.h"
-#include "Editor/EntitySaveComponent.h"
-#include "Editor/EntitySelectSingleton.h"
-#include "Editor/EntitySelectSystem.h"
-#include "Editor/EntityWindowComponent.h"
 #include "Editor/GizmoCrosshairSystem.h"
 #include "Editor/GizmoTransformSystem.h"
 #include "Editor/OverlaySystem.h"
@@ -23,6 +18,7 @@
 #include "Editor/SettingsLocalSystem.h"
 #include "Editor/SettingsMenuSystem.h"
 #include "Editor/SettingsWindowComponent.h"
+#include "EntityEditor/EntityEditorRegisterModule.h"
 #include "FlipbookEditor/FlipbookEditorRegisterModule.h"
 #include "InputEditor/InputEditorRegisterModule.h"
 #include "SpriteEditor/SpriteEditorRegisterModule.h"
@@ -42,17 +38,10 @@ void editor::Editor::Register()
 	PROFILE_FUNCTION();
 
 	m_ClientWorld.RegisterComponent<editor::AssetBrowserWindowComponent>();
-	m_ClientWorld.RegisterComponent<editor::EntitySaveComponent>();
-	m_ClientWorld.RegisterComponent<editor::EntityWindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
-
-	m_ClientWorld.RegisterSingleton<editor::EntitySelectSingleton>();
 	m_ClientWorld.RegisterSingleton<editor::settings::LocalSingleton>();
-
 	m_ClientWorld.RegisterSystem<editor::AssetBrowserSystem>();
 	m_ClientWorld.RegisterSystem<editor::AssetReloadSystem>();
-	m_ClientWorld.RegisterSystem<editor::EntityEditorSystem>(m_ClientWorld);
-	m_ClientWorld.RegisterSystem<editor::EntitySelectSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
 	m_ClientWorld.RegisterSystem<editor::IconSystem>();
@@ -63,6 +52,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
 	m_ClientWorld.RegisterSystem<editor::ToolbarSystem>();
 
+	editor::entity::RegisterModule(m_ClientWorld);
 	editor::flipbook::RegisterModule(m_ClientWorld);
 	editor::input::RegisterModule(m_ClientWorld);
 	editor::sprite::RegisterModule(m_ClientWorld);

@@ -4,9 +4,9 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace editor
+namespace editor::entity
 {
-	struct EntitySelectSingleton;
+	struct SelectSingleton;
 }
 
 namespace eng
@@ -23,27 +23,21 @@ namespace eng
 	struct VisibilityComponent;
 }
 
-namespace eng::settings
+namespace editor::entity
 {
-	struct DebugSingleton;
-}
-
-namespace editor
-{
-	class EntitySelectSystem final : public ecs::System
+	class SelectSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::EntitySelectSingleton,
+			editor::entity::SelectSingleton,
 			eng::InputManager,
 			eng::LinesSingleton>
 			::Read<
-			eng::AssetManager,
 			eng::ActiveComponent,
+			eng::AssetManager,
 			eng::CameraComponent,
 			eng::EditorComponent,
-			eng::settings::DebugSingleton,
 			eng::SpriteComponent,
 			eng::TransformComponent,
 			eng::VisibilityComponent,

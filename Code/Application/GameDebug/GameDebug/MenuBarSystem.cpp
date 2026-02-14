@@ -25,7 +25,6 @@
 #include "GameDebug/DebugShapeWindowRequest.h"
 #include "GameDebug/DebugSplineWindowRequest.h"
 #include "GameDebug/EditorAssetBrowserWindowRequest.h"
-#include "GameDebug/EditorEntityWindowRequest.h"
 #include "GameDebug/EditorSettingsWindowRequest.h"
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/SettingsWindowComponent.h"
@@ -161,8 +160,6 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::MenuItem("Asset Browser"))
 				world.AddEvent<editor::AssetBrowserWindowRequest>();
-			if (ImGui::MenuItem("Entity Editor"))
-				world.AddEvent<editor::EntityWindowRequest>();
 			if (ImGui::MenuItem("Flipbook Editor"))
 				world.AddEvent<editor::flipbook::WindowRequest>();
 			if (ImGui::MenuItem("Input Editor"))

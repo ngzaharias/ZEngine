@@ -9,17 +9,13 @@ namespace ecs
 	struct NameComponent;
 }
 
-namespace editor
+namespace editor::entity
 {
-	struct EntitySaveComponent;
-	struct EntitySelectSingleton;
-	struct EntityWindowComponent;
-	struct EntityWindowRequest;
-}
-
-namespace editor::settings
-{
-	struct LocalSingleton;
+	struct OpenWindowEvent;
+	struct SaveComponent;
+	struct SelectSingleton;
+	struct SettingsSingleton;
+	struct WindowComponent;
 }
 
 namespace eng
@@ -38,32 +34,26 @@ namespace eng::level
 	struct EntityComponent;
 }
 
-namespace hidden
+namespace editor::entity
 {
-	struct GroupComponent;
-	struct ObjectComponent;
-}
-
-namespace editor
-{
-	class EntityEditorSystem final : public ecs::System
+	class WindowSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			editor::EntitySaveComponent,
-			editor::EntitySelectSingleton,
-			editor::EntityWindowComponent,
-			editor::settings::LocalSingleton>
+			editor::entity::SaveComponent,
+			editor::entity::SelectSingleton,
+			editor::entity::SettingsSingleton,
+			editor::entity::WindowComponent>
 			::Read<
-			editor::EntityWindowRequest,
+			editor::entity::OpenWindowEvent,
 			eng::AssetManager,
 			eng::InputManager,
 			eng::level::EntityComponent,
 			eng::PrototypeComponent>;
 
-		EntityEditorSystem(ecs::EntityWorld& world);
+		WindowSystem(ecs::EntityWorld& world);
 
 		void Update(World& world, const GameTime& gameTime);
 
