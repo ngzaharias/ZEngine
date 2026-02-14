@@ -49,8 +49,9 @@ project "Editor"
 		"%{wks.location}/../Code/Application/GameServer/",
 		"%{wks.location}/../Code/Application/GameUI/",
 		"%{wks.location}/../Code/Bindings/Steam/",
-		"%{wks.location}/../Code/Editors/InputEditor/",
+		"%{wks.location}/../Code/Editors/EntityEditor/",
 		"%{wks.location}/../Code/Editors/FlipbookEditor/",
+		"%{wks.location}/../Code/Editors/InputEditor/",
 		"%{wks.location}/../Code/Editors/SpriteEditor/",
 		"%{wks.location}/../Code/Editors/TableEditor/",
 		"%{wks.location}/../Code/Editors/TextureEditor/",
@@ -110,8 +111,9 @@ project "Editor"
 		"Steam",
 
 		-- Editors
-		"InputEditor",
+		"EntityEditor",
 		"FlipbookEditor",
+		"InputEditor",
 		"SpriteEditor",
 		"TableEditor",
 		"TextureEditor",
