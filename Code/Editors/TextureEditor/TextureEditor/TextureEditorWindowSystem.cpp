@@ -14,9 +14,9 @@
 #include "TextureEditor/TextureEditorAssetNewComponent.h"
 #include "TextureEditor/TextureEditorAssetOpenComponent.h"
 #include "TextureEditor/TextureEditorAssetSaveComponent.h"
+#include "TextureEditor/TextureEditorOpenWindowEvent.h"
 #include "TextureEditor/TextureEditorSettingsSingleton.h"
 #include "TextureEditor/TextureEditorWindowComponent.h"
-#include "TextureEditor/TextureEditorWindowRequest.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -241,7 +241,7 @@ void editor::texture::WindowSystem::Update(World& world, const GameTime& gameTim
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);
 
-	for (const auto& request : world.Events<editor::texture::WindowRequest>())
+	for (const auto& request : world.Events<editor::texture::OpenWindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

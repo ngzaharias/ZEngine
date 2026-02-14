@@ -15,9 +15,9 @@ namespace editor::texture
 	struct AssetNewComponent;
 	struct AssetOpenComponent;
 	struct AssetSaveComponent;
+	struct OpenWindowEvent;
 	struct SettingsSingleton;
 	struct WindowComponent;
-	struct WindowRequest;
 }
 
 namespace eng
@@ -42,7 +42,7 @@ namespace editor::texture
 			editor::texture::WindowComponent,
 			eng::AssetManager>
 			::Read<
-			editor::texture::WindowRequest,
+			editor::texture::OpenWindowEvent,
 			eng::InputManager>;
 
 		void Update(World& world, const GameTime& gameTime);
