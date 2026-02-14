@@ -5,7 +5,12 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Editor/EditorIcons.h"
+#include "Editor/SettingsLocalSingleton.h"
 #include "Engine/SettingsDebugSingleton.h"
+#include "EntityEditor/EntityEditorOpenWindowEvent.h"
+#include "FlipbookEditor/FlipbookEditorOpenWindowEvent.h"
+#include "SpriteEditor/SpriteEditorOpenWindowEvent.h"
+#include "TextureEditor/TextureEditorOpenWindowEvent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -14,7 +19,7 @@ namespace
 {
 	using World = editor::ToolbarSystem::World;
 
-	bool ButtonIcon(const char* label, const char* tooltip, const editor::Icon& icon, const ImVec2& size, const bool active = false)
+	bool ButtonIcon(const char* label, const char* tooltip, const editor::Icon& icon, const ImVec2& size = ImVec2(22, 22), const bool active = false)
 	{
 		const bool result = imgui::ImageButton(label, active, icon.m_TextureId, size, icon.m_UV0, icon.m_UV1);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
@@ -23,9 +28,8 @@ namespace
 		return result;
 	}
 
-	void VerticalSeparator()
+	void Spacing()
 	{
-		ImGui::SameLine();
 		ImGui::Dummy(ImVec2(10.0f, 0.0f));
 		ImGui::SameLine();
 	}
@@ -33,17 +37,79 @@ namespace
 	void Draw_Mode(World& world)
 	{
 		const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
-		const char* tooltip = settings.m_IsEditorModeEnabled
-			? "Edit Mode"
-			: "Game Mode";
-		const editor::Icon& icon = settings.m_IsEditorModeEnabled
-			? icon::MODE_EDIT
-			: icon::MODE_GAME;
-
-		if (ButtonIcon("##mode", tooltip, icon, ImVec2(22, 22)))
 		{
-			auto& write = world.WriteSingleton<eng::settings::DebugSingleton>();
-			write.m_IsEditorModeEnabled = !write.m_IsEditorModeEnabled;
+			const char* tooltip = settings.m_IsEditorModeEnabled
+				? "Switch to Game Mode"
+				: "Switch to Edit Mode";
+			const editor::Icon& icon = settings.m_IsEditorModeEnabled
+				? icon::MODE_GAME
+				: icon::MODE_EDIT;
+
+			if (ButtonIcon("##mode", tooltip, icon))
+			{
+				auto& write = world.WriteSingleton<eng::settings::DebugSingleton>();
+				write.m_IsEditorModeEnabled = !write.m_IsEditorModeEnabled;
+			}
+		}
+		ImGui::SameLine();
+	}
+
+	void Draw_Editors(World& world)
+	{
+		if (ButtonIcon("##entity", "Entity Editor", icon::EDITOR_ENTITY))
+			world.AddEvent<editor::entity::OpenWindowEvent>();
+		ImGui::SameLine();
+		if (ButtonIcon("##texture", "Texture Editor", icon::EDITOR_TEXTURE))
+			world.AddEvent<editor::texture::OpenWindowEvent>();
+		ImGui::SameLine();
+		if (ButtonIcon("##sprite", "Sprite Editor", icon::EDITOR_SPRITE))
+			world.AddEvent<editor::sprite::OpenWindowEvent>();
+		ImGui::SameLine();
+		if (ButtonIcon("##flipbook", "Flipbook Editor", icon::EDITOR_FLIPBOOK))
+			world.AddEvent<editor::flipbook::OpenWindowEvent>();
+		ImGui::SameLine();
+	}
+
+	void Draw_Gizmos(World& world)
+	{
+		const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
+		const auto& gizmo = settings.m_Gizmos;
+		{
+			const bool enabled = gizmo.m_FloorGrid.m_IsEnabled;
+			if (ButtonIcon("##grid", "Grid", icon::GRID, ImVec2(22, 22), enabled))
+			{
+				auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+				write.m_Gizmos.m_FloorGrid.m_IsEnabled = !enabled;
+			}
+			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+				ImGui::OpenPopup("grid popup");
+			if (ImGui::BeginPopup("grid popup"))
+			{
+				auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+				ImGui::ColorEdit3("Colour  ", &write.m_Gizmos.m_FloorGrid.m_MajorColour.x, ImGuiColorEditFlags_NoInputs);
+				ImGui::EndPopup();
+			}
+		}
+		ImGui::SameLine();
+		{
+			const bool enabled = gizmo.m_CoordAxes.m_IsEnabled;
+			if (ButtonIcon("##axis", "Axis", icon::AXIS, ImVec2(22, 22), enabled))
+			{
+				auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+				write.m_Gizmos.m_CoordAxes.m_IsEnabled = !enabled;
+			}
+			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+				ImGui::OpenPopup("axis popup");
+			if (ImGui::BeginPopup("axis popup"))
+			{
+				auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+				ImGui::Checkbox("X", &write.m_Gizmos.m_CoordAxes.m_ShowX);
+				ImGui::SameLine();
+				ImGui::Checkbox("Y", &write.m_Gizmos.m_CoordAxes.m_ShowY);
+				ImGui::SameLine();
+				ImGui::Checkbox("Z", &write.m_Gizmos.m_CoordAxes.m_ShowZ);
+				ImGui::EndPopup();
+			}
 		}
 		ImGui::SameLine();
 	}
@@ -71,18 +137,19 @@ void editor::ToolbarSystem::Update(World& world, const GameTime& gameTime)
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 8));
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(4, 4));
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(6, 6));
+	//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+	//ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(4, 4));
+	//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(6, 6));
 	if (ImGui::Begin("Toolbar", nullptr, s_WindowFlags)) 
 	{
-		ImGui::Dummy(ImVec2(14.0f, 0.0f));
-		ImGui::SameLine();
+		ImGui::PopStyleVar(2);
 
+		Spacing();
 		Draw_Mode(world);
-		VerticalSeparator();
+		Spacing();
+		Draw_Editors(world);
+		Spacing();
+		Draw_Gizmos(world);
 	}
 	ImGui::End();
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar(4);
 }
