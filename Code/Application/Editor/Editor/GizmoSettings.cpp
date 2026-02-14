@@ -13,8 +13,6 @@ namespace
 	const str::StringView strMajorColour = "m_MajorColour";
 	const str::StringView strMajorScale = "m_MajorScale";
 	const str::StringView strMajorWidth = "m_MajorWidth";
-	const str::StringView strShowMajor = "m_ShowMajor";
-	const str::StringView strShowMinor = "m_ShowMinor";
 	const str::StringView strShowX = "m_ShowX";
 	const str::StringView strShowY = "m_ShowY";
 	const str::StringView strShowZ = "m_ShowZ";
@@ -100,8 +98,6 @@ template<>
 void eng::Visitor::ReadCustom(editor::settings::Gizmos::FloorGrid& value) const
 {
 	Read(strIsEnabled, value.m_IsEnabled, value.m_IsEnabled);
-	Read(strShowMajor, value.m_ShowMajor, value.m_ShowMajor);
-	Read(strShowMinor, value.m_ShowMinor, value.m_ShowMinor);
 	Read(strMajorScale, value.m_MajorScale, value.m_MajorScale);
 	Read(strMajorWidth, value.m_MajorWidth, value.m_MajorWidth);
 	Read(strMajorColour, value.m_MajorColour, value.m_MajorColour);
@@ -110,8 +106,6 @@ template<>
 void eng::Visitor::WriteCustom(const editor::settings::Gizmos::FloorGrid& value)
 {
 	Write(strIsEnabled, value.m_IsEnabled);
-	Write(strShowMajor, value.m_ShowMajor);
-	Write(strShowMinor, value.m_ShowMinor);
 	Write(strMajorScale, value.m_MajorScale);
 	Write(strMajorWidth, value.m_MajorWidth);
 	Write(strMajorColour, value.m_MajorColour);
@@ -121,8 +115,6 @@ bool imgui::Inspector::WriteCustom(editor::settings::Gizmos::FloorGrid& value)
 {
 	bool result = false;
 	result |= Write("IsEnabled", value.m_IsEnabled);
-	result |= Write("m_ShowMajor", value.m_ShowMajor);
-	result |= Write("m_ShowMinor", value.m_ShowMinor);
 	result |= Write("m_MajorScale", value.m_MajorScale);
 	result |= Write("m_MajorWidth", value.m_MajorWidth);
 	result |= Write("m_MajorColour", value.m_MajorColour);

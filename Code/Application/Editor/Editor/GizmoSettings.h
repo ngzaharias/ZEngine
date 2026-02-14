@@ -22,9 +22,6 @@ namespace editor::settings
 		struct FloorGrid
 		{
 			bool m_IsEnabled = false;
-			bool m_ShowMajor = true;
-			bool m_ShowMinor = false;
-
 			float m_MajorScale = 100.f;
 			float m_MajorWidth = 0.01f;
 			Vector3f m_MajorColour = Vector3f(0.4f);

@@ -4,7 +4,6 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/EntitySelectSingleton.h"
 #include "Editor/SettingsLocalSingleton.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
@@ -14,6 +13,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "EntityEditor/EntityEditorSelectSingleton.h"
 #include "Math/Matrix.h"
 
 #include "imgui/imgui.h"
@@ -161,7 +161,7 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 			ImGuizmo::SetDrawlist();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 
-			const auto& selectComponent = world.ReadSingleton<editor::EntitySelectSingleton>();
+			const auto& selectComponent = world.ReadSingleton<editor::entity::SelectSingleton>();
 			const ecs::Entity selected = selectComponent.m_Entity;
 			if (selected.IsUnassigned())
 				continue;
