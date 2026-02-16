@@ -54,6 +54,7 @@ void debug::OverlaySystem::Update(World& world, const GameTime& gameTime)
 	{
 		ImGui::NewLine();
 		ImGui::NewLine();
+		ImGui::NewLine();
 
 		// version
 		{
