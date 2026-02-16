@@ -34,6 +34,5 @@ bool imgui::Inspector::WriteCustom(eng::settings::DebugSingleton& value)
 	result |= Write("m_AreLinesEnabled", value.m_AreLinesEnabled);
 	result |= Write("m_ArePhysicsEnabled", value.m_ArePhysicsEnabled);
 	result |= Write("m_AreSoftbodyEnabled", value.m_AreSoftbodyEnabled);
-	result |= Write("m_IsEditorModeEnabled", value.m_IsEditorModeEnabled);
 	return result;
 }

@@ -11,6 +11,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/TransformComponent.h"
+#include "Settings/SettingsEditorComponent.h"
 
 void camera::ActivationSystem::Initialise(World& world)
 {
@@ -35,21 +36,25 @@ void camera::ActivationSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
-	const bool hasEditorCamera = world.HasAny<ecs::query::Include<const eng::EditorComponent>>();
-	if (debugSettings.m_IsEditorModeEnabled)
+	if (world.HasAny<ecs::query::Include<settings::EditorComponent>>())
 	{
 		using EnableQuery = ecs::query
-			::Include<const eng::CameraComponent, const eng::EditorComponent>
-			::Exclude<const eng::ActiveComponent>;
+			::Include<
+			const eng::CameraComponent, 
+			const eng::EditorComponent>
+			::Exclude<
+			const eng::ActiveComponent>;
 		for (auto&& view : world.Query<EnableQuery>())
 		{
 			world.AddComponent<eng::ActiveComponent>(view);
 		}
 
 		using DisableQuery = ecs::query
-			::Include<const eng::ActiveComponent, const eng::CameraComponent>
-			::Exclude<const eng::EditorComponent>;
+			::Include<
+			const eng::ActiveComponent, 
+			const eng::CameraComponent>
+			::Exclude<
+			const eng::EditorComponent>;
 		for (auto&& view : world.Query<DisableQuery>())
 		{
 			world.RemoveComponent<eng::ActiveComponent>(view);
@@ -58,8 +63,11 @@ void camera::ActivationSystem::Update(World& world, const GameTime& gameTime)
 	else
 	{
 		using EnableQuery = ecs::query
-			::Include<const eng::CameraComponent>
-			::Exclude<const eng::ActiveComponent, const eng::EditorComponent>;
+			::Include<
+			const eng::CameraComponent>
+			::Exclude<
+			const eng::ActiveComponent, 
+			const eng::EditorComponent>;
 		for (auto&& view : world.Query<EnableQuery>())
 		{
 			world.AddComponent<eng::ActiveComponent>(view);

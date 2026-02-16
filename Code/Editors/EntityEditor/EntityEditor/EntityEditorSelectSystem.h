@@ -23,6 +23,11 @@ namespace eng
 	struct VisibilityComponent;
 }
 
+namespace settings
+{
+	struct EditorComponent;
+}
+
 namespace editor::entity
 {
 	class SelectSystem final : public ecs::System
@@ -41,10 +46,8 @@ namespace editor::entity
 			eng::SpriteComponent,
 			eng::TransformComponent,
 			eng::VisibilityComponent,
-			eng::WindowManager>;
-
-		void Initialise(World& world);
-		void Shutdown(World& world);
+			eng::WindowManager,
+			settings::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

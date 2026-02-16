@@ -13,6 +13,7 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "Math/Ray.h"
+#include "Settings/SettingsEditorComponent.h"
 #include "Tactics/TacticsInput.h"
 #include "Tactics/TacticsSelectedComponent.h"
 #include "Tilemap/TilemapAgentComponent.h"
@@ -32,8 +33,7 @@ void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
-	if (debugSettings.m_IsEditorModeEnabled)
+	if (world.HasAny<ecs::query::Include<settings::EditorComponent>>())
 		return;
 
 	const auto& inputManager = world.ReadResource<eng::InputManager>();

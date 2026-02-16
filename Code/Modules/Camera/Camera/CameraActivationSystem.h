@@ -23,9 +23,9 @@ namespace eng
 	struct TransformComponent;
 }
 
-namespace eng::settings
+namespace settings
 {
-	struct DebugSingleton;
+	struct EditorComponent;
 }
 
 namespace camera
@@ -44,7 +44,7 @@ namespace camera
 			eng::EditorComponent,
 			eng::TransformComponent>
 			::Read<
-			eng::settings::DebugSingleton>;
+			settings::EditorComponent>;
 
 		void Initialise(World& world);
 

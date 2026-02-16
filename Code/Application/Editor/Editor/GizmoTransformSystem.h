@@ -11,6 +11,11 @@ namespace editor::entity
 	struct SelectSingleton;
 }
 
+namespace editor::gizmo
+{
+	struct TransformSingleton;
+}
+
 namespace editor::settings
 {
 	struct LocalSingleton;
@@ -27,9 +32,9 @@ namespace eng
 	struct VersionComponent;
 }
 
-namespace eng::settings
+namespace settings
 {
-	struct DebugSingleton;
+	struct EditorComponent;
 }
 
 namespace editor::gizmo
@@ -39,6 +44,7 @@ namespace editor::gizmo
 	public:
 		using World = ecs::WorldView
 			::Write<
+			editor::gizmo::TransformSingleton,
 			eng::PhysicsComponent,
 			eng::TransformComponent>
 			::Read<
@@ -47,8 +53,8 @@ namespace editor::gizmo
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::InputManager,
-			eng::settings::DebugSingleton,
-			eng::WindowManager>;
+			eng::WindowManager,
+			::settings::EditorComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

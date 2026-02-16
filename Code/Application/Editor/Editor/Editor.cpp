@@ -12,6 +12,7 @@
 #include "Editor/EditorRenderGridSystem.h"
 #include "Editor/EditorToolbarSystem.h"
 #include "Editor/GizmoCrosshairSystem.h"
+#include "Editor/GizmoTransformSingleton.h"
 #include "Editor/GizmoTransformSystem.h"
 #include "Editor/OverlaySystem.h"
 #include "Editor/SettingsLocalSingleton.h"
@@ -21,6 +22,7 @@
 #include "EntityEditor/EntityEditorRegisterModule.h"
 #include "FlipbookEditor/FlipbookEditorRegisterModule.h"
 #include "InputEditor/InputEditorRegisterModule.h"
+#include "Settings/SettingsRegisterModule.h"
 #include "SpriteEditor/SpriteEditorRegisterModule.h"
 #include "TableEditor/TableEditorRegisterModule.h"
 #include "TextureEditor/TextureEditorRegisterModule.h"
@@ -38,6 +40,7 @@ void editor::Editor::Register()
 	PROFILE_FUNCTION();
 
 	m_ClientWorld.RegisterComponent<editor::AssetBrowserWindowComponent>();
+	m_ClientWorld.RegisterSingleton<editor::gizmo::TransformSingleton>();
 	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
 	m_ClientWorld.RegisterSingleton<editor::settings::LocalSingleton>();
 	m_ClientWorld.RegisterSystem<editor::AssetBrowserSystem>();
@@ -60,6 +63,7 @@ void editor::Editor::Register()
 	editor::texture::RegisterModule(m_ClientWorld);
 	editor::theme::RegisterModule(m_ClientWorld);
 	editor::trajectory::RegisterModule(m_ClientWorld);
+	::settings::RegisterModule(m_ClientWorld);
 }
 
 void editor::Editor::Initialise()

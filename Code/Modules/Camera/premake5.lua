@@ -25,4 +25,5 @@ project "Camera"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Modules/Camera/",
+		"%{wks.location}/../Code/Modules/Settings/",
 	}

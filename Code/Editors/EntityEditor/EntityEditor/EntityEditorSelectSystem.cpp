@@ -23,6 +23,7 @@
 #include "Math/Quaternion.h"
 #include "Math/Ray.h"
 #include "Math/Sphere.h"
+#include "Settings/SettingsEditorComponent.h"
 
 namespace
 {
@@ -70,36 +71,24 @@ namespace
 	}
 }
 
-void editor::entity::SelectSystem::Initialise(World& world)
-{
-	PROFILE_FUNCTION();
-
-	auto& input = world.WriteResource<eng::InputManager>();
-	input.AppendLayer(strInput, input::Layer{ eng::EInputPriority::EditorWorld });
-}
-
-void editor::entity::SelectSystem::Shutdown(World& world)
-{
-	PROFILE_FUNCTION();
-
-	auto& input = world.WriteResource<eng::InputManager>();
-	input.RemoveLayer(strInput);
-}
-
 void editor::entity::SelectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	//if (world.HasAny<eng::settings::DebugSingleton>())
-	//{
-	//	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
-	//	auto& input = world.WriteResource<eng::InputManager>();
-	//	input::Layer& layer = input.ModifyLayer(strInput);
-	//	layer.m_Bindings.RemoveAll();
+	if (world.HasAny<ecs::query::Added<settings::EditorComponent>>())
+	{
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::EditorWorld;
+		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_1, false);
 
-	//	if (debugSettings.m_IsEditorModeEnabled)
-	//		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_1, false);
-	//}
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInput, layer);
+	}
+	else if (world.HasAny<ecs::query::Removed<settings::EditorComponent>>())
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInput);
+	}
 
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);

@@ -9,6 +9,8 @@
 #include "Engine/SettingsDebugSingleton.h"
 #include "EntityEditor/EntityEditorOpenWindowEvent.h"
 #include "FlipbookEditor/FlipbookEditorOpenWindowEvent.h"
+#include "Settings/SettingsEditorComponent.h"
+#include "Settings/SettingsEditorToggleEvent.h"
 #include "SpriteEditor/SpriteEditorOpenWindowEvent.h"
 #include "TextureEditor/TextureEditorOpenWindowEvent.h"
 
@@ -36,20 +38,17 @@ namespace
 
 	void Draw_Mode(World& world)
 	{
-		const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
-		{
-			const char* tooltip = settings.m_IsEditorModeEnabled
-				? "Switch to Game Mode"
-				: "Switch to Edit Mode";
-			const editor::Icon& icon = settings.m_IsEditorModeEnabled
-				? icon::MODE_GAME
-				: icon::MODE_EDIT;
+		const bool isEnabled = world.HasAny<ecs::query::Include<settings::EditorComponent>>();
+		const char* tooltip = isEnabled
+			? "Switch to Game Mode"
+			: "Switch to Edit Mode";
+		const editor::Icon& icon = isEnabled
+			? icon::MODE_GAME
+			: icon::MODE_EDIT;
 
-			if (ButtonIcon("##mode", tooltip, icon))
-			{
-				auto& write = world.WriteSingleton<eng::settings::DebugSingleton>();
-				write.m_IsEditorModeEnabled = !write.m_IsEditorModeEnabled;
-			}
+		if (ButtonIcon("##mode", tooltip, icon))
+		{
+			world.AddEvent<settings::EditorToggleEvent>();
 		}
 		ImGui::SameLine();
 	}
@@ -142,9 +141,6 @@ void editor::ToolbarSystem::Update(World& world, const GameTime& gameTime)
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 8));
-	//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-	//ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(4, 4));
-	//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(6, 6));
 	if (ImGui::Begin("Toolbar", nullptr, s_WindowFlags)) 
 	{
 		ImGui::PopStyleVar(2);

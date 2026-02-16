@@ -68,6 +68,7 @@ project "Editor"
 		"%{wks.location}/../Code/Modules/Camera/",
 		"%{wks.location}/../Code/Modules/ClientHidden/",
 		"%{wks.location}/../Code/Modules/Container/",
+		"%{wks.location}/../Code/Modules/Settings/",
 		"%{wks.location}/../Code/Modules/Softbody/",
 	}
 
@@ -139,6 +140,7 @@ project "Editor"
 		"ServerCursor",
 		"ServerHidden",
 		"ServerNetwork",
+		"Settings",
 		"SharedCursor",
 		"SharedHidden",
 		"SharedNetwork",

@@ -26,11 +26,6 @@ void debug::settings::DebugSystem::Initialise(World& world)
 	visitor.Read(world.WriteSingleton<eng::settings::DebugSingleton>());
 	visitor.Read(world.WriteSingleton<client::settings::DebugSingleton>());
 	visitor.Read(world.WriteSingleton<client::hidden::DebugSingleton>());
-
-#ifdef Z_EDITOR
-	auto& component = world.WriteSingleton<eng::settings::DebugSingleton>();
-	component.m_IsEditorModeEnabled = true;
-#endif
 }
 
 void debug::settings::DebugSystem::Update(World& world, const GameTime& gameTime)

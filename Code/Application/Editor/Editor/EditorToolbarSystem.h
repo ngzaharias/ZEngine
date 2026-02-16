@@ -28,6 +28,12 @@ namespace eng::settings
 	struct DebugSingleton;
 }
 
+namespace settings
+{
+	struct EditorComponent;
+	struct EditorToggleEvent;
+}
+
 namespace editor
 {
 	class ToolbarSystem final : public ecs::System
@@ -39,7 +45,9 @@ namespace editor
 			editor::flipbook::OpenWindowEvent,
 			editor::sprite::OpenWindowEvent,
 			editor::texture::OpenWindowEvent,
-			eng::settings::DebugSingleton>
+			eng::settings::DebugSingleton,
+			::settings::EditorComponent,
+			::settings::EditorToggleEvent>
 			::Read<>;
 
 		void Update(World& world, const GameTime& gameTime);

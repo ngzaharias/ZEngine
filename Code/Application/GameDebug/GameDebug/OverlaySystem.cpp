@@ -53,6 +53,7 @@ void debug::OverlaySystem::Update(World& world, const GameTime& gameTime)
 	if (ImGui::Begin("Overlay", nullptr, s_Flags))
 	{
 		ImGui::NewLine();
+		ImGui::NewLine();
 
 		// version
 		{
