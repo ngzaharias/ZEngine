@@ -29,7 +29,6 @@ workspace "ZEngine"
 	filter "Release*"
 		defines { "NDEBUG", "Z_RELEASE" }
 		editandcontinue "Off"
-		flags { "FatalWarnings" }
 		optimize "Speed"
 		runtime "Release"
 		symbols "On"
