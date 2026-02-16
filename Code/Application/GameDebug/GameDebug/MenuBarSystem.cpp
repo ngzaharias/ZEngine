@@ -83,9 +83,9 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-#ifdef Z_RELEASE
+#if defined(Z_RELEASE) && !defined(Z_EDITOR)
 	return;
-#endif 
+#endif
 
 	if (ImGui::BeginMainMenuBar())
 	{
