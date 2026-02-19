@@ -8,6 +8,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/Visitor.h"
 #include "EntityEditor/EntityEditorSettingsSingleton.h"
+#include "GameState/GameStateEditorComponent.h"
 
 namespace
 {
@@ -28,6 +29,9 @@ void editor::entity::SettingsSystem::Initialise(World& world)
 void editor::entity::SettingsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
 
 	if (world.HasAny<editor::entity::SettingsSingleton>())
 	{

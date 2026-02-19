@@ -8,6 +8,11 @@ namespace editor::entity
 	struct SettingsSingleton;
 }
 
+namespace gamestate
+{
+	struct EditorComponent;
+}
+
 namespace editor::entity
 {
 	class SettingsSystem final : public ecs::System
@@ -15,7 +20,8 @@ namespace editor::entity
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::entity::SettingsSingleton>;
+			editor::entity::SettingsSingleton,
+			gamestate::EditorComponent>;
 
 		void Initialise(World& world);
 

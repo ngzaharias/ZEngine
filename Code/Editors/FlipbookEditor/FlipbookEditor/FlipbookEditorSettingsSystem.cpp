@@ -6,6 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/Visitor.h"
 #include "FlipbookEditor/FlipbookEditorSettingsSingleton.h"
+#include "GameState/GameStateEditorComponent.h"
 
 namespace
 {
@@ -26,6 +27,9 @@ void editor::flipbook::SettingsSystem::Initialise(World& world)
 void editor::flipbook::SettingsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
 
 	if (world.HasAny<editor::flipbook::SettingsSingleton>())
 	{

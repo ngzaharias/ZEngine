@@ -5,6 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/Visitor.h"
+#include "GameState/GameStateEditorComponent.h"
 #include "SpriteEditor/SpriteEditorSettingsSingleton.h"
 
 namespace
@@ -26,6 +27,9 @@ void editor::sprite::SettingsSystem::Initialise(World& world)
 void editor::sprite::SettingsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
 
 	if (world.HasAny<editor::sprite::SettingsSingleton>())
 	{

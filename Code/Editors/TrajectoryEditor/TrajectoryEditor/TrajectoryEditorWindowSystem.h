@@ -22,6 +22,11 @@ namespace eng
 	class AssetManager;
 }
 
+namespace gamestate
+{
+	struct EditorComponent;
+}
+
 namespace editor::trajectory
 {
 	class WindowSystem final : public ecs::System
@@ -35,7 +40,8 @@ namespace editor::trajectory
 			editor::trajectory::WindowComponent,
 			eng::AssetManager>
 			::Read<
-			editor::trajectory::WindowRequest>;
+			editor::trajectory::WindowRequest,
+			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

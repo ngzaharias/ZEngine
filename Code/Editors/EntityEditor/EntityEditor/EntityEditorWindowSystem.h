@@ -34,6 +34,11 @@ namespace eng::level
 	struct EntityComponent;
 }
 
+namespace gamestate
+{
+	struct EditorComponent;
+}
+
 namespace editor::entity
 {
 	class WindowSystem final : public ecs::System
@@ -51,7 +56,8 @@ namespace editor::entity
 			eng::AssetManager,
 			eng::InputManager,
 			eng::level::EntityComponent,
-			eng::PrototypeComponent>;
+			eng::PrototypeComponent,
+			gamestate::EditorComponent>;
 
 		WindowSystem(ecs::EntityWorld& world);
 

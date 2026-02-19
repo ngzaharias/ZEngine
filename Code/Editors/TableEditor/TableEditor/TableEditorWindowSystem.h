@@ -19,6 +19,11 @@ namespace editor::table
 	struct WindowRequest;
 }
 
+namespace gamestate
+{
+	struct EditorComponent;
+}
+
 namespace editor::table
 {
 	class WindowSystem final : public ecs::System
@@ -29,7 +34,8 @@ namespace editor::table
 			ecs::NameComponent,
 			editor::table::WindowComponent>
 			::Read<
-			editor::table::WindowRequest>;
+			editor::table::WindowRequest,
+			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

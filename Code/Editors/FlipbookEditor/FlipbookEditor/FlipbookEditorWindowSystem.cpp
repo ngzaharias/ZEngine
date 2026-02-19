@@ -13,6 +13,7 @@
 #include "FlipbookEditor/FlipbookEditorBatchingComponent.h"
 #include "FlipbookEditor/FlipbookEditorOpenWindowEvent.h"
 #include "FlipbookEditor/FlipbookEditorWindowComponent.h"
+#include "GameState/GameStateEditorComponent.h"
 #include "Math/AABB.h"
 
 #include "imgui/imgui.h"
@@ -308,6 +309,9 @@ namespace
 void editor::flipbook::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
 
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);

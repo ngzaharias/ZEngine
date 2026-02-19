@@ -10,6 +10,7 @@
 #include "Engine/InputManager.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TextureHelpers.h"
+#include "GameState/GameStateEditorComponent.h"
 #include "TextureEditor/TextureEditorAssetImportComponent.h"
 #include "TextureEditor/TextureEditorAssetNewComponent.h"
 #include "TextureEditor/TextureEditorAssetOpenComponent.h"
@@ -214,6 +215,9 @@ namespace
 void editor::texture::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
 
 	if (world.HasAny<ecs::query::Added<editor::texture::WindowComponent>>())
 	{

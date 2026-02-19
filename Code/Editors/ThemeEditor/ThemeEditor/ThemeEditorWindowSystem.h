@@ -15,6 +15,11 @@ namespace editor::theme
 	struct WindowRequest;
 }
 
+namespace gamestate
+{
+	struct EditorComponent;
+}
+
 namespace editor::theme
 {
 	class WindowSystem final : public ecs::System
@@ -25,7 +30,8 @@ namespace editor::theme
 			ecs::NameComponent,
 			editor::theme::WindowComponent>
 			::Read<
-			editor::theme::WindowRequest>;
+			editor::theme::WindowRequest,
+			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

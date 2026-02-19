@@ -10,6 +10,7 @@
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/TrajectoryAsset.h"
+#include "GameState/GameStateEditorComponent.h"
 #include "Math/Math.h"
 #include "Math/Vector.h"
 #include "Math/VectorMath.h"
@@ -208,6 +209,9 @@ namespace
 void editor::trajectory::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
 
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);

@@ -19,6 +19,7 @@
 #include "Engine/WindowManager.h"
 #include "EntityEditor/EntityEditorSelectSingleton.h"
 #include "GameState/GameStateEditModeComponent.h"
+#include "GameState/GameStateEditorComponent.h"
 #include "Math/AABB.h"
 #include "Math/CollisionMath.h"
 #include "Math/Quaternion.h"
@@ -74,6 +75,9 @@ namespace
 void editor::entity::SelectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
 
 	if (world.HasAny<ecs::query::Added<gamestate::EditModeComponent>>())
 	{

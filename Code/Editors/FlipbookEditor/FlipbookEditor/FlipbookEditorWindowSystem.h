@@ -23,6 +23,11 @@ namespace eng
 	class AssetManager;
 }
 
+namespace gamestate
+{
+	struct EditorComponent;
+}
+
 namespace editor::flipbook
 {
 	class WindowSystem final : public ecs::System
@@ -37,7 +42,8 @@ namespace editor::flipbook
 			editor::flipbook::WindowComponent,
 			eng::AssetManager>
 			::Read<
-			editor::flipbook::OpenWindowEvent>;
+			editor::flipbook::OpenWindowEvent,
+			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

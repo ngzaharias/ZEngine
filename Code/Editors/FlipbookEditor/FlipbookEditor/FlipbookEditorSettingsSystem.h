@@ -8,6 +8,11 @@ namespace editor::flipbook
 	struct SettingsSingleton;
 }
 
+namespace gamestate
+{
+	struct EditorComponent;
+}
+
 namespace editor::flipbook
 {
 	class SettingsSystem final : public ecs::System
@@ -15,7 +20,9 @@ namespace editor::flipbook
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::flipbook::SettingsSingleton>;
+			editor::flipbook::SettingsSingleton>
+			::Read<
+			gamestate::EditorComponent>;
 
 		void Initialise(World& world);
 

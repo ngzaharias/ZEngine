@@ -26,6 +26,11 @@ namespace eng
 	class InputManager;
 }
 
+namespace gamestate
+{
+	struct EditorComponent;
+}
+
 namespace editor::texture
 {
 	class WindowSystem final : public ecs::System
@@ -43,7 +48,8 @@ namespace editor::texture
 			eng::AssetManager>
 			::Read<
 			editor::texture::OpenWindowEvent,
-			eng::InputManager>;
+			eng::InputManager,
+			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

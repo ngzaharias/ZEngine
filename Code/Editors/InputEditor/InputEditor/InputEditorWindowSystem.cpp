@@ -7,6 +7,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
+#include "GameState/GameStateEditorComponent.h"
 #include "Input/Key.h"
 #include "InputEditor/InputEditorWindowComponent.h"
 #include "InputEditor/InputEditorWindowRequest.h"
@@ -25,6 +26,9 @@ namespace
 void editor::input::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
 
 	constexpr ImGuiWindowFlags s_WindowFlags =
 		ImGuiWindowFlags_NoCollapse |

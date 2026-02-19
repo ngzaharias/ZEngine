@@ -12,6 +12,7 @@
 #include "Engine/ShaderAsset.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TextureHelpers.h"
+#include "GameState/GameStateEditorComponent.h"
 #include "Math/AABB.h"
 #include "SpriteEditor/SpriteEditorAssetNewComponent.h"
 #include "SpriteEditor/SpriteEditorAssetOpenComponent.h"
@@ -358,6 +359,9 @@ namespace
 void editor::sprite::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
 
 	if (world.HasAny<ecs::query::Added<editor::sprite::WindowComponent>>())
 	{

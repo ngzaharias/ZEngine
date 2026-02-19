@@ -20,6 +20,11 @@ namespace eng
 	class InputManager;
 }
 
+namespace gamestate
+{
+	struct EditorComponent;
+}
+
 namespace editor::input
 {
 	class WindowSystem final : public ecs::System
@@ -31,7 +36,8 @@ namespace editor::input
 			editor::input::WindowComponent,
 			eng::InputManager>
 			::Read<
-			editor::input::WindowRequest>;
+			editor::input::WindowRequest,
+			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

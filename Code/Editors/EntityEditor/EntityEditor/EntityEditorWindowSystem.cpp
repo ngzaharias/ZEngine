@@ -23,6 +23,7 @@
 #include "EntityEditor/EntityEditorSelectSingleton.h"
 #include "EntityEditor/EntityEditorSettingsSingleton.h"
 #include "EntityEditor/EntityEditorWindowComponent.h"
+#include "GameState/GameStateEditorComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -267,6 +268,9 @@ editor::entity::WindowSystem::WindowSystem(ecs::EntityWorld& world)
 void editor::entity::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
 
 	if (world.HasAny<ecs::query::Added<editor::entity::WindowComponent>>())
 	{
