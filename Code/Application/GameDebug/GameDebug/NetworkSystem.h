@@ -44,8 +44,6 @@ namespace debug
 
 		NetworkSystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld);
 
-		void Initialise(World& world);
-		
 		void Update(World& world, const GameTime& gameTime);
 
 	private:

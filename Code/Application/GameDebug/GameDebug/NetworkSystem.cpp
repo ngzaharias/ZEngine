@@ -26,11 +26,6 @@ debug::NetworkSystem::NetworkSystem(ecs::EntityWorld& clientWorld, ecs::EntityWo
 {
 }
 
-void debug::NetworkSystem::Initialise(World& world)
-{
-	world.AddEvent<debug::NetworkWindowRequest>();
-}
-
 void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
