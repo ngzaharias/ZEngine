@@ -9,13 +9,17 @@ namespace ecs
 	struct NameComponent;
 }
 
-namespace editor::entity
+namespace editor::inspector
 {
 	struct OpenWindowEvent;
 	struct SaveComponent;
-	struct SelectSingleton;
 	struct SettingsSingleton;
 	struct WindowComponent;
+}
+
+namespace editor::outliner
+{
+	struct SelectSingleton;
 }
 
 namespace eng
@@ -39,7 +43,7 @@ namespace gamestate
 	struct EditorComponent;
 }
 
-namespace editor::entity
+namespace editor::inspector
 {
 	class WindowSystem final : public ecs::System
 	{
@@ -47,12 +51,12 @@ namespace editor::entity
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			editor::entity::SaveComponent,
-			editor::entity::SelectSingleton,
-			editor::entity::SettingsSingleton,
-			editor::entity::WindowComponent>
+			editor::inspector::SaveComponent,
+			editor::inspector::SettingsSingleton,
+			editor::inspector::WindowComponent,
+			editor::outliner::SelectSingleton>
 			::Read<
-			editor::entity::OpenWindowEvent,
+			editor::inspector::OpenWindowEvent,
 			eng::AssetManager,
 			eng::InputManager,
 			eng::level::EntityComponent,

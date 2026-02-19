@@ -12,8 +12,8 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "EntityEditor/EntityEditorSelectSingleton.h"
 #include "GameState/GameStateEditModeComponent.h"
+#include "Outliner/OutlinerSelectSingleton.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -134,7 +134,7 @@ namespace
 
 	void ProcessTransform(World& world)
 	{
-		const auto& selectComponent = world.ReadSingleton<editor::entity::SelectSingleton>();
+		const auto& selectComponent = world.ReadSingleton<editor::outliner::SelectSingleton>();
 		const ecs::Entity selected = selectComponent.m_Entity;
 		if (selectComponent.m_Entity.IsUnassigned())
 			return;

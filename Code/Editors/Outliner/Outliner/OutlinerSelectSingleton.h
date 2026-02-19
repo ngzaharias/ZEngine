@@ -3,7 +3,7 @@
 #include "ECS/Entity.h"
 #include "ECS/Singleton.h"
 
-namespace editor::entity
+namespace editor::outliner
 {
 	struct SelectSingleton final : public ecs::Singleton<SelectSingleton>
 	{

@@ -3,12 +3,17 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace editor::entity
+namespace editor::flipbook
 {
 	struct OpenWindowEvent;
 }
 
-namespace editor::flipbook
+namespace editor::inspector
+{
+	struct OpenWindowEvent;
+}
+
+namespace editor::outliner
 {
 	struct OpenWindowEvent;
 }
@@ -41,8 +46,9 @@ namespace editor
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::entity::OpenWindowEvent,
 			editor::flipbook::OpenWindowEvent,
+			editor::inspector::OpenWindowEvent,
+			editor::outliner::OpenWindowEvent,
 			editor::sprite::OpenWindowEvent,
 			editor::texture::OpenWindowEvent,
 			eng::settings::DebugSingleton,

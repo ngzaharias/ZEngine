@@ -4,13 +4,14 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/EditorIcons.h"
 #include "Editor/SettingsLocalSingleton.h"
 #include "Engine/SettingsDebugSingleton.h"
-#include "EntityEditor/EntityEditorOpenWindowEvent.h"
 #include "FlipbookEditor/FlipbookEditorOpenWindowEvent.h"
 #include "GameState/GameStateEditModeComponent.h"
 #include "GameState/GameStateEditModeToggleEvent.h"
+#include "Icons/Icons.h"
+#include "Inspector/InspectorOpenWindowEvent.h"
+#include "Outliner/OutlinerOpenWindowEvent.h"
 #include "SpriteEditor/SpriteEditorOpenWindowEvent.h"
 #include "TextureEditor/TextureEditorOpenWindowEvent.h"
 
@@ -21,7 +22,7 @@ namespace
 {
 	using World = editor::ToolbarSystem::World;
 
-	bool ButtonIcon(const char* label, const char* tooltip, const editor::Icon& icon, const ImVec2& size = ImVec2(22, 22), const bool active = false)
+	bool ButtonIcon(const char* label, const char* tooltip, const icon::Data& icon, const ImVec2& size = ImVec2(22, 22), const bool active = false)
 	{
 		const bool result = imgui::ImageButton(label, active, icon.m_TextureId, size, icon.m_UV0, icon.m_UV1);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
@@ -42,7 +43,7 @@ namespace
 		const char* tooltip = isEnabled
 			? "Switch to Game Mode"
 			: "Switch to Edit Mode";
-		const editor::Icon& icon = isEnabled
+		const icon::Data& icon = isEnabled
 			? icon::MODE_GAME
 			: icon::MODE_EDIT;
 
@@ -55,9 +56,15 @@ namespace
 
 	void Draw_Editors(World& world)
 	{
-		if (ButtonIcon("##entity", "Entity Editor", icon::EDITOR_ENTITY))
-			world.AddEvent<editor::entity::OpenWindowEvent>();
+		if (ButtonIcon("##outliner", "Outliner", icon::EDITOR_OUTLINER))
+			world.AddEvent<editor::outliner::OpenWindowEvent>();
 		ImGui::SameLine();
+		if (ButtonIcon("##inspector", "Inspector", icon::EDITOR_INSPECTOR))
+			world.AddEvent<editor::inspector::OpenWindowEvent>();
+		ImGui::SameLine();
+
+		Spacing();
+
 		if (ButtonIcon("##texture", "Texture Editor", icon::EDITOR_TEXTURE))
 			world.AddEvent<editor::texture::OpenWindowEvent>();
 		ImGui::SameLine();

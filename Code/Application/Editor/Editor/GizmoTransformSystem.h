@@ -6,14 +6,14 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace editor::entity
-{
-	struct SelectSingleton;
-}
-
 namespace editor::gizmo
 {
 	struct TransformSingleton;
+}
+
+namespace editor::outliner
+{
+	struct SelectSingleton;
 }
 
 namespace editor::settings
@@ -48,7 +48,7 @@ namespace editor::gizmo
 			eng::PhysicsComponent,
 			eng::TransformComponent>
 			::Read<
-			editor::entity::SelectSingleton,
+			editor::outliner::SelectSingleton,
 			editor::settings::LocalSingleton,
 			eng::ActiveComponent,
 			eng::CameraComponent,

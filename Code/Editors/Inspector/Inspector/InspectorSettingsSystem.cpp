@@ -1,5 +1,5 @@
-#include "EntityEditorPCH.h"
-#include "EntityEditor/EntityEditorSettingsSystem.h"
+#include "InspectorPCH.h"
+#include "Inspector/InspectorSettingsSystem.h"
 
 #include "Core/Path.h"
 #include "ECS/EntityWorld.h"
@@ -7,15 +7,15 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/Visitor.h"
-#include "EntityEditor/EntityEditorSettingsSingleton.h"
 #include "GameState/GameStateEditorComponent.h"
+#include "Inspector/InspectorSettingsSingleton.h"
 
 namespace
 {
-	const str::StringView strFilename = "EntityEditor.toml";
+	const str::StringView strFilename = "Inspector.toml";
 }
 
-void editor::entity::SettingsSystem::Initialise(World& world)
+void editor::inspector::SettingsSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
@@ -23,22 +23,22 @@ void editor::entity::SettingsSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(world.WriteSingleton<editor::entity::SettingsSingleton>());
+	visitor.Read(world.WriteSingleton<editor::inspector::SettingsSingleton>());
 }
 
-void editor::entity::SettingsSystem::Update(World& world, const GameTime& gameTime)
+void editor::inspector::SettingsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
 		return;
 
-	if (world.HasAny<editor::entity::SettingsSingleton>())
+	if (world.HasAny<editor::inspector::SettingsSingleton>())
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(world.ReadSingleton<editor::entity::SettingsSingleton>());
+		visitor.Write(world.ReadSingleton<editor::inspector::SettingsSingleton>());
 		visitor.SaveToFile(filepath);
 	}
 }

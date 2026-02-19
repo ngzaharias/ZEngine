@@ -1,5 +1,5 @@
-#include "EntityEditorPCH.h"
-#include "EntityEditor/EntityEditorSelectSystem.h"
+#include "OutlinerPCH.h"
+#include "Outliner/OutlinerSelectSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -17,7 +17,6 @@
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "EntityEditor/EntityEditorSelectSingleton.h"
 #include "GameState/GameStateEditModeComponent.h"
 #include "GameState/GameStateEditorComponent.h"
 #include "Math/AABB.h"
@@ -25,6 +24,7 @@
 #include "Math/Quaternion.h"
 #include "Math/Ray.h"
 #include "Math/Sphere.h"
+#include "Outliner/OutlinerSelectSingleton.h"
 
 namespace
 {
@@ -37,7 +37,9 @@ namespace
 		float m_DistanceSqr = FLT_MAX;
 	};
 
-	Optional<AABB3f> GetEntityBounds(editor::entity::SelectSystem::World& world, const ecs::Entity& entity)
+	using World = editor::outliner::SelectSystem::World;
+
+	Optional<AABB3f> GetEntityBounds(World& world, const ecs::Entity& entity)
 	{
 		if (!world.HasComponent<eng::TransformComponent>(entity))
 			return {};
@@ -72,7 +74,7 @@ namespace
 	}
 }
 
-void editor::entity::SelectSystem::Update(World& world, const GameTime& gameTime)
+void editor::outliner::SelectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -136,7 +138,7 @@ void editor::entity::SelectSystem::Update(World& world, const GameTime& gameTime
 
 		if (input.IsPressed(strSelect))
 		{
-			auto& selectComponent = world.WriteSingleton<editor::entity::SelectSingleton>();
+			auto& selectComponent = world.WriteSingleton<editor::outliner::SelectSingleton>();
 			if (!selected.IsEmpty())
 			{
 				std::sort(selected.begin(), selected.end(),

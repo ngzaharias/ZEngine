@@ -4,7 +4,7 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace editor::entity
+namespace editor::outliner
 {
 	struct SelectSingleton;
 }
@@ -29,14 +29,14 @@ namespace gamestate
 	struct EditorComponent;
 }
 
-namespace editor::entity
+namespace editor::outliner
 {
 	class SelectSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::entity::SelectSingleton,
+			editor::outliner::SelectSingleton,
 			eng::InputManager,
 			eng::LinesSingleton>
 			::Read<

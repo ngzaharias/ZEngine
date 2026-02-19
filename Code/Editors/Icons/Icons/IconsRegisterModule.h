@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace editor::entity
+namespace icon
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

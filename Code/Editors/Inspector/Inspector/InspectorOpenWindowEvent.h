@@ -2,7 +2,7 @@
 
 #include "ECS/Event.h"
 
-namespace editor::entity
+namespace editor::inspector
 {
 	struct OpenWindowEvent final : public ecs::Event<OpenWindowEvent> { };
 }

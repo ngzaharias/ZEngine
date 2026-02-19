@@ -9,7 +9,7 @@ namespace editor::gizmo
 	struct TransformSingleton;
 }
 
-namespace editor::entity
+namespace editor::outliner
 {
 	struct SelectSingleton;
 }
@@ -41,6 +41,7 @@ namespace editor
 		using World = ecs::WorldView
 			::Write<
 			editor::gizmo::TransformSingleton,
+			editor::outliner::SelectSingleton,
 			eng::CameraComponent,
 			eng::TransformComponent>
 			::Read<

@@ -3,7 +3,7 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace editor::entity
+namespace editor::inspector
 {
 	struct SettingsSingleton;
 }
@@ -13,14 +13,14 @@ namespace gamestate
 	struct EditorComponent;
 }
 
-namespace editor::entity
+namespace editor::inspector
 {
 	class SettingsSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::entity::SettingsSingleton,
+			editor::inspector::SettingsSingleton,
 			gamestate::EditorComponent>;
 
 		void Initialise(World& world);

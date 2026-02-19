@@ -4,8 +4,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/SettingsLocalSingleton.h"
 #include "Editor/GizmoTransformSingleton.h"
+#include "Editor/SettingsLocalSingleton.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
@@ -14,9 +14,9 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "EntityEditor/EntityEditorSelectSingleton.h"
 #include "GameState/GameStateEditModeComponent.h"
 #include "Math/Matrix.h"
+#include "Outliner/OutlinerSelectSingleton.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -130,7 +130,7 @@ namespace
 				ImGuizmo::SetDrawlist();
 				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 
-				const auto& selectComponent = world.ReadSingleton<editor::entity::SelectSingleton>();
+				const auto& selectComponent = world.ReadSingleton<editor::outliner::SelectSingleton>();
 				const ecs::Entity selected = selectComponent.m_Entity;
 				if (selected.IsUnassigned())
 					continue;

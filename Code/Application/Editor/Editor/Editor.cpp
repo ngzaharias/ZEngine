@@ -19,10 +19,12 @@
 #include "Editor/SettingsLocalSystem.h"
 #include "Editor/SettingsMenuSystem.h"
 #include "Editor/SettingsWindowComponent.h"
-#include "EntityEditor/EntityEditorRegisterModule.h"
 #include "FlipbookEditor/FlipbookEditorRegisterModule.h"
 #include "GameState/GameStateRegisterModule.h"
+#include "Icons/IconsRegisterModule.h"
 #include "InputEditor/InputEditorRegisterModule.h"
+#include "Inspector/InspectorRegisterModule.h"
+#include "Outliner/OutlinerRegisterModule.h"
 #include "SpriteEditor/SpriteEditorRegisterModule.h"
 #include "TableEditor/TableEditorRegisterModule.h"
 #include "TextureEditor/TextureEditorRegisterModule.h"
@@ -55,15 +57,17 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
 	m_ClientWorld.RegisterSystem<editor::ToolbarSystem>();
 
-	editor::entity::RegisterModule(m_ClientWorld);
 	editor::flipbook::RegisterModule(m_ClientWorld);
 	editor::input::RegisterModule(m_ClientWorld);
+	editor::inspector::RegisterModule(m_ClientWorld);
+	editor::outliner::RegisterModule(m_ClientWorld);
 	editor::sprite::RegisterModule(m_ClientWorld);
 	editor::table::RegisterModule(m_ClientWorld);
 	editor::texture::RegisterModule(m_ClientWorld);
 	editor::theme::RegisterModule(m_ClientWorld);
 	editor::trajectory::RegisterModule(m_ClientWorld);
 	gamestate::RegisterModule(m_ClientWorld);
+	icon::RegisterModule(m_ClientWorld);
 }
 
 void editor::Editor::Initialise()

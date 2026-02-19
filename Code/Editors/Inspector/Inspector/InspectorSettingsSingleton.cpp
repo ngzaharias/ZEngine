@@ -1,5 +1,5 @@
-#include "EntityEditorPCH.h"
-#include "EntityEditor/EntityEditorSettingsSingleton.h"
+#include "InspectorPCH.h"
+#include "Inspector/InspectorSettingsSingleton.h"
 
 #include "Engine/Visitor.h"
 #include "imgui/Inspector.h"
@@ -11,13 +11,13 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(editor::entity::SettingsSingleton& value) const
+void eng::Visitor::ReadCustom(editor::inspector::SettingsSingleton& value) const
 {
 	Read(strOpen, value.m_Open, value.m_Open);
 	Read(strSave, value.m_Save, value.m_Save);
 }
 template<>
-void eng::Visitor::WriteCustom(const editor::entity::SettingsSingleton& value)
+void eng::Visitor::WriteCustom(const editor::inspector::SettingsSingleton& value)
 {
 	Write(strOpen, value.m_Open);
 	Write(strSave, value.m_Save);
