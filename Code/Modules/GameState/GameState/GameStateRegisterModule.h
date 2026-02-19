@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace settings
+namespace gamestate
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

@@ -9,8 +9,8 @@
 #include "Engine/SettingsDebugSingleton.h"
 #include "EntityEditor/EntityEditorOpenWindowEvent.h"
 #include "FlipbookEditor/FlipbookEditorOpenWindowEvent.h"
-#include "Settings/SettingsEditorComponent.h"
-#include "Settings/SettingsEditorToggleEvent.h"
+#include "GameState/GameStateEditModeComponent.h"
+#include "GameState/GameStateEditModeToggleEvent.h"
 #include "SpriteEditor/SpriteEditorOpenWindowEvent.h"
 #include "TextureEditor/TextureEditorOpenWindowEvent.h"
 
@@ -38,7 +38,7 @@ namespace
 
 	void Draw_Mode(World& world)
 	{
-		const bool isEnabled = world.HasAny<ecs::query::Include<settings::EditorComponent>>();
+		const bool isEnabled = world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>();
 		const char* tooltip = isEnabled
 			? "Switch to Game Mode"
 			: "Switch to Edit Mode";
@@ -48,7 +48,7 @@ namespace
 
 		if (ButtonIcon("##mode", tooltip, icon))
 		{
-			world.AddEvent<settings::EditorToggleEvent>();
+			world.AddEvent<gamestate::EditModeToggleEvent>();
 		}
 		ImGui::SameLine();
 	}

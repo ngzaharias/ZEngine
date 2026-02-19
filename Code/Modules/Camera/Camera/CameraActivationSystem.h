@@ -23,9 +23,9 @@ namespace eng
 	struct TransformComponent;
 }
 
-namespace settings
+namespace gamestate
 {
-	struct EditorComponent;
+	struct EditModeComponent;
 }
 
 namespace camera
@@ -44,7 +44,7 @@ namespace camera
 			eng::EditorComponent,
 			eng::TransformComponent>
 			::Read<
-			settings::EditorComponent>;
+			gamestate::EditModeComponent>;
 
 		void Initialise(World& world);
 

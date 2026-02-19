@@ -32,9 +32,9 @@ namespace eng
 	struct VersionComponent;
 }
 
-namespace settings
+namespace gamestate
 {
-	struct EditorComponent;
+	struct EditModeComponent;
 }
 
 namespace editor::gizmo
@@ -54,7 +54,7 @@ namespace editor::gizmo
 			eng::CameraComponent,
 			eng::InputManager,
 			eng::WindowManager,
-			::settings::EditorComponent>;
+			gamestate::EditModeComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

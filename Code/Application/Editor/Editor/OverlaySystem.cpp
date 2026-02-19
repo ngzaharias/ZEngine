@@ -13,7 +13,7 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "EntityEditor/EntityEditorSelectSingleton.h"
-#include "Settings/SettingsEditorComponent.h"
+#include "GameState/GameStateEditModeComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -189,7 +189,7 @@ void editor::OverlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasAny<ecs::query::Include<settings::EditorComponent>>())
+	if (!world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
 		return;
 
 	ProcessCamera(world);

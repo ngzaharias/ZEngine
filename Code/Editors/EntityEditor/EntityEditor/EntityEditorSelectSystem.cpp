@@ -18,12 +18,12 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "EntityEditor/EntityEditorSelectSingleton.h"
+#include "GameState/GameStateEditModeComponent.h"
 #include "Math/AABB.h"
 #include "Math/CollisionMath.h"
 #include "Math/Quaternion.h"
 #include "Math/Ray.h"
 #include "Math/Sphere.h"
-#include "Settings/SettingsEditorComponent.h"
 
 namespace
 {
@@ -75,7 +75,7 @@ void editor::entity::SelectSystem::Update(World& world, const GameTime& gameTime
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<settings::EditorComponent>>())
+	if (world.HasAny<ecs::query::Added<gamestate::EditModeComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::EditorWorld;
@@ -84,7 +84,7 @@ void editor::entity::SelectSystem::Update(World& world, const GameTime& gameTime
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.AppendLayer(strInput, layer);
 	}
-	else if (world.HasAny<ecs::query::Removed<settings::EditorComponent>>())
+	else if (world.HasAny<ecs::query::Removed<gamestate::EditModeComponent>>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);

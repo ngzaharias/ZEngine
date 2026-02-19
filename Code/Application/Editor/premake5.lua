@@ -68,7 +68,7 @@ project "Editor"
 		"%{wks.location}/../Code/Modules/Camera/",
 		"%{wks.location}/../Code/Modules/ClientHidden/",
 		"%{wks.location}/../Code/Modules/Container/",
-		"%{wks.location}/../Code/Modules/Settings/",
+		"%{wks.location}/../Code/Modules/GameState/",
 		"%{wks.location}/../Code/Modules/Softbody/",
 	}
 
@@ -136,11 +136,11 @@ project "Editor"
 		"ClientHidden",
 		"ClientNetwork",
 		"Container",
+		"GameState",
 		"Hexmap",
 		"ServerCursor",
 		"ServerHidden",
 		"ServerNetwork",
-		"Settings",
 		"SharedCursor",
 		"SharedHidden",
 		"SharedNetwork",

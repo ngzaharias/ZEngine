@@ -23,9 +23,9 @@ namespace eng
 	struct VisibilityComponent;
 }
 
-namespace settings
+namespace gamestate
 {
-	struct EditorComponent;
+	struct EditModeComponent;
 }
 
 namespace editor::entity
@@ -47,7 +47,7 @@ namespace editor::entity
 			eng::TransformComponent,
 			eng::VisibilityComponent,
 			eng::WindowManager,
-			settings::EditorComponent>;
+			gamestate::EditModeComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -3,22 +3,22 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace settings
+namespace gamestate
 {
-	struct EditorComponent;
-	struct EditorToggleEvent;
+	struct EditModeComponent;
+	struct EditModeToggleEvent;
 }
 
-namespace settings
+namespace gamestate
 {
-	class EditorSystem final : public ecs::System
+	class EditModeSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			settings::EditorComponent>
+			gamestate::EditModeComponent>
 			::Read<
-			settings::EditorToggleEvent>;
+			gamestate::EditModeToggleEvent>;
 
 		void Initialise(World& world);
 

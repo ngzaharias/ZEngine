@@ -28,9 +28,9 @@ namespace eng::settings
 	struct DebugSingleton;
 }
 
-namespace settings
+namespace gamestate
 {
-	struct EditorComponent;
+	struct EditModeComponent;
 }
 
 namespace editor
@@ -48,7 +48,7 @@ namespace editor
 			eng::EditorComponent,
 			eng::settings::DebugSingleton,
 			eng::WindowManager,
-			::settings::EditorComponent>;
+			gamestate::EditModeComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

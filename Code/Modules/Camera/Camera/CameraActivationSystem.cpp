@@ -11,7 +11,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/TransformComponent.h"
-#include "Settings/SettingsEditorComponent.h"
+#include "GameState/GameStateEditModeComponent.h"
 
 void camera::ActivationSystem::Initialise(World& world)
 {
@@ -36,7 +36,7 @@ void camera::ActivationSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Include<settings::EditorComponent>>())
+	if (world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
 	{
 		using EnableQuery = ecs::query
 			::Include<

@@ -21,8 +21,8 @@
 #include "Editor/SettingsWindowComponent.h"
 #include "EntityEditor/EntityEditorRegisterModule.h"
 #include "FlipbookEditor/FlipbookEditorRegisterModule.h"
+#include "GameState/GameStateRegisterModule.h"
 #include "InputEditor/InputEditorRegisterModule.h"
-#include "Settings/SettingsRegisterModule.h"
 #include "SpriteEditor/SpriteEditorRegisterModule.h"
 #include "TableEditor/TableEditorRegisterModule.h"
 #include "TextureEditor/TextureEditorRegisterModule.h"
@@ -63,7 +63,7 @@ void editor::Editor::Register()
 	editor::texture::RegisterModule(m_ClientWorld);
 	editor::theme::RegisterModule(m_ClientWorld);
 	editor::trajectory::RegisterModule(m_ClientWorld);
-	::settings::RegisterModule(m_ClientWorld);
+	gamestate::RegisterModule(m_ClientWorld);
 }
 
 void editor::Editor::Initialise()

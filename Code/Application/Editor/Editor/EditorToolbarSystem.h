@@ -28,10 +28,10 @@ namespace eng::settings
 	struct DebugSingleton;
 }
 
-namespace settings
+namespace gamestate
 {
-	struct EditorComponent;
-	struct EditorToggleEvent;
+	struct EditModeComponent;
+	struct EditModeToggleEvent;
 }
 
 namespace editor
@@ -46,8 +46,8 @@ namespace editor
 			editor::sprite::OpenWindowEvent,
 			editor::texture::OpenWindowEvent,
 			eng::settings::DebugSingleton,
-			::settings::EditorComponent,
-			::settings::EditorToggleEvent>
+			gamestate::EditModeComponent,
+			gamestate::EditModeToggleEvent>
 			::Read<>;
 
 		void Update(World& world, const GameTime& gameTime);

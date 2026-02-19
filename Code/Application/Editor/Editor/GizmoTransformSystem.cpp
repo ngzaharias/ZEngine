@@ -15,8 +15,8 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "EntityEditor/EntityEditorSelectSingleton.h"
+#include "GameState/GameStateEditModeComponent.h"
 #include "Math/Matrix.h"
-#include "Settings/SettingsEditorComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -245,7 +245,7 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
 		return;
 
-	if (!world.HasAny<ecs::query::Include<::settings::EditorComponent>>())
+	if (!world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
 		return;
 
 	ProcessInput(world);

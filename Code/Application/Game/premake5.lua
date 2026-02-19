@@ -112,6 +112,7 @@ project "Game"
 		"GameClient",
 		"GameDebug",
 		"GameServer",
+		"GameState",
 		"GameUI",
 
 		-- Bindings

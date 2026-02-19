@@ -12,8 +12,8 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "GameState/GameStateEditModeComponent.h"
 #include "Math/Ray.h"
-#include "Settings/SettingsEditorComponent.h"
 #include "Tactics/TacticsInput.h"
 #include "Tactics/TacticsSelectedComponent.h"
 #include "Tilemap/TilemapAgentComponent.h"
@@ -33,7 +33,7 @@ void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Include<settings::EditorComponent>>())
+	if (world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
 		return;
 
 	const auto& inputManager = world.ReadResource<eng::InputManager>();
