@@ -8,12 +8,17 @@
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/FileHelpers.h"
+#include "Engine/FlipbookComponent.h"
 #include "Engine/InputManager.h"
 #include "Engine/InspectorHelpers.h"
 #include "Engine/LevelEntityComponent.h"
+#include "Engine/LightAmbientComponent.h"
+#include "Engine/LightDirectionalComponent.h"
+#include "Engine/LightPointComponent.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/SpriteComponent.h"
+#include "Engine/StaticMeshComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Visitor.h"
@@ -50,7 +55,35 @@ namespace
 		return std::format("{}: {}", label, index);
 	}
 
-	ecs::Entity CreateEntity(ecs::EntityWorld& world, const str::StringView name, const str::Name& level)
+	using IconView = ecs::EntityView
+		::Optional<
+		eng::CameraComponent,
+		eng::FlipbookComponent,
+		eng::light::AmbientComponent,
+		eng::light::DirectionalComponent,
+		eng::light::PointComponent,
+		eng::SpriteComponent,
+		eng::StaticMeshComponent>;
+	const icon::Data& GetIcon(const IconView& view)
+	{
+		if (view.HasOptional<eng::CameraComponent>())
+			return icon::ENTITY_CAMERA;
+		if (view.HasOptional<eng::FlipbookComponent>())
+			return icon::ENTITY_FLIPBOOK;
+		if (view.HasOptional<eng::light::AmbientComponent>())
+			return icon::ENTITY_LIGHT;
+		if (view.HasOptional<eng::light::DirectionalComponent>())
+			return icon::ENTITY_LIGHT;
+		if (view.HasOptional<eng::light::PointComponent>())
+			return icon::ENTITY_LIGHT;
+		if (view.HasOptional<eng::SpriteComponent>())
+			return icon::ENTITY_SPRITE;
+		if (view.HasOptional<eng::StaticMeshComponent>())
+			return icon::ENTITY_STATICMESH;
+		return icon::ENTITY;
+	}
+
+	ecs::Entity CreateEntity(World& world, const str::StringView name, const str::Name& level)
 	{
 		const ecs::Entity entity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(entity, name);
@@ -64,6 +97,11 @@ namespace
 		select.m_Entity = entity;
 
 		return entity;
+	}
+
+	void Icon(const icon::Data& icon, const ImVec2& size = ImVec2(15, 15))
+	{
+		imgui::Image(icon.m_TextureId, size, icon.m_UV0, icon.m_UV1);
 	}
 
 	bool ButtonIcon(const char* label, const char* tooltip, const icon::Data& icon, const ImVec2& size = ImVec2(22, 22), const bool active = false)
@@ -98,8 +136,17 @@ namespace
 		const auto& select = world.ReadSingleton<editor::outliner::SelectSingleton>();
 
 		using Query = ecs::query
-			::Include<const eng::PrototypeComponent>
-			::Optional<const ecs::NameComponent>;
+			::Include<
+			const eng::PrototypeComponent>
+			::Optional<
+			const ecs::NameComponent,
+			const eng::CameraComponent,
+			const eng::FlipbookComponent,
+			const eng::light::AmbientComponent,
+			const eng::light::DirectionalComponent,
+			const eng::light::PointComponent,
+			const eng::SpriteComponent,
+			const eng::StaticMeshComponent>;
 		for (auto&& view : world.Query<Query>())
 		{
 			imgui::RaiiID id(view.GetEntity().GetIndex());
@@ -107,6 +154,9 @@ namespace
 			const char* name = "<unknown>";;
 			if (const auto* component = view.ReadOptional<ecs::NameComponent>())
 				name = component->m_Name.c_str();
+
+			Icon(GetIcon(view));
+			ImGui::SameLine();
 
 			const bool isSelected = view == select.m_Entity;
 			if (ImGui::Selectable(name, isSelected))
@@ -125,7 +175,7 @@ namespace
 		}
 	}
 
-	void Draw_EntityDrop(ecs::EntityWorld& world, const str::Name& levelName)
+	void Draw_EntityDrop(World& world, const str::Name& levelName)
 	{
 		const auto* window = ImGui::GetCurrentWindow();
 
@@ -148,11 +198,6 @@ namespace
 			ImGui::EndDragDropTarget();
 		}
 	}
-}
-
-editor::outliner::WindowSystem::WindowSystem(ecs::EntityWorld& world)
-	: m_World(world)
-{
 }
 
 void editor::outliner::WindowSystem::Update(World& world, const GameTime& gameTime)
@@ -202,7 +247,7 @@ void editor::outliner::WindowSystem::Update(World& world, const GameTime& gameTi
 			}
 
 			Draw_EntityList(world);
-			Draw_EntityDrop(m_World, levelName);
+			Draw_EntityDrop(world, levelName);
 		}
 		ImGui::End();
 

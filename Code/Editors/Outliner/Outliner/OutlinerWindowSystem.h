@@ -9,6 +9,21 @@ namespace ecs
 	struct NameComponent;
 }
 
+namespace eng
+{
+	struct CameraComponent;
+	struct FlipbookComponent;
+	struct SpriteComponent;
+	struct StaticMeshComponent;
+}
+
+namespace eng::light
+{
+	struct AmbientComponent;
+	struct DirectionalComponent;
+	struct PointComponent;
+}
+
 namespace editor::outliner
 {
 	struct OpenWindowEvent;
@@ -37,16 +52,17 @@ namespace editor::outliner
 			editor::outliner::WindowComponent>
 			::Read<
 			ecs::NameComponent,
+			eng::CameraComponent,
+			eng::FlipbookComponent,
+			eng::SpriteComponent,
+			eng::StaticMeshComponent,
 			editor::outliner::OpenWindowEvent,
 			eng::level::EntityComponent,
 			gamestate::EditorComponent>;
 
-		WindowSystem(ecs::EntityWorld& world);
-
 		void Update(World& world, const GameTime& gameTime);
 
 	private:
-		ecs::EntityWorld& m_World;
 		imgui::Identifier m_WindowIds = {};
 	};
 }
