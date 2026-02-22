@@ -34,7 +34,6 @@ namespace
 	void Spacing()
 	{
 		ImGui::Dummy(ImVec2(10.0f, 0.0f));
-		ImGui::SameLine();
 	}
 
 	void Draw_Mode(World& world)
@@ -51,7 +50,6 @@ namespace
 		{
 			world.AddEvent<gamestate::EditModeToggleEvent>();
 		}
-		ImGui::SameLine();
 	}
 
 	void Draw_Editors(World& world)
@@ -61,9 +59,10 @@ namespace
 		ImGui::SameLine();
 		if (ButtonIcon("##inspector", "Inspector", icon::EDITOR_INSPECTOR))
 			world.AddEvent<editor::inspector::OpenWindowEvent>();
-		ImGui::SameLine();
 
+		ImGui::SameLine();
 		Spacing();
+		ImGui::SameLine();
 
 		if (ButtonIcon("##texture", "Texture Editor", icon::EDITOR_TEXTURE))
 			world.AddEvent<editor::texture::OpenWindowEvent>();
@@ -73,10 +72,19 @@ namespace
 		ImGui::SameLine();
 		if (ButtonIcon("##flipbook", "Flipbook Editor", icon::EDITOR_FLIPBOOK))
 			world.AddEvent<editor::flipbook::OpenWindowEvent>();
-		ImGui::SameLine();
 	}
 
-	void Draw_Gizmos(World& world)
+	void Draw_DebugGizmos(World& world)
+	{
+		const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
+		if (ButtonIcon("##lines", "Lines", icon::DEBUG_LINES, ImVec2(22, 22), settings.m_AreLinesEnabled))
+		{
+			auto& write = world.WriteSingleton<eng::settings::DebugSingleton>();
+			write.m_AreLinesEnabled = !settings.m_AreLinesEnabled;
+		}
+	}
+
+	void Draw_EditorGizmos(World& world)
 	{
 		const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
 		const auto& axes = settings.m_Gizmos.m_CoordAxes;
@@ -122,7 +130,6 @@ namespace
 			ImGui::ColorEdit3("Colour  ", &write.m_Gizmos.m_FloorGrid.m_MajorColour.x, ImGuiColorEditFlags_NoInputs);
 			ImGui::EndPopup();
 		}
-		ImGui::SameLine();
 	}
 }
 
@@ -153,11 +160,23 @@ void editor::ToolbarSystem::Update(World& world, const GameTime& gameTime)
 		ImGui::PopStyleVar(2);
 
 		Spacing();
+		ImGui::SameLine();
+
 		Draw_Mode(world);
+
+		ImGui::SameLine();
 		Spacing();
+		ImGui::SameLine();
+
 		Draw_Editors(world);
+
+		ImGui::SameLine();
 		Spacing();
-		Draw_Gizmos(world);
+		ImGui::SameLine();
+
+		Draw_DebugGizmos(world);
+		ImGui::SameLine();
+		Draw_EditorGizmos(world);
 	}
 	ImGui::End();
 }
