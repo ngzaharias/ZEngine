@@ -10,11 +10,13 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/LinesComponent.h"
-#include "Engine/ShaderAsset.h"
 #include "Engine/SettingsDebugSingleton.h"
+#include "Engine/ShaderAsset.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "GameState/GameStateEditModeComponent.h"
+#include "GameState/GameStateEditorComponent.h"
 #include "Math/Matrix.h"
 
 #include <GLEW/glew.h>
@@ -82,6 +84,11 @@ void editor::RenderGridSystem::Shutdown(World& world)
 void editor::RenderGridSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
+	if (!world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
+		return;
 
 	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
 	const auto& localSettings = world.ReadSingleton<editor::settings::LocalSingleton>();

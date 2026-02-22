@@ -22,6 +22,12 @@ namespace eng::settings
 	struct DebugSingleton;
 }
 
+namespace gamestate
+{
+	struct EditModeComponent;
+	struct EditorComponent;
+}
+
 namespace render
 {
 	struct OpaqueComponent;
@@ -35,7 +41,7 @@ namespace editor
 	public:
 		using World = ecs::WorldView
 			::Write<
-			//eng::AssetManager,
+			eng::AssetManager,
 			render::OpaqueComponent>
 			::Read<
 			editor::settings::LocalSingleton,
@@ -44,6 +50,8 @@ namespace editor
 			eng::settings::DebugSingleton,
 			eng::TransformComponent,
 			eng::WindowManager,
+			gamestate::EditModeComponent,
+			gamestate::EditorComponent,
 			render::ShadowComponent>;
 
 		void Initialise(World& world);
