@@ -14,6 +14,8 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "GameState/GameStateEditModeComponent.h"
+#include "GameState/GameStateEditorComponent.h"
 #include "Math/Matrix.h"
 
 #include <GLEW/glew.h>
@@ -59,6 +61,11 @@ void editor::RenderAxesSystem::Shutdown(World& world)
 void editor::RenderAxesSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+		return;
+	if (!world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
+		return;
 
 	if (world.HasAny<editor::settings::LocalSingleton>())
 	{

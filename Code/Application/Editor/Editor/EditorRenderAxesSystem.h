@@ -20,6 +20,12 @@ namespace eng
 	struct TransformComponent;
 }
 
+namespace gamestate
+{
+	struct EditModeComponent;
+	struct EditorComponent;
+}
+
 namespace render
 {
 	struct OpaqueComponent;
@@ -41,6 +47,8 @@ namespace editor
 			eng::CameraComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
+			gamestate::EditModeComponent,
+			gamestate::EditorComponent,
 			render::ShadowComponent>;
 
 		void Initialise(World& world);
