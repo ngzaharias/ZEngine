@@ -9,7 +9,4 @@ m_Size = 1000.0
 ['eng::TransformComponent']
 m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
-m_Translate = { X = 40.30068588256836, Y = 23.61754035949707, Z = -100.0 }
-
-['camera::Move2DComponent']
-['camera::Pan3DComponent']
+m_Translate = { X = 0.0, Y = 0.0, Z = -100.0 }
