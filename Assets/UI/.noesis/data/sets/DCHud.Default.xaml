@@ -1,0 +1,11 @@
+<vdctx:DCHud xmlns:vdctx="clr-namespace:project">
+  <vdctx:DCHud.Abilities>
+    <vdctx:VMAbility Name="Foo"/>
+    <vdctx:VMAbility Name="Bar"/>
+    <vdctx:VMAbility Name="Pawn"/>
+    <vdctx:VMAbility Name="King"/>
+    <vdctx:VMAbility Name="Queen"/>
+    <vdctx:VMAbility Name="Knight"/>
+    <vdctx:VMAbility Name="Castle"/>
+  </vdctx:DCHud.Abilities>
+</vdctx:DCHud>

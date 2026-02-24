@@ -1,0 +1,4 @@
+m_Guid = "f53b1bdcb705436baf0735a675eaa04e"
+m_Name = "HUD"
+
+['gui::HUDComponent']

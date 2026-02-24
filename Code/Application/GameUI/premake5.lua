@@ -29,4 +29,5 @@ project "GameUI"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Modules/Camera/",
 		"%{wks.location}/../Code/Modules/ClientHidden/",
+		"%{wks.location}/../Code/Modules/Tactics/",
 	}

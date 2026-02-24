@@ -8,6 +8,7 @@
 #include "Engine/UIManager.h"
 #include "GameUI/DCGameMenu.h"
 #include "GameUI/DCHiddenCount.h"
+#include "GameUI/DCHud.h"
 #include "GameUI/DCLevelComplete.h"
 #include "GameUI/DCLoadingScreen.h"
 #include "GameUI/DCMainMenu.h"
@@ -21,6 +22,8 @@
 #include "GameUI/HiddenCountSystem.h"
 #include "GameUI/HiddenLevelSystem.h"
 #include "GameUI/HintTable.h"
+#include "GameUI/HUDComponent.h"
+#include "GameUI/HUDSystem.h"
 #include "GameUI/InputBindingsSystem.h"
 #include "GameUI/InputComponents.h"
 #include "GameUI/LevelCompleteExitGameRequest.h"
@@ -47,6 +50,7 @@ namespace
 {
 	const str::Name strGameMenu_xaml = NAME("GameMenu.xaml");
 	const str::Name strHiddenCount_xaml = NAME("HiddenCount.xaml");
+	const str::Name strHUD_xaml = NAME("HUD.xaml");
 	const str::Name strLevelComplete_xaml = NAME("LevelComplete.xaml");
 	const str::Name strLoading_xaml = NAME("Loading.xaml");
 	const str::Name strMainMenu_xaml = NAME("MainMenu.xaml");
@@ -58,6 +62,7 @@ void gui::RegisterModule(ecs::EntityWorld& world)
 {
 	// components
 	{
+		world.RegisterComponent<gui::HUDComponent>();
 		world.RegisterComponent<gui::game_menu::WindowComponent>();
 		world.RegisterComponent<gui::input::BindingsComponent>();
 		world.RegisterComponent<gui::level_complete::WindowComponent>();
@@ -86,6 +91,7 @@ void gui::RegisterModule(ecs::EntityWorld& world)
 
 	// systems
 	{
+		world.RegisterSystem<gui::HUDSystem>();
 		world.RegisterSystem<gui::game_menu::MenuSystem>();
 		world.RegisterSystem<gui::hidden::CountSystem>();
 		world.RegisterSystem<gui::hidden::LevelSystem>();
@@ -100,6 +106,7 @@ void gui::RegisterModule(ecs::EntityWorld& world)
 	// prototypes
 	{
 		auto& manager = world.WriteResource<eng::PrototypeManager>();
+		manager.RegisterComponent<gui::HUDComponent>();
 		manager.RegisterComponent<gui::input::BindingsComponent>();
 		manager.RegisterComponent<gui::main_menu::WindowComponent>();
 	}
@@ -117,6 +124,7 @@ void gui::RegisterModule(ecs::EntityWorld& world)
 		auto& manager = world.WriteResource<eng::UIManager>();
 		manager.RegisterDataContext<gui::DCGameMenu>(strGameMenu_xaml);
 		manager.RegisterDataContext<gui::DCHiddenCount>(strHiddenCount_xaml);
+		manager.RegisterDataContext<gui::DCHud>(strHUD_xaml);
 		manager.RegisterDataContext<gui::DCLevelComplete>(strLevelComplete_xaml);
 		manager.RegisterDataContext<gui::DCLoadingScreen>(strLoading_xaml);
 		manager.RegisterDataContext<gui::DCLoadingScreen>(strSplash_xaml);
