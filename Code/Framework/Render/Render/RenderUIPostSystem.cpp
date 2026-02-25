@@ -18,5 +18,23 @@ void render::UIPostSystem::Update(World& world, const GameTime& gameTime)
 	auto& uiManager = world.WriteResource<eng::UIManager>();
 	uiManager.RenderFinish();
 
-	glColorMask(true, true, true, true);
+	const auto& windowManager = world.ReadResource<eng::WindowManager>();
+	if (const eng::Window* window = windowManager.GetWindow(0))
+	{
+		const Vector2u& windowSize = window->GetSize();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, windowSize.x, windowSize.y);
+		glDisable(GL_ALPHA_TEST);
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_SCISSOR_TEST);
+		glDisable(GL_STENCIL_TEST);
+		glClearStencil(0);
+		glClearDepthf(1.f);
+
+		// the depth mask must be enabled BEFORE clearing the depth buffer
+		glDepthMask(GL_TRUE);
+		glColorMask(true, true, true, true);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	}
 }
