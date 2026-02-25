@@ -31,7 +31,10 @@ void render::UIPreSystem::Update(World& world, const GameTime& gameTime)
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, windowSize.x, windowSize.y);
+		glDisable(GL_ALPHA_TEST);
+		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_SCISSOR_TEST);
+		glDisable(GL_STENCIL_TEST);
 		glClearStencil(0);
 		glClearDepthf(1.f);
 		glClearColor(s_ClearColour.r, s_ClearColour.g, s_ClearColour.b, 0.f);

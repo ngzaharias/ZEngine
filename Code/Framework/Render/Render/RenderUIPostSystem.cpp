@@ -5,6 +5,11 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/UIManager.h"
+#include "Engine/Window.h"
+#include "Engine/WindowManager.h"
+
+#include <GLEW/glew.h>
+#include <GLFW/glfw3.h>
 
 void render::UIPostSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -12,4 +17,6 @@ void render::UIPostSystem::Update(World& world, const GameTime& gameTime)
 
 	auto& uiManager = world.WriteResource<eng::UIManager>();
 	uiManager.RenderFinish();
+
+	glColorMask(true, true, true, true);
 }
