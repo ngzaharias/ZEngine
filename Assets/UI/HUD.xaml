@@ -12,20 +12,19 @@
         <Button Content="{Binding Name}" Width="120" Height="160" Style="{DynamicResource Style.Button}"/>
       </DataTemplate>
       <ItemsPanelTemplate x:Key="Template.AbilityList">
-        <StackPanel Orientation="Horizontal"/>
+        <UniformGrid Rows="1">
+        </UniformGrid>
       </ItemsPanelTemplate>
     </ResourceDictionary>
   </Page.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="1*"/>
-      <ColumnDefinition Width="1*"/>
+      <ColumnDefinition Width="5*"/>
       <ColumnDefinition Width="1*"/>
     </Grid.ColumnDefinitions>
     <Border Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4,4,4,4" BorderThickness="2,2,2,2" Margin="0,0,0,100">
-      <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Visible">
-        <ItemsControl x:Name="AbilityList" ItemsSource="{Binding Abilities}" ItemTemplate="{StaticResource Template.Ability}" ItemsPanel="{DynamicResource Template.AbilityList}"/>
-      </ScrollViewer>
+      <ItemsControl x:Name="AbilityList" ItemsSource="{Binding Abilities}" ItemTemplate="{StaticResource Template.Ability}" ItemsPanel="{DynamicResource Template.AbilityList}"/>
     </Border>
   </Grid>
 </Page>
