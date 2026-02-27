@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Guid.h"
-#include "Engine/UIDataContext.h"
+#include "Engine/UIViewModel.h"
 
 namespace str
 {
@@ -10,7 +10,7 @@ namespace str
 
 namespace gui
 {
-	class VMColour final : public Noesis::BaseComponent
+	class VMColour final : public eng::UIViewModel
 	{
 	public:
 		VMColour(const str::Name& name, const str::Guid& guid);
@@ -21,6 +21,7 @@ namespace gui
 		Noesis::String m_Name = {};
 		str::Guid m_Guid = {};
 
+	private:
 		NS_DECLARE_REFLECTION(gui::VMColour, Noesis::BaseComponent)
 	};
 }

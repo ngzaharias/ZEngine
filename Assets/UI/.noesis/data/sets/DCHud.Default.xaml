@@ -1,11 +1,11 @@
 <vdctx:DCHud xmlns:vdctx="clr-namespace:project">
-  <vdctx:DCHud.Abilities>
-    <vdctx:VMAbility Name="Foo"/>
-    <vdctx:VMAbility Name="Bar"/>
-    <vdctx:VMAbility Name="Pawn"/>
-    <vdctx:VMAbility Name="King"/>
-    <vdctx:VMAbility Name="Queen"/>
-    <vdctx:VMAbility Name="Knight"/>
-    <vdctx:VMAbility Name="Castle"/>
-  </vdctx:DCHud.Abilities>
+  <vdctx:DCHud.SelectedPawn>
+    <vdctx:VMPawn>
+      <vdctx:VMPawn.Abilities>
+        <vdctx:VMAbility Name="Foo" IsSelected="False"/>
+        <vdctx:VMAbility Name="Bar" IsSelected="False"/>
+        <vdctx:VMAbility Name="Zoo" IsSelected="False"/>
+      </vdctx:VMPawn.Abilities>
+    </vdctx:VMPawn>
+  </vdctx:DCHud.SelectedPawn>
 </vdctx:DCHud>

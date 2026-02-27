@@ -14,6 +14,12 @@ namespace gui
 	struct HUDComponent;
 }
 
+namespace tactics
+{
+	struct AbilityComponent;
+	struct SelectedComponent;
+}
+
 namespace gui
 {
 	class HUDSystem final : public ecs::System
@@ -24,7 +30,9 @@ namespace gui
 			eng::UIManager>
 			::Read<
 			eng::AbilityTable,
-			gui::HUDComponent>;
+			gui::HUDComponent,
+			tactics::AbilityComponent,
+			tactics::SelectedComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

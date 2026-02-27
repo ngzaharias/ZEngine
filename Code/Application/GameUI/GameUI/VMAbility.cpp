@@ -15,7 +15,19 @@ const char* gui::VMAbility::GetName() const
 	return m_Name.Str();
 }
 
+bool gui::VMAbility::GetIsSelected() const
+{
+	return m_IsSelected;
+}
+
+void gui::VMAbility::SetIsSelected(const bool value)
+{
+	m_IsSelected = value;
+	OnPropertyChanged("IsSelected");
+}
+
 NS_IMPLEMENT_REFLECTION(gui::VMAbility)
 {
 	NsProp("Name", &gui::VMAbility::GetName);
+	NsProp("IsSelected", &gui::VMAbility::GetIsSelected);
 }
