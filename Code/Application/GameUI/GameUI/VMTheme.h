@@ -1,12 +1,8 @@
 #pragma once
 
 #include "Core/Guid.h"
+#include "Core/Name.h"
 #include "Engine/UIViewModel.h"
-
-namespace str
-{
-	class Name;
-}
 
 namespace gui
 {
@@ -18,7 +14,7 @@ namespace gui
 		const char* GetName() const;
 
 	public:
-		Noesis::String m_Name = {};
+		str::Name m_Name = {};
 		str::Guid m_Guid = {};
 
 	private:

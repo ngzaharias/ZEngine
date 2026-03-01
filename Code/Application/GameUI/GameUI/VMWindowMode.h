@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/String.h"
 #include "Engine/UIViewModel.h"
 #include "Engine/WindowModeEnum.h"
 
@@ -13,7 +14,7 @@ namespace gui
 		const char* GetName() const;
 
 	public:
-		Noesis::String m_Name = {};
+		str::String m_Name = {};
 		eng::EWindowMode m_WindowMode = eng::EWindowMode::Borderless;
 
 	private:

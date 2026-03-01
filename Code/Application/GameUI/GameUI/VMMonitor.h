@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/String.h"
 #include "Engine/UIViewModel.h"
 
 namespace gui
@@ -12,7 +13,7 @@ namespace gui
 		const char* GetName() const;
 
 	public:
-		Noesis::String m_Name = {};
+		str::String m_Name = {};
 		int32 m_Index = -1;
 
 	private:

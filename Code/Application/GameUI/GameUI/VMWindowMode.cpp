@@ -9,13 +9,12 @@
 gui::VMWindowMode::VMWindowMode(const eng::EWindowMode windowMode)
 	: m_WindowMode(windowMode)
 {
-	const str::StringView string = EnumToString(m_WindowMode);
-	m_Name = Noesis::String(string.data(), (uint32)string.size());
+	m_Name = EnumToString(m_WindowMode);
 }
 
 const char* gui::VMWindowMode::GetName() const
 {
-	return m_Name.Str();
+	return m_Name.c_str();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::VMWindowMode)

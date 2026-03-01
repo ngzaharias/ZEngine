@@ -6,13 +6,12 @@
 gui::VMRefreshRate::VMRefreshRate(const int32 refreshRate, bool isNative)
 	: m_RefreshRate(refreshRate)
 {
-	const str::String string = std::format("{}{}", m_RefreshRate, isNative ? " (native)" : "");
-	m_Name = Noesis::String(string.data(), (uint32)string.size());
+	m_Name = std::format("{}{}", m_RefreshRate, isNative ? " (native)" : "");
 }
 
 const char* gui::VMRefreshRate::GetName() const
 {
-	return m_Name.Str();
+	return m_Name.c_str();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::VMRefreshRate)

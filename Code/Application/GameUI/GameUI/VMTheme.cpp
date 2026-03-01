@@ -4,17 +4,16 @@
 #include "Core/Name.h"
 
 #include <NsCore/ReflectionImplement.h>
-#include <NsCore/StringFwd.h>
 
 gui::VMTheme::VMTheme(const str::Name& name, const str::Guid& guid)
-	: m_Name(name.ToChar())
+	: m_Name(name)
 	, m_Guid(guid)
 {
 }
 
 const char* gui::VMTheme::GetName() const
 {
-	return m_Name.Str();
+	return m_Name.ToChar();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::VMTheme)

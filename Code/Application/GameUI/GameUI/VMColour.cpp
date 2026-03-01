@@ -7,14 +7,14 @@
 #include <NsCore/StringFwd.h>
 
 gui::VMColour::VMColour(const str::Name& name, const str::Guid& guid)
-	: m_Name(name.ToChar())
+	: m_Name(name)
 	, m_Guid(guid)
 {
 }
 
 const char* gui::VMColour::GetName() const
 {
-	return m_Name.Str();
+	return m_Name.ToChar();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::VMColour)

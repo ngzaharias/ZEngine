@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/String.h"
 #include "Engine/UIViewModel.h"
 #include "Math/Vector.h"
 
@@ -13,7 +14,7 @@ namespace gui
 		const char* GetName() const;
 
 	public:
-		Noesis::String m_Name = {};
+		str::String m_Name = {};
 		Vector2u m_Resolution = {};
 
 	private:
