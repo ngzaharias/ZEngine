@@ -1,4 +1,6 @@
 <Class Name="VMAbility">
   <Property Name="Name" Type="String" StringMinWordCount="0" StringMaxWordCount="10"/>
+  <Property Name="Display" Type="String" StringMinWordCount="0" StringMaxWordCount="10"/>
+  <Property Name="Tooltip" Type="String" StringMinWordCount="0" StringMaxWordCount="10"/>
   <Property Name="IsSelected" Type="Boolean"/>
 </Class>

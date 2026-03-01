@@ -6,8 +6,11 @@
 namespace
 {
 	const str::StringView strDirection = "m_Direction";
+	const str::StringView strDisplay = "m_Display";
 	const str::StringView strNodes = "m_Nodes";
 	const str::StringView strOffset = "m_Offset";
+	const str::StringView strSkill = "m_Skill";
+	const str::StringView strTooltip = "m_Tooltip";
 }
 
 template<>
@@ -26,4 +29,12 @@ template<>
 void eng::Visitor::ReadCustom(tactics::Teleport& value) const
 {
 	Read(strOffset, value.m_Offset, value.m_Offset);
+}
+
+template<>
+void eng::Visitor::ReadCustom(tactics::Ability& value) const
+{
+	Read(strDisplay, value.m_Display, value.m_Display);
+	Read(strTooltip, value.m_Tooltip, value.m_Tooltip);
+	Read(strSkill, value.m_Skill, value.m_Skill);
 }

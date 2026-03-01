@@ -2,9 +2,9 @@
   <vdctx:DCHud.SelectedPawn>
     <vdctx:VMPawn>
       <vdctx:VMPawn.Abilities>
-        <vdctx:VMAbility Name="Foo" IsSelected="False"/>
-        <vdctx:VMAbility Name="Bar" IsSelected="False"/>
-        <vdctx:VMAbility Name="Zoo" IsSelected="False"/>
+        <vdctx:VMAbility Display="Foo"/>
+        <vdctx:VMAbility Display="Bar"/>
+        <vdctx:VMAbility Display="Zoo"/>
       </vdctx:VMPawn.Abilities>
     </vdctx:VMPawn>
   </vdctx:DCHud.SelectedPawn>

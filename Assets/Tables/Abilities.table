@@ -1,143 +1,179 @@
 [Bishop_NE]
-[Bishop_NE.Rush]
+m_Display = "NE"
+[Bishop_NE.m_Skill.Rush]
 m_Direction = { X = 1, Y = 1 }
 
 [Bishop_NW]
-[Bishop_NW.Rush]
+m_Display = "NW"
+[Bishop_NW.m_Skill.Rush]
 m_Direction = { X = -1, Y = 1 }
 
 [Bishop_SE]
-[Bishop_SE.Rush]
+m_Display = "SE"
+[Bishop_SE.m_Skill.Rush]
 m_Direction = { X = 1, Y = -1 }
 
 [Bishop_SW]
-[Bishop_SW.Rush]
+m_Display = "SW"
+[Bishop_SW.m_Skill.Rush]
 m_Direction = { X = -1, Y = -1 }
 
 [Castle_N]
-[Castle_N.Rush]
+m_Display = "N"
+[Castle_N.m_Skill.Rush]
 m_Direction = { Y = 1 }
 
 [Castle_E]
-[Castle_E.Rush]
+m_Display = "E"
+[Castle_E.m_Skill.Rush]
 m_Direction = { X = 1 }
 
 [Castle_S]
-[Castle_S.Rush]
+m_Display = "S"
+[Castle_S.m_Skill.Rush]
 m_Direction = { Y = -1 }
 
 [Castle_W]
-[Castle_W.Rush]
+m_Display = "W"
+[Castle_W.m_Skill.Rush]
 m_Direction = { X = -1 }
 
 [King_N]
-[King_N.Teleport]
+m_Display = "N"
+[King_N.m_Skill.Teleport]
 m_Offset = { Y = 1 }
 
 [King_E]
-[King_E.Teleport]
+m_Display = "E"
+[King_E.m_Skill.Teleport]
 m_Offset = { X = 1 }
 
 [King_S]
-[King_S.Teleport]
+m_Display = "S"
+[King_S.m_Skill.Teleport]
 m_Offset = { Y = -1 }
 
 [King_W]
-[King_W.Teleport]
+m_Display = "W"
+[King_W.m_Skill.Teleport]
 m_Offset = { X = -1 }
 
 [Knight_NEE]
-[Knight_NEE.Path]
+m_Display = "NEE"
+[Knight_NEE.m_Skill.Path]
 m_Nodes = [{ X = 2, Y = 1 }]
 
 [Knight_NNE]
-[Knight_NNE.Path]
+m_Display = "NNE"
+[Knight_NNE.m_Skill.Path]
 m_Nodes = [{ X = 1, Y = 2 }]
 
 [Knight_NNW]
-[Knight_NNW.Path]
+m_Display = "NNW"
+[Knight_NNW.m_Skill.Path]
 m_Nodes = [{ X = -1, Y = 2 }]
 
 [Knight_NWW]
-[Knight_NWW.Path]
+m_Display = "NWW"
+[Knight_NWW.m_Skill.Path]
 m_Nodes = [{ X = -2, Y = 1 }]
 
 [Knight_SEE]
-[Knight_SEE.Path]
+m_Display = "SEE"
+[Knight_SEE.m_Skill.Path]
 m_Nodes = [{ X = 2, Y = -1 }]
 
 [Knight_SSE]
-[Knight_SSE.Path]
+m_Display = "SSE"
+[Knight_SSE.m_Skill.Path]
 m_Nodes = [{ X = 1, Y = -2 }]
 
 [Knight_SSW]
-[Knight_SSW.Path]
+m_Display = "SSW"
+[Knight_SSW.m_Skill.Path]
 m_Nodes = [{ X = -1, Y = -2 }]
 
 [Knight_SWW]
-[Knight_SWW.Path]
+m_Display = "SWW"
+[Knight_SWW.m_Skill.Path]
 m_Nodes = [{ X = -2, Y = -1 }]
 
 [Pawn_Basic_N]
-[Pawn_Basic_N.Path]
+m_Display = "N"
+[Pawn_Basic_N.m_Skill.Path]
 m_Nodes = [{ Y = 1 }]
 
 [Pawn_Basic_S]
-[Pawn_Basic_S.Path]
+m_Display = "S"
+[Pawn_Basic_S.m_Skill.Path]
 m_Nodes = [{ Y = -1 }]
 
 [Pawn_Opener_N]
-[Pawn_Opener_N.Path]
+m_Display = "N"
+[Pawn_Opener_N.m_Skill.Path]
 m_Nodes = [{ Y = 1 }, { Y = 1 }]
 
 [Pawn_Opener_S]
-[Pawn_Opener_S.Path]
+m_Display = "S"
+[Pawn_Opener_S.m_Skill.Path]
 m_Nodes = [{ Y = -1 }, { Y = -1 }]
 
 [Pawn_Attack_NE]
-[Pawn_Attack_NE.Path]
+m_Display = "NE"
+[Pawn_Attack_NE.m_Skill.Path]
 m_Nodes = [{ X = 1, Y = 1 }]
 
 [Pawn_Attack_NW]
-[Pawn_Attack_NW.Path]
+m_Display = "NW"
+[Pawn_Attack_NW.m_Skill.Path]
 m_Nodes = [{ X = -1, Y = 1 }]
 
 [Pawn_Attack_SE]
-[Pawn_Attack_SE.Path]
+m_Display = "SE"
+[Pawn_Attack_SE.m_Skill.Path]
 m_Nodes = [{ X = 1, Y = -1 }]
 
 [Pawn_Attack_SW]
-[Pawn_Attack_SW.Path]
+m_Display = "SW"
+[Pawn_Attack_SW.m_Skill.Path]
 m_Nodes = [{ X = -1, Y = -1 }]
 
 [Queen_NW]
-[Queen_NW.Rush]
+m_Display = "NW"
+[Queen_NW.m_Skill.Rush]
 m_Direction = { X = -1, Y = 1 }
 
 [Queen_N]
-[Queen_N.Rush]
+m_Display = "N"
+[Queen_N.m_Skill.Rush]
 m_Direction = { Y = 1 }
 
 [Queen_NE]
-[Queen_NE.Rush]
+m_Display = "NE"
+[Queen_NE.m_Skill.Rush]
 m_Direction = { X = 1, Y = 1 }
 
 [Queen_E]
-[Queen_E.Rush]
+m_Display = "E"
+[Queen_E.m_Skill.Rush]
 m_Direction = { X = 1 }
 
 [Queen_SE]
-[Queen_SE.Rush]
+m_Display = "SE"
+[Queen_SE.m_Skill.Rush]
 m_Direction = { X = 1, Y = -1 }
 
 [Queen_S]
-[Queen_S.Rush]
+m_Display = "S"
+[Queen_S.m_Skill.Rush]
 m_Direction = { Y = -1 }
 
 [Queen_SW]
-[Queen_SW.Rush]
+m_Display = "SW"
+[Queen_SW.m_Skill.Rush]
 m_Direction = { X = -1, Y = -1 }
 
 [Queen_W]
-[Queen_W.Rush]
+m_Display = "W"
+[Queen_W.m_Skill.Rush]
 m_Direction = { X = -1 }

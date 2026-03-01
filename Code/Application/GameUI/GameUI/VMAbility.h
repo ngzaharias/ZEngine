@@ -3,21 +3,29 @@
 #include "Core/Name.h"
 #include "Engine/UIViewModel.h"
 
+namespace tactics
+{
+	struct Ability;
+}
+
 namespace gui
 {
-	class VMAbility final : public eng::UIViewModel
+	struct VMAbility final : public eng::UIViewModel
 	{
 	public:
-		VMAbility(const str::Name& name);
+		VMAbility(const str::Name& name, const tactics::Ability& ability);
 
-		const char* GetName() const;
+		const str::Name& GetName() const { return m_Name; }
+		const char* GetDisplay() const { return m_Display.c_str(); }
+		const char* GetTooltip() const { return m_Tooltip.c_str(); }
 
 		bool GetIsSelected() const;
 		void SetIsSelected(const bool value);
 
-	public:
-		Noesis::String m_Name = {};
-		str::Name m_Key = {};
+	private:
+		str::Name m_Name = {};
+		str::String m_Display = {};
+		str::String m_Tooltip = {};
 		bool m_IsSelected = false;
 
 	private:

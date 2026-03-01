@@ -1,18 +1,15 @@
 #include "GameUIPCH.h"
 #include "GameUI/VMAbility.h"
 
+#include "Tactics/TacticsAbilityTable.h"
+
 #include <NsCore/ReflectionImplement.h>
-#include <NsCore/StringFwd.h>
 
-gui::VMAbility::VMAbility(const str::Name& name)
-	: m_Name(name.ToChar())
-	, m_Key(name)
+gui::VMAbility::VMAbility(const str::Name& name, const tactics::Ability& ability)
+	: m_Name(name)
+	, m_Display(ability.m_Display)
+	, m_Tooltip(ability.m_Tooltip)
 {
-}
-
-const char* gui::VMAbility::GetName() const
-{
-	return m_Name.Str();
 }
 
 bool gui::VMAbility::GetIsSelected() const
@@ -28,6 +25,7 @@ void gui::VMAbility::SetIsSelected(const bool value)
 
 NS_IMPLEMENT_REFLECTION(gui::VMAbility)
 {
-	NsProp("Name", &gui::VMAbility::GetName);
+	NsProp("Display", &gui::VMAbility::GetDisplay);
+	NsProp("Tooltip", &gui::VMAbility::GetTooltip);
 	NsProp("IsSelected", &gui::VMAbility::GetIsSelected);
 }
