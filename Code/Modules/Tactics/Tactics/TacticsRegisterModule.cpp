@@ -7,25 +7,26 @@
 #include "Engine/TableHeadmaster.h"
 #include "Tactics/TacticsAbilityComponent.h"
 #include "Tactics/TacticsAbilityTable.h"
+#include "Tactics/TacticsExecuteComponent.h"
+#include "Tactics/TacticsExecuteEvent.h"
 #include "Tactics/TacticsInputSystem.h"
+#include "Tactics/TacticsPreviewComponent.h"
+#include "Tactics/TacticsPreviewEvent.h"
 #include "Tactics/TacticsPreviewSystem.h"
 #include "Tactics/TacticsSelectedComponent.h"
 #include "Tactics/TacticsSelectSystem.h"
 
 void tactics::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<tactics::AbilityComponent>();
-		world.RegisterComponent<tactics::SelectedComponent>();
-	}
-
-	// systems
-	{
-		world.RegisterSystem<tactics::InputSystem>();
-		world.RegisterSystem<tactics::PreviewSystem>();
-		world.RegisterSystem<tactics::SelectSystem>();
-	}
+	world.RegisterComponent<tactics::AbilityComponent>();
+	world.RegisterComponent<tactics::ExecuteComponent>();
+	world.RegisterComponent<tactics::PreviewComponent>();
+	world.RegisterComponent<tactics::SelectedComponent>();
+	world.RegisterEvent<tactics::ExecuteEvent>();
+	world.RegisterEvent<tactics::PreviewEvent>();
+	world.RegisterSystem<tactics::InputSystem>();
+	world.RegisterSystem<tactics::PreviewSystem>();
+	world.RegisterSystem<tactics::SelectSystem>();
 
 	// prototypes
 	{

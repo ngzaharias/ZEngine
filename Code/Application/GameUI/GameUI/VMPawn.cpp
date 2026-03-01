@@ -4,14 +4,10 @@
 #include <NsCore/ReflectionImplement.h>
 #include <NsGui/ObservableCollection.h>
 
-gui::VMPawn::VMPawn(const str::String& name)
-	: m_Name(name.c_str())
+gui::VMPawn::VMPawn(const ecs::Entity& entity, const str::String& name)
+	: m_Entity(entity)
+	, m_Name(name)
 {
-}
-
-const char* gui::VMPawn::GetName() const
-{
-	return m_Name.Str();
 }
 
 Noesis::ObservableCollection<gui::VMAbility>* gui::VMPawn::GetAbilities() const

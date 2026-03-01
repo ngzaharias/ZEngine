@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Core/Name.h"
+#include "Core/String.h"
+#include "ECS/Entity.h"
 #include "Engine/UIViewModel.h"
 #include "GameUI/VMAbility.h"
 
@@ -15,15 +16,18 @@ namespace gui
 	class VMPawn final : public eng::UIViewModel
 	{
 	public:
-		VMPawn(const str::String& name);
+		VMPawn(const ecs::Entity& entity, const str::String& name);
 
-		const char* GetName() const;
+		const ecs::Entity& GetEntity() const { return m_Entity; }
+		const char* GetName() const { return m_Name.c_str(); }
 
 		Noesis::ObservableCollection<gui::VMAbility>* GetAbilities() const;
 		void SetAbilities(Noesis::Ptr<Noesis::ObservableCollection<gui::VMAbility>> value);
 
-	public:
-		Noesis::String m_Name = {};
+	private:
+		ecs::Entity m_Entity = {};
+		str::String m_Name = {};
+
 		Noesis::Ptr<Noesis::ObservableCollection<gui::VMAbility>> m_Abilities;
 
 	private:

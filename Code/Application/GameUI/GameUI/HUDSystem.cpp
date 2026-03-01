@@ -10,6 +10,7 @@
 #include "GameUI/DCHUD.h"
 #include "GameUI/HUDComponent.h"
 #include "Tactics/TacticsAbilityComponent.h"
+#include "Tactics/TacticsAbilityTable.h"
 #include "Tactics/TacticsSelectedComponent.h"
 
 #include <NsGui/ObservableCollection.h>
@@ -49,19 +50,21 @@ void gui::HUDSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const auto& nameComponent = view.ReadRequired<ecs::NameComponent>();
 		const auto& abilityComponent = view.ReadRequired<tactics::AbilityComponent>();
+		const auto& abilityTable = world.ReadResource<tactics::AbilityTable>();
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		auto& hud = uiManager.WriteDataContext<gui::DCHud>(strHUD_xaml);
 
-		auto abilities = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMAbility>>();
+		auto vmAbilities = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMAbility>>();
 		for (const str::Name& name : abilityComponent.m_Abilities)
 		{
-			auto ability = Noesis::MakePtr<gui::VMAbility>(name);
-			abilities->Add(ability);
+			const auto& ability = abilityTable.GetObject(name);
+			auto vmAbility = Noesis::MakePtr<gui::VMAbility>(name, ability);
+			vmAbilities->Add(vmAbility);
 		}
 
-		auto pawn = Noesis::MakePtr<gui::VMPawn>(nameComponent.m_Name);
-		pawn->SetAbilities(abilities);
-		hud.SetSelectedPawn(pawn);
+		auto vmPawn = Noesis::MakePtr<gui::VMPawn>(view, nameComponent.m_Name);
+		vmPawn->SetAbilities(vmAbilities);
+		hud.SetSelectedPawn(vmPawn);
 	}
 
 	for (auto&& view : world.Query<ecs::query::Removed<tactics::SelectedComponent>>())

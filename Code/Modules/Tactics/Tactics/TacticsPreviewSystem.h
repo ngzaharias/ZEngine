@@ -13,6 +13,8 @@ namespace tactics
 {
 	class AbilityTable;
 	struct AbilityComponent;
+	struct PreviewComponent;
+	struct PreviewEvent;
 	struct SelectedComponent;
 }
 
@@ -33,6 +35,8 @@ namespace tactics
 			eng::TransformComponent,
 			tactics::AbilityComponent,
 			tactics::AbilityTable,
+			tactics::PreviewComponent,
+			tactics::PreviewEvent,
 			tactics::SelectedComponent,
 			tilemap::GridComponent>;
 
