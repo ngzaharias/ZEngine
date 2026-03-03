@@ -27,16 +27,13 @@ namespace gui
 		void SetSelectedPawn(Noesis::Ptr<gui::VMPawn> value);
 
 	private:
-		const NoesisApp::DelegateCommand* GetAbilityExecuteCommand() const { return &m_AbilityExecuteCommand; }
 		const NoesisApp::DelegateCommand* GetAbilityPreviewCommand() const { return &m_AbilityPreviewCommand; }
 
-		void OnAbilityExecuteCommand(Noesis::BaseComponent* param);
 		void OnAbilityPreviewCommand(Noesis::BaseComponent* param);
 
 	private:
 		Noesis::Ptr<gui::VMPawn> m_SelectedPawn;
 
-		NoesisApp::DelegateCommand m_AbilityExecuteCommand = {};
 		NoesisApp::DelegateCommand m_AbilityPreviewCommand = {};
 
 		NS_DECLARE_REFLECTION(gui::DCHud, eng::UIDataContext)

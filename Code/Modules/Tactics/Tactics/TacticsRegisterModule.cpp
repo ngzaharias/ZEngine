@@ -5,33 +5,27 @@
 #include "ECS/WorldView.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/TableHeadmaster.h"
-#include "Tactics/TacticsAbilityComponent.h"
+#include "Tactics/TacticsPawnAbilitiesComponent.h"
+#include "Tactics/TacticsAbilityPreviewComponent.h"
+#include "Tactics/TacticsAbilityPreviewEvent.h"
+#include "Tactics/TacticsAbilityPreviewSystem.h"
 #include "Tactics/TacticsAbilityTable.h"
-#include "Tactics/TacticsExecuteComponent.h"
-#include "Tactics/TacticsExecuteEvent.h"
-#include "Tactics/TacticsInputSystem.h"
-#include "Tactics/TacticsPreviewComponent.h"
-#include "Tactics/TacticsPreviewEvent.h"
-#include "Tactics/TacticsPreviewSystem.h"
-#include "Tactics/TacticsSelectedComponent.h"
-#include "Tactics/TacticsSelectSystem.h"
+#include "Tactics/TacticsPawnSelectedComponent.h"
+#include "Tactics/TacticsPawnSelectionSystem.h"
 
 void tactics::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<tactics::AbilityComponent>();
-	world.RegisterComponent<tactics::ExecuteComponent>();
-	world.RegisterComponent<tactics::PreviewComponent>();
-	world.RegisterComponent<tactics::SelectedComponent>();
-	world.RegisterEvent<tactics::ExecuteEvent>();
-	world.RegisterEvent<tactics::PreviewEvent>();
-	world.RegisterSystem<tactics::InputSystem>();
-	world.RegisterSystem<tactics::PreviewSystem>();
-	world.RegisterSystem<tactics::SelectSystem>();
+	world.RegisterComponent<tactics::AbilityPreviewComponent>();
+	world.RegisterComponent<tactics::PawnAbilitiesComponent>();
+	world.RegisterComponent<tactics::PawnSelectedComponent>();
+	world.RegisterEvent<tactics::AbilityPreviewEvent>();
+	world.RegisterSystem<tactics::AbilityPreviewSystem>();
+	world.RegisterSystem<tactics::PawnSelectionSystem>();
 
 	// prototypes
 	{
 		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.RegisterComponent<tactics::AbilityComponent>();
+		manager.RegisterComponent<tactics::PawnAbilitiesComponent>();
 	}
 
 	// tables

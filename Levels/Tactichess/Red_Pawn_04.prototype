@@ -21,7 +21,7 @@ m_Translate = { X = -40.0, Y = 200.0, Z = 0.0 }
 ['eng::VisibilityComponent']
 m_IsVisible = true
 
-['tactics::AbilityComponent']
+['tactics::PawnAbilitiesComponent']
 m_Abilities = [ 'Pawn_Basic_S', 'Pawn_Opener_S', 'Pawn_Attack_SE', 'Pawn_Attack_SW' ]
 
 ['tilemap::AgentComponent']

@@ -1,5 +1,5 @@
 #include "TacticsPCH.h"
-#include "Tactics/TacticsSelectSystem.h"
+#include "Tactics/TacticsPawnSelectionSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -14,8 +14,7 @@
 #include "Engine/WindowManager.h"
 #include "GameState/GameStateEditModeComponent.h"
 #include "Math/Ray.h"
-#include "Tactics/TacticsInput.h"
-#include "Tactics/TacticsSelectedComponent.h"
+#include "Tactics/TacticsPawnSelectedComponent.h"
 #include "Tilemap/TilemapAgentComponent.h"
 
 #include <PhysX/PxRigidActor.h>
@@ -23,15 +22,34 @@
 
 namespace
 {
+	const str::Name strInput = str::Name::Create("Tactics");
+	const str::Name strSelect = str::Name::Create("Select");
+
 	ecs::Entity ToEntity(const physx::PxRigidActor* actor)
 	{
 		return reinterpret_cast<uint64>(actor->userData);
 	}
 }
 
-void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
+void tactics::PawnSelectionSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
+
+	if (world.HasAny<ecs::query::Added<tilemap::AgentComponent>>())
+	{
+		input::Layer layer;
+		layer.m_Priority = eng::EInputPriority::Gameplay;
+		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, true);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.AppendLayer(strInput, layer);
+	}
+
+	if (world.HasAny<ecs::query::Removed<tilemap::AgentComponent>>())
+	{
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInput);
+	}
 
 	if (world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
 		return;
@@ -84,14 +102,14 @@ void tactics::SelectSystem::Update(World& world, const GameTime& gameTime)
 				agentEntity = hitEntity;
 		}
 
-		if (agentEntity && !world.HasComponent<tactics::SelectedComponent>(agentEntity))
-			world.AddComponent<tactics::SelectedComponent>(agentEntity);
+		if (agentEntity && !world.HasComponent<tactics::PawnSelectedComponent>(agentEntity))
+			world.AddComponent<tactics::PawnSelectedComponent>(agentEntity);
 
 		// remove previous selection
-		for (auto&& selectedView : world.Query<ecs::query::Include<const tactics::SelectedComponent>>())
+		for (auto&& selectedView : world.Query<ecs::query::Include<const tactics::PawnSelectedComponent>>())
 		{
 			if (selectedView != agentEntity)
-				world.RemoveComponent<tactics::SelectedComponent>(selectedView);
+				world.RemoveComponent<tactics::PawnSelectedComponent>(selectedView);
 		}
 	}
 }

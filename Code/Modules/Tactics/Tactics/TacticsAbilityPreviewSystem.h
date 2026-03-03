@@ -12,10 +12,10 @@ namespace eng
 namespace tactics
 {
 	class AbilityTable;
-	struct AbilityComponent;
-	struct PreviewComponent;
-	struct PreviewEvent;
-	struct SelectedComponent;
+	struct AbilityPreviewComponent;
+	struct AbilityPreviewEvent;
+	struct PawnAbilitiesComponent;
+	struct PawnSelectedComponent;
 }
 
 namespace tilemap
@@ -25,19 +25,19 @@ namespace tilemap
 
 namespace tactics
 {
-	class PreviewSystem final : public ecs::System
+	class AbilityPreviewSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::LinesSingleton>
+			eng::LinesSingleton,
+			tactics::AbilityPreviewComponent>
 			::Read<
 			eng::TransformComponent,
-			tactics::AbilityComponent,
+			tactics::AbilityPreviewEvent,
 			tactics::AbilityTable,
-			tactics::PreviewComponent,
-			tactics::PreviewEvent,
-			tactics::SelectedComponent,
+			tactics::PawnAbilitiesComponent,
+			tactics::PawnSelectedComponent,
 			tilemap::GridComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

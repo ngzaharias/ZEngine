@@ -7,7 +7,7 @@
 
 namespace tactics
 {
-	struct AbilityComponent final : public ecs::Component<AbilityComponent>
+	struct PawnAbilitiesComponent final : public ecs::Component<PawnAbilitiesComponent>
 		, ecs::IsPrototype
 	{
 		Array<str::Name> m_Abilities = {};

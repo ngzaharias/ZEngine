@@ -20,7 +20,7 @@ namespace eng::settings
 
 namespace tactics
 {
-	struct SelectedComponent;
+	struct PawnSelectedComponent;
 }
 
 namespace tilemap
@@ -30,12 +30,12 @@ namespace tilemap
 
 namespace tactics
 {
-	class SelectSystem final : public ecs::System
+	class PawnSelectionSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			tactics::SelectedComponent>
+			tactics::PawnSelectedComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,

@@ -21,7 +21,7 @@ m_Translate = { X = -120.0, Y = 280.0, Z = 0.0 }
 ['eng::VisibilityComponent']
 m_IsVisible = true
 
-['tactics::AbilityComponent']
+['tactics::PawnAbilitiesComponent']
 m_Abilities = [ 'Bishop_NE', 'Bishop_NW', 'Bishop_SE', 'Bishop_SW' ]
 
 ['tilemap::AgentComponent']

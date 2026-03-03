@@ -16,8 +16,8 @@ namespace gui
 
 namespace tactics
 {
-	struct AbilityComponent;
-	struct SelectedComponent;
+	struct PawnAbilitiesComponent;
+	struct PawnSelectedComponent;
 }
 
 namespace gui
@@ -31,8 +31,8 @@ namespace gui
 			::Read<
 			eng::AbilityTable,
 			gui::HUDComponent,
-			tactics::AbilityComponent,
-			tactics::SelectedComponent>;
+			tactics::PawnAbilitiesComponent,
+			tactics::PawnSelectedComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

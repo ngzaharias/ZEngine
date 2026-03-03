@@ -1,5 +1,5 @@
 #include "TacticsPCH.h"
-#include "Tactics/TacticsPreviewSystem.h"
+#include "Tactics/TacticsAbilityPreviewSystem.h"
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
@@ -8,15 +8,16 @@
 #include "Engine/LinesComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Math/VectorMath.h"
-#include "Tactics/TacticsAbilityComponent.h"
+#include "Tactics/TacticsAbilityPreviewComponent.h"
+#include "Tactics/TacticsAbilityPreviewEvent.h"
 #include "Tactics/TacticsAbilityTable.h"
-#include "Tactics/TacticsPreviewComponent.h"
-#include "Tactics/TacticsPreviewEvent.h"
+#include "Tactics/TacticsPawnAbilitiesComponent.h"
+#include "Tactics/TacticsPawnSelectedComponent.h"
 #include "Tilemap/TilemapGridComponent.h"
 
 namespace
 {
-	using World = tactics::PreviewSystem::World;
+	using World = tactics::AbilityPreviewSystem::World;
 	Vector3f GetTileSize(World& world)
 	{
 		for (auto&& view : world.Query<ecs::query::Include<const tilemap::GridComponent>>())
@@ -28,36 +29,36 @@ namespace
 	}
 }
 
-void tactics::PreviewSystem::Update(World& world, const GameTime& gameTime)
+void tactics::AbilityPreviewSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (const auto& event : world.Events<tactics::PreviewEvent>())
+	for (const auto& event : world.Events<tactics::AbilityPreviewEvent>())
 	{
-		auto& previewComponent = !world.HasComponent<tactics::PreviewComponent>(event.m_Entity)
-			? world.AddComponent<tactics::PreviewComponent>(event.m_Entity)
-			: world.WriteComponent<tactics::PreviewComponent>(event.m_Entity);
+		auto& previewComponent = !world.HasComponent<tactics::AbilityPreviewComponent>(event.m_Entity)
+			? world.AddComponent<tactics::AbilityPreviewComponent>(event.m_Entity)
+			: world.WriteComponent<tactics::AbilityPreviewComponent>(event.m_Entity);
 		previewComponent.m_Ability = event.m_Ability;
 	}
 
 	using ChangedQuery = ecs::query
-		::Include<tactics::PreviewComponent>
-		::Removed<tactics::SelectedComponent>;
+		::Include<tactics::AbilityPreviewComponent>
+		::Removed<tactics::PawnSelectedComponent>;
 	for (auto&& view : world.Query<ChangedQuery>())
 	{
-		world.RemoveComponent<tactics::PreviewComponent>(view);
+		world.RemoveComponent<tactics::AbilityPreviewComponent>(view);
 	}
 
 	using PreviewQuery = ecs::query
 		::Include<
 		const eng::TransformComponent,
-		const tactics::AbilityComponent,
-		const tactics::PreviewComponent>;
+		const tactics::PawnAbilitiesComponent,
+		const tactics::AbilityPreviewComponent>;
 	for (auto&& view : world.Query<PreviewQuery>())
 	{
 		const Vector3f tileSize = GetTileSize(world);
-		const auto& abilityComponent = view.ReadRequired<tactics::AbilityComponent>();
-		const auto& previewComponent = view.ReadRequired<tactics::PreviewComponent>();
+		const auto& abilityComponent = view.ReadRequired<tactics::PawnAbilitiesComponent>();
+		const auto& previewComponent = view.ReadRequired<tactics::AbilityPreviewComponent>();
 		const auto& transformComponent = view.ReadRequired<eng::TransformComponent>();
 		if (!enumerate::Contains(abilityComponent.m_Abilities, previewComponent.m_Ability))
 			return;

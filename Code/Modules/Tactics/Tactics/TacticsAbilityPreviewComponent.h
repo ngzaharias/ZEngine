@@ -5,7 +5,7 @@
 
 namespace tactics
 {
-	struct ExecuteComponent final : public ecs::Component<ExecuteComponent>
+	struct AbilityPreviewComponent final : public ecs::Component<AbilityPreviewComponent>
 	{
 		str::Name m_Ability = {};
 	};

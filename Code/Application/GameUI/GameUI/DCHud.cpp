@@ -3,16 +3,13 @@
 
 #include "ECS/EntityWorld.h"
 #include "GameUI/VMPawn.h"
-#include "Tactics/TacticsAbilityTable.h"
-#include "Tactics/TacticsExecuteEvent.h"
-#include "Tactics/TacticsPreviewEvent.h"
+#include "Tactics/TacticsAbilityPreviewEvent.h"
 
 #include <NsCore/Delegate.h>
 #include <NsCore/ReflectionImplement.h>
 
 gui::DCHud::DCHud()
 {
-	m_AbilityExecuteCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCHud::OnAbilityExecuteCommand));
 	m_AbilityPreviewCommand.SetExecuteFunc(MakeDelegate(this, &gui::DCHud::OnAbilityPreviewCommand));
 }
 
@@ -31,21 +28,11 @@ void gui::DCHud::SetSelectedPawn(Noesis::Ptr<gui::VMPawn> value)
 	OnPropertyChanged("SelectedPawn");
 }
 
-void gui::DCHud::OnAbilityExecuteCommand(Noesis::BaseComponent* param)
-{
-	if (const auto* vmAbility = Noesis::DynamicCast<gui::VMAbility*>(param))
-	{
-		auto& data = m_EntityWorld->AddEvent<tactics::ExecuteEvent>();
-		data.m_Entity = m_SelectedPawn->GetEntity();
-		data.m_Ability = vmAbility->GetName();
-	}
-}
-
 void gui::DCHud::OnAbilityPreviewCommand(Noesis::BaseComponent* param)
 {
 	if (const auto* vmAbility = Noesis::DynamicCast<gui::VMAbility*>(param))
 	{
-		auto& data = m_EntityWorld->AddEvent<tactics::PreviewEvent>();
+		auto& data = m_EntityWorld->AddEvent<tactics::AbilityPreviewEvent>();
 		data.m_Entity = m_SelectedPawn->GetEntity();
 		data.m_Ability = vmAbility->GetName();
 	}
@@ -54,6 +41,5 @@ void gui::DCHud::OnAbilityPreviewCommand(Noesis::BaseComponent* param)
 NS_IMPLEMENT_REFLECTION(gui::DCHud)
 {
 	NsProp("SelectedPawn", &gui::DCHud::GetSelectedPawn);
-	NsProp("AbilityExecuteCommand", &gui::DCHud::GetAbilityExecuteCommand);
 	NsProp("AbilityPreviewCommand", &gui::DCHud::GetAbilityPreviewCommand);
 }
