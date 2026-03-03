@@ -59,6 +59,7 @@ template <typename... TWrite, typename... TRead>
 template<class TComponent>
 void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::RemoveComponent(const ecs::Entity& entity)
 {
+	static_assert(core::Contains<TComponent, TWrite...>(), "Component isn't in WriteAccess.");
 	m_EntityWorld.template RemoveComponent<TComponent>(entity);
 }
 
