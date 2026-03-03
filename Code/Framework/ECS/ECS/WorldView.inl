@@ -80,6 +80,7 @@ template <typename... TWrite, typename... TRead>
 template<class TComponent>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteComponent(const ecs::Entity& entity, const bool alive /*= true*/)->TComponent&
 {
+	static_assert(core::Contains<TComponent, TWrite...>(), "Component isn't in WriteAccess.");
 	return m_EntityWorld.template WriteComponent<TComponent>(entity, alive);
 }
 

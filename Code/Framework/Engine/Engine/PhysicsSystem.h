@@ -41,13 +41,12 @@ namespace eng
 		using World = ecs::WorldView
 			::Write<
 			eng::AssetManager,
+			eng::PhysicsComponent,
 			eng::PhysicsManager,
 			eng::PhysicsSceneSingleton,
 			eng::RigidDynamicComponent,
 			eng::RigidStaticComponent,
-			eng::TransformComponent>
-			::Read<
-			eng::PhysicsComponent>;
+			eng::TransformComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);
