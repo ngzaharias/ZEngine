@@ -100,6 +100,8 @@ template <typename... TWrite, typename... TRead>
 template <typename TEvent, typename... TArgs>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddEvent(TArgs&&... args)->decltype(auto)
 {
+	static_assert(core::Contains<TEvent, TWrite...>(), "Event isn't in WriteAccess.");
+
 	return m_EntityWorld.template AddEvent<TEvent>(std::forward<TArgs>(args)...);
 }
 
