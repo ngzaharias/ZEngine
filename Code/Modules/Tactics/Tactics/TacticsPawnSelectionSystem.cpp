@@ -14,6 +14,7 @@
 #include "Engine/WindowManager.h"
 #include "GameState/GameStateEditModeComponent.h"
 #include "Math/Ray.h"
+#include "Tactics/TacticsInputPriorityEnum.h"
 #include "Tactics/TacticsPawnSelectedComponent.h"
 #include "Tilemap/TilemapAgentComponent.h"
 
@@ -22,7 +23,8 @@
 
 namespace
 {
-	const str::Name strInput = str::Name::Create("Tactics");
+	const str::Name strDeselect = str::Name::Create("Deselect");
+	const str::Name strInput = str::Name::Create("PawnSelectionSystem");
 	const str::Name strSelect = str::Name::Create("Select");
 
 	ecs::Entity ToEntity(const physx::PxRigidActor* actor)
@@ -38,8 +40,9 @@ void tactics::PawnSelectionSystem::Update(World& world, const GameTime& gameTime
 	if (world.HasAny<ecs::query::Added<tilemap::AgentComponent>>())
 	{
 		input::Layer layer;
-		layer.m_Priority = eng::EInputPriority::Gameplay;
+		layer.m_Priority = tactics::EInputPriority::PawnSelection;
 		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, true);
+		layer.m_Bindings.Emplace(strDeselect, input::EKey::Mouse_Right, true);
 
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.AppendLayer(strInput, layer);

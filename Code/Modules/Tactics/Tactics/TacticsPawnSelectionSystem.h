@@ -35,6 +35,7 @@ namespace tactics
 	public:
 		using World = ecs::WorldView
 			::Write<
+			eng::InputManager,
 			tactics::PawnSelectedComponent>
 			::Read<
 			eng::ActiveComponent,

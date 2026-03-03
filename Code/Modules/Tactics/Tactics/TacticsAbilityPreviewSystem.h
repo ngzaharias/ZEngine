@@ -5,6 +5,7 @@
 
 namespace eng
 {
+	class InputManager;
 	struct LinesSingleton;
 	struct TransformComponent;
 }
@@ -30,6 +31,7 @@ namespace tactics
 	public:
 		using World = ecs::WorldView
 			::Write<
+			eng::InputManager,
 			eng::LinesSingleton,
 			tactics::AbilityPreviewComponent>
 			::Read<
