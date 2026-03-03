@@ -51,7 +51,7 @@ template <typename... TWrite, typename... TRead>
 template <typename TComponent, typename... TArgs>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto)
 {
-	static_assert(core::Contains<TComponent, TWrite...>(), "Component isn't in WriteAccess.");
+	static_assert(core::Contains<TComponent, TWrite...>(), "WorldView doesn't have Write access to Component.");
 
 	return m_EntityWorld.template AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
 }
@@ -60,7 +60,7 @@ template <typename... TWrite, typename... TRead>
 template<class TComponent>
 void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::RemoveComponent(const ecs::Entity& entity)
 {
-	static_assert(core::Contains<TComponent, TWrite...>(), "Component isn't in WriteAccess.");
+	static_assert(core::Contains<TComponent, TWrite...>(), "WorldView doesn't have Write access to Component.");
 
 	m_EntityWorld.template RemoveComponent<TComponent>(entity);
 }
@@ -71,7 +71,7 @@ bool ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasComponent(con
 {
 	constexpr bool hasWriteAccess = core::Contains<TComponent, TWrite...>();
 	constexpr bool hasReadAccess = core::Contains<TComponent, TRead...>();
-	static_assert(hasWriteAccess || hasReadAccess, "Component isn't in WriteAccess or ReadAccess.");
+	static_assert(hasWriteAccess || hasReadAccess, "WorldView doesn't have Write/Read access to Component.");
 
 	return m_EntityWorld.template HasComponent<TComponent>(entity, alive);
 }
@@ -82,7 +82,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadComponent(co
 {
 	constexpr bool hasWriteAccess = core::Contains<TComponent, TWrite...>();
 	constexpr bool hasReadAccess = core::Contains<TComponent, TRead...>();
-	static_assert(hasWriteAccess || hasReadAccess, "Component isn't in WriteAccess or ReadAccess.");
+	static_assert(hasWriteAccess || hasReadAccess, "WorldView doesn't have Write/Read access to Component.");
 
 	return m_EntityWorld.template ReadComponent<TComponent>(entity, alive);
 }
@@ -91,7 +91,7 @@ template <typename... TWrite, typename... TRead>
 template<class TComponent>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteComponent(const ecs::Entity& entity, const bool alive /*= true*/)->TComponent&
 {
-	static_assert(core::Contains<TComponent, TWrite...>(), "Component isn't in WriteAccess.");
+	static_assert(core::Contains<TComponent, TWrite...>(), "WorldView doesn't have Write access to Component.");
 
 	return m_EntityWorld.template WriteComponent<TComponent>(entity, alive);
 }
@@ -100,7 +100,7 @@ template <typename... TWrite, typename... TRead>
 template <typename TEvent, typename... TArgs>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddEvent(TArgs&&... args)->decltype(auto)
 {
-	static_assert(core::Contains<TEvent, TWrite...>(), "Event isn't in WriteAccess.");
+	static_assert(core::Contains<TEvent, TWrite...>(), "WorldView doesn't have Write access to Event.");
 
 	return m_EntityWorld.template AddEvent<TEvent>(std::forward<TArgs>(args)...);
 }
@@ -111,7 +111,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadResource() -
 {
 	constexpr bool hasWriteAccess = core::Contains<TResource, TWrite...>();
 	constexpr bool hasReadAccess = core::Contains<TResource, TRead...>();
-	static_assert(hasWriteAccess || hasReadAccess, "Resource isn't in WriteAccess or ReadAccess.");
+	static_assert(hasWriteAccess || hasReadAccess, "WorldView doesn't have Write/Read access to Resource.");
 
 	return m_EntityWorld.template ReadResource<TResource>();
 }
@@ -120,7 +120,7 @@ template <typename... TWrite, typename... TRead>
 template<class TResource>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteResource() -> TResource&
 {
-	static_assert(core::Contains<TResource, TWrite...>(), "Resource isn't in WriteAccess.");
+	static_assert(core::Contains<TResource, TWrite...>(), "WorldView doesn't have Write access to Resource.");
 
 	return m_EntityWorld.template WriteResource<TResource>();
 }
@@ -131,7 +131,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadSingleton() 
 {
 	constexpr bool hasWriteAccess = core::Contains<TSingleton, TWrite...>();
 	constexpr bool hasReadAccess = core::Contains<TSingleton, TRead...>();
-	static_assert(hasWriteAccess || hasReadAccess, "Singleton isn't in WriteAccess or ReadAccess.");
+	static_assert(hasWriteAccess || hasReadAccess, "WorldView doesn't have Write/Read access to Singleton.");
 
 	return m_EntityWorld.template ReadSingleton<TSingleton>();
 }
@@ -140,7 +140,7 @@ template <typename... TWrite, typename... TRead>
 template<class TSingleton>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteSingleton() -> TSingleton&
 {
-	static_assert(core::Contains<TSingleton, TWrite...>(), "Singleton isn't in WriteAccess.");
+	static_assert(core::Contains<TSingleton, TWrite...>(), "WorldView doesn't have Write access to Singleton.");
 
 	return m_EntityWorld.template WriteSingleton<TSingleton>();
 }
