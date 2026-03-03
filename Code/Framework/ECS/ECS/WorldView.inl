@@ -67,6 +67,9 @@ template <typename... TWrite, typename... TRead>
 template<class TComponent>
 bool ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasComponent(const ecs::Entity& entity, const bool alive /*= true*/) const
 {
+	constexpr bool hasWriteAccess = core::Contains<TComponent, TWrite...>();
+	constexpr bool hasReadAccess = core::Contains<TComponent, TRead...>();
+	static_assert(hasWriteAccess || hasReadAccess, "Component isn't in WriteAccess or ReadAccess.");
 	return m_EntityWorld.template HasComponent<TComponent>(entity, alive);
 }
 
