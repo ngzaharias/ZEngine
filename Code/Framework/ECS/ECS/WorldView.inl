@@ -52,6 +52,7 @@ template <typename TComponent, typename... TArgs>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto)
 {
 	static_assert(core::Contains<TComponent, TWrite...>(), "Component isn't in WriteAccess.");
+
 	return m_EntityWorld.template AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
 }
 
@@ -60,6 +61,7 @@ template<class TComponent>
 void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::RemoveComponent(const ecs::Entity& entity)
 {
 	static_assert(core::Contains<TComponent, TWrite...>(), "Component isn't in WriteAccess.");
+
 	m_EntityWorld.template RemoveComponent<TComponent>(entity);
 }
 
@@ -70,6 +72,7 @@ bool ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasComponent(con
 	constexpr bool hasWriteAccess = core::Contains<TComponent, TWrite...>();
 	constexpr bool hasReadAccess = core::Contains<TComponent, TRead...>();
 	static_assert(hasWriteAccess || hasReadAccess, "Component isn't in WriteAccess or ReadAccess.");
+
 	return m_EntityWorld.template HasComponent<TComponent>(entity, alive);
 }
 
@@ -77,6 +80,10 @@ template <typename... TWrite, typename... TRead>
 template<class TComponent>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadComponent(const ecs::Entity& entity, const bool alive /*= true*/)->const TComponent&
 {
+	constexpr bool hasWriteAccess = core::Contains<TComponent, TWrite...>();
+	constexpr bool hasReadAccess = core::Contains<TComponent, TRead...>();
+	static_assert(hasWriteAccess || hasReadAccess, "Component isn't in WriteAccess or ReadAccess.");
+
 	return m_EntityWorld.template ReadComponent<TComponent>(entity, alive);
 }
 
@@ -85,6 +92,7 @@ template<class TComponent>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteComponent(const ecs::Entity& entity, const bool alive /*= true*/)->TComponent&
 {
 	static_assert(core::Contains<TComponent, TWrite...>(), "Component isn't in WriteAccess.");
+
 	return m_EntityWorld.template WriteComponent<TComponent>(entity, alive);
 }
 
