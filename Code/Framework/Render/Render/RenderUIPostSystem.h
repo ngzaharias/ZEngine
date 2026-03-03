@@ -6,6 +6,7 @@
 namespace eng
 {
 	class UIManager;
+	class WindowManager;
 }
 
 namespace render
@@ -23,6 +24,7 @@ namespace render
 		using World = ecs::WorldView
 			::Write<
 			eng::UIManager,
+			eng::WindowManager,
 			render::UIPostComponent>
 			::Read<
 			render::TranslucentComponent>;

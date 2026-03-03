@@ -29,6 +29,7 @@ namespace voxel
 	public:
 		using World = ecs::WorldView
 			::Write<
+			eng::InputManager,
 			eng::LinesSingleton,
 			eng::TextComponent,
 			eng::TransformComponent,
@@ -38,7 +39,6 @@ namespace voxel
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::EditorComponent,
-			eng::InputManager,
 			eng::WindowManager,
 			voxel::ChunkComponent>;
 

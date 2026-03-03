@@ -45,6 +45,7 @@ namespace editor::gizmo
 		using World = ecs::WorldView
 			::Write<
 			editor::gizmo::TransformSingleton,
+			eng::InputManager,
 			eng::PhysicsComponent,
 			eng::TransformComponent>
 			::Read<
@@ -52,7 +53,6 @@ namespace editor::gizmo
 			editor::settings::LocalSingleton,
 			eng::ActiveComponent,
 			eng::CameraComponent,
-			eng::InputManager,
 			eng::WindowManager,
 			gamestate::EditModeComponent>;
 

@@ -43,6 +43,7 @@ namespace client::hidden
 		using World = ecs::WorldView
 			::Write<
 			client::hidden::RevealComponent,
+			eng::InputManager,
 			eng::LinesSingleton,
 			eng::RigidStaticComponent,
 			shared::hidden::SelectedEvent>
@@ -51,7 +52,6 @@ namespace client::hidden
 			client::hidden::ObjectComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,
-			eng::InputManager,
 			eng::PhysicsSceneSingleton,
 			eng::PrototypeComponent,
 			eng::TransformComponent,

@@ -18,6 +18,11 @@ namespace eng
 	struct TransformComponent;
 }
 
+namespace net
+{
+	class Peer;
+}
+
 namespace shared::cursor
 {
 	struct ClientTransformEvent;
@@ -33,6 +38,7 @@ namespace client::cursor
 			ecs::NameComponent,
 			eng::SpriteComponent,
 			eng::TransformComponent,
+			net::Peer,
 			shared::cursor::ClientTransformEvent>
 			::Read<
 			eng::ActiveComponent,

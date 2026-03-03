@@ -24,12 +24,12 @@ namespace camera
 	public:
 		using World = ecs::WorldView
 			::Write<
+			eng::InputManager,
 			eng::TransformComponent>
 			::Read<
 			camera::Pan3DComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,
-			eng::InputManager,
 			eng::WindowManager>;
 
 		void Update(World& world, const GameTime& gameTime);

@@ -5,7 +5,7 @@
 
 namespace eng
 {
-	class UIManager;
+	class WindowManager;
 }
 
 namespace render
@@ -21,6 +21,7 @@ namespace render
 	public:
 		using World = ecs::WorldView
 			::Write<
+			eng::WindowManager,
 			render::ImGuiComponent>
 			::Read<
 			render::UIPostComponent>;

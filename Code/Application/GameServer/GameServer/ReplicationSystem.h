@@ -23,10 +23,11 @@ namespace server
 	{
 	public:
 		using World = ecs::WorldView
-			::Read<
-			ecs::ReplicationComponent,
+			::Write<
 			ecs::ReplicationHost,
-			net::Host>;
+			net::Host>
+			::Read<
+			ecs::ReplicationComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

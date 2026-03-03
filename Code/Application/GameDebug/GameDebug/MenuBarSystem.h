@@ -96,10 +96,9 @@ namespace debug
 			editor::theme::WindowRequest,
 			editor::trajectory::WindowRequest,
 			eng::AssetManager,
+			eng::InputManager,
 			eng::TableHeadmaster,
-			eng::TablesReloaded>
-			::Read<
-			eng::InputManager>;
+			eng::TablesReloaded>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

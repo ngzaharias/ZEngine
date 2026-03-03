@@ -29,8 +29,7 @@ namespace client::network
 		using World = ecs::WorldView
 			::Write<
 			client::network::PeerComponent,
-			ecs::NameComponent>
-			::Read<
+			ecs::NameComponent,
 			net::Peer>;
 
 		void Initialise(World& world);

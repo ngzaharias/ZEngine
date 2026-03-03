@@ -24,13 +24,13 @@ namespace camera
 	public:
 		using World = ecs::WorldView
 			::Write<
+			eng::InputManager,
 			eng::TransformComponent>
 			::Read<
 			camera::Move3DComponent,
 			camera::SettingsSingleton,
 			eng::ActiveComponent,
-			eng::CameraComponent,
-			eng::InputManager>;
+			eng::CameraComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

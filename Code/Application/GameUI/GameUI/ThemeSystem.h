@@ -22,11 +22,11 @@ namespace gui
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::UIManager>
+			eng::UIManager,
+			eng::ThemeTable>
 			::Read<
 			eng::settings::GameplaySingleton,
-			eng::TablesReloaded,
-			eng::ThemeTable>;
+			eng::TablesReloaded>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

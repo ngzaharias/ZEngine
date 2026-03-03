@@ -109,6 +109,10 @@ template <typename... TWrite, typename... TRead>
 template<class TResource>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadResource() -> const TResource&
 {
+	constexpr bool hasWriteAccess = core::Contains<TResource, TWrite...>();
+	constexpr bool hasReadAccess = core::Contains<TResource, TRead...>();
+	static_assert(hasWriteAccess || hasReadAccess, "Resource isn't in WriteAccess or ReadAccess.");
+
 	return m_EntityWorld.template ReadResource<TResource>();
 }
 
@@ -116,6 +120,8 @@ template <typename... TWrite, typename... TRead>
 template<class TResource>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteResource() -> TResource&
 {
+	static_assert(core::Contains<TResource, TWrite...>(), "Resource isn't in WriteAccess.");
+
 	return m_EntityWorld.template WriteResource<TResource>();
 }
 

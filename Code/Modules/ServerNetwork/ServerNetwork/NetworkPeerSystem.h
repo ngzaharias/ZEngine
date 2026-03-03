@@ -29,9 +29,8 @@ namespace server::network
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			server::network::PeerComponent>
-			::Read<
-			net::Host>;
+			net::Host,
+			server::network::PeerComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

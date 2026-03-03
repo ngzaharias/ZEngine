@@ -45,10 +45,10 @@ namespace editor::texture
 			editor::texture::AssetSaveComponent,
 			editor::texture::SettingsSingleton,
 			editor::texture::WindowComponent,
-			eng::AssetManager>
+			eng::AssetManager,
+			eng::InputManager>
 			::Read<
 			editor::texture::OpenWindowEvent,
-			eng::InputManager,
 			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

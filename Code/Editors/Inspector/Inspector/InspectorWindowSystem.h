@@ -54,11 +54,11 @@ namespace editor::inspector
 			editor::inspector::SaveComponent,
 			editor::inspector::SettingsSingleton,
 			editor::inspector::WindowComponent,
-			editor::outliner::SelectSingleton>
+			editor::outliner::SelectSingleton,
+			eng::InputManager>
 			::Read<
 			editor::inspector::OpenWindowEvent,
 			eng::AssetManager,
-			eng::InputManager,
 			eng::level::EntityComponent,
 			eng::PrototypeComponent,
 			gamestate::EditorComponent>;

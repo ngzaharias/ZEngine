@@ -25,9 +25,9 @@ namespace gui::input
 	public:
 		using World = ecs::WorldView
 			::Write<
+			eng::InputManager,
 			gui::game_menu::OpenRequest>
 			::Read<
-			eng::InputManager,
 			gui::input::BindingsComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

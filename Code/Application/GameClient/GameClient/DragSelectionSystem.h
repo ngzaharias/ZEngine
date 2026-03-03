@@ -34,12 +34,12 @@ namespace drag
 			::Write<
 			drag::SelectionComponent,
 			ecs::NameComponent,
+			eng::InputManager,
 			eng::LinesSingleton>
 			::Read<
 			drag::IsSelectableComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,
-			eng::InputManager,
 			eng::PhysicsSceneSingleton,
 			eng::TransformComponent,
 			eng::WindowManager>;

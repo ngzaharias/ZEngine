@@ -25,11 +25,11 @@ namespace hexmap
 	public:
 		using World = ecs::WorldView
 			::Write<
+			eng::InputManager,
 			hexmap::LayerComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,
-			eng::InputManager,
 			eng::TransformComponent,
 			eng::WindowManager,
 			hexmap::RootComponent>;

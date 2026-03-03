@@ -5,7 +5,6 @@
 
 namespace eng
 {
-	class AbilityTable;
 	class UIManager;
 }
 
@@ -16,6 +15,7 @@ namespace gui
 
 namespace tactics
 {
+	class AbilityTable;
 	struct PawnAbilitiesComponent;
 	struct PawnSelectedComponent;
 }
@@ -29,8 +29,8 @@ namespace gui
 			::Write<
 			eng::UIManager>
 			::Read<
-			eng::AbilityTable,
 			gui::HUDComponent,
+			tactics::AbilityTable,
 			tactics::PawnAbilitiesComponent,
 			tactics::PawnSelectedComponent>;
 

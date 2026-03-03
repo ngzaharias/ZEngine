@@ -46,9 +46,9 @@ namespace editor::sprite
 			editor::sprite::OpenWindowEvent,
 			editor::sprite::SettingsSingleton,
 			editor::sprite::WindowComponent,
-			eng::AssetManager>
+			eng::AssetManager,
+			eng::InputManager>
 			::Read<
-			eng::InputManager,
 			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
