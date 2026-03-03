@@ -18,6 +18,11 @@ namespace editor::outliner
 	struct OpenWindowEvent;
 }
 
+namespace editor::settings
+{
+	struct LocalSingleton;
+}
+
 namespace editor::sprite
 {
 	struct OpenWindowEvent;
@@ -49,12 +54,12 @@ namespace editor
 			editor::flipbook::OpenWindowEvent,
 			editor::inspector::OpenWindowEvent,
 			editor::outliner::OpenWindowEvent,
+			editor::settings::LocalSingleton,
 			editor::sprite::OpenWindowEvent,
 			editor::texture::OpenWindowEvent,
 			eng::settings::DebugSingleton,
 			gamestate::EditModeComponent,
-			gamestate::EditModeToggleEvent>
-			::Read<>;
+			gamestate::EditModeToggleEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -129,6 +129,10 @@ template <typename... TWrite, typename... TRead>
 template<class TSingleton>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadSingleton() -> const TSingleton&
 {
+	constexpr bool hasWriteAccess = core::Contains<TSingleton, TWrite...>();
+	constexpr bool hasReadAccess = core::Contains<TSingleton, TRead...>();
+	static_assert(hasWriteAccess || hasReadAccess, "Singleton isn't in WriteAccess or ReadAccess.");
+
 	return m_EntityWorld.template ReadSingleton<TSingleton>();
 }
 
@@ -136,6 +140,8 @@ template <typename... TWrite, typename... TRead>
 template<class TSingleton>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteSingleton() -> TSingleton&
 {
+	static_assert(core::Contains<TSingleton, TWrite...>(), "Singleton isn't in WriteAccess.");
+
 	return m_EntityWorld.template WriteSingleton<TSingleton>();
 }
 

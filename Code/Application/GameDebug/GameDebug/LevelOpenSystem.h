@@ -35,10 +35,10 @@ namespace debug::level
 			debug::level::OpenWindowComponent,
 			ecs::NameComponent,
 			eng::InputManager,
+			eng::level::DirectorySingleton,
 			eng::level::LoadRequest>
 			::Read<
-			debug::level::OpenRequest,
-			eng::level::DirectorySingleton>;
+			debug::level::OpenRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
