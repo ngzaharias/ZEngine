@@ -6,6 +6,11 @@
 #include "ECS/WorldView.h"
 #include "Network/PeerId.h"
 
+namespace ecs
+{
+	struct ReplicationComponent;
+}
+
 namespace server::cursor
 {
 	struct TransformSingleton;
@@ -24,6 +29,7 @@ namespace server::cursor
 	public:
 		using World = ecs::WorldView
 			::Write<
+			ecs::ReplicationComponent,
 			server::cursor::TransformSingleton,
 			shared::cursor::TransformComponent>
 			::Read<

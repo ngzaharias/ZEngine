@@ -13,8 +13,11 @@ namespace eng
 {
 	struct CameraComponent;
 	struct FlipbookComponent;
+	struct PrototypeComponent;
 	struct SpriteComponent;
 	struct StaticMeshComponent;
+	struct TransformComponent;
+	struct VisibilityComponent;
 }
 
 namespace eng::light
@@ -48,16 +51,19 @@ namespace editor::outliner
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::outliner::SelectSingleton,
-			editor::outliner::WindowComponent>
-			::Read<
 			ecs::NameComponent,
+			editor::outliner::SelectSingleton,
+			editor::outliner::WindowComponent,
+			eng::level::EntityComponent,
+			eng::PrototypeComponent,
+			eng::SpriteComponent,
+			eng::TransformComponent,
+			eng::VisibilityComponent>
+			::Read<
 			eng::CameraComponent,
 			eng::FlipbookComponent,
-			eng::SpriteComponent,
 			eng::StaticMeshComponent,
 			editor::outliner::OpenWindowEvent,
-			eng::level::EntityComponent,
 			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

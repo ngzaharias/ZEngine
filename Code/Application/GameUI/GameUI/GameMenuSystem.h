@@ -51,13 +51,13 @@ namespace gui::game_menu
 			eng::InputManager,
 			eng::level::LoadRequest,
 			eng::UIManager,
-			gui::game_menu::CloseRequest>
+			gui::game_menu::CloseRequest,
+			gui::game_menu::WindowComponent>
 			::Read<
 			eng::settings::LaunchSingleton,
 			gui::game_menu::ExitGameRequest,
 			gui::game_menu::ExitToMenuRequest,
-			gui::game_menu::OpenRequest,
-			gui::game_menu::WindowComponent>;
+			gui::game_menu::OpenRequest>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

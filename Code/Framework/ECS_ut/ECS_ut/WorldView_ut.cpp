@@ -181,8 +181,8 @@ CLASS_TEST_CASE("ReadComponent.")
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
 	WorldView worldView = entityWorld.WorldView<WorldView>();
 
-	worldView.AddComponent<ComponentA>(raii.m_EntityA);
-	worldView.AddComponent<ComponentB>(raii.m_EntityA);
+	entityWorld.AddComponent<ComponentA>(raii.m_EntityA);
+	entityWorld.AddComponent<ComponentB>(raii.m_EntityA);
 	entityWorld.Update({});
 
 	CHECK_NOTHROW(worldView.ReadComponent<ComponentA>(raii.m_EntityA));

@@ -51,6 +51,7 @@ template <typename... TWrite, typename... TRead>
 template <typename TComponent, typename... TArgs>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto)
 {
+	static_assert(core::Contains<TComponent, TWrite...>(), "Component isn't in WriteAccess.");
 	return m_EntityWorld.template AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
 }
 
