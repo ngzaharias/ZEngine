@@ -16,6 +16,11 @@ namespace server::cursor
 	struct TransformSingleton;
 }
 
+namespace server::network
+{
+	struct PeerComponent;
+}
+
 namespace shared::cursor
 {
 	struct ClientTransformEvent;
@@ -33,6 +38,7 @@ namespace server::cursor
 			server::cursor::TransformSingleton,
 			shared::cursor::TransformComponent>
 			::Read<
+			server::network::PeerComponent,
 			shared::cursor::ClientTransformEvent>;
 
 		void Update(World& world, const GameTime& gameTime);

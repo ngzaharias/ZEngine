@@ -6,6 +6,7 @@
 namespace eng
 {
 	struct LinesSingleton;
+	struct TransformComponent;
 }
 
 namespace eng::settings
@@ -28,6 +29,7 @@ namespace debug
 			eng::LinesSingleton>
 			::Read<
 			eng::settings::DebugSingleton,
+			eng::TransformComponent,
 			softbody::ChainComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

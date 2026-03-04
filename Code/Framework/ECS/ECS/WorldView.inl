@@ -196,6 +196,15 @@ template <typename... TWrite, typename... TRead>
 template<class TQuery>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Query() -> ecs::QueryRange<TQuery>
 {
+	using TWriteRead = TypeMerge<TWriteList, TReadList>::TypeList;
+	using TIncludeList = ecs::query::IncludeAccess<TQuery>;
+	using TOptionalList = ecs::query::OptionalAccess<TQuery>;
+
+	constexpr bool hasIncludeAccess = core::ContainsAll(TIncludeList{}, TWriteRead{});
+	constexpr bool hasOptionalAccess = core::ContainsAll(TOptionalList{}, TWriteRead{});
+	static_assert(hasIncludeAccess, "WorldView doesn't have Write/Read access to Component in Include Query.");
+	static_assert(hasOptionalAccess, "WorldView doesn't have Write/Read access to Component in Optional Query.");
+
 	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
 	const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
 	return ecs::QueryRange<TQuery>{ m_EntityWorld, queryGroup };

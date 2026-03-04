@@ -3,6 +3,11 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace ecs
+{
+	struct NameComponent;
+}
+
 namespace eng
 {
 	class UIManager;
@@ -29,6 +34,7 @@ namespace gui
 			::Write<
 			eng::UIManager>
 			::Read<
+			ecs::NameComponent,
 			gui::HUDComponent,
 			tactics::AbilityTable,
 			tactics::PawnAbilitiesComponent,

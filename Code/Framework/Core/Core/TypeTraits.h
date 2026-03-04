@@ -5,6 +5,9 @@
 
 #include <type_traits>
 
+template <typename... Types>
+struct TypeList;
+
 namespace detail 
 {
 	template<class Default, class AlwaysVoid, template<class...> class Op, class... Args>
@@ -47,5 +50,17 @@ namespace core
 		using TStrippedType = typename std::remove_const<TType>::type;
 		using TStrippedHead = typename std::remove_const<THead>::type;
 		return std::is_same<TStrippedType, TStrippedHead>::value || Contains<TType, TTail...>();
+	}
+
+	template <typename... TType, typename... TOther>
+	constexpr bool ContainsAll(const TypeList<TType...>&, const TypeList<TOther...>&)
+	{
+		return (Contains<TType, TOther...>() && ...);
+	}
+
+	template <typename... TType, typename... TOther>
+	constexpr bool ContainsAny(const TypeList<TType...>&, const TypeList<TOther...>&)
+	{
+		return (Contains<TType, TOther...>() || ...);
 	}
 }

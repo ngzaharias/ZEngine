@@ -26,6 +26,7 @@ namespace net
 namespace shared::cursor
 {
 	struct ClientTransformEvent;
+	struct TransformComponent;
 }
 
 namespace client::cursor
@@ -44,7 +45,8 @@ namespace client::cursor
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::InputManager,
-			eng::WindowManager>;
+			eng::WindowManager,
+			shared::cursor::TransformComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

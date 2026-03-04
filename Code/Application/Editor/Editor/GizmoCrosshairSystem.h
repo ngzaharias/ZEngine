@@ -29,6 +29,7 @@ namespace editor::gizmo
 			eng::LinesSingleton>
 			::Read<
 			editor::settings::LocalSingleton,
+			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::TransformComponent>;
 

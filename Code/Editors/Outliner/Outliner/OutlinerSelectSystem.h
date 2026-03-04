@@ -23,6 +23,11 @@ namespace eng
 	struct VisibilityComponent;
 }
 
+namespace eng::level
+{
+	struct EntityComponent;
+}
+
 namespace gamestate
 {
 	struct EditModeComponent;
@@ -44,6 +49,7 @@ namespace editor::outliner
 			eng::AssetManager,
 			eng::CameraComponent,
 			eng::EditorComponent,
+			eng::level::EntityComponent,
 			eng::SpriteComponent,
 			eng::TransformComponent,
 			eng::VisibilityComponent,

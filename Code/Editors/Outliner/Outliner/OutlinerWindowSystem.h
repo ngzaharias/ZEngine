@@ -39,6 +39,13 @@ namespace eng::level
 	struct EntityComponent;
 }
 
+namespace eng::light
+{
+	struct AmbientComponent;
+	struct DirectionalComponent;
+	struct PointComponent;
+}
+
 namespace gamestate
 {
 	struct EditorComponent;
@@ -62,6 +69,9 @@ namespace editor::outliner
 			::Read<
 			eng::CameraComponent,
 			eng::FlipbookComponent,
+			eng::light::AmbientComponent,
+			eng::light::DirectionalComponent,
+			eng::light::PointComponent,
 			eng::StaticMeshComponent,
 			editor::outliner::OpenWindowEvent,
 			gamestate::EditorComponent>;

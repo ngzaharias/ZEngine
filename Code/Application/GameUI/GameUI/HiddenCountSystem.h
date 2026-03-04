@@ -8,7 +8,7 @@ namespace eng
 	class UIManager;
 }
 
-namespace hidden
+namespace client::hidden
 {
 	struct CountComponent;
 }
@@ -22,7 +22,7 @@ namespace gui::hidden
 			::Write<
 			eng::UIManager>
 			::Read<
-			::hidden::CountComponent>;
+			client::hidden::CountComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
