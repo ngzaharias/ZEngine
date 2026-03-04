@@ -44,8 +44,8 @@ void gui::HUDSystem::Update(World& world, const GameTime& gameTime)
 		::Added<
 		tactics::PawnSelectedComponent>
 		::Include<
-		ecs::NameComponent,
-		tactics::PawnAbilitiesComponent>;
+		const ecs::NameComponent,
+		const tactics::PawnAbilitiesComponent>;
 	for (auto&& view : world.Query<SelectedQuery>())
 	{
 		const auto& nameComponent = view.ReadRequired<ecs::NameComponent>();

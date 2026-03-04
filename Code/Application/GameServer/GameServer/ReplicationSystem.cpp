@@ -42,7 +42,7 @@ void server::ReplicationSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const net::PeerId& peerId : m_PeersConnected)
 	{
-		for (auto&& view : world.Query<ecs::query::Include<ecs::ReplicationComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<const ecs::ReplicationComponent>>())
 			replicationHost.StartReplicate(peerId, view);
 	}
 

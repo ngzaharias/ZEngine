@@ -21,11 +21,11 @@ namespace voxel
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::DynamicMeshComponent>
+			eng::DynamicMeshComponent,
+			voxel::ChunkComponent>
 			::Read<
 			eng::TransformComponent,
 			voxel::ChunkChangedFrameComponent,
-			voxel::ChunkComponent,
 			voxel::ChunkLoadedFrameComponent,
 			voxel::ModifyComponent>;
 

@@ -41,3 +41,25 @@ public:
 		typename TypeMerge<TypeList<Head>, List>::TypeList,
 		List>;
 };
+
+template <typename List>
+struct TypeNonConst;
+
+template <>
+struct TypeNonConst<TypeList<>>
+{
+	using type = TypeList<>;
+};
+
+template <typename Head, typename... Tail>
+struct TypeNonConst<TypeList<Head, Tail...>>
+{
+private:
+	using List = typename TypeNonConst<TypeList<Tail...>>::type;
+
+public:
+	using type = std::conditional_t<
+		!std::is_const_v<Head>,
+		typename TypeMerge<TypeList<Head>, List>::TypeList,
+		List>;
+};

@@ -34,9 +34,10 @@ namespace ecs
 		template<typename...>
 		friend class WorldView_t;
 
-	private:
+	public:
 		using TWriteList = TypeList<TWrite...>;
 		using TReadList = TypeList<TRead...>;
+		using TList = TypeList<TWrite..., TRead...>;
 
 	public:
 		template <typename... Types>
@@ -121,6 +122,10 @@ namespace ecs
 
 		template<class TQuery>
 		auto Query() -> ecs::QueryRange<TQuery>;
+
+	private:
+		template<class TQuery>
+		void ValidateAccess();
 
 	private:
 		ecs::EntityWorld& m_EntityWorld;

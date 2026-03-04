@@ -27,7 +27,7 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 		transformComponent.m_Translate = eventData.m_Translate;
 	}
 
-	for (auto&& view : world.Query<ecs::query::Added<server::network::PeerComponent>::Include<server::network::PeerComponent>>())
+	for (auto&& view : world.Query<ecs::query::Added<server::network::PeerComponent>::Include<const server::network::PeerComponent>>())
 	{
 		const auto& peerComponent = view.ReadRequired<server::network::PeerComponent>();
 		const net::PeerId peerId = peerComponent.m_PeerId;
@@ -42,7 +42,7 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 		transformSingleton.m_Peers.Set(peerId, entity);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<server::network::PeerComponent>::Include<server::network::PeerComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<server::network::PeerComponent>::Include<const server::network::PeerComponent>>())
 	{
 		const auto& peerComponent = view.ReadRequired<server::network::PeerComponent>();
 		auto& transformSingleton = world.WriteSingleton<server::cursor::TransformSingleton>();

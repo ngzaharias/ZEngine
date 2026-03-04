@@ -196,16 +196,35 @@ template <typename... TWrite, typename... TRead>
 template<class TQuery>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Query() -> ecs::QueryRange<TQuery>
 {
-	using TAccessList = TypeList<TWrite..., TRead...>;
-	using TIncludeList = ecs::query::IncludeAccess<TQuery>;
-	using TOptionalList = ecs::query::OptionalAccess<TQuery>;
-
-	constexpr bool hasIncludeAccess = core::ContainsAll(TIncludeList{}, TAccessList{});
-	constexpr bool hasOptionalAccess = core::ContainsAll(TOptionalList{}, TAccessList{});
-	static_assert(hasIncludeAccess, "WorldView doesn't have Write/Read access to Component in Include Query.");
-	static_assert(hasOptionalAccess, "WorldView doesn't have Write/Read access to Component in Optional Query.");
+#ifndef Z_RELEASE
+	ValidateAccess<TQuery>();
+#endif
 
 	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
 	const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
 	return ecs::QueryRange<TQuery>{ m_EntityWorld, queryGroup };
+}
+
+
+template <typename... TWrite, typename... TRead>
+template<class TQuery>
+void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ValidateAccess()
+{
+	using TAccessList = TypeList<TWrite..., TRead...>;
+
+	using TIncludeWrite = TypeNonConst<ecs::query::IncludeAccess<TQuery>>::type;
+	constexpr bool hasIncludeWrite = core::ContainsAll(TIncludeWrite{}, TWriteList{});
+	static_assert(hasIncludeWrite, "WorldView doesn't have Write access to Component in Include Query.");
+
+	using TIncludeRead = TypeConst<ecs::query::IncludeAccess<TQuery>>::type;
+	constexpr bool hasIncludeRead = core::ContainsAll(TIncludeRead{}, TAccessList{});
+	static_assert(hasIncludeRead, "WorldView doesn't have Read (or Write) access to Component in Include Query.");
+
+	using TOptionalWrite = TypeNonConst<ecs::query::OptionalAccess<TQuery>>::type;
+	constexpr bool hasOptionalWrite = core::ContainsAll(TOptionalWrite{}, TWriteList{});
+	static_assert(hasOptionalWrite, "WorldView doesn't have Write access to Component in Optional Query.");
+
+	using TOptionalRead = TypeConst<ecs::query::OptionalAccess<TQuery>>::type;
+	constexpr bool hasOptionalRead = core::ContainsAll(TOptionalRead{}, TAccessList{});
+	static_assert(hasOptionalRead, "WorldView doesn't have Read (or Write) access to Component in Optional Query.");
 }

@@ -55,7 +55,7 @@ namespace
 	{
 		Array<ecs::Entity> voxelEntities;
 		auto& lines = world.WriteSingleton<eng::LinesSingleton>();
-		for (auto&& view : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<const eng::TransformComponent, const voxel::ChunkComponent>>())
 		{
 			const auto& transform = view.ReadRequired<eng::TransformComponent>();
 			const AABB3f aabb = AABB3f(transform.m_Translate, transform.m_Translate + Vector3f(voxel::s_ChunkSize1D));
