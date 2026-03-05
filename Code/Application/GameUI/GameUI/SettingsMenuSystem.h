@@ -24,7 +24,7 @@ namespace eng::settings
 
 namespace gui::settings_menu
 {
-	struct CloseRequest;
+	struct CloseRequestEvent;
 	struct OpenRequest;
 	struct ValueRequest;
 	struct WindowComponent;
@@ -46,7 +46,7 @@ namespace gui::settings_menu
 			eng::WindowManager,
 			gui::settings_menu::WindowComponent>
 			::Read<
-			gui::settings_menu::CloseRequest,
+			gui::settings_menu::CloseRequestEvent,
 			gui::settings_menu::OpenRequest,
 			gui::settings_menu::ValueRequest>;
 

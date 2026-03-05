@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/ReplicationComponent.h"
-#include "Engine/ApplicationCloseRequest.h"
+#include "Engine/ApplicationCloseRequestEvent.h"
 #include "Engine/AssetComponent.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
@@ -16,7 +16,7 @@
 #include "Engine/LevelEntityComponent.h"
 #include "Engine/LevelLoadedComponent.h"
 #include "Engine/LevelLoadingComponent.h"
-#include "Engine/LevelLoadRequest.h"
+#include "Engine/LevelLoadRequestEvent.h"
 #include "Engine/LightAmbientComponent.h"
 #include "Engine/LightDirectionalComponent.h"
 #include "Engine/LightPointComponent.h"
@@ -43,7 +43,7 @@
 #include "Engine/SoundSingleRequestComponent.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshComponent.h"
-#include "Engine/TablesReloaded.h"
+#include "Engine/TablesReloadedEvent.h"
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/UserComponent.h"
@@ -78,8 +78,8 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<eng::sound::SingleRequestComponent>();
 	entityWorld.RegisterComponent<eng::VisibilityComponent>();
 
-	entityWorld.RegisterEvent<eng::application::CloseRequest>();
-	entityWorld.RegisterEvent<eng::TablesReloaded>();
+	entityWorld.RegisterEvent<eng::application::CloseRequestEvent>();
+	entityWorld.RegisterEvent<eng::TablesReloadedEvent>();
 
 	entityWorld.RegisterSingleton<eng::FrameBufferSingleton>();
 	entityWorld.RegisterSingleton<eng::LinesSingleton>();
@@ -123,7 +123,7 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld)
 
 	// events
 	{
-		entityWorld.RegisterEvent<eng::level::LoadRequest>();
+		entityWorld.RegisterEvent<eng::level::LoadRequestEvent>();
 	}
 
 	// singletons

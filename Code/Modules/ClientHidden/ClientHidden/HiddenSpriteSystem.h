@@ -14,7 +14,7 @@ namespace eng
 {
 	class ThemeTable;
 	struct SpriteComponent;
-	struct TablesReloaded;
+	struct TablesReloadedEvent;
 }
 
 namespace eng::settings
@@ -34,7 +34,7 @@ namespace client::hidden
 			client::hidden::ObjectComponent,
 			client::hidden::RevealComponent,
 			eng::settings::GameplaySingleton,
-			eng::TablesReloaded,
+			eng::TablesReloadedEvent,
 			eng::ThemeTable>;
 
 		void Update(World& world, const GameTime& gameTime);

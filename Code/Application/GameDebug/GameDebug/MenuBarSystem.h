@@ -65,7 +65,7 @@ namespace eng
 	class AssetManager;
 	class InputManager;
 	class TableHeadmaster;
-	struct TablesReloaded;
+	struct TablesReloadedEvent;
 }
 
 namespace debug
@@ -98,7 +98,7 @@ namespace debug
 			eng::AssetManager,
 			eng::InputManager,
 			eng::TableHeadmaster,
-			eng::TablesReloaded>;
+			eng::TablesReloadedEvent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

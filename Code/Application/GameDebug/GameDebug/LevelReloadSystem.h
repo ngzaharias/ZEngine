@@ -6,7 +6,7 @@
 namespace eng::level
 {
 	struct LoadedComponent;
-	struct LoadRequest;
+	struct LoadRequestEvent;
 }
 
 namespace debug::level
@@ -21,7 +21,7 @@ namespace debug::level
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::level::LoadRequest>
+			eng::level::LoadRequestEvent>
 			::Read<
 			debug::level::ReloadRequest,
 			eng::level::LoadedComponent>;

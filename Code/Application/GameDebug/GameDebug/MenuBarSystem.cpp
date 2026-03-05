@@ -11,7 +11,7 @@
 #include "Engine/AssetManager.h"
 #include "Engine/InputManager.h"
 #include "Engine/TableHeadmaster.h"
-#include "Engine/TablesReloaded.h"
+#include "Engine/TablesReloadedEvent.h"
 #include "GameDebug/DebugContainerWindowRequest.h"
 #include "GameDebug/DebugEntityWindowRequest.h"
 #include "GameDebug/DebugFrameBufferWindowRequest.h"
@@ -106,7 +106,7 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 			if (ImGui::MenuItem("Reload Tables"))
 			{
-				world.AddEvent<eng::TablesReloaded>();
+				world.AddEvent<eng::TablesReloadedEvent>();
 				auto& tableHeadmaster = world.WriteResource<eng::TableHeadmaster>();
 				tableHeadmaster.Reload();
 			}

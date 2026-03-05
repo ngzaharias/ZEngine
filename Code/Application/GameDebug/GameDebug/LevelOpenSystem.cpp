@@ -7,7 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
 #include "Engine/LevelDirectorySingleton.h"
-#include "Engine/LevelLoadRequest.h"
+#include "Engine/LevelLoadRequestEvent.h"
 #include "GameDebug/DebugLevelOpenRequest.h"
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "Input/Key.h"
@@ -93,7 +93,7 @@ void debug::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 
 					if (ImGui::Button(name.ToChar(), { width, 0 }))
 					{
-						world.AddEvent<eng::level::LoadRequest>(name);
+						world.AddEvent<eng::level::LoadRequestEvent>(name);
 						ImGui::CloseCurrentPopup();
 					}
 

@@ -2,7 +2,7 @@
 #include "GameUI/DCGameMenu.h"
 
 #include "ECS/EntityWorld.h"
-#include "GameUI/GameMenuCloseRequest.h"
+#include "GameUI/GameMenuCloseRequestEvent.h"
 #include "GameUI/GameMenuExitGameRequest.h"
 #include "GameUI/GameMenuExitToMenuRequest.h"
 #include "GameUI/SettingsMenuOpenRequest.h"
@@ -23,7 +23,7 @@ gui::DCGameMenu::~DCGameMenu()
 
 void gui::DCGameMenu::OnCloseCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::game_menu::CloseRequest>();
+	m_EntityWorld->AddEvent<gui::game_menu::CloseRequestEvent>();
 }
 
 void gui::DCGameMenu::OnExitGameCommand(Noesis::BaseComponent* param)

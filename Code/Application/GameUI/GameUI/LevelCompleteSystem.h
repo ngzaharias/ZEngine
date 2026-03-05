@@ -10,13 +10,13 @@ namespace eng
 
 namespace eng::application
 {
-	struct CloseRequest;
+	struct CloseRequestEvent;
 }
 
 namespace eng::level
 {
 	struct LoadedComponent;
-	struct LoadRequest;
+	struct LoadRequestEvent;
 }
 
 namespace eng::settings
@@ -39,8 +39,8 @@ namespace gui::level_complete
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::application::CloseRequest,
-			eng::level::LoadRequest,
+			eng::application::CloseRequestEvent,
+			eng::level::LoadRequestEvent,
 			eng::UIManager>
 			::Read<
 			eng::level::LoadedComponent,

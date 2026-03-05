@@ -5,7 +5,7 @@
 
 namespace eng::level
 {
-	struct LoadRequest;
+	struct LoadRequestEvent;
 }
 
 namespace eng::settings
@@ -20,7 +20,7 @@ namespace eng::settings
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::level::LoadRequest,
+			eng::level::LoadRequestEvent,
 			eng::settings::LaunchSingleton>;
 
 		void Initialise(World& world);

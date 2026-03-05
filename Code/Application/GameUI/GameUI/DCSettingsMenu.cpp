@@ -12,7 +12,7 @@
 #include "Engine/ThemeTable.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "GameUI/SettingsMenuCloseRequest.h"
+#include "GameUI/SettingsMenuCloseRequestEvent.h"
 #include "GameUI/SettingsMenuOpenRequest.h"
 #include "GameUI/SettingsMenuValueRequest.h"
 #include "GameUI/SettingsMenuWindowComponent.h"
@@ -387,7 +387,7 @@ void gui::DCSettingsMenu::SetWindowMode(gui::VMWindowMode* value)
 
 void gui::DCSettingsMenu::OnCloseCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::settings_menu::CloseRequest>();
+	m_EntityWorld->AddEvent<gui::settings_menu::CloseRequestEvent>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCSettingsMenu)

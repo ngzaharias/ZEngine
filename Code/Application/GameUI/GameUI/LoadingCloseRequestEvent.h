@@ -5,5 +5,5 @@
 
 namespace gui::loading
 {
-	struct CloseRequest final : public ecs::Event<CloseRequest> { };
+	struct CloseRequestEvent final : public ecs::Event<CloseRequestEvent> { };
 }

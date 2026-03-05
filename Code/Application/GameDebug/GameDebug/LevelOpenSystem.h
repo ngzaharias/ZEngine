@@ -16,7 +16,7 @@ namespace eng
 namespace eng::level
 {
 	struct DirectorySingleton;
-	struct LoadRequest;
+	struct LoadRequestEvent;
 }
 
 namespace debug::level
@@ -36,7 +36,7 @@ namespace debug::level
 			ecs::NameComponent,
 			eng::InputManager,
 			eng::level::DirectorySingleton,
-			eng::level::LoadRequest>
+			eng::level::LoadRequestEvent>
 			::Read<
 			debug::level::OpenRequest>;
 

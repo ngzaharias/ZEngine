@@ -9,7 +9,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/SettingsGameplaySingleton.h"
 #include "Engine/SpriteComponent.h"
-#include "Engine/TablesReloaded.h"
+#include "Engine/TablesReloadedEvent.h"
 #include "Engine/ThemeTable.h"
 
 namespace
@@ -68,7 +68,7 @@ void client::hidden::SpriteSystem::Update(World& world, const GameTime& gameTime
 		sprite.m_Colour = theme.m_Highlight;
 	}
 
-	if (world.HasAny<ecs::query::Added<const eng::TablesReloaded>>())
+	if (world.HasAny<ecs::query::Added<const eng::TablesReloadedEvent>>())
 		Refresh(world);
 	if (world.HasAny<eng::settings::GameplaySingleton>())
 		Refresh(world);

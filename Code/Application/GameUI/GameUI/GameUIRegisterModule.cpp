@@ -13,7 +13,7 @@
 #include "GameUI/DCLoadingScreen.h"
 #include "GameUI/DCMainMenu.h"
 #include "GameUI/DCSettingsMenu.h"
-#include "GameUI/GameMenuCloseRequest.h"
+#include "GameUI/GameMenuCloseRequestEvent.h"
 #include "GameUI/GameMenuExitGameRequest.h"
 #include "GameUI/GameMenuExitToMenuRequest.h"
 #include "GameUI/GameMenuOpenRequest.h"
@@ -31,7 +31,7 @@
 #include "GameUI/LevelCompleteResetGameRequest.h"
 #include "GameUI/LevelCompleteSystem.h"
 #include "GameUI/LevelCompleteWindowComponent.h"
-#include "GameUI/LoadingCloseRequest.h"
+#include "GameUI/LoadingCloseRequestEvent.h"
 #include "GameUI/LoadingSystem.h"
 #include "GameUI/MainMenuContinueGameRequest.h"
 #include "GameUI/MainMenuExitGameRequest.h"
@@ -39,7 +39,7 @@
 #include "GameUI/MainMenuNewGameRequest.h"
 #include "GameUI/MainMenuSystem.h"
 #include "GameUI/MainMenuWindowComponent.h"
-#include "GameUI/SettingsMenuCloseRequest.h"
+#include "GameUI/SettingsMenuCloseRequestEvent.h"
 #include "GameUI/SettingsMenuOpenRequest.h"
 #include "GameUI/SettingsMenuSystem.h"
 #include "GameUI/SettingsMenuValueRequest.h"
@@ -72,19 +72,19 @@ void gui::RegisterModule(ecs::EntityWorld& world)
 
 	// events
 	{
-		world.RegisterEvent<gui::game_menu::CloseRequest>();
+		world.RegisterEvent<gui::game_menu::CloseRequestEvent>();
 		world.RegisterEvent<gui::game_menu::ExitGameRequest>();
 		world.RegisterEvent<gui::game_menu::ExitToMenuRequest>();
 		world.RegisterEvent<gui::game_menu::OpenRequest>();
 		world.RegisterEvent<gui::level_complete::ExitGameRequest>();
 		world.RegisterEvent<gui::level_complete::ExitToMenuRequest>();
 		world.RegisterEvent<gui::level_complete::ResetGameRequest>();
-		world.RegisterEvent<gui::loading::CloseRequest>();
+		world.RegisterEvent<gui::loading::CloseRequestEvent>();
 		world.RegisterEvent<gui::main_menu::ContinueGameRequest>();
 		world.RegisterEvent<gui::main_menu::ExitGameRequest>();
 		world.RegisterEvent<gui::main_menu::LoadGameRequest>();
 		world.RegisterEvent<gui::main_menu::NewGameRequest>();
-		world.RegisterEvent<gui::settings_menu::CloseRequest>();
+		world.RegisterEvent<gui::settings_menu::CloseRequestEvent>();
 		world.RegisterEvent<gui::settings_menu::OpenRequest>();
 		world.RegisterEvent<gui::settings_menu::ValueRequest>();
 	}

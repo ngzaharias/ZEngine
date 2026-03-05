@@ -20,7 +20,7 @@ namespace gui
 
 namespace gui::loading
 {
-	struct CloseRequest;
+	struct CloseRequestEvent;
 }
 
 namespace gui::loading
@@ -34,7 +34,7 @@ namespace gui::loading
 			eng::UIManager>
 			::Read<
 			gui::HintTable,
-			gui::loading::CloseRequest>;
+			gui::loading::CloseRequestEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -13,7 +13,7 @@
 #include "Engine/LevelEntityComponent.h"
 #include "Engine/LevelLoadedComponent.h"
 #include "Engine/LevelLoadingComponent.h"
-#include "Engine/LevelLoadRequest.h"
+#include "Engine/LevelLoadRequestEvent.h"
 #include "Engine/PrototypeManager.h"
 
 #include <filesystem>
@@ -56,7 +56,7 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 	const auto& directoryComponent = world.ReadSingleton<eng::level::DirectorySingleton>();
 
 	// requests
-	for (const auto& request : world.Events<eng::level::LoadRequest>())
+	for (const auto& request : world.Events<eng::level::LoadRequestEvent>())
 	{
 		const ecs::Entity levelEntity = world.CreateEntity();
 		auto& loadingComponent = world.AddComponent<eng::level::LoadingComponent>(levelEntity);

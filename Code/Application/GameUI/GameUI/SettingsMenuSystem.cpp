@@ -13,7 +13,7 @@
 #include "Engine/SettingsWindowSingleton.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCSettingsMenu.h"
-#include "GameUI/SettingsMenuCloseRequest.h"
+#include "GameUI/SettingsMenuCloseRequestEvent.h"
 #include "GameUI/SettingsMenuOpenRequest.h"
 #include "GameUI/SettingsMenuValueRequest.h"
 #include "GameUI/SettingsMenuWindowComponent.h"
@@ -46,7 +46,7 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 	//////////////////////////////////////////////////////////////////////////
 	// Events
 
-	if (world.HasAny<gui::settings_menu::CloseRequest>())
+	if (world.HasAny<gui::settings_menu::CloseRequestEvent>())
 	{
 		for (auto&& view : world.Query<ecs::query::Include<gui::settings_menu::WindowComponent>>())
 			world.DestroyEntity(view);

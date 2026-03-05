@@ -7,7 +7,7 @@ namespace eng
 {
 	class ThemeTable;
 	class UIManager;
-	struct TablesReloaded;
+	struct TablesReloadedEvent;
 }
 
 namespace eng::settings
@@ -26,7 +26,7 @@ namespace gui
 			eng::ThemeTable>
 			::Read<
 			eng::settings::GameplaySingleton,
-			eng::TablesReloaded>;
+			eng::TablesReloadedEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

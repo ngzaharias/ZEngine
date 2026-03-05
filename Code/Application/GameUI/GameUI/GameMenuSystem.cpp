@@ -5,13 +5,13 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/ApplicationCloseRequest.h"
+#include "Engine/ApplicationCloseRequestEvent.h"
 #include "Engine/InputManager.h"
-#include "Engine/LevelLoadRequest.h"
+#include "Engine/LevelLoadRequestEvent.h"
 #include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCGameMenu.h"
-#include "GameUI/GameMenuCloseRequest.h"
+#include "GameUI/GameMenuCloseRequestEvent.h"
 #include "GameUI/GameMenuExitGameRequest.h"
 #include "GameUI/GameMenuExitToMenuRequest.h"
 #include "GameUI/GameMenuOpenRequest.h"
@@ -52,7 +52,7 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	//////////////////////////////////////////////////////////////////////////
 	// Events
 
-	if (world.HasAny<gui::game_menu::CloseRequest>())
+	if (world.HasAny<gui::game_menu::CloseRequestEvent>())
 	{
 		for (auto&& view : world.Query<ecs::query::Include<gui::game_menu::WindowComponent>>())
 			world.DestroyEntity(view);
@@ -60,14 +60,14 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 	if (world.HasAny<gui::game_menu::ExitGameRequest>())
 	{
-		world.AddEvent<eng::application::CloseRequest>();
+		world.AddEvent<eng::application::CloseRequestEvent>();
 	}
 
 	if (world.HasAny<gui::game_menu::ExitToMenuRequest>())
 	{
 		const auto& settings = world.ReadSingleton<eng::settings::LaunchSingleton>();
-		world.AddEvent<eng::level::LoadRequest>(settings.m_Level);
-		world.AddEvent<gui::game_menu::CloseRequest>();
+		world.AddEvent<eng::level::LoadRequestEvent>(settings.m_Level);
+		world.AddEvent<gui::game_menu::CloseRequestEvent>();
 	}
 
 	if (world.HasAny<gui::game_menu::OpenRequest>())

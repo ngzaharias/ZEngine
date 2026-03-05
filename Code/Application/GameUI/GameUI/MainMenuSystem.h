@@ -11,12 +11,12 @@ namespace eng
 
 namespace eng::application
 {
-	struct CloseRequest;
+	struct CloseRequestEvent;
 }
 
 namespace eng::level
 {
-	struct LoadRequest;
+	struct LoadRequestEvent;
 }
 
 namespace gui::main_menu
@@ -35,8 +35,8 @@ namespace gui::main_menu
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::application::CloseRequest,
-			eng::level::LoadRequest,
+			eng::application::CloseRequestEvent,
+			eng::level::LoadRequestEvent,
 			eng::UIManager>
 			::Read<
 			eng::VersionSingleton,
