@@ -8,7 +8,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/LevelEntityComponent.h"
-#include "Engine/LinesComponent.h"
+#include "Engine/LinesSingleton.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "GameDebug/HiddenObjectComponent.h"

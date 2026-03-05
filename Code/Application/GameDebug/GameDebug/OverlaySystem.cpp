@@ -7,7 +7,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/ColourHelpers.h"
-#include "Engine/VersionComponent.h"
+#include "Engine/VersionSingleton.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "GameDebug/FPSCounter.h"

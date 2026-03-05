@@ -7,7 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/PhysicsComponent.h"
-#include "Engine/PhysicsSceneComponent.h"
+#include "Engine/PhysicsSceneSingleton.h"
 #include "Engine/PhysicsHelpers.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PhysicsMaterialAsset.h"

@@ -3,7 +3,7 @@
 #include "ClientHidden/HiddenDebugSingleton.h"
 #include "ECS/Component.h"
 #include "Engine/SettingsDebugSingleton.h"
-#include "GameClient/SettingsDebugComponent.h"
+#include "GameClient/SettingsDebugSingleton.h"
 
 namespace debug::settings
 {

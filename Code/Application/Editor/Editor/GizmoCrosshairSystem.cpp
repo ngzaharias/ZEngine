@@ -7,7 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Editor/SettingsLocalSingleton.h"
 #include "Engine/CameraComponent.h"
-#include "Engine/LinesComponent.h"
+#include "Engine/LinesSingleton.h"
 #include "Engine/TransformComponent.h"
 #include "Math/Quaternion.h"
 

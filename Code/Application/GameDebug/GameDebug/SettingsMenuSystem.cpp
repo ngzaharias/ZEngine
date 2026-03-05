@@ -7,7 +7,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/SettingsDebugSingleton.h"
-#include "GameClient/SettingsDebugComponent.h"
+#include "GameClient/SettingsDebugSingleton.h"
 #include "GameDebug/SettingsWindowComponent.h"
 #include "GameDebug/SettingsWindowRequest.h"
 

@@ -8,7 +8,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/ColourHelpers.h"
-#include "Engine/LinesComponent.h"
+#include "Engine/LinesSingleton.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/TransformComponent.h"
 #include "Math/Algorithms.h"

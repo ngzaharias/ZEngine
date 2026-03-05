@@ -1,5 +1,5 @@
 #include "EnginePCH.h"
-#include "Engine/LinesComponent.h"
+#include "Engine/LinesSingleton.h"
 
 #include "Engine/CameraHelpers.h"
 #include "Math/AABB.h"

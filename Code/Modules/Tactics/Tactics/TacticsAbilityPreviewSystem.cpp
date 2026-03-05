@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
-#include "Engine/LinesComponent.h"
+#include "Engine/LinesSingleton.h"
 #include "Engine/TransformComponent.h"
 #include "Math/VectorMath.h"
 #include "Tactics/TacticsAbilityPreviewComponent.h"

@@ -15,7 +15,7 @@
 #include "GameClient/ProjectileCreateResultComponent.h"
 #include "GameClient/ProjectileSpawnComponent.h"
 #include "GameClient/ProjectileTrajectoryComponent.h"
-#include "GameClient/SettingsDebugComponent.h"
+#include "GameClient/SettingsDebugSingleton.h"
 
 void client::RegisterComponents(ecs::EntityWorld& entityWorld)
 {

@@ -8,7 +8,7 @@
 #include "Engine/ApplicationCloseRequest.h"
 #include "Engine/LevelLoadRequest.h"
 #include "Engine/UIManager.h"
-#include "Engine/VersionComponent.h"
+#include "Engine/VersionSingleton.h"
 #include "GameUI/DCMainMenu.h"
 #include "GameUI/MainMenuContinueGameRequest.h"
 #include "GameUI/MainMenuExitGameRequest.h"

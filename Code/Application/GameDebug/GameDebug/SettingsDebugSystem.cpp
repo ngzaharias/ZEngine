@@ -8,7 +8,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/Visitor.h"
-#include "GameClient/SettingsDebugComponent.h"
+#include "GameClient/SettingsDebugSingleton.h"
 
 namespace
 {

@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/VersionComponent.h"
+#include "Engine/VersionSingleton.h"
 
 namespace
 {

@@ -9,7 +9,7 @@
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
 #include "Engine/LevelEntityComponent.h"
-#include "Engine/LinesComponent.h"
+#include "Engine/LinesSingleton.h"
 #include "Engine/SettingsDebugSingleton.h"
 #include "Engine/SpriteAsset.h"
 #include "Engine/SpriteComponent.h"
