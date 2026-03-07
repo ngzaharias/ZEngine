@@ -13,7 +13,7 @@ namespace ecs
 namespace debug
 {
 	struct EntityWindowComponent;
-	struct EntityWindowRequest;
+	struct EntityWindowEvent;
 }
 
 namespace debug
@@ -26,7 +26,7 @@ namespace debug
 			debug::EntityWindowComponent,
 			ecs::NameComponent>
 			::Read<
-			debug::EntityWindowRequest>;
+			debug::EntityWindowEvent>;
 
 		EntitySystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld);
 

@@ -9,36 +9,35 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
+#include "Engine/ExecuteShell.h"
 #include "Engine/InputManager.h"
 #include "Engine/TableHeadmaster.h"
 #include "Engine/TablesReloadedEvent.h"
-#include "GameDebug/DebugContainerWindowRequest.h"
-#include "GameDebug/DebugEntityWindowRequest.h"
-#include "GameDebug/DebugFrameBufferWindowRequest.h"
-#include "GameDebug/DebugImGuiDemoRequest.h"
-#include "GameDebug/DebugImNodesDemoRequest.h"
-#include "GameDebug/DebugInspectorDemoRequest.h"
-#include "GameDebug/DebugLevelOpenRequest.h"
-#include "GameDebug/DebugLevelReloadRequest.h"
-#include "GameDebug/DebugLevelSaveRequest.h"
-#include "GameDebug/DebugNetworkWindowRequest.h"
-#include "GameDebug/DebugShapeWindowRequest.h"
-#include "GameDebug/DebugSplineWindowRequest.h"
-#include "GameDebug/EditorAssetBrowserWindowRequest.h"
-#include "GameDebug/EditorSettingsWindowRequest.h"
+#include "GameDebug/DebugContainerWindowEvent.h"
+#include "GameDebug/DebugEntityWindowEvent.h"
+#include "GameDebug/DebugFrameBufferWindowEvent.h"
+#include "GameDebug/DebugImGuiDemoEvent.h"
+#include "GameDebug/DebugImNodesDemoEvent.h"
+#include "GameDebug/DebugInspectorDemoEvent.h"
+#include "GameDebug/DebugLevelOpenEvent.h"
+#include "GameDebug/DebugLevelReloadEvent.h"
+#include "GameDebug/DebugLevelSaveEvent.h"
+#include "GameDebug/DebugNetworkWindowEvent.h"
+#include "GameDebug/DebugShapeWindowEvent.h"
+#include "GameDebug/DebugSplineWindowEvent.h"
+#include "GameDebug/EditorAssetBrowserWindowEvent.h"
+#include "GameDebug/EditorSettingsWindowEvent.h"
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/SettingsWindowComponent.h"
-#include "GameDebug/SettingsWindowRequest.h"
-#include "InputEditor/InputEditorWindowRequest.h"
-#include "TableEditor/TableEditorWindowRequest.h"
-#include "ThemeEditor/ThemeEditorWindowRequest.h"
-#include "TrajectoryEditor/TrajectoryEditorWindowRequest.h"
+#include "GameDebug/SettingsWindowEvent.h"
+#include "InputEditor/InputEditorWindowEvent.h"
+#include "TableEditor/TableEditorWindowEvent.h"
+#include "ThemeEditor/ThemeEditorWindowEvent.h"
+#include "TrajectoryEditor/TrajectoryEditorWindowEvent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
 #include "imgui/Inspector.h"
-
-#include <windows.h>
 
 namespace
 {
@@ -49,10 +48,7 @@ namespace
 
 	void LaunchExe(const str::Path& filepath)
 	{
-		// #release: programs that run shell commands will be deleted by windows defender
-#ifndef Z_RELEASE
-		ShellExecuteA(NULL, "open", filepath.ToChar(), NULL, NULL, SW_SHOWDEFAULT);
-#endif
+		eng::ExecuteShell("open", filepath.ToChar(), eng::EShellMode::DEFAULT);
 	}
 }
 
@@ -92,9 +88,9 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("Open Level", "Ctrl+O"))
-				world.AddEvent<debug::level::OpenRequest>();
+				world.AddEvent<debug::level::OpenEvent>();
 			if (ImGui::MenuItem("Reload Level", "Ctrl+R"))
-				world.AddEvent<debug::level::ReloadRequest>();
+				world.AddEvent<debug::level::ReloadEvent>();
 			
 			ImGui::Separator();
 
@@ -117,9 +113,9 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("Settings"))
 		{
 			if (ImGui::MenuItem("Debug"))
-				world.AddEvent<debug::settings::WindowRequest>();
+				world.AddEvent<debug::settings::WindowEvent>();
 			if (ImGui::MenuItem("Editor"))
-				world.AddEvent<editor::settings::WindowRequest>();
+				world.AddEvent<editor::settings::WindowEvent>();
 			ImGui::EndMenu();
 		}
 
@@ -136,19 +132,19 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("Debuggers"))
 		{
 			if (ImGui::MenuItem("Container"))
-				world.AddEvent<debug::ContainerWindowRequest>();
+				world.AddEvent<debug::ContainerWindowEvent>();
 			if (ImGui::MenuItem("Entities", "Ctrl+Shift+F11"))
-				world.AddEvent<debug::EntityWindowRequest>();
+				world.AddEvent<debug::EntityWindowEvent>();
 			if (ImGui::MenuItem("Network"))
-				world.AddEvent<debug::NetworkWindowRequest>();
+				world.AddEvent<debug::NetworkWindowEvent>();
 			if (ImGui::MenuItem("Optick (external)"))
 				LaunchExe(str::Path(str::EPath::ThirdParty, "optick/1.3.1/Optick.exe"));
 			if (ImGui::MenuItem("Shapes"))
-				world.AddEvent<debug::ShapeWindowRequest>();
+				world.AddEvent<debug::ShapeWindowEvent>();
 			if (ImGui::MenuItem("Splines"))
-				world.AddEvent<debug::SplineWindowRequest>();
+				world.AddEvent<debug::SplineWindowEvent>();
 			if (ImGui::MenuItem("Render: Frame Buffer"))
-				world.AddEvent<debug::FrameBufferWindowRequest>();
+				world.AddEvent<debug::FrameBufferWindowEvent>();
 
 			ImGui::EndMenu();
 		}
@@ -156,15 +152,15 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("Editors"))
 		{
 			if (ImGui::MenuItem("Asset Browser"))
-				world.AddEvent<editor::AssetBrowserWindowRequest>();
+				world.AddEvent<editor::AssetBrowserWindowEvent>();
 			if (ImGui::MenuItem("Input Editor"))
-				world.AddEvent<editor::input::WindowRequest>();
+				world.AddEvent<editor::input::WindowEvent>();
 			if (ImGui::MenuItem("Table Editor"))
-				world.AddEvent<editor::table::WindowRequest>();
+				world.AddEvent<editor::table::WindowEvent>();
 			if (ImGui::MenuItem("Theme Editor"))
-				world.AddEvent<editor::theme::WindowRequest>();
+				world.AddEvent<editor::theme::WindowEvent>();
 			if (ImGui::MenuItem("Trajectory Editor"))
-				world.AddEvent<editor::trajectory::WindowRequest>();
+				world.AddEvent<editor::trajectory::WindowEvent>();
 			if (ImGui::MenuItem("UI Editor (external)"))
 				LaunchExe(str::Path(str::EPath::Assets, "UI/ZEngine.noesis"));
 
@@ -174,11 +170,11 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		if (ImGui::BeginMenu("Windows"))
 		{
 			if (ImGui::MenuItem("Demo: ImGui"))
-				world.AddEvent<debug::ImGuiDemoRequest>();
+				world.AddEvent<debug::ImGuiDemoEvent>();
 			if (ImGui::MenuItem("Demo: ImNodes"))
-				world.AddEvent<debug::ImNodesDemoRequest>();
+				world.AddEvent<debug::ImNodesDemoEvent>();
 			if (ImGui::MenuItem("Demo: Inspector"))
-				world.AddEvent<debug::InspectorDemoRequest>();
+				world.AddEvent<debug::InspectorDemoEvent>();
 
 			ImGui::EndMenu();
 		}
@@ -189,10 +185,10 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();
 		if (input.IsPressed(strOpen))
-			world.AddEvent<debug::level::OpenRequest>();
+			world.AddEvent<debug::level::OpenEvent>();
 		if (input.IsPressed(strReload))
-			world.AddEvent<debug::level::ReloadRequest>();
+			world.AddEvent<debug::level::ReloadEvent>();
 		if (input.IsPressed(strSave))
-			world.AddEvent<debug::level::SaveRequest>();
+			world.AddEvent<debug::level::SaveEvent>();
 	}
 }

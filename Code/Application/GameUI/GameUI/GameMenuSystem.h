@@ -16,12 +16,12 @@ namespace eng
 
 namespace eng::application
 {
-	struct CloseRequestEvent;
+	struct CloseEvent;
 }
 
 namespace eng::level
 {
-	struct LoadRequestEvent;
+	struct LoadEvent;
 }
 
 namespace eng::settings
@@ -31,11 +31,11 @@ namespace eng::settings
 
 namespace gui::game_menu
 {
-	struct CloseRequestEvent;
-	struct ExitGameRequest;
-	struct ExitToMenuRequest;
-	struct ResumeRequest;
-	struct OpenRequest;
+	struct CloseEvent;
+	struct ExitGameEvent;
+	struct ExitToMenuEvent;
+	struct ResumeEvent;
+	struct OpenEvent;
 	struct WindowComponent;
 }
 
@@ -47,17 +47,17 @@ namespace gui::game_menu
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			eng::application::CloseRequestEvent,
+			eng::application::CloseEvent,
 			eng::InputManager,
-			eng::level::LoadRequestEvent,
+			eng::level::LoadEvent,
 			eng::UIManager,
-			gui::game_menu::CloseRequestEvent,
+			gui::game_menu::CloseEvent,
 			gui::game_menu::WindowComponent>
 			::Read<
 			eng::settings::LaunchSingleton,
-			gui::game_menu::ExitGameRequest,
-			gui::game_menu::ExitToMenuRequest,
-			gui::game_menu::OpenRequest>;
+			gui::game_menu::ExitGameEvent,
+			gui::game_menu::ExitToMenuEvent,
+			gui::game_menu::OpenEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

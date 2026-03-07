@@ -2,15 +2,14 @@
 #include "GameUI/DCMainMenu.h"
 
 #include "ECS/EntityWorld.h"
-#include "GameUI/MainMenuContinueGameRequest.h"
-#include "GameUI/MainMenuExitGameRequest.h"
-#include "GameUI/MainMenuLoadGameRequest.h"
-#include "GameUI/MainMenuNewGameRequest.h"
-#include "GameUI/SettingsMenuOpenRequest.h"
+#include "Engine/ExecuteShell.h"
+#include "GameUI/MainMenuContinueGameEvent.h"
+#include "GameUI/MainMenuExitGameEvent.h"
+#include "GameUI/MainMenuLoadGameEvent.h"
+#include "GameUI/MainMenuNewGameEvent.h"
+#include "GameUI/SettingsMenuOpenEvent.h"
 
 #include <NsCore/ReflectionImplement.h>
-
-#include <windows.h>
 
 gui::DCMainMenu::DCMainMenu()
 {
@@ -52,50 +51,42 @@ void gui::DCMainMenu::SetVersion(const str::String& value)
 
 void gui::DCMainMenu::OnContinueGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::main_menu::ContinueGameRequest>();
+	m_EntityWorld->AddEvent<gui::main_menu::ContinueGameEvent>();
 }
 
 void gui::DCMainMenu::OnExitGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::main_menu::ExitGameRequest>();
+	m_EntityWorld->AddEvent<gui::main_menu::ExitGameEvent>();
 }
 
 void gui::DCMainMenu::OnLoadGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::main_menu::LoadGameRequest>();
+	m_EntityWorld->AddEvent<gui::main_menu::LoadGameEvent>();
 }
 
 void gui::DCMainMenu::OnNewGameCommand(Noesis::BaseComponent* param)
 {
-	auto& request = m_EntityWorld->AddEvent<gui::main_menu::NewGameRequest>();
+	auto& request = m_EntityWorld->AddEvent<gui::main_menu::NewGameEvent>();
 	request.m_Level = m_NewGameLevel;
 }
 
 void gui::DCMainMenu::OnReportCommand(Noesis::BaseComponent* param)
 {
-	const wchar_t* recipient = L"support@papa-koala.com";
-	const wchar_t* subject = L"Tactichess";
-	const wchar_t* body =
-		L"Issue:%0D%0A"
-		L"%0D%0A"
-		L"Attachments:%0D%0A"
-		L"%0D%0A";
+	const char* recipient = "support@papa-koala.com";
+	const char* subject = "Tactichess";
+	const char* body =
+		"Issue:%0D%0A"
+		"%0D%0A"
+		"Attachments:%0D%0A"
+		"%0D%0A";
 
-	// Format mailto URI
-	wchar_t mailto[1024];
-	swprintf(mailto, 1024,
-		L"mailto:%s?subject=%s&body=%s",
-		recipient,
-		subject,
-		body
-	);
-
-	ShellExecuteW(nullptr, L"open", mailto, nullptr, nullptr, SW_SHOWNORMAL);
+	const str::String mailto = std::format("mailto:{}?subject={}&body={}", recipient, subject, body);
+	eng::ExecuteShell("open", mailto.c_str(), eng::EShellMode::NORMAL);
 }
 
 void gui::DCMainMenu::OnSettingsCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::settings_menu::OpenRequest>();
+	m_EntityWorld->AddEvent<gui::settings_menu::OpenEvent>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCMainMenu)

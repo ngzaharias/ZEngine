@@ -5,8 +5,8 @@
 
 namespace gamestate
 {
-	struct ChangeFinished;
-	struct ChangeRequest;
+	struct ChangeFinishedEvent;
+	struct ChangeRequestEvent;
 	struct StateSingleton;
 }
 
@@ -20,8 +20,8 @@ namespace gamestate
 			::Write<
 			gamestate::StateSingleton>
 			::Read<
-			gamestate::ChangeFinished,
-			gamestate::ChangeRequest>;
+			gamestate::ChangeFinishedEvent,
+			gamestate::ChangeRequestEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

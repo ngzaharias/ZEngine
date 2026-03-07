@@ -5,16 +5,16 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/ApplicationCloseRequestEvent.h"
+#include "Engine/ApplicationCloseEvent.h"
 #include "Engine/InputManager.h"
-#include "Engine/LevelLoadRequestEvent.h"
+#include "Engine/LevelLoadEvent.h"
 #include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCGameMenu.h"
-#include "GameUI/GameMenuCloseRequestEvent.h"
-#include "GameUI/GameMenuExitGameRequest.h"
-#include "GameUI/GameMenuExitToMenuRequest.h"
-#include "GameUI/GameMenuOpenRequest.h"
+#include "GameUI/GameMenuCloseEvent.h"
+#include "GameUI/GameMenuExitGameEvent.h"
+#include "GameUI/GameMenuExitToMenuEvent.h"
+#include "GameUI/GameMenuOpenEvent.h"
 #include "GameUI/GameMenuWindowComponent.h"
 
 namespace
@@ -52,25 +52,25 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	//////////////////////////////////////////////////////////////////////////
 	// Events
 
-	if (world.HasAny<gui::game_menu::CloseRequestEvent>())
+	if (world.HasAny<gui::game_menu::CloseEvent>())
 	{
 		for (auto&& view : world.Query<ecs::query::Include<gui::game_menu::WindowComponent>>())
 			world.DestroyEntity(view);
 	}
 
-	if (world.HasAny<gui::game_menu::ExitGameRequest>())
+	if (world.HasAny<gui::game_menu::ExitGameEvent>())
 	{
-		world.AddEvent<eng::application::CloseRequestEvent>();
+		world.AddEvent<eng::application::CloseEvent>();
 	}
 
-	if (world.HasAny<gui::game_menu::ExitToMenuRequest>())
+	if (world.HasAny<gui::game_menu::ExitToMenuEvent>())
 	{
 		const auto& settings = world.ReadSingleton<eng::settings::LaunchSingleton>();
-		world.AddEvent<eng::level::LoadRequestEvent>(settings.m_Level);
-		world.AddEvent<gui::game_menu::CloseRequestEvent>();
+		world.AddEvent<eng::level::LoadEvent>(settings.m_Level);
+		world.AddEvent<gui::game_menu::CloseEvent>();
 	}
 
-	if (world.HasAny<gui::game_menu::OpenRequest>())
+	if (world.HasAny<gui::game_menu::OpenEvent>())
 	{
 		const ecs::Entity entity = world.CreateEntity();
 		world.AddComponent<gui::game_menu::WindowComponent>(entity);

@@ -13,9 +13,9 @@
 #include "Engine/SettingsWindowSingleton.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCSettingsMenu.h"
-#include "GameUI/SettingsMenuCloseRequestEvent.h"
-#include "GameUI/SettingsMenuOpenRequest.h"
-#include "GameUI/SettingsMenuValueRequest.h"
+#include "GameUI/SettingsMenuCloseEvent.h"
+#include "GameUI/SettingsMenuOpenEvent.h"
+#include "GameUI/SettingsMenuValueEvent.h"
 #include "GameUI/SettingsMenuWindowComponent.h"
 
 namespace
@@ -46,18 +46,18 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 	//////////////////////////////////////////////////////////////////////////
 	// Events
 
-	if (world.HasAny<gui::settings_menu::CloseRequestEvent>())
+	if (world.HasAny<gui::settings_menu::CloseEvent>())
 	{
 		for (auto&& view : world.Query<ecs::query::Include<gui::settings_menu::WindowComponent>>())
 			world.DestroyEntity(view);
 	}
 
-	if (world.HasAny<gui::settings_menu::OpenRequest>())
+	if (world.HasAny<gui::settings_menu::OpenEvent>())
 	{
 		world.AddComponent<gui::settings_menu::WindowComponent>(world.CreateEntity());
 	}
 
-	for (const auto& eventData : world.Events<gui::settings_menu::ValueRequest>())
+	for (const auto& eventData : world.Events<gui::settings_menu::ValueEvent>())
 	{
 		// audio
 		if (eventData.m_EffectVolume)

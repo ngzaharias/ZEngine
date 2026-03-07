@@ -6,7 +6,7 @@
 #include "TrajectoryEditor/TrajectoryEditorAssetOpenComponent.h"
 #include "TrajectoryEditor/TrajectoryEditorAssetSaveComponent.h"
 #include "TrajectoryEditor/TrajectoryEditorWindowComponent.h"
-#include "TrajectoryEditor/TrajectoryEditorWindowRequest.h"
+#include "TrajectoryEditor/TrajectoryEditorWindowEvent.h"
 #include "TrajectoryEditor/TrajectoryEditorWindowSystem.h"
 
 void editor::trajectory::RegisterModule(ecs::EntityWorld& world)
@@ -20,7 +20,7 @@ void editor::trajectory::RegisterModule(ecs::EntityWorld& world)
 
 	// events
 	{
-		world.RegisterEvent<editor::trajectory::WindowRequest>();
+		world.RegisterEvent<editor::trajectory::WindowEvent>();
 	}
 
 	// systems

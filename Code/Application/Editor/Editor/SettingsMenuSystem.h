@@ -13,7 +13,7 @@ namespace editor::settings
 {
 	struct LocalSingleton;
 	struct WindowComponent;
-	struct WindowRequest;
+	struct WindowEvent;
 }
 
 namespace editor::settings
@@ -26,7 +26,7 @@ namespace editor::settings
 			editor::settings::LocalSingleton,
 			editor::settings::WindowComponent>
 			::Read<
-			editor::settings::WindowRequest>;
+			editor::settings::WindowEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

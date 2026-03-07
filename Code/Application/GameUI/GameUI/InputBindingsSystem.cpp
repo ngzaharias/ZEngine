@@ -5,7 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
-#include "GameUI/GameMenuOpenRequest.h"
+#include "GameUI/GameMenuOpenEvent.h"
 #include "GameUI/InputComponents.h"
 
 namespace 
@@ -41,7 +41,7 @@ void gui::input::BindingsSystem::Update(World& world, const GameTime& gameTime)
 		for (const gui::input::ECommand& command : bindings.m_Commands)
 		{
 			if (command == ECommand::GameMenu && input.IsPressed(strGameMenu))
-				world.AddEvent<gui::game_menu::OpenRequest>();
+				world.AddEvent<gui::game_menu::OpenEvent>();
 		}
 	}
 }

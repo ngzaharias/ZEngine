@@ -13,10 +13,10 @@
 #include "GameUI/DCLoadingScreen.h"
 #include "GameUI/DCMainMenu.h"
 #include "GameUI/DCSettingsMenu.h"
-#include "GameUI/GameMenuCloseRequestEvent.h"
-#include "GameUI/GameMenuExitGameRequest.h"
-#include "GameUI/GameMenuExitToMenuRequest.h"
-#include "GameUI/GameMenuOpenRequest.h"
+#include "GameUI/GameMenuCloseEvent.h"
+#include "GameUI/GameMenuExitGameEvent.h"
+#include "GameUI/GameMenuExitToMenuEvent.h"
+#include "GameUI/GameMenuOpenEvent.h"
 #include "GameUI/GameMenuSystem.h"
 #include "GameUI/GameMenuWindowComponent.h"
 #include "GameUI/HiddenCountSystem.h"
@@ -26,23 +26,23 @@
 #include "GameUI/HUDSystem.h"
 #include "GameUI/InputBindingsSystem.h"
 #include "GameUI/InputComponents.h"
-#include "GameUI/LevelCompleteExitGameRequest.h"
-#include "GameUI/LevelCompleteExitToMenuRequest.h"
-#include "GameUI/LevelCompleteResetGameRequest.h"
+#include "GameUI/LevelCompleteExitGameEvent.h"
+#include "GameUI/LevelCompleteExitToMenuEvent.h"
+#include "GameUI/LevelCompleteResetGameEvent.h"
 #include "GameUI/LevelCompleteSystem.h"
 #include "GameUI/LevelCompleteWindowComponent.h"
-#include "GameUI/LoadingCloseRequestEvent.h"
+#include "GameUI/LoadingCloseEvent.h"
 #include "GameUI/LoadingSystem.h"
-#include "GameUI/MainMenuContinueGameRequest.h"
-#include "GameUI/MainMenuExitGameRequest.h"
-#include "GameUI/MainMenuLoadGameRequest.h"
-#include "GameUI/MainMenuNewGameRequest.h"
+#include "GameUI/MainMenuContinueGameEvent.h"
+#include "GameUI/MainMenuExitGameEvent.h"
+#include "GameUI/MainMenuLoadGameEvent.h"
+#include "GameUI/MainMenuNewGameEvent.h"
 #include "GameUI/MainMenuSystem.h"
 #include "GameUI/MainMenuWindowComponent.h"
-#include "GameUI/SettingsMenuCloseRequestEvent.h"
-#include "GameUI/SettingsMenuOpenRequest.h"
+#include "GameUI/SettingsMenuCloseEvent.h"
+#include "GameUI/SettingsMenuOpenEvent.h"
 #include "GameUI/SettingsMenuSystem.h"
-#include "GameUI/SettingsMenuValueRequest.h"
+#include "GameUI/SettingsMenuValueEvent.h"
 #include "GameUI/SettingsMenuWindowComponent.h"
 #include "GameUI/ThemeSystem.h"
 
@@ -72,21 +72,21 @@ void gui::RegisterModule(ecs::EntityWorld& world)
 
 	// events
 	{
-		world.RegisterEvent<gui::game_menu::CloseRequestEvent>();
-		world.RegisterEvent<gui::game_menu::ExitGameRequest>();
-		world.RegisterEvent<gui::game_menu::ExitToMenuRequest>();
-		world.RegisterEvent<gui::game_menu::OpenRequest>();
-		world.RegisterEvent<gui::level_complete::ExitGameRequest>();
-		world.RegisterEvent<gui::level_complete::ExitToMenuRequest>();
-		world.RegisterEvent<gui::level_complete::ResetGameRequest>();
-		world.RegisterEvent<gui::loading::CloseRequestEvent>();
-		world.RegisterEvent<gui::main_menu::ContinueGameRequest>();
-		world.RegisterEvent<gui::main_menu::ExitGameRequest>();
-		world.RegisterEvent<gui::main_menu::LoadGameRequest>();
-		world.RegisterEvent<gui::main_menu::NewGameRequest>();
-		world.RegisterEvent<gui::settings_menu::CloseRequestEvent>();
-		world.RegisterEvent<gui::settings_menu::OpenRequest>();
-		world.RegisterEvent<gui::settings_menu::ValueRequest>();
+		world.RegisterEvent<gui::game_menu::CloseEvent>();
+		world.RegisterEvent<gui::game_menu::ExitGameEvent>();
+		world.RegisterEvent<gui::game_menu::ExitToMenuEvent>();
+		world.RegisterEvent<gui::game_menu::OpenEvent>();
+		world.RegisterEvent<gui::level_complete::ExitGameEvent>();
+		world.RegisterEvent<gui::level_complete::ExitToMenuEvent>();
+		world.RegisterEvent<gui::level_complete::ResetGameEvent>();
+		world.RegisterEvent<gui::loading::CloseEvent>();
+		world.RegisterEvent<gui::main_menu::ContinueGameEvent>();
+		world.RegisterEvent<gui::main_menu::ExitGameEvent>();
+		world.RegisterEvent<gui::main_menu::LoadGameEvent>();
+		world.RegisterEvent<gui::main_menu::NewGameEvent>();
+		world.RegisterEvent<gui::settings_menu::CloseEvent>();
+		world.RegisterEvent<gui::settings_menu::OpenEvent>();
+		world.RegisterEvent<gui::settings_menu::ValueEvent>();
 	}
 
 	// systems

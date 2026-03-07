@@ -4,15 +4,15 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/ApplicationCloseRequestEvent.h"
+#include "Engine/ApplicationCloseEvent.h"
 #include "Engine/LevelLoadedComponent.h"
-#include "Engine/LevelLoadRequestEvent.h"
+#include "Engine/LevelLoadEvent.h"
 #include "Engine/SettingsLaunchSingleton.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCLevelComplete.h"
-#include "GameUI/LevelCompleteExitGameRequest.h"
-#include "GameUI/LevelCompleteExitToMenuRequest.h"
-#include "GameUI/LevelCompleteResetGameRequest.h"
+#include "GameUI/LevelCompleteExitGameEvent.h"
+#include "GameUI/LevelCompleteExitToMenuEvent.h"
+#include "GameUI/LevelCompleteResetGameEvent.h"
 #include "GameUI/LevelCompleteWindowComponent.h"
 
 namespace
@@ -41,21 +41,21 @@ void gui::level_complete::MenuSystem::Update(World& world, const GameTime& gameT
 	//////////////////////////////////////////////////////////////////////////
 	// Events
 
-	if (world.HasAny<gui::level_complete::ExitGameRequest>())
+	if (world.HasAny<gui::level_complete::ExitGameEvent>())
 	{
-		world.AddEvent<eng::application::CloseRequestEvent>();
+		world.AddEvent<eng::application::CloseEvent>();
 	}
 
-	if (world.HasAny<gui::level_complete::ExitToMenuRequest>())
+	if (world.HasAny<gui::level_complete::ExitToMenuEvent>())
 	{
 		const auto& settings = world.ReadSingleton<eng::settings::LaunchSingleton>();
-		world.AddEvent<eng::level::LoadRequestEvent>(settings.m_Level);
+		world.AddEvent<eng::level::LoadEvent>(settings.m_Level);
 
 		for (auto&& view : world.Query<ecs::query::Include<const gui::level_complete::WindowComponent>>())
 			world.DestroyEntity(view);
 	}
 
-	if (world.HasAny<gui::level_complete::ResetGameRequest>())
+	if (world.HasAny<gui::level_complete::ResetGameEvent>())
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 		std::remove(filepath.ToChar());
@@ -63,7 +63,7 @@ void gui::level_complete::MenuSystem::Update(World& world, const GameTime& gameT
 		for (auto&& view : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
 		{
 			const auto& levelComponent = view.ReadRequired<eng::level::LoadedComponent>();
-			world.AddEvent<eng::level::LoadRequestEvent>(levelComponent.m_Name);
+			world.AddEvent<eng::level::LoadEvent>(levelComponent.m_Name);
 		}
 
 		for (auto&& view : world.Query<ecs::query::Include<const gui::level_complete::WindowComponent>>())

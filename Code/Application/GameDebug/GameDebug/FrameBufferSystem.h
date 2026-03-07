@@ -7,7 +7,7 @@ namespace debug
 {
 	struct FrameBufferSingleton;
 	struct FrameBufferWindowComponent;
-	struct FrameBufferWindowRequest;
+	struct FrameBufferWindowEvent;
 }
 
 namespace eng
@@ -24,7 +24,7 @@ namespace debug
 			::Write<
 			debug::FrameBufferWindowComponent>
 			::Read<
-			debug::FrameBufferWindowRequest,
+			debug::FrameBufferWindowEvent,
 			eng::FrameBufferSingleton>;
 
 		void Update(World& world, const GameTime& gameTime);

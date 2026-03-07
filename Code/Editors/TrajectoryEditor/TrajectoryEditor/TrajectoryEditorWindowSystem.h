@@ -14,7 +14,7 @@ namespace editor::trajectory
 	struct AssetOpenComponent;
 	struct AssetSaveComponent;
 	struct WindowComponent;
-	struct WindowRequest;
+	struct WindowEvent;
 }
 
 namespace eng
@@ -40,7 +40,7 @@ namespace editor::trajectory
 			editor::trajectory::WindowComponent,
 			eng::AssetManager>
 			::Read<
-			editor::trajectory::WindowRequest,
+			editor::trajectory::WindowEvent,
 			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

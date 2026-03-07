@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "InputEditor/InputEditorWindowComponent.h"
-#include "InputEditor/InputEditorWindowRequest.h"
+#include "InputEditor/InputEditorWindowEvent.h"
 #include "InputEditor/InputEditorWindowSystem.h"
 
 void editor::input::RegisterModule(ecs::EntityWorld& world)
@@ -16,7 +16,7 @@ void editor::input::RegisterModule(ecs::EntityWorld& world)
 
 	// events
 	{
-		world.RegisterEvent<editor::input::WindowRequest>();
+		world.RegisterEvent<editor::input::WindowEvent>();
 	}
 
 	// systems

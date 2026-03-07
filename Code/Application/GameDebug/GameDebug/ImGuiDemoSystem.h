@@ -5,7 +5,7 @@
 
 namespace debug
 {
-	struct ImGuiDemoRequest;
+	struct ImGuiDemoEvent;
 	struct ImGuiDemoWindowComponent;
 }
 
@@ -23,7 +23,7 @@ namespace debug
 			::Write<
 			debug::ImGuiDemoWindowComponent>
 			::Read<
-			debug::ImGuiDemoRequest>;
+			debug::ImGuiDemoEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -23,7 +23,7 @@ namespace container
 namespace debug
 {
 	struct ContainerWindowComponent;
-	struct ContainerWindowRequest;
+	struct ContainerWindowEvent;
 }
 
 namespace debug
@@ -44,7 +44,7 @@ namespace debug
 			container::StorageComponent,
 			container::StorageCreateResultComponent,
 			container::StorageDestroyResultComponent,
-			debug::ContainerWindowRequest>;
+			debug::ContainerWindowEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

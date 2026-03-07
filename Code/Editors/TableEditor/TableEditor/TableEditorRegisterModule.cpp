@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "TableEditor/TableEditorWindowComponent.h"
-#include "TableEditor/TableEditorWindowRequest.h"
+#include "TableEditor/TableEditorWindowEvent.h"
 #include "TableEditor/TableEditorWindowSystem.h"
 
 void editor::table::RegisterModule(ecs::EntityWorld& world)
@@ -16,7 +16,7 @@ void editor::table::RegisterModule(ecs::EntityWorld& world)
 
 	// events
 	{
-		world.RegisterEvent<editor::table::WindowRequest>();
+		world.RegisterEvent<editor::table::WindowEvent>();
 	}
 
 	// systems

@@ -11,20 +11,20 @@ namespace eng
 
 namespace eng::application
 {
-	struct CloseRequestEvent;
+	struct CloseEvent;
 }
 
 namespace eng::level
 {
-	struct LoadRequestEvent;
+	struct LoadEvent;
 }
 
 namespace gui::main_menu
 {
-	struct ContinueGameRequest;
-	struct ExitGameRequest;
-	struct LoadGameRequest;
-	struct NewGameRequest;
+	struct ContinueGameEvent;
+	struct ExitGameEvent;
+	struct LoadGameEvent;
+	struct NewGameEvent;
 	struct WindowComponent;
 }
 
@@ -35,15 +35,15 @@ namespace gui::main_menu
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::application::CloseRequestEvent,
-			eng::level::LoadRequestEvent,
+			eng::application::CloseEvent,
+			eng::level::LoadEvent,
 			eng::UIManager>
 			::Read<
 			eng::VersionSingleton,
-			gui::main_menu::ContinueGameRequest,
-			gui::main_menu::ExitGameRequest,
-			gui::main_menu::LoadGameRequest,
-			gui::main_menu::NewGameRequest,
+			gui::main_menu::ContinueGameEvent,
+			gui::main_menu::ExitGameEvent,
+			gui::main_menu::LoadGameEvent,
+			gui::main_menu::NewGameEvent,
 			gui::main_menu::WindowComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

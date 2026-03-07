@@ -10,7 +10,7 @@
 #include "GameState/GameStateEditorComponent.h"
 #include "Input/Key.h"
 #include "InputEditor/InputEditorWindowComponent.h"
-#include "InputEditor/InputEditorWindowRequest.h"
+#include "InputEditor/InputEditorWindowEvent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -37,7 +37,7 @@ void editor::input::WindowSystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(800, 600.f);
 
-	for (const auto& request : world.Events<editor::input::WindowRequest>())
+	for (const auto& request : world.Events<editor::input::WindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

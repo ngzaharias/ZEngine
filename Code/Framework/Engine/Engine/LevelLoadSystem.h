@@ -20,7 +20,7 @@ namespace eng::level
 	struct EntityComponent;
 	struct LoadedComponent;
 	struct LoadingComponent;
-	struct LoadRequestEvent;
+	struct LoadEvent;
 }
 
 namespace str
@@ -41,7 +41,7 @@ namespace eng::level
 			eng::level::EntityComponent,
 			eng::level::LoadedComponent,
 			eng::level::LoadingComponent,
-			eng::level::LoadRequestEvent,
+			eng::level::LoadEvent,
 			eng::PrototypeManager>;
 		
 		LoadSystem(ecs::EntityWorld& entityWorld);

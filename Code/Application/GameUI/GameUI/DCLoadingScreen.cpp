@@ -2,7 +2,7 @@
 #include "GameUI/DCLoadingScreen.h"
 
 #include "ECS/EntityWorld.h"
-#include "GameUI/LoadingCloseRequestEvent.h"
+#include "GameUI/LoadingCloseEvent.h"
 
 #include <NsCore/ReflectionImplement.h>
 
@@ -31,7 +31,7 @@ void gui::DCLoadingScreen::SetHint(const char* value)
 
 void gui::DCLoadingScreen::OnCloseCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::loading::CloseRequestEvent>();
+	m_EntityWorld->AddEvent<gui::loading::CloseEvent>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCLoadingScreen)

@@ -12,9 +12,9 @@
 #include "Engine/ThemeTable.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "GameUI/SettingsMenuCloseRequestEvent.h"
-#include "GameUI/SettingsMenuOpenRequest.h"
-#include "GameUI/SettingsMenuValueRequest.h"
+#include "GameUI/SettingsMenuCloseEvent.h"
+#include "GameUI/SettingsMenuOpenEvent.h"
+#include "GameUI/SettingsMenuValueEvent.h"
 #include "GameUI/SettingsMenuWindowComponent.h"
 #include "GameUI/VMMonitor.h"
 #include "GameUI/VMRefreshRate.h"
@@ -125,7 +125,7 @@ void gui::DCSettingsMenu::SetEffectVolume(float value)
 		m_EffectVolume = value;
 		OnPropertyChanged("EffectVolume");
 
-		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueRequest>();
+		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueEvent>();
 		eventData.m_EffectVolume = value;
 	}
 }
@@ -142,7 +142,7 @@ void gui::DCSettingsMenu::SetMasterVolume(float value)
 		m_MasterVolume = value;
 		OnPropertyChanged("MasterVolume");
 
-		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueRequest>();
+		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueEvent>();
 		eventData.m_MasterVolume = value;
 	}
 }
@@ -159,7 +159,7 @@ void gui::DCSettingsMenu::SetMusicVolume(float value)
 		m_MusicVolume = value;
 		OnPropertyChanged("MusicVolume");
 
-		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueRequest>();
+		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueEvent>();
 		eventData.m_MusicVolume = value;
 	}
 }
@@ -176,7 +176,7 @@ void gui::DCSettingsMenu::SetMoveSpeed(float value)
 		m_MoveSpeed = value;
 		OnPropertyChanged("MoveSpeed");
 
-		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueRequest>();
+		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueEvent>();
 		eventData.m_MoveSpeed = value;
 	}
 }
@@ -193,7 +193,7 @@ void gui::DCSettingsMenu::SetZoomRate(float value)
 		m_ZoomRate = value;
 		OnPropertyChanged("ZoomRate");
 
-		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueRequest>();
+		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueEvent>();
 		eventData.m_ZoomRate = value;
 	}
 }
@@ -210,7 +210,7 @@ void gui::DCSettingsMenu::SetZoomSpeed(float value)
 		m_ZoomSpeed = value;
 		OnPropertyChanged("ZoomSpeed");
 
-		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueRequest>();
+		auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueEvent>();
 		eventData.m_ZoomSpeed = value;
 	}
 }
@@ -243,7 +243,7 @@ void gui::DCSettingsMenu::SetTheme(gui::VMTheme* value)
 
 		if (value)
 		{
-			auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueRequest>();
+			auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueEvent>();
 			eventData.m_Theme = value->m_Guid;
 		}
 	}
@@ -277,7 +277,7 @@ void gui::DCSettingsMenu::SetMonitor(gui::VMMonitor* value)
 
 		if (value)
 		{
-			auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueRequest>();
+			auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueEvent>();
 			eventData.m_Monitor = value->m_Index;
 		}
 	}
@@ -311,7 +311,7 @@ void gui::DCSettingsMenu::SetRefreshRate(gui::VMRefreshRate* value)
 
 		if (value)
 		{
-			auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueRequest>();
+			auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueEvent>();
 			eventData.m_RefreshRate = value->m_RefreshRate;
 		}
 	}
@@ -345,7 +345,7 @@ void gui::DCSettingsMenu::SetResolution(gui::VMResolution* value)
 
 		if (value)
 		{
-			auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueRequest>();
+			auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueEvent>();
 			eventData.m_Resolution = value->m_Resolution;
 		}
 	}
@@ -379,7 +379,7 @@ void gui::DCSettingsMenu::SetWindowMode(gui::VMWindowMode* value)
 
 		if (value)
 		{
-			auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueRequest>();
+			auto& eventData = m_EntityWorld->AddEvent<gui::settings_menu::ValueEvent>();
 			eventData.m_WindowMode = value->m_WindowMode;
 		}
 	}
@@ -387,7 +387,7 @@ void gui::DCSettingsMenu::SetWindowMode(gui::VMWindowMode* value)
 
 void gui::DCSettingsMenu::OnCloseCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::settings_menu::CloseRequestEvent>();
+	m_EntityWorld->AddEvent<gui::settings_menu::CloseEvent>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCSettingsMenu)

@@ -8,7 +8,7 @@
 #include "ECS/WorldView.h"
 #include "Editor/AssetBrowserWindowComponent.h"
 #include "Engine/AssetManager.h"
-#include "GameDebug/EditorAssetBrowserWindowRequest.h"
+#include "GameDebug/EditorAssetBrowserWindowEvent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -58,7 +58,7 @@ void editor::AssetBrowserSystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(800, 600.f);
 
-	for (const auto& request : world.Events<editor::AssetBrowserWindowRequest>())
+	for (const auto& request : world.Events<editor::AssetBrowserWindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

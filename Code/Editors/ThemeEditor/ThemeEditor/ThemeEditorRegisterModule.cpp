@@ -4,7 +4,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "ThemeEditor/ThemeEditorWindowComponent.h"
-#include "ThemeEditor/ThemeEditorWindowRequest.h"
+#include "ThemeEditor/ThemeEditorWindowEvent.h"
 #include "ThemeEditor/ThemeEditorWindowSystem.h"
 
 void editor::theme::RegisterModule(ecs::EntityWorld& world)
@@ -16,7 +16,7 @@ void editor::theme::RegisterModule(ecs::EntityWorld& world)
 
 	// events
 	{
-		world.RegisterEvent<editor::theme::WindowRequest>();
+		world.RegisterEvent<editor::theme::WindowEvent>();
 	}
 
 	// systems

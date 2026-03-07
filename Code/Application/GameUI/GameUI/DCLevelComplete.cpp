@@ -2,9 +2,9 @@
 #include "GameUI/DCLevelComplete.h"
 
 #include "ECS/EntityWorld.h"
-#include "GameUI/LevelCompleteExitGameRequest.h"
-#include "GameUI/LevelCompleteExitToMenuRequest.h"
-#include "GameUI/LevelCompleteResetGameRequest.h"
+#include "GameUI/LevelCompleteExitGameEvent.h"
+#include "GameUI/LevelCompleteExitToMenuEvent.h"
+#include "GameUI/LevelCompleteResetGameEvent.h"
 
 #include <NsCore/ReflectionImplement.h>
 
@@ -21,17 +21,17 @@ gui::DCLevelComplete::~DCLevelComplete()
 
 void gui::DCLevelComplete::OnExitGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::level_complete::ExitGameRequest>();
+	m_EntityWorld->AddEvent<gui::level_complete::ExitGameEvent>();
 }
 
 void gui::DCLevelComplete::OnExitToMenuCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::level_complete::ExitToMenuRequest>();
+	m_EntityWorld->AddEvent<gui::level_complete::ExitToMenuEvent>();
 }
 
 void gui::DCLevelComplete::OnResetGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::level_complete::ResetGameRequest>();
+	m_EntityWorld->AddEvent<gui::level_complete::ResetGameEvent>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCLevelComplete)

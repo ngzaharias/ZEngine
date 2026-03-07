@@ -7,8 +7,8 @@
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
 #include "Engine/LevelDirectorySingleton.h"
-#include "Engine/LevelLoadRequestEvent.h"
-#include "GameDebug/DebugLevelOpenRequest.h"
+#include "Engine/LevelLoadEvent.h"
+#include "GameDebug/DebugLevelOpenEvent.h"
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "Input/Key.h"
 #include "Math/Math.h"
@@ -38,7 +38,7 @@ void debug::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const bool hasWindow = world.HasAny<ecs::query::Include<debug::level::OpenWindowComponent>>();
-	if (!hasWindow && world.HasAny<debug::level::OpenRequest>())
+	if (!hasWindow && world.HasAny<debug::level::OpenEvent>())
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, s_Title);
@@ -93,7 +93,7 @@ void debug::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 
 					if (ImGui::Button(name.ToChar(), { width, 0 }))
 					{
-						world.AddEvent<eng::level::LoadRequestEvent>(name);
+						world.AddEvent<eng::level::LoadEvent>(name);
 						ImGui::CloseCurrentPopup();
 					}
 

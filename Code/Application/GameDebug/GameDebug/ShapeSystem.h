@@ -13,7 +13,7 @@ namespace ecs
 namespace debug
 {
 	struct ShapeWindowComponent;
-	struct ShapeWindowRequest;
+	struct ShapeWindowEvent;
 
 	class ShapeSystem final : public ecs::System
 	{
@@ -23,7 +23,7 @@ namespace debug
 			debug::ShapeWindowComponent,
 			ecs::NameComponent>
 			::Read<
-			debug::ShapeWindowRequest>;
+			debug::ShapeWindowEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

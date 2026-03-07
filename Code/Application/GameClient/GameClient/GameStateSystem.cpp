@@ -5,8 +5,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/GameStateChangeFinished.h"
-#include "GameClient/GameStateChangeRequest.h"
+#include "GameClient/GameStateChangeFinishedEvent.h"
+#include "GameClient/GameStateChangeRequestEvent.h"
 #include "GameClient/GameStateStateSingleton.h"
 #include "GameClient/GameStateTypes.h"
 
@@ -14,7 +14,7 @@ void gamestate::StateSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (const auto& request : world.Events<gamestate::ChangeRequest>())
+	for (const auto& request : world.Events<gamestate::ChangeRequestEvent>())
 	{
 		auto& stateComponent = world.WriteSingleton<gamestate::StateSingleton>();
 		stateComponent.m_Queue.Append(request.m_Queue);
@@ -23,7 +23,7 @@ void gamestate::StateSystem::Update(World& world, const GameTime& gameTime)
 	const auto& constComponent = world.ReadSingleton<gamestate::StateSingleton>();
 	const bool hasEmptyState = std::holds_alternative<gamestate::None>(constComponent.m_State);
 	const bool hasStateQueued = !constComponent.m_Queue.IsEmpty();
-	const bool hasStateFinished = world.HasAny<gamestate::ChangeFinished>();
+	const bool hasStateFinished = world.HasAny<gamestate::ChangeFinishedEvent>();
 	if ((hasEmptyState && hasStateQueued) || hasStateFinished)
 	{
 		auto& stateComponent = world.WriteSingleton<gamestate::StateSingleton>();

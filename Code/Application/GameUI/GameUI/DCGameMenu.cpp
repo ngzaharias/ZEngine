@@ -2,10 +2,10 @@
 #include "GameUI/DCGameMenu.h"
 
 #include "ECS/EntityWorld.h"
-#include "GameUI/GameMenuCloseRequestEvent.h"
-#include "GameUI/GameMenuExitGameRequest.h"
-#include "GameUI/GameMenuExitToMenuRequest.h"
-#include "GameUI/SettingsMenuOpenRequest.h"
+#include "GameUI/GameMenuCloseEvent.h"
+#include "GameUI/GameMenuExitGameEvent.h"
+#include "GameUI/GameMenuExitToMenuEvent.h"
+#include "GameUI/SettingsMenuOpenEvent.h"
 
 #include <NsCore/ReflectionImplement.h>
 
@@ -23,22 +23,22 @@ gui::DCGameMenu::~DCGameMenu()
 
 void gui::DCGameMenu::OnCloseCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::game_menu::CloseRequestEvent>();
+	m_EntityWorld->AddEvent<gui::game_menu::CloseEvent>();
 }
 
 void gui::DCGameMenu::OnExitGameCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::game_menu::ExitGameRequest>();
+	m_EntityWorld->AddEvent<gui::game_menu::ExitGameEvent>();
 }
 
 void gui::DCGameMenu::OnExitToMenuCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::game_menu::ExitToMenuRequest>();
+	m_EntityWorld->AddEvent<gui::game_menu::ExitToMenuEvent>();
 }
 
 void gui::DCGameMenu::OnSettingsCommand(Noesis::BaseComponent* param)
 {
-	m_EntityWorld->AddEvent<gui::settings_menu::OpenRequest>();
+	m_EntityWorld->AddEvent<gui::settings_menu::OpenEvent>();
 }
 
 NS_IMPLEMENT_REFLECTION(gui::DCGameMenu)

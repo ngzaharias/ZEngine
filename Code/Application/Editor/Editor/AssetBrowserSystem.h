@@ -19,7 +19,7 @@ namespace eng
 namespace editor
 {
 	struct AssetBrowserWindowComponent;
-	struct AssetBrowserWindowRequest;
+	struct AssetBrowserWindowEvent;
 }
 
 namespace editor
@@ -33,7 +33,7 @@ namespace editor
 			editor::AssetBrowserWindowComponent>
 			::Read<
 			eng::AssetManager,
-			editor::AssetBrowserWindowRequest>;
+			editor::AssetBrowserWindowEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

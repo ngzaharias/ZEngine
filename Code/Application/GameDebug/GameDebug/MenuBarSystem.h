@@ -5,59 +5,59 @@
 
 namespace debug
 {
-	struct ContainerWindowRequest;
-	struct EntityWindowRequest;
-	struct FrameBufferWindowRequest;
-	struct ImGuiDemoRequest;
-	struct ImNodesDemoRequest;
-	struct InspectorDemoRequest;
-	struct NetworkWindowRequest;
-	struct ShapeWindowRequest;
-	struct SplineWindowRequest;
+	struct ContainerWindowEvent;
+	struct EntityWindowEvent;
+	struct FrameBufferWindowEvent;
+	struct ImGuiDemoEvent;
+	struct ImNodesDemoEvent;
+	struct InspectorDemoEvent;
+	struct NetworkWindowEvent;
+	struct ShapeWindowEvent;
+	struct SplineWindowEvent;
 }
 
 namespace debug::level
 {
-	struct OpenRequest;
-	struct ReloadRequest;
-	struct SaveRequest;
-	struct SaveAsRequest;
+	struct OpenEvent;
+	struct ReloadEvent;
+	struct SaveEvent;
+	struct SaveAsEvent;
 }
 
 namespace debug::settings
 {
-	struct WindowRequest;
+	struct WindowEvent;
 }
 
 namespace editor
 {
-	struct AssetBrowserWindowRequest;
-	struct SettingsWindowRequest;
+	struct AssetBrowserWindowEvent;
+	struct SettingsWindowEvent;
 }
 
 namespace editor::input
 {
-	struct WindowRequest;
+	struct WindowEvent;
 }
 
 namespace editor::settings
 {
-	struct WindowRequest;
+	struct WindowEvent;
 }
 
 namespace editor::table
 {
-	struct WindowRequest;
+	struct WindowEvent;
 }
 
 namespace editor::theme
 {
-	struct WindowRequest;
+	struct WindowEvent;
 }
 
 namespace editor::trajectory
 {
-	struct WindowRequest;
+	struct WindowEvent;
 }
 
 namespace eng
@@ -75,26 +75,26 @@ namespace debug
 	public:
 		using World = ecs::WorldView
 			::Write<
-			debug::ContainerWindowRequest,
-			debug::EntityWindowRequest,
-			debug::FrameBufferWindowRequest,
-			debug::ImGuiDemoRequest,
-			debug::ImNodesDemoRequest,
-			debug::InspectorDemoRequest,
-			debug::level::OpenRequest,
-			debug::level::ReloadRequest,
-			debug::level::SaveAsRequest,
-			debug::level::SaveRequest,
-			debug::NetworkWindowRequest,
-			debug::settings::WindowRequest,
-			debug::ShapeWindowRequest,
-			debug::SplineWindowRequest,
-			editor::AssetBrowserWindowRequest,
-			editor::input::WindowRequest,
-			editor::settings::WindowRequest,
-			editor::table::WindowRequest,
-			editor::theme::WindowRequest,
-			editor::trajectory::WindowRequest,
+			debug::ContainerWindowEvent,
+			debug::EntityWindowEvent,
+			debug::FrameBufferWindowEvent,
+			debug::ImGuiDemoEvent,
+			debug::ImNodesDemoEvent,
+			debug::InspectorDemoEvent,
+			debug::level::OpenEvent,
+			debug::level::ReloadEvent,
+			debug::level::SaveAsEvent,
+			debug::level::SaveEvent,
+			debug::NetworkWindowEvent,
+			debug::settings::WindowEvent,
+			debug::ShapeWindowEvent,
+			debug::SplineWindowEvent,
+			editor::AssetBrowserWindowEvent,
+			editor::input::WindowEvent,
+			editor::settings::WindowEvent,
+			editor::table::WindowEvent,
+			editor::theme::WindowEvent,
+			editor::trajectory::WindowEvent,
 			eng::AssetManager,
 			eng::InputManager,
 			eng::TableHeadmaster,

@@ -17,7 +17,7 @@
 #include "TrajectoryEditor/TrajectoryEditorAssetOpenComponent.h"
 #include "TrajectoryEditor/TrajectoryEditorAssetSaveComponent.h"
 #include "TrajectoryEditor/TrajectoryEditorWindowComponent.h"
-#include "TrajectoryEditor/TrajectoryEditorWindowRequest.h"
+#include "TrajectoryEditor/TrajectoryEditorWindowEvent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -216,7 +216,7 @@ void editor::trajectory::WindowSystem::Update(World& world, const GameTime& game
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);
 
-	for (const auto& request : world.Events<editor::trajectory::WindowRequest>())
+	for (const auto& request : world.Events<editor::trajectory::WindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

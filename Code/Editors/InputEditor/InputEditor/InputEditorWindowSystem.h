@@ -12,7 +12,7 @@ namespace ecs
 namespace editor::input
 {
 	struct WindowComponent;
-	struct WindowRequest;
+	struct WindowEvent;
 }
 
 namespace eng
@@ -36,7 +36,7 @@ namespace editor::input
 			editor::input::WindowComponent,
 			eng::InputManager>
 			::Read<
-			editor::input::WindowRequest,
+			editor::input::WindowEvent,
 			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

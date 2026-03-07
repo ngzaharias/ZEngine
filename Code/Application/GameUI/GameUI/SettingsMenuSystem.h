@@ -24,9 +24,9 @@ namespace eng::settings
 
 namespace gui::settings_menu
 {
-	struct CloseRequestEvent;
-	struct OpenRequest;
-	struct ValueRequest;
+	struct CloseEvent;
+	struct OpenEvent;
+	struct ValueEvent;
 	struct WindowComponent;
 }
 
@@ -46,9 +46,9 @@ namespace gui::settings_menu
 			eng::WindowManager,
 			gui::settings_menu::WindowComponent>
 			::Read<
-			gui::settings_menu::CloseRequestEvent,
-			gui::settings_menu::OpenRequest,
-			gui::settings_menu::ValueRequest>;
+			gui::settings_menu::CloseEvent,
+			gui::settings_menu::OpenEvent,
+			gui::settings_menu::ValueEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

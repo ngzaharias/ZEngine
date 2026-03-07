@@ -12,7 +12,7 @@ namespace ecs
 namespace editor::theme
 {
 	struct WindowComponent;
-	struct WindowRequest;
+	struct WindowEvent;
 }
 
 namespace gamestate
@@ -30,7 +30,7 @@ namespace editor::theme
 			ecs::NameComponent,
 			editor::theme::WindowComponent>
 			::Read<
-			editor::theme::WindowRequest,
+			editor::theme::WindowEvent,
 			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

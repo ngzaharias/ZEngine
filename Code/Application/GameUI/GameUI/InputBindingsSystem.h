@@ -10,7 +10,7 @@ namespace eng
 
 namespace gui::game_menu
 {
-	struct OpenRequest;
+	struct OpenEvent;
 }
 
 namespace gui::input
@@ -26,7 +26,7 @@ namespace gui::input
 		using World = ecs::WorldView
 			::Write<
 			eng::InputManager,
-			gui::game_menu::OpenRequest>
+			gui::game_menu::OpenEvent>
 			::Read<
 			gui::input::BindingsComponent>;
 

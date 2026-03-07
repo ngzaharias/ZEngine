@@ -5,15 +5,15 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/ApplicationCloseRequestEvent.h"
-#include "Engine/LevelLoadRequestEvent.h"
+#include "Engine/ApplicationCloseEvent.h"
+#include "Engine/LevelLoadEvent.h"
 #include "Engine/UIManager.h"
 #include "Engine/VersionSingleton.h"
 #include "GameUI/DCMainMenu.h"
-#include "GameUI/MainMenuContinueGameRequest.h"
-#include "GameUI/MainMenuExitGameRequest.h"
-#include "GameUI/MainMenuLoadGameRequest.h"
-#include "GameUI/MainMenuNewGameRequest.h"
+#include "GameUI/MainMenuContinueGameEvent.h"
+#include "GameUI/MainMenuExitGameEvent.h"
+#include "GameUI/MainMenuLoadGameEvent.h"
+#include "GameUI/MainMenuNewGameEvent.h"
 #include "GameUI/MainMenuWindowComponent.h"
 
 namespace
@@ -49,21 +49,21 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	//////////////////////////////////////////////////////////////////////////
 	// Events
 
-	if (world.HasAny<gui::main_menu::ContinueGameRequest>())
+	if (world.HasAny<gui::main_menu::ContinueGameEvent>())
 	{
 	}
 
-	if (world.HasAny<gui::main_menu::ExitGameRequest>())
+	if (world.HasAny<gui::main_menu::ExitGameEvent>())
 	{
-		world.AddEvent<eng::application::CloseRequestEvent>();
+		world.AddEvent<eng::application::CloseEvent>();
 	}
 
-	if (world.HasAny<gui::main_menu::LoadGameRequest>())
+	if (world.HasAny<gui::main_menu::LoadGameEvent>())
 	{
 	}
 
-	for (const auto& request : world.Events<gui::main_menu::NewGameRequest>())
+	for (const auto& request : world.Events<gui::main_menu::NewGameEvent>())
 	{
-		world.AddEvent<eng::level::LoadRequestEvent>(request.m_Level);
+		world.AddEvent<eng::level::LoadEvent>(request.m_Level);
 	}
 }

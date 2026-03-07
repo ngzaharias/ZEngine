@@ -7,7 +7,7 @@
 namespace debug
 {
 	struct SplineWindowComponent;
-	struct SplineWindowRequest;
+	struct SplineWindowEvent;
 }
 
 namespace ecs
@@ -25,7 +25,7 @@ namespace debug
 			debug::SplineWindowComponent,
 			ecs::NameComponent>
 			::Read<
-			debug::SplineWindowRequest>;
+			debug::SplineWindowEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

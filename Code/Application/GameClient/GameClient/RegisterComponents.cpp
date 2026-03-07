@@ -4,8 +4,8 @@
 #include "ECS/EntityWorld.h"
 #include "GameClient/DragIsSelectableComponent.h"
 #include "GameClient/DragSelectionComponent.h"
-#include "GameClient/GameStateChangeFinished.h"
-#include "GameClient/GameStateChangeRequest.h"
+#include "GameClient/GameStateChangeFinishedEvent.h"
+#include "GameClient/GameStateChangeRequestEvent.h"
 #include "GameClient/GameStateStateSingleton.h"
 #include "GameClient/ModalMessageComponent.h"
 #include "GameClient/MovementAccelerationComponent.h"
@@ -29,8 +29,8 @@ void client::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<projectile::SpawnComponent>();
 	entityWorld.RegisterComponent<projectile::TrajectoryComponent>();
 
-	entityWorld.RegisterEvent<gamestate::ChangeFinished>();
-	entityWorld.RegisterEvent<gamestate::ChangeRequest>();
+	entityWorld.RegisterEvent<gamestate::ChangeFinishedEvent>();
+	entityWorld.RegisterEvent<gamestate::ChangeRequestEvent>();
 
 	entityWorld.RegisterSingleton<client::settings::DebugSingleton>();
 	entityWorld.RegisterSingleton<gamestate::StateSingleton>();

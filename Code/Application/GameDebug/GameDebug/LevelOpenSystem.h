@@ -16,12 +16,12 @@ namespace eng
 namespace eng::level
 {
 	struct DirectorySingleton;
-	struct LoadRequestEvent;
+	struct LoadEvent;
 }
 
 namespace debug::level
 {
-	struct OpenRequest;
+	struct OpenEvent;
 	struct OpenWindowComponent;
 }
 
@@ -36,9 +36,9 @@ namespace debug::level
 			ecs::NameComponent,
 			eng::InputManager,
 			eng::level::DirectorySingleton,
-			eng::level::LoadRequestEvent>
+			eng::level::LoadEvent>
 			::Read<
-			debug::level::OpenRequest>;
+			debug::level::OpenEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

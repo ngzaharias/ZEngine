@@ -7,7 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Editor/SettingsLocalSingleton.h"
 #include "Editor/SettingsWindowComponent.h"
-#include "GameDebug/EditorSettingsWindowRequest.h"
+#include "GameDebug/EditorSettingsWindowEvent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -26,7 +26,7 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 {
 	PROFILE_FUNCTION();
 
-	for (const auto& request : world.Events<editor::settings::WindowRequest>())
+	for (const auto& request : world.Events<editor::settings::WindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

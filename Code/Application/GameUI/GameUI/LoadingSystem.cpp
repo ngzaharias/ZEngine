@@ -8,7 +8,7 @@
 #include "Engine/UIManager.h"
 #include "GameUI/DCLoadingScreen.h"
 #include "GameUI/HintTable.h"
-#include "GameUI/LoadingCloseRequestEvent.h"
+#include "GameUI/LoadingCloseEvent.h"
 
 namespace
 {
@@ -46,7 +46,7 @@ void gui::loading::LoadingSystem::Update(World& world, const GameTime& gameTime)
 	}
 
 	// Events
-	for (const auto& request : world.Events<gui::loading::CloseRequestEvent>())
+	for (const auto& request : world.Events<gui::loading::CloseEvent>())
 	{
 		for (auto&& view : world.Query<ecs::query::Include<eng::level::LoadingComponent>>())
 		{

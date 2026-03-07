@@ -9,7 +9,7 @@
 #include "Engine/SettingsDebugSingleton.h"
 #include "GameClient/SettingsDebugSingleton.h"
 #include "GameDebug/SettingsWindowComponent.h"
-#include "GameDebug/SettingsWindowRequest.h"
+#include "GameDebug/SettingsWindowEvent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -26,7 +26,7 @@ void debug::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const bool hasWindow = world.HasAny<ecs::query::Include<debug::settings::WindowComponent>>();
-	if (!hasWindow && world.HasAny<debug::settings::WindowRequest>())
+	if (!hasWindow && world.HasAny<debug::settings::WindowEvent>())
 	{
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Debug Settings");

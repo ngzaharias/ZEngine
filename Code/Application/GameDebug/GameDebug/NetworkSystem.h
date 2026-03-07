@@ -11,7 +11,7 @@ namespace ecs
 
 namespace gamestate
 {
-	struct ChangeRequest;
+	struct ChangeRequestEvent;
 }
 
 namespace net
@@ -24,7 +24,7 @@ namespace debug
 {
 	struct NetworkEvent;
 	struct NetworkWindowComponent;
-	struct NetworkWindowRequest;
+	struct NetworkWindowEvent;
 }
 
 namespace debug
@@ -40,7 +40,7 @@ namespace debug
 			net::Host,
 			net::Peer>
 			::Read<
-			debug::NetworkWindowRequest>;
+			debug::NetworkWindowEvent>;
 
 		NetworkSystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld);
 
