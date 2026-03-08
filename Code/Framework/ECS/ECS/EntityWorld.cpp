@@ -13,12 +13,13 @@ ecs::EntityWorld::EntityWorld(ecs::TypeRegistry& typeRegistry)
 	, m_ResourceRegistry()
 	, m_SystemRegistry()
 {
-	RegisterComponent<ecs::NameComponent>();
 }
 
 void ecs::EntityWorld::Initialise()
 {
 	PROFILE_FUNCTION();
+
+	RegisterComponent<ecs::NameComponent>();
 
 	m_QueryRegistry.Initialise();
 	m_SystemRegistry.Initialise(*this);
