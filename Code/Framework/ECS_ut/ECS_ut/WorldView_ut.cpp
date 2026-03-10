@@ -543,3 +543,185 @@ CLASS_TEST_CASE("Components that are updated the frame after an entity is destro
 	CHECK(worldView.Count<ecs::query::Include<ComponentA>>() == 0);
 	CHECK(worldView.Count<ecs::query::Exclude<ComponentA>>() == 2);
 }
+
+CLASS_TEST_CASE("WriteComponent can be used with components that are present in the WorldView Write access.")
+{
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	entityWorld.AddComponent<ComponentA>(raii.m_EntityA);
+	entityWorld.AddComponent<ComponentB>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	worldView.WriteComponent<ComponentA>(raii.m_EntityA);
+	worldView.WriteComponent<ComponentB>(raii.m_EntityA);
+}
+
+CLASS_TEST_CASE("WriteComponent cannot be used with components that are present in the WorldView Read access.")
+{
+	using WorldView = ecs::WorldView
+		::Read<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	entityWorld.AddComponent<ComponentA>(raii.m_EntityA);
+	entityWorld.AddComponent<ComponentB>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	// doesn't compile
+	//worldView.WriteComponent<ComponentA>(raii.m_EntityA);
+	//worldView.WriteComponent<ComponentB>(raii.m_EntityA);
+}
+
+CLASS_TEST_CASE("WriteComponent cannot be used with components that are present in the WorldView.")
+{
+	using WorldView = ecs::WorldView;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	entityWorld.AddComponent<ComponentA>(raii.m_EntityA);
+	entityWorld.AddComponent<ComponentB>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	// doesn't compile
+	//worldView.WriteComponent<ComponentA>(raii.m_EntityA);
+	//worldView.WriteComponent<ComponentB>(raii.m_EntityA);
+}
+
+CLASS_TEST_CASE("ReadComponent can be used with components that are present in the WorldView Write access.")
+{
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	entityWorld.AddComponent<ComponentA>(raii.m_EntityA);
+	entityWorld.AddComponent<ComponentB>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	worldView.ReadComponent<ComponentA>(raii.m_EntityA);
+	worldView.ReadComponent<ComponentB>(raii.m_EntityA);
+}
+
+CLASS_TEST_CASE("ReadComponent can be used with components that are present in the WorldView Read access.")
+{
+	using WorldView = ecs::WorldView
+		::Read<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	entityWorld.AddComponent<ComponentA>(raii.m_EntityA);
+	entityWorld.AddComponent<ComponentB>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	worldView.ReadComponent<ComponentA>(raii.m_EntityA);
+	worldView.ReadComponent<ComponentB>(raii.m_EntityA);
+}
+
+CLASS_TEST_CASE("ReadComponent cannot be used with components that are present in the WorldView.")
+{
+	using WorldView = ecs::WorldView;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	entityWorld.AddComponent<ComponentA>(raii.m_EntityA);
+	entityWorld.AddComponent<ComponentB>(raii.m_EntityA);
+	entityWorld.Update({});
+
+	// doesn't compile
+	//worldView.ReadComponent<ComponentA>(raii.m_EntityA);
+	//worldView.ReadComponent<ComponentB>(raii.m_EntityA);
+}
+
+CLASS_TEST_CASE("Components that are present in the WorldView Write access can be queried as non-const.")
+{
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	worldView.Query<ecs::query::Include<ComponentA>>();
+	worldView.Query<ecs::query::Include<ComponentB>>();
+}
+
+CLASS_TEST_CASE("Components that are present in the WorldView Write access can be queried as const.")
+{
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	worldView.Query<ecs::query::Include<const ComponentA>>();
+	worldView.Query<ecs::query::Include<const ComponentB>>();
+}
+
+CLASS_TEST_CASE("Components that are present in the WorldView Read access cannot be queried as non-const.")
+{
+	using WorldView = ecs::WorldView
+		::Read<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	// doesn't compile
+	//worldView.Query<ecs::query::Include<ComponentA>>();
+	//worldView.Query<ecs::query::Include<ComponentB>>();
+}
+
+CLASS_TEST_CASE("Components that are present in the WorldView Read access can be queried as const.")
+{
+	using WorldView = ecs::WorldView
+		::Read<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	worldView.Count<ecs::query::Include<const ComponentA>>();
+	worldView.Count<ecs::query::Include<const ComponentB>>();
+}
+
+CLASS_TEST_CASE("Components that are not present in the WorldView cannot be queried as non-const.")
+{
+	using WorldView = ecs::WorldView;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	// doesn't compile
+	//worldView.Count<ecs::query::Include<ComponentA>>();
+	//worldView.Count<ecs::query::Include<ComponentB>>();
+}
+
+CLASS_TEST_CASE("Components that are not present in the WorldView cannot be queried as const.")
+{
+	using WorldView = ecs::WorldView;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	// doesn't compile
+	//worldView.Count<ecs::query::Include<const ComponentA>>();
+	//worldView.Count<ecs::query::Include<const ComponentB>>();
+}
