@@ -38,7 +38,6 @@ project "GameClient"
 		"%{wks.location}/../Code/Modules/ClientCursor/",
 		"%{wks.location}/../Code/Modules/ClientHidden/",
 		"%{wks.location}/../Code/Modules/ClientNetwork/",
-		"%{wks.location}/../Code/Modules/Container/",
 		"%{wks.location}/../Code/Modules/Hexmap/",
 		"%{wks.location}/../Code/Modules/SharedCursor/",
 		"%{wks.location}/../Code/Modules/SharedHidden/",

@@ -12,6 +12,7 @@
 #include "GameServer/RegisterSystems.h"
 #include "ServerCursor/CursorRegisterModule.h"
 #include "ServerHidden/HiddenRegisterModule.h"
+#include "ServerInventory/InventoryRegisterModule.h"
 #include "ServerNetwork/NetworkRegisterModule.h"
 #include "SharedCursor/CursorRegisterModule.h"
 #include "SharedHidden/HiddenRegisterModule.h"
@@ -58,6 +59,7 @@ void server::GameServer::Register(const Dependencies& dependencies)
 	{
 		server::cursor::RegisterModule(m_EntityWorld);
 		server::hidden::RegisterModule(m_EntityWorld);
+		server::inventory::RegisterModule(m_EntityWorld);
 		server::network::RegisterModule(m_EntityWorld);
 		shared::cursor::RegisterModule(m_EntityWorld);
 		shared::hidden::RegisterModule(m_EntityWorld);

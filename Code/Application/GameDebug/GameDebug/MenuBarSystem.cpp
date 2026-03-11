@@ -13,12 +13,12 @@
 #include "Engine/InputManager.h"
 #include "Engine/TableHeadmaster.h"
 #include "Engine/TablesReloadedEvent.h"
-#include "GameDebug/DebugContainerWindowEvent.h"
 #include "GameDebug/DebugEntityWindowEvent.h"
 #include "GameDebug/DebugFrameBufferWindowEvent.h"
 #include "GameDebug/DebugImGuiDemoEvent.h"
 #include "GameDebug/DebugImNodesDemoEvent.h"
 #include "GameDebug/DebugInspectorDemoEvent.h"
+#include "GameDebug/DebugInventoryWindowEvent.h"
 #include "GameDebug/DebugLevelOpenEvent.h"
 #include "GameDebug/DebugLevelReloadEvent.h"
 #include "GameDebug/DebugLevelSaveEvent.h"
@@ -131,10 +131,10 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 		if (ImGui::BeginMenu("Debuggers"))
 		{
-			if (ImGui::MenuItem("Container"))
-				world.AddEvent<debug::ContainerWindowEvent>();
 			if (ImGui::MenuItem("Entities", "Ctrl+Shift+F11"))
 				world.AddEvent<debug::EntityWindowEvent>();
+			if (ImGui::MenuItem("Inventory"))
+				world.AddEvent<debug::inventory::WindowEvent>();
 			if (ImGui::MenuItem("Network"))
 				world.AddEvent<debug::NetworkWindowEvent>();
 			if (ImGui::MenuItem("Optick (external)"))

@@ -5,7 +5,6 @@
 
 namespace debug
 {
-	struct ContainerWindowEvent;
 	struct EntityWindowEvent;
 	struct FrameBufferWindowEvent;
 	struct ImGuiDemoEvent;
@@ -14,6 +13,11 @@ namespace debug
 	struct NetworkWindowEvent;
 	struct ShapeWindowEvent;
 	struct SplineWindowEvent;
+}
+
+namespace debug::inventory
+{
+	struct WindowEvent;
 }
 
 namespace debug::level
@@ -75,12 +79,12 @@ namespace debug
 	public:
 		using World = ecs::WorldView
 			::Write<
-			debug::ContainerWindowEvent,
 			debug::EntityWindowEvent,
 			debug::FrameBufferWindowEvent,
 			debug::ImGuiDemoEvent,
 			debug::ImNodesDemoEvent,
 			debug::InspectorDemoEvent,
+			debug::inventory::WindowEvent,
 			debug::level::OpenEvent,
 			debug::level::ReloadEvent,
 			debug::level::SaveAsEvent,

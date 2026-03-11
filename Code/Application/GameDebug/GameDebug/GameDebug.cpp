@@ -5,15 +5,15 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/TypeRegistry.h"
 #include "ECS/WorldView.h"
-#include "GameDebug/ContainerWindowComponent.h"
-#include "GameDebug/ContainerSystem.h"
 #include "GameDebug/DebugClientWindowEvent.h"
-#include "GameDebug/DebugContainerWindowEvent.h"
 #include "GameDebug/DebugEntityWindowEvent.h"
 #include "GameDebug/DebugFrameBufferWindowEvent.h"
 #include "GameDebug/DebugImGuiDemoEvent.h"
 #include "GameDebug/DebugImNodesDemoEvent.h"
 #include "GameDebug/DebugInspectorDemoEvent.h"
+#include "GameDebug/DebugInventoryWindowComponent.h"
+#include "GameDebug/DebugInventoryWindowEvent.h"
+#include "GameDebug/DebugInventoryWindowSystem.h"
 #include "GameDebug/DebugLevelOpenEvent.h"
 #include "GameDebug/DebugLevelReloadEvent.h"
 #include "GameDebug/DebugLevelSaveAsEvent.h"
@@ -46,15 +46,15 @@
 #include "GameDebug/NetworkWindowComponent.h"
 #include "GameDebug/OverlaySystem.h"
 #include "GameDebug/PhysicsSystem.h"
-#include "GameDebug/SettingsWindowComponent.h"
-#include "GameDebug/SettingsWindowEvent.h"
 #include "GameDebug/SettingsDebugSystem.h"
 #include "GameDebug/SettingsMenuSystem.h"
-#include "GameDebug/ShapeWindowComponent.h"
+#include "GameDebug/SettingsWindowComponent.h"
+#include "GameDebug/SettingsWindowEvent.h"
 #include "GameDebug/ShapeSystem.h"
+#include "GameDebug/ShapeWindowComponent.h"
 #include "GameDebug/SoftbodySystem.h"
-#include "GameDebug/SplineWindowComponent.h"
 #include "GameDebug/SplineSystem.h"
+#include "GameDebug/SplineWindowComponent.h"
 
 debug::GameDebug::GameDebug(
 	ecs::EntityWorld& clientWorld,
@@ -66,32 +66,31 @@ debug::GameDebug::GameDebug(
 
 void debug::GameDebug::Register()
 {
-	m_ClientWorld.RegisterComponent<debug::ContainerWindowComponent>();
+	// client
 	m_ClientWorld.RegisterComponent<debug::EntityWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::FrameBufferWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::hidden::ObjectComponent>();
 	m_ClientWorld.RegisterComponent<debug::ImGuiDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::ImNodesDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::InspectorDemoWindowComponent>();
+	m_ClientWorld.RegisterComponent<debug::inventory::WindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::level::OpenWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::NetworkWindowComponent>();
+	m_ClientWorld.RegisterComponent<debug::settings::WindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::ShapeWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::SplineWindowComponent>();
-	m_ClientWorld.RegisterComponent<debug::settings::WindowComponent>();
-
 	m_ClientWorld.RegisterEvent<debug::ClientWindowEvent>();
-	m_ClientWorld.RegisterEvent<debug::ContainerWindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::EntityWindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::FrameBufferWindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::ImGuiDemoEvent>();
 	m_ClientWorld.RegisterEvent<debug::ImNodesDemoEvent>();
 	m_ClientWorld.RegisterEvent<debug::InspectorDemoEvent>();
+	m_ClientWorld.RegisterEvent<debug::inventory::WindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::level::OpenEvent>();
-	m_ClientWorld.RegisterEvent<debug::level::ReloadEvent>();
+	m_ClientWorld.RegisterEvent<debug::level::ReloadEvent>(); 
 	m_ClientWorld.RegisterEvent<debug::level::SaveAsEvent>();
 	m_ClientWorld.RegisterEvent<debug::level::SaveEvent>();
 	m_ClientWorld.RegisterEvent<debug::NetworkEvent>();
-	m_ServerWorld.RegisterEvent<debug::NetworkEvent>();
 	m_ClientWorld.RegisterEvent<debug::NetworkWindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::ServerWindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::settings::WindowEvent>();
@@ -99,8 +98,6 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterEvent<debug::SplineWindowEvent>();
 	m_ClientWorld.RegisterEvent<editor::AssetBrowserWindowEvent>();
 	m_ClientWorld.RegisterEvent<editor::settings::WindowEvent>();
-
-	m_ClientWorld.RegisterSystem<debug::ContainerSystem>();
 	m_ClientWorld.RegisterSystem<debug::EntitySystem>(m_ClientWorld, m_ServerWorld);
 	m_ClientWorld.RegisterSystem<debug::FrameBufferSystem>();
 	m_ClientWorld.RegisterSystem<debug::hidden::ObjectSystem>();
@@ -108,6 +105,7 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<debug::ImNodesDemoSystem>();
 	m_ClientWorld.RegisterSystem<debug::InputSystem>();
 	m_ClientWorld.RegisterSystem<debug::InspectorDemoSystem>();
+	m_ClientWorld.RegisterSystem<debug::inventory::WindowSystem>();
 	m_ClientWorld.RegisterSystem<debug::level::OpenSystem>();
 	m_ClientWorld.RegisterSystem<debug::level::ReloadSystem>();
 	m_ClientWorld.RegisterSystem<debug::MenuBarSystem>();
@@ -119,6 +117,9 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<debug::ShapeSystem>();
 	m_ClientWorld.RegisterSystem<debug::SoftbodySystem>();
 	m_ClientWorld.RegisterSystem<debug::SplineSystem>();
+
+	// server
+	m_ServerWorld.RegisterEvent<debug::NetworkEvent>();
 }
 
 void debug::GameDebug::Initialise()
