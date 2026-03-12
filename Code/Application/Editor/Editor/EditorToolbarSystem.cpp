@@ -54,11 +54,11 @@ namespace
 
 	void Draw_Editors(World& world)
 	{
-		if (ButtonIcon("##outliner", "Outliner", icon::EDITOR_OUTLINER))
-			world.AddEvent<editor::outliner::OpenWindowEvent>();
-		ImGui::SameLine();
 		if (ButtonIcon("##inspector", "Inspector", icon::EDITOR_INSPECTOR))
 			world.AddEvent<editor::inspector::OpenWindowEvent>();
+		ImGui::SameLine();
+		if (ButtonIcon("##outliner", "Outliner", icon::EDITOR_OUTLINER))
+			world.AddEvent<editor::outliner::OpenWindowEvent>();
 
 		ImGui::SameLine();
 		Spacing();

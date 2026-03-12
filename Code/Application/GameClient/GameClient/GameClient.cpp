@@ -25,6 +25,7 @@
 #include "GameClient/RegisterSystems.h"
 #include "GameUI/GameUIRegisterModule.h"
 #include "Hexmap/HexmapRegisterModule.h"
+#include "Icons/IconsRegisterModule.h"
 #include "Render/RenderRegisterModule.h"
 #include "SharedCursor/CursorRegisterModule.h"
 #include "SharedHidden/HiddenRegisterModule.h"
@@ -99,6 +100,7 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		client::network::RegisterModule(m_EntityWorld);
 		gui::RegisterModule(m_EntityWorld);
 		hexmap::RegisterModule(m_EntityWorld);
+		icon::RegisterModule(m_EntityWorld);
 		render::RegisterModule(m_EntityWorld);
 		shared::cursor::RegisterModule(m_EntityWorld);
 		shared::hidden::RegisterModule(m_EntityWorld);

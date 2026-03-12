@@ -126,6 +126,7 @@ project "Game"
 		"Core",
 		"ECS",
 		"Engine",
+		"Icons",
 		"Imgui",
 		"Math",
 		"Network",

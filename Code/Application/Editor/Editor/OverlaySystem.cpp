@@ -5,7 +5,6 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/EditorIcons.h"
 #include "Editor/GizmoTransformSingleton.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/SettingsDebugSingleton.h"
@@ -13,6 +12,7 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "GameState/GameStateEditModeComponent.h"
+#include "Icons/Icons.h"
 #include "Outliner/OutlinerSelectSingleton.h"
 
 #include "imgui/imgui.h"
@@ -38,7 +38,7 @@ namespace
 		ImGuiWindowFlags_NoScrollWithMouse |
 		ImGuiWindowFlags_NoTitleBar;
 
-	bool ButtonIcon(const char* label, const char* tooltip, const editor::Icon& icon, const ImVec2& size = ImVec2(22, 22), const bool active = false)
+	bool ButtonIcon(const char* label, const char* tooltip, const icon::Data& icon, const ImVec2& size = ImVec2(22, 22), const bool active = false)
 	{
 		const bool result = imgui::ImageButton(label, active, icon.m_TextureId, size, icon.m_UV0, icon.m_UV1);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));

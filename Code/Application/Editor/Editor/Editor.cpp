@@ -7,7 +7,6 @@
 #include "Editor/AssetBrowserSystem.h"
 #include "Editor/AssetBrowserWindowComponent.h"
 #include "Editor/AssetReloadSystem.h"
-#include "Editor/EditorIconSystem.h"
 #include "Editor/EditorRenderAxesSystem.h"
 #include "Editor/EditorRenderGridSystem.h"
 #include "Editor/EditorToolbarSystem.h"
@@ -49,7 +48,6 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::AssetReloadSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
-	m_ClientWorld.RegisterSystem<editor::IconSystem>();
 	m_ClientWorld.RegisterSystem<editor::OverlaySystem>();
 	m_ClientWorld.RegisterSystem<editor::RenderAxesSystem>();
 	m_ClientWorld.RegisterSystem<editor::RenderGridSystem>();
@@ -67,7 +65,6 @@ void editor::Editor::Register()
 	editor::theme::RegisterModule(m_ClientWorld);
 	editor::trajectory::RegisterModule(m_ClientWorld);
 	gamestate::RegisterModule(m_ClientWorld);
-	icon::RegisterModule(m_ClientWorld);
 }
 
 void editor::Editor::Initialise()

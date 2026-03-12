@@ -50,7 +50,6 @@ project "Editor"
 		"%{wks.location}/../Code/Application/GameUI/",
 		"%{wks.location}/../Code/Bindings/Steam/",
 		"%{wks.location}/../Code/Editors/FlipbookEditor/",
-		"%{wks.location}/../Code/Editors/Icons/",
 		"%{wks.location}/../Code/Editors/InputEditor/",
 		"%{wks.location}/../Code/Editors/Inspector/",
 		"%{wks.location}/../Code/Editors/Outliner/",
@@ -62,6 +61,7 @@ project "Editor"
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Engine/",
+		"%{wks.location}/../Code/Framework/Icons/",
 		"%{wks.location}/../Code/Framework/Imgui/",
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
@@ -119,7 +119,6 @@ project "Editor"
 
 		-- Editors
 		"FlipbookEditor",
-		"Icons",
 		"InputEditor",
 		"Inspector",
 		"Outliner",
@@ -133,6 +132,7 @@ project "Editor"
 		"Core",
 		"ECS",
 		"Engine",
+		"Icons",
 		"Imgui",
 		"Math",
 		"Network",
