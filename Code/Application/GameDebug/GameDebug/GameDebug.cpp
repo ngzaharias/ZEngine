@@ -19,7 +19,6 @@
 #include "GameDebug/DebugServerWindowEvent.h"
 #include "GameDebug/DebugShapeWindowEvent.h"
 #include "GameDebug/DebugSplineWindowEvent.h"
-#include "GameDebug/EditorAssetBrowserWindowEvent.h"
 #include "GameDebug/EditorSettingsWindowEvent.h"
 #include "GameDebug/FrameBufferSystem.h"
 #include "GameDebug/FrameBufferWindowComponent.h"
@@ -86,7 +85,6 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterEvent<debug::settings::WindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::ShapeWindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::SplineWindowEvent>();
-	m_ClientWorld.RegisterEvent<editor::AssetBrowserWindowEvent>();
 	m_ClientWorld.RegisterEvent<editor::settings::WindowEvent>();
 	m_ClientWorld.RegisterSystem<debug::FrameBufferSystem>();
 	m_ClientWorld.RegisterSystem<debug::hidden::ObjectSystem>();

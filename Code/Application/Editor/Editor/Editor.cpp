@@ -1,11 +1,10 @@
 #include "EditorPCH.h"
 #include "Editor/Editor.h"
 
+#include "AssetBrowser/AssetBrowserRegisterModule.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/AssetBrowserSystem.h"
-#include "Editor/AssetBrowserWindowComponent.h"
 #include "Editor/AssetReloadSystem.h"
 #include "Editor/EditorRenderAxesSystem.h"
 #include "Editor/EditorRenderGridSystem.h"
@@ -40,11 +39,9 @@ void editor::Editor::Register()
 {
 	PROFILE_FUNCTION();
 
-	m_ClientWorld.RegisterComponent<editor::AssetBrowserWindowComponent>();
 	m_ClientWorld.RegisterSingleton<editor::gizmo::TransformSingleton>();
 	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
 	m_ClientWorld.RegisterSingleton<editor::settings::LocalSingleton>();
-	m_ClientWorld.RegisterSystem<editor::AssetBrowserSystem>();
 	m_ClientWorld.RegisterSystem<editor::AssetReloadSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
@@ -55,6 +52,7 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterSystem<editor::settings::MenuSystem>();
 	m_ClientWorld.RegisterSystem<editor::ToolbarSystem>();
 
+	editor::assets::RegisterModule(m_ClientWorld);
 	editor::flipbook::RegisterModule(m_ClientWorld);
 	editor::input::RegisterModule(m_ClientWorld);
 	editor::inspector::RegisterModule(m_ClientWorld);

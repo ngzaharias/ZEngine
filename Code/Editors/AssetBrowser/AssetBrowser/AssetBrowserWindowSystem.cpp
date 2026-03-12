@@ -1,21 +1,21 @@
-#include "EditorPCH.h"
-#include "Editor/AssetBrowserSystem.h"
+#include "AssetBrowserPCH.h"
+#include "AssetBrowser/AssetBrowserWindowSystem.h"
 
+#include "AssetBrowser/AssetBrowserOpenWindowEvent.h"
+#include "AssetBrowser/AssetBrowserWindowComponent.h"
 #include "Core/SortHelpers.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/AssetBrowserWindowComponent.h"
 #include "Engine/AssetManager.h"
-#include "GameDebug/EditorAssetBrowserWindowEvent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
 
 namespace
 {
-	using World = editor::AssetBrowserSystem::World;
+	using World = editor::assets::WindowSystem::World;
 
 	str::String ToLabel(const char* label, const int32 index)
 	{
@@ -47,7 +47,7 @@ namespace
 	}
 }
 
-void editor::AssetBrowserSystem::Update(World& world, const GameTime& gameTime)
+void editor::assets::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -58,13 +58,13 @@ void editor::AssetBrowserSystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(800, 600.f);
 
-	for (const auto& request : world.Events<editor::AssetBrowserWindowEvent>())
+	for (const auto& request : world.Events<editor::assets::OpenWindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Asset Browser");
 
-		auto& window = world.AddComponent<editor::AssetBrowserWindowComponent>(windowEntity);
+		auto& window = world.AddComponent<editor::assets::WindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_Label = ToLabel("Asset Browser", identifier);
 
@@ -74,15 +74,15 @@ void editor::AssetBrowserSystem::Update(World& world, const GameTime& gameTime)
 		Sort(window.m_Sorted);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::AssetBrowserWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::assets::WindowComponent>>())
 	{
-		const auto& window = world.ReadComponent<editor::AssetBrowserWindowComponent>(view, false);
+		const auto& window = world.ReadComponent<editor::assets::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Include<editor::AssetBrowserWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::assets::WindowComponent>>())
 	{
-		auto& windowComponent = view.WriteRequired<editor::AssetBrowserWindowComponent>();
+		auto& windowComponent = view.WriteRequired<editor::assets::WindowComponent>();
 
 		bool isWindowOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);

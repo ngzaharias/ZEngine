@@ -3,10 +3,11 @@
 #include "Core/Array.h"
 #include "Core/String.h"
 #include "ECS/Component.h"
+#include "Engine/AssetFile.h"
 
-namespace editor
+namespace editor::assets
 {
-	struct AssetBrowserWindowComponent final : public ecs::Component<AssetBrowserWindowComponent>
+	struct WindowComponent final : public ecs::Component<WindowComponent>
 	{
 		int32 m_Identifier = 0;
 		str::String m_Label = {};

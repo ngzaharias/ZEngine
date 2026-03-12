@@ -1,6 +1,7 @@
 #include "EditorPCH.h"
 #include "Editor/EditorToolbarSystem.h"
 
+#include "AssetBrowser/AssetBrowserOpenWindowEvent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -64,6 +65,9 @@ namespace
 		Spacing();
 		ImGui::SameLine();
 
+		if (ButtonIcon("##browser", "Asset Browser", icon::EDITOR_BROWSER))
+			world.AddEvent<editor::assets::OpenWindowEvent>();
+		ImGui::SameLine();
 		if (ButtonIcon("##texture", "Texture Editor", icon::EDITOR_TEXTURE))
 			world.AddEvent<editor::texture::OpenWindowEvent>();
 		ImGui::SameLine();

@@ -16,24 +16,24 @@ namespace eng
 	struct AssetFile;
 }
 
-namespace editor
+namespace editor::assets
 {
-	struct AssetBrowserWindowComponent;
-	struct AssetBrowserWindowEvent;
+	struct OpenWindowEvent;
+	struct WindowComponent;
 }
 
-namespace editor
+namespace editor::assets
 {
-	class AssetBrowserSystem final : public ecs::System
+	class WindowSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			editor::AssetBrowserWindowComponent>
+			editor::assets::WindowComponent>
 			::Read<
-			eng::AssetManager,
-			editor::AssetBrowserWindowEvent>;
+			editor::assets::OpenWindowEvent,
+			eng::AssetManager>;
 
 		void Update(World& world, const GameTime& gameTime);
 

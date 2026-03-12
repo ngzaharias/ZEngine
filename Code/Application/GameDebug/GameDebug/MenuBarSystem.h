@@ -39,7 +39,6 @@ namespace debug::settings
 
 namespace editor
 {
-	struct AssetBrowserWindowEvent;
 	struct SettingsWindowEvent;
 }
 
@@ -97,7 +96,6 @@ namespace debug
 			debug::settings::WindowEvent,
 			debug::ShapeWindowEvent,
 			debug::SplineWindowEvent,
-			editor::AssetBrowserWindowEvent,
 			editor::input::WindowEvent,
 			editor::settings::WindowEvent,
 			editor::table::WindowEvent,

@@ -25,7 +25,6 @@
 #include "GameDebug/DebugNetworkWindowEvent.h"
 #include "GameDebug/DebugShapeWindowEvent.h"
 #include "GameDebug/DebugSplineWindowEvent.h"
-#include "GameDebug/EditorAssetBrowserWindowEvent.h"
 #include "GameDebug/EditorSettingsWindowEvent.h"
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/SettingsWindowComponent.h"
@@ -151,8 +150,6 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 		if (ImGui::BeginMenu("Editors"))
 		{
-			if (ImGui::MenuItem("Asset Browser"))
-				world.AddEvent<editor::AssetBrowserWindowEvent>();
 			if (ImGui::MenuItem("Input Editor"))
 				world.AddEvent<editor::input::WindowEvent>();
 			if (ImGui::MenuItem("Table Editor"))

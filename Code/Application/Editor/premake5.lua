@@ -49,6 +49,7 @@ project "Editor"
 		"%{wks.location}/../Code/Application/GameServer/",
 		"%{wks.location}/../Code/Application/GameUI/",
 		"%{wks.location}/../Code/Bindings/Steam/",
+		"%{wks.location}/../Code/Editors/AssetBrowser/",
 		"%{wks.location}/../Code/Editors/FlipbookEditor/",
 		"%{wks.location}/../Code/Editors/InputEditor/",
 		"%{wks.location}/../Code/Editors/Inspector/",
@@ -118,6 +119,7 @@ project "Editor"
 		"DebugInventory",
 
 		-- Editors
+		"AssetBrowser",
 		"FlipbookEditor",
 		"InputEditor",
 		"Inspector",
