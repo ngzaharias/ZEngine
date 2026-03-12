@@ -4,9 +4,9 @@
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
 
-namespace debug
+namespace debug::entity
 {
-	struct EntityWindowComponent final : public ecs::Component<EntityWindowComponent> 
+	struct WindowComponent final : public ecs::Component<WindowComponent> 
 	{ 
 		int32 m_Identifier = 0;
 

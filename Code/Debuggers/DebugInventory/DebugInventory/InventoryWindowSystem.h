@@ -27,7 +27,5 @@ namespace debug::inventory
 
 	private:
 		imgui::Identifier m_WindowIds = {};
-		ecs::EntityWorld& m_ClientWorld;
-		ecs::EntityWorld& m_ServerWorld;
 	};
 };

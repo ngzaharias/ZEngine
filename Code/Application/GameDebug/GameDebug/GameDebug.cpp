@@ -1,13 +1,12 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/GameDebug.h"
 
+#include "DebugEntity/EntityRegisterModule.h"
 #include "DebugInventory/InventoryRegisterModule.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/TypeRegistry.h"
 #include "ECS/WorldView.h"
-#include "GameDebug/DebugClientWindowEvent.h"
-#include "GameDebug/DebugEntityWindowEvent.h"
 #include "GameDebug/DebugFrameBufferWindowEvent.h"
 #include "GameDebug/DebugImGuiDemoEvent.h"
 #include "GameDebug/DebugImNodesDemoEvent.h"
@@ -22,8 +21,6 @@
 #include "GameDebug/DebugSplineWindowEvent.h"
 #include "GameDebug/EditorAssetBrowserWindowEvent.h"
 #include "GameDebug/EditorSettingsWindowEvent.h"
-#include "GameDebug/EntitySystem.h"
-#include "GameDebug/EntityWindowComponent.h"
 #include "GameDebug/FrameBufferSystem.h"
 #include "GameDebug/FrameBufferWindowComponent.h"
 #include "GameDebug/HiddenObjectComponent.h"
@@ -65,7 +62,6 @@ debug::GameDebug::GameDebug(
 void debug::GameDebug::Register()
 {
 	// client
-	m_ClientWorld.RegisterComponent<debug::EntityWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::FrameBufferWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::hidden::ObjectComponent>();
 	m_ClientWorld.RegisterComponent<debug::ImGuiDemoWindowComponent>();
@@ -76,8 +72,6 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<debug::settings::WindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::ShapeWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::SplineWindowComponent>();
-	m_ClientWorld.RegisterEvent<debug::ClientWindowEvent>();
-	m_ClientWorld.RegisterEvent<debug::EntityWindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::FrameBufferWindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::ImGuiDemoEvent>();
 	m_ClientWorld.RegisterEvent<debug::ImNodesDemoEvent>();
@@ -94,7 +88,6 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterEvent<debug::SplineWindowEvent>();
 	m_ClientWorld.RegisterEvent<editor::AssetBrowserWindowEvent>();
 	m_ClientWorld.RegisterEvent<editor::settings::WindowEvent>();
-	m_ClientWorld.RegisterSystem<debug::EntitySystem>(m_ClientWorld, m_ServerWorld);
 	m_ClientWorld.RegisterSystem<debug::FrameBufferSystem>();
 	m_ClientWorld.RegisterSystem<debug::hidden::ObjectSystem>();
 	m_ClientWorld.RegisterSystem<debug::ImGuiDemoSystem>();
@@ -116,6 +109,7 @@ void debug::GameDebug::Register()
 	// server
 	m_ServerWorld.RegisterEvent<debug::NetworkEvent>();
 
+	debug::entity::RegisterModule(m_ClientWorld, m_ServerWorld);
 	debug::inventory::RegisterModule(m_ClientWorld, m_ServerWorld);
 }
 

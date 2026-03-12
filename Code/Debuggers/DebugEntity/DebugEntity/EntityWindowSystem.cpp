@@ -1,5 +1,5 @@
-#include "GameDebugPCH.h"
-#include "GameDebug/EntitySystem.h"
+#include "DebugEntityPCH.h"
+#include "DebugEntity/EntityWindowSystem.h"
 
 #include "Core/Algorithms.h"
 #include "Core/Colour.h"
@@ -7,12 +7,12 @@
 #include "Core/Name.h"
 #include "Core/String.h"
 #include "Core/TypeInfo.h"
+#include "DebugEntity/EntityWindowComponent.h"
+#include "DebugEntity/EntityWindowEvent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameDebug/DebugEntityWindowEvent.h"
-#include "GameDebug/EntityWindowComponent.h"
 #include "Math/Vector.h"
 
 #include "imgui/imgui.h"
@@ -92,13 +92,13 @@ namespace
 	}
 }
 
-debug::EntitySystem::EntitySystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
+debug::entity::WindowSystem::WindowSystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
 	: m_ClientWorld(clientWorld)
 	, m_ServerWorld(serverWorld)
 {
 }
 
-void debug::EntitySystem::Update(World& world, const GameTime& gameTime)
+void debug::entity::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -107,28 +107,28 @@ void debug::EntitySystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(100.f, 100.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(300.f, 200.f);
 
-	for (const auto& request : world.Events<debug::EntityWindowEvent>())
+	for (const auto& request : world.Events<debug::entity::WindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Entity Debugger");
 
-		auto& window = world.AddComponent<debug::EntityWindowComponent>(windowEntity);
+		auto& window = world.AddComponent<debug::entity::WindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_DockspaceLabel = ToLabel("Entity Debugger##entitydebugger", identifier);
 		window.m_EntitiesLabel = ToLabel("Entities##entitydebugger", identifier);
 		window.m_ComponentsLabel = ToLabel("Components##entitydebugger", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const debug::EntityWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const debug::entity::WindowComponent>>())
 	{
-		auto& window = world.ReadComponent<debug::EntityWindowComponent>(view, false);
+		auto& window = world.ReadComponent<debug::entity::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Include<debug::EntityWindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<debug::entity::WindowComponent>>())
 	{
-		auto& window = view.WriteRequired<debug::EntityWindowComponent>();
+		auto& window = view.WriteRequired<debug::entity::WindowComponent>();
 
 		bool isOpen = true;
 		bool isClient = true;

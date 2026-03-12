@@ -114,6 +114,7 @@ project "Editor"
 		"Steam",
 
 		-- Debuggers
+		"DebugEntity",
 		"DebugInventory",
 
 		-- Editors

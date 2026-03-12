@@ -5,6 +5,7 @@
 #include "Core/Name.h"
 #include "Core/Path.h"
 #include "Core/String.h"
+#include "DebugEntity/EntityWindowEvent.h"
 #include "DebugInventory/InventoryWindowEvent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -14,7 +15,6 @@
 #include "Engine/InputManager.h"
 #include "Engine/TableHeadmaster.h"
 #include "Engine/TablesReloadedEvent.h"
-#include "GameDebug/DebugEntityWindowEvent.h"
 #include "GameDebug/DebugFrameBufferWindowEvent.h"
 #include "GameDebug/DebugImGuiDemoEvent.h"
 #include "GameDebug/DebugImNodesDemoEvent.h"
@@ -131,8 +131,8 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 		if (ImGui::BeginMenu("Debuggers"))
 		{
-			if (ImGui::MenuItem("Entities", "Ctrl+Shift+F11"))
-				world.AddEvent<debug::EntityWindowEvent>();
+			if (ImGui::MenuItem("Entity", "Ctrl+Shift+F11"))
+				world.AddEvent<debug::entity::WindowEvent>();
 			if (ImGui::MenuItem("Inventory"))
 				world.AddEvent<debug::inventory::WindowEvent>();
 			if (ImGui::MenuItem("Network"))

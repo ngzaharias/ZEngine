@@ -10,25 +10,25 @@ namespace ecs
 	struct NameComponent;
 }
 
-namespace debug
+namespace debug::entity
 {
-	struct EntityWindowComponent;
-	struct EntityWindowEvent;
+	struct WindowComponent;
+	struct WindowEvent;
 }
 
-namespace debug
+namespace debug::entity
 {
-	class EntitySystem final : public ecs::System
+	class WindowSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			debug::EntityWindowComponent,
+			debug::entity::WindowComponent,
 			ecs::NameComponent>
 			::Read<
-			debug::EntityWindowEvent>;
+			debug::entity::WindowEvent>;
 
-		EntitySystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld);
+		WindowSystem(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld);
 
 		void Update(World& world, const GameTime& gameTime);
 

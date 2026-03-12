@@ -119,6 +119,7 @@ project "Game"
 		"Steam",
 
 		-- Debuggers
+		"DebugEntity",
 		"DebugInventory",
 
 		-- Framework
