@@ -16,25 +16,25 @@
 #include "Engine/VersionSystem.h"
 #include "Engine/WindowSystem.h"
 
-void eng::RegisterClientSystems(ecs::EntityWorld& entityWorld)
+void eng::RegisterClientSystems(ecs::EntityWorld& world)
 {
-	entityWorld.RegisterSystem<eng::AssetSystem>();
-	entityWorld.RegisterSystem<eng::FlipbookPlaySystem>();
-	entityWorld.RegisterSystem<eng::MusicSystem>();
-	entityWorld.RegisterSystem<eng::sound::PlaySystem>();
-	entityWorld.RegisterSystem<eng::sound::RandomSystem>();
-	entityWorld.RegisterSystem<eng::sound::SequenceSystem>();
-	entityWorld.RegisterSystem<eng::VersionSystem>();
-	entityWorld.RegisterSystem<eng::WindowSystem>();
+	world.RegisterSystem<eng::AssetSystem>();
+	world.RegisterSystem<eng::FlipbookPlaySystem>();
+	world.RegisterSystem<eng::MusicSystem>();
+	world.RegisterSystem<eng::sound::PlaySystem>();
+	world.RegisterSystem<eng::sound::RandomSystem>();
+	world.RegisterSystem<eng::sound::SequenceSystem>();
+	world.RegisterSystem<eng::VersionSystem>();
+	world.RegisterSystem<eng::WindowSystem>();
 }
 
-void eng::RegisterServerSystems(ecs::EntityWorld& entityWorld)
+void eng::RegisterServerSystems(ecs::EntityWorld& world)
 {
 }
 
-void eng::RegisterSharedSystems(ecs::EntityWorld& entityWorld)
+void eng::RegisterSharedSystems(ecs::EntityWorld& world)
 {
-	entityWorld.RegisterSystem<eng::level::LoadSystem>(entityWorld);
-	entityWorld.RegisterSystem<eng::PhysicsSystem>();
-	entityWorld.RegisterSystem<eng::settings::LaunchSystem>();
+	world.RegisterSystem<eng::level::LoadSystem>(world);
+	world.RegisterSystem<eng::PhysicsSystem>();
+	world.RegisterSystem<eng::settings::LaunchSystem>();
 }
