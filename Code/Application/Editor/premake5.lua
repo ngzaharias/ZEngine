@@ -113,6 +113,9 @@ project "Editor"
 		-- Bindings
 		"Steam",
 
+		-- Debuggers
+		"DebugInventory",
+
 		-- Editors
 		"FlipbookEditor",
 		"Icons",

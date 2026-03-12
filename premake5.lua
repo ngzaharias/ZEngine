@@ -58,16 +58,21 @@ workspace "ZEngine"
 		"%{wks.location}/../Code/Application/%{prj.name}/%{prj.name}/**.h",
 		"%{wks.location}/../Code/Application/%{prj.name}/%{prj.name}/**.cpp",
 		"%{wks.location}/../Code/Application/%{prj.name}/%{prj.name}/**.inl",
-		"%{wks.location}/../Code/Editors/%{prj.name}/*.natvis",
-		"%{wks.location}/../Code/Editors/%{prj.name}/premake5.*",
-		"%{wks.location}/../Code/Editors/%{prj.name}/%{prj.name}/**.h",
-		"%{wks.location}/../Code/Editors/%{prj.name}/%{prj.name}/**.cpp",
-		"%{wks.location}/../Code/Editors/%{prj.name}/%{prj.name}/**.inl",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/*.natvis",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/premake5.*",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/%{prj.name}/**.h",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/%{prj.name}/**.cpp",
 		"%{wks.location}/../Code/Bindings/%{prj.name}/%{prj.name}/**.inl",
+		"%{wks.location}/../Code/Debuggers/%{prj.name}/*.natvis",
+		"%{wks.location}/../Code/Debuggers/%{prj.name}/premake5.*",
+		"%{wks.location}/../Code/Debuggers/%{prj.name}/%{prj.name}/**.h",
+		"%{wks.location}/../Code/Debuggers/%{prj.name}/%{prj.name}/**.cpp",
+		"%{wks.location}/../Code/Debuggers/%{prj.name}/%{prj.name}/**.inl",
+		"%{wks.location}/../Code/Editors/%{prj.name}/*.natvis",
+		"%{wks.location}/../Code/Editors/%{prj.name}/premake5.*",
+		"%{wks.location}/../Code/Editors/%{prj.name}/%{prj.name}/**.h",
+		"%{wks.location}/../Code/Editors/%{prj.name}/%{prj.name}/**.cpp",
+		"%{wks.location}/../Code/Editors/%{prj.name}/%{prj.name}/**.inl",
 		"%{wks.location}/../Code/Framework/%{prj.name}/*.natvis",
 		"%{wks.location}/../Code/Framework/%{prj.name}/premake5.*",
 		"%{wks.location}/../Code/Framework/%{prj.name}/%{prj.name}/**.h",
@@ -95,6 +100,8 @@ workspace "ZEngine"
 		include "Code/Application/GameUI/premake5.lua"
 	group "Bindings"
 		include "Code/Bindings/Steam/premake5.lua"
+	group "Debuggers"
+		include "Code/Debuggers/DebugInventory/premake5.lua"
 	group "Editors"
 		include "Code/Editors/FlipbookEditor/premake5.lua"
 		include "Code/Editors/Icons/premake5.lua"

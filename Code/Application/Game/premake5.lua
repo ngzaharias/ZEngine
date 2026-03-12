@@ -118,6 +118,9 @@ project "Game"
 		-- Bindings
 		"Steam",
 
+		-- Debuggers
+		"DebugInventory",
+
 		-- Framework
 		"Core",
 		"ECS",

@@ -1,6 +1,7 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/GameDebug.h"
 
+#include "DebugInventory/InventoryRegisterModule.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/TypeRegistry.h"
@@ -11,9 +12,6 @@
 #include "GameDebug/DebugImGuiDemoEvent.h"
 #include "GameDebug/DebugImNodesDemoEvent.h"
 #include "GameDebug/DebugInspectorDemoEvent.h"
-#include "GameDebug/DebugInventoryWindowComponent.h"
-#include "GameDebug/DebugInventoryWindowEvent.h"
-#include "GameDebug/DebugInventoryWindowSystem.h"
 #include "GameDebug/DebugLevelOpenEvent.h"
 #include "GameDebug/DebugLevelReloadEvent.h"
 #include "GameDebug/DebugLevelSaveAsEvent.h"
@@ -73,7 +71,6 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<debug::ImGuiDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::ImNodesDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::InspectorDemoWindowComponent>();
-	m_ClientWorld.RegisterComponent<debug::inventory::WindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::level::OpenWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::NetworkWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::settings::WindowComponent>();
@@ -85,7 +82,6 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterEvent<debug::ImGuiDemoEvent>();
 	m_ClientWorld.RegisterEvent<debug::ImNodesDemoEvent>();
 	m_ClientWorld.RegisterEvent<debug::InspectorDemoEvent>();
-	m_ClientWorld.RegisterEvent<debug::inventory::WindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::level::OpenEvent>();
 	m_ClientWorld.RegisterEvent<debug::level::ReloadEvent>(); 
 	m_ClientWorld.RegisterEvent<debug::level::SaveAsEvent>();
@@ -105,7 +101,6 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<debug::ImNodesDemoSystem>();
 	m_ClientWorld.RegisterSystem<debug::InputSystem>();
 	m_ClientWorld.RegisterSystem<debug::InspectorDemoSystem>();
-	m_ClientWorld.RegisterSystem<debug::inventory::WindowSystem>();
 	m_ClientWorld.RegisterSystem<debug::level::OpenSystem>();
 	m_ClientWorld.RegisterSystem<debug::level::ReloadSystem>();
 	m_ClientWorld.RegisterSystem<debug::MenuBarSystem>();
@@ -120,6 +115,8 @@ void debug::GameDebug::Register()
 
 	// server
 	m_ServerWorld.RegisterEvent<debug::NetworkEvent>();
+
+	debug::inventory::RegisterModule(m_ClientWorld, m_ServerWorld);
 }
 
 void debug::GameDebug::Initialise()
