@@ -63,6 +63,90 @@ namespace
 			data.m_Initial.y + (data.m_Stride.y * y));
 	}
 
+	void Asset_New(World& world, const ecs::Entity& entity)
+	{
+		if (world.HasComponent<editor::sprite::AssetNewComponent>(entity))
+		{
+			world.RemoveComponent<editor::sprite::AssetNewComponent>(entity);
+			
+			auto& window = world.WriteComponent<editor::sprite::WindowComponent>(entity);
+			if (!window.m_Asset.m_Guid.IsValid())
+			{
+				window.m_Asset.m_Shader = uuidShader;
+				window.m_Asset.m_Texture2D = uuidTexture2D;
+				window.m_Asset.m_Size = Vector2f(128.f);
+			}
+
+			window.m_Asset.m_Guid = str::Guid::Generate();
+			window.m_Asset.m_Name = str::Name::Create("SP_");
+		}
+	}
+
+	void Asset_Open(World& world, const ecs::Entity& entity)
+	{
+		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
+		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
+		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
+
+		if (world.HasComponent<editor::sprite::AssetOpenComponent>(entity))
+		{
+			world.RemoveComponent<editor::sprite::AssetOpenComponent>(entity);
+
+			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
+
+			eng::SelectFileSettings fileSettings;
+			fileSettings.m_Title = "Open Sprite";
+			fileSettings.m_Filters = { "Assets (*.asset)", "*.asset" };
+			fileSettings.m_Path = settings.m_Open;
+
+			const str::Path filepath = eng::SelectFileDialog(fileSettings);
+			if (!filepath.IsEmpty())
+			{
+				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
+				writeSettings.m_Open = filepath.GetDirectory();
+
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
+				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
+				assetManager.LoadFromFile(writeWindow.m_Asset, filepath);
+			}
+		}
+	};
+
+	void Asset_Save(World& world, const ecs::Entity& entity)
+	{
+		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
+		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
+		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
+
+		if (world.HasComponent<editor::sprite::AssetSaveComponent>(entity))
+		{
+			world.RemoveComponent<editor::sprite::AssetSaveComponent>(entity);
+
+			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
+			const auto& window = world.ReadComponent<editor::sprite::WindowComponent>(entity);
+			const str::Name& name = window.m_Asset.m_Name;
+
+			eng::SaveFileSettings fileSettings;
+			fileSettings.m_Title = "Save Sprite";
+			fileSettings.m_Filters = { "Assets (*.asset)", "*.asset" };
+			fileSettings.m_Path = str::Path(
+				settings.m_Save, 
+				window.m_Asset.m_Name, 
+				eng::AssetManager::s_Extension);
+
+			const str::Path filepath = eng::SaveFileDialog(fileSettings);
+			if (!filepath.IsEmpty())
+			{
+				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
+				writeSettings.m_Save = filepath.GetDirectory();
+
+				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
+				auto& assetManager = world.WriteResource<eng::AssetManager>();
+				assetManager.SaveToFile(writeWindow.m_Asset, filepath);
+			}
+		}
+	};
+
 	void DrawMenuBar(World& world, const ecs::Entity& entity)
 	{
 		if (ImGui::BeginMenuBar())
@@ -191,90 +275,6 @@ namespace
 			DrawBatcher(world, entity);
 	}
 
-	void Asset_New(World& world, const ecs::Entity& entity)
-	{
-		if (world.HasComponent<editor::sprite::AssetNewComponent>(entity))
-		{
-			world.RemoveComponent<editor::sprite::AssetNewComponent>(entity);
-			
-			auto& window = world.WriteComponent<editor::sprite::WindowComponent>(entity);
-			if (!window.m_Asset.m_Guid.IsValid())
-			{
-				window.m_Asset.m_Shader = uuidShader;
-				window.m_Asset.m_Texture2D = uuidTexture2D;
-				window.m_Asset.m_Size = Vector2f(128.f);
-			}
-
-			window.m_Asset.m_Guid = str::Guid::Generate();
-			window.m_Asset.m_Name = str::Name::Create("SP_");
-		}
-	}
-
-	void Asset_Open(World& world, const ecs::Entity& entity)
-	{
-		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
-		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
-		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
-
-		if (world.HasComponent<editor::sprite::AssetOpenComponent>(entity))
-		{
-			world.RemoveComponent<editor::sprite::AssetOpenComponent>(entity);
-
-			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
-
-			eng::SelectFileSettings fileSettings;
-			fileSettings.m_Title = "Open Sprite";
-			fileSettings.m_Filters = { "Assets (*.asset)", "*.asset" };
-			fileSettings.m_Path = settings.m_Open;
-
-			const str::Path filepath = eng::SelectFileDialog(fileSettings);
-			if (!filepath.IsEmpty())
-			{
-				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
-				writeSettings.m_Open = filepath.GetDirectory();
-
-				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
-				assetManager.LoadFromFile(writeWindow.m_Asset, filepath);
-			}
-		}
-	};
-
-	void Asset_Save(World& world, const ecs::Entity& entity)
-	{
-		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
-		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
-		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
-
-		if (world.HasComponent<editor::sprite::AssetSaveComponent>(entity))
-		{
-			world.RemoveComponent<editor::sprite::AssetSaveComponent>(entity);
-
-			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
-			const auto& window = world.ReadComponent<editor::sprite::WindowComponent>(entity);
-			const str::Name& name = window.m_Asset.m_Name;
-
-			eng::SaveFileSettings fileSettings;
-			fileSettings.m_Title = "Save Sprite";
-			fileSettings.m_Filters = { "Assets (*.asset)", "*.asset" };
-			fileSettings.m_Path = str::Path(
-				settings.m_Save, 
-				window.m_Asset.m_Name, 
-				eng::AssetManager::s_Extension);
-
-			const str::Path filepath = eng::SaveFileDialog(fileSettings);
-			if (!filepath.IsEmpty())
-			{
-				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
-				writeSettings.m_Save = filepath.GetDirectory();
-
-				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
-				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				assetManager.SaveToFile(writeWindow.m_Asset, filepath);
-			}
-		}
-	};
-
 	void DrawPreviewer(World& world, const ecs::Entity& entity)
 	{
 		auto& window = world.WriteComponent<editor::sprite::WindowComponent>(entity);
@@ -313,25 +313,44 @@ namespace
 		if (!textureAsset)
 			return;
 
-		const Vector2f textureSize = Vector2f((float)textureAsset->m_Width, (float)textureAsset->m_Height);
-		const ImVec2 regionSize = ImGui::GetContentRegionAvail();
-		const Vector2f imageSize = eng::FitImageToRegion(textureSize, regionSize);
-		const ImVec2 regionMin = ImGui::GetCursorScreenPos();
-		const ImVec2 regionMax = ImVec2(regionMin.x + imageSize.x, regionMin.y + imageSize.y);
+		if (ImGui::GetIO().MouseWheel != 0.f)
+		{
+			constexpr float scale = 25.f;
+			window.m_RegionZoom += Vector2f(ImGui::GetIO().MouseWheel * scale);
+		}
 
-		imgui::Image(textureAsset->m_TextureId, imageSize);
+		if (ImGui::IsMouseDragging(ImGuiMouseButton_Right))
+		{
+			window.m_RegionOffset += ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
+			ImGui::ResetMouseDragDelta(ImGuiMouseButton_Right);
+		}
+
+		const Vector2f textureSize = Vector2f((float)textureAsset->m_Width, (float)textureAsset->m_Height);
+		const Vector2f regionSize = ImGui::GetContentRegionAvail() + window.m_RegionZoom;
+		const Vector2f imageSize = eng::FitImageToRegion(textureSize, regionSize);
+		const Vector2f regionMin = ImGui::GetCursorScreenPos();
+		const Vector2f regionMax = regionMin + imageSize;
+
+		// draw image
+		{
+			Vector2f pos = ImGui::GetCursorPos() + window.m_RegionOffset;
+			Vector2f size = imageSize;
+
+			ImGui::SetCursorPos(pos);
+			imgui::Image(textureAsset->m_TextureId, size);
+		}
 
 		// draw rect
 		{
-			const Vector2f spritePos = Vector2f((float)sprite.m_Position.x, (float)sprite.m_Position.y);
-			const Vector2f spriteSize = Vector2f((float)sprite.m_Size.x, (float)sprite.m_Size.y);
+			Vector2f min = sprite.m_Position;
+			Vector2f max = sprite.m_Position + sprite.m_Size;
+			min.x = math::Remap(min.x, 0.f, textureSize.x, regionMin.x, regionMax.x);
+			min.y = math::Remap(min.y, 0.f, textureSize.y, regionMax.y, regionMin.y);
+			max.x = math::Remap(max.x, 0.f, textureSize.x, regionMin.x, regionMax.x);
+			max.y = math::Remap(max.y, 0.f, textureSize.y, regionMax.y, regionMin.y);
 
-			Vector2f min = spritePos;
-			Vector2f max = min + spriteSize;
-			min.x = math::Remap(min.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
-			min.y = math::Remap(min.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
-			max.x = math::Remap(max.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
-			max.y = math::Remap(max.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
+			min += window.m_RegionOffset;
+			max += window.m_RegionOffset;
 
 			constexpr Colour colour = Colour(1.0f, 1.0f, 0.4f, 1.0f);
 			imgui::AddRect({ min, max }, colour);
@@ -345,12 +364,16 @@ namespace
 			{
 				Vector2f min = ToPosition(i, batch);
 				Vector2f max = min + window.m_Asset.m_Size;
-				min.x = math::Remap(min.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
-				min.y = math::Remap(min.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
-				max.x = math::Remap(max.x, 0.f, (float)textureAsset->m_Width, regionMin.x, regionMax.x);
-				max.y = math::Remap(max.y, 0.f, (float)textureAsset->m_Height, regionMax.y, regionMin.y);
+				min.x = math::Remap(min.x, 0.f, textureSize.x, regionMin.x, regionMax.x);
+				min.y = math::Remap(min.y, 0.f, textureSize.y, regionMax.y, regionMin.y);
+				max.x = math::Remap(max.x, 0.f, textureSize.x, regionMin.x, regionMax.x);
+				max.y = math::Remap(max.y, 0.f, textureSize.y, regionMax.y, regionMin.y);
 
-				imgui::AddRect({ min, max }, Vector4f(1.0f, 0.4f, 0.0f, 1.0f));
+				min += window.m_RegionOffset;
+				max += window.m_RegionOffset;
+
+				constexpr Colour colour = Vector4f(1.0f, 0.4f, 0.0f, 1.0f);
+				imgui::AddRect({ min, max }, colour);
 			}
 		}
 	};
@@ -438,7 +461,11 @@ void editor::sprite::WindowSystem::Update(World& world, const GameTime& gameTime
 		}
 		ImGui::End();
 
-		if (ImGui::Begin(window.m_TextureLabel.c_str()))
+		constexpr ImGuiWindowFlags textureFlags = 
+			ImGuiWindowFlags_NoMove | 
+			ImGuiWindowFlags_NoScrollbar | 
+			ImGuiWindowFlags_NoScrollWithMouse;
+		if (ImGui::Begin(window.m_TextureLabel.c_str(), nullptr, textureFlags))
 			DrawTexture(world, view);
 		ImGui::End();
 

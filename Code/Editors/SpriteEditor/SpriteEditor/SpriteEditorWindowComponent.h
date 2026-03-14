@@ -19,5 +19,8 @@ namespace editor::sprite
 		eng::SpriteAsset m_Asset = {};
 		str::Guid m_ShaderLoaded = {};
 		str::Guid m_TextureLoaded = {};
+
+		Vector2f m_RegionOffset = Vector2f::Zero;
+		Vector2f m_RegionZoom = Vector2f::Zero;
 	};
 }
