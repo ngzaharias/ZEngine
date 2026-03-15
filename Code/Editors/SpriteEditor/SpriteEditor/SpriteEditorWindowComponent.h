@@ -19,6 +19,7 @@ namespace editor::sprite
 		eng::SpriteAsset m_Asset = {};
 		str::Guid m_ShaderLoaded = {};
 		str::Guid m_TextureLoaded = {};
+		bool m_UnsavedChanges = false;
 
 		Vector2f m_RegionOffset = Vector2f::Zero;
 		Vector2f m_RegionZoom = Vector2f::Zero;

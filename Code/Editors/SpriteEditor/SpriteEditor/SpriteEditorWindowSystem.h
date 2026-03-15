@@ -11,9 +11,9 @@ namespace ecs
 
 namespace editor::sprite
 {
-	struct AssetNewComponent;
-	struct AssetOpenComponent;
-	struct AssetSaveComponent;
+	struct AssetNewEvent;
+	struct AssetOpenEvent;
+	struct AssetSaveEvent;
 	struct BatchingComponent;
 	struct OpenWindowEvent;
 	struct SettingsSingleton;
@@ -39,9 +39,9 @@ namespace editor::sprite
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			editor::sprite::AssetNewComponent,
-			editor::sprite::AssetOpenComponent,
-			editor::sprite::AssetSaveComponent,
+			editor::sprite::AssetNewEvent,
+			editor::sprite::AssetOpenEvent,
+			editor::sprite::AssetSaveEvent,
 			editor::sprite::BatchingComponent,
 			editor::sprite::OpenWindowEvent,
 			editor::sprite::SettingsSingleton,

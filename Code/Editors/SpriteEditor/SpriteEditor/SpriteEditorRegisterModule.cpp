@@ -3,9 +3,9 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "SpriteEditor/SpriteEditorAssetNewComponent.h"
-#include "SpriteEditor/SpriteEditorAssetOpenComponent.h"
-#include "SpriteEditor/SpriteEditorAssetSaveComponent.h"
+#include "SpriteEditor/SpriteEditorAssetNewEvent.h"
+#include "SpriteEditor/SpriteEditorAssetOpenEvent.h"
+#include "SpriteEditor/SpriteEditorAssetSaveEvent.h"
 #include "SpriteEditor/SpriteEditorBatchingComponent.h"
 #include "SpriteEditor/SpriteEditorOpenWindowEvent.h"
 #include "SpriteEditor/SpriteEditorSettingsSingleton.h"
@@ -15,11 +15,11 @@
 
 void editor::sprite::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<editor::sprite::AssetNewComponent>();
-	world.RegisterComponent<editor::sprite::AssetOpenComponent>();
-	world.RegisterComponent<editor::sprite::AssetSaveComponent>();
 	world.RegisterComponent<editor::sprite::BatchingComponent>();
 	world.RegisterComponent<editor::sprite::WindowComponent>();
+	world.RegisterEvent<editor::sprite::AssetNewEvent>();
+	world.RegisterEvent<editor::sprite::AssetOpenEvent>();
+	world.RegisterEvent<editor::sprite::AssetSaveEvent>();
 	world.RegisterEvent<editor::sprite::OpenWindowEvent>();
 	world.RegisterSingleton<editor::sprite::SettingsSingleton>();
 	world.RegisterSystem<editor::sprite::SettingsSystem>();

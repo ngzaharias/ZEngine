@@ -14,9 +14,9 @@
 #include "Engine/TextureHelpers.h"
 #include "GameState/GameStateEditorComponent.h"
 #include "Math/AABB.h"
-#include "SpriteEditor/SpriteEditorAssetNewComponent.h"
-#include "SpriteEditor/SpriteEditorAssetOpenComponent.h"
-#include "SpriteEditor/SpriteEditorAssetSaveComponent.h"
+#include "SpriteEditor/SpriteEditorAssetNewEvent.h"
+#include "SpriteEditor/SpriteEditorAssetOpenEvent.h"
+#include "SpriteEditor/SpriteEditorAssetSaveEvent.h"
 #include "SpriteEditor/SpriteEditorBatchingComponent.h"
 #include "SpriteEditor/SpriteEditorOpenWindowEvent.h"
 #include "SpriteEditor/SpriteEditorSettingsSingleton.h"
@@ -44,10 +44,6 @@ namespace
 	constexpr ImGuiDockNodeFlags s_DockNodeFlags =
 		ImGuiDockNodeFlags_NoCloseButton |
 		ImGuiDockNodeFlags_NoWindowMenuButton;
-	constexpr ImGuiTableFlags s_InspectorFlags = 0;
-	constexpr ImGuiWindowFlags s_WindowFlags =
-		ImGuiWindowFlags_NoCollapse |
-		ImGuiWindowFlags_MenuBar;
 
 	str::String ToLabel(const char* label, const int32 index)
 	{
@@ -63,13 +59,13 @@ namespace
 			data.m_Initial.y + (data.m_Stride.y * y));
 	}
 
-	void Asset_New(World& world, const ecs::Entity& entity)
+	void Asset_New(World& world)
 	{
-		if (world.HasComponent<editor::sprite::AssetNewComponent>(entity))
+		for (const auto& request : world.Events<editor::sprite::AssetNewEvent>())
 		{
-			world.RemoveComponent<editor::sprite::AssetNewComponent>(entity);
-			
-			auto& window = world.WriteComponent<editor::sprite::WindowComponent>(entity);
+			auto& window = world.WriteComponent<editor::sprite::WindowComponent>(request.m_Entity);
+			window.m_UnsavedChanges = true;
+
 			if (!window.m_Asset.m_Guid.IsValid())
 			{
 				window.m_Asset.m_Shader = uuidShader;
@@ -82,16 +78,10 @@ namespace
 		}
 	}
 
-	void Asset_Open(World& world, const ecs::Entity& entity)
+	void Asset_Open(World& world)
 	{
-		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
-		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
-		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
-
-		if (world.HasComponent<editor::sprite::AssetOpenComponent>(entity))
+		for (const auto& request : world.Events<editor::sprite::AssetOpenEvent>())
 		{
-			world.RemoveComponent<editor::sprite::AssetOpenComponent>(entity);
-
 			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
 
 			eng::SelectFileSettings fileSettings;
@@ -106,24 +96,21 @@ namespace
 				writeSettings.m_Open = filepath.GetDirectory();
 
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
-				assetManager.LoadFromFile(writeWindow.m_Asset, filepath);
+				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(request.m_Entity);
+				if (assetManager.LoadFromFile(writeWindow.m_Asset, filepath))
+				{
+					writeWindow.m_UnsavedChanges = false;
+				}
 			}
 		}
 	};
 
-	void Asset_Save(World& world, const ecs::Entity& entity)
+	void Asset_Save(World& world)
 	{
-		constexpr Vector2f s_DefaultSize = Vector2f(500.f, 400.f);
-		constexpr ImGuiPopupFlags s_PopupFlags = ImGuiPopupFlags_NoOpenOverExistingPopup;
-		constexpr ImGuiWindowFlags s_WindowFlags = ImGuiWindowFlags_NoDocking;
-
-		if (world.HasComponent<editor::sprite::AssetSaveComponent>(entity))
+		for (const auto& request : world.Events<editor::sprite::AssetSaveEvent>())
 		{
-			world.RemoveComponent<editor::sprite::AssetSaveComponent>(entity);
-
 			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
-			const auto& window = world.ReadComponent<editor::sprite::WindowComponent>(entity);
+			const auto& window = world.ReadComponent<editor::sprite::WindowComponent>(request.m_Entity);
 			const str::Name& name = window.m_Asset.m_Name;
 
 			eng::SaveFileSettings fileSettings;
@@ -140,40 +127,41 @@ namespace
 				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
 				writeSettings.m_Save = filepath.GetDirectory();
 
-				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);
+				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(request.m_Entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
-				assetManager.SaveToFile(writeWindow.m_Asset, filepath);
+				if (assetManager.SaveToFile(writeWindow.m_Asset, filepath))
+				{
+					writeWindow.m_UnsavedChanges = false;
+				}
 			}
 		}
 	};
 
 	void DrawMenuBar(World& world, const ecs::Entity& entity)
 	{
+		const auto& input = world.ReadResource<eng::InputManager>();
+		if (input.IsPressed(strNew))
+			world.AddEvent<editor::sprite::AssetNewEvent>(entity);
+		if (input.IsPressed(strOpen))
+			world.AddEvent<editor::sprite::AssetOpenEvent>(entity);
+		if (input.IsPressed(strSave))
+			world.AddEvent<editor::sprite::AssetSaveEvent>(entity);
+
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
 			{
 				if (ImGui::MenuItem("New", "Ctrl+N"))
-					world.AddComponent<editor::sprite::AssetNewComponent>(entity);
-
+					world.AddEvent<editor::sprite::AssetNewEvent>(entity);
 				if (ImGui::MenuItem("Open", "Ctrl+O"))
-					world.AddComponent<editor::sprite::AssetOpenComponent>(entity);
-
+					world.AddEvent<editor::sprite::AssetOpenEvent>(entity);
 				if (ImGui::MenuItem("Save", "Ctrl+S"))
-					world.AddComponent<editor::sprite::AssetSaveComponent>(entity);
+					world.AddEvent<editor::sprite::AssetSaveEvent>(entity);
 
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
 		}
-
-		const auto& input = world.ReadResource<eng::InputManager>();
-		if (input.IsPressed(strNew))
-			world.AddComponent<editor::sprite::AssetNewComponent>(entity);
-		if (input.IsPressed(strOpen))
-			world.AddComponent<editor::sprite::AssetOpenComponent>(entity);
-		if (input.IsPressed(strSave))
-			world.AddComponent<editor::sprite::AssetSaveComponent>(entity);
 	};
 
 	void DrawBatcher(World& world, const ecs::Entity& entity)
@@ -262,12 +250,13 @@ namespace
 		{
 			const auto& assetManager = world.ReadResource<eng::AssetManager>();
 
-			inspector.Write("m_Guid", sprite.m_Guid);
-			inspector.Write("m_Name", sprite.m_Name);
-			inspector.Write("m_Shader", sprite.m_Shader);
-			imgui::WriteTexture2D(assetManager, "m_Texture2D", sprite.m_Texture2D);
-			inspector.Write("m_Position", sprite.m_Position);
-			inspector.Write("m_Size", sprite.m_Size);
+			bool& modified = window.m_UnsavedChanges;
+			modified |= inspector.Write("m_Guid", sprite.m_Guid);
+			modified |= inspector.Write("m_Name", sprite.m_Name);
+			modified |= inspector.Write("m_Shader", sprite.m_Shader);
+			modified |= imgui::WriteTexture2D(assetManager, "m_Texture2D", sprite.m_Texture2D);
+			modified |= inspector.Write("m_Position", sprite.m_Position);
+			modified |= inspector.Write("m_Size", sprite.m_Size);
 			inspector.End();
 		}
 
@@ -434,11 +423,16 @@ void editor::sprite::WindowSystem::Update(World& world, const GameTime& gameTime
 	for (auto&& view : world.Query<ecs::query::Include<editor::sprite::WindowComponent>>())
 	{
 		auto& window = view.WriteRequired<editor::sprite::WindowComponent>();
+		ImGuiWindowFlags flags = 
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_MenuBar;
+		if (window.m_UnsavedChanges)
+			flags |= ImGuiWindowFlags_UnsavedDocument;
 
 		bool isOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
-		if (ImGui::Begin(window.m_DockspaceLabel.c_str(), &isOpen, s_WindowFlags))
+		if (ImGui::Begin(window.m_DockspaceLabel.c_str(), &isOpen, flags))
 		{
 			DrawMenuBar(world, view);
 
@@ -477,9 +471,9 @@ void editor::sprite::WindowSystem::Update(World& world, const GameTime& gameTime
 			DrawPreviewer(world, view);
 		ImGui::End();
 
-		Asset_New(world, view);
-		Asset_Open(world, view);
-		Asset_Save(world, view);
+		Asset_New(world);
+		Asset_Open(world);
+		Asset_Save(world);
 
 		if (!isOpen)
 			world.DestroyEntity(view);
