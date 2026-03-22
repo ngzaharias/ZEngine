@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Core/Map.h"
+#include "Core/Set.h"
 #include "Core/SparseArray.h"
+#include "ECS/Component.h"
 #include "ECS/ComponentContainer.h"
 #include "ECS/ComponentId.h"
 #include "ECS/ComponentMask.h"
@@ -77,6 +79,8 @@ namespace ecs
 		Components m_DeadComponents;
 		EntityMap m_AliveEntities;
 		EntitySet m_DeadEntities;
+
+		Set<ecs::ComponentId> m_FrameComponents;
 	};
 }
 

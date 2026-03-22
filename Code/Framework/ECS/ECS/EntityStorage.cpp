@@ -52,6 +52,15 @@ void ecs::EntityStorage::FlushChanges()
 	}
 
 	{
+		PROFILE_CUSTOM("Remove frame components.");
+		for (ecs::ComponentId typeId : m_FrameComponents)
+		{
+			ecs::IComponentContainer* storage = m_AliveComponents.Get(typeId);
+			storage->RemoveAll();
+		}
+	}
+
+	{
 		PROFILE_CUSTOM("Remove dead entities from queries.");
 		for (const ecs::Entity& entity : m_DeadEntities)
 		{

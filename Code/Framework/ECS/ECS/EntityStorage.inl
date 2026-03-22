@@ -12,6 +12,9 @@ void ecs::EntityStorage::RegisterComponent()
 	m_AliveComponents.Set(typeId, new ecs::ComponentContainer<TComponent>());
 	m_DeadComponents.Set(typeId, new ecs::ComponentContainer<TComponent>());
 	m_EntityBuffer.RegisterComponent<TComponent>();
+
+	if constexpr (std::is_base_of<ecs::FrameComponent<TComponent>, TComponent>::value)
+		m_FrameComponents.Add(typeId);
 }
 
 template <typename TComponent, typename... TArgs>
