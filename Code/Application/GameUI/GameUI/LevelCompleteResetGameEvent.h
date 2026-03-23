@@ -4,5 +4,5 @@
 
 namespace gui::level_complete
 {
-	struct ResetGameEvent final : public ecs::Event<ResetGameEvent> { };
+	struct ResetGameEvent final : public ecs::Event { };
 }

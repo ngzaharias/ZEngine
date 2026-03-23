@@ -4,5 +4,5 @@
 
 namespace gui::level_complete
 {
-	struct ExitToMenuEvent final : public ecs::Event<ExitToMenuEvent> { };
+	struct ExitToMenuEvent final : public ecs::Event { };
 }

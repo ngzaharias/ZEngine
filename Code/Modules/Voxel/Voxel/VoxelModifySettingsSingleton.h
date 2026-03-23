@@ -5,7 +5,7 @@
 
 namespace voxel
 {
-	struct ModifySettingsSingleton final : public ecs::Singleton<ModifySettingsSingleton>
+	struct ModifySettingsSingleton final : public ecs::Singleton
 	{
 		voxel::EType m_Type = voxel::EType::None;
 		int32 m_Radius = 0;

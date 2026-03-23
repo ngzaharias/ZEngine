@@ -5,7 +5,7 @@
 
 namespace editor::texture
 {
-	struct SettingsSingleton final : public ecs::Singleton<SettingsSingleton>
+	struct SettingsSingleton final : public ecs::Singleton
 	{
 		str::Path m_Import = {};
 		str::Path m_Open = {};

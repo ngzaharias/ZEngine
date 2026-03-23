@@ -4,5 +4,5 @@
 
 namespace debug
 {
-	struct FrameBufferWindowEvent final : public ecs::Event<FrameBufferWindowEvent> { };
+	struct FrameBufferWindowEvent final : public ecs::Event { };
 }

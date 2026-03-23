@@ -5,7 +5,7 @@
 namespace eng::settings
 {
 	/// \brief Debug settings that is only used in non-gold builds.
-	struct DebugSingleton final : public ecs::Singleton<DebugSingleton>
+	struct DebugSingleton final : public ecs::Singleton
 	{
 		bool m_AreLinesEnabled = false;
 		bool m_ArePhysicsEnabled = false;

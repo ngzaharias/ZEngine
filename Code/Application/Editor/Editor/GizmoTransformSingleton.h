@@ -17,7 +17,7 @@ namespace editor::gizmo
 		Transform,
 	};
 
-	struct TransformSingleton final : public ecs::Singleton<TransformSingleton>
+	struct TransformSingleton final : public ecs::Singleton
 	{
 		ETransformOper m_TransformOper = ETransformOper::Translate;
 		ETransformType m_TransformType = ETransformType::Transform;

@@ -4,5 +4,5 @@
 
 namespace gui::level_complete
 {
-	struct ExitGameEvent final : public ecs::Event<ExitGameEvent> { };
+	struct ExitGameEvent final : public ecs::Event { };
 }

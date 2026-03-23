@@ -6,7 +6,7 @@
 namespace eng::settings
 {
 	/// \brief 
-	struct GameplaySingleton final : public ecs::Singleton<GameplaySingleton>
+	struct GameplaySingleton final : public ecs::Singleton
 	{
 		str::Guid m_Theme = GUID("605947d5630f4508921b83738d2b6869");
 	};

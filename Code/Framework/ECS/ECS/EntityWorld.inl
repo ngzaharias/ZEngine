@@ -8,11 +8,11 @@ bool ecs::EntityWorld::IsRegistered() const
 	{
 		return m_EntityStorage.IsRegistered<TType>();
 	}
-	else if constexpr (std::derived_from<TType, ecs::Event<TType>>)
+	else if constexpr (std::derived_from<TType, ecs::Event>)
 	{
 		return m_EventStorage.IsRegistered<TType>();
 	}
-	else if constexpr (std::derived_from<TType, ecs::Singleton<TType>>)
+	else if constexpr (std::derived_from<TType, ecs::Singleton>)
 	{
 		return m_SingletonStorage.IsRegistered<TType>();
 	}
@@ -214,8 +214,7 @@ void ecs::EntityWorld::RegisterEvent()
 	static_assert(!std::is_const<TEvent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TEvent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TEvent>, "Type cannot be a pointer.");
-	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
-	static_assert(std::is_convertible<TEvent*, ecs::Event<TEvent>*>::value, "Type must inherit using the [public] keyword!");
+	static_assert(std::derived_from<TEvent, ecs::Event>, "Type doesn't inherit from ecs::Event.");
 
 	Z_PANIC(!IsRegistered<TEvent>(), "Event is already registered!");
 
@@ -229,7 +228,7 @@ auto ecs::EntityWorld::AddEvent(TArgs&&... args) -> TEvent&
 	static_assert(!std::is_const<TEvent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TEvent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TEvent>, "Type cannot be a pointer.");
-	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
+	static_assert(std::derived_from<TEvent, ecs::Event>, "Type doesn't inherit from ecs::Event.");
 
 	Z_PANIC(IsRegistered<TEvent>(), "Event isn't registered!");
 
@@ -269,10 +268,11 @@ auto ecs::EntityWorld::WriteResource() -> TResource&
 	static_assert(!std::is_const<TResource>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TResource>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TResource>, "Type cannot be a pointer.");
-	static_assert(!std::is_base_of<ecs::Component, TResource>::value, "Type cannot be a Singleton.");
-	static_assert(!std::is_base_of<ecs::Event<TResource>, TResource>::value, "Type cannot be a Singleton.");
-	static_assert(!std::is_base_of<ecs::System, TResource>::value, "Type cannot be a System.");
-	static_assert(!std::is_base_of<ecs::Singleton<TResource>, TResource>::value, "Type cannot be a Singleton.");
+	
+	static_assert(!std::derived_from<TResource, ecs::Component>, "Type cannot be a Component.");
+	static_assert(!std::derived_from<TResource, ecs::Event>, "Type cannot be an Event.");
+	static_assert(!std::derived_from<TResource, ecs::Singleton>, "Type cannot be a Singleton.");
+	static_assert(!std::derived_from<TResource, ecs::System>, "Type cannot be a System.");
 
 	Z_PANIC(IsRegistered<TResource>(), "Resource isn't registered!");
 	return m_ResourceRegistry.Get<TResource>();
@@ -287,8 +287,7 @@ void ecs::EntityWorld::RegisterSingleton(TArgs&&... args)
 	static_assert(!std::is_const<TSingleton>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TSingleton>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TSingleton>, "Type cannot be a pointer.");
-	static_assert(std::is_base_of<ecs::Singleton<TSingleton>, TSingleton>::value, "Type doesn't inherit from ecs::Singleton.");
-	static_assert(std::is_convertible<TSingleton*, ecs::Singleton<TSingleton>*>::value, "Type must inherit using the [public] keyword!");
+	static_assert(std::derived_from<TSingleton, ecs::Singleton>, "Type doesn't inherit from ecs::Singleton.");
 
 	Z_PANIC(!IsRegistered<TSingleton>(), "Singleton is already registered!");
 
@@ -302,7 +301,7 @@ auto ecs::EntityWorld::ReadSingleton() -> const TSingleton&
 	static_assert(!std::is_const<TSingleton>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TSingleton>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TSingleton>, "Type cannot be a pointer.");
-	static_assert(std::is_base_of<ecs::Singleton<TSingleton>, TSingleton>::value, "Type doesn't inherit from ecs::Singleton.");
+	static_assert(std::derived_from<TSingleton, ecs::Singleton>, "Type doesn't inherit from ecs::Singleton.");
 
 	Z_PANIC(IsRegistered<TSingleton>(), "Singleton isn't registered!");
 	return m_SingletonStorage.GetSingleton<TSingleton>();
@@ -314,7 +313,7 @@ auto ecs::EntityWorld::WriteSingleton() -> TSingleton&
 	static_assert(!std::is_const<TSingleton>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TSingleton>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TSingleton>, "Type cannot be a pointer.");
-	static_assert(std::is_base_of<ecs::Singleton<TSingleton>, TSingleton>::value, "Type doesn't inherit from ecs::Singleton.");
+	static_assert(std::derived_from<TSingleton, ecs::Singleton>, "Type doesn't inherit from ecs::Singleton.");
 
 	Z_PANIC(IsRegistered<TSingleton>(), "Singleton isn't registered!");
 
@@ -331,8 +330,7 @@ void ecs::EntityWorld::RegisterSystem(TArgs&&... args)
 	static_assert(!std::is_const<TSystem>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TSystem>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TSystem>, "Type cannot be a pointer.");
-	static_assert(std::is_base_of<ecs::System, TSystem>::value, "Type doesn't inherit from ecs::System.");
-	static_assert(std::is_convertible<TSystem*, ecs::System*>::value, "Type must inherit using the [public] keyword!");
+	static_assert(std::derived_from<TSystem, ecs::System>, "Type doesn't inherit from ecs::System.");
 
 	Z_PANIC(!IsRegistered<TSystem>(), "System is already registered!");
 
@@ -346,7 +344,7 @@ auto ecs::EntityWorld::GetSystem() -> TSystem&
 	static_assert(!std::is_const<TSystem>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TSystem>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TSystem>, "Type cannot be a pointer.");
-	static_assert(std::is_base_of<ecs::System, TSystem>::value, "Type doesn't inherit from ecs::System.");
+	static_assert(std::derived_from<TSystem, ecs::System>, "Type doesn't inherit from ecs::System.");
 
 	Z_PANIC(IsRegistered<TSystem>(), "System isn't registered!");
 	return m_SystemRegistry.GetSystem<TSystem>();

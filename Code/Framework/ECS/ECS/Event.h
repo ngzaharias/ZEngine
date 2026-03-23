@@ -4,8 +4,6 @@
 
 namespace ecs
 {
-	/// \brief Used to signal events.
-	/// Each event is added on the next frame and deleted the frame after that.
-	template<typename TEvent>
+	/// \brief Added on the next frame and deleted the frame after that.
 	struct Event { };
 }

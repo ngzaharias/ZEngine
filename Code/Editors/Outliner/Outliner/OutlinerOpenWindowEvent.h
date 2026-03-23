@@ -4,5 +4,5 @@
 
 namespace editor::outliner
 {
-	struct OpenWindowEvent final : public ecs::Event<OpenWindowEvent> { };
+	struct OpenWindowEvent final : public ecs::Event { };
 }

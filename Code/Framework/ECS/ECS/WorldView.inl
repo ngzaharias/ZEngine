@@ -149,11 +149,11 @@ template <typename... TWrite, typename... TRead>
 template<class TType>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Count() -> int32
 {
-	if constexpr (std::is_base_of<ecs::Event<TType>, TType>::value)
+	if constexpr (std::is_base_of<ecs::Event, TType>::value)
 	{
 		return m_EntityWorld.m_EntityStorage.GetEvents<TType>().GetCount();
 	}
-	else if constexpr (std::is_base_of<ecs::Singleton<TType>, TType>::value)
+	else if constexpr (std::is_base_of<ecs::Singleton, TType>::value)
 	{
 		static_assert(false, "Unsupported.");
 	}
@@ -169,11 +169,11 @@ template <typename... TWrite, typename... TRead>
 template<class TType>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasAny() -> bool
 {
-	if constexpr (std::is_base_of<ecs::Event<TType>, TType>::value)
+	if constexpr (std::is_base_of<ecs::Event, TType>::value)
 	{
 		return m_EntityWorld.m_EventStorage.HasEvents<TType>();
 	}
-	else if constexpr (std::is_base_of<ecs::Singleton<TType>, TType>::value)
+	else if constexpr (std::is_base_of<ecs::Singleton, TType>::value)
 	{
 		return m_EntityWorld.m_SingletonStorage.WasUpdated<TType>();
 	}

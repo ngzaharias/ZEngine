@@ -5,5 +5,5 @@
 namespace gamestate
 {
 	/// \brief Signals that the current gamestate has finished.
-	struct ChangeFinishedEvent final : public ecs::Event<ChangeFinishedEvent> { };
+	struct ChangeFinishedEvent final : public ecs::Event { };
 }

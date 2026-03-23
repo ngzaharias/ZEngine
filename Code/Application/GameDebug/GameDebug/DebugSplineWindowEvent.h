@@ -4,5 +4,5 @@
 
 namespace debug
 {
-	struct SplineWindowEvent final : public ecs::Event<SplineWindowEvent> { };
+	struct SplineWindowEvent final : public ecs::Event { };
 }

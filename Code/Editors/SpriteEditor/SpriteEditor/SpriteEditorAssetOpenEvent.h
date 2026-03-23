@@ -5,7 +5,7 @@
 
 namespace editor::sprite
 {
-	struct AssetOpenEvent final : public ecs::Event<AssetOpenEvent> 
+	struct AssetOpenEvent final : public ecs::Event 
 	{
 		AssetOpenEvent() = default;
 		AssetOpenEvent(const ecs::Entity& entity) : m_Entity(entity) {}

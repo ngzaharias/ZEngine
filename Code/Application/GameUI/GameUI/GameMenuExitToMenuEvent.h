@@ -4,5 +4,5 @@
 
 namespace gui::game_menu
 {
-	struct ExitToMenuEvent final : public ecs::Event<ExitToMenuEvent> { };
+	struct ExitToMenuEvent final : public ecs::Event { };
 }

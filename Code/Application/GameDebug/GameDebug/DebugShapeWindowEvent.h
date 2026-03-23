@@ -4,5 +4,5 @@
 
 namespace debug
 {
-	struct ShapeWindowEvent final : public ecs::Event<ShapeWindowEvent> { };
+	struct ShapeWindowEvent final : public ecs::Event { };
 }

@@ -6,7 +6,7 @@
 namespace client::hidden
 {
 	/// \brief Debug settings that is only used in non-gold builds.
-	struct DebugSingleton final : public ecs::Singleton<DebugSingleton>
+	struct DebugSingleton final : public ecs::Singleton
 	{
 		bool m_IsInputEnabled = false;
 		bool m_IsObjectEnabled = false;

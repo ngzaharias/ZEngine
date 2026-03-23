@@ -7,7 +7,7 @@
 
 namespace shared::cursor
 {
-	struct ClientTransformEvent final : public ecs::Event<ClientTransformEvent>
+	struct ClientTransformEvent final : public ecs::Event
 		, ecs::IsReplicated
 	{
 		net::PeerId m_PeerId = {};

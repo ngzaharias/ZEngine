@@ -4,5 +4,5 @@
 
 namespace debug
 {
-	struct NetworkWindowEvent final : public ecs::Event<NetworkWindowEvent> { };
+	struct NetworkWindowEvent final : public ecs::Event { };
 }

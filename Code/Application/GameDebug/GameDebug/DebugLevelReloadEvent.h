@@ -4,5 +4,5 @@
 
 namespace debug::level
 {
-	struct ReloadEvent final : public ecs::Event<ReloadEvent> { };
+	struct ReloadEvent final : public ecs::Event { };
 }

@@ -4,5 +4,5 @@
 
 namespace gui::main_menu
 {
-	struct LoadGameEvent final : public ecs::Event<LoadGameEvent> { };
+	struct LoadGameEvent final : public ecs::Event { };
 }

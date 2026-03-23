@@ -4,5 +4,5 @@
 
 namespace gui::main_menu
 {
-	struct ContinueGameEvent final : public ecs::Event<ContinueGameEvent> { };
+	struct ContinueGameEvent final : public ecs::Event { };
 }

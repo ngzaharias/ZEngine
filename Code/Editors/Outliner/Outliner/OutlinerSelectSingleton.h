@@ -5,7 +5,7 @@
 
 namespace editor::outliner
 {
-	struct SelectSingleton final : public ecs::Singleton<SelectSingleton>
+	struct SelectSingleton final : public ecs::Singleton
 	{
 		ecs::Entity m_Entity = {};
 	};

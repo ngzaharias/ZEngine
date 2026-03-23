@@ -8,7 +8,7 @@
 
 namespace gui::settings_menu
 {
-	struct ValueEvent final : public ecs::Event<ValueEvent> 
+	struct ValueEvent final : public ecs::Event 
 	{ 
 		// audio
 		Optional<float> m_EffectVolume = {};

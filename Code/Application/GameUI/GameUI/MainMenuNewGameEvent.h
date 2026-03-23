@@ -5,7 +5,7 @@
 
 namespace gui::main_menu
 {
-	struct NewGameEvent final : public ecs::Event<NewGameEvent> 
+	struct NewGameEvent final : public ecs::Event 
 	{ 
 		str::Name m_Level = {};
 	};

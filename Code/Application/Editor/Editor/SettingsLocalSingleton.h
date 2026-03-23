@@ -6,7 +6,7 @@
 
 namespace editor::settings
 {
-	struct LocalSingleton final : public ecs::Singleton<LocalSingleton>
+	struct LocalSingleton final : public ecs::Singleton
 	{
 		Gizmos m_Gizmos = {};
 	};

@@ -6,7 +6,7 @@
 
 namespace debug
 {
-	struct NetworkEvent final : public ecs::Event<NetworkEvent>, ecs::IsReplicated
+	struct NetworkEvent final : public ecs::Event, ecs::IsReplicated
 	{
 		str::String m_Data = {};
 	};

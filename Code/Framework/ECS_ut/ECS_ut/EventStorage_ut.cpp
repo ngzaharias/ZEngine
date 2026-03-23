@@ -7,12 +7,12 @@
 
 namespace
 {
-	struct EventA final : public ecs::Event<EventA> 
+	struct EventA final : public ecs::Event 
 	{ 
 		int32 m_Value = 0; 
 	};
 	
-	struct EventB final : public ecs::Event<EventB>, ecs::IsReplicated
+	struct EventB final : public ecs::Event, ecs::IsReplicated
 	{ 
 		int32 m_Value = 0; 
 	};

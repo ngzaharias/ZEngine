@@ -5,5 +5,5 @@
 namespace eng::application
 {
 	/// \brief Request to close the application.
-	struct CloseEvent final : public ecs::Event<CloseEvent> { };
+	struct CloseEvent final : public ecs::Event { };
 }

@@ -7,8 +7,8 @@
 
 namespace
 {
-	struct EventA final : public ecs::Event<EventA> { int32 m_Value = 0; };
-	struct EventB final : public ecs::Event<EventB> { int32 m_Value = 0; };
+	struct EventA final : public ecs::Event { int32 m_Value = 0; };
+	struct EventB final : public ecs::Event { int32 m_Value = 0; };
 }
 
 CLASS_TEST_CASE("Registering an event constructs a container for the type.")

@@ -37,7 +37,7 @@ namespace server::inventory
 	};
 
 	/// \brief 
-	struct StorageChangesSingleton final : public ecs::Singleton<StorageChangesSingleton>
+	struct StorageChangesSingleton final : public ecs::Singleton
 	{
 		Array<MemberAdded> m_MemberAdded;
 		Array<MemberMoved> m_MemberMoved;

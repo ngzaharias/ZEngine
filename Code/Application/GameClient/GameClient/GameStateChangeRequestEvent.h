@@ -8,7 +8,7 @@
 namespace gamestate
 {
 	/// \brief Holds a single gamestate Event.
-	struct ChangeRequestEvent final : public ecs::Event<ChangeRequestEvent>
+	struct ChangeRequestEvent final : public ecs::Event
 	{
 		Array<gamestate::State> m_Queue = { };
 	};

@@ -6,7 +6,7 @@
 
 namespace eng::sound
 {
-	struct RandomBufferSingleton final : public ecs::Singleton<RandomBufferSingleton>
+	struct RandomBufferSingleton final : public ecs::Singleton
 	{
 		Array<str::Guid> m_Requests = {};
 	};

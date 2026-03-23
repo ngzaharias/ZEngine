@@ -7,7 +7,7 @@
 namespace gamestate
 {
 	/// \brief Holds the current gamestate as well as the current queue.
-	struct StateSingleton final : public ecs::Singleton<StateSingleton>
+	struct StateSingleton final : public ecs::Singleton
 	{
 		gamestate::State m_State = gamestate::None();
 		Array<gamestate::State> m_Queue = { };

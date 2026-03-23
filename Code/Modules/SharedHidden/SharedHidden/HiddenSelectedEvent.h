@@ -6,7 +6,7 @@
 
 namespace shared::hidden
 {
-	struct SelectedEvent final : public ecs::Event<SelectedEvent>
+	struct SelectedEvent final : public ecs::Event
 		, ecs::IsReplicated
 	{
 		str::Guid m_Entity = {};

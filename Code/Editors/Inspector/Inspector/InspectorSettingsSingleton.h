@@ -5,7 +5,7 @@
 
 namespace editor::inspector
 {
-	struct SettingsSingleton final : public ecs::Singleton<SettingsSingleton>
+	struct SettingsSingleton final : public ecs::Singleton
 	{
 		str::Path m_Open = {};
 		str::Path m_Save = {};

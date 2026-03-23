@@ -4,5 +4,5 @@
 
 namespace gamestate
 {
-	struct EditModeToggleEvent final : public ecs::Event<EditModeToggleEvent> { };
+	struct EditModeToggleEvent final : public ecs::Event { };
 };

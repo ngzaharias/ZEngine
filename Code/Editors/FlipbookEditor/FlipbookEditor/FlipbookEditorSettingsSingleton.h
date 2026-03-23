@@ -5,7 +5,7 @@
 
 namespace editor::flipbook
 {
-	struct SettingsSingleton final : public ecs::Singleton<SettingsSingleton>
+	struct SettingsSingleton final : public ecs::Singleton
 	{
 		str::Path m_Extract = {};
 		str::Path m_Open = {};

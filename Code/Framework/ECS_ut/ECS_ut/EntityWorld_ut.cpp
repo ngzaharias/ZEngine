@@ -39,7 +39,7 @@ namespace
 		bool m_Bool = false;
 	};
 
-	struct Event final : public ecs::Event<Event> 
+	struct Event final : public ecs::Event 
 	{ 
 		bool m_Bool = false;
 	};
@@ -50,7 +50,7 @@ namespace
 		bool m_Bool = false; 
 	};
 
-	struct Singleton final : public ecs::Singleton<Singleton> 
+	struct Singleton final : public ecs::Singleton 
 	{ 
 		bool m_Bool = false; 
 	};

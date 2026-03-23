@@ -4,5 +4,5 @@
 
 namespace debug::level
 {
-	struct SaveEvent final : public ecs::Event<SaveEvent> { };
+	struct SaveEvent final : public ecs::Event { };
 }

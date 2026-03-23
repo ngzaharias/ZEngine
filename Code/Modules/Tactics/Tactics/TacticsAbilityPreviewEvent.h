@@ -6,7 +6,7 @@
 
 namespace tactics
 {
-	struct AbilityPreviewEvent final : public ecs::Event<AbilityPreviewEvent>
+	struct AbilityPreviewEvent final : public ecs::Event
 	{
 		ecs::Entity m_Entity = {};
 		str::Name m_Ability = {};

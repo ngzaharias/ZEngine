@@ -14,8 +14,8 @@ namespace
 	struct ComponentB final : public ecs::Component {};
 	struct ComponentC final : public ecs::Component {};
 
-	struct SingletonA final : public ecs::Singleton<SingletonA> {};
-	struct SingletonB final : public ecs::Singleton<SingletonB> {};
+	struct SingletonA final : public ecs::Singleton {};
+	struct SingletonB final : public ecs::Singleton {};
 
 	class ResourceA { };
 	class ResourceB { };

@@ -4,5 +4,5 @@
 
 namespace debug::inventory
 {
-	struct WindowEvent final : public ecs::Event<WindowEvent> { };
+	struct WindowEvent final : public ecs::Event { };
 }

@@ -4,5 +4,5 @@
 
 namespace debug::settings
 {
-	struct WindowEvent final : public ecs::Event<WindowEvent> { };
+	struct WindowEvent final : public ecs::Event { };
 }

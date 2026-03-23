@@ -6,7 +6,7 @@
 
 namespace server::cursor
 {
-	struct TransformSingleton final : public ecs::Singleton<TransformSingleton>
+	struct TransformSingleton final : public ecs::Singleton
 	{
 		Map<net::PeerId, ecs::Entity> m_Peers = {};
 	};

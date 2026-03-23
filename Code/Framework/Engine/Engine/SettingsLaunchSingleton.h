@@ -6,7 +6,7 @@
 namespace eng::settings
 {
 	/// \brief Launch settings for the game.
-	struct LaunchSingleton final : public ecs::Singleton<LaunchSingleton>
+	struct LaunchSingleton final : public ecs::Singleton
 	{
 		// the level that is loaded when the game first launches
 		str::Name m_Level = {};

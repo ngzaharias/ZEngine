@@ -6,7 +6,7 @@
 namespace eng::level
 {
 	/// \brief Request to load a specific level.
-	struct LoadEvent final : public ecs::Event<LoadEvent>
+	struct LoadEvent final : public ecs::Event
 	{
 		LoadEvent() = default;
 		LoadEvent(const str::Name& name) : m_Name(name) { }

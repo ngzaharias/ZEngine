@@ -8,7 +8,7 @@
 namespace eng::level
 {
 	/// \brief Contains every available level that can be loaded.
-	struct DirectorySingleton final : public ecs::Singleton<DirectorySingleton>
+	struct DirectorySingleton final : public ecs::Singleton
 	{
 		Map<str::Name, str::Path> m_Levels;
 	};

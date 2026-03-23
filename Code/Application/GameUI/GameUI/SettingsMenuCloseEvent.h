@@ -4,5 +4,5 @@
 
 namespace gui::settings_menu
 {
-	struct CloseEvent final : public ecs::Event<CloseEvent> { };
+	struct CloseEvent final : public ecs::Event { };
 }

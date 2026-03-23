@@ -5,6 +5,5 @@
 namespace ecs
 {
 	/// \brief 
-	template<typename TSingleton>
 	struct Singleton { };
 }

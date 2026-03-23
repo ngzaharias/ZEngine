@@ -18,7 +18,7 @@ namespace projectile
 	};
 
 	/// \brief 
-	struct ChangesSingleton final : public ecs::Singleton<ChangesSingleton>
+	struct ChangesSingleton final : public ecs::Singleton
 	{
 		Array<Created> m_Created = { };
 		Array<Destroyed> m_Destroyed = { };

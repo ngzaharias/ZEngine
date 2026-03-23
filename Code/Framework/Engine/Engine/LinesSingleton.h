@@ -32,7 +32,7 @@ namespace eng
 		Colour m_Colour = { };
 	};
 
-	struct LinesSingleton final : public ecs::Singleton<LinesSingleton>
+	struct LinesSingleton final : public ecs::Singleton
 	{
 		/// \brief Adds an axis-aligned bounding box.
 		void AddAABB(const AABB3f& extents, const Colour& colour);

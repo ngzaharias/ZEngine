@@ -124,7 +124,7 @@ void ecs::TypeRegistry::WriteComponentData(ecs::EntityStorage& storage, const ec
 template <typename TEvent>
 void ecs::TypeRegistry::RegisterEvent()
 {
-	static_assert(std::is_base_of<ecs::Event<TEvent>, TEvent>::value, "Type doesn't inherit from ecs::Event.");
+	static_assert(std::is_base_of<ecs::Event, TEvent>::value, "Type doesn't inherit from ecs::Event.");
 
 	const TypeId globalId = ToTypeId<TEvent>();
 	const TypeId localId = ToTypeId<TEvent, ecs::EventTag>();

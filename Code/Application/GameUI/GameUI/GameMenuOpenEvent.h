@@ -4,5 +4,5 @@
 
 namespace gui::game_menu
 {
-	struct OpenEvent final : public ecs::Event<OpenEvent> { };
+	struct OpenEvent final : public ecs::Event { };
 }

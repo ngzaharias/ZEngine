@@ -6,7 +6,7 @@
 
 namespace eng::sound
 {
-	struct SequenceBufferSingleton final : public ecs::Singleton<SequenceBufferSingleton>
+	struct SequenceBufferSingleton final : public ecs::Singleton
 	{
 		Array<str::Guid> m_Requests = {};
 	};

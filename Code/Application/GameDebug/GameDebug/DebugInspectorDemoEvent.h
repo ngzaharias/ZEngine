@@ -4,5 +4,5 @@
 
 namespace debug
 {
-	struct InspectorDemoEvent final : public ecs::Event<InspectorDemoEvent> { };
+	struct InspectorDemoEvent final : public ecs::Event { };
 }
