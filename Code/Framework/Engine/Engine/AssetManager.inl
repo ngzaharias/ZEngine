@@ -4,10 +4,10 @@ template<typename TAsset, typename TLoader, typename... TArgs>
 void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 {
 	static_assert(std::is_convertible<TAsset*, eng::Asset*>::value, "Type must inherit from eng::Asset using the [public] keyword!");
-	static_assert(std::is_base_of<eng::Asset, TAsset>::value, "Type isn't a base of eng::Asset!");
+	static_assert(std::derived_from<TAsset, eng::Asset>, "Type doesn't inherit from eng::Asset.");
 
 	static_assert(std::is_convertible<TLoader*, eng::AssetLoader*>::value, "Type must inherit from eng::AssetLoader using the [public] keyword!");
-	static_assert(std::is_base_of<eng::AssetLoader, TLoader>::value, "Type isn't a base of eng::AssetLoader!");
+	static_assert(std::derived_from<TLoader, eng::AssetLoader>, "Type doesn't inherit from eng::AssetLoader.");
 
 	Z_PANIC(!enumerate::Contains(m_Registry, type), "Type '{}' has already been registered!", ToTypeName<TAsset>());
 
@@ -172,7 +172,7 @@ void eng::AssetManager::LoadImmediate(const str::Path& filepath)
 template<typename TAsset>
 void eng::AssetManager::ScheduleLoad(eng::AssetManager& manager, const str::Path& filepath)
 {
-	if constexpr (std::is_base_of<eng::DeferredLoad, TAsset>::value)
+	if constexpr (std::derived_from<TAsset, eng::DeferredLoad>)
 	{
 		std::thread thread(&eng::AssetManager::LoadDeferred<TAsset>, &manager, filepath);
 		thread.detach();

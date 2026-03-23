@@ -29,7 +29,7 @@ inline void ecs::EventContainer<TEvent>::MoveAll(IEventContainer& destination)
 template<typename TEvent>
 inline void ecs::EventContainer<TEvent>::ReadAt(MemBuffer& buffer, int32 index) const
 {
-	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
+	if constexpr (std::derived_from<TEvent, ecs::IsReplicated>)
 	{
 		buffer.Write(m_Data[index]);
 	}
@@ -38,7 +38,7 @@ inline void ecs::EventContainer<TEvent>::ReadAt(MemBuffer& buffer, int32 index) 
 template<typename TEvent>
 inline void ecs::EventContainer<TEvent>::ReadAll(MemBuffer& buffer) const
 {
-	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
+	if constexpr (std::derived_from<TEvent, ecs::IsReplicated>)
 	{
 		buffer.Write(m_Data.GetCount());
 		for (const TEvent& data : m_Data)

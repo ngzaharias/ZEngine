@@ -13,8 +13,8 @@ void eng::PrototypeManager::RegisterComponent()
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
-	static_assert(std::is_base_of<ecs::Component, TComponent>::value, "Type doesn't inherit from ecs::Component.");
-	static_assert(std::is_base_of<ecs::IsPrototype, TComponent>::value, "Type doesn't inherit from ecs::IsPrototype.");
+	static_assert(std::derived_from<TComponent, ecs::Component>, "Type doesn't inherit from ecs::Component.");
+	static_assert(std::derived_from<TComponent, ecs::IsPrototype>, "Type doesn't inherit from ecs::IsPrototype.");
 
 	const str::Name typeName = str::Name::Create(TypeName<TComponent>::m_WithNamespace);
 	Z_PANIC(!m_EntryMap.Contains(typeName), "Type is already registered!");

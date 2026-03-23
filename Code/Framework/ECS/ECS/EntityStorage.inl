@@ -13,7 +13,7 @@ void ecs::EntityStorage::RegisterComponent()
 	m_DeadComponents.Set(typeId, new ecs::ComponentContainer<TComponent>());
 	m_EntityBuffer.RegisterComponent<TComponent>();
 
-	if constexpr (std::is_base_of<ecs::FrameComponent, TComponent>::value)
+	if constexpr (std::derived_from<TComponent, ecs::FrameComponent>)
 		m_FrameComponents.Add(typeId);
 }
 

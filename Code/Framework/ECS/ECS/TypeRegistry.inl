@@ -5,10 +5,10 @@
 template<typename TComponent>
 void ecs::TypeRegistry::RegisterComponent()
 {
-	//static_assert(std::is_base_of<ecs::Component, TComponent>::value, "Type doesn't inherit from ecs::Component.");
+	static_assert(std::derived_from<TComponent, ecs::Component>, "Type doesn't inherit from ecs::Component.");
 
-	constexpr bool isPrototype = std::is_base_of<ecs::IsPrototype, TComponent>::value;
-	constexpr bool isReplicated = std::is_base_of<ecs::IsReplicated, TComponent>::value;
+	constexpr bool isPrototype = std::derived_from<TComponent, ecs::IsPrototype>;
+	constexpr bool isReplicated = std::derived_from<TComponent, ecs::IsReplicated>;
 
 	const TypeId globalId = ToTypeId<TComponent>();
 	const TypeId localId = ToTypeId<TComponent, ecs::ComponentTag>();
@@ -124,7 +124,7 @@ void ecs::TypeRegistry::WriteComponentData(ecs::EntityStorage& storage, const ec
 template<typename TEvent>
 void ecs::TypeRegistry::RegisterEvent()
 {
-	static_assert(std::is_base_of<ecs::Event, TEvent>::value, "Type doesn't inherit from ecs::Event.");
+	static_assert(std::derived_from<TEvent, ecs::Event>, "Type doesn't inherit from ecs::Event.");
 
 	const TypeId globalId = ToTypeId<TEvent>();
 	const TypeId localId = ToTypeId<TEvent, ecs::EventTag>();
@@ -137,9 +137,9 @@ void ecs::TypeRegistry::RegisterEvent()
 	ecs::TypeEvent& entry = m_EventMap[localId];
 	entry.m_GlobalId = globalId;
 	entry.m_LocalId = localId;
-	entry.m_IsReplicated = std::is_base_of<ecs::IsReplicated, TEvent>::value;
+	entry.m_IsReplicated = std::derived_from<TEvent, ecs::IsReplicated>;
 
-	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
+	if constexpr (std::derived_from<TEvent, ecs::IsReplicated>)
 	{
 		entry.m_Add = &AddEventMethod<TEvent>;
 	}

@@ -10,7 +10,7 @@ void ecs::EventStorage::RegisterEvent()
 {
 	m_MainBuffer.RegisterEvent<TEvent>();
 	m_NextBuffer.RegisterEvent<TEvent>();
-	if constexpr (std::is_base_of<ecs::IsReplicated, TEvent>::value)
+	if constexpr (std::derived_from<TEvent, ecs::IsReplicated>)
 		m_SyncBuffer.RegisterEvent<TEvent>();
 }
 
