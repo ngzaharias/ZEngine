@@ -7,7 +7,7 @@
 
 namespace editor::sprite
 {
-	struct WindowComponent final : public ecs::Component<WindowComponent>
+	struct WindowComponent final : public ecs::Component
 	{
 		int32 m_Identifier = 0;
 

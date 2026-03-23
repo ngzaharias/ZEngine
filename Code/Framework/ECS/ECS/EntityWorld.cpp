@@ -21,6 +21,7 @@ void ecs::EntityWorld::Initialise()
 
 	RegisterComponent<ecs::NameComponent>();
 
+	m_Entity = CreateEntity();
 	m_QueryRegistry.Initialise();
 	m_SystemRegistry.Initialise(*this);
 	//Z_LOG(ELog::Debug, "{}", LogUpdateOrder());
@@ -45,11 +46,6 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 	m_EntityStorage.FlushChanges();
 	m_EventStorage.FlushChanges();
 	m_SingletonStorage.FlushChanges();
-}
-
-auto ecs::EntityWorld::GetComponentMask(const ecs::Entity& entity) -> const ecs::ComponentMask&
-{
-	return m_EntityStorage.m_AliveEntities.Get(entity);
 }
 
 str::String ecs::EntityWorld::LogDependencies() const

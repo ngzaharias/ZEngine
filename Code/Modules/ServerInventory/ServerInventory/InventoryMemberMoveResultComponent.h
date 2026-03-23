@@ -8,7 +8,7 @@
 namespace server::inventory
 {
 	/// \brief Result of a request made to a member component.
-	struct MemberMoveResultComponent final : public ecs::Component<MemberMoveResultComponent>
+	struct MemberMoveResultComponent final : public ecs::Component
 	{
 		str::Guid m_TransactionId = { };
 		ecs::Entity m_Member = { };

@@ -10,7 +10,7 @@
 namespace eng
 {
 	// \brief 
-	struct SpriteComponent final : public ecs::Component<SpriteComponent>
+	struct SpriteComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		str::Guid m_Sprite = {};

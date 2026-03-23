@@ -5,7 +5,7 @@
 namespace client::hidden
 {
 	/// \brief 
-	struct VFXComponent final : public ecs::Component<VFXComponent>
+	struct VFXComponent final : public ecs::Component
 	{
 	};
 }

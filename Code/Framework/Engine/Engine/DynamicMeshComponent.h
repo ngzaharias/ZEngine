@@ -17,7 +17,7 @@ namespace eng
 		uint32 m_IndexBuffer = 0;
 	};
 
-	struct DynamicMeshComponent final : public ecs::Component<DynamicMeshComponent>
+	struct DynamicMeshComponent final : public ecs::Component
 	{
 		Array<uint32> m_Indices;
 		Array<Vector3f> m_Normals;

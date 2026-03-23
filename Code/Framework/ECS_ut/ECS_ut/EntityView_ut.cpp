@@ -11,10 +11,10 @@
 
 namespace
 {
-	struct ComponentA final : public ecs::Component<ComponentA> { int m_Int = 1; };
-	struct ComponentB final : public ecs::Component<ComponentB> { int m_Int = 2; };
-	struct ComponentC final : public ecs::Component<ComponentC> { int m_Int = 3; };
-	struct ComponentD final : public ecs::Component<ComponentD> { int m_Int = 4; };
+	struct ComponentA final : public ecs::Component { int m_Int = 1; };
+	struct ComponentB final : public ecs::Component { int m_Int = 2; };
+	struct ComponentC final : public ecs::Component { int m_Int = 3; };
+	struct ComponentD final : public ecs::Component { int m_Int = 4; };
 }
 
 CLASS_TEST_CASE("Test.")

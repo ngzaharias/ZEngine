@@ -7,7 +7,7 @@
 namespace server::inventory
 {
 	/// \brief 
-	struct OwnerComponent final : public ecs::Component<OwnerComponent>
+	struct OwnerComponent final : public ecs::Component
 	{
 		// All the storages the entity owns.
 		SparseArray<int32, ecs::Entity> m_Storages = { };

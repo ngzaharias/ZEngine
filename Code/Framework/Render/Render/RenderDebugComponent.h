@@ -2,5 +2,5 @@
 
 namespace render
 {
-	struct DebugComponent final : public ecs::Component<DebugComponent> { };
+	struct DebugComponent final : public ecs::Component { };
 }

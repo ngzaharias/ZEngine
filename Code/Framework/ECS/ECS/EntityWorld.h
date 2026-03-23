@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Map.h"
+#include "ECS/Component.h"
 #include "ECS/EntityStorage.h"
 #include "ECS/EventStorage.h"
 #include "ECS/IsReplicated.h"
@@ -11,6 +12,8 @@
 #include "ECS/SystemRegistry.h"
 #include "ECS/TypeInfo.h"
 #include "ECS/TypeRegistry.h"
+
+#include <concepts>
 
 class GameTime;
 
@@ -23,6 +26,9 @@ namespace ecs
 
 namespace ecs
 {
+	template<typename TComponent>
+	concept IsSoloComponent = std::derived_from<TComponent, ecs::SoloComponent>;
+
 	class EntityWorld final
 	{
 		template<typename...>
@@ -51,67 +57,80 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Component
 
-		template<class TComponent>
+		template<typename TComponent>
 		void RegisterComponent();
 
-		template<class TComponent, typename... TArgs>
-		auto AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&;
+		template<typename TComponent, typename... TArgs>
+		requires std::derived_from<TComponent, ecs::SoloComponent>
+		auto AddComponent(TArgs&&... args)->TComponent&;
+		template<typename TComponent, typename... TArgs>
+		auto AddComponent(const ecs::Entity& entity, TArgs&&... args)->TComponent&;
 
-		template<class TComponent>
+		template<typename TComponent>
+		requires std::derived_from<TComponent, ecs::SoloComponent>
+		void RemoveComponent();
+		template<typename TComponent>
 		void RemoveComponent(const ecs::Entity& entity);
 
-		template<class TComponent>
+		template<typename TComponent>
+		requires std::derived_from<TComponent, ecs::SoloComponent>
+		bool HasComponent(const bool alive = true) const;
+		template<typename TComponent>
 		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
 
-		template<class TComponent>
+		template<typename TComponent>
+		requires std::derived_from<TComponent, ecs::SoloComponent>
+		auto ReadComponent(const bool alive = true) -> const TComponent&;
+		template<typename TComponent>
 		auto ReadComponent(const ecs::Entity& entity, const bool alive = true) -> const TComponent&;
 
-		template<class TComponent>
-		auto WriteComponent(const ecs::Entity& entity, const bool alive = true) -> TComponent&;
-
-		auto GetComponentMask(const ecs::Entity& entity) -> const ecs::ComponentMask&;
+		template<typename TComponent>
+		requires std::derived_from<TComponent, ecs::SoloComponent>
+		auto WriteComponent(const bool alive = true)->TComponent&;
+		template<typename TComponent>
+		auto WriteComponent(const ecs::Entity& entity, const bool alive = true)->TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event
 
-		template<class TEvent>
+		template<typename TEvent>
 		void RegisterEvent();
 
-		template<class TEvent, typename... TArgs>
+		template<typename TEvent, typename... TArgs>
 		auto AddEvent(TArgs&&... args)->TEvent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Resource
 
-		template<class TResource>
+		template<typename TResource>
 		void RegisterResource(TResource& resource);
 
-		template<class TResource>
+		template<typename TResource>
 		auto ReadResource() -> const TResource&;
 
-		template<class TResource>
+		template<typename TResource>
 		auto WriteResource() -> TResource&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Singleton
 
-		template<class TSingleton, typename... TArgs>
+		template<typename TSingleton, typename... TArgs>
 		void RegisterSingleton(TArgs&&... args);
 
-		template<class TSingleton>
+		template<typename TSingleton>
 		auto ReadSingleton() -> const TSingleton&;
 
-		template<class TSingleton>
+		template<typename TSingleton>
 		auto WriteSingleton() -> TSingleton&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// System
 
 		/// \brief Registers and creates a system.
-		template<class TSystem, typename... TArgs>
+		template<typename TSystem, typename... TArgs>
 		void RegisterSystem(TArgs&&... args);
 
-		template<class TSystem>
+		template<typename TSystem>
 		auto GetSystem() -> TSystem&;
 
 		//////////////////////////////////////////////////////////////////////////
@@ -140,6 +159,7 @@ namespace ecs
 		auto TryComponentsForView(const ecs::Entity& entity) const->std::tuple<TComponents*...>;
 
 	public:
+		ecs::Entity m_Entity = {};
 		ecs::TypeRegistry& m_TypeRegistry;
 		ecs::EntityStorage m_EntityStorage;
 		ecs::EventStorage m_EventStorage;

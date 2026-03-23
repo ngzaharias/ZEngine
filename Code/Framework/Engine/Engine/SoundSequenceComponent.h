@@ -5,7 +5,7 @@
 
 namespace eng::sound
 {
-	struct SequenceComponent final : public ecs::Component<SequenceComponent>
+	struct SequenceComponent final : public ecs::Component
 	{
 		str::Guid m_Asset = {};
 		int32 m_Index = -1;

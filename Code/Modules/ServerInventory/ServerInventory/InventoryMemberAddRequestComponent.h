@@ -8,7 +8,7 @@
 namespace server::inventory
 {
 	/// \brief Make a request for a member component.
-	struct MemberAddRequestComponent final : public ecs::Component<MemberAddRequestComponent>
+	struct MemberAddRequestComponent final : public ecs::Component
 	{
 		str::Guid m_TransactionId = { };
 		// Storage that it is being added to.

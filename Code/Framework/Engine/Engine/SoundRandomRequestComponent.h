@@ -5,7 +5,7 @@
 
 namespace eng::sound
 {
-	struct RandomRequestComponent final : public ecs::Component<RandomRequestComponent>
+	struct RandomRequestComponent final : public ecs::Component
 	{
 		str::Guid m_Asset = {};
 	};

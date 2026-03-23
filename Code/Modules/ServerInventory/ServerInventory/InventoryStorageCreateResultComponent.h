@@ -8,7 +8,7 @@
 namespace server::inventory
 {
 	/// \brief Result of a create request made to a storage entity.
-	struct StorageCreateResultComponent final : public ecs::Component<StorageCreateResultComponent>
+	struct StorageCreateResultComponent final : public ecs::Component
 	{
 		str::Guid m_TransactionId = { };
 		// The entity that was created, unassigned if it failed.

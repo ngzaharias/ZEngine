@@ -4,5 +4,5 @@
 
 namespace gamestate
 {
-	struct EditModeComponent final : public ecs::Component<EditModeComponent> { };
+	struct EditModeComponent final : public ecs::Component { };
 };

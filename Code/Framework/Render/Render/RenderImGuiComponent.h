@@ -2,5 +2,5 @@
 
 namespace render
 {
-	struct ImGuiComponent final : public ecs::Component<ImGuiComponent> { };
+	struct ImGuiComponent final : public ecs::Component { };
 }

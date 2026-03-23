@@ -7,7 +7,7 @@
 
 namespace eng
 {
-	struct TextComponent final : public ecs::Component<TextComponent>
+	struct TextComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		str::String m_Text = { };

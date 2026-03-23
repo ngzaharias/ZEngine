@@ -7,7 +7,7 @@
 namespace server::inventory
 {
 	/// \brief Make a request for a member component.
-	struct MemberMoveRequestComponent final : public ecs::Component<MemberMoveRequestComponent>
+	struct MemberMoveRequestComponent final : public ecs::Component
 	{
 		str::Guid m_TransactionId = { };
 		ecs::Entity m_Storage = { };

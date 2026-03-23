@@ -8,7 +8,7 @@
 namespace server::inventory
 {
 	/// \brief Result of a destroy request made to a storage entity.
-	struct StorageDestroyResultComponent final : public ecs::Component<StorageDestroyResultComponent>
+	struct StorageDestroyResultComponent final : public ecs::Component
 	{
 		str::Guid m_TransactionId = { };
 		ecs::Entity m_Storage = { };

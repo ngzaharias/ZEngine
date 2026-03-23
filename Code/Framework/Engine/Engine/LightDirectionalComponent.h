@@ -6,7 +6,7 @@
 
 namespace eng::light
 {
-	struct DirectionalComponent final : public ecs::Component<DirectionalComponent>
+	struct DirectionalComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		Vector3f m_Colour = Vector3f::One;

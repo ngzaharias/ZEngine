@@ -7,7 +7,7 @@
 namespace server::inventory
 {
 	/// \brief Make a request for a member component.
-	struct MemberRemoveRequestComponent final : public ecs::Component<MemberRemoveRequestComponent>
+	struct MemberRemoveRequestComponent final : public ecs::Component
 	{
 		str::Guid m_TransactionId = { };
 		ecs::Entity m_Member = { };

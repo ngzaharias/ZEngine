@@ -7,7 +7,7 @@
 
 namespace eng
 {
-	struct FlipbookComponent final : public ecs::Component<FlipbookComponent>
+	struct FlipbookComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		str::Guid m_Flipbook = { };

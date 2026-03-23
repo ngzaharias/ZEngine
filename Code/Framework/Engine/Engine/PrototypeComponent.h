@@ -6,7 +6,7 @@
 
 namespace eng
 {
-	struct PrototypeComponent final : public ecs::Component<PrototypeComponent>
+	struct PrototypeComponent final : public ecs::Component
 	{
 		str::Guid m_Guid = {};
 		// #todo: remove path and instead replace it with the level and 

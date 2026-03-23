@@ -6,7 +6,7 @@
 namespace camera
 {
 	/// \brief
-	struct Pan3DComponent final : public ecs::Component<Pan3DComponent>
+	struct Pan3DComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 	};

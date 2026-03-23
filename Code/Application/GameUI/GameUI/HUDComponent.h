@@ -5,7 +5,7 @@
 
 namespace gui
 {
-	struct HUDComponent final : public ecs::Component<HUDComponent>
+	struct HUDComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 	};

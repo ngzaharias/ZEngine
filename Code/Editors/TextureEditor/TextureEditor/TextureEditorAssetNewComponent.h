@@ -4,5 +4,5 @@
 
 namespace editor::texture
 {
-	struct AssetNewComponent final : public ecs::Component<AssetNewComponent> { };
+	struct AssetNewComponent final : public ecs::Component { };
 }

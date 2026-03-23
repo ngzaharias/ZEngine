@@ -9,7 +9,7 @@
 namespace projectile
 {
 	/// \brief Request that a new projectile is created.
-	struct CreateRequestComponent final : public ecs::Component<CreateRequestComponent>
+	struct CreateRequestComponent final : public ecs::Component
 	{
 		// The unique id to track the entity.
 		str::Guid m_TransactionId = { };

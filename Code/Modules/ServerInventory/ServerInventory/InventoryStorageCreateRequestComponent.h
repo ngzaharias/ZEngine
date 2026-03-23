@@ -7,7 +7,7 @@
 namespace server::inventory
 {
 	/// \brief Request that a new storage is created.
-	struct StorageCreateRequestComponent final : public ecs::Component<StorageCreateRequestComponent>
+	struct StorageCreateRequestComponent final : public ecs::Component
 	{
 		str::Guid m_TransactionId = { };
 		// The owner of the storage, can be unassigned.

@@ -2,5 +2,5 @@
 
 namespace render
 {
-	struct TranslucentComponent final : public ecs::Component<TranslucentComponent> { };
+	struct TranslucentComponent final : public ecs::Component { };
 }

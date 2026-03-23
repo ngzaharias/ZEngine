@@ -8,7 +8,7 @@
 
 namespace
 {
-	struct Component final : public ecs::Component<Component>
+	struct Component final : public ecs::Component
 	{
 		Component() = default;
 		Component(int32 val) : m_Value(val) { }

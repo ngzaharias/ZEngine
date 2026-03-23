@@ -15,8 +15,8 @@ class GameTime {};
 
 namespace
 {
-	struct ComponentA final : public ecs::Component<ComponentA> { };
-	struct ComponentB final : public ecs::Component<ComponentB> { };
+	struct ComponentA final : public ecs::Component { };
+	struct ComponentB final : public ecs::Component { };
 }
 
 CLASS_TEST_CASE("Include only ComponentA.")

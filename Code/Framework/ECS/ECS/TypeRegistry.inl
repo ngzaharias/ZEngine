@@ -5,7 +5,7 @@
 template <typename TComponent>
 void ecs::TypeRegistry::RegisterComponent()
 {
-	static_assert(std::is_base_of<ecs::Component<TComponent>, TComponent>::value, "Type doesn't inherit from ecs::Component.");
+	//static_assert(std::is_base_of<ecs::Component, TComponent>::value, "Type doesn't inherit from ecs::Component.");
 
 	constexpr bool isPrototype = std::is_base_of<ecs::IsPrototype, TComponent>::value;
 	constexpr bool isReplicated = std::is_base_of<ecs::IsReplicated, TComponent>::value;

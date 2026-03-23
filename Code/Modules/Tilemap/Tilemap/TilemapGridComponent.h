@@ -6,7 +6,7 @@
 
 namespace tilemap
 {
-	struct GridComponent final : public ecs::Component<GridComponent>
+	struct GridComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		Vector3i m_GridSize = Vector3i::Zero;

@@ -4,7 +4,7 @@
 
 namespace debug::hidden
 {
-	struct ObjectComponent final : public ecs::Component<ObjectComponent>
+	struct ObjectComponent final : public ecs::Component
 	{ 
 		ecs::Entity m_Child = {};
 	};

@@ -10,7 +10,7 @@ namespace physx
 
 namespace eng
 {
-	struct RigidStaticComponent final : public ecs::Component<RigidStaticComponent>
+	struct RigidStaticComponent final : public ecs::Component
 	{
 		physx::PxRigidStatic* m_Actor = nullptr;
 		Array<physx::PxShape*> m_Shapes = { };

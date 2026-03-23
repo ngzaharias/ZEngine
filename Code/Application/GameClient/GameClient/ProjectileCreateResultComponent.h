@@ -15,7 +15,7 @@ namespace projectile
 	};
 
 	/// \brief Result of a spawn request made to a storage entity.
-	struct CreateResultComponent final : public ecs::Component<CreateResultComponent>
+	struct CreateResultComponent final : public ecs::Component
 	{
 		// The unique id to track the projectile.
 		str::Guid m_TransactionId = { };

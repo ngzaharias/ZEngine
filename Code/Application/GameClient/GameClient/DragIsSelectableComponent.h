@@ -4,5 +4,5 @@
 
 namespace drag
 {
-	struct IsSelectableComponent final : public ecs::Component<IsSelectableComponent> {};
+	struct IsSelectableComponent final : public ecs::Component {};
 }

@@ -4,5 +4,5 @@
 
 namespace eng
 {
-	struct SavegameComponent final : public ecs::Component<SavegameComponent> {};
+	struct SavegameComponent final : public ecs::Component {};
 }

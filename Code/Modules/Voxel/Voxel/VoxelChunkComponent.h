@@ -7,7 +7,7 @@
 
 namespace voxel
 {
-	struct ChunkComponent final : public ecs::Component<ChunkComponent>
+	struct ChunkComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		Array<voxel::Block> m_Data;

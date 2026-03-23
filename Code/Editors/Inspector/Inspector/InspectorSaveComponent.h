@@ -4,5 +4,5 @@
 
 namespace editor::inspector
 {
-	struct SaveComponent final : public ecs::Component<SaveComponent> { };
+	struct SaveComponent final : public ecs::Component { };
 }

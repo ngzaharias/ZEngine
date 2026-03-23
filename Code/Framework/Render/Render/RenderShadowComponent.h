@@ -2,5 +2,5 @@
 
 namespace render
 {
-	struct ShadowComponent final : public ecs::Component<ShadowComponent> { };
+	struct ShadowComponent final : public ecs::Component { };
 }

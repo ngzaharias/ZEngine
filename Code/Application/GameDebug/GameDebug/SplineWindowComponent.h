@@ -49,7 +49,7 @@ namespace debug
 		CatmullRom,
 		Hermite>;
 
-	struct SplineWindowComponent final : public ecs::Component<SplineWindowComponent>
+	struct SplineWindowComponent final : public ecs::Component
 	{
 		int32 m_Identifier = 0;
 		str::String m_DockspaceLabel = {};

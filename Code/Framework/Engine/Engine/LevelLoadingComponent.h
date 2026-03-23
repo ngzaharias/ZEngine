@@ -14,7 +14,7 @@ namespace eng::level
 	};
 
 	/// \brief There exists one of these components for every level that is loaded.
-	struct LoadingComponent final : public ecs::Component<LoadingComponent>
+	struct LoadingComponent final : public ecs::Component
 	{
 		str::Name m_Name = {};
 

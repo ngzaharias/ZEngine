@@ -7,7 +7,7 @@
 namespace projectile
 {
 	/// \brief Holds information about the spawned projectile.
-	struct SpawnComponent final : public ecs::Component<SpawnComponent>
+	struct SpawnComponent final : public ecs::Component
 	{
 		// The unique id to track the projectile.
 		str::Guid m_TransactionId = { };

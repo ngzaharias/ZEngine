@@ -8,7 +8,7 @@
 namespace camera
 {
 	/// \brief
-	struct Bound2DComponent final : public ecs::Component<Bound2DComponent>
+	struct Bound2DComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		Vector2f m_Max = Vector2f(+KINDA_LARGE_FLOAT);

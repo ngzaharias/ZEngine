@@ -4,5 +4,5 @@
 
 namespace editor::trajectory
 {
-	struct AssetOpenComponent final : public ecs::Component<AssetOpenComponent> { };
+	struct AssetOpenComponent final : public ecs::Component { };
 };

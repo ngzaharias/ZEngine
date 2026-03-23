@@ -4,5 +4,5 @@
 
 namespace gui::level_complete
 {
-	struct WindowComponent final : public ecs::Component<WindowComponent> { };
+	struct WindowComponent final : public ecs::Component { };
 }

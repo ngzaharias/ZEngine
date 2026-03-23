@@ -9,7 +9,7 @@ class Matrix4x4;
 
 namespace eng
 {
-	struct TransformComponent final : public ecs::Component<TransformComponent>
+	struct TransformComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		Matrix4x4 ToTransform() const;

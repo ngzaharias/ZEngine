@@ -6,7 +6,7 @@
 
 namespace gui::main_menu
 {
-	struct WindowComponent final : public ecs::Component<WindowComponent>
+	struct WindowComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		str::Name m_NewGame = {};

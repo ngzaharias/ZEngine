@@ -6,7 +6,7 @@
 
 namespace eng
 {
-	struct StaticMeshComponent final : public ecs::Component<StaticMeshComponent>
+	struct StaticMeshComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		str::Guid m_StaticMesh = { };

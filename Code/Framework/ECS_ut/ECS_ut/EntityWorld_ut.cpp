@@ -18,10 +18,24 @@ namespace
 	bool m_IsSystemUpdated = false;
 	bool m_IsSystemShutdown = false;
 
-	struct Component final : public ecs::Component<Component>
+	struct Component final : public ecs::Component
 	{
 		Component() = default;
 		Component(bool val) : m_Bool(val) { }
+		bool m_Bool = false;
+	};
+
+	struct FComponent final : public ecs::FrameComponent 
+	{ 
+		FComponent() = default;
+		FComponent(bool val) : m_Bool(val) { }
+		bool m_Bool = false;
+	};
+
+	struct SComponent final : public ecs::SoloComponent 
+	{ 
+		SComponent() = default;
+		SComponent(bool val) : m_Bool(val) { }
 		bool m_Bool = false;
 	};
 
@@ -324,6 +338,13 @@ CLASS_TEST_CASE("RegisterComponent will register a component with the world.")
 	CHECK_NOTHROW(world.RegisterComponent<Component>());
 }
 
+CLASS_TEST_CASE("RegisterComponent will register a solo component with the world.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	CHECK_NOTHROW(world.RegisterComponent<SComponent>());
+}
+
 CLASS_TEST_CASE("RegisterComponent will crash if the same component is registered twice.")
 {
 	ecs::TypeRegistry types;
@@ -344,6 +365,18 @@ CLASS_TEST_CASE("AddComponent can add a component to an entity.")
 	CHECK(world.HasComponent<Component>(entity));
 }
 
+CLASS_TEST_CASE("AddComponent can add a solo component.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	world.AddComponent<SComponent>();
+	world.Update({});
+	CHECK(world.HasComponent<SComponent>());
+}
+
 CLASS_TEST_CASE("AddComponent can construct a component using vardic arguments.")
 {
 	ecs::TypeRegistry types;
@@ -351,8 +384,19 @@ CLASS_TEST_CASE("AddComponent can construct a component using vardic arguments."
 	world.RegisterComponent<Component>();
 	ecs::Entity entity = world.CreateEntity();
 
-	const auto& componentA = world.AddComponent<Component>(entity, true);
-	CHECK(componentA.m_Bool == true);
+	const auto& component = world.AddComponent<Component>(entity, true);
+	CHECK(component.m_Bool == true);
+}
+
+CLASS_TEST_CASE("AddComponent can construct a solo component using vardic arguments.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	const auto& component = world.AddComponent<SComponent>(true);
+	CHECK(component.m_Bool == true);
 }
 
 CLASS_TEST_CASE("AddComponent will crash the game if called twice on the same entity.")
@@ -364,6 +408,18 @@ CLASS_TEST_CASE("AddComponent will crash the game if called twice on the same en
 	ecs::Entity entity = world.CreateEntity();
 	world.AddComponent<Component>(entity);
 	//CHECK_THROWS(world.AddComponent<Component>(entity));
+	//CHECK_THROWS(world.Update({}));
+}
+
+CLASS_TEST_CASE("AddComponent will crash the game if called twice on the same solo component.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	world.AddComponent<SComponent>();
+	//CHECK_THROWS(world.AddComponent<SComponent>());
 	//CHECK_THROWS(world.Update({}));
 }
 
@@ -386,6 +442,25 @@ CLASS_TEST_CASE("AddComponent can be called again after the component was remove
 	CHECK(world.HasComponent<Component>(entity));
 }
 
+CLASS_TEST_CASE("AddComponent can be called again after the solo component was removed.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	world.AddComponent<SComponent>();
+	world.Update({});
+
+	world.RemoveComponent<SComponent>();
+	world.Update({});
+
+	world.AddComponent<SComponent>();
+	world.Update({});
+
+	CHECK(world.HasComponent<SComponent>());
+}
+
 CLASS_TEST_CASE("RemoveComponent will remove the component from an entity.")
 {
 	ecs::TypeRegistry types;
@@ -400,6 +475,20 @@ CLASS_TEST_CASE("RemoveComponent will remove the component from an entity.")
 	CHECK_NOTHROW(world.Update({}));
 }
 
+CLASS_TEST_CASE("RemoveComponent will remove the solo component.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	world.AddComponent<SComponent>();
+	world.Update({});
+
+	CHECK_NOTHROW(world.RemoveComponent<SComponent>());
+	CHECK_NOTHROW(world.Update({}));
+}
+
 CLASS_TEST_CASE("RemoveComponent will crash the game if called on an entity that doesn't have the component.")
 {
 	ecs::TypeRegistry types;
@@ -408,6 +497,17 @@ CLASS_TEST_CASE("RemoveComponent will crash the game if called on an entity that
 
 	ecs::Entity entity = world.CreateEntity();
 	//CHECK_THROWS(world.RemoveComponent<Component>(entity));
+	//CHECK_THROWS(world.Update({}));
+}
+
+CLASS_TEST_CASE("RemoveComponent will crash the game if called on the solo component that wasn't added.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	//CHECK_THROWS(world.RemoveComponent<SComponent>());
 	//CHECK_THROWS(world.Update({}));
 }
 
@@ -424,6 +524,19 @@ CLASS_TEST_CASE("HasComponent returns true if a component has been added to an e
 	CHECK(world.HasComponent<Component>(entity));
 }
 
+CLASS_TEST_CASE("HasComponent returns true if the solo component has been added.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	world.AddComponent<SComponent>();
+	world.Update({});
+
+	CHECK(world.HasComponent<SComponent>());
+}
+
 CLASS_TEST_CASE("HasComponent returns false if a component hasn't been added to an entity.")
 {
 	ecs::TypeRegistry types;
@@ -432,6 +545,16 @@ CLASS_TEST_CASE("HasComponent returns false if a component hasn't been added to 
 
 	ecs::Entity entity = world.CreateEntity();
 	CHECK(!world.HasComponent<Component>(entity));
+}
+
+CLASS_TEST_CASE("HasComponent returns false if the solo component hasn't been added to an entity.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	CHECK(!world.HasComponent<SComponent>());
 }
 
 CLASS_TEST_CASE("HasComponent returns true if a component was removed but the world hasn't updated yet.")
@@ -447,6 +570,19 @@ CLASS_TEST_CASE("HasComponent returns true if a component was removed but the wo
 	CHECK(world.HasComponent<Component>(entity));
 }
 
+CLASS_TEST_CASE("HasComponent returns true if the solo component was removed but the world hasn't updated yet.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	world.AddComponent<SComponent>();
+	world.Update({});
+	world.RemoveComponent<SComponent>();
+	CHECK(world.HasComponent<SComponent>());
+}
+
 CLASS_TEST_CASE("HasComponent returns false if a component was added but the world hasn't updated yet.")
 {
 	ecs::TypeRegistry types;
@@ -456,6 +592,17 @@ CLASS_TEST_CASE("HasComponent returns false if a component was added but the wor
 	ecs::Entity entity = world.CreateEntity();
 	world.AddComponent<Component>(entity);
 	CHECK(!world.HasComponent<Component>(entity));
+}
+
+CLASS_TEST_CASE("HasComponent returns false if the solo component was added but the world hasn't updated yet.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	world.AddComponent<SComponent>();
+	CHECK(!world.HasComponent<SComponent>());
 }
 
 CLASS_TEST_CASE("ReadComponent returns a component that can't be modified.")
@@ -471,6 +618,19 @@ CLASS_TEST_CASE("ReadComponent returns a component that can't be modified.")
 	// component.m_Bool = true; // doesn't compile
 }
 
+CLASS_TEST_CASE("ReadComponent returns the solo component that can't be modified.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	world.AddComponent<SComponent>();
+	world.Update({});
+	auto& component = world.ReadComponent<SComponent>();
+	// component.m_Bool = true; // doesn't compile
+}
+
 CLASS_TEST_CASE("ReadComponent crashes when the component hasn't been added to the entity.")
 {
 	ecs::TypeRegistry types;
@@ -479,6 +639,16 @@ CLASS_TEST_CASE("ReadComponent crashes when the component hasn't been added to t
 	ecs::Entity entity = world.CreateEntity();
 
 	//CHECK_THROWS(world.ReadComponent<Component>(entity));
+}
+
+CLASS_TEST_CASE("ReadComponent crashes when the solo component hasn't been added.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	//CHECK_THROWS(world.ReadComponent<SComponent>());
 }
 
 CLASS_TEST_CASE("WriteComponent returns a component that can be modified.")
@@ -496,6 +666,21 @@ CLASS_TEST_CASE("WriteComponent returns a component that can be modified.")
 	CHECK(component.m_Bool);
 }
 
+CLASS_TEST_CASE("WriteComponent returns the solo component that can be modified.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	world.Initialise();
+
+	world.AddComponent<SComponent>();
+	world.Update({});
+
+	auto& component = world.WriteComponent<SComponent>();
+	component.m_Bool = true;
+	CHECK(component.m_Bool);
+}
+
 CLASS_TEST_CASE("WriteComponent crashes when the component hasn't been added to the entity.")
 {
 	ecs::TypeRegistry types;
@@ -506,53 +691,14 @@ CLASS_TEST_CASE("WriteComponent crashes when the component hasn't been added to 
 	//CHECK_THROWS(world.WriteComponent<Component>(entity));
 }
 
-CLASS_TEST_CASE("GetComponentMask returns a mask with the component added.")
-{
-	const ecs::ComponentId typeId = ToTypeId<Component, ecs::ComponentTag>();
-
-	ecs::TypeRegistry types;
-	ecs::EntityWorld world(types);
-	world.RegisterComponent<Component>();
-
-	ecs::Entity entity = world.CreateEntity();
-	world.AddComponent<Component>(entity);
-	world.Update({});
-	CHECK(world.GetComponentMask(entity).Has(typeId));
-}
-
-CLASS_TEST_CASE("GetComponentMask returns an empty mask if an entity has no components.")
+CLASS_TEST_CASE("WriteComponent crashes when the solo component hasn't been added.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<Component>();
+	world.Initialise();
 
-	ecs::Entity entity = world.CreateEntity();
-	world.Update({});
-	CHECK(world.GetComponentMask(entity).HasNone());
-}
-
-CLASS_TEST_CASE("GetComponentMask returns an empty mask when a component was added to an entity but hasn't updated the world.")
-{
-	ecs::TypeRegistry types;
-	ecs::EntityWorld world(types);
-	world.RegisterComponent<Component>();
-
-	ecs::Entity entity = world.CreateEntity();
-	world.Update({});
-
-	world.AddComponent<Component>(entity);
-	CHECK(world.GetComponentMask(entity).HasNone());
-}
-
-CLASS_TEST_CASE("GetComponentMask crashes when called on an entity that isn't alive.")
-{
-	ecs::TypeRegistry types;
-	ecs::EntityWorld world(types);
-	world.RegisterComponent<Component>();
-
-	ecs::Entity entity = world.CreateEntity();
-	world.AddComponent<Component>(entity);
-	//CHECK_THROWS(world.GetComponentMask(entity).HasNone());
+	//CHECK_THROWS(world.WriteComponent<SComponent>());
 }
 
 CLASS_TEST_CASE("RegisterEvent will register an event with the world.")
@@ -760,4 +906,17 @@ CLASS_TEST_CASE("GetSystem will crash the game if called on an unregistered syst
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	//CHECK_THROWS(world.GetSystem<System>());
+}
+
+CLASS_TEST_CASE("FrameComponent is removed at the end of the next frame.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<FComponent>();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<FComponent>(entity);
+	world.Update({});
+	world.Update({});
+	CHECK(!world.HasComponent<FComponent>(entity));
 }

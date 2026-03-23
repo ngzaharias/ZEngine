@@ -5,7 +5,7 @@
 
 namespace eng::sound
 {
-	struct SequenceRequestComponent final : public ecs::Component<SequenceRequestComponent>
+	struct SequenceRequestComponent final : public ecs::Component
 	{
 		str::Guid m_Asset = {};
 	};

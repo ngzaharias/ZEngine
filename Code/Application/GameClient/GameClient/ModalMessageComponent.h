@@ -5,7 +5,7 @@
 
 namespace gui::modal
 {
-	struct MessageComponent final : public ecs::Component<MessageComponent>
+	struct MessageComponent final : public ecs::Component
 	{
 		str::String m_Title = { };
 		str::String m_Message = { };

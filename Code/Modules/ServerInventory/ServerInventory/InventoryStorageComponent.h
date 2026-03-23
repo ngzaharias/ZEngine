@@ -8,7 +8,7 @@
 namespace server::inventory
 {
 	/// \brief Holds a list of entities for a container.
-	struct StorageComponent final : public ecs::Component<StorageComponent>
+	struct StorageComponent final : public ecs::Component
 	{
 		ecs::Entity m_Owner = { };
 		int32 m_Limit = INT32_MAX;

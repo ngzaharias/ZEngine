@@ -6,7 +6,7 @@
 namespace eng
 {
 	// \brief 
-	struct VisibilityComponent final : public ecs::Component<VisibilityComponent>
+	struct VisibilityComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		bool m_IsVisible = true;

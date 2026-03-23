@@ -7,7 +7,7 @@
 
 namespace shared::cursor
 {
-	struct TransformComponent final : public ecs::Component<TransformComponent>
+	struct TransformComponent final : public ecs::Component
 		, ecs::IsReplicated
 	{
 		net::PeerId m_PeerId = {};

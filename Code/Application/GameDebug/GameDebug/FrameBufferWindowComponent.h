@@ -4,5 +4,5 @@
 
 namespace debug
 {
-	struct FrameBufferWindowComponent final : public ecs::Component<FrameBufferWindowComponent> { };
+	struct FrameBufferWindowComponent final : public ecs::Component { };
 };

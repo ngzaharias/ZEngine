@@ -5,7 +5,7 @@
 
 namespace debug
 {
-	struct NetworkWindowComponent final : public ecs::Component<NetworkWindowComponent>
+	struct NetworkWindowComponent final : public ecs::Component
 	{
 		int32 m_Identifier = 0;
 		str::String m_Message = {};

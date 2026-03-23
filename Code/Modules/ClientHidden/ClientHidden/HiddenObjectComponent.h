@@ -10,7 +10,7 @@
 namespace client::hidden
 {
 	/// \brief Base object to mark which entities are hidden objects.
-	struct ObjectComponent final : public ecs::Component<ObjectComponent>
+	struct ObjectComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		str::Guid m_Group = {};

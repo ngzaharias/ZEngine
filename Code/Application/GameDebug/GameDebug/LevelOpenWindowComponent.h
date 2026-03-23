@@ -4,5 +4,5 @@
 
 namespace debug::level
 {
-	struct OpenWindowComponent final : public ecs::Component<OpenWindowComponent> { };
+	struct OpenWindowComponent final : public ecs::Component { };
 }

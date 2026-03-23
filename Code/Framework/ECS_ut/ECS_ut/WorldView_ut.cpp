@@ -10,9 +10,9 @@
 
 namespace
 {
-	struct ComponentA final : public ecs::Component<ComponentA> {};
-	struct ComponentB final : public ecs::Component<ComponentB> {};
-	struct ComponentC final : public ecs::Component<ComponentC> {};
+	struct ComponentA final : public ecs::Component {};
+	struct ComponentB final : public ecs::Component {};
+	struct ComponentC final : public ecs::Component {};
 
 	struct SingletonA final : public ecs::Singleton<SingletonA> {};
 	struct SingletonB final : public ecs::Singleton<SingletonB> {};

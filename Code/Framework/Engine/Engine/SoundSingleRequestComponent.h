@@ -5,7 +5,7 @@
 
 namespace eng::sound
 {
-	struct SingleRequestComponent final : public ecs::Component<SingleRequestComponent>
+	struct SingleRequestComponent final : public ecs::Component
 	{
 		str::Guid m_Asset = {};
 	};

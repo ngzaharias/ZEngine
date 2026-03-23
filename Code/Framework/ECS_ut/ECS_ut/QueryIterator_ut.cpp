@@ -13,9 +13,9 @@
 
 namespace
 {
-	struct ComponentA final : public ecs::Component<ComponentA> { bool m_Bool = true; };
-	struct ComponentB final : public ecs::Component<ComponentB> { bool m_Bool = false; };
-	struct ComponentC final : public ecs::Component<ComponentC> { };
+	struct ComponentA final : public ecs::Component { bool m_Bool = true; };
+	struct ComponentB final : public ecs::Component { bool m_Bool = false; };
+	struct ComponentC final : public ecs::Component { };
 }
 
 CLASS_TEST_CASE("Test.")

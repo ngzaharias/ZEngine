@@ -11,7 +11,7 @@
 
 namespace
 {
-	struct Component final : public ecs::Component<Component>
+	struct Component final : public ecs::Component
 		, ecs::IsReplicated
 	{
 		Component() = default;

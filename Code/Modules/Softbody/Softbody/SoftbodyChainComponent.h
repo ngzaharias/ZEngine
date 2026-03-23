@@ -13,7 +13,7 @@ namespace softbody
 		Vector2f m_Position = Vector2f::Zero;
 	};
 
-	struct ChainComponent final : public ecs::Component<ChainComponent>
+	struct ChainComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		// constraints

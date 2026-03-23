@@ -6,7 +6,7 @@
 
 namespace editor::sprite
 {
-	struct BatchingComponent final : public ecs::Component<BatchingComponent>
+	struct BatchingComponent final : public ecs::Component
 	{
 		/// \brief How many iterations are done along X and Y.
 		/// X is iterated again for each iteration of Y.

@@ -7,7 +7,7 @@
 namespace server::inventory
 {
 	/// \brief Holds all information of a single member inside a container.
-	struct MemberComponent final : public ecs::Component<MemberComponent>
+	struct MemberComponent final : public ecs::Component
 	{
 		ecs::Entity m_Storage = { };
 		uint16 m_Count = 0;

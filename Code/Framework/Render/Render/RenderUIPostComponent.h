@@ -2,5 +2,5 @@
 
 namespace render
 {
-	struct UIPostComponent final : public ecs::Component<UIPostComponent> { };
+	struct UIPostComponent final : public ecs::Component { };
 }

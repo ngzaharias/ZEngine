@@ -6,7 +6,7 @@
 namespace server::network
 {
 	/// \brief
-	struct PeerComponent final : public ecs::Component<PeerComponent>
+	struct PeerComponent final : public ecs::Component
 	{
 		net::PeerId m_PeerId = {};
 	};

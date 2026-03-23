@@ -4,5 +4,5 @@
 
 namespace debug
 {
-	struct InspectorDemoWindowComponent final : public ecs::Component<InspectorDemoWindowComponent> { };
+	struct InspectorDemoWindowComponent final : public ecs::Component { };
 };

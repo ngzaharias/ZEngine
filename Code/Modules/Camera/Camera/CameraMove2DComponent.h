@@ -6,7 +6,7 @@
 namespace camera
 {
 	/// \brief
-	struct Move2DComponent final : public ecs::Component<Move2DComponent>
+	struct Move2DComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 	};

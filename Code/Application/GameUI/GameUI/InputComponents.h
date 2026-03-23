@@ -12,7 +12,7 @@ namespace gui::input
 		GameMenu,
 	};
 
-	struct BindingsComponent final : public ecs::Component<BindingsComponent>
+	struct BindingsComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		Array<ECommand> m_Commands = {};

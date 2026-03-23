@@ -7,7 +7,7 @@
 namespace projectile
 {
 	/// \brief Holds information related to the trajectory of the projectile.
-	struct TrajectoryComponent final : public ecs::Component<TrajectoryComponent>
+	struct TrajectoryComponent final : public ecs::Component
 	{
 		// The trajectory the projectile will follow.
 		path::Trajectory m_Trajectory = { };

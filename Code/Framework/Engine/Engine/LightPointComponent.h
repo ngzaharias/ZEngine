@@ -6,7 +6,7 @@
 
 namespace eng::light
 {
-	struct PointComponent final : public ecs::Component<PointComponent>
+	struct PointComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		Vector3f m_Colour = Vector3f::One;

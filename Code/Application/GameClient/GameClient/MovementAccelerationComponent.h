@@ -5,7 +5,7 @@
 namespace movement
 {
 	/// \brief
-	struct AccelerationComponent final : public ecs::Component<AccelerationComponent>
+	struct AccelerationComponent final : public ecs::Component
 	{
 		float m_Acceleration = 0.f;
 		float m_Maximum = 0.f;

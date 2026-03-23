@@ -4,5 +4,5 @@
 
 namespace gui::game_menu
 {
-	struct WindowComponent final : public ecs::Component<WindowComponent> { };
+	struct WindowComponent final : public ecs::Component { };
 }

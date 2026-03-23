@@ -6,7 +6,7 @@
 namespace tabletop
 {
 	/// \brief 
-	struct DeckComponent final : public ecs::Component<DeckComponent>
+	struct DeckComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 	};

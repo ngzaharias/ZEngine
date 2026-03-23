@@ -4,5 +4,5 @@
 
 namespace voxel
 {
-	struct ChunkChangedFrameComponent final : public ecs::Component<ChunkChangedFrameComponent> { };
+	struct ChunkChangedFrameComponent final : public ecs::Component { };
 }

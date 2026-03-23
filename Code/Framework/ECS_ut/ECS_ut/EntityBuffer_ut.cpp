@@ -7,12 +7,12 @@
 
 namespace
 {
-	struct ComponentA final : public ecs::Component<ComponentA>
+	struct ComponentA final : public ecs::Component
 	{
 		int32 m_Value = 0;
 	};
 
-	struct ComponentB final : public ecs::Component<ComponentB>
+	struct ComponentB final : public ecs::Component
 	{
 		int32 m_Value = 0;
 	};

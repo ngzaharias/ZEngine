@@ -15,7 +15,7 @@ namespace camera
 	};
 
 	/// \brief
-	struct Zoom2DComponent final : public ecs::Component<Zoom2DComponent>
+	struct Zoom2DComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		float m_Max = KINDA_LARGE_FLOAT;

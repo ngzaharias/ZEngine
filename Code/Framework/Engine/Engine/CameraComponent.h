@@ -7,17 +7,17 @@
 namespace eng
 {
 	/// \brief
-	struct CameraComponent final : public ecs::Component<CameraComponent>
+	struct CameraComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		eng::Projection m_Projection = eng::Perspective();
 	};
 
-	struct ActiveComponent  final : public ecs::Component<ActiveComponent>
+	struct ActiveComponent  final : public ecs::Component
 	{
 	};
 
-	struct EditorComponent  final : public ecs::Component<EditorComponent>
+	struct EditorComponent  final : public ecs::Component
 	{
 	};
 }

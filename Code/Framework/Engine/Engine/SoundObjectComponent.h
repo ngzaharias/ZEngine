@@ -7,7 +7,7 @@
 
 namespace eng::sound
 {
-	struct ObjectComponent final : public ecs::Component<ObjectComponent>
+	struct ObjectComponent final : public ecs::Component
 	{
 		// Sounds cannot be moved/deleted once they have started otherwise they will stop immediately.
 		sf::Sound* m_Sound = nullptr;

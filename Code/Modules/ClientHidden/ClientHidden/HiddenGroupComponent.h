@@ -10,7 +10,7 @@
 namespace client::hidden
 {
 	/// \brief Group of hidden objects.
-	struct GroupComponent final : public ecs::Component<GroupComponent>
+	struct GroupComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		Array<str::Guid> m_Objects = {};

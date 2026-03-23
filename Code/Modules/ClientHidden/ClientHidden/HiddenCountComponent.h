@@ -6,7 +6,7 @@
 namespace client::hidden
 {
 	/// \brief Counts the number of objects that are hidden and revealed.
-	struct CountComponent final : public ecs::Component<CountComponent>
+	struct CountComponent final : public ecs::Component
 		, ecs::IsPrototype
 	{
 		int32 m_Objects = 0;
