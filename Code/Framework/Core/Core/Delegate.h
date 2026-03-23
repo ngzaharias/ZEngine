@@ -65,7 +65,7 @@ class DelegateCollection
 public:
 	DelegateCollection();
 	DelegateCollection(DelegateCollection&& rhs) noexcept;
-	template <typename... Handles>
+	template<typename... Handles>
 	DelegateCollection(const Handles&... handles);
 	DelegateCollection(const DelegateCollection&) = delete;
 	~DelegateCollection();

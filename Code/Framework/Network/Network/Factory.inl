@@ -1,11 +1,11 @@
 
-template <typename TMessage>
+template<typename TMessage>
 void net::Factory::Register(const uint32 type)
 {
 	Register<TMessage>(static_cast<net::EMessage>(type));
 }
 
-template <typename TMessage>
+template<typename TMessage>
 void net::Factory::Register(const net::EMessage type)
 {
 	net::MessageEntry& entry = m_EntryMap[type];

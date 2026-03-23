@@ -2,7 +2,7 @@
 //////////////////////////////////////////////////////////////////////////
 // Component
 
-template <typename TComponent>
+template<typename TComponent>
 void ecs::TypeRegistry::RegisterComponent()
 {
 	//static_assert(std::is_base_of<ecs::Component, TComponent>::value, "Type doesn't inherit from ecs::Component.");
@@ -121,7 +121,7 @@ void ecs::TypeRegistry::WriteComponentData(ecs::EntityStorage& storage, const ec
 //////////////////////////////////////////////////////////////////////////
 // Event
 
-template <typename TEvent>
+template<typename TEvent>
 void ecs::TypeRegistry::RegisterEvent()
 {
 	static_assert(std::is_base_of<ecs::Event, TEvent>::value, "Type doesn't inherit from ecs::Event.");
@@ -155,7 +155,7 @@ void ecs::TypeRegistry::AddEventMethod(ecs::EventBuffer& buffer, const MemBuffer
 //////////////////////////////////////////////////////////////////////////
 // Resource
 
-template <typename TResource>
+template<typename TResource>
 void ecs::TypeRegistry::RegisterResource()
 {
 	const TypeId globalId = ToTypeId<TResource>();
@@ -174,7 +174,7 @@ void ecs::TypeRegistry::RegisterResource()
 //////////////////////////////////////////////////////////////////////////
 // Singleton
 
-template <typename TSingleton>
+template<typename TSingleton>
 void ecs::TypeRegistry::RegisterSingleton()
 {
 	const TypeId globalId = ToTypeId<TSingleton>();
@@ -193,7 +193,7 @@ void ecs::TypeRegistry::RegisterSingleton()
 //////////////////////////////////////////////////////////////////////////
 // System
 
-template <typename TSystem>
+template<typename TSystem>
 void ecs::TypeRegistry::RegisterSystem()
 {
 	const TypeId globalId = ToTypeId<TSystem>();

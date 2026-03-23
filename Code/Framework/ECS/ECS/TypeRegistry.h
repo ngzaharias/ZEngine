@@ -58,7 +58,7 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Component
 
-		template <typename TComponent>
+		template<typename TComponent>
 		void RegisterComponent();
 
 		bool HasComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
@@ -90,7 +90,7 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Event
 
-		template <typename TEvent>
+		template<typename TEvent>
 		void RegisterEvent();
 
 		void AddEvent(ecs::EventBuffer& buffer, const ecs::EventId typeId, const MemBuffer& data) const;
@@ -101,19 +101,19 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Resource
 
-		template <typename TResource>
+		template<typename TResource>
 		void RegisterResource();
 
 		//////////////////////////////////////////////////////////////////////////
 		// Singleton
 
-		template <typename TSingleton>
+		template<typename TSingleton>
 		void RegisterSingleton();
 
 		//////////////////////////////////////////////////////////////////////////
 		// System
 
-		template <typename TSystem>
+		template<typename TSystem>
 		void RegisterSystem();
 
 	private:

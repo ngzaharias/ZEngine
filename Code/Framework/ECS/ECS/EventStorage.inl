@@ -14,7 +14,7 @@ void ecs::EventStorage::RegisterEvent()
 		m_SyncBuffer.RegisterEvent<TEvent>();
 }
 
-template <typename TEvent, typename... TArgs>
+template<typename TEvent, typename... TArgs>
 auto ecs::EventStorage::AddEvent(TArgs&&... args) -> TEvent&
 {
 	return m_NextBuffer.AddEvent<TEvent>(std::forward<TArgs>(args)...);

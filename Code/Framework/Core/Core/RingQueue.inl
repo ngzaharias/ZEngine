@@ -3,7 +3,7 @@
 #include <utility>
 
 template<class Type, int32 t_Capacity>
-template <typename ... Types>
+template<typename ... Types>
 constexpr RingQueue<Type, t_Capacity>::RingQueue(Types&&... values)
 	: m_Array{ std::forward<Types>(values)... }
 	, m_Count(sizeof...(Types))

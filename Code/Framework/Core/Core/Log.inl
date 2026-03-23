@@ -3,7 +3,7 @@
 #include "Core/String.h"
 #include <format>
 
-template <typename... TArgs>
+template<typename... TArgs>
 inline void core::LogFormatted(const ELog channel, const char* format, TArgs&&... args)
 {
 	if constexpr (sizeof...(args) > 0)

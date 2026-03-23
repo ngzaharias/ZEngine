@@ -181,9 +181,9 @@ namespace eng
 		template<typename Value>
 		inline void ReadCustom(Value& value) const;
 
-		template <typename TEnum>
+		template<typename TEnum>
 		void ReadEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue) const;
-		template <typename TEnum>
+		template<typename TEnum>
 		void ReadEnum(const int32 index, TEnum& value) const;
 
 		template<typename Value>
@@ -216,9 +216,9 @@ namespace eng
 		template<typename Value>
 		inline void WriteCustom(const Value& value);
 
-		template <typename TEnum>
+		template<typename TEnum>
 		void WriteEnum(const str::StringView& key, const TEnum& value);
-		template <typename TEnum>
+		template<typename TEnum>
 		void WriteEnum(const int32 index, const TEnum& value);
 
 		template<typename Value>

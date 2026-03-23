@@ -17,7 +17,7 @@ namespace core
 	void LogInitialise();
 	void LogShutdown();
 
-	template <typename... TArgs>
+	template<typename... TArgs>
 	inline void LogFormatted(const ELog channel, const char* format, TArgs&&... args);
 
 	void LogMessage(const ELog channel, const char* message);

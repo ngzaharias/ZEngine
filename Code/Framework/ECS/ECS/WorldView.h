@@ -24,10 +24,10 @@ namespace ecs
 
 namespace ecs
 {
-	template <typename...>
+	template<typename...>
 	class WorldView_t;
 
-	template <typename... TWrite, typename... TRead>
+	template<typename... TWrite, typename... TRead>
 	class WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>
 	{
 		friend class SystemRegistry;
@@ -40,17 +40,17 @@ namespace ecs
 		using TList = TypeList<TWrite..., TRead...>;
 
 	public:
-		template <typename... Types>
+		template<typename... Types>
 		using Write = WorldView_t<decltype(TWriteList::template Append<Types...>()), TReadList>;
-		template <typename... Types>
+		template<typename... Types>
 		using Read = WorldView_t<TWriteList, decltype(TReadList::template Append<Types...>())>;
 
 		WorldView_t(ecs::EntityWorld& entityWorld);
 
-		template <typename... TOthers>
+		template<typename... TOthers>
 		WorldView_t(const WorldView_t<TOthers...>& rhs);
 
-		//template <typename... TOthers>
+		//template<typename... TOthers>
 		//operator WorldView_t<TOthers...>() const;
 
 	public:

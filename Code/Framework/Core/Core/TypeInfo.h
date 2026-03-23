@@ -42,7 +42,7 @@ TypeId ToTypeId()
 	return value;
 }
 
-template <typename... TTypes, typename Tag = TypeTag>
+template<typename... TTypes, typename Tag = TypeTag>
 void ToTypeId(Set<TypeId>& values, TypeList<TTypes...>)
 {
 	(values.Add(ToTypeId<TTypes, Tag>()), ...);

@@ -3,7 +3,7 @@
 template<class TQuery>
 const ecs::QueryId ecs::QueryProxy<TQuery>::m_QueryId = ecs::QueryProxy<TQuery>::Id();
 
-template <typename TQuery>
+template<typename TQuery>
 inline ecs::QueryId ecs::QueryProxy<TQuery>::Id()
 {
 	static bool isRegistered = false;

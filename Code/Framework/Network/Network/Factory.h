@@ -15,9 +15,9 @@ namespace net
 	class Factory final
 	{
 	public:
-		template <typename TMessage>
+		template<typename TMessage>
 		void Register(const uint32 type);
-		template <typename TMessage>
+		template<typename TMessage>
 		void Register(const net::EMessage type);
 
 		net::Message* Request(const net::EMessage type);

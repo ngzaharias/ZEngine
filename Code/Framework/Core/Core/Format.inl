@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-template <typename... TArgs>
+template<typename... TArgs>
 str::String str::Format(const char* format, TArgs... args)
 {
 	const int length = std::snprintf(nullptr, 0, format, args...);

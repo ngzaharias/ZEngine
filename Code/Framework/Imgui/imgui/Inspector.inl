@@ -394,7 +394,7 @@ bool imgui::Inspector::WriteArray(Array<Value>& values)
 	return result;
 }
 
-template <typename Value>
+template<typename Value>
 void imgui::Inspector::ReadEnum(const Value& value)
 {
 	ImGui::SetNextItemWidth(-1);
@@ -405,7 +405,7 @@ void imgui::Inspector::ReadEnum(const Value& value)
 		ImGui::EndCombo();
 }
 
-template <typename Value>
+template<typename Value>
 bool imgui::Inspector::WriteEnum(Value& value)
 {
 	bool result = false;

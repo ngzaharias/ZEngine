@@ -25,9 +25,9 @@ namespace ecs
 		using TOptionalList = TypeList<TOptional...>;
 
 	public:
-		template <typename... Types>
+		template<typename... Types>
 		using Required = EntityView_t<decltype(TRequiredList::template Append<Types...>()), TOptionalList>;
-		template <typename... Types>
+		template<typename... Types>
 		using Optional = EntityView_t<TRequiredList, decltype(TOptionalList::template Append<Types...>())>;
 
 		EntityView_t(ecs::EntityWorld& world, const ecs::Entity& entity);

@@ -66,7 +66,7 @@ void DelegateHandle<Signature>::Disconnect() const
 	m_Delegate.Disconnect(m_HandleId);
 }
 
-template <typename... Handles>
+template<typename... Handles>
 DelegateCollection::DelegateCollection(const Handles&... handles)
 {
 	m_Disconnects =

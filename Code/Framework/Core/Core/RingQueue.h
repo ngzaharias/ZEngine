@@ -10,7 +10,7 @@ class RingQueue final
 public:
 	constexpr RingQueue() = default;
 
-	template <typename... Types>
+	template<typename... Types>
 	constexpr RingQueue(Types&&... values);
 
 	constexpr auto operator[](int32 index)->Type&;

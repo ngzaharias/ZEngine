@@ -149,13 +149,13 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// EntityView
 
-		template <typename TComponent>
+		template<typename TComponent>
 		auto GetComponentForView(const ecs::Entity& entity) const->TComponent*;
-		template <typename...TComponents>
+		template<typename...TComponents>
 		auto GetComponentsForView(const ecs::Entity& entity) const->std::tuple<TComponents*...>;
-		template <typename TComponent>
+		template<typename TComponent>
 		auto TryComponentForView(const ecs::Entity& entity) const->TComponent*;
-		template <typename...TComponents>
+		template<typename...TComponents>
 		auto TryComponentsForView(const ecs::Entity& entity) const->std::tuple<TComponents*...>;
 
 	public:

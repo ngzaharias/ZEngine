@@ -149,7 +149,7 @@ void eng::Visitor::ReadArray(Array<Value>& values) const
 	m_Node = &parentNode;
 }
 
-template <typename TEnum>
+template<typename TEnum>
 void eng::Visitor::ReadEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue) const
 {
 	toml::Table& currentNode = *m_Node->as_table();
@@ -164,7 +164,7 @@ void eng::Visitor::ReadEnum(const str::StringView& key, TEnum& value, const TEnu
 	//value = result ? static_cast<TEnum>(*result) : defaultValue;
 }
 
-template <typename TEnum>
+template<typename TEnum>
 void eng::Visitor::ReadEnum(const int32 index, TEnum& value) const
 {
 	toml::Array& currentNode = *m_Node->as_array();
@@ -402,7 +402,7 @@ void eng::Visitor::WriteArray(const Array<Value>& values)
 	m_Node = &parentNode;
 }
 
-template <typename TEnum>
+template<typename TEnum>
 void eng::Visitor::WriteEnum(const str::StringView& key, const TEnum& value)
 {
 	toml::Table& currentNode = *m_Node->as_table();
@@ -410,7 +410,7 @@ void eng::Visitor::WriteEnum(const str::StringView& key, const TEnum& value)
 	// currentNode.insert_or_assign(key, static_cast<int64>(value)); // by value
 }
 
-template <typename TEnum>
+template<typename TEnum>
 void eng::Visitor::WriteEnum(const int32 index, const TEnum& value)
 {
 	toml::Array& currentNode = *m_Node->as_array();

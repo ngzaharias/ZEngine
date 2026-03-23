@@ -1,54 +1,54 @@
 #pragma once
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WorldView_t(ecs::EntityWorld& entityWorld)
 	: m_EntityWorld(entityWorld)
 	, m_QueryRegistry(entityWorld.m_QueryRegistry)
 {
 }
 
-template <typename... TWrite, typename... TRead>
-template <typename... TOthers>
+template<typename... TWrite, typename... TRead>
+template<typename... TOthers>
 ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WorldView_t(const WorldView_t<TOthers...>& rhs)
 	: m_EntityWorld(rhs.m_EntityWorld)
 	, m_QueryRegistry(rhs.m_QueryRegistry)
 {
 }
 
-//template <typename... TWrite, typename... TRead>
-//template <typename... TOthers>
+//template<typename... TWrite, typename... TRead>
+//template<typename... TOthers>
 //ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::operator WorldView_t<TOthers...>() const
 //{
 //	return WorldView_t<TOthers...>(*this);
 //}
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TEntityView>
 TEntityView ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::EntityView(const ecs::Entity& entity)
 {
 	return TEntityView(m_EntityWorld, entity);
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 bool ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::IsAlive(const ecs::Entity& entity) const
 {
 	return m_EntityWorld.IsAlive(entity);
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 inline auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::CreateEntity() -> ecs::Entity
 {
 	return m_EntityWorld.CreateEntity();
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 inline void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::DestroyEntity(const ecs::Entity& entity)
 {
 	m_EntityWorld.DestroyEntity(entity);
 }
 
-template <typename... TWrite, typename... TRead>
-template <typename TComponent, typename... TArgs>
+template<typename... TWrite, typename... TRead>
+template<typename TComponent, typename... TArgs>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto)
 {
 	static_assert(core::Contains<TComponent, TWrite...>(), "WorldView doesn't have Write access to Component.");
@@ -56,7 +56,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddComponent(con
 	return m_EntityWorld.template AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TComponent>
 void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::RemoveComponent(const ecs::Entity& entity)
 {
@@ -65,7 +65,7 @@ void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::RemoveComponent(
 	m_EntityWorld.template RemoveComponent<TComponent>(entity);
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TComponent>
 bool ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasComponent(const ecs::Entity& entity, const bool alive /*= true*/) const
 {
@@ -76,7 +76,7 @@ bool ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasComponent(con
 	return m_EntityWorld.template HasComponent<TComponent>(entity, alive);
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TComponent>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadComponent(const ecs::Entity& entity, const bool alive /*= true*/)->const TComponent&
 {
@@ -87,7 +87,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadComponent(co
 	return m_EntityWorld.template ReadComponent<TComponent>(entity, alive);
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TComponent>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteComponent(const ecs::Entity& entity, const bool alive /*= true*/)->TComponent&
 {
@@ -96,8 +96,8 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteComponent(c
 	return m_EntityWorld.template WriteComponent<TComponent>(entity, alive);
 }
 
-template <typename... TWrite, typename... TRead>
-template <typename TEvent, typename... TArgs>
+template<typename... TWrite, typename... TRead>
+template<typename TEvent, typename... TArgs>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddEvent(TArgs&&... args)->decltype(auto)
 {
 	static_assert(core::Contains<TEvent, TWrite...>(), "WorldView doesn't have Write access to Event.");
@@ -105,7 +105,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddEvent(TArgs&&
 	return m_EntityWorld.template AddEvent<TEvent>(std::forward<TArgs>(args)...);
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TResource>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadResource() -> const TResource&
 {
@@ -116,7 +116,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadResource() -
 	return m_EntityWorld.template ReadResource<TResource>();
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TResource>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteResource() -> TResource&
 {
@@ -125,7 +125,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteResource() 
 	return m_EntityWorld.template WriteResource<TResource>();
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TSingleton>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadSingleton() -> const TSingleton&
 {
@@ -136,7 +136,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadSingleton() 
 	return m_EntityWorld.template ReadSingleton<TSingleton>();
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TSingleton>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteSingleton() -> TSingleton&
 {
@@ -145,7 +145,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteSingleton()
 	return m_EntityWorld.template WriteSingleton<TSingleton>();
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TType>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Count() -> int32
 {
@@ -165,7 +165,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Count() -> int32
 	}
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TType>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasAny() -> bool
 {
@@ -185,14 +185,14 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasAny() -> bool
 	}
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TEvent>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Events() -> decltype(auto)
 {
 	return m_EntityWorld.m_EventStorage.GetEvents<TEvent>();
 }
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TQuery>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Query() -> ecs::QueryRange<TQuery>
 {
@@ -206,7 +206,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Query() -> ecs::
 }
 
 
-template <typename... TWrite, typename... TRead>
+template<typename... TWrite, typename... TRead>
 template<class TQuery>
 void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ValidateAccess()
 {

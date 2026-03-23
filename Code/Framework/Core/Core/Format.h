@@ -4,7 +4,7 @@
 
 namespace str
 {
-	template <typename... TArgs>
+	template<typename... TArgs>
 	str::String Format(const char* format, TArgs... args);
 }
 

@@ -5,7 +5,7 @@
 
 #include <type_traits>
 
-template <typename... Types>
+template<typename... Types>
 struct TypeList;
 
 namespace detail 
@@ -38,13 +38,13 @@ namespace core
 	template<template<typename...> class Ref, typename... Args>
 	struct IsSpecialization<Ref<Args...>, Ref> : std::true_type {};
 
-	template <typename TType>
+	template<typename TType>
 	constexpr bool Contains()
 	{
 		return false;
 	}
 
-	template <typename TType, typename THead, typename... TTail>
+	template<typename TType, typename THead, typename... TTail>
 	constexpr bool Contains()
 	{
 		using TStrippedType = typename std::remove_const<TType>::type;
@@ -52,13 +52,13 @@ namespace core
 		return std::is_same<TStrippedType, TStrippedHead>::value || Contains<TType, TTail...>();
 	}
 
-	template <typename... TType, typename... TOther>
+	template<typename... TType, typename... TOther>
 	constexpr bool ContainsAll(const TypeList<TType...>&, const TypeList<TOther...>&)
 	{
 		return (Contains<TType, TOther...>() && ...);
 	}
 
-	template <typename... TType, typename... TOther>
+	template<typename... TType, typename... TOther>
 	constexpr bool ContainsAny(const TypeList<TType...>&, const TypeList<TOther...>&)
 	{
 		return (Contains<TType, TOther...>() || ...);

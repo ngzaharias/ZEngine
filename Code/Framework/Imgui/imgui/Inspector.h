@@ -95,9 +95,9 @@ namespace imgui
 		template<typename Value>
 		bool WriteArray(Array<Value>& values);
 
-		template <typename Value>
+		template<typename Value>
 		void ReadEnum(const Value& value);
-		template <typename TEnum>
+		template<typename TEnum>
 		bool WriteEnum(TEnum& value);
 
 		template<typename Key, typename Value>

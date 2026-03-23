@@ -2,10 +2,10 @@
 
 #include <type_traits>
 
-template <typename... Types>
+template<typename... Types>
 struct TypeList
 {
-	template <typename... Added>
+	template<typename... Added>
 	using Append = TypeList<Types..., Added...>;
 
 	using NonConst = TypeList<std::remove_const_t<Types>...>;
@@ -20,16 +20,16 @@ struct TypeMerge<TypeList<A...>, TypeList<B...>>
 	using TypeList = TypeList<A..., B...>;
 };
 
-template <typename List>
+template<typename List>
 struct TypeConst;
 
-template <>
+template<>
 struct TypeConst<TypeList<>>
 {
 	using type = TypeList<>;
 };
 
-template <typename Head, typename... Tail>
+template<typename Head, typename... Tail>
 struct TypeConst<TypeList<Head, Tail...>>
 {
 private:
@@ -42,16 +42,16 @@ public:
 		List>;
 };
 
-template <typename List>
+template<typename List>
 struct TypeNonConst;
 
-template <>
+template<>
 struct TypeNonConst<TypeList<>>
 {
 	using type = TypeList<>;
 };
 
-template <typename Head, typename... Tail>
+template<typename Head, typename... Tail>
 struct TypeNonConst<TypeList<Head, Tail...>>
 {
 private:

@@ -17,13 +17,13 @@ void ecs::EntityStorage::RegisterComponent()
 		m_FrameComponents.Add(typeId);
 }
 
-template <typename TComponent, typename... TArgs>
+template<typename TComponent, typename... TArgs>
 auto ecs::EntityStorage::AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&
 {
 	return m_EntityBuffer.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
 }
 
-template <typename TComponent>
+template<typename TComponent>
 void ecs::EntityStorage::RemoveComponent(const ecs::Entity& entity)
 {
 	m_EntityBuffer.RemoveComponent<TComponent>(entity);
