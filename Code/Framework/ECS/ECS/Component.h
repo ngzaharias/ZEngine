@@ -18,6 +18,15 @@ namespace ecs
 	struct StaticComponent : public ecs::Component { };
 
 	template<typename TComponent>
+	concept IsComponent = std::derived_from<TComponent, ecs::Component>;
+	template<typename TComponent>
+	concept IsFrameComponent = std::derived_from<TComponent, ecs::FrameComponent>;
+	template<typename TComponent>
+	concept IsSoloComponent = std::derived_from<TComponent, ecs::SoloComponent>;
+	template<typename TComponent>
+	concept IsStaticComponent = std::derived_from<TComponent, ecs::StaticComponent>;
+
+	template<typename TComponent>
 	concept IsSoloOrStaticComponent =
 		std::derived_from<TComponent, ecs::SoloComponent> ||
 		std::derived_from<TComponent, ecs::StaticComponent>;

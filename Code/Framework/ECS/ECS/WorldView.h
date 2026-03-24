@@ -2,6 +2,7 @@
 
 #include "Core/TypeList.h"
 #include "Core/Types.h"
+#include "ECS/Component.h"
 #include "ECS/Entity.h"
 #include "ECS/EntityView.h"
 #include "ECS/EntityWorld.h"

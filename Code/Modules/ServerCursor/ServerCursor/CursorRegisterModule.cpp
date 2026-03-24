@@ -8,13 +8,6 @@
 
 void server::cursor::RegisterModule(ecs::EntityWorld& world)
 {
-	// component
-	{
-		world.RegisterComponent<server::cursor::TransformStaticComponent>();
-	}
-
-	// system
-	{
-		world.RegisterSystem<server::cursor::TransformSystem>();
-	}
+	world.RegisterComponent<server::cursor::TransformStaticComponent>();
+	world.RegisterSystem<server::cursor::TransformSystem>();
 }

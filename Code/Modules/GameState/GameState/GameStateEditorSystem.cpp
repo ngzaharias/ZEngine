@@ -11,7 +11,6 @@ void gamestate::EditorSystem::Initialise(World& world)
 	PROFILE_FUNCTION();
 
 #ifdef Z_EDITOR
-	const ecs::Entity entity = world.CreateEntity();
-	world.AddComponent<gamestate::EditorComponent>(entity);
+	world.AddComponent<gamestate::EditorComponent>();
 #endif
 }

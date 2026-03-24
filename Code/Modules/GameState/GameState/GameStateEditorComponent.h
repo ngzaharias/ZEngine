@@ -4,5 +4,5 @@
 
 namespace gamestate
 {
-	struct EditorComponent final : public ecs::Component { };
+	struct EditorComponent final : public ecs::SoloComponent { };
 };

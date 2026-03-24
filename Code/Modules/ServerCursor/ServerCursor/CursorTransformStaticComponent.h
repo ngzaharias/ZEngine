@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ECS/Entity.h"
 #include "ECS/Component.h"
+#include "ECS/Entity.h"
 #include "Network/PeerId.h"
 
 namespace server::cursor

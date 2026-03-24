@@ -12,8 +12,7 @@ void gamestate::EditModeSystem::Initialise(World& world)
 	PROFILE_FUNCTION();
 
 #ifdef Z_EDITOR
-	const ecs::Entity entity = world.CreateEntity();
-	world.AddComponent<gamestate::EditModeComponent>(entity);
+	world.AddComponent<gamestate::EditModeComponent>();
 #endif
 }
 
@@ -23,15 +22,13 @@ void gamestate::EditModeSystem::Update(World& world, const GameTime& gameTime)
 
 	if (world.HasAny<gamestate::EditModeToggleEvent>())
 	{
-		if (world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
+		if (!world.HasComponent<gamestate::EditModeComponent>())
 		{
-			for (auto&& view : world.Query<ecs::query::Include<gamestate::EditModeComponent>>())
-				world.DestroyEntity(view);
+			world.AddComponent<gamestate::EditModeComponent>();
 		}
 		else
 		{
-			const ecs::Entity entity = world.CreateEntity();
-			world.AddComponent<gamestate::EditModeComponent>(entity);
+			world.RemoveComponent<gamestate::EditModeComponent>();
 		}
 	}
 }

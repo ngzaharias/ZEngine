@@ -55,7 +55,7 @@ void ecs::EntityWorld::RegisterComponent()
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
-	static_assert(std::derived_from<TComponent, ecs::Component>, "Type doesn't inherit from ecs::Component.");
+	static_assert(ecs::IsComponent<TComponent>, "Type doesn't inherit from ecs::Component.");
 
 	Z_PANIC(!IsRegistered<TComponent>(), "Component is already registered!");
 
@@ -69,7 +69,9 @@ auto ecs::EntityWorld::AddComponent(const ecs::Entity& entity, TArgs&&... args) 
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
-	static_assert(std::derived_from<TComponent, ecs::Component>, "Type doesn't inherit from ecs::Component.");
+	static_assert(ecs::IsComponent<TComponent>, "Type doesn't inherit from ecs::Component.");
+	static_assert(!ecs::IsSoloComponent<TComponent>, "Type can't inherit from ecs::SoloComponent.");
+	static_assert(!ecs::IsStaticComponent<TComponent>, "Type can't inherit from ecs::StaticComponent.");
 
 	Z_PANIC(!entity.IsUnassigned(), "Entity is unassigned!");
 	Z_PANIC(IsRegistered<TComponent>(), "Component isn't registered!");
@@ -83,7 +85,9 @@ void ecs::EntityWorld::RemoveComponent(const ecs::Entity& entity)
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
-	static_assert(std::derived_from<TComponent, ecs::Component>, "Type doesn't inherit from ecs::Component.");
+	static_assert(ecs::IsComponent<TComponent>, "Type doesn't inherit from ecs::Component.");
+	static_assert(!ecs::IsSoloComponent<TComponent>, "Type can't inherit from ecs::SoloComponent.");
+	static_assert(!ecs::IsStaticComponent<TComponent>, "Type can't inherit from ecs::StaticComponent.");
 
 	Z_PANIC(IsAlive(entity), "Entity isn't alive!");
 	Z_PANIC(HasComponent<TComponent>(entity), "Entity doesn't have this component!");
@@ -97,7 +101,7 @@ bool ecs::EntityWorld::HasComponent(const ecs::Entity& entity, const bool alive 
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
-	static_assert(std::derived_from<TComponent, ecs::Component>, "Type doesn't inherit from ecs::Component.");
+	static_assert(ecs::IsComponent<TComponent>, "Type doesn't inherit from ecs::Component.");
 
 	Z_PANIC(IsRegistered<TComponent>(), "Component isn't registered!");
 	return m_EntityStorage.HasComponent<TComponent>(entity, alive);
@@ -109,7 +113,9 @@ auto ecs::EntityWorld::ReadComponent(const ecs::Entity& entity, const bool alive
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
-	static_assert(std::derived_from<TComponent, ecs::Component>, "Type doesn't inherit from ecs::Component.");
+	static_assert(ecs::IsComponent<TComponent>, "Type doesn't inherit from ecs::Component.");
+	static_assert(!ecs::IsSoloComponent<TComponent>, "Type can't inherit from ecs::SoloComponent.");
+	static_assert(!ecs::IsStaticComponent<TComponent>, "Type can't inherit from ecs::StaticComponent.");
 
 	Z_PANIC(HasComponent<TComponent>(entity, alive), "Entity doesn't have this component!");
 	return m_EntityStorage.GetComponent<TComponent>(entity, alive);
@@ -121,7 +127,9 @@ auto ecs::EntityWorld::WriteComponent(const ecs::Entity& entity, const bool aliv
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
-	static_assert(std::derived_from<TComponent, ecs::Component>, "Type doesn't inherit from ecs::Component.");
+	static_assert(ecs::IsComponent<TComponent>, "Type doesn't inherit from ecs::Component.");
+	static_assert(!ecs::IsSoloComponent<TComponent>, "Type can't inherit from ecs::SoloComponent.");
+	static_assert(!ecs::IsStaticComponent<TComponent>, "Type can't inherit from ecs::StaticComponent.");
 
 	Z_PANIC(HasComponent<TComponent>(entity, alive), "Entity doesn't have this component!");
 
