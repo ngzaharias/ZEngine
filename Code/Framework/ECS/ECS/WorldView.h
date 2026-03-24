@@ -69,26 +69,41 @@ namespace ecs
 		//////////////////////////////////////////////////////////////////////////
 		// Component
 
-		template<class TComponent, typename... TArgs>
-		auto AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto);
+		template<typename TComponent, typename... TArgs>
+		requires ecs::IsSoloOrStaticComponent<TComponent>
+		auto AddComponent(TArgs&&... args) -> TComponent&;
+		template<typename TComponent, typename... TArgs>
+		auto AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&;
 
-		template<class TComponent>
+		template<typename TComponent>
+		requires ecs::IsSoloOrStaticComponent<TComponent>
+		void RemoveComponent();
+		template<typename TComponent>
 		void RemoveComponent(const ecs::Entity& entity);
 
-		template<class TComponent>
+		template<typename TComponent>
+		requires ecs::IsSoloOrStaticComponent<TComponent>
+		bool HasComponent(const bool alive = true) const;
+		template<typename TComponent>
 		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
 
-		template<class TComponent>
-		auto ReadComponent(const ecs::Entity& entity, const bool alive = true)->const TComponent&;
+		template<typename TComponent>
+		requires ecs::IsSoloOrStaticComponent<TComponent>
+		auto ReadComponent(const bool alive = true) -> const TComponent&;
+		template<typename TComponent>
+		auto ReadComponent(const ecs::Entity& entity, const bool alive = true) -> const TComponent&;
 
-		template<class TComponent>
-		auto WriteComponent(const ecs::Entity& entity, const bool alive = true)->TComponent&;
+		template<typename TComponent>
+		requires ecs::IsSoloOrStaticComponent<TComponent>
+		auto WriteComponent(const bool alive = true) -> TComponent&;
+		template<typename TComponent>
+		auto WriteComponent(const ecs::Entity& entity, const bool alive = true) -> TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event
 
 		template<class TEvent, typename... TArgs>
-		auto AddEvent(TArgs&&... args)->decltype(auto);
+		auto AddEvent(TArgs&&... args) -> TEvent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Resource

@@ -49,11 +49,31 @@ inline void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::DestroyEn
 
 template<typename... TWrite, typename... TRead>
 template<typename TComponent, typename... TArgs>
-auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddComponent(const ecs::Entity& entity, TArgs&&... args)->decltype(auto)
+requires ecs::IsSoloOrStaticComponent<TComponent>
+auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddComponent(TArgs&&... args) -> TComponent&
+{
+	static_assert(core::Contains<TComponent, TWrite...>(), "WorldView doesn't have Write access to Component.");
+
+	return m_EntityWorld.template AddComponent<TComponent>(std::forward<TArgs>(args)...);
+}
+
+template<typename... TWrite, typename... TRead>
+template<typename TComponent, typename... TArgs>
+auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&
 {
 	static_assert(core::Contains<TComponent, TWrite...>(), "WorldView doesn't have Write access to Component.");
 
 	return m_EntityWorld.template AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
+}
+
+template<typename... TWrite, typename... TRead>
+template<class TComponent>
+requires ecs::IsSoloOrStaticComponent<TComponent>
+void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::RemoveComponent()
+{
+	static_assert(core::Contains<TComponent, TWrite...>(), "WorldView doesn't have Write access to Component.");
+
+	m_EntityWorld.template RemoveComponent<TComponent>();
 }
 
 template<typename... TWrite, typename... TRead>
@@ -63,6 +83,18 @@ void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::RemoveComponent(
 	static_assert(core::Contains<TComponent, TWrite...>(), "WorldView doesn't have Write access to Component.");
 
 	m_EntityWorld.template RemoveComponent<TComponent>(entity);
+}
+
+template<typename... TWrite, typename... TRead>
+template<class TComponent>
+requires ecs::IsSoloOrStaticComponent<TComponent>
+bool ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasComponent(const bool alive /*= true*/) const
+{
+	constexpr bool hasWriteAccess = core::Contains<TComponent, TWrite...>();
+	constexpr bool hasReadAccess = core::Contains<TComponent, TRead...>();
+	static_assert(hasWriteAccess || hasReadAccess, "WorldView doesn't have Write/Read access to Component.");
+
+	return m_EntityWorld.template HasComponent<TComponent>(alive);
 }
 
 template<typename... TWrite, typename... TRead>
@@ -78,7 +110,19 @@ bool ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasComponent(con
 
 template<typename... TWrite, typename... TRead>
 template<class TComponent>
-auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadComponent(const ecs::Entity& entity, const bool alive /*= true*/)->const TComponent&
+requires ecs::IsSoloOrStaticComponent<TComponent>
+auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadComponent(const bool alive /*= true*/) -> const TComponent&
+{
+	constexpr bool hasWriteAccess = core::Contains<TComponent, TWrite...>();
+	constexpr bool hasReadAccess = core::Contains<TComponent, TRead...>();
+	static_assert(hasWriteAccess || hasReadAccess, "WorldView doesn't have Write/Read access to Component.");
+
+	return m_EntityWorld.template ReadComponent<TComponent>(alive);
+}
+
+template<typename... TWrite, typename... TRead>
+template<class TComponent>
+auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadComponent(const ecs::Entity& entity, const bool alive /*= true*/) -> const TComponent&
 {
 	constexpr bool hasWriteAccess = core::Contains<TComponent, TWrite...>();
 	constexpr bool hasReadAccess = core::Contains<TComponent, TRead...>();
@@ -89,7 +133,17 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ReadComponent(co
 
 template<typename... TWrite, typename... TRead>
 template<class TComponent>
-auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteComponent(const ecs::Entity& entity, const bool alive /*= true*/)->TComponent&
+requires ecs::IsSoloOrStaticComponent<TComponent>
+auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteComponent(const bool alive /*= true*/) -> TComponent&
+{
+	static_assert(core::Contains<TComponent, TWrite...>(), "WorldView doesn't have Write access to Component.");
+
+	return m_EntityWorld.template WriteComponent<TComponent>(alive);
+}
+
+template<typename... TWrite, typename... TRead>
+template<class TComponent>
+auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteComponent(const ecs::Entity& entity, const bool alive /*= true*/) -> TComponent&
 {
 	static_assert(core::Contains<TComponent, TWrite...>(), "WorldView doesn't have Write access to Component.");
 
@@ -98,7 +152,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WriteComponent(c
 
 template<typename... TWrite, typename... TRead>
 template<typename TEvent, typename... TArgs>
-auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddEvent(TArgs&&... args)->decltype(auto)
+auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::AddEvent(TArgs&&... args) -> TEvent&
 {
 	static_assert(core::Contains<TEvent, TWrite...>(), "WorldView doesn't have Write access to Event.");
 

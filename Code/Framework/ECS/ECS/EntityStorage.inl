@@ -8,13 +8,18 @@ bool ecs::EntityStorage::IsRegistered() const
 template<class TComponent>
 void ecs::EntityStorage::RegisterComponent()
 {
+	auto* aliveComponents = new ecs::ComponentContainer<TComponent>();
+	auto* deadComponents = new ecs::ComponentContainer<TComponent>();
+
 	const ecs::ComponentId typeId = ToTypeId<TComponent, ecs::ComponentTag>();
-	m_AliveComponents.Set(typeId, new ecs::ComponentContainer<TComponent>());
-	m_DeadComponents.Set(typeId, new ecs::ComponentContainer<TComponent>());
+	m_AliveComponents.Set(typeId, aliveComponents);
+	m_DeadComponents.Set(typeId, deadComponents);
 	m_EntityBuffer.RegisterComponent<TComponent>();
 
 	if constexpr (std::derived_from<TComponent, ecs::FrameComponent>)
 		m_FrameComponents.Add(typeId);
+	if constexpr (std::derived_from<TComponent, ecs::StaticComponent>)
+		aliveComponents->Emplace(m_Entity);
 }
 
 template<typename TComponent, typename... TArgs>

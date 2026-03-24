@@ -21,7 +21,6 @@ void ecs::EntityWorld::Initialise()
 
 	RegisterComponent<ecs::NameComponent>();
 
-	m_Entity = CreateEntity();
 	m_QueryRegistry.Initialise();
 	m_SystemRegistry.Initialise(*this);
 	//Z_LOG(ELog::Debug, "{}", LogUpdateOrder());

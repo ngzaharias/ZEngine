@@ -39,6 +39,13 @@ namespace
 		bool m_Bool = false;
 	};
 
+	struct TComponent final : public ecs::StaticComponent 
+	{ 
+		TComponent() = default;
+		TComponent(bool val) : m_Bool(val) { }
+		bool m_Bool = false;
+	};
+
 	struct Event final : public ecs::Event 
 	{ 
 		bool m_Bool = false;
@@ -919,4 +926,23 @@ CLASS_TEST_CASE("FrameComponent is removed at the end of the next frame.")
 	world.Update({});
 	world.Update({});
 	CHECK(!world.HasComponent<FComponent>(entity));
+}
+
+CLASS_TEST_CASE("StaticComponent is available during initialise.")
+{
+	class System : ecs::System
+	{
+		using World = ecs::WorldView
+			::Read<TComponent>;
+
+		void Initialise(World& world)
+		{
+			CHECK(world.HasComponent<TComponent>());
+		};
+	};
+
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<TComponent>();
+	world.Initialise();
 }

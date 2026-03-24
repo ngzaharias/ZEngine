@@ -68,16 +68,16 @@ void ecs::EntityWorld::RegisterComponent()
 }
 
 template<typename TComponent, typename... TArgs>
-requires std::derived_from<TComponent, ecs::SoloComponent>
+requires ecs::IsSoloOrStaticComponent<TComponent>
 auto ecs::EntityWorld::AddComponent(TArgs&&... args) -> TComponent&
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
-	
+
 	Z_PANIC(IsRegistered<TComponent>(), "Component isn't registered!");
 
-	return m_EntityStorage.AddComponent<TComponent>(m_Entity, std::forward<TArgs>(args)...);
+	return m_EntityStorage.AddComponent<TComponent>(m_EntityStorage.m_Entity, std::forward<TArgs>(args)...);
 }
 
 template<typename TComponent, typename... TArgs>
@@ -95,16 +95,16 @@ auto ecs::EntityWorld::AddComponent(const ecs::Entity& entity, TArgs&&... args) 
 }
 
 template<typename TComponent>
-requires std::derived_from<TComponent, ecs::SoloComponent>
+requires ecs::IsSoloOrStaticComponent<TComponent>
 void ecs::EntityWorld::RemoveComponent()
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
 
-	Z_PANIC(HasComponent<TComponent>(m_Entity), "Entity doesn't have this component!");
+	Z_PANIC(HasComponent<TComponent>(m_EntityStorage.m_Entity), "Entity doesn't have this component!");
 
-	m_EntityStorage.RemoveComponent<TComponent>(m_Entity);
+	m_EntityStorage.RemoveComponent<TComponent>(m_EntityStorage.m_Entity);
 }
 
 template<typename TComponent>
@@ -122,7 +122,7 @@ void ecs::EntityWorld::RemoveComponent(const ecs::Entity& entity)
 }
 
 template<typename TComponent>
-requires std::derived_from<TComponent, ecs::SoloComponent>
+requires ecs::IsSoloOrStaticComponent<TComponent>
 bool ecs::EntityWorld::HasComponent(const bool alive /*= true*/) const
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
@@ -130,7 +130,7 @@ bool ecs::EntityWorld::HasComponent(const bool alive /*= true*/) const
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
 
 	Z_PANIC(IsRegistered<TComponent>(), "Component isn't registered!");
-	return m_EntityStorage.HasComponent<TComponent>(m_Entity, alive);
+	return m_EntityStorage.HasComponent<TComponent>(m_EntityStorage.m_Entity, alive);
 }
 
 template<typename TComponent>
@@ -146,15 +146,15 @@ bool ecs::EntityWorld::HasComponent(const ecs::Entity& entity, const bool alive 
 }
 
 template<typename TComponent>
-requires std::derived_from<TComponent, ecs::SoloComponent>
+requires ecs::IsSoloOrStaticComponent<TComponent>
 auto ecs::EntityWorld::ReadComponent(const bool alive /*= true*/) -> const TComponent&
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
 
-	Z_PANIC(HasComponent<TComponent>(m_Entity, alive), "Entity doesn't have this component!");
-	return m_EntityStorage.GetComponent<TComponent>(m_Entity, alive);
+	Z_PANIC(HasComponent<TComponent>(m_EntityStorage.m_Entity, alive), "Entity doesn't have this component!");
+	return m_EntityStorage.GetComponent<TComponent>(m_EntityStorage.m_Entity, alive);
 }
 
 template<typename TComponent>
@@ -170,21 +170,21 @@ auto ecs::EntityWorld::ReadComponent(const ecs::Entity& entity, const bool alive
 }
 
 template<typename TComponent>
-requires std::derived_from<TComponent, ecs::SoloComponent>
+requires ecs::IsSoloOrStaticComponent<TComponent>
 auto ecs::EntityWorld::WriteComponent(const bool alive /*= true*/) -> TComponent&
 {
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
 
-	Z_PANIC(HasComponent<TComponent>(m_Entity, alive), "Entity doesn't have this component!");
+	Z_PANIC(HasComponent<TComponent>(m_EntityStorage.m_Entity, alive), "Entity doesn't have this component!");
 
 	if (alive)
 	{
 		ecs::EntityBuffer& buffer = m_EntityStorage.GetEntityBuffer();
-		buffer.UpdateComponent<TComponent>(m_Entity);
+		buffer.UpdateComponent<TComponent>(m_EntityStorage.m_Entity);
 	}
-	return m_EntityStorage.GetComponent<TComponent>(m_Entity, alive);
+	return m_EntityStorage.GetComponent<TComponent>(m_EntityStorage.m_Entity, alive);
 }
 
 template<typename TComponent>

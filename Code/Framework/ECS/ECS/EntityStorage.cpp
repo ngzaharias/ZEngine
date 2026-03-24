@@ -6,6 +6,7 @@
 ecs::EntityStorage::EntityStorage(ecs::QueryRegistry& queryRegistry)
 	: m_QueryRegistry(queryRegistry)
 {
+	m_Entity = CreateEntity();
 }
 
 auto ecs::EntityStorage::GetEntityBuffer() -> ecs::EntityBuffer&

@@ -72,6 +72,7 @@ namespace ecs
 		auto TryComponent(const ecs::Entity& entity, const bool alive = true) const -> TComponent*;
 
 	private:
+		ecs::Entity m_Entity = {};
 		ecs::EntityBuffer m_EntityBuffer;
 		ecs::QueryRegistry& m_QueryRegistry;
 
