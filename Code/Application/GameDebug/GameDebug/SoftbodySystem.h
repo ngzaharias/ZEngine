@@ -5,13 +5,13 @@
 
 namespace eng
 {
-	struct LinesSingleton;
+	struct LinesStaticComponent;
 	struct TransformComponent;
 }
 
 namespace eng::settings
 {
-	struct DebugSingleton;
+	struct DebugStaticComponent;
 }
 
 namespace softbody
@@ -26,9 +26,9 @@ namespace debug
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::LinesSingleton>
+			eng::LinesStaticComponent>
 			::Read<
-			eng::settings::DebugSingleton,
+			eng::settings::DebugStaticComponent,
 			eng::TransformComponent,
 			softbody::ChainComponent>;
 

@@ -5,7 +5,7 @@
 
 namespace client::settings
 {
-	struct DebugSingleton;
+	struct DebugStaticComponent;
 }
 
 namespace ecs
@@ -15,7 +15,7 @@ namespace ecs
 
 namespace eng
 {
-	struct LinesSingleton;
+	struct LinesStaticComponent;
 	struct StaticMeshComponent;
 	struct TransformComponent;
 }
@@ -40,12 +40,12 @@ namespace hexmap
 			::Write<
 			ecs::NameComponent,
 			eng::level::EntityComponent,
-			eng::LinesSingleton,
+			eng::LinesStaticComponent,
 			eng::StaticMeshComponent,
 			eng::TransformComponent,
 			hexmap::LayerComponent>
 			::Read<
-			client::settings::DebugSingleton,
+			client::settings::DebugStaticComponent,
 			hexmap::RootComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

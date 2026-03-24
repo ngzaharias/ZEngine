@@ -5,9 +5,9 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/SettingsLocalSingleton.h"
+#include "Editor/SettingsLocalStaticComponent.h"
 #include "Engine/CameraComponent.h"
-#include "Engine/LinesSingleton.h"
+#include "Engine/LinesStaticComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Math/Quaternion.h"
 
@@ -15,7 +15,7 @@ void editor::gizmo::CrosshairSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
-	const auto& localSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
+	const auto& localSettings = world.ReadComponent<editor::settings::LocalStaticComponent>();
 	const auto& gizmos = localSettings.m_Gizmos;
 	const auto& settings = gizmos.m_Crosshair;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
@@ -39,12 +39,12 @@ void editor::gizmo::CrosshairSystem::Update(World& world, const GameTime& gameTi
 
 		const Vector3f position = translate + forward * 30.f;
 
-		auto& linesSingleton = world.WriteSingleton<eng::LinesSingleton>();
-		linesSingleton.AddLine(
+		auto& linesStaticComponent = world.WriteComponent<eng::LinesStaticComponent>();
+		linesStaticComponent.AddLine(
 			position - right * 0.1f,
 			position + right * 0.1f,
 			Colour::White);
-		linesSingleton.AddLine(
+		linesStaticComponent.AddLine(
 			position - upward * 0.1f,
 			position + upward * 0.1f,
 			Colour::White);

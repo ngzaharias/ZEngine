@@ -19,7 +19,7 @@ namespace ecs
 	struct EntityCreateMessage;
 	struct EntityDestroyMessage;
 	struct EventAddMessage;
-	struct SingletonUpdateMessage;
+	struct StaticComponentUpdateMessage;
 	struct TypeEvent;
 }
 

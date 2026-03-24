@@ -9,8 +9,8 @@
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
 #include "Engine/LevelEntityComponent.h"
-#include "Engine/LinesSingleton.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/LinesStaticComponent.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "Engine/SpriteAsset.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
@@ -24,7 +24,7 @@
 #include "Math/Quaternion.h"
 #include "Math/Ray.h"
 #include "Math/Sphere.h"
-#include "Outliner/OutlinerSelectSingleton.h"
+#include "Outliner/OutlinerSelectStaticComponent.h"
 
 namespace
 {
@@ -132,13 +132,13 @@ void editor::outliner::SelectSystem::Update(World& world, const GameTime& gameTi
 
 			selected.Emplace(view, math::DistanceSqr(ray.m_Position, intersectPos));
 
-			auto& lines = world.WriteSingleton<eng::LinesSingleton>();
+			auto& lines = world.WriteComponent<eng::LinesStaticComponent>();
 			lines.AddSphere(intersectPos, 100.f, Colour::Red);
 		}
 
 		if (input.IsPressed(strSelect))
 		{
-			auto& selectComponent = world.WriteSingleton<editor::outliner::SelectSingleton>();
+			auto& selectComponent = world.WriteComponent<editor::outliner::SelectStaticComponent>();
 			if (!selected.IsEmpty())
 			{
 				std::sort(selected.begin(), selected.end(),

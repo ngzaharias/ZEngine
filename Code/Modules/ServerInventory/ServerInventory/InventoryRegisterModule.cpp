@@ -14,7 +14,7 @@
 #include "ServerInventory/InventoryMemberSystem.h"
 #include "ServerInventory/InventoryOwnerComponent.h"
 #include "ServerInventory/InventoryOwnerSystem.h"
-#include "ServerInventory/InventoryStorageChangesSingleton.h"
+#include "ServerInventory/InventoryStorageChangesStaticComponent.h"
 #include "ServerInventory/InventoryStorageComponent.h"
 #include "ServerInventory/InventoryStorageCreateRequestComponent.h"
 #include "ServerInventory/InventoryStorageCreateResultComponent.h"
@@ -37,7 +37,7 @@ void server::inventory::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterComponent<server::inventory::StorageCreateResultComponent>();
 	world.RegisterComponent<server::inventory::StorageDestroyRequestComponent>();
 	world.RegisterComponent<server::inventory::StorageDestroyResultComponent>();
-	world.RegisterSingleton<server::inventory::StorageChangesSingleton>();
+	world.RegisterComponent<server::inventory::StorageChangesStaticComponent>();
 	world.RegisterSystem<server::inventory::StorageSystem>();
 	world.RegisterSystem<server::inventory::MemberSystem>();
 	world.RegisterSystem<server::inventory::OwnerSystem>();

@@ -8,7 +8,7 @@
 #include "Engine/ApplicationCloseEvent.h"
 #include "Engine/InputManager.h"
 #include "Engine/LevelLoadEvent.h"
-#include "Engine/SettingsLaunchSingleton.h"
+#include "Engine/SettingsLaunchStaticComponent.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCGameMenu.h"
 #include "GameUI/GameMenuCloseEvent.h"
@@ -65,7 +65,7 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 
 	if (world.HasAny<gui::game_menu::ExitToMenuEvent>())
 	{
-		const auto& settings = world.ReadSingleton<eng::settings::LaunchSingleton>();
+		const auto& settings = world.ReadComponent<eng::settings::LaunchStaticComponent>();
 		world.AddEvent<eng::level::LoadEvent>(settings.m_Level);
 		world.AddEvent<gui::game_menu::CloseEvent>();
 	}

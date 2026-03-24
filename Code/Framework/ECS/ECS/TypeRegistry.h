@@ -17,9 +17,6 @@
 #include "ECS/ResourceId.h"
 #include "ECS/ResourceTag.h"
 #include "ECS/ReplicationComponent.h"
-#include "ECS/Singleton.h"
-#include "ECS/SingletonStorage.h"
-#include "ECS/SingletonTag.h"
 #include "ECS/System.h"
 #include "ECS/SystemId.h"
 #include "ECS/SystemTag.h"
@@ -27,7 +24,6 @@
 #include "ECS/TypeEvent.h"
 #include "ECS/TypeInfo.h"
 #include "ECS/TypeResource.h"
-#include "ECS/TypeSingleton.h"
 #include "ECS/TypeSystem.h"
 
 namespace ecs
@@ -41,7 +37,6 @@ namespace ecs
 		using ComponentMap	= Map<ecs::ComponentId, ecs::TypeComponent>;
 		using EventMap		= Map<ecs::EventId,		ecs::TypeEvent>;
 		using ResourceMap	= Map<ecs::ResourceId,	ecs::TypeResource>;
-		using SingletonMap	= Map<ecs::SingletonId, ecs::TypeSingleton>;
 		using SystemMap		= Map<ecs::SystemId,	ecs::TypeSystem>;
 
 		const TypeMap& GetTypeMap() const;
@@ -105,12 +100,6 @@ namespace ecs
 		void RegisterResource();
 
 		//////////////////////////////////////////////////////////////////////////
-		// Singleton
-
-		template<typename TSingleton>
-		void RegisterSingleton();
-
-		//////////////////////////////////////////////////////////////////////////
 		// System
 
 		template<typename TSystem>
@@ -122,7 +111,6 @@ namespace ecs
 		ComponentMap	m_ComponentMap = {};
 		EventMap		m_EventMap = {};
 		ResourceMap		m_ResourceMap = {};
-		SingletonMap	m_SingletonMap = {};
 		SystemMap		m_SystemMap = {};
 	};
 }

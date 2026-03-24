@@ -5,7 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/ReplicationComponent.h"
 #include "ECS/WorldView.h"
-#include "ServerCursor/CursorTransformSingleton.h"
+#include "ServerCursor/CursorTransformStaticComponent.h"
 #include "ServerNetwork/NetworkPeerComponent.h"
 #include "SharedCursor/CursorClientTransformEvent.h"
 #include "SharedCursor/CursorTransformComponent.h"
@@ -16,8 +16,8 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 
 	for (const auto& eventData : world.Events<shared::cursor::ClientTransformEvent>())
 	{
-		const auto& transformSingleton = world.ReadSingleton<server::cursor::TransformSingleton>();
-		const auto& peers = transformSingleton.m_Peers;
+		const auto& transformStaticComponent = world.ReadComponent<server::cursor::TransformStaticComponent>();
+		const auto& peers = transformStaticComponent.m_Peers;
 		const auto find = peers.Find(eventData.m_PeerId);
 		if (find == peers.end())
 			continue;
@@ -38,17 +38,17 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 		auto& transformComponent = world.AddComponent<shared::cursor::TransformComponent>(entity);
 		transformComponent.m_PeerId = peerId;
 
-		auto& transformSingleton = world.WriteSingleton<server::cursor::TransformSingleton>();
-		transformSingleton.m_Peers.Set(peerId, entity);
+		auto& transformStaticComponent = world.WriteComponent<server::cursor::TransformStaticComponent>();
+		transformStaticComponent.m_Peers.Set(peerId, entity);
 	}
 
 	for (auto&& view : world.Query<ecs::query::Removed<server::network::PeerComponent>::Include<const server::network::PeerComponent>>())
 	{
 		const auto& peerComponent = view.ReadRequired<server::network::PeerComponent>();
-		auto& transformSingleton = world.WriteSingleton<server::cursor::TransformSingleton>();
+		auto& transformStaticComponent = world.WriteComponent<server::cursor::TransformStaticComponent>();
 		
 		const net::PeerId peerId = peerComponent.m_PeerId;
-		auto& peers = transformSingleton.m_Peers;
+		auto& peers = transformStaticComponent.m_Peers;
 
 		const ecs::Entity entity = peers.Get(peerId);
 		world.DestroyEntity(entity);

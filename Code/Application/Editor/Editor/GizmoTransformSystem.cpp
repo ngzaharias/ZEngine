@@ -4,19 +4,19 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/GizmoTransformSingleton.h"
-#include "Editor/SettingsLocalSingleton.h"
+#include "Editor/GizmoTransformStaticComponent.h"
+#include "Editor/SettingsLocalStaticComponent.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
 #include "Engine/PhysicsComponent.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "GameState/GameStateEditModeComponent.h"
 #include "Math/Matrix.h"
-#include "Outliner/OutlinerSelectSingleton.h"
+#include "Outliner/OutlinerSelectStaticComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -37,28 +37,28 @@ namespace
 		const auto& input = world.ReadResource<eng::InputManager>();
 		if (input.IsPressed(strTransform))
 		{
-			auto& gizmo = world.WriteSingleton<editor::gizmo::TransformSingleton>();
+			auto& gizmo = world.WriteComponent<editor::gizmo::TransformStaticComponent>();
 			gizmo.m_TransformType = editor::gizmo::ETransformType::Transform;
 		}
 		if (input.IsPressed(strPhysics))
 		{
-			auto& gizmo = world.WriteSingleton<editor::gizmo::TransformSingleton>();
+			auto& gizmo = world.WriteComponent<editor::gizmo::TransformStaticComponent>();
 			gizmo.m_TransformType = editor::gizmo::ETransformType::Physics;
 		}
 
 		if (input.IsPressed(strTranslate))
 		{
-			auto& gizmo = world.WriteSingleton<editor::gizmo::TransformSingleton>();
+			auto& gizmo = world.WriteComponent<editor::gizmo::TransformStaticComponent>();
 			gizmo.m_TransformOper = editor::gizmo::ETransformOper::Translate;
 		}
 		if (input.IsPressed(strRotate))
 		{
-			auto& gizmo = world.WriteSingleton<editor::gizmo::TransformSingleton>();
+			auto& gizmo = world.WriteComponent<editor::gizmo::TransformStaticComponent>();
 			gizmo.m_TransformOper = editor::gizmo::ETransformOper::Rotate;
 		}
 		if (input.IsPressed(strScale))
 		{
-			auto& gizmo = world.WriteSingleton<editor::gizmo::TransformSingleton>();
+			auto& gizmo = world.WriteComponent<editor::gizmo::TransformStaticComponent>();
 			gizmo.m_TransformOper = editor::gizmo::ETransformOper::Scale;
 		}
 	}
@@ -86,7 +86,7 @@ namespace
 		if (!window)
 			return;
 
-		const auto& gizmo = world.ReadSingleton<editor::gizmo::TransformSingleton>();
+		const auto& gizmo = world.ReadComponent<editor::gizmo::TransformStaticComponent>();
 
 		ImGuiWindowClass windowClass;
 		windowClass.ViewportFlagsOverrideClear |= ImGuiViewportFlags_NoAutoMerge;
@@ -130,7 +130,7 @@ namespace
 				ImGuizmo::SetDrawlist();
 				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 
-				const auto& selectComponent = world.ReadSingleton<editor::outliner::SelectSingleton>();
+				const auto& selectComponent = world.ReadComponent<editor::outliner::SelectStaticComponent>();
 				const ecs::Entity selected = selectComponent.m_Entity;
 				if (selected.IsUnassigned())
 					continue;
@@ -239,8 +239,8 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
-	const auto& singleton = world.ReadSingleton<editor::settings::LocalSingleton>();
-	const auto& gizmos = singleton.m_Gizmos;
+	const auto& component = world.ReadComponent<editor::settings::LocalStaticComponent>();
+	const auto& gizmos = component.m_Gizmos;
 	const auto& settings = gizmos.m_Transform;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
 		return;

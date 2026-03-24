@@ -13,7 +13,7 @@ namespace ecs
 
 namespace server::cursor
 {
-	struct TransformSingleton;
+	struct TransformStaticComponent;
 }
 
 namespace server::network
@@ -35,7 +35,7 @@ namespace server::cursor
 		using World = ecs::WorldView
 			::Write<
 			ecs::ReplicationComponent,
-			server::cursor::TransformSingleton,
+			server::cursor::TransformStaticComponent,
 			shared::cursor::TransformComponent>
 			::Read<
 			server::network::PeerComponent,

@@ -8,7 +8,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
-#include "Engine/LinesSingleton.h"
+#include "Engine/LinesStaticComponent.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"

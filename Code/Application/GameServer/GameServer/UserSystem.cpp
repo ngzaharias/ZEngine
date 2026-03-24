@@ -7,7 +7,7 @@
 #include "ECS/ReplicationHost.h"
 #include "ECS/WorldView.h"
 #include "Engine/UserComponent.h"
-#include "Engine/UserMapSingleton.h"
+#include "Engine/UserMapStaticComponent.h"
 #include "Network/Host.h"
 
 void server::UserSystem::Initialise(World& world)
@@ -33,7 +33,7 @@ void server::UserSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& userMapComponent = world.ReadSingleton<net::UserMapSingleton>();
+	const auto& userMapComponent = world.ReadComponent<net::UserMapStaticComponent>();
 	for (auto&& [userId, wantsConnected] : m_Requests)
 	{
 		auto& replicationHost = world.WriteResource<ecs::ReplicationHost>();
@@ -51,7 +51,7 @@ void server::UserSystem::Update(World& world, const GameTime& gameTime)
 			auto& userComponent = world.AddComponent<net::UserComponent>(userEntity);
 			userComponent.m_UserId = userId;
 
-			auto& mapComponent = world.WriteSingleton<net::UserMapSingleton>();
+			auto& mapComponent = world.WriteComponent<net::UserMapStaticComponent>();
 			mapComponent.m_EntityToUser.Set(userEntity, userId);
 			mapComponent.m_UserToEntity.Set(userId, userEntity);
 
@@ -63,7 +63,7 @@ void server::UserSystem::Update(World& world, const GameTime& gameTime)
 			const ecs::Entity userEntity = userMapComponent.m_UserToEntity.Get(userId);
 			world.DestroyEntity(userEntity);
 
-			auto& mapComponent = world.WriteSingleton<net::UserMapSingleton>();
+			auto& mapComponent = world.WriteComponent<net::UserMapStaticComponent>();
 			mapComponent.m_EntityToUser.Remove(userEntity);
 			mapComponent.m_UserToEntity.Remove(userId);
 

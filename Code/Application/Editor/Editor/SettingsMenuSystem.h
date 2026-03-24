@@ -11,7 +11,7 @@ namespace ecs
 
 namespace editor::settings
 {
-	struct LocalSingleton;
+	struct LocalStaticComponent;
 	struct WindowComponent;
 	struct WindowEvent;
 }
@@ -23,7 +23,7 @@ namespace editor::settings
 	public:
 		using World = ecs::WorldView::Write<
 			ecs::NameComponent,
-			editor::settings::LocalSingleton,
+			editor::settings::LocalStaticComponent,
 			editor::settings::WindowComponent>
 			::Read<
 			editor::settings::WindowEvent>;

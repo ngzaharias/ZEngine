@@ -5,11 +5,11 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/LinesSingleton.h"
+#include "Engine/LinesStaticComponent.h"
 #include "Engine/PhysicsComponent.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "Math/AABB.h"
 #include "Math/Matrix.h"
 #include "Math/OBB.h"
@@ -46,7 +46,7 @@ namespace
 	using World = debug::PhysicsSystem::World;
 	void RenderShape(World& world, const physx::PxActor& actor, const physx::PxShape& shape, const physx::PxTransform& actorTransform)
 	{
-		auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
+		auto& linesComponent = world.WriteComponent<eng::LinesStaticComponent>();
 
 		const physx::PxTransform& shapeTransform = shape.getLocalPose();
 		const Matrix4x4 transform = ToTransform(shapeTransform) * ToTransform(actorTransform);
@@ -83,7 +83,7 @@ void debug::PhysicsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
+	const auto& settings = world.ReadComponent<eng::settings::DebugStaticComponent>();
 	if (!settings.m_ArePhysicsEnabled)
 		return;
 

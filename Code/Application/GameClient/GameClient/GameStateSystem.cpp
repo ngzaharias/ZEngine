@@ -7,7 +7,7 @@
 #include "ECS/WorldView.h"
 #include "GameClient/GameStateChangeFinishedEvent.h"
 #include "GameClient/GameStateChangeRequestEvent.h"
-#include "GameClient/GameStateStateSingleton.h"
+#include "GameClient/GameStateStateStaticComponent.h"
 #include "GameClient/GameStateTypes.h"
 
 void gamestate::StateSystem::Update(World& world, const GameTime& gameTime)
@@ -16,17 +16,17 @@ void gamestate::StateSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const auto& request : world.Events<gamestate::ChangeRequestEvent>())
 	{
-		auto& stateComponent = world.WriteSingleton<gamestate::StateSingleton>();
+		auto& stateComponent = world.WriteComponent<gamestate::StateStaticComponent>();
 		stateComponent.m_Queue.Append(request.m_Queue);
 	}
 
-	const auto& constComponent = world.ReadSingleton<gamestate::StateSingleton>();
+	const auto& constComponent = world.ReadComponent<gamestate::StateStaticComponent>();
 	const bool hasEmptyState = std::holds_alternative<gamestate::None>(constComponent.m_State);
 	const bool hasStateQueued = !constComponent.m_Queue.IsEmpty();
 	const bool hasStateFinished = world.HasAny<gamestate::ChangeFinishedEvent>();
 	if ((hasEmptyState && hasStateQueued) || hasStateFinished)
 	{
-		auto& stateComponent = world.WriteSingleton<gamestate::StateSingleton>();
+		auto& stateComponent = world.WriteComponent<gamestate::StateStaticComponent>();
 
 		// remove old state
 		stateComponent.m_State = gamestate::None();

@@ -93,7 +93,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 	//// #temp: level - 1
 	//if (false)
 	//{
-	//	auto& lines = world.WriteSingleton<eng::LinesSingleton>();
+	//	auto& lines = world.WriteComponent<eng::LinesStaticComponent>();
 
 	//	const float radiusMinor = chart.m_HexRadius / settings.m_TileRatio;
 	//	const Vector2i min = hexagon::ToOffset(chart.m_Frustrum.m_Min, radiusMinor);
@@ -108,7 +108,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 
 	//// #temp: level + 1
 	//{
-	//	auto& lines = world.WriteSingleton<eng::LinesSingleton>();
+	//	auto& lines = world.WriteComponent<eng::LinesStaticComponent>();
 
 	//	const float radiusMajor = chart.m_HexRadius * settings.m_TileRatio;
 	//	const Vector2i min = hexagon::ToOffset(chart.m_Frustrum.m_Min, radiusMajor);

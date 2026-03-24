@@ -6,12 +6,12 @@
 
 namespace client::hidden
 {
-	struct DebugSingleton;
+	struct DebugStaticComponent;
 }
 
 namespace client::settings
 {
-	struct DebugSingleton;
+	struct DebugStaticComponent;
 }
 
 namespace debug::settings
@@ -31,7 +31,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct DebugSingleton;
+	struct DebugStaticComponent;
 }
 
 namespace debug::settings
@@ -41,11 +41,11 @@ namespace debug::settings
 	public:
 		using World = ecs::WorldView
 			::Write<
-			client::hidden::DebugSingleton,
-			client::settings::DebugSingleton,
+			client::hidden::DebugStaticComponent,
+			client::settings::DebugStaticComponent,
 			debug::settings::WindowComponent,
 			ecs::NameComponent,
-			eng::settings::DebugSingleton,
+			eng::settings::DebugStaticComponent,
 			eng::WindowManager>;
 
 		void Update(World& world, const GameTime& gameTime);

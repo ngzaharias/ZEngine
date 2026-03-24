@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/VersionSingleton.h"
+#include "Engine/VersionStaticComponent.h"
 
 namespace
 {
@@ -21,7 +21,7 @@ void eng::VersionSystem::Initialise(World& world)
 	return;
 #endif
 
-	auto& component = world.WriteSingleton<eng::VersionSingleton>();
+	auto& component = world.WriteComponent<eng::VersionStaticComponent>();
 
 	char buffer[256];
 	if (FILE* pipe = _popen(strBranch, "r"))

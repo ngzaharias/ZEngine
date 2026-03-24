@@ -5,7 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/Visitor.h"
-#include "FlipbookEditor/FlipbookEditorSettingsSingleton.h"
+#include "FlipbookEditor/FlipbookEditorSettingsStaticComponent.h"
 #include "GameState/GameStateEditorComponent.h"
 
 namespace
@@ -21,7 +21,7 @@ void editor::flipbook::SettingsSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(world.WriteSingleton<editor::flipbook::SettingsSingleton>());
+	visitor.Read(world.WriteComponent<editor::flipbook::SettingsStaticComponent>());
 }
 
 void editor::flipbook::SettingsSystem::Update(World& world, const GameTime& gameTime)
@@ -31,12 +31,12 @@ void editor::flipbook::SettingsSystem::Update(World& world, const GameTime& game
 	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
 		return;
 
-	if (world.HasAny<editor::flipbook::SettingsSingleton>())
+	if (world.HasAny<ecs::query::Updated<editor::flipbook::SettingsStaticComponent>>())
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(world.ReadSingleton<editor::flipbook::SettingsSingleton>());
+		visitor.Write(world.ReadComponent<editor::flipbook::SettingsStaticComponent>());
 		visitor.SaveToFile(filepath);
 	}
 }

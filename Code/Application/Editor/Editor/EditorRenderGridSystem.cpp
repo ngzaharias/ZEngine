@@ -5,12 +5,12 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/SettingsLocalSingleton.h"
+#include "Editor/SettingsLocalStaticComponent.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/LinesSingleton.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/LinesStaticComponent.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -90,8 +90,8 @@ void editor::RenderGridSystem::Update(World& world, const GameTime& gameTime)
 	if (!world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
 		return;
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
-	const auto& localSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
+	const auto& debugSettings = world.ReadComponent<eng::settings::DebugStaticComponent>();
+	const auto& localSettings = world.ReadComponent<editor::settings::LocalStaticComponent>();
 	const auto& gizmos = localSettings.m_Gizmos;
 	const auto& settings = gizmos.m_FloorGrid;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)

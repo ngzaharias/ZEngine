@@ -11,8 +11,8 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/FlipbookComponent.h"
-#include "Engine/FrameBufferSingleton.h"
-#include "Engine/LevelDirectorySingleton.h"
+#include "Engine/FrameBufferStaticComponent.h"
+#include "Engine/LevelDirectoryStaticComponent.h"
 #include "Engine/LevelEntityComponent.h"
 #include "Engine/LevelLoadedComponent.h"
 #include "Engine/LevelLoadingComponent.h"
@@ -20,24 +20,24 @@
 #include "Engine/LightAmbientComponent.h"
 #include "Engine/LightDirectionalComponent.h"
 #include "Engine/LightPointComponent.h"
-#include "Engine/LinesSingleton.h"
-#include "Engine/MusicSingleton.h"
+#include "Engine/LinesStaticComponent.h"
+#include "Engine/MusicStaticComponent.h"
 #include "Engine/PhysicsComponent.h"
-#include "Engine/PhysicsSceneSingleton.h"
+#include "Engine/PhysicsSceneStaticComponent.h"
 #include "Engine/PrototypeManager.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/SavegameComponent.h"
-#include "Engine/SettingsAudioSingleton.h"
-#include "Engine/SettingsDebugSingleton.h"
-#include "Engine/SettingsGameplaySingleton.h"
-#include "Engine/SettingsLaunchSingleton.h"
-#include "Engine/SettingsWindowSingleton.h"
+#include "Engine/SettingsAudioStaticComponent.h"
+#include "Engine/SettingsDebugStaticComponent.h"
+#include "Engine/SettingsGameplayStaticComponent.h"
+#include "Engine/SettingsLaunchStaticComponent.h"
+#include "Engine/SettingsWindowStaticComponent.h"
 #include "Engine/SoundObjectComponent.h"
-#include "Engine/SoundRandomBufferSingleton.h"
+#include "Engine/SoundRandomBufferStaticComponent.h"
 #include "Engine/SoundRandomComponent.h"
 #include "Engine/SoundRandomRequestComponent.h"
-#include "Engine/SoundSequenceBufferSingleton.h"
+#include "Engine/SoundSequenceBufferStaticComponent.h"
 #include "Engine/SoundSequenceComponent.h"
 #include "Engine/SoundSequenceRequestComponent.h"
 #include "Engine/SoundSingleRequestComponent.h"
@@ -47,8 +47,8 @@
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/UserComponent.h"
-#include "Engine/UserMapSingleton.h"
-#include "Engine/VersionSingleton.h"
+#include "Engine/UserMapStaticComponent.h"
+#include "Engine/VersionStaticComponent.h"
 #include "Engine/VisibilityComponent.h"
 
 #include "Engine/Visitor.h"
@@ -81,20 +81,20 @@ void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterEvent<eng::application::CloseEvent>();
 	entityWorld.RegisterEvent<eng::TablesReloadedEvent>();
 
-	entityWorld.RegisterSingleton<eng::FrameBufferSingleton>();
-	entityWorld.RegisterSingleton<eng::LinesSingleton>();
-	entityWorld.RegisterSingleton<eng::MusicSingleton>();
-	entityWorld.RegisterSingleton<eng::settings::AudioSingleton>();
-	entityWorld.RegisterSingleton<eng::settings::DebugSingleton>();
-	entityWorld.RegisterSingleton<eng::settings::GameplaySingleton>();
-	entityWorld.RegisterSingleton<eng::settings::WindowSingleton>();
-	entityWorld.RegisterSingleton<eng::sound::RandomBufferSingleton>();
-	entityWorld.RegisterSingleton<eng::sound::SequenceBufferSingleton>();
+	entityWorld.RegisterComponent<eng::FrameBufferStaticComponent>();
+	entityWorld.RegisterComponent<eng::LinesStaticComponent>();
+	entityWorld.RegisterComponent<eng::MusicStaticComponent>();
+	entityWorld.RegisterComponent<eng::settings::AudioStaticComponent>();
+	entityWorld.RegisterComponent<eng::settings::DebugStaticComponent>();
+	entityWorld.RegisterComponent<eng::settings::GameplayStaticComponent>();
+	entityWorld.RegisterComponent<eng::settings::WindowStaticComponent>();
+	entityWorld.RegisterComponent<eng::sound::RandomBufferStaticComponent>();
+	entityWorld.RegisterComponent<eng::sound::SequenceBufferStaticComponent>();
 }
 
 void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
 {
-	entityWorld.RegisterSingleton<net::UserMapSingleton>();
+	entityWorld.RegisterComponent<net::UserMapStaticComponent>();
 }
 
 void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld)
@@ -126,11 +126,11 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld)
 		entityWorld.RegisterEvent<eng::level::LoadEvent>();
 	}
 
-	// singletons
+	// components
 	{
-		entityWorld.RegisterSingleton<eng::level::DirectorySingleton>();
-		entityWorld.RegisterSingleton<eng::PhysicsSceneSingleton>();
-		entityWorld.RegisterSingleton<eng::settings::LaunchSingleton>();
-		entityWorld.RegisterSingleton<eng::VersionSingleton>();
+		entityWorld.RegisterComponent<eng::level::DirectoryStaticComponent>();
+		entityWorld.RegisterComponent<eng::PhysicsSceneStaticComponent>();
+		entityWorld.RegisterComponent<eng::settings::LaunchStaticComponent>();
+		entityWorld.RegisterComponent<eng::VersionStaticComponent>();
 	}
 }

@@ -172,25 +172,6 @@ void ecs::TypeRegistry::RegisterResource()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Singleton
-
-template<typename TSingleton>
-void ecs::TypeRegistry::RegisterSingleton()
-{
-	const TypeId globalId = ToTypeId<TSingleton>();
-	const TypeId localId = ToTypeId<TSingleton, ecs::SingletonTag>();
-
-	ecs::TypeInfo& info = m_TypeMap[globalId];
-	info.m_Name = ToTypeName<TSingleton>();
-	info.m_Base = ecs::ETypeBase::Singleton;
-	info.m_LocalId = localId;
-
-	ecs::TypeSingleton& entry = m_SingletonMap[localId];
-	entry.m_GlobalId = globalId;
-	entry.m_LocalId = localId;
-}
-
-//////////////////////////////////////////////////////////////////////////
 // System
 
 template<typename TSystem>

@@ -21,7 +21,7 @@ namespace eng::level
 
 namespace eng::settings
 {
-	struct LaunchSingleton;
+	struct LaunchStaticComponent;
 }
 
 namespace gui::level_complete
@@ -44,7 +44,7 @@ namespace gui::level_complete
 			eng::UIManager>
 			::Read<
 			eng::level::LoadedComponent,
-			eng::settings::LaunchSingleton,
+			eng::settings::LaunchStaticComponent,
 			gui::level_complete::ExitGameEvent,
 			gui::level_complete::ExitToMenuEvent,
 			gui::level_complete::ResetGameEvent,

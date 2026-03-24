@@ -7,7 +7,7 @@
 #include "Engine/ApplicationCloseEvent.h"
 #include "Engine/LevelLoadedComponent.h"
 #include "Engine/LevelLoadEvent.h"
-#include "Engine/SettingsLaunchSingleton.h"
+#include "Engine/SettingsLaunchStaticComponent.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCLevelComplete.h"
 #include "GameUI/LevelCompleteExitGameEvent.h"
@@ -48,7 +48,7 @@ void gui::level_complete::MenuSystem::Update(World& world, const GameTime& gameT
 
 	if (world.HasAny<gui::level_complete::ExitToMenuEvent>())
 	{
-		const auto& settings = world.ReadSingleton<eng::settings::LaunchSingleton>();
+		const auto& settings = world.ReadComponent<eng::settings::LaunchStaticComponent>();
 		world.AddEvent<eng::level::LoadEvent>(settings.m_Level);
 
 		for (auto&& view : world.Query<ecs::query::Include<const gui::level_complete::WindowComponent>>())

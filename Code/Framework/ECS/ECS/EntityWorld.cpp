@@ -8,7 +8,6 @@ ecs::EntityWorld::EntityWorld(ecs::TypeRegistry& typeRegistry)
 	: m_TypeRegistry(typeRegistry)
 	, m_EntityStorage(m_QueryRegistry)
 	, m_EventStorage()
-	, m_SingletonStorage()
 	, m_QueryRegistry()
 	, m_ResourceRegistry()
 	, m_SystemRegistry()
@@ -44,7 +43,6 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 
 	m_EntityStorage.FlushChanges();
 	m_EventStorage.FlushChanges();
-	m_SingletonStorage.FlushChanges();
 }
 
 str::String ecs::EntityWorld::LogDependencies() const

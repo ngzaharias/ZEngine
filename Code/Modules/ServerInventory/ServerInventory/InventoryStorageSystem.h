@@ -16,7 +16,7 @@ namespace server::inventory
 	struct MemberRemoveRequestComponent;
 	struct MemberRemoveResultComponent;
 	struct OwnerComponent;
-	struct StorageChangesSingleton;
+	struct StorageChangesStaticComponent;
 	struct StorageComponent;
 	struct StorageCreateRequestComponent;
 	struct StorageCreateResultComponent;
@@ -35,7 +35,7 @@ namespace server::inventory
 			server::inventory::MemberAddResultComponent,
 			server::inventory::MemberMoveResultComponent,
 			server::inventory::MemberRemoveResultComponent,
-			server::inventory::StorageChangesSingleton,
+			server::inventory::StorageChangesStaticComponent,
 			server::inventory::StorageComponent,
 			server::inventory::StorageCreateResultComponent,
 			server::inventory::StorageDestroyResultComponent>

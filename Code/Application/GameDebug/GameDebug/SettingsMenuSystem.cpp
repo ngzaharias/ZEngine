@@ -1,13 +1,13 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/SettingsMenuSystem.h"
 
-#include "ClientHidden/HiddenDebugSingleton.h"
+#include "ClientHidden/HiddenDebugStaticComponent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/SettingsDebugSingleton.h"
-#include "GameClient/SettingsDebugSingleton.h"
+#include "Engine/SettingsDebugStaticComponent.h"
+#include "GameClient/SettingsDebugStaticComponent.h"
 #include "GameDebug/SettingsWindowComponent.h"
 #include "GameDebug/SettingsWindowEvent.h"
 
@@ -32,9 +32,9 @@ void debug::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Debug Settings");
 
 		auto& window = world.AddComponent<debug::settings::WindowComponent>(windowEntity);
-		window.m_Engine = world.ReadSingleton<eng::settings::DebugSingleton>();
-		window.m_Client = world.ReadSingleton<client::settings::DebugSingleton>();
-		window.m_Hidden = world.ReadSingleton<client::hidden::DebugSingleton>();
+		window.m_Engine = world.ReadComponent<eng::settings::DebugStaticComponent>();
+		window.m_Client = world.ReadComponent<client::settings::DebugStaticComponent>();
+		window.m_Hidden = world.ReadComponent<client::hidden::DebugStaticComponent>();
 
 		ImGui::OpenPopup("Debug Settings##gamedebug");
 	}
@@ -58,13 +58,13 @@ void debug::settings::MenuSystem::Update(World& world, const GameTime& gameTime)
 			if (inspector.Begin("##debugsettings"))
 			{
 				if (inspector.Write(window.m_Engine))
-					world.WriteSingleton<eng::settings::DebugSingleton>() = window.m_Engine;
+					world.WriteComponent<eng::settings::DebugStaticComponent>() = window.m_Engine;
 				ImGui::Spacing();
 				if (inspector.Write(window.m_Client))
-					world.WriteSingleton<client::settings::DebugSingleton>() = window.m_Client;
+					world.WriteComponent<client::settings::DebugStaticComponent>() = window.m_Client;
 				ImGui::Spacing();
 				if (inspector.Write(window.m_Hidden))
-					world.WriteSingleton<client::hidden::DebugSingleton>() = window.m_Hidden;
+					world.WriteComponent<client::hidden::DebugStaticComponent>() = window.m_Hidden;
 				inspector.End();
 			}
 			ImGui::End();

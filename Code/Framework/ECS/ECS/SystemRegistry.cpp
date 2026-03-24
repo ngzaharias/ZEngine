@@ -18,7 +18,7 @@ namespace
 		switch (value)
 		{
 		case ecs::ETypeBase::Component:
-		case ecs::ETypeBase::Singleton:
+		case ecs::ETypeBase::StaticComponent:
 			return true;
 		default:
 			return false;

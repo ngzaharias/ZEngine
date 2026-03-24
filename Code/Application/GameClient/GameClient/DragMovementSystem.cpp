@@ -8,9 +8,9 @@
 #include "ECS/WorldView.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/CameraComponent.h"
-#include "Engine/LinesSingleton.h"
+#include "Engine/LinesStaticComponent.h"
 #include "Engine/InputManager.h"
-#include "Engine/PhysicsSceneSingleton.h"
+#include "Engine/PhysicsSceneStaticComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -58,7 +58,7 @@ void drag::MovementSystem::Update(World& world, const GameTime& gameTime)
 
 			const OBB3f obb = OBB3f::FromExtents(rotator, Vector3f(500.f, 500.f, 0.f));
 
-			auto& linesComponent = world.WriteSingleton<eng::LinesSingleton>();
+			auto& linesComponent = world.WriteComponent<eng::LinesStaticComponent>();
 			linesComponent.AddOBB(planeTranslate, obb, Colour::White);
 		}
 

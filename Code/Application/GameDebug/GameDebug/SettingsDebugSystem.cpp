@@ -1,14 +1,14 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/SettingsDebugSystem.h"
 
-#include "ClientHidden/HiddenDebugSingleton.h"
+#include "ClientHidden/HiddenDebugStaticComponent.h"
 #include "Core/Path.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "Engine/Visitor.h"
-#include "GameClient/SettingsDebugSingleton.h"
+#include "GameClient/SettingsDebugStaticComponent.h"
 
 namespace
 {
@@ -23,9 +23,9 @@ void debug::settings::DebugSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(world.WriteSingleton<eng::settings::DebugSingleton>());
-	visitor.Read(world.WriteSingleton<client::settings::DebugSingleton>());
-	visitor.Read(world.WriteSingleton<client::hidden::DebugSingleton>());
+	visitor.Read(world.WriteComponent<eng::settings::DebugStaticComponent>());
+	visitor.Read(world.WriteComponent<client::settings::DebugStaticComponent>());
+	visitor.Read(world.WriteComponent<client::hidden::DebugStaticComponent>());
 }
 
 void debug::settings::DebugSystem::Update(World& world, const GameTime& gameTime)
@@ -33,17 +33,17 @@ void debug::settings::DebugSystem::Update(World& world, const GameTime& gameTime
 	PROFILE_FUNCTION();
 
 	const bool hasChanged =
-		world.HasAny<eng::settings::DebugSingleton>() ||
-		world.HasAny<client::settings::DebugSingleton>() ||
-		world.HasAny<client::hidden::DebugSingleton>();
+		world.HasAny<ecs::query::Updated<eng::settings::DebugStaticComponent>>() ||
+		world.HasAny<ecs::query::Updated<client::settings::DebugStaticComponent>>() ||
+		world.HasAny<ecs::query::Updated<client::hidden::DebugStaticComponent>>();
 	if (hasChanged)
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(world.ReadSingleton<eng::settings::DebugSingleton>());
-		visitor.Write(world.ReadSingleton<client::settings::DebugSingleton>());
-		visitor.Write(world.ReadSingleton<client::hidden::DebugSingleton>());
+		visitor.Write(world.ReadComponent<eng::settings::DebugStaticComponent>());
+		visitor.Write(world.ReadComponent<client::settings::DebugStaticComponent>());
+		visitor.Write(world.ReadComponent<client::hidden::DebugStaticComponent>());
 		visitor.SaveToFile(filepath);
 	}
 }

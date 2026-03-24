@@ -5,8 +5,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/SettingsLocalSingleton.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Editor/SettingsLocalStaticComponent.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "FlipbookEditor/FlipbookEditorOpenWindowEvent.h"
 #include "GameState/GameStateEditModeComponent.h"
 #include "GameState/GameStateEditModeToggleEvent.h"
@@ -80,28 +80,28 @@ namespace
 
 	void Draw_DebugGizmos(World& world)
 	{
-		const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
+		const auto& settings = world.ReadComponent<eng::settings::DebugStaticComponent>();
 		if (ButtonIcon("##lines", "Lines", icon::DEBUG_LINES, ImVec2(22, 22), settings.m_AreLinesEnabled))
 		{
-			auto& write = world.WriteSingleton<eng::settings::DebugSingleton>();
+			auto& write = world.WriteComponent<eng::settings::DebugStaticComponent>();
 			write.m_AreLinesEnabled = !settings.m_AreLinesEnabled;
 		}
 	}
 
 	void Draw_EditorGizmos(World& world)
 	{
-		const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
+		const auto& settings = world.ReadComponent<editor::settings::LocalStaticComponent>();
 		const auto& axes = settings.m_Gizmos.m_CoordAxes;
 		if (ButtonIcon("##axis", "Axes", icon::AXIS, ImVec2(22, 22), axes.m_IsEnabled))
 		{
-			auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+			auto& write = world.WriteComponent<editor::settings::LocalStaticComponent>();
 			write.m_Gizmos.m_CoordAxes.m_IsEnabled = !axes.m_IsEnabled;
 		}
 		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
 			ImGui::OpenPopup("axes");
 		if (ImGui::BeginPopup("axes"))
 		{
-			auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+			auto& write = world.WriteComponent<editor::settings::LocalStaticComponent>();
 			ImGui::PushStyleColor(ImGuiCol_CheckMark, axes.m_ColourX);
 			ImGui::Checkbox("##X", &write.m_Gizmos.m_CoordAxes.m_ShowX);
 			ImGui::PopStyleColor();
@@ -123,14 +123,14 @@ namespace
 		const auto& grid = settings.m_Gizmos.m_FloorGrid;
 		if (ButtonIcon("##grid", "Grid", icon::GRID, ImVec2(22, 22), grid.m_IsEnabled))
 		{
-			auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+			auto& write = world.WriteComponent<editor::settings::LocalStaticComponent>();
 			write.m_Gizmos.m_FloorGrid.m_IsEnabled = !grid.m_IsEnabled;
 		}
 		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
 			ImGui::OpenPopup("grid");
 		if (ImGui::BeginPopup("grid"))
 		{
-			auto& write = world.WriteSingleton<editor::settings::LocalSingleton>();
+			auto& write = world.WriteComponent<editor::settings::LocalStaticComponent>();
 			ImGui::ColorEdit3("Colour  ", &write.m_Gizmos.m_FloorGrid.m_MajorColour.x, ImGuiColorEditFlags_NoInputs);
 			ImGui::EndPopup();
 		}

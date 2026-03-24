@@ -1,14 +1,14 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/HiddenObjectSystem.h"
 
-#include "ClientHidden/HiddenDebugSingleton.h"
+#include "ClientHidden/HiddenDebugStaticComponent.h"
 #include "ClientHidden/HiddenObjectComponent.h"
 #include "Core/VariantHelpers.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/LevelEntityComponent.h"
-#include "Engine/LinesSingleton.h"
+#include "Engine/LinesStaticComponent.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
 #include "GameDebug/HiddenObjectComponent.h"
@@ -18,7 +18,7 @@ void debug::hidden::ObjectSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& settings = world.ReadSingleton<client::hidden::DebugSingleton>();
+	const auto& settings = world.ReadComponent<client::hidden::DebugStaticComponent>();
 	if (settings.m_IsObjectEnabled)
 	{
 		using AddQuery = ecs::query

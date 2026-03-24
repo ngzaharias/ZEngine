@@ -9,13 +9,13 @@ namespace eng
 	class WindowManager;
 	struct ActiveComponent;
 	struct CameraComponent;
-	struct PhysicsSceneSingleton;
+	struct PhysicsSceneStaticComponent;
 	struct TransformComponent;
 }
 
 namespace eng::settings
 {
-	struct DebugSingleton;
+	struct DebugStaticComponent;
 }
 
 namespace tactics
@@ -41,8 +41,8 @@ namespace tactics
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::InputManager,
-			eng::PhysicsSceneSingleton,
-			eng::settings::DebugSingleton,
+			eng::PhysicsSceneStaticComponent,
+			eng::settings::DebugStaticComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
 			tilemap::AgentComponent>;

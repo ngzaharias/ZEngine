@@ -25,7 +25,7 @@
 #include "GameState/GameStateEditorComponent.h"
 #include "Icons/Icons.h"
 #include "Outliner/OutlinerOpenWindowEvent.h"
-#include "Outliner/OutlinerSelectSingleton.h"
+#include "Outliner/OutlinerSelectStaticComponent.h"
 #include "Outliner/OutlinerWindowComponent.h"
 
 #include "imgui/imgui.h"
@@ -93,7 +93,7 @@ namespace
 		auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
 		prototypeComponent.m_Guid = str::Guid::Generate();
 
-		auto& select = world.WriteSingleton<editor::outliner::SelectSingleton>();
+		auto& select = world.WriteComponent<editor::outliner::SelectStaticComponent>();
 		select.m_Entity = entity;
 
 		return entity;
@@ -133,7 +133,7 @@ namespace
 		ImGui::Spacing();
 		ImGui::Separator();
 
-		const auto& select = world.ReadSingleton<editor::outliner::SelectSingleton>();
+		const auto& select = world.ReadComponent<editor::outliner::SelectStaticComponent>();
 
 		using Query = ecs::query
 			::Include<
@@ -161,7 +161,7 @@ namespace
 			const bool isSelected = view == select.m_Entity;
 			if (ImGui::Selectable(name, isSelected))
 			{
-				auto& select = world.WriteSingleton<editor::outliner::SelectSingleton>();
+				auto& select = world.WriteComponent<editor::outliner::SelectStaticComponent>();
 				select.m_Entity = view;
 			}
 

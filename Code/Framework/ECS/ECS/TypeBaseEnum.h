@@ -7,7 +7,7 @@ namespace ecs
 		Component,
 		Event,
 		Resource,
-		Singleton,
+		StaticComponent,
 		System,
 	};
 }

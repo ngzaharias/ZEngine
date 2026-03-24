@@ -11,7 +11,7 @@ namespace eng
 namespace eng::sound
 {
 	struct SequenceComponent;
-	struct SequenceBufferSingleton;
+	struct SequenceBufferStaticComponent;
 	struct SequenceRequestComponent;
 }
 
@@ -23,7 +23,7 @@ namespace eng::sound
 		using World = ecs::WorldView
 			::Write<
 			eng::AssetManager,
-			eng::sound::SequenceBufferSingleton,
+			eng::sound::SequenceBufferStaticComponent,
 			eng::sound::SequenceComponent>
 			::Read<
 			eng::sound::SequenceRequestComponent>;

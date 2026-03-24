@@ -8,7 +8,7 @@
 #include "SpriteEditor/SpriteEditorAssetSaveEvent.h"
 #include "SpriteEditor/SpriteEditorBatchingComponent.h"
 #include "SpriteEditor/SpriteEditorOpenWindowEvent.h"
-#include "SpriteEditor/SpriteEditorSettingsSingleton.h"
+#include "SpriteEditor/SpriteEditorSettingsStaticComponent.h"
 #include "SpriteEditor/SpriteEditorSettingsSystem.h"
 #include "SpriteEditor/SpriteEditorWindowComponent.h"
 #include "SpriteEditor/SpriteEditorWindowSystem.h"
@@ -21,7 +21,7 @@ void editor::sprite::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterEvent<editor::sprite::AssetOpenEvent>();
 	world.RegisterEvent<editor::sprite::AssetSaveEvent>();
 	world.RegisterEvent<editor::sprite::OpenWindowEvent>();
-	world.RegisterSingleton<editor::sprite::SettingsSingleton>();
+	world.RegisterComponent<editor::sprite::SettingsStaticComponent>();
 	world.RegisterSystem<editor::sprite::SettingsSystem>();
 	world.RegisterSystem<editor::sprite::WindowSystem>();
 }

@@ -3,7 +3,6 @@
 #include "ECS/Component.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/Event.h"
-#include "ECS/Singleton.h"
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
@@ -57,7 +56,7 @@ namespace
 		bool m_Bool = false; 
 	};
 
-	struct Singleton final : public ecs::Singleton 
+	struct StaticComponent final : public ecs::StaticComponent 
 	{ 
 		bool m_Bool = false; 
 	};
@@ -133,19 +132,19 @@ CLASS_TEST_CASE("IsRegistered will return false for a Resource that isn't regist
 	CHECK(!world.IsRegistered<Resource>());
 }
 
-CLASS_TEST_CASE("IsRegistered will return true for a singleton that is registered.")
+CLASS_TEST_CASE("IsRegistered will return true for a component that is registered.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterSingleton<Singleton>();
-	CHECK(world.IsRegistered<Singleton>());
+	world.RegisterComponent<StaticComponent>();
+	CHECK(world.IsRegistered<StaticComponent>());
 }
 
-CLASS_TEST_CASE("IsRegistered will return false for a Singleton that isn't registered.")
+CLASS_TEST_CASE("IsRegistered will return false for a StaticComponent that isn't registered.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	CHECK(!world.IsRegistered<Singleton>());
+	CHECK(!world.IsRegistered<StaticComponent>());
 }
 
 CLASS_TEST_CASE("IsRegistered will return true for a system that is registered.")
@@ -334,7 +333,7 @@ CLASS_TEST_CASE("DestroyEntity doesn't change the values of an entity.")
 	world.Update({});
 
 	world.DestroyEntity(entity);
-	CHECK(entity.GetIndex() == 0);
+	CHECK(entity.GetIndex() == 1);
 	CHECK(entity.GetVersion() == 0);
 }
 
@@ -835,54 +834,54 @@ CLASS_TEST_CASE("WriteResource crashes when the resource hasn't been registered.
 	//CHECK_THROWS(world.WriteResource<Resource>());
 }
 
-CLASS_TEST_CASE("RegisterSingleton will register an singleton with the world.")
+CLASS_TEST_CASE("RegisterComponent will register an component with the world.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	CHECK_NOTHROW(world.RegisterSingleton<Singleton>());
+	CHECK_NOTHROW(world.RegisterComponent<StaticComponent>());
 }
 
-CLASS_TEST_CASE("RegisterSingleton will crash if the same singleton is registered twice.")
+CLASS_TEST_CASE("RegisterComponent will crash if the same component is registered twice.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterSingleton<Singleton>();
-	//CHECK_THROWS(world.RegisterSingleton<Singleton>());
+	world.RegisterComponent<StaticComponent>();
+	//CHECK_THROWS(world.RegisterComponent<StaticComponent>());
 }
 
-CLASS_TEST_CASE("ReadSingleton returns a singleton that can't be modified.")
+CLASS_TEST_CASE("ReadComponent returns a component that can't be modified.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterSingleton<Singleton>();
+	world.RegisterComponent<StaticComponent>();
 
-	auto& singleton = world.ReadSingleton<Singleton>();
-	// singleton.m_Bool = true; // doesn't compile
+	auto& component = world.ReadComponent<StaticComponent>();
+	// component.m_Bool = true; // doesn't compile
 }
 
-CLASS_TEST_CASE("ReadSingleton crashes when the singleton hasn't been registered.")
+CLASS_TEST_CASE("ReadComponent crashes when the StaticComponent.hasn't been registered.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	//CHECK_THROWS(world.ReadSingleton<Singleton>());
+	//CHECK_THROWS(world.ReadComponent<StaticComponent>());
 }
 
-CLASS_TEST_CASE("WriteSingleton returns a singleton that can be modified.")
+CLASS_TEST_CASE("WriteComponent returns a component that can be modified.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterSingleton<Singleton>();
+	world.RegisterComponent<StaticComponent>();
 
-	auto& singleton = world.WriteSingleton<Singleton>();
-	singleton.m_Bool = true;
-	CHECK(singleton.m_Bool);
+	auto& component = world.WriteComponent<StaticComponent>();
+	component.m_Bool = true;
+	CHECK(component.m_Bool);
 }
 
-CLASS_TEST_CASE("WriteSingleton crashes when the singleton hasn't been registered.")
+CLASS_TEST_CASE("WriteComponent crashes when the StaticComponent.hasn't been registered.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	//CHECK_THROWS(world.WriteSingleton<Singleton>());
+	//CHECK_THROWS(world.WriteComponent<StaticComponent>());
 }
 
 CLASS_TEST_CASE("RegisterSystem will register a system with the world.")
@@ -930,8 +929,9 @@ CLASS_TEST_CASE("FrameComponent is removed at the end of the next frame.")
 
 CLASS_TEST_CASE("StaticComponent is available during initialise.")
 {
-	class System : ecs::System
+	class System : public ecs::System
 	{
+	public:
 		using World = ecs::WorldView
 			::Read<TComponent>;
 
@@ -944,5 +944,28 @@ CLASS_TEST_CASE("StaticComponent is available during initialise.")
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<TComponent>();
+	world.RegisterSystem<System>();
 	world.Initialise();
+}
+
+CLASS_TEST_CASE("StaticComponent is available during shutdown.")
+{
+	class System : public ecs::System
+	{
+	public:
+		using World = ecs::WorldView
+			::Read<TComponent>;
+
+		void Shutdown(World& world)
+		{
+			CHECK(world.HasComponent<TComponent>());
+		};
+	};
+
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<TComponent>();
+	world.RegisterSystem<System>();
+	world.Initialise();
+	world.Shutdown();
 }

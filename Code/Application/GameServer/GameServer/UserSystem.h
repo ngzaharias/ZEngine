@@ -17,7 +17,7 @@ namespace net
 {
 	class Host;
 	struct UserComponent;
-	struct UserMapSingleton;
+	struct UserMapStaticComponent;
 }
 
 namespace server
@@ -32,7 +32,7 @@ namespace server
 			ecs::ReplicationHost,
 			net::Host,
 			net::UserComponent,
-			net::UserMapSingleton>;
+			net::UserMapStaticComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

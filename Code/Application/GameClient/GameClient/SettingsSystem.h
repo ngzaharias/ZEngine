@@ -5,7 +5,7 @@
 
 namespace camera
 {
-	struct SettingsSingleton;
+	struct SettingsStaticComponent;
 }
 
 namespace eng
@@ -15,9 +15,9 @@ namespace eng
 
 namespace eng::settings
 {
-	struct AudioSingleton;
-	struct GameplaySingleton;
-	struct WindowSingleton;
+	struct AudioStaticComponent;
+	struct GameplayStaticComponent;
+	struct WindowStaticComponent;
 }
 
 namespace client
@@ -27,10 +27,10 @@ namespace client
 	public:
 		using World = ecs::WorldView
 			::Write<
-			camera::SettingsSingleton,
-			eng::settings::AudioSingleton,
-			eng::settings::GameplaySingleton,
-			eng::settings::WindowSingleton>
+			camera::SettingsStaticComponent,
+			eng::settings::AudioStaticComponent,
+			eng::settings::GameplayStaticComponent,
+			eng::settings::WindowStaticComponent>
 			::Read<
 			eng::WindowManager>;
 

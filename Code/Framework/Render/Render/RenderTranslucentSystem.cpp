@@ -12,7 +12,7 @@
 #include "Engine/ColourHelpers.h"
 #include "Engine/FlipbookAsset.h"
 #include "Engine/FlipbookComponent.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/SpriteAsset.h"
 #include "Engine/SpriteComponent.h"
@@ -100,7 +100,7 @@ void render::TranslucentSystem::Update(World& world, const GameTime& gameTime)
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
+	const auto& debugSettings = world.ReadComponent<eng::settings::DebugStaticComponent>();
 	
 	using CameraQuery = ecs::query
 		::Include<

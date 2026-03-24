@@ -1,7 +1,7 @@
 #include "ClientHiddenPCH.h"
 #include "ClientHidden/HiddenRevealSystem.h"
 
-#include "ClientHidden/HiddenDebugSingleton.h"
+#include "ClientHidden/HiddenDebugStaticComponent.h"
 #include "ClientHidden/HiddenObjectComponent.h"
 #include "ClientHidden/HiddenRevealComponent.h"
 #include "Core/Colour.h"
@@ -11,8 +11,8 @@
 #include "Engine/CameraHelpers.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/InputManager.h"
-#include "Engine/LinesSingleton.h"
-#include "Engine/PhysicsSceneSingleton.h"
+#include "Engine/LinesStaticComponent.h"
+#include "Engine/PhysicsSceneStaticComponent.h"
 #include "Engine/PrototypeComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/TransformComponent.h"
@@ -72,8 +72,8 @@ void client::hidden::RevealSystem::Update(World& world, const GameTime& gameTime
 		return;
 
 	const auto& input = world.ReadResource<eng::InputManager>();
-	const auto& settings = world.ReadSingleton<client::hidden::DebugSingleton>();
-	const auto& physics = world.ReadSingleton<eng::PhysicsSceneSingleton>();
+	const auto& settings = world.ReadComponent<client::hidden::DebugStaticComponent>();
+	const auto& physics = world.ReadComponent<eng::PhysicsSceneStaticComponent>();
 
 	Set<ecs::Entity> reveals;
 	if (input.IsPressed(strSelect))
@@ -128,7 +128,7 @@ void client::hidden::RevealSystem::Update(World& world, const GameTime& gameTime
 
 				if (settings.m_IsInputEnabled)
 				{
-					auto& lines = world.WriteSingleton<eng::LinesSingleton>();
+					auto& lines = world.WriteComponent<eng::LinesStaticComponent>();
 					lines.AddSphere(hitPosition, Sphere3f(10.f), Colour::Red);
 				}
 			}
@@ -136,7 +136,7 @@ void client::hidden::RevealSystem::Update(World& world, const GameTime& gameTime
 			{
 				if (settings.m_IsInputEnabled)
 				{
-					auto& lines = world.WriteSingleton<eng::LinesSingleton>();
+					auto& lines = world.WriteComponent<eng::LinesStaticComponent>();
 					lines.AddSphere(ray.m_Position + ray.m_Direction * 100.f, Sphere3f(10.f), Colour::Green);
 				}
 			}

@@ -10,7 +10,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/DynamicMeshComponent.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TransformComponent.h"
@@ -74,7 +74,7 @@ void render::VoxelSystem::Update(World& world, const GameTime& gameTime)
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
+	const auto& debugSettings = world.ReadComponent<eng::settings::DebugStaticComponent>();
 	
 	using CameraQuery = ecs::query
 		::Include<

@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/FrameBufferSingleton.h"
+#include "Engine/FrameBufferStaticComponent.h"
 #include "GameDebug/DebugFrameBufferWindowEvent.h"
 #include "GameDebug/FrameBufferWindowComponent.h"
 #include "Math/Vector.h"
@@ -32,7 +32,7 @@ void debug::FrameBufferSystem::Update(World& world, const GameTime& gameTime)
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(label.c_str(), &isOpen))
 		{
-			const auto& component = world.ReadSingleton<eng::FrameBufferSingleton>();
+			const auto& component = world.ReadComponent<eng::FrameBufferStaticComponent>();
 
 			const ImVec2 regionSize = ImGui::GetContentRegionAvail();
 			imgui::Image(component.m_ShadowTexture, Vector2f(regionSize.x, regionSize.y));

@@ -14,7 +14,7 @@
 #include "ServerInventory/InventoryMemberRemoveRequestComponent.h"
 #include "ServerInventory/InventoryMemberRemoveResultComponent.h"
 #include "ServerInventory/InventoryOwnerComponent.h"
-#include "ServerInventory/InventoryStorageChangesSingleton.h"
+#include "ServerInventory/InventoryStorageChangesStaticComponent.h"
 #include "ServerInventory/InventoryStorageComponent.h"
 #include "ServerInventory/InventoryStorageCreateRequestComponent.h"
 #include "ServerInventory/InventoryStorageCreateResultComponent.h"
@@ -25,7 +25,7 @@ namespace
 {
 	using World = server::inventory::StorageSystem::World;
 
-	server::inventory::EError VerifyMemberAdd(World& world, const ecs::Entity& entity, const server::inventory::StorageChangesSingleton& frameData)
+	server::inventory::EError VerifyMemberAdd(World& world, const ecs::Entity& entity, const server::inventory::StorageChangesStaticComponent& frameData)
 	{
 		const auto& requestComponent = world.ReadComponent<server::inventory::MemberAddRequestComponent>(entity);
 		if (requestComponent.m_Member.IsUnassigned())
@@ -53,7 +53,7 @@ namespace
 		return server::inventory::EError::None;
 	}
 
-	server::inventory::EError VerifyMemberMove(World& world, const ecs::Entity& entity, const server::inventory::StorageChangesSingleton& frameData)
+	server::inventory::EError VerifyMemberMove(World& world, const ecs::Entity& entity, const server::inventory::StorageChangesStaticComponent& frameData)
 	{
 		const auto& requestComponent = world.ReadComponent<server::inventory::MemberMoveRequestComponent>(entity);
 		if (requestComponent.m_Member.IsUnassigned())
@@ -80,7 +80,7 @@ namespace
 		return server::inventory::EError::None;
 	}
 
-	server::inventory::EError VerifyMemberRemove(World& world, const ecs::Entity& entity, const server::inventory::StorageChangesSingleton& frameData)
+	server::inventory::EError VerifyMemberRemove(World& world, const ecs::Entity& entity, const server::inventory::StorageChangesStaticComponent& frameData)
 	{
 		const auto& requestComponent = world.ReadComponent<server::inventory::MemberRemoveRequestComponent>(entity);
 		if (requestComponent.m_Member.IsUnassigned())
@@ -105,7 +105,7 @@ namespace
 		return server::inventory::EError::None;
 	}
 
-	server::inventory::EError VerifyStorageCreate(World& world, const ecs::Entity& entity, const server::inventory::StorageChangesSingleton& frameData)
+	server::inventory::EError VerifyStorageCreate(World& world, const ecs::Entity& entity, const server::inventory::StorageChangesStaticComponent& frameData)
 	{
 		const auto& requestComponent = world.ReadComponent<server::inventory::StorageCreateRequestComponent>(entity);
 		if (world.HasComponent<server::inventory::OwnerComponent>(requestComponent.m_Owner))
@@ -128,7 +128,7 @@ namespace
 	}
 
 	using DestroyWorld = server::inventory::StorageSystem::World;
-	server::inventory::EError VerifyStorageDestroy(DestroyWorld& world, const ecs::Entity& entity, const server::inventory::StorageChangesSingleton& frameData)
+	server::inventory::EError VerifyStorageDestroy(DestroyWorld& world, const ecs::Entity& entity, const server::inventory::StorageChangesStaticComponent& frameData)
 	{
 		const auto& requestComponent = world.ReadComponent<server::inventory::StorageDestroyRequestComponent>(entity);
 		if (requestComponent.m_Storage.IsUnassigned())
@@ -157,7 +157,7 @@ void server::inventory::StorageSystem::Update(World& world, const GameTime& game
 	PROFILE_FUNCTION();
 
 	// clear values from previous frame
-	auto& changesComponent = world.WriteSingleton<server::inventory::StorageChangesSingleton>();
+	auto& changesComponent = world.WriteComponent<server::inventory::StorageChangesStaticComponent>();
 	changesComponent.m_MemberAdded.RemoveAll();
 	changesComponent.m_MemberMoved.RemoveAll();
 	changesComponent.m_MemberRemoved.RemoveAll();
@@ -184,7 +184,7 @@ void server::inventory::StorageSystem::Update(World& world, const GameTime& game
 
 void server::inventory::StorageSystem::ProcessMemberAddRequests(World& world)
 {
-	auto& changesComponent = world.WriteSingleton<server::inventory::StorageChangesSingleton>();
+	auto& changesComponent = world.WriteComponent<server::inventory::StorageChangesStaticComponent>();
 	
 	using AddedQuery = ecs::query
 		::Added<const server::inventory::MemberAddRequestComponent>
@@ -217,7 +217,7 @@ void server::inventory::StorageSystem::ProcessMemberAddRequests(World& world)
 
 void server::inventory::StorageSystem::ProcessMemberMoveRequests(World& world)
 {
-	auto& changesComponent = world.WriteSingleton<server::inventory::StorageChangesSingleton>();
+	auto& changesComponent = world.WriteComponent<server::inventory::StorageChangesStaticComponent>();
 	
 	using AddedQuery = ecs::query
 		::Added<const server::inventory::MemberMoveRequestComponent>
@@ -249,7 +249,7 @@ void server::inventory::StorageSystem::ProcessMemberMoveRequests(World& world)
 
 void server::inventory::StorageSystem::ProcessMemberRemoveRequests(World& world)
 {
-	auto& changesComponent = world.WriteSingleton<server::inventory::StorageChangesSingleton>();
+	auto& changesComponent = world.WriteComponent<server::inventory::StorageChangesStaticComponent>();
 	
 	using AddedQuery = ecs::query
 		::Added<const server::inventory::MemberRemoveRequestComponent>
@@ -292,7 +292,7 @@ void server::inventory::StorageSystem::ProcessMemberRemoveRequests(World& world)
 
 void server::inventory::StorageSystem::ProcessStorageRequests(World& world)
 {
-	auto& storageChangesComponent = world.WriteSingleton<server::inventory::StorageChangesSingleton>();
+	auto& storageChangesComponent = world.WriteComponent<server::inventory::StorageChangesStaticComponent>();
 
 	using CreateQuery = ecs::query
 		::Added<const server::inventory::StorageCreateRequestComponent>

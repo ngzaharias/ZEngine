@@ -6,7 +6,7 @@
 namespace camera
 {
 	struct Move2DComponent;
-	struct SettingsSingleton;
+	struct SettingsStaticComponent;
 }
 
 namespace eng
@@ -29,7 +29,7 @@ namespace camera
 			eng::TransformComponent>
 			::Read<
 			camera::Move2DComponent,
-			camera::SettingsSingleton,
+			camera::SettingsStaticComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent>;
 

@@ -3,14 +3,14 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/TypeRegistry.h"
-#include "ServerCursor/CursorTransformSingleton.h"
+#include "ServerCursor/CursorTransformStaticComponent.h"
 #include "ServerCursor/CursorTransformSystem.h"
 
 void server::cursor::RegisterModule(ecs::EntityWorld& world)
 {
-	// singleton
+	// component
 	{
-		world.RegisterSingleton<server::cursor::TransformSingleton>();
+		world.RegisterComponent<server::cursor::TransformStaticComponent>();
 	}
 
 	// system

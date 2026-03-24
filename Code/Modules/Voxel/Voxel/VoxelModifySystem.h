@@ -10,7 +10,7 @@ namespace eng
 	struct ActiveComponent;
 	struct CameraComponent;
 	struct EditorComponent;
-	struct LinesSingleton;
+	struct LinesStaticComponent;
 	struct TextComponent;
 	struct TransformComponent;
 }
@@ -19,7 +19,7 @@ namespace voxel
 {
 	struct ChunkComponent;
 	struct ModifyComponent;
-	struct ModifySettingsSingleton;
+	struct ModifySettingsStaticComponent;
 }
 
 namespace voxel
@@ -30,11 +30,11 @@ namespace voxel
 		using World = ecs::WorldView
 			::Write<
 			eng::InputManager,
-			eng::LinesSingleton,
+			eng::LinesStaticComponent,
 			eng::TextComponent,
 			eng::TransformComponent,
 			voxel::ModifyComponent,
-			voxel::ModifySettingsSingleton>
+			voxel::ModifySettingsStaticComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,

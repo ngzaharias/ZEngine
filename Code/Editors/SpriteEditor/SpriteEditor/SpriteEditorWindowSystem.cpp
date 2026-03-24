@@ -19,7 +19,7 @@
 #include "SpriteEditor/SpriteEditorAssetSaveEvent.h"
 #include "SpriteEditor/SpriteEditorBatchingComponent.h"
 #include "SpriteEditor/SpriteEditorOpenWindowEvent.h"
-#include "SpriteEditor/SpriteEditorSettingsSingleton.h"
+#include "SpriteEditor/SpriteEditorSettingsStaticComponent.h"
 #include "SpriteEditor/SpriteEditorWindowComponent.h"
 
 #include "imgui/imgui.h"
@@ -82,7 +82,7 @@ namespace
 	{
 		for (const auto& request : world.Events<editor::sprite::AssetOpenEvent>())
 		{
-			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
+			const auto& settings = world.ReadComponent<editor::sprite::SettingsStaticComponent>();
 
 			eng::SelectFileSettings fileSettings;
 			fileSettings.m_Title = "Open Sprite";
@@ -92,7 +92,7 @@ namespace
 			const str::Path filepath = eng::SelectFileDialog(fileSettings);
 			if (!filepath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
+				auto& writeSettings = world.WriteComponent<editor::sprite::SettingsStaticComponent>();
 				writeSettings.m_Open = filepath.GetDirectory();
 
 				auto& assetManager = world.WriteResource<eng::AssetManager>();
@@ -109,7 +109,7 @@ namespace
 	{
 		for (const auto& request : world.Events<editor::sprite::AssetSaveEvent>())
 		{
-			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
+			const auto& settings = world.ReadComponent<editor::sprite::SettingsStaticComponent>();
 			const auto& window = world.ReadComponent<editor::sprite::WindowComponent>(request.m_Entity);
 			const str::Name& name = window.m_Asset.m_Name;
 
@@ -124,7 +124,7 @@ namespace
 			const str::Path filepath = eng::SaveFileDialog(fileSettings);
 			if (!filepath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
+				auto& writeSettings = world.WriteComponent<editor::sprite::SettingsStaticComponent>();
 				writeSettings.m_Save = filepath.GetDirectory();
 
 				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(request.m_Entity);
@@ -176,7 +176,7 @@ namespace
 		ImGui::TextDisabled("Options:");
 		if (ImGui::Button("Extract"))
 		{
-			const auto& settings = world.ReadSingleton<editor::sprite::SettingsSingleton>();
+			const auto& settings = world.ReadComponent<editor::sprite::SettingsStaticComponent>();
 			const auto& window = world.ReadComponent<editor::sprite::WindowComponent>(entity);
 
 			eng::SelectFolderSettings fileSettings;
@@ -186,7 +186,7 @@ namespace
 			const str::Path folderpath = eng::SelectFolderDialog(fileSettings);
 			if (!folderpath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteSingleton<editor::sprite::SettingsSingleton>();
+				auto& writeSettings = world.WriteComponent<editor::sprite::SettingsStaticComponent>();
 				writeSettings.m_Extract = folderpath;
 
 				auto& writeWindow = world.WriteComponent<editor::sprite::WindowComponent>(entity);

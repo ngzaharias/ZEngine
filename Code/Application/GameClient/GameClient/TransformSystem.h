@@ -10,7 +10,7 @@ namespace eng
 
 namespace projectile
 {
-	struct ChangesSingleton;
+	struct ChangesStaticComponent;
 	struct CreateRequestComponent;
 	struct TrajectoryComponent;
 }
@@ -25,7 +25,7 @@ namespace transform
 			::Write<
 			eng::TransformComponent>
 			::Read<
-			projectile::ChangesSingleton,
+			projectile::ChangesStaticComponent,
 			projectile::CreateRequestComponent,
 			projectile::TrajectoryComponent>;
 

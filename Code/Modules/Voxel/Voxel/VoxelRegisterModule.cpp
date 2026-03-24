@@ -8,7 +8,7 @@
 #include "Voxel/VoxelChunkComponent.h"
 #include "Voxel/VoxelChunkLoadedFrameComponent.h"
 #include "Voxel/VoxelModifyComponent.h"
-#include "Voxel/VoxelModifySettingsSingleton.h"
+#include "Voxel/VoxelModifySettingsStaticComponent.h"
 #include "Voxel/VoxelMeshingSystem.h"
 #include "Voxel/VoxelModifySystem.h"
 
@@ -22,9 +22,9 @@ void voxel::RegisterModule(ecs::EntityWorld& world)
 		world.RegisterComponent<voxel::ModifyComponent>();
 	}
 
-	// singletons
+	// components
 	{
-		world.RegisterSingleton<voxel::ModifySettingsSingleton>();
+		world.RegisterComponent<voxel::ModifySettingsStaticComponent>();
 	}
 
 	// systems

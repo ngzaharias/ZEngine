@@ -8,8 +8,8 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/ColourHelpers.h"
-#include "Engine/LinesSingleton.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/LinesStaticComponent.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Math/Algorithms.h"
 #include "Math/Circle.h"
@@ -20,11 +20,11 @@ void debug::SoftbodySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& settings = world.ReadSingleton<eng::settings::DebugSingleton>();
+	const auto& settings = world.ReadComponent<eng::settings::DebugStaticComponent>();
 	if (!settings.m_AreSoftbodyEnabled)
 		return;
 
-	auto& lines = world.WriteSingleton<eng::LinesSingleton>();
+	auto& lines = world.WriteComponent<eng::LinesStaticComponent>();
 	for (auto&& view : world.Query<ecs::query::Include<const eng::TransformComponent, const softbody::ChainComponent>>())
 	{
 		const auto& chain = view.ReadRequired<softbody::ChainComponent>();

@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/Visitor.h"
 #include "GameState/GameStateEditorComponent.h"
-#include "TextureEditor/TextureEditorSettingsSingleton.h"
+#include "TextureEditor/TextureEditorSettingsStaticComponent.h"
 
 namespace
 {
@@ -21,7 +21,7 @@ void editor::texture::SettingsSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(world.WriteSingleton<editor::texture::SettingsSingleton>());
+	visitor.Read(world.WriteComponent<editor::texture::SettingsStaticComponent>());
 }
 
 void editor::texture::SettingsSystem::Update(World& world, const GameTime& gameTime)
@@ -31,12 +31,12 @@ void editor::texture::SettingsSystem::Update(World& world, const GameTime& gameT
 	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
 		return;
 
-	if (world.HasAny<editor::texture::SettingsSingleton>())
+	if (world.HasAny<ecs::query::Updated<editor::texture::SettingsStaticComponent>>())
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(world.ReadSingleton<editor::texture::SettingsSingleton>());
+		visitor.Write(world.ReadComponent<editor::texture::SettingsStaticComponent>());
 		visitor.SaveToFile(filepath);
 	}
 }

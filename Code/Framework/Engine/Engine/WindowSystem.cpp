@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/SettingsWindowSingleton.h"
+#include "Engine/SettingsWindowStaticComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 
@@ -13,9 +13,9 @@ void eng::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<eng::settings::WindowSingleton>())
+	if (world.HasAny<ecs::query::Updated<eng::settings::WindowStaticComponent>>())
 	{
-		const auto& windowSettings = world.ReadSingleton<eng::settings::WindowSingleton>();
+		const auto& windowSettings = world.ReadComponent<eng::settings::WindowStaticComponent>();
 
 		auto& manager = world.WriteResource<eng::WindowManager>();
 		if (eng::Window* window = manager.GetWindow(0))

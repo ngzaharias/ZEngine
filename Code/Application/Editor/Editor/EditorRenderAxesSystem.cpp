@@ -5,11 +5,11 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/SettingsLocalSingleton.h"
+#include "Editor/SettingsLocalStaticComponent.h"
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/LinesSingleton.h"
+#include "Engine/LinesStaticComponent.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -67,12 +67,12 @@ void editor::RenderAxesSystem::Update(World& world, const GameTime& gameTime)
 	if (!world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
 		return;
 
-	if (world.HasAny<editor::settings::LocalSingleton>())
+	if (world.HasAny<ecs::query::Updated<editor::settings::LocalStaticComponent>>())
 	{
 		UpdateBuffers(world);
 	}
 
-	const auto& localSettings = world.ReadSingleton<editor::settings::LocalSingleton>();
+	const auto& localSettings = world.ReadComponent<editor::settings::LocalStaticComponent>();
 	const auto& gizmos = localSettings.m_Gizmos;
 	const auto& settings = gizmos.m_CoordAxes;
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
@@ -157,7 +157,7 @@ void editor::RenderAxesSystem::UpdateBuffers(World& world)
 {
 	PROFILE_FUNCTION();
 
-	const auto& settings = world.ReadSingleton<editor::settings::LocalSingleton>();
+	const auto& settings = world.ReadComponent<editor::settings::LocalStaticComponent>();
 	const auto& axes = settings.m_Gizmos.m_CoordAxes;
 
 	m_Vertices.RemoveAll();

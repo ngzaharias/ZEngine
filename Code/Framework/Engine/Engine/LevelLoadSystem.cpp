@@ -9,7 +9,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/LevelDirectorySingleton.h"
+#include "Engine/LevelDirectoryStaticComponent.h"
 #include "Engine/LevelEntityComponent.h"
 #include "Engine/LevelLoadedComponent.h"
 #include "Engine/LevelLoadingComponent.h"
@@ -34,7 +34,7 @@ void eng::level::LoadSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
-	auto& directoryComponent = world.WriteSingleton<eng::level::DirectorySingleton>();
+	auto& directoryComponent = world.WriteComponent<eng::level::DirectoryStaticComponent>();
 
 	str::Path subpath;
 	const str::Path path = str::Path(str::EPath::Levels);
@@ -53,7 +53,7 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& directoryComponent = world.ReadSingleton<eng::level::DirectorySingleton>();
+	const auto& directoryComponent = world.ReadComponent<eng::level::DirectoryStaticComponent>();
 
 	// requests
 	for (const auto& request : world.Events<eng::level::LoadEvent>())

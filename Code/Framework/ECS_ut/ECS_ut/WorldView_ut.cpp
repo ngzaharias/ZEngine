@@ -14,8 +14,8 @@ namespace
 	struct ComponentB final : public ecs::Component {};
 	struct ComponentC final : public ecs::Component {};
 
-	struct SingletonA final : public ecs::Singleton {};
-	struct SingletonB final : public ecs::Singleton {};
+	struct TComponentA final : public ecs::StaticComponent {};
+	struct TComponentB final : public ecs::StaticComponent {};
 
 	class ResourceA { };
 	class ResourceB { };
@@ -26,8 +26,8 @@ namespace
 		{
 			m_EntityWorld.RegisterComponent<ComponentA>();
 			m_EntityWorld.RegisterComponent<ComponentB>();
-			m_EntityWorld.RegisterSingleton<SingletonA>();
-			m_EntityWorld.RegisterSingleton<SingletonB>();
+			m_EntityWorld.RegisterComponent<TComponentA>();
+			m_EntityWorld.RegisterComponent<TComponentB>();
 			m_EntityWorld.RegisterResource<ResourceA>(m_ResourceA);
 			m_EntityWorld.RegisterResource<ResourceB>(m_ResourceB);
 			m_EntityWorld.Initialise();
@@ -207,30 +207,30 @@ CLASS_TEST_CASE("WriteComponent.")
 	CHECK_NOTHROW(worldView.WriteComponent<ComponentB>(raii.m_EntityA));
 }
 
-CLASS_TEST_CASE("ReadSingleton.")
+CLASS_TEST_CASE("ReadComponent (StaticComponent).")
 {
 	using WorldView = ecs::WorldView
-		::Read<SingletonA, SingletonB>;
+		::Read<TComponentA, TComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
 	WorldView worldView = entityWorld.WorldView<WorldView>();
 
-	CHECK_NOTHROW(worldView.ReadSingleton<SingletonA>());
-	CHECK_NOTHROW(worldView.ReadSingleton<SingletonB>());
+	CHECK_NOTHROW(worldView.ReadComponent<TComponentA>());
+	CHECK_NOTHROW(worldView.ReadComponent<TComponentB>());
 }
 
-CLASS_TEST_CASE("WriteSingleton.")
+CLASS_TEST_CASE("WriteComponent (StaticComponent).")
 {
 	using WorldView = ecs::WorldView
-		::Write<SingletonA, SingletonB>;
+		::Write<TComponentA, TComponentB>;
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
 	WorldView worldView = entityWorld.WorldView<WorldView>();
 
-	CHECK_NOTHROW(worldView.WriteSingleton<SingletonA>());
-	CHECK_NOTHROW(worldView.WriteSingleton<SingletonB>());
+	CHECK_NOTHROW(worldView.WriteComponent<TComponentA>());
+	CHECK_NOTHROW(worldView.WriteComponent<TComponentB>());
 }
 
 CLASS_TEST_CASE("ReadResource.")
@@ -421,7 +421,7 @@ CLASS_TEST_CASE("Components that are removed from an entity are present in the e
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
 	WorldView worldView = entityWorld.WorldView<WorldView>();
 
-	// #note: singleton component count towards being excluded
+	// #note: component component count towards being excluded
 	CHECK(worldView.Count<ecs::query::Exclude<ComponentA>>() == 3);
 	CHECK(worldView.Count<ecs::query::Exclude<ComponentB>>() == 3);
 	CHECK(worldView.Count<ecs::query::Exclude<ComponentA, ComponentB>>() == 3);

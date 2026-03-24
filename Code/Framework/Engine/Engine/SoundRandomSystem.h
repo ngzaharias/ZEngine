@@ -11,7 +11,7 @@ namespace eng
 namespace eng::sound
 {
 	struct RandomComponent;
-	struct RandomBufferSingleton;
+	struct RandomBufferStaticComponent;
 	struct RandomRequestComponent;
 }
 
@@ -23,7 +23,7 @@ namespace eng::sound
 		using World = ecs::WorldView
 			::Write<
 			eng::AssetManager,
-			eng::sound::RandomBufferSingleton,
+			eng::sound::RandomBufferStaticComponent,
 			eng::sound::RandomComponent>
 			::Read<
 			eng::sound::RandomRequestComponent>;

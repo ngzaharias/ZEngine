@@ -20,8 +20,8 @@ namespace eng
 	class WindowManager;
 	struct ActiveComponent;
 	struct CameraComponent;
-	struct LinesSingleton;
-	struct PhysicsSceneSingleton;
+	struct LinesStaticComponent;
+	struct PhysicsSceneStaticComponent;
 	struct TransformComponent;
 }
 
@@ -35,12 +35,12 @@ namespace drag
 			drag::SelectionComponent,
 			ecs::NameComponent,
 			eng::InputManager,
-			eng::LinesSingleton>
+			eng::LinesStaticComponent>
 			::Read<
 			drag::IsSelectableComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,
-			eng::PhysicsSceneSingleton,
+			eng::PhysicsSceneStaticComponent,
 			eng::TransformComponent,
 			eng::WindowManager>;
 

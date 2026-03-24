@@ -8,7 +8,7 @@
 
 namespace editor::settings
 {
-	struct LocalSingleton;
+	struct LocalStaticComponent;
 }
 
 namespace eng
@@ -42,7 +42,7 @@ namespace editor
 			eng::AssetManager,
 			render::OpaqueComponent>
 			::Read<
-			editor::settings::LocalSingleton,
+			editor::settings::LocalStaticComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::TransformComponent,

@@ -1,14 +1,14 @@
 #include "GameUIPCH.h"
 #include "GameUI/DCSettingsMenu.h"
 
-#include "Camera/CameraSettingsSingleton.h"
+#include "Camera/CameraSettingsStaticComponent.h"
 #include "Core/Algorithms.h"
 #include "Core/EnumHelpers.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "Engine/SettingsAudioSingleton.h"
-#include "Engine/SettingsGameplaySingleton.h"
-#include "Engine/SettingsWindowSingleton.h"
+#include "Engine/SettingsAudioStaticComponent.h"
+#include "Engine/SettingsGameplayStaticComponent.h"
+#include "Engine/SettingsWindowStaticComponent.h"
 #include "Engine/ThemeTable.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -44,11 +44,11 @@ void gui::DCSettingsMenu::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
-	const auto& audio = world.ReadSingleton<eng::settings::AudioSingleton>();
-	const auto& camera = world.ReadSingleton<camera::SettingsSingleton>();
-	const auto& gameplay = world.ReadSingleton<eng::settings::GameplaySingleton>();
+	const auto& audio = world.ReadComponent<eng::settings::AudioStaticComponent>();
+	const auto& camera = world.ReadComponent<camera::SettingsStaticComponent>();
+	const auto& gameplay = world.ReadComponent<eng::settings::GameplayStaticComponent>();
 	const auto& themes = world.ReadResource<eng::ThemeTable>();
-	const auto& window = world.ReadSingleton<eng::settings::WindowSingleton>();
+	const auto& window = world.ReadComponent<eng::settings::WindowStaticComponent>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const auto& monitor = *windowManager.GetMonitor(0);
 

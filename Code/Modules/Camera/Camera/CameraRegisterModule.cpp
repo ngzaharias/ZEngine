@@ -12,7 +12,7 @@
 #include "Camera/CameraPan3DSystem.h"
 #include "Camera/CameraZoom2DComponent.h"
 #include "Camera/CameraZoom2DSystem.h"
-#include "Camera/CameraSettingsSingleton.h"
+#include "Camera/CameraSettingsStaticComponent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/PrototypeManager.h"
@@ -28,9 +28,9 @@ void camera::RegisterModule(ecs::EntityWorld& world)
 		world.RegisterComponent<camera::Zoom2DComponent>();
 	}
 
-	// singletons
+	// components
 	{
-		world.RegisterSingleton<camera::SettingsSingleton>();
+		world.RegisterComponent<camera::SettingsStaticComponent>();
 	}
 
 	// systems

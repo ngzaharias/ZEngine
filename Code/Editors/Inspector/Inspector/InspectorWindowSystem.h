@@ -13,13 +13,13 @@ namespace editor::inspector
 {
 	struct OpenWindowEvent;
 	struct SaveComponent;
-	struct SettingsSingleton;
+	struct SettingsStaticComponent;
 	struct WindowComponent;
 }
 
 namespace editor::outliner
 {
-	struct SelectSingleton;
+	struct SelectStaticComponent;
 }
 
 namespace eng
@@ -52,9 +52,9 @@ namespace editor::inspector
 			::Write<
 			ecs::NameComponent,
 			editor::inspector::SaveComponent,
-			editor::inspector::SettingsSingleton,
+			editor::inspector::SettingsStaticComponent,
 			editor::inspector::WindowComponent,
-			editor::outliner::SelectSingleton,
+			editor::outliner::SelectStaticComponent,
 			eng::InputManager>
 			::Read<
 			editor::inspector::OpenWindowEvent,

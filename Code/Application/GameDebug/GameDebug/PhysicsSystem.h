@@ -5,7 +5,7 @@
 
 namespace eng
 {
-	struct LinesSingleton;
+	struct LinesStaticComponent;
 	struct PhysicsComponent;
 	struct RigidDynamicComponent;
 	struct RigidStaticComponent;
@@ -13,7 +13,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct DebugSingleton;
+	struct DebugStaticComponent;
 }
 
 namespace debug
@@ -23,12 +23,12 @@ namespace debug
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::LinesSingleton>
+			eng::LinesStaticComponent>
 			::Read<
 			eng::PhysicsComponent,
 			eng::RigidDynamicComponent,
 			eng::RigidStaticComponent,
-			eng::settings::DebugSingleton>;
+			eng::settings::DebugStaticComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

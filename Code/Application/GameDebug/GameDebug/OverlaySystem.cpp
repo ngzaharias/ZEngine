@@ -7,7 +7,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/ColourHelpers.h"
-#include "Engine/VersionSingleton.h"
+#include "Engine/VersionStaticComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "GameDebug/FPSCounter.h"
@@ -58,7 +58,7 @@ void debug::OverlaySystem::Update(World& world, const GameTime& gameTime)
 
 		// version
 		{
-			const auto& component = world.ReadSingleton<eng::VersionSingleton>();
+			const auto& component = world.ReadComponent<eng::VersionStaticComponent>();
 			if (!component.m_Commit.empty())
 			{
 				ImGui::TextColored(Colour::Green, "%s : %s", component.m_Commit.c_str(), component.m_Branch.c_str());

@@ -7,7 +7,7 @@ namespace gamestate
 {
 	struct ChangeFinishedEvent;
 	struct ChangeRequestEvent;
-	struct StateSingleton;
+	struct StateStaticComponent;
 }
 
 namespace gamestate
@@ -18,7 +18,7 @@ namespace gamestate
 	public:
 		using World = ecs::WorldView
 			::Write<
-			gamestate::StateSingleton>
+			gamestate::StateStaticComponent>
 			::Read<
 			gamestate::ChangeFinishedEvent,
 			gamestate::ChangeRequestEvent>;

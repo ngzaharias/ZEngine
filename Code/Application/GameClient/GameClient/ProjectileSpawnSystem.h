@@ -5,7 +5,7 @@
 
 namespace projectile
 {
-	struct ChangesSingleton;
+	struct ChangesStaticComponent;
 	struct CreateRequestComponent;
 	struct CreateResultComponent;
 	struct SpawnComponent;
@@ -20,7 +20,7 @@ namespace projectile
 	public:
 		using World = ecs::WorldView
 			::Write<
-			projectile::ChangesSingleton,
+			projectile::ChangesStaticComponent,
 			projectile::CreateResultComponent,
 			projectile::SpawnComponent>
 			::Read<

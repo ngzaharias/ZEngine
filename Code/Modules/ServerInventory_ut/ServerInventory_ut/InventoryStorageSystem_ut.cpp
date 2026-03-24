@@ -14,7 +14,7 @@
 #include "ServerInventory/InventoryMemberSystem.h"
 #include "ServerInventory/InventoryOwnerComponent.h"
 #include "ServerInventory/InventoryOwnerSystem.h"
-#include "ServerInventory/InventoryStorageChangesSingleton.h"
+#include "ServerInventory/InventoryStorageChangesStaticComponent.h"
 #include "ServerInventory/InventoryStorageComponent.h"
 #include "ServerInventory/InventoryStorageCreateRequestComponent.h"
 #include "ServerInventory/InventoryStorageCreateResultComponent.h"
@@ -41,7 +41,7 @@ namespace
 			m_EntityWorld.RegisterComponent<server::inventory::StorageCreateResultComponent>();
 			m_EntityWorld.RegisterComponent<server::inventory::StorageDestroyRequestComponent>();
 			m_EntityWorld.RegisterComponent<server::inventory::StorageDestroyResultComponent>();
-			m_EntityWorld.RegisterSingleton<server::inventory::StorageChangesSingleton>();
+			m_EntityWorld.RegisterComponent<server::inventory::StorageChangesStaticComponent>();
 			m_EntityWorld.RegisterSystem<server::inventory::StorageSystem>();
 			m_EntityWorld.RegisterSystem<server::inventory::MemberSystem>();
 			m_EntityWorld.RegisterSystem<server::inventory::OwnerSystem>();
@@ -351,7 +351,7 @@ TEST_CASE("server::inventory::StorageSystem::Member Add")
 		CHECK(memberComponent.m_Type == 666);
 
 		// checks changes
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<server::inventory::StorageChangesSingleton>();
+		const auto& changesComponent = world.m_EntityWorld.ReadComponent<server::inventory::StorageChangesStaticComponent>();
 		REQUIRE(changesComponent.m_MemberAdded.GetCount() == 1);
 		CHECK(changesComponent.m_MemberAdded[0].m_Member == memberEntity);
 		CHECK(changesComponent.m_MemberAdded[0].m_Storage == storageEntity);
@@ -361,7 +361,7 @@ TEST_CASE("server::inventory::StorageSystem::Member Add")
 	{
 		world.Update();
 
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<server::inventory::StorageChangesSingleton>();
+		const auto& changesComponent = world.m_EntityWorld.ReadComponent<server::inventory::StorageChangesStaticComponent>();
 		CHECK(changesComponent.m_MemberAdded.GetCount() == 0);
 		CHECK(changesComponent.m_MemberMoved.GetCount() == 0);
 		CHECK(changesComponent.m_MemberRemoved.GetCount() == 0);
@@ -645,7 +645,7 @@ TEST_CASE("server::inventory::StorageSystem::Member Remove")
 		CHECK(!storageComponent.m_Members.Contains(memberEntity));
 
 		// check changes
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<server::inventory::StorageChangesSingleton>();
+		const auto& changesComponent = world.m_EntityWorld.ReadComponent<server::inventory::StorageChangesStaticComponent>();
 		REQUIRE(changesComponent.m_MemberRemoved.GetCount() == 1);
 		CHECK(changesComponent.m_MemberRemoved[0].m_Member == memberEntity);
 		CHECK(changesComponent.m_MemberRemoved[0].m_Storage == storageEntity);
@@ -655,7 +655,7 @@ TEST_CASE("server::inventory::StorageSystem::Member Remove")
 	{
 		world.Update();
 
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<server::inventory::StorageChangesSingleton>();
+		const auto& changesComponent = world.m_EntityWorld.ReadComponent<server::inventory::StorageChangesStaticComponent>();
 		CHECK(changesComponent.m_MemberAdded.GetCount() == 0);
 		CHECK(changesComponent.m_MemberMoved.GetCount() == 0);
 		CHECK(changesComponent.m_MemberRemoved.GetCount() == 0);
@@ -779,7 +779,7 @@ TEST_CASE("server::inventory::StorageSystem::Storage Create")
 		CHECK(storageComponent.m_Type == 666);
 
 		// check changes
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<server::inventory::StorageChangesSingleton>();
+		const auto& changesComponent = world.m_EntityWorld.ReadComponent<server::inventory::StorageChangesStaticComponent>();
 		REQUIRE(changesComponent.m_StorageCreated.GetCount() == 1);
 		REQUIRE(changesComponent.m_StorageDestroyed.GetCount() == 0);
 		CHECK(changesComponent.m_StorageCreated[0].m_Storage == resultComponent.m_Storage);
@@ -955,7 +955,7 @@ TEST_CASE("server::inventory::StorageSystem::Storage Destroy")
 		CHECK(!world.IsAlive(storageEntity));
 
 		// check changes
-		const auto& changesComponent = world.m_EntityWorld.ReadSingleton<server::inventory::StorageChangesSingleton>();
+		const auto& changesComponent = world.m_EntityWorld.ReadComponent<server::inventory::StorageChangesStaticComponent>();
 		REQUIRE(changesComponent.m_StorageCreated.GetCount() == 0);
 		REQUIRE(changesComponent.m_StorageDestroyed.GetCount() == 1);
 		CHECK(changesComponent.m_StorageDestroyed[0].m_Storage == storageEntity);

@@ -9,11 +9,11 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/ColourHelpers.h"
-#include "Engine/FrameBufferSingleton.h"
+#include "Engine/FrameBufferStaticComponent.h"
 #include "Engine/LightAmbientComponent.h"
 #include "Engine/LightDirectionalComponent.h"
 #include "Engine/LightPointComponent.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/StaticMeshComponent.h"
@@ -44,7 +44,7 @@ void render::ShadowSystem::Initialise(World& world)
 
 	// texture and buffer
 	{
-		auto& bufferComponent = world.WriteSingleton<eng::FrameBufferSingleton>();
+		auto& bufferComponent = world.WriteComponent<eng::FrameBufferStaticComponent>();
 		bufferComponent.m_ShadowSize = Vector2u(1024, 1024);
 
 		glGenFramebuffers(1, &bufferComponent.m_ShadowBuffer);
@@ -75,7 +75,7 @@ void render::ShadowSystem::Shutdown(World& world)
 {
 	PROFILE_FUNCTION();
 
-	auto& bufferComponent = world.WriteSingleton<eng::FrameBufferSingleton>();
+	auto& bufferComponent = world.WriteComponent<eng::FrameBufferStaticComponent>();
 
 	glDeleteFramebuffers(1, &bufferComponent.m_ShadowBuffer);
 	glDeleteTextures(1, &bufferComponent.m_ShadowTexture);
@@ -87,7 +87,7 @@ void render::ShadowSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto& bufferComponent = world.ReadSingleton<eng::FrameBufferSingleton>();
+	const auto& bufferComponent = world.ReadComponent<eng::FrameBufferStaticComponent>();
 
 	{
 		glViewport(0, 0, bufferComponent.m_ShadowSize.x, bufferComponent.m_ShadowSize.y);
@@ -109,7 +109,7 @@ void render::ShadowSystem::Update(World& world, const GameTime& gameTime)
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
+	const auto& debugSettings = world.ReadComponent<eng::settings::DebugStaticComponent>();
 
 	using CameraQuery = ecs::query
 		::Include<

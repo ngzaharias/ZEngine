@@ -8,17 +8,17 @@
 
 namespace editor::gizmo
 {
-	struct TransformSingleton;
+	struct TransformStaticComponent;
 }
 
 namespace editor::outliner
 {
-	struct SelectSingleton;
+	struct SelectStaticComponent;
 }
 
 namespace editor::settings
 {
-	struct LocalSingleton;
+	struct LocalStaticComponent;
 }
 
 namespace eng
@@ -44,13 +44,13 @@ namespace editor::gizmo
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::gizmo::TransformSingleton,
+			editor::gizmo::TransformStaticComponent,
 			eng::InputManager,
 			eng::PhysicsComponent,
 			eng::TransformComponent>
 			::Read<
-			editor::outliner::SelectSingleton,
-			editor::settings::LocalSingleton,
+			editor::outliner::SelectStaticComponent,
+			editor::settings::LocalStaticComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::WindowManager,

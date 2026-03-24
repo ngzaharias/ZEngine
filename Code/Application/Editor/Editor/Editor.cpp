@@ -10,10 +10,10 @@
 #include "Editor/EditorRenderGridSystem.h"
 #include "Editor/EditorToolbarSystem.h"
 #include "Editor/GizmoCrosshairSystem.h"
-#include "Editor/GizmoTransformSingleton.h"
+#include "Editor/GizmoTransformStaticComponent.h"
 #include "Editor/GizmoTransformSystem.h"
 #include "Editor/OverlaySystem.h"
-#include "Editor/SettingsLocalSingleton.h"
+#include "Editor/SettingsLocalStaticComponent.h"
 #include "Editor/SettingsLocalSystem.h"
 #include "Editor/SettingsMenuSystem.h"
 #include "Editor/SettingsWindowComponent.h"
@@ -39,9 +39,9 @@ void editor::Editor::Register()
 {
 	PROFILE_FUNCTION();
 
-	m_ClientWorld.RegisterSingleton<editor::gizmo::TransformSingleton>();
+	m_ClientWorld.RegisterComponent<editor::gizmo::TransformStaticComponent>();
 	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
-	m_ClientWorld.RegisterSingleton<editor::settings::LocalSingleton>();
+	m_ClientWorld.RegisterComponent<editor::settings::LocalStaticComponent>();
 	m_ClientWorld.RegisterSystem<editor::AssetReloadSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();

@@ -7,14 +7,14 @@
 #include "ECS/WorldView.h"
 #include "GameClient/MovementAccelerationComponent.h"
 #include "GameClient/MovementVelocityComponent.h"
-#include "GameClient/ProjectileChangesSingleton.h"
+#include "GameClient/ProjectileChangesStaticComponent.h"
 #include "GameClient/ProjectileCreateRequestComponent.h"
 
 void movement::VelocitySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& changesComponent = world.ReadSingleton<projectile::ChangesSingleton>();
+	const auto& changesComponent = world.ReadComponent<projectile::ChangesStaticComponent>();
 	for (const projectile::Created& createdData : changesComponent.m_Created)
 	{
 		const auto& requestComponent = world.ReadComponent<projectile::CreateRequestComponent>(createdData.m_Request);

@@ -16,7 +16,7 @@ namespace editor::texture
 	struct AssetOpenComponent;
 	struct AssetSaveComponent;
 	struct OpenWindowEvent;
-	struct SettingsSingleton;
+	struct SettingsStaticComponent;
 	struct WindowComponent;
 }
 
@@ -43,7 +43,7 @@ namespace editor::texture
 			editor::texture::AssetNewComponent,
 			editor::texture::AssetOpenComponent,
 			editor::texture::AssetSaveComponent,
-			editor::texture::SettingsSingleton,
+			editor::texture::SettingsStaticComponent,
 			editor::texture::WindowComponent,
 			eng::AssetManager,
 			eng::InputManager>

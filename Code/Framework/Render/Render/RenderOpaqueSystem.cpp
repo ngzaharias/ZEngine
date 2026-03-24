@@ -10,11 +10,11 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/ColourHelpers.h"
-#include "Engine/FrameBufferSingleton.h"
+#include "Engine/FrameBufferStaticComponent.h"
 #include "Engine/LightAmbientComponent.h"
 #include "Engine/LightDirectionalComponent.h"
 #include "Engine/LightPointComponent.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/StaticMeshComponent.h"
@@ -105,7 +105,7 @@ void render::OpaqueSystem::Update(World& world, const GameTime& gameTime)
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
+	const auto& debugSettings = world.ReadComponent<eng::settings::DebugStaticComponent>();
 
 	using CameraQuery = ecs::query
 		::Include<
@@ -354,7 +354,7 @@ void render::OpaqueSystem::RenderBatch(World& world, const render::BatchId& id, 
 
 			if (shader->u_Texture_ShadowMap)
 			{
-				auto& component = world.WriteSingleton<eng::FrameBufferSingleton>();
+				auto& component = world.WriteComponent<eng::FrameBufferStaticComponent>();
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, component.m_ShadowTexture);
 			}

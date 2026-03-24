@@ -2,7 +2,7 @@
 #include "Camera/CameraZoom2DSystem.h"
 
 #include "Camera/CameraZoom2DComponent.h"
-#include "Camera/CameraSettingsSingleton.h"
+#include "Camera/CameraSettingsStaticComponent.h"
 #include "Core/GameTime.h"
 #include "Core/VariantHelpers.h"
 #include "ECS/EntityWorld.h"
@@ -28,7 +28,7 @@ void camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 		return;
 
 	const Vector2u& windowSize = window->GetSize();
-	const auto& cameraSettings = world.ReadSingleton<camera::SettingsSingleton>();
+	const auto& cameraSettings = world.ReadComponent<camera::SettingsStaticComponent>();
 
 	using CameraQuery = ecs::query
 		::Include<

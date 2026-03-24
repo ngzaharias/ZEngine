@@ -8,9 +8,9 @@
 #include "Engine/AssetManager.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/LinesSingleton.h"
+#include "Engine/LinesStaticComponent.h"
 #include "Engine/ShaderAsset.h"
-#include "Engine/SettingsDebugSingleton.h"
+#include "Engine/SettingsDebugStaticComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -52,7 +52,7 @@ void render::DebugSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
-	const auto& debugSettings = world.ReadSingleton<eng::settings::DebugSingleton>();
+	const auto& debugSettings = world.ReadComponent<eng::settings::DebugStaticComponent>();
 	if (!debugSettings.m_AreLinesEnabled)
 		return;
 
@@ -65,7 +65,7 @@ void render::DebugSystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-	const auto& readComponent = world.ReadSingleton<eng::LinesSingleton>();
+	const auto& readComponent = world.ReadComponent<eng::LinesStaticComponent>();
 	if (!readComponent.m_Vertices.IsEmpty())
 	{
 		const Vector2u& windowSize = window->GetSize();
@@ -137,7 +137,7 @@ void render::DebugSystem::Update(World& world, const GameTime& gameTime)
 			glDrawArrays(GL_LINES, 0, vertexCount);
 		}
 
-		auto& writeComponent = world.WriteSingleton<eng::LinesSingleton>();
+		auto& writeComponent = world.WriteComponent<eng::LinesStaticComponent>();
 		writeComponent.m_Vertices.RemoveAll();
 	}
 }

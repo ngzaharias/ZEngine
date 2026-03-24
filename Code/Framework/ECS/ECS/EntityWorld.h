@@ -7,8 +7,7 @@
 #include "ECS/IsReplicated.h"
 #include "ECS/QueryRegistry.h"
 #include "ECS/ResourceRegistry.h"
-#include "ECS/Singleton.h"
-#include "ECS/SingletonStorage.h"
+#include "ECS/Component.h"
 #include "ECS/SystemRegistry.h"
 #include "ECS/TypeInfo.h"
 #include "ECS/TypeRegistry.h"
@@ -58,34 +57,42 @@ namespace ecs
 		void RegisterComponent();
 
 		template<typename TComponent, typename... TArgs>
-		requires ecs::IsSoloOrStaticComponent<TComponent>
-		auto AddComponent(TArgs&&... args)->TComponent&;
-		template<typename TComponent, typename... TArgs>
 		auto AddComponent(const ecs::Entity& entity, TArgs&&... args)->TComponent&;
 
-		template<typename TComponent>
-		requires ecs::IsSoloOrStaticComponent<TComponent>
-		void RemoveComponent();
 		template<typename TComponent>
 		void RemoveComponent(const ecs::Entity& entity);
 
 		template<typename TComponent>
-		requires ecs::IsSoloOrStaticComponent<TComponent>
-		bool HasComponent(const bool alive = true) const;
-		template<typename TComponent>
 		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
 
-		template<typename TComponent>
-		requires ecs::IsSoloOrStaticComponent<TComponent>
-		auto ReadComponent(const bool alive = true) -> const TComponent&;
 		template<typename TComponent>
 		auto ReadComponent(const ecs::Entity& entity, const bool alive = true) -> const TComponent&;
 
 		template<typename TComponent>
+		auto WriteComponent(const ecs::Entity& entity, const bool alive = true) -> TComponent&;
+
+		//////////////////////////////////////////////////////////////////////////
+		// Solo/Static Component
+
+		template<typename TComponent, typename... TArgs>
+		requires ecs::IsSoloOrStaticComponent<TComponent>
+		auto AddComponent(TArgs&&... args) -> TComponent&;
+
+		template<typename TComponent>
+		requires ecs::IsSoloOrStaticComponent<TComponent>
+		void RemoveComponent();
+
+		template<typename TComponent>
+		requires ecs::IsSoloOrStaticComponent<TComponent>
+		bool HasComponent(const bool alive = true) const;
+
+		template<typename TComponent>
+		requires ecs::IsSoloOrStaticComponent<TComponent>
+		auto ReadComponent(const bool alive = true) -> const TComponent&;
+
+		template<typename TComponent>
 		requires ecs::IsSoloOrStaticComponent<TComponent>
 		auto WriteComponent(const bool alive = true)->TComponent&;
-		template<typename TComponent>
-		auto WriteComponent(const ecs::Entity& entity, const bool alive = true) -> TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event
@@ -107,18 +114,6 @@ namespace ecs
 
 		template<typename TResource>
 		auto WriteResource() -> TResource&;
-
-		//////////////////////////////////////////////////////////////////////////
-		// Singleton
-
-		template<typename TSingleton, typename... TArgs>
-		void RegisterSingleton(TArgs&&... args);
-
-		template<typename TSingleton>
-		auto ReadSingleton() -> const TSingleton&;
-
-		template<typename TSingleton>
-		auto WriteSingleton() -> TSingleton&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// System
@@ -159,7 +154,6 @@ namespace ecs
 		ecs::TypeRegistry& m_TypeRegistry;
 		ecs::EntityStorage m_EntityStorage;
 		ecs::EventStorage m_EventStorage;
-		ecs::SingletonStorage m_SingletonStorage;
 
 		ecs::QueryRegistry m_QueryRegistry;
 		ecs::ResourceRegistry m_ResourceRegistry;

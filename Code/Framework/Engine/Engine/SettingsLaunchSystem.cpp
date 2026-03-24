@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/LevelLoadEvent.h"
-#include "Engine/SettingsLaunchSingleton.h"
+#include "Engine/SettingsLaunchStaticComponent.h"
 #include "Engine/Visitor.h"
 
 namespace
@@ -19,7 +19,7 @@ void eng::settings::LaunchSystem::Initialise(World& world)
 	PROFILE_FUNCTION();
 
 	const str::Path filepath = str::Path(str::EPath::Levels, strFilename);
-	auto& settings = world.WriteSingleton<eng::settings::LaunchSingleton>();
+	auto& settings = world.WriteComponent<eng::settings::LaunchStaticComponent>();
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);

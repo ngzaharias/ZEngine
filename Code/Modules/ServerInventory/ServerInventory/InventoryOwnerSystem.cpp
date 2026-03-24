@@ -7,7 +7,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "ServerInventory/InventoryOwnerComponent.h"
-#include "ServerInventory/InventoryStorageChangesSingleton.h"
+#include "ServerInventory/InventoryStorageChangesStaticComponent.h"
 
 void server::inventory::OwnerSystem::Update(World& world, const GameTime& gameTime)
 {
@@ -18,7 +18,7 @@ void server::inventory::OwnerSystem::Update(World& world, const GameTime& gameTi
 
 void server::inventory::OwnerSystem::ProcessStorageChanges(World& world)
 {
-	const auto& storageChangesComponent = world.ReadSingleton<server::inventory::StorageChangesSingleton>();
+	const auto& storageChangesComponent = world.ReadComponent<server::inventory::StorageChangesStaticComponent>();
 
 	Map<ecs::Entity, Array<const StorageChange*>> requests;
 	for (const StorageChange& data : storageChangesComponent.m_StorageCreated)
