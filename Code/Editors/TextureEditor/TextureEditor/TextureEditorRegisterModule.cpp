@@ -19,8 +19,8 @@ void editor::texture::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterComponent<editor::texture::AssetNewComponent>();
 	world.RegisterComponent<editor::texture::AssetOpenComponent>();
 	world.RegisterComponent<editor::texture::AssetSaveComponent>();
+	world.RegisterComponent<editor::texture::SettingsComponent>();
 	world.RegisterComponent<editor::texture::WindowComponent>();
 	world.RegisterEvent<editor::texture::OpenWindowEvent>();
-	world.RegisterComponent<editor::texture::SettingsComponent>();
 	world.RegisterSystem<editor::texture::WindowSystem>();
 }

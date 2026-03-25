@@ -9,18 +9,7 @@
 
 void editor::theme::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<editor::theme::WindowComponent>();
-	}
-
-	// events
-	{
-		world.RegisterEvent<editor::theme::WindowEvent>();
-	}
-
-	// systems
-	{
-		world.RegisterSystem<editor::theme::WindowSystem>();
-	}
+	world.RegisterComponent<editor::theme::WindowComponent>();
+	world.RegisterEvent<editor::theme::WindowEvent>();
+	world.RegisterSystem<editor::theme::WindowSystem>();
 }

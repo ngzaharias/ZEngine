@@ -7,13 +7,6 @@
 
 void client::network::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<client::network::PeerComponent>();
-	}
-
-	// systems
-	{
-		world.RegisterSystem<client::network::PeerSystem>();
-	}
+	world.RegisterComponent<client::network::PeerComponent>();
+	world.RegisterSystem<client::network::PeerSystem>();
 }

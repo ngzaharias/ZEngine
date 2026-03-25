@@ -10,16 +10,9 @@
 
 void tilemap::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<tilemap::AgentComponent>();
-		world.RegisterComponent<tilemap::GridComponent>();
-	}
-
-	// systems
-	{
-		world.RegisterSystem<tilemap::DebugSystem>();
-	}
+	world.RegisterComponent<tilemap::AgentComponent>();
+	world.RegisterComponent<tilemap::GridComponent>();
+	world.RegisterSystem<tilemap::DebugSystem>();
 
 	// prototypes
 	{

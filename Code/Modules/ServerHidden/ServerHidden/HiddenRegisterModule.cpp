@@ -7,8 +7,5 @@
 
 void server::hidden::RegisterModule(ecs::EntityWorld& world)
 {
-	// systems
-	{
-		world.RegisterSystem<server::hidden::RevealSystem>();
-	}
+	world.RegisterSystem<server::hidden::RevealSystem>();
 }

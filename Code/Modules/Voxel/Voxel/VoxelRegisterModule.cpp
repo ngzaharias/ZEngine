@@ -23,6 +23,8 @@ void voxel::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterSystem<voxel::ModifySystem>();
 
 	// prototype
-	auto& manager = world.WriteResource<eng::PrototypeManager>();
-	manager.RegisterComponent<voxel::ChunkComponent>();
+	{
+		auto& manager = world.WriteResource<eng::PrototypeManager>();
+		manager.RegisterComponent<voxel::ChunkComponent>();
+	}
 }

@@ -19,29 +19,18 @@
 
 void camera::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<camera::Bound2DComponent>();
-		world.RegisterComponent<camera::Move2DComponent>();
-		world.RegisterComponent<camera::Move3DComponent>();
-		world.RegisterComponent<camera::Pan3DComponent>();
-		world.RegisterComponent<camera::Zoom2DComponent>();
-	}
-
-	// components
-	{
-		world.RegisterComponent<camera::SettingsComponent>();
-	}
-
-	// systems
-	{
-		world.RegisterSystem<camera::ActivationSystem>();
-		world.RegisterSystem<camera::Bound2DSystem>();
-		world.RegisterSystem<camera::Move2DSystem>();
-		world.RegisterSystem<camera::Move3DSystem>();
-		world.RegisterSystem<camera::Pan3DSystem>();
-		world.RegisterSystem<camera::Zoom2DSystem>();
-	}
+	world.RegisterComponent<camera::Bound2DComponent>();
+	world.RegisterComponent<camera::Move2DComponent>();
+	world.RegisterComponent<camera::Move3DComponent>();
+	world.RegisterComponent<camera::Pan3DComponent>();
+	world.RegisterComponent<camera::Zoom2DComponent>();
+	world.RegisterComponent<camera::SettingsComponent>();
+	world.RegisterSystem<camera::ActivationSystem>();
+	world.RegisterSystem<camera::Bound2DSystem>();
+	world.RegisterSystem<camera::Move2DSystem>();
+	world.RegisterSystem<camera::Move3DSystem>();
+	world.RegisterSystem<camera::Pan3DSystem>();
+	world.RegisterSystem<camera::Zoom2DSystem>();
 
 	// prototypes
 	{

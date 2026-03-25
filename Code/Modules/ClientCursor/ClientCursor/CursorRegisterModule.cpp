@@ -6,8 +6,5 @@
 
 void client::cursor::RegisterModule(ecs::EntityWorld& world)
 {
-	// system
-	{
-		world.RegisterSystem<client::cursor::TransformSystem>();
-	}
+	world.RegisterSystem<client::cursor::TransformSystem>();
 }

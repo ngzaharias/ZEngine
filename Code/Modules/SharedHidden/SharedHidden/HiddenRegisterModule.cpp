@@ -8,9 +8,6 @@
 
 void shared::hidden::RegisterModule(ecs::EntityWorld& world)
 {
-	// events
-	{
-		world.RegisterEvent<shared::hidden::RevealedEvent>();
-		world.RegisterEvent<shared::hidden::SelectedEvent>();
-	}
+	world.RegisterEvent<shared::hidden::RevealedEvent>();
+	world.RegisterEvent<shared::hidden::SelectedEvent>();
 }

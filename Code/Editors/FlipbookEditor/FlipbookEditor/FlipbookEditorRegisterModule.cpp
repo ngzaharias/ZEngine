@@ -17,9 +17,9 @@ void editor::flipbook::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterComponent<editor::flipbook::AssetOpenComponent>();
 	world.RegisterComponent<editor::flipbook::AssetSaveComponent>();
 	world.RegisterComponent<editor::flipbook::BatchingComponent>();
+	world.RegisterComponent<editor::flipbook::SettingsComponent>();
 	world.RegisterComponent<editor::flipbook::WindowComponent>();
 	world.RegisterEvent<editor::flipbook::OpenWindowEvent>();
-	world.RegisterComponent<editor::flipbook::SettingsComponent>();
 	world.RegisterSystem<editor::flipbook::SettingsSystem>();
 	world.RegisterSystem<editor::flipbook::WindowSystem>();
 }

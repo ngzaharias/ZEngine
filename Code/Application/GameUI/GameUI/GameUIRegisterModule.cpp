@@ -60,48 +60,37 @@ namespace
 
 void gui::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<gui::HUDComponent>();
-		world.RegisterComponent<gui::game_menu::WindowComponent>();
-		world.RegisterComponent<gui::input::BindingsComponent>();
-		world.RegisterComponent<gui::level_complete::WindowComponent>();
-		world.RegisterComponent<gui::main_menu::WindowComponent>();
-		world.RegisterComponent<gui::settings_menu::WindowComponent>();
-	}
-
-	// events
-	{
-		world.RegisterEvent<gui::game_menu::CloseEvent>();
-		world.RegisterEvent<gui::game_menu::ExitGameEvent>();
-		world.RegisterEvent<gui::game_menu::ExitToMenuEvent>();
-		world.RegisterEvent<gui::game_menu::OpenEvent>();
-		world.RegisterEvent<gui::level_complete::ExitGameEvent>();
-		world.RegisterEvent<gui::level_complete::ExitToMenuEvent>();
-		world.RegisterEvent<gui::level_complete::ResetGameEvent>();
-		world.RegisterEvent<gui::loading::CloseEvent>();
-		world.RegisterEvent<gui::main_menu::ContinueGameEvent>();
-		world.RegisterEvent<gui::main_menu::ExitGameEvent>();
-		world.RegisterEvent<gui::main_menu::LoadGameEvent>();
-		world.RegisterEvent<gui::main_menu::NewGameEvent>();
-		world.RegisterEvent<gui::settings_menu::CloseEvent>();
-		world.RegisterEvent<gui::settings_menu::OpenEvent>();
-		world.RegisterEvent<gui::settings_menu::ValueEvent>();
-	}
-
-	// systems
-	{
-		world.RegisterSystem<gui::HUDSystem>();
-		world.RegisterSystem<gui::game_menu::MenuSystem>();
-		world.RegisterSystem<gui::hidden::CountSystem>();
-		world.RegisterSystem<gui::hidden::LevelSystem>();
-		world.RegisterSystem<gui::input::BindingsSystem>();
-		world.RegisterSystem<gui::level_complete::MenuSystem>();
-		world.RegisterSystem<gui::loading::LoadingSystem>();
-		world.RegisterSystem<gui::main_menu::MenuSystem>();
-		world.RegisterSystem<gui::settings_menu::MenuSystem>();
-		world.RegisterSystem<gui::ThemeSystem>();
-	}
+	world.RegisterComponent<gui::game_menu::WindowComponent>();
+	world.RegisterComponent<gui::HUDComponent>();
+	world.RegisterComponent<gui::input::BindingsComponent>();
+	world.RegisterComponent<gui::level_complete::WindowComponent>();
+	world.RegisterComponent<gui::main_menu::WindowComponent>();
+	world.RegisterComponent<gui::settings_menu::WindowComponent>();
+	world.RegisterEvent<gui::game_menu::CloseEvent>();
+	world.RegisterEvent<gui::game_menu::ExitGameEvent>();
+	world.RegisterEvent<gui::game_menu::ExitToMenuEvent>();
+	world.RegisterEvent<gui::game_menu::OpenEvent>();
+	world.RegisterEvent<gui::level_complete::ExitGameEvent>();
+	world.RegisterEvent<gui::level_complete::ExitToMenuEvent>();
+	world.RegisterEvent<gui::level_complete::ResetGameEvent>();
+	world.RegisterEvent<gui::loading::CloseEvent>();
+	world.RegisterEvent<gui::main_menu::ContinueGameEvent>();
+	world.RegisterEvent<gui::main_menu::ExitGameEvent>();
+	world.RegisterEvent<gui::main_menu::LoadGameEvent>();
+	world.RegisterEvent<gui::main_menu::NewGameEvent>();
+	world.RegisterEvent<gui::settings_menu::CloseEvent>();
+	world.RegisterEvent<gui::settings_menu::OpenEvent>();
+	world.RegisterEvent<gui::settings_menu::ValueEvent>();
+	world.RegisterSystem<gui::game_menu::MenuSystem>();
+	world.RegisterSystem<gui::hidden::CountSystem>();
+	world.RegisterSystem<gui::hidden::LevelSystem>();
+	world.RegisterSystem<gui::HUDSystem>();
+	world.RegisterSystem<gui::input::BindingsSystem>();
+	world.RegisterSystem<gui::level_complete::MenuSystem>();
+	world.RegisterSystem<gui::loading::LoadingSystem>();
+	world.RegisterSystem<gui::main_menu::MenuSystem>();
+	world.RegisterSystem<gui::settings_menu::MenuSystem>();
+	world.RegisterSystem<gui::ThemeSystem>();
 
 	// prototypes
 	{

@@ -11,9 +11,9 @@
 
 void editor::outliner::RegisterModule(ecs::EntityWorld& world)
 {
+	world.RegisterComponent<editor::outliner::SelectComponent>();
 	world.RegisterComponent<editor::outliner::WindowComponent>();
 	world.RegisterEvent<editor::outliner::OpenWindowEvent>();
-	world.RegisterComponent<editor::outliner::SelectComponent>();
 	world.RegisterSystem<editor::outliner::SelectSystem>();
 	world.RegisterSystem<editor::outliner::WindowSystem>();
 }

@@ -9,11 +9,8 @@
 
 void tabletop::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<tabletop::CardComponent>();
-		world.RegisterComponent<tabletop::DeckComponent>();
-	}
+	world.RegisterComponent<tabletop::CardComponent>();
+	world.RegisterComponent<tabletop::DeckComponent>();
 
 	// prototypes
 	{

@@ -9,15 +9,8 @@
 
 void softbody::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<softbody::ChainComponent>();
-	}	
-	
-	// systems
-	{
-		world.RegisterSystem<softbody::ChainSystem>();
-	}
+	world.RegisterComponent<softbody::ChainComponent>();
+	world.RegisterSystem<softbody::ChainSystem>();
 
 	// prototypes
 	{

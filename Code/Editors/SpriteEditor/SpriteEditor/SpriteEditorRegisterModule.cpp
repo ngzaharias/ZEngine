@@ -16,12 +16,12 @@
 void editor::sprite::RegisterModule(ecs::EntityWorld& world)
 {
 	world.RegisterComponent<editor::sprite::BatchingComponent>();
+	world.RegisterComponent<editor::sprite::SettingsComponent>();
 	world.RegisterComponent<editor::sprite::WindowComponent>();
 	world.RegisterEvent<editor::sprite::AssetNewEvent>();
 	world.RegisterEvent<editor::sprite::AssetOpenEvent>();
 	world.RegisterEvent<editor::sprite::AssetSaveEvent>();
 	world.RegisterEvent<editor::sprite::OpenWindowEvent>();
-	world.RegisterComponent<editor::sprite::SettingsComponent>();
 	world.RegisterSystem<editor::sprite::SettingsSystem>();
 	world.RegisterSystem<editor::sprite::WindowSystem>();
 }

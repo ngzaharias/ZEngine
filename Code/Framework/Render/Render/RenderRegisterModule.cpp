@@ -23,28 +23,21 @@
 
 void render::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<render::CursorComponent>();
-		world.RegisterComponent<render::DebugComponent>();
-		world.RegisterComponent<render::ImGuiComponent>();
-		world.RegisterComponent<render::OpaqueComponent>();
-		world.RegisterComponent<render::ShadowComponent>();
-		world.RegisterComponent<render::TranslucentComponent>();
-		world.RegisterComponent<render::UIPostComponent>();
-		world.RegisterComponent<render::UIPreComponent>();
-	}
-
-	// systems
-	{
-		world.RegisterSystem<render::CursorSystem>();
-		world.RegisterSystem<render::DebugSystem>();
-		world.RegisterSystem<render::ImGuiSystem>();
-		world.RegisterSystem<render::OpaqueSystem>();
-		world.RegisterSystem<render::ShadowSystem>();
-		world.RegisterSystem<render::TranslucentSystem>();
-		world.RegisterSystem<render::UIPostSystem>();
-		world.RegisterSystem<render::UIPreSystem>();
-		world.RegisterSystem<render::VoxelSystem>();
-	}
+	world.RegisterComponent<render::CursorComponent>();
+	world.RegisterComponent<render::DebugComponent>();
+	world.RegisterComponent<render::ImGuiComponent>();
+	world.RegisterComponent<render::OpaqueComponent>();
+	world.RegisterComponent<render::ShadowComponent>();
+	world.RegisterComponent<render::TranslucentComponent>();
+	world.RegisterComponent<render::UIPostComponent>();
+	world.RegisterComponent<render::UIPreComponent>();
+	world.RegisterSystem<render::CursorSystem>();
+	world.RegisterSystem<render::DebugSystem>();
+	world.RegisterSystem<render::ImGuiSystem>();
+	world.RegisterSystem<render::OpaqueSystem>();
+	world.RegisterSystem<render::ShadowSystem>();
+	world.RegisterSystem<render::TranslucentSystem>();
+	world.RegisterSystem<render::UIPostSystem>();
+	world.RegisterSystem<render::UIPreSystem>();
+	world.RegisterSystem<render::VoxelSystem>();
 }

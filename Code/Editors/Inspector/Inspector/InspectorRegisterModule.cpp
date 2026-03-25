@@ -13,9 +13,9 @@
 void editor::inspector::RegisterModule(ecs::EntityWorld& world)
 {
 	world.RegisterComponent<editor::inspector::SaveComponent>();
+	world.RegisterComponent<editor::inspector::SettingsComponent>();
 	world.RegisterComponent<editor::inspector::WindowComponent>();
 	world.RegisterEvent<editor::inspector::OpenWindowEvent>();
-	world.RegisterComponent<editor::inspector::SettingsComponent>();
 	world.RegisterSystem<editor::inspector::SettingsSystem>();
 	world.RegisterSystem<editor::inspector::WindowSystem>(world);
 }

@@ -22,31 +22,20 @@
 
 void client::hidden::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<client::hidden::CountComponent>();
-		world.RegisterComponent<client::hidden::GroupComponent>();
-		world.RegisterComponent<client::hidden::ObjectComponent>();
-		world.RegisterComponent<client::hidden::RevealComponent>();
-		world.RegisterComponent<client::hidden::VFXComponent>();
-	}
-
-	// components
-	{
-		world.RegisterComponent<client::hidden::DebugComponent>();
-	}
-
-	// systems
-	{
-		world.RegisterSystem<client::hidden::CountSystem>();
-		world.RegisterSystem<client::hidden::PhysicsSystem>();
-		world.RegisterSystem<client::hidden::RevealSystem>();
-		world.RegisterSystem<client::hidden::SaveLoadSystem>();
-		world.RegisterSystem<client::hidden::SoundSystem>();
-		world.RegisterSystem<client::hidden::SpriteSystem>();
-		world.RegisterSystem<client::hidden::TrackerSystem>();
-		world.RegisterSystem<client::hidden::VFXSystem>();
-	}
+	world.RegisterComponent<client::hidden::CountComponent>();
+	world.RegisterComponent<client::hidden::DebugComponent>();
+	world.RegisterComponent<client::hidden::GroupComponent>();
+	world.RegisterComponent<client::hidden::ObjectComponent>();
+	world.RegisterComponent<client::hidden::RevealComponent>();
+	world.RegisterComponent<client::hidden::VFXComponent>();
+	world.RegisterSystem<client::hidden::CountSystem>();
+	world.RegisterSystem<client::hidden::PhysicsSystem>();
+	world.RegisterSystem<client::hidden::RevealSystem>();
+	world.RegisterSystem<client::hidden::SaveLoadSystem>();
+	world.RegisterSystem<client::hidden::SoundSystem>();
+	world.RegisterSystem<client::hidden::SpriteSystem>();
+	world.RegisterSystem<client::hidden::TrackerSystem>();
+	world.RegisterSystem<client::hidden::VFXSystem>();
 
 	// prototypes
 	{

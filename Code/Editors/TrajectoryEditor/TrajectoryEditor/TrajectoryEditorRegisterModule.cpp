@@ -11,20 +11,9 @@
 
 void editor::trajectory::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<editor::trajectory::AssetOpenComponent>();
-		world.RegisterComponent<editor::trajectory::AssetSaveComponent>();
-		world.RegisterComponent<editor::trajectory::WindowComponent>();
-	}
-
-	// events
-	{
-		world.RegisterEvent<editor::trajectory::WindowEvent>();
-	}
-
-	// systems
-	{
-		world.RegisterSystem<editor::trajectory::WindowSystem>();
-	}
+	world.RegisterComponent<editor::trajectory::AssetOpenComponent>();
+	world.RegisterComponent<editor::trajectory::AssetSaveComponent>();
+	world.RegisterComponent<editor::trajectory::WindowComponent>();
+	world.RegisterEvent<editor::trajectory::WindowEvent>();
+	world.RegisterSystem<editor::trajectory::WindowSystem>();
 }

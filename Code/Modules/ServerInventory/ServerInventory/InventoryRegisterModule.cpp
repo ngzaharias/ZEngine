@@ -32,13 +32,13 @@ void server::inventory::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterComponent<server::inventory::MemberRemoveRequestComponent>();
 	world.RegisterComponent<server::inventory::MemberRemoveResultComponent>();
 	world.RegisterComponent<server::inventory::OwnerComponent>();
+	world.RegisterComponent<server::inventory::StorageChangesComponent>();
 	world.RegisterComponent<server::inventory::StorageComponent>();
 	world.RegisterComponent<server::inventory::StorageCreateRequestComponent>();
 	world.RegisterComponent<server::inventory::StorageCreateResultComponent>();
 	world.RegisterComponent<server::inventory::StorageDestroyRequestComponent>();
 	world.RegisterComponent<server::inventory::StorageDestroyResultComponent>();
-	world.RegisterComponent<server::inventory::StorageChangesComponent>();
-	world.RegisterSystem<server::inventory::StorageSystem>();
 	world.RegisterSystem<server::inventory::MemberSystem>();
 	world.RegisterSystem<server::inventory::OwnerSystem>();
+	world.RegisterSystem<server::inventory::StorageSystem>();
 }

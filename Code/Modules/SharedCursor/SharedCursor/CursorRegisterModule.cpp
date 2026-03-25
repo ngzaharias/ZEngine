@@ -6,13 +6,6 @@
 
 void shared::cursor::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<shared::cursor::TransformComponent>();
-	}
-
-	// events
-	{
-		world.RegisterEvent<shared::cursor::ClientTransformEvent>();
-	}
+	world.RegisterComponent<shared::cursor::TransformComponent>();
+	world.RegisterEvent<shared::cursor::ClientTransformEvent>();
 }

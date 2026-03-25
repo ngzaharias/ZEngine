@@ -13,19 +13,12 @@
 
 void hexmap::RegisterModule(ecs::EntityWorld& world)
 {
-	// components
-	{
-		world.RegisterComponent<hexmap::LayerComponent>();
-		world.RegisterComponent<hexmap::RootComponent>();
-	}
-
-	// systems
-	{
-		world.RegisterSystem<hexmap::LoadSystem>();
-		world.RegisterSystem<hexmap::ModifySystem>();
-		world.RegisterSystem<hexmap::RenderSystem>();
-		world.RegisterSystem<hexmap::RootSystem>();
-	}
+	world.RegisterComponent<hexmap::LayerComponent>();
+	world.RegisterComponent<hexmap::RootComponent>();
+	world.RegisterSystem<hexmap::LoadSystem>();
+	world.RegisterSystem<hexmap::ModifySystem>();
+	world.RegisterSystem<hexmap::RenderSystem>();
+	world.RegisterSystem<hexmap::RootSystem>();
 
 	// prototypes
 	{
