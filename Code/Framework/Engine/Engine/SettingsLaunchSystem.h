@@ -10,7 +10,7 @@ namespace eng::level
 
 namespace eng::settings
 {
-	struct LaunchStaticComponent;
+	struct LaunchComponent;
 }
 
 namespace eng::settings
@@ -21,7 +21,7 @@ namespace eng::settings
 		using World = ecs::WorldView
 			::Write<
 			eng::level::LoadEvent,
-			eng::settings::LaunchStaticComponent>;
+			eng::settings::LaunchComponent>;
 
 		void Initialise(World& world);
 	};

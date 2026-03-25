@@ -5,7 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/StaticMeshComponent.h"
-#include "GameClient/ProjectileChangesStaticComponent.h"
+#include "GameClient/ProjectileChangesComponent.h"
 #include "GameClient/ProjectileCreateRequestComponent.h"
 
 void visual::VisualSystem::Update(World& world, const GameTime& gameTime)
@@ -17,7 +17,7 @@ void visual::VisualSystem::Update(World& world, const GameTime& gameTime)
 
 void visual::VisualSystem::ProjectileRequests(World& world)
 {
-	const auto& changesComponent = world.ReadComponent<projectile::ChangesStaticComponent>();
+	const auto& changesComponent = world.ReadComponent<projectile::ChangesComponent>();
 	for (const projectile::Created& createdData : changesComponent.m_Created)
 	{
 		const auto& requestComponent = world.ReadComponent<projectile::CreateRequestComponent>(createdData.m_Request);

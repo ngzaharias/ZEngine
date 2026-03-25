@@ -30,7 +30,7 @@ namespace eng::light
 namespace editor::outliner
 {
 	struct OpenWindowEvent;
-	struct SelectStaticComponent;
+	struct SelectComponent;
 	struct WindowComponent;
 }
 
@@ -59,7 +59,7 @@ namespace editor::outliner
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			editor::outliner::SelectStaticComponent,
+			editor::outliner::SelectComponent,
 			editor::outliner::WindowComponent,
 			eng::level::EntityComponent,
 			eng::PrototypeComponent,

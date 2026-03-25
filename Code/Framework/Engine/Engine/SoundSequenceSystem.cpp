@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/SoundAssets.h"
-#include "Engine/SoundSequenceBufferStaticComponent.h"
+#include "Engine/SoundSequenceBufferComponent.h"
 #include "Engine/SoundSequenceComponent.h"
 #include "Engine/SoundSequenceRequestComponent.h"
 
@@ -14,7 +14,7 @@ void eng::sound::SequenceSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& bufferComponent = world.WriteComponent<eng::sound::SequenceBufferStaticComponent>();
+	auto& bufferComponent = world.WriteComponent<eng::sound::SequenceBufferComponent>();
 	bufferComponent.m_Requests.RemoveAll();
 
 	using Query = ecs::query

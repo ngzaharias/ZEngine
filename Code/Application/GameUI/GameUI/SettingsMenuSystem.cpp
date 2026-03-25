@@ -1,16 +1,16 @@
 #include "GameUIPCH.h"
 #include "GameUI/SettingsMenuSystem.h"
 
-#include "Camera/CameraSettingsStaticComponent.h"
-#include "ClientHidden/HiddenDebugStaticComponent.h"
+#include "Camera/CameraSettingsComponent.h"
+#include "ClientHidden/HiddenDebugComponent.h"
 #include "Core/Name.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/SettingsAudioStaticComponent.h"
-#include "Engine/SettingsGameplayStaticComponent.h"
-#include "Engine/SettingsLaunchStaticComponent.h"
-#include "Engine/SettingsWindowStaticComponent.h"
+#include "Engine/SettingsAudioComponent.h"
+#include "Engine/SettingsGameplayComponent.h"
+#include "Engine/SettingsLaunchComponent.h"
+#include "Engine/SettingsWindowComponent.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCSettingsMenu.h"
 #include "GameUI/SettingsMenuCloseEvent.h"
@@ -61,30 +61,30 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 	{
 		// audio
 		if (eventData.m_EffectVolume)
-			world.WriteComponent<eng::settings::AudioStaticComponent>().m_EffectVolume = *eventData.m_EffectVolume;
+			world.WriteComponent<eng::settings::AudioComponent>().m_EffectVolume = *eventData.m_EffectVolume;
 		if (eventData.m_MasterVolume)
-			world.WriteComponent<eng::settings::AudioStaticComponent>().m_MasterVolume = *eventData.m_MasterVolume;
+			world.WriteComponent<eng::settings::AudioComponent>().m_MasterVolume = *eventData.m_MasterVolume;
 		if (eventData.m_MusicVolume)
-			world.WriteComponent<eng::settings::AudioStaticComponent>().m_MusicVolume = *eventData.m_MusicVolume;
+			world.WriteComponent<eng::settings::AudioComponent>().m_MusicVolume = *eventData.m_MusicVolume;
 
 		// gameplay
 		if (eventData.m_MoveSpeed)
-			world.WriteComponent<camera::SettingsStaticComponent>().m_TranslateSpeed = *eventData.m_MoveSpeed;
+			world.WriteComponent<camera::SettingsComponent>().m_TranslateSpeed = *eventData.m_MoveSpeed;
 		if (eventData.m_ZoomRate)
-			world.WriteComponent<camera::SettingsStaticComponent>().m_ZoomAmount = *eventData.m_ZoomRate;
+			world.WriteComponent<camera::SettingsComponent>().m_ZoomAmount = *eventData.m_ZoomRate;
 		if (eventData.m_ZoomSpeed)
-			world.WriteComponent<camera::SettingsStaticComponent>().m_ZoomSpeed = *eventData.m_ZoomSpeed;
+			world.WriteComponent<camera::SettingsComponent>().m_ZoomSpeed = *eventData.m_ZoomSpeed;
 		if (eventData.m_Theme)
-			world.WriteComponent<eng::settings::GameplayStaticComponent>().m_Theme = *eventData.m_Theme;
+			world.WriteComponent<eng::settings::GameplayComponent>().m_Theme = *eventData.m_Theme;
 
 		// graphics
 		if (eventData.m_Monitor)
-			world.WriteComponent<eng::settings::WindowStaticComponent>().m_Monitor = *eventData.m_Monitor;
+			world.WriteComponent<eng::settings::WindowComponent>().m_Monitor = *eventData.m_Monitor;
 		if (eventData.m_RefreshRate)
-			world.WriteComponent<eng::settings::WindowStaticComponent>().m_RefreshRate = *eventData.m_RefreshRate;
+			world.WriteComponent<eng::settings::WindowComponent>().m_RefreshRate = *eventData.m_RefreshRate;
 		if (eventData.m_Resolution)
-			world.WriteComponent<eng::settings::WindowStaticComponent>().m_Resolution = *eventData.m_Resolution;
+			world.WriteComponent<eng::settings::WindowComponent>().m_Resolution = *eventData.m_Resolution;
 		if (eventData.m_WindowMode)
-			world.WriteComponent<eng::settings::WindowStaticComponent>().m_WindowMode = *eventData.m_WindowMode;
+			world.WriteComponent<eng::settings::WindowComponent>().m_WindowMode = *eventData.m_WindowMode;
 	}
 }

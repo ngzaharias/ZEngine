@@ -19,7 +19,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct GameplayStaticComponent;
+	struct GameplayComponent;
 }
 
 namespace client::hidden
@@ -33,7 +33,7 @@ namespace client::hidden
 			::Read<
 			client::hidden::ObjectComponent,
 			client::hidden::RevealComponent,
-			eng::settings::GameplayStaticComponent,
+			eng::settings::GameplayComponent,
 			eng::TablesReloadedEvent,
 			eng::ThemeTable>;
 

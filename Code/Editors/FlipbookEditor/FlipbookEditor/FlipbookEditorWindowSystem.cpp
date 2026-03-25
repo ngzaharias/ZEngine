@@ -310,7 +310,7 @@ void editor::flipbook::WindowSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+	if (!world.HasComponent<gamestate::EditorComponent>())
 		return;
 
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);

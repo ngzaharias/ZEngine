@@ -15,7 +15,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace render
@@ -42,7 +42,7 @@ namespace render
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::DynamicMeshComponent,
-			eng::settings::DebugStaticComponent,
+			eng::settings::DebugComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
 			render::ShadowComponent,

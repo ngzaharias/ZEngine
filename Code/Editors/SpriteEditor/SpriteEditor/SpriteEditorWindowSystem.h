@@ -16,7 +16,7 @@ namespace editor::sprite
 	struct AssetSaveEvent;
 	struct BatchingComponent;
 	struct OpenWindowEvent;
-	struct SettingsStaticComponent;
+	struct SettingsComponent;
 	struct WindowComponent;
 }
 
@@ -44,7 +44,7 @@ namespace editor::sprite
 			editor::sprite::AssetSaveEvent,
 			editor::sprite::BatchingComponent,
 			editor::sprite::OpenWindowEvent,
-			editor::sprite::SettingsStaticComponent,
+			editor::sprite::SettingsComponent,
 			editor::sprite::WindowComponent,
 			eng::AssetManager,
 			eng::InputManager>

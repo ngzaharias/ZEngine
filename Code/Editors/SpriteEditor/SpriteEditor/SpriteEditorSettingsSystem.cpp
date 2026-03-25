@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/Visitor.h"
 #include "GameState/GameStateEditorComponent.h"
-#include "SpriteEditor/SpriteEditorSettingsStaticComponent.h"
+#include "SpriteEditor/SpriteEditorSettingsComponent.h"
 
 namespace
 {
@@ -21,22 +21,22 @@ void editor::sprite::SettingsSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(world.WriteComponent<editor::sprite::SettingsStaticComponent>());
+	visitor.Read(world.WriteComponent<editor::sprite::SettingsComponent>());
 }
 
 void editor::sprite::SettingsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+	if (!world.HasComponent<gamestate::EditorComponent>())
 		return;
 
-	if (world.HasAny<ecs::query::Updated<editor::sprite::SettingsStaticComponent>>())
+	if (world.HasAny<ecs::query::Updated<editor::sprite::SettingsComponent>>())
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(world.ReadComponent<editor::sprite::SettingsStaticComponent>());
+		visitor.Write(world.ReadComponent<editor::sprite::SettingsComponent>());
 		visitor.SaveToFile(filepath);
 	}
 }

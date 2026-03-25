@@ -7,7 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/SoundAssets.h"
-#include "Engine/SoundRandomBufferStaticComponent.h"
+#include "Engine/SoundRandomBufferComponent.h"
 #include "Engine/SoundRandomComponent.h"
 #include "Engine/SoundRandomRequestComponent.h"
 
@@ -20,7 +20,7 @@ void eng::sound::RandomSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& bufferComponent = world.WriteComponent<eng::sound::RandomBufferStaticComponent>();
+	auto& bufferComponent = world.WriteComponent<eng::sound::RandomBufferComponent>();
 	bufferComponent.m_Requests.RemoveAll();
 
 	using Query = ecs::query

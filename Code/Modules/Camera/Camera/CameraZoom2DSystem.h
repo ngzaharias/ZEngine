@@ -5,7 +5,7 @@
 
 namespace camera
 {
-	struct SettingsStaticComponent;
+	struct SettingsComponent;
 	struct Zoom2DComponent;
 }
 
@@ -28,7 +28,7 @@ namespace camera
 			eng::CameraComponent,
 			eng::TransformComponent>
 			::Read<
-			camera::SettingsStaticComponent,
+			camera::SettingsComponent,
 			camera::Zoom2DComponent,
 			eng::ActiveComponent,
 			eng::InputManager,

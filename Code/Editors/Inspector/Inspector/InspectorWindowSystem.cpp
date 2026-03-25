@@ -21,9 +21,9 @@
 #include "GameState/GameStateEditorComponent.h"
 #include "Inspector/InspectorOpenWindowEvent.h"
 #include "Inspector/InspectorSaveComponent.h"
-#include "Inspector/InspectorSettingsStaticComponent.h"
+#include "Inspector/InspectorSettingsComponent.h"
 #include "Inspector/InspectorWindowComponent.h"
-#include "Outliner/OutlinerSelectStaticComponent.h"
+#include "Outliner/OutlinerSelectComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -78,7 +78,7 @@ namespace
 
 	void Draw_Inspector(ecs::EntityWorld& world, const WindowView& view)
 	{
-		const auto& select = world.ReadComponent<editor::outliner::SelectStaticComponent>();
+		const auto& select = world.ReadComponent<editor::outliner::SelectComponent>();
 		const auto& window = view.ReadRequired<editor::inspector::WindowComponent>();
 
 		const ecs::Entity selected = select.m_Entity;
@@ -117,8 +117,8 @@ namespace
 		const auto& input = world.ReadResource<eng::InputManager>();
 		if (input.IsPressed(strSave) || view.HasOptional<editor::inspector::SaveComponent>())
 		{
-			const auto& select = world.ReadComponent<editor::outliner::SelectStaticComponent>();
-			const auto& settings = world.ReadComponent<editor::inspector::SettingsStaticComponent>();
+			const auto& select = world.ReadComponent<editor::outliner::SelectComponent>();
+			const auto& settings = world.ReadComponent<editor::inspector::SettingsComponent>();
 
 			const ecs::Entity selected = select.m_Entity;
 			if (world.HasComponent<eng::PrototypeComponent>(selected))
@@ -138,7 +138,7 @@ namespace
 
 				if (!filepath.IsEmpty())
 				{
-					auto& settings = world.WriteComponent<editor::inspector::SettingsStaticComponent>();
+					auto& settings = world.WriteComponent<editor::inspector::SettingsComponent>();
 					settings.m_Save = filepath.GetDirectory();
 
 					auto& manager = world.WriteResource<eng::PrototypeManager>();
@@ -158,7 +158,7 @@ void editor::inspector::WindowSystem::Update(World& world, const GameTime& gameT
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+	if (!world.HasComponent<gamestate::EditorComponent>())
 		return;
 
 	if (world.HasAny<ecs::query::Added<editor::inspector::WindowComponent>>())

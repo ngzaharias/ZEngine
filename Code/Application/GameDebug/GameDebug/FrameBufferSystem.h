@@ -5,14 +5,14 @@
 
 namespace debug
 {
-	struct FrameBufferStaticComponent;
+	struct FrameBufferComponent;
 	struct FrameBufferWindowComponent;
 	struct FrameBufferWindowEvent;
 }
 
 namespace eng
 {
-	struct FrameBufferStaticComponent;
+	struct FrameBufferComponent;
 }
 
 namespace debug
@@ -25,7 +25,7 @@ namespace debug
 			debug::FrameBufferWindowComponent>
 			::Read<
 			debug::FrameBufferWindowEvent,
-			eng::FrameBufferStaticComponent>;
+			eng::FrameBufferComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

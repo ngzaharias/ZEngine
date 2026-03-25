@@ -25,7 +25,7 @@ namespace editor::outliner
 
 namespace editor::settings
 {
-	struct LocalStaticComponent;
+	struct LocalComponent;
 }
 
 namespace editor::sprite
@@ -40,7 +40,7 @@ namespace editor::texture
 
 namespace eng::settings
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace gamestate
@@ -60,10 +60,10 @@ namespace editor
 			editor::flipbook::OpenWindowEvent,
 			editor::inspector::OpenWindowEvent,
 			editor::outliner::OpenWindowEvent,
-			editor::settings::LocalStaticComponent,
+			editor::settings::LocalComponent,
 			editor::sprite::OpenWindowEvent,
 			editor::texture::OpenWindowEvent,
-			eng::settings::DebugStaticComponent,
+			eng::settings::DebugComponent,
 			gamestate::EditModeComponent,
 			gamestate::EditModeToggleEvent>;
 

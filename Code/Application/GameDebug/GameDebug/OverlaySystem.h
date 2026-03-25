@@ -8,7 +8,7 @@
 namespace eng
 {
 	class WindowManager;
-	struct VersionStaticComponent;
+	struct VersionComponent;
 }
 
 namespace debug
@@ -18,7 +18,7 @@ namespace debug
 	public:
 		using World = ecs::WorldView
 			::Read<
-			eng::VersionStaticComponent,
+			eng::VersionComponent,
 			eng::WindowManager>;
 
 		void Update(World& world, const GameTime& gameTime);

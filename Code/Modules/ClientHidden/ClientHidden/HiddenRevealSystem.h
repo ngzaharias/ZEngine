@@ -6,7 +6,7 @@
 
 namespace client::hidden
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 	struct ObjectComponent;
 	struct RevealComponent;
 }
@@ -22,8 +22,8 @@ namespace eng
 	class WindowManager;
 	struct ActiveComponent;
 	struct CameraComponent;
-	struct LinesStaticComponent;
-	struct PhysicsSceneStaticComponent;
+	struct LinesComponent;
+	struct PhysicsSceneComponent;
 	struct PrototypeComponent;
 	struct RigidStaticComponent;
 	struct TransformComponent;
@@ -44,15 +44,15 @@ namespace client::hidden
 			::Write<
 			client::hidden::RevealComponent,
 			eng::InputManager,
-			eng::LinesStaticComponent,
+			eng::LinesComponent,
 			eng::RigidStaticComponent,
 			shared::hidden::SelectedEvent>
 			::Read<
-			client::hidden::DebugStaticComponent,
+			client::hidden::DebugComponent,
 			client::hidden::ObjectComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,
-			eng::PhysicsSceneStaticComponent,
+			eng::PhysicsSceneComponent,
 			eng::PrototypeComponent,
 			eng::TransformComponent,
 			eng::WindowManager,

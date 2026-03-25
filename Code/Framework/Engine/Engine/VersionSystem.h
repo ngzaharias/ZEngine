@@ -5,7 +5,7 @@
 
 namespace eng
 {
-	struct VersionStaticComponent;
+	struct VersionComponent;
 }
 
 namespace eng
@@ -15,7 +15,7 @@ namespace eng
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::VersionStaticComponent>;
+			eng::VersionComponent>;
 
 		void Initialise(World& world);
 	};

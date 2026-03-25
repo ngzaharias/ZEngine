@@ -14,7 +14,7 @@
 #include "ServerInventory/InventoryMemberSystem.h"
 #include "ServerInventory/InventoryOwnerComponent.h"
 #include "ServerInventory/InventoryOwnerSystem.h"
-#include "ServerInventory/InventoryStorageChangesStaticComponent.h"
+#include "ServerInventory/InventoryStorageChangesComponent.h"
 #include "ServerInventory/InventoryStorageComponent.h"
 #include "ServerInventory/InventoryStorageCreateRequestComponent.h"
 #include "ServerInventory/InventoryStorageCreateResultComponent.h"
@@ -41,7 +41,7 @@ namespace
 			m_EntityWorld.RegisterComponent<server::inventory::StorageCreateResultComponent>();
 			m_EntityWorld.RegisterComponent<server::inventory::StorageDestroyRequestComponent>();
 			m_EntityWorld.RegisterComponent<server::inventory::StorageDestroyResultComponent>();
-			m_EntityWorld.RegisterComponent<server::inventory::StorageChangesStaticComponent>();
+			m_EntityWorld.RegisterComponent<server::inventory::StorageChangesComponent>();
 			m_EntityWorld.RegisterSystem<server::inventory::StorageSystem>();
 			m_EntityWorld.RegisterSystem<server::inventory::MemberSystem>();
 			m_EntityWorld.RegisterSystem<server::inventory::OwnerSystem>();

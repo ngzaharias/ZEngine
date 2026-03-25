@@ -12,7 +12,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct GameplayStaticComponent;
+	struct GameplayComponent;
 }
 
 namespace gui
@@ -25,7 +25,7 @@ namespace gui
 			eng::UIManager,
 			eng::ThemeTable>
 			::Read<
-			eng::settings::GameplayStaticComponent,
+			eng::settings::GameplayComponent,
 			eng::TablesReloadedEvent>;
 
 		void Update(World& world, const GameTime& gameTime);

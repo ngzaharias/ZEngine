@@ -9,13 +9,13 @@ namespace eng
 	class WindowManager;
 	struct ActiveComponent;
 	struct CameraComponent;
-	struct LinesStaticComponent;
+	struct LinesComponent;
 	struct TransformComponent;
 }
 
 namespace eng::settings
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace render
@@ -32,12 +32,12 @@ namespace render
 		using World = ecs::WorldView
 			::Write<
 			eng::AssetManager,
-			eng::LinesStaticComponent,
+			eng::LinesComponent,
 			render::OpaqueComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,
-			eng::settings::DebugStaticComponent,
+			eng::settings::DebugComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
 			render::ShadowComponent>;

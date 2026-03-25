@@ -12,7 +12,7 @@
 #include "Camera/CameraPan3DSystem.h"
 #include "Camera/CameraZoom2DComponent.h"
 #include "Camera/CameraZoom2DSystem.h"
-#include "Camera/CameraSettingsStaticComponent.h"
+#include "Camera/CameraSettingsComponent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/PrototypeManager.h"
@@ -30,7 +30,7 @@ void camera::RegisterModule(ecs::EntityWorld& world)
 
 	// components
 	{
-		world.RegisterComponent<camera::SettingsStaticComponent>();
+		world.RegisterComponent<camera::SettingsComponent>();
 	}
 
 	// systems

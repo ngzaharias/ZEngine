@@ -8,7 +8,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/Visitor.h"
 #include "GameState/GameStateEditorComponent.h"
-#include "Inspector/InspectorSettingsStaticComponent.h"
+#include "Inspector/InspectorSettingsComponent.h"
 
 namespace
 {
@@ -23,22 +23,22 @@ void editor::inspector::SettingsSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(world.WriteComponent<editor::inspector::SettingsStaticComponent>());
+	visitor.Read(world.WriteComponent<editor::inspector::SettingsComponent>());
 }
 
 void editor::inspector::SettingsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+	if (!world.HasComponent<gamestate::EditorComponent>())
 		return;
 
-	if (world.HasAny<ecs::query::Updated<editor::inspector::SettingsStaticComponent>>())
+	if (world.HasAny<ecs::query::Updated<editor::inspector::SettingsComponent>>())
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(world.ReadComponent<editor::inspector::SettingsStaticComponent>());
+		visitor.Write(world.ReadComponent<editor::inspector::SettingsComponent>());
 		visitor.SaveToFile(filepath);
 	}
 }

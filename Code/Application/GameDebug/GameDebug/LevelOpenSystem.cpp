@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
-#include "Engine/LevelDirectoryStaticComponent.h"
+#include "Engine/LevelDirectoryComponent.h"
 #include "Engine/LevelLoadEvent.h"
 #include "GameDebug/DebugLevelOpenEvent.h"
 #include "GameDebug/LevelOpenWindowComponent.h"
@@ -86,7 +86,7 @@ void debug::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 				const float width = ImGui::GetContentRegionAvail().x / count;
 				const float height = 64.f;
 
-				const auto& directoryComponent = world.WriteComponent<eng::level::DirectoryStaticComponent>();
+				const auto& directoryComponent = world.WriteComponent<eng::level::DirectoryComponent>();
 				for (auto&& [name, path] : directoryComponent.m_Levels)
 				{
 					ImGui::TableNextColumn();

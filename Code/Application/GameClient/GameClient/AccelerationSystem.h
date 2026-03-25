@@ -5,7 +5,7 @@
 
 namespace projectile
 {
-	struct ChangesStaticComponent;
+	struct ChangesComponent;
 	struct CreateRequestComponent;
 }
 
@@ -22,7 +22,7 @@ namespace movement
 			::Write<
 			movement::AccelerationComponent>
 			::Read<
-			projectile::ChangesStaticComponent,
+			projectile::ChangesComponent,
 			projectile::CreateRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

@@ -10,7 +10,7 @@ namespace eng
 
 namespace projectile
 {
-	struct ChangesStaticComponent;
+	struct ChangesComponent;
 	struct CreateRequestComponent;
 }
 
@@ -24,7 +24,7 @@ namespace visual
 			::Write<
 			eng::StaticMeshComponent>
 			::Read<
-			projectile::ChangesStaticComponent,
+			projectile::ChangesComponent,
 			projectile::CreateRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

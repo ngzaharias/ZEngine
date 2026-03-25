@@ -18,7 +18,7 @@ namespace ecs
 	struct EventAddMessage;
 	struct TypeComponent;
 	struct TypeEvent;
-	struct TypeStaticComponent;
+	struct TypeComponent;
 }
 
 namespace net

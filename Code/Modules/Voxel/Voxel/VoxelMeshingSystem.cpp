@@ -8,9 +8,9 @@
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Math/VectorMath.h"
-#include "Voxel/VoxelChunkChangedFrameComponent.h"
+#include "Voxel/VoxelChunkChangedComponent.h"
 #include "Voxel/VoxelChunkComponent.h"
-#include "Voxel/VoxelChunkLoadedFrameComponent.h"
+#include "Voxel/VoxelChunkLoadedComponent.h"
 #include "Voxel/VoxelModifyComponent.h"
 
 #include <GLEW/glew.h>
@@ -179,8 +179,8 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 
 	using ChunkAddedQuery = ecs::query::Added<const voxel::ChunkComponent>::Include<const eng::DynamicMeshComponent>;
 	using MeshAddedQuery = ecs::query::Added<const eng::DynamicMeshComponent>::Include<const voxel::ChunkComponent>;
-	using ChangedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const voxel::ChunkComponent, const voxel::ChunkChangedFrameComponent>;
-	using LoadedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const voxel::ChunkComponent, const voxel::ChunkLoadedFrameComponent>;
+	using ChangedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const voxel::ChunkComponent, const voxel::ChunkChangedComponent>;
+	using LoadedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const voxel::ChunkComponent, const voxel::ChunkLoadedComponent>;
 
 	entitiesToUpdate.Add(world.Query<ChunkAddedQuery>());
 	entitiesToUpdate.Add(world.Query<MeshAddedQuery>());

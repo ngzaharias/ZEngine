@@ -10,7 +10,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
-#include "Engine/LinesStaticComponent.h"
+#include "Engine/LinesComponent.h"
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -21,7 +21,7 @@
 #include "Math/Sphere.h"
 #include "Voxel/VoxelChunkComponent.h"
 #include "Voxel/VoxelModifyComponent.h"
-#include "Voxel/VoxelModifySettingsStaticComponent.h"
+#include "Voxel/VoxelModifySettingsComponent.h"
 
 // #todo: enable only when voxels are present
 
@@ -54,7 +54,7 @@ namespace
 	Vector3f Raycast(voxel::ModifySystem::World& world, const Segment3f& segment)
 	{
 		Array<ecs::Entity> voxelEntities;
-		auto& lines = world.WriteComponent<eng::LinesStaticComponent>();
+		auto& lines = world.WriteComponent<eng::LinesComponent>();
 		for (auto&& view : world.Query<ecs::query::Include<const eng::TransformComponent, const voxel::ChunkComponent>>())
 		{
 			const auto& transform = view.ReadRequired<eng::TransformComponent>();
@@ -176,10 +176,10 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 		const Vector3i gridPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
 		const Vector3f alignPos = math::ToWorldPos(gridPos, voxel::s_BlockSize1D);
 
-		auto& lines = world.WriteComponent<eng::LinesStaticComponent>();
+		auto& lines = world.WriteComponent<eng::LinesComponent>();
 		lines.AddAABB(alignPos, voxel::s_BlockSize1D * 0.5f, Vector4f(1.f));
 
-		auto& settings = world.WriteComponent<voxel::ModifySettingsStaticComponent>();
+		auto& settings = world.WriteComponent<voxel::ModifySettingsComponent>();
 		if (input.IsPressed(strRadius0))
 			settings.m_Radius = 0;
 		if (input.IsPressed(strRadius1))

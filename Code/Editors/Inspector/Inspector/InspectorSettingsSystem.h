@@ -5,7 +5,7 @@
 
 namespace editor::inspector
 {
-	struct SettingsStaticComponent;
+	struct SettingsComponent;
 }
 
 namespace gamestate
@@ -20,7 +20,7 @@ namespace editor::inspector
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::inspector::SettingsStaticComponent,
+			editor::inspector::SettingsComponent,
 			gamestate::EditorComponent>;
 
 		void Initialise(World& world);

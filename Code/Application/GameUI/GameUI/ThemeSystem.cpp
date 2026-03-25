@@ -5,7 +5,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/SettingsGameplayStaticComponent.h"
+#include "Engine/SettingsGameplayComponent.h"
 #include "Engine/TablesReloadedEvent.h"
 #include "Engine/ThemeTable.h"
 #include "Engine/UIManager.h"
@@ -22,7 +22,7 @@ namespace
 
 	void UpdateTheme(gui::ThemeSystem::World& world)
 	{
-		const auto& settings = world.ReadComponent<eng::settings::GameplayStaticComponent>();
+		const auto& settings = world.ReadComponent<eng::settings::GameplayComponent>();
 		const auto& themes = world.WriteResource<eng::ThemeTable>();
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 
@@ -54,6 +54,6 @@ void gui::ThemeSystem::Update(World& world, const GameTime& gameTime)
 
 	if (world.HasAny<ecs::query::Added<const eng::TablesReloadedEvent>>())
 		UpdateTheme(world);
-	if (world.HasAny<ecs::query::Updated<eng::settings::GameplayStaticComponent>>())
+	if (world.HasAny<ecs::query::Updated<eng::settings::GameplayComponent>>())
 		UpdateTheme(world);
 }

@@ -6,7 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
-#include "Engine/LinesStaticComponent.h"
+#include "Engine/LinesComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Math/VectorMath.h"
 #include "Tactics/TacticsAbilityPreviewComponent.h"
@@ -92,7 +92,7 @@ namespace
 			const auto& table = world.ReadResource<tactics::AbilityTable>();
 			const tactics::Ability& ability = table.GetObject(previewComponent.m_Ability);
 
-			auto& lines = world.WriteComponent<eng::LinesStaticComponent>();
+			auto& lines = world.WriteComponent<eng::LinesComponent>();
 			core::VariantMatch(ability.m_Skill,
 				[&](const tactics::Path& data)
 				{

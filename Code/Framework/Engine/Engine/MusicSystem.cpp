@@ -7,8 +7,8 @@
 #include "Engine/AssetManager.h"
 #include "Engine/AudioHelpers.h"
 #include "Engine/MusicAsset.h"
-#include "Engine/MusicStaticComponent.h"
-#include "Engine/SettingsAudioStaticComponent.h"
+#include "Engine/MusicComponent.h"
+#include "Engine/SettingsAudioComponent.h"
 
 namespace
 {
@@ -37,12 +37,12 @@ void eng::MusicSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	// update the music volume when it changes
-	if (world.HasAny<ecs::query::Updated<eng::settings::AudioStaticComponent>>())
+	if (world.HasAny<ecs::query::Updated<eng::settings::AudioComponent>>())
 	{
 		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		if (const auto* musicAsset = assetManager.ReadAsset<eng::MusicAsset>(strAsset))
 		{
-			const auto& settings = world.ReadComponent<eng::settings::AudioStaticComponent>();
+			const auto& settings = world.ReadComponent<eng::settings::AudioComponent>();
 			const float volume = audio::ToVolume(settings.m_MusicVolume * settings.m_MasterVolume);
 			musicAsset->m_Buffer->setVolume(volume);
 			musicAsset->m_Buffer->setLoop(true);

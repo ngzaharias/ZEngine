@@ -16,7 +16,7 @@ namespace eng
 
 namespace eng::level
 {
-	struct DirectoryStaticComponent;
+	struct DirectoryComponent;
 	struct EntityComponent;
 	struct LoadedComponent;
 	struct LoadingComponent;
@@ -37,7 +37,7 @@ namespace eng::level
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			eng::level::DirectoryStaticComponent,
+			eng::level::DirectoryComponent,
 			eng::level::EntityComponent,
 			eng::level::LoadedComponent,
 			eng::level::LoadingComponent,

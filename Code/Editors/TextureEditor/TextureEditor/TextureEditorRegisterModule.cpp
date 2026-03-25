@@ -8,7 +8,7 @@
 #include "TextureEditor/TextureEditorAssetOpenComponent.h"
 #include "TextureEditor/TextureEditorAssetSaveComponent.h"
 #include "TextureEditor/TextureEditorOpenWindowEvent.h"
-#include "TextureEditor/TextureEditorSettingsStaticComponent.h"
+#include "TextureEditor/TextureEditorSettingsComponent.h"
 #include "TextureEditor/TextureEditorSettingsSystem.h"
 #include "TextureEditor/TextureEditorWindowComponent.h"
 #include "TextureEditor/TextureEditorWindowSystem.h"
@@ -21,6 +21,6 @@ void editor::texture::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterComponent<editor::texture::AssetSaveComponent>();
 	world.RegisterComponent<editor::texture::WindowComponent>();
 	world.RegisterEvent<editor::texture::OpenWindowEvent>();
-	world.RegisterComponent<editor::texture::SettingsStaticComponent>();
+	world.RegisterComponent<editor::texture::SettingsComponent>();
 	world.RegisterSystem<editor::texture::WindowSystem>();
 }

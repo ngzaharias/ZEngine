@@ -5,7 +5,7 @@
 
 namespace editor::settings
 {
-	struct LocalStaticComponent;
+	struct LocalComponent;
 }
 
 namespace eng
@@ -19,7 +19,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace gamestate
@@ -44,10 +44,10 @@ namespace editor
 			eng::AssetManager,
 			render::OpaqueComponent>
 			::Read<
-			editor::settings::LocalStaticComponent,
+			editor::settings::LocalComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,
-			eng::settings::DebugStaticComponent,
+			eng::settings::DebugComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
 			gamestate::EditModeComponent,

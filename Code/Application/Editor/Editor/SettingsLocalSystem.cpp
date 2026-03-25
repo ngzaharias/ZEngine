@@ -6,7 +6,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/SettingsLocalStaticComponent.h"
+#include "Editor/SettingsLocalComponent.h"
 #include "Engine/Visitor.h"
 
 namespace
@@ -22,19 +22,19 @@ void editor::settings::LocalSystem::Initialise(World& world)
 
 	eng::Visitor visitor;
 	visitor.LoadFromFile(filepath);
-	visitor.Read(world.WriteComponent<editor::settings::LocalStaticComponent>());
+	visitor.Read(world.WriteComponent<editor::settings::LocalComponent>());
 }
 
 void editor::settings::LocalSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Updated<editor::settings::LocalStaticComponent>>())
+	if (world.HasAny<ecs::query::Updated<editor::settings::LocalComponent>>())
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(world.ReadComponent<editor::settings::LocalStaticComponent>());
+		visitor.Write(world.ReadComponent<editor::settings::LocalComponent>());
 		visitor.SaveToFile(filepath);
 	}
 }

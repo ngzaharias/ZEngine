@@ -9,7 +9,7 @@
 #include "Engine/CameraHelpers.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/ColourHelpers.h"
-#include "Engine/SettingsDebugStaticComponent.h"
+#include "Engine/SettingsDebugComponent.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/SpriteAsset.h"
 #include "Engine/StaticMeshAsset.h"
@@ -93,7 +93,7 @@ void hexmap::RenderSystem::Update(World& world, const GameTime& gameTime)
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 
-	const auto& debugSettings = world.ReadComponent<eng::settings::DebugStaticComponent>();
+	const auto& debugSettings = world.ReadComponent<eng::settings::DebugComponent>();
 
 	using CameraQuery = ecs::query
 		::Include<

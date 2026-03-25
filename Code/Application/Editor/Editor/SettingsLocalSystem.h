@@ -5,7 +5,7 @@
 
 namespace editor::settings
 {
-	struct LocalStaticComponent;
+	struct LocalComponent;
 }
 
 namespace editor::settings
@@ -15,7 +15,7 @@ namespace editor::settings
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::settings::LocalStaticComponent>;
+			editor::settings::LocalComponent>;
 
 		void Initialise(World& world);
 

@@ -1,16 +1,16 @@
 #pragma once
 
-#include "ClientHidden/HiddenDebugStaticComponent.h"
+#include "ClientHidden/HiddenDebugComponent.h"
 #include "ECS/Component.h"
-#include "Engine/SettingsDebugStaticComponent.h"
-#include "GameClient/SettingsDebugStaticComponent.h"
+#include "Engine/SettingsDebugComponent.h"
+#include "GameClient/SettingsDebugComponent.h"
 
 namespace debug::settings
 {
 	struct WindowComponent final : public ecs::Component
 	{
-		client::settings::DebugStaticComponent m_Client;
-		eng::settings::DebugStaticComponent m_Engine;
-		client::hidden::DebugStaticComponent m_Hidden;
+		client::settings::DebugComponent m_Client;
+		eng::settings::DebugComponent m_Engine;
+		client::hidden::DebugComponent m_Hidden;
 	};
 }

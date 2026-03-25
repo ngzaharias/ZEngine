@@ -6,7 +6,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameClient/ProjectileChangesStaticComponent.h"
+#include "GameClient/ProjectileChangesComponent.h"
 #include "GameClient/ProjectileCreateRequestComponent.h"
 #include "GameClient/ProjectileCreateResultComponent.h"
 #include "GameClient/ProjectileSpawnComponent.h"
@@ -14,7 +14,7 @@
 
 namespace
 {
-	projectile::EError VerifyDestroy(const ecs::Entity& entity, const projectile::ChangesStaticComponent& frameData)
+	projectile::EError VerifyDestroy(const ecs::Entity& entity, const projectile::ChangesComponent& frameData)
 	{
 		auto hasDuplicate = [&](const projectile::Destroyed& rhs)
 		{
@@ -32,7 +32,7 @@ void projectile::SpawnSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	auto& changesComponent = world.WriteComponent<projectile::ChangesStaticComponent>();
+	auto& changesComponent = world.WriteComponent<projectile::ChangesComponent>();
 	changesComponent.m_Created.RemoveAll();
 	changesComponent.m_Destroyed.RemoveAll();
 
@@ -46,7 +46,7 @@ void projectile::SpawnSystem::Update(World& world, const GameTime& gameTime)
 
 void projectile::SpawnSystem::ProcessCreate(World& world)
 {
-	auto& changesComponent = world.WriteComponent<projectile::ChangesStaticComponent>();
+	auto& changesComponent = world.WriteComponent<projectile::ChangesComponent>();
 
 	using Query = ecs::query
 		::Added<const projectile::CreateRequestComponent>
@@ -79,14 +79,14 @@ void projectile::SpawnSystem::ProcessCreate(World& world)
 
 void projectile::SpawnSystem::ProcessDestroy(World& world)
 {
-	auto& changesComponent = world.WriteComponent<projectile::ChangesStaticComponent>();
+	auto& changesComponent = world.WriteComponent<projectile::ChangesComponent>();
 	for (const Destroyed& destroyData : changesComponent.m_Destroyed)
 		world.DestroyEntity(destroyData.m_Projectile);
 }
 
 void projectile::SpawnSystem::ProcessLifetime(World& world, const GameTime& gameTime)
 {
-	auto& changesComponent = world.WriteComponent<projectile::ChangesStaticComponent>();
+	auto& changesComponent = world.WriteComponent<projectile::ChangesComponent>();
 	for (auto&& view : world.Query<ecs::query::Include<projectile::SpawnComponent>>())
 	{
 		auto& spawnComponent = view.WriteRequired<projectile::SpawnComponent>();

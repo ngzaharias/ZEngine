@@ -16,7 +16,7 @@
 #include "TextureEditor/TextureEditorAssetOpenComponent.h"
 #include "TextureEditor/TextureEditorAssetSaveComponent.h"
 #include "TextureEditor/TextureEditorOpenWindowEvent.h"
-#include "TextureEditor/TextureEditorSettingsStaticComponent.h"
+#include "TextureEditor/TextureEditorSettingsComponent.h"
 #include "TextureEditor/TextureEditorWindowComponent.h"
 
 #include "imgui/imgui.h"
@@ -97,7 +97,7 @@ namespace
 
 		if (HasInput(world, strImport) || world.HasComponent<editor::texture::AssetImportComponent>(entity))
 		{
-			const auto& readSettings = world.ReadComponent<editor::texture::SettingsStaticComponent>();
+			const auto& readSettings = world.ReadComponent<editor::texture::SettingsComponent>();
 
 			eng::SelectFileSettings settings;
 			settings.m_Title = "Import Texture";
@@ -107,7 +107,7 @@ namespace
 			const str::Path filepath = eng::SelectFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteComponent<editor::texture::SettingsStaticComponent>();
+				auto& writeSettings = world.WriteComponent<editor::texture::SettingsComponent>();
 				writeSettings.m_Import = filepath.GetDirectory();
 
 				auto& writeWindow = world.WriteComponent<editor::texture::WindowComponent>(entity);
@@ -144,7 +144,7 @@ namespace
 
 		if (HasInput(world, strOpen) || world.HasComponent<editor::texture::AssetOpenComponent>(entity))
 		{
-			const auto& readSettings = world.ReadComponent<editor::texture::SettingsStaticComponent>();
+			const auto& readSettings = world.ReadComponent<editor::texture::SettingsComponent>();
 
 			eng::SelectFileSettings settings;
 			settings.m_Title = "Open Texture";
@@ -154,7 +154,7 @@ namespace
 			const str::Path filepath = eng::SelectFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteComponent<editor::texture::SettingsStaticComponent>();
+				auto& writeSettings = world.WriteComponent<editor::texture::SettingsComponent>();
 				writeSettings.m_Open = filepath.GetDirectory();
 
 				auto& writeWindow = world.WriteComponent<editor::texture::WindowComponent>(entity);
@@ -175,7 +175,7 @@ namespace
 
 		if (HasInput(world, strSave) || world.HasComponent<editor::texture::AssetSaveComponent>(entity))
 		{
-			const auto& readSettings = world.ReadComponent<editor::texture::SettingsStaticComponent>();
+			const auto& readSettings = world.ReadComponent<editor::texture::SettingsComponent>();
 			const auto& readWindow = world.ReadComponent<editor::texture::WindowComponent>(entity);
 
 			eng::SaveFileSettings settings;
@@ -189,7 +189,7 @@ namespace
 			const str::Path filepath = eng::SaveFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				auto& writeSettings = world.WriteComponent<editor::texture::SettingsStaticComponent>();
+				auto& writeSettings = world.WriteComponent<editor::texture::SettingsComponent>();
 				writeSettings.m_Save = str::Path(filepath.GetParent(), "\\");
 
 				auto& writeWindow = world.WriteComponent<editor::texture::WindowComponent>(entity);
@@ -216,7 +216,7 @@ void editor::texture::WindowSystem::Update(World& world, const GameTime& gameTim
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+	if (!world.HasComponent<gamestate::EditorComponent>())
 		return;
 
 	if (world.HasAny<ecs::query::Added<editor::texture::WindowComponent>>())

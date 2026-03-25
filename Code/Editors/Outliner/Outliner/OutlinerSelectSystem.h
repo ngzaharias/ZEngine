@@ -6,7 +6,7 @@
 
 namespace editor::outliner
 {
-	struct SelectStaticComponent;
+	struct SelectComponent;
 }
 
 namespace eng
@@ -17,7 +17,7 @@ namespace eng
 	struct ActiveComponent;
 	struct CameraComponent;
 	struct EditorComponent;
-	struct LinesStaticComponent;
+	struct LinesComponent;
 	struct SpriteComponent;
 	struct TransformComponent;
 	struct VisibilityComponent;
@@ -41,9 +41,9 @@ namespace editor::outliner
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::outliner::SelectStaticComponent,
+			editor::outliner::SelectComponent,
 			eng::InputManager,
-			eng::LinesStaticComponent>
+			eng::LinesComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::AssetManager,

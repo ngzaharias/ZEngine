@@ -7,7 +7,7 @@
 #include "FlipbookEditor/FlipbookEditorAssetSaveComponent.h"
 #include "FlipbookEditor/FlipbookEditorBatchingComponent.h"
 #include "FlipbookEditor/FlipbookEditorOpenWindowEvent.h"
-#include "FlipbookEditor/FlipbookEditorSettingsStaticComponent.h"
+#include "FlipbookEditor/FlipbookEditorSettingsComponent.h"
 #include "FlipbookEditor/FlipbookEditorSettingsSystem.h"
 #include "FlipbookEditor/FlipbookEditorWindowComponent.h"
 #include "FlipbookEditor/FlipbookEditorWindowSystem.h"
@@ -19,7 +19,7 @@ void editor::flipbook::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterComponent<editor::flipbook::BatchingComponent>();
 	world.RegisterComponent<editor::flipbook::WindowComponent>();
 	world.RegisterEvent<editor::flipbook::OpenWindowEvent>();
-	world.RegisterComponent<editor::flipbook::SettingsStaticComponent>();
+	world.RegisterComponent<editor::flipbook::SettingsComponent>();
 	world.RegisterSystem<editor::flipbook::SettingsSystem>();
 	world.RegisterSystem<editor::flipbook::WindowSystem>();
 }

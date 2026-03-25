@@ -9,11 +9,11 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/AudioHelpers.h"
-#include "Engine/SettingsAudioStaticComponent.h"
+#include "Engine/SettingsAudioComponent.h"
 #include "Engine/SoundAssets.h"
 #include "Engine/SoundObjectComponent.h"
-#include "Engine/SoundRandomBufferStaticComponent.h"
-#include "Engine/SoundSequenceBufferStaticComponent.h"
+#include "Engine/SoundRandomBufferComponent.h"
+#include "Engine/SoundSequenceBufferComponent.h"
 #include "Engine/SoundSingleRequestComponent.h"
 
 #include <NsGUI/IntegrationAPI.h>
@@ -43,7 +43,7 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& audioSettings = world.ReadComponent<eng::settings::AudioStaticComponent>();
+	const auto& audioSettings = world.ReadComponent<eng::settings::AudioComponent>();
 	using SingleQuery = ecs::query
 		::Added<const eng::sound::SingleRequestComponent>
 		::Include<const eng::sound::SingleRequestComponent>;
@@ -55,13 +55,13 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 
 	// Random Buffer
 	{
-		const auto& bufferComponent = world.ReadComponent<eng::sound::RandomBufferStaticComponent>();
+		const auto& bufferComponent = world.ReadComponent<eng::sound::RandomBufferComponent>();
 		m_Requests.Append(bufferComponent.m_Requests);
 	}
 
 	// Sequence Buffer
 	{
-		const auto& bufferComponent = world.ReadComponent<eng::sound::SequenceBufferStaticComponent>();
+		const auto& bufferComponent = world.ReadComponent<eng::sound::SequenceBufferComponent>();
 		m_Requests.Append(bufferComponent.m_Requests);
 	}
 

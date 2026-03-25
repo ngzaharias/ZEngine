@@ -10,13 +10,13 @@ namespace eng
 {
 	struct ActiveComponent;
 	struct CameraComponent;
-	struct LinesStaticComponent;
+	struct LinesComponent;
 	struct TransformComponent;
 }
 
 namespace editor::settings
 {
-	struct LocalStaticComponent;
+	struct LocalComponent;
 }
 
 namespace editor::gizmo
@@ -26,9 +26,9 @@ namespace editor::gizmo
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::LinesStaticComponent>
+			eng::LinesComponent>
 			::Read<
-			editor::settings::LocalStaticComponent,
+			editor::settings::LocalComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::TransformComponent>;

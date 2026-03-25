@@ -1,7 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/SettingsSystem.h"
 
-#include "Camera/CameraSettingsStaticComponent.h"
+#include "Camera/CameraSettingsComponent.h"
 #include "Core/Path.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
@@ -9,10 +9,10 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/MusicAsset.h"
-#include "Engine/MusicStaticComponent.h"
-#include "Engine/SettingsAudioStaticComponent.h"
-#include "Engine/SettingsGameplayStaticComponent.h"
-#include "Engine/SettingsWindowStaticComponent.h"
+#include "Engine/MusicComponent.h"
+#include "Engine/SettingsAudioComponent.h"
+#include "Engine/SettingsGameplayComponent.h"
+#include "Engine/SettingsWindowComponent.h"
 #include "Engine/Visitor.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -31,10 +31,10 @@ void client::SettingsSystem::Initialise(World& world)
 	PROFILE_FUNCTION();
 
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
-	auto& audioSettings = world.WriteComponent<eng::settings::AudioStaticComponent>();
-	auto& cameraSettings = world.WriteComponent<camera::SettingsStaticComponent>();
-	auto& gameplaySettings = world.WriteComponent<eng::settings::GameplayStaticComponent>();
-	auto& windowSettings = world.WriteComponent<eng::settings::WindowStaticComponent>();
+	auto& audioSettings = world.WriteComponent<eng::settings::AudioComponent>();
+	auto& cameraSettings = world.WriteComponent<camera::SettingsComponent>();
+	auto& gameplaySettings = world.WriteComponent<eng::settings::GameplayComponent>();
+	auto& windowSettings = world.WriteComponent<eng::settings::WindowComponent>();
 	if (const eng::Window* window = windowManager.GetWindow(0))
 	{
 		windowSettings.m_Resolution = window->GetSize();
@@ -56,19 +56,19 @@ void client::SettingsSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	const bool hasChanged =
-		world.HasAny<ecs::query::Updated<eng::settings::AudioStaticComponent>>() ||
-		world.HasAny<ecs::query::Updated<camera::SettingsStaticComponent>>() ||
-		world.HasAny<ecs::query::Updated<eng::settings::GameplayStaticComponent>>() ||
-		world.HasAny<ecs::query::Updated<eng::settings::WindowStaticComponent>>();
+		world.HasAny<ecs::query::Updated<eng::settings::AudioComponent>>() ||
+		world.HasAny<ecs::query::Updated<camera::SettingsComponent>>() ||
+		world.HasAny<ecs::query::Updated<eng::settings::GameplayComponent>>() ||
+		world.HasAny<ecs::query::Updated<eng::settings::WindowComponent>>();
 	if (hasChanged)
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
 		eng::Visitor visitor;
-		visitor.Write(strAudio, world.ReadComponent<eng::settings::AudioStaticComponent>());
-		visitor.Write(strCamera, world.ReadComponent<camera::SettingsStaticComponent>());
-		visitor.Write(strGameplay, world.ReadComponent<eng::settings::GameplayStaticComponent>());
-		visitor.Write(strWindow, world.ReadComponent<eng::settings::WindowStaticComponent>());
+		visitor.Write(strAudio, world.ReadComponent<eng::settings::AudioComponent>());
+		visitor.Write(strCamera, world.ReadComponent<camera::SettingsComponent>());
+		visitor.Write(strGameplay, world.ReadComponent<eng::settings::GameplayComponent>());
+		visitor.Write(strWindow, world.ReadComponent<eng::settings::WindowComponent>());
 		visitor.SaveToFile(filepath);
 	}
 }

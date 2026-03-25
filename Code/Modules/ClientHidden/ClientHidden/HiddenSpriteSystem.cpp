@@ -7,7 +7,7 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/SettingsGameplayStaticComponent.h"
+#include "Engine/SettingsGameplayComponent.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TablesReloadedEvent.h"
 #include "Engine/ThemeTable.h"
@@ -17,7 +17,7 @@ namespace
 	void Refresh(client::hidden::SpriteSystem::World& world)
 	{
 		const auto& themes = world.ReadResource<eng::ThemeTable>();
-		const auto& settings = world.ReadComponent<eng::settings::GameplayStaticComponent>();
+		const auto& settings = world.ReadComponent<eng::settings::GameplayComponent>();
 
 		using Query = ecs::query
 			::Include<const eng::SpriteComponent, const client::hidden::ObjectComponent>
@@ -40,7 +40,7 @@ void client::hidden::SpriteSystem::Update(World& world, const GameTime& gameTime
 	PROFILE_FUNCTION();
 
 	const auto& themes = world.ReadResource<eng::ThemeTable>();
-	const auto& settings = world.ReadComponent<eng::settings::GameplayStaticComponent>();
+	const auto& settings = world.ReadComponent<eng::settings::GameplayComponent>();
 
 	using ObjectQuery = ecs::query
 		::Added<const client::hidden::ObjectComponent>
@@ -70,6 +70,6 @@ void client::hidden::SpriteSystem::Update(World& world, const GameTime& gameTime
 
 	if (world.HasAny<ecs::query::Added<const eng::TablesReloadedEvent>>())
 		Refresh(world);
-	if (world.HasAny<ecs::query::Updated<eng::settings::GameplayStaticComponent>>())
+	if (world.HasAny<ecs::query::Updated<eng::settings::GameplayComponent>>())
 		Refresh(world);
 } 

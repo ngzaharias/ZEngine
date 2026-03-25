@@ -8,7 +8,7 @@
 namespace server::inventory
 {
 	struct MemberComponent;
-	struct StorageChangesStaticComponent;
+	struct StorageChangesComponent;
 	struct StorageComponent;
 }
 
@@ -23,7 +23,7 @@ namespace server::inventory
 			server::inventory::MemberComponent>
 			::Read<
 			server::inventory::StorageComponent,
-			server::inventory::StorageChangesStaticComponent>;
+			server::inventory::StorageChangesComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

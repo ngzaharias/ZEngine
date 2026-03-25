@@ -10,7 +10,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct WindowStaticComponent;
+	struct WindowComponent;
 }
 
 namespace eng
@@ -22,7 +22,7 @@ namespace eng
 			::Write<
 			eng::WindowManager>
 			::Read<
-			eng::settings::WindowStaticComponent>;
+			eng::settings::WindowComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -11,11 +11,14 @@ namespace eng
 
 namespace voxel
 {
-	struct ChunkChangedFrameComponent;
+	struct ChunkChangedComponent;
 	struct ChunkComponent;
-	struct ChunkLoadedFrameComponent;
+	struct ChunkLoadedComponent;
 	struct ModifyComponent;
+}
 
+namespace voxel
+{
 	class MeshingSystem final : public ecs::System
 	{
 	public:
@@ -25,8 +28,8 @@ namespace voxel
 			voxel::ChunkComponent>
 			::Read<
 			eng::TransformComponent,
-			voxel::ChunkChangedFrameComponent,
-			voxel::ChunkLoadedFrameComponent,
+			voxel::ChunkChangedComponent,
+			voxel::ChunkLoadedComponent,
 			voxel::ModifyComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

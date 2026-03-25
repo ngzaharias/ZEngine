@@ -5,17 +5,17 @@
 
 namespace client::hidden
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace client::settings
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace eng::settings
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace debug::settings
@@ -25,9 +25,9 @@ namespace debug::settings
 	public:
 		using World = ecs::WorldView
 			::Write<
-			client::hidden::DebugStaticComponent,
-			client::settings::DebugStaticComponent,
-			eng::settings::DebugStaticComponent>;
+			client::hidden::DebugComponent,
+			client::settings::DebugComponent,
+			eng::settings::DebugComponent>;
 
 		void Initialise(World& world);
 

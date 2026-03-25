@@ -7,8 +7,8 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
-#include "Engine/LinesStaticComponent.h"
-#include "Engine/SettingsDebugStaticComponent.h"
+#include "Engine/LinesComponent.h"
+#include "Engine/SettingsDebugComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -24,7 +24,7 @@ void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	const auto& debugSettings = world.ReadComponent<eng::settings::DebugStaticComponent>();
+	const auto& debugSettings = world.ReadComponent<eng::settings::DebugComponent>();
 	const auto& inputManager = world.ReadResource<eng::InputManager>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
@@ -66,7 +66,7 @@ void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 				const Vector3i tilePos = math::ToGridPos(intersectPos, tileSize);
 				const Vector3f snapPos = math::ToWorldPos(tilePos, tileSize);
 
-				auto& lines = world.WriteComponent<eng::LinesStaticComponent>();
+				auto& lines = world.WriteComponent<eng::LinesComponent>();
 				lines.AddAABB(snapPos, tileSize * 0.5f, Colour::Magenta);
 			}
 		}

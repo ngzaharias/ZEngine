@@ -8,7 +8,7 @@ namespace eng
 	class InputManager;
 	class WindowManager;
 	struct CameraComponent;
-	struct LinesStaticComponent;
+	struct LinesComponent;
 	struct NameComponent;
 	struct TransformComponent;
 }
@@ -22,7 +22,7 @@ namespace drag
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::LinesStaticComponent,
+			eng::LinesComponent,
 			eng::TransformComponent>
 			::Read<
 			drag::SelectionComponent,

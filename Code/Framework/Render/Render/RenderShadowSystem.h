@@ -8,7 +8,7 @@ namespace eng
 	class AssetManager;
 	struct ActiveComponent;
 	struct CameraComponent;
-	struct FrameBufferStaticComponent;
+	struct FrameBufferComponent;
 	struct StaticMeshComponent;
 	struct TransformComponent;
 }
@@ -20,7 +20,7 @@ namespace eng::light
 
 namespace eng::settings
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace render
@@ -40,13 +40,13 @@ namespace render
 		using World = ecs::WorldView
 			::Write<
 			eng::AssetManager,
-			eng::FrameBufferStaticComponent,
+			eng::FrameBufferComponent,
 			render::ShadowComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::light::DirectionalComponent,
-			eng::settings::DebugStaticComponent,
+			eng::settings::DebugComponent,
 			eng::StaticMeshComponent,
 			eng::TransformComponent,
 			render::UIPreComponent>;

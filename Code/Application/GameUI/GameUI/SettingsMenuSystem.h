@@ -5,7 +5,7 @@
 
 namespace camera
 {
-	struct SettingsStaticComponent;
+	struct SettingsComponent;
 }
 
 namespace eng
@@ -17,9 +17,9 @@ namespace eng
 
 namespace eng::settings
 {
-	struct AudioStaticComponent;
-	struct GameplayStaticComponent;
-	struct WindowStaticComponent;
+	struct AudioComponent;
+	struct GameplayComponent;
+	struct WindowComponent;
 }
 
 namespace gui::settings_menu
@@ -37,10 +37,10 @@ namespace gui::settings_menu
 	public:
 		using World = ecs::WorldView
 			::Write<
-			camera::SettingsStaticComponent,
-			eng::settings::AudioStaticComponent,
-			eng::settings::GameplayStaticComponent,
-			eng::settings::WindowStaticComponent,
+			camera::SettingsComponent,
+			eng::settings::AudioComponent,
+			eng::settings::GameplayComponent,
+			eng::settings::WindowComponent,
 			eng::ThemeTable,
 			eng::UIManager,
 			eng::WindowManager,

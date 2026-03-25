@@ -7,8 +7,8 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
-#include "Engine/PhysicsSceneStaticComponent.h"
-#include "Engine/SettingsDebugStaticComponent.h"
+#include "Engine/PhysicsSceneComponent.h"
+#include "Engine/SettingsDebugComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -58,7 +58,7 @@ void tactics::PawnSelectionSystem::Update(World& world, const GameTime& gameTime
 		return;
 
 	const auto& inputManager = world.ReadResource<eng::InputManager>();
-	const auto& physicsScene = world.ReadComponent<eng::PhysicsSceneStaticComponent>();
+	const auto& physicsScene = world.ReadComponent<eng::PhysicsSceneComponent>();
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	const eng::Window* window = windowManager.GetWindow(0);
 	if (!window)

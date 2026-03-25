@@ -5,7 +5,7 @@
 
 namespace editor::flipbook
 {
-	struct SettingsStaticComponent;
+	struct SettingsComponent;
 }
 
 namespace gamestate
@@ -20,7 +20,7 @@ namespace editor::flipbook
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::flipbook::SettingsStaticComponent>
+			editor::flipbook::SettingsComponent>
 			::Read<
 			gamestate::EditorComponent>;
 

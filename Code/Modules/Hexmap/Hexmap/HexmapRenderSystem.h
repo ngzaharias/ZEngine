@@ -14,7 +14,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace hexmap
@@ -41,7 +41,7 @@ namespace hexmap
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,
-			eng::settings::DebugStaticComponent,
+			eng::settings::DebugComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
 			hexmap::LayerComponent,

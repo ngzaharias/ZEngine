@@ -5,13 +5,13 @@
 
 namespace eng
 {
-	struct LinesStaticComponent;
+	struct LinesComponent;
 	struct TransformComponent;
 }
 
 namespace eng::settings
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace softbody
@@ -26,9 +26,9 @@ namespace debug
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::LinesStaticComponent>
+			eng::LinesComponent>
 			::Read<
-			eng::settings::DebugStaticComponent,
+			eng::settings::DebugComponent,
 			eng::TransformComponent,
 			softbody::ChainComponent>;
 

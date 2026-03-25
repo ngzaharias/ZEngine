@@ -8,7 +8,7 @@
 #include "Engine/ApplicationCloseEvent.h"
 #include "Engine/LevelLoadEvent.h"
 #include "Engine/UIManager.h"
-#include "Engine/VersionStaticComponent.h"
+#include "Engine/VersionComponent.h"
 #include "GameUI/DCMainMenu.h"
 #include "GameUI/MainMenuContinueGameEvent.h"
 #include "GameUI/MainMenuExitGameEvent.h"
@@ -33,7 +33,7 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.CreateWidget(strMainMenu_xaml);
 
-		const auto& versionComponent = world.ReadComponent<eng::VersionStaticComponent>();
+		const auto& versionComponent = world.ReadComponent<eng::VersionComponent>();
 		const auto& menuComponent = view.ReadRequired<gui::main_menu::WindowComponent>();
 		auto& dataContext = uiManager.WriteDataContext<gui::DCMainMenu>(strMainMenu_xaml);
 		dataContext.SetNewGameLevel(menuComponent.m_NewGame);

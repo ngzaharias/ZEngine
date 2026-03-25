@@ -8,7 +8,7 @@
 #include "ECS/WorldView.h"
 
 #include "GameClient/MovementVelocityComponent.h"
-#include "GameClient/ProjectileChangesStaticComponent.h"
+#include "GameClient/ProjectileChangesComponent.h"
 #include "GameClient/ProjectileCreateRequestComponent.h"
 #include "GameClient/ProjectileTrajectoryComponent.h"
 
@@ -16,7 +16,7 @@ void projectile::TrajectorySystem::Update(World& world, const GameTime& gameTime
 {
 	PROFILE_FUNCTION();
 
-	const auto& changesComponent = world.ReadComponent<projectile::ChangesStaticComponent>();
+	const auto& changesComponent = world.ReadComponent<projectile::ChangesComponent>();
 	for (const Created& createdData : changesComponent.m_Created)
 	{
 		const auto& requestComponent = world.ReadComponent<projectile::CreateRequestComponent>(createdData.m_Request);

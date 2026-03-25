@@ -9,8 +9,8 @@
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
 #include "Engine/LevelEntityComponent.h"
-#include "Engine/LinesStaticComponent.h"
-#include "Engine/SettingsDebugStaticComponent.h"
+#include "Engine/LinesComponent.h"
+#include "Engine/SettingsDebugComponent.h"
 #include "Engine/SpriteAsset.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
@@ -24,7 +24,7 @@
 #include "Math/Quaternion.h"
 #include "Math/Ray.h"
 #include "Math/Sphere.h"
-#include "Outliner/OutlinerSelectStaticComponent.h"
+#include "Outliner/OutlinerSelectComponent.h"
 
 namespace
 {
@@ -78,7 +78,7 @@ void editor::outliner::SelectSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+	if (!world.HasComponent<gamestate::EditorComponent>())
 		return;
 
 	if (world.HasAny<ecs::query::Added<gamestate::EditModeComponent>>())
@@ -132,13 +132,13 @@ void editor::outliner::SelectSystem::Update(World& world, const GameTime& gameTi
 
 			selected.Emplace(view, math::DistanceSqr(ray.m_Position, intersectPos));
 
-			auto& lines = world.WriteComponent<eng::LinesStaticComponent>();
+			auto& lines = world.WriteComponent<eng::LinesComponent>();
 			lines.AddSphere(intersectPos, 100.f, Colour::Red);
 		}
 
 		if (input.IsPressed(strSelect))
 		{
-			auto& selectComponent = world.WriteComponent<editor::outliner::SelectStaticComponent>();
+			auto& selectComponent = world.WriteComponent<editor::outliner::SelectComponent>();
 			if (!selected.IsEmpty())
 			{
 				std::sort(selected.begin(), selected.end(),

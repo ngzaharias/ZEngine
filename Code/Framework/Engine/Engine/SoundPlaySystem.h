@@ -16,14 +16,14 @@ namespace eng
 
 namespace eng::settings
 {
-	struct AudioStaticComponent;
+	struct AudioComponent;
 }
 
 namespace eng::sound
 {
 	struct ObjectComponent;
-	struct RandomBufferStaticComponent;
-	struct SequenceBufferStaticComponent;
+	struct RandomBufferComponent;
+	struct SequenceBufferComponent;
 	struct SingleRequestComponent;
 }
 
@@ -38,9 +38,9 @@ namespace eng::sound
 			ecs::NameComponent,
 			eng::sound::ObjectComponent>
 			::Read<
-			eng::settings::AudioStaticComponent,
-			eng::sound::RandomBufferStaticComponent,
-			eng::sound::SequenceBufferStaticComponent,
+			eng::settings::AudioComponent,
+			eng::sound::RandomBufferComponent,
+			eng::sound::SequenceBufferComponent,
 			eng::sound::SingleRequestComponent>;
 
 		void Initialise(World& world);

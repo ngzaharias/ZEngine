@@ -6,16 +6,16 @@
 #include "GameClient/DragSelectionComponent.h"
 #include "GameClient/GameStateChangeFinishedEvent.h"
 #include "GameClient/GameStateChangeRequestEvent.h"
-#include "GameClient/GameStateStateStaticComponent.h"
+#include "GameClient/GameStateStateComponent.h"
 #include "GameClient/ModalMessageComponent.h"
 #include "GameClient/MovementAccelerationComponent.h"
 #include "GameClient/MovementVelocityComponent.h"
-#include "GameClient/ProjectileChangesStaticComponent.h"
+#include "GameClient/ProjectileChangesComponent.h"
 #include "GameClient/ProjectileCreateRequestComponent.h"
 #include "GameClient/ProjectileCreateResultComponent.h"
 #include "GameClient/ProjectileSpawnComponent.h"
 #include "GameClient/ProjectileTrajectoryComponent.h"
-#include "GameClient/SettingsDebugStaticComponent.h"
+#include "GameClient/SettingsDebugComponent.h"
 
 void client::RegisterComponents(ecs::EntityWorld& entityWorld)
 {
@@ -32,7 +32,7 @@ void client::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterEvent<gamestate::ChangeFinishedEvent>();
 	entityWorld.RegisterEvent<gamestate::ChangeRequestEvent>();
 
-	entityWorld.RegisterComponent<client::settings::DebugStaticComponent>();
-	entityWorld.RegisterComponent<gamestate::StateStaticComponent>();
-	entityWorld.RegisterComponent<projectile::ChangesStaticComponent>();
+	entityWorld.RegisterComponent<client::settings::DebugComponent>();
+	entityWorld.RegisterComponent<gamestate::StateComponent>();
+	entityWorld.RegisterComponent<projectile::ChangesComponent>();
 }

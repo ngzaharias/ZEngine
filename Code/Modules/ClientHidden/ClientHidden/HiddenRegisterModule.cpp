@@ -3,7 +3,7 @@
 
 #include "ClientHidden/HiddenCountComponent.h"
 #include "ClientHidden/HiddenCountSystem.h"
-#include "ClientHidden/HiddenDebugStaticComponent.h"
+#include "ClientHidden/HiddenDebugComponent.h"
 #include "ClientHidden/HiddenGroupComponent.h"
 #include "ClientHidden/HiddenObjectComponent.h"
 #include "ClientHidden/HiddenPhysicsSystem.h"
@@ -33,7 +33,7 @@ void client::hidden::RegisterModule(ecs::EntityWorld& world)
 
 	// components
 	{
-		world.RegisterComponent<client::hidden::DebugStaticComponent>();
+		world.RegisterComponent<client::hidden::DebugComponent>();
 	}
 
 	// systems

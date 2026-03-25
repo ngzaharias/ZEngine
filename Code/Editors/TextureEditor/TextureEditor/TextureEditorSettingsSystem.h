@@ -5,7 +5,7 @@
 
 namespace editor::texture
 {
-	struct SettingsStaticComponent;
+	struct SettingsComponent;
 }
 
 namespace gamestate
@@ -20,7 +20,7 @@ namespace editor::texture
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::texture::SettingsStaticComponent>
+			editor::texture::SettingsComponent>
 			::Read<
 			gamestate::EditorComponent>;
 

@@ -7,7 +7,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "ServerInventory/InventoryMemberComponent.h"
-#include "ServerInventory/InventoryStorageChangesStaticComponent.h"
+#include "ServerInventory/InventoryStorageChangesComponent.h"
 #include "ServerInventory/InventoryStorageComponent.h"
 
 void server::inventory::MemberSystem::Update(World& world, const GameTime& gameTime)
@@ -21,7 +21,7 @@ void server::inventory::MemberSystem::Update(World& world, const GameTime& gameT
 
 void server::inventory::MemberSystem::ProcessAddRequests(World& world)
 {
-	const auto& changesComponent = world.ReadComponent<server::inventory::StorageChangesStaticComponent>();
+	const auto& changesComponent = world.ReadComponent<server::inventory::StorageChangesComponent>();
 	for (const MemberAdded& data : changesComponent.m_MemberAdded)
 	{
 		auto& memberComponent = world.AddComponent<server::inventory::MemberComponent>(data.m_Member);
@@ -35,7 +35,7 @@ void server::inventory::MemberSystem::ProcessAddRequests(World& world)
 
 void server::inventory::MemberSystem::ProcessMoveRequests(World& world)
 {
-	const auto& changesComponent = world.ReadComponent<server::inventory::StorageChangesStaticComponent>();
+	const auto& changesComponent = world.ReadComponent<server::inventory::StorageChangesComponent>();
 	for (const MemberMoved& data : changesComponent.m_MemberMoved)
 	{
 		auto& memberComponent = world.WriteComponent<server::inventory::MemberComponent>(data.m_Member);
@@ -45,7 +45,7 @@ void server::inventory::MemberSystem::ProcessMoveRequests(World& world)
 
 void server::inventory::MemberSystem::ProcessRemoveRequests(World& world)
 {
-	const auto& changesComponent = world.ReadComponent<server::inventory::StorageChangesStaticComponent>();
+	const auto& changesComponent = world.ReadComponent<server::inventory::StorageChangesComponent>();
 
 	// gather remove requests to handle duplicates
 	Set<ecs::Entity> removeRequests;

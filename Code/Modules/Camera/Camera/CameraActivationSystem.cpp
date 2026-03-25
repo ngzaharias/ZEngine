@@ -9,7 +9,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
-#include "Engine/SettingsDebugStaticComponent.h"
+#include "Engine/SettingsDebugComponent.h"
 #include "Engine/TransformComponent.h"
 #include "GameState/GameStateEditModeComponent.h"
 

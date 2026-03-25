@@ -6,12 +6,12 @@
 
 namespace editor::gizmo
 {
-	struct TransformStaticComponent;
+	struct TransformComponent;
 }
 
 namespace editor::outliner
 {
-	struct SelectStaticComponent;
+	struct SelectComponent;
 }
 
 namespace eng
@@ -25,7 +25,7 @@ namespace eng
 
 namespace eng::settings
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace gamestate
@@ -40,14 +40,14 @@ namespace editor
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::gizmo::TransformStaticComponent,
-			editor::outliner::SelectStaticComponent,
+			editor::gizmo::TransformComponent,
+			editor::outliner::SelectComponent,
 			eng::CameraComponent,
 			eng::TransformComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::EditorComponent,
-			eng::settings::DebugStaticComponent,
+			eng::settings::DebugComponent,
 			eng::WindowManager,
 			gamestate::EditModeComponent>;
 

@@ -6,7 +6,7 @@
 namespace eng
 {
 	class UIManager;
-	struct VersionStaticComponent;
+	struct VersionComponent;
 }
 
 namespace eng::application
@@ -39,7 +39,7 @@ namespace gui::main_menu
 			eng::level::LoadEvent,
 			eng::UIManager>
 			::Read<
-			eng::VersionStaticComponent,
+			eng::VersionComponent,
 			gui::main_menu::ContinueGameEvent,
 			gui::main_menu::ExitGameEvent,
 			gui::main_menu::LoadGameEvent,

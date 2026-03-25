@@ -5,15 +5,15 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/GizmoTransformStaticComponent.h"
+#include "Editor/GizmoTransformComponent.h"
 #include "Engine/CameraComponent.h"
-#include "Engine/SettingsDebugStaticComponent.h"
+#include "Engine/SettingsDebugComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "GameState/GameStateEditModeComponent.h"
 #include "Icons/Icons.h"
-#include "Outliner/OutlinerSelectStaticComponent.h"
+#include "Outliner/OutlinerSelectComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -134,7 +134,7 @@ namespace
 
 	void ProcessTransform(World& world)
 	{
-		const auto& selectComponent = world.ReadComponent<editor::outliner::SelectStaticComponent>();
+		const auto& selectComponent = world.ReadComponent<editor::outliner::SelectComponent>();
 		const ecs::Entity selected = selectComponent.m_Entity;
 		if (selectComponent.m_Entity.IsUnassigned())
 			return;
@@ -158,25 +158,25 @@ namespace
 		ImGui::SetNextWindowSize(Vector2f(22.f, 100.f));
 		if (ImGui::Begin("Transform##editor", nullptr, s_WindowFlags))
 		{
-			const auto& gizmo = world.ReadComponent<editor::gizmo::TransformStaticComponent>();
+			const auto& gizmo = world.ReadComponent<editor::gizmo::TransformComponent>();
 			const bool tactive = gizmo.m_TransformOper == editor::gizmo::ETransformOper::Translate;
 			if (ButtonIcon("##translate", "Translate", icon::MANIPULATE_TRANSLATE, ImVec2(22, 22), tactive))
 			{
-				auto& write = world.WriteComponent<editor::gizmo::TransformStaticComponent>();
+				auto& write = world.WriteComponent<editor::gizmo::TransformComponent>();
 				write.m_TransformOper = editor::gizmo::ETransformOper::Translate;
 			}
 
 			const bool ractive = gizmo.m_TransformOper == editor::gizmo::ETransformOper::Rotate;
 			if (ButtonIcon("##rotate", "Rotate", icon::MANIPULATE_ROTATE, ImVec2(22, 22), ractive))
 			{
-				auto& write = world.WriteComponent<editor::gizmo::TransformStaticComponent>();
+				auto& write = world.WriteComponent<editor::gizmo::TransformComponent>();
 				write.m_TransformOper = editor::gizmo::ETransformOper::Rotate;
 			}
 
 			const bool sactive = gizmo.m_TransformOper == editor::gizmo::ETransformOper::Scale;
 			if (ButtonIcon("##scale", "Scale", icon::MANIPULATE_SCALE, ImVec2(22, 22), sactive))
 			{
-				auto& write = world.WriteComponent<editor::gizmo::TransformStaticComponent>();
+				auto& write = world.WriteComponent<editor::gizmo::TransformComponent>();
 				write.m_TransformOper = editor::gizmo::ETransformOper::Scale;
 			}
 		}

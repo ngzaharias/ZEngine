@@ -25,7 +25,7 @@
 #include "GameState/GameStateEditorComponent.h"
 #include "Icons/Icons.h"
 #include "Outliner/OutlinerOpenWindowEvent.h"
-#include "Outliner/OutlinerSelectStaticComponent.h"
+#include "Outliner/OutlinerSelectComponent.h"
 #include "Outliner/OutlinerWindowComponent.h"
 
 #include "imgui/imgui.h"
@@ -93,7 +93,7 @@ namespace
 		auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
 		prototypeComponent.m_Guid = str::Guid::Generate();
 
-		auto& select = world.WriteComponent<editor::outliner::SelectStaticComponent>();
+		auto& select = world.WriteComponent<editor::outliner::SelectComponent>();
 		select.m_Entity = entity;
 
 		return entity;
@@ -133,7 +133,7 @@ namespace
 		ImGui::Spacing();
 		ImGui::Separator();
 
-		const auto& select = world.ReadComponent<editor::outliner::SelectStaticComponent>();
+		const auto& select = world.ReadComponent<editor::outliner::SelectComponent>();
 
 		using Query = ecs::query
 			::Include<
@@ -161,7 +161,7 @@ namespace
 			const bool isSelected = view == select.m_Entity;
 			if (ImGui::Selectable(name, isSelected))
 			{
-				auto& select = world.WriteComponent<editor::outliner::SelectStaticComponent>();
+				auto& select = world.WriteComponent<editor::outliner::SelectComponent>();
 				select.m_Entity = view;
 			}
 
@@ -204,7 +204,7 @@ void editor::outliner::WindowSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasAny<ecs::query::Include<gamestate::EditorComponent>>())
+	if (!world.HasComponent<gamestate::EditorComponent>())
 		return;
 
 	for (const auto& request : world.Events<editor::outliner::OpenWindowEvent>())

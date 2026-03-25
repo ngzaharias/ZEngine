@@ -2,7 +2,7 @@
 #include "Camera/CameraMove3DSystem.h"
 
 #include "Camera/CameraMove3DComponent.h"
-#include "Camera/CameraSettingsStaticComponent.h"
+#include "Camera/CameraSettingsComponent.h"
 #include "Core/GameTime.h"
 #include "Core/VariantHelpers.h"
 #include "ECS/EntityWorld.h"
@@ -68,7 +68,7 @@ void camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 		const eng::ActiveComponent,
 		const eng::CameraComponent>;
 
-	const auto& settings = world.ReadComponent<camera::SettingsStaticComponent>();
+	const auto& settings = world.ReadComponent<camera::SettingsComponent>();
 	for (auto&& view : world.Query<CameraQuery>())
 	{
 		const auto& input = world.ReadResource<eng::InputManager>();

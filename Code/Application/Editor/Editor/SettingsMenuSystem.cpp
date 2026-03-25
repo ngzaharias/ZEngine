@@ -5,7 +5,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Editor/SettingsLocalStaticComponent.h"
+#include "Editor/SettingsLocalComponent.h"
 #include "Editor/SettingsWindowComponent.h"
 #include "GameDebug/EditorSettingsWindowEvent.h"
 
@@ -35,7 +35,7 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 		auto& window = world.AddComponent<editor::settings::WindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_Label = ToLabel("Settings Menu##editor", identifier);
-		window.m_Local = world.ReadComponent<editor::settings::LocalStaticComponent>();
+		window.m_Local = world.ReadComponent<editor::settings::LocalComponent>();
 	}
 
 	for (auto&& view : world.Query<ecs::query::Removed<const editor::settings::WindowComponent>>())
@@ -70,7 +70,7 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 
 			if (wasModified)
 			{
-				world.WriteComponent<editor::settings::LocalStaticComponent>() = localSettings;
+				world.WriteComponent<editor::settings::LocalComponent>() = localSettings;
 			}
 		}
 		ImGui::End();

@@ -8,9 +8,9 @@
 #include "ECS/WorldView.h"
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
-#include "Engine/LinesStaticComponent.h"
+#include "Engine/LinesComponent.h"
 #include "Engine/InputManager.h"
-#include "Engine/PhysicsSceneStaticComponent.h"
+#include "Engine/PhysicsSceneComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -53,8 +53,8 @@ void drag::SelectionSystem::Update(World& world, const GameTime& gameTime)
 	if (!window)
 		return;
 
-	const auto& sceneComponent = world.ReadComponent<eng::PhysicsSceneStaticComponent>();
-	auto& linesComponent = world.WriteComponent<eng::LinesStaticComponent>();
+	const auto& sceneComponent = world.ReadComponent<eng::PhysicsSceneComponent>();
+	auto& linesComponent = world.WriteComponent<eng::LinesComponent>();
 
 	using Query = ecs::query
 		::Include<

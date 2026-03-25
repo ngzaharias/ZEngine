@@ -5,7 +5,7 @@
 
 namespace client::hidden
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 	struct ObjectComponent;
 }
 
@@ -16,7 +16,7 @@ namespace debug::hidden
 
 namespace eng
 {
-	struct LinesStaticComponent;
+	struct LinesComponent;
 	struct SpriteComponent;
 	struct TransformComponent;
 }
@@ -35,11 +35,11 @@ namespace debug::hidden
 			::Write<
 			debug::hidden::ObjectComponent,
 			eng::level::EntityComponent,
-			eng::LinesStaticComponent,
+			eng::LinesComponent,
 			eng::SpriteComponent,
 			eng::TransformComponent>
 			::Read<
-			client::hidden::DebugStaticComponent,
+			client::hidden::DebugComponent,
 			client::hidden::ObjectComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

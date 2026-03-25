@@ -15,7 +15,7 @@ namespace eng
 
 namespace eng::level
 {
-	struct DirectoryStaticComponent;
+	struct DirectoryComponent;
 	struct LoadEvent;
 }
 
@@ -35,7 +35,7 @@ namespace debug::level
 			debug::level::OpenWindowComponent,
 			ecs::NameComponent,
 			eng::InputManager,
-			eng::level::DirectoryStaticComponent,
+			eng::level::DirectoryComponent,
 			eng::level::LoadEvent>
 			::Read<
 			debug::level::OpenEvent>;

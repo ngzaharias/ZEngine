@@ -6,12 +6,12 @@
 namespace eng
 {
 	class AssetManager;
-	struct MusicStaticComponent;
+	struct MusicComponent;
 }
 
 namespace eng::settings
 {
-	struct AudioStaticComponent;
+	struct AudioComponent;
 }
 
 namespace eng
@@ -22,9 +22,9 @@ namespace eng
 		using World = ecs::WorldView
 			::Write<
 			eng::AssetManager,
-			eng::MusicStaticComponent>
+			eng::MusicComponent>
 			::Read<
-			eng::settings::AudioStaticComponent>;
+			eng::settings::AudioComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

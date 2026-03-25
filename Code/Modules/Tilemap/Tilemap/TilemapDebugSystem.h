@@ -9,13 +9,13 @@ namespace eng
 	class WindowManager;
 	struct ActiveComponent;
 	struct CameraComponent;
-	struct LinesStaticComponent;
+	struct LinesComponent;
 	struct TransformComponent;
 }
 
 namespace eng::settings
 {
-	struct DebugStaticComponent;
+	struct DebugComponent;
 }
 
 namespace tilemap
@@ -31,12 +31,12 @@ namespace tilemap
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::LinesStaticComponent>
+			eng::LinesComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::InputManager,
-			eng::settings::DebugStaticComponent,
+			eng::settings::DebugComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
 			tilemap::AgentComponent,
