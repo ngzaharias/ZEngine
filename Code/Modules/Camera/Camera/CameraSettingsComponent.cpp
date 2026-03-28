@@ -1,7 +1,7 @@
 #include "CameraPCH.h"
 #include "Camera/CameraSettingsComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -12,7 +12,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(camera::SettingsComponent& value) const
+void Visitor::ReadCustom(camera::SettingsComponent& value) const
 {
 	Read(strRotateSpeed, value.m_RotateSpeed, value.m_RotateSpeed);
 	Read(strTranslateSpeed, value.m_TranslateSpeed, value.m_TranslateSpeed);
@@ -20,7 +20,7 @@ void eng::Visitor::ReadCustom(camera::SettingsComponent& value) const
 	Read(strZoomSpeed, value.m_ZoomSpeed, value.m_ZoomSpeed);
 }
 template<>
-void eng::Visitor::WriteCustom(const camera::SettingsComponent& value)
+void Visitor::WriteCustom(const camera::SettingsComponent& value)
 {
 	Write(strRotateSpeed, value.m_RotateSpeed);
 	Write(strTranslateSpeed, value.m_TranslateSpeed);

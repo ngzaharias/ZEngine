@@ -35,6 +35,7 @@ project "GameClient"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Framework/Render/",
+		"%{wks.location}/../Code/Framework/Serialize/",
 		"%{wks.location}/../Code/Modules/Camera/",
 		"%{wks.location}/../Code/Modules/ClientCursor/",
 		"%{wks.location}/../Code/Modules/ClientHidden/",

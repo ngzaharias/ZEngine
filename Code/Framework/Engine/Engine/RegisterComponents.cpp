@@ -50,16 +50,15 @@
 #include "Engine/UserMapComponent.h"
 #include "Engine/VersionComponent.h"
 #include "Engine/VisibilityComponent.h"
-
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 template<>
-void eng::Visitor::ReadCustom(ecs::ReplicationComponent& value) const
+void Visitor::ReadCustom(ecs::ReplicationComponent& value) const
 {
 }
 
 template<>
-void eng::Visitor::WriteCustom(const ecs::ReplicationComponent& value)
+void Visitor::WriteCustom(const ecs::ReplicationComponent& value)
 {
 }
 

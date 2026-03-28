@@ -25,5 +25,6 @@ project "AssetBrowser"
 		"%{wks.location}/../Code/Framework/Icons/",
 		"%{wks.location}/../Code/Framework/ImGui/",
 		"%{wks.location}/../Code/Framework/Math/",
+		"%{wks.location}/../Code/Framework/Serialize/",
 		"%{wks.location}/../Code/Modules/GameState/",
 	}

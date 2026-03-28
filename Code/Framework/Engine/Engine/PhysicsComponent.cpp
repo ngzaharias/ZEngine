@@ -1,7 +1,8 @@
 #include "EnginePCH.h"
 #include "Engine/PhysicsComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -26,14 +27,14 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::PhysicsComponent& value) const
+void Visitor::ReadCustom(eng::PhysicsComponent& value) const
 {
 	Read(strRigidbody, value.m_Rigidbody, value.m_Rigidbody);
 	Read(strShapes, value.m_Shapes, value.m_Shapes);
 }
 
 template<>
-void eng::Visitor::WriteCustom(const eng::PhysicsComponent& value)
+void Visitor::WriteCustom(const eng::PhysicsComponent& value)
 {
 	Write(strRigidbody, value.m_Rigidbody);
 	Write(strShapes, value.m_Shapes);
@@ -49,7 +50,7 @@ bool imgui::Inspector::WriteCustom(eng::PhysicsComponent& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::RigidDynamic& value) const
+void Visitor::ReadCustom(eng::RigidDynamic& value) const
 {
 	Read(strENABLE_CCD, value.eENABLE_CCD, value.eENABLE_CCD);
 	Read(strKINEMATIC, value.eKINEMATIC, value.eKINEMATIC);
@@ -62,7 +63,7 @@ void eng::Visitor::ReadCustom(eng::RigidDynamic& value) const
 }
 
 template<>
-void eng::Visitor::WriteCustom(const eng::RigidDynamic& value)
+void Visitor::WriteCustom(const eng::RigidDynamic& value)
 {
 	Write(strENABLE_CCD, value.eENABLE_CCD);
 	Write(strKINEMATIC, value.eKINEMATIC);
@@ -90,10 +91,10 @@ bool imgui::Inspector::WriteCustom(eng::RigidDynamic& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::RigidStatic& value) const { }
+void Visitor::ReadCustom(eng::RigidStatic& value) const { }
 
 template<>
-void eng::Visitor::WriteCustom(const eng::RigidStatic& value) { }
+void Visitor::WriteCustom(const eng::RigidStatic& value) { }
 
 template<>
 bool imgui::Inspector::WriteCustom(eng::RigidStatic& value)
@@ -102,7 +103,7 @@ bool imgui::Inspector::WriteCustom(eng::RigidStatic& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::ShapeBox& value) const
+void Visitor::ReadCustom(eng::ShapeBox& value) const
 {
 	Read(strExtents, value.m_Extents, value.m_Extents);
 	Read(strTranslate, value.m_Translate, value.m_Translate);
@@ -111,7 +112,7 @@ void eng::Visitor::ReadCustom(eng::ShapeBox& value) const
 }
 
 template<>
-void eng::Visitor::WriteCustom(const eng::ShapeBox& value)
+void Visitor::WriteCustom(const eng::ShapeBox& value)
 {
 	Write(strExtents, value.m_Extents);
 	Write(strTranslate, value.m_Translate);
@@ -131,7 +132,7 @@ bool imgui::Inspector::WriteCustom(eng::ShapeBox& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::ShapeSphere& value) const
+void Visitor::ReadCustom(eng::ShapeSphere& value) const
 {
 	Read(strTranslate, value.m_Translate, value.m_Translate);
 	Read(strChannel, value.m_Channel, value.m_Channel);
@@ -139,7 +140,7 @@ void eng::Visitor::ReadCustom(eng::ShapeSphere& value) const
 }
 
 template<>
-void eng::Visitor::WriteCustom(const eng::ShapeSphere& value)
+void Visitor::WriteCustom(const eng::ShapeSphere& value)
 {
 	Write(strTranslate, value.m_Translate);
 	Write(strChannel, value.m_Channel);

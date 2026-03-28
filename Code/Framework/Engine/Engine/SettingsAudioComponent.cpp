@@ -1,7 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/SettingsAudioComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -11,14 +11,14 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::settings::AudioComponent& value) const
+void Visitor::ReadCustom(eng::settings::AudioComponent& value) const
 {
 	Read(strEffectVolume, value.m_EffectVolume, value.m_EffectVolume);
 	Read(strMasterVolume, value.m_MasterVolume, value.m_MasterVolume);
 	Read(strMusicVolume, value.m_MusicVolume, value.m_MusicVolume);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::settings::AudioComponent& value)
+void Visitor::WriteCustom(const eng::settings::AudioComponent& value)
 {
 	Write(strEffectVolume, value.m_EffectVolume);
 	Write(strMasterVolume, value.m_MasterVolume);

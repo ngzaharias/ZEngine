@@ -3,10 +3,7 @@
 #include "Engine/Asset.h"
 #include "Engine/AssetLoader.h"
 
-namespace eng
-{
-	class Visitor;
-}
+class Visitor;
 
 namespace eng
 {
@@ -30,8 +27,8 @@ namespace eng
 		void Unbind(eng::Texture2DAsset& asset) const;
 
 		bool Import(eng::Texture2DAsset& asset, const str::Path& filepath) const;
-		bool Load(eng::Texture2DAsset& asset, eng::Visitor& visitor) const;
-		bool Save(eng::Texture2DAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::Texture2DAsset& asset, Visitor& visitor) const;
+		bool Save(eng::Texture2DAsset& asset, Visitor& visitor) const;
 		bool Unload(eng::Texture2DAsset& asset) const;
 	};
 }

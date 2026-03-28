@@ -1,7 +1,8 @@
 #include "CameraPCH.h"
 #include "Camera/CameraZoom2DComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -11,13 +12,13 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(camera::Zoom2DComponent& value) const
+void Visitor::ReadCustom(camera::Zoom2DComponent& value) const
 {
 	Read(strMax, value.m_Max, value.m_Max);
 	Read(strMin, value.m_Min, value.m_Min);
 }
 template<>
-void eng::Visitor::WriteCustom(const camera::Zoom2DComponent& value)
+void Visitor::WriteCustom(const camera::Zoom2DComponent& value)
 {
 	Write(strMax, value.m_Max);
 	Write(strMin, value.m_Min);

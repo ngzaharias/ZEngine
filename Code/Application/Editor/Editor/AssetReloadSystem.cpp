@@ -6,6 +6,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
+#include "Serialize/Visitor.h"
 
 #include <stdlib.h>
 #include <windows.h>
@@ -72,7 +73,7 @@ void editor::AssetReloadSystem::Update(World& world, const GameTime& gameTime)
 			if (!filepath.IsEmpty() && !filepath.IsDirectory())
 			{
 				str::Guid guid;
-				eng::Visitor visitor;
+				Visitor visitor;
 				visitor.LoadFromFile(filepath);
 				visitor.Read(strGuid, guid, {});
 				if (guid.IsValid())

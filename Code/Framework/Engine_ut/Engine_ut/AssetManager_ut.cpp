@@ -14,7 +14,7 @@ namespace
 	class MyLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Load(MyAsset& asset, eng::Visitor& visitor) const { return true; }
+		bool Load(MyAsset& asset, Visitor& visitor) const { return true; }
 	};
 
 	struct RAIIHelper

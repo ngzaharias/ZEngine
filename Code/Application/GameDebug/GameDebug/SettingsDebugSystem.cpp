@@ -7,8 +7,8 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/SettingsDebugComponent.h"
-#include "Engine/Visitor.h"
 #include "GameClient/SettingsDebugComponent.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -21,7 +21,7 @@ void debug::settings::DebugSystem::Initialise(World& world)
 
 	const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
-	eng::Visitor visitor;
+	Visitor visitor;
 	visitor.LoadFromFile(filepath);
 	visitor.Read(world.WriteComponent<eng::settings::DebugComponent>());
 	visitor.Read(world.WriteComponent<client::settings::DebugComponent>());
@@ -40,7 +40,7 @@ void debug::settings::DebugSystem::Update(World& world, const GameTime& gameTime
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
-		eng::Visitor visitor;
+		Visitor visitor;
 		visitor.Write(world.ReadComponent<eng::settings::DebugComponent>());
 		visitor.Write(world.ReadComponent<client::settings::DebugComponent>());
 		visitor.Write(world.ReadComponent<client::hidden::DebugComponent>());

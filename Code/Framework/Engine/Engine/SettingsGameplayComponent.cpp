@@ -1,7 +1,8 @@
 #include "EnginePCH.h"
 #include "Engine/SettingsGameplayComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -10,12 +11,12 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::settings::GameplayComponent& value) const
+void Visitor::ReadCustom(eng::settings::GameplayComponent& value) const
 {
 	Read(strTheme, value.m_Theme, value.m_Theme);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::settings::GameplayComponent& value)
+void Visitor::WriteCustom(const eng::settings::GameplayComponent& value)
 {
 	Write(strTheme, value.m_Theme);
 }

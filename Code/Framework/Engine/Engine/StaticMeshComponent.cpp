@@ -2,7 +2,8 @@
 #include "Engine/StaticMeshComponent.h"
 
 #include "Engine/InspectorHelpers.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -11,12 +12,12 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::StaticMeshComponent& value) const
+void Visitor::ReadCustom(eng::StaticMeshComponent& value) const
 {
 	Read(strStaticMesh, value.m_StaticMesh, value.m_StaticMesh);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::StaticMeshComponent& value)
+void Visitor::WriteCustom(const eng::StaticMeshComponent& value)
 {
 	Write(strStaticMesh, value.m_StaticMesh);
 }

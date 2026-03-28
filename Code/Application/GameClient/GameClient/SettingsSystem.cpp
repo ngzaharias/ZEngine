@@ -13,9 +13,9 @@
 #include "Engine/SettingsAudioComponent.h"
 #include "Engine/SettingsGameplayComponent.h"
 #include "Engine/SettingsWindowComponent.h"
-#include "Engine/Visitor.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -43,7 +43,7 @@ void client::SettingsSystem::Initialise(World& world)
 
 	const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
-	eng::Visitor visitor;
+	Visitor visitor;
 	visitor.LoadFromFile(filepath);
 	visitor.Read(strAudio, audioSettings, {});
 	visitor.Read(strCamera, cameraSettings, {});
@@ -64,7 +64,7 @@ void client::SettingsSystem::Update(World& world, const GameTime& gameTime)
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
-		eng::Visitor visitor;
+		Visitor visitor;
 		visitor.Write(strAudio, world.ReadComponent<eng::settings::AudioComponent>());
 		visitor.Write(strCamera, world.ReadComponent<camera::SettingsComponent>());
 		visitor.Write(strGameplay, world.ReadComponent<eng::settings::GameplayComponent>());

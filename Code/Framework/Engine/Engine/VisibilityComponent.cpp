@@ -1,7 +1,8 @@
 #include "EnginePCH.h"
 #include "Engine/VisibilityComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -10,12 +11,12 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::VisibilityComponent& value) const
+void Visitor::ReadCustom(eng::VisibilityComponent& value) const
 {
 	Read(strIsVisible, value.m_IsVisible, value.m_IsVisible);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::VisibilityComponent& value)
+void Visitor::WriteCustom(const eng::VisibilityComponent& value)
 {
 	Write(strIsVisible, value.m_IsVisible);
 }

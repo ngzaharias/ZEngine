@@ -1,7 +1,8 @@
 #include "TacticsPCH.h"
 #include "Tactics/TacticsPawnAbilitiesComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -10,12 +11,12 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(tactics::PawnAbilitiesComponent& value) const
+void Visitor::ReadCustom(tactics::PawnAbilitiesComponent& value) const
 {
 	Read(strAbilities, value.m_Abilities, value.m_Abilities);
 }
 template<>
-void eng::Visitor::WriteCustom(const tactics::PawnAbilitiesComponent& value)
+void Visitor::WriteCustom(const tactics::PawnAbilitiesComponent& value)
 {
 	Write(strAbilities, value.m_Abilities);
 }

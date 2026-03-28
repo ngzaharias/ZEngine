@@ -5,10 +5,7 @@
 #include "Engine/Asset.h"
 #include "Engine/AssetLoader.h"
 
-namespace eng
-{
-	class Visitor;
-}
+class Visitor;
 
 namespace eng
 {
@@ -36,7 +33,7 @@ namespace eng
 	{
 	public:
 		bool Import(eng::FontAsset& asset, const str::Path& filepath) const;
-		bool Load(eng::FontAsset& asset, eng::Visitor& visitor) const;
-		bool Save(eng::FontAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::FontAsset& asset, Visitor& visitor) const;
+		bool Save(eng::FontAsset& asset, Visitor& visitor) const;
 	};
 }

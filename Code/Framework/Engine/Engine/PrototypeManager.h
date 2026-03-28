@@ -2,8 +2,15 @@
 
 #include "Core/Map.h"
 #include "Core/Name.h"
+#include "Core/TypeName.h"
+#include "ECS/Component.h"
+#include "ECS/EntityWorld.h"
 #include "Engine/PrototypeComponent.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
+
+#include <type_traits>
 
 namespace ecs
 {
@@ -13,7 +20,6 @@ namespace ecs
 
 namespace eng
 {
-	class Visitor;
 	struct Prototype;
 }
 
@@ -21,10 +27,10 @@ namespace eng
 {
 	struct PrototypeEntry
 	{
-		using Save = void(ecs::EntityWorld&, const ecs::Entity&, eng::Visitor&);
+		using Save = void(ecs::EntityWorld&, const ecs::Entity&, Visitor&);
 		Save* m_Save = nullptr;
 
-		using Load = void(ecs::EntityWorld&, const ecs::Entity&, eng::Visitor&);
+		using Load = void(ecs::EntityWorld&, const ecs::Entity&, Visitor&);
 		Load* m_Load = nullptr;
 
 		using Inspect = void(ecs::EntityWorld&, const ecs::Entity&, imgui::Inspector&);
@@ -48,9 +54,9 @@ namespace eng
 
 	private:
 		template<typename TComponent>
-		static void SaveComponent(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor);
+		static void SaveComponent(ecs::EntityWorld& world, const ecs::Entity& entity, Visitor& visitor);
 		template<typename TComponent>
-		static void LoadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor);
+		static void LoadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, Visitor& visitor);
 		template<typename TComponent>
 		static void InspectComponent(ecs::EntityWorld& world, const ecs::Entity& entity, imgui::Inspector& insepctor);
 

@@ -7,10 +7,7 @@
 #include "Math/AABB.h"
 #include "Math/Vector.h"
 
-namespace eng
-{
-	class Visitor;
-}
+class Visitor;
 
 namespace eng
 {
@@ -48,6 +45,6 @@ namespace eng
 		bool Bind(eng::StaticMeshAsset& asset) const;
 		bool Unbind(eng::StaticMeshAsset& asset) const;
 
-		bool Load(eng::StaticMeshAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::StaticMeshAsset& asset, Visitor& visitor) const;
 	};
 }

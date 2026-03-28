@@ -4,7 +4,7 @@
 #include "Core/Assert.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -18,7 +18,7 @@ bool eng::PrototypeManager::SaveEntity(ecs::EntityWorld& world, const ecs::Entit
 	auto& prototypeComponent = world.WriteComponent<eng::PrototypeComponent>(entity);
 	prototypeComponent.m_Path = filepath;
 
-	eng::Visitor visitor;
+	Visitor visitor;
 	visitor.Write("m_Guid", prototypeComponent.m_Guid);
 	visitor.Write("m_Name", nameComponent.m_Name);
 
@@ -33,7 +33,7 @@ bool eng::PrototypeManager::LoadEntity(ecs::EntityWorld& world, const ecs::Entit
 {
 	PROFILE_FUNCTION();
 
-	eng::Visitor visitor;
+	Visitor visitor;
 	if (!visitor.LoadFromFile(filepath))
 		return false;
 

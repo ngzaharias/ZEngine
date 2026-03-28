@@ -1,7 +1,8 @@
 #include "GameUIPCH.h"
 #include "GameUI/MainMenuWindowComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -10,12 +11,12 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(gui::main_menu::WindowComponent& value) const
+void Visitor::ReadCustom(gui::main_menu::WindowComponent& value) const
 {
 	Read(strNewGame, value.m_NewGame, value.m_NewGame);
 }
 template<>
-void eng::Visitor::WriteCustom(const gui::main_menu::WindowComponent& value)
+void Visitor::WriteCustom(const gui::main_menu::WindowComponent& value)
 {
 	Write(strNewGame, value.m_NewGame);
 }

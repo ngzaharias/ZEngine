@@ -1,7 +1,8 @@
 #include "SoftbodyPCH.h"
 #include "Softbody/SoftbodyChainComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -12,7 +13,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(softbody::ChainComponent& value) const
+void Visitor::ReadCustom(softbody::ChainComponent& value) const
 {
 	Read(strAngle, value.m_Angle, value.m_Angle);
 	Read(strRadius, value.m_Radius, value.m_Radius);
@@ -22,7 +23,7 @@ void eng::Visitor::ReadCustom(softbody::ChainComponent& value) const
 	value.m_Radius = math::Max(value.m_Radius, 0.f);
 }
 template<>
-void eng::Visitor::WriteCustom(const softbody::ChainComponent& value)
+void Visitor::WriteCustom(const softbody::ChainComponent& value)
 {
 	Write(strAngle, value.m_Angle);
 	Write(strRadius, value.m_Radius);

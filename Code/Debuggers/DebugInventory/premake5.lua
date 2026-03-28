@@ -23,6 +23,7 @@ project "DebugInventory"
 		"%{wks.location}/../Code/Framework/Engine/",
 		"%{wks.location}/../Code/Framework/Imgui/",
 		"%{wks.location}/../Code/Framework/Math/",
+		"%{wks.location}/../Code/Framework/Serialize/",
 		"%{wks.location}/../Code/Debuggers/DebugInventory/",
 		"%{wks.location}/../Code/Modules/ServerInventory/",
 	}

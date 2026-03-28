@@ -1,7 +1,8 @@
 #include "EnginePCH.h"
 #include "Engine/CameraTypes.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -14,13 +15,13 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::Cinematic& value) const
+void Visitor::ReadCustom(eng::Cinematic& value) const
 {
 	Read(strClippingNear, value.m_ClippingNear, value.m_ClippingNear);
 	Read(strClippingFar, value.m_ClippingFar, value.m_ClippingFar);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::Cinematic& value)
+void Visitor::WriteCustom(const eng::Cinematic& value)
 {
 	Write(strClippingNear, value.m_ClippingNear);
 	Write(strClippingFar, value.m_ClippingFar);
@@ -35,14 +36,14 @@ bool imgui::Inspector::WriteCustom(eng::Cinematic& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::Orthographic& value) const
+void Visitor::ReadCustom(eng::Orthographic& value) const
 {
 	Read(strClippingNear, value.m_ClippingNear, value.m_ClippingNear);
 	Read(strClippingFar, value.m_ClippingFar, value.m_ClippingFar);
 	Read(strSize, value.m_Size, value.m_Size);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::Orthographic& value)
+void Visitor::WriteCustom(const eng::Orthographic& value)
 {
 	Write(strClippingNear, value.m_ClippingNear);
 	Write(strClippingFar, value.m_ClippingFar);
@@ -59,7 +60,7 @@ bool imgui::Inspector::WriteCustom(eng::Orthographic& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::Perspective& value) const
+void Visitor::ReadCustom(eng::Perspective& value) const
 {
 	Read(strClippingNear, value.m_ClippingNear, value.m_ClippingNear);
 	Read(strClippingFar, value.m_ClippingFar, value.m_ClippingFar);
@@ -67,7 +68,7 @@ void eng::Visitor::ReadCustom(eng::Perspective& value) const
 	Read(strFoVAxis, value.m_FoVAxis, value.m_FoVAxis);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::Perspective& value)
+void Visitor::WriteCustom(const eng::Perspective& value)
 {
 	Write(strClippingNear, value.m_ClippingNear);
 	Write(strClippingFar, value.m_ClippingFar);
@@ -86,11 +87,11 @@ bool imgui::Inspector::WriteCustom(eng::Perspective& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::UserInterface& value) const
+void Visitor::ReadCustom(eng::UserInterface& value) const
 {
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::UserInterface& value)
+void Visitor::WriteCustom(const eng::UserInterface& value)
 {
 }
 template<>

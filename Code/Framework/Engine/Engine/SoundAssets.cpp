@@ -2,7 +2,7 @@
 #include "Engine/SoundAssets.h"
 
 #include "Engine/AssetManager.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 #include <SFML/Audio/SoundBuffer.hpp>
 
@@ -12,19 +12,19 @@ namespace
 	const str::Name strSourceFile = NAME("m_SourceFile");
 }
 
-bool eng::sound::AssetLoader::Load(eng::sound::RandomAsset& asset, eng::Visitor& visitor) const
+bool eng::sound::AssetLoader::Load(eng::sound::RandomAsset& asset, Visitor& visitor) const
 {
 	visitor.Read(strHandles, asset.m_Handles, {});
 	return true;
 }
 
-bool eng::sound::AssetLoader::Load(eng::sound::SequenceAsset& asset, eng::Visitor& visitor) const
+bool eng::sound::AssetLoader::Load(eng::sound::SequenceAsset& asset, Visitor& visitor) const
 {
 	visitor.Read(strHandles, asset.m_Handles, {});
 	return true;
 }
 
-bool eng::sound::AssetLoader::Load(eng::sound::SingleAsset& asset, eng::Visitor& visitor) const
+bool eng::sound::AssetLoader::Load(eng::sound::SingleAsset& asset, Visitor& visitor) const
 {
 	visitor.Read(strSourceFile, asset.m_SourceFile, {});
 

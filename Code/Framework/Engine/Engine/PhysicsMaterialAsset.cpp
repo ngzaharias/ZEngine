@@ -3,7 +3,7 @@
 
 #include "Engine/AssetManager.h"
 #include "Engine/PhysicsManager.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 #include <PhysX/PxMaterial.h>
 #include <PhysX/PxPhysics.h>
@@ -20,7 +20,7 @@ eng::PhysicsMaterialAssetLoader::PhysicsMaterialAssetLoader(eng::PhysicsManager&
 { 
 }
 
-bool eng::PhysicsMaterialAssetLoader::Load(eng::PhysicsMaterialAsset& asset, eng::Visitor& visitor) const
+bool eng::PhysicsMaterialAssetLoader::Load(eng::PhysicsMaterialAsset& asset, Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 

@@ -4,7 +4,7 @@
 #include "Core/Guid.h"
 #include "Core/Path.h"
 #include "Engine/TableManager.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 void eng::TableHeadmaster::Initialise(const str::Path& folderPath)
 {
@@ -17,7 +17,7 @@ void eng::TableHeadmaster::Initialise(const str::Path& folderPath)
 		if (!filepath.HasExtension())
 			filepath += s_Extension;
 
-		eng::Visitor visitor;
+		Visitor visitor;
 		if (visitor.LoadFromFile(filepath))
 			entry.m_Manager->Read(visitor);
 	}

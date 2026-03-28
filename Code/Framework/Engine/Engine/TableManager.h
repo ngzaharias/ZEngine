@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Core/Map.h"
+#include "Serialize/Visitor.h"
+
+class Visitor;
 
 namespace eng
 {
-	class Visitor;
-
 	/// \brief
 	class ITableManager
 	{
@@ -13,7 +14,7 @@ namespace eng
 		ITableManager() {}
 		virtual ~ITableManager() {}
 
-		virtual void Read(eng::Visitor& visitor) = 0;
+		virtual void Read(Visitor& visitor) = 0;
 	};
 
 	/// \brief
@@ -30,7 +31,7 @@ namespace eng
 		const TObject& GetObject(const TKey& value) const { return m_ObjectMap.Get(value); }
 		const ObjectMap& GetObjectMap() const { return m_ObjectMap; }
 
-		void Read(eng::Visitor& visitor) override;
+		void Read(Visitor& visitor) override;
 
 	protected:
 		ObjectMap m_ObjectMap = {};

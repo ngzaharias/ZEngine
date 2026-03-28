@@ -1,7 +1,8 @@
 #include "EnginePCH.h"
 #include "Engine/PrototypeComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace

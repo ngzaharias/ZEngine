@@ -6,10 +6,7 @@
 
 #include <SFML/Audio/SoundBuffer.hpp>
 
-namespace eng
-{
-	class Visitor;
-}
+class Visitor;
 
 namespace eng::sound
 {
@@ -33,8 +30,8 @@ namespace eng::sound
 	class AssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Load(eng::sound::RandomAsset& asset, eng::Visitor& visitor) const;
-		bool Load(eng::sound::SequenceAsset& asset, eng::Visitor& visitor) const;
-		bool Load(eng::sound::SingleAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::sound::RandomAsset& asset, Visitor& visitor) const;
+		bool Load(eng::sound::SequenceAsset& asset, Visitor& visitor) const;
+		bool Load(eng::sound::SingleAsset& asset, Visitor& visitor) const;
 	};
 }

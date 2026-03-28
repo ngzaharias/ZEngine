@@ -1,7 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/ThemeTable.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace 
 {
@@ -21,7 +21,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::Theme& value) const
+void Visitor::ReadCustom(eng::Theme& value) const
 {
 	Read(strName, value.m_Name, value.m_Name);
 	Read(strBackground0, value.m_Background0, value.m_Background0);

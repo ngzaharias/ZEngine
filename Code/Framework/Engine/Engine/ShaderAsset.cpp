@@ -3,8 +3,7 @@
 
 #include "Core/Parse.h"
 #include "Engine/AssetManager.h"
-#include "Engine/TomlHelpers.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 #include <GLEW/glew.h>
 
@@ -180,7 +179,7 @@ bool eng::ShaderAssetLoader::Unbind(eng::ShaderAsset& asset) const
 	return true;
 }
 
-bool eng::ShaderAssetLoader::Load(eng::ShaderAsset& asset, eng::Visitor& visitor) const
+bool eng::ShaderAssetLoader::Load(eng::ShaderAsset& asset, Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 	visitor.Read(strFragment, asset.m_Fragment, {});

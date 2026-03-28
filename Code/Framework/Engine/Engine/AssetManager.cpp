@@ -112,7 +112,7 @@ void eng::AssetManager::LoadFilepath(const str::Path& filepath, const bool canSe
 	if (filepath.GetFileExtension() == s_Extension)
 	{
 		// #todo: peak the guid and type
-		eng::Visitor visitor;
+		Visitor visitor;
 		if (visitor.LoadFromFile(filepath))
 		{
 			eng::AssetFile assetFile;

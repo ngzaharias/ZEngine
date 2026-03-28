@@ -4,8 +4,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/Visitor.h"
 #include "GameState/GameStateEditorComponent.h"
+#include "Serialize/Visitor.h"
 #include "TextureEditor/TextureEditorSettingsComponent.h"
 
 namespace
@@ -19,7 +19,7 @@ void editor::texture::SettingsSystem::Initialise(World& world)
 
 	const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
-	eng::Visitor visitor;
+	Visitor visitor;
 	visitor.LoadFromFile(filepath);
 	visitor.Read(world.WriteComponent<editor::texture::SettingsComponent>());
 }
@@ -35,7 +35,7 @@ void editor::texture::SettingsSystem::Update(World& world, const GameTime& gameT
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
-		eng::Visitor visitor;
+		Visitor visitor;
 		visitor.Write(world.ReadComponent<editor::texture::SettingsComponent>());
 		visitor.SaveToFile(filepath);
 	}

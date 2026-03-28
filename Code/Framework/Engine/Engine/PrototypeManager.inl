@@ -1,12 +1,5 @@
 #pragma once
 
-#include "Core/TypeName.h"
-#include "ECS/Component.h"
-#include "ECS/EntityWorld.h"
-#include "Engine/Visitor.h"
-
-#include <type_traits>
-
 template<typename TComponent>
 void eng::PrototypeManager::RegisterComponent()
 {
@@ -26,7 +19,7 @@ void eng::PrototypeManager::RegisterComponent()
 }
 
 template<typename TComponent>
-void eng::PrototypeManager::SaveComponent(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor)
+void eng::PrototypeManager::SaveComponent(ecs::EntityWorld& world, const ecs::Entity& entity, Visitor& visitor)
 {
 	if (world.HasComponent<TComponent>(entity))
 	{
@@ -37,7 +30,7 @@ void eng::PrototypeManager::SaveComponent(ecs::EntityWorld& world, const ecs::En
 }
 
 template<typename TComponent>
-void eng::PrototypeManager::LoadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, eng::Visitor& visitor)
+void eng::PrototypeManager::LoadComponent(ecs::EntityWorld& world, const ecs::Entity& entity, Visitor& visitor)
 {
 	if (!world.IsRegistered<TComponent>())
 		return;

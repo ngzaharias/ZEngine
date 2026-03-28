@@ -8,8 +8,8 @@
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/Texture2DAsset.h"
-#include "FlipbookEditor/FlipbookEditorAssetSaveComponent.h"
 #include "FlipbookEditor/FlipbookEditorAssetOpenComponent.h"
+#include "FlipbookEditor/FlipbookEditorAssetSaveComponent.h"
 #include "FlipbookEditor/FlipbookEditorBatchingComponent.h"
 #include "FlipbookEditor/FlipbookEditorOpenWindowEvent.h"
 #include "FlipbookEditor/FlipbookEditorWindowComponent.h"
@@ -187,7 +187,7 @@ namespace
 			const str::Path filepath = eng::SelectFileDialog(settings);
 			if (!filepath.IsEmpty())
 			{
-				eng::Visitor visitor;
+				Visitor visitor;
 				visitor.LoadFromFile(filepath);
 				eng::FlipbookAssetLoader loader;
 				loader.Load(windowComponent.m_Asset, visitor);

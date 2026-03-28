@@ -1,7 +1,8 @@
 #include "GameClientPCH.h"
 #include "GameClient/SettingsDebugComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -10,12 +11,12 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(client::settings::DebugComponent& value) const
+void Visitor::ReadCustom(client::settings::DebugComponent& value) const
 {
 	Read(strIsHexmapEnabled, value.m_IsHexmapEnabled, value.m_IsHexmapEnabled);
 }
 template<>
-void eng::Visitor::WriteCustom(const client::settings::DebugComponent& value)
+void Visitor::WriteCustom(const client::settings::DebugComponent& value)
 {
 	Write(strIsHexmapEnabled, value.m_IsHexmapEnabled);
 }

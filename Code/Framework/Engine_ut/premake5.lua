@@ -28,6 +28,7 @@ project "Engine_ut"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Engine/",
+		"%{wks.location}/../Code/Framework/Serialize/",
 	}
 
 	libdirs 
@@ -54,6 +55,7 @@ project "Engine_ut"
 		"ECS",
 		"Engine",
 		"Math",
+		"Serialize",
 		"Steam",
 
 		"OptickCore.lib",

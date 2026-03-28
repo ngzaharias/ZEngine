@@ -15,14 +15,15 @@
 #include "Engine/AssetFile.h"
 #include "Engine/AssetLoader.h"
 #include "Engine/AssetRef.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 #include <mutex>
+
+class Visitor;
 
 namespace eng
 {
 	class AssetLoader;
-	class Visitor;
 	struct Asset;
 }
 
@@ -115,13 +116,13 @@ namespace eng
 
 		/// \brief Function that can be used to import an asset from a file.
 		template<typename TAsset, typename TLoader>
-		static bool ImportMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
+		static bool ImportMethod(eng::Asset& asset, const eng::AssetLoader& loader, Visitor& visitor);
 		/// \brief Function that can be used to load the asset from a visitor.
 		template<typename TAsset, typename TLoader>
-		static bool LoadMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
+		static bool LoadMethod(eng::Asset& asset, const eng::AssetLoader& loader, Visitor& visitor);
 		/// \brief Function that can be used to save the asset to a visitor.
 		template<typename TAsset, typename TLoader>
-		static bool SaveMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor);
+		static bool SaveMethod(eng::Asset& asset, const eng::AssetLoader& loader, Visitor& visitor);
 		/// \brief Function that can be used to unload the asset from the engine.
 		template<typename TAsset, typename TLoader>
 		static bool UnloadMethod(eng::Asset& asset, const eng::AssetLoader& loader);

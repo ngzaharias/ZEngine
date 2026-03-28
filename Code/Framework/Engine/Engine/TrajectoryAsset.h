@@ -6,10 +6,7 @@
 #include "Engine/SpriteAsset.h"
 #include "Math/Vector.h"
 
-namespace eng
-{
-	class Visitor;
-}
+class Visitor;
 
 namespace eng
 {
@@ -21,7 +18,7 @@ namespace eng
 	class TrajectoryAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Load(eng::TrajectoryAsset& asset, eng::Visitor& visitor) const;
-		bool Save(eng::TrajectoryAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::TrajectoryAsset& asset, Visitor& visitor) const;
+		bool Save(eng::TrajectoryAsset& asset, Visitor& visitor) const;
 	};
 }

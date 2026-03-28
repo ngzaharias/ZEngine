@@ -4,7 +4,7 @@
 #include "Engine/AssetManager.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/Texture2DAsset.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -21,13 +21,13 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::FlipbookFrame& value) const
+void Visitor::ReadCustom(eng::FlipbookFrame& value) const
 {
 	Read(strPosition, value.m_Position, s_DefaultFrame.m_Position);
 	Read(strSize, value.m_Size, s_DefaultFrame.m_Size);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::FlipbookFrame& value)
+void Visitor::WriteCustom(const eng::FlipbookFrame& value)
 {
 	Write(strPosition, value.m_Position);
 	Write(strSize, value.m_Size);
@@ -47,7 +47,7 @@ void eng::FlipbookAssetLoader::Unbind(eng::FlipbookAsset& asset) const
 	m_AssetManager->ReleaseAsset(asset.m_Texture2D);
 }
 
-bool eng::FlipbookAssetLoader::Save(eng::FlipbookAsset& asset, eng::Visitor& visitor) const
+bool eng::FlipbookAssetLoader::Save(eng::FlipbookAsset& asset, Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 	visitor.Write(strFps, asset.m_FPS);
@@ -58,7 +58,7 @@ bool eng::FlipbookAssetLoader::Save(eng::FlipbookAsset& asset, eng::Visitor& vis
 	return true;
 }
 
-bool eng::FlipbookAssetLoader::Load(eng::FlipbookAsset& asset, eng::Visitor& visitor) const
+bool eng::FlipbookAssetLoader::Load(eng::FlipbookAsset& asset, Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 	visitor.Read(strFps, asset.m_FPS, s_DefaultAsset.m_FPS);

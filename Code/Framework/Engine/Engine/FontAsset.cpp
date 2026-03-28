@@ -3,8 +3,7 @@
 
 #include "Core/Algorithms.h"
 #include "Engine/AssetManager.h"
-#include "Engine/TomlHelpers.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 #include <ft2build.h>
 #include <GLEW/glew.h>
@@ -42,7 +41,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(::Character& value) const
+void Visitor::ReadCustom(::Character& value) const
 {
 	Read(strAdvanceX, value.m_AdvanceX, 200u);
 	Read(strAdvanceY, value.m_AdvanceY, 0u);
@@ -51,7 +50,7 @@ void eng::Visitor::ReadCustom(::Character& value) const
 }
 
 template<>
-void eng::Visitor::WriteCustom(const ::Character& value)
+void Visitor::WriteCustom(const ::Character& value)
 {
 	SetInline();
 	Write(strAdvanceX, value.m_AdvanceX);
@@ -111,7 +110,7 @@ bool eng::FontAssetLoader::Import(eng::FontAsset& asset, const str::Path& filepa
 	return true;
 }
 
-bool eng::FontAssetLoader::Load(eng::FontAsset& asset, eng::Visitor& visitor) const
+bool eng::FontAssetLoader::Load(eng::FontAsset& asset, Visitor& visitor) const
 {
 	// #todo: assert file exists
 	// #todo: fallback to default on failure
@@ -171,7 +170,7 @@ bool eng::FontAssetLoader::Load(eng::FontAsset& asset, eng::Visitor& visitor) co
 	return true;
 }
 
-bool eng::FontAssetLoader::Save(eng::FontAsset& asset, eng::Visitor& visitor) const
+bool eng::FontAssetLoader::Save(eng::FontAsset& asset, Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 	visitor.Write(strWidth, asset.m_Width);

@@ -1,9 +1,9 @@
 #include "EnginePCH.h"
 #include "Engine/TransformComponent.h"
 
-#include "Engine/Visitor.h"
-#include "Math/Matrix.h"
 #include "imgui/Inspector.h"
+#include "Math/Matrix.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -13,14 +13,14 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::TransformComponent& value) const
+void Visitor::ReadCustom(eng::TransformComponent& value) const
 {
 	Read(strTranslate, value.m_Translate, value.m_Translate);
 	Read(strRotate, value.m_Rotate, value.m_Rotate);
 	Read(strScale, value.m_Scale, value.m_Scale);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::TransformComponent& value)
+void Visitor::WriteCustom(const eng::TransformComponent& value)
 {
 	Write(strTranslate, value.m_Translate);
 	Write(strRotate, value.m_Rotate);

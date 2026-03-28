@@ -6,10 +6,7 @@
 
 #include <SFML/Audio/Music.hpp>
 
-namespace eng
-{
-	class Visitor;
-}
+class Visitor;
 
 namespace eng
 {
@@ -22,7 +19,7 @@ namespace eng
 	class MusicAssetLoader final : public eng::AssetLoader
 	{
 	public:
-		bool Load(eng::MusicAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::MusicAsset& asset, Visitor& visitor) const;
 		bool Unload(eng::MusicAsset& asset) const;
 	};
 }

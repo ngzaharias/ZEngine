@@ -12,7 +12,7 @@ void icon::LoadSystem::Initialise(World& world)
 {
 	str::Path filepath = str::Path(str::EPath::Assets, "Textures/T_Icon_Atlas.asset");
 
-	eng::Visitor visitor;
+	Visitor visitor;
 	visitor.LoadFromFile(filepath);
 
 	eng::Texture2DAsset asset;

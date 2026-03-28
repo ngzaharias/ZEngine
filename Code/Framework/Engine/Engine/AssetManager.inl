@@ -25,11 +25,11 @@ void eng::AssetManager::RegisterAsset(const str::Name& type, TArgs&&... args)
 	if constexpr (requires (TAsset a, TLoader l) { l.Unbind(a); })
 		methods.m_Unbind = &UnbindMethod<TAsset, TLoader>;
 
-	if constexpr (requires (TAsset a, TLoader l, eng::Visitor v) { l.Import(a, v); })
+	if constexpr (requires (TAsset a, TLoader l, Visitor v) { l.Import(a, v); })
 		methods.m_Import = &ImportMethod<TAsset, TLoader>;
-	if constexpr (requires (TAsset a, TLoader l, eng::Visitor v) { l.Load(a, v); })
+	if constexpr (requires (TAsset a, TLoader l, Visitor v) { l.Load(a, v); })
 		methods.m_Load = &LoadMethod<TAsset, TLoader>;
-	if constexpr (requires (TAsset a, TLoader l, eng::Visitor v) { l.Save(a, v); })
+	if constexpr (requires (TAsset a, TLoader l, Visitor v) { l.Save(a, v); })
 		methods.m_Save = &SaveMethod<TAsset, TLoader>;
 	if constexpr (requires (TAsset a, TLoader l) { l.Unload(a); })
 		methods.m_Unload = &UnloadMethod<TAsset, TLoader>;
@@ -64,7 +64,7 @@ bool eng::AssetManager::ImportFromFile(TAsset& asset, const str::Path& filepath)
 	asset.m_Name = NAME(filepath.GetFileNameNoExtension());
 	asset.m_Type = type;
 
-	eng::Visitor visitor;
+	Visitor visitor;
 	visitor.LoadFromFile(filepath);
 	if (!entry.m_Methods.m_Import || !entry.m_Methods.m_Import(asset, *entry.m_Loader, visitor))
 	{
@@ -85,7 +85,7 @@ bool eng::AssetManager::LoadFromFile(TAsset& asset, const str::Path& filepath)
 {
 	PROFILE_FUNCTION();
 
-	eng::Visitor visitor;
+	Visitor visitor;
 	if (!visitor.LoadFromFile(filepath))
 		return false;
 
@@ -120,7 +120,7 @@ bool eng::AssetManager::SaveToFile(TAsset& asset, const str::Path& filepath)
 	if (!filepath.HasExtension())
 		return false;
 
-	eng::Visitor visitor;
+	Visitor visitor;
 	visitor.Write("m_Guid", asset.m_Guid);
 	visitor.Write("m_Name", asset.m_Name);
 	visitor.Write("m_Type", asset.m_Type);
@@ -200,7 +200,7 @@ void eng::AssetManager::UnbindMethod(eng::Asset& asset, const eng::AssetLoader& 
 }
 
 template<typename TAsset, typename TLoader>
-bool eng::AssetManager::ImportMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor)
+bool eng::AssetManager::ImportMethod(eng::Asset& asset, const eng::AssetLoader& loader, Visitor& visitor)
 {
 	const TLoader& tLoader = static_cast<const TLoader&>(loader);
 	TAsset& tAsset = static_cast<TAsset&>(asset);
@@ -208,7 +208,7 @@ bool eng::AssetManager::ImportMethod(eng::Asset& asset, const eng::AssetLoader& 
 }
 
 template<typename TAsset, typename TLoader>
-bool eng::AssetManager::LoadMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor)
+bool eng::AssetManager::LoadMethod(eng::Asset& asset, const eng::AssetLoader& loader, Visitor& visitor)
 {
 	const TLoader& tLoader = static_cast<const TLoader&>(loader);
 	TAsset& tAsset = static_cast<TAsset&>(asset);
@@ -216,7 +216,7 @@ bool eng::AssetManager::LoadMethod(eng::Asset& asset, const eng::AssetLoader& lo
 }
 
 template<typename TAsset, typename TLoader>
-bool eng::AssetManager::SaveMethod(eng::Asset& asset, const eng::AssetLoader& loader, eng::Visitor& visitor)
+bool eng::AssetManager::SaveMethod(eng::Asset& asset, const eng::AssetLoader& loader, Visitor& visitor)
 {
 	const TLoader& tLoader = static_cast<const TLoader&>(loader);
 	TAsset& tAsset = static_cast<TAsset&>(asset);

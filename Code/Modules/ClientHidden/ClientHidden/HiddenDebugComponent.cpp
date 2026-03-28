@@ -1,7 +1,8 @@
 #include "ClientHiddenPCH.h"
 #include "ClientHidden/HiddenDebugComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -11,13 +12,13 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(client::hidden::DebugComponent& value) const
+void Visitor::ReadCustom(client::hidden::DebugComponent& value) const
 {
 	Read(strIsInputEnabled, value.m_IsInputEnabled, value.m_IsInputEnabled);
 	Read(strIsObjectEnabled, value.m_IsObjectEnabled, value.m_IsObjectEnabled);
 }
 template<>
-void eng::Visitor::WriteCustom(const client::hidden::DebugComponent& value)
+void Visitor::WriteCustom(const client::hidden::DebugComponent& value)
 {
 	Write(strIsInputEnabled, value.m_IsInputEnabled);
 	Write(strIsObjectEnabled, value.m_IsObjectEnabled);

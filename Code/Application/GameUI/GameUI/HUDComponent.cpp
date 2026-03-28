@@ -1,15 +1,16 @@
 #include "GameUIPCH.h"
 #include "GameUI/HUDComponent.h"
 
-#include "Engine/Visitor.h"
-#include "ImGui/Inspector.h"
+#include "Serialize/Visitor.h"
+
+#include "imgui/Inspector.h"
 
 template<>
-void eng::Visitor::ReadCustom(gui::HUDComponent& value) const
+void Visitor::ReadCustom(gui::HUDComponent& value) const
 {
 }
 template<>
-void eng::Visitor::WriteCustom(const gui::HUDComponent& value)
+void Visitor::WriteCustom(const gui::HUDComponent& value)
 {
 }
 template<>

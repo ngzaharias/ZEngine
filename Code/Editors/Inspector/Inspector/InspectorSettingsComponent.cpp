@@ -1,7 +1,8 @@
 #include "InspectorPCH.h"
 #include "Inspector/InspectorSettingsComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -11,13 +12,13 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(editor::inspector::SettingsComponent& value) const
+void Visitor::ReadCustom(editor::inspector::SettingsComponent& value) const
 {
 	Read(strOpen, value.m_Open, value.m_Open);
 	Read(strSave, value.m_Save, value.m_Save);
 }
 template<>
-void eng::Visitor::WriteCustom(const editor::inspector::SettingsComponent& value)
+void Visitor::WriteCustom(const editor::inspector::SettingsComponent& value)
 {
 	Write(strOpen, value.m_Open);
 	Write(strSave, value.m_Save);

@@ -1,7 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/AchievementTable.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace 
 {
@@ -9,7 +9,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::Achievement& value) const
+void Visitor::ReadCustom(eng::Achievement& value) const
 {
 	Read(strIdentifier, value.m_Identifier, value.m_Identifier);
 }

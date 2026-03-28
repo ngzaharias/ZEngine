@@ -2,7 +2,7 @@
 #include "GameUI/HintTable.h"
 
 #include "Core/Random.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -21,7 +21,7 @@ const gui::Hint& gui::HintTable::GetRandom() const
 }
 
 template<>
-void eng::Visitor::ReadCustom(gui::Hint& value) const
+void Visitor::ReadCustom(gui::Hint& value) const
 {
 	Read(strText, value.m_Text, value.m_Text);
 }

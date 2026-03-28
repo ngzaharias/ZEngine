@@ -1,27 +1,22 @@
 #pragma once
 
-#include "Core/EnumHelpers.h"
-#include "Core/TypeName.h"
-#include "Core/TypeTraits.h"
-#include "Core/VariantHelpers.h"
-
 //////////////////////////////////////////////////////////////////////////
 // Read
 
 template<typename Value>
-inline void eng::Visitor::Read(Value& value) const
+inline void Visitor::Read(Value& value) const
 {
 	ReadCustom<Value>(value);
 }
 
 template<typename Key, typename Value>
-inline void eng::Visitor::Read(Map<Key, Value>& values) const
+inline void Visitor::Read(Map<Key, Value>& values) const
 {
 	ReadMap(values);
 }
 
 template<typename Value>
-void eng::Visitor::Read(const str::StringView& key, Value& value, const Value& defaultValue) const
+void Visitor::Read(const str::StringView& key, Value& value, const Value& defaultValue) const
 {
 	toml::Table& parentNode = *m_Node->as_table();
 	if constexpr (core::IsSpecialization<Value, Array>::value)
@@ -97,7 +92,7 @@ void eng::Visitor::Read(const str::StringView& key, Value& value, const Value& d
 }
 
 template<typename Value>
-inline void eng::Visitor::Read(const int32 index, Value& value) const
+inline void Visitor::Read(const int32 index, Value& value) const
 {
 	toml::Array& parentNode = *m_Node->as_array();
 	if constexpr (core::IsSpecialization<Value, Array>::value)
@@ -140,7 +135,7 @@ inline void eng::Visitor::Read(const int32 index, Value& value) const
 }
 
 template<typename Value>
-void eng::Visitor::ReadArray(Array<Value>& values) const
+void Visitor::ReadArray(Array<Value>& values) const
 {
 	toml::Array& parentNode = *m_Node->as_array();
 	values.Resize(static_cast<int32>(parentNode.size()));
@@ -150,7 +145,7 @@ void eng::Visitor::ReadArray(Array<Value>& values) const
 }
 
 template<typename TEnum>
-void eng::Visitor::ReadEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue) const
+void Visitor::ReadEnum(const str::StringView& key, TEnum& value, const TEnum defaultValue) const
 {
 	toml::Table& currentNode = *m_Node->as_table();
 
@@ -165,7 +160,7 @@ void eng::Visitor::ReadEnum(const str::StringView& key, TEnum& value, const TEnu
 }
 
 template<typename TEnum>
-void eng::Visitor::ReadEnum(const int32 index, TEnum& value) const
+void Visitor::ReadEnum(const int32 index, TEnum& value) const
 {
 	toml::Array& currentNode = *m_Node->as_array();
 
@@ -180,7 +175,7 @@ void eng::Visitor::ReadEnum(const int32 index, TEnum& value) const
 }
 
 template<typename Value>
-void eng::Visitor::ReadMap(Map<str::Guid, Value>& values) const
+void Visitor::ReadMap(Map<str::Guid, Value>& values) const
 {
 	toml::Table& parentNode = *m_Node->as_table();
 	for (auto& node : parentNode)
@@ -197,7 +192,7 @@ void eng::Visitor::ReadMap(Map<str::Guid, Value>& values) const
 }
 
 template<typename Value>
-void eng::Visitor::ReadMap(Map<str::Name, Value>& values) const
+void Visitor::ReadMap(Map<str::Name, Value>& values) const
 {
 	toml::Table& parentNode = *m_Node->as_table();
 	for (auto& node : parentNode)
@@ -211,7 +206,7 @@ void eng::Visitor::ReadMap(Map<str::Name, Value>& values) const
 }
 
 template<typename Value>
-void eng::Visitor::ReadMap(Map<str::String, Value>& values) const
+void Visitor::ReadMap(Map<str::String, Value>& values) const
 {
 	toml::Table& parentNode = *m_Node->as_table();
 	for (auto& node : parentNode)
@@ -224,7 +219,7 @@ void eng::Visitor::ReadMap(Map<str::String, Value>& values) const
 }
 
 template<typename Type>
-void eng::Visitor::ReadOptional(const str::StringView& key, Optional<Type>& value, const Optional<Type>& defaultValue) const
+void Visitor::ReadOptional(const str::StringView& key, Optional<Type>& value, const Optional<Type>& defaultValue) const
 {
 	toml::Table& currentNode = *m_Node->as_table();
 	if (currentNode.contains(key))
@@ -239,7 +234,7 @@ void eng::Visitor::ReadOptional(const str::StringView& key, Optional<Type>& valu
 }
 
 template<typename Value>
-void eng::Visitor::ReadPrimitive(const str::StringView& key, Value& value, const Value defaultValue) const
+void Visitor::ReadPrimitive(const str::StringView& key, Value& value, const Value defaultValue) const
 {
 	toml::Table& currentNode = *m_Node->as_table();
 	const auto result = currentNode[key].value<Value>();
@@ -247,7 +242,7 @@ void eng::Visitor::ReadPrimitive(const str::StringView& key, Value& value, const
 }
 
 template<typename Value>
-void eng::Visitor::ReadPrimitive(const int32 index, Value& value) const
+void Visitor::ReadPrimitive(const int32 index, Value& value) const
 {
 	toml::Array& currentNode = *m_Node->as_array();
 	if (const auto result = currentNode.at(index).value<Value>())
@@ -255,7 +250,7 @@ void eng::Visitor::ReadPrimitive(const int32 index, Value& value) const
 }
 
 template<typename Value>
-void eng::Visitor::ReadSet(Set<Value>& values) const
+void Visitor::ReadSet(Set<Value>& values) const
 {
 	toml::Array& parentNode = *m_Node->as_array();
 	const int32 count = static_cast<int32>(parentNode.size());
@@ -269,14 +264,14 @@ void eng::Visitor::ReadSet(Set<Value>& values) const
 }
 
 template<typename ...Types>
-void eng::Visitor::ReadVariant(Variant<Types...>& value) const
+void Visitor::ReadVariant(Variant<Types...>& value) const
 {
 	// use a short-circuiting fold expression to assign the correct type
 	((ReadVariantElement<Types>(value)) || ...);
 }
 
 template<typename TElement, typename TVariant>
-bool eng::Visitor::ReadVariantElement(TVariant& value) const
+bool Visitor::ReadVariantElement(TVariant& value) const
 {
 	const str::StringView typeName = core::ToElementName<TElement>();
 
@@ -292,19 +287,19 @@ bool eng::Visitor::ReadVariantElement(TVariant& value) const
 // Write
 
 template<typename Value>
-inline void eng::Visitor::Write(const Value& value)
+inline void Visitor::Write(const Value& value)
 {
 	WriteCustom<Value>(value);
 }
 
 template<typename Key, typename Value>
-inline void eng::Visitor::Write(const Map<Key, Value>& values)
+inline void Visitor::Write(const Map<Key, Value>& values)
 {
 	WriteMap(values);
 }
 
 template<typename Value>
-inline void eng::Visitor::Write(const str::StringView& key, const Value& value)
+inline void Visitor::Write(const str::StringView& key, const Value& value)
 {
 	toml::Table& parentNode = *m_Node->as_table();
 	if constexpr (core::IsSpecialization<Value, Array>::value)
@@ -354,7 +349,7 @@ inline void eng::Visitor::Write(const str::StringView& key, const Value& value)
 }
 
 template<typename Value>
-inline void eng::Visitor::Write(const int32 index, const Value& value)
+inline void Visitor::Write(const int32 index, const Value& value)
 {
 	toml::Array& parentNode = *m_Node->as_array();
 	if constexpr (core::IsSpecialization<Value, Array>::value)
@@ -393,7 +388,7 @@ inline void eng::Visitor::Write(const int32 index, const Value& value)
 }
 
 template<typename Value>
-void eng::Visitor::WriteArray(const Array<Value>& values)
+void Visitor::WriteArray(const Array<Value>& values)
 {
 	toml::Array& parentNode = *m_Node->as_array();
 	parentNode.reserve(static_cast<size_t>(values.GetCount()));
@@ -403,7 +398,7 @@ void eng::Visitor::WriteArray(const Array<Value>& values)
 }
 
 template<typename TEnum>
-void eng::Visitor::WriteEnum(const str::StringView& key, const TEnum& value)
+void Visitor::WriteEnum(const str::StringView& key, const TEnum& value)
 {
 	toml::Table& currentNode = *m_Node->as_table();
 	currentNode.insert_or_assign(key, EnumToString(value)); // by string
@@ -411,7 +406,7 @@ void eng::Visitor::WriteEnum(const str::StringView& key, const TEnum& value)
 }
 
 template<typename TEnum>
-void eng::Visitor::WriteEnum(const int32 index, const TEnum& value)
+void Visitor::WriteEnum(const int32 index, const TEnum& value)
 {
 	toml::Array& currentNode = *m_Node->as_array();
 	currentNode.push_back(EnumToString(value)); // by string
@@ -419,7 +414,7 @@ void eng::Visitor::WriteEnum(const int32 index, const TEnum& value)
 }
 
 template<typename Value>
-void eng::Visitor::WriteMap(const Map<str::Guid, Value>& values)
+void Visitor::WriteMap(const Map<str::Guid, Value>& values)
 {
 	toml::Table& parentNode = *m_Node->as_table();
 	for (auto&& [guid, value] : values)
@@ -431,7 +426,7 @@ void eng::Visitor::WriteMap(const Map<str::Guid, Value>& values)
 }
 
 template<typename Value>
-void eng::Visitor::WriteMap(const Map<str::Name, Value>& values)
+void Visitor::WriteMap(const Map<str::Name, Value>& values)
 {
 	toml::Table& parentNode = *m_Node->as_table();
 	for (auto&& [key, value] : values)
@@ -440,7 +435,7 @@ void eng::Visitor::WriteMap(const Map<str::Name, Value>& values)
 }
 
 template<typename Value>
-void eng::Visitor::WriteMap(const Map<str::String, Value>& values)
+void Visitor::WriteMap(const Map<str::String, Value>& values)
 {
 	toml::Table& parentNode = *m_Node->as_table();
 	for (auto&& [key, value] : values)
@@ -449,28 +444,28 @@ void eng::Visitor::WriteMap(const Map<str::String, Value>& values)
 }
 
 template<typename Type>
-void eng::Visitor::WriteOptional(const str::StringView& key, const Optional<Type>& value)
+void Visitor::WriteOptional(const str::StringView& key, const Optional<Type>& value)
 {
 	if (value)
 		Write(key, *value);
 }
 
 template<typename Value>
-void eng::Visitor::WritePrimitive(const str::StringView& key, const Value& value)
+void Visitor::WritePrimitive(const str::StringView& key, const Value& value)
 {
 	toml::Table& currentNode = *m_Node->as_table();
 	currentNode.insert_or_assign(key, value);
 }
 
 template<typename Value>
-void eng::Visitor::WritePrimitive(const int32 index, const Value& value)
+void Visitor::WritePrimitive(const int32 index, const Value& value)
 {
 	toml::Array& currentNode = *m_Node->as_array();
 	currentNode.push_back(value);
 }
 
 template<typename Value>
-void eng::Visitor::WriteSet(const Set<Value>& values)
+void Visitor::WriteSet(const Set<Value>& values)
 {
 	int32 i = 0;
 	toml::Array& parentNode = *m_Node->as_array();
@@ -481,7 +476,7 @@ void eng::Visitor::WriteSet(const Set<Value>& values)
 }
 
 template<typename ...Types>
-void eng::Visitor::WriteVariant(const Variant<Types...>& value)
+void Visitor::WriteVariant(const Variant<Types...>& value)
 {
 	core::VariantMatch(value, [&](auto& element)
 		{

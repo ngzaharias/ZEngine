@@ -1,7 +1,8 @@
 #include "EnginePCH.h"
 #include "Engine/CameraComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -10,12 +11,12 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::CameraComponent& value) const
+void Visitor::ReadCustom(eng::CameraComponent& value) const
 {
 	Read(strProjection, value.m_Projection, value.m_Projection);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::CameraComponent& value)
+void Visitor::WriteCustom(const eng::CameraComponent& value)
 {
 	Write(strProjection, value.m_Projection);
 }

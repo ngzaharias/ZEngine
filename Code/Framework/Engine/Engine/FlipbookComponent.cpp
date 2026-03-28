@@ -3,7 +3,8 @@
 
 #include "Engine/AssetManager.h"
 #include "Engine/InspectorHelpers.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace 
@@ -17,7 +18,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::FlipbookComponent& value) const
+void Visitor::ReadCustom(eng::FlipbookComponent& value) const
 {
 	Read(strFlipbook, value.m_Flipbook, value.m_Flipbook);
 	Read(strSize, value.m_Size, value.m_Size);
@@ -27,7 +28,7 @@ void eng::Visitor::ReadCustom(eng::FlipbookComponent& value) const
 	Read(strIsPlaying, value.m_IsPlaying, value.m_IsPlaying);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::FlipbookComponent& value)
+void Visitor::WriteCustom(const eng::FlipbookComponent& value)
 {
 	Write(strFlipbook, value.m_Flipbook);
 	Write(strSize, value.m_Size);

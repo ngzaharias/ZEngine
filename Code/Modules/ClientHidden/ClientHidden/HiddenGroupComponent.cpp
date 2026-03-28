@@ -3,7 +3,8 @@
 
 #include "Engine/AssetManager.h"
 #include "Engine/InspectorHelpers.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -13,13 +14,13 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(client::hidden::GroupComponent& value) const
+void Visitor::ReadCustom(client::hidden::GroupComponent& value) const
 {
 	Read(strObjects, value.m_Objects, value.m_Objects);
 	Read(strRevealed, value.m_Revealed, value.m_Revealed);
 }
 template<>
-void eng::Visitor::WriteCustom(const client::hidden::GroupComponent& value)
+void Visitor::WriteCustom(const client::hidden::GroupComponent& value)
 {
 	Write(strObjects, value.m_Objects);
 	Write(strRevealed, value.m_Revealed);

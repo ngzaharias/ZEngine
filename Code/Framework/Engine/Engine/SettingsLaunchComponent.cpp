@@ -1,7 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/SettingsLaunchComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -9,12 +9,12 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::settings::LaunchComponent& value) const
+void Visitor::ReadCustom(eng::settings::LaunchComponent& value) const
 {
 	Read(strLevel, value.m_Level, value.m_Level);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::settings::LaunchComponent& value)
+void Visitor::WriteCustom(const eng::settings::LaunchComponent& value)
 {
 	Write(strLevel, value.m_Level);
 }

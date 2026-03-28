@@ -1,7 +1,8 @@
 #include "FlipbookEditorPCH.h"
 #include "FlipbookEditor/FlipbookEditorSettingsComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -12,14 +13,14 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(editor::flipbook::SettingsComponent& value) const
+void Visitor::ReadCustom(editor::flipbook::SettingsComponent& value) const
 {
 	Read(strExtract, value.m_Extract, value.m_Extract);
 	Read(strOpen, value.m_Open, value.m_Open);
 	Read(strSave, value.m_Save, value.m_Save);
 }
 template<>
-void eng::Visitor::WriteCustom(const editor::flipbook::SettingsComponent& value)
+void Visitor::WriteCustom(const editor::flipbook::SettingsComponent& value)
 {
 	Write(strExtract, value.m_Extract);
 	Write(strOpen, value.m_Open);

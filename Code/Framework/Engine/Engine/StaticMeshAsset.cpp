@@ -4,7 +4,7 @@
 #include "Core/Algorithms.h"
 #include "Core/Thread.h"
 #include "Engine/AssetManager.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 #include <assimp/BaseImporter.h>
 #include <assimp/Importer.hpp>
@@ -65,7 +65,7 @@ bool eng::StaticMeshAssetLoader::Unbind(eng::StaticMeshAsset& asset) const
 	return true;
 }
 
-bool eng::StaticMeshAssetLoader::Load(eng::StaticMeshAsset& asset, eng::Visitor& visitor) const
+bool eng::StaticMeshAssetLoader::Load(eng::StaticMeshAsset& asset, Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 

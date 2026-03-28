@@ -1,15 +1,16 @@
 #include "TabletopPCH.h"
 #include "Tabletop/TabletopDeckComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 template<>
-void eng::Visitor::ReadCustom(tabletop::DeckComponent& value) const
+void Visitor::ReadCustom(tabletop::DeckComponent& value) const
 {
 }
 template<>
-void eng::Visitor::WriteCustom(const tabletop::DeckComponent& value)
+void Visitor::WriteCustom(const tabletop::DeckComponent& value)
 {
 }
 template<>

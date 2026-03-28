@@ -1,7 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/SettingsWindowComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -12,7 +12,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::settings::WindowComponent& value) const
+void Visitor::ReadCustom(eng::settings::WindowComponent& value) const
 {
 	Read(strWindowMode, value.m_WindowMode, value.m_WindowMode);
 	Read(strResolution, value.m_Resolution, value.m_Resolution);
@@ -20,7 +20,7 @@ void eng::Visitor::ReadCustom(eng::settings::WindowComponent& value) const
 	Read(strMonitor, value.m_Monitor, value.m_Monitor);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::settings::WindowComponent& value)
+void Visitor::WriteCustom(const eng::settings::WindowComponent& value)
 {
 	Write(strWindowMode, value.m_WindowMode);
 	Write(strResolution, value.m_Resolution);

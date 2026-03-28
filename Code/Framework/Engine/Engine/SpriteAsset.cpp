@@ -4,7 +4,7 @@
 #include "Engine/AssetManager.h"
 #include "Engine/ShaderAsset.h"
 #include "Engine/Texture2DAsset.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -32,7 +32,7 @@ void eng::SpriteAssetLoader::Unbind(eng::SpriteAsset& asset) const
 	m_AssetManager->ReleaseAsset(asset.m_Texture2D);
 }
 
-bool eng::SpriteAssetLoader::Load(eng::SpriteAsset& asset, eng::Visitor& visitor) const
+bool eng::SpriteAssetLoader::Load(eng::SpriteAsset& asset, Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 	visitor.Read(strPosition, asset.m_Position, asset.m_Position);
@@ -42,7 +42,7 @@ bool eng::SpriteAssetLoader::Load(eng::SpriteAsset& asset, eng::Visitor& visitor
 	return true;
 }
 
-bool eng::SpriteAssetLoader::Save(eng::SpriteAsset& asset, eng::Visitor& visitor) const
+bool eng::SpriteAssetLoader::Save(eng::SpriteAsset& asset, Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 	visitor.Write(strPosition, asset.m_Position);

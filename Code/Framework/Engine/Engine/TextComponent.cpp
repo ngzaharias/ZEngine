@@ -2,7 +2,8 @@
 #include "Engine/TextComponent.h"
 
 #include "Engine/InspectorHelpers.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace 
@@ -12,13 +13,13 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::TextComponent& value) const
+void Visitor::ReadCustom(eng::TextComponent& value) const
 {
 	Read(strText, value.m_Text, value.m_Text);
 	Read(strFont, value.m_Font, value.m_Font);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::TextComponent& value)
+void Visitor::WriteCustom(const eng::TextComponent& value)
 {
 	Write(strText, value.m_Text);
 	Write(strFont, value.m_Font);

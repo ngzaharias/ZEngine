@@ -1,7 +1,8 @@
 #include "EnginePCH.h"
 #include "Engine/SettingsDebugComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -12,7 +13,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::settings::DebugComponent& value) const
+void Visitor::ReadCustom(eng::settings::DebugComponent& value) const
 {
 	Read(strAreLinesEnabled, value.m_AreLinesEnabled, value.m_AreLinesEnabled);
 	Read(strArePhysicsEnabled, value.m_ArePhysicsEnabled, value.m_ArePhysicsEnabled);
@@ -20,7 +21,7 @@ void eng::Visitor::ReadCustom(eng::settings::DebugComponent& value) const
 	// Read(strIsEditorModeEnabled, value.m_IsEditorModeEnabled, value.m_IsEditorModeEnabled);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::settings::DebugComponent& value)
+void Visitor::WriteCustom(const eng::settings::DebugComponent& value)
 {
 	Write(strAreLinesEnabled, value.m_AreLinesEnabled);
 	Write(strArePhysicsEnabled, value.m_ArePhysicsEnabled);

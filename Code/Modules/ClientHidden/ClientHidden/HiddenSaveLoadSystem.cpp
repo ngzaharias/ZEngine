@@ -11,7 +11,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/PrototypeComponent.h"
 #include "Engine/SavegameComponent.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -25,7 +25,7 @@ void client::hidden::SaveLoadSystem::Update(World& world, const GameTime& gameTi
 
 	if (world.HasAny<ecs::query::Updated<const client::hidden::GroupComponent>>())
 	{
-		eng::Visitor visitor;
+		Visitor visitor;
 		for (auto&& view : world.Query<ecs::query::Include<const client::hidden::GroupComponent>>())
 		{
 			const auto& component = view.ReadRequired<client::hidden::GroupComponent>();
@@ -44,7 +44,7 @@ void client::hidden::SaveLoadSystem::Update(World& world, const GameTime& gameTi
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
-		eng::Visitor visitor;
+		Visitor visitor;
 		visitor.LoadFromFile(filepath);
 
 		Array<str::Guid> revealed;

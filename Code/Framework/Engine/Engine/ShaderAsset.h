@@ -7,10 +7,7 @@
 #include "Engine/Asset.h"
 #include "Engine/AssetLoader.h"
 
-namespace eng
-{
-	class Visitor;
-}
+class Visitor;
 
 namespace eng
 {
@@ -75,6 +72,6 @@ namespace eng
 		bool Bind(eng::ShaderAsset& asset) const;
 		bool Unbind(eng::ShaderAsset& asset) const;
 
-		bool Load(eng::ShaderAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::ShaderAsset& asset, Visitor& visitor) const;
 	};
 }

@@ -3,7 +3,7 @@
 
 #include "Engine/AssetManager.h"
 #include "Engine/InspectorHelpers.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 #include "imgui/Inspector.h"
 
@@ -14,13 +14,13 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(hexmap::RootComponent& value) const
+void Visitor::ReadCustom(hexmap::RootComponent& value) const
 {
 	Read(strHexRadius, value.m_HexRadius, value.m_HexRadius);
 	Read(strHexCount, value.m_HexCount, value.m_HexCount);
 }
 template<>
-void eng::Visitor::WriteCustom(const hexmap::RootComponent& value)
+void Visitor::WriteCustom(const hexmap::RootComponent& value)
 {
 	Write(strHexRadius, value.m_HexRadius);
 	Write(strHexCount, value.m_HexCount);

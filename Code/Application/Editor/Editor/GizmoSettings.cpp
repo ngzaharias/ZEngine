@@ -1,7 +1,8 @@
 #include "EditorPCH.h"
 #include "Editor/GizmoSettings.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -20,7 +21,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(editor::settings::Gizmos& value) const
+void Visitor::ReadCustom(editor::settings::Gizmos& value) const
 {
 	Read(strIsEnabled, value.m_IsEnabled, value.m_IsEnabled);
 	Read(strCoordAxes, value.m_CoordAxes, value.m_CoordAxes);
@@ -29,7 +30,7 @@ void eng::Visitor::ReadCustom(editor::settings::Gizmos& value) const
 	Read(strTransform, value.m_Transform, value.m_Transform);
 }
 template<>
-void eng::Visitor::WriteCustom(const editor::settings::Gizmos& value)
+void Visitor::WriteCustom(const editor::settings::Gizmos& value)
 {
 	Write(strIsEnabled, value.m_IsEnabled);
 	Write(strCoordAxes, value.m_CoordAxes);
@@ -50,7 +51,7 @@ bool imgui::Inspector::WriteCustom(editor::settings::Gizmos& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(editor::settings::Gizmos::CoordAxes& value) const
+void Visitor::ReadCustom(editor::settings::Gizmos::CoordAxes& value) const
 {
 	Read(strIsEnabled, value.m_IsEnabled, value.m_IsEnabled);
 	Read(strShowX, value.m_ShowX, value.m_ShowX);
@@ -58,7 +59,7 @@ void eng::Visitor::ReadCustom(editor::settings::Gizmos::CoordAxes& value) const
 	Read(strShowZ, value.m_ShowZ, value.m_ShowZ);
 }
 template<>
-void eng::Visitor::WriteCustom(const editor::settings::Gizmos::CoordAxes& value)
+void Visitor::WriteCustom(const editor::settings::Gizmos::CoordAxes& value)
 {
 	Write(strIsEnabled, value.m_IsEnabled);
 	Write(strShowX, value.m_ShowX);
@@ -77,12 +78,12 @@ bool imgui::Inspector::WriteCustom(editor::settings::Gizmos::CoordAxes& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(editor::settings::Gizmos::Crosshair& value) const
+void Visitor::ReadCustom(editor::settings::Gizmos::Crosshair& value) const
 {
 	Read(strIsEnabled, value.m_IsEnabled, value.m_IsEnabled);
 }
 template<>
-void eng::Visitor::WriteCustom(const editor::settings::Gizmos::Crosshair& value)
+void Visitor::WriteCustom(const editor::settings::Gizmos::Crosshair& value)
 {
 	Write(strIsEnabled, value.m_IsEnabled);
 }
@@ -95,7 +96,7 @@ bool imgui::Inspector::WriteCustom(editor::settings::Gizmos::Crosshair& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(editor::settings::Gizmos::FloorGrid& value) const
+void Visitor::ReadCustom(editor::settings::Gizmos::FloorGrid& value) const
 {
 	Read(strIsEnabled, value.m_IsEnabled, value.m_IsEnabled);
 	Read(strMajorScale, value.m_MajorScale, value.m_MajorScale);
@@ -103,7 +104,7 @@ void eng::Visitor::ReadCustom(editor::settings::Gizmos::FloorGrid& value) const
 	Read(strMajorColour, value.m_MajorColour, value.m_MajorColour);
 }
 template<>
-void eng::Visitor::WriteCustom(const editor::settings::Gizmos::FloorGrid& value)
+void Visitor::WriteCustom(const editor::settings::Gizmos::FloorGrid& value)
 {
 	Write(strIsEnabled, value.m_IsEnabled);
 	Write(strMajorScale, value.m_MajorScale);
@@ -122,12 +123,12 @@ bool imgui::Inspector::WriteCustom(editor::settings::Gizmos::FloorGrid& value)
 }
 
 template<>
-void eng::Visitor::ReadCustom(editor::settings::Gizmos::Transform& value) const
+void Visitor::ReadCustom(editor::settings::Gizmos::Transform& value) const
 {
 	Read(strIsEnabled, value.m_IsEnabled, value.m_IsEnabled);
 }
 template<>
-void eng::Visitor::WriteCustom(const editor::settings::Gizmos::Transform& value)
+void Visitor::WriteCustom(const editor::settings::Gizmos::Transform& value)
 {
 	Write(strIsEnabled, value.m_IsEnabled);
 }

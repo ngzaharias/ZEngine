@@ -5,10 +5,7 @@
 #include "Engine/AssetLoader.h"
 #include "Math/Vector.h"
 
-namespace eng
-{
-	class Visitor;
-}
+class Visitor;
 
 namespace eng
 {
@@ -26,7 +23,7 @@ namespace eng
 		void Bind(eng::SpriteAsset& asset) const;
 		void Unbind(eng::SpriteAsset& asset) const;
 
-		bool Load(eng::SpriteAsset& asset, eng::Visitor& visitor) const;
-		bool Save(eng::SpriteAsset& asset, eng::Visitor& visitor) const;
+		bool Load(eng::SpriteAsset& asset, Visitor& visitor) const;
+		bool Save(eng::SpriteAsset& asset, Visitor& visitor) const;
 	};
 }

@@ -21,12 +21,12 @@
 #include "Engine/StaticMeshComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
-#include "Engine/Visitor.h"
 #include "GameState/GameStateEditorComponent.h"
 #include "Icons/Icons.h"
 #include "Outliner/OutlinerOpenWindowEvent.h"
 #include "Outliner/OutlinerSelectComponent.h"
 #include "Outliner/OutlinerWindowComponent.h"
+#include "Serialize/Visitor.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"

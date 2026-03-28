@@ -4,9 +4,9 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/Visitor.h"
 #include "FlipbookEditor/FlipbookEditorSettingsComponent.h"
 #include "GameState/GameStateEditorComponent.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -19,7 +19,7 @@ void editor::flipbook::SettingsSystem::Initialise(World& world)
 
 	const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
-	eng::Visitor visitor;
+	Visitor visitor;
 	visitor.LoadFromFile(filepath);
 	visitor.Read(world.WriteComponent<editor::flipbook::SettingsComponent>());
 }
@@ -35,7 +35,7 @@ void editor::flipbook::SettingsSystem::Update(World& world, const GameTime& game
 	{
 		const str::Path filepath = str::Path(str::EPath::AppData, strFilename);
 
-		eng::Visitor visitor;
+		Visitor visitor;
 		visitor.Write(world.ReadComponent<editor::flipbook::SettingsComponent>());
 		visitor.SaveToFile(filepath);
 	}

@@ -7,7 +7,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/LevelLoadEvent.h"
 #include "Engine/SettingsLaunchComponent.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace
 {
@@ -21,7 +21,7 @@ void eng::settings::LaunchSystem::Initialise(World& world)
 	const str::Path filepath = str::Path(str::EPath::Levels, strFilename);
 	auto& settings = world.WriteComponent<eng::settings::LaunchComponent>();
 
-	eng::Visitor visitor;
+	Visitor visitor;
 	visitor.LoadFromFile(filepath);
 	visitor.Read(settings);
 

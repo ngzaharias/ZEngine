@@ -1,7 +1,8 @@
 #include "SpriteEditorPCH.h"
 #include "SpriteEditor/SpriteEditorSettingsComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -12,14 +13,14 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(editor::sprite::SettingsComponent& value) const
+void Visitor::ReadCustom(editor::sprite::SettingsComponent& value) const
 {
 	Read(strExtract, value.m_Extract, value.m_Extract);
 	Read(strOpen, value.m_Open, value.m_Open);
 	Read(strSave, value.m_Save, value.m_Save);
 }
 template<>
-void eng::Visitor::WriteCustom(const editor::sprite::SettingsComponent& value)
+void Visitor::WriteCustom(const editor::sprite::SettingsComponent& value)
 {
 	Write(strExtract, value.m_Extract);
 	Write(strOpen, value.m_Open);

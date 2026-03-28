@@ -4,7 +4,7 @@
 #include "Engine/FileHelpers.h"
 #include "Engine/TableHeadmaster.h"
 #include "Engine/TableManager.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace eng
 {
@@ -41,7 +41,7 @@ namespace eng
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::MyObject& value) const
+void Visitor::ReadCustom(eng::MyObject& value) const
 {
 	Read("m_Int32", value.m_Int32, 0);
 }

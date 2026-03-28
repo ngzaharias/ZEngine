@@ -1,7 +1,8 @@
 #include "EnginePCH.h"
 #include "Engine/LightDirectionalComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace 
@@ -10,12 +11,12 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::light::DirectionalComponent& value) const
+void Visitor::ReadCustom(eng::light::DirectionalComponent& value) const
 {
 	Read(strColour, value.m_Colour, value.m_Colour);
 }
 template<>
-void eng::Visitor::WriteCustom(const eng::light::DirectionalComponent& value)
+void Visitor::WriteCustom(const eng::light::DirectionalComponent& value)
 {
 	Write(strColour, value.m_Colour);
 }

@@ -4,7 +4,7 @@
 #include "Core/Thread.h"
 #include "Engine/AssetManager.h"
 #include "Engine/FileHelpers.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -77,7 +77,7 @@ bool eng::Texture2DAssetLoader::Import(eng::Texture2DAsset& asset, const str::Pa
 	return LoadImage(asset, filepath);
 }
 
-bool eng::Texture2DAssetLoader::Load(eng::Texture2DAsset& asset, eng::Visitor& visitor) const
+bool eng::Texture2DAssetLoader::Load(eng::Texture2DAsset& asset, Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 
@@ -93,7 +93,7 @@ bool eng::Texture2DAssetLoader::Load(eng::Texture2DAsset& asset, eng::Visitor& v
 	return LoadImage(asset, filepath);
 }
 
-bool eng::Texture2DAssetLoader::Save(eng::Texture2DAsset& asset, eng::Visitor& visitor) const
+bool eng::Texture2DAssetLoader::Save(eng::Texture2DAsset& asset, Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 	visitor.Write(strSourceFile, asset.m_SourceFile);

@@ -1,7 +1,8 @@
 #include "TextureEditorPCH.h"
 #include "TextureEditor/TextureEditorSettingsComponent.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -12,14 +13,14 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(editor::texture::SettingsComponent& value) const
+void Visitor::ReadCustom(editor::texture::SettingsComponent& value) const
 {
 	Read(strExtract, value.m_Import, value.m_Import);
 	Read(strOpen, value.m_Open, value.m_Open);
 	Read(strSave, value.m_Save, value.m_Save);
 }
 template<>
-void eng::Visitor::WriteCustom(const editor::texture::SettingsComponent& value)
+void Visitor::WriteCustom(const editor::texture::SettingsComponent& value)
 {
 	Write(strExtract, value.m_Import);
 	Write(strOpen, value.m_Open);

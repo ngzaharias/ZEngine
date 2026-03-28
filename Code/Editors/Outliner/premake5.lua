@@ -26,5 +26,6 @@ project "Outliner"
 		"%{wks.location}/../Code/Framework/ImGui/",
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
+		"%{wks.location}/../Code/Framework/Serialize/",
 		"%{wks.location}/../Code/Modules/GameState/",
 	}

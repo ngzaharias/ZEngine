@@ -2,7 +2,8 @@
 #include "Voxel/VoxelChunkComponent.h"
 
 #include "Core/EnumHelpers.h"
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
+
 #include "imgui/Inspector.h"
 
 namespace
@@ -11,7 +12,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(voxel::ChunkComponent& value) const
+void Visitor::ReadCustom(voxel::ChunkComponent& value) const
 {
 	Array<int32> data;
 	Read(strData, data, {});
@@ -22,7 +23,7 @@ void eng::Visitor::ReadCustom(voxel::ChunkComponent& value) const
 	}
 }
 template<>
-void eng::Visitor::WriteCustom(const voxel::ChunkComponent& value)
+void Visitor::WriteCustom(const voxel::ChunkComponent& value)
 {
 	Array<int32> data;
 	for (const voxel::Block block : value.m_Data)

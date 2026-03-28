@@ -1,7 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/ColourTable.h"
 
-#include "Engine/Visitor.h"
+#include "Serialize/Visitor.h"
 
 namespace 
 {
@@ -12,7 +12,7 @@ namespace
 }
 
 template<>
-void eng::Visitor::ReadCustom(eng::ColourObject& value) const
+void Visitor::ReadCustom(eng::ColourObject& value) const
 {
 	Read(strName, value.m_Name, value.m_Name);
 	Read(strColour, value.m_Colour, value.m_Colour);
