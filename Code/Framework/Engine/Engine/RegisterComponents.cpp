@@ -15,8 +15,8 @@
 #include "Engine/LevelDirectoryComponent.h"
 #include "Engine/LevelEntityComponent.h"
 #include "Engine/LevelLoadedComponent.h"
-#include "Engine/LevelLoadingComponent.h"
 #include "Engine/LevelLoadEvent.h"
+#include "Engine/LevelLoadingComponent.h"
 #include "Engine/LightAmbientComponent.h"
 #include "Engine/LightDirectionalComponent.h"
 #include "Engine/LightPointComponent.h"
@@ -44,8 +44,11 @@
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshComponent.h"
 #include "Engine/TablesReloadedEvent.h"
+#include "Engine/TemplateComponent.h"
+#include "Engine/TemplateMapComponent.h"
 #include "Engine/TextComponent.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/TransformTemplate.h"
 #include "Engine/UserComponent.h"
 #include "Engine/UserMapComponent.h"
 #include "Engine/VersionComponent.h"
@@ -65,30 +68,28 @@ void Visitor::WriteCustom(const ecs::ReplicationComponent& value)
 void eng::RegisterClientComponents(ecs::EntityWorld& entityWorld)
 {
 	entityWorld.RegisterComponent<eng::DynamicMeshComponent>();
+	entityWorld.RegisterComponent<eng::FrameBufferComponent>();
 	entityWorld.RegisterComponent<eng::light::AmbientComponent>();
 	entityWorld.RegisterComponent<eng::light::DirectionalComponent>();
 	entityWorld.RegisterComponent<eng::light::PointComponent>();
-	entityWorld.RegisterComponent<eng::SavegameComponent>();
-	entityWorld.RegisterComponent<eng::sound::ObjectComponent>();
-	entityWorld.RegisterComponent<eng::sound::RandomComponent>();
-	entityWorld.RegisterComponent<eng::sound::RandomRequestComponent>();
-	entityWorld.RegisterComponent<eng::sound::SequenceComponent>();
-	entityWorld.RegisterComponent<eng::sound::SequenceRequestComponent>();
-	entityWorld.RegisterComponent<eng::sound::SingleRequestComponent>();
-	entityWorld.RegisterComponent<eng::VisibilityComponent>();
-
-	entityWorld.RegisterEvent<eng::application::CloseEvent>();
-	entityWorld.RegisterEvent<eng::TablesReloadedEvent>();
-
-	entityWorld.RegisterComponent<eng::FrameBufferComponent>();
 	entityWorld.RegisterComponent<eng::LinesComponent>();
 	entityWorld.RegisterComponent<eng::MusicComponent>();
+	entityWorld.RegisterComponent<eng::SavegameComponent>();
 	entityWorld.RegisterComponent<eng::settings::AudioComponent>();
 	entityWorld.RegisterComponent<eng::settings::DebugComponent>();
 	entityWorld.RegisterComponent<eng::settings::GameplayComponent>();
 	entityWorld.RegisterComponent<eng::settings::WindowComponent>();
+	entityWorld.RegisterComponent<eng::sound::ObjectComponent>();
 	entityWorld.RegisterComponent<eng::sound::RandomBufferComponent>();
+	entityWorld.RegisterComponent<eng::sound::RandomComponent>();
+	entityWorld.RegisterComponent<eng::sound::RandomRequestComponent>();
 	entityWorld.RegisterComponent<eng::sound::SequenceBufferComponent>();
+	entityWorld.RegisterComponent<eng::sound::SequenceComponent>();
+	entityWorld.RegisterComponent<eng::sound::SequenceRequestComponent>();
+	entityWorld.RegisterComponent<eng::sound::SingleRequestComponent>();
+	entityWorld.RegisterComponent<eng::VisibilityComponent>();
+	entityWorld.RegisterEvent<eng::application::CloseEvent>();
+	entityWorld.RegisterEvent<eng::TablesReloadedEvent>();
 }
 
 void eng::RegisterServerComponents(ecs::EntityWorld& entityWorld)
@@ -115,8 +116,11 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& entityWorld)
 		entityWorld.RegisterComponent<eng::RigidStaticComponent>();
 		entityWorld.RegisterComponent<eng::SpriteComponent>();
 		entityWorld.RegisterComponent<eng::StaticMeshComponent>();
+		entityWorld.RegisterComponent<eng::TemplateComponent>();
+		entityWorld.RegisterComponent<eng::TemplateMapComponent>();
 		entityWorld.RegisterComponent<eng::TextComponent>();
 		entityWorld.RegisterComponent<eng::TransformComponent>();
+		entityWorld.RegisterComponent<eng::TransformTemplate>();
 		entityWorld.RegisterComponent<net::UserComponent>();
 	}
 

@@ -8,11 +8,12 @@
 #include "Engine/LevelLoadSystem.h"
 #include "Engine/MusicSystem.h"
 #include "Engine/PhysicsSystem.h"
-#include "Engine/SoundPlaySystem.h"
 #include "Engine/SettingsLaunchSystem.h"
+#include "Engine/SoundPlaySystem.h"
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SoundRandomSystem.h"
 #include "Engine/SoundSequenceSystem.h"
+#include "Engine/TemplateSystem.h"
 #include "Engine/VersionSystem.h"
 #include "Engine/WindowSystem.h"
 
@@ -37,4 +38,5 @@ void eng::RegisterSharedSystems(ecs::EntityWorld& world)
 	world.RegisterSystem<eng::level::LoadSystem>(world);
 	world.RegisterSystem<eng::PhysicsSystem>();
 	world.RegisterSystem<eng::settings::LaunchSystem>();
+	world.RegisterSystem<eng::TemplateSystem>();
 }

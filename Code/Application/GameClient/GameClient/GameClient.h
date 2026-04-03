@@ -21,6 +21,7 @@ namespace eng
 	class PlatformManager;
 	class PrototypeManager;
 	class TableHeadmaster;
+	class TemplateManager;
 	class WindowManager;
 }
 
@@ -35,6 +36,7 @@ namespace client
 		eng::PlatformManager& m_PlatformManager;
 		eng::PrototypeManager& m_PrototypeManager;
 		eng::TableHeadmaster& m_TableHeadmaster;
+		eng::TemplateManager& m_TemplateManager;
 		eng::WindowManager& m_WindowManager;
 	};
 

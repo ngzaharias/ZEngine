@@ -27,6 +27,7 @@ namespace ecs
 
 		bool m_IsPrototype = false;
 		bool m_IsReplicated = false;
+		bool m_IsTemplate = false;
 
 		using HasSolo = bool(ecs::EntityStorage&, const ecs::Entity&);
 		HasSolo* m_HasSolo = nullptr;

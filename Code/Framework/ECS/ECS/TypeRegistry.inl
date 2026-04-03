@@ -9,6 +9,7 @@ void ecs::TypeRegistry::RegisterComponent()
 
 	constexpr bool isPrototype = std::derived_from<TComponent, ecs::IsPrototype>;
 	constexpr bool isReplicated = std::derived_from<TComponent, ecs::IsReplicated>;
+	constexpr bool isTemplate = std::derived_from<TComponent, ecs::TemplateComponent>;
 
 	const TypeId globalId = ToTypeId<TComponent>();
 	const TypeId localId = ToTypeId<TComponent, ecs::ComponentTag>();
@@ -29,6 +30,7 @@ void ecs::TypeRegistry::RegisterComponent()
 
 	entry.m_IsPrototype = isPrototype;
 	entry.m_IsReplicated = isReplicated;
+	entry.m_IsTemplate = isTemplate;
 
 	entry.m_HasSolo = &HasComponentSolo<TComponent>;
 	entry.m_AddSolo = &AddComponentSolo<TComponent>;

@@ -29,11 +29,13 @@
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/StaticMeshComponent.h"
+#include "Engine/TemplateManager.h"
 #include "Engine/TextComponent.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/ThemeTable.h"
 #include "Engine/TrajectoryAsset.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/TransformTemplate.h"
 #include "Engine/VisibilityComponent.h"
 #include "Engine/Window.h"
 
@@ -163,6 +165,8 @@ void eng::Application::Register()
 		m_PrototypeManager.RegisterComponent<eng::TextComponent>();
 		m_PrototypeManager.RegisterComponent<eng::TransformComponent>();
 		m_PrototypeManager.RegisterComponent<eng::VisibilityComponent>();
+
+		m_TemplateManager.RegisterComponent<eng::TransformTemplate>();
 	}
 
 	// tables

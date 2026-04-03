@@ -17,6 +17,9 @@ namespace ecs
 	/// is present for the entire lifetime of the world.
 	struct StaticComponent : public ecs::Component { };
 
+	/// \brief 
+	struct TemplateComponent : public ecs::Component { };
+
 	template<typename TComponent>
 	concept IsComponent = std::derived_from<TComponent, ecs::Component>;
 	template<typename TComponent>
@@ -25,6 +28,8 @@ namespace ecs
 	concept IsSoloComponent = std::derived_from<TComponent, ecs::SoloComponent>;
 	template<typename TComponent>
 	concept IsStaticComponent = std::derived_from<TComponent, ecs::StaticComponent>;
+	template<typename TComponent>
+	concept IsTemplateComponent = std::derived_from<TComponent, ecs::TemplateComponent>;
 
 	template<typename TComponent>
 	concept IsSoloOrStaticComponent =
