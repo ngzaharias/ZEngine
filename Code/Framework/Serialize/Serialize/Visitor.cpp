@@ -133,6 +133,12 @@ bool Visitor::LoadFromFile(const str::Path& filepath)
 	return true;
 }
 
+bool Visitor::Has(const str::StringView& key) const
+{
+	toml::Table& currentNode = *m_Node->as_table();
+	return currentNode.contains(key);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Read - Visit by Key
 
