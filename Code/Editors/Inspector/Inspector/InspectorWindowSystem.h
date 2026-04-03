@@ -26,6 +26,7 @@ namespace eng
 {
 	class AssetManager;
 	class InputManager;
+	class TemplateManager;
 	struct CameraComponent;
 	struct PhysicsComponent;
 	struct PrototypeComponent;
@@ -55,7 +56,8 @@ namespace editor::inspector
 			editor::inspector::SettingsComponent,
 			editor::inspector::WindowComponent,
 			editor::outliner::SelectComponent,
-			eng::InputManager>
+			eng::InputManager,
+			eng::TemplateManager>
 			::Read<
 			editor::inspector::OpenWindowEvent,
 			eng::AssetManager,

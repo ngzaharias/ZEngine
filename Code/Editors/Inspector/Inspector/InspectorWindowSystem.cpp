@@ -13,11 +13,17 @@
 #include "Engine/InspectorHelpers.h"
 #include "Engine/LevelEntityComponent.h"
 #include "Engine/PhysicsComponent.h"
-#include "Engine/PrototypeManager.h"
 #include "Engine/SpriteComponent.h"
+#include "Engine/TemplateHelpers.h"
+#include "Engine/TemplateManager.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "GameState/GameStateEditorComponent.h"
+#include "Inspector/InspectorHistoryCreateEvent.h"
+#include "Inspector/InspectorHistoryDestroyEvent.h"
+#include "Inspector/InspectorHistoryRedoEvent.h"
+#include "Inspector/InspectorHistoryUndoEvent.h"
+#include "Inspector/InspectorHistoryUpdateEvent.h"
 #include "Inspector/InspectorOpenWindowEvent.h"
 #include "Inspector/InspectorSaveComponent.h"
 #include "Inspector/InspectorSettingsComponent.h"
@@ -55,7 +61,7 @@ namespace
 		const auto& registry = world.ReadResource<ecs::TypeRegistry>();
 		for (auto&& [localId, componentInfo] : registry.GetComponentMap())
 		{
-			if (!componentInfo.m_IsPrototype)
+			if (!componentInfo.m_IsTemplate)
 				continue;
 
 			const ecs::TypeInfo& typeInfo = registry.GetTypeInfo(componentInfo.m_GlobalId);
@@ -72,7 +78,49 @@ namespace
 				{
 					registry.RemoveComponent(storage, localId, entity);
 				}
+
+				str::String data;
+				const auto& manager = world.ReadResource<eng::TemplateManager>();
+				manager.ReadEntity(world, entity, data);
+
+				auto& event = world.AddEvent<editor::inspector::HistoryUpdateEvent>();
+				event.m_Entity = entity;
+				event.m_Data = std::move(data);
 			}
+		}
+	}
+
+	void Draw_MenuBar(ecs::EntityWorld& world, const WindowView& view)
+	{
+		const auto& select = world.ReadComponent<editor::outliner::SelectComponent>();
+		const auto& window = view.ReadRequired<editor::inspector::WindowComponent>();
+
+		const ecs::Entity selected = select.m_Entity;
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::MenuItem("Create"))
+			{
+				const ecs::Entity entity = world.CreateEntity();
+				world.AddComponent<ecs::NameComponent>(entity, "Entity_");
+				world.AddComponent<eng::TemplateComponent>(entity, str::Guid::Generate());
+
+				auto& event = world.AddEvent<editor::inspector::HistoryCreateEvent>();
+				event.m_Entity = entity;
+			}
+
+			if (ImGui::BeginMenu("Components"))
+			{
+				if (world.IsAlive(selected))
+					SelectComponent(world, selected);
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::MenuItem("Undo"))
+				world.AddEvent<editor::inspector::HistoryUndoEvent>();
+			if (ImGui::MenuItem("Redo"))
+				world.AddEvent<editor::inspector::HistoryRedoEvent>();
+
+			ImGui::EndMenuBar();
 		}
 	}
 
@@ -84,22 +132,20 @@ namespace
 		const ecs::Entity selected = select.m_Entity;
 		if (world.IsAlive(selected))
 		{
-			if (ImGui::BeginMenuBar())
-			{
-				if (ImGui::BeginMenu("Components"))
-				{
-					SelectComponent(world, selected);
-					ImGui::EndMenu();
-				}
-				ImGui::EndMenuBar();
-			}
-
 			imgui::Inspector inspector;
 			inspector.AddPayload(world.ReadResource<eng::AssetManager>());
 			if (inspector.Begin("##table"))
 			{
-				auto& manager = world.WriteResource<eng::PrototypeManager>();
-				manager.InspectEntity(world, selected, inspector);
+				const auto& manager = world.ReadResource<eng::TemplateManager>();
+				if (manager.InspectEntity(world, selected, inspector))
+				{
+					str::String data;
+					manager.ReadEntity(world, selected, data);
+
+					auto& event = world.AddEvent<editor::inspector::HistoryUpdateEvent>();
+					event.m_Entity = selected;
+					event.m_Data = std::move(data);
+				}
 				inspector.End();
 			}
 		}
@@ -121,9 +167,9 @@ namespace
 			const auto& settings = world.ReadComponent<editor::inspector::SettingsComponent>();
 
 			const ecs::Entity selected = select.m_Entity;
-			if (world.HasComponent<eng::PrototypeComponent>(selected))
+			if (world.HasComponent<eng::TemplateComponent>(selected))
 			{
-				const auto& prototype = world.ReadComponent<eng::PrototypeComponent>(selected);
+				const auto& prototype = world.ReadComponent<eng::TemplateComponent>(selected);
 				const auto& name = world.ReadComponent<ecs::NameComponent>(selected);
 
 				str::Path filepath = prototype.m_Path;
@@ -131,19 +177,19 @@ namespace
 				{
 					eng::SaveFileSettings saveFile;
 					saveFile.m_Title = "Save Entity";
-					saveFile.m_Filters = { "Prototypes (*.prototype)", "*.prototype" };
-					saveFile.m_Path = str::Path(settings.m_Save, name.m_Name, eng::PrototypeManager::s_Extension);
+					saveFile.m_Filters = { "Templates (*.template)", "*.template" };
+					saveFile.m_Path = str::Path(settings.m_Save, name.m_Name, eng::TemplateManager::s_Extension);
 					filepath = eng::SaveFileDialog(saveFile);
 				}
 
-				if (!filepath.IsEmpty())
-				{
-					auto& settings = world.WriteComponent<editor::inspector::SettingsComponent>();
-					settings.m_Save = filepath.GetDirectory();
+				//if (!filepath.IsEmpty())
+				//{
+				//	auto& settings = world.WriteComponent<editor::inspector::SettingsComponent>();
+				//	settings.m_Save = filepath.GetDirectory();
 
-					auto& manager = world.WriteResource<eng::PrototypeManager>();
-					manager.SaveEntity(world, selected, filepath);
-				}
+				//	auto& manager = world.WriteResource<eng::TemplateManager>();
+				//	manager.ReadEntity(world, selected, filepath);
+				//}
 			}
 		}
 	}
@@ -211,6 +257,7 @@ void editor::inspector::WindowSystem::Update(World& world, const GameTime& gameT
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(window.m_Label.c_str(), &isOpen, s_WindowFlags))
 		{
+			Draw_MenuBar(m_World, windowView);
 			Draw_Inspector(m_World, windowView);
 			Draw_SavePopup(m_World, windowView);
 		}
