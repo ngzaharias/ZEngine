@@ -13,9 +13,9 @@ namespace eng
 {
 	struct CameraComponent;
 	struct FlipbookComponent;
-	struct PrototypeComponent;
 	struct SpriteComponent;
 	struct StaticMeshComponent;
+	struct TemplateComponent;
 	struct TransformComponent;
 	struct VisibilityComponent;
 }
@@ -62,8 +62,8 @@ namespace editor::outliner
 			editor::outliner::SelectComponent,
 			editor::outliner::WindowComponent,
 			eng::level::EntityComponent,
-			eng::PrototypeComponent,
 			eng::SpriteComponent,
+			eng::TemplateComponent,
 			eng::TransformComponent,
 			eng::VisibilityComponent>
 			::Read<

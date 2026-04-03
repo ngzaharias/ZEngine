@@ -16,9 +16,9 @@
 #include "Engine/LightDirectionalComponent.h"
 #include "Engine/LightPointComponent.h"
 #include "Engine/PhysicsComponent.h"
-#include "Engine/PrototypeManager.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshComponent.h"
+#include "Engine/TemplateManager.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
 #include "GameState/GameStateEditorComponent.h"
@@ -83,14 +83,21 @@ namespace
 		return icon::ENTITY;
 	}
 
-	ecs::Entity CreateEntity(World& world, const str::StringView name, const str::Name& level)
+	ecs::Entity CreateEntity(World& world, const str::StringView name)
 	{
+		str::Name levelName = {};
+		for (auto&& view : world.Query<ecs::query::Include<const eng::level::EntityComponent>>())
+		{
+			const auto& level = view.ReadRequired<eng::level::EntityComponent>();
+			levelName = level.m_Name;
+		}
+
 		const ecs::Entity entity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(entity, name);
-		world.AddComponent<eng::level::EntityComponent>(entity, level);
+		world.AddComponent<eng::level::EntityComponent>(entity, levelName);
 		world.AddComponent<eng::TransformComponent>(entity);
 
-		auto& prototypeComponent = world.AddComponent<eng::PrototypeComponent>(entity);
+		auto& prototypeComponent = world.AddComponent<eng::TemplateComponent>(entity);
 		prototypeComponent.m_Guid = str::Guid::Generate();
 
 		auto& select = world.WriteComponent<editor::outliner::SelectComponent>();
@@ -111,6 +118,22 @@ namespace
 		ImGui::SetItemTooltip(tooltip);
 		ImGui::PopStyleVar();
 		return result;
+	}
+
+	void Draw_MenuBar(World& world)
+	{
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("Create"))
+			{
+				if (ImGui::MenuItem("Entity"))
+					CreateEntity(world, "Entity_");
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenuBar();
+		}
 	}
 
 	void Draw_EntityList(World& world)
@@ -137,7 +160,7 @@ namespace
 
 		using Query = ecs::query
 			::Include<
-			const eng::PrototypeComponent>
+			const eng::TemplateComponent>
 			::Optional<
 			const ecs::NameComponent,
 			const eng::CameraComponent,
@@ -175,7 +198,7 @@ namespace
 		}
 	}
 
-	void Draw_EntityDrop(World& world, const str::Name& levelName)
+	void Draw_EntityDrop(World& world)
 	{
 		const auto* window = ImGui::GetCurrentWindow();
 
@@ -189,7 +212,7 @@ namespace
 				const eng::AssetFile& file = *(const eng::AssetFile*)payload->Data;
 				if (file.m_Type == strSprite)
 				{
-					const ecs::Entity entity = CreateEntity(world, file.m_Name, levelName);
+					const ecs::Entity entity = CreateEntity(world, file.m_Name);
 					world.AddComponent<eng::VisibilityComponent>(entity);
 					auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(entity);
 					spriteComponent.m_Sprite = file.m_Guid;
@@ -227,6 +250,7 @@ void editor::outliner::WindowSystem::Update(World& world, const GameTime& gameTi
 	for (auto&& windowView : world.Query<ecs::query::Include<editor::outliner::WindowComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags =
+			ImGuiWindowFlags_MenuBar |
 			ImGuiWindowFlags_NoCollapse;
 
 		constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
@@ -239,15 +263,9 @@ void editor::outliner::WindowSystem::Update(World& world, const GameTime& gameTi
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(window.m_Label.c_str(), &isOpen, s_WindowFlags))
 		{
-			str::Name levelName = {};
-			for (auto&& view : world.Query<ecs::query::Include<const eng::level::EntityComponent>>())
-			{
-				const auto& level = view.ReadRequired<eng::level::EntityComponent>();
-				levelName = level.m_Name;
-			}
-
+			Draw_MenuBar(world);
 			Draw_EntityList(world);
-			Draw_EntityDrop(world, levelName);
+			Draw_EntityDrop(world);
 		}
 		ImGui::End();
 
