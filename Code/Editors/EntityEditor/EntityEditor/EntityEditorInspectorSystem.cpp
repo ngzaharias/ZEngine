@@ -46,16 +46,16 @@ namespace
 		::Required<
 		editor::entity::InspectorComponent>;
 
+	str::String ToLabel(const char* label, const int32 index)
+	{
+		return std::format("{}: {}", label, index);
+	}
+
 	template<typename T>
 	const char* ToString(T)
 	{
 		static str::String typeName = str::String(TypeName<T>::m_NoNamespace);
 		return typeName.c_str();
-	}
-
-	str::String ToLabel(const char* label, const int32 index)
-	{
-		return std::format("{}: {}", label, index);
 	}
 
 	void SelectComponent(ecs::EntityWorld& world, const ecs::Entity& entity)
@@ -146,14 +146,15 @@ namespace
 		};
 
 		const auto& historyComponent = world.ReadComponent<editor::entity::HistoryComponent>();
+
+		ImGui::TextDisabled("---------- REDO ----------");
 		for (const editor::entity::HistoryData& history : historyComponent.m_RedoStack)
 		{
 			const char* command = std::visit(ToString, history);
 			ImGui::Text("%s", command);
 		}
-		ImGui::Text("---------- REDO ----------");
-		ImGui::Separator();
-		ImGui::Text("---------- UNDO ----------");
+
+		ImGui::TextDisabled("---------- UNDO ----------");
 		for (auto [i, history] : enumerate::Reverse(historyComponent.m_UndoStack))
 		{
 			const char* command = std::visit(ToString, history);
