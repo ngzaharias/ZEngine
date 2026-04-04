@@ -140,6 +140,7 @@ namespace
 
 	void Draw_History(ecs::EntityWorld& world, const WindowView& view)
 	{
+		static str::String s_Scratch;
 		auto ToString = [](auto type) -> const char*
 		{
 			return ::ToString(type);
@@ -147,18 +148,21 @@ namespace
 
 		const auto& historyComponent = world.ReadComponent<editor::entity::HistoryComponent>();
 
-		ImGui::TextDisabled("---------- REDO ----------");
-		for (const editor::entity::HistoryData& history : historyComponent.m_RedoStack)
+		ImGui::Selectable("##start", historyComponent.m_UndoStack.IsEmpty());
+
+		const int32 last = historyComponent.m_UndoStack.GetCount() - 1;
+		for (auto [i, history] : enumerate::Forward(historyComponent.m_UndoStack))
 		{
 			const char* command = std::visit(ToString, history);
-			ImGui::Text("%s", command);
+			s_Scratch = std::format("{}##undo{}", command, i);
+			ImGui::Selectable(s_Scratch.c_str(), i == last);
 		}
 
-		ImGui::TextDisabled("---------- UNDO ----------");
-		for (auto [i, history] : enumerate::Reverse(historyComponent.m_UndoStack))
+		for (auto [i, history] : enumerate::Reverse(historyComponent.m_RedoStack))
 		{
 			const char* command = std::visit(ToString, history);
-			ImGui::Text("%s", command);
+			s_Scratch = std::format("{}##redo{}", command, i);
+			ImGui::Selectable(s_Scratch.c_str());
 		}
 	}
 
@@ -266,7 +270,7 @@ void editor::entity::InspectorSystem::Update(World& world, const GameTime& gameT
 		if (ImGui::Begin(window.m_Label.c_str(), &isOpen, s_WindowFlags))
 		{
 			Draw_MenuBar(m_World, windowView);
-			if (ImGui::BeginTabBar(""))
+			if (ImGui::BeginTabBar("##options"))
 			{
 				if (ImGui::BeginTabItem("Inspector"))
 				{
