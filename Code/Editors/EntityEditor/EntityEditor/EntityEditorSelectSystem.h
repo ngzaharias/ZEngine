@@ -9,47 +9,53 @@ namespace editor::entity
 	struct SelectComponent;
 }
 
-namespace editor::gizmo
-{
-	struct TransformComponent;
-}
-
 namespace eng
 {
+	class AssetManager;
+	class InputManager;
 	class WindowManager;
 	struct ActiveComponent;
 	struct CameraComponent;
 	struct EditorComponent;
+	struct LinesComponent;
+	struct SpriteComponent;
 	struct TransformComponent;
+	struct VisibilityComponent;
 }
 
-namespace eng::settings
+namespace eng::level
 {
-	struct DebugComponent;
+	struct EntityComponent;
 }
 
 namespace gamestate
 {
 	struct EditModeComponent;
+	struct EditorComponent;
 }
 
-namespace editor
+namespace editor::entity
 {
-	class OverlaySystem final : public ecs::System
+	class SelectSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
 			editor::entity::SelectComponent,
-			editor::gizmo::TransformComponent,
-			eng::CameraComponent,
-			eng::TransformComponent>
+			eng::InputManager,
+			eng::LinesComponent>
 			::Read<
 			eng::ActiveComponent,
+			eng::AssetManager,
+			eng::CameraComponent,
 			eng::EditorComponent,
-			eng::settings::DebugComponent,
+			eng::level::EntityComponent,
+			eng::SpriteComponent,
+			eng::TransformComponent,
+			eng::VisibilityComponent,
 			eng::WindowManager,
-			gamestate::EditModeComponent>;
+			gamestate::EditModeComponent,
+			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

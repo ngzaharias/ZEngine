@@ -7,12 +7,12 @@
 #include "ECS/WorldView.h"
 #include "Editor/SettingsLocalComponent.h"
 #include "Engine/SettingsDebugComponent.h"
+#include "EntityEditor/EntityEditorOpenInspectorEvent.h"
+#include "EntityEditor/EntityEditorOpenOutlinerEvent.h"
 #include "FlipbookEditor/FlipbookEditorOpenWindowEvent.h"
 #include "GameState/GameStateEditModeComponent.h"
 #include "GameState/GameStateEditModeToggleEvent.h"
 #include "Icons/Icons.h"
-#include "Inspector/InspectorOpenWindowEvent.h"
-#include "Outliner/OutlinerOpenWindowEvent.h"
 #include "SpriteEditor/SpriteEditorOpenWindowEvent.h"
 #include "TextureEditor/TextureEditorOpenWindowEvent.h"
 
@@ -55,11 +55,11 @@ namespace
 
 	void Draw_Editors(World& world)
 	{
-		if (ButtonIcon("##inspector", "Inspector", icon::EDITOR_INSPECTOR))
-			world.AddEvent<editor::inspector::OpenWindowEvent>();
-		ImGui::SameLine();
 		if (ButtonIcon("##outliner", "Outliner", icon::EDITOR_OUTLINER))
-			world.AddEvent<editor::outliner::OpenWindowEvent>();
+			world.AddEvent<editor::entity::OpenOutlinerEvent>();
+		ImGui::SameLine();
+		if (ButtonIcon("##inspector", "Inspector", icon::EDITOR_INSPECTOR))
+			world.AddEvent<editor::entity::OpenInspectorEvent>();
 
 		ImGui::SameLine();
 		Spacing();

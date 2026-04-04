@@ -14,9 +14,9 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "EntityEditor/EntityEditorSelectComponent.h"
 #include "GameState/GameStateEditModeComponent.h"
 #include "Math/Matrix.h"
-#include "Outliner/OutlinerSelectComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -130,7 +130,7 @@ namespace
 				ImGuizmo::SetDrawlist();
 				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 
-				const auto& selectComponent = world.ReadComponent<editor::outliner::SelectComponent>();
+				const auto& selectComponent = world.ReadComponent<editor::entity::SelectComponent>();
 				const ecs::Entity selected = selectComponent.m_Entity;
 				if (selected.IsUnassigned())
 					continue;

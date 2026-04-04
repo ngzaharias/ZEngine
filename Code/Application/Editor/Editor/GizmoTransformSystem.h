@@ -6,14 +6,14 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace editor::entity
+{
+	struct SelectComponent;
+}
+
 namespace editor::gizmo
 {
 	struct TransformComponent;
-}
-
-namespace editor::outliner
-{
-	struct SelectComponent;
 }
 
 namespace editor::settings
@@ -49,7 +49,7 @@ namespace editor::gizmo
 			eng::PhysicsComponent,
 			eng::TransformComponent>
 			::Read<
-			editor::outliner::SelectComponent,
+			editor::entity::SelectComponent,
 			editor::settings::LocalComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,

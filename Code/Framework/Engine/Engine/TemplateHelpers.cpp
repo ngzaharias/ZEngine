@@ -7,24 +7,36 @@
 
 ecs::Entity eng::ToEntity(ToEntityWorld& world, const str::Guid& guid)
 {
+	if (!guid.IsValid())
+		return {};
+
 	const auto& mapComponent = world.ReadComponent<eng::TemplateMapComponent>();
 	return mapComponent.m_GuidToEntity.Get(guid);
 }
 
 ecs::Entity eng::ToEntity(ecs::EntityWorld& world, const str::Guid& guid)
 {
+	if (!guid.IsValid())
+		return {};
+
 	const auto& mapComponent = world.ReadComponent<eng::TemplateMapComponent>();
 	return mapComponent.m_GuidToEntity.Get(guid);
 }
 
 str::Guid eng::ToGuid(ToGuidWorld& world, const ecs::Entity& entity)
 {
+	if (entity.IsUnassigned())
+		return {};
+
 	const auto& templateComponent = world.ReadComponent<eng::TemplateComponent>(entity);
 	return templateComponent.m_Guid;
 }
 
 str::Guid eng::ToGuid(ecs::EntityWorld& world, const ecs::Entity& entity)
 {
+	if (entity.IsUnassigned())
+		return {};
+
 	const auto& templateComponent = world.ReadComponent<eng::TemplateComponent>(entity);
 	return templateComponent.m_Guid;
 }
