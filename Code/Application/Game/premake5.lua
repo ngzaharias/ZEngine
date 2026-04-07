@@ -52,6 +52,7 @@ project "Game"
 		"%{wks.location}/../Code/Application/GameServer/",
 		"%{wks.location}/../Code/Application/GameUI/",
 		"%{wks.location}/../Code/Bindings/Steam/",
+		"%{wks.location}/../Code/Framework/Command/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Engine/",
@@ -124,6 +125,7 @@ project "Game"
 		"DebugInventory",
 
 		-- Framework
+		"Command",
 		"Core",
 		"ECS",
 		"Engine",

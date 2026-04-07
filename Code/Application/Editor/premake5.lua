@@ -50,14 +50,15 @@ project "Editor"
 		"%{wks.location}/../Code/Application/GameUI/",
 		"%{wks.location}/../Code/Bindings/Steam/",
 		"%{wks.location}/../Code/Editors/AssetBrowser/",
+		"%{wks.location}/../Code/Editors/EntityEditor/",
 		"%{wks.location}/../Code/Editors/FlipbookEditor/",
 		"%{wks.location}/../Code/Editors/InputEditor/",
-		"%{wks.location}/../Code/Editors/EntityEditor/",
 		"%{wks.location}/../Code/Editors/SpriteEditor/",
 		"%{wks.location}/../Code/Editors/TableEditor/",
 		"%{wks.location}/../Code/Editors/TextureEditor/",
 		"%{wks.location}/../Code/Editors/ThemeEditor/",
 		"%{wks.location}/../Code/Editors/TrajectoryEditor/",
+		"%{wks.location}/../Code/Framework/Command/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Engine/",
@@ -120,9 +121,9 @@ project "Editor"
 
 		-- Editors
 		"AssetBrowser",
+		"EntityEditor",
 		"FlipbookEditor",
 		"InputEditor",
-		"EntityEditor",
 		"SpriteEditor",
 		"TableEditor",
 		"TextureEditor",
@@ -130,6 +131,7 @@ project "Editor"
 		"TrajectoryEditor",
 
 		-- Framework
+		"Command",
 		"Core",
 		"ECS",
 		"Engine",
