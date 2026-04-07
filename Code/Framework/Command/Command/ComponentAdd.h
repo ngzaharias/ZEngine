@@ -17,6 +17,11 @@ public:
 		, m_Args(std::forward<TArgs>(args)...)
 	{ }
 
+	const char* ToString() const override
+	{
+		return "ComponentAdd";
+	}
+
 	void Exec(ecs::EntityWorld& world) override;
 	void Redo(ecs::EntityWorld& world) override;
 	void Undo(ecs::EntityWorld& world) override;
