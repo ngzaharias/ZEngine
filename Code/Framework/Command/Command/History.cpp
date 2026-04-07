@@ -34,3 +34,24 @@ void History::Redo()
 	m_UndoStack.Append(command);
 	m_RedoStack.Pop();
 }
+
+bool History::HasUndo() const
+{
+	return !m_UndoStack.IsEmpty();
+}
+
+bool History::HasRedo() const
+{
+	return !m_RedoStack.IsEmpty();
+}
+
+const Array<Command*>& History::GetUndos() const
+{
+	return m_UndoStack;
+}
+
+const Array<Command*>& History::GetRedos() const
+{
+	return m_RedoStack;
+}
+

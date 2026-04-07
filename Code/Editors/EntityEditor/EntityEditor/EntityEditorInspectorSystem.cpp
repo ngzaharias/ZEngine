@@ -161,17 +161,20 @@ namespace
 		static str::String s_Scratch = {};
 
 		auto& commands = world.WriteResource<editor::entity::Commands>();
-		ImGui::Selectable("##start", commands.m_UndoStack.IsEmpty());
+		auto& undoStack = commands.GetUndos();
+		auto& redoStack = commands.GetRedos();
 
-		const int32 last = commands.m_UndoStack.GetCount() - 1;
-		for (auto&& [i, command] : enumerate::Forward(commands.m_UndoStack))
+		ImGui::Selectable("##start", undoStack.IsEmpty());
+
+		const int32 last = undoStack.GetCount() - 1;
+		for (auto&& [i, command] : enumerate::Forward(undoStack))
 		{
 			const char* name = command->ToString();
 			s_Scratch = std::format("{}##undo{}", name, i);
 			ImGui::Selectable(s_Scratch.c_str(), i == last);
 		}
 
-		for (auto&& [i, command] : enumerate::Reverse(commands.m_RedoStack))
+		for (auto&& [i, command] : enumerate::Reverse(redoStack))
 		{
 			const char* name = command->ToString();
 			s_Scratch = std::format("{}##redo{}", name, i);

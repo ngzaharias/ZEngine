@@ -16,6 +16,12 @@ public:
 	void Undo();
 	void Redo();
 
+	bool HasUndo() const;
+	bool HasRedo() const;
+
+	const Array<Command*>& GetUndos() const;
+	const Array<Command*>& GetRedos() const;
+
 protected:
 	ecs::EntityWorld& m_World;
 	Array<Command*> m_RedoStack = {};
