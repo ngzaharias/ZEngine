@@ -59,7 +59,7 @@ namespace
 	}
 
 	template<typename TComponent>
-	void Draw_Component(ecs::EntityWorld& world, const ecs::Entity& entity)
+	void ToggleComponent(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
 		const bool hasComponent = world.HasComponent<TComponent>(entity);
 		imgui::Checkbox("##has", hasComponent);
@@ -84,7 +84,7 @@ namespace
 
 	void Draw_Components(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
-		Draw_Component<eng::TransformTemplate>(world, entity);
+		ToggleComponent<eng::TransformTemplate>(world, entity);
 	}
 
 	void Draw_MenuBar(ecs::EntityWorld& world, const WindowView& view)
@@ -159,10 +159,9 @@ namespace
 	void Draw_History(ecs::EntityWorld& world, const WindowView& view)
 	{
 		static str::String s_Scratch = {};
-
-		auto& commands = world.WriteResource<editor::entity::Commands>();
-		auto& undoStack = commands.GetUndos();
-		auto& redoStack = commands.GetRedos();
+		const auto& commands = world.ReadResource<editor::entity::Commands>();
+		const auto& undoStack = commands.GetUndos();
+		const auto& redoStack = commands.GetRedos();
 
 		ImGui::Selectable("##start", undoStack.IsEmpty());
 
