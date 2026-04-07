@@ -2,6 +2,7 @@
 #include "EntityEditor/EntityEditorInspectorSystem.h"
 
 #include "Camera/CameraMove3DComponent.h"
+#include "Command/ComponentUpdate.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
@@ -18,10 +19,7 @@
 #include "Engine/TemplateManager.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
-#include "EntityEditor/EntityEditorEntityUpdatedEvent.h"
-#include "EntityEditor/EntityEditorHistoryComponent.h"
-#include "EntityEditor/EntityEditorHistoryRedoEvent.h"
-#include "EntityEditor/EntityEditorHistoryUndoEvent.h"
+#include "EntityEditor/EntityEditorCommands.h"
 #include "EntityEditor/EntityEditorInspectorComponent.h"
 #include "EntityEditor/EntityEditorOpenInspectorEvent.h"
 #include "EntityEditor/EntityEditorSelectComponent.h"
@@ -34,6 +32,8 @@
 #include "imgui/imgui_stdlib.h"
 #include "imgui/imgui_user.h"
 #include "imgui/Inspector.h"
+
+#include "Engine/TransformTemplate.h"
 
 namespace
 {
@@ -58,36 +58,33 @@ namespace
 		return typeName.c_str();
 	}
 
-	void SelectComponent(ecs::EntityWorld& world, const ecs::Entity& entity)
+	template<typename TComponent>
+	void Draw_Component(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
-		ecs::EntityStorage& storage = world.m_EntityStorage;
-		const auto& registry = world.ReadResource<ecs::TypeRegistry>();
-		for (auto&& [localId, componentInfo] : registry.GetComponentMap())
+		const bool hasComponent = world.HasComponent<TComponent>(entity);
+		imgui::Checkbox("##has", hasComponent);
+		ImGui::SameLine();
+		ImGui::BeginDisabled(entity.IsUnassigned());
+		if (ImGui::MenuItem("eng::TemplateComponent"))
 		{
-			if (!componentInfo.m_IsTemplate)
-				continue;
-
-			const ecs::TypeInfo& typeInfo = registry.GetTypeInfo(componentInfo.m_GlobalId);
-			const bool hasComponent = registry.HasComponent(storage, localId, entity);
-			imgui::Checkbox("##has", hasComponent);
-			ImGui::SameLine();
-			if (ImGui::MenuItem(typeInfo.m_Name.c_str()))
+			const str::Guid entityUUID = eng::ToGuid(world, entity);
+			if (!hasComponent)
 			{
-				if (!hasComponent)
-				{
-					registry.AddComponent(storage, localId, entity);
-				}
-				else
-				{
-					registry.RemoveComponent(storage, localId, entity);
-				}
-
-				str::String data;
-				const auto& manager = world.ReadResource<eng::TemplateManager>();
-				manager.ReadEntity(world, entity, data);
-				world.AddEvent<editor::entity::EntityUpdatedEvent>(entity, std::move(data));
+				auto& commands = world.WriteResource<editor::entity::Commands>();
+				commands.AddComponent<TComponent>(eng::ToGuid(world, entity));
+			}
+			else
+			{
+				auto& commands = world.WriteResource<editor::entity::Commands>();
+				commands.RemoveComponent<TComponent>(eng::ToGuid(world, entity));
 			}
 		}
+		ImGui::EndDisabled();
+	}
+
+	void Draw_Components(ecs::EntityWorld& world, const ecs::Entity& entity)
+	{
+		Draw_Component<eng::TransformTemplate>(world, entity);
 	}
 
 	void Draw_MenuBar(ecs::EntityWorld& world, const WindowView& view)
@@ -100,15 +97,15 @@ namespace
 		{
 			if (ImGui::BeginMenu("Components"))
 			{
-				if (world.IsAlive(selected))
-					SelectComponent(world, selected);
+				Draw_Components(world, selected);
 				ImGui::EndMenu();
 			}
 
+			auto& commands = world.WriteResource<editor::entity::Commands>();
 			if (ImGui::MenuItem("Undo"))
-				world.AddEvent<editor::entity::HistoryUndoEvent>();
+				commands.Undo();
 			if (ImGui::MenuItem("Redo"))
-				world.AddEvent<editor::entity::HistoryRedoEvent>();
+				commands.Redo();
 
 			ImGui::EndMenuBar();
 		}
@@ -119,49 +116,65 @@ namespace
 		const auto& select = world.ReadComponent<editor::entity::SelectComponent>();
 		const auto& window = view.ReadRequired<editor::entity::InspectorComponent>();
 
-		const ecs::Entity selected = select.m_Entity;
-		if (world.IsAlive(selected))
+		const ecs::Entity entity = select.m_Entity;
+		if (!world.IsAlive(entity))
+			return;
+
+		if (world.HasComponent<eng::TransformTemplate>(entity))
 		{
-			imgui::Inspector inspector;
-			inspector.AddPayload(world.ReadResource<eng::AssetManager>());
-			if (inspector.Begin("##table"))
+			auto componentOld = world.ReadComponent<eng::TransformTemplate>(entity);
+			auto componentNew = componentOld;
+			if (imgui::DragVector("m_Translate", componentNew.m_Translate))
 			{
-				str::String data;
-				const auto& manager = world.ReadResource<eng::TemplateManager>();
-				manager.ReadEntity(world, selected, data);
-				if (manager.InspectEntity(world, selected, inspector))
-				{
-					world.AddEvent<editor::entity::EntityUpdatedEvent>(selected, std::move(data));
-				}
-				inspector.End();
+				auto& commands = world.WriteResource<editor::entity::Commands>();
+				commands.UpdateComponent(
+					&eng::TransformTemplate::m_Translate,
+					eng::ToGuid(world, entity),
+					componentOld.m_Translate,
+					componentNew.m_Translate);
+			}
+
+			if (imgui::DragRotator("m_Rotate", componentNew.m_Rotate))
+			{
+				auto& commands = world.WriteResource<editor::entity::Commands>();
+				commands.UpdateComponent(
+					&eng::TransformTemplate::m_Rotate,
+					eng::ToGuid(world, entity),
+					componentOld.m_Rotate,
+					componentNew.m_Rotate);
+			}
+
+			if (imgui::DragVector("m_Scale", componentNew.m_Scale))
+			{
+				auto& commands = world.WriteResource<editor::entity::Commands>();
+				commands.UpdateComponent(
+					&eng::TransformTemplate::m_Scale,
+					eng::ToGuid(world, entity),
+					componentOld.m_Scale,
+					componentNew.m_Scale);
 			}
 		}
 	}
 
 	void Draw_History(ecs::EntityWorld& world, const WindowView& view)
 	{
-		static str::String s_Scratch;
-		auto ToString = [](auto type) -> const char*
+		static str::String s_Scratch = {};
+
+		auto& commands = world.WriteResource<editor::entity::Commands>();
+		ImGui::Selectable("##start", commands.m_UndoStack.IsEmpty());
+
+		const int32 last = commands.m_UndoStack.GetCount() - 1;
+		for (auto&& [i, command] : enumerate::Forward(commands.m_UndoStack))
 		{
-			return ::ToString(type);
-		};
-
-		const auto& historyComponent = world.ReadComponent<editor::entity::HistoryComponent>();
-
-		ImGui::Selectable("##start", historyComponent.m_UndoStack.IsEmpty());
-
-		const int32 last = historyComponent.m_UndoStack.GetCount() - 1;
-		for (auto [i, history] : enumerate::Forward(historyComponent.m_UndoStack))
-		{
-			const char* command = std::visit(ToString, history);
-			s_Scratch = std::format("{}##undo{}", command, i);
+			const char* name = command->ToString();
+			s_Scratch = std::format("{}##undo{}", name, i);
 			ImGui::Selectable(s_Scratch.c_str(), i == last);
 		}
 
-		for (auto [i, history] : enumerate::Reverse(historyComponent.m_RedoStack))
+		for (auto&& [i, command] : enumerate::Reverse(commands.m_RedoStack))
 		{
-			const char* command = std::visit(ToString, history);
-			s_Scratch = std::format("{}##redo{}", command, i);
+			const char* name = command->ToString();
+			s_Scratch = std::format("{}##redo{}", name, i);
 			ImGui::Selectable(s_Scratch.c_str());
 		}
 	}
@@ -291,4 +304,7 @@ void editor::entity::InspectorSystem::Update(World& world, const GameTime& gameT
 		if (!isOpen)
 			world.DestroyEntity(windowView);
 	}
+
+	auto& commands = world.WriteResource<editor::entity::Commands>();
+	commands.Update();
 }

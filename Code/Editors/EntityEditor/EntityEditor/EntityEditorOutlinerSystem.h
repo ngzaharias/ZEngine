@@ -6,14 +6,13 @@
 
 namespace ecs
 {
+	class EntityWorld;
 	struct NameComponent;
 }
 
 namespace editor::entity
 {
-	struct EntityCreatedEvent;
-	struct EntityDestroyedEvent;
-	struct EntitySelectedEvent;
+	class Commands;
 	struct OpenOutlinerEvent;
 	struct OutlinerComponent;
 	struct SelectComponent;
@@ -55,11 +54,9 @@ namespace editor::entity
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
+			editor::entity::Commands,
 			editor::entity::OutlinerComponent,
 			editor::entity::SelectComponent,
-			editor::entity::EntityCreatedEvent,
-			editor::entity::EntityDestroyedEvent,
-			editor::entity::EntitySelectedEvent,
 			eng::level::EntityComponent,
 			eng::SpriteComponent,
 			eng::TemplateComponent,
@@ -75,9 +72,12 @@ namespace editor::entity
 			eng::StaticMeshComponent,
 			gamestate::EditorComponent>;
 
+		OutlinerSystem(ecs::EntityWorld& world);
+
 		void Update(World& world, const GameTime& gameTime);
 
 	private:
+		ecs::EntityWorld& m_World;
 		imgui::Identifier m_WindowIds = {};
 	};
 }

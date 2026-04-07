@@ -18,12 +18,11 @@
 #include "Engine/PhysicsComponent.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshComponent.h"
+#include "Engine/TemplateHelpers.h"
 #include "Engine/TemplateManager.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
-#include "EntityEditor/EntityEditorEntityCreatedEvent.h"
-#include "EntityEditor/EntityEditorEntityDestroyedEvent.h"
-#include "EntityEditor/EntityEditorEntitySelectedEvent.h"
+#include "EntityEditor/EntityEditorCommands.h"
 #include "EntityEditor/EntityEditorOpenOutlinerEvent.h"
 #include "EntityEditor/EntityEditorOutlinerComponent.h"
 #include "EntityEditor/EntityEditorSelectComponent.h"
@@ -86,20 +85,16 @@ namespace
 		return icon::ENTITY;
 	}
 
-	ecs::Entity CreateEntity(World& world, const str::StringView name)
+	void CreateEntity(ecs::EntityWorld& world, const str::StringView name)
 	{
-		const ecs::Entity entity = world.CreateEntity();
-		world.AddComponent<ecs::NameComponent>(entity, name);
-		world.AddComponent<eng::TemplateComponent>(entity, str::Guid::Generate());
-
-		world.AddEvent<editor::entity::EntityCreatedEvent>(entity);
-		return entity;
+		auto& commands = world.WriteResource<editor::entity::Commands>();
+		commands.CreateEntity("Entity_");
 	}
 
-	void DestroyEntity(World& world, const ecs::Entity& entity)
+	void DestroyEntity(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
-		world.DestroyEntity(entity);
-		world.AddEvent<editor::entity::EntityDestroyedEvent>(entity);
+		auto& commands = world.WriteResource<editor::entity::Commands>();
+		commands.DestroyEntity(eng::ToGuid(world, entity));
 	}
 
 	void Icon(const icon::Data& icon, const ImVec2& size = ImVec2(15, 15))
@@ -116,14 +111,14 @@ namespace
 		return result;
 	}
 
-	void Draw_MenuBar(World& world)
+	void Draw_MenuBar(ecs::EntityWorld& entityWorld, World& world)
 	{
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("Create"))
 			{
 				if (ImGui::MenuItem("Entity"))
-					CreateEntity(world, "Entity_");
+					CreateEntity(entityWorld, "Entity_");
 
 				ImGui::EndMenu();
 			}
@@ -132,7 +127,7 @@ namespace
 		}
 	}
 
-	void Draw_EntityList(World& world)
+	void Draw_EntityList(ecs::EntityWorld& entityWorld, World& world)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2.f, 0.f));
 		ButtonIcon("##entity", "Entity", icon::ENTITY);
@@ -180,7 +175,6 @@ namespace
 			const bool isSelected = view == select.m_Entity;
 			if (ImGui::Selectable(name, isSelected))
 			{
-				world.AddEvent<editor::entity::EntitySelectedEvent>(select.m_Entity, view);
 				auto& select = world.WriteComponent<editor::entity::SelectComponent>();
 				select.m_Entity = view;
 			}
@@ -189,13 +183,13 @@ namespace
 			if (ImGui::BeginPopup(name))
 			{
 				if (ImGui::Selectable("Destroy"))
-					DestroyEntity(world, view);
+					DestroyEntity(entityWorld, view);
 				ImGui::EndPopup();
 			}
 		}
 	}
 
-	void Draw_EntityDrop(World& world)
+	void Draw_EntityDrop(ecs::EntityWorld& world)
 	{
 		const auto* window = ImGui::GetCurrentWindow();
 
@@ -209,15 +203,20 @@ namespace
 				const eng::AssetFile& file = *(const eng::AssetFile*)payload->Data;
 				if (file.m_Type == strSprite)
 				{
-					const ecs::Entity entity = CreateEntity(world, file.m_Name);
-					world.AddComponent<eng::VisibilityComponent>(entity);
-					auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(entity);
-					spriteComponent.m_Sprite = file.m_Guid;
+					//const ecs::Entity entity = CreateEntity(m_World, file.m_Name);
+					//world.AddComponent<eng::VisibilityComponent>(entity);
+					//auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(entity);
+					//spriteComponent.m_Sprite = file.m_Guid;
 				}
 			}
 			ImGui::EndDragDropTarget();
 		}
 	}
+}
+
+editor::entity::OutlinerSystem::OutlinerSystem(ecs::EntityWorld& world)
+	: m_World(world)
+{
 }
 
 void editor::entity::OutlinerSystem::Update(World& world, const GameTime& gameTime)
@@ -260,9 +259,9 @@ void editor::entity::OutlinerSystem::Update(World& world, const GameTime& gameTi
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(window.m_Label.c_str(), &isOpen, s_WindowFlags))
 		{
-			Draw_MenuBar(world);
-			Draw_EntityList(world);
-			Draw_EntityDrop(world);
+			Draw_MenuBar(m_World, world);
+			Draw_EntityList(m_World, world);
+			Draw_EntityDrop(m_World);
 		}
 		ImGui::End();
 

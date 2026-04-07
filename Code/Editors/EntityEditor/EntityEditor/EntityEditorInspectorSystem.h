@@ -11,7 +11,7 @@ namespace ecs
 
 namespace editor::entity
 {
-	struct EntityUpdatedEvent;
+	class Commands;
 	struct HistoryComponent;
 	struct InspectorComponent;
 	struct OpenInspectorEvent;
@@ -49,7 +49,7 @@ namespace editor::entity
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			editor::entity::EntityUpdatedEvent,
+			editor::entity::Commands,
 			editor::entity::InspectorComponent,
 			editor::entity::SelectComponent,
 			editor::entity::SettingsComponent,
