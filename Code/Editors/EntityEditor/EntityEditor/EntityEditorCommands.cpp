@@ -1,33 +1,54 @@
 #include "EntityEditorPCH.h"
 #include "EntityEditor/EntityEditorCommands.h"
 
-#include "Command/EntityCreate.h"
-#include "Command/EntityDestroy.h"
+#include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
+#include "Engine/TemplateComponent.h"
+#include "Engine/TemplateHelpers.h"
+#include "Engine/TemplateManager.h"
 
-editor::entity::Commands::Commands(ecs::EntityWorld& world)
-	: History(world)
-{ 
+editor::entity::EntityCreate::EntityCreate(const str::String& name)
+	: m_Guid(str::Guid::Generate())
+	, m_Name(name)
+{
 }
 
-void editor::entity::Commands::Update()
+void editor::entity::EntityCreate::Exec(ecs::EntityWorld& world)
 {
-	if (m_ExecStack.IsEmpty())
-		return;
-
-	for (Command* command : m_ExecStack)
-		command->Exec(m_World);
-
-	m_UndoStack.Append(m_ExecStack);
-	m_ExecStack.RemoveAll();
-	m_RedoStack.RemoveAll();
+	const ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<ecs::NameComponent>(entity, m_Name);
+	world.AddComponent<eng::TemplateComponent>(entity, m_Guid);
 }
 
-void editor::entity::Commands::CreateEntity(const str::StringView& name)
+void editor::entity::EntityCreate::Undo(ecs::EntityWorld& world)
 {
-	m_ExecStack.Append(new EntityCreate(str::String(name)));
+	const ecs::Entity entity = eng::ToEntity(world, m_Guid);
+	world.DestroyEntity(entity);
 }
 
-void editor::entity::Commands::DestroyEntity(const str::Guid& guid)
+editor::entity::EntityDestroy::EntityDestroy(const str::Guid& entity)
+	: m_Entity(entity)
 {
-	m_ExecStack.Append(new EntityDestroy(guid));
+}
+
+editor::entity::EntityDestroy::EntityDestroy(const str::Guid& entity, str::String&& data)
+	: m_Entity(entity)
+	, m_Data(std::move(data))
+{
+}
+
+editor::entity::EntityDestroy::EntityDestroy(const str::Guid& entity, const str::String& data)
+	: m_Entity(entity)
+	, m_Data(data)
+{
+}
+
+void editor::entity::EntityDestroy::Exec(ecs::EntityWorld& world)
+{
+	const ecs::Entity entity = eng::ToEntity(world, m_Entity);
+	world.DestroyEntity(entity);
+}
+
+void editor::entity::EntityDestroy::Undo(ecs::EntityWorld& world)
+{
 }

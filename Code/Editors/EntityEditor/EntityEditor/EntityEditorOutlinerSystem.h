@@ -12,7 +12,7 @@ namespace ecs
 
 namespace editor::entity
 {
-	class Commands;
+	class CommandManager;
 	struct OpenOutlinerEvent;
 	struct OutlinerComponent;
 	struct SelectComponent;
@@ -54,7 +54,7 @@ namespace editor::entity
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			editor::entity::Commands,
+			editor::entity::CommandManager,
 			editor::entity::OutlinerComponent,
 			editor::entity::SelectComponent,
 			eng::level::EntityComponent,

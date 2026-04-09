@@ -2,7 +2,6 @@
 #include "EntityEditor/EntityEditorInspectorSystem.h"
 
 #include "Camera/CameraMove3DComponent.h"
-#include "Command/ComponentUpdate.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
@@ -19,11 +18,13 @@
 #include "Engine/TemplateManager.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
-#include "EntityEditor/EntityEditorCommands.h"
+#include "EntityEditor/EntityEditorCommandManager.h"
+#include "EntityEditor/EntityEditorInspector.h"
 #include "EntityEditor/EntityEditorInspectorComponent.h"
 #include "EntityEditor/EntityEditorOpenInspectorEvent.h"
 #include "EntityEditor/EntityEditorSelectComponent.h"
 #include "EntityEditor/EntityEditorSettingsComponent.h"
+#include "EntityEditor/EntityEditorTemplates.h"
 #include "GameState/GameStateEditorComponent.h"
 #include "Serialize/Visitor.h"
 
@@ -51,13 +52,6 @@ namespace
 		return std::format("{}: {}", label, index);
 	}
 
-	template<typename T>
-	const char* ToString(T)
-	{
-		static str::String typeName = str::String(TypeName<T>::m_NoNamespace);
-		return typeName.c_str();
-	}
-
 	template<typename TComponent>
 	void ToggleComponent(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
@@ -70,13 +64,13 @@ namespace
 			const str::Guid entityUUID = eng::ToGuid(world, entity);
 			if (!hasComponent)
 			{
-				auto& commands = world.WriteResource<editor::entity::Commands>();
-				commands.AddComponent<TComponent>(eng::ToGuid(world, entity));
+				auto& commands = world.WriteResource<editor::entity::CommandManager>();
+				commands.AddComponent<TComponent>(entityUUID);
 			}
 			else
 			{
-				auto& commands = world.WriteResource<editor::entity::Commands>();
-				commands.RemoveComponent<TComponent>(eng::ToGuid(world, entity));
+				auto& commands = world.WriteResource<editor::entity::CommandManager>();
+				commands.RemoveComponent<TComponent>(entityUUID);
 			}
 		}
 		ImGui::EndDisabled();
@@ -101,11 +95,11 @@ namespace
 				ImGui::EndMenu();
 			}
 
-			auto& commands = world.WriteResource<editor::entity::Commands>();
+			auto& commands = world.WriteResource<editor::entity::CommandManager>();
 			if (ImGui::MenuItem("Undo"))
-				commands.Undo();
+				commands.UndoLastCommand();
 			if (ImGui::MenuItem("Redo"))
-				commands.Redo();
+				commands.RedoLastCommand();
 
 			ImGui::EndMenuBar();
 		}
@@ -117,51 +111,29 @@ namespace
 		const auto& window = view.ReadRequired<editor::entity::InspectorComponent>();
 
 		const ecs::Entity entity = select.m_Entity;
-		if (!world.IsAlive(entity))
+		const str::Guid entityUUID = eng::ToGuid(world, entity);
+		if (!entityUUID.IsValid())
 			return;
 
+		editor::entity::Inspector inspector;
+		inspector.Begin("", entityUUID);
 		if (world.HasComponent<eng::TransformTemplate>(entity))
+			inspector.Visit(world.ReadComponent<eng::TransformTemplate>(entity));
+		inspector.End();
+
+		if (inspector.HasCommands())
 		{
-			auto componentOld = world.ReadComponent<eng::TransformTemplate>(entity);
-			auto componentNew = componentOld;
-			if (imgui::DragVector("m_Translate", componentNew.m_Translate))
-			{
-				auto& commands = world.WriteResource<editor::entity::Commands>();
-				commands.UpdateComponent(
-					&eng::TransformTemplate::m_Translate,
-					eng::ToGuid(world, entity),
-					componentOld.m_Translate,
-					componentNew.m_Translate);
-			}
-
-			if (imgui::DragRotator("m_Rotate", componentNew.m_Rotate))
-			{
-				auto& commands = world.WriteResource<editor::entity::Commands>();
-				commands.UpdateComponent(
-					&eng::TransformTemplate::m_Rotate,
-					eng::ToGuid(world, entity),
-					componentOld.m_Rotate,
-					componentNew.m_Rotate);
-			}
-
-			if (imgui::DragVector("m_Scale", componentNew.m_Scale))
-			{
-				auto& commands = world.WriteResource<editor::entity::Commands>();
-				commands.UpdateComponent(
-					&eng::TransformTemplate::m_Scale,
-					eng::ToGuid(world, entity),
-					componentOld.m_Scale,
-					componentNew.m_Scale);
-			}
+			auto& manager = world.WriteResource<editor::entity::CommandManager>();
+			manager.AddCommands(inspector.MoveCommands());
 		}
 	}
 
 	void Draw_History(ecs::EntityWorld& world, const WindowView& view)
 	{
 		static str::String s_Scratch = {};
-		const auto& commands = world.ReadResource<editor::entity::Commands>();
-		const auto& undoStack = commands.GetUndos();
-		const auto& redoStack = commands.GetRedos();
+		const auto& commands = world.ReadResource<editor::entity::CommandManager>();
+		const auto& undoStack = commands.GetUndoCommands();
+		const auto& redoStack = commands.GetRedoCommands();
 
 		ImGui::Selectable("##start", undoStack.IsEmpty());
 
@@ -307,6 +279,6 @@ void editor::entity::InspectorSystem::Update(World& world, const GameTime& gameT
 			world.DestroyEntity(windowView);
 	}
 
-	auto& commands = world.WriteResource<editor::entity::Commands>();
-	commands.Update();
+	auto& commands = world.WriteResource<editor::entity::CommandManager>();
+	commands.ExecuteCommands();
 }

@@ -22,7 +22,7 @@
 #include "Engine/TemplateManager.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/VisibilityComponent.h"
-#include "EntityEditor/EntityEditorCommands.h"
+#include "EntityEditor/EntityEditorCommandManager.h"
 #include "EntityEditor/EntityEditorOpenOutlinerEvent.h"
 #include "EntityEditor/EntityEditorOutlinerComponent.h"
 #include "EntityEditor/EntityEditorSelectComponent.h"
@@ -87,13 +87,13 @@ namespace
 
 	void CreateEntity(ecs::EntityWorld& world, const str::StringView name)
 	{
-		auto& commands = world.WriteResource<editor::entity::Commands>();
+		auto& commands = world.WriteResource<editor::entity::CommandManager>();
 		commands.CreateEntity("Entity_");
 	}
 
 	void DestroyEntity(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
-		auto& commands = world.WriteResource<editor::entity::Commands>();
+		auto& commands = world.WriteResource<editor::entity::CommandManager>();
 		commands.DestroyEntity(eng::ToGuid(world, entity));
 	}
 

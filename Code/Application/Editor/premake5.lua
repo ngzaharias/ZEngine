@@ -58,7 +58,6 @@ project "Editor"
 		"%{wks.location}/../Code/Editors/TextureEditor/",
 		"%{wks.location}/../Code/Editors/ThemeEditor/",
 		"%{wks.location}/../Code/Editors/TrajectoryEditor/",
-		"%{wks.location}/../Code/Framework/Command/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Engine/",
@@ -131,7 +130,6 @@ project "Editor"
 		"TrajectoryEditor",
 
 		-- Framework
-		"Command",
 		"Core",
 		"ECS",
 		"Engine",

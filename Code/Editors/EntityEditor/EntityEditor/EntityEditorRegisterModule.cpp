@@ -3,7 +3,7 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "EntityEditor/EntityEditorCommands.h"
+#include "EntityEditor/EntityEditorCommandManager.h"
 #include "EntityEditor/EntityEditorInspectorComponent.h"
 #include "EntityEditor/EntityEditorInspectorSystem.h"
 #include "EntityEditor/EntityEditorOpenInspectorEvent.h"
@@ -17,7 +17,7 @@
 
 void editor::entity::RegisterModule(ecs::EntityWorld& world)
 {
-	static editor::entity::Commands commands(world);
+	static editor::entity::CommandManager manager(world);
 
 	world.RegisterComponent<editor::entity::InspectorComponent>();
 	world.RegisterComponent<editor::entity::OutlinerComponent>();
@@ -25,7 +25,7 @@ void editor::entity::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterComponent<editor::entity::SettingsComponent>();
 	world.RegisterEvent<editor::entity::OpenInspectorEvent>();
 	world.RegisterEvent<editor::entity::OpenOutlinerEvent>();
-	world.RegisterResource<editor::entity::Commands>(commands);
+	world.RegisterResource<editor::entity::CommandManager>(manager);
 	world.RegisterSystem<editor::entity::InspectorSystem>(world);
 	world.RegisterSystem<editor::entity::OutlinerSystem>(world);
 	world.RegisterSystem<editor::entity::SelectSystem>();
