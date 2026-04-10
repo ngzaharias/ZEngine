@@ -6,7 +6,6 @@
 #include "DebugEntity/EntityWindowSystem.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "Engine/PrototypeManager.h"
 
 void debug::entity::RegisterModule(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
 {

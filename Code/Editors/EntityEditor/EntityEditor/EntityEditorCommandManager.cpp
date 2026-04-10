@@ -3,9 +3,9 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
-#include "Engine/TemplateComponent.h"
-#include "Engine/TemplateHelpers.h"
 #include "Engine/TemplateManager.h"
+#include "Engine/UUIDComponent.h"
+#include "Engine/UUIDHelpers.h"
 
 editor::entity::CommandManager::CommandManager(ecs::EntityWorld& world)
 	: m_World(world)
@@ -78,13 +78,20 @@ void editor::entity::CommandManager::AddCommands(Array<Command*>&& commands)
 	m_ExecStack.Append(commands);
 }
 
-void editor::entity::CommandManager::CreateEntity(const str::StringView& name)
+void editor::entity::CommandManager::CreateEntity(const str::Guid& uuid, const str::StringView& name)
 {
-	m_ExecStack.Append(new EntityCreate(str::String(name)));
+	m_ExecStack.Append(new EntityCreate(uuid, name));
 }
 
-void editor::entity::CommandManager::DestroyEntity(const str::Guid& guid)
+void editor::entity::CommandManager::DestroyEntity(const str::Guid& uuid)
 {
-	m_ExecStack.Append(new EntityDestroy(guid));
+	Visitor visitor;
+	const ecs::Entity entity = eng::ToEntity(m_World, uuid);
+
+	const auto& manager = m_World.ReadResource<eng::TemplateManager>();
+	manager.ReadEntity(m_World, entity, visitor);
+
+	str::String data = visitor;
+	m_ExecStack.Append(new EntityDestroy(uuid, std::move(data)));
 }
 

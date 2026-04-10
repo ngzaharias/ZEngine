@@ -25,7 +25,6 @@ namespace ecs
 		ecs::QueryId m_RemovedId = -1;
 		ecs::QueryId m_IncludeId = -1;
 
-		bool m_IsPrototype = false;
 		bool m_IsReplicated = false;
 		bool m_IsTemplate = false;
 

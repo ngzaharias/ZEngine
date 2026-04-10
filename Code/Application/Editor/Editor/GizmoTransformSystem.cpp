@@ -9,7 +9,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraHelpers.h"
 #include "Engine/InputManager.h"
-#include "Engine/PhysicsComponent.h"
+#include "Engine/PhysicsTemplate.h"
 #include "Engine/SettingsDebugComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
@@ -158,13 +158,13 @@ namespace
 						&transform.m_Scale.x);
 				}
 
-				if (gizmo.m_TransformType == editor::gizmo::ETransformType::Physics && world.HasComponent<eng::PhysicsComponent>(selected))
+				if (gizmo.m_TransformType == editor::gizmo::ETransformType::Physics && world.HasComponent<eng::PhysicsTemplate>(selected))
 				{
 					const bool isScale = gizmo.m_TransformOper == editor::gizmo::ETransformOper::Scale;
 					if (isScale)
 						operation = ImGuizmo::BOUNDS;
 
-					auto& physics = world.WriteComponent<eng::PhysicsComponent>(selected);
+					auto& physics = world.WriteComponent<eng::PhysicsTemplate>(selected);
 					for (eng::Shape& shape : physics.m_Shapes)
 					{
 						Matrix4x4 parentTran = Matrix4x4::Identity;

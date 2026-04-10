@@ -38,9 +38,9 @@ namespace editor::entity
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
-		void CreateEntity(const str::StringView& name);
+		void CreateEntity(const str::Guid& uuid, const str::StringView& name);
 		
-		void DestroyEntity(const str::Guid& guid);
+		void DestroyEntity(const str::Guid& uuid);
 		
 		//////////////////////////////////////////////////////////////////////////
 		// Component

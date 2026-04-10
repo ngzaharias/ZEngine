@@ -28,6 +28,7 @@ namespace eng
 	class PhysicsManager;
 	struct PhysicsComponent;
 	struct PhysicsSceneComponent;
+	struct PhysicsTemplate;
 	struct RigidDynamicComponent;
 	struct RigidStaticComponent;
 	struct TransformComponent;
@@ -43,6 +44,7 @@ namespace eng
 			eng::AssetManager,
 			eng::PhysicsComponent,
 			eng::PhysicsManager,
+			eng::PhysicsTemplate,
 			eng::PhysicsSceneComponent,
 			eng::RigidDynamicComponent,
 			eng::RigidStaticComponent,

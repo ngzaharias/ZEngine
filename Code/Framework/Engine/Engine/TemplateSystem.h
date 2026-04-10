@@ -5,8 +5,8 @@
 
 namespace eng
 {
-	struct TemplateComponent;
-	struct TemplateMapComponent;
+	struct UUIDComponent;
+	struct UUIDMapComponent;
 }
 
 namespace eng
@@ -16,9 +16,9 @@ namespace eng
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::TemplateMapComponent>
+			eng::UUIDMapComponent>
 			::Read<
-			eng::TemplateComponent>;
+			eng::UUIDComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

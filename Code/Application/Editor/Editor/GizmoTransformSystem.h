@@ -27,7 +27,7 @@ namespace eng
 	class WindowManager;
 	struct ActiveComponent;
 	struct CameraComponent;
-	struct PhysicsComponent;
+	struct PhysicsTemplate;
 	struct TransformComponent;
 	struct VersionComponent;
 }
@@ -46,7 +46,7 @@ namespace editor::gizmo
 			::Write<
 			editor::gizmo::TransformComponent,
 			eng::InputManager,
-			eng::PhysicsComponent,
+			eng::PhysicsTemplate,
 			eng::TransformComponent>
 			::Read<
 			editor::entity::SelectComponent,

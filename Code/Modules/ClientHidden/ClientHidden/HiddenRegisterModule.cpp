@@ -3,9 +3,12 @@
 
 #include "ClientHidden/HiddenCountComponent.h"
 #include "ClientHidden/HiddenCountSystem.h"
+#include "ClientHidden/HiddenCountTemplate.h"
 #include "ClientHidden/HiddenDebugComponent.h"
 #include "ClientHidden/HiddenGroupComponent.h"
+#include "ClientHidden/HiddenGroupTemplate.h"
 #include "ClientHidden/HiddenObjectComponent.h"
+#include "ClientHidden/HiddenObjectTemplate.h"
 #include "ClientHidden/HiddenPhysicsSystem.h"
 #include "ClientHidden/HiddenRevealComponent.h"
 #include "ClientHidden/HiddenRevealSystem.h"
@@ -17,15 +20,18 @@
 #include "ClientHidden/HiddenVFXSystem.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "Engine/PrototypeManager.h"
 #include "Engine/TableHeadmaster.h"
+#include "Engine/TemplateManager.h"
 
 void client::hidden::RegisterModule(ecs::EntityWorld& world)
 {
 	world.RegisterComponent<client::hidden::CountComponent>();
+	world.RegisterComponent<client::hidden::CountTemplate>();
 	world.RegisterComponent<client::hidden::DebugComponent>();
 	world.RegisterComponent<client::hidden::GroupComponent>();
+	world.RegisterComponent<client::hidden::GroupTemplate>();
 	world.RegisterComponent<client::hidden::ObjectComponent>();
+	world.RegisterComponent<client::hidden::ObjectTemplate>();
 	world.RegisterComponent<client::hidden::RevealComponent>();
 	world.RegisterComponent<client::hidden::VFXComponent>();
 	world.RegisterSystem<client::hidden::CountSystem>();
@@ -37,11 +43,11 @@ void client::hidden::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterSystem<client::hidden::TrackerSystem>();
 	world.RegisterSystem<client::hidden::VFXSystem>();
 
-	// prototypes
+	// templates
 	{
-		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.RegisterComponent<client::hidden::CountComponent>();
-		manager.RegisterComponent<client::hidden::GroupComponent>();
-		manager.RegisterComponent<client::hidden::ObjectComponent>();
+		auto& manager = world.WriteResource<eng::TemplateManager>();
+		manager.RegisterComponent<client::hidden::CountTemplate>();
+		manager.RegisterComponent<client::hidden::GroupTemplate>();
+		manager.RegisterComponent<client::hidden::ObjectTemplate>();
 	}
 }

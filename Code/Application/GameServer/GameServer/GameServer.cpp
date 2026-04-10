@@ -5,7 +5,6 @@
 #include "Engine/AssetManager.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
-#include "Engine/PrototypeManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
 #include "Engine/TemplateManager.h"
@@ -36,7 +35,6 @@ void server::GameServer::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetHost());
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetPeer());
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
-		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
 		m_EntityWorld.RegisterResource(dependencies.m_TemplateManager);
 		m_EntityWorld.RegisterResource(m_ReplicationHost);
 		m_EntityWorld.RegisterResource(m_TypeRegistry);

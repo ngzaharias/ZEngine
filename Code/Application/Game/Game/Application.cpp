@@ -29,7 +29,6 @@ void game::Application::Register()
 		m_NetworkManager,
 		m_PhysicsManager,
 		m_PlatformManager,
-		m_PrototypeManager,
 		m_TableHeadmaster,
 		m_TemplateManager,
 		m_WindowManager };
@@ -38,7 +37,6 @@ void game::Application::Register()
 		m_AssetManager,
 		m_NetworkManager,
 		m_PhysicsManager,
-		m_PrototypeManager,
 		m_TemplateManager };
 
 	m_GameClient.Register(clientDependencies);

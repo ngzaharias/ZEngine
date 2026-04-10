@@ -14,7 +14,6 @@
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PlatformManager.h"
-#include "Engine/PrototypeManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
 #include "Engine/TableHeadmaster.h"
@@ -63,7 +62,6 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetPeer());
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
 		m_EntityWorld.RegisterResource(dependencies.m_PlatformManager);
-		m_EntityWorld.RegisterResource(dependencies.m_PrototypeManager);
 		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
 		m_EntityWorld.RegisterResource(dependencies.m_TemplateManager);
 		m_EntityWorld.RegisterResource(dependencies.m_WindowManager);

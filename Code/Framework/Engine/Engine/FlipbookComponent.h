@@ -2,13 +2,11 @@
 
 #include "Core/Guid.h"
 #include "ECS/Component.h"
-#include "ECS/IsPrototype.h"
 #include "Math/Vector.h"
 
 namespace eng
 {
 	struct FlipbookComponent final : public ecs::Component
-		, ecs::IsPrototype
 	{
 		str::Guid m_Flipbook = { };
 		Vector2u m_Size = Vector2u::Zero;

@@ -26,7 +26,6 @@ namespace eng
 	class TemplateManager;
 	struct CameraComponent;
 	struct PhysicsComponent;
-	struct PrototypeComponent;
 	struct SpriteComponent;
 	struct TransformComponent;
 }
@@ -60,7 +59,6 @@ namespace editor::entity
 			editor::entity::OpenInspectorEvent,
 			eng::AssetManager,
 			eng::level::EntityComponent,
-			eng::PrototypeComponent,
 			gamestate::EditorComponent>;
 
 		InspectorSystem(ecs::EntityWorld& world);

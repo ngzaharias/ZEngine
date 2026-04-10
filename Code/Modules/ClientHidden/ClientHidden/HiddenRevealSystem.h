@@ -24,9 +24,9 @@ namespace eng
 	struct CameraComponent;
 	struct LinesComponent;
 	struct PhysicsSceneComponent;
-	struct PrototypeComponent;
 	struct RigidStaticComponent;
 	struct TransformComponent;
+	struct UUIDComponent;
 }
 
 namespace shared::hidden
@@ -53,8 +53,8 @@ namespace client::hidden
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::PhysicsSceneComponent,
-			eng::PrototypeComponent,
 			eng::TransformComponent,
+			eng::UUIDComponent,
 			eng::WindowManager,
 			shared::hidden::RevealedEvent>;
 

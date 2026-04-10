@@ -1,23 +1,16 @@
 #include "EntityEditorPCH.h"
 #include "EntityEditor/EntityEditorInspectorSystem.h"
 
-#include "Camera/CameraMove3DComponent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraComponent.h"
 #include "Engine/FileHelpers.h"
 #include "Engine/InputManager.h"
-#include "Engine/InspectorHelpers.h"
-#include "Engine/LevelEntityComponent.h"
-#include "Engine/PhysicsComponent.h"
-#include "Engine/SpriteComponent.h"
-#include "Engine/TemplateHelpers.h"
 #include "Engine/TemplateManager.h"
-#include "Engine/TransformComponent.h"
-#include "Engine/VisibilityComponent.h"
+#include "Engine/UUIDComponent.h"
+#include "Engine/UUIDHelpers.h"
 #include "EntityEditor/EntityEditorCommandManager.h"
 #include "EntityEditor/EntityEditorInspector.h"
 #include "EntityEditor/EntityEditorInspectorComponent.h"
@@ -30,11 +23,7 @@
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
-#include "imgui/imgui_stdlib.h"
 #include "imgui/imgui_user.h"
-#include "imgui/Inspector.h"
-
-#include "Engine/TransformTemplate.h"
 
 namespace
 {
@@ -53,15 +42,24 @@ namespace
 	}
 
 	template<typename TComponent>
+	void InspectComponent(ecs::EntityWorld& world, const ecs::Entity& entity, editor::entity::Inspector& inspector)
+	{
+		static const str::String name = str::String(TypeName<TComponent>::m_WithNamespace);
+		if (world.HasComponent<TComponent>(entity))
+			inspector.Visit(name.c_str(), world.ReadComponent<TComponent>(entity));
+	}
+
+	template<typename TComponent>
 	void ToggleComponent(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
+		static const str::String name = str::String(TypeName<TComponent>::m_WithNamespace);
 		const bool hasComponent = world.HasComponent<TComponent>(entity);
 		imgui::Checkbox("##has", hasComponent);
 		ImGui::SameLine();
 		ImGui::BeginDisabled(entity.IsUnassigned());
-		if (ImGui::MenuItem("eng::TemplateComponent"))
+		if (ImGui::MenuItem(name.c_str()))
 		{
-			const str::Guid entityUUID = eng::ToGuid(world, entity);
+			const str::Guid entityUUID = eng::ToUUID(world, entity);
 			if (!hasComponent)
 			{
 				auto& commands = world.WriteResource<editor::entity::CommandManager>();
@@ -78,6 +76,15 @@ namespace
 
 	void Draw_Components(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
+		ToggleComponent<camera::Move2DTemplate>(world, entity);
+		ToggleComponent<camera::Move3DTemplate>(world, entity);
+		ToggleComponent<camera::Pan3DTemplate>(world, entity);
+		ToggleComponent<camera::Zoom2DTemplate>(world, entity);
+		ToggleComponent<eng::CameraTemplate>(world, entity);
+		ToggleComponent<eng::FlipbookTemplate>(world, entity);
+		ToggleComponent<eng::PhysicsTemplate>(world, entity);
+		ToggleComponent<eng::SpriteTemplate>(world, entity);
+		ToggleComponent<eng::StaticMeshTemplate>(world, entity);
 		ToggleComponent<eng::TransformTemplate>(world, entity);
 	}
 
@@ -111,14 +118,26 @@ namespace
 		const auto& window = view.ReadRequired<editor::entity::InspectorComponent>();
 
 		const ecs::Entity entity = select.m_Entity;
-		const str::Guid entityUUID = eng::ToGuid(world, entity);
+		const str::Guid entityUUID = eng::ToUUID(world, entity);
 		if (!entityUUID.IsValid())
 			return;
 
 		editor::entity::Inspector inspector;
 		inspector.Begin("", entityUUID);
-		if (world.HasComponent<eng::TransformTemplate>(entity))
-			inspector.Visit(world.ReadComponent<eng::TransformTemplate>(entity));
+		InspectComponent<ecs::NameComponent>(world, entity, inspector);
+		InspectComponent<eng::UUIDComponent>(world, entity, inspector);
+		InspectComponent<eng::VisibilityTemplate>(world, entity, inspector);
+		InspectComponent<eng::TransformTemplate>(world, entity, inspector);
+		//////////////////////////////////////////////////////////////////////////
+		InspectComponent<camera::Move2DTemplate>(world, entity, inspector);
+		InspectComponent<camera::Move3DTemplate>(world, entity, inspector);
+		InspectComponent<camera::Pan3DTemplate>(world, entity, inspector);
+		InspectComponent<camera::Zoom2DTemplate>(world, entity, inspector);
+		InspectComponent<eng::CameraTemplate>(world, entity, inspector);
+		InspectComponent<eng::FlipbookTemplate>(world, entity, inspector);
+		InspectComponent<eng::PhysicsTemplate>(world, entity, inspector);
+		InspectComponent<eng::SpriteTemplate>(world, entity, inspector);
+		InspectComponent<eng::StaticMeshTemplate>(world, entity, inspector);
 		inspector.End();
 
 		if (inspector.HasCommands())
@@ -166,29 +185,27 @@ namespace
 			const auto& settings = world.ReadComponent<editor::entity::SettingsComponent>();
 
 			const ecs::Entity selected = select.m_Entity;
-			if (world.HasComponent<eng::TemplateComponent>(selected))
+			const auto& name = world.ReadComponent<ecs::NameComponent>(selected);
+
+			str::Path filepath;
+			if (filepath.IsEmpty())
 			{
-				const auto& prototype = world.ReadComponent<eng::TemplateComponent>(selected);
-				const auto& name = world.ReadComponent<ecs::NameComponent>(selected);
+				eng::SaveFileSettings saveFile;
+				saveFile.m_Title = "Save Entity";
+				saveFile.m_Filters = { "Templates (*.template)", "*.template" };
+				saveFile.m_Path = str::Path(settings.m_Save, name.m_Name, eng::TemplateManager::s_Extension);
+				filepath = eng::SaveFileDialog(saveFile);
+			}
 
-				str::Path filepath = prototype.m_Path;
-				if (filepath.IsEmpty())
-				{
-					eng::SaveFileSettings saveFile;
-					saveFile.m_Title = "Save Entity";
-					saveFile.m_Filters = { "Templates (*.template)", "*.template" };
-					saveFile.m_Path = str::Path(settings.m_Save, name.m_Name, eng::TemplateManager::s_Extension);
-					filepath = eng::SaveFileDialog(saveFile);
-				}
+			if (!filepath.IsEmpty())
+			{
+				auto& settings = world.WriteComponent<editor::entity::SettingsComponent>();
+				settings.m_Save = filepath.GetDirectory();
 
-				//if (!filepath.IsEmpty())
-				//{
-				//	auto& settings = world.WriteComponent<editor::entity::SettingsComponent>();
-				//	settings.m_Save = filepath.GetDirectory();
-
-				//	auto& manager = world.WriteResource<eng::TemplateManager>();
-				//	manager.ReadEntity(world, selected, filepath);
-				//}
+				Visitor visitor;
+				auto& manager = world.WriteResource<eng::TemplateManager>();
+				manager.ReadEntity(world, selected, visitor);
+				visitor.SaveToFile(filepath);
 			}
 		}
 	}

@@ -3,8 +3,6 @@
 
 #include "Serialize/Visitor.h"
 
-#include "imgui/Inspector.h"
-
 namespace
 {
 	const str::StringView strRotate = "m_Rotate";
@@ -25,13 +23,4 @@ void Visitor::WriteCustom(const eng::TransformTemplate& value)
 	Write(strTranslate, value.m_Translate);
 	Write(strRotate, value.m_Rotate);
 	Write(strScale, value.m_Scale);
-}
-template<>
-bool imgui::Inspector::WriteCustom(eng::TransformTemplate& value)
-{
-	bool result = false;
-	result |= Write("m_Translate", value.m_Translate);
-	result |= Write("m_Rotate", value.m_Rotate);
-	result |= Write("m_Scale", value.m_Scale);
-	return result;
 }

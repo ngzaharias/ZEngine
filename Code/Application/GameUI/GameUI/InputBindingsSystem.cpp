@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
 #include "GameUI/GameMenuOpenEvent.h"
-#include "GameUI/InputComponents.h"
+#include "GameUI/InputBindingsComponent.h"
 
 namespace 
 {

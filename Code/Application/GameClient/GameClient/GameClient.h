@@ -19,7 +19,6 @@ namespace eng
 	class NetworkManager;
 	class PhysicsManager;
 	class PlatformManager;
-	class PrototypeManager;
 	class TableHeadmaster;
 	class TemplateManager;
 	class WindowManager;
@@ -34,7 +33,6 @@ namespace client
 		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
 		eng::PlatformManager& m_PlatformManager;
-		eng::PrototypeManager& m_PrototypeManager;
 		eng::TableHeadmaster& m_TableHeadmaster;
 		eng::TemplateManager& m_TemplateManager;
 		eng::WindowManager& m_WindowManager;

@@ -6,22 +6,21 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraComponent.h"
+#include "Engine/CameraTemplate.h"
 #include "Engine/FileHelpers.h"
-#include "Engine/FlipbookComponent.h"
+#include "Engine/FlipbookTemplate.h"
 #include "Engine/InputManager.h"
 #include "Engine/InspectorHelpers.h"
-#include "Engine/LevelEntityComponent.h"
-#include "Engine/LightAmbientComponent.h"
-#include "Engine/LightDirectionalComponent.h"
-#include "Engine/LightPointComponent.h"
-#include "Engine/PhysicsComponent.h"
-#include "Engine/SpriteComponent.h"
-#include "Engine/StaticMeshComponent.h"
-#include "Engine/TemplateHelpers.h"
+#include "Engine/LightAmbientTemplate.h"
+#include "Engine/LightDirectionalTemplate.h"
+#include "Engine/LightPointTemplate.h"
+#include "Engine/PhysicsTemplate.h"
+#include "Engine/SpriteTemplate.h"
+#include "Engine/StaticMeshTemplate.h"
 #include "Engine/TemplateManager.h"
-#include "Engine/TransformComponent.h"
-#include "Engine/VisibilityComponent.h"
+#include "Engine/TransformTemplate.h"
+#include "Engine/UUIDHelpers.h"
+#include "Engine/VisibilityTemplate.h"
 #include "EntityEditor/EntityEditorCommandManager.h"
 #include "EntityEditor/EntityEditorOpenOutlinerEvent.h"
 #include "EntityEditor/EntityEditorOutlinerComponent.h"
@@ -59,28 +58,28 @@ namespace
 
 	using IconView = ecs::EntityView
 		::Optional<
-		eng::CameraComponent,
-		eng::FlipbookComponent,
-		eng::light::AmbientComponent,
-		eng::light::DirectionalComponent,
-		eng::light::PointComponent,
-		eng::SpriteComponent,
-		eng::StaticMeshComponent>;
+		eng::CameraTemplate,
+		eng::FlipbookTemplate,
+		eng::light::AmbientTemplate,
+		eng::light::DirectionalTemplate,
+		eng::light::PointTemplate,
+		eng::SpriteTemplate,
+		eng::StaticMeshTemplate>;
 	const icon::Data& GetIcon(const IconView& view)
 	{
-		if (view.HasOptional<eng::CameraComponent>())
+		if (view.HasOptional<eng::CameraTemplate>())
 			return icon::ENTITY_CAMERA;
-		if (view.HasOptional<eng::FlipbookComponent>())
+		if (view.HasOptional<eng::FlipbookTemplate>())
 			return icon::ENTITY_FLIPBOOK;
-		if (view.HasOptional<eng::light::AmbientComponent>())
+		if (view.HasOptional<eng::light::AmbientTemplate>())
 			return icon::ENTITY_LIGHT;
-		if (view.HasOptional<eng::light::DirectionalComponent>())
+		if (view.HasOptional<eng::light::DirectionalTemplate>())
 			return icon::ENTITY_LIGHT;
-		if (view.HasOptional<eng::light::PointComponent>())
+		if (view.HasOptional<eng::light::PointTemplate>())
 			return icon::ENTITY_LIGHT;
-		if (view.HasOptional<eng::SpriteComponent>())
+		if (view.HasOptional<eng::SpriteTemplate>())
 			return icon::ENTITY_SPRITE;
-		if (view.HasOptional<eng::StaticMeshComponent>())
+		if (view.HasOptional<eng::StaticMeshTemplate>())
 			return icon::ENTITY_STATICMESH;
 		return icon::ENTITY;
 	}
@@ -88,13 +87,13 @@ namespace
 	void CreateEntity(ecs::EntityWorld& world, const str::StringView name)
 	{
 		auto& commands = world.WriteResource<editor::entity::CommandManager>();
-		commands.CreateEntity("Entity_");
+		commands.CreateEntity(str::Guid::Generate(), "Entity_");
 	}
 
 	void DestroyEntity(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
 		auto& commands = world.WriteResource<editor::entity::CommandManager>();
-		commands.DestroyEntity(eng::ToGuid(world, entity));
+		commands.DestroyEntity(eng::ToUUID(world, entity));
 	}
 
 	void Icon(const icon::Data& icon, const ImVec2& size = ImVec2(15, 15))
@@ -151,16 +150,16 @@ namespace
 
 		using Query = ecs::query
 			::Include<
-			const eng::TemplateComponent>
+			const eng::UUIDComponent>
 			::Optional<
 			const ecs::NameComponent,
-			const eng::CameraComponent,
-			const eng::FlipbookComponent,
-			const eng::light::AmbientComponent,
-			const eng::light::DirectionalComponent,
-			const eng::light::PointComponent,
-			const eng::SpriteComponent,
-			const eng::StaticMeshComponent>;
+			const eng::CameraTemplate,
+			const eng::FlipbookTemplate,
+			const eng::light::AmbientTemplate,
+			const eng::light::DirectionalTemplate,
+			const eng::light::PointTemplate,
+			const eng::SpriteTemplate,
+			const eng::StaticMeshTemplate>;
 		for (auto&& view : world.Query<Query>())
 		{
 			imgui::RaiiID id(view.GetEntity().GetIndex());

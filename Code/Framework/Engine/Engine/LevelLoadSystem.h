@@ -11,7 +11,7 @@ namespace ecs
 
 namespace eng
 {
-	class PrototypeManager;
+	class TemplateManager;
 }
 
 namespace eng::level
@@ -42,7 +42,7 @@ namespace eng::level
 			eng::level::LoadedComponent,
 			eng::level::LoadingComponent,
 			eng::level::LoadEvent,
-			eng::PrototypeManager>;
+			eng::TemplateManager>;
 		
 		LoadSystem(ecs::EntityWorld& entityWorld);
 

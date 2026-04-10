@@ -3,6 +3,7 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
+#include "Engine/UUIDComponent.h"
 
 namespace
 {
@@ -10,16 +11,32 @@ namespace
 	const str::StringView strName = "m_Name";
 }
 
-void eng::TemplateManager::LoadEntity(ecs::EntityWorld& world, const ecs::Entity& entity, const str::String& data) const
+void eng::TemplateManager::ReadEntity(ecs::EntityWorld& world, const ecs::Entity& entity, Visitor& visitor) const
+{
+	const auto& nameComponent = world.ReadComponent<ecs::NameComponent>(entity);
+	const auto& uuidComponent = world.ReadComponent<eng::UUIDComponent>(entity);
+
+	visitor.Write(strName, nameComponent.m_Name);
+	visitor.Write(strGuid, uuidComponent.m_UUID);
+	for (auto&& [key, entry] : m_EntryMap)
+	{
+		entry.m_Read(world, entity, visitor);
+	}
+}
+
+void eng::TemplateManager::WriteEntity(ecs::EntityWorld& world, const ecs::Entity& entity, Visitor& visitor) const
 {
 	PROFILE_FUNCTION();
 
-	auto& nameComponent = world.AddComponent<ecs::NameComponent>(entity);
-	auto& templateComponent = world.AddComponent<eng::TemplateComponent>(entity);
+	auto& nameComponent = world.HasComponent<ecs::NameComponent>(entity)
+		? world.WriteComponent<ecs::NameComponent>(entity)
+		: world.AddComponent<ecs::NameComponent>(entity);
+	auto& uuidComponent = world.HasComponent<eng::UUIDComponent>(entity)
+		? world.WriteComponent<eng::UUIDComponent>(entity)
+		: world.AddComponent<eng::UUIDComponent>(entity);
 
-	Visitor visitor(data);
 	visitor.Read(strName, nameComponent.m_Name, {});
-	visitor.Read(strGuid, templateComponent.m_Guid, {});
+	visitor.Read(strGuid, uuidComponent.m_UUID, {});
 	for (str::StringView key : visitor)
 	{
 		const str::Name typeName = NAME(key);
@@ -27,50 +44,6 @@ void eng::TemplateManager::LoadEntity(ecs::EntityWorld& world, const ecs::Entity
 			continue;
 
 		const eng::TemplateEntry& entry = m_EntryMap.Get(typeName);
-		entry.m_Load(world, entity, visitor);
+		entry.m_Write(world, entity, visitor);
 	}
-}
-
-void eng::TemplateManager::ReadEntity(ecs::EntityWorld& world, const ecs::Entity& entity, str::String& data) const
-{
-	const auto& nameComponent = world.ReadComponent<ecs::NameComponent>(entity);
-	const auto& templateComponent = world.ReadComponent<eng::TemplateComponent>(entity);
-
-	Visitor visitor;
-	visitor.Write(strName, nameComponent.m_Name);
-	visitor.Write(strGuid, templateComponent.m_Guid);
-	for (auto&& [key, entry] : m_EntryMap)
-	{
-		entry.m_Read(world, entity, visitor);
-	}
-
-	data = visitor;
-}
-
-void eng::TemplateManager::SyncEntity(ecs::EntityWorld& world, const ecs::Entity& entity, const str::String& data) const
-{
-	PROFILE_FUNCTION();
-
-	auto& nameComponent = !world.HasComponent<ecs::NameComponent>(entity)
-		? world.AddComponent<ecs::NameComponent>(entity)
-		: world.WriteComponent<ecs::NameComponent>(entity);
-	auto& templateComponent = !world.HasComponent<eng::TemplateComponent>(entity)
-		? world.AddComponent<eng::TemplateComponent>(entity)
-		: world.WriteComponent<eng::TemplateComponent>(entity);
-
-	Visitor visitor(data);
-	visitor.Read(strName, nameComponent.m_Name, {});
-	visitor.Read(strGuid, templateComponent.m_Guid, {});
-	for (auto&& [key, entry] : m_EntryMap)
-	{
-		entry.m_Sync(world, entity, visitor);
-	}
-}
-
-bool eng::TemplateManager::InspectEntity(ecs::EntityWorld& world, const ecs::Entity& entity, imgui::Inspector& insepctor) const
-{
-	bool modified = false;
-	for (auto&& [name, entry] : m_EntryMap)
-		modified |= entry.m_Inspect(world, entity, insepctor);
-	return modified;
 }

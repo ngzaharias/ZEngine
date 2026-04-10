@@ -20,25 +20,20 @@ namespace editor::entity
 
 namespace eng
 {
-	struct CameraComponent;
-	struct FlipbookComponent;
-	struct SpriteComponent;
-	struct StaticMeshComponent;
-	struct TemplateComponent;
-	struct TransformComponent;
-	struct VisibilityComponent;
-}
-
-namespace eng::level
-{
-	struct EntityComponent;
+	struct CameraTemplate;
+	struct FlipbookTemplate;
+	struct SpriteTemplate;
+	struct StaticMeshTemplate;
+	struct TransformTemplate;
+	struct UUIDComponent;
+	struct VisibilityTemplate;
 }
 
 namespace eng::light
 {
-	struct AmbientComponent;
-	struct DirectionalComponent;
-	struct PointComponent;
+	struct AmbientTemplate;
+	struct DirectionalTemplate;
+	struct PointTemplate;
 }
 
 namespace gamestate
@@ -57,19 +52,18 @@ namespace editor::entity
 			editor::entity::CommandManager,
 			editor::entity::OutlinerComponent,
 			editor::entity::SelectComponent,
-			eng::level::EntityComponent,
-			eng::SpriteComponent,
-			eng::TemplateComponent,
-			eng::TransformComponent,
-			eng::VisibilityComponent>
+			eng::SpriteTemplate,
+			eng::TransformTemplate,
+			eng::UUIDComponent,
+			eng::VisibilityTemplate>
 			::Read<
 			editor::entity::OpenOutlinerEvent,
-			eng::CameraComponent,
-			eng::FlipbookComponent,
-			eng::light::AmbientComponent,
-			eng::light::DirectionalComponent,
-			eng::light::PointComponent,
-			eng::StaticMeshComponent,
+			eng::CameraTemplate,
+			eng::FlipbookTemplate,
+			eng::light::AmbientTemplate,
+			eng::light::DirectionalTemplate,
+			eng::light::PointTemplate,
+			eng::StaticMeshTemplate,
 			gamestate::EditorComponent>;
 
 		OutlinerSystem(ecs::EntityWorld& world);

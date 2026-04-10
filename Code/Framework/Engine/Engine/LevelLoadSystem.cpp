@@ -14,7 +14,7 @@
 #include "Engine/LevelLoadedComponent.h"
 #include "Engine/LevelLoadingComponent.h"
 #include "Engine/LevelLoadEvent.h"
-#include "Engine/PrototypeManager.h"
+#include "Engine/TemplateManager.h"
 
 #include <filesystem>
 
@@ -114,9 +114,9 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 
 void eng::level::LoadSystem::LoadLevel(World& world, const str::Name& levelName, const str::Path& directory)
 {
-	constexpr const char* s_Extension = ".prototype";
+	constexpr const char* s_Extension = ".template";
 
-	const auto& prototypeManager = world.ReadResource<eng::PrototypeManager>();
+	const auto& manager = world.ReadResource<eng::TemplateManager>();
 
 	{
 		const ecs::Entity levelEntity = world.CreateEntity();
@@ -145,9 +145,12 @@ void eng::level::LoadSystem::LoadLevel(World& world, const str::Name& levelName,
 		}
 		else if (filepath.GetFileExtension() == s_Extension)
 		{
+			Visitor visitor;
+			visitor.LoadFromFile(filepath);
+
 			const ecs::Entity entity = world.CreateEntity();
 			world.AddComponent<eng::level::EntityComponent>(entity, levelName);
-			prototypeManager.LoadEntity(m_EntityWorld, entity, filepath);
+			manager.WriteEntity(m_EntityWorld, entity, visitor);
 		}
 	}
 }
