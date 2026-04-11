@@ -35,11 +35,13 @@ inline bool imgui::Inspector::Write(const char* label, Value& value)
 	ImGui::TableNextRow();
 
 	RaiiID id(label);
-	if (imgui::WriteHeader(label, value))
+	bool expanded = imgui::WriteHeader(label, value);
+	bool modified = imgui::WriteDetails(label, value);
+	if (expanded)
 	{
 		RaiiIndent indent(0);
 		ImGui::TableSetColumnIndex(1);
-		return imgui::WriteMember(value);
+		modified |= imgui::WriteMember(value);
 	}
-	return false;
+	return modified;
 }

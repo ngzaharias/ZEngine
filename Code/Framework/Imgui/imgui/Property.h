@@ -69,6 +69,9 @@ namespace imgui
 	bool WriteHeader(const char* label, Value& value);
 
 	template<typename Value>
+	bool WriteDetails(const char* label, Value& value);
+
+	template<typename Value>
 	void ReadMember(const Value& value);
 	template<typename Value>
 	bool WriteMember(Value& value);

@@ -112,13 +112,15 @@ inline bool imgui::Write(const char* label, Value& value)
 	ImGui::TableNextRow();
 
 	RaiiID id(label);
-	if (WriteHeader(label, value))
+	bool expanded = WriteHeader(label, value);
+	bool modified = WriteDetails(label, value);
+	if (expanded)
 	{
 		RaiiIndent indent(0);
 		ImGui::TableSetColumnIndex(1);
-		return WriteMember(value);
+		modified |= WriteMember(value);
 	}
-	return false;
+	return modified;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -162,6 +164,23 @@ template<typename Value>
 bool imgui::WriteHeader(const char* label, Value& value)
 {
 	RaiiID id(label);
+	if constexpr (core::IsSpecialization<Value, std::optional>::value)
+	{
+		if (value.has_value())
+			return WriteHeader(label, *value);
+		return _private::Header<Value::value_type>(label);
+	}
+	else
+	{
+		return _private::Header<Value>(label);
+	}
+	return false;
+}
+
+template<typename Value>
+bool imgui::WriteDetails(const char* label, Value& value)
+{
+	bool modified = false;
 	if constexpr (core::IsSpecialization<Value, Array>::value)
 	{
 		struct Append {};
@@ -170,7 +189,6 @@ bool imgui::WriteHeader(const char* label, Value& value)
 		using Command = Optional<Variant<Append, PopBack, RemoveAll>>;
 
 		Command command = {};
-		bool isExpanded = _private::Header<Value>(label);
 		ImGui::OpenPopupOnItemClick("array##parent");
 
 		if (ImGui::BeginPopup("array##parent"))
@@ -186,13 +204,12 @@ bool imgui::WriteHeader(const char* label, Value& value)
 
 		if (command)
 		{
+			modified = true;
 			core::VariantMatch(*command,
 				[&value](const Append&) { value.Emplace(); },
 				[&value](const PopBack&) { if (!value.IsEmpty()) { value.Pop(); } },
 				[&value](const RemoveAll&) { value.RemoveAll(); });
 		}
-
-		return isExpanded;
 	}
 	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
 	{
@@ -200,15 +217,12 @@ bool imgui::WriteHeader(const char* label, Value& value)
 		ImGui::TableSetColumnIndex(2);
 		if (imgui::Checkbox("##enable", hasValue))
 		{
+			modified = true;
 			if (hasValue)
 				value.emplace();
 			if (!hasValue)
 				value.reset();
 		}
-
-		if (hasValue)
-			return WriteHeader(label, *value);
-		return _private::Header<Value::value_type>(label);
 	}
 	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
 	{
@@ -222,17 +236,11 @@ bool imgui::WriteHeader(const char* label, Value& value)
 		ImGui::SetNextItemWidth(-1);
 		if (ImGui::BeginCombo("##variant", preview.c_str()))
 		{
-			_private::ComboVariant(value);
+			modified |= _private::ComboVariant(value);
 			ImGui::EndCombo();
 		}
-
-		return _private::Header<Value>(label);
 	}
-	else
-	{
-		return _private::Header<Value>(label);
-	}
-	return false;
+	return modified;
 }
 
 template<typename Value>
