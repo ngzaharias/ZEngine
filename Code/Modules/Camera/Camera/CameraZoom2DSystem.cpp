@@ -2,6 +2,7 @@
 #include "Camera/CameraZoom2DSystem.h"
 
 #include "Camera/CameraZoom2DComponent.h"
+#include "Camera/CameraZoom2DTemplate.h"
 #include "Camera/CameraSettingsComponent.h"
 #include "Core/GameTime.h"
 #include "Core/VariantHelpers.h"
@@ -87,5 +88,32 @@ void camera::Zoom2DSystem::Update(World& world, const GameTime& gameTime)
 				writeZoom.m_Target = {};
 			}
 		}
+	}
+
+	using AddedQuery = ecs::query
+		::Added<const camera::Zoom2DTemplate>
+		::Include<const camera::Zoom2DTemplate>;
+	for (auto&& view : world.Query<AddedQuery>())
+	{
+		const auto& cameraTemplate = view.ReadRequired<camera::Zoom2DTemplate>();
+		auto& cameraComponent = world.AddComponent<camera::Zoom2DComponent>(view);
+		cameraComponent.m_Min = cameraTemplate.m_Min;
+		cameraComponent.m_Max = cameraTemplate.m_Max;
+	}
+
+	using UpdatedQuery = ecs::query
+		::Updated<const camera::Zoom2DTemplate>
+		::Include<camera::Zoom2DComponent, const camera::Zoom2DTemplate>;
+	for (auto&& view : world.Query<UpdatedQuery>())
+	{
+		const auto& cameraTemplate = view.ReadRequired<camera::Zoom2DTemplate>();
+		auto& cameraComponent = view.WriteRequired<camera::Zoom2DComponent>();
+		cameraComponent.m_Min = cameraTemplate.m_Min;
+		cameraComponent.m_Max = cameraTemplate.m_Max;
+	}
+
+	for (auto&& view : world.Query<ecs::query::Removed<const camera::Zoom2DTemplate>>())
+	{
+		world.RemoveComponent<camera::Zoom2DComponent>(view);
 	}
 }

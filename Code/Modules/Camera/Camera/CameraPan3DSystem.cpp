@@ -2,6 +2,7 @@
 #include "Camera/CameraPan3DSystem.h"
 
 #include "Camera/CameraPan3DComponent.h"
+#include "Camera/CameraPan3DTemplate.h"
 #include "Core/GameTime.h"
 #include "Core/VariantHelpers.h"
 #include "ECS/EntityWorld.h"
@@ -88,5 +89,18 @@ void camera::Pan3DSystem::Update(World& world, const GameTime& gameTime)
 				writeTransform.m_Translate = translate;
 			}
 		}
+	}
+
+	using AddedQuery = ecs::query
+		::Added<const camera::Pan3DTemplate>
+		::Include<const camera::Pan3DTemplate>;
+	for (auto&& view : world.Query<AddedQuery>())
+	{
+		world.AddComponent<camera::Pan3DComponent>(view);
+	}
+
+	for (auto&& view : world.Query<ecs::query::Removed<const camera::Pan3DTemplate>>())
+	{
+		world.RemoveComponent<camera::Pan3DComponent>(view);
 	}
 }

@@ -2,6 +2,7 @@
 #include "Camera/CameraMove2DSystem.h"
 
 #include "Camera/CameraMove2DComponent.h"
+#include "Camera/CameraMove2DTemplate.h"
 #include "Camera/CameraSettingsComponent.h"
 #include "Core/GameTime.h"
 #include "Core/VariantHelpers.h"
@@ -87,5 +88,18 @@ void camera::Move2DSystem::Update(World& world, const GameTime& gameTime)
 			const Quaternion rotation = Quaternion::FromRotator(transform.m_Rotate);
 			transform.m_Translate += (direction * speed) * rotation;
 		}
+	}
+
+	using AddedQuery = ecs::query
+		::Added<const camera::Move2DTemplate>
+		::Include<const camera::Move2DTemplate>;
+	for (auto&& view : world.Query<AddedQuery>())
+	{
+		world.AddComponent<camera::Move2DComponent>(view);
+	}
+
+	for (auto&& view : world.Query<ecs::query::Removed<const camera::Move2DTemplate>>())
+	{
+		world.RemoveComponent<camera::Move2DComponent>(view);
 	}
 }

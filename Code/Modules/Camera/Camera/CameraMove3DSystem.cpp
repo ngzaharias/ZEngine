@@ -2,6 +2,7 @@
 #include "Camera/CameraMove3DSystem.h"
 
 #include "Camera/CameraMove3DComponent.h"
+#include "Camera/CameraMove3DTemplate.h"
 #include "Camera/CameraSettingsComponent.h"
 #include "Core/GameTime.h"
 #include "Core/VariantHelpers.h"
@@ -108,5 +109,18 @@ void camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 			auto& writeTransform = view.WriteRequired<eng::TransformComponent>();
 			writeTransform.m_Rotate += rotator;
 		}
+	}
+
+	using AddedQuery = ecs::query
+		::Added<const camera::Move3DTemplate>
+		::Include<const camera::Move3DTemplate>;
+	for (auto&& view : world.Query<AddedQuery>())
+	{
+		world.AddComponent<camera::Move3DComponent>(view);
+	}
+
+	for (auto&& view : world.Query<ecs::query::Removed<const camera::Move3DTemplate>>())
+	{
+		world.RemoveComponent<camera::Move3DComponent>(view);
 	}
 }

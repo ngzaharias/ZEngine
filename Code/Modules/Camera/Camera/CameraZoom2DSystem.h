@@ -7,6 +7,7 @@ namespace camera
 {
 	struct SettingsComponent;
 	struct Zoom2DComponent;
+	struct Zoom2DTemplate;
 }
 
 namespace eng
@@ -25,11 +26,12 @@ namespace camera
 	public:
 		using World = ecs::WorldView
 			::Write<
+			camera::Zoom2DComponent,
 			eng::CameraComponent,
 			eng::TransformComponent>
 			::Read<
 			camera::SettingsComponent,
-			camera::Zoom2DComponent,
+			camera::Zoom2DTemplate,
 			eng::ActiveComponent,
 			eng::InputManager,
 			eng::WindowManager>;

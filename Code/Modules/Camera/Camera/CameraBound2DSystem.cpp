@@ -2,6 +2,7 @@
 #include "Camera/CameraBound2DSystem.h"
 
 #include "Camera/CameraBound2DComponent.h"
+#include "Camera/CameraBound2DTemplate.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -61,5 +62,32 @@ void camera::Bound2DSystem::Update(World& world, const GameTime& gameTime)
 				writeTransform.m_Translate = translate;
 			}
 		}
+	}
+
+	using AddedQuery = ecs::query
+		::Added<const camera::Bound2DTemplate>
+		::Include<const camera::Bound2DTemplate>;
+	for (auto&& view : world.Query<AddedQuery>())
+	{
+		const auto& cameraTemplate = view.ReadRequired<camera::Bound2DTemplate>();
+		auto& cameraComponent = world.AddComponent<camera::Bound2DComponent>(view);
+		cameraComponent.m_Min = cameraTemplate.m_Min;
+		cameraComponent.m_Max = cameraTemplate.m_Max;
+	}
+
+	using UpdatedQuery = ecs::query
+		::Updated<const camera::Bound2DTemplate>
+		::Include<camera::Bound2DComponent, const camera::Bound2DTemplate>;
+	for (auto&& view : world.Query<UpdatedQuery>())
+	{
+		const auto& cameraTemplate = view.ReadRequired<camera::Bound2DTemplate>();
+		auto& cameraComponent = view.WriteRequired<camera::Bound2DComponent>();
+		cameraComponent.m_Min = cameraTemplate.m_Min;
+		cameraComponent.m_Max = cameraTemplate.m_Max;
+	}
+
+	for (auto&& view : world.Query<ecs::query::Removed<const camera::Bound2DTemplate>>())
+	{
+		world.RemoveComponent<camera::Bound2DComponent>(view);
 	}
 }

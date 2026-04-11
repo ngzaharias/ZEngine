@@ -6,6 +6,7 @@
 namespace camera
 {
 	struct Bound2DComponent;
+	struct Bound2DTemplate;
 }
 
 namespace eng
@@ -23,9 +24,10 @@ namespace camera
 	public:
 		using World = ecs::WorldView
 			::Write<
+			camera::Bound2DComponent,
 			eng::TransformComponent>
 			::Read<
-			camera::Bound2DComponent,
+			camera::Bound2DTemplate,
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::WindowManager>;

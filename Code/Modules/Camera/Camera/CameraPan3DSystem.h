@@ -6,6 +6,7 @@
 namespace camera
 {
 	struct Pan3DComponent;
+	struct Pan3DTemplate;
 }
 
 namespace eng
@@ -24,10 +25,11 @@ namespace camera
 	public:
 		using World = ecs::WorldView
 			::Write<
+			camera::Pan3DComponent,
 			eng::InputManager,
 			eng::TransformComponent>
 			::Read<
-			camera::Pan3DComponent,
+			camera::Pan3DTemplate,
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::WindowManager>;
