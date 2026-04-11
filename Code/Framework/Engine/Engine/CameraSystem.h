@@ -5,18 +5,22 @@
 
 namespace eng
 {
-	class AssetManager;
-	struct FlipbookComponent;
+	struct CameraComponent;
+	struct CameraTemplate;
+}
 
-	class FlipbookPlaySystem : public ecs::System
+namespace eng
+{
+	/// \brief
+	class CameraSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::FlipbookComponent>
+			eng::CameraComponent>
 			::Read<
-			eng::AssetManager>;
+			eng::CameraTemplate>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
-};
+}
