@@ -39,7 +39,7 @@ void Visitor::WriteCustom(const editor::settings::Gizmos& value)
 	Write(strTransform, value.m_Transform);
 }
 template<>
-bool imgui::WriteCustom(editor::settings::Gizmos& value)
+bool imgui::Inspector::WriteCustom(editor::settings::Gizmos& value)
 {
 	bool result = false;
 	result |= Write("IsEnabled", value.m_IsEnabled);
@@ -67,7 +67,7 @@ void Visitor::WriteCustom(const editor::settings::Gizmos::CoordAxes& value)
 	Write(strShowZ, value.m_ShowZ);
 }
 template<>
-bool imgui::WriteCustom(editor::settings::Gizmos::CoordAxes& value)
+bool imgui::Inspector::WriteCustom(editor::settings::Gizmos::CoordAxes& value)
 {
 	bool result = false;
 	result |= Write("IsEnabled", value.m_IsEnabled);
@@ -88,7 +88,7 @@ void Visitor::WriteCustom(const editor::settings::Gizmos::Crosshair& value)
 	Write(strIsEnabled, value.m_IsEnabled);
 }
 template<>
-bool imgui::WriteCustom(editor::settings::Gizmos::Crosshair& value)
+bool imgui::Inspector::WriteCustom(editor::settings::Gizmos::Crosshair& value)
 {
 	bool result = false;
 	result |= Write("IsEnabled", value.m_IsEnabled);
@@ -112,7 +112,7 @@ void Visitor::WriteCustom(const editor::settings::Gizmos::FloorGrid& value)
 	Write(strMajorColour, value.m_MajorColour);
 }
 template<>
-bool imgui::WriteCustom(editor::settings::Gizmos::FloorGrid& value)
+bool imgui::Inspector::WriteCustom(editor::settings::Gizmos::FloorGrid& value)
 {
 	bool result = false;
 	result |= Write("IsEnabled", value.m_IsEnabled);
@@ -133,7 +133,7 @@ void Visitor::WriteCustom(const editor::settings::Gizmos::Transform& value)
 	Write(strIsEnabled, value.m_IsEnabled);
 }
 template<>
-bool imgui::WriteCustom(editor::settings::Gizmos::Transform& value)
+bool imgui::Inspector::WriteCustom(editor::settings::Gizmos::Transform& value)
 {
 	bool result = false;
 	result |= Write("IsEnabled", value.m_IsEnabled);

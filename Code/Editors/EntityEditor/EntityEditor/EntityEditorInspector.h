@@ -5,8 +5,6 @@
 #include "EntityEditor/EntityEditorCommands.h"
 
 #include "imgui/imgui.h"
-#include "imgui/imgui_user.h"
-#include "imgui/Property.h"
 
 namespace editor::entity
 {

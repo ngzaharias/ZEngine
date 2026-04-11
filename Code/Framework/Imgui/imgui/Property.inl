@@ -112,15 +112,13 @@ inline bool imgui::Write(const char* label, Value& value)
 	ImGui::TableNextRow();
 
 	RaiiID id(label);
-	bool modified = false;
-	modified |= WriteDetails(value);
 	if (WriteHeader(label, value))
 	{
 		RaiiIndent indent(0);
 		ImGui::TableSetColumnIndex(1);
-		modified |= WriteMember(value);
+		return WriteMember(value);
 	}
-	return modified;
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -164,57 +162,53 @@ template<typename Value>
 bool imgui::WriteHeader(const char* label, Value& value)
 {
 	RaiiID id(label);
-	if constexpr (core::IsSpecialization<Value, std::optional>::value)
-	{
-		if (value.has_value())
-			return WriteHeader(label, *value);
-		return _private::Header<Value::value_type>(label);
-	}
-	else
-	{
-		return _private::Header<Value>(label);
-	}
-	return false;
-}
-
-template<typename Value>
-bool imgui::WriteDetails(Value& value)
-{
-	bool modified = false;
-	RaiiID id(&modified);
 	if constexpr (core::IsSpecialization<Value, Array>::value)
 	{
-		ImGui::TableSetColumnIndex(1);
-		if (ImGui::Button("Append"))
+		struct Append {};
+		struct PopBack {};
+		struct RemoveAll {};
+		using Command = Optional<Variant<Append, PopBack, RemoveAll>>;
+
+		Command command = {};
+		bool isExpanded = _private::Header<Value>(label);
+		ImGui::OpenPopupOnItemClick("array##parent");
+
+		if (ImGui::BeginPopup("array##parent"))
 		{
-			modified |= true;
-			value.Emplace();
+			if (ImGui::Selectable("Append"))
+				command = Append{};
+			if (ImGui::Selectable("PopBack"))
+				command = PopBack{};
+			if (ImGui::Selectable("RemoveAll"))
+				command = RemoveAll{};
+			ImGui::EndPopup();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("PopBack") && !value.IsEmpty())
+
+		if (command)
 		{
-			modified |= true;
-			value.Pop();
+			core::VariantMatch(*command,
+				[&value](const Append&) { value.Emplace(); },
+				[&value](const PopBack&) { if (!value.IsEmpty()) { value.Pop(); } },
+				[&value](const RemoveAll&) { value.RemoveAll(); });
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("RemoveAll"))
-		{
-			modified |= true;
-			value.RemoveAll();
-		}
+
+		return isExpanded;
 	}
-	if constexpr (core::IsSpecialization<Value, std::optional>::value)
+	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
 	{
 		bool hasValue = value.has_value();
 		ImGui::TableSetColumnIndex(2);
 		if (imgui::Checkbox("##enable", hasValue))
 		{
-			modified |= true;
 			if (hasValue)
 				value.emplace();
 			if (!hasValue)
 				value.reset();
 		}
+
+		if (hasValue)
+			return WriteHeader(label, *value);
+		return _private::Header<Value::value_type>(label);
 	}
 	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
 	{
@@ -228,11 +222,17 @@ bool imgui::WriteDetails(Value& value)
 		ImGui::SetNextItemWidth(-1);
 		if (ImGui::BeginCombo("##variant", preview.c_str()))
 		{
-			modified |= _private::ComboVariant(value);
+			_private::ComboVariant(value);
 			ImGui::EndCombo();
 		}
+
+		return _private::Header<Value>(label);
 	}
-	return modified;
+	else
+	{
+		return _private::Header<Value>(label);
+	}
+	return false;
 }
 
 template<typename Value>
@@ -271,36 +271,36 @@ void imgui::ReadMember(const Value& value)
 template<typename Value>
 bool imgui::WriteMember(Value& value)
 {
-	bool modified = false;
+	bool result = false;
 	if constexpr (core::IsSpecialization<Value, Array>::value)
 	{
-		modified |= WriteArray(value);
+		result = WriteArray(value);
 	}
 	else if constexpr (core::IsSpecialization<Value, Map>::value)
 	{
-		modified |= WriteMap(value);
+		result = WriteMap(value);
 	}
 	else if constexpr (core::IsSpecialization<Value, Set>::value)
 	{
-		modified |= WriteSet(value);
+		result = WriteSet(value);
 	}
 	else if constexpr (core::IsSpecialization<Value, std::optional>::value)
 	{
-		modified |= WriteOptional(value);
+		result = WriteOptional(value);
 	}
 	else if constexpr (core::IsSpecialization<Value, std::variant>::value)
 	{
-		modified |= WriteVariant(value);
+		result = WriteVariant(value);
 	}
 	else if constexpr (std::is_enum<Value>::value)
 	{
-		modified |= WriteEnum(value);
+		result = WriteEnum(value);
 	}
 	else
 	{
-		modified |= WriteCustom(value);
+		result = WriteCustom(value);
 	}
-	return modified;
+	return result;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -330,7 +330,7 @@ bool imgui::WriteArray(Array<Value>& values)
 	struct Remove { int32 i; };
 	using Command = Optional<Variant<Insert, Remove>>;
 
-	bool modified = false;
+	bool result = false;
 	Command command = {};
 	for (int32 i = 0; i < values.GetCount(); ++i)
 	{
@@ -341,12 +341,11 @@ bool imgui::WriteArray(Array<Value>& values)
 		bool isExpanded = WriteHeader(label.c_str(), values[i]);
 		ImGui::OpenPopupOnItemClick("array##child");
 
-		//modified |= WriteDetails(values[i]);
 		if (isExpanded)
 		{
 			RaiiIndent indent(0);
 			ImGui::TableSetColumnIndex(1);
-			modified |= WriteMember(values[i]);
+			result |= WriteMember(values[i]);
 		}
 
 		if (ImGui::BeginPopup("array##child"))
@@ -368,7 +367,7 @@ bool imgui::WriteArray(Array<Value>& values)
 			[&values](const Remove& data) { values.RemoveOrderedAt(data.i); });
 	}
 
-	return modified;
+	return result;
 }
 
 template<typename Value>
@@ -385,7 +384,7 @@ void imgui::ReadEnum(const Value& value)
 template<typename Value>
 bool imgui::WriteEnum(Value& value)
 {
-	bool modified = false;
+	bool result = false;
 	ImGui::SetNextItemWidth(-1);
 
 	const str::String preview = str::String(EnumToString(value));
@@ -398,13 +397,13 @@ bool imgui::WriteEnum(Value& value)
 			const str::String string = str::String(EnumToString(item));
 			if (ImGui::Selectable(string.c_str(), value == item))
 			{
-				modified |= true;
+				result = true;
 				value = item;
 			}
 		}
 		ImGui::EndCombo();
 	}
-	return modified;
+	return result;
 }
 
 template<typename Key, typename Value>
@@ -420,13 +419,13 @@ void imgui::ReadMap(const Map<Key, Value>& values)
 template<typename Key, typename Value>
 bool imgui::WriteMap(Map<Key, Value>& values)
 {
-	bool modified = false;
+	bool result = false;
 	for (auto&& [key, value] : values)
 	{
 		const str::String string = std::format("{}", key);
-		modified |= Write(string.c_str(), value);
+		result |= Write(string.c_str(), value);
 	}
-	return modified;
+	return result;
 }
 
 template<typename Value>
@@ -446,17 +445,17 @@ void imgui::ReadOptional(const Optional<Value>& value)
 template<typename Value>
 bool imgui::WriteOptional(Optional<Value>& value)
 {
-	bool modified = false;
+	bool result = false;
 	if (value)
 	{
-		modified |= WriteMember(*value);
+		result = WriteMember(*value);
 	}
 	else
 	{
 		ImGui::TableSetColumnIndex(1);
 		ImGui::Text("...");
 	}
-	return modified;
+	return result;
 }
 
 template<typename Value>
@@ -493,14 +492,10 @@ void imgui::ReadVariant(const Variant<Values...>& value)
 template<typename ...Values>
 bool imgui::WriteVariant(Variant<Values...>& value)
 {
-	bool modified = false;
-	modified |= WriteDetails(value);
+	bool result = false;
 	core::VariantMatch(value, [&](auto& element)
 		{
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(1);
-			modified |= WriteMember(element);
+			result = Write("##value", element);
 		});
-
-	return modified;
+	return result;
 }

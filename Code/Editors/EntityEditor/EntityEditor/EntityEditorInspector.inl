@@ -1,3 +1,4 @@
+#pragma once
 
 template<typename Value>
 void editor::entity::Inspector::Visit(const Value& value)

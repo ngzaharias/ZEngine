@@ -67,7 +67,7 @@ namespace
 }
 
 template<>
-void imgui::ReadCustom(const Struct& value)
+void imgui::Inspector::ReadCustom(const Struct& value)
 {
 	Read("m_Bool", value.m_Bool);
 	Read("m_Float", value.m_Float);
@@ -103,7 +103,7 @@ void imgui::ReadCustom(const Struct& value)
 }
 
 template<>
-bool imgui::WriteCustom(Struct& value)
+bool imgui::Inspector::WriteCustom(Struct& value)
 {
 	bool result = false;
 	result |= Write("m_Bool", value.m_Bool);

@@ -35,7 +35,7 @@
 #include "imgui/imgui_user.h"
 
 template<>
-bool imgui::WriteCustom(ecs::NameComponent& value)
+bool imgui::Inspector::WriteCustom(ecs::NameComponent& value)
 {
 	return Write("m_Name", value.m_Name);
 }
