@@ -29,7 +29,7 @@ void Visitor::WriteCustom(const eng::settings::DebugComponent& value)
 	// Write(strIsEditorModeEnabled, value.m_IsEditorModeEnabled);
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::settings::DebugComponent& value)
+bool imgui::WriteCustom(eng::settings::DebugComponent& value)
 {
 	bool result = false;
 	result |= Write("m_AreLinesEnabled", value.m_AreLinesEnabled);

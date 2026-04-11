@@ -1,8 +1,8 @@
 #pragma once
 
-class Vector3i;
+#include "Core/Types.h"
 
-using int32 = int32_t;
+class Vector3i;
 
 namespace enumerate
 {
