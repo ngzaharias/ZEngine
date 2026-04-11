@@ -4,7 +4,7 @@
 #include "imgui/Inspector.h"
 
 template<>
-bool imgui::Inspector::WriteCustom(debug::BezierQuadratic& value)
+bool imgui::WriteCustom(debug::BezierQuadratic& value)
 {
 	bool result = false;
 	result |= Write("Control", value.c);
@@ -14,7 +14,7 @@ bool imgui::Inspector::WriteCustom(debug::BezierQuadratic& value)
 }
 
 template<>
-bool imgui::Inspector::WriteCustom(debug::BezierCubic& value)
+bool imgui::WriteCustom(debug::BezierCubic& value)
 {
 	bool result = false;
 	result |= Write("1: Point", value.p1);
@@ -25,7 +25,7 @@ bool imgui::Inspector::WriteCustom(debug::BezierCubic& value)
 }
 
 template<>
-bool imgui::Inspector::WriteCustom(debug::CatmullRom& value)
+bool imgui::WriteCustom(debug::CatmullRom& value)
 {
 	bool result = false;
 	result |= Write("1: Control", value.c1);
@@ -36,7 +36,7 @@ bool imgui::Inspector::WriteCustom(debug::CatmullRom& value)
 }
 
 template<>
-bool imgui::Inspector::WriteCustom(debug::Hermite& value)
+bool imgui::WriteCustom(debug::Hermite& value)
 {
 	bool result = false;
 	result |= Write("Velocity 2", value.v2);

@@ -21,7 +21,7 @@ void Visitor::WriteCustom(const client::settings::DebugComponent& value)
 	Write(strIsHexmapEnabled, value.m_IsHexmapEnabled);
 }
 template<>
-bool imgui::Inspector::WriteCustom(client::settings::DebugComponent& value)
+bool imgui::WriteCustom(client::settings::DebugComponent& value)
 {
 	bool result = false;
 	result |= Write("m_IsHexmapEnabled", value.m_IsHexmapEnabled);

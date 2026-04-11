@@ -5,14 +5,14 @@
 #include "imgui/Inspector.h"
 
 template<>
-void imgui::Inspector::ReadCustom(const StructSimple& value)
+void imgui::ReadCustom(const StructSimple& value)
 {
 	Read("m_Float", value.m_Float);
 	Read("m_Int32", value.m_Int32);
 }
 
 template<>
-bool imgui::Inspector::WriteCustom(StructSimple& value)
+bool imgui::WriteCustom(StructSimple& value)
 {
 	bool result = false;
 	result |= Write("m_Float", value.m_Float);
@@ -21,13 +21,13 @@ bool imgui::Inspector::WriteCustom(StructSimple& value)
 }
 
 template<>
-void imgui::Inspector::ReadCustom(const StructRecursive& value)
+void imgui::ReadCustom(const StructRecursive& value)
 {
 	Read("m_Struct", value.m_Struct);
 }
 
 template<>
-bool imgui::Inspector::WriteCustom(StructRecursive& value)
+bool imgui::WriteCustom(StructRecursive& value)
 {
 	bool result = false;
 	result |= Write("m_Struct", value.m_Struct);
