@@ -44,11 +44,12 @@ namespace eng
 			eng::AssetManager,
 			eng::PhysicsComponent,
 			eng::PhysicsManager,
-			eng::PhysicsTemplate,
 			eng::PhysicsSceneComponent,
 			eng::RigidDynamicComponent,
 			eng::RigidStaticComponent,
-			eng::TransformComponent>;
+			eng::TransformComponent>
+			::Read<
+			eng::PhysicsTemplate>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

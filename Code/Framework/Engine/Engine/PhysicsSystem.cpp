@@ -196,6 +196,14 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 {
 	PROFILE_FUNCTION();
 
+	using AddedQuery = ecs::query
+		::Added<const eng::PhysicsTemplate>
+		::Include<const eng::PhysicsTemplate>;
+	for (auto&& view : world.Query<AddedQuery>())
+	{
+		world.AddComponent<eng::PhysicsComponent>(view);
+	}
+
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto* materialAsset = assetManager.ReadAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
 	if (!materialAsset)
@@ -292,6 +300,11 @@ void eng::PhysicsSystem::ProcessUpdated(World& world)
 
 void eng::PhysicsSystem::ProcessRemoved(World& world)
 {
+	for (auto&& view : world.Query<ecs::query::Removed<const eng::PhysicsTemplate>>())
+	{
+		world.RemoveComponent<eng::PhysicsComponent>(view);
+	}
+
 	for (auto&& view : world.Query<ecs::query::Removed<eng::PhysicsComponent>>())
 	{
 		auto& component = world.WriteComponent<eng::PhysicsComponent>(view, false);
