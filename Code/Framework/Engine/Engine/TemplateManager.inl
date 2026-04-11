@@ -28,6 +28,9 @@ void eng::TemplateManager::ReadComponent(ecs::EntityWorld& world, const ecs::Ent
 template<typename TComponent>
 void eng::TemplateManager::WriteComponent(ecs::EntityWorld& world, const ecs::Entity& entity, Visitor& visitor)
 {
+	if (!world.IsRegistered<TComponent>())
+		return;
+
 	auto& component = world.HasComponent<TComponent>(entity)
 		? world.WriteComponent<TComponent>(entity)
 		: world.AddComponent<TComponent>(entity);
