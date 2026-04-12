@@ -146,7 +146,11 @@ void ecs::EntityStorage::FlushChanges()
 				const bool hasAllIncludes = componentMask.HasAll(queryMask.m_IncludeMask);
 				const bool hasNoneExcludes = componentMask.HasNone(queryMask.m_ExcludeMask);
 
-				if (hasAllAdded && hasAllRemoved && hasAllUpdated && hasAllIncludes && hasNoneExcludes)
+				const bool hasAnyCondition = 
+					queryMask.m_ConditionAlive == !changes.m_IsDestroy ||
+					queryMask.m_ConditionDead == changes.m_IsDestroy;
+
+				if (hasAllAdded && hasAllRemoved && hasAllUpdated && hasAllIncludes && hasNoneExcludes && hasAnyCondition)
 				{
 					queryGroup.Add(entity);
 				}

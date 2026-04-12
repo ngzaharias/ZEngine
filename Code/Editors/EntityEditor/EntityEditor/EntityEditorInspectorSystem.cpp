@@ -234,7 +234,10 @@ void editor::entity::InspectorSystem::Update(World& world, const GameTime& gameT
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<editor::entity::InspectorComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::entity::InspectorComponent>;
+	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
@@ -251,7 +254,10 @@ void editor::entity::InspectorSystem::Update(World& world, const GameTime& gameT
 		window.m_Label = ToLabel("Inspector", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::entity::InspectorComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::entity::InspectorComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		const auto& window = world.ReadComponent<editor::entity::InspectorComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

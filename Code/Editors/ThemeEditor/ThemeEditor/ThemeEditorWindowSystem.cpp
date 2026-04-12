@@ -54,7 +54,10 @@ void editor::theme::WindowSystem::Update(World& world, const GameTime& gameTime)
 		window.m_Label = ToLabel("Theme Editor", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::theme::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::theme::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		const auto& window = world.ReadComponent<editor::theme::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

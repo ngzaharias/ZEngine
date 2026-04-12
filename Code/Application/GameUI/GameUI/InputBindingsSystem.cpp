@@ -28,7 +28,10 @@ void gui::input::BindingsSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<gui::input::BindingsComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<gui::input::BindingsComponent>;
+	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);

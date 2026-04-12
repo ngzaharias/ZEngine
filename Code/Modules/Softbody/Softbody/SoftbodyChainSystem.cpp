@@ -68,7 +68,10 @@ void softbody::ChainSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<softbody::ChainComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<softbody::ChainComponent>;
+	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);

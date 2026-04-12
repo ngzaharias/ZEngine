@@ -35,7 +35,10 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 		dataContext.Initialise(world);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<gui::settings_menu::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<gui::settings_menu::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strSettingsMenu_xaml);

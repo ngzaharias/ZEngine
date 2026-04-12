@@ -120,7 +120,10 @@ void debug::entity::WindowSystem::Update(World& world, const GameTime& gameTime)
 		window.m_ComponentsLabel = ToLabel("Components##entitydebugger", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const debug::entity::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<debug::entity::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& window = world.ReadComponent<debug::entity::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

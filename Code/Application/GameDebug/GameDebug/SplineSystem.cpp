@@ -138,7 +138,10 @@ void debug::SplineSystem::Update(World& world, const GameTime& gameTime)
 		window.m_PlottingLabel = ToLabel("Plotter##collision", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const debug::SplineWindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<debug::SplineWindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		const auto& window = world.ReadComponent<debug::SplineWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

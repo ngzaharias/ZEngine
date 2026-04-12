@@ -56,7 +56,10 @@ void camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<camera::Move3DComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<camera::Move3DComponent>;
+	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
@@ -119,7 +122,7 @@ void camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 		world.AddComponent<camera::Move3DComponent>(view);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const camera::Move3DTemplate>>())
+	for (auto&& view : world.Query<ecs::query::Removed<camera::Move3DTemplate>>())
 	{
 		world.RemoveComponent<camera::Move3DComponent>(view);
 	}

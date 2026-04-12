@@ -47,7 +47,10 @@ namespace
 			input.AppendLayer(strInput, layer);
 		}
 
-		for (auto&& view : world.Query<ecs::query::Removed<tactics::AbilityPreviewComponent>>())
+		using RemovedQuery = ecs::query
+			::Condition<ecs::Alive, ecs::Dead>
+			::Removed<tactics::AbilityPreviewComponent>;
+		for (auto&& view : world.Query<RemovedQuery>())
 		{
 			auto& input = world.WriteResource<eng::InputManager>();
 			input.RemoveLayer(strInput);

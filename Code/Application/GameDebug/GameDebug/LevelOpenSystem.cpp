@@ -56,7 +56,10 @@ void debug::level::OpenSystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	if (world.HasAny<ecs::query::Removed<debug::level::OpenWindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<debug::level::OpenWindowComponent>;
+	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);

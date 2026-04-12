@@ -48,7 +48,10 @@ void editor::input::WindowSystem::Update(World& world, const GameTime& gameTime)
 		window.m_Label = ToLabel("Input Editor##input", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::input::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::input::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& window = world.ReadComponent<editor::input::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

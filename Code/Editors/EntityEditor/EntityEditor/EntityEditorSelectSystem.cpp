@@ -90,7 +90,11 @@ void editor::entity::SelectSystem::Update(World& world, const GameTime& gameTime
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.AppendLayer(strInput, layer);
 	}
-	else if (world.HasAny<ecs::query::Removed<gamestate::EditModeComponent>>())
+
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<gamestate::EditModeComponent>;
+	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);

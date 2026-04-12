@@ -40,7 +40,10 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 		dataContext.SetVersion(versionComponent.m_Version);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<gui::main_menu::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<gui::main_menu::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strMainMenu_xaml);

@@ -38,7 +38,10 @@ void gui::loading::LoadingSystem::Update(World& world, const GameTime& gameTime)
 		dcLoading.SetHint(hint.m_Text.c_str());
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<eng::level::LoadingComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<eng::level::LoadingComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strLoading_xaml);

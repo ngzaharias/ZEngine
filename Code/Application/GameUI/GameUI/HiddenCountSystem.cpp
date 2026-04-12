@@ -44,7 +44,10 @@ void gui::hidden::CountSystem::Update(World& world, const GameTime& gameTime)
 		dataContext.SetObjectTotal(counter.m_Objects);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<client::hidden::CountComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<client::hidden::CountComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strHiddenCount_xaml);

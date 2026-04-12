@@ -185,7 +185,10 @@ void debug::ShapeSystem::Update(World& world, const GameTime& gameTime)
 		window.m_PlottingLabel = ToLabel("Plotter##collision", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const debug::ShapeWindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<debug::ShapeWindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		const auto& window = world.ReadComponent<debug::ShapeWindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

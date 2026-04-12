@@ -38,7 +38,10 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 		window.m_Local = world.ReadComponent<editor::settings::LocalComponent>();
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::settings::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::settings::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& window = world.ReadComponent<editor::settings::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

@@ -18,6 +18,11 @@ inline ecs::QueryId ecs::QueryProxy<TQuery>::Id()
 		queryMask.m_UpdatedMask = ecs::ToComponentMask(ecs::query::UpdatedAccess<TQuery>{});
 		queryMask.m_IncludeMask = ecs::ToComponentMask(ecs::query::IncludeAccess<TQuery>{});
 		queryMask.m_ExcludeMask = ecs::ToComponentMask(ecs::query::ExcludeAccess<TQuery>{});
+		queryMask.m_ConditionAlive = core::Contains(ecs::Alive{}, ecs::query::ConditionAccess<TQuery>{});
+		queryMask.m_ConditionDead = core::Contains(ecs::Dead{}, ecs::query::ConditionAccess<TQuery>{});
+
+		if (!queryMask.m_ConditionAlive && !queryMask.m_ConditionDead)
+			queryMask.m_ConditionAlive = true;
 
 		ecs::QueryMasks& queryMasks = ecs::QueryRegistry::GetMasks();
 		Z_PANIC(queryMasks.Find(queryId) == queryMasks.end(), "QueryId already present in QueryRegistry!");

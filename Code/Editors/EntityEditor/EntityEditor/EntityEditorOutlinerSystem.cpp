@@ -236,7 +236,10 @@ void editor::entity::OutlinerSystem::Update(World& world, const GameTime& gameTi
 		window.m_Label = ToLabel("Outliner", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::entity::OutlinerComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::entity::OutlinerComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		const auto& window = world.ReadComponent<editor::entity::OutlinerComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

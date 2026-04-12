@@ -34,7 +34,10 @@ void server::ReplicationSystem::Update(World& world, const GameTime& gameTime)
 			replicationHost.StartReplicate(peerId, view);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<ecs::ReplicationComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<ecs::ReplicationComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		for (auto&& [peerId, replicationData] : replicationMap)
 			replicationHost.StopReplicate(peerId, view);

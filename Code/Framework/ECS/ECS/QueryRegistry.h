@@ -4,6 +4,7 @@
 #include "Core/Set.h"
 #include "Core/TypeInfo.h"
 #include "Core/TypeList.h"
+#include "Core/TypeTraits.h"
 #include "ECS/ComponentMask.h"
 #include "ECS/Entity.h"
 #include "ECS/QueryMask.h"
