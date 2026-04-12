@@ -10,6 +10,8 @@ namespace eng
 {
 	struct TransformTemplate final : public ecs::TemplateComponent
 	{
+		Matrix4x4 ToTransform() const;
+
 		Vector3f m_Translate = Vector3f::Zero;
 		Rotator m_Rotate = Rotator::Zero;
 		Vector3f m_Scale = Vector3f::One;

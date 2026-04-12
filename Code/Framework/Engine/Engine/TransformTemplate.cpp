@@ -10,6 +10,11 @@ namespace
 	const str::StringView strTranslate = "m_Translate";
 }
 
+Matrix4x4 eng::TransformTemplate::ToTransform() const
+{
+	return Matrix4x4::FromTransform(m_Translate, m_Rotate, m_Scale);
+}
+
 template<>
 void Visitor::ReadCustom(eng::TransformTemplate& value) const
 {
