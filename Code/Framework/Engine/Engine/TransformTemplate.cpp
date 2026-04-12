@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/TransformTemplate.h"
 
+#include "Math/Matrix.h"
 #include "Serialize/Visitor.h"
 
 namespace
