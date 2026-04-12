@@ -71,14 +71,42 @@ namespace editor::entity
 	};
 
 	template<typename TComponent, typename TValue>
-	struct ComponentUpdate : public Command
+	struct ComponentField : public Command
 	{
 		using TField = TValue TComponent::*;
 
 	public:
-		ComponentUpdate(TField fieldPtr, const str::Guid& uuid, const TValue& valueOld, const TValue& valueNew)
+		ComponentField(TField fieldPtr, const str::Guid& uuid, const TValue& valueOld, const TValue& valueNew)
 			: m_FieldPtr(fieldPtr)
 			, m_UUID(uuid)
+			, m_ValueOld(valueOld)
+			, m_ValueNew(valueNew)
+		{ }
+
+		const char* ToString() const override
+		{
+			static const str::StringView name = TypeName<TComponent>::m_WithNamespace;
+			static const str::String string = std::format("ComponentField: {}", name);
+			return string.c_str();
+		}
+
+		void Exec(ecs::EntityWorld& world) override;
+		void Undo(ecs::EntityWorld& world) override;
+
+	private:
+		TField m_FieldPtr = nullptr;
+
+		str::Guid m_UUID = {};
+		TValue m_ValueOld = {};
+		TValue m_ValueNew = {};
+	};
+
+	template<typename TComponent>
+	struct ComponentUpdate : public Command
+	{
+	public:
+		ComponentUpdate(const str::Guid& uuid, const TComponent& valueOld, const TComponent& valueNew)
+			: m_UUID(uuid)
 			, m_ValueOld(valueOld)
 			, m_ValueNew(valueNew)
 		{ }
@@ -94,11 +122,9 @@ namespace editor::entity
 		void Undo(ecs::EntityWorld& world) override;
 
 	private:
-		TField m_FieldPtr = nullptr;
-
 		str::Guid m_UUID = {};
-		TValue m_ValueOld = {};
-		TValue m_ValueNew = {};
+		TComponent m_ValueOld = {};
+		TComponent m_ValueNew = {};
 	};
 
 	struct EntityCreate : public Command

@@ -27,5 +27,5 @@ void editor::entity::Inspector::Visit(const char* label, const Value& value)
 template <typename TComponent, typename TValue>
 void editor::entity::Inspector::PushCommand(TValue TComponent::* fieldPtr, const TValue& valueOld, const TValue& valueNew)
 {
-	m_Commands.Append(new ComponentUpdate<TComponent, TValue>(fieldPtr, m_EntityUUID, valueOld, valueNew));
+	m_Commands.Append(new ComponentField<TComponent, TValue>(fieldPtr, m_EntityUUID, valueOld, valueNew));
 }

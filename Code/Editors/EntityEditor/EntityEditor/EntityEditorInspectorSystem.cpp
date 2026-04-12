@@ -63,12 +63,12 @@ namespace
 			if (!hasComponent)
 			{
 				auto& commands = world.WriteResource<editor::entity::CommandManager>();
-				commands.AddComponent<TComponent>(entityUUID);
+				commands.ComponentAdd<TComponent>(entityUUID);
 			}
 			else
 			{
 				auto& commands = world.WriteResource<editor::entity::CommandManager>();
-				commands.RemoveComponent<TComponent>(entityUUID);
+				commands.ComponentRemove<TComponent>(entityUUID);
 			}
 		}
 		ImGui::EndDisabled();

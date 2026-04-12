@@ -38,21 +38,24 @@ namespace editor::entity
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
-		void CreateEntity(const str::Guid& uuid, const str::StringView& name);
+		void EntityCreate(const str::Guid& uuid, const str::StringView& name);
 		
-		void DestroyEntity(const str::Guid& uuid);
+		void EntityDestroy(const str::Guid& uuid);
 		
 		//////////////////////////////////////////////////////////////////////////
 		// Component
 
 		template<typename TComponent, typename... TArgs>
-		void AddComponent(const str::Guid& guid, TArgs&&... args);
+		void ComponentAdd(const str::Guid& guid, TArgs&&... args);
 
 		template<typename TComponent>
-		void RemoveComponent(const str::Guid& guid);
+		void ComponentRemove(const str::Guid& guid);
 
 		template <typename TComponent, typename TValue>
-		void UpdateComponent(TValue TComponent::* fieldPtr, const str::Guid& guid, const TValue& valueOld, const TValue& valueNew);
+		void ComponentField(TValue TComponent::* fieldPtr, const str::Guid& guid, const TValue& valueOld, const TValue& valueNew);
+
+		template <typename TComponent>
+		void ComponentUpdate(const str::Guid& guid, const TComponent& valueOld, const TComponent& valueNew);
 
 	private:
 		ecs::EntityWorld& m_World;

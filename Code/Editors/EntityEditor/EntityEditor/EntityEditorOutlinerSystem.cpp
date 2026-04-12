@@ -87,13 +87,13 @@ namespace
 	void CreateEntity(ecs::EntityWorld& world, const str::StringView name)
 	{
 		auto& commands = world.WriteResource<editor::entity::CommandManager>();
-		commands.CreateEntity(str::Guid::Generate(), "Entity_");
+		commands.EntityCreate(str::Guid::Generate(), "Entity_");
 	}
 
 	void DestroyEntity(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
 		auto& commands = world.WriteResource<editor::entity::CommandManager>();
-		commands.DestroyEntity(eng::ToUUID(world, entity));
+		commands.EntityDestroy(eng::ToUUID(world, entity));
 	}
 
 	void Icon(const icon::Data& icon, const ImVec2& size = ImVec2(15, 15))

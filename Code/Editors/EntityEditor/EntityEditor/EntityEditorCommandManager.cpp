@@ -78,12 +78,12 @@ void editor::entity::CommandManager::AddCommands(Array<Command*>&& commands)
 	m_ExecStack.Append(commands);
 }
 
-void editor::entity::CommandManager::CreateEntity(const str::Guid& uuid, const str::StringView& name)
+void editor::entity::CommandManager::EntityCreate(const str::Guid& uuid, const str::StringView& name)
 {
-	m_ExecStack.Append(new EntityCreate(uuid, name));
+	m_ExecStack.Append(new editor::entity::EntityCreate(uuid, name));
 }
 
-void editor::entity::CommandManager::DestroyEntity(const str::Guid& uuid)
+void editor::entity::CommandManager::EntityDestroy(const str::Guid& uuid)
 {
 	Visitor visitor;
 	const ecs::Entity entity = eng::ToEntity(m_World, uuid);
@@ -92,6 +92,6 @@ void editor::entity::CommandManager::DestroyEntity(const str::Guid& uuid)
 	manager.ReadEntity(m_World, entity, visitor);
 
 	str::String data = visitor;
-	m_ExecStack.Append(new EntityDestroy(uuid, std::move(data)));
+	m_ExecStack.Append(new editor::entity::EntityDestroy(uuid, std::move(data)));
 }
 
