@@ -8,6 +8,7 @@
 
 namespace editor::entity
 {
+	class CommandManager;
 	struct SelectComponent;
 }
 
@@ -29,6 +30,8 @@ namespace eng
 	struct CameraComponent;
 	struct PhysicsTemplate;
 	struct TransformComponent;
+	struct TransformTemplate;
+	struct UUIDComponent;
 	struct VersionComponent;
 }
 
@@ -44,15 +47,18 @@ namespace editor::gizmo
 	public:
 		using World = ecs::WorldView
 			::Write<
+			editor::entity::CommandManager,
 			editor::gizmo::TransformComponent,
 			eng::InputManager,
-			eng::PhysicsTemplate,
-			eng::TransformComponent>
+			eng::PhysicsTemplate>
 			::Read<
 			editor::entity::SelectComponent,
 			editor::settings::LocalComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,
+			eng::TransformComponent,
+			eng::TransformTemplate,
+			eng::UUIDComponent,
 			eng::WindowManager,
 			gamestate::EditModeComponent>;
 

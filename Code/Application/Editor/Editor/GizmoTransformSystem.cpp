@@ -12,8 +12,11 @@
 #include "Engine/PhysicsTemplate.h"
 #include "Engine/SettingsDebugComponent.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/TransformTemplate.h"
+#include "Engine/UUIDHelpers.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
+#include "EntityEditor/EntityEditorCommandManager.h"
 #include "EntityEditor/EntityEditorSelectComponent.h"
 #include "GameState/GameStateEditModeComponent.h"
 #include "Math/Matrix.h"
@@ -137,14 +140,16 @@ namespace
 				if (!world.IsAlive(selected))
 					continue;
 
-				if (gizmo.m_TransformType == editor::gizmo::ETransformType::Transform && world.HasComponent<eng::TransformComponent>(selected))
+				if (gizmo.m_TransformType == editor::gizmo::ETransformType::Transform && world.HasComponent<eng::TransformTemplate>(selected))
 				{
-					auto& transform = world.WriteComponent<eng::TransformComponent>(selected);
+					const auto& valueOld = world.ReadComponent<eng::TransformTemplate>(selected);
+					auto valueNew = valueOld;
 
-					Matrix4x4 objectTran = transform.ToTransform();
+					Matrix4x4 objectTran = valueOld.ToTransform();
 
+					bool modified = false;
 					ImGuizmo::SetID(0);
-					ImGuizmo::Manipulate(
+					modified |= ImGuizmo::Manipulate(
 						cameraView.m_Data[0],
 						cameraProj.m_Data[0],
 						operation,
@@ -153,9 +158,16 @@ namespace
 
 					ImGuizmo::DecomposeMatrixToComponents(
 						objectTran.m_Data[0],
-						&transform.m_Translate.x,
-						&transform.m_Rotate.m_Pitch,
-						&transform.m_Scale.x);
+						&valueNew.m_Translate.x,
+						&valueNew.m_Rotate.m_Pitch,
+						&valueNew.m_Scale.x);
+
+					if (modified)
+					{
+						const str::Guid entityUUID = eng::ToUUID(world, selected);
+						auto& manager = world.WriteResource<editor::entity::CommandManager>();
+						manager.ComponentUpdate(entityUUID, valueOld, valueNew);
+					}
 				}
 
 				if (gizmo.m_TransformType == editor::gizmo::ETransformType::Physics && world.HasComponent<eng::PhysicsTemplate>(selected))
