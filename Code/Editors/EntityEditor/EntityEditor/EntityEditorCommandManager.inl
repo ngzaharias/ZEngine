@@ -18,7 +18,8 @@ void editor::entity::CommandManager::ComponentField(
 	const TValue& valueOld,
 	const TValue& valueNew)
 {
-	m_ExecStack.Append(new editor::entity::ComponentField<TComponent, TValue>(fieldPtr, entity, valueOld, valueNew));
+	auto* command = new editor::entity::ComponentField<TComponent, TValue>(fieldPtr, entity, valueOld, valueNew);
+	m_ExecStack.Append(command);
 }
 
 template <typename TComponent>
@@ -27,5 +28,6 @@ void editor::entity::CommandManager::ComponentUpdate(
 	const TComponent& valueOld,
 	const TComponent& valueNew)
 {
-	m_ExecStack.Append(new editor::entity::ComponentUpdate<TComponent>(entity, valueOld, valueNew));
+	auto* command = new editor::entity::ComponentUpdate<TComponent>(entity, valueOld, valueNew);
+	m_ExecStack.Append(command);
 }

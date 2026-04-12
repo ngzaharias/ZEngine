@@ -13,6 +13,11 @@ editor::entity::EntityCreate::EntityCreate(const str::Guid& uuid, const str::Str
 {
 }
 
+const char* editor::entity::EntityCreate::ToString() const
+{
+	return "EntityCreate";
+}
+
 void editor::entity::EntityCreate::Exec(ecs::EntityWorld& world)
 {
 	const ecs::Entity entity = world.CreateEntity();
@@ -25,6 +30,8 @@ void editor::entity::EntityCreate::Undo(ecs::EntityWorld& world)
 	const ecs::Entity entity = eng::ToEntity(world, m_UUID);
 	world.DestroyEntity(entity);
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 editor::entity::EntityDestroy::EntityDestroy(const str::Guid& uuid)
 	: m_UUID(uuid)
@@ -41,6 +48,11 @@ editor::entity::EntityDestroy::EntityDestroy(const str::Guid& uuid, const str::S
 	: m_UUID(uuid)
 	, m_Data(data)
 {
+}
+
+const char* editor::entity::EntityDestroy::ToString() const
+{
+	return "EntityDestroy";
 }
 
 void editor::entity::EntityDestroy::Exec(ecs::EntityWorld& world)

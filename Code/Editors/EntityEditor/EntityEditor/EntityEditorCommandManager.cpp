@@ -18,9 +18,21 @@ void editor::entity::CommandManager::ExecuteCommands()
 		return;
 
 	for (Command* command : m_ExecStack)
+	{
 		command->Exec(m_World);
 
-	m_UndoStack.Append(m_ExecStack);
+		if (!m_UndoStack.IsEmpty())
+		{
+			Command* last = m_UndoStack.GetLast();
+			if (last->Merge(*command))
+			{
+				delete command;
+				continue;
+			}
+		}
+		m_UndoStack.Append(command);
+	}
+
 	m_ExecStack.RemoveAll();
 	m_RedoStack.RemoveAll();
 }

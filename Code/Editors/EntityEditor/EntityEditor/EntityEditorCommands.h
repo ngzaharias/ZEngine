@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Guid.h"
+#include "Core/Hash.h"
 #include "Core/Name.h"
 #include "Core/String.h"
 #include "ECS/Entity.h"
@@ -20,6 +21,12 @@ namespace editor::entity
 		virtual void Exec(ecs::EntityWorld& world) = 0;
 		virtual void Redo(ecs::EntityWorld& world) { Exec(world); }
 		virtual void Undo(ecs::EntityWorld& world) = 0;
+		virtual bool Merge(Command& command) { return false; }
+
+		int32 m_Command = 0;
+		int32 m_TypeId = 0;
+		float m_Time = 0.f;
+		bool m_Merge = false;
 	};
 
 	template<typename TComponent, typename... TArgs>
@@ -31,12 +38,7 @@ namespace editor::entity
 			, m_Args(std::forward<TArgs>(args)...)
 		{ }
 
-		const char* ToString() const override
-		{
-			static const str::StringView name = TypeName<TComponent>::m_WithNamespace;
-			static const str::String string = std::format("ComponentAdd: {}", name);
-			return string.c_str();
-		}
+		const char* ToString() const override;
 
 		void Exec(ecs::EntityWorld& world) override;
 		void Undo(ecs::EntityWorld& world) override;
@@ -55,12 +57,7 @@ namespace editor::entity
 			, m_Data(data)
 		{ }
 
-		const char* ToString() const override
-		{
-			static const str::StringView name = TypeName<TComponent>::m_WithNamespace;
-			static const str::String string = std::format("ComponentRemove: {}", name);
-			return string.c_str();
-		}
+		const char* ToString() const override;
 
 		void Exec(ecs::EntityWorld& world) override;
 		void Undo(ecs::EntityWorld& world) override;
@@ -81,17 +78,16 @@ namespace editor::entity
 			, m_UUID(uuid)
 			, m_ValueOld(valueOld)
 			, m_ValueNew(valueNew)
-		{ }
-
-		const char* ToString() const override
-		{
-			static const str::StringView name = TypeName<TComponent>::m_WithNamespace;
-			static const str::String string = std::format("ComponentField: {}", name);
-			return string.c_str();
+		{ 
+			m_Command = 1;
+			m_TypeId = ToTypeId<TComponent>();
 		}
+
+		const char* ToString() const override;
 
 		void Exec(ecs::EntityWorld& world) override;
 		void Undo(ecs::EntityWorld& world) override;
+		bool Merge(Command& command) override;
 
 	private:
 		TField m_FieldPtr = nullptr;
@@ -109,17 +105,16 @@ namespace editor::entity
 			: m_UUID(uuid)
 			, m_ValueOld(valueOld)
 			, m_ValueNew(valueNew)
-		{ }
-
-		const char* ToString() const override
-		{
-			static const str::StringView name = TypeName<TComponent>::m_WithNamespace;
-			static const str::String string = std::format("ComponentUpdate: {}", name);
-			return string.c_str();
+		{ 
+			m_Command = 2;
+			m_TypeId = ToTypeId<TComponent>();
 		}
+
+		const char* ToString() const override;
 
 		void Exec(ecs::EntityWorld& world) override;
 		void Undo(ecs::EntityWorld& world) override;
+		bool Merge(Command& command) override;
 
 	private:
 		str::Guid m_UUID = {};
@@ -132,10 +127,7 @@ namespace editor::entity
 	public:
 		EntityCreate(const str::Guid& uuid, const str::StringView& name);
 
-		const char* ToString() const override
-		{
-			return "EntityCreate";
-		}
+		const char* ToString() const override;
 
 		void Exec(ecs::EntityWorld& world) override;
 		void Undo(ecs::EntityWorld& world) override;
@@ -152,10 +144,7 @@ namespace editor::entity
 		EntityDestroy(const str::Guid& uuid, str::String&& data);
 		EntityDestroy(const str::Guid& uuid, const str::String& data);
 
-		const char* ToString() const override
-		{
-			return "EntityDestroy";
-		}
+		const char* ToString() const override;
 
 		void Exec(ecs::EntityWorld& world) override;
 		void Undo(ecs::EntityWorld& world) override;
