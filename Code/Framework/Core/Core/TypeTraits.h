@@ -52,6 +52,12 @@ namespace core
 		return std::is_same<TStrippedType, TStrippedHead>::value || Contains<TType, TTail...>();
 	}
 
+	template<typename TType, typename... TOther>
+	constexpr bool Contains(const TType&, const TypeList<TOther...>&)
+	{
+		return Contains<TType, TOther...>();
+	}
+
 	template<typename... TType, typename... TOther>
 	constexpr bool ContainsAll(const TypeList<TType...>&, const TypeList<TOther...>&)
 	{
