@@ -8,6 +8,8 @@
 
 #include <tuple>
 
+class GameTime;
+
 namespace ecs
 {
 	class EntityWorld;
@@ -20,7 +22,7 @@ namespace editor::entity
 	public:
 		CommandManager(ecs::EntityWorld& world);
 
-		void ExecuteCommands();
+		void ExecuteCommands(const GameTime& gameTime);
 		void UndoLastCommand();
 		void RedoLastCommand();
 
@@ -62,6 +64,8 @@ namespace editor::entity
 		Array<Command*> m_ExecStack = {};
 		Array<Command*> m_RedoStack = {};
 		Array<Command*> m_UndoStack = {};
+		float m_LastCommand = 0.f;
+		bool m_MergeDisabled = false;
 	};
 }
 

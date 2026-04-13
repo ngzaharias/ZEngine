@@ -303,5 +303,5 @@ void editor::entity::InspectorSystem::Update(World& world, const GameTime& gameT
 	}
 
 	auto& commands = world.WriteResource<editor::entity::CommandManager>();
-	commands.ExecuteCommands();
+	commands.ExecuteCommands(gameTime);
 }

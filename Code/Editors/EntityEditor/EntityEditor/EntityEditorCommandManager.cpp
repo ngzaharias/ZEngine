@@ -1,6 +1,7 @@
 #include "EntityEditorPCH.h"
 #include "EntityEditor/EntityEditorCommandManager.h"
 
+#include "Core/GameTime.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
 #include "Engine/TemplateManager.h"
@@ -12,16 +13,18 @@ editor::entity::CommandManager::CommandManager(ecs::EntityWorld& world)
 {
 }
 
-void editor::entity::CommandManager::ExecuteCommands()
+void editor::entity::CommandManager::ExecuteCommands(const GameTime& gameTime)
 {
 	if (m_ExecStack.IsEmpty())
 		return;
 
+	const float elapsed = gameTime.m_TotalTime - m_LastCommand;
+	m_MergeDisabled |= elapsed > 0.5f;
 	for (Command* command : m_ExecStack)
 	{
 		command->Exec(m_World);
 
-		if (!m_UndoStack.IsEmpty())
+		if (!m_MergeDisabled && !m_UndoStack.IsEmpty())
 		{
 			Command* last = m_UndoStack.GetLast();
 			if (last->Merge(*command))
@@ -33,6 +36,8 @@ void editor::entity::CommandManager::ExecuteCommands()
 		m_UndoStack.Append(command);
 	}
 
+	m_LastCommand = gameTime.m_TotalTime;
+	m_MergeDisabled = false;
 	m_ExecStack.RemoveAll();
 	m_RedoStack.RemoveAll();
 }
@@ -49,6 +54,8 @@ void editor::entity::CommandManager::UndoLastCommand()
 	// move from undo -> redo
 	m_RedoStack.Append(command);
 	m_UndoStack.Pop();
+
+	m_MergeDisabled = true;
 }
 
 void editor::entity::CommandManager::RedoLastCommand()
