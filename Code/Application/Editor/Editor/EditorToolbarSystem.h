@@ -8,17 +8,13 @@ namespace editor::assets
 	struct OpenWindowEvent;
 }
 
+namespace editor::entity
+{
+	struct OpenInspectorEvent;
+	struct OpenOutlinerEvent;
+}
+
 namespace editor::flipbook
-{
-	struct OpenWindowEvent;
-}
-
-namespace editor::inspector
-{
-	struct OpenWindowEvent;
-}
-
-namespace editor::outliner
 {
 	struct OpenWindowEvent;
 }
@@ -57,9 +53,9 @@ namespace editor
 		using World = ecs::WorldView
 			::Write<
 			editor::assets::OpenWindowEvent,
+			editor::entity::OpenInspectorEvent,
+			editor::entity::OpenOutlinerEvent,
 			editor::flipbook::OpenWindowEvent,
-			editor::inspector::OpenWindowEvent,
-			editor::outliner::OpenWindowEvent,
 			editor::settings::LocalComponent,
 			editor::sprite::OpenWindowEvent,
 			editor::texture::OpenWindowEvent,

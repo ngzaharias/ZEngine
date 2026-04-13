@@ -26,7 +26,6 @@ str::NameTable::~NameTable()
 
 str::Hash str::NameTable::Register(const str::StringView& string)
 {
-	// #fixme: shouldn't need to convert to string
 	const str::Hash hash = str::ToHash(string);
 	const auto find = m_Values.Find(hash);
 	if (find == m_Values.end())

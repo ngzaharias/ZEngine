@@ -7,8 +7,8 @@ void ecs::TypeRegistry::RegisterComponent()
 {
 	static_assert(std::derived_from<TComponent, ecs::Component>, "Type doesn't inherit from ecs::Component.");
 
-	constexpr bool isPrototype = std::derived_from<TComponent, ecs::IsPrototype>;
 	constexpr bool isReplicated = std::derived_from<TComponent, ecs::IsReplicated>;
+	constexpr bool isTemplate = std::derived_from<TComponent, ecs::TemplateComponent>;
 
 	const TypeId globalId = ToTypeId<TComponent>();
 	const TypeId localId = ToTypeId<TComponent, ecs::ComponentTag>();
@@ -27,8 +27,8 @@ void ecs::TypeRegistry::RegisterComponent()
 	entry.m_RemovedId = ecs::QueryProxy<ecs::query::Removed<TComponent>>::Id();
 	entry.m_IncludeId = ecs::QueryProxy<ecs::query::Include<TComponent>>::Id();
 
-	entry.m_IsPrototype = isPrototype;
 	entry.m_IsReplicated = isReplicated;
+	entry.m_IsTemplate = isTemplate;
 
 	entry.m_HasSolo = &HasComponentSolo<TComponent>;
 	entry.m_AddSolo = &AddComponentSolo<TComponent>;

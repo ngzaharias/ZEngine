@@ -40,7 +40,10 @@ void gui::game_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<gui::game_menu::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<gui::game_menu::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strGameMenu_xaml);

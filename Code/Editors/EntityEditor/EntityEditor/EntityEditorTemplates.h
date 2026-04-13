@@ -1,0 +1,17 @@
+#pragma once
+
+#include "Camera/CameraBound2DTemplate.h"
+#include "Camera/CameraMove2DTemplate.h"
+#include "Camera/CameraMove3DTemplate.h"
+#include "Camera/CameraPan3DTemplate.h"
+#include "Camera/CameraZoom2DTemplate.h"
+#include "Engine/CameraTemplate.h"
+#include "Engine/FlipbookTemplate.h"
+#include "Engine/LightAmbientTemplate.h"
+#include "Engine/LightDirectionalTemplate.h"
+#include "Engine/LightPointTemplate.h"
+#include "Engine/PhysicsTemplate.h"
+#include "Engine/SpriteTemplate.h"
+#include "Engine/StaticMeshTemplate.h"
+#include "Engine/TransformTemplate.h"
+#include "Engine/VisibilityTemplate.h"

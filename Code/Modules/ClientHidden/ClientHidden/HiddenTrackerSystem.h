@@ -11,8 +11,8 @@ namespace client::hidden
 
 namespace eng
 {
-	struct PrototypeComponent;
 	struct SpriteComponent;
+	struct UUIDComponent;
 }
 
 namespace client::hidden
@@ -26,7 +26,7 @@ namespace client::hidden
 			::Read<
 			client::hidden::GroupComponent,
 			client::hidden::RevealComponent,
-			eng::PrototypeComponent>;
+			eng::UUIDComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

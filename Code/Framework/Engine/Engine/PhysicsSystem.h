@@ -28,6 +28,7 @@ namespace eng
 	class PhysicsManager;
 	struct PhysicsComponent;
 	struct PhysicsSceneComponent;
+	struct PhysicsTemplate;
 	struct RigidDynamicComponent;
 	struct RigidStaticComponent;
 	struct TransformComponent;
@@ -46,7 +47,9 @@ namespace eng
 			eng::PhysicsSceneComponent,
 			eng::RigidDynamicComponent,
 			eng::RigidStaticComponent,
-			eng::TransformComponent>;
+			eng::TransformComponent>
+			::Read<
+			eng::PhysicsTemplate>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

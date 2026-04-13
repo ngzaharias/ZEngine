@@ -65,7 +65,10 @@ void debug::inventory::WindowSystem::Update(World& world, const GameTime& gameTi
 		window.m_Identifier = identifier;
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const debug::inventory::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<debug::inventory::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		const auto& window = world.ReadComponent<debug::inventory::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

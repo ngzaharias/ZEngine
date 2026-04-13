@@ -2,6 +2,7 @@
 #include "Camera/CameraMove3DSystem.h"
 
 #include "Camera/CameraMove3DComponent.h"
+#include "Camera/CameraMove3DTemplate.h"
 #include "Camera/CameraSettingsComponent.h"
 #include "Core/GameTime.h"
 #include "Core/VariantHelpers.h"
@@ -55,7 +56,10 @@ void camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<camera::Move3DComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<camera::Move3DComponent>;
+	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
@@ -108,5 +112,18 @@ void camera::Move3DSystem::Update(World& world, const GameTime& gameTime)
 			auto& writeTransform = view.WriteRequired<eng::TransformComponent>();
 			writeTransform.m_Rotate += rotator;
 		}
+	}
+
+	using AddedQuery = ecs::query
+		::Added<const camera::Move3DTemplate>
+		::Include<const camera::Move3DTemplate>;
+	for (auto&& view : world.Query<AddedQuery>())
+	{
+		world.AddComponent<camera::Move3DComponent>(view);
+	}
+
+	for (auto&& view : world.Query<ecs::query::Removed<camera::Move3DTemplate>>())
+	{
+		world.RemoveComponent<camera::Move3DComponent>(view);
 	}
 }

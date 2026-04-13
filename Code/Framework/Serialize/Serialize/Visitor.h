@@ -91,6 +91,8 @@ public:
 	bool LoadFromFile(const str::Path& path);
 
 public:
+	bool Has(const str::StringView& key) const;
+
 	// Read
 	template<typename Value>
 	void Read(Value& value) const;

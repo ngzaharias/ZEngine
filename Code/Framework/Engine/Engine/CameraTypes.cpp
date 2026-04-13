@@ -3,7 +3,7 @@
 
 #include "Serialize/Visitor.h"
 
-#include "imgui/Inspector.h"
+#include "imgui/Property.h"
 
 namespace
 {
@@ -27,7 +27,7 @@ void Visitor::WriteCustom(const eng::Cinematic& value)
 	Write(strClippingFar, value.m_ClippingFar);
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::Cinematic& value)
+bool imgui::WriteCustom(eng::Cinematic& value)
 {
 	bool result = false;
 	result |= Write("m_ClippingNear", value.m_ClippingNear);
@@ -50,7 +50,7 @@ void Visitor::WriteCustom(const eng::Orthographic& value)
 	Write(strSize, value.m_Size);
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::Orthographic& value)
+bool imgui::WriteCustom(eng::Orthographic& value)
 {
 	bool result = false;
 	result |= Write("m_ClippingNear", value.m_ClippingNear);
@@ -76,7 +76,7 @@ void Visitor::WriteCustom(const eng::Perspective& value)
 	Write(strFoVAxis, value.m_FoVAxis);
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::Perspective& value)
+bool imgui::WriteCustom(eng::Perspective& value)
 {
 	bool result = false;
 	result |= Write("m_ClippingNear", value.m_ClippingNear);
@@ -95,7 +95,7 @@ void Visitor::WriteCustom(const eng::UserInterface& value)
 {
 }
 template<>
-bool imgui::Inspector::WriteCustom(eng::UserInterface& value)
+bool imgui::WriteCustom(eng::UserInterface& value)
 {
 	return false;
 }

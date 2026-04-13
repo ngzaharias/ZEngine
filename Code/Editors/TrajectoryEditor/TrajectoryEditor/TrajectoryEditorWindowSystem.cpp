@@ -229,7 +229,10 @@ void editor::trajectory::WindowSystem::Update(World& world, const GameTime& game
 		window.m_PlottingLabel = ToLabel("Plotter##trajectory", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::trajectory::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::trajectory::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		const auto& window = world.ReadComponent<editor::trajectory::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

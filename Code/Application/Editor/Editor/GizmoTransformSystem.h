@@ -6,14 +6,15 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace editor::entity
+{
+	class CommandManager;
+	struct SelectComponent;
+}
+
 namespace editor::gizmo
 {
 	struct TransformComponent;
-}
-
-namespace editor::outliner
-{
-	struct SelectComponent;
 }
 
 namespace editor::settings
@@ -27,8 +28,10 @@ namespace eng
 	class WindowManager;
 	struct ActiveComponent;
 	struct CameraComponent;
-	struct PhysicsComponent;
+	struct PhysicsTemplate;
 	struct TransformComponent;
+	struct TransformTemplate;
+	struct UUIDComponent;
 	struct VersionComponent;
 }
 
@@ -44,15 +47,18 @@ namespace editor::gizmo
 	public:
 		using World = ecs::WorldView
 			::Write<
+			editor::entity::CommandManager,
 			editor::gizmo::TransformComponent,
 			eng::InputManager,
-			eng::PhysicsComponent,
-			eng::TransformComponent>
+			eng::PhysicsTemplate>
 			::Read<
-			editor::outliner::SelectComponent,
+			editor::entity::SelectComponent,
 			editor::settings::LocalComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent,
+			eng::TransformComponent,
+			eng::TransformTemplate,
+			eng::UUIDComponent,
 			eng::WindowManager,
 			gamestate::EditModeComponent>;
 

@@ -4,14 +4,14 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace editor::entity
+{
+	struct SelectComponent;
+}
+
 namespace editor::gizmo
 {
 	struct TransformComponent;
-}
-
-namespace editor::outliner
-{
-	struct SelectComponent;
 }
 
 namespace eng
@@ -40,8 +40,8 @@ namespace editor
 	public:
 		using World = ecs::WorldView
 			::Write<
+			editor::entity::SelectComponent,
 			editor::gizmo::TransformComponent,
-			editor::outliner::SelectComponent,
 			eng::CameraComponent,
 			eng::TransformComponent>
 			::Read<

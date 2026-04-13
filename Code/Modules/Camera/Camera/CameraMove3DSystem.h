@@ -6,6 +6,7 @@
 namespace camera
 {
 	struct Move3DComponent;
+	struct Move3DTemplate;
 	struct SettingsComponent;
 }
 
@@ -24,10 +25,11 @@ namespace camera
 	public:
 		using World = ecs::WorldView
 			::Write<
+			camera::Move3DComponent,
 			eng::InputManager,
 			eng::TransformComponent>
 			::Read<
-			camera::Move3DComponent,
+			camera::Move3DTemplate,
 			camera::SettingsComponent,
 			eng::ActiveComponent,
 			eng::CameraComponent>;

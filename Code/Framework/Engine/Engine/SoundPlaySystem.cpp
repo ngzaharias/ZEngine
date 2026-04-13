@@ -98,7 +98,10 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 			world.DestroyEntity(view);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<eng::sound::ObjectComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<eng::sound::ObjectComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& object = world.WriteComponent<eng::sound::ObjectComponent>(view, false);
 		delete object.m_Sound;

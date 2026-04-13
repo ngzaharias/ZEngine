@@ -276,9 +276,11 @@ void server::inventory::StorageSystem::ProcessMemberRemoveRequests(World& world)
 		}
 	}
 
-	// #todo: only dead entities
 	// member lifetime is external so we need to listen to it being destroyed
-	for (auto&& view : world.Query<ecs::query::Removed<const server::inventory::MemberComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Dead>
+		::Removed<server::inventory::MemberComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		// if storage was also destroyed in the previous frame
 		const auto& memberComponent = world.ReadComponent<server::inventory::MemberComponent>(view, false);

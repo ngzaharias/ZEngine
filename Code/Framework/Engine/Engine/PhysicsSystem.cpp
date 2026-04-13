@@ -7,10 +7,11 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
 #include "Engine/PhysicsComponent.h"
-#include "Engine/PhysicsSceneComponent.h"
 #include "Engine/PhysicsHelpers.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PhysicsMaterialAsset.h"
+#include "Engine/PhysicsSceneComponent.h"
+#include "Engine/PhysicsTemplate.h"
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/TransformComponent.h"
@@ -195,21 +196,31 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 {
 	PROFILE_FUNCTION();
 
+	using AddedQuery = ecs::query
+		::Added<const eng::PhysicsTemplate>
+		::Include<const eng::PhysicsTemplate>;
+	for (auto&& view : world.Query<AddedQuery>())
+	{
+		world.AddComponent<eng::PhysicsComponent>(view);
+	}
+
 	const auto& assetManager = world.ReadResource<eng::AssetManager>();
 	const auto* materialAsset = assetManager.ReadAsset<eng::PhysicsMaterialAsset>(strDefaultMaterial);
 	if (!materialAsset)
 		return;
 
 	Set<ecs::Entity> entities = {};
-	entities.Add(world.Query<ecs::query::Added<eng::PhysicsComponent>>());
-	entities.Add(world.Query<ecs::query::Updated<eng::PhysicsComponent>>());
+	entities.Add(world.Query<ecs::query::Added<eng::PhysicsTemplate>>());
+	entities.Add(world.Query<ecs::query::Updated<eng::PhysicsTemplate>>());
 	for (const ecs::Entity& entity : entities)
 	{
+		const auto& physicsTemplate = world.ReadComponent<eng::PhysicsTemplate>(entity);
 		auto& physicsManager = world.WriteResource<eng::PhysicsManager>();
-
-		// #hack: dirty hack to not mark the component as updated which causes an infinite loop
-		auto& physicsComponent = const_cast<eng::PhysicsComponent&>(world.ReadComponent<eng::PhysicsComponent>(entity));
 		auto& sceneComponent = world.WriteComponent<eng::PhysicsSceneComponent>();
+
+		auto& physicsComponent = world.HasComponent<eng::PhysicsComponent>(entity)
+			? world.WriteComponent<eng::PhysicsComponent>(entity)
+			: world.AddComponent<eng::PhysicsComponent>(entity);
 
 		physx::PxPhysics& physics = physicsManager.GetPhysics();
 		for (physx::PxShape* shape : physicsComponent.m_PxShapes)
@@ -232,11 +243,11 @@ void eng::PhysicsSystem::ProcessAdded(World& world)
 			transform = eng::physics::ToTransform(transformComponent.m_Translate, transformComponent.m_Rotate);
 		}
 
-		physicsComponent.m_PxRigidActor = CreateActor(physics, physicsComponent.m_Rigidbody);
+		physicsComponent.m_PxRigidActor = CreateActor(physics, physicsTemplate.m_Rigidbody);
 		physicsComponent.m_PxRigidActor->userData = reinterpret_cast<void*>(entity.m_Value);
 		physicsComponent.m_PxRigidActor->setGlobalPose(transform);
 
-		for (const eng::Shape& data : physicsComponent.m_Shapes)
+		for (const eng::Shape& data : physicsTemplate.m_Shapes)
 		{
 			if (physx::PxShape* shape = CreateShape(physics, data, *materialAsset->m_Material))
 			{
@@ -254,17 +265,21 @@ void eng::PhysicsSystem::ProcessUpdated(World& world)
 	PROFILE_FUNCTION();
 
 	using Query = ecs::query
-		::Include<eng::TransformComponent, const eng::PhysicsComponent>;
+		::Include<
+		eng::TransformComponent, 
+		const eng::PhysicsComponent,
+		const eng::PhysicsTemplate>;
 	for (auto&& view : world.Query<Query>())
 	{
 		const auto& physicsComponent = view.ReadRequired<eng::PhysicsComponent>();
-		if (!std::holds_alternative<eng::RigidDynamic>(physicsComponent.m_Rigidbody))
+		const auto& physicsTemplate = view.ReadRequired<eng::PhysicsTemplate>();
+		if (!std::holds_alternative<eng::RigidDynamic>(physicsTemplate.m_Rigidbody))
 			continue;
 
 		if (!physicsComponent.m_PxRigidActor)
 			continue;
 
-		const auto& rigidDynamic = std::get<eng::RigidDynamic>(physicsComponent.m_Rigidbody);
+		const auto& rigidDynamic = std::get<eng::RigidDynamic>(physicsTemplate.m_Rigidbody);
 		if (!rigidDynamic.eKINEMATIC)
 		{
 			auto& transformComponent = view.WriteRequired<eng::TransformComponent>();
@@ -285,6 +300,11 @@ void eng::PhysicsSystem::ProcessUpdated(World& world)
 
 void eng::PhysicsSystem::ProcessRemoved(World& world)
 {
+	for (auto&& view : world.Query<ecs::query::Removed<const eng::PhysicsTemplate>>())
+	{
+		world.RemoveComponent<eng::PhysicsComponent>(view);
+	}
+
 	for (auto&& view : world.Query<ecs::query::Removed<eng::PhysicsComponent>>())
 	{
 		auto& component = world.WriteComponent<eng::PhysicsComponent>(view, false);

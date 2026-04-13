@@ -6,7 +6,6 @@
 #include "DebugInventory/InventoryWindowSystem.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "Engine/PrototypeManager.h"
 
 void debug::inventory::RegisterModule(ecs::EntityWorld& clientWorld, ecs::EntityWorld& serverWorld)
 {

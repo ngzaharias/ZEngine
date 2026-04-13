@@ -332,7 +332,10 @@ void editor::flipbook::WindowSystem::Update(World& world, const GameTime& gameTi
 		window.m_TextureLabel   = ToLabel("Texture##flipbook", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::flipbook::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::flipbook::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		const auto& window = world.ReadComponent<editor::flipbook::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

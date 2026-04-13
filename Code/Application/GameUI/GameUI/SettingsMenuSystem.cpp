@@ -29,15 +29,16 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 
 	for (auto&& view : world.Query<ecs::query::Added<gui::settings_menu::WindowComponent>>())
 	{
-		gui::DCSettingsMenu::World other = world;
-
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.CreateWidget(strSettingsMenu_xaml, true);
 		auto& dataContext = uiManager.WriteDataContext<gui::DCSettingsMenu>(strSettingsMenu_xaml);
-		dataContext.Initialise(other);
+		dataContext.Initialise(world);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<gui::settings_menu::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<gui::settings_menu::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strSettingsMenu_xaml);

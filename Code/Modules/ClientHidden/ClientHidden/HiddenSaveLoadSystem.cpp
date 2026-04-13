@@ -9,8 +9,8 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Engine/PrototypeComponent.h"
 #include "Engine/SavegameComponent.h"
+#include "Engine/UUIDComponent.h"
 #include "Serialize/Visitor.h"
 
 namespace
@@ -38,7 +38,7 @@ void client::hidden::SaveLoadSystem::Update(World& world, const GameTime& gameTi
 
 	using Query = ecs::query
 		::Added<const client::hidden::ObjectComponent>
-		::Include<const eng::PrototypeComponent>
+		::Include<const eng::UUIDComponent>
 		::Exclude<const client::hidden::RevealComponent>;
 	if (world.HasAny<Query>())
 	{
@@ -52,8 +52,8 @@ void client::hidden::SaveLoadSystem::Update(World& world, const GameTime& gameTi
 
 		for (auto&& view : world.Query<Query>())
 		{
-			const auto& component = view.ReadRequired<eng::PrototypeComponent>();
-			if (enumerate::Contains(revealed, component.m_Guid))
+			const auto& uuidComponent = view.ReadRequired<eng::UUIDComponent>();
+			if (enumerate::Contains(revealed, uuidComponent.m_UUID))
 			{
 				world.AddComponent<eng::SavegameComponent>(view);
 				world.AddComponent<client::hidden::RevealComponent>(view);

@@ -20,7 +20,7 @@
 #include "Engine/PhysicsComponent.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PhysicsMaterialAsset.h"
-#include "Engine/PrototypeManager.h"
+#include "Engine/PhysicsTemplate.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
 #include "Engine/ShaderAsset.h"
@@ -29,6 +29,7 @@
 #include "Engine/SpriteComponent.h"
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/StaticMeshComponent.h"
+#include "Engine/TemplateManager.h"
 #include "Engine/TextComponent.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/ThemeTable.h"
@@ -75,7 +76,7 @@ eng::Application::Application()
 	, m_NetworkManager()
 	, m_PhysicsManager()
 	, m_PlatformManager()
-	, m_PrototypeManager()
+	, m_TemplateManager()
 	, m_WindowManager()
 {
 	srand((unsigned int)time(NULL));
@@ -148,21 +149,6 @@ void eng::Application::Register()
 		m_AssetManager.RegisterAsset<eng::StaticMeshAsset, eng::StaticMeshAssetLoader>(strStaticMesh);
 		m_AssetManager.RegisterAsset<eng::Texture2DAsset, eng::Texture2DAssetLoader>(strTexture2D);
 		m_AssetManager.RegisterAsset<eng::TrajectoryAsset, eng::TrajectoryAssetLoader>(strTrajectory);
-	}
-
-	// prototypes
-	{
-		m_PrototypeManager.RegisterComponent<eng::CameraComponent>();
-		m_PrototypeManager.RegisterComponent<eng::FlipbookComponent>();
-		m_PrototypeManager.RegisterComponent<eng::light::AmbientComponent>();
-		m_PrototypeManager.RegisterComponent<eng::light::DirectionalComponent>();
-		m_PrototypeManager.RegisterComponent<eng::light::PointComponent>();
-		m_PrototypeManager.RegisterComponent<eng::PhysicsComponent>();
-		m_PrototypeManager.RegisterComponent<eng::SpriteComponent>();
-		m_PrototypeManager.RegisterComponent<eng::StaticMeshComponent>();
-		m_PrototypeManager.RegisterComponent<eng::TextComponent>();
-		m_PrototypeManager.RegisterComponent<eng::TransformComponent>();
-		m_PrototypeManager.RegisterComponent<eng::VisibilityComponent>();
 	}
 
 	// tables

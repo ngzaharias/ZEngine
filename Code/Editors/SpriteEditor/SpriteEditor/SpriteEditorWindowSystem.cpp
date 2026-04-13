@@ -390,7 +390,10 @@ void editor::sprite::WindowSystem::Update(World& world, const GameTime& gameTime
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<editor::sprite::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::sprite::WindowComponent>;
+	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
@@ -414,7 +417,10 @@ void editor::sprite::WindowSystem::Update(World& world, const GameTime& gameTime
 		window.m_TextureLabel   = ToLabel("Texture##sprite", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::sprite::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::sprite::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& window = world.ReadComponent<editor::sprite::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

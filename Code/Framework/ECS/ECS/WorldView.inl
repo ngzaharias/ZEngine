@@ -8,19 +8,16 @@ ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WorldView_t(ecs::Enti
 }
 
 template<typename... TWrite, typename... TRead>
-template<typename... TOthers>
-ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::WorldView_t(const WorldView_t<TOthers...>& rhs)
-	: m_EntityWorld(rhs.m_EntityWorld)
-	, m_QueryRegistry(rhs.m_QueryRegistry)
+template<typename TOtherWrite, typename TOtherRead>
+ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::operator WorldView_t<TOtherWrite, TOtherRead>&()
 {
-}
+	constexpr bool hasWrite = core::ContainsAll(TOtherWrite{}, TWriteList{});
+	static_assert(hasWrite, "WorldView doesn't have Write access to everything in the downcast WorldView.");
+	constexpr bool hasRead = core::ContainsAll(TOtherRead{}, TReadList{});
+	static_assert(hasRead, "WorldView doesn't have Read access to everything in the downcast WorldView.");
 
-//template<typename... TWrite, typename... TRead>
-//template<typename... TOthers>
-//ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::operator WorldView_t<TOthers...>() const
-//{
-//	return WorldView_t<TOthers...>(*this);
-//}
+	return reinterpret_cast<WorldView_t<TOtherWrite, TOtherRead>&>(*this);
+}
 
 template<typename... TWrite, typename... TRead>
 template<class TEntityView>

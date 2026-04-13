@@ -13,9 +13,9 @@
 #include "Engine/InputManager.h"
 #include "Engine/LinesComponent.h"
 #include "Engine/PhysicsSceneComponent.h"
-#include "Engine/PrototypeComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/UUIDComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "Math/AABB.h"
@@ -60,7 +60,10 @@ void client::hidden::RevealSystem::Update(World& world, const GameTime& gameTime
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<hidden::ObjectComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<hidden::ObjectComponent>;
+	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
@@ -118,11 +121,11 @@ void client::hidden::RevealSystem::Update(World& world, const GameTime& gameTime
 					if (!world.HasComponent<client::hidden::RevealComponent>(selectedEntity))
 						reveals.Add(selectedEntity);
 
-					if (world.HasComponent<eng::PrototypeComponent>(selectedEntity))
+					if (world.HasComponent<eng::UUIDComponent>(selectedEntity))
 					{
-						const auto& prototypeComponent = world.ReadComponent<eng::PrototypeComponent>(selectedEntity);
+						const auto& uuidComponent = world.ReadComponent<eng::UUIDComponent>(selectedEntity);
 						auto& eventData = world.AddEvent<shared::hidden::SelectedEvent>();
-						eventData.m_Entity = prototypeComponent.m_Guid;
+						eventData.m_Entity = uuidComponent.m_UUID;
 					}
 				}
 
@@ -148,13 +151,13 @@ void client::hidden::RevealSystem::Update(World& world, const GameTime& gameTime
 		using Query = ecs::query
 			::Include<
 			const client::hidden::ObjectComponent,
-			const eng::PrototypeComponent>
+			const eng::UUIDComponent>
 			::Exclude<
 			const client::hidden::RevealComponent>;
 		for (auto&& view : world.Query<Query>())
 		{
-			const auto& prototypeComponent = view.ReadRequired<eng::PrototypeComponent>();
-			if (prototypeComponent.m_Guid == eventData.m_Entity)
+			const auto& uuidComponent = view.ReadRequired<eng::UUIDComponent>();
+			if (uuidComponent.m_UUID == eventData.m_Entity)
 				reveals.Add(view);
 		}
 	}

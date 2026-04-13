@@ -74,7 +74,10 @@ void editor::assets::WindowSystem::Update(World& world, const GameTime& gameTime
 		Sort(window.m_Sorted);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::assets::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::assets::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		const auto& window = world.ReadComponent<editor::assets::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

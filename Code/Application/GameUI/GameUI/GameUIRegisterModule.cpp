@@ -3,8 +3,8 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "Engine/PrototypeManager.h"
 #include "Engine/TableHeadmaster.h"
+#include "Engine/TemplateManager.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCGameMenu.h"
 #include "GameUI/DCHiddenCount.h"
@@ -24,8 +24,10 @@
 #include "GameUI/HintTable.h"
 #include "GameUI/HUDComponent.h"
 #include "GameUI/HUDSystem.h"
+#include "GameUI/HUDTemplate.h"
+#include "GameUI/InputBindingsComponent.h"
 #include "GameUI/InputBindingsSystem.h"
-#include "GameUI/InputComponents.h"
+#include "GameUI/InputBindingsTemplate.h"
 #include "GameUI/LevelCompleteExitGameEvent.h"
 #include "GameUI/LevelCompleteExitToMenuEvent.h"
 #include "GameUI/LevelCompleteResetGameEvent.h"
@@ -39,6 +41,7 @@
 #include "GameUI/MainMenuNewGameEvent.h"
 #include "GameUI/MainMenuSystem.h"
 #include "GameUI/MainMenuWindowComponent.h"
+#include "GameUI/MainMenuWindowTemplate.h"
 #include "GameUI/SettingsMenuCloseEvent.h"
 #include "GameUI/SettingsMenuOpenEvent.h"
 #include "GameUI/SettingsMenuSystem.h"
@@ -62,9 +65,12 @@ void gui::RegisterModule(ecs::EntityWorld& world)
 {
 	world.RegisterComponent<gui::game_menu::WindowComponent>();
 	world.RegisterComponent<gui::HUDComponent>();
+	world.RegisterComponent<gui::HUDTemplate>();
 	world.RegisterComponent<gui::input::BindingsComponent>();
+	world.RegisterComponent<gui::input::BindingsTemplate>();
 	world.RegisterComponent<gui::level_complete::WindowComponent>();
 	world.RegisterComponent<gui::main_menu::WindowComponent>();
+	world.RegisterComponent<gui::main_menu::WindowTemplate>();
 	world.RegisterComponent<gui::settings_menu::WindowComponent>();
 	world.RegisterEvent<gui::game_menu::CloseEvent>();
 	world.RegisterEvent<gui::game_menu::ExitGameEvent>();
@@ -92,12 +98,12 @@ void gui::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterSystem<gui::settings_menu::MenuSystem>();
 	world.RegisterSystem<gui::ThemeSystem>();
 
-	// prototypes
+	// templates
 	{
-		auto& manager = world.WriteResource<eng::PrototypeManager>();
-		manager.RegisterComponent<gui::HUDComponent>();
-		manager.RegisterComponent<gui::input::BindingsComponent>();
-		manager.RegisterComponent<gui::main_menu::WindowComponent>();
+		auto& manager = world.WriteResource<eng::TemplateManager>();
+		manager.RegisterComponent<gui::HUDTemplate>();
+		manager.RegisterComponent<gui::input::BindingsTemplate>();
+		manager.RegisterComponent<gui::main_menu::WindowTemplate>();
 	}
 
 	// tables

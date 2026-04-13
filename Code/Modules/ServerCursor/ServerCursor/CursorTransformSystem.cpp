@@ -42,10 +42,14 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 		serverComponent.m_Peers.Set(peerId, entity);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<server::network::PeerComponent>::Include<const server::network::PeerComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<server::network::PeerComponent>
+		::Include<server::cursor::TransformComponent, const server::network::PeerComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		const auto& peerComponent = view.ReadRequired<server::network::PeerComponent>();
-		auto& transformComponent = world.WriteComponent<server::cursor::TransformComponent>();
+		auto& transformComponent = view.WriteRequired<server::cursor::TransformComponent>();
 		
 		const net::PeerId peerId = peerComponent.m_PeerId;
 		auto& peers = transformComponent.m_Peers;

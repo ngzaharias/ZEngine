@@ -46,6 +46,12 @@ namespace gui::settings_menu
 			eng::WindowManager,
 			gui::settings_menu::WindowComponent>
 			::Read<
+			camera::SettingsComponent,
+			eng::settings::AudioComponent,
+			eng::settings::GameplayComponent,
+			eng::settings::WindowComponent,
+			eng::ThemeTable,
+			eng::WindowManager,
 			gui::settings_menu::CloseEvent,
 			gui::settings_menu::OpenEvent,
 			gui::settings_menu::ValueEvent>;

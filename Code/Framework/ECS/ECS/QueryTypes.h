@@ -5,6 +5,8 @@ struct TypeList;
 
 namespace ecs
 {
+	struct Alive {};
+	struct Dead {};
 	struct QueryTag {};
 }
 
@@ -16,26 +18,30 @@ namespace ecs::query
 		typename TUpdated = TypeList<>,
 		typename TInclude = TypeList<>,
 		typename TOptional = TypeList<>,
-		typename TExclude = TypeList<>>
+		typename TExclude = TypeList<>,
+		typename TCondition = TypeList<>>
 	struct Builder
 	{
 		template<typename... Types>
-		using Added = Builder<decltype(TAdded::template Append<Types...>()), TRemoved, TUpdated, TInclude, TOptional, TExclude>;
+		using Added = Builder<decltype(TAdded::template Append<Types...>()), TRemoved, TUpdated, TInclude, TOptional, TExclude, TCondition>;
 
 		template<typename... Types>
-		using Removed = Builder<TAdded, decltype(TRemoved::template Append<Types...>()), TUpdated, TInclude, TOptional, TExclude>;
+		using Removed = Builder<TAdded, decltype(TRemoved::template Append<Types...>()), TUpdated, TInclude, TOptional, TExclude, TCondition>;
 
 		template<typename... Types>
-		using Updated = Builder<TAdded, TRemoved, decltype(TUpdated::template Append<Types...>()), TInclude, TOptional, TExclude>;
+		using Updated = Builder<TAdded, TRemoved, decltype(TUpdated::template Append<Types...>()), TInclude, TOptional, TExclude, TCondition>;
 
 		template<typename... Types>
-		using Include = Builder<TAdded, TRemoved, TUpdated, decltype(TInclude::template Append<Types...>()), TExclude>;
+		using Include = Builder<TAdded, TRemoved, TUpdated, decltype(TInclude::template Append<Types...>()), TExclude, TCondition>;
 
 		template<typename... Types>
-		using Optional = Builder<TAdded, TRemoved, TUpdated, TInclude, decltype(TOptional::template Append<Types...>()), TExclude>;
+		using Optional = Builder<TAdded, TRemoved, TUpdated, TInclude, decltype(TOptional::template Append<Types...>()), TExclude, TCondition>;
 
 		template<typename... Types>
-		using Exclude = Builder<TAdded, TRemoved, TUpdated, TInclude, TOptional, decltype(TExclude::template Append<Types...>())>;
+		using Exclude = Builder<TAdded, TRemoved, TUpdated, TInclude, TOptional, decltype(TExclude::template Append<Types...>()), TCondition>;
+
+		template<typename... Types>
+		using Condition = Builder<TAdded, TRemoved, TUpdated, TInclude, TOptional, TExclude, decltype(TCondition::template Append<Types...>())>;
 	};
 
 	template<typename... Types>
@@ -56,6 +62,9 @@ namespace ecs::query
 	template<typename... Types>
 	using Exclude = Builder<>::Exclude<Types...>;
 
+	template<typename... Types>
+	using Condition = Builder<>::Condition<Types...>;
+
 	//////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
@@ -64,8 +73,8 @@ namespace ecs::query
 	template<typename TQuery>
 	struct Access;
 
-	template<typename TAdded, typename TRemoved, typename TUpdated, typename TInclude, typename TOptional, typename TExclude>
-	struct Access<Builder<TAdded, TRemoved, TUpdated, TInclude, TOptional, TExclude>>
+	template<typename TAdded, typename TRemoved, typename TUpdated, typename TInclude, typename TOptional, typename TExclude, typename TCondition>
+	struct Access<Builder<TAdded, TRemoved, TUpdated, TInclude, TOptional, TExclude, TCondition>>
 	{
 		using Added = TAdded;
 		using Removed = TRemoved;
@@ -73,6 +82,7 @@ namespace ecs::query
 		using Include = TInclude;
 		using Optional = TOptional;
 		using Exclude = TExclude;
+		using Condition = TCondition;
 	};
 
 	template<typename TQuery>
@@ -87,4 +97,6 @@ namespace ecs::query
 	using OptionalAccess = typename Access<TQuery>::Optional;
 	template<typename TQuery>
 	using ExcludeAccess = typename Access<TQuery>::Exclude;
+	template<typename TQuery>
+	using ConditionAccess = typename Access<TQuery>::Condition;
 }

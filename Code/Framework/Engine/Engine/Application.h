@@ -6,8 +6,8 @@
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
 #include "Engine/PlatformManager.h"
-#include "Engine/PrototypeManager.h"
 #include "Engine/TableHeadmaster.h"
+#include "Engine/TemplateManager.h"
 #include "Engine/WindowManager.h"
 
 class GameTime;
@@ -46,8 +46,8 @@ namespace eng
 		eng::NetworkManager m_NetworkManager;
 		eng::PhysicsManager m_PhysicsManager;
 		eng::PlatformManager m_PlatformManager;
-		eng::PrototypeManager m_PrototypeManager;
 		eng::TableHeadmaster m_TableHeadmaster;
+		eng::TemplateManager m_TemplateManager;
 		eng::WindowManager m_WindowManager;
 	};
 }

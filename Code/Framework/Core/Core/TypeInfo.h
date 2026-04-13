@@ -56,3 +56,12 @@ const char* ToTypeName()
 	static const char* value = typeid(Type).name();
 	return value;
 }
+
+template<typename Type>
+const char* ToTypeName(Type)
+{
+	// #note: MSVC returns "class <TYPE>", "struct <TYPE>" or "<TYPE>"
+	// will also include namespace (including anonymous).
+	static const char* value = typeid(Type).name();
+	return value;
+}

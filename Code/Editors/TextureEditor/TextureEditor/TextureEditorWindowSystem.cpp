@@ -236,7 +236,10 @@ void editor::texture::WindowSystem::Update(World& world, const GameTime& gameTim
 		input.AppendLayer(strInput, layer);
 	}
 
-	if (world.HasAny<ecs::query::Removed<editor::texture::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::texture::WindowComponent>;
+	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
@@ -258,7 +261,10 @@ void editor::texture::WindowSystem::Update(World& world, const GameTime& gameTim
 		window.m_PreviewerLabel = ToLabel("Previewer##texture", identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::texture::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<editor::texture::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& window = world.ReadComponent<editor::texture::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);

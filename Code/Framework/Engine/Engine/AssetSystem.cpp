@@ -76,10 +76,10 @@ void eng::AssetSystem::Update(World& world, const GameTime& gameTime)
 	for (auto&& view : world.Query<ecs::query::Updated<eng::StaticMeshComponent>>())
 		ProcessEntity(world, view);
 
-	for (auto&& view : world.Query<ecs::query::Removed<eng::FlipbookComponent>>())
+	for (auto&& view : world.Query<ecs::query::Condition<ecs::Alive, ecs::Dead>::Removed<eng::FlipbookComponent>>())
 		ProcessEntity(world, view);
-	for (auto&& view : world.Query<ecs::query::Removed<eng::SpriteComponent>>())
+	for (auto&& view : world.Query<ecs::query::Condition<ecs::Alive, ecs::Dead>::Removed<eng::SpriteComponent>>())
 		ProcessEntity(world, view);
-	for (auto&& view : world.Query<ecs::query::Removed<eng::StaticMeshComponent>>())
+	for (auto&& view : world.Query<ecs::query::Condition<ecs::Alive, ecs::Dead>::Removed<eng::StaticMeshComponent>>())
 		ProcessEntity(world, view);
 }

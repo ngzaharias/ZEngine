@@ -32,7 +32,10 @@ void gui::level_complete::MenuSystem::Update(World& world, const GameTime& gameT
 		uiManager.CreateWidget(strLevelComplete_xaml, true);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<gui::level_complete::WindowComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<gui::level_complete::WindowComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strLevelComplete_xaml);

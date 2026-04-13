@@ -34,7 +34,10 @@ void gui::HUDSystem::Update(World& world, const GameTime& gameTime)
 		uiManager.CreateWidget(strHUD_xaml);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<gui::HUDComponent>>())
+	using RemovedHudQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<gui::HUDComponent>;
+	for (auto&& view : world.Query<RemovedHudQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.DestroyWidget(strHUD_xaml);
@@ -67,7 +70,10 @@ void gui::HUDSystem::Update(World& world, const GameTime& gameTime)
 		hud.SetSelectedPawn(vmPawn);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<tactics::PawnSelectedComponent>>())
+	using RemovedSelectedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<tactics::PawnSelectedComponent>;
+	for (auto&& view : world.Query<RemovedSelectedQuery>())
 	{
 		if (world.HasAny<ecs::query::Include<tactics::PawnSelectedComponent>>())
 			continue;

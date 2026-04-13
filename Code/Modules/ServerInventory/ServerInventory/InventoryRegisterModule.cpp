@@ -3,7 +3,6 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "Engine/PrototypeManager.h"
 #include "ServerInventory/InventoryMemberAddRequestComponent.h"
 #include "ServerInventory/InventoryMemberAddResultComponent.h"
 #include "ServerInventory/InventoryMemberComponent.h"

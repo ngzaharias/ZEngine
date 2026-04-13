@@ -1,7 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/PhysicsHelpers.h"
 
-#include "Engine/PhysicsComponent.h"
+#include "Engine/PhysicsTemplate.h"
 #include "Math/Quaternion.h"
 
 #include <PhysX/PxRigidDynamic.h>

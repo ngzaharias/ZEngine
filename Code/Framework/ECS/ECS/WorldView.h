@@ -48,11 +48,13 @@ namespace ecs
 
 		WorldView_t(ecs::EntityWorld& entityWorld);
 
-		template<typename... TOthers>
-		WorldView_t(const WorldView_t<TOthers...>& rhs);
+		WorldView_t(const WorldView_t&) = delete;
+		WorldView_t& operator=(const WorldView_t&) = delete;
+		WorldView_t(WorldView_t&&) = delete;
+		WorldView_t& operator=(WorldView_t&&) = delete;
 
-		//template<typename... TOthers>
-		//operator WorldView_t<TOthers...>() const;
+		template<typename TOtherWrite, typename TOtherRead>
+		operator WorldView_t<TOtherWrite, TOtherRead>&();
 
 	public:
 		template<class TEntityView>

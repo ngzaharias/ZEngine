@@ -24,10 +24,10 @@ void Visitor::WriteCustom(const client::hidden::DebugComponent& value)
 	Write(strIsObjectEnabled, value.m_IsObjectEnabled);
 }
 template<>
-bool imgui::Inspector::WriteCustom(client::hidden::DebugComponent& value)
+bool imgui::WriteCustom(client::hidden::DebugComponent& value)
 {
-	bool result = false;
-	result |= Write("m_IsInputEnabled", value.m_IsInputEnabled);
-	result |= Write("m_IsObjectEnabled", value.m_IsObjectEnabled);
-	return result;
+	bool modified = false;
+	modified |= imgui::Write("m_IsInputEnabled", value.m_IsInputEnabled);
+	modified |= imgui::Write("m_IsObjectEnabled", value.m_IsObjectEnabled);
+	return modified;
 }
