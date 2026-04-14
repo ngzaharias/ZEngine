@@ -13,7 +13,7 @@ ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::operator WorldView_t<
 {
 	constexpr bool hasWrite = core::ContainsAll(TOtherWrite{}, TWriteList{});
 	static_assert(hasWrite, "WorldView doesn't have Write access to everything in the downcast WorldView.");
-	constexpr bool hasRead = core::ContainsAll(TOtherRead{}, TReadList{});
+	constexpr bool hasRead = core::ContainsAll(TOtherRead{}, TList{});
 	static_assert(hasRead, "WorldView doesn't have Read access to everything in the downcast WorldView.");
 
 	return reinterpret_cast<WorldView_t<TOtherWrite, TOtherRead>&>(*this);
