@@ -3,6 +3,7 @@
 #include "Core/Array.h"
 #include "Core/Path.h"
 #include "Core/String.h"
+#include "Core/StringView.h"
 
 namespace eng
 {
@@ -35,6 +36,12 @@ namespace eng
 		str::String m_Path = "";
 	};
 
+	struct SearchDirectorySettings
+	{
+		str::StringView m_Extension = {};
+		bool m_IsRecursive = true;
+	};
+
 	str::Path GetAppDataDirectory();
 	str::Path GetAssetsDirectory();
 	str::Path GetConfigDirectory();
@@ -51,4 +58,6 @@ namespace eng
 	str::Path SelectFileDialog(const SelectFileSettings& settings);
 	Array<str::Path> SelectFilesDialog(const SelectFilesSettings& settings);
 	str::Path SelectFolderDialog(const SelectFolderSettings& settings);
+
+	Array<str::Path> SearchDirectory(const str::Path& directory, const SearchDirectorySettings& settings);
 }

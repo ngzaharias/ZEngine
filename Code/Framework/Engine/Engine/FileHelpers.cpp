@@ -247,3 +247,27 @@ str::Path eng::SelectFolderDialog(const SelectFolderSettings& settings)
 
 	return selectFile.result();
 }
+
+Array<str::Path> eng::SearchDirectory(const str::Path& directory, const SearchDirectorySettings& settings)
+{
+	Array<str::Path> search;
+	search.Append(directory);
+
+	for (int32 i = 0; i < search.GetCount(); ++i)
+	{
+		str::Path filepath = search[i];
+		if (!filepath.IsDirectory())
+			continue;
+
+		search.RemoveAt(i);
+		for (const auto& entry : std::filesystem::directory_iterator(filepath.ToChar()))
+		{
+			if (entry.is_directory() && !settings.m_IsRecursive)
+				continue;
+
+			search.Append(entry.path().string());
+
+		}
+	}
+	return search;
+}
