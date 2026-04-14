@@ -259,7 +259,7 @@ Array<str::Path> eng::SearchDirectory(const str::Path& directory, const SearchDi
 		if (!filepath.IsDirectory())
 			continue;
 
-		search.RemoveAt(i);
+		search.RemoveAt(i--);
 		for (const auto& entry : std::filesystem::directory_iterator(filepath.ToChar()))
 		{
 			if (entry.is_directory() && !settings.m_IsRecursive)
