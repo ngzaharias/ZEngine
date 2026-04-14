@@ -1,4 +1,4 @@
-m_Name = "StaticMesh_"
+m_Name = "Cylinder_"
 
 ['eng::StaticMeshTemplate']
 m_StaticMesh = "d0284c563e6a49a29a8025ff2731a3de"

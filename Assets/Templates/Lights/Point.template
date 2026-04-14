@@ -1,0 +1,9 @@
+m_Name = "Light: Point_"
+
+['eng::light::PointTemplate']
+m_StaticMesh = "d0284c563e6a49a29a8025ff2731a3de"
+
+['eng::TransformTemplate']
+m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
