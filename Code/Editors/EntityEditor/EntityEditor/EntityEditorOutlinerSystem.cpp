@@ -84,13 +84,13 @@ namespace
 		return icon::ENTITY;
 	}
 
-	void CreateEntity(ecs::EntityWorld& world, const str::Path& path)
+	void CreateEntity(World& world, const str::Path& path)
 	{
 		auto& commands = world.WriteResource<editor::entity::CommandManager>();
 		commands.EntityCreate(path);
 	}
 
-	void DestroyEntity(ecs::EntityWorld& world, const ecs::Entity& entity)
+	void DestroyEntity(World& world, const ecs::Entity& entity)
 	{
 		auto& commands = world.WriteResource<editor::entity::CommandManager>();
 		commands.EntityDestroy(eng::ToUUID(world, entity));
@@ -110,21 +110,24 @@ namespace
 		return result;
 	}
 
-	void Draw_MenuBar(ecs::EntityWorld& entityWorld, World& world)
+	void Draw_MenuBar(World& world, const WindowView& view)
 	{
+		const auto& window = view.ReadRequired<editor::entity::OutlinerComponent>();
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("Create"))
 			{
 				if (ImGui::MenuItem("Entity"))
-					CreateEntity(entityWorld, {});
+					CreateEntity(world, {});
 				ImGui::Separator();
-				if (ImGui::MenuItem("Camera"))
-					CreateEntity(entityWorld, str::Path(str::EPath::Assets, "Templates\\Camera.template"));
-				if (ImGui::MenuItem("Sprite"))
-					CreateEntity(entityWorld, str::Path(str::EPath::Assets, "Templates\\Sprite.template"));
-				if (ImGui::MenuItem("StaticMesh"))
-					CreateEntity(entityWorld, str::Path(str::EPath::Assets, "Templates\\StaticMesh.template"));
+
+				str::String name;
+				for (const str::Path& filepath : window.m_Templates)
+				{
+					name = filepath.GetFileNameNoExtension();
+					if (ImGui::MenuItem(name.c_str()))
+						CreateEntity(world, filepath);
+				}
 
 				ImGui::EndMenu();
 			}
@@ -189,7 +192,7 @@ namespace
 			if (ImGui::BeginPopup(name))
 			{
 				if (ImGui::Selectable("Destroy"))
-					DestroyEntity(entityWorld, view);
+					DestroyEntity(world, view);
 				ImGui::EndPopup();
 			}
 		}
@@ -241,6 +244,10 @@ void editor::entity::OutlinerSystem::Update(World& world, const GameTime& gameTi
 		auto& window = world.AddComponent<editor::entity::OutlinerComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_Label = ToLabel("Outliner", identifier);
+
+		const str::Path directory = str::Path(str::EPath::Assets, "Templates");
+		const eng::SearchDirectorySettings settings = { .m_Extension = ".template" };
+		window.m_Templates = eng::SearchDirectory(directory, settings);
 	}
 
 	using RemovedQuery = ecs::query
@@ -252,7 +259,7 @@ void editor::entity::OutlinerSystem::Update(World& world, const GameTime& gameTi
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (auto&& windowView : world.Query<ecs::query::Include<editor::entity::OutlinerComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::entity::OutlinerComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags =
 			ImGuiWindowFlags_MenuBar |
@@ -261,20 +268,20 @@ void editor::entity::OutlinerSystem::Update(World& world, const GameTime& gameTi
 		constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 		constexpr Vector2f s_DefaultSize = Vector2f(800, 600.f);
 
-		const auto& window = windowView.WriteRequired<editor::entity::OutlinerComponent>();
+		const auto& window = view.WriteRequired<editor::entity::OutlinerComponent>();
 
 		bool isOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(window.m_Label.c_str(), &isOpen, s_WindowFlags))
 		{
-			Draw_MenuBar(m_World, world);
+			Draw_MenuBar(world, view);
 			Draw_EntityList(m_World, world);
 			Draw_EntityDrop(m_World);
 		}
 		ImGui::End();
 
 		if (!isOpen)
-			world.DestroyEntity(windowView);
+			world.DestroyEntity(view);
 	}
 }
