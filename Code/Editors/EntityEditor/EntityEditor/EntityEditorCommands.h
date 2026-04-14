@@ -3,6 +3,7 @@
 #include "Core/Guid.h"
 #include "Core/Hash.h"
 #include "Core/Name.h"
+#include "Core/Path.h"
 #include "Core/String.h"
 #include "ECS/Entity.h"
 #include "ECS/EntityWorld.h"
@@ -125,7 +126,7 @@ namespace editor::entity
 	struct EntityCreate : public Command
 	{
 	public:
-		EntityCreate(const str::Guid& uuid, const str::StringView& name);
+		EntityCreate(const str::Path& path);
 
 		const char* ToString() const override;
 
@@ -134,7 +135,7 @@ namespace editor::entity
 
 	private:
 		str::Guid m_UUID = {};
-		str::String m_Name = {};
+	 	str::Path m_Path = {};
 	};
 
 	struct EntityDestroy : public Command

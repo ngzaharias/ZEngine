@@ -6,10 +6,16 @@
 #include "Engine/TemplateManager.h"
 #include "Engine/UUIDComponent.h"
 #include "Engine/UUIDHelpers.h"
+#include "Serialize/Visitor.h"
 
-editor::entity::EntityCreate::EntityCreate(const str::Guid& uuid, const str::StringView& name)
+namespace
+{
+	const str::StringView strUUID = "m_UUID";
+}
+
+editor::entity::EntityCreate::EntityCreate(const str::Path& path)
 	: m_UUID(str::Guid::Generate())
-	, m_Name(name)
+	, m_Path(path)
 {
 }
 
@@ -20,9 +26,25 @@ const char* editor::entity::EntityCreate::ToString() const
 
 void editor::entity::EntityCreate::Exec(ecs::EntityWorld& world)
 {
-	const ecs::Entity entity = world.CreateEntity();
-	world.AddComponent<ecs::NameComponent>(entity, m_Name);
-	world.AddComponent<eng::UUIDComponent>(entity, m_UUID);
+	if (m_Path.IsEmpty())
+	{
+		const ecs::Entity entity = world.CreateEntity();
+		world.AddComponent<ecs::NameComponent>(entity, "Entity_");
+		world.AddComponent<eng::UUIDComponent>(entity, m_UUID);
+	}
+	else
+	{
+		Visitor visitor;
+		if (visitor.LoadFromFile(m_Path))
+		{
+			// #hack: override the UUID since we can't access the component after it is added
+			visitor.Write(strUUID, m_UUID);
+
+			const ecs::Entity entity = world.CreateEntity();
+			const auto& manager = world.ReadResource<eng::TemplateManager>();
+			manager.WriteEntity(world, entity, visitor);
+		}
+	}
 }
 
 void editor::entity::EntityCreate::Undo(ecs::EntityWorld& world)

@@ -97,9 +97,9 @@ void editor::entity::CommandManager::AddCommands(Array<Command*>&& commands)
 	m_ExecStack.Append(commands);
 }
 
-void editor::entity::CommandManager::EntityCreate(const str::Guid& uuid, const str::StringView& name)
+void editor::entity::CommandManager::EntityCreate(const str::Path& path)
 {
-	m_ExecStack.Append(new editor::entity::EntityCreate(uuid, name));
+	m_ExecStack.Append(new editor::entity::EntityCreate(path));
 }
 
 void editor::entity::CommandManager::EntityDestroy(const str::Guid& uuid)

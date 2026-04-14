@@ -84,10 +84,10 @@ namespace
 		return icon::ENTITY;
 	}
 
-	void CreateEntity(ecs::EntityWorld& world, const str::StringView name)
+	void CreateEntity(ecs::EntityWorld& world, const str::Path& path)
 	{
 		auto& commands = world.WriteResource<editor::entity::CommandManager>();
-		commands.EntityCreate(str::Guid::Generate(), "Entity_");
+		commands.EntityCreate(path);
 	}
 
 	void DestroyEntity(ecs::EntityWorld& world, const ecs::Entity& entity)
@@ -117,7 +117,14 @@ namespace
 			if (ImGui::BeginMenu("Create"))
 			{
 				if (ImGui::MenuItem("Entity"))
-					CreateEntity(entityWorld, "Entity_");
+					CreateEntity(entityWorld, {});
+				ImGui::Separator();
+				if (ImGui::MenuItem("Camera"))
+					CreateEntity(entityWorld, str::Path(str::EPath::Assets, "Templates\\Camera.template"));
+				if (ImGui::MenuItem("Sprite"))
+					CreateEntity(entityWorld, str::Path(str::EPath::Assets, "Templates\\Sprite.template"));
+				if (ImGui::MenuItem("StaticMesh"))
+					CreateEntity(entityWorld, str::Path(str::EPath::Assets, "Templates\\StaticMesh.template"));
 
 				ImGui::EndMenu();
 			}

@@ -7,8 +7,8 @@
 
 namespace
 {
-	const str::StringView strGuid = "m_Guid";
 	const str::StringView strName = "m_Name";
+	const str::StringView strUUID = "m_UUID";
 }
 
 void eng::TemplateManager::ReadEntity(ecs::EntityWorld& world, const ecs::Entity& entity, Visitor& visitor) const
@@ -17,7 +17,7 @@ void eng::TemplateManager::ReadEntity(ecs::EntityWorld& world, const ecs::Entity
 	const auto& uuidComponent = world.ReadComponent<eng::UUIDComponent>(entity);
 
 	visitor.Write(strName, nameComponent.m_Name);
-	visitor.Write(strGuid, uuidComponent.m_UUID);
+	visitor.Write(strUUID, uuidComponent.m_UUID);
 	for (auto&& [key, entry] : m_EntryMap)
 	{
 		entry.m_Read(world, entity, visitor);
@@ -36,7 +36,7 @@ void eng::TemplateManager::WriteEntity(ecs::EntityWorld& world, const ecs::Entit
 		: world.AddComponent<eng::UUIDComponent>(entity);
 
 	visitor.Read(strName, nameComponent.m_Name, {});
-	visitor.Read(strGuid, uuidComponent.m_UUID, {});
+	visitor.Read(strUUID, uuidComponent.m_UUID, {});
 	for (str::StringView key : visitor)
 	{
 		const str::Name typeName = NAME(key);

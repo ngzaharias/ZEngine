@@ -40,7 +40,7 @@ namespace editor::entity
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
-		void EntityCreate(const str::Guid& uuid, const str::StringView& name);
+		void EntityCreate(const str::Path& path);
 		
 		void EntityDestroy(const str::Guid& uuid);
 		
