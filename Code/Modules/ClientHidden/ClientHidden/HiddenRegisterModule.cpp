@@ -6,8 +6,10 @@
 #include "ClientHidden/HiddenCountTemplate.h"
 #include "ClientHidden/HiddenDebugComponent.h"
 #include "ClientHidden/HiddenGroupComponent.h"
+#include "ClientHidden/HiddenGroupSystem.h"
 #include "ClientHidden/HiddenGroupTemplate.h"
 #include "ClientHidden/HiddenObjectComponent.h"
+#include "ClientHidden/HiddenObjectSystem.h"
 #include "ClientHidden/HiddenObjectTemplate.h"
 #include "ClientHidden/HiddenPhysicsSystem.h"
 #include "ClientHidden/HiddenRevealComponent.h"
@@ -15,7 +17,6 @@
 #include "ClientHidden/HiddenSaveLoadSystem.h"
 #include "ClientHidden/HiddenSoundSystem.h"
 #include "ClientHidden/HiddenSpriteSystem.h"
-#include "ClientHidden/HiddenTrackerSystem.h"
 #include "ClientHidden/HiddenVFXComponent.h"
 #include "ClientHidden/HiddenVFXSystem.h"
 #include "ECS/EntityWorld.h"
@@ -35,12 +36,13 @@ void client::hidden::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterComponent<client::hidden::RevealComponent>();
 	world.RegisterComponent<client::hidden::VFXComponent>();
 	world.RegisterSystem<client::hidden::CountSystem>();
+	world.RegisterSystem<client::hidden::GroupSystem>();
+	world.RegisterSystem<client::hidden::ObjectSystem>();
 	world.RegisterSystem<client::hidden::PhysicsSystem>();
 	world.RegisterSystem<client::hidden::RevealSystem>();
 	world.RegisterSystem<client::hidden::SaveLoadSystem>();
 	world.RegisterSystem<client::hidden::SoundSystem>();
 	world.RegisterSystem<client::hidden::SpriteSystem>();
-	world.RegisterSystem<client::hidden::TrackerSystem>();
 	world.RegisterSystem<client::hidden::VFXSystem>();
 
 	// templates

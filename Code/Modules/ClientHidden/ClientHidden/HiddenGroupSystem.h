@@ -6,25 +6,25 @@
 namespace client::hidden
 {
 	struct GroupComponent;
+	struct GroupTemplate;
 	struct RevealComponent;
 }
 
 namespace eng
 {
-	struct SpriteComponent;
 	struct UUIDComponent;
 }
 
 namespace client::hidden
 {
-	class TrackerSystem final : public ecs::System
+	class GroupSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::SpriteComponent>
+			client::hidden::GroupComponent>
 			::Read<
-			client::hidden::GroupComponent,
+			client::hidden::GroupTemplate,
 			client::hidden::RevealComponent,
 			eng::UUIDComponent>;
 

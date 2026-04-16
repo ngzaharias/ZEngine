@@ -143,7 +143,7 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 				root.m_Zone = GetCameraZone(camera, transform, windowSize);
 			}
 		}
-	}	
+	}
 	
 	using AddedQuery = ecs::query
 		::Added<const hexmap::RootTemplate>

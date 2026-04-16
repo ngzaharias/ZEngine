@@ -6,7 +6,9 @@
 namespace client::hidden
 {
 	struct CountComponent;
+	struct CountTemplate;
 	struct GroupComponent;
+	struct GroupTemplate;
 }
 
 namespace client::hidden
@@ -18,7 +20,9 @@ namespace client::hidden
 			::Write<
 			client::hidden::CountComponent>
 			::Read<
-			client::hidden::GroupComponent>;
+			client::hidden::CountTemplate,
+			client::hidden::GroupComponent,
+			client::hidden::GroupTemplate>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

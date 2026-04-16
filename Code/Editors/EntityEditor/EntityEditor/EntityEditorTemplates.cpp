@@ -59,6 +59,23 @@ void editor::entity::Inspector::VisitCustom(const camera::Zoom2DTemplate& valueO
 }
 
 template<>
+void editor::entity::Inspector::VisitCustom(const client::hidden::CountTemplate& valueOld)
+{
+}
+
+template<>
+void editor::entity::Inspector::VisitCustom(const client::hidden::GroupTemplate& valueOld)
+{
+	client::hidden::GroupTemplate valueNew = valueOld;
+	VISIT(client::hidden::GroupTemplate, m_Objects);
+}
+
+template<>
+void editor::entity::Inspector::VisitCustom(const client::hidden::ObjectTemplate& valueOld)
+{
+}
+
+template<>
 void editor::entity::Inspector::VisitCustom(const ecs::NameComponent& valueOld)
 {
 	ecs::NameComponent valueNew = valueOld;

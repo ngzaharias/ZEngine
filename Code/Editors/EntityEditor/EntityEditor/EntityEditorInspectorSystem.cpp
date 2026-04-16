@@ -80,6 +80,9 @@ namespace
 		ToggleComponent<camera::Move3DTemplate>(world, entity);
 		ToggleComponent<camera::Pan3DTemplate>(world, entity);
 		ToggleComponent<camera::Zoom2DTemplate>(world, entity);
+		ToggleComponent<client::hidden::CountTemplate>(world, entity);
+		ToggleComponent<client::hidden::GroupTemplate>(world, entity);
+		ToggleComponent<client::hidden::ObjectTemplate>(world, entity);
 		ToggleComponent<eng::CameraTemplate>(world, entity);
 		ToggleComponent<eng::FlipbookTemplate>(world, entity);
 		ToggleComponent<eng::light::AmbientTemplate>(world, entity);
@@ -137,6 +140,9 @@ namespace
 		InspectComponent<camera::Move3DTemplate>(world, entity, inspector);
 		InspectComponent<camera::Pan3DTemplate>(world, entity, inspector);
 		InspectComponent<camera::Zoom2DTemplate>(world, entity, inspector);
+		InspectComponent<client::hidden::CountTemplate>(world, entity, inspector);
+		InspectComponent<client::hidden::GroupTemplate>(world, entity, inspector);
+		InspectComponent<client::hidden::ObjectTemplate>(world, entity, inspector);
 		InspectComponent<eng::CameraTemplate>(world, entity, inspector);
 		InspectComponent<eng::FlipbookTemplate>(world, entity, inspector);
 		InspectComponent<eng::light::AmbientTemplate>(world, entity, inspector);

@@ -12,6 +12,5 @@ namespace client::hidden
 	struct GroupTemplate final : public ecs::TemplateComponent
 	{
 		Array<str::Guid> m_Objects = {};
-		Array<str::Guid> m_Revealed = {};
 	};
 }

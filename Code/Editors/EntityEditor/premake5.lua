@@ -31,4 +31,5 @@ project "EntityEditor"
 		"%{wks.location}/../Code/Modules/Camera/",
 		"%{wks.location}/../Code/Modules/GameState/",
 		"%{wks.location}/../Code/Modules/Hexmap/",
+		"%{wks.location}/../Code/Modules/ClientHidden/",
 	}
