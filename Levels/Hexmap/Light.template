@@ -1,4 +1,4 @@
-m_Guid = "7212084c734344319aac2f4e00bb0e9e"
+m_UUID = "7212084c734344319aac2f4e00bb0e9e"
 m_Name = "Light"
 
 ['eng::light::DirectionalTemplate']

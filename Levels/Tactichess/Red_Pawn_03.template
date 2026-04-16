@@ -1,4 +1,4 @@
-m_Guid = '31b06e44688b4aa01893438f1002d97b'
+m_UUID = '31b06e44688b4aa01893438f1002d97b'
 m_Name = 'Red_Pawn_03'
 
 ['eng::PhysicsTemplate'.m_Rigidbody.RigidDynamic]

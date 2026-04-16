@@ -1,4 +1,4 @@
-m_Guid = "9cac40f46a8d44d4a3f1953418e8443f"
+m_UUID = "9cac40f46a8d44d4a3f1953418e8443f"
 m_Name = "GUI Bindings"
 
 ['gui::input::BindingsTemplate']

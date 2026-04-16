@@ -1,4 +1,4 @@
-m_Guid = "3367a37c5bbb4785aeae6d49a71f9f7a"
+m_UUID = "3367a37c5bbb4785aeae6d49a71f9f7a"
 m_Name = "StaticMesh_Gizmo_01"
 
 ['eng::StaticMeshTemplate']

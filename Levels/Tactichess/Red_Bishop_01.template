@@ -1,4 +1,4 @@
-m_Guid = 'c2f2079eaf6a4ad601b6eab16e307743'
+m_UUID = 'c2f2079eaf6a4ad601b6eab16e307743'
 m_Name = 'Red_Bishop_01'
 
 ['eng::PhysicsTemplate'.m_Rigidbody.RigidDynamic]

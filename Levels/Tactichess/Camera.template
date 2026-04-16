@@ -1,4 +1,4 @@
-m_Guid = '672fe6dfc75d4bf5a1c3f150056dec63'
+m_UUID = '672fe6dfc75d4bf5a1c3f150056dec63'
 m_Name = 'Camera'
 
 ['eng::CameraTemplate'.m_Projection.Orthographic]

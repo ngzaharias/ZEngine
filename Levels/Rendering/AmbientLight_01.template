@@ -1,4 +1,4 @@
-m_Guid = "7831c5251ff04529bcaabb9d9f064759"
+m_UUID = "7831c5251ff04529bcaabb9d9f064759"
 m_Name = "AmbientLight_01"
 
 ['eng::light::AmbientTemplate']

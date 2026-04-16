@@ -1,4 +1,4 @@
-m_Guid = 'd1f972dd54754f1146a656b530c7ed98'
+m_UUID = 'd1f972dd54754f1146a656b530c7ed98'
 m_Name = 'Red_Castle_02'
 
 ['eng::PhysicsTemplate'.m_Rigidbody.RigidDynamic]

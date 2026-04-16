@@ -1,4 +1,4 @@
-m_Guid = "2b8437963385415889c16c5ba899b5b6"
+m_UUID = "2b8437963385415889c16c5ba899b5b6"
 m_Name = "PointLight_02"
 
 ['eng::light::PointTemplate']

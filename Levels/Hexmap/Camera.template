@@ -1,4 +1,4 @@
-m_Guid = "652d9dc149cc45e7a63bca75e8426d7d"
+m_UUID = "652d9dc149cc45e7a63bca75e8426d7d"
 m_Name = "Camera"
 
 ['eng::CameraTemplate']

@@ -1,4 +1,4 @@
-m_Guid = "10ed57cf87da4005aa152c1f1e763d8c"
+m_UUID = "10ed57cf87da4005aa152c1f1e763d8c"
 m_Name = "Chain"
 
 ['softbody::ChainTemplate']
