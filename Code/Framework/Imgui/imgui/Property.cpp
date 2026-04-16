@@ -6,6 +6,7 @@
 #include "Core/String.h"
 #include "Core/StringView.h"
 #include "Core/Types.h"
+#include "Math/AABB.h"
 #include "Math/Quaternion.h"
 #include "Math/Vector.h"
 
@@ -256,6 +257,39 @@ bool imgui::WriteCustom(uint64& value)
 {
 	ImGui::SetNextItemWidth(-1);
 	return imgui::DragUInt("##value", value);
+}
+
+template<>
+bool imgui::WriteCustom(AABB2f& value)
+{
+	bool modified = false;
+	ImGui::SetNextItemWidth(-1);
+	modified |= imgui::DragVector("m_Min", value.m_Min);
+	ImGui::SetNextItemWidth(-1);
+	modified |= imgui::DragVector("m_Max", value.m_Max);
+	return modified;
+}
+
+template<>
+bool imgui::WriteCustom(AABB2i& value)
+{
+	bool modified = false;
+	ImGui::SetNextItemWidth(-1);
+	modified |= imgui::DragVector("m_Min", value.m_Min);
+	ImGui::SetNextItemWidth(-1);
+	modified |= imgui::DragVector("m_Max", value.m_Max);
+	return modified;
+}
+
+template<>
+bool imgui::WriteCustom(AABB3f& value)
+{
+	bool modified = false;
+	ImGui::SetNextItemWidth(-1);
+	modified |= imgui::DragVector("m_Min", value.m_Min);
+	ImGui::SetNextItemWidth(-1);
+	modified |= imgui::DragVector("m_Max", value.m_Max);
+	return modified;
 }
 
 template<>
