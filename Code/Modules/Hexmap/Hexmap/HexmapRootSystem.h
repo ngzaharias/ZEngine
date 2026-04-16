@@ -15,6 +15,7 @@ namespace eng
 namespace hexmap
 {
 	struct RootComponent;
+	struct RootTemplate;
 }
 
 namespace hexmap
@@ -30,7 +31,8 @@ namespace hexmap
 			::Read<
 			eng::ActiveComponent,
 			eng::TransformComponent,
-			eng::WindowManager>;
+			eng::WindowManager,
+			hexmap::RootTemplate>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -12,6 +12,7 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "Hexmap/HexmapRootComponent.h"
+#include "Hexmap/HexmapRootTemplate.h"
 #include "Math/AABB.h"
 #include "Math/Algorithms.h"
 #include "Math/CollisionMath.h"
@@ -142,5 +143,36 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 				root.m_Zone = GetCameraZone(camera, transform, windowSize);
 			}
 		}
+	}	
+	
+	using AddedQuery = ecs::query
+		::Added<const hexmap::RootTemplate>
+		::Include<const hexmap::RootTemplate>;
+	for (auto&& view : world.Query<AddedQuery>())
+	{
+		const auto& rootTemplate = view.ReadRequired<hexmap::RootTemplate>();
+		auto& rootComponent = world.AddComponent<hexmap::RootComponent>(view);
+		rootComponent.m_HexRadius = rootTemplate.m_HexRadius;
+		rootComponent.m_HexCount = rootTemplate.m_HexCount;
+		rootComponent.m_Zoom = rootTemplate.m_Zoom;
+		rootComponent.m_Zone = rootTemplate.m_Zone;
+	}
+
+	using UpdatedQuery = ecs::query
+		::Updated<const hexmap::RootTemplate>
+		::Include<hexmap::RootComponent, const hexmap::RootTemplate>;
+	for (auto&& view : world.Query<UpdatedQuery>())
+	{
+		const auto& rootTemplate = view.ReadRequired<hexmap::RootTemplate>();
+		auto& rootComponent = view.WriteRequired<hexmap::RootComponent>();
+		rootComponent.m_HexRadius = rootTemplate.m_HexRadius;
+		rootComponent.m_HexCount = rootTemplate.m_HexCount;
+		rootComponent.m_Zoom = rootTemplate.m_Zoom;
+		rootComponent.m_Zone = rootTemplate.m_Zone;
+	}
+
+	for (auto&& view : world.Query<ecs::query::Removed<const hexmap::RootTemplate>>())
+	{
+		world.RemoveComponent<hexmap::RootComponent>(view);
 	}
 }

@@ -15,3 +15,4 @@
 #include "Engine/StaticMeshTemplate.h"
 #include "Engine/TransformTemplate.h"
 #include "Engine/VisibilityTemplate.h"
+#include "Hexmap/HexmapRootTemplate.h"

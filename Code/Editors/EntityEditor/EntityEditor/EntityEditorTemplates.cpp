@@ -156,4 +156,14 @@ void editor::entity::Inspector::VisitCustom(const eng::VisibilityTemplate& value
 	}
 }
 
+template<>
+void editor::entity::Inspector::VisitCustom(const hexmap::RootTemplate& valueOld)
+{
+	hexmap::RootTemplate valueNew = valueOld;
+	VISIT(hexmap::RootTemplate, m_HexRadius);
+	VISIT(hexmap::RootTemplate, m_HexCount);
+	VISIT(hexmap::RootTemplate, m_Zoom);
+	VISIT(hexmap::RootTemplate, m_Zone);
+}
+
 #undef VISIT

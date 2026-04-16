@@ -82,10 +82,14 @@ namespace
 		ToggleComponent<camera::Zoom2DTemplate>(world, entity);
 		ToggleComponent<eng::CameraTemplate>(world, entity);
 		ToggleComponent<eng::FlipbookTemplate>(world, entity);
+		ToggleComponent<eng::light::AmbientTemplate>(world, entity);
+		ToggleComponent<eng::light::DirectionalTemplate>(world, entity);
+		ToggleComponent<eng::light::PointTemplate>(world, entity);
 		ToggleComponent<eng::PhysicsTemplate>(world, entity);
 		ToggleComponent<eng::SpriteTemplate>(world, entity);
 		ToggleComponent<eng::StaticMeshTemplate>(world, entity);
 		ToggleComponent<eng::TransformTemplate>(world, entity);
+		ToggleComponent<hexmap::RootTemplate>(world, entity);
 	}
 
 	void Draw_MenuBar(ecs::EntityWorld& world, const WindowView& view)
@@ -135,9 +139,13 @@ namespace
 		InspectComponent<camera::Zoom2DTemplate>(world, entity, inspector);
 		InspectComponent<eng::CameraTemplate>(world, entity, inspector);
 		InspectComponent<eng::FlipbookTemplate>(world, entity, inspector);
+		InspectComponent<eng::light::AmbientTemplate>(world, entity, inspector);
+		InspectComponent<eng::light::DirectionalTemplate>(world, entity, inspector);
+		InspectComponent<eng::light::PointTemplate>(world, entity, inspector);
 		InspectComponent<eng::PhysicsTemplate>(world, entity, inspector);
 		InspectComponent<eng::SpriteTemplate>(world, entity, inspector);
 		InspectComponent<eng::StaticMeshTemplate>(world, entity, inspector);
+		InspectComponent<hexmap::RootTemplate>(world, entity, inspector);
 		inspector.End();
 
 		if (inspector.HasCommands())
