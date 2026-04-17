@@ -16,6 +16,7 @@
 #include "Math/Matrix.h"
 #include "Math/Plane.h"
 #include "Softbody/SoftbodyChainComponent.h"
+#include "Softbody/SoftbodyChainTemplate.h"
 
 namespace
 {
@@ -83,7 +84,13 @@ void softbody::ChainSystem::Update(World& world, const GameTime& gameTime)
 		return;
 
 	const Vector2u& windowSize = window->GetSize();
-	for (auto&& chainView : world.Query<ecs::query::Include<const eng::TransformComponent, const softbody::ChainComponent>>())
+
+	using UpdateQuery = ecs::query
+		::Include<
+		softbody::ChainComponent,
+		const eng::TransformComponent,
+		const softbody::ChainTemplate>;
+	for (auto&& chainView : world.Query<UpdateQuery>())
 	{
 		using CameraQuery = ecs::query
 			::Include<
@@ -106,41 +113,71 @@ void softbody::ChainSystem::Update(World& world, const GameTime& gameTime)
 			Vector3f intersectPos;
 			if (math::Intersection(ray, plane, intersectPos))
 			{
-				auto& chainTransform = chainView.WriteRequired<eng::TransformComponent>();
-				chainTransform.m_Translate = intersectPos;
+				auto& transformComponent = chainView.WriteRequired<eng::TransformComponent>();
+				transformComponent.m_Translate = intersectPos;
 			}
 		}
 
-		auto& chain = chainView.WriteRequired<softbody::ChainComponent>();
-		const auto& transform = chainView.ReadRequired<eng::TransformComponent>();
-		if (!chain.m_Links.IsEmpty())
+		auto& chainComponent = chainView.WriteRequired<softbody::ChainComponent>();
+		const auto& chainTemplate = chainView.ReadRequired<softbody::ChainTemplate>();
+		const auto& transformComponent = chainView.ReadRequired<eng::TransformComponent>();
+		if (!chainComponent.m_Links.IsEmpty())
 		{
 			// update first node
-			chain.m_Links[0].m_Position = transform.m_Translate.XY();
-			if (chain.m_Links.GetCount() >= 2)
+			chainComponent.m_Links[0].m_Position = transformComponent.m_Translate.XY();
+			if (chainComponent.m_Links.GetCount() >= 2)
 			{
-				softbody::Link& linkH = chain.m_Links[0];
-				softbody::Link& linkI = chain.m_Links[1];
+				softbody::ChainLink& linkH = chainComponent.m_Links[0];
+				softbody::ChainLink& linkI = chainComponent.m_Links[1];
 				if (!math::IsNearly(linkH.m_Position, linkI.m_Position))
 					linkH.m_Direction = (linkH.m_Position - linkI.m_Position).Normalized();
 			}
 
-			const float radians = math::ToRadians(chain.m_Angle);
-			const bool isAngleConstrained = chain.m_Angle > 0.f;
-			const bool isLengthConstrained = chain.m_Radius > 0.f;
-			for (int32 i = 1; i < chain.m_Links.GetCount(); ++i)
+			const float radians = math::ToRadians(chainTemplate.m_Angle);
+			const bool isAngleConstrained = chainTemplate.m_Angle > 0.f;
+			const bool isLengthConstrained = chainTemplate.m_Radius > 0.f;
+			for (int32 i = 1; i < chainComponent.m_Links.GetCount(); ++i)
 			{
-				softbody::Link& linkH = chain.m_Links[i-1];
-				softbody::Link& linkI = chain.m_Links[i];
+				softbody::ChainLink& linkH = chainComponent.m_Links[i-1];
+				softbody::ChainLink& linkI = chainComponent.m_Links[i];
 
-				linkI.m_Position += chain.m_Gravity * gameTime.m_DeltaTime;
+				linkI.m_Position += chainTemplate.m_Gravity * gameTime.m_DeltaTime;
 
 				linkI.m_Direction = (linkH.m_Position - linkI.m_Position).Normalized();
 				if (isAngleConstrained)
 					linkI.m_Direction = ConstrainAngle(linkH.m_Direction, linkI.m_Direction, radians);
 				if (isLengthConstrained)
-					linkI.m_Position = ConstrainLength(linkH.m_Position, linkI.m_Direction, chain.m_Radius);
+					linkI.m_Position = ConstrainLength(linkH.m_Position, linkI.m_Direction, chainTemplate.m_Radius);
 			}
 		}
+	}
+
+	using TemplateAddedQuery = ecs::query
+		::Added<const softbody::ChainTemplate>
+		::Include<const softbody::ChainTemplate>;
+	for (auto&& view : world.Query<TemplateAddedQuery>())
+	{
+		const auto& chainTemplate = view.ReadRequired<softbody::ChainTemplate>();
+		auto& chainComponent = world.AddComponent<softbody::ChainComponent>(view);
+		for (int32 i = 0; i < chainTemplate.m_Links; ++i)
+			chainComponent.m_Links.Emplace();
+	}
+
+	using TemplateUpdatedQuery = ecs::query
+		::Updated<const softbody::ChainTemplate>
+		::Include<softbody::ChainComponent, const softbody::ChainTemplate>;
+	for (auto&& view : world.Query<TemplateUpdatedQuery>())
+	{
+		const auto& chainTemplate = view.ReadRequired<softbody::ChainTemplate>();
+		auto& chainComponent = view.WriteRequired<softbody::ChainComponent>();
+
+		chainComponent.m_Links.RemoveAll();
+		for (int32 i = 0; i < chainTemplate.m_Links; ++i)
+			chainComponent.m_Links.Emplace();
+	}
+
+	for (auto&& view : world.Query<ecs::query::Removed<const softbody::ChainTemplate>>())
+	{
+		world.RemoveComponent<softbody::ChainComponent>(view);
 	}
 }

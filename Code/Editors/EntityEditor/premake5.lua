@@ -33,4 +33,5 @@ project "EntityEditor"
 		"%{wks.location}/../Code/Modules/ClientHidden/",
 		"%{wks.location}/../Code/Modules/GameState/",
 		"%{wks.location}/../Code/Modules/Hexmap/",
+		"%{wks.location}/../Code/Modules/Softbody/",
 	}

@@ -8,6 +8,8 @@ namespace softbody
 {
 	struct ChainTemplate final : public ecs::TemplateComponent
 	{
+		int32 m_Links = 0;
+
 		// constraints
 		float m_Angle = math::ToRadians(0.f);
 		float m_Radius = 200.f;

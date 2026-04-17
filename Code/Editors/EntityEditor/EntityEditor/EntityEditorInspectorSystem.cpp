@@ -93,6 +93,10 @@ namespace
 		ToggleComponent<eng::StaticMeshTemplate>(world, entity);
 		ToggleComponent<eng::TransformTemplate>(world, entity);
 		ToggleComponent<hexmap::RootTemplate>(world, entity);
+		ToggleComponent<gui::HUDTemplate>(world, entity);
+		ToggleComponent<gui::input::BindingsTemplate>(world, entity);
+		ToggleComponent<gui::main_menu::WindowTemplate>(world, entity);
+		ToggleComponent<softbody::ChainTemplate>(world, entity);
 	}
 
 	void Draw_MenuBar(ecs::EntityWorld& world, const WindowView& view)
@@ -152,6 +156,10 @@ namespace
 		InspectComponent<eng::SpriteTemplate>(world, entity, inspector);
 		InspectComponent<eng::StaticMeshTemplate>(world, entity, inspector);
 		InspectComponent<hexmap::RootTemplate>(world, entity, inspector);
+		InspectComponent<gui::HUDTemplate>(world, entity, inspector);
+		InspectComponent<gui::input::BindingsTemplate>(world, entity, inspector);
+		InspectComponent<gui::main_menu::WindowTemplate>(world, entity, inspector);
+		InspectComponent<softbody::ChainTemplate>(world, entity, inspector);
 		inspector.End();
 
 		if (inspector.HasCommands())

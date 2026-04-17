@@ -23,3 +23,4 @@
 #include "GameUI/InputBindingsTemplate.h"
 #include "GameUI/MainMenuWindowTemplate.h"
 #include "Hexmap/HexmapRootTemplate.h"
+#include "Softbody/SoftbodyChainTemplate.h"

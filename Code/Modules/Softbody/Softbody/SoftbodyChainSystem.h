@@ -15,6 +15,7 @@ namespace eng
 namespace softbody
 {
 	struct ChainComponent;
+	struct ChainTemplate;
 }
 
 namespace softbody
@@ -30,7 +31,8 @@ namespace softbody
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,
-			eng::WindowManager>;
+			eng::WindowManager,
+			softbody::ChainTemplate>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

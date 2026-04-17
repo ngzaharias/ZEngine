@@ -7,12 +7,14 @@ namespace
 {
 	const str::StringView strAngle = "m_Angle";
 	const str::StringView strGravity = "m_Gravity";
+	const str::StringView strLinks = "m_Links";
 	const str::StringView strRadius = "m_Radius";
 }
 
 template<>
 void Visitor::ReadCustom(softbody::ChainTemplate& value) const
 {
+	Read(strLinks, value.m_Links, value.m_Links);
 	Read(strAngle, value.m_Angle, value.m_Angle);
 	Read(strRadius, value.m_Radius, value.m_Radius);
 	Read(strGravity, value.m_Gravity, value.m_Gravity);
@@ -23,6 +25,7 @@ void Visitor::ReadCustom(softbody::ChainTemplate& value) const
 template<>
 void Visitor::WriteCustom(const softbody::ChainTemplate& value)
 {
+	Write(strLinks, value.m_Links);
 	Write(strAngle, value.m_Angle);
 	Write(strRadius, value.m_Radius);
 	Write(strGravity, value.m_Gravity);

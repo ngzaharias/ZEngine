@@ -186,4 +186,14 @@ void editor::entity::Inspector::VisitCustom(const gui::main_menu::WindowTemplate
 	VISIT(gui::main_menu::WindowTemplate, m_NewGame);
 }
 
+template<>
+void editor::entity::Inspector::VisitCustom(const softbody::ChainTemplate& valueOld)
+{
+	softbody::ChainTemplate valueNew = valueOld;
+	VISIT(softbody::ChainTemplate, m_Links);
+	VISIT(softbody::ChainTemplate, m_Angle);
+	VISIT(softbody::ChainTemplate, m_Radius);
+	VISIT(softbody::ChainTemplate, m_Gravity);
+}
+
 #undef VISIT
