@@ -7,6 +7,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/ColourHelpers.h"
+#include "Engine/LevelLoadedComponent.h"
 #include "Engine/VersionComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
@@ -91,6 +92,13 @@ void debug::OverlaySystem::Update(World& world, const GameTime& gameTime)
 			const Colour colour = colour::LerpRGB(Colour::Red, Colour::Green, clamped);
 
 			ImGui::TextColored(colour, "FPS: %d", iFPS);
+		}
+
+		// level
+		for (auto&& view : world.Query<ecs::query::Include<const eng::level::LoadedComponent>>())
+		{
+			const auto& component = view.ReadRequired<eng::level::LoadedComponent>();
+			ImGui::TextColored(Colour::Green, "%s", component.m_Name.ToChar());
 		}
 	}
 	ImGui::End();

@@ -5,6 +5,11 @@
 #include "ECS/WorldView.h"
 #include "GameDebug/FPSCounter.h"
 
+namespace eng::level
+{
+	struct LoadedComponent;
+}
+
 namespace eng
 {
 	class WindowManager;
@@ -18,6 +23,7 @@ namespace debug
 	public:
 		using World = ecs::WorldView
 			::Read<
+			eng::level::LoadedComponent,
 			eng::VersionComponent,
 			eng::WindowManager>;
 
