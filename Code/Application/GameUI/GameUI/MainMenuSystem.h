@@ -25,7 +25,7 @@ namespace gui::main_menu
 	struct ExitGameEvent;
 	struct LoadGameEvent;
 	struct NewGameEvent;
-	struct WindowComponent;
+	struct WindowTemplate;
 }
 
 namespace gui::main_menu
@@ -44,7 +44,7 @@ namespace gui::main_menu
 			gui::main_menu::ExitGameEvent,
 			gui::main_menu::LoadGameEvent,
 			gui::main_menu::NewGameEvent,
-			gui::main_menu::WindowComponent>;
+			gui::main_menu::WindowTemplate>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

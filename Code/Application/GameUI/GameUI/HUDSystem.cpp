@@ -8,7 +8,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/UIManager.h"
 #include "GameUI/DCHUD.h"
-#include "GameUI/HUDComponent.h"
+#include "GameUI/HUDTemplate.h"
 #include "Tactics/TacticsAbilityTable.h"
 #include "Tactics/TacticsPawnAbilitiesComponent.h"
 #include "Tactics/TacticsPawnSelectedComponent.h"
@@ -25,18 +25,18 @@ void gui::HUDSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	using AddedQuery = ecs::query
-		::Added<gui::HUDComponent>
-		::Include<const gui::HUDComponent>;
+		::Added<gui::HUDTemplate>
+		::Include<const gui::HUDTemplate>;
 	for (auto&& view : world.Query<AddedQuery>())
 	{
-		const auto& counter = view.ReadRequired<gui::HUDComponent>();
+		const auto& counter = view.ReadRequired<gui::HUDTemplate>();
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.CreateWidget(strHUD_xaml);
 	}
 
 	using RemovedHudQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<gui::HUDComponent>;
+		::Removed<gui::HUDTemplate>;
 	for (auto&& view : world.Query<RemovedHudQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();

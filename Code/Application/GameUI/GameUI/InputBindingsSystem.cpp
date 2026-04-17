@@ -6,7 +6,7 @@
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
 #include "GameUI/GameMenuOpenEvent.h"
-#include "GameUI/InputBindingsComponent.h"
+#include "GameUI/InputBindingsTemplate.h"
 
 namespace 
 {
@@ -18,7 +18,7 @@ void gui::input::BindingsSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<gui::input::BindingsComponent>>())
+	if (world.HasAny<ecs::query::Added<gui::input::BindingsTemplate>>())
 	{
 		::input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -30,7 +30,7 @@ void gui::input::BindingsSystem::Update(World& world, const GameTime& gameTime)
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<gui::input::BindingsComponent>;
+		::Removed<gui::input::BindingsTemplate>;
 	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
@@ -38,9 +38,9 @@ void gui::input::BindingsSystem::Update(World& world, const GameTime& gameTime)
 	}
 
 	const auto& input = world.ReadResource<eng::InputManager>();
-	for (auto&& view : world.Query<ecs::query::Include<const gui::input::BindingsComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const gui::input::BindingsTemplate>>())
 	{
-		const auto& bindings = view.ReadRequired<gui::input::BindingsComponent>();
+		const auto& bindings = view.ReadRequired<gui::input::BindingsTemplate>();
 		for (const gui::input::ECommand& command : bindings.m_Commands)
 		{
 			if (command == ECommand::GameMenu && input.IsPressed(strGameMenu))

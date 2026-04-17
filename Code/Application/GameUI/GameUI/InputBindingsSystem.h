@@ -15,7 +15,7 @@ namespace gui::game_menu
 
 namespace gui::input
 {
-	struct BindingsComponent;
+	struct BindingsTemplate;
 }
 
 namespace gui::input
@@ -28,7 +28,7 @@ namespace gui::input
 			eng::InputManager,
 			gui::game_menu::OpenEvent>
 			::Read<
-			gui::input::BindingsComponent>;
+			gui::input::BindingsTemplate>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

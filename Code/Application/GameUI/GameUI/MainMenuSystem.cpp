@@ -14,7 +14,7 @@
 #include "GameUI/MainMenuExitGameEvent.h"
 #include "GameUI/MainMenuLoadGameEvent.h"
 #include "GameUI/MainMenuNewGameEvent.h"
-#include "GameUI/MainMenuWindowComponent.h"
+#include "GameUI/MainMenuWindowTemplate.h"
 
 namespace
 {
@@ -26,23 +26,23 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	using AddedQuery = ecs::query
-		::Added<gui::main_menu::WindowComponent>
-		::Include<const gui::main_menu::WindowComponent>;
+		::Added<gui::main_menu::WindowTemplate>
+		::Include<const gui::main_menu::WindowTemplate>;
 	for (auto&& view : world.Query<AddedQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		uiManager.CreateWidget(strMainMenu_xaml);
 
 		const auto& versionComponent = world.ReadComponent<eng::VersionComponent>();
-		const auto& menuComponent = view.ReadRequired<gui::main_menu::WindowComponent>();
+		const auto& menuTemplate = view.ReadRequired<gui::main_menu::WindowTemplate>();
 		auto& dataContext = uiManager.WriteDataContext<gui::DCMainMenu>(strMainMenu_xaml);
-		dataContext.SetNewGameLevel(menuComponent.m_NewGame);
+		dataContext.SetNewGameLevel(menuTemplate.m_NewGame);
 		dataContext.SetVersion(versionComponent.m_Version);
 	}
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<gui::main_menu::WindowComponent>;
+		::Removed<gui::main_menu::WindowTemplate>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		auto& uiManager = world.WriteResource<eng::UIManager>();

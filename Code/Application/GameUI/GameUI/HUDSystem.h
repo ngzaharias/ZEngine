@@ -15,7 +15,7 @@ namespace eng
 
 namespace gui
 {
-	struct HUDComponent;
+	struct HUDTemplate;
 }
 
 namespace tactics
@@ -35,7 +35,7 @@ namespace gui
 			eng::UIManager>
 			::Read<
 			ecs::NameComponent,
-			gui::HUDComponent,
+			gui::HUDTemplate,
 			tactics::AbilityTable,
 			tactics::PawnAbilitiesComponent,
 			tactics::PawnSelectedComponent>;

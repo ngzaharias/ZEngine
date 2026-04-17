@@ -22,10 +22,8 @@
 #include "GameUI/HiddenCountSystem.h"
 #include "GameUI/HiddenLevelSystem.h"
 #include "GameUI/HintTable.h"
-#include "GameUI/HUDComponent.h"
 #include "GameUI/HUDSystem.h"
 #include "GameUI/HUDTemplate.h"
-#include "GameUI/InputBindingsComponent.h"
 #include "GameUI/InputBindingsSystem.h"
 #include "GameUI/InputBindingsTemplate.h"
 #include "GameUI/LevelCompleteExitGameEvent.h"
@@ -40,7 +38,6 @@
 #include "GameUI/MainMenuLoadGameEvent.h"
 #include "GameUI/MainMenuNewGameEvent.h"
 #include "GameUI/MainMenuSystem.h"
-#include "GameUI/MainMenuWindowComponent.h"
 #include "GameUI/MainMenuWindowTemplate.h"
 #include "GameUI/SettingsMenuCloseEvent.h"
 #include "GameUI/SettingsMenuOpenEvent.h"
@@ -64,12 +61,9 @@ namespace
 void gui::RegisterModule(ecs::EntityWorld& world)
 {
 	world.RegisterComponent<gui::game_menu::WindowComponent>();
-	world.RegisterComponent<gui::HUDComponent>();
 	world.RegisterComponent<gui::HUDTemplate>();
-	world.RegisterComponent<gui::input::BindingsComponent>();
 	world.RegisterComponent<gui::input::BindingsTemplate>();
 	world.RegisterComponent<gui::level_complete::WindowComponent>();
-	world.RegisterComponent<gui::main_menu::WindowComponent>();
 	world.RegisterComponent<gui::main_menu::WindowTemplate>();
 	world.RegisterComponent<gui::settings_menu::WindowComponent>();
 	world.RegisterEvent<gui::game_menu::CloseEvent>();

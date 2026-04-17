@@ -1,22 +1,6 @@
 #include "EntityEditorPCH.h"
 #include "EntityEditor/EntityEditorTemplates.h"
 
-#include "Camera/CameraBound2DTemplate.h"
-#include "Camera/CameraMove2DTemplate.h"
-#include "Camera/CameraMove3DTemplate.h"
-#include "Camera/CameraPan3DTemplate.h"
-#include "Camera/CameraZoom2DTemplate.h"
-#include "ECS/NameComponent.h"
-#include "Engine/CameraTemplate.h"
-#include "Engine/FlipbookTemplate.h"
-#include "Engine/LightAmbientTemplate.h"
-#include "Engine/LightDirectionalTemplate.h"
-#include "Engine/LightPointTemplate.h"
-#include "Engine/PhysicsTemplate.h"
-#include "Engine/SpriteTemplate.h"
-#include "Engine/StaticMeshTemplate.h"
-#include "Engine/TransformTemplate.h"
-#include "Engine/VisibilityTemplate.h"
 #include "EntityEditor/EntityEditorInspector.h"
 
 #include "imgui/Property.h"
@@ -181,6 +165,25 @@ void editor::entity::Inspector::VisitCustom(const hexmap::RootTemplate& valueOld
 	VISIT(hexmap::RootTemplate, m_HexCount);
 	VISIT(hexmap::RootTemplate, m_Zoom);
 	VISIT(hexmap::RootTemplate, m_Zone);
+}
+
+template<>
+void editor::entity::Inspector::VisitCustom(const gui::HUDTemplate& valueOld)
+{
+}
+
+template<>
+void editor::entity::Inspector::VisitCustom(const gui::input::BindingsTemplate& valueOld)
+{
+	gui::input::BindingsTemplate valueNew = valueOld;
+	VISIT(gui::input::BindingsTemplate, m_Commands);
+}
+
+template<>
+void editor::entity::Inspector::VisitCustom(const gui::main_menu::WindowTemplate& valueOld)
+{
+	gui::main_menu::WindowTemplate valueNew = valueOld;
+	VISIT(gui::main_menu::WindowTemplate, m_NewGame);
 }
 
 #undef VISIT
