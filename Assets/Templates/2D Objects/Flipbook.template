@@ -1,5 +1,8 @@
 m_Name = "Flipbook_"
 
+['eng::VisibilityTemplate']
+m_IsVisible = true
+
 ['eng::FlipbookTemplate']
 m_Flipbook = "9cf3dbdc769ea09a6e4aa0390e246666"
 m_Size = { X = 50, Y = 50 }

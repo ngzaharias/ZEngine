@@ -1,5 +1,8 @@
 m_Name = "Capsule_"
 
+['eng::VisibilityTemplate']
+m_IsVisible = true
+
 ['eng::StaticMeshTemplate']
 m_StaticMesh = "d0284c563e6a49a29a8025ff2731a3de"
 

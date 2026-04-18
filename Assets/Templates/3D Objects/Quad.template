@@ -1,5 +1,8 @@
 m_Name = "Quad_"
 
+['eng::VisibilityTemplate']
+m_IsVisible = true
+
 ['eng::StaticMeshTemplate']
 m_StaticMesh = "e94876a8e4cc4d1684c85859b48a1af6"
 

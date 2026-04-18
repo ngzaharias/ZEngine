@@ -1,5 +1,8 @@
 m_Name = "Sprite_"
 
+['eng::VisibilityTemplate']
+m_IsVisible = true
+
 ['eng::SpriteTemplate']
 m_Size = { X = 50, Y = 50 }
 m_Sprite = "52ffdca6bc1d64230eda0e2056e9662b"
