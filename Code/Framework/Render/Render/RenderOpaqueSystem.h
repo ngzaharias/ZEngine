@@ -12,6 +12,7 @@ namespace eng
 	struct FrameBufferComponent;
 	struct StaticMeshComponent;
 	struct TransformComponent;
+	struct VisibilityComponent;
 }
 
 namespace eng::light
@@ -54,6 +55,7 @@ namespace render
 			eng::settings::DebugComponent,
 			eng::StaticMeshComponent,
 			eng::TransformComponent,
+			eng::VisibilityComponent,
 			eng::WindowManager,
 			render::ShadowComponent>;
 

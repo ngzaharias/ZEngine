@@ -19,6 +19,7 @@
 #include "Engine/StaticMeshAsset.h"
 #include "Engine/StaticMeshComponent.h"
 #include "Engine/TransformComponent.h"
+#include "Engine/VisibilityComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "Math/Matrix.h"
@@ -202,6 +203,13 @@ void render::OpaqueSystem::Update(World& world, const GameTime& gameTime)
 				batch.m_TexParams.RemoveAll();
 			}
 
+			if (world.HasComponent<eng::VisibilityComponent>(id.m_Entity))
+			{
+				const auto& visibileComponent = world.ReadComponent<eng::VisibilityComponent>(id.m_Entity);
+				if (!visibileComponent.m_IsVisible)
+					continue;
+			}
+
 			const auto& meshTransform = world.ReadComponent<eng::TransformComponent>(id.m_Entity);
 
 			const Matrix4x4 model = meshTransform.ToTransform();
@@ -228,6 +236,8 @@ void render::OpaqueSystem::RenderBatch(World& world, const render::BatchId& id, 
 	const auto* mesh = assetManager.ReadAsset<eng::StaticMeshAsset>(id.m_StaticMeshId);
 	const auto* shader = assetManager.ReadAsset<eng::ShaderAsset>(id.m_ShaderId);
 	if (!mesh || !shader)
+		return;
+	if (batch.m_Models.IsEmpty())
 		return;
 
 	glUseProgram(shader->m_ProgramId);
