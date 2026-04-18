@@ -21,6 +21,9 @@ namespace editor::entity
 		bool Begin(const char* label, const str::Guid& entityUUID);
 		void End();
 
+		void Break();
+		void Space();
+
 		bool HasCommands() const;
 		auto GetCommands() const -> const Array<Command*>;
 		auto MoveCommands() -> Array<Command*>;

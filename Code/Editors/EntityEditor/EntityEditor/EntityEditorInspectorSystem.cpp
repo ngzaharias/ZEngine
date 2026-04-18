@@ -24,6 +24,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 #include "imgui/imgui_user.h"
+#include "imgui/Property.h"
 
 namespace
 {
@@ -76,6 +77,10 @@ namespace
 
 	void Draw_Components(ecs::EntityWorld& world, const ecs::Entity& entity)
 	{
+		ToggleComponent<eng::VisibilityTemplate>(world, entity);
+		ToggleComponent<eng::TransformTemplate>(world, entity);
+		ImGui::Separator();
+		ImGui::Separator();
 		ToggleComponent<camera::Move2DTemplate>(world, entity);
 		ToggleComponent<camera::Move3DTemplate>(world, entity);
 		ToggleComponent<camera::Pan3DTemplate>(world, entity);
@@ -91,7 +96,6 @@ namespace
 		ToggleComponent<eng::PhysicsTemplate>(world, entity);
 		ToggleComponent<eng::SpriteTemplate>(world, entity);
 		ToggleComponent<eng::StaticMeshTemplate>(world, entity);
-		ToggleComponent<eng::TransformTemplate>(world, entity);
 		ToggleComponent<hexmap::RootTemplate>(world, entity);
 		ToggleComponent<gui::HUDTemplate>(world, entity);
 		ToggleComponent<gui::input::BindingsTemplate>(world, entity);
@@ -135,9 +139,55 @@ namespace
 
 		editor::entity::Inspector inspector;
 		inspector.Begin("", entityUUID);
-		InspectComponent<ecs::NameComponent>(world, entity, inspector);
-		InspectComponent<eng::UUIDComponent>(world, entity, inspector);
-		InspectComponent<eng::VisibilityTemplate>(world, entity, inspector);
+		if (world.HasComponent<ecs::NameComponent>(entity))
+		{
+			const auto& oldValue = world.ReadComponent<ecs::NameComponent>(entity);
+			auto newValue = oldValue;
+			if (imgui::Write("Name", newValue.m_Name))
+			{
+				auto& commands = world.WriteResource<editor::entity::CommandManager>();
+				commands.ComponentField<ecs::NameComponent>(
+					&ecs::NameComponent::m_Name,
+					eng::ToUUID(world, entity),
+					oldValue.m_Name,
+					newValue.m_Name);
+			}
+		}
+
+		if (world.HasComponent<eng::UUIDComponent>(entity))
+		{
+			const auto& oldValue = world.ReadComponent<eng::UUIDComponent>(entity);
+			auto newValue = oldValue;
+			if (imgui::Write("UUID", newValue.m_UUID))
+			{
+				auto& commands = world.WriteResource<editor::entity::CommandManager>();
+				commands.ComponentField<eng::UUIDComponent>(
+					&eng::UUIDComponent::m_UUID,
+					eng::ToUUID(world, entity),
+					oldValue.m_UUID,
+					newValue.m_UUID);
+			}
+		}
+
+		if (world.HasComponent<eng::VisibilityTemplate>(entity))
+		{
+			const auto& oldValue = world.ReadComponent<eng::VisibilityTemplate>(entity);
+			auto newValue = oldValue;
+			if (imgui::Write("Visibility", newValue.m_IsVisible))
+			{
+				auto& commands = world.WriteResource<editor::entity::CommandManager>();
+				commands.ComponentField<eng::VisibilityTemplate>(
+					&eng::VisibilityTemplate::m_IsVisible,
+					eng::ToUUID(world, entity),
+					oldValue.m_IsVisible,
+					newValue.m_IsVisible);
+			}
+		}
+		inspector.Space();
+		inspector.Break();
+		inspector.Space();
+
+		//////////////////////////////////////////////////////////////////////////
 		InspectComponent<eng::TransformTemplate>(world, entity, inspector);
 		//////////////////////////////////////////////////////////////////////////
 		InspectComponent<camera::Move2DTemplate>(world, entity, inspector);

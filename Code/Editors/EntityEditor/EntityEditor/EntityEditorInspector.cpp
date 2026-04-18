@@ -41,6 +41,24 @@ bool editor::entity::Inspector::Begin(const char* label, const str::Guid& entity
 	return false;
 }
 
+void editor::entity::Inspector::Break()
+{
+	ImGui::TableNextRow();
+	ImGui::TableSetColumnIndex(0);
+	ImGui::Separator();
+	ImGui::TableSetColumnIndex(1);
+	ImGui::Separator();
+}
+
+void editor::entity::Inspector::Space()
+{
+	ImGui::TableNextRow();
+	ImGui::TableSetColumnIndex(0);
+	ImGui::Spacing();
+	ImGui::TableSetColumnIndex(1);
+	ImGui::Spacing();
+}
+
 void editor::entity::Inspector::End()
 {
 	ImGui::EndTable();

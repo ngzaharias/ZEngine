@@ -169,16 +169,36 @@ namespace
 			const eng::light::DirectionalTemplate,
 			const eng::light::PointTemplate,
 			const eng::SpriteTemplate,
-			const eng::StaticMeshTemplate>;
+			const eng::StaticMeshTemplate,
+			const eng::VisibilityTemplate>;
 		for (auto&& view : world.Query<Query>())
 		{
 			imgui::RaiiID id(view.GetEntity().GetIndex());
 
 			const char* name = "<unknown>";;
-			if (const auto* component = view.ReadOptional<ecs::NameComponent>())
-				name = component->m_Name.c_str();
+			if (const auto* nameComponent = view.ReadOptional<ecs::NameComponent>())
+				name = nameComponent->m_Name.c_str();
 
-			Icon(GetIcon(view));
+			if (const auto* visibilityComponent = view.ReadOptional<eng::VisibilityTemplate>())
+			{
+				bool visibility = visibilityComponent->m_IsVisible;
+				if (imgui::Checkbox("##visibility", visibility))
+				{
+					auto& commands = world.WriteResource<editor::entity::CommandManager>();
+					commands.ComponentField<eng::VisibilityTemplate>(
+						&eng::VisibilityTemplate::m_IsVisible,
+						eng::ToUUID(world, view),
+						visibilityComponent->m_IsVisible,
+						visibility);
+				}
+			}
+			else
+			{
+				ImGui::Dummy(Vector2f(22.f));
+			}
+
+			ImGui::SameLine();
+			Icon(GetIcon(view), Vector2f(22.f));
 			ImGui::SameLine();
 
 			const bool isSelected = view == select.m_Entity;
