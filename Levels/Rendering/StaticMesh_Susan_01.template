@@ -1,6 +1,9 @@
 m_UUID = "49228a0f02544100a887399001aa3910"
 m_Name = "StaticMesh_Susan_01"
 
+['eng::VisibilityTemplate']
+m_IsVisible = true
+
 ['eng::StaticMeshTemplate']
 m_StaticMesh = "e94876a8e4cc4d1684c85859b48a1af7"
 

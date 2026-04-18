@@ -1,6 +1,9 @@
 m_UUID = "79d87664c821448a8723c32f91aae44b"
 m_Name = "Sprite_03"
 
+['eng::VisibilityTemplate']
+m_IsVisible = true
+
 ['eng::SpriteTemplate']
 m_Size = { X = 50, Y = 50 }
 m_Sprite = "52ffdca6bc1d64230eda0e2056e9662b"
