@@ -125,7 +125,7 @@ void str::Guid::ValidateString(const str::StringView& string)
 {
 	if (string.length() != 32)
 	{
-		Z_LOG(ELog::Assert, "Guid string length is invalid! Expected: 36, Received: {}", string.length());
+		Z_LOG(ELog::Assert, "Guid string length is invalid! Expected: 32, Received: {}", string.length());
 		return;
 	}
 
