@@ -155,6 +155,7 @@ project "Editor"
 		"SharedHidden",
 		"SharedNetwork",
 		"Softbody",
+		"Spellcraft",
 		"Tabletop",
 		"Tactics",
 		"Tilemap",

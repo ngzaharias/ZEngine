@@ -31,6 +31,7 @@
 #include "SharedHidden/HiddenRegisterModule.h"
 #include "SharedNetwork/NetworkRegisterModule.h"
 #include "Softbody/SoftbodyRegisterModule.h"
+#include "Spellcraft/SpellcraftRegisterModule.h"
 #include "Tabletop/TabletopRegisterModule.h"
 #include "Tactics/TacticsRegisterModule.h"
 #include "Tilemap/TilemapRegisterModule.h"
@@ -106,6 +107,7 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		shared::hidden::RegisterModule(m_EntityWorld);
 		shared::network::RegisterModule(m_EntityWorld);
 		softbody::RegisterModule(m_EntityWorld);
+		spellcraft::RegisterModule(m_EntityWorld);
 		tabletop::RegisterModule(m_EntityWorld);
 		tactics::RegisterModule(m_EntityWorld);
 		tilemap::RegisterModule(m_EntityWorld);

@@ -45,6 +45,7 @@ project "GameClient"
 		"%{wks.location}/../Code/Modules/SharedHidden/",
 		"%{wks.location}/../Code/Modules/SharedNetwork/",
 		"%{wks.location}/../Code/Modules/Softbody/",
+		"%{wks.location}/../Code/Modules/Spellcraft/",
 		"%{wks.location}/../Code/Modules/Tabletop/",
 		"%{wks.location}/../Code/Modules/Tactics/",
 		"%{wks.location}/../Code/Modules/Tilemap/",

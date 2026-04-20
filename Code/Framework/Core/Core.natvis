@@ -8,6 +8,6 @@
     <Intrinsic Name="p5" Expression="((uint16_t*)&amp;m_Data.m_U16)[5]" />
     <Intrinsic Name="p6" Expression="((uint16_t*)&amp;m_Data.m_U16)[6]" />
     <Intrinsic Name="p7" Expression="((uint16_t*)&amp;m_Data.m_U16)[7]" />
-    <DisplayString>"{p0(),hb}-{p2(),hb}-{p3(),hb}-{p4(),hb}-{p7(),hb}{p6(),hb}{p5(),hb}"</DisplayString>
+    <DisplayString>"{p0(),hb}{p2(),hb}{p3(),hb}{p4(),hb}{p7(),hb}{p6(),hb}{p5(),hb}"</DisplayString>
   </Type>
 </AutoVisualizer>

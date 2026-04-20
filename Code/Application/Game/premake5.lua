@@ -148,6 +148,7 @@ project "Game"
 		"SharedHidden",
 		"SharedNetwork",
 		"Softbody",
+		"Spellcraft",
 		"Tabletop",
 		"Tactics",
 		"Tilemap",
