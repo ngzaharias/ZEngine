@@ -31,6 +31,7 @@ project "GameDebug"
 		"%{wks.location}/../Code/Debuggers/DebugInventory/",
 		"%{wks.location}/../Code/Editors/FlipbookEditor/",
 		"%{wks.location}/../Code/Editors/InputEditor/",
+		"%{wks.location}/../Code/Editors/SpellEditor/",
 		"%{wks.location}/../Code/Editors/SpriteEditor/",
 		"%{wks.location}/../Code/Editors/TableEditor/",
 		"%{wks.location}/../Code/Editors/TextureEditor/",

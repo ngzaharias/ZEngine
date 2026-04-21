@@ -52,6 +52,11 @@ namespace editor::settings
 	struct WindowEvent;
 }
 
+namespace editor::spell
+{
+	struct WindowEvent;
+}
+
 namespace editor::table
 {
 	struct WindowEvent;
@@ -98,6 +103,7 @@ namespace debug
 			debug::SplineWindowEvent,
 			editor::input::WindowEvent,
 			editor::settings::WindowEvent,
+			editor::spell::WindowEvent,
 			editor::table::WindowEvent,
 			editor::theme::WindowEvent,
 			editor::trajectory::WindowEvent,

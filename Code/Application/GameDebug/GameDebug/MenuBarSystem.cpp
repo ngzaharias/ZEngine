@@ -30,6 +30,7 @@
 #include "GameDebug/SettingsWindowComponent.h"
 #include "GameDebug/SettingsWindowEvent.h"
 #include "InputEditor/InputEditorWindowEvent.h"
+#include "SpellEditor/SpellEditorWindowEvent.h"
 #include "TableEditor/TableEditorWindowEvent.h"
 #include "ThemeEditor/ThemeEditorWindowEvent.h"
 #include "TrajectoryEditor/TrajectoryEditorWindowEvent.h"
@@ -152,6 +153,8 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::MenuItem("Input Editor"))
 				world.AddEvent<editor::input::WindowEvent>();
+			if (ImGui::MenuItem("Spell Editor"))
+				world.AddEvent<editor::spell::WindowEvent>();
 			if (ImGui::MenuItem("Table Editor"))
 				world.AddEvent<editor::table::WindowEvent>();
 			if (ImGui::MenuItem("Theme Editor"))
