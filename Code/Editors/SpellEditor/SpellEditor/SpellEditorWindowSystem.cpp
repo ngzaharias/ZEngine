@@ -7,6 +7,11 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "GameState/GameStateEditorComponent.h"
+#include "SpellEditor/SpellEditorHelpers.h"
+#include "SpellEditor/SpellEditorGraphComponent.h"
+#include "SpellEditor/SpellEditorLinkCreateEvent.h"
+#include "SpellEditor/SpellEditorLinkDestroyEvent.h"
+#include "SpellEditor/SpellEditorNodeCreateEvent.h"
 #include "SpellEditor/SpellEditorWindowComponent.h"
 #include "SpellEditor/SpellEditorWindowEvent.h"
 
@@ -20,31 +25,6 @@ namespace
 	str::String ToLabel(const char* label, const int32 index)
 	{
 		return std::format("{}: {}", label, index);
-	}
-
-	using NodeView = ecs::EntityView
-		::Required<
-		editor::spell::WindowComponent>;
-	void CreateNode(const NodeView& view, const str::StringView& label)
-	{
-		auto& window = view.WriteRequired<editor::spell::WindowComponent>();
-		{
-			const int32 nodeId = window.m_GraphIds++;
-			const int32 inputId = window.m_GraphIds++;
-			const int32 outputId = window.m_GraphIds++;
-
-			editor::spell::Node& node = window.m_Nodes[nodeId];
-			node.m_Label = str::String(label);
-			node.m_UUID = str::Guid::Generate();
-			node.m_InputId = inputId;
-			node.m_OutputId = outputId;
-
-			editor::spell::Param& input = window.m_Param[inputId];
-			input.m_NodeId = inputId;
-
-			editor::spell::Param& output = window.m_Param[outputId];
-			input.m_NodeId = outputId;
-		}
 	}
 }
 
@@ -78,13 +58,16 @@ void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Include<editor::spell::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::spell::WindowComponent, const editor::spell::GraphComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags =
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_MenuBar;
 
 		auto& window = view.WriteRequired<editor::spell::WindowComponent>();
+		const auto& graphComponent = view.ReadRequired<editor::spell::GraphComponent>();
+		const auto& graph = graphComponent.m_Graph;
+		const auto& registry = graph.GetRegistry();
 
 		bool isOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
@@ -93,21 +76,18 @@ void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::BeginMenuBar())
 			{
-				if (ImGui::BeginMenu("Effects"))
+				if (ImGui::BeginMenu("Node"))
 				{
-					if (ImGui::MenuItem("Damage"))
-						CreateNode(view, "Damage");
-					if (ImGui::MenuItem("Heal"))
-						CreateNode(view, "Heal");
-					ImGui::EndMenu();
-				}
+					for (auto&& [name, node] : registry.GetDefinitions())
+					{
+						if (ImGui::MenuItem(name.ToChar()))
+						{
+							auto& event = world.AddEvent<editor::spell::NodeCreateEvent>();
+							event.m_Entity = view;
+							event.m_Name = name;
+						}
+					}
 
-				if (ImGui::BeginMenu("Emitters"))
-				{
-					if (ImGui::MenuItem("Explosion"))
-						CreateNode(view, "Explosion");
-					if (ImGui::MenuItem("Projectile"))
-						CreateNode(view, "Projectile");
 					ImGui::EndMenu();
 				}
 
@@ -118,30 +98,63 @@ void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
 			ImNodes::PushAttributeFlag(ImNodesAttributeFlags_EnableLinkDetachWithDragClick);
 			ImNodes::PushAttributeFlag(ImNodesAttributeFlags_EnableLinkCreationOnSnap);
 
-			for (auto&& [nodeId, node] : window.m_Nodes)
+			for (auto&& [uuid, node] : graph.GetNodes())
 			{
-				ImNodes::BeginNode(nodeId);
+				PushNodeColour(node);
+				ImNodes::BeginNode(node.m_GraphId);
 				{
 					ImNodes::BeginNodeTitleBar();
 					ImGui::TextUnformatted(node.m_Label.c_str());
 					ImNodes::EndNodeTitleBar();
 
-					ImNodes::BeginInputAttribute(node.m_InputId);
-					ImGui::Text("Input");
-					ImNodes::EndInputAttribute();
+					if (ImGui::IsItemHovered())
+					{
+						ImGui::BeginTooltip();
+						ImGui::Text(node.m_Tooltip.c_str());
+						ImGui::EndTooltip();
+					}
+
+					ImGui::BeginGroup();
+					for (const ngraph::Field& field : node.m_Inputs)
+					{
+						PushFieldColour(field);
+						ImNodes::BeginInputAttribute(field.m_GraphId);
+						ImGui::Text(field.m_Label.c_str());
+						ImNodes::EndInputAttribute();
+						PopFieldColour();
+					}
+					if (node.m_Inputs.IsEmpty())
+					{
+						ImGui::Dummy(ImVec2(0, 0));
+					}
+					ImGui::EndGroup();
 
 					ImGui::SameLine();
 
-					ImNodes::BeginOutputAttribute(node.m_OutputId);
-					ImGui::Text("Output");
-					ImNodes::EndOutputAttribute();
+					ImGui::BeginGroup();
+					for (const ngraph::Field& field : node.m_Outputs)
+					{
+						PushFieldColour(field);
+						ImNodes::BeginOutputAttribute(field.m_GraphId);
+						ImGui::Indent(40);
+						ImGui::Text(field.m_Label.c_str());
+						ImNodes::EndOutputAttribute();
+						PopFieldColour();
+					}
+					if (node.m_Outputs.IsEmpty())
+					{
+						ImGui::Dummy(ImVec2(0, 0));
+					}
+					ImGui::EndGroup();
 				}
 				ImNodes::EndNode();
+				PopNodeColour();
 			}
 
-			for (auto&& [linkId, link] : window.m_Links)
+			int32 i = 0;
+			for (auto&& [uuid, link] : graph.GetLinks())
 			{
-				ImNodes::Link(linkId, link.m_SourceId, link.m_TargetId);
+				ImNodes::Link(i++, link.m_SourceId, link.m_TargetId);
 			}
 
 			ImNodes::PopAttributeFlag();
@@ -152,17 +165,26 @@ void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
 			int32 sourceId, targetId;
 			if (ImNodes::IsLinkCreated(&sourceId, &targetId))
 			{
-				Link& link = window.m_Links[window.m_GraphIds++];
-				link.m_SourceId = sourceId;
-				link.m_TargetId = targetId;
+				auto& event = world.AddEvent<editor::spell::LinkCreateEvent>();
+				event.m_Entity = view;
+				event.m_SourceId = sourceId;
+				event.m_TargetId = targetId;
 			}
 
 			int32 linkId;
 			if (ImNodes::IsLinkDestroyed(&linkId))
-				window.m_Links.Remove(linkId);
+			{
+				auto& event = world.AddEvent<editor::spell::LinkDestroyEvent>();
+				event.m_Entity = view;
+				event.m_LinkId = linkId;
+			}
 
 			if (ImNodes::IsLinkHovered(&linkId) && ImGui::IsKeyPressed(ImGuiKey_Delete))
-				window.m_Links.Remove(linkId);
+			{
+				auto& event = world.AddEvent<editor::spell::LinkDestroyEvent>();
+				event.m_Entity = view;
+				event.m_LinkId = linkId;
+			}
 		}
 		ImGui::End();
 
