@@ -24,6 +24,12 @@ public:
 
 	operator Vector4f() const { return Vector4f(r, g, b, a); }
 
+	[[nodiscard]] constexpr Colour operator*(const float rhs) const noexcept { return Colour(r * rhs, g * rhs, b * rhs, a * rhs); }
+	[[nodiscard]] constexpr Colour operator/(const float rhs) const noexcept { return Colour(r / rhs, g / rhs, b / rhs, a / rhs); }
+
+	constexpr Colour& operator*=(const float rhs) noexcept { r *= rhs; g *= rhs; b *= rhs; a *= rhs; return *this; }
+	constexpr Colour& operator/=(const float rhs) noexcept { r /= rhs; g /= rhs; b /= rhs; a /= rhs; return *this; }
+
 	static const Colour Black;
 	static const Colour Blue;
 	static const Colour Cyan;

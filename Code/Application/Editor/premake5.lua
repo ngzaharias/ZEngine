@@ -124,6 +124,7 @@ project "Editor"
 		"EntityEditor",
 		"FlipbookEditor",
 		"InputEditor",
+		"NodeGraph",
 		"SpellEditor",
 		"SpriteEditor",
 		"TableEditor",
