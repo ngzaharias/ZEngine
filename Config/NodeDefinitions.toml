@@ -1,90 +1,25 @@
 
-['In']
-m_Colour = 0x0F0F0F
-m_Label = "In"
+['OnCast']
+m_Label = "OnCast"
+	[['OnCast'.m_Outputs]]
+	m_Type = 'Exec'
 
-	[['In'.m_Outputs]]
-	m_Type = 'Emitter'
-	m_Label = ""
-
-['Out']
-m_Colour = 0x0F0F0F
-m_Label = "Out"
-
-	[['Out'.m_Inputs]]
-	m_Type = 'Emitter'
-	m_Label = ""
-
-['Fast']
-m_Colour = 0x11DD11
-m_Label = "Fast"
-
-	[['Fast'.m_Outputs]]
-	m_Type = 'float'
-	m_Label = ""
-
-['Slow']
-m_Colour = 0x11DD11
-m_Label = "Slow"
-
-	[['Slow'.m_Outputs]]
-	m_Type = 'float'
-	m_Label = ""
-
-['Small']
-m_Colour = 0x1111DD
-m_Label = "Small"
-
-	[['Small'.m_Outputs]]
-	m_Type = 'float'
-	m_Label = ""
-
-['Medium']
-m_Colour = 0x1111DD
-m_Label = "Medium"
-
-	[['Medium'.m_Outputs]]
-	m_Type = 'float'
-	m_Label = ""
-
-['Large']
-m_Colour = 0x1111DD
-m_Label = "Large"
-
-	[['Large'.m_Outputs]]
-	m_Type = 'float'
-	m_Label = ""
-
-['emitter::Explosion']
-m_Colour = 0xDD1111
+['Explosion_Basic']
 m_Label = "Explosion"
-m_Tooltip = "Creates an explosion that will trigger 'OnHit' on all entities it contacts."
+	[['Explosion_Basic'.m_Inputs]]
+	m_Type = 'Exec'
 
-	[['emitter::Explosion'.m_Inputs]]
-	m_Type = 'Emitter'
-	m_Label = ""
-
-	[['emitter::Explosion'.m_Inputs]]
-	m_Type = 'float'
-	m_Label = "Radius"
-
-	[['emitter::Explosion'.m_Outputs]]
-	m_Type = 'Emitter'
-	m_Label = ""
-
-['emitter::Projectile']
-m_Colour = 0xDD1111
+['Projectile_Basic']
 m_Label = "Projectile"
-m_Tooltip = "Creates a projectile that will trigger 'OnHit' to the first entity it contacts."
 
-	[['emitter::Projectile'.m_Inputs]]
-	m_Type = 'Emitter'
-	m_Label = ""
+	[['Projectile_Basic'.m_Inputs]]
+	m_Type = 'Exec'
 
-	[['emitter::Projectile'.m_Inputs]]
-	m_Type = 'float'
-	m_Label = "Speed"
+['Projectile_And']
+m_Label = "Projectile"
 
-	[['emitter::Projectile'.m_Outputs]]
-	m_Type = 'Emitter'
-	m_Label = ""
+	[['Projectile_And'.m_Inputs]]
+	m_Type = 'Exec'
+
+	[['Projectile_And'.m_Outputs]]
+	m_Type = 'Exec'
