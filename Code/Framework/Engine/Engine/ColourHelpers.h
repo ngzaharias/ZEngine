@@ -7,6 +7,11 @@ namespace ecs
 	struct Entity;
 }
 
+namespace str
+{
+	class Name;
+}
+
 namespace colour
 {
 	Colour LerpRGB(const Colour& a, const Colour& b, const float t);
@@ -19,4 +24,5 @@ namespace colour
 	const Colour& Generate(const int32 value);
 	const Colour& Generate(const uint32 value);
 	const Colour& Generate(const ecs::Entity& value);
+	const Colour& Generate(const str::Name& value);
 }
