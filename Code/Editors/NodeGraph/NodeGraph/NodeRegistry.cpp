@@ -28,14 +28,15 @@ auto ngraph::NodeRegistry::GetDefinitions() const -> const NodeMap&
 	return m_NodeMap;
 }
 
-ngraph::Node ngraph::NodeRegistry::Create(const str::Name& name)
+ngraph::Node ngraph::NodeRegistry::Create(const str::Name& type)
 {
-	const ngraph::NodeDefinition& nodeDef = m_NodeMap.Get(name, s_Fallback);
+	const ngraph::NodeDefinition& nodeDef = m_NodeMap.Get(type, s_Fallback);
 
 	ngraph::Node node;
-	node.m_Colour = nodeDef.m_Colour;
+	node.m_Type = type;
 	node.m_Label = nodeDef.m_Label;
 	node.m_Tooltip = nodeDef.m_Tooltip;
+	node.m_Colour = nodeDef.m_Colour;
 
 	for (const ngraph::FieldDefinition& fieldDef : nodeDef.m_Inputs)
 	{

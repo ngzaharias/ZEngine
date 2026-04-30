@@ -78,15 +78,7 @@ void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
 			{
 				if (ImGui::BeginMenu("Node"))
 				{
-					for (auto&& [name, node] : registry.GetDefinitions())
-					{
-						if (ImGui::MenuItem(name.ToChar()))
-						{
-							auto& event = world.AddEvent<editor::spell::NodeCreateEvent>();
-							event.m_Entity = view;
-							event.m_Name = name;
-						}
-					}
+
 
 					ImGui::EndMenu();
 				}
@@ -154,13 +146,31 @@ void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
 			int32 i = 0;
 			for (auto&& [uuid, link] : graph.GetLinks())
 			{
+				PushLinkColour(link);
 				ImNodes::Link(i++, link.m_SourceId, link.m_TargetId);
+				PopLinkColour();
 			}
 
 			ImNodes::PopAttributeFlag();
 			ImNodes::PopAttributeFlag();
 			ImNodes::MiniMap();
 			ImNodes::EndNodeEditor();
+
+			if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+				ImGui::OpenPopup("##node");
+			if (ImGui::BeginPopupContextItem("##node"))
+			{
+				for (auto&& [name, node] : registry.GetDefinitions())
+				{
+					if (ImGui::MenuItem(name.ToChar()))
+					{
+						auto& event = world.AddEvent<editor::spell::NodeCreateEvent>();
+						event.m_Entity = view;
+						event.m_Name = name;
+					}
+				}
+				ImGui::EndPopup();
+			}
 
 			int32 sourceId, targetId;
 			if (ImNodes::IsLinkCreated(&sourceId, &targetId))

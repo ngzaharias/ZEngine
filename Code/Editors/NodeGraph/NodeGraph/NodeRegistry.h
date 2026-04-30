@@ -21,7 +21,7 @@ namespace ngraph
 
 		auto GetDefinitions() const -> const NodeMap&;
 
-		ngraph::Node Create(const str::Name& name);
+		ngraph::Node Create(const str::Name& type);
 
 	private:
 		NodeMap m_NodeMap = {};

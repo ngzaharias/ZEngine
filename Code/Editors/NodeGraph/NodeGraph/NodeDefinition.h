@@ -3,6 +3,7 @@
 #include "Core/Array.h"
 #include "Core/Colour.h"
 #include "Core/Name.h"
+#include "Core/Optional.h"
 #include "Core/String.h"
 
 namespace ngraph
@@ -16,9 +17,9 @@ namespace ngraph
 
 	struct NodeDefinition
 	{
-		Colour m_Colour = {};
 		str::String m_Label = {};
 		str::String m_Tooltip = {};
+		Optional<Colour> m_Colour = {};
 
 		Array<FieldDefinition> m_Inputs = {};
 		Array<FieldDefinition> m_Outputs = {};

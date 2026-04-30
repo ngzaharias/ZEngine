@@ -30,18 +30,20 @@ void Visitor::WriteCustom(const ngraph::FieldDefinition& value)
 template<>
 void Visitor::ReadCustom(ngraph::NodeDefinition& value) const
 {
-	Read(strColour, value.m_Colour, Colour(0.16f, 0.29f, 0.47f, 1.f));
 	Read(strLabel, value.m_Label, value.m_Label);
 	Read(strTooltip, value.m_Tooltip, value.m_Tooltip);
+	Read(strColour, value.m_Colour, {});
+
 	Read(strInputs, value.m_Inputs, value.m_Inputs);
 	Read(strOutputs, value.m_Outputs, value.m_Outputs);
 }
 template<>
 void Visitor::WriteCustom(const ngraph::NodeDefinition& value)
 {
-	Write(strColour, value.m_Colour);
 	Write(strLabel, value.m_Label);
 	Write(strTooltip, value.m_Tooltip);
+	Write(strColour, value.m_Colour);
+
 	Write(strInputs, value.m_Inputs);
 	Write(strOutputs, value.m_Outputs);
 }

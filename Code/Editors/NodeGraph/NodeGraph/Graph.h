@@ -40,14 +40,14 @@ namespace ngraph
 		//////////////////////////////////////////////////////////////////////////
 		// Link
 		
-		void CreateLink(const GraphId sourceId, const GraphId targetId);
+		void CreateLink(const str::Name& type, const GraphId sourceId, const GraphId targetId);
 		
 		void DestroyLink(const int32 index);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Node
 
-		void CreateNode(const str::Name& name);
+		void CreateNode(const str::Name& type);
 		
 		void DestroyNode(const str::Guid& uuid);
 

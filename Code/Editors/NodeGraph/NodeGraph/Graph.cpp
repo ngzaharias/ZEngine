@@ -45,11 +45,12 @@ auto ngraph::Graph::GetRegistry() const -> const ngraph::NodeRegistry&
 	return m_Registry;
 }
 
-void ngraph::Graph::CreateLink(const GraphId sourceId, const GraphId targetId)
+void ngraph::Graph::CreateLink(const str::Name& type, const GraphId sourceId, const GraphId targetId)
 {
 	const str::Guid uuid = str::Guid::Generate();
 	Link& link = m_LinkMap[uuid];
 	link.m_UUID = uuid;
+	link.m_Type = type;
 	link.m_SourceId = sourceId;
 	link.m_TargetId = targetId;
 }
@@ -59,9 +60,9 @@ void ngraph::Graph::DestroyLink(const int32 index)
 	m_LinkMap.RemoveAt(index);
 }
 
-void ngraph::Graph::CreateNode(const str::Name& name)
+void ngraph::Graph::CreateNode(const str::Name& type)
 {
-	Node node = m_Registry.Create(name);
+	Node node = m_Registry.Create(type);
 	node.m_GraphId = m_GraphId++;
 	node.m_UUID = str::Guid::Generate();
 

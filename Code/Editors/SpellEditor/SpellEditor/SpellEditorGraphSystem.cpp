@@ -35,7 +35,7 @@ void editor::spell::GraphSystem::Update(World& world, const GameTime& gameTime)
 		if (fieldA.m_Type != fieldB.m_Type)
 			continue;
 
-		graph.CreateLink(event.m_SourceId, event.m_TargetId);
+		graph.CreateLink(fieldA.m_Type, event.m_SourceId, event.m_TargetId);
 	}
 
 	for (const auto& event : world.Events<editor::spell::LinkDestroyEvent>())
