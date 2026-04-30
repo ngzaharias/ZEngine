@@ -76,13 +76,6 @@ void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::BeginMenuBar())
 			{
-				if (ImGui::BeginMenu("Node"))
-				{
-
-
-					ImGui::EndMenu();
-				}
-
 				ImGui::EndMenuBar();
 			}
 
