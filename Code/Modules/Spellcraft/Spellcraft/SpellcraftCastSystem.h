@@ -3,11 +3,6 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace eng
-{
-	class InputManager;
-}
-
 namespace gamestate
 {
 	struct EditModeComponent;
@@ -30,7 +25,6 @@ namespace spellcraft
 	public:
 		using World = ecs::WorldView
 			::Write<
-			eng::InputManager,
 			spellcraft::CastComponent>
 			::Read<
 			gamestate::EditModeComponent,
@@ -39,8 +33,6 @@ namespace spellcraft
 			spellcraft::ExplosionHitEvent,
 			spellcraft::ProjectileComponent,
 			spellcraft::ProjectileHitEvent>;
-
-		void Initialise(World& world);
 
 		void Update(World& world, const GameTime& gameTime);
 	};
