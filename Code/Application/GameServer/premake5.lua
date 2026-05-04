@@ -31,7 +31,6 @@ project "GameServer"
 		"%{wks.location}/../Code/Framework/Serialize/",
 		"%{wks.location}/../Code/Modules/ServerCursor/",
 		"%{wks.location}/../Code/Modules/ServerHidden/",
-		"%{wks.location}/../Code/Modules/ServerInventory/",
 		"%{wks.location}/../Code/Modules/ServerNetwork/",
 		"%{wks.location}/../Code/Modules/SharedCursor/",
 		"%{wks.location}/../Code/Modules/SharedHidden/",

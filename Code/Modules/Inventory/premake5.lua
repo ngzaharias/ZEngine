@@ -1,15 +1,15 @@
-project "DebugInventory"
+project "Inventory"
 	kind "StaticLib"
-	pchheader "DebugInventoryPCH.h"
-	pchsource "DebugInventory/DebugInventoryPCH.cpp"
-	location "%{wks.location}/Modules/DebugInventory"
+	pchheader "InventoryPCH.h"
+	pchsource "Inventory/InventoryPCH.cpp"
+	location "%{wks.location}/Modules/Inventory"
 	
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"DebugInventory/**.h", 
-			"DebugInventory/**.cpp", 
-			"DebugInventory/**.inl" } },
+			"Inventory/**.h", 
+			"Inventory/**.cpp", 
+			"Inventory/**.inl" } },
 	}
 
 	includedirs 
@@ -24,6 +24,5 @@ project "DebugInventory"
 		"%{wks.location}/../Code/Framework/Imgui/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Debuggers/DebugInventory/",
 		"%{wks.location}/../Code/Modules/Inventory/",
 	}

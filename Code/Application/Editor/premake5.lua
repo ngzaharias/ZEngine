@@ -72,7 +72,7 @@ project "Editor"
 		"%{wks.location}/../Code/Modules/Camera/",
 		"%{wks.location}/../Code/Modules/ClientHidden/",
 		"%{wks.location}/../Code/Modules/GameState/",
-		"%{wks.location}/../Code/Modules/ServerInventory/",
+		"%{wks.location}/../Code/Modules/Inventory/",
 		"%{wks.location}/../Code/Modules/Softbody/",
 	}
 
@@ -152,7 +152,7 @@ project "Editor"
 		"Hexmap",
 		"ServerCursor",
 		"ServerHidden",
-		"ServerInventory",
+		"Inventory",
 		"ServerNetwork",
 		"SharedCursor",
 		"SharedHidden",

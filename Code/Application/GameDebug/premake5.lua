@@ -47,7 +47,7 @@ project "GameDebug"
 		"%{wks.location}/../Code/Framework/Serialize/",
 		"%{wks.location}/../Code/Modules/ClientHidden/",
 		"%{wks.location}/../Code/Modules/Hexmap/",
-		"%{wks.location}/../Code/Modules/ServerInventory/",
+		"%{wks.location}/../Code/Modules/Inventory/",
 		"%{wks.location}/../Code/Modules/Softbody/",
 		"%{wks.location}/../Code/Modules/Tabletop/",
 		"%{wks.location}/../Code/Modules/Voxel/",
