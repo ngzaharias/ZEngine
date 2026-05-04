@@ -116,6 +116,7 @@ project "Editor"
 		"Steam",
 
 		-- Debuggers
+		"DebugCrafting",
 		"DebugEntity",
 		"DebugInventory",
 
@@ -148,6 +149,7 @@ project "Editor"
 		"ClientCursor",
 		"ClientHidden",
 		"ClientNetwork",
+		"Crafting",
 		"GameState",
 		"Hexmap",
 		"ServerCursor",

@@ -1,6 +1,7 @@
 #include "GameDebugPCH.h"
 #include "GameDebug/GameDebug.h"
 
+#include "DebugCrafting/CraftingRegisterModule.h"
 #include "DebugEntity/EntityRegisterModule.h"
 #include "DebugInventory/InventoryRegisterModule.h"
 #include "ECS/EntityWorld.h"
@@ -107,6 +108,7 @@ void debug::GameDebug::Register()
 	// server
 	m_ServerWorld.RegisterEvent<debug::NetworkEvent>();
 
+	debug::crafting::RegisterModule(m_ClientWorld, m_ServerWorld);
 	debug::entity::RegisterModule(m_ClientWorld, m_ServerWorld);
 	debug::inventory::RegisterModule(m_ClientWorld, m_ServerWorld);
 }

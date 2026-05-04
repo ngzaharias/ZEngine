@@ -29,6 +29,7 @@ project "GameServer"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Framework/Serialize/",
+		"%{wks.location}/../Code/Modules/Inventory/",
 		"%{wks.location}/../Code/Modules/ServerCursor/",
 		"%{wks.location}/../Code/Modules/ServerHidden/",
 		"%{wks.location}/../Code/Modules/ServerNetwork/",

@@ -27,6 +27,7 @@ project "GameDebug"
 		"%{wks.location}/../Code/Application/GameDebug/",
 		"%{wks.location}/../Code/Application/GameServer/",
 		"%{wks.location}/../Code/Application/GameUI/",
+		"%{wks.location}/../Code/Debuggers/DebugCrafting/",
 		"%{wks.location}/../Code/Debuggers/DebugEntity/",
 		"%{wks.location}/../Code/Debuggers/DebugInventory/",
 		"%{wks.location}/../Code/Editors/FlipbookEditor/",

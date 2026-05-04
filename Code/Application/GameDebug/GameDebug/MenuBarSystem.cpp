@@ -5,6 +5,7 @@
 #include "Core/Name.h"
 #include "Core/Path.h"
 #include "Core/String.h"
+#include "DebugCrafting/CraftingWindowEvent.h"
 #include "DebugEntity/EntityWindowEvent.h"
 #include "DebugInventory/InventoryWindowEvent.h"
 #include "ECS/EntityWorld.h"
@@ -131,6 +132,8 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 		if (ImGui::BeginMenu("Debuggers"))
 		{
+			if (ImGui::MenuItem("Crafting"))
+				world.AddEvent<debug::crafting::WindowEvent>();
 			if (ImGui::MenuItem("Entity", "Ctrl+Shift+F11"))
 				world.AddEvent<debug::entity::WindowEvent>();
 			if (ImGui::MenuItem("Inventory"))

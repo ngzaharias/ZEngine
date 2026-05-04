@@ -5,6 +5,7 @@
 #include "ClientCursor/CursorRegisterModule.h"
 #include "ClientHidden/HiddenRegisterModule.h"
 #include "ClientNetwork/NetworkRegisterModule.h"
+#include "Crafting/CraftingRegisterModule.h"
 #include "ECS/TypeRegistry.h"
 #include "ECS/WorldView.h"
 #include "Engine/AchievementTable.h"
@@ -26,6 +27,7 @@
 #include "GameUI/GameUIRegisterModule.h"
 #include "Hexmap/HexmapRegisterModule.h"
 #include "Icons/IconsRegisterModule.h"
+#include "Inventory/InventoryRegisterModule.h"
 #include "Render/RenderRegisterModule.h"
 #include "SharedCursor/CursorRegisterModule.h"
 #include "SharedHidden/HiddenRegisterModule.h"
@@ -99,9 +101,11 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		client::cursor::RegisterModule(m_EntityWorld);
 		client::hidden::RegisterModule(m_EntityWorld);
 		client::network::RegisterModule(m_EntityWorld);
+		crafting::RegisterModule(m_EntityWorld);
 		gui::RegisterModule(m_EntityWorld);
 		hexmap::RegisterModule(m_EntityWorld);
 		icon::RegisterModule(m_EntityWorld);
+		inventory::RegisterModule(m_EntityWorld);
 		render::RegisterModule(m_EntityWorld);
 		shared::cursor::RegisterModule(m_EntityWorld);
 		shared::hidden::RegisterModule(m_EntityWorld);

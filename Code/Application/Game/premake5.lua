@@ -120,6 +120,7 @@ project "Game"
 		"Steam",
 
 		-- Debuggers
+		"DebugCrafting",
 		"DebugEntity",
 		"DebugInventory",
 
@@ -139,6 +140,7 @@ project "Game"
 		"ClientCursor",
 		"ClientHidden",
 		"ClientNetwork",
+		"Crafting",
 		"Hexmap",
 		"ServerCursor",
 		"ServerHidden",
