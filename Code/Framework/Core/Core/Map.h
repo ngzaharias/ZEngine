@@ -78,6 +78,10 @@ public:
 	/// \brief Removes a specified element from the container if one exists with that key.
 	void Remove(const Key& key);
 
+	/// \brief Removes an element from the container at the specified index.
+	/// An exception std::out_of_range is thrown if none exists.
+	void RemoveAt(const uint32 index);
+
 	/// \brief Removes all elements from the container.
 	void RemoveAll();
 

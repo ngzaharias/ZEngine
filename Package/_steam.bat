@@ -5,6 +5,7 @@ call mkdir .\Steam\
 
 call xcopy /s ..\Solution\_Build\Game\Release_x64\ .\Steam\
 call xcopy /s ..\Assets\ .\Steam\Assets\
+call xcopy /s ..\Config\ .\Steam\Config\
 call xcopy /s ..\Levels\ .\Steam\Levels\
 call ren .\Steam\Game.exe WithMyLittleEye.exe
 

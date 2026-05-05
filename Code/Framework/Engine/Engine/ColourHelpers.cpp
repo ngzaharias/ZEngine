@@ -2,6 +2,8 @@
 #include "Engine/ColourHelpers.h"
 
 #include "Core/Colour.h"
+#include "Core/Hash.h"
+#include "Core/Name.h"
 #include "ECS/Entity.h"
 
 #include <type_traits>
@@ -195,5 +197,12 @@ const Colour& colour::Generate(const uint32 value)
 const Colour& colour::Generate(const ecs::Entity& value)
 {
 	const uint32 index = static_cast<uint32>(value.m_Value) % s_ColoursCount;
+	return s_Colours[index];
+}
+
+const Colour& colour::Generate(const str::Name& value)
+{
+	const str::Hash hash = value.ToHash();
+	const uint32 index = hash % s_ColoursCount;
 	return s_Colours[index];
 }

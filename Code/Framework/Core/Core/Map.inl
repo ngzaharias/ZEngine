@@ -158,6 +158,14 @@ void Map<Key, Value>::Remove(const Key& key)
 }
 
 template<typename Key, typename Value>
+void Map<Key, Value>::RemoveAt(const uint32 index)
+{
+	auto itr = m_Values.cbegin();
+	std::advance(itr, index);
+	m_Values.erase(itr->first);
+}
+
+template<typename Key, typename Value>
 void Map<Key, Value>::RemoveAll()
 {
 	m_Values.clear();

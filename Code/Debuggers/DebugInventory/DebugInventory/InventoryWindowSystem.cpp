@@ -7,16 +7,16 @@
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Inventory/InventoryMemberAddRequestComponent.h"
+#include "Inventory/InventoryMemberAddResultComponent.h"
+#include "Inventory/InventoryMemberMoveRequestComponent.h"
+#include "Inventory/InventoryMemberMoveResultComponent.h"
+#include "Inventory/InventoryStorageComponent.h"
+#include "Inventory/InventoryStorageCreateRequestComponent.h"
+#include "Inventory/InventoryStorageCreateResultComponent.h"
+#include "Inventory/InventoryStorageDestroyRequestComponent.h"
+#include "Inventory/InventoryStorageDestroyResultComponent.h"
 #include "Math/Vector.h"
-#include "ServerInventory/InventoryMemberAddRequestComponent.h"
-#include "ServerInventory/InventoryMemberAddResultComponent.h"
-#include "ServerInventory/InventoryMemberMoveRequestComponent.h"
-#include "ServerInventory/InventoryMemberMoveResultComponent.h"
-#include "ServerInventory/InventoryStorageComponent.h"
-#include "ServerInventory/InventoryStorageCreateRequestComponent.h"
-#include "ServerInventory/InventoryStorageCreateResultComponent.h"
-#include "ServerInventory/InventoryStorageDestroyRequestComponent.h"
-#include "ServerInventory/InventoryStorageDestroyResultComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -79,22 +79,22 @@ void debug::inventory::WindowSystem::Update(World& world, const GameTime& gameTi
 		auto& window = windowView.WriteRequired<debug::inventory::WindowComponent>();
 		const ecs::Entity& storageSelected = window.m_Storage;
 
-		//if (const auto* resultComponent = windowView.ReadOptional<server::inventory::StorageCreateResultComponent>())
+		//if (const auto* resultComponent = windowView.ReadOptional<inventory::StorageCreateResultComponent>())
 		//{
 		//	window.m_Storage = resultComponent->m_Storage;
-		//	world.RemoveComponent<server::inventory::StorageCreateRequestComponent>(windowView);
+		//	world.RemoveComponent<inventory::StorageCreateRequestComponent>(windowView);
 		//}
 
-		//if (windowView.HasOptional<server::inventory::StorageDestroyResultComponent>())
+		//if (windowView.HasOptional<inventory::StorageDestroyResultComponent>())
 		//{
 		//	window.m_Storage = ecs::Entity::Unassigned;
-		//	world.RemoveComponent<server::inventory::StorageDestroyRequestComponent>(windowView);
+		//	world.RemoveComponent<inventory::StorageDestroyRequestComponent>(windowView);
 		//}
 
-		//if (windowView.HasOptional<server::inventory::MemberAddResultComponent>())
-		//	world.RemoveComponent<server::inventory::MemberAddRequestComponent>(windowView);
-		//if (windowView.HasOptional<server::inventory::MemberMoveResultComponent>())
-		//	world.RemoveComponent<server::inventory::MemberMoveRequestComponent>(windowView);
+		//if (windowView.HasOptional<inventory::MemberAddResultComponent>())
+		//	world.RemoveComponent<inventory::MemberAddRequestComponent>(windowView);
+		//if (windowView.HasOptional<inventory::MemberMoveResultComponent>())
+		//	world.RemoveComponent<inventory::MemberMoveRequestComponent>(windowView);
 
 		bool isWindowOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
@@ -103,18 +103,18 @@ void debug::inventory::WindowSystem::Update(World& world, const GameTime& gameTi
 		{
 			if (ImGui::Button("Create Storage"))
 			{
-				//world.AddComponent<server::inventory::StorageCreateRequestComponent>(windowView);
+				//world.AddComponent<inventory::StorageCreateRequestComponent>(windowView);
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Destroy Storage"))
 			{
-				//auto& requestComponent = world.AddComponent<server::inventory::StorageDestroyRequestComponent>(windowView);
+				//auto& requestComponent = world.AddComponent<inventory::StorageDestroyRequestComponent>(windowView);
 				//requestComponent.m_Storage = window.m_Storage;
 			}
 			if (ImGui::Button("Create Member"))
 			{
 				//const ecs::Entity memberEntity = world.CreateEntity();
-				//auto& requestComponent = world.AddComponent<server::inventory::MemberAddRequestComponent>(windowView);
+				//auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(windowView);
 				//requestComponent.m_Storage = window.m_Storage;
 				//requestComponent.m_Member = memberEntity;
 			}
@@ -130,7 +130,7 @@ void debug::inventory::WindowSystem::Update(World& world, const GameTime& gameTi
 			{
 				//if (ImGui::Selectable("Unassigned"))
 				//	window.m_Storage = ecs::Entity::Unassigned;
-				//for (auto&& storageView : world.Query<ecs::query::Include<const server::inventory::StorageComponent>>())
+				//for (auto&& storageView : world.Query<ecs::query::Include<const inventory::StorageComponent>>())
 				//{
 				//	const str::String storageLabel = ToString(storageView);
 				//	if (ImGui::Selectable(storageLabel.c_str()))
@@ -139,9 +139,9 @@ void debug::inventory::WindowSystem::Update(World& world, const GameTime& gameTi
 				ImGui::EndCombo();
 			}
 
-			//if (world.HasComponent<server::inventory::StorageComponent>(storageSelected))
+			//if (world.HasComponent<inventory::StorageComponent>(storageSelected))
 			//{
-			//	const auto& storageComponent = world.ReadComponent<server::inventory::StorageComponent>(storageSelected);
+			//	const auto& storageComponent = world.ReadComponent<inventory::StorageComponent>(storageSelected);
 
 			//	constexpr int32 s_Columns = 5;
 			//	constexpr int32 s_Rows = 5;
@@ -182,7 +182,7 @@ void debug::inventory::WindowSystem::Update(World& world, const GameTime& gameTi
 
 			//				if (!data.m_Member.IsUnassigned())
 			//				{
-			//					auto& requestComponent = world.AddComponent<server::inventory::MemberMoveRequestComponent>(windowView);
+			//					auto& requestComponent = world.AddComponent<inventory::MemberMoveRequestComponent>(windowView);
 			//					requestComponent.m_Storage = storageSelected;
 			//					requestComponent.m_Member = data.m_Member;
 			//				}

@@ -1,0 +1,25 @@
+
+['OnCast']
+m_Label = "OnCast"
+	[['OnCast'.m_Outputs]]
+	m_Type = 'Exec'
+
+['Explosion_Basic']
+m_Label = "Explosion"
+	[['Explosion_Basic'.m_Inputs]]
+	m_Type = 'Exec'
+
+['Projectile_Basic']
+m_Label = "Projectile"
+
+	[['Projectile_Basic'.m_Inputs]]
+	m_Type = 'Exec'
+
+['Projectile_And']
+m_Label = "Projectile"
+
+	[['Projectile_And'.m_Inputs]]
+	m_Type = 'Exec'
+
+	[['Projectile_And'.m_Outputs]]
+	m_Type = 'Exec'

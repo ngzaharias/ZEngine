@@ -14,6 +14,11 @@ namespace debug
 	struct SplineWindowEvent;
 }
 
+namespace debug::crafting
+{
+	struct WindowEvent;
+}
+
 namespace debug::entity
 {
 	struct WindowEvent;
@@ -52,6 +57,11 @@ namespace editor::settings
 	struct WindowEvent;
 }
 
+namespace editor::spell
+{
+	struct WindowEvent;
+}
+
 namespace editor::table
 {
 	struct WindowEvent;
@@ -82,6 +92,7 @@ namespace debug
 	public:
 		using World = ecs::WorldView
 			::Write<
+			debug::crafting::WindowEvent,
 			debug::entity::WindowEvent,
 			debug::FrameBufferWindowEvent,
 			debug::ImGuiDemoEvent,
@@ -98,6 +109,7 @@ namespace debug
 			debug::SplineWindowEvent,
 			editor::input::WindowEvent,
 			editor::settings::WindowEvent,
+			editor::spell::WindowEvent,
 			editor::table::WindowEvent,
 			editor::theme::WindowEvent,
 			editor::trajectory::WindowEvent,

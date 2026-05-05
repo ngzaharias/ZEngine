@@ -195,7 +195,7 @@ void Visitor::Read(const str::StringView& key, uint32& value, const uint32 defau
 void Visitor::Read(const str::StringView& key, Colour& value, const Colour defaultValue) const
 {
 	toml::Table& currentNode = *m_Node->as_table();
-	const auto result = currentNode[key].value<uint32>();
+	const auto result = currentNode[key].value<int32>();
 	value = result ? Colour(*result) : defaultValue;
 }
 
@@ -283,7 +283,7 @@ void Visitor::Read(const int32 index, uint32& value) const
 void Visitor::Read(const int32 index, Colour& value) const
 {
 	toml::Array& currentNode = *m_Node->as_array();
-	if (const auto result = currentNode.at(index).value<uint32>())
+	if (const auto result = currentNode.at(index).value<int32>())
 		value = Colour(*result);
 }
 

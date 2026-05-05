@@ -5,6 +5,7 @@
 #include "Core/Name.h"
 #include "Core/Path.h"
 #include "Core/String.h"
+#include "DebugCrafting/CraftingWindowEvent.h"
 #include "DebugEntity/EntityWindowEvent.h"
 #include "DebugInventory/InventoryWindowEvent.h"
 #include "ECS/EntityWorld.h"
@@ -30,6 +31,7 @@
 #include "GameDebug/SettingsWindowComponent.h"
 #include "GameDebug/SettingsWindowEvent.h"
 #include "InputEditor/InputEditorWindowEvent.h"
+#include "SpellEditor/SpellEditorWindowEvent.h"
 #include "TableEditor/TableEditorWindowEvent.h"
 #include "ThemeEditor/ThemeEditorWindowEvent.h"
 #include "TrajectoryEditor/TrajectoryEditorWindowEvent.h"
@@ -130,6 +132,8 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 
 		if (ImGui::BeginMenu("Debuggers"))
 		{
+			if (ImGui::MenuItem("Crafting"))
+				world.AddEvent<debug::crafting::WindowEvent>();
 			if (ImGui::MenuItem("Entity", "Ctrl+Shift+F11"))
 				world.AddEvent<debug::entity::WindowEvent>();
 			if (ImGui::MenuItem("Inventory"))
@@ -152,6 +156,8 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 		{
 			if (ImGui::MenuItem("Input Editor"))
 				world.AddEvent<editor::input::WindowEvent>();
+			if (ImGui::MenuItem("Spell Editor"))
+				world.AddEvent<editor::spell::WindowEvent>();
 			if (ImGui::MenuItem("Table Editor"))
 				world.AddEvent<editor::table::WindowEvent>();
 			if (ImGui::MenuItem("Theme Editor"))
