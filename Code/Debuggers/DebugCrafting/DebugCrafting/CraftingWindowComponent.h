@@ -10,6 +10,5 @@ namespace debug::crafting
 	{ 
 		int32 m_Identifier = 0;
 		str::String m_Label = {};
-		ecs::Entity m_Storage = { };
 	};
 };

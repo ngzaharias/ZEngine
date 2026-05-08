@@ -156,6 +156,7 @@ workspace "ZEngine"
 		include "Code/Framework/Engine_ut/premake5.lua"
 		include "Code/Framework/Lua_ut/premake5.lua"
 		include "Code/Framework/Math_ut/premake5.lua"
+		include "Code/Modules/Crafting_ut/premake5.lua"
 		include "Code/Modules/Inventory_ut/premake5.lua"
 	group ""
 

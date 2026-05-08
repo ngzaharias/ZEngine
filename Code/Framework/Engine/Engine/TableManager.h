@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Map.h"
+#include "Core/Path.h"
 #include "Serialize/Visitor.h"
 
 class Visitor;
@@ -14,7 +15,8 @@ namespace eng
 		ITableManager() {}
 		virtual ~ITableManager() {}
 
-		virtual void Read(Visitor& visitor) = 0;
+		virtual void Load(const str::Path& filepath) {}
+		virtual void PostLoad() {}
 	};
 
 	/// \brief
@@ -27,11 +29,13 @@ namespace eng
 		TableManager() {}
 		virtual ~TableManager() {}
 
-		bool HasObject(const TKey& value) const { return m_ObjectMap.Contains(value); }
-		const TObject& GetObject(const TKey& value) const { return m_ObjectMap.Get(value); }
-		const ObjectMap& GetObjectMap() const { return m_ObjectMap; }
+		void Load(const str::Path& filepath) override;
 
-		void Read(Visitor& visitor) override;
+		void AddObject(const TKey& key, TObject&& value);
+		void AddObject(const TKey& key, const TObject& value);
+		bool HasObject(const TKey& key) const;
+		auto GetObject(const TKey& key) const -> const TObject&;
+		auto GetObjects() const -> const ObjectMap&;
 
 	protected:
 		ObjectMap m_ObjectMap = {};

@@ -35,6 +35,13 @@ str::String str::Guid::ToString() const
 	return str::String(buffer);
 }
 
+str::Guid str::Guid::Create(const uint64 value)
+{
+	str::Guid guid;
+	guid.m_Data.m_U64[1] = value;
+	return guid;
+}
+
 str::Guid str::Guid::Create(const str::StringView& string)
 {
 #ifdef ASSERTS_ENABLED

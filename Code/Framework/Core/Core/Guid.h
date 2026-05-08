@@ -5,6 +5,7 @@
 #include "Core/Types.h"
 
 #define GUID(string) str::Guid::Create(string)
+#define GUID64(value) str::Guid::Create(value)
 
 namespace str
 {
@@ -32,8 +33,11 @@ namespace str
 		inline bool operator==(Guid const& rhs) const { return m_Data.m_U64[0] == rhs.m_Data.m_U64[0] && m_Data.m_U64[1] == rhs.m_Data.m_U64[1]; }
 		inline bool operator!=(Guid const& rhs) const { return m_Data.m_U64[0] != rhs.m_Data.m_U64[0] || m_Data.m_U64[1] != rhs.m_Data.m_U64[1]; }
 
+		static Guid Create(const uint64 value);
 		static Guid Create(const str::StringView& string);
+
 		static Guid Generate();
+
 		static bool IsValidString(const str::StringView& string);
 
 		static void ValidateString(const str::StringView& string);

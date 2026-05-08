@@ -17,9 +17,8 @@ void eng::TableHeadmaster::Initialise(const str::Path& folderPath)
 		if (!filepath.HasExtension())
 			filepath += s_Extension;
 
-		Visitor visitor;
-		if (visitor.LoadFromFile(filepath))
-			entry.m_Manager->Read(visitor);
+		entry.m_Manager->Load(filepath);
+		entry.m_Manager->PostLoad();
 	}
 }
 
