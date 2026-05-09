@@ -164,6 +164,7 @@ void ecs::EntityWorld::RemoveComponent()
 	static_assert(!std::is_const<TComponent>::value, "Type cannot be const.");
 	static_assert(!std::is_reference_v<TComponent>, "Type cannot be a reference.");
 	static_assert(!std::is_pointer_v<TComponent>, "Type cannot be a pointer.");
+	static_assert(!std::derived_from<TComponent, ecs::FrameComponent>, "Type cannot be a FrameComponent.");
 
 	Z_PANIC(HasComponent<TComponent>(m_EntityStorage.m_Entity), "Entity doesn't have this component!");
 
