@@ -74,27 +74,27 @@ void debug::inventory::WindowSystem::Update(World& world, const GameTime& gameTi
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (auto&& windowView : world.Query<ecs::query::Include<debug::inventory::WindowComponent>>())
+	using UpdateQuery = ecs::query
+		::Include<
+		debug::inventory::WindowComponent>
+		::Optional<
+		const debug::inventory::WindowComponent,
+		const ::inventory::StorageCreateResultComponent,
+		const ::inventory::StorageDestroyResultComponent>;
+	for (auto&& windowView : world.Query<UpdateQuery>())
 	{
 		auto& window = windowView.WriteRequired<debug::inventory::WindowComponent>();
 		const ecs::Entity& storageSelected = window.m_Storage;
 
-		//if (const auto* resultComponent = windowView.ReadOptional<inventory::StorageCreateResultComponent>())
-		//{
-		//	window.m_Storage = resultComponent->m_Storage;
-		//	world.RemoveComponent<inventory::StorageCreateRequestComponent>(windowView);
-		//}
+		if (const auto* resultComponent = windowView.ReadOptional<::inventory::StorageCreateResultComponent>())
+		{
+			window.m_Storage = resultComponent->m_Storage;
+		}
 
-		//if (windowView.HasOptional<inventory::StorageDestroyResultComponent>())
-		//{
-		//	window.m_Storage = ecs::Entity::Unassigned;
-		//	world.RemoveComponent<inventory::StorageDestroyRequestComponent>(windowView);
-		//}
-
-		//if (windowView.HasOptional<inventory::MemberAddResultComponent>())
-		//	world.RemoveComponent<inventory::MemberAddRequestComponent>(windowView);
-		//if (windowView.HasOptional<inventory::MemberMoveResultComponent>())
-		//	world.RemoveComponent<inventory::MemberMoveRequestComponent>(windowView);
+		if (windowView.HasOptional<::inventory::StorageDestroyResultComponent>())
+		{
+			window.m_Storage = ecs::Entity::Unassigned;
+		}
 
 		bool isWindowOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);
@@ -103,20 +103,20 @@ void debug::inventory::WindowSystem::Update(World& world, const GameTime& gameTi
 		{
 			if (ImGui::Button("Create Storage"))
 			{
-				//world.AddComponent<inventory::StorageCreateRequestComponent>(windowView);
+				world.AddComponent<::inventory::StorageCreateRequestComponent>(windowView);
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Destroy Storage"))
 			{
-				//auto& requestComponent = world.AddComponent<inventory::StorageDestroyRequestComponent>(windowView);
-				//requestComponent.m_Storage = window.m_Storage;
+				auto& requestComponent = world.AddComponent<::inventory::StorageDestroyRequestComponent>(windowView);
+				requestComponent.m_Storage = window.m_Storage;
 			}
 			if (ImGui::Button("Create Member"))
 			{
-				//const ecs::Entity memberEntity = world.CreateEntity();
-				//auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(windowView);
-				//requestComponent.m_Storage = window.m_Storage;
-				//requestComponent.m_Member = memberEntity;
+				const ecs::Entity memberEntity = world.CreateEntity();
+				auto& requestComponent = world.AddComponent<::inventory::MemberAddRequestComponent>(windowView);
+				requestComponent.m_Storage = window.m_Storage;
+				requestComponent.m_Member = memberEntity;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Destroy Member"))
@@ -128,70 +128,70 @@ void debug::inventory::WindowSystem::Update(World& world, const GameTime& gameTi
 			const str::String previewLabel = ToString(window.m_Storage);
 			if (ImGui::BeginCombo("##storage", previewLabel.c_str()))
 			{
-				//if (ImGui::Selectable("Unassigned"))
-				//	window.m_Storage = ecs::Entity::Unassigned;
-				//for (auto&& storageView : world.Query<ecs::query::Include<const inventory::StorageComponent>>())
-				//{
-				//	const str::String storageLabel = ToString(storageView);
-				//	if (ImGui::Selectable(storageLabel.c_str()))
-				//		window.m_Storage = storageView;
-				//}
+				if (ImGui::Selectable("Unassigned"))
+					window.m_Storage = ecs::Entity::Unassigned;
+				for (auto&& storageView : world.Query<ecs::query::Include<const ::inventory::StorageComponent>>())
+				{
+					const str::String storageLabel = ToString(storageView);
+					if (ImGui::Selectable(storageLabel.c_str()))
+						window.m_Storage = storageView;
+				}
 				ImGui::EndCombo();
 			}
 
-			//if (world.HasComponent<inventory::StorageComponent>(storageSelected))
-			//{
-			//	const auto& storageComponent = world.ReadComponent<inventory::StorageComponent>(storageSelected);
+			if (world.HasComponent<::inventory::StorageComponent>(storageSelected))
+			{
+				const auto& storageComponent = world.ReadComponent<::inventory::StorageComponent>(storageSelected);
 
-			//	constexpr int32 s_Columns = 5;
-			//	constexpr int32 s_Rows = 5;
-			//	constexpr ImVec2 s_ItemSize = ImVec2(50.f, 50.f);
-			//	constexpr ImVec2 s_TableSize = ImVec2(s_Columns * s_ItemSize.x + 10.f, s_Rows * s_ItemSize.y + 10.f);
-			//	struct Payload { ecs::Entity m_Storage; ecs::Entity m_Member; };
+				constexpr int32 s_Columns = 5;
+				constexpr int32 s_Rows = 5;
+				constexpr ImVec2 s_ItemSize = ImVec2(50.f, 50.f);
+				constexpr ImVec2 s_TableSize = ImVec2(s_Columns * s_ItemSize.x + 10.f, s_Rows * s_ItemSize.y + 10.f);
+				struct Payload { ecs::Entity m_Storage; ecs::Entity m_Member; };
 
-			//	for (int32 i = 0; i < s_Columns * s_Rows; ++i)
-			//	{
-			//		ImGui::PushID(i);
-			//		if (i % s_Rows != 0)
-			//			ImGui::SameLine();
+				for (int32 i = 0; i < s_Columns * s_Rows; ++i)
+				{
+					ImGui::PushID(i);
+					if (i % s_Rows != 0)
+						ImGui::SameLine();
 
-			//		ecs::Entity memberEntity;
-			//		if (i < storageComponent.m_Members.GetCount())
-			//		{
-			//			auto iterator = storageComponent.m_Members.begin();
-			//			std::advance(iterator, i);
-			//			memberEntity = *iterator;
-			//		}
+					ecs::Entity memberEntity;
+					if (i < storageComponent.m_Members.GetCount())
+					{
+						auto iterator = storageComponent.m_Members.begin();
+						std::advance(iterator, i);
+						memberEntity = *iterator;
+					}
 
-			//		const str::String memberLabel = ToMemberString(memberEntity);
-			//		ImGui::Button(memberLabel.c_str(), s_ItemSize);
+					const str::String memberLabel = ToMemberString(memberEntity);
+					ImGui::Button(memberLabel.c_str(), s_ItemSize);
 
-			//		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-			//		{
-			//			Payload payload = { storageSelected, memberEntity };
-			//			ImGui::SetDragDropPayload("storage_payload", &payload, sizeof(Payload));
-			//			ImGui::Text("[ ]");
-			//			ImGui::EndDragDropSource();
-			//		}
+					if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+					{
+						Payload payload = { storageSelected, memberEntity };
+						ImGui::SetDragDropPayload("storage_payload", &payload, sizeof(Payload));
+						ImGui::Text("[ ]");
+						ImGui::EndDragDropSource();
+					}
 
-			//		if (ImGui::BeginDragDropTarget())
-			//		{
-			//			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("storage_payload"))
-			//			{
-			//				const Payload data = *(const Payload*)payload->Data;
+					if (ImGui::BeginDragDropTarget())
+					{
+						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("storage_payload"))
+						{
+							const Payload data = *(const Payload*)payload->Data;
 
-			//				if (!data.m_Member.IsUnassigned())
-			//				{
-			//					auto& requestComponent = world.AddComponent<inventory::MemberMoveRequestComponent>(windowView);
-			//					requestComponent.m_Storage = storageSelected;
-			//					requestComponent.m_Member = data.m_Member;
-			//				}
-			//			}
-			//			ImGui::EndDragDropTarget();
-			//		}
-			//		ImGui::PopID();
-			//	}
-			//}
+							if (!data.m_Member.IsUnassigned())
+							{
+								auto& requestComponent = world.AddComponent<::inventory::MemberMoveRequestComponent>(windowView);
+								requestComponent.m_Storage = storageSelected;
+								requestComponent.m_Member = data.m_Member;
+							}
+						}
+						ImGui::EndDragDropTarget();
+					}
+					ImGui::PopID();
+				}
+			}
 			ImGui::End();
 
 			if (!isWindowOpen)

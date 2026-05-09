@@ -168,18 +168,6 @@ void inventory::StorageSystem::Update(World& world, const GameTime& gameTime)
 	ProcessMemberMoveRequests(world);
 	ProcessMemberRemoveRequests(world);
 	ProcessStorageRequests(world);
-
-	// cleanup results on the next frame
-	for (auto&& view : world.Query<ecs::query::Include<const inventory::MemberAddResultComponent>>())
-		world.RemoveComponent<inventory::MemberAddResultComponent>(view);
-	for (auto&& view : world.Query<ecs::query::Include<const inventory::MemberMoveResultComponent>>())
-		world.RemoveComponent<inventory::MemberMoveResultComponent>(view);
-	for (auto&& view : world.Query<ecs::query::Include<const inventory::MemberRemoveResultComponent>>())
-		world.RemoveComponent<inventory::MemberRemoveResultComponent>(view);
-	for (auto&& view : world.Query<ecs::query::Include<const inventory::StorageCreateResultComponent>>())
-		world.RemoveComponent<inventory::StorageCreateResultComponent>(view);
-	for (auto&& view : world.Query<ecs::query::Include<const inventory::StorageDestroyResultComponent>>())
-		world.RemoveComponent<inventory::StorageDestroyResultComponent>(view);
 }
 
 void inventory::StorageSystem::ProcessMemberAddRequests(World& world)

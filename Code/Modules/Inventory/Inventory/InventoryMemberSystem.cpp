@@ -54,7 +54,7 @@ void inventory::MemberSystem::ProcessRemoveRequests(World& world)
 
 	for (const StorageChange& data : changesComponent.m_StorageDestroyed)
 	{
-		const auto& storageComponent = world.ReadComponent<inventory::StorageComponent>(data.m_Storage);
+		const auto& storageComponent = world.ReadComponent<inventory::StorageComponent>(data.m_Storage, false);
 		for (const ecs::Entity& memberEntity : storageComponent.m_Members)
 			removeRequests.Add(memberEntity);
 	}
