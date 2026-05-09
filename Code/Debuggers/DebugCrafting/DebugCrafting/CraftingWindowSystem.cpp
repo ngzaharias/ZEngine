@@ -2,6 +2,7 @@
 #include "DebugCrafting/CraftingWindowSystem.h"
 
 #include "Core/String.h"
+#include "Crafting/CraftingRecipeTable.h"
 #include "DebugCrafting/CraftingWindowComponent.h"
 #include "DebugCrafting/CraftingWindowEvent.h"
 #include "ECS/EntityWorld.h"
@@ -38,6 +39,14 @@ void debug::crafting::WindowSystem::Update(World& world, const GameTime& gameTim
 		auto& window = world.AddComponent<debug::crafting::WindowComponent>(windowEntity);
 		window.m_Label = ToLabel("Crafting Debugger", identifier);
 		window.m_Identifier = identifier;
+
+		const auto& recipes = world.ReadResource<::crafting::RecipeTable>();
+		for (const auto& [guid, recipe] : recipes.GetObjects())
+		{
+			window.m_Ingredients.Append(recipe.m_Input);
+			window.m_Ingredients.Append(recipe.m_Input);
+			window.m_Ingredients.Append(recipe.m_Input);
+		}
 	}
 
 	using RemovedQuery = ecs::query
@@ -58,8 +67,33 @@ void debug::crafting::WindowSystem::Update(World& world, const GameTime& gameTim
 		imgui::SetNextWindowSize(s_DefaultSize, ImGuiCond_FirstUseEver);
 		if (ImGui::Begin(window.m_Label.c_str(), &isWindowOpen, s_WindowFlags))
 		{
-			ImGui::End();
+			constexpr int32 s_Columns = 5;
+			constexpr int32 s_Rows = 5;
+			constexpr ImVec2 s_ItemSize = ImVec2(50.f, 50.f);
+			constexpr ImVec2 s_TableSize = ImVec2(s_Columns * s_ItemSize.x + 10.f, s_Rows * s_ItemSize.y + 10.f);
+			struct Payload { ecs::Entity m_Storage; ecs::Entity m_Member; };
 
+			for (int32 i = 0; i < s_Columns * s_Rows; ++i)
+			{
+				ImGui::PushID(i);
+				if (i % s_Rows != 0)
+					ImGui::SameLine();
+
+				if (i < window.m_Ingredients.GetCount())
+				{
+					const str::Guid& guid = window.m_Ingredients[i];
+					const str::String label = guid.ToString().substr(0, 5);
+					ImGui::Button(label.c_str(), s_ItemSize);
+				}
+				else
+				{
+					ImGui::Button("", s_ItemSize);
+				}
+
+				ImGui::PopID();
+			}
+
+			ImGui::End();
 		}
 
 		if (!isWindowOpen)

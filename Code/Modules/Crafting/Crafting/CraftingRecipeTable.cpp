@@ -5,11 +5,21 @@
 
 namespace
 {
+	const str::StringView strInput = "m_Input";
+	const str::StringView strOutput = "m_Output";
 }
 
 template<>
+void Visitor::WriteCustom(const crafting::Recipe& value)
+{
+	Write(strInput, value.m_Input);
+	Write(strOutput, value.m_Output);
+}
+template<>
 void Visitor::ReadCustom(crafting::Recipe& value) const
 {
+	Read(strInput, value.m_Input, value.m_Input);
+	Read(strOutput, value.m_Output, value.m_Output);
 }
 
 str::Guid crafting::RecipeTable::GetRecipe(const Array<str::Guid> ingredients) const
