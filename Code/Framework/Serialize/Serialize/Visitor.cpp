@@ -127,7 +127,11 @@ bool Visitor::LoadFromFile(const str::Path& filepath)
 {
 	toml::parse_result result = toml::parse_file(filepath.ToView());
 	if (!result)
+	{
+		const auto& error = result.error();
+		Z_LOG(ELog::Error, "{}", error.description());
 		return false;
+	}
 
 	m_Root = std::move(result).table();
 	return true;
