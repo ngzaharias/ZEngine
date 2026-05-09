@@ -63,7 +63,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 	m_ZoomSpeed = camera.m_ZoomSpeed;
 
 	m_Themes->Clear();
-	for (const auto& [guid, value] : themes.GetObjectMap())
+	for (const auto& [guid, value] : themes.GetObjects())
 	{
 		auto theme = Noesis::MakePtr<gui::VMTheme>(value.m_Name, guid);
 		m_Themes->Add(theme);

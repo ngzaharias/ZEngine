@@ -78,7 +78,7 @@ namespace eng
 		headmaster.Initialise(raiihelper.m_AssetPath);
 
 		auto& manager = headmaster.GetManager<GuidKeyTable>();
-		auto& objects = manager.GetObjectMap();
+		auto& objects = manager.GetObjects();
 		CHECK(objects.GetCount() == 4);
 		REQUIRE(objects.Contains(strGuid1));
 		REQUIRE(objects.Contains(strGuid2));
@@ -98,7 +98,7 @@ namespace eng
 		headmaster.Initialise(raiihelper.m_AssetPath);
 
 		auto& manager = headmaster.GetManager<NameKeyTable>();
-		auto& objects = manager.GetObjectMap();
+		auto& objects = manager.GetObjects();
 		CHECK(objects.GetCount() == 4);
 		REQUIRE(objects.Contains(strName1));
 		REQUIRE(objects.Contains(strName2));
@@ -118,7 +118,7 @@ namespace eng
 		headmaster.Initialise(raiihelper.m_AssetPath);
 
 		auto& manager = headmaster.GetManager<StringKeyTable>();
-		auto& objects = manager.GetObjectMap();
+		auto& objects = manager.GetObjects();
 		CHECK(objects.GetCount() == 4);
 		REQUIRE(objects.Contains(strString1));
 		REQUIRE(objects.Contains(strString2));
