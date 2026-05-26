@@ -8,6 +8,7 @@
 
 namespace crafting
 {
+	class IngredientTable;
 	class RecipeTable;
 }
 
@@ -26,6 +27,7 @@ namespace debug::crafting
 			::Write<
 			debug::crafting::WindowComponent>
 			::Read<
+			::crafting::IngredientTable,
 			::crafting::RecipeTable,
 			debug::crafting::WindowEvent>;
 

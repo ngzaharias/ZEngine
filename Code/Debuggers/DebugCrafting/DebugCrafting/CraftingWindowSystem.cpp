@@ -2,6 +2,7 @@
 #include "DebugCrafting/CraftingWindowSystem.h"
 
 #include "Core/String.h"
+#include "Crafting/CraftingIngredientTable.h"
 #include "Crafting/CraftingRecipeTable.h"
 #include "DebugCrafting/CraftingWindowComponent.h"
 #include "DebugCrafting/CraftingWindowEvent.h"
@@ -40,12 +41,10 @@ void debug::crafting::WindowSystem::Update(World& world, const GameTime& gameTim
 		window.m_Label = ToLabel("Crafting Debugger", identifier);
 		window.m_Identifier = identifier;
 
-		const auto& recipes = world.ReadResource<::crafting::RecipeTable>();
-		for (const auto& [guid, recipe] : recipes.GetObjects())
+		const auto& ingredients = world.ReadResource<::crafting::IngredientTable>();
+		for (const auto& [guid, ingredient] : ingredients.GetObjects())
 		{
-			window.m_Ingredients.Append(recipe.m_Input);
-			window.m_Ingredients.Append(recipe.m_Input);
-			window.m_Ingredients.Append(recipe.m_Input);
+			window.m_Ingredients.Append(guid);
 		}
 	}
 
@@ -60,6 +59,7 @@ void debug::crafting::WindowSystem::Update(World& world, const GameTime& gameTim
 
 	for (auto&& windowView : world.Query<ecs::query::Include<debug::crafting::WindowComponent>>())
 	{
+		const auto& ingredients = world.ReadResource<::crafting::IngredientTable>();
 		auto& window = windowView.WriteRequired<debug::crafting::WindowComponent>();
 
 		bool isWindowOpen = true;
@@ -82,7 +82,9 @@ void debug::crafting::WindowSystem::Update(World& world, const GameTime& gameTim
 				if (i < window.m_Ingredients.GetCount())
 				{
 					const str::Guid& guid = window.m_Ingredients[i];
-					const str::String label = guid.ToString().substr(0, 5);
+					const ::crafting::Ingredient& ingredient = ingredients.GetObject(guid);
+
+					const str::String& label = ingredient.m_Name;
 					ImGui::Button(label.c_str(), s_ItemSize);
 				}
 				else

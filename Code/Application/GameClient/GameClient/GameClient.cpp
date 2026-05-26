@@ -5,6 +5,7 @@
 #include "ClientCursor/CursorRegisterModule.h"
 #include "ClientHidden/HiddenRegisterModule.h"
 #include "ClientNetwork/NetworkRegisterModule.h"
+#include "Crafting/CraftingIngredientTable.h"
 #include "Crafting/CraftingRecipeTable.h"
 #include "Crafting/CraftingRegisterModule.h"
 #include "ECS/TypeRegistry.h"
@@ -79,6 +80,9 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(headmaster.GetManager<eng::AchievementTable>());
 		m_EntityWorld.RegisterResource(headmaster.GetManager<eng::ColourTable>());
 		m_EntityWorld.RegisterResource(headmaster.GetManager<eng::ThemeTable>());
+
+		headmaster.Register<crafting::IngredientTable>("Ingredients");
+		m_EntityWorld.RegisterResource(headmaster.GetManager<crafting::IngredientTable>());
 
 		headmaster.Register<crafting::RecipeTable>("Recipes");
 		m_EntityWorld.RegisterResource(headmaster.GetManager<crafting::RecipeTable>());

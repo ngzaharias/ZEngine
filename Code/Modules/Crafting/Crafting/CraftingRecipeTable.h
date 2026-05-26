@@ -16,8 +16,5 @@ namespace crafting
 	{
 	public:
 		str::Guid GetRecipe(const Array<str::Guid> ingredients) const;
-
-	protected:
-		Map<str::Guid, Set<str::Guid>> m_IngredientMap = {};
 	};
 }
