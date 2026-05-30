@@ -25,7 +25,7 @@ namespace
 		if (!asset.m_TextureData)
 		{
 			const char* failureReason = stbi_failure_reason();
-			Z_LOG(ELog::Assert, "Failed to load Texture2D! Reason: {} \nPath: {}", filepath.ToChar(), failureReason);
+			Z_LOG(ELog::Assert, "Failed to load Texture2D! Reason: {} \nPath: {}", failureReason, filepath.ToChar());
 			return false;
 		}
 
