@@ -1,11 +1,11 @@
-#include "GameState/GameStateEditModeSystem.h"
+#include "SharedGameState/GameStateEditModeSystem.h"
 
 #include "Core/Profiler.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameState/GameStateEditModeComponent.h"
-#include "GameState/GameStateEditModeToggleEvent.h"
+#include "SharedGameState/GameStateEditModeComponent.h"
+#include "SharedGameState/GameStateEditModeToggleEvent.h"
 
 void gamestate::EditModeSystem::Initialise(World& world)
 {

@@ -1,10 +1,10 @@
-#include "GameState/GameStateDebugSystem.h"
+#include "SharedGameState/GameStateDebugSystem.h"
 
 #include "Core/Profiler.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameState/GameStateDebugComponent.h"
+#include "SharedGameState/GameStateDebugComponent.h"
 
 void gamestate::DebugSystem::Initialise(World& world)
 {

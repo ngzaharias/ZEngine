@@ -1,13 +1,13 @@
-#include "GameState/GameStateRegisterModule.h"
+#include "SharedGameState/GameStateRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
-#include "GameState/GameStateDebugComponent.h"
-#include "GameState/GameStateDebugSystem.h"
-#include "GameState/GameStateEditModeComponent.h"
-#include "GameState/GameStateEditModeSystem.h"
-#include "GameState/GameStateEditModeToggleEvent.h"
-#include "GameState/GameStateEditorComponent.h"
-#include "GameState/GameStateEditorSystem.h"
+#include "SharedGameState/GameStateDebugComponent.h"
+#include "SharedGameState/GameStateDebugSystem.h"
+#include "SharedGameState/GameStateEditModeComponent.h"
+#include "SharedGameState/GameStateEditModeSystem.h"
+#include "SharedGameState/GameStateEditModeToggleEvent.h"
+#include "SharedGameState/GameStateEditorComponent.h"
+#include "SharedGameState/GameStateEditorSystem.h"
 
 void gamestate::RegisterModule(ecs::EntityWorld& world)
 {
