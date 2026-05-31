@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

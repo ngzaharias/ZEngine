@@ -7,32 +7,32 @@
 #include "SharedSpellcraft/SpellcraftHealthComponent.h"
 #include "SharedSpellcraft/SpellcraftHealthTemplate.h"
 
-void spellcraft::HealthSystem::Update(World& world, const GameTime& gameTime)
+void shared::spellcraft::HealthSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	using AddedQuery = ecs::query
-		::Added<const spellcraft::HealthTemplate>
-		::Include<const spellcraft::HealthTemplate>;
+		::Added<const shared::spellcraft::HealthTemplate>
+		::Include<const shared::spellcraft::HealthTemplate>;
 	for (auto&& view : world.Query<AddedQuery>())
 	{
-		const auto& healthTemplate = view.ReadRequired<spellcraft::HealthTemplate>();
-		auto& healthComponent = world.AddComponent<spellcraft::HealthComponent>(view);
+		const auto& healthTemplate = view.ReadRequired<shared::spellcraft::HealthTemplate>();
+		auto& healthComponent = world.AddComponent<shared::spellcraft::HealthComponent>(view);
 		healthComponent.m_Current = healthTemplate.m_Initial;
 	}
 
 	using UpdatedQuery = ecs::query
-		::Updated<const spellcraft::HealthTemplate>
-		::Include<spellcraft::HealthComponent, const spellcraft::HealthTemplate>;
+		::Updated<const shared::spellcraft::HealthTemplate>
+		::Include<shared::spellcraft::HealthComponent, const shared::spellcraft::HealthTemplate>;
 	for (auto&& view : world.Query<UpdatedQuery>())
 	{
-		const auto& healthTemplate = view.ReadRequired<spellcraft::HealthTemplate>();
-		auto& healthComponent = view.WriteRequired<spellcraft::HealthComponent>();
+		const auto& healthTemplate = view.ReadRequired<shared::spellcraft::HealthTemplate>();
+		auto& healthComponent = view.WriteRequired<shared::spellcraft::HealthComponent>();
 		healthComponent.m_Current = healthTemplate.m_Initial;
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const spellcraft::HealthTemplate>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const shared::spellcraft::HealthTemplate>>())
 	{
-		world.RemoveComponent<spellcraft::HealthComponent>(view);
+		world.RemoveComponent<shared::spellcraft::HealthComponent>(view);
 	}
 }

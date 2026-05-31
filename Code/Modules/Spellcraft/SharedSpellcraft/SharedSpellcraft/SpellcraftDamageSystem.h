@@ -3,7 +3,7 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	class DamageSystem final : public ecs::System
 	{

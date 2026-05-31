@@ -9,7 +9,7 @@ namespace ecs
 	struct NameComponent;
 }
 
-namespace editor::spell
+namespace editor::spellcraft
 {
 	struct GraphComponent;
 	struct LinkCreateEvent;
@@ -24,7 +24,7 @@ namespace gamestate
 	struct EditorComponent;
 }
 
-namespace editor::spell
+namespace editor::spellcraft
 {
 	class WindowSystem final : public ecs::System
 	{
@@ -32,13 +32,13 @@ namespace editor::spell
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			editor::spell::LinkCreateEvent,
-			editor::spell::LinkDestroyEvent,
-			editor::spell::NodeCreateEvent,
-			editor::spell::WindowComponent>
+			editor::spellcraft::LinkCreateEvent,
+			editor::spellcraft::LinkDestroyEvent,
+			editor::spellcraft::NodeCreateEvent,
+			editor::spellcraft::WindowComponent>
 			::Read<
-			editor::spell::GraphComponent,
-			editor::spell::WindowEvent,
+			editor::spellcraft::GraphComponent,
+			editor::spellcraft::WindowEvent,
 			gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

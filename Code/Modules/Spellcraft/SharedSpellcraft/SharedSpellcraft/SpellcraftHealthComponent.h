@@ -2,7 +2,7 @@
 
 #include "ECS/Component.h"
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	struct HealthComponent final : public ecs::Component
 	{

@@ -3,19 +3,19 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	struct BookComponent;
 }
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	class BookSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			spellcraft::BookComponent>
+			shared::spellcraft::BookComponent>
 			::Read<>;
 
 		void Initialise(World& world);

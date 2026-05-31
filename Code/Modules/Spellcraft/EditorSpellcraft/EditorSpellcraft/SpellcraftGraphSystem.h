@@ -3,7 +3,7 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace editor::spell
+namespace editor::spellcraft
 {
 	struct GraphComponent;
 	struct LinkCreateEvent;
@@ -12,19 +12,19 @@ namespace editor::spell
 	struct WindowComponent;
 }
 
-namespace editor::spell
+namespace editor::spellcraft
 {
 	class GraphSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::spell::GraphComponent>
+			editor::spellcraft::GraphComponent>
 			::Read<
-			editor::spell::LinkCreateEvent,
-			editor::spell::LinkDestroyEvent,
-			editor::spell::NodeCreateEvent,
-			editor::spell::WindowComponent>;
+			editor::spellcraft::LinkCreateEvent,
+			editor::spellcraft::LinkDestroyEvent,
+			editor::spellcraft::NodeCreateEvent,
+			editor::spellcraft::WindowComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

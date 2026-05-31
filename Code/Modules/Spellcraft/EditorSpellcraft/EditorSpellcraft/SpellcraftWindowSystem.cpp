@@ -28,7 +28,7 @@ namespace
 	}
 }
 
-void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
+void editor::spellcraft::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -38,34 +38,34 @@ void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);
 
-	for (const auto& request : world.Events<editor::spell::WindowEvent>())
+	for (const auto& request : world.Events<editor::spellcraft::WindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Spell Editor");
 
-		auto& window = world.AddComponent<editor::spell::WindowComponent>(windowEntity);
+		auto& window = world.AddComponent<editor::spellcraft::WindowComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_Label = ToLabel("Spell Editor", identifier);
 	}
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::spell::WindowComponent>;
+		::Removed<editor::spellcraft::WindowComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		const auto& window = world.ReadComponent<editor::spell::WindowComponent>(view, false);
+		const auto& window = world.ReadComponent<editor::spellcraft::WindowComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Include<editor::spell::WindowComponent, const editor::spell::GraphComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::spellcraft::WindowComponent, const editor::spellcraft::GraphComponent>>())
 	{
 		constexpr ImGuiWindowFlags s_WindowFlags =
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_MenuBar;
 
-		auto& window = view.WriteRequired<editor::spell::WindowComponent>();
-		const auto& graphComponent = view.ReadRequired<editor::spell::GraphComponent>();
+		auto& window = view.WriteRequired<editor::spellcraft::WindowComponent>();
+		const auto& graphComponent = view.ReadRequired<editor::spellcraft::GraphComponent>();
 		const auto& graph = graphComponent.m_Graph;
 		const auto& registry = graph.GetRegistry();
 
@@ -157,7 +157,7 @@ void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
 				{
 					if (ImGui::MenuItem(name.ToChar()))
 					{
-						auto& event = world.AddEvent<editor::spell::NodeCreateEvent>();
+						auto& event = world.AddEvent<editor::spellcraft::NodeCreateEvent>();
 						event.m_Entity = view;
 						event.m_Name = name;
 					}
@@ -168,7 +168,7 @@ void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
 			int32 sourceId, targetId;
 			if (ImNodes::IsLinkCreated(&sourceId, &targetId))
 			{
-				auto& event = world.AddEvent<editor::spell::LinkCreateEvent>();
+				auto& event = world.AddEvent<editor::spellcraft::LinkCreateEvent>();
 				event.m_Entity = view;
 				event.m_SourceId = sourceId;
 				event.m_TargetId = targetId;
@@ -177,14 +177,14 @@ void editor::spell::WindowSystem::Update(World& world, const GameTime& gameTime)
 			int32 linkId;
 			if (ImNodes::IsLinkDestroyed(&linkId))
 			{
-				auto& event = world.AddEvent<editor::spell::LinkDestroyEvent>();
+				auto& event = world.AddEvent<editor::spellcraft::LinkDestroyEvent>();
 				event.m_Entity = view;
 				event.m_LinkId = linkId;
 			}
 
 			if (ImNodes::IsLinkHovered(&linkId) && ImGui::IsKeyPressed(ImGuiKey_Delete))
 			{
-				auto& event = world.AddEvent<editor::spell::LinkDestroyEvent>();
+				auto& event = world.AddEvent<editor::spellcraft::LinkDestroyEvent>();
 				event.m_Entity = view;
 				event.m_LinkId = linkId;
 			}

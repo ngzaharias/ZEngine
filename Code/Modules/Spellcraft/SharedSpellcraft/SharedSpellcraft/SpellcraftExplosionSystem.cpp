@@ -18,19 +18,19 @@ namespace
 	const str::Guid strFlipbook = GUID("9cf3dbdc769ea09a6e4aa0390e246666");
 }
 
-void spellcraft::ExplosionSystem::Update(World& world, const GameTime& gameTime)
+void shared::spellcraft::ExplosionSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (auto&& view : world.Query<ecs::query::Added<const spellcraft::CastComponent>::Include<const spellcraft::CastComponent>>())
+	for (auto&& view : world.Query<ecs::query::Added<const shared::spellcraft::CastComponent>::Include<const shared::spellcraft::CastComponent>>())
 	{
-		const auto& bookComponent = world.ReadComponent<spellcraft::BookComponent>();
-		const auto& castComponent = view.ReadRequired<spellcraft::CastComponent>();
-		const spellcraft::Glyph& glyph = bookComponent.m_Glyph.Get(castComponent.m_Glyph);
-		if (std::holds_alternative<spellcraft::emitter::Explosion>(glyph))
+		const auto& bookComponent = world.ReadComponent<shared::spellcraft::BookComponent>();
+		const auto& castComponent = view.ReadRequired<shared::spellcraft::CastComponent>();
+		const shared::spellcraft::Glyph& glyph = bookComponent.m_Glyph.Get(castComponent.m_Glyph);
+		if (std::holds_alternative<shared::spellcraft::emitter::Explosion>(glyph))
 		{
-			const auto& explosionData = std::get<spellcraft::emitter::Explosion>(glyph);
-			auto& explosionComponent = world.AddComponent<spellcraft::ExplosionComponent>(view);
+			const auto& explosionData = std::get<shared::spellcraft::emitter::Explosion>(glyph);
+			auto& explosionComponent = world.AddComponent<shared::spellcraft::ExplosionComponent>(view);
 			explosionComponent.m_OnHit = explosionData.m_OnHit;
 			explosionComponent.m_Duration = 2.f;
 			explosionComponent.m_Radius = explosionData.m_Radius;
@@ -45,15 +45,15 @@ void spellcraft::ExplosionSystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	for (auto&& view : world.Query<ecs::query::Include<spellcraft::ExplosionComponent, const eng::TransformComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<shared::spellcraft::ExplosionComponent, const eng::TransformComponent>>())
 	{
-		auto& explosionComponent = view.WriteRequired<spellcraft::ExplosionComponent>();
+		auto& explosionComponent = view.WriteRequired<shared::spellcraft::ExplosionComponent>();
 		explosionComponent.m_Duration -= gameTime.m_DeltaTime;
 
 		if (explosionComponent.m_Duration <= 0.f)
 		{
 			const auto& transformComponent = view.ReadRequired<eng::TransformComponent>();
-			auto& hitEvent = world.AddEvent<spellcraft::ExplosionHitEvent>();
+			auto& hitEvent = world.AddEvent<shared::spellcraft::ExplosionHitEvent>();
 			hitEvent.m_Entity = {};
 			hitEvent.m_OnHit = explosionComponent.m_OnHit;
 			hitEvent.m_Translate = transformComponent.m_Translate;

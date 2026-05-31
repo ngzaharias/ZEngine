@@ -8,7 +8,7 @@ namespace gamestate
 	struct EditModeComponent;
 }
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	struct BookComponent;
 	struct CastComponent;
@@ -18,21 +18,21 @@ namespace spellcraft
 	struct ProjectileHitEvent;
 }
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	class CastSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			spellcraft::CastComponent>
+			shared::spellcraft::CastComponent>
 			::Read<
 			gamestate::EditModeComponent,
-			spellcraft::BookComponent,
-			spellcraft::ExplosionComponent,
-			spellcraft::ExplosionHitEvent,
-			spellcraft::ProjectileComponent,
-			spellcraft::ProjectileHitEvent>;
+			shared::spellcraft::BookComponent,
+			shared::spellcraft::ExplosionComponent,
+			shared::spellcraft::ExplosionHitEvent,
+			shared::spellcraft::ProjectileComponent,
+			shared::spellcraft::ProjectileHitEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

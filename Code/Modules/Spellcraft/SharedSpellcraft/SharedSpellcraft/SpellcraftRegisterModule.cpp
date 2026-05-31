@@ -18,20 +18,20 @@
 #include "SharedSpellcraft/SpellcraftProjectileHitEvent.h"
 #include "SharedSpellcraft/SpellcraftProjectileSystem.h"
 
-void spellcraft::RegisterModule(ecs::EntityWorld& world)
+void shared::spellcraft::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<spellcraft::BookComponent>();
-	world.RegisterComponent<spellcraft::CastComponent>();
-	world.RegisterComponent<spellcraft::ExplosionComponent>();
-	world.RegisterComponent<spellcraft::HealthComponent>();
-	world.RegisterComponent<spellcraft::HealthTemplate>();
-	world.RegisterComponent<spellcraft::ProjectileComponent>();
-	world.RegisterEvent<spellcraft::ExplosionHitEvent>();
-	world.RegisterEvent<spellcraft::ProjectileHitEvent>();
-	world.RegisterSystem<spellcraft::BookSystem>();
-	world.RegisterSystem<spellcraft::CastSystem>();
-	world.RegisterSystem<spellcraft::DamageSystem>();
-	world.RegisterSystem<spellcraft::ExplosionSystem>();
-	world.RegisterSystem<spellcraft::HealthSystem>();
-	world.RegisterSystem<spellcraft::ProjectileSystem>();
+	world.RegisterComponent<shared::spellcraft::BookComponent>();
+	world.RegisterComponent<shared::spellcraft::CastComponent>();
+	world.RegisterComponent<shared::spellcraft::ExplosionComponent>();
+	world.RegisterComponent<shared::spellcraft::HealthComponent>();
+	world.RegisterComponent<shared::spellcraft::HealthTemplate>();
+	world.RegisterComponent<shared::spellcraft::ProjectileComponent>();
+	world.RegisterEvent<shared::spellcraft::ExplosionHitEvent>();
+	world.RegisterEvent<shared::spellcraft::ProjectileHitEvent>();
+	world.RegisterSystem<shared::spellcraft::BookSystem>();
+	world.RegisterSystem<shared::spellcraft::CastSystem>();
+	world.RegisterSystem<shared::spellcraft::DamageSystem>();
+	world.RegisterSystem<shared::spellcraft::ExplosionSystem>();
+	world.RegisterSystem<shared::spellcraft::HealthSystem>();
+	world.RegisterSystem<shared::spellcraft::ProjectileSystem>();
 }

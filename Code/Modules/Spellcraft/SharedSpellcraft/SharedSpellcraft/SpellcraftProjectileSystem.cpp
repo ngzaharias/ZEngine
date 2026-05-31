@@ -17,19 +17,19 @@ namespace
 	const str::Guid strSprite = GUID("52ffdca6bc1d64230eda0e2056e9662b");
 }
 
-void spellcraft::ProjectileSystem::Update(World& world, const GameTime& gameTime)
+void shared::spellcraft::ProjectileSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (auto&& view : world.Query<ecs::query::Added<const spellcraft::CastComponent>::Include<const spellcraft::CastComponent>>())
+	for (auto&& view : world.Query<ecs::query::Added<const shared::spellcraft::CastComponent>::Include<const shared::spellcraft::CastComponent>>())
 	{
-		const auto& bookComponent = world.ReadComponent<spellcraft::BookComponent>();
-		const auto& castComponent = view.ReadRequired<spellcraft::CastComponent>();
-		const spellcraft::Glyph& glyph = bookComponent.m_Glyph.Get(castComponent.m_Glyph);
-		if (std::holds_alternative<spellcraft::emitter::Projectile>(glyph))
+		const auto& bookComponent = world.ReadComponent<shared::spellcraft::BookComponent>();
+		const auto& castComponent = view.ReadRequired<shared::spellcraft::CastComponent>();
+		const shared::spellcraft::Glyph& glyph = bookComponent.m_Glyph.Get(castComponent.m_Glyph);
+		if (std::holds_alternative<shared::spellcraft::emitter::Projectile>(glyph))
 		{
-			const auto& projectileData = std::get<spellcraft::emitter::Projectile>(glyph);
-			auto& projectileComponent = world.AddComponent<spellcraft::ProjectileComponent>(view);
+			const auto& projectileData = std::get<shared::spellcraft::emitter::Projectile>(glyph);
+			auto& projectileComponent = world.AddComponent<shared::spellcraft::ProjectileComponent>(view);
 			projectileComponent.m_OnHit = projectileData.m_OnHit;
 			projectileComponent.m_Direction = castComponent.m_Direction;
 			projectileComponent.m_Distance = projectileData.m_Distance;
@@ -44,9 +44,9 @@ void spellcraft::ProjectileSystem::Update(World& world, const GameTime& gameTime
 		}
 	}
 
-	for (auto&& view : world.Query<ecs::query::Include<eng::TransformComponent, spellcraft::ProjectileComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<eng::TransformComponent, shared::spellcraft::ProjectileComponent>>())
 	{
-		auto& projectileComponent = view.WriteRequired<spellcraft::ProjectileComponent>();
+		auto& projectileComponent = view.WriteRequired<shared::spellcraft::ProjectileComponent>();
 		projectileComponent.m_Distance -= projectileComponent.m_Speed * gameTime.m_DeltaTime;
 
 		auto& transformComponent = view.WriteRequired<eng::TransformComponent>();
@@ -54,7 +54,7 @@ void spellcraft::ProjectileSystem::Update(World& world, const GameTime& gameTime
 
 		if (projectileComponent.m_Distance <= 0.f)
 		{
-			auto& hitEvent = world.AddEvent<spellcraft::ProjectileHitEvent>();
+			auto& hitEvent = world.AddEvent<shared::spellcraft::ProjectileHitEvent>();
 			hitEvent.m_Entity = {};
 			hitEvent.m_OnHit = projectileComponent.m_OnHit;
 			hitEvent.m_Translate = transformComponent.m_Translate;

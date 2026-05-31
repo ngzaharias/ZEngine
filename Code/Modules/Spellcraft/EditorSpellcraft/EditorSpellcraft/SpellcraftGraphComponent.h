@@ -3,7 +3,7 @@
 #include "ECS/Component.h"
 #include "NodeGraph/Graph.h"
 
-namespace editor::spell
+namespace editor::spellcraft
 {
 	struct GraphComponent final : public ecs::Component 
 	{ 

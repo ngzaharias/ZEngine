@@ -157,7 +157,7 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 			if (ImGui::MenuItem("Input Editor"))
 				world.AddEvent<editor::input::WindowEvent>();
 			if (ImGui::MenuItem("Spell Editor"))
-				world.AddEvent<editor::spell::WindowEvent>();
+				world.AddEvent<editor::spellcraft::WindowEvent>();
 			if (ImGui::MenuItem("Table Editor"))
 				world.AddEvent<editor::table::WindowEvent>();
 			if (ImGui::MenuItem("Theme Editor"))

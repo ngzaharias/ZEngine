@@ -5,7 +5,7 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 
-void spellcraft::DamageSystem::Update(World& world, const GameTime& gameTime)
+void shared::spellcraft::DamageSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 }

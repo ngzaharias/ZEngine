@@ -5,7 +5,7 @@
 #include "ECS/Event.h"
 #include "Math/Vector.h"
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	struct ExplosionHitEvent final : public ecs::Event
 	{

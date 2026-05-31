@@ -4,7 +4,7 @@
 #include "ECS/Component.h"
 #include "Math/Vector.h"
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	struct ProjectileComponent final : public ecs::Component
 	{

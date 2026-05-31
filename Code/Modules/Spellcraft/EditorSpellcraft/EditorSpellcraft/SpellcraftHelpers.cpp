@@ -92,7 +92,7 @@ namespace
 	}
 }
 
-void editor::spell::PushFieldColour(const ngraph::Field& field)
+void editor::spellcraft::PushFieldColour(const ngraph::Field& field)
 {
 	const Colour colour = !field.m_Colour
 		? ToPinColour(field.m_Type)
@@ -104,13 +104,13 @@ void editor::spell::PushFieldColour(const ngraph::Field& field)
 	ImNodes::PushColorStyle(ImNodesCol_PinHovered, highlight);
 }
 
-void editor::spell::PopFieldColour()
+void editor::spellcraft::PopFieldColour()
 {
 	ImNodes::PopColorStyle();
 	ImNodes::PopColorStyle();
 }
 
-void editor::spell::PushLinkColour(const ngraph::Link& link)
+void editor::spellcraft::PushLinkColour(const ngraph::Link& link)
 {
 	const Colour colour = ToPinColour(link.m_Type);
 	const uint32 normal = ToColour(colour);
@@ -120,14 +120,14 @@ void editor::spell::PushLinkColour(const ngraph::Link& link)
 	ImNodes::PushColorStyle(ImNodesCol_LinkSelected, highlight);
 }
 
-void editor::spell::PopLinkColour()
+void editor::spellcraft::PopLinkColour()
 {
 	ImNodes::PopColorStyle();
 	ImNodes::PopColorStyle();
 	ImNodes::PopColorStyle();
 }
 
-void editor::spell::PushNodeColour(const ngraph::Node& node)
+void editor::spellcraft::PushNodeColour(const ngraph::Node& node)
 {
 	const Colour colour = !node.m_Colour
 		? ToNodeColour(node.m_Type)
@@ -143,7 +143,7 @@ void editor::spell::PushNodeColour(const ngraph::Node& node)
 	ImGui::PushStyleColor(ImGuiCol_Text, text);
 }
 
-void editor::spell::PopNodeColour()
+void editor::spellcraft::PopNodeColour()
 {
 	ImGui::PopStyleColor();
 	ImNodes::PopColorStyle();

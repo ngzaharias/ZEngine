@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace editor::spell
+namespace editor::spellcraft
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

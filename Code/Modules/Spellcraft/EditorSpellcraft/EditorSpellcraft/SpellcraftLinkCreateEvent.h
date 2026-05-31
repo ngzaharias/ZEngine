@@ -3,7 +3,7 @@
 #include "ECS/Entity.h"
 #include "ECS/Event.h"
 
-namespace editor::spell
+namespace editor::spellcraft
 {
 	struct LinkCreateEvent final : public ecs::Event 
 	{

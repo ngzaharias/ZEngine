@@ -10,25 +10,25 @@
 #include "EditorSpellcraft/SpellcraftLinkDestroyEvent.h"
 #include "EditorSpellcraft/SpellcraftNodeCreateEvent.h"
 
-void editor::spell::GraphSystem::Update(World& world, const GameTime& gameTime)
+void editor::spellcraft::GraphSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (auto&& view : world.Query<ecs::query::Added<const editor::spell::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Added<const editor::spellcraft::WindowComponent>>())
 	{
-		auto& graphComponent = world.AddComponent<editor::spell::GraphComponent>(view);
+		auto& graphComponent = world.AddComponent<editor::spellcraft::GraphComponent>(view);
 		graphComponent.m_Graph.Initialise();
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const editor::spell::WindowComponent>>())
-		world.RemoveComponent<editor::spell::GraphComponent>(view);
+	for (auto&& view : world.Query<ecs::query::Removed<const editor::spellcraft::WindowComponent>>())
+		world.RemoveComponent<editor::spellcraft::GraphComponent>(view);
 
-	for (const auto& event : world.Events<editor::spell::LinkCreateEvent>())
+	for (const auto& event : world.Events<editor::spellcraft::LinkCreateEvent>())
 	{
-		if (!world.HasComponent<editor::spell::GraphComponent>(event.m_Entity))
+		if (!world.HasComponent<editor::spellcraft::GraphComponent>(event.m_Entity))
 			continue;
 
-		auto& graphComponent = world.WriteComponent<editor::spell::GraphComponent>(event.m_Entity);
+		auto& graphComponent = world.WriteComponent<editor::spellcraft::GraphComponent>(event.m_Entity);
 		auto& graph = graphComponent.m_Graph;
 		const ngraph::Field& fieldA = graph.GetField(event.m_SourceId);
 		const ngraph::Field& fieldB = graph.GetField(event.m_TargetId);
@@ -38,22 +38,22 @@ void editor::spell::GraphSystem::Update(World& world, const GameTime& gameTime)
 		graph.CreateLink(fieldA.m_Type, event.m_SourceId, event.m_TargetId);
 	}
 
-	for (const auto& event : world.Events<editor::spell::LinkDestroyEvent>())
+	for (const auto& event : world.Events<editor::spellcraft::LinkDestroyEvent>())
 	{
-		if (!world.HasComponent<editor::spell::GraphComponent>(event.m_Entity))
+		if (!world.HasComponent<editor::spellcraft::GraphComponent>(event.m_Entity))
 			continue;
 
-		auto& graphComponent = world.WriteComponent<editor::spell::GraphComponent>(event.m_Entity);
+		auto& graphComponent = world.WriteComponent<editor::spellcraft::GraphComponent>(event.m_Entity);
 		auto& graph = graphComponent.m_Graph;
 		graph.DestroyLink(event.m_LinkId);
 	}
 
-	for (const auto& event : world.Events<editor::spell::NodeCreateEvent>())
+	for (const auto& event : world.Events<editor::spellcraft::NodeCreateEvent>())
 	{
-		if (!world.HasComponent<editor::spell::GraphComponent>(event.m_Entity))
+		if (!world.HasComponent<editor::spellcraft::GraphComponent>(event.m_Entity))
 			continue;
 
-		auto& graphComponent = world.WriteComponent<editor::spell::GraphComponent>(event.m_Entity);
+		auto& graphComponent = world.WriteComponent<editor::spellcraft::GraphComponent>(event.m_Entity);
 		auto& graph = graphComponent.m_Graph;
 		graph.CreateNode(event.m_Name);
 	}

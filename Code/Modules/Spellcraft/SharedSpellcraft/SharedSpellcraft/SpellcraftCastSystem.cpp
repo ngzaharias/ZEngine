@@ -11,30 +11,30 @@
 #include "SharedSpellcraft/SpellcraftProjectileComponent.h"
 #include "SharedSpellcraft/SpellcraftProjectileHitEvent.h"
 
-void spellcraft::CastSystem::Update(World& world, const GameTime& gameTime)
+void shared::spellcraft::CastSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (const auto& hitEvent : world.Events<spellcraft::ExplosionHitEvent>())
+	for (const auto& hitEvent : world.Events<shared::spellcraft::ExplosionHitEvent>())
 	{
 		if (!hitEvent.m_OnHit.IsValid())
 			continue;
 
 		const ecs::Entity entity = world.CreateEntity();
-		auto& castComponent = world.AddComponent<spellcraft::CastComponent>(entity);
+		auto& castComponent = world.AddComponent<shared::spellcraft::CastComponent>(entity);
 		castComponent.m_Glyph = hitEvent.m_OnHit;
 		castComponent.m_Entity = hitEvent.m_Entity;
 		castComponent.m_Translate = hitEvent.m_Translate;
 		castComponent.m_Direction = hitEvent.m_Direction;
 	}
 
-	for (const auto& hitEvent : world.Events<spellcraft::ProjectileHitEvent>())
+	for (const auto& hitEvent : world.Events<shared::spellcraft::ProjectileHitEvent>())
 	{
 		if (!hitEvent.m_OnHit.IsValid())
 			continue;
 
 		const ecs::Entity entity = world.CreateEntity();
-		auto& castComponent = world.AddComponent<spellcraft::CastComponent>(entity);
+		auto& castComponent = world.AddComponent<shared::spellcraft::CastComponent>(entity);
 		castComponent.m_Glyph = hitEvent.m_OnHit;
 		castComponent.m_Entity = hitEvent.m_Entity;
 		castComponent.m_Translate = hitEvent.m_Translate;

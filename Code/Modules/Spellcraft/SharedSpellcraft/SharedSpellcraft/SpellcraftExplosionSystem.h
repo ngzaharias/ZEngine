@@ -9,7 +9,7 @@ namespace eng
 	struct TransformComponent;
 }
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	struct BookComponent;
 	struct CastComponent;
@@ -17,7 +17,7 @@ namespace spellcraft
 	struct ExplosionHitEvent;
 }
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	class ExplosionSystem final : public ecs::System
 	{
@@ -26,11 +26,11 @@ namespace spellcraft
 			::Write<
 			eng::FlipbookComponent,
 			eng::TransformComponent,
-			spellcraft::ExplosionComponent,
-			spellcraft::ExplosionHitEvent>
+			shared::spellcraft::ExplosionComponent,
+			shared::spellcraft::ExplosionHitEvent>
 			::Read<
-			spellcraft::BookComponent,
-			spellcraft::CastComponent>;
+			shared::spellcraft::BookComponent,
+			shared::spellcraft::CastComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -2,7 +2,7 @@
 
 #include "ECS/Component.h"
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	struct ExplosionComponent final : public ecs::Component
 	{

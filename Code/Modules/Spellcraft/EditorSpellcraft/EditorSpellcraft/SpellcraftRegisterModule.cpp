@@ -12,14 +12,14 @@
 #include "EditorSpellcraft/SpellcraftWindowEvent.h"
 #include "EditorSpellcraft/SpellcraftWindowSystem.h"
 
-void editor::spell::RegisterModule(ecs::EntityWorld& world)
+void editor::spellcraft::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<editor::spell::GraphComponent>();
-	world.RegisterComponent<editor::spell::WindowComponent>();
-	world.RegisterEvent<editor::spell::LinkCreateEvent>();
-	world.RegisterEvent<editor::spell::LinkDestroyEvent>();
-	world.RegisterEvent<editor::spell::NodeCreateEvent>();
-	world.RegisterEvent<editor::spell::WindowEvent>();
-	world.RegisterSystem<editor::spell::GraphSystem>();
-	world.RegisterSystem<editor::spell::WindowSystem>();
+	world.RegisterComponent<editor::spellcraft::GraphComponent>();
+	world.RegisterComponent<editor::spellcraft::WindowComponent>();
+	world.RegisterEvent<editor::spellcraft::LinkCreateEvent>();
+	world.RegisterEvent<editor::spellcraft::LinkDestroyEvent>();
+	world.RegisterEvent<editor::spellcraft::NodeCreateEvent>();
+	world.RegisterEvent<editor::spellcraft::WindowEvent>();
+	world.RegisterSystem<editor::spellcraft::GraphSystem>();
+	world.RegisterSystem<editor::spellcraft::WindowSystem>();
 }

@@ -56,7 +56,7 @@ void editor::Editor::Register()
 	editor::entity::RegisterModule(m_ClientWorld);
 	editor::flipbook::RegisterModule(m_ClientWorld);
 	editor::input::RegisterModule(m_ClientWorld);
-	editor::spell::RegisterModule(m_ClientWorld);
+	editor::spellcraft::RegisterModule(m_ClientWorld);
 	editor::sprite::RegisterModule(m_ClientWorld);
 	editor::table::RegisterModule(m_ClientWorld);
 	editor::texture::RegisterModule(m_ClientWorld);

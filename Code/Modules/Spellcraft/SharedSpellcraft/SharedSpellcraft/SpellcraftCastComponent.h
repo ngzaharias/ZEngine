@@ -5,7 +5,7 @@
 #include "ECS/Entity.h"
 #include "Math/Vector.h"
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	struct CastComponent final : public ecs::Component
 	{

@@ -4,7 +4,7 @@
 #include "ECS/Entity.h"
 #include "ECS/Event.h"
 
-namespace editor::spell
+namespace editor::spellcraft
 {
 	struct NodeCreateEvent final : public ecs::Event
 	{

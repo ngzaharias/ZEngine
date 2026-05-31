@@ -7,7 +7,7 @@ namespace ngraph
 	struct Node;
 }
 
-namespace editor::spell
+namespace editor::spellcraft
 {
 	void PushFieldColour(const ngraph::Field& field);
 	void PopFieldColour();

@@ -5,7 +5,7 @@
 #include "Core/Variant.h"
 #include "ECS/Component.h"
 
-namespace spellcraft::emitter
+namespace shared::spellcraft::emitter
 {
 	struct Explosion 
 	{
@@ -21,7 +21,7 @@ namespace spellcraft::emitter
 	};
 }
 
-namespace spellcraft::effect
+namespace shared::spellcraft::effect
 {
 	struct Damage 
 	{
@@ -33,7 +33,7 @@ namespace spellcraft::effect
 	};
 }
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	using Glyph = Variant<
 		effect::Damage,

@@ -3,22 +3,22 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	struct HealthComponent;
 	struct HealthTemplate;
 }
 
-namespace spellcraft
+namespace shared::spellcraft
 {
 	class HealthSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			spellcraft::HealthComponent>
+			shared::spellcraft::HealthComponent>
 			::Read<
-			spellcraft::HealthTemplate>;
+			shared::spellcraft::HealthTemplate>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
