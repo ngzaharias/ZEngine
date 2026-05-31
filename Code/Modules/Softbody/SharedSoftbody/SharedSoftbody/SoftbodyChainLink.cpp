@@ -10,13 +10,13 @@ namespace
 }
 
 template<>
-void Visitor::ReadCustom(softbody::ChainLink& value) const
+void Visitor::ReadCustom(shared::softbody::ChainLink& value) const
 {
 	Read(strDirection, value.m_Direction, value.m_Direction);
 	Read(strPosition, value.m_Position, value.m_Position);
 }
 template<>
-void Visitor::WriteCustom(const softbody::ChainLink& value)
+void Visitor::WriteCustom(const shared::softbody::ChainLink& value)
 {
 	Write(strDirection, value.m_Direction);
 	Write(strPosition, value.m_Position);

@@ -3,7 +3,7 @@
 #include "ECS/Component.h"
 #include "SharedSoftbody/SoftbodyChainLink.h"
 
-namespace softbody
+namespace shared::softbody
 {
 	struct ChainComponent final : public ecs::Component
 	{

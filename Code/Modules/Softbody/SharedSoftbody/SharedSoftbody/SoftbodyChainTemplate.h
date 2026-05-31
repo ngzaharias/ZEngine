@@ -4,7 +4,7 @@
 #include "ECS/Component.h"
 #include "Math/Vector.h"
 
-namespace softbody
+namespace shared::softbody
 {
 	struct ChainTemplate final : public ecs::TemplateComponent
 	{

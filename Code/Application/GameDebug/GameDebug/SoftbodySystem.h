@@ -14,7 +14,7 @@ namespace eng::settings
 	struct DebugComponent;
 }
 
-namespace softbody
+namespace shared::softbody
 {
 	struct ChainComponent;
 }
@@ -30,7 +30,7 @@ namespace debug
 			::Read<
 			eng::settings::DebugComponent,
 			eng::TransformComponent,
-			softbody::ChainComponent>;
+			shared::softbody::ChainComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

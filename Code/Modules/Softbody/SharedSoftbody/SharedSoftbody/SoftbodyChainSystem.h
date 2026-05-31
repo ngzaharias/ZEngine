@@ -12,13 +12,13 @@ namespace eng
 	struct TransformComponent;
 }
 
-namespace softbody
+namespace shared::softbody
 {
 	struct ChainComponent;
 	struct ChainTemplate;
 }
 
-namespace softbody
+namespace shared::softbody
 {
 	class ChainSystem final : public ecs::System
 	{
@@ -27,12 +27,12 @@ namespace softbody
 			::Write<
 			eng::InputManager,
 			eng::TransformComponent,
-			softbody::ChainComponent>
+			shared::softbody::ChainComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::WindowManager,
-			softbody::ChainTemplate>;
+			shared::softbody::ChainTemplate>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

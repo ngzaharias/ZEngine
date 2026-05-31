@@ -187,13 +187,13 @@ void editor::entity::Inspector::VisitCustom(const gui::main_menu::WindowTemplate
 }
 
 template<>
-void editor::entity::Inspector::VisitCustom(const softbody::ChainTemplate& valueOld)
+void editor::entity::Inspector::VisitCustom(const shared::softbody::ChainTemplate& valueOld)
 {
-	softbody::ChainTemplate valueNew = valueOld;
-	VISIT(softbody::ChainTemplate, m_Links);
-	VISIT(softbody::ChainTemplate, m_Angle);
-	VISIT(softbody::ChainTemplate, m_Radius);
-	VISIT(softbody::ChainTemplate, m_Gravity);
+	shared::softbody::ChainTemplate valueNew = valueOld;
+	VISIT(shared::softbody::ChainTemplate, m_Links);
+	VISIT(shared::softbody::ChainTemplate, m_Angle);
+	VISIT(shared::softbody::ChainTemplate, m_Radius);
+	VISIT(shared::softbody::ChainTemplate, m_Gravity);
 }
 
 #undef VISIT

@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace softbody
+namespace shared::softbody
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

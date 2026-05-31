@@ -25,9 +25,9 @@ void debug::SoftbodySystem::Update(World& world, const GameTime& gameTime)
 		return;
 
 	auto& lines = world.WriteComponent<eng::LinesComponent>();
-	for (auto&& view : world.Query<ecs::query::Include<const eng::TransformComponent, const softbody::ChainComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const eng::TransformComponent, const shared::softbody::ChainComponent>>())
 	{
-		const auto& chain = view.ReadRequired<softbody::ChainComponent>();
+		const auto& chain = view.ReadRequired<shared::softbody::ChainComponent>();
 		for (const auto& [i, link] : enumerate::Forward(chain.m_Links))
 		{
 			const Colour& colour = colour::Generate(i);

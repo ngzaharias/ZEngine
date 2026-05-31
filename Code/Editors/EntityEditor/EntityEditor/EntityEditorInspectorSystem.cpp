@@ -105,7 +105,7 @@ namespace
 		ToggleComponent<client::hidden::GroupTemplate>(world, entity);
 		ToggleComponent<client::hidden::ObjectTemplate>(world, entity);
 		ToggleComponent<hexmap::RootTemplate>(world, entity);
-		ToggleComponent<softbody::ChainTemplate>(world, entity);
+		ToggleComponent<shared::softbody::ChainTemplate>(world, entity);
 	}
 
 	void Draw_MenuBar(ecs::EntityWorld& world, const WindowView& view)
@@ -214,7 +214,7 @@ namespace
 		InspectComponent<shared::camera::Move3DTemplate>(world, entity, inspector);
 		InspectComponent<shared::camera::Pan3DTemplate>(world, entity, inspector);
 		InspectComponent<shared::camera::Zoom2DTemplate>(world, entity, inspector);
-		InspectComponent<softbody::ChainTemplate>(world, entity, inspector);
+		InspectComponent<shared::softbody::ChainTemplate>(world, entity, inspector);
 		inspector.End();
 
 		if (inspector.HasCommands())

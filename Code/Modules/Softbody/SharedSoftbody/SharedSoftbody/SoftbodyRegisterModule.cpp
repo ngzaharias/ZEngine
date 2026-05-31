@@ -8,15 +8,15 @@
 #include "SharedSoftbody/SoftbodyChainSystem.h"
 #include "SharedSoftbody/SoftbodyChainTemplate.h"
 
-void softbody::RegisterModule(ecs::EntityWorld& world)
+void shared::softbody::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<softbody::ChainComponent>();
-	world.RegisterComponent<softbody::ChainTemplate>();
-	world.RegisterSystem<softbody::ChainSystem>();
+	world.RegisterComponent<shared::softbody::ChainComponent>();
+	world.RegisterComponent<shared::softbody::ChainTemplate>();
+	world.RegisterSystem<shared::softbody::ChainSystem>();
 
 	// templates
 	{
 		auto& manager = world.WriteResource<eng::TemplateManager>();
-		manager.RegisterComponent<softbody::ChainTemplate>();
+		manager.RegisterComponent<shared::softbody::ChainTemplate>();
 	}
 }

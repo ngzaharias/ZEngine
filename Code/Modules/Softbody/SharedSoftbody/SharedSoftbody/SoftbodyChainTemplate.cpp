@@ -12,7 +12,7 @@ namespace
 }
 
 template<>
-void Visitor::ReadCustom(softbody::ChainTemplate& value) const
+void Visitor::ReadCustom(shared::softbody::ChainTemplate& value) const
 {
 	Read(strLinks, value.m_Links, value.m_Links);
 	Read(strAngle, value.m_Angle, value.m_Angle);
@@ -23,7 +23,7 @@ void Visitor::ReadCustom(softbody::ChainTemplate& value) const
 	value.m_Radius = math::Max(value.m_Radius, 0.f);
 }
 template<>
-void Visitor::WriteCustom(const softbody::ChainTemplate& value)
+void Visitor::WriteCustom(const shared::softbody::ChainTemplate& value)
 {
 	Write(strLinks, value.m_Links);
 	Write(strAngle, value.m_Angle);
