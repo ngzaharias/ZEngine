@@ -1,8 +1,19 @@
 project "ClientNetwork"
 	kind "StaticLib"
-	pchheader "ClientNetworkPCH.h"
-	pchsource "ClientNetwork/ClientNetworkPCH.cpp"
-	location "%{wks.location}/Modules/ClientNetwork"
+	pchheader "NetworkPCH.h"
+	pchsource "ClientNetwork/NetworkPCH.cpp"
+	location "%{wks.location}/Modules/Network/ClientNetwork"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
@@ -21,6 +32,6 @@ project "ClientNetwork"
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Network/",
-		"%{wks.location}/../Code/Modules/ClientNetwork/",
-		"%{wks.location}/../Code/Modules/SharedNetwork/",
+		"%{wks.location}/../Code/Modules/Network/ClientNetwork/",
+		"%{wks.location}/../Code/Modules/Network/SharedNetwork/",
 	}
