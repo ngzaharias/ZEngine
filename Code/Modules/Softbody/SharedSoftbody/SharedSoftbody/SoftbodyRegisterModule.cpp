@@ -1,12 +1,12 @@
 #include "SoftbodyPCH.h"
-#include "Softbody/SoftbodyRegisterModule.h"
+#include "SharedSoftbody/SoftbodyRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/TemplateManager.h"
-#include "Softbody/SoftbodyChainComponent.h"
-#include "Softbody/SoftbodyChainSystem.h"
-#include "Softbody/SoftbodyChainTemplate.h"
+#include "SharedSoftbody/SoftbodyChainComponent.h"
+#include "SharedSoftbody/SoftbodyChainSystem.h"
+#include "SharedSoftbody/SoftbodyChainTemplate.h"
 
 void softbody::RegisterModule(ecs::EntityWorld& world)
 {

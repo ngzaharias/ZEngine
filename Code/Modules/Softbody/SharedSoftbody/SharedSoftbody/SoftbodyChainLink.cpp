@@ -1,5 +1,5 @@
 #include "SoftbodyPCH.h"
-#include "Softbody/SoftbodyChainLink.h"
+#include "SharedSoftbody/SoftbodyChainLink.h"
 
 #include "Serialize/Visitor.h"
 

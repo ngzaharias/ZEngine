@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ECS/Component.h"
-#include "Softbody/SoftbodyChainLink.h"
+#include "SharedSoftbody/SoftbodyChainLink.h"
 
 namespace softbody
 {

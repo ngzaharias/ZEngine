@@ -1,5 +1,5 @@
 #include "SoftbodyPCH.h"
-#include "Softbody/SoftbodyChainSystem.h"
+#include "SharedSoftbody/SoftbodyChainSystem.h"
 
 #include "Core/Colour.h"
 #include "Core/GameTime.h"
@@ -15,8 +15,8 @@
 #include "Math/Math.h"
 #include "Math/Matrix.h"
 #include "Math/Plane.h"
-#include "Softbody/SoftbodyChainComponent.h"
-#include "Softbody/SoftbodyChainTemplate.h"
+#include "SharedSoftbody/SoftbodyChainComponent.h"
+#include "SharedSoftbody/SoftbodyChainTemplate.h"
 
 namespace
 {

@@ -1,15 +1,26 @@
-project "Softbody"
+project "SharedSoftbody"
 	kind "StaticLib"
 	pchheader "SoftbodyPCH.h"
-	pchsource "Softbody/SoftbodyPCH.cpp"
-	location "%{wks.location}/Modules/Softbody"
+	pchsource "SharedSoftbody/SoftbodyPCH.cpp"
+	location "%{wks.location}/Modules/Softbody/SharedSoftbody"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"Softbody/**.h", 
-			"Softbody/**.cpp", 
-			"Softbody/**.inl" } },
+			"SharedSoftbody/**.h", 
+			"SharedSoftbody/**.cpp", 
+			"SharedSoftbody/**.inl" } },
 	}
 
 	includedirs 
@@ -27,5 +38,5 @@ project "Softbody"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Softbody/",
+		"%{wks.location}/../Code/Modules/Softbody/SharedSoftbody/",
 	}
