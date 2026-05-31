@@ -1,5 +1,5 @@
-#include "SpellEditorPCH.h"
-#include "SpellEditor/SpellEditorHelpers.h"
+#include "SpellcraftPCH.h"
+#include "EditorSpellcraft/SpellcraftHelpers.h"
 
 #include "Core/Colour.h"
 #include "Core/Name.h"

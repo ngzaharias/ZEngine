@@ -1,11 +1,11 @@
 #include "SpellcraftPCH.h"
-#include "Spellcraft/SpellcraftBookSystem.h"
+#include "SharedSpellcraft/SpellcraftBookSystem.h"
 
 #include "Core/Guid.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Spellcraft/SpellcraftBookComponent.h"
+#include "SharedSpellcraft/SpellcraftBookComponent.h"
 
 namespace
 {

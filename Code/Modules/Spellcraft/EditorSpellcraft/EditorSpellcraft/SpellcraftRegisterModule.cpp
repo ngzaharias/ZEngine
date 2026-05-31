@@ -1,16 +1,16 @@
-#include "SpellEditorPCH.h"
-#include "SpellEditor/SpellEditorRegisterModule.h"
+#include "SpellcraftPCH.h"
+#include "EditorSpellcraft/SpellcraftRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "SpellEditor/SpellEditorGraphComponent.h"
-#include "SpellEditor/SpellEditorGraphSystem.h"
-#include "SpellEditor/SpellEditorLinkCreateEvent.h"
-#include "SpellEditor/SpellEditorLinkDestroyEvent.h"
-#include "SpellEditor/SpellEditorNodeCreateEvent.h"
-#include "SpellEditor/SpellEditorWindowComponent.h"
-#include "SpellEditor/SpellEditorWindowEvent.h"
-#include "SpellEditor/SpellEditorWindowSystem.h"
+#include "EditorSpellcraft/SpellcraftGraphComponent.h"
+#include "EditorSpellcraft/SpellcraftGraphSystem.h"
+#include "EditorSpellcraft/SpellcraftLinkCreateEvent.h"
+#include "EditorSpellcraft/SpellcraftLinkDestroyEvent.h"
+#include "EditorSpellcraft/SpellcraftNodeCreateEvent.h"
+#include "EditorSpellcraft/SpellcraftWindowComponent.h"
+#include "EditorSpellcraft/SpellcraftWindowEvent.h"
+#include "EditorSpellcraft/SpellcraftWindowSystem.h"
 
 void editor::spell::RegisterModule(ecs::EntityWorld& world)
 {

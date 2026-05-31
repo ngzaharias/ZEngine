@@ -1,5 +1,5 @@
 #include "SpellcraftPCH.h"
-#include "Spellcraft/SpellcraftProjectileSystem.h"
+#include "SharedSpellcraft/SpellcraftProjectileSystem.h"
 
 #include "Core/GameTime.h"
 #include "ECS/EntityWorld.h"
@@ -7,10 +7,10 @@
 #include "ECS/WorldView.h"
 #include "Engine/SpriteComponent.h"
 #include "Engine/TransformComponent.h"
-#include "Spellcraft/SpellcraftBookComponent.h"
-#include "Spellcraft/SpellcraftCastComponent.h"
-#include "Spellcraft/SpellcraftProjectileComponent.h"
-#include "Spellcraft/SpellcraftProjectileHitEvent.h"
+#include "SharedSpellcraft/SpellcraftBookComponent.h"
+#include "SharedSpellcraft/SpellcraftCastComponent.h"
+#include "SharedSpellcraft/SpellcraftProjectileComponent.h"
+#include "SharedSpellcraft/SpellcraftProjectileHitEvent.h"
 
 namespace
 {

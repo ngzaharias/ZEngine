@@ -1,15 +1,15 @@
 #include "SpellcraftPCH.h"
-#include "Spellcraft/SpellcraftCastSystem.h"
+#include "SharedSpellcraft/SpellcraftCastSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Spellcraft/SpellcraftBookComponent.h"
-#include "Spellcraft/SpellcraftCastComponent.h"
-#include "Spellcraft/SpellcraftExplosionComponent.h"
-#include "Spellcraft/SpellcraftExplosionHitEvent.h"
-#include "Spellcraft/SpellcraftProjectileComponent.h"
-#include "Spellcraft/SpellcraftProjectileHitEvent.h"
+#include "SharedSpellcraft/SpellcraftBookComponent.h"
+#include "SharedSpellcraft/SpellcraftCastComponent.h"
+#include "SharedSpellcraft/SpellcraftExplosionComponent.h"
+#include "SharedSpellcraft/SpellcraftExplosionHitEvent.h"
+#include "SharedSpellcraft/SpellcraftProjectileComponent.h"
+#include "SharedSpellcraft/SpellcraftProjectileHitEvent.h"
 
 void spellcraft::CastSystem::Update(World& world, const GameTime& gameTime)
 {

@@ -1,11 +1,11 @@
 #include "SpellcraftPCH.h"
-#include "Spellcraft/SpellcraftHealthSystem.h"
+#include "SharedSpellcraft/SpellcraftHealthSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Spellcraft/SpellcraftHealthComponent.h"
-#include "Spellcraft/SpellcraftHealthTemplate.h"
+#include "SharedSpellcraft/SpellcraftHealthComponent.h"
+#include "SharedSpellcraft/SpellcraftHealthTemplate.h"
 
 void spellcraft::HealthSystem::Update(World& world, const GameTime& gameTime)
 {

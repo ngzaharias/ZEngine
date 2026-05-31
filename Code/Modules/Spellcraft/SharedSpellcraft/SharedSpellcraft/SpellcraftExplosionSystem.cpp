@@ -1,5 +1,5 @@
 #include "SpellcraftPCH.h"
-#include "Spellcraft/SpellcraftExplosionSystem.h"
+#include "SharedSpellcraft/SpellcraftExplosionSystem.h"
 
 #include "Core/GameTime.h"
 #include "Core/Random.h"
@@ -8,10 +8,10 @@
 #include "ECS/WorldView.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/TransformComponent.h"
-#include "Spellcraft/SpellcraftBookComponent.h"
-#include "Spellcraft/SpellcraftCastComponent.h"
-#include "Spellcraft/SpellcraftExplosionComponent.h"
-#include "Spellcraft/SpellcraftExplosionHitEvent.h"
+#include "SharedSpellcraft/SpellcraftBookComponent.h"
+#include "SharedSpellcraft/SpellcraftCastComponent.h"
+#include "SharedSpellcraft/SpellcraftExplosionComponent.h"
+#include "SharedSpellcraft/SpellcraftExplosionHitEvent.h"
 
 namespace
 {

@@ -1,14 +1,14 @@
-#include "SpellEditorPCH.h"
-#include "SpellEditor/SpellEditorGraphSystem.h"
+#include "SpellcraftPCH.h"
+#include "EditorSpellcraft/SpellcraftGraphSystem.h"
 
 #include "ECS/EntityView.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "SpellEditor/SpellEditorGraphComponent.h"
-#include "SpellEditor/SpellEditorLinkCreateEvent.h"
-#include "SpellEditor/SpellEditorLinkDestroyEvent.h"
-#include "SpellEditor/SpellEditorNodeCreateEvent.h"
+#include "EditorSpellcraft/SpellcraftGraphComponent.h"
+#include "EditorSpellcraft/SpellcraftLinkCreateEvent.h"
+#include "EditorSpellcraft/SpellcraftLinkDestroyEvent.h"
+#include "EditorSpellcraft/SpellcraftNodeCreateEvent.h"
 
 void editor::spell::GraphSystem::Update(World& world, const GameTime& gameTime)
 {

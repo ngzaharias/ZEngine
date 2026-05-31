@@ -1,5 +1,5 @@
 #include "SpellcraftPCH.h"
-#include "Spellcraft/SpellcraftDamageSystem.h"
+#include "SharedSpellcraft/SpellcraftDamageSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
