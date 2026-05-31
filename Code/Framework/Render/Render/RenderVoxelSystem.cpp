@@ -17,7 +17,7 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "Math/Matrix.h"
-#include "Voxel/VoxelChunkComponent.h"
+#include "SharedVoxel/VoxelChunkComponent.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
