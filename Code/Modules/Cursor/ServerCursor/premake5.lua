@@ -1,8 +1,19 @@
 project "ServerCursor"
 	kind "StaticLib"
-	pchheader "ServerCursorPCH.h"
-	pchsource "ServerCursor/ServerCursorPCH.cpp"
-	location "%{wks.location}/Modules/ServerCursor"
+	pchheader "CursorPCH.h"
+	pchsource "ServerCursor/CursorPCH.cpp"
+	location "%{wks.location}/Modules/Cursor/ServerCursor"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
@@ -25,7 +36,7 @@ project "ServerCursor"
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Framework/Math/",
-		"%{wks.location}/../Code/Modules/ServerCursor/",
-		"%{wks.location}/../Code/Modules/ServerNetwork/",
-		"%{wks.location}/../Code/Modules/SharedCursor/",
+		"%{wks.location}/../Code/Modules/Cursor/ServerCursor/",
+		"%{wks.location}/../Code/Modules/Cursor/SharedCursor/",
+		"%{wks.location}/../Code/Modules/Network/ServerNetwork/",
 	}

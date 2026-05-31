@@ -1,4 +1,4 @@
-#include "ServerCursorPCH.h"
+#include "CursorPCH.h"
 #include "ServerCursor/CursorTransformSystem.h"
 
 #include "ECS/EntityWorld.h"
@@ -44,8 +44,11 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<server::network::PeerComponent>
-		::Include<server::cursor::TransformComponent, const server::network::PeerComponent>;
+		::Removed<
+		server::network::PeerComponent>
+		::Include<
+		server::cursor::TransformComponent, 
+		const server::network::PeerComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		const auto& peerComponent = view.ReadRequired<server::network::PeerComponent>();
