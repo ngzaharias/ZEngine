@@ -1,6 +1,6 @@
 #pragma once
 
-namespace voxel
+namespace shared::voxel
 {
 	constexpr int32 s_BlockCount1D = 16;
 	constexpr int32 s_BlockCount2D = s_BlockCount1D * s_BlockCount1D;

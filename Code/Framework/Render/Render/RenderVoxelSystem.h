@@ -24,7 +24,7 @@ namespace render
 	struct ShadowComponent;
 }
 
-namespace voxel
+namespace shared::voxel
 {
 	struct ChunkComponent;
 }
@@ -46,7 +46,7 @@ namespace render
 			eng::TransformComponent,
 			eng::WindowManager,
 			render::ShadowComponent,
-			voxel::ChunkComponent>;
+			shared::voxel::ChunkComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

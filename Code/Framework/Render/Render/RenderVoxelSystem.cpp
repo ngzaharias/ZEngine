@@ -95,10 +95,10 @@ void render::VoxelSystem::Update(World& world, const GameTime& gameTime)
 			::Include<
 			const eng::DynamicMeshComponent,
 			const eng::TransformComponent,
-			const voxel::ChunkComponent>;
+			const shared::voxel::ChunkComponent>;
 		for (auto&& renderView : world.Query<RenderQuery>())
 		{
-			const auto& voxelComponent = renderView.ReadRequired<voxel::ChunkComponent>();
+			const auto& voxelComponent = renderView.ReadRequired<shared::voxel::ChunkComponent>();
 			const auto& voxelDynamicMesh = renderView.ReadRequired<eng::DynamicMeshComponent>();
 			const auto& voxelTransform = renderView.ReadRequired<eng::TransformComponent>();
 

@@ -9,7 +9,7 @@ namespace eng
 	struct TransformComponent;
 }
 
-namespace voxel
+namespace shared::voxel
 {
 	struct ChunkChangedComponent;
 	struct ChunkComponent;
@@ -17,7 +17,7 @@ namespace voxel
 	struct ModifyComponent;
 }
 
-namespace voxel
+namespace shared::voxel
 {
 	class MeshingSystem final : public ecs::System
 	{
@@ -25,12 +25,12 @@ namespace voxel
 		using World = ecs::WorldView
 			::Write<
 			eng::DynamicMeshComponent,
-			voxel::ChunkComponent>
+			shared::voxel::ChunkComponent>
 			::Read<
 			eng::TransformComponent,
-			voxel::ChunkChangedComponent,
-			voxel::ChunkLoadedComponent,
-			voxel::ModifyComponent>;
+			shared::voxel::ChunkChangedComponent,
+			shared::voxel::ChunkLoadedComponent,
+			shared::voxel::ModifyComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

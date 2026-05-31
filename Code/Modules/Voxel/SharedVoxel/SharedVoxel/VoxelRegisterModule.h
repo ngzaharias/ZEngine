@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace voxel
+namespace shared::voxel
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

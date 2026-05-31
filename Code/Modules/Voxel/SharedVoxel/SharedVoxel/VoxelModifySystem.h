@@ -15,14 +15,14 @@ namespace eng
 	struct TransformComponent;
 }
 
-namespace voxel
+namespace shared::voxel
 {
 	struct ChunkComponent;
 	struct ModifyComponent;
 	struct ModifySettingsComponent;
 }
 
-namespace voxel
+namespace shared::voxel
 {
 	class ModifySystem final : public ecs::System
 	{
@@ -33,14 +33,14 @@ namespace voxel
 			eng::LinesComponent,
 			eng::TextComponent,
 			eng::TransformComponent,
-			voxel::ModifyComponent,
-			voxel::ModifySettingsComponent>
+			shared::voxel::ModifyComponent,
+			shared::voxel::ModifySettingsComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::EditorComponent,
 			eng::WindowManager,
-			voxel::ChunkComponent>;
+			shared::voxel::ChunkComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

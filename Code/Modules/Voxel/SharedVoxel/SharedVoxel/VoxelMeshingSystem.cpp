@@ -19,7 +19,7 @@
 namespace
 {
 	constexpr float s_VertA = 0.f;
-	constexpr float s_VertB = voxel::s_BlockSize1D;
+	constexpr float s_VertB = shared::voxel::s_BlockSize1D;
 
 	const Array<Vector3f> s_VerticesXNeg = {
 		Vector3f(s_VertA, s_VertA, s_VertB),
@@ -86,8 +86,8 @@ namespace
 
 	int32 ToInnerIndex(const Vector3i& innerPos)
 	{
-		constexpr int32 s_Count1D = voxel::s_BlockCount1D;
-		constexpr int32 s_Count2D = voxel::s_BlockCount2D;
+		constexpr int32 s_Count1D = shared::voxel::s_BlockCount1D;
+		constexpr int32 s_Count2D = shared::voxel::s_BlockCount2D;
 		return innerPos.x
 			+ innerPos.y * s_Count1D
 			+ innerPos.z * s_Count2D;
@@ -95,34 +95,34 @@ namespace
 
 	Vector3i ToInnerPos(const int32 innerIndex)
 	{
-		constexpr int32 s_Count1D = voxel::s_BlockCount1D;
-		constexpr int32 s_Count2D = voxel::s_BlockCount2D;
+		constexpr int32 s_Count1D = shared::voxel::s_BlockCount1D;
+		constexpr int32 s_Count2D = shared::voxel::s_BlockCount2D;
 		return Vector3i(
 			innerIndex % s_Count1D,
 			(innerIndex / s_Count1D) % s_Count1D,
 			(innerIndex / s_Count2D) % s_Count1D);
 	}
 
-	Vector3i ToNeighbourPos(Vector3i innerPos, const voxel::EDirection direction)
+	Vector3i ToNeighbourPos(Vector3i innerPos, const shared::voxel::EDirection direction)
 	{
 		switch (direction)
 		{
-		case voxel::EDirection::XNeg:
+		case shared::voxel::EDirection::XNeg:
 			innerPos.x--;
 			break;
-		case voxel::EDirection::XPos:
+		case shared::voxel::EDirection::XPos:
 			innerPos.x++;
 			break;
-		case voxel::EDirection::YNeg:
+		case shared::voxel::EDirection::YNeg:
 			innerPos.y--;
 			break;
-		case voxel::EDirection::YPos:
+		case shared::voxel::EDirection::YPos:
 			innerPos.y++;
 			break;
-		case voxel::EDirection::ZNeg:
+		case shared::voxel::EDirection::ZNeg:
 			innerPos.z--;
 			break;
-		case voxel::EDirection::ZPos:
+		case shared::voxel::EDirection::ZPos:
 			innerPos.z++;
 			break;
 		}
@@ -130,9 +130,9 @@ namespace
 		return innerPos;
 	}
 
-	bool HasBlock(const Vector3i& innerPos, const Array<voxel::Block>& data)
+	bool HasBlock(const Vector3i& innerPos, const Array<shared::voxel::Block>& data)
 	{
-		using namespace voxel;
+		using namespace shared::voxel;
 
 		if (innerPos.x < 0 || innerPos.y < 0 || innerPos.z < 0)
 			return false;
@@ -141,32 +141,32 @@ namespace
 
 		const int32 innerIndex = ToInnerIndex(innerPos);
 		const EType type = data[innerIndex].m_Type;
-		return type != voxel::EType::None;
+		return type != shared::voxel::EType::None;
 	}
 }
 
-void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
+void shared::voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	Set<ecs::Entity> entitiesToUpdate;
-	for (auto&& requestView : world.Query<ecs::query::Include<const voxel::ModifyComponent>>())
+	for (auto&& requestView : world.Query<ecs::query::Include<const shared::voxel::ModifyComponent>>())
 	{
-		const auto& modifyComponent = requestView.ReadRequired<voxel::ModifyComponent>();
-		for (const voxel::Modify& request : modifyComponent.m_Changes)
+		const auto& modifyComponent = requestView.ReadRequired<shared::voxel::ModifyComponent>();
+		for (const shared::voxel::Modify& request : modifyComponent.m_Changes)
 		{
-			for (auto&& chunkView : world.Query<ecs::query::Include<voxel::ChunkComponent, const eng::TransformComponent>>())
+			for (auto&& chunkView : world.Query<ecs::query::Include<shared::voxel::ChunkComponent, const eng::TransformComponent>>())
 			{
 				const auto& transform = chunkView.ReadRequired<eng::TransformComponent>();
 
-				const Vector3i requestPos = math::ToGridPos(request.m_WorldPos - transform.m_Translate, voxel::s_ChunkSize1D);
+				const Vector3i requestPos = math::ToGridPos(request.m_WorldPos - transform.m_Translate, shared::voxel::s_ChunkSize1D);
 				if (requestPos != Vector3i::Zero)
 					continue;
 
 				const Vector3f worldPos = request.m_WorldPos - transform.m_Translate;
-				const Vector3i innerPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
+				const Vector3i innerPos = math::ToGridPos(worldPos, shared::voxel::s_BlockSize1D);
 				const int32 innerIndex = ToInnerIndex(innerPos);
-				auto& chunk = chunkView.WriteRequired<voxel::ChunkComponent>();
+				auto& chunk = chunkView.WriteRequired<shared::voxel::ChunkComponent>();
 				chunk.m_Data[innerIndex] = request.m_Data;
 
 				entitiesToUpdate.Add(chunkView);
@@ -174,13 +174,13 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 		}
 	}
 
-	for (auto&& view : world.Query<ecs::query::Include<const voxel::ChunkComponent>::Exclude<const eng::DynamicMeshComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const shared::voxel::ChunkComponent>::Exclude<const eng::DynamicMeshComponent>>())
 		world.AddComponent<eng::DynamicMeshComponent>(view);
 
-	using ChunkAddedQuery = ecs::query::Added<const voxel::ChunkComponent>::Include<const eng::DynamicMeshComponent>;
-	using MeshAddedQuery = ecs::query::Added<const eng::DynamicMeshComponent>::Include<const voxel::ChunkComponent>;
-	using ChangedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const voxel::ChunkComponent, const voxel::ChunkChangedComponent>;
-	using LoadedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const voxel::ChunkComponent, const voxel::ChunkLoadedComponent>;
+	using ChunkAddedQuery = ecs::query::Added<const shared::voxel::ChunkComponent>::Include<const eng::DynamicMeshComponent>;
+	using MeshAddedQuery = ecs::query::Added<const eng::DynamicMeshComponent>::Include<const shared::voxel::ChunkComponent>;
+	using ChangedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const shared::voxel::ChunkComponent, const shared::voxel::ChunkChangedComponent>;
+	using LoadedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const shared::voxel::ChunkComponent, const shared::voxel::ChunkLoadedComponent>;
 
 	entitiesToUpdate.Add(world.Query<ChunkAddedQuery>());
 	entitiesToUpdate.Add(world.Query<MeshAddedQuery>());
@@ -189,7 +189,7 @@ void voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 
 	for (const ecs::Entity& entity : entitiesToUpdate)
 	{
-		const auto& chunkComponent = world.ReadComponent<voxel::ChunkComponent>(entity);
+		const auto& chunkComponent = world.ReadComponent<shared::voxel::ChunkComponent>(entity);
 		auto& meshComponent = world.WriteComponent<eng::DynamicMeshComponent>(entity);
 		meshComponent.m_Indices.RemoveAll();
 		meshComponent.m_Normals.RemoveAll();

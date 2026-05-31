@@ -3,11 +3,11 @@
 #include "ECS/Component.h"
 #include "SharedVoxel/VoxelTypes.h"
 
-namespace voxel
+namespace shared::voxel
 {
 	struct ModifySettingsComponent final : public ecs::StaticComponent
 	{
-		voxel::EType m_Type = voxel::EType::None;
+		EType m_Type = EType::None;
 		int32 m_Radius = 0;
 	};
 }

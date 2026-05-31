@@ -47,48 +47,48 @@ namespace
 	int32 ToInnerIndex(const Vector3i& innerPos)
 	{
 		return innerPos.x
-			+ innerPos.y * voxel::s_BlockCount1D
-			+ innerPos.z * voxel::s_BlockCount2D;
+			+ innerPos.y * shared::voxel::s_BlockCount1D
+			+ innerPos.z * shared::voxel::s_BlockCount2D;
 	}
 
-	Vector3f Raycast(voxel::ModifySystem::World& world, const Segment3f& segment)
+	Vector3f Raycast(shared::voxel::ModifySystem::World& world, const Segment3f& segment)
 	{
 		Array<ecs::Entity> voxelEntities;
 		auto& lines = world.WriteComponent<eng::LinesComponent>();
-		for (auto&& view : world.Query<ecs::query::Include<const eng::TransformComponent, const voxel::ChunkComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<const eng::TransformComponent, const shared::voxel::ChunkComponent>>())
 		{
 			const auto& transform = view.ReadRequired<eng::TransformComponent>();
-			const AABB3f aabb = AABB3f(transform.m_Translate, transform.m_Translate + Vector3f(voxel::s_ChunkSize1D));
+			const AABB3f aabb = AABB3f(transform.m_Translate, transform.m_Translate + Vector3f(shared::voxel::s_ChunkSize1D));
 
 			Vector3f intersectPos;
 			if (!math::Intersection(aabb, segment, intersectPos))
 				continue;
 
 			lines.AddAABB(
-				transform.m_Translate + Vector3f(voxel::s_ChunkSize1D * 0.5f),
-				voxel::s_ChunkSize1D * 0.51f,
+				transform.m_Translate + Vector3f(shared::voxel::s_ChunkSize1D * 0.5f),
+				shared::voxel::s_ChunkSize1D * 0.51f,
 				Vector4f(1.f));
 			voxelEntities.Append(view);
 		}
 
-		const path::Raytracer raytracer(segment.m_PointA, segment.m_PointB, voxel::s_BlockSize1D);
+		const path::Raytracer raytracer(segment.m_PointA, segment.m_PointB, shared::voxel::s_BlockSize1D);
 		for (const Vector3i& gridPos : raytracer)
 		{
-			const Vector3f worldPos = math::ToWorldPos(gridPos, voxel::s_BlockSize1D);
+			const Vector3f worldPos = math::ToWorldPos(gridPos, shared::voxel::s_BlockSize1D);
 			for (const ecs::Entity& voxelEntity : voxelEntities)
 			{
 				const auto& transform = world.ReadComponent<eng::TransformComponent>(voxelEntity);
 
-				const Vector3i requestPos = math::ToGridPos(worldPos - transform.m_Translate, voxel::s_ChunkSize1D);
+				const Vector3i requestPos = math::ToGridPos(worldPos - transform.m_Translate, shared::voxel::s_ChunkSize1D);
 				if (requestPos != Vector3i::Zero)
 					continue;
 
 				const Vector3f localPos = worldPos - transform.m_Translate;
-				const Vector3i innerPos = math::ToGridPos(localPos, voxel::s_BlockSize1D);
+				const Vector3i innerPos = math::ToGridPos(localPos, shared::voxel::s_BlockSize1D);
 				const int32 innerIndex = ToInnerIndex(innerPos);
-				const auto& chunkComponent = world.ReadComponent<voxel::ChunkComponent>(voxelEntity);
-				const voxel::Block& block = chunkComponent.m_Data[innerIndex];
-				if (block.m_Type == voxel::EType::None)
+				const auto& chunkComponent = world.ReadComponent<shared::voxel::ChunkComponent>(voxelEntity);
+				const shared::voxel::Block& block = chunkComponent.m_Data[innerIndex];
+				if (block.m_Type == shared::voxel::EType::None)
 					continue;
 
 				return worldPos;
@@ -109,11 +109,11 @@ namespace
 	}
 }
 
-void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
+void shared::voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<voxel::ChunkComponent>>())
+	if (world.HasAny<ecs::query::Added<shared::voxel::ChunkComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -139,14 +139,14 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<voxel::ChunkComponent>;
+		::Removed<shared::voxel::ChunkComponent>;
 	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.RemoveLayer(strInput);
 	}
-	
-	if (!world.HasAny<ecs::query::Include<voxel::ChunkComponent>>())
+
+	if (!world.HasAny<ecs::query::Include<shared::voxel::ChunkComponent>>())
 		return;
 
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
@@ -176,13 +176,13 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 
 		const Segment3f segment = Segment3f(ray.m_Position, ray.m_Position + ray.m_Direction * s_Distance);
 		const Vector3f worldPos = Raycast(world, segment);
-		const Vector3i gridPos = math::ToGridPos(worldPos, voxel::s_BlockSize1D);
-		const Vector3f alignPos = math::ToWorldPos(gridPos, voxel::s_BlockSize1D);
+		const Vector3i gridPos = math::ToGridPos(worldPos, shared::voxel::s_BlockSize1D);
+		const Vector3f alignPos = math::ToWorldPos(gridPos, shared::voxel::s_BlockSize1D);
 
 		auto& lines = world.WriteComponent<eng::LinesComponent>();
-		lines.AddAABB(alignPos, voxel::s_BlockSize1D * 0.5f, Vector4f(1.f));
+		lines.AddAABB(alignPos, shared::voxel::s_BlockSize1D * 0.5f, Vector4f(1.f));
 
-		auto& settings = world.WriteComponent<voxel::ModifySettingsComponent>();
+		auto& settings = world.WriteComponent<shared::voxel::ModifySettingsComponent>();
 		if (input.IsPressed(strRadius0))
 			settings.m_Radius = 0;
 		if (input.IsPressed(strRadius1))
@@ -199,39 +199,39 @@ void voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 			settings.m_Radius = 6;
 
 		if (input.IsPressed(strVoxel0))
-			settings.m_Type = voxel::EType::None;
+			settings.m_Type = shared::voxel::EType::None;
 		if (input.IsPressed(strVoxel1))
-			settings.m_Type = voxel::EType::Black;
+			settings.m_Type = shared::voxel::EType::Black;
 		if (input.IsPressed(strVoxel2))
-			settings.m_Type = voxel::EType::Green;
+			settings.m_Type = shared::voxel::EType::Green;
 		if (input.IsPressed(strVoxel3))
-			settings.m_Type = voxel::EType::Grey;
+			settings.m_Type = shared::voxel::EType::Grey;
 		if (input.IsPressed(strVoxel4))
-			settings.m_Type = voxel::EType::Orange;
+			settings.m_Type = shared::voxel::EType::Orange;
 		if (input.IsPressed(strVoxel5))
-			settings.m_Type = voxel::EType::Purple;
+			settings.m_Type = shared::voxel::EType::Purple;
 		if (input.IsPressed(strVoxel6))
-			settings.m_Type = voxel::EType::Red;
+			settings.m_Type = shared::voxel::EType::Red;
 
 		if (input.IsPressed(strSelect))
 		{
 			const ecs::Entity entity = world.CreateEntity();
-			auto& requestComponent = world.AddComponent<voxel::ModifyComponent>(entity);
+			auto& requestComponent = world.AddComponent<shared::voxel::ModifyComponent>(entity);
 
 			const int32 radius = settings.m_Radius;
-			const voxel::EType type = settings.m_Type;
+			const shared::voxel::EType type = settings.m_Type;
 			for (const Vector3i& index : enumerate::Vector(Vector3i(-radius), Vector3i(+radius)))
 			{
 				const Vector3f offset = Vector3f(
-					voxel::s_BlockSize1D * index.x,
-					voxel::s_BlockSize1D * index.y,
-					voxel::s_BlockSize1D * index.z);
+					shared::voxel::s_BlockSize1D * index.x,
+					shared::voxel::s_BlockSize1D * index.y,
+					shared::voxel::s_BlockSize1D * index.z);
 
-				requestComponent.m_Changes.Emplace(alignPos + offset, voxel::Block{ voxel::EFlags::None, type });
+				requestComponent.m_Changes.Emplace(alignPos + offset, shared::voxel::Block{ shared::voxel::EFlags::None, type });
 			}
 		}
 	}
 
-	for (auto&& view : world.Query<ecs::query::Include<const voxel::ModifyComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<const shared::voxel::ModifyComponent>>())
 		world.DestroyEntity(view);
 }

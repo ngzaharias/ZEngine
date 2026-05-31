@@ -105,7 +105,6 @@ void client::GameClient::Register(const Dependencies& dependencies)
 
 	// modules
 	{
-		shared::camera::RegisterModule(m_EntityWorld);
 		client::cursor::RegisterModule(m_EntityWorld);
 		client::hidden::RegisterModule(m_EntityWorld);
 		client::network::RegisterModule(m_EntityWorld);
@@ -115,15 +114,16 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		icon::RegisterModule(m_EntityWorld);
 		inventory::RegisterModule(m_EntityWorld);
 		render::RegisterModule(m_EntityWorld);
+		shared::camera::RegisterModule(m_EntityWorld);
 		shared::cursor::RegisterModule(m_EntityWorld);
 		shared::hidden::RegisterModule(m_EntityWorld);
 		shared::network::RegisterModule(m_EntityWorld);
+		shared::voxel::RegisterModule(m_EntityWorld);
 		softbody::RegisterModule(m_EntityWorld);
 		spellcraft::RegisterModule(m_EntityWorld);
 		tabletop::RegisterModule(m_EntityWorld);
 		tactics::RegisterModule(m_EntityWorld);
 		tilemap::RegisterModule(m_EntityWorld);
-		voxel::RegisterModule(m_EntityWorld);
 	}
 }
 

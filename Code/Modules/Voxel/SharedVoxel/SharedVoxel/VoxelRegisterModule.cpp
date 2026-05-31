@@ -13,20 +13,20 @@
 #include "SharedVoxel/VoxelModifySettingsComponent.h"
 #include "SharedVoxel/VoxelModifySystem.h"
 
-void voxel::RegisterModule(ecs::EntityWorld& world)
+void shared::voxel::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<voxel::ChunkChangedComponent>();
-	world.RegisterComponent<voxel::ChunkComponent>();
-	world.RegisterComponent<voxel::ChunkLoadedComponent>();
-	world.RegisterComponent<voxel::ChunkTemplate>();
-	world.RegisterComponent<voxel::ModifyComponent>();
-	world.RegisterComponent<voxel::ModifySettingsComponent>();
-	world.RegisterSystem<voxel::MeshingSystem>();
-	world.RegisterSystem<voxel::ModifySystem>();
+	world.RegisterComponent<shared::voxel::ChunkChangedComponent>();
+	world.RegisterComponent<shared::voxel::ChunkComponent>();
+	world.RegisterComponent<shared::voxel::ChunkLoadedComponent>();
+	world.RegisterComponent<shared::voxel::ChunkTemplate>();
+	world.RegisterComponent<shared::voxel::ModifyComponent>();
+	world.RegisterComponent<shared::voxel::ModifySettingsComponent>();
+	world.RegisterSystem<shared::voxel::MeshingSystem>();
+	world.RegisterSystem<shared::voxel::ModifySystem>();
 
 	// templates
 	{
 		auto& manager = world.WriteResource<eng::TemplateManager>();
-		manager.RegisterComponent<voxel::ChunkTemplate>();
+		manager.RegisterComponent<shared::voxel::ChunkTemplate>();
 	}
 }

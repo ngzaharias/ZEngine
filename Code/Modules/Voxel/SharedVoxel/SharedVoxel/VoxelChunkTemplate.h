@@ -4,10 +4,10 @@
 #include "ECS/Component.h"
 #include "SharedVoxel/VoxelTypes.h"
 
-namespace voxel
+namespace shared::voxel
 {
 	struct ChunkTemplate final : public ecs::TemplateComponent
 	{
-		Array<voxel::Block> m_Data;
+		Array<shared::voxel::Block> m_Data;
 	};
 }

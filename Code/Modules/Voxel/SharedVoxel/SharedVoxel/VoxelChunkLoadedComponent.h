@@ -2,7 +2,7 @@
 
 #include "ECS/Component.h"
 
-namespace voxel
+namespace shared::voxel
 {
 	struct ChunkLoadedComponent final : public ecs::FrameComponent { };
 }
