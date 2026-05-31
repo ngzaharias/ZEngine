@@ -1,5 +1,5 @@
 #include "CraftingPCH.h"
-#include "Crafting/CraftingIngredientTable.h"
+#include "SharedCrafting/CraftingIngredientTable.h"
 
 #include "Serialize/Visitor.h"
 

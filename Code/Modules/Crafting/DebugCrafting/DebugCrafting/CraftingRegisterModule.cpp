@@ -1,4 +1,4 @@
-#include "DebugCraftingPCH.h"
+#include "CraftingPCH.h"
 #include "DebugCrafting/CraftingRegisterModule.h"
 
 #include "DebugCrafting/CraftingWindowComponent.h"

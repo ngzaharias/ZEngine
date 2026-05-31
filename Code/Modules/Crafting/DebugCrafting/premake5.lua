@@ -1,8 +1,19 @@
 project "DebugCrafting"
 	kind "StaticLib"
-	pchheader "DebugCraftingPCH.h"
-	pchsource "DebugCrafting/DebugCraftingPCH.cpp"
-	location "%{wks.location}/Modules/DebugCrafting"
+	pchheader "CraftingPCH.h"
+	pchsource "DebugCrafting/CraftingPCH.cpp"
+	location "%{wks.location}/Modules/Crafting/DebugCrafting"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
@@ -24,6 +35,6 @@ project "DebugCrafting"
 		"%{wks.location}/../Code/Framework/Imgui/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Debuggers/DebugCrafting/",
-		"%{wks.location}/../Code/Modules/Crafting/",
+		"%{wks.location}/../Code/Modules/Crafting/DebugCrafting",
+		"%{wks.location}/../Code/Modules/Crafting/SharedCrafting",
 	}

@@ -1,6 +1,6 @@
-project "Crafting_ut"
+project "SharedCrafting_ut"
 	kind "ConsoleApp"
-	location "%{wks.location}/Modules/Crafting_ut"
+	location "%{wks.location}/Modules/Crafting/SharedCrafting_ut"
 
 	defines { "Z_UNIT_TEST" }
 
@@ -10,12 +10,23 @@ project "Crafting_ut"
 		"6319", 
 	}
 
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
+
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"Crafting_ut/**.h", 
-			"Crafting_ut/**.cpp", 
-			"Crafting_ut/**.inl" } },
+			"SharedCrafting_ut/**.h", 
+			"SharedCrafting_ut/**.cpp", 
+			"SharedCrafting_ut/**.inl" } },
 	}
 
 	includedirs 
@@ -28,7 +39,7 @@ project "Crafting_ut"
 		"%{wks.location}/../Code/Framework/Engine/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Crafting/",
+		"%{wks.location}/../Code/Modules/Crafting/SharedCrafting/",
 	}
 
 	libdirs 
@@ -44,7 +55,7 @@ project "Crafting_ut"
 		"Math",
 		"Serialize",
 
-		"Crafting",
+		"SharedCrafting",
 
 		"OptickCore.lib",
 	}

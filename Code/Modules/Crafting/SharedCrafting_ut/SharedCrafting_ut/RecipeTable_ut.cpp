@@ -1,7 +1,7 @@
 #include <Catch2/catch.hpp>
 
-#include "Crafting/CraftingRecipeTable.h"
 #include "Engine/TableHeadmaster.h"
+#include "SharedCrafting/CraftingRecipeTable.h"
 
 #define CLASS_TEST_CASE(name) TEST_CASE("crafting::RecipeTable. " name, "[crafting::RecipeTable]")
 

@@ -1,15 +1,15 @@
-#include "DebugCraftingPCH.h"
+#include "CraftingPCH.h"
 #include "DebugCrafting/CraftingWindowSystem.h"
 
 #include "Core/String.h"
-#include "Crafting/CraftingIngredientTable.h"
-#include "Crafting/CraftingRecipeTable.h"
 #include "DebugCrafting/CraftingWindowComponent.h"
 #include "DebugCrafting/CraftingWindowEvent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Math/Vector.h"
+#include "SharedCrafting/CraftingIngredientTable.h"
+#include "SharedCrafting/CraftingRecipeTable.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
