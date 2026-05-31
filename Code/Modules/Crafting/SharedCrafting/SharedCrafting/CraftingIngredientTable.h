@@ -4,14 +4,14 @@
 #include "Core/String.h"
 #include "Engine/TableManager.h"
 
-namespace crafting
+namespace shared::crafting
 {
 	struct Ingredient
 	{
 		str::String m_Name = {};
 	};
 
-	class IngredientTable final : public eng::TableManager<str::Guid, crafting::Ingredient>
+	class IngredientTable final : public eng::TableManager<str::Guid, shared::crafting::Ingredient>
 	{
 	};
 }

@@ -4,7 +4,7 @@
 #include "Core/String.h"
 #include "Engine/TableManager.h"
 
-namespace crafting
+namespace shared::crafting
 {
 	struct Recipe
 	{
@@ -12,7 +12,7 @@ namespace crafting
 		str::Guid m_Output = {};
 	};
 
-	class RecipeTable final : public eng::TableManager<str::Guid, crafting::Recipe>
+	class RecipeTable final : public eng::TableManager<str::Guid, shared::crafting::Recipe>
 	{
 	public:
 		str::Guid GetRecipe(const Array<str::Guid> ingredients) const;

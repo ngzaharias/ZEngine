@@ -41,7 +41,7 @@ void debug::crafting::WindowSystem::Update(World& world, const GameTime& gameTim
 		window.m_Label = ToLabel("Crafting Debugger", identifier);
 		window.m_Identifier = identifier;
 
-		const auto& ingredients = world.ReadResource<::crafting::IngredientTable>();
+		const auto& ingredients = world.ReadResource<shared::crafting::IngredientTable>();
 		for (const auto& [guid, ingredient] : ingredients.GetObjects())
 		{
 			window.m_Ingredients.Append(guid);
@@ -59,7 +59,7 @@ void debug::crafting::WindowSystem::Update(World& world, const GameTime& gameTim
 
 	for (auto&& windowView : world.Query<ecs::query::Include<debug::crafting::WindowComponent>>())
 	{
-		const auto& ingredients = world.ReadResource<::crafting::IngredientTable>();
+		const auto& ingredients = world.ReadResource<shared::crafting::IngredientTable>();
 		auto& window = windowView.WriteRequired<debug::crafting::WindowComponent>();
 
 		bool isWindowOpen = true;
@@ -82,7 +82,7 @@ void debug::crafting::WindowSystem::Update(World& world, const GameTime& gameTim
 				if (i < window.m_Ingredients.GetCount())
 				{
 					const str::Guid& guid = window.m_Ingredients[i];
-					const ::crafting::Ingredient& ingredient = ingredients.GetObject(guid);
+					const shared::crafting::Ingredient& ingredient = ingredients.GetObject(guid);
 
 					const str::String& label = ingredient.m_Name;
 					ImGui::Button(label.c_str(), s_ItemSize);

@@ -81,11 +81,11 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(headmaster.GetManager<eng::ColourTable>());
 		m_EntityWorld.RegisterResource(headmaster.GetManager<eng::ThemeTable>());
 
-		headmaster.Register<crafting::IngredientTable>("Ingredients");
-		m_EntityWorld.RegisterResource(headmaster.GetManager<crafting::IngredientTable>());
+		headmaster.Register<shared::crafting::IngredientTable>("Ingredients");
+		m_EntityWorld.RegisterResource(headmaster.GetManager<shared::crafting::IngredientTable>());
 
-		headmaster.Register<crafting::RecipeTable>("Recipes");
-		m_EntityWorld.RegisterResource(headmaster.GetManager<crafting::RecipeTable>());
+		headmaster.Register<shared::crafting::RecipeTable>("Recipes");
+		m_EntityWorld.RegisterResource(headmaster.GetManager<shared::crafting::RecipeTable>());
 	}
 
 	// engine
@@ -108,11 +108,11 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		client::cursor::RegisterModule(m_EntityWorld);
 		client::hidden::RegisterModule(m_EntityWorld);
 		client::network::RegisterModule(m_EntityWorld);
-		crafting::RegisterModule(m_EntityWorld);
 		gui::RegisterModule(m_EntityWorld);
 		icon::RegisterModule(m_EntityWorld);
 		render::RegisterModule(m_EntityWorld);
 		shared::camera::RegisterModule(m_EntityWorld);
+		shared::crafting::RegisterModule(m_EntityWorld);
 		shared::cursor::RegisterModule(m_EntityWorld);
 		shared::hexmap::RegisterModule(m_EntityWorld);
 		shared::hidden::RegisterModule(m_EntityWorld);

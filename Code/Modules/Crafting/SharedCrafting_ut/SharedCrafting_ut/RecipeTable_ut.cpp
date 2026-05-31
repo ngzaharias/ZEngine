@@ -16,11 +16,11 @@ namespace
 CLASS_TEST_CASE("Test.")
 {
 	eng::TableHeadmaster headmaster;
-	headmaster.Register<crafting::RecipeTable>("Recipes");
+	headmaster.Register<shared::crafting::RecipeTable>("Recipes");
 
-	auto& table = headmaster.GetManager<crafting::RecipeTable>();
+	auto& table = headmaster.GetManager<shared::crafting::RecipeTable>();
 	{
-		crafting::Recipe recipe;
+		shared::crafting::Recipe recipe;
 		recipe.m_Input = { strInputA, strInputB };
 		recipe.m_Output = strOutput;
 		table.AddObject(strRecipeA, recipe);

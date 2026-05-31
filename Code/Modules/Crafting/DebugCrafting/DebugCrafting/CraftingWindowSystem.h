@@ -6,16 +6,16 @@
 #include "ECS/WorldView.h"
 #include "imgui/Identifier.h"
 
-namespace crafting
-{
-	class IngredientTable;
-	class RecipeTable;
-}
-
 namespace debug::crafting
 {
 	struct WindowComponent;
 	struct WindowEvent;
+}
+
+namespace shared::crafting
+{
+	class IngredientTable;
+	class RecipeTable;
 }
 
 namespace debug::crafting
@@ -27,9 +27,9 @@ namespace debug::crafting
 			::Write<
 			debug::crafting::WindowComponent>
 			::Read<
-			::crafting::IngredientTable,
-			::crafting::RecipeTable,
-			debug::crafting::WindowEvent>;
+			debug::crafting::WindowEvent,
+			shared::crafting::IngredientTable,
+			shared::crafting::RecipeTable>;
 
 		void Update(World& world, const GameTime& gameTime);
 

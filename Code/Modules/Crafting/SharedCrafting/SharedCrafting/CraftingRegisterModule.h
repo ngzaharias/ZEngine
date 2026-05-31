@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace crafting
+namespace shared::crafting
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

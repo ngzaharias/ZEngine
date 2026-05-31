@@ -9,12 +9,12 @@ namespace
 }
 
 template<>
-void Visitor::WriteCustom(const crafting::Ingredient& value)
+void Visitor::WriteCustom(const shared::crafting::Ingredient& value)
 {
 	Write(strName, value.m_Name);
 }
 template<>
-void Visitor::ReadCustom(crafting::Ingredient& value) const
+void Visitor::ReadCustom(shared::crafting::Ingredient& value) const
 {
 	Read(strName, value.m_Name, value.m_Name);
 }

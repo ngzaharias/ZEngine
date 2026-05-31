@@ -10,19 +10,19 @@ namespace
 }
 
 template<>
-void Visitor::WriteCustom(const crafting::Recipe& value)
+void Visitor::WriteCustom(const shared::crafting::Recipe& value)
 {
 	Write(strInput, value.m_Input);
 	Write(strOutput, value.m_Output);
 }
 template<>
-void Visitor::ReadCustom(crafting::Recipe& value) const
+void Visitor::ReadCustom(shared::crafting::Recipe& value) const
 {
 	Read(strInput, value.m_Input, value.m_Input);
 	Read(strOutput, value.m_Output, value.m_Output);
 }
 
-str::Guid crafting::RecipeTable::GetRecipe(const Array<str::Guid> ingredients) const
+str::Guid shared::crafting::RecipeTable::GetRecipe(const Array<str::Guid> ingredients) const
 {
 	for (const auto& [key, recipe] : m_ObjectMap)
 	{
