@@ -1,5 +1,5 @@
 #include "HexmapPCH.h"
-#include "Hexmap/HexmapModifySystem.h"
+#include "SharedHexmap/HexmapModifySystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -10,14 +10,14 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Hexmap/HexmapHelpers.h"
-#include "Hexmap/HexmapLayerComponent.h"
-#include "Hexmap/HexmapRootComponent.h"
 #include "Math/CollisionMath.h"
 #include "Math/Hexagon.h"
 #include "Math/HexagonHelpers.h"
 #include "Math/Plane.h"
 #include "Math/Ray.h"
+#include "SharedHexmap/HexmapHelpers.h"
+#include "SharedHexmap/HexmapLayerComponent.h"
+#include "SharedHexmap/HexmapRootComponent.h"
 
 namespace
 {

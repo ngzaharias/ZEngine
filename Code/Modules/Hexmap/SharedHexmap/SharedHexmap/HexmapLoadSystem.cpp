@@ -1,5 +1,5 @@
 #include "HexmapPCH.h"
-#include "Hexmap/HexmapLoadSystem.h"
+#include "SharedHexmap/HexmapLoadSystem.h"
 
 #include "Core/Algorithms.h"
 #include "Core/Colour.h"
@@ -9,13 +9,13 @@
 #include "ECS/WorldView.h"
 #include "Engine/LevelEntityComponent.h"
 #include "Engine/TransformComponent.h"
-#include "Hexmap/HexmapHelpers.h"
-#include "Hexmap/HexmapLayerComponent.h"
-#include "Hexmap/HexmapRootComponent.h"
 #include "Math/Algorithms.h"
 #include "Math/CollisionMath.h"
 #include "Math/Hexagon.h"
 #include "Math/HexagonHelpers.h"
+#include "SharedHexmap/HexmapHelpers.h"
+#include "SharedHexmap/HexmapLayerComponent.h"
+#include "SharedHexmap/HexmapRootComponent.h"
 
 void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 {

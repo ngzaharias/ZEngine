@@ -1,13 +1,13 @@
 #include "HexmapPCH.h"
-#include "Hexmap/HexmapRenderSystem.h"
+#include "SharedHexmap/HexmapRenderSystem.h"
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/AssetManager.h"
-#include "Engine/CameraHelpers.h"
 #include "Engine/CameraComponent.h"
+#include "Engine/CameraHelpers.h"
 #include "Engine/ColourHelpers.h"
 #include "Engine/SettingsDebugComponent.h"
 #include "Engine/ShaderAsset.h"
@@ -17,9 +17,9 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "Hexmap/HexmapLayerComponent.h"
-#include "Hexmap/HexmapRootComponent.h"
 #include "Math/HexagonHelpers.h"
+#include "SharedHexmap/HexmapLayerComponent.h"
+#include "SharedHexmap/HexmapRootComponent.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>

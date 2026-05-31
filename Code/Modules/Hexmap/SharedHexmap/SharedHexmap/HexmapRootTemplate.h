@@ -2,8 +2,8 @@
 
 #include "Core/GUID.h"
 #include "ECS/Component.h"
-#include "Hexmap/HexmapData.h"
 #include "Math/AABB.h"
+#include "SharedHexmap/HexmapData.h"
 
 namespace hexmap
 {

@@ -1,5 +1,5 @@
 #include "HexmapPCH.h"
-#include "Hexmap/HexmapRootTemplate.h"
+#include "SharedHexmap/HexmapRootTemplate.h"
 
 #include "Engine/AssetManager.h"
 #include "Engine/InspectorHelpers.h"

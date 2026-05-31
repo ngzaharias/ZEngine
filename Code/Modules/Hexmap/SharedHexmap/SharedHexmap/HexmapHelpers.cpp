@@ -1,7 +1,7 @@
 #include "HexmapPCH.h"
-#include "Hexmap/HexmapData.h"
+#include "SharedHexmap/HexmapData.h"
 
-#include "Hexmap/HexmapHelpers.h"
+#include "SharedHexmap/HexmapHelpers.h"
 #include "Math/Vector.h"
 
 hexmap::LayerPos hexmap::ToLayerPos(const HexPos& hexPos, const Vector2i& stride)

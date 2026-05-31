@@ -4,7 +4,7 @@
 #include "Core/Set.h"
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
-#include "Hexmap/HexmapData.h"
+#include "SharedHexmap/HexmapData.h"
 
 namespace hexmap
 {
