@@ -1,4 +1,4 @@
-#include "ClientHiddenPCH.h"
+#include "HiddenPCH.h"
 #include "ClientHidden/HiddenGroupTemplate.h"
 
 #include "Serialize/Visitor.h"

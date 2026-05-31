@@ -1,8 +1,19 @@
 project "SharedHidden"
 	kind "StaticLib"
-	pchheader "SharedHiddenPCH.h"
-	pchsource "SharedHidden/SharedHiddenPCH.cpp"
-	location "%{wks.location}/Modules/SharedHidden"
+	pchheader "HiddenPCH.h"
+	pchsource "SharedHidden/HiddenPCH.cpp"
+	location "%{wks.location}/Modules/Hidden/SharedHidden"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
@@ -19,5 +30,5 @@ project "SharedHidden"
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Math/",
-		"%{wks.location}/../Code/Modules/SharedHidden/",
+		"%{wks.location}/../Code/Modules/Hidden/SharedHidden/",
 	}

@@ -1,4 +1,4 @@
-#include "ClientHiddenPCH.h"
+#include "HiddenPCH.h"
 #include "ClientHidden/HiddenGroupSystem.h"
 
 #include "ClientHidden/HiddenGroupComponent.h"

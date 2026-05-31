@@ -1,4 +1,4 @@
-#include "ClientHiddenPCH.h"
+#include "HiddenPCH.h"
 #include "ClientHidden/HiddenVFXSystem.h"
 
 #include "ClientHidden/HiddenRevealComponent.h"

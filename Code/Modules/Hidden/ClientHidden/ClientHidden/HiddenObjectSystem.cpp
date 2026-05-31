@@ -1,4 +1,4 @@
-#include "ClientHiddenPCH.h"
+#include "HiddenPCH.h"
 #include "ClientHidden/HiddenObjectSystem.h"
 
 #include "ClientHidden/HiddenObjectComponent.h"

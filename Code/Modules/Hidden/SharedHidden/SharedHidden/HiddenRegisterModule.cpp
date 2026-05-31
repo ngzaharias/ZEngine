@@ -1,4 +1,4 @@
-#include "SharedHiddenPCH.h"
+#include "HiddenPCH.h"
 #include "SharedHidden/HiddenRegisterModule.h"
 
 #include "ECS/EntityWorld.h"

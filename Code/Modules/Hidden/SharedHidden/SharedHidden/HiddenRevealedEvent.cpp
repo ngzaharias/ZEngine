@@ -1,4 +1,4 @@
-#include "SharedHiddenPCH.h"
+#include "HiddenPCH.h"
 #include "SharedHidden/HiddenRevealedEvent.h"
 
 #include "Core/MemBuffer.h"

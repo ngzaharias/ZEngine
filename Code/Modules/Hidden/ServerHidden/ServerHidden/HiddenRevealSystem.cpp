@@ -1,4 +1,4 @@
-#include "ServerHiddenPCH.h"
+#include "HiddenPCH.h"
 #include "ServerHidden/HiddenRevealSystem.h"
 
 #include "Core/Profiler.h"

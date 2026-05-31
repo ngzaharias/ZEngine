@@ -1,4 +1,4 @@
-#include "ClientHiddenPCH.h"
+#include "HiddenPCH.h"
 #include "ClientHidden/HiddenRegisterModule.h"
 
 #include "ClientHidden/HiddenCountComponent.h"
