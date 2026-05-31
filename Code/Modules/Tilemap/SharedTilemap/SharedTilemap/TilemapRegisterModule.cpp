@@ -1,14 +1,14 @@
 #include "TilemapPCH.h"
-#include "Tilemap/TilemapRegisterModule.h"
+#include "SharedTilemap/TilemapRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/TemplateManager.h"
-#include "Tilemap/TilemapAgentComponent.h"
-#include "Tilemap/TilemapAgentTemplate.h"
-#include "Tilemap/TilemapDebugSystem.h"
-#include "Tilemap/TilemapGridComponent.h"
-#include "Tilemap/TilemapGridTemplate.h"
+#include "SharedTilemap/TilemapAgentComponent.h"
+#include "SharedTilemap/TilemapAgentTemplate.h"
+#include "SharedTilemap/TilemapDebugSystem.h"
+#include "SharedTilemap/TilemapGridComponent.h"
+#include "SharedTilemap/TilemapGridTemplate.h"
 
 void tilemap::RegisterModule(ecs::EntityWorld& world)
 {

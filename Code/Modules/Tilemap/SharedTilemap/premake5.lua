@@ -1,15 +1,26 @@
-project "Tilemap"
+project "SharedTilemap"
 	kind "StaticLib"
 	pchheader "TilemapPCH.h"
-	pchsource "Tilemap/TilemapPCH.cpp"
-	location "%{wks.location}/Modules/Tilemap"
+	pchsource "SharedTilemap/TilemapPCH.cpp"
+	location "%{wks.location}/Modules/Tilemap/SharedTilemap"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"Tilemap/**.h", 
-			"Tilemap/**.cpp", 
-			"Tilemap/**.inl" } },
+			"SharedTilemap/**.h", 
+			"SharedTilemap/**.cpp", 
+			"SharedTilemap/**.inl" } },
 	}
 
 	includedirs 
@@ -25,5 +36,5 @@ project "Tilemap"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Tilemap/",
+		"%{wks.location}/../Code/Modules/Tilemap/SharedTilemap/",
 	}

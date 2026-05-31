@@ -1,5 +1,5 @@
 #include "TilemapPCH.h"
-#include "Tilemap/TilemapDebugSystem.h"
+#include "SharedTilemap/TilemapDebugSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -17,8 +17,8 @@
 #include "Math/Quaternion.h"
 #include "Math/Ray.h"
 #include "Math/VectorMath.h"
-#include "Tilemap/TilemapAgentComponent.h"
-#include "Tilemap/TilemapGridComponent.h"
+#include "SharedTilemap/TilemapAgentComponent.h"
+#include "SharedTilemap/TilemapGridComponent.h"
 
 void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 {

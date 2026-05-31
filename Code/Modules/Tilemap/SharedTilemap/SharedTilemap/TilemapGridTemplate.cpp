@@ -1,5 +1,5 @@
 #include "TilemapPCH.h"
-#include "Tilemap/TilemapGridTemplate.h"
+#include "SharedTilemap/TilemapGridTemplate.h"
 
 #include "Serialize/Visitor.h"
 
