@@ -21,23 +21,23 @@
 #include "SharedInventory/InventoryStorageDestroyResultComponent.h"
 #include "SharedInventory/InventoryStorageSystem.h"
 
-void inventory::RegisterModule(ecs::EntityWorld& world)
+void shared::inventory::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<inventory::MemberAddRequestComponent>();
-	world.RegisterComponent<inventory::MemberAddResultComponent>();
-	world.RegisterComponent<inventory::MemberComponent>();
-	world.RegisterComponent<inventory::MemberMoveRequestComponent>();
-	world.RegisterComponent<inventory::MemberMoveResultComponent>();
-	world.RegisterComponent<inventory::MemberRemoveRequestComponent>();
-	world.RegisterComponent<inventory::MemberRemoveResultComponent>();
-	world.RegisterComponent<inventory::OwnerComponent>();
-	world.RegisterComponent<inventory::StorageChangesComponent>();
-	world.RegisterComponent<inventory::StorageComponent>();
-	world.RegisterComponent<inventory::StorageCreateRequestComponent>();
-	world.RegisterComponent<inventory::StorageCreateResultComponent>();
-	world.RegisterComponent<inventory::StorageDestroyRequestComponent>();
-	world.RegisterComponent<inventory::StorageDestroyResultComponent>();
-	world.RegisterSystem<inventory::MemberSystem>();
-	world.RegisterSystem<inventory::OwnerSystem>();
-	world.RegisterSystem<inventory::StorageSystem>();
+	world.RegisterComponent<shared::inventory::MemberAddRequestComponent>();
+	world.RegisterComponent<shared::inventory::MemberAddResultComponent>();
+	world.RegisterComponent<shared::inventory::MemberComponent>();
+	world.RegisterComponent<shared::inventory::MemberMoveRequestComponent>();
+	world.RegisterComponent<shared::inventory::MemberMoveResultComponent>();
+	world.RegisterComponent<shared::inventory::MemberRemoveRequestComponent>();
+	world.RegisterComponent<shared::inventory::MemberRemoveResultComponent>();
+	world.RegisterComponent<shared::inventory::OwnerComponent>();
+	world.RegisterComponent<shared::inventory::StorageChangesComponent>();
+	world.RegisterComponent<shared::inventory::StorageComponent>();
+	world.RegisterComponent<shared::inventory::StorageCreateRequestComponent>();
+	world.RegisterComponent<shared::inventory::StorageCreateResultComponent>();
+	world.RegisterComponent<shared::inventory::StorageDestroyRequestComponent>();
+	world.RegisterComponent<shared::inventory::StorageDestroyResultComponent>();
+	world.RegisterSystem<shared::inventory::MemberSystem>();
+	world.RegisterSystem<shared::inventory::OwnerSystem>();
+	world.RegisterSystem<shared::inventory::StorageSystem>();
 }

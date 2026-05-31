@@ -5,14 +5,14 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	struct MemberComponent;
 	struct StorageChangesComponent;
 	struct StorageComponent;
 }
 
-namespace inventory
+namespace shared::inventory
 {
 	/// \brief Handles adding/removing of member component on an entity.
 	class MemberSystem final : public ecs::System
@@ -20,10 +20,10 @@ namespace inventory
 	public:
 		using World = ecs::WorldView
 			::Write<
-			inventory::MemberComponent>
+			shared::inventory::MemberComponent>
 			::Read<
-			inventory::StorageComponent,
-			inventory::StorageChangesComponent>;
+			shared::inventory::StorageComponent,
+			shared::inventory::StorageChangesComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

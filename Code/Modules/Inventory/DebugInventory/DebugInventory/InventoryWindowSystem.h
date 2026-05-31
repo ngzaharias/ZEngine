@@ -12,7 +12,7 @@ namespace debug::inventory
 	struct WindowEvent;
 }
 
-namespace inventory
+namespace shared::inventory
 {
 	struct MemberAddRequestComponent;
 	struct MemberMoveRequestComponent;
@@ -31,15 +31,15 @@ namespace debug::inventory
 		using World = ecs::WorldView
 			::Write<
 			debug::inventory::WindowComponent,
-			::inventory::MemberAddRequestComponent,
-			::inventory::MemberMoveRequestComponent,
-			::inventory::StorageCreateRequestComponent,
-			::inventory::StorageDestroyRequestComponent>
+			shared::inventory::MemberAddRequestComponent,
+			shared::inventory::MemberMoveRequestComponent,
+			shared::inventory::StorageCreateRequestComponent,
+			shared::inventory::StorageDestroyRequestComponent>
 			::Read<
 			debug::inventory::WindowEvent,
-			::inventory::StorageComponent,
-			::inventory::StorageCreateResultComponent,
-			::inventory::StorageDestroyResultComponent>;
+			shared::inventory::StorageComponent,
+			shared::inventory::StorageCreateResultComponent,
+			shared::inventory::StorageDestroyResultComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

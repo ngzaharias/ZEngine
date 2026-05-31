@@ -5,7 +5,7 @@
 #include "ECS/Component.h"
 #include "SharedInventory/InventoryMemberEnum.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	struct MemberAdded
 	{

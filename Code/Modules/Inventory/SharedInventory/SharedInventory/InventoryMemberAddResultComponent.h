@@ -5,7 +5,7 @@
 #include "ECS/Entity.h"
 #include "SharedInventory/InventoryErrorEnum.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	/// \brief Result of a request made to a member component.
 	struct MemberAddResultComponent final : public ecs::FrameComponent

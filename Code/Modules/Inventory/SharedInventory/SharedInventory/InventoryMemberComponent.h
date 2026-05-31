@@ -4,7 +4,7 @@
 #include "ECS/Entity.h"
 #include "SharedInventory/InventoryMemberEnum.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	/// \brief Holds all information of a single member inside a container.
 	struct MemberComponent final : public ecs::Component

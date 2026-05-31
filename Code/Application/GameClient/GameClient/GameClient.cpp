@@ -112,11 +112,11 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		gui::RegisterModule(m_EntityWorld);
 		hexmap::RegisterModule(m_EntityWorld);
 		icon::RegisterModule(m_EntityWorld);
-		inventory::RegisterModule(m_EntityWorld);
 		render::RegisterModule(m_EntityWorld);
 		shared::camera::RegisterModule(m_EntityWorld);
 		shared::cursor::RegisterModule(m_EntityWorld);
 		shared::hidden::RegisterModule(m_EntityWorld);
+		shared::inventory::RegisterModule(m_EntityWorld);
 		shared::network::RegisterModule(m_EntityWorld);
 		shared::softbody::RegisterModule(m_EntityWorld);
 		shared::spellcraft::RegisterModule(m_EntityWorld);

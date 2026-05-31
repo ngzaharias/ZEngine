@@ -28,23 +28,23 @@ namespace
 	{
 		RAIIHelper()
 		{
-			m_EntityWorld.RegisterComponent<inventory::MemberAddRequestComponent>();
-			m_EntityWorld.RegisterComponent<inventory::MemberAddResultComponent>();
-			m_EntityWorld.RegisterComponent<inventory::MemberComponent>();
-			m_EntityWorld.RegisterComponent<inventory::MemberMoveRequestComponent>();
-			m_EntityWorld.RegisterComponent<inventory::MemberMoveResultComponent>();
-			m_EntityWorld.RegisterComponent<inventory::MemberRemoveRequestComponent>();
-			m_EntityWorld.RegisterComponent<inventory::MemberRemoveResultComponent>();
-			m_EntityWorld.RegisterComponent<inventory::OwnerComponent>();
-			m_EntityWorld.RegisterComponent<inventory::StorageComponent>();
-			m_EntityWorld.RegisterComponent<inventory::StorageCreateRequestComponent>();
-			m_EntityWorld.RegisterComponent<inventory::StorageCreateResultComponent>();
-			m_EntityWorld.RegisterComponent<inventory::StorageDestroyRequestComponent>();
-			m_EntityWorld.RegisterComponent<inventory::StorageDestroyResultComponent>();
-			m_EntityWorld.RegisterComponent<inventory::StorageChangesComponent>();
-			m_EntityWorld.RegisterSystem<inventory::StorageSystem>();
-			m_EntityWorld.RegisterSystem<inventory::MemberSystem>();
-			m_EntityWorld.RegisterSystem<inventory::OwnerSystem>();
+			m_EntityWorld.RegisterComponent<shared::inventory::MemberAddRequestComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::MemberAddResultComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::MemberComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::MemberMoveRequestComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::MemberMoveResultComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::MemberRemoveRequestComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::MemberRemoveResultComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::OwnerComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::StorageComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::StorageCreateRequestComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::StorageCreateResultComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::StorageDestroyRequestComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::StorageDestroyResultComponent>();
+			m_EntityWorld.RegisterComponent<shared::inventory::StorageChangesComponent>();
+			m_EntityWorld.RegisterSystem<shared::inventory::StorageSystem>();
+			m_EntityWorld.RegisterSystem<shared::inventory::MemberSystem>();
+			m_EntityWorld.RegisterSystem<shared::inventory::OwnerSystem>();
 
 			Initialise();
 		}
@@ -56,7 +56,7 @@ namespace
 		const ecs::Entity requestEntity = world.CreateEntity();
 		world.Update();
 
-		auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(requestEntity);
+		auto& requestComponent = world.AddComponent<shared::inventory::MemberAddRequestComponent>(requestEntity);
 		requestComponent.m_Member = memberEntity;
 		requestComponent.m_Storage = storageEntity;
 		world.Update(2);
@@ -69,15 +69,15 @@ namespace
 		const ecs::Entity requestEntity = world.CreateEntity();
 		world.Update();
 
-		world.AddComponent<inventory::StorageCreateRequestComponent>(requestEntity);
+		world.AddComponent<shared::inventory::StorageCreateRequestComponent>(requestEntity);
 		world.Update(2);
 
-		const auto& resultComponent = world.ReadComponent<inventory::StorageCreateResultComponent>(requestEntity);
+		const auto& resultComponent = world.ReadComponent<shared::inventory::StorageCreateResultComponent>(requestEntity);
 		return resultComponent.m_Storage;
 	}
 }
 
-TEST_CASE("inventory::MemberSystem::Member Add")
+TEST_CASE("shared::inventory::MemberSystem::Member Add")
 {
 	RAIIHelper world;
 
@@ -95,81 +95,81 @@ TEST_CASE("inventory::MemberSystem::Member Add")
 	{
 		// request add
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberAddRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = ecs::Entity::Unassigned;
 			requestComponent.m_Storage = storageEntity;
 		}
 
 		world.Update(2);
-		CHECK(!world.HasComponent<inventory::MemberComponent>(ecs::Entity::Unassigned));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(ecs::Entity::Unassigned));
 	}
 
 	SECTION("Member is Dead Entity")
 	{
 		// request add
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberAddRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = deadEntity;
 			requestComponent.m_Storage = storageEntity;
 		}
 
 		world.Update(2);
-		CHECK(!world.HasComponent<inventory::MemberComponent>(deadEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(deadEntity));
 	}
 
 	SECTION("Storage is Unassigned Entity")
 	{
 		// request add
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberAddRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 			requestComponent.m_Storage = ecs::Entity::Unassigned;
 		}
 
 		world.Update(2);
-		CHECK(!world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Storage is Dead Entity")
 	{
 		// request add
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberAddRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 			requestComponent.m_Storage = deadEntity;
 		}
 
 		world.Update(2);
-		CHECK(!world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Storage Destroyed in Previous Frame")
 	{
 		// remove storage
-		world.RemoveComponent<inventory::StorageComponent>(storageEntity);
+		world.RemoveComponent<shared::inventory::StorageComponent>(storageEntity);
 		world.Update();
 
 		// request add
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberAddRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 			requestComponent.m_Storage = storageEntity;
 		}
 
 		world.Update(2);
-		CHECK(!world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Duplicate Request in Previous Frame")
 	{
 		// request add
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberAddRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 			requestComponent.m_Storage = storageEntity;
@@ -179,24 +179,24 @@ TEST_CASE("inventory::MemberSystem::Member Add")
 
 		// request add
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(requestBEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberAddRequestComponent>(requestBEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 			requestComponent.m_Storage = storageEntity;
 		}
 
 		world.Update();
-		CHECK(world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 
 		world.Update();
-		CHECK(world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Duplicate Request in Same Frame")
 	{
 		// request add
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberAddRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 			requestComponent.m_Storage = storageEntity;
@@ -204,21 +204,21 @@ TEST_CASE("inventory::MemberSystem::Member Add")
 
 		// request add
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(requestBEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberAddRequestComponent>(requestBEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 			requestComponent.m_Storage = storageEntity;
 		}
 
 		world.Update(2);
-		CHECK(world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Regular Flow")
 	{
 		// request add
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberAddRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberAddRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Storage = storageEntity;
 			requestComponent.m_Member = memberEntity;
@@ -229,11 +229,11 @@ TEST_CASE("inventory::MemberSystem::Member Add")
 		}
 
 		world.Update(2);
-		CHECK(world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 }
 
-TEST_CASE("inventory::MemberSystem::Member Remove")
+TEST_CASE("shared::inventory::MemberSystem::Member Remove")
 {
 	RAIIHelper world;
 
@@ -248,10 +248,10 @@ TEST_CASE("inventory::MemberSystem::Member Remove")
 	world.Update();
 
 	{
-		REQUIRE(world.HasComponent<inventory::MemberComponent>(memberEntity));
-		REQUIRE(world.HasComponent<inventory::StorageComponent>(storageEntity));
-		const auto& memberComponent = world.ReadComponent<inventory::MemberComponent>(memberEntity);
-		const auto& storageComponent = world.ReadComponent<inventory::StorageComponent>(storageEntity);
+		REQUIRE(world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
+		REQUIRE(world.HasComponent<shared::inventory::StorageComponent>(storageEntity));
+		const auto& memberComponent = world.ReadComponent<shared::inventory::MemberComponent>(memberEntity);
+		const auto& storageComponent = world.ReadComponent<shared::inventory::StorageComponent>(storageEntity);
 		REQUIRE(storageComponent.m_Members.Contains(memberEntity));
 	}
 
@@ -259,26 +259,26 @@ TEST_CASE("inventory::MemberSystem::Member Remove")
 	{
 		// request remove
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberRemoveRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberRemoveRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = ecs::Entity::Unassigned;
 		}
 
 		world.Update(2);
-		CHECK(world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Member is Dead Entity")
 	{
 		// request remove
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberRemoveRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberRemoveRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = deadEntity;
 		}
 
 		world.Update(2);
-		CHECK(world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Member was Destroyed in Previous Frame")
@@ -289,13 +289,13 @@ TEST_CASE("inventory::MemberSystem::Member Remove")
 
 		// request remove
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberRemoveRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberRemoveRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 		}
 
 		world.Update(2);
-		CHECK(!world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Storage was Destroyed in Previous Frame")
@@ -303,7 +303,7 @@ TEST_CASE("inventory::MemberSystem::Member Remove")
 		// destroy the storage
 		{
 			const ecs::Entity requestEntity = world.CreateEntity();
-			auto& requestComponent = world.AddComponent<inventory::StorageDestroyRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::StorageDestroyRequestComponent>(requestAEntity);
 			requestComponent.m_Storage = storageEntity;
 		}
 
@@ -311,13 +311,13 @@ TEST_CASE("inventory::MemberSystem::Member Remove")
 
 		// request remove
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberRemoveRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberRemoveRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 		}
 
 		world.Update(2);
-		CHECK(!world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Storage was Destroyed in Same Frame")
@@ -325,26 +325,26 @@ TEST_CASE("inventory::MemberSystem::Member Remove")
 		// destroy the storage
 		{
 			const ecs::Entity requestEntity = world.CreateEntity();
-			auto& requestComponent = world.AddComponent<inventory::StorageDestroyRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::StorageDestroyRequestComponent>(requestAEntity);
 			requestComponent.m_Storage = storageEntity;
 		}
 
 		// request remove
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberRemoveRequestComponent>(requestBEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberRemoveRequestComponent>(requestBEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 		}
 
 		world.Update(2);
-		CHECK(!world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Duplicate Request in Previous Frame")
 	{
 		// request remove
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberRemoveRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberRemoveRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 		}
@@ -353,36 +353,36 @@ TEST_CASE("inventory::MemberSystem::Member Remove")
 
 		// request remove
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberRemoveRequestComponent>(requestBEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberRemoveRequestComponent>(requestBEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 		}
 
 		world.Update();
-		CHECK(!world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 
 		world.Update();
-		CHECK(!world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Duplicate Request in Same Frame")
 	{
 		// request remove
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberRemoveRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberRemoveRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 		}
 
 		// request remove
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberRemoveRequestComponent>(requestBEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberRemoveRequestComponent>(requestBEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 		}
 
 		world.Update(2);
-		CHECK(!world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Member and Storage are Destroyed in Same Frame")
@@ -390,25 +390,25 @@ TEST_CASE("inventory::MemberSystem::Member Remove")
 		// destroy the storage
 		{
 			const ecs::Entity requestEntity = world.CreateEntity();
-			auto& requestComponent = world.AddComponent<inventory::StorageDestroyRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::StorageDestroyRequestComponent>(requestAEntity);
 			requestComponent.m_Storage = storageEntity;
 		}
 
 		world.DestroyEntity(memberEntity);
 		world.Update(2);
-		CHECK(!world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 
 	SECTION("Regular Flow")
 	{
 		// request remove
 		{
-			auto& requestComponent = world.AddComponent<inventory::MemberRemoveRequestComponent>(requestAEntity);
+			auto& requestComponent = world.AddComponent<shared::inventory::MemberRemoveRequestComponent>(requestAEntity);
 			requestComponent.m_TransactionId = transactionId;
 			requestComponent.m_Member = memberEntity;
 		}
 
 		world.Update(2);
-		CHECK(!world.HasComponent<inventory::MemberComponent>(memberEntity));
+		CHECK(!world.HasComponent<shared::inventory::MemberComponent>(memberEntity));
 	}
 }

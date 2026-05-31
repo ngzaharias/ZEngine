@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace inventory
+namespace shared::inventory
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

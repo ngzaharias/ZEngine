@@ -10,7 +10,7 @@
 #include "SharedInventory/InventoryStorageChangesComponent.h"
 #include "SharedInventory/InventoryStorageComponent.h"
 
-void inventory::MemberSystem::Update(World& world, const GameTime& gameTime)
+void shared::inventory::MemberSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -19,12 +19,12 @@ void inventory::MemberSystem::Update(World& world, const GameTime& gameTime)
 	ProcessRemoveRequests(world);
 }
 
-void inventory::MemberSystem::ProcessAddRequests(World& world)
+void shared::inventory::MemberSystem::ProcessAddRequests(World& world)
 {
-	const auto& changesComponent = world.ReadComponent<inventory::StorageChangesComponent>();
+	const auto& changesComponent = world.ReadComponent<shared::inventory::StorageChangesComponent>();
 	for (const MemberAdded& data : changesComponent.m_MemberAdded)
 	{
-		auto& memberComponent = world.AddComponent<inventory::MemberComponent>(data.m_Member);
+		auto& memberComponent = world.AddComponent<shared::inventory::MemberComponent>(data.m_Member);
 		memberComponent.m_Storage = data.m_Storage;
 		memberComponent.m_Count = data.m_Count;
 		memberComponent.m_GridX = data.m_GridX;
@@ -33,19 +33,19 @@ void inventory::MemberSystem::ProcessAddRequests(World& world)
 	}
 }
 
-void inventory::MemberSystem::ProcessMoveRequests(World& world)
+void shared::inventory::MemberSystem::ProcessMoveRequests(World& world)
 {
-	const auto& changesComponent = world.ReadComponent<inventory::StorageChangesComponent>();
+	const auto& changesComponent = world.ReadComponent<shared::inventory::StorageChangesComponent>();
 	for (const MemberMoved& data : changesComponent.m_MemberMoved)
 	{
-		auto& memberComponent = world.WriteComponent<inventory::MemberComponent>(data.m_Member);
+		auto& memberComponent = world.WriteComponent<shared::inventory::MemberComponent>(data.m_Member);
 		memberComponent.m_Storage = data.m_Storage;
 	}
 }
 
-void inventory::MemberSystem::ProcessRemoveRequests(World& world)
+void shared::inventory::MemberSystem::ProcessRemoveRequests(World& world)
 {
-	const auto& changesComponent = world.ReadComponent<inventory::StorageChangesComponent>();
+	const auto& changesComponent = world.ReadComponent<shared::inventory::StorageChangesComponent>();
 
 	// gather remove requests to handle duplicates
 	Set<ecs::Entity> removeRequests;
@@ -54,13 +54,13 @@ void inventory::MemberSystem::ProcessRemoveRequests(World& world)
 
 	for (const StorageChange& data : changesComponent.m_StorageDestroyed)
 	{
-		const auto& storageComponent = world.ReadComponent<inventory::StorageComponent>(data.m_Storage, false);
+		const auto& storageComponent = world.ReadComponent<shared::inventory::StorageComponent>(data.m_Storage, false);
 		for (const ecs::Entity& memberEntity : storageComponent.m_Members)
 			removeRequests.Add(memberEntity);
 	}
 
 	// process requests, no safety checks as that indicates an error in the system
 	for (const ecs::Entity& memberEntity : removeRequests)
-		world.RemoveComponent<inventory::MemberComponent>(memberEntity);
+		world.RemoveComponent<shared::inventory::MemberComponent>(memberEntity);
 
 }

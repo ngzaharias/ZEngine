@@ -9,7 +9,7 @@
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	enum class EError
 	{

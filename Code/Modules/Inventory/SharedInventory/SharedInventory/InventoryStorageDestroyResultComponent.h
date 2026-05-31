@@ -5,7 +5,7 @@
 #include "ECS/Entity.h"
 #include "SharedInventory/InventoryErrorEnum.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	/// \brief Result of a destroy request made to a storage entity.
 	struct StorageDestroyResultComponent final : public ecs::FrameComponent

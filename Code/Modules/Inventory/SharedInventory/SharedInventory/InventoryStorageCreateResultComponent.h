@@ -5,7 +5,7 @@
 #include "ECS/Entity.h"
 #include "SharedInventory/InventoryErrorEnum.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	/// \brief Result of a create request made to a storage entity.
 	struct StorageCreateResultComponent final : public ecs::FrameComponent

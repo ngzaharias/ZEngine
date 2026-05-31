@@ -4,7 +4,7 @@
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	/// \brief Request that a new storage is created.
 	struct StorageCreateRequestComponent final : public ecs::FrameComponent

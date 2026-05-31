@@ -5,7 +5,7 @@
 #include "ECS/Entity.h"
 #include "SharedInventory/InventoryMemberEnum.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	/// \brief Make a request for a member component.
 	struct MemberAddRequestComponent final : public ecs::FrameComponent

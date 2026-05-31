@@ -9,16 +9,16 @@
 #include "SharedInventory/InventoryOwnerComponent.h"
 #include "SharedInventory/InventoryStorageChangesComponent.h"
 
-void inventory::OwnerSystem::Update(World& world, const GameTime& gameTime)
+void shared::inventory::OwnerSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	ProcessStorageChanges(world);
 }
 
-void inventory::OwnerSystem::ProcessStorageChanges(World& world)
+void shared::inventory::OwnerSystem::ProcessStorageChanges(World& world)
 {
-	const auto& storageChangesComponent = world.ReadComponent<inventory::StorageChangesComponent>();
+	const auto& storageChangesComponent = world.ReadComponent<shared::inventory::StorageChangesComponent>();
 
 	Map<ecs::Entity, Array<const StorageChange*>> requests;
 	for (const StorageChange& data : storageChangesComponent.m_StorageCreated)
@@ -29,9 +29,9 @@ void inventory::OwnerSystem::ProcessStorageChanges(World& world)
 		if (ownerEntity.IsUnassigned())
 			continue;
 
-		auto& ownerComponent = world.HasComponent<inventory::OwnerComponent>(ownerEntity)
-			? world.WriteComponent<inventory::OwnerComponent>(ownerEntity)
-			: world.AddComponent<inventory::OwnerComponent>(ownerEntity);
+		auto& ownerComponent = world.HasComponent<shared::inventory::OwnerComponent>(ownerEntity)
+			? world.WriteComponent<shared::inventory::OwnerComponent>(ownerEntity)
+			: world.AddComponent<shared::inventory::OwnerComponent>(ownerEntity);
 
 		for (const StorageChange* data : createRequests)
 			ownerComponent.m_Storages.Set(data->m_Type, data->m_Storage);
@@ -45,7 +45,7 @@ void inventory::OwnerSystem::ProcessStorageChanges(World& world)
 		if (data.m_Owner.IsUnassigned())
 			continue;
 
-		auto& ownerComponent = world.WriteComponent<inventory::OwnerComponent>(data.m_Owner);
+		auto& ownerComponent = world.WriteComponent<shared::inventory::OwnerComponent>(data.m_Owner);
 		ownerComponent.m_Storages.Remove(data.m_Type);
 
 		if (ownerComponent.m_Storages.IsEmpty())
@@ -54,5 +54,5 @@ void inventory::OwnerSystem::ProcessStorageChanges(World& world)
 
 	// process requests, no safety checks as that indicates an error in the system
 	for (const ecs::Entity& ownerEntity : removeRequests)
-		world.RemoveComponent<inventory::OwnerComponent>(ownerEntity);
+		world.RemoveComponent<shared::inventory::OwnerComponent>(ownerEntity);
 }

@@ -5,7 +5,7 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	struct MemberAddRequestComponent;
 	struct MemberAddResultComponent;
@@ -24,7 +24,7 @@ namespace inventory
 	struct StorageDestroyResultComponent;
 }
 
-namespace inventory
+namespace shared::inventory
 {
 	/// \brief Handles creating/destroying of storage entity and its components.
 	class StorageSystem final : public ecs::System
@@ -32,21 +32,21 @@ namespace inventory
 	public:
 		using World = ecs::WorldView
 			::Write<
-			inventory::MemberAddResultComponent,
-			inventory::MemberMoveResultComponent,
-			inventory::MemberRemoveResultComponent,
-			inventory::StorageChangesComponent,
-			inventory::StorageComponent,
-			inventory::StorageCreateResultComponent,
-			inventory::StorageDestroyResultComponent>
+			shared::inventory::MemberAddResultComponent,
+			shared::inventory::MemberMoveResultComponent,
+			shared::inventory::MemberRemoveResultComponent,
+			shared::inventory::StorageChangesComponent,
+			shared::inventory::StorageComponent,
+			shared::inventory::StorageCreateResultComponent,
+			shared::inventory::StorageDestroyResultComponent>
 			::Read<
-			inventory::MemberAddRequestComponent,
-			inventory::MemberComponent,
-			inventory::MemberMoveRequestComponent,
-			inventory::MemberRemoveRequestComponent,
-			inventory::OwnerComponent,
-			inventory::StorageCreateRequestComponent,
-			inventory::StorageDestroyRequestComponent>;
+			shared::inventory::MemberAddRequestComponent,
+			shared::inventory::MemberComponent,
+			shared::inventory::MemberMoveRequestComponent,
+			shared::inventory::MemberRemoveRequestComponent,
+			shared::inventory::OwnerComponent,
+			shared::inventory::StorageCreateRequestComponent,
+			shared::inventory::StorageDestroyRequestComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

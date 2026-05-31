@@ -5,14 +5,14 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	struct OwnerComponent;
 	struct StorageChangesComponent;
 	struct StorageComponent;
 }
 
-namespace inventory
+namespace shared::inventory
 {
 	/// \brief Handles creating/destroying of storage entity and its components.
 	class OwnerSystem final : public ecs::System
@@ -20,10 +20,10 @@ namespace inventory
 	public:
 		using World = ecs::WorldView
 			::Write<
-			inventory::OwnerComponent>
+			shared::inventory::OwnerComponent>
 			::Read<
-			inventory::StorageComponent,
-			inventory::StorageChangesComponent>;
+			shared::inventory::StorageComponent,
+			shared::inventory::StorageChangesComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

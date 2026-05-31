@@ -2,7 +2,7 @@
 
 #include "Core/Types.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	enum class EMember : uint16
 	{

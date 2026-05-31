@@ -5,7 +5,7 @@
 #include "ECS/Entity.h"
 #include "SharedInventory/InventoryStorageEnum.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	/// \brief Holds a list of entities for a container.
 	struct StorageComponent final : public ecs::Component

@@ -4,7 +4,7 @@
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
 
-namespace inventory
+namespace shared::inventory
 {
 	/// \brief 
 	enum class EStorage : uint16
