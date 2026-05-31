@@ -12,34 +12,34 @@ if (imgui::Write(#field, valueNew.field)) \
 } \
 
 template<>
-void editor::entity::Inspector::VisitCustom(const camera::Bound2DTemplate& valueOld)
+void editor::entity::Inspector::VisitCustom(const shared::camera::Bound2DTemplate & valueOld)
 {
-	camera::Bound2DTemplate valueNew = valueOld;
-	VISIT(camera::Bound2DTemplate, m_Min);
-	VISIT(camera::Bound2DTemplate, m_Max);
+	shared::camera::Bound2DTemplate valueNew = valueOld;
+	VISIT(shared::camera::Bound2DTemplate, m_Min);
+	VISIT(shared::camera::Bound2DTemplate, m_Max);
 }
 
 template<>
-void editor::entity::Inspector::VisitCustom(const camera::Move2DTemplate& valueOld)
-{
-}
-
-template<>
-void editor::entity::Inspector::VisitCustom(const camera::Move3DTemplate& valueOld)
+void editor::entity::Inspector::VisitCustom(const shared::camera::Move2DTemplate & valueOld)
 {
 }
 
 template<>
-void editor::entity::Inspector::VisitCustom(const camera::Pan3DTemplate& valueOld)
+void editor::entity::Inspector::VisitCustom(const shared::camera::Move3DTemplate & valueOld)
 {
 }
 
 template<>
-void editor::entity::Inspector::VisitCustom(const camera::Zoom2DTemplate& valueOld)
+void editor::entity::Inspector::VisitCustom(const shared::camera::Pan3DTemplate & valueOld)
 {
-	camera::Zoom2DTemplate valueNew = valueOld;
-	VISIT(camera::Zoom2DTemplate, m_Min);
-	VISIT(camera::Zoom2DTemplate, m_Max);
+}
+
+template<>
+void editor::entity::Inspector::VisitCustom(const shared::camera::Zoom2DTemplate & valueOld)
+{
+	shared::camera::Zoom2DTemplate valueNew = valueOld;
+	VISIT(shared::camera::Zoom2DTemplate, m_Min);
+	VISIT(shared::camera::Zoom2DTemplate, m_Max);
 }
 
 template<>

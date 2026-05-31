@@ -3,11 +3,6 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace camera
-{
-	struct SettingsComponent;
-}
-
 namespace eng
 {
 	class WindowManager;
@@ -20,6 +15,11 @@ namespace eng::settings
 	struct WindowComponent;
 }
 
+namespace shared::camera
+{
+	struct SettingsComponent;
+}
+
 namespace client
 {
 	class SettingsSystem final : public ecs::System
@@ -27,10 +27,10 @@ namespace client
 	public:
 		using World = ecs::WorldView
 			::Write<
-			camera::SettingsComponent,
 			eng::settings::AudioComponent,
 			eng::settings::GameplayComponent,
-			eng::settings::WindowComponent>
+			eng::settings::WindowComponent,
+			shared::camera::SettingsComponent>
 			::Read<
 			eng::WindowManager>;
 

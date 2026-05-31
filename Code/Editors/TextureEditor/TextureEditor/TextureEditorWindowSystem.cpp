@@ -10,7 +10,7 @@
 #include "Engine/InputManager.h"
 #include "Engine/Texture2DAsset.h"
 #include "Engine/TextureHelpers.h"
-#include "GameState/GameStateEditorComponent.h"
+#include "SharedGameState/GameStateEditorComponent.h"
 #include "TextureEditor/TextureEditorAssetImportComponent.h"
 #include "TextureEditor/TextureEditorAssetNewComponent.h"
 #include "TextureEditor/TextureEditorAssetOpenComponent.h"

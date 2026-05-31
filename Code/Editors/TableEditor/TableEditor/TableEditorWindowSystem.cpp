@@ -6,7 +6,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameState/GameStateEditorComponent.h"
+#include "SharedGameState/GameStateEditorComponent.h"
 #include "TableEditor/TableEditorWindowComponent.h"
 #include "TableEditor/TableEditorWindowEvent.h"
 

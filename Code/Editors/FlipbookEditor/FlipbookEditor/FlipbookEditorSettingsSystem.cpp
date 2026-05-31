@@ -5,8 +5,8 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "FlipbookEditor/FlipbookEditorSettingsComponent.h"
-#include "GameState/GameStateEditorComponent.h"
 #include "Serialize/Visitor.h"
+#include "SharedGameState/GameStateEditorComponent.h"
 
 namespace
 {

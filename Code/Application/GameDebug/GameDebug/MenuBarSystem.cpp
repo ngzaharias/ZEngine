@@ -31,7 +31,7 @@
 #include "GameDebug/SettingsWindowComponent.h"
 #include "GameDebug/SettingsWindowEvent.h"
 #include "InputEditor/InputEditorWindowEvent.h"
-#include "SpellEditor/SpellEditorWindowEvent.h"
+#include "EditorSpellcraft/SpellcraftWindowEvent.h"
 #include "TableEditor/TableEditorWindowEvent.h"
 #include "ThemeEditor/ThemeEditorWindowEvent.h"
 #include "TrajectoryEditor/TrajectoryEditorWindowEvent.h"

@@ -1,4 +1,4 @@
-#include "DebugEntityPCH.h"
+#include "EntityPCH.h"
 #include "DebugEntity/EntityWindowSystem.h"
 
 #include "Core/Algorithms.h"

@@ -14,9 +14,9 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "GameState/GameStateEditModeComponent.h"
-#include "GameState/GameStateEditorComponent.h"
 #include "Math/Matrix.h"
+#include "SharedGameState/GameStateEditModeComponent.h"
+#include "SharedGameState/GameStateEditorComponent.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>

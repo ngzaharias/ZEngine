@@ -1,7 +1,6 @@
 #include "GameUIPCH.h"
 #include "GameUI/SettingsMenuSystem.h"
 
-#include "Camera/CameraSettingsComponent.h"
 #include "ClientHidden/HiddenDebugComponent.h"
 #include "Core/Name.h"
 #include "ECS/EntityWorld.h"
@@ -17,6 +16,7 @@
 #include "GameUI/SettingsMenuOpenEvent.h"
 #include "GameUI/SettingsMenuValueEvent.h"
 #include "GameUI/SettingsMenuWindowComponent.h"
+#include "SharedCamera/CameraSettingsComponent.h"
 
 namespace
 {
@@ -70,11 +70,11 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 
 		// gameplay
 		if (eventData.m_MoveSpeed)
-			world.WriteComponent<camera::SettingsComponent>().m_TranslateSpeed = *eventData.m_MoveSpeed;
+			world.WriteComponent<shared::camera::SettingsComponent>().m_TranslateSpeed = *eventData.m_MoveSpeed;
 		if (eventData.m_ZoomRate)
-			world.WriteComponent<camera::SettingsComponent>().m_ZoomAmount = *eventData.m_ZoomRate;
+			world.WriteComponent<shared::camera::SettingsComponent>().m_ZoomAmount = *eventData.m_ZoomRate;
 		if (eventData.m_ZoomSpeed)
-			world.WriteComponent<camera::SettingsComponent>().m_ZoomSpeed = *eventData.m_ZoomSpeed;
+			world.WriteComponent<shared::camera::SettingsComponent>().m_ZoomSpeed = *eventData.m_ZoomSpeed;
 		if (eventData.m_Theme)
 			world.WriteComponent<eng::settings::GameplayComponent>().m_Theme = *eventData.m_Theme;
 

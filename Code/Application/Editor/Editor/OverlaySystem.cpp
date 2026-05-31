@@ -12,8 +12,8 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "EntityEditor/EntityEditorSelectComponent.h"
-#include "GameState/GameStateEditModeComponent.h"
 #include "Icons/Icons.h"
+#include "SharedGameState/GameStateEditModeComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"

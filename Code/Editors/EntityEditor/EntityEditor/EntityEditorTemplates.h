@@ -1,10 +1,5 @@
 #pragma once
 
-#include "Camera/CameraBound2DTemplate.h"
-#include "Camera/CameraMove2DTemplate.h"
-#include "Camera/CameraMove3DTemplate.h"
-#include "Camera/CameraPan3DTemplate.h"
-#include "Camera/CameraZoom2DTemplate.h"
 #include "ClientHidden/HiddenCountTemplate.h"
 #include "ClientHidden/HiddenGroupTemplate.h"
 #include "ClientHidden/HiddenObjectTemplate.h"
@@ -22,5 +17,10 @@
 #include "GameUI/HUDTemplate.h"
 #include "GameUI/InputBindingsTemplate.h"
 #include "GameUI/MainMenuWindowTemplate.h"
-#include "Hexmap/HexmapRootTemplate.h"
-#include "Softbody/SoftbodyChainTemplate.h"
+#include "SharedCamera/CameraBound2DTemplate.h"
+#include "SharedCamera/CameraMove2DTemplate.h"
+#include "SharedCamera/CameraMove3DTemplate.h"
+#include "SharedCamera/CameraPan3DTemplate.h"
+#include "SharedCamera/CameraZoom2DTemplate.h"
+#include "SharedHexmap/HexmapRootTemplate.h"
+#include "SharedSoftbody/SoftbodyChainTemplate.h"

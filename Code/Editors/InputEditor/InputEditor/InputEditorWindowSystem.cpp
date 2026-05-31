@@ -7,10 +7,10 @@
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/InputManager.h"
-#include "GameState/GameStateEditorComponent.h"
 #include "Input/Key.h"
 #include "InputEditor/InputEditorWindowComponent.h"
 #include "InputEditor/InputEditorWindowEvent.h"
+#include "SharedGameState/GameStateEditorComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"

@@ -6,11 +6,6 @@
 #include <NsApp/DelegateCommand.h>
 #include <NsGui/BaseCommand.h>
 
-namespace camera
-{
-	struct SettingsComponent;
-}
-
 namespace eng
 {
 	class ThemeTable;
@@ -39,6 +34,11 @@ namespace Noesis
 	class ObservableCollection;
 }
 
+namespace shared::camera
+{
+	struct SettingsComponent;
+}
+
 namespace gui
 {
 	class DCSettingsMenu final : public eng::UIDataContext
@@ -46,12 +46,12 @@ namespace gui
 	public:
 		using World = ecs::WorldView
 			::Read<
-			camera::SettingsComponent,
 			eng::settings::AudioComponent,
 			eng::settings::GameplayComponent,
 			eng::settings::WindowComponent,
 			eng::ThemeTable,
-			eng::WindowManager>;
+			eng::WindowManager,
+			shared::camera::SettingsComponent>;
 
 		DCSettingsMenu();
 		~DCSettingsMenu() override;

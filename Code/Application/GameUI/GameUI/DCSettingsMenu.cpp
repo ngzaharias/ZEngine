@@ -1,7 +1,6 @@
 #include "GameUIPCH.h"
 #include "GameUI/DCSettingsMenu.h"
 
-#include "Camera/CameraSettingsComponent.h"
 #include "Core/Algorithms.h"
 #include "Core/EnumHelpers.h"
 #include "ECS/EntityWorld.h"
@@ -21,6 +20,7 @@
 #include "GameUI/VMResolution.h"
 #include "GameUI/VMTheme.h"
 #include "GameUI/VMWindowMode.h"
+#include "SharedCamera/CameraSettingsComponent.h"
 
 #include <NsCore/ReflectionImplement.h>
 #include <NsGui/ObservableCollection.h>
@@ -45,7 +45,7 @@ void gui::DCSettingsMenu::Initialise(World& world)
 	PROFILE_FUNCTION();
 
 	const auto& audio = world.ReadComponent<eng::settings::AudioComponent>();
-	const auto& camera = world.ReadComponent<camera::SettingsComponent>();
+	const auto& camera = world.ReadComponent<shared::camera::SettingsComponent>();
 	const auto& gameplay = world.ReadComponent<eng::settings::GameplayComponent>();
 	const auto& themes = world.ReadResource<eng::ThemeTable>();
 	const auto& window = world.ReadComponent<eng::settings::WindowComponent>();

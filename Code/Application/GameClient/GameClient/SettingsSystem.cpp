@@ -1,7 +1,7 @@
 #include "GameClientPCH.h"
 #include "GameClient/SettingsSystem.h"
 
-#include "Camera/CameraSettingsComponent.h"
+#include "SharedCamera/CameraSettingsComponent.h"
 #include "Core/Path.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
@@ -32,7 +32,7 @@ void client::SettingsSystem::Initialise(World& world)
 
 	const auto& windowManager = world.ReadResource<eng::WindowManager>();
 	auto& audioSettings = world.WriteComponent<eng::settings::AudioComponent>();
-	auto& cameraSettings = world.WriteComponent<camera::SettingsComponent>();
+	auto& cameraSettings = world.WriteComponent<shared::camera::SettingsComponent>();
 	auto& gameplaySettings = world.WriteComponent<eng::settings::GameplayComponent>();
 	auto& windowSettings = world.WriteComponent<eng::settings::WindowComponent>();
 	if (const eng::Window* window = windowManager.GetWindow(0))
@@ -57,7 +57,7 @@ void client::SettingsSystem::Update(World& world, const GameTime& gameTime)
 
 	const bool hasChanged =
 		world.HasAny<ecs::query::Updated<eng::settings::AudioComponent>>() ||
-		world.HasAny<ecs::query::Updated<camera::SettingsComponent>>() ||
+		world.HasAny<ecs::query::Updated<shared::camera::SettingsComponent>>() ||
 		world.HasAny<ecs::query::Updated<eng::settings::GameplayComponent>>() ||
 		world.HasAny<ecs::query::Updated<eng::settings::WindowComponent>>();
 	if (hasChanged)
@@ -66,7 +66,7 @@ void client::SettingsSystem::Update(World& world, const GameTime& gameTime)
 
 		Visitor visitor;
 		visitor.Write(strAudio, world.ReadComponent<eng::settings::AudioComponent>());
-		visitor.Write(strCamera, world.ReadComponent<camera::SettingsComponent>());
+		visitor.Write(strCamera, world.ReadComponent<shared::camera::SettingsComponent>());
 		visitor.Write(strGameplay, world.ReadComponent<eng::settings::GameplayComponent>());
 		visitor.Write(strWindow, world.ReadComponent<eng::settings::WindowComponent>());
 		visitor.SaveToFile(filepath);

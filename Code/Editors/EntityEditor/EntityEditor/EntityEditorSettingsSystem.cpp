@@ -6,9 +6,9 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "GameState/GameStateEditorComponent.h"
 #include "EntityEditor/EntityEditorSettingsComponent.h"
 #include "Serialize/Visitor.h"
+#include "SharedGameState/GameStateEditorComponent.h"
 
 namespace
 {

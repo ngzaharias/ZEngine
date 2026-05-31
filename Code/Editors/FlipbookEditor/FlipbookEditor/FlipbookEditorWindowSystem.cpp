@@ -13,8 +13,8 @@
 #include "FlipbookEditor/FlipbookEditorBatchingComponent.h"
 #include "FlipbookEditor/FlipbookEditorOpenWindowEvent.h"
 #include "FlipbookEditor/FlipbookEditorWindowComponent.h"
-#include "GameState/GameStateEditorComponent.h"
 #include "Math/AABB.h"
+#include "SharedGameState/GameStateEditorComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"

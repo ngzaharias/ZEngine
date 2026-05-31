@@ -1,13 +1,9 @@
 #include "GameClientPCH.h"
 #include "GameClient/GameClient.h"
 
-#include "Camera/CameraRegisterModule.h"
 #include "ClientCursor/CursorRegisterModule.h"
 #include "ClientHidden/HiddenRegisterModule.h"
 #include "ClientNetwork/NetworkRegisterModule.h"
-#include "Crafting/CraftingIngredientTable.h"
-#include "Crafting/CraftingRecipeTable.h"
-#include "Crafting/CraftingRegisterModule.h"
 #include "ECS/TypeRegistry.h"
 #include "ECS/WorldView.h"
 #include "Engine/AchievementTable.h"
@@ -27,19 +23,23 @@
 #include "GameClient/RegisterComponents.h"
 #include "GameClient/RegisterSystems.h"
 #include "GameUI/GameUIRegisterModule.h"
-#include "Hexmap/HexmapRegisterModule.h"
 #include "Icons/IconsRegisterModule.h"
-#include "Inventory/InventoryRegisterModule.h"
 #include "Render/RenderRegisterModule.h"
+#include "SharedCamera/CameraRegisterModule.h"
+#include "SharedCrafting/CraftingIngredientTable.h"
+#include "SharedCrafting/CraftingRecipeTable.h"
+#include "SharedCrafting/CraftingRegisterModule.h"
 #include "SharedCursor/CursorRegisterModule.h"
+#include "SharedHexmap/HexmapRegisterModule.h"
 #include "SharedHidden/HiddenRegisterModule.h"
+#include "SharedInventory/InventoryRegisterModule.h"
 #include "SharedNetwork/NetworkRegisterModule.h"
-#include "Softbody/SoftbodyRegisterModule.h"
-#include "Spellcraft/SpellcraftRegisterModule.h"
-#include "Tabletop/TabletopRegisterModule.h"
-#include "Tactics/TacticsRegisterModule.h"
-#include "Tilemap/TilemapRegisterModule.h"
-#include "Voxel/VoxelRegisterModule.h"
+#include "SharedSoftbody/SoftbodyRegisterModule.h"
+#include "SharedSpellcraft/SpellcraftRegisterModule.h"
+#include "SharedTabletop/TabletopRegisterModule.h"
+#include "SharedTactics/TacticsRegisterModule.h"
+#include "SharedTilemap/TilemapRegisterModule.h"
+#include "SharedVoxel/VoxelRegisterModule.h"
 
 namespace
 {
@@ -105,7 +105,7 @@ void client::GameClient::Register(const Dependencies& dependencies)
 
 	// modules
 	{
-		camera::RegisterModule(m_EntityWorld);
+		shared::camera::RegisterModule(m_EntityWorld);
 		client::cursor::RegisterModule(m_EntityWorld);
 		client::hidden::RegisterModule(m_EntityWorld);
 		client::network::RegisterModule(m_EntityWorld);

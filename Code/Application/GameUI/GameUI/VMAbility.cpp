@@ -1,7 +1,7 @@
 #include "GameUIPCH.h"
 #include "GameUI/VMAbility.h"
 
-#include "Tactics/TacticsAbilityTable.h"
+#include "SharedTactics/TacticsAbilityTable.h"
 
 #include <NsCore/ReflectionImplement.h>
 

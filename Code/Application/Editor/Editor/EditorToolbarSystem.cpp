@@ -10,9 +10,9 @@
 #include "EntityEditor/EntityEditorOpenInspectorEvent.h"
 #include "EntityEditor/EntityEditorOpenOutlinerEvent.h"
 #include "FlipbookEditor/FlipbookEditorOpenWindowEvent.h"
-#include "GameState/GameStateEditModeComponent.h"
-#include "GameState/GameStateEditModeToggleEvent.h"
 #include "Icons/Icons.h"
+#include "SharedGameState/GameStateEditModeComponent.h"
+#include "SharedGameState/GameStateEditModeToggleEvent.h"
 #include "SpriteEditor/SpriteEditorOpenWindowEvent.h"
 #include "TextureEditor/TextureEditorOpenWindowEvent.h"
 

@@ -18,8 +18,8 @@
 #include "EntityEditor/EntityEditorSelectComponent.h"
 #include "EntityEditor/EntityEditorSettingsComponent.h"
 #include "EntityEditor/EntityEditorTemplates.h"
-#include "GameState/GameStateEditorComponent.h"
 #include "Serialize/Visitor.h"
+#include "SharedGameState/GameStateEditorComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -81,25 +81,30 @@ namespace
 		ToggleComponent<eng::TransformTemplate>(world, entity);
 		ImGui::Separator();
 		ImGui::Separator();
-		ToggleComponent<camera::Move2DTemplate>(world, entity);
-		ToggleComponent<camera::Move3DTemplate>(world, entity);
-		ToggleComponent<camera::Pan3DTemplate>(world, entity);
-		ToggleComponent<camera::Zoom2DTemplate>(world, entity);
-		ToggleComponent<client::hidden::CountTemplate>(world, entity);
-		ToggleComponent<client::hidden::GroupTemplate>(world, entity);
-		ToggleComponent<client::hidden::ObjectTemplate>(world, entity);
 		ToggleComponent<eng::CameraTemplate>(world, entity);
+		ToggleComponent<shared::camera::Move2DTemplate>(world, entity);
+		ToggleComponent<shared::camera::Move3DTemplate>(world, entity);
+		ToggleComponent<shared::camera::Pan3DTemplate>(world, entity);
+		ToggleComponent<shared::camera::Zoom2DTemplate>(world, entity);
+		ImGui::Separator();
 		ToggleComponent<eng::FlipbookTemplate>(world, entity);
+		ToggleComponent<eng::SpriteTemplate>(world, entity);
+		ToggleComponent<eng::StaticMeshTemplate>(world, entity);
+		ImGui::Separator();
 		ToggleComponent<eng::light::AmbientTemplate>(world, entity);
 		ToggleComponent<eng::light::DirectionalTemplate>(world, entity);
 		ToggleComponent<eng::light::PointTemplate>(world, entity);
+		ImGui::Separator();
 		ToggleComponent<eng::PhysicsTemplate>(world, entity);
-		ToggleComponent<eng::SpriteTemplate>(world, entity);
-		ToggleComponent<eng::StaticMeshTemplate>(world, entity);
-		ToggleComponent<hexmap::RootTemplate>(world, entity);
+		ImGui::Separator();
 		ToggleComponent<gui::HUDTemplate>(world, entity);
 		ToggleComponent<gui::input::BindingsTemplate>(world, entity);
 		ToggleComponent<gui::main_menu::WindowTemplate>(world, entity);
+		ImGui::Separator();
+		ToggleComponent<client::hidden::CountTemplate>(world, entity);
+		ToggleComponent<client::hidden::GroupTemplate>(world, entity);
+		ToggleComponent<client::hidden::ObjectTemplate>(world, entity);
+		ToggleComponent<hexmap::RootTemplate>(world, entity);
 		ToggleComponent<softbody::ChainTemplate>(world, entity);
 	}
 
@@ -190,10 +195,6 @@ namespace
 		//////////////////////////////////////////////////////////////////////////
 		InspectComponent<eng::TransformTemplate>(world, entity, inspector);
 		//////////////////////////////////////////////////////////////////////////
-		InspectComponent<camera::Move2DTemplate>(world, entity, inspector);
-		InspectComponent<camera::Move3DTemplate>(world, entity, inspector);
-		InspectComponent<camera::Pan3DTemplate>(world, entity, inspector);
-		InspectComponent<camera::Zoom2DTemplate>(world, entity, inspector);
 		InspectComponent<client::hidden::CountTemplate>(world, entity, inspector);
 		InspectComponent<client::hidden::GroupTemplate>(world, entity, inspector);
 		InspectComponent<client::hidden::ObjectTemplate>(world, entity, inspector);
@@ -205,10 +206,14 @@ namespace
 		InspectComponent<eng::PhysicsTemplate>(world, entity, inspector);
 		InspectComponent<eng::SpriteTemplate>(world, entity, inspector);
 		InspectComponent<eng::StaticMeshTemplate>(world, entity, inspector);
-		InspectComponent<hexmap::RootTemplate>(world, entity, inspector);
 		InspectComponent<gui::HUDTemplate>(world, entity, inspector);
 		InspectComponent<gui::input::BindingsTemplate>(world, entity, inspector);
 		InspectComponent<gui::main_menu::WindowTemplate>(world, entity, inspector);
+		InspectComponent<hexmap::RootTemplate>(world, entity, inspector);
+		InspectComponent<shared::camera::Move2DTemplate>(world, entity, inspector);
+		InspectComponent<shared::camera::Move3DTemplate>(world, entity, inspector);
+		InspectComponent<shared::camera::Pan3DTemplate>(world, entity, inspector);
+		InspectComponent<shared::camera::Zoom2DTemplate>(world, entity, inspector);
 		InspectComponent<softbody::ChainTemplate>(world, entity, inspector);
 		inspector.End();
 

@@ -18,13 +18,13 @@
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
 #include "EntityEditor/EntityEditorSelectComponent.h"
-#include "GameState/GameStateEditModeComponent.h"
-#include "GameState/GameStateEditorComponent.h"
 #include "Math/AABB.h"
 #include "Math/CollisionMath.h"
 #include "Math/Quaternion.h"
 #include "Math/Ray.h"
 #include "Math/Sphere.h"
+#include "SharedGameState/GameStateEditModeComponent.h"
+#include "SharedGameState/GameStateEditorComponent.h"
 
 namespace
 {

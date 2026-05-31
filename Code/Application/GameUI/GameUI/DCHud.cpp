@@ -3,7 +3,7 @@
 
 #include "ECS/EntityWorld.h"
 #include "GameUI/VMPawn.h"
-#include "Tactics/TacticsAbilityPreviewEvent.h"
+#include "SharedTactics/TacticsAbilityPreviewEvent.h"
 
 #include <NsCore/Delegate.h>
 #include <NsCore/ReflectionImplement.h>

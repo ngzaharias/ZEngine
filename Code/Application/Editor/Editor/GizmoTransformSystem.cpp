@@ -18,8 +18,8 @@
 #include "Engine/WindowManager.h"
 #include "EntityEditor/EntityEditorCommandManager.h"
 #include "EntityEditor/EntityEditorSelectComponent.h"
-#include "GameState/GameStateEditModeComponent.h"
 #include "Math/Matrix.h"
+#include "SharedGameState/GameStateEditModeComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"

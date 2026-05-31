@@ -3,11 +3,6 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace camera
-{
-	struct SettingsComponent;
-}
-
 namespace eng
 {
 	class ThemeTable;
@@ -30,6 +25,11 @@ namespace gui::settings_menu
 	struct WindowComponent;
 }
 
+namespace shared::camera
+{
+	struct SettingsComponent;
+}
+
 namespace gui::settings_menu
 {
 	class MenuSystem final : public ecs::System
@@ -37,16 +37,15 @@ namespace gui::settings_menu
 	public:
 		using World = ecs::WorldView
 			::Write<
-			camera::SettingsComponent,
 			eng::settings::AudioComponent,
 			eng::settings::GameplayComponent,
 			eng::settings::WindowComponent,
 			eng::ThemeTable,
 			eng::UIManager,
 			eng::WindowManager,
-			gui::settings_menu::WindowComponent>
+			gui::settings_menu::WindowComponent,
+			shared::camera::SettingsComponent>
 			::Read<
-			camera::SettingsComponent,
 			eng::settings::AudioComponent,
 			eng::settings::GameplayComponent,
 			eng::settings::WindowComponent,
@@ -54,7 +53,8 @@ namespace gui::settings_menu
 			eng::WindowManager,
 			gui::settings_menu::CloseEvent,
 			gui::settings_menu::OpenEvent,
-			gui::settings_menu::ValueEvent>;
+			gui::settings_menu::ValueEvent,
+			shared::camera::SettingsComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

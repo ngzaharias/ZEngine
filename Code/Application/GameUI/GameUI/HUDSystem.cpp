@@ -9,9 +9,9 @@
 #include "Engine/UIManager.h"
 #include "GameUI/DCHUD.h"
 #include "GameUI/HUDTemplate.h"
-#include "Tactics/TacticsAbilityTable.h"
-#include "Tactics/TacticsPawnAbilitiesComponent.h"
-#include "Tactics/TacticsPawnSelectedComponent.h"
+#include "SharedTactics/TacticsAbilityTable.h"
+#include "SharedTactics/TacticsPawnAbilitiesComponent.h"
+#include "SharedTactics/TacticsPawnSelectedComponent.h"
 
 #include <NsGui/ObservableCollection.h>
 

@@ -25,9 +25,9 @@
 #include "EntityEditor/EntityEditorOpenOutlinerEvent.h"
 #include "EntityEditor/EntityEditorOutlinerComponent.h"
 #include "EntityEditor/EntityEditorSelectComponent.h"
-#include "GameState/GameStateEditorComponent.h"
 #include "Icons/Icons.h"
 #include "Serialize/Visitor.h"
+#include "SharedGameState/GameStateEditorComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
