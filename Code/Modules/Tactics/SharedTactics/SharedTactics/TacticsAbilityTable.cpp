@@ -1,5 +1,5 @@
 #include "TacticsPCH.h"
-#include "Tactics/TacticsAbilityTable.h"
+#include "SharedTactics/TacticsAbilityTable.h"
 
 #include "Serialize/Visitor.h"
 

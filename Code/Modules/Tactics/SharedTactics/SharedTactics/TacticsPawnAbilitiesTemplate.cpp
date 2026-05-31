@@ -1,5 +1,5 @@
 #include "TacticsPCH.h"
-#include "Tactics/TacticsPawnAbilitiesTemplate.h"
+#include "SharedTactics/TacticsPawnAbilitiesTemplate.h"
 
 #include "Serialize/Visitor.h"
 

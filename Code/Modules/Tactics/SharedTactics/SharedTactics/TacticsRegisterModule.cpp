@@ -1,18 +1,18 @@
 #include "TacticsPCH.h"
-#include "Tactics/TacticsRegisterModule.h"
+#include "SharedTactics/TacticsRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/TableHeadmaster.h"
 #include "Engine/TemplateManager.h"
-#include "Tactics/TacticsPawnAbilitiesComponent.h"
-#include "Tactics/TacticsPawnAbilitiesTemplate.h"
-#include "Tactics/TacticsAbilityPreviewComponent.h"
-#include "Tactics/TacticsAbilityPreviewEvent.h"
-#include "Tactics/TacticsAbilityPreviewSystem.h"
-#include "Tactics/TacticsAbilityTable.h"
-#include "Tactics/TacticsPawnSelectedComponent.h"
-#include "Tactics/TacticsPawnSelectionSystem.h"
+#include "SharedTactics/TacticsPawnAbilitiesComponent.h"
+#include "SharedTactics/TacticsPawnAbilitiesTemplate.h"
+#include "SharedTactics/TacticsAbilityPreviewComponent.h"
+#include "SharedTactics/TacticsAbilityPreviewEvent.h"
+#include "SharedTactics/TacticsAbilityPreviewSystem.h"
+#include "SharedTactics/TacticsAbilityTable.h"
+#include "SharedTactics/TacticsPawnSelectedComponent.h"
+#include "SharedTactics/TacticsPawnSelectionSystem.h"
 
 void tactics::RegisterModule(ecs::EntityWorld& world)
 {

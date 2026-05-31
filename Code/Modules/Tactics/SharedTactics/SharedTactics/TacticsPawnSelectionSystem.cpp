@@ -1,5 +1,5 @@
 #include "TacticsPCH.h"
-#include "Tactics/TacticsPawnSelectionSystem.h"
+#include "SharedTactics/TacticsPawnSelectionSystem.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -12,11 +12,11 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Window.h"
 #include "Engine/WindowManager.h"
-#include "GameState/GameStateEditModeComponent.h"
 #include "Math/Ray.h"
-#include "Tactics/TacticsInputPriorityEnum.h"
-#include "Tactics/TacticsPawnSelectedComponent.h"
-#include "Tilemap/TilemapAgentComponent.h"
+#include "SharedGameState/GameStateEditModeComponent.h"
+#include "SharedTactics/TacticsInputPriorityEnum.h"
+#include "SharedTactics/TacticsPawnSelectedComponent.h"
+#include "SharedTilemap/TilemapAgentComponent.h"
 
 #include <PhysX/PxRigidActor.h>
 #include <PhysX/PxScene.h>

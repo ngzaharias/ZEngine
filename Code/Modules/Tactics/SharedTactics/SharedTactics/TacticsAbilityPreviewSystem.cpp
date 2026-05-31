@@ -1,5 +1,5 @@
 #include "TacticsPCH.h"
-#include "Tactics/TacticsAbilityPreviewSystem.h"
+#include "SharedTactics/TacticsAbilityPreviewSystem.h"
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
@@ -9,13 +9,13 @@
 #include "Engine/LinesComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Math/VectorMath.h"
-#include "Tactics/TacticsAbilityPreviewComponent.h"
-#include "Tactics/TacticsAbilityPreviewEvent.h"
-#include "Tactics/TacticsAbilityTable.h"
-#include "Tactics/TacticsInputPriorityEnum.h"
-#include "Tactics/TacticsPawnAbilitiesComponent.h"
-#include "Tactics/TacticsPawnSelectedComponent.h"
-#include "Tilemap/TilemapGridComponent.h"
+#include "SharedTactics/TacticsAbilityPreviewComponent.h"
+#include "SharedTactics/TacticsAbilityPreviewEvent.h"
+#include "SharedTactics/TacticsAbilityTable.h"
+#include "SharedTactics/TacticsInputPriorityEnum.h"
+#include "SharedTactics/TacticsPawnAbilitiesComponent.h"
+#include "SharedTactics/TacticsPawnSelectedComponent.h"
+#include "SharedTilemap/TilemapGridComponent.h"
 
 namespace
 {

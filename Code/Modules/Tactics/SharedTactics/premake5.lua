@@ -1,15 +1,26 @@
-project "Tactics"
+project "SharedTactics"
 	kind "StaticLib"
 	pchheader "TacticsPCH.h"
-	pchsource "Tactics/TacticsPCH.cpp"
-	location "%{wks.location}/Modules/Tactics"
+	pchsource "SharedTactics/TacticsPCH.cpp"
+	location "%{wks.location}/Modules/Tactics/SharedTactics"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"Tactics/**.h", 
-			"Tactics/**.cpp", 
-			"Tactics/**.inl" } },
+			"SharedTactics/**.h", 
+			"SharedTactics/**.cpp", 
+			"SharedTactics/**.inl" } },
 	}
 
 	includedirs 
@@ -26,7 +37,7 @@ project "Tactics"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/GameState/",
-		"%{wks.location}/../Code/Modules/Tactics/",
-		"%{wks.location}/../Code/Modules/Tilemap/",
+		"%{wks.location}/../Code/Modules/GameState/SharedGameState/",
+		"%{wks.location}/../Code/Modules/Tactics/SharedTactics/",
+		"%{wks.location}/../Code/Modules/Tilemap/SharedTilemap/",
 	}
