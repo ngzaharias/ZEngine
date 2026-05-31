@@ -29,10 +29,10 @@ void client::RegisterComponents(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterComponent<projectile::SpawnComponent>();
 	entityWorld.RegisterComponent<projectile::TrajectoryComponent>();
 
-	entityWorld.RegisterEvent<gamestate::ChangeFinishedEvent>();
-	entityWorld.RegisterEvent<gamestate::ChangeRequestEvent>();
+	entityWorld.RegisterEvent<shared::gamestate::ChangeFinishedEvent>();
+	entityWorld.RegisterEvent<shared::gamestate::ChangeRequestEvent>();
 
 	entityWorld.RegisterComponent<client::settings::DebugComponent>();
-	entityWorld.RegisterComponent<gamestate::StateComponent>();
+	entityWorld.RegisterComponent<shared::gamestate::StateComponent>();
 	entityWorld.RegisterComponent<projectile::ChangesComponent>();
 }

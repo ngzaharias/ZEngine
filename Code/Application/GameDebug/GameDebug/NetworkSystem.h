@@ -9,7 +9,7 @@ namespace ecs
 	struct NameComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct ChangeRequestEvent;
 }

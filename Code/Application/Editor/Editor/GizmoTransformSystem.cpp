@@ -257,7 +257,7 @@ void editor::gizmo::TransformSystem::Update(World& world, const GameTime& gameTi
 	if (!gizmos.m_IsEnabled || !settings.m_IsEnabled)
 		return;
 
-	if (!world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
+	if (!world.HasAny<ecs::query::Include<shared::gamestate::EditModeComponent>>())
 		return;
 
 	ProcessInput(world);

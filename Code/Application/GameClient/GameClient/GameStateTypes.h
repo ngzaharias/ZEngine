@@ -4,7 +4,7 @@
 #include "Core/Variant.h"
 #include "Network/Types.h"
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct None { };
 

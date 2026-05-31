@@ -5,11 +5,11 @@
 #include "ECS/Event.h"
 #include "GameClient/GameStateTypes.h"
 
-namespace gamestate
+namespace shared::gamestate
 {
 	/// \brief Holds a single gamestate Event.
 	struct ChangeRequestEvent final : public ecs::Event
 	{
-		Array<gamestate::State> m_Queue = { };
+		Array<shared::gamestate::State> m_Queue = { };
 	};
 }

@@ -78,10 +78,10 @@ void editor::entity::SelectSystem::Update(World& world, const GameTime& gameTime
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasComponent<gamestate::EditorComponent>())
+	if (!world.HasComponent<shared::gamestate::EditorComponent>())
 		return;
 
-	if (world.HasAny<ecs::query::Added<gamestate::EditModeComponent>>())
+	if (world.HasAny<ecs::query::Added<shared::gamestate::EditModeComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::EditorWorld;
@@ -93,7 +93,7 @@ void editor::entity::SelectSystem::Update(World& world, const GameTime& gameTime
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<gamestate::EditModeComponent>;
+		::Removed<shared::gamestate::EditModeComponent>;
 	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();

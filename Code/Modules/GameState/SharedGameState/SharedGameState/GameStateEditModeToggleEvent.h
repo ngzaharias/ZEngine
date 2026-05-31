@@ -2,7 +2,7 @@
 
 #include "ECS/Event.h"
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditModeToggleEvent final : public ecs::Event { };
 };

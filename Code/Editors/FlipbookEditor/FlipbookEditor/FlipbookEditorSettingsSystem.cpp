@@ -28,7 +28,7 @@ void editor::flipbook::SettingsSystem::Update(World& world, const GameTime& game
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasComponent<gamestate::EditorComponent>())
+	if (!world.HasComponent<shared::gamestate::EditorComponent>())
 		return;
 
 	if (world.HasAny<ecs::query::Updated<editor::flipbook::SettingsComponent>>())

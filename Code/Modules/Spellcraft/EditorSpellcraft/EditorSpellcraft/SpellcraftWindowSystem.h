@@ -19,7 +19,7 @@ namespace editor::spellcraft
 	struct WindowEvent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditorComponent;
 }
@@ -39,7 +39,7 @@ namespace editor::spellcraft
 			::Read<
 			editor::spellcraft::GraphComponent,
 			editor::spellcraft::WindowEvent,
-			gamestate::EditorComponent>;
+			shared::gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

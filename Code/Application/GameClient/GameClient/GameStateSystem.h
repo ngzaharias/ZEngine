@@ -3,14 +3,14 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct ChangeFinishedEvent;
 	struct ChangeRequestEvent;
 	struct StateComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	/// \brief System that holds a queue of requested states and the current state.
 	class StateSystem : public ecs::System
@@ -18,10 +18,10 @@ namespace gamestate
 	public:
 		using World = ecs::WorldView
 			::Write<
-			gamestate::StateComponent>
+			shared::gamestate::StateComponent>
 			::Read<
-			gamestate::ChangeFinishedEvent,
-			gamestate::ChangeRequestEvent>;
+			shared::gamestate::ChangeFinishedEvent,
+			shared::gamestate::ChangeRequestEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

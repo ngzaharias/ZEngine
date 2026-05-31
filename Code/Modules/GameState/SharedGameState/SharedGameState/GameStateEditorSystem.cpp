@@ -6,11 +6,11 @@
 #include "ECS/WorldView.h"
 #include "SharedGameState/GameStateEditorComponent.h"
 
-void gamestate::EditorSystem::Initialise(World& world)
+void shared::gamestate::EditorSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
 #ifdef Z_EDITOR
-	world.AddComponent<gamestate::EditorComponent>();
+	world.AddComponent<shared::gamestate::EditorComponent>();
 #endif
 }

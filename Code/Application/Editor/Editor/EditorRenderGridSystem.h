@@ -22,7 +22,7 @@ namespace eng::settings
 	struct DebugComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditModeComponent;
 	struct EditorComponent;
@@ -50,8 +50,8 @@ namespace editor
 			eng::settings::DebugComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
-			gamestate::EditModeComponent,
-			gamestate::EditorComponent,
+			shared::gamestate::EditModeComponent,
+			shared::gamestate::EditorComponent,
 			render::ShadowComponent>;
 
 		void Initialise(World& world);

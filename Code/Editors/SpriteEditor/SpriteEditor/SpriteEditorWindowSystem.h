@@ -26,7 +26,7 @@ namespace eng
 	class InputManager;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditorComponent;
 }
@@ -49,7 +49,7 @@ namespace editor::sprite
 			eng::AssetManager,
 			eng::InputManager>
 			::Read<
-			gamestate::EditorComponent>;
+			shared::gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

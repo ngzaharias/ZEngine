@@ -57,7 +57,7 @@ void shared::tactics::PawnSelectionSystem::Update(World& world, const GameTime& 
 		input.RemoveLayer(strInput);
 	}
 
-	if (world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
+	if (world.HasAny<ecs::query::Include<shared::gamestate::EditModeComponent>>())
 		return;
 
 	const auto& inputManager = world.ReadResource<eng::InputManager>();

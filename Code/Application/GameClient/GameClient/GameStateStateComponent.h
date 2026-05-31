@@ -4,12 +4,12 @@
 #include "ECS/Component.h"
 #include "GameClient/GameStateTypes.h"
 
-namespace gamestate
+namespace shared::gamestate
 {
 	/// \brief Holds the current gamestate as well as the current queue.
 	struct StateComponent final : public ecs::StaticComponent
 	{
-		gamestate::State m_State = gamestate::None();
-		Array<gamestate::State> m_Queue = { };
+		shared::gamestate::State m_State = shared::gamestate::None();
+		Array<shared::gamestate::State> m_Queue = { };
 	};
 }

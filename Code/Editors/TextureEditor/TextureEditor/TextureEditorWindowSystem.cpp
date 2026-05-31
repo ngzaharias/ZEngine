@@ -216,7 +216,7 @@ void editor::texture::WindowSystem::Update(World& world, const GameTime& gameTim
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasComponent<gamestate::EditorComponent>())
+	if (!world.HasComponent<shared::gamestate::EditorComponent>())
 		return;
 
 	if (world.HasAny<ecs::query::Added<editor::texture::WindowComponent>>())

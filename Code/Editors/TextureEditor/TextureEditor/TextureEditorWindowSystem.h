@@ -26,7 +26,7 @@ namespace eng
 	class InputManager;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditorComponent;
 }
@@ -49,7 +49,7 @@ namespace editor::texture
 			eng::InputManager>
 			::Read<
 			editor::texture::OpenWindowEvent,
-			gamestate::EditorComponent>;
+			shared::gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

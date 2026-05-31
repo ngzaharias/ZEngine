@@ -8,7 +8,7 @@ namespace editor::sprite
 	struct SettingsComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditorComponent;
 }
@@ -22,7 +22,7 @@ namespace editor::sprite
 			::Write<
 			editor::sprite::SettingsComponent>
 			::Read<
-			gamestate::EditorComponent>;
+			shared::gamestate::EditorComponent>;
 
 		void Initialise(World& world);
 

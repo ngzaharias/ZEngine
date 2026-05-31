@@ -22,7 +22,7 @@ namespace eng
 	class AssetManager;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditorComponent;
 }
@@ -41,7 +41,7 @@ namespace editor::trajectory
 			eng::AssetManager>
 			::Read<
 			editor::trajectory::WindowEvent,
-			gamestate::EditorComponent>;
+			shared::gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

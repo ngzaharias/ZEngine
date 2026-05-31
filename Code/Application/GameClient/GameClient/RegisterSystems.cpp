@@ -20,7 +20,7 @@ void client::RegisterSystems(ecs::EntityWorld& entityWorld)
 	entityWorld.RegisterSystem<client::SettingsSystem>();
 	entityWorld.RegisterSystem<drag::MovementSystem>();
 	entityWorld.RegisterSystem<drag::SelectionSystem>();
-	entityWorld.RegisterSystem<gamestate::StateSystem>();
+	entityWorld.RegisterSystem<shared::gamestate::StateSystem>();
 	entityWorld.RegisterSystem<gui::modal::StateSystem>();
 	entityWorld.RegisterSystem<movement::AccelerationSystem>();
 	entityWorld.RegisterSystem<movement::VelocitySystem>();

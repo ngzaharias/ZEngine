@@ -8,7 +8,7 @@ namespace editor::entity
 	struct SettingsComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditorComponent;
 }
@@ -21,7 +21,7 @@ namespace editor::entity
 		using World = ecs::WorldView
 			::Write<
 			editor::entity::SettingsComponent,
-			gamestate::EditorComponent>;
+			shared::gamestate::EditorComponent>;
 
 		void Initialise(World& world);
 

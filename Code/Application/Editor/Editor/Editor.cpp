@@ -62,7 +62,7 @@ void editor::Editor::Register()
 	editor::texture::RegisterModule(m_ClientWorld);
 	editor::theme::RegisterModule(m_ClientWorld);
 	editor::trajectory::RegisterModule(m_ClientWorld);
-	gamestate::RegisterModule(m_ClientWorld);
+	shared::gamestate::RegisterModule(m_ClientWorld);
 }
 
 void editor::Editor::Initialise()

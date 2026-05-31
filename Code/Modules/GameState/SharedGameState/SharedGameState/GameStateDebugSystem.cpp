@@ -6,12 +6,12 @@
 #include "ECS/WorldView.h"
 #include "SharedGameState/GameStateDebugComponent.h"
 
-void gamestate::DebugSystem::Initialise(World& world)
+void shared::gamestate::DebugSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
 #ifdef Z_DEBUG
 	const ecs::Entity entity = world.CreateEntity();
-	world.AddComponent<gamestate::DebugComponent>(entity);
+	world.AddComponent<shared::gamestate::DebugComponent>(entity);
 #endif
 }

@@ -2,7 +2,7 @@
 
 #include "ECS/Component.h"
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct DebugComponent final : public ecs::Component { };
 };

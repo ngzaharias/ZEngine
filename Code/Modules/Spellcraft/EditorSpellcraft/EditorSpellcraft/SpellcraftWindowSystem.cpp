@@ -32,7 +32,7 @@ void editor::spellcraft::WindowSystem::Update(World& world, const GameTime& game
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasComponent<gamestate::EditorComponent>())
+	if (!world.HasComponent<shared::gamestate::EditorComponent>())
 		return;
 
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);

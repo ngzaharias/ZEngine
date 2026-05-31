@@ -3,19 +3,19 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct DebugComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	class DebugSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			gamestate::DebugComponent>;
+			shared::gamestate::DebugComponent>;
 
 		void Initialise(World& world);
 	};

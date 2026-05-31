@@ -85,9 +85,9 @@ void editor::RenderGridSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasComponent<gamestate::EditorComponent>())
+	if (!world.HasComponent<shared::gamestate::EditorComponent>())
 		return;
-	if (!world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>())
+	if (!world.HasAny<ecs::query::Include<shared::gamestate::EditModeComponent>>())
 		return;
 
 	const auto& debugSettings = world.ReadComponent<eng::settings::DebugComponent>();

@@ -39,7 +39,7 @@ namespace
 
 	void Draw_Mode(World& world)
 	{
-		const bool isEnabled = world.HasAny<ecs::query::Include<gamestate::EditModeComponent>>();
+		const bool isEnabled = world.HasAny<ecs::query::Include<shared::gamestate::EditModeComponent>>();
 		const char* tooltip = isEnabled
 			? "Switch to Game Mode"
 			: "Switch to Edit Mode";
@@ -49,7 +49,7 @@ namespace
 
 		if (ButtonIcon("##mode", tooltip, icon))
 		{
-			world.AddEvent<gamestate::EditModeToggleEvent>();
+			world.AddEvent<shared::gamestate::EditModeToggleEvent>();
 		}
 	}
 

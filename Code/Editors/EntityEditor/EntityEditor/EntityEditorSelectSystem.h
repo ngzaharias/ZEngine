@@ -28,7 +28,7 @@ namespace eng::level
 	struct EntityComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditModeComponent;
 	struct EditorComponent;
@@ -54,8 +54,8 @@ namespace editor::entity
 			eng::TransformComponent,
 			eng::VisibilityComponent,
 			eng::WindowManager,
-			gamestate::EditModeComponent,
-			gamestate::EditorComponent>;
+			shared::gamestate::EditModeComponent,
+			shared::gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

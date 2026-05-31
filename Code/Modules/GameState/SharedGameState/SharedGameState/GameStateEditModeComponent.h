@@ -2,7 +2,7 @@
 
 #include "ECS/Component.h"
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditModeComponent final : public ecs::SoloComponent { };
 };

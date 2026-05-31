@@ -28,7 +28,7 @@ namespace eng::settings
 	struct DebugComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditModeComponent;
 }
@@ -49,7 +49,7 @@ namespace editor
 			eng::EditorComponent,
 			eng::settings::DebugComponent,
 			eng::WindowManager,
-			gamestate::EditModeComponent>;
+			shared::gamestate::EditModeComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

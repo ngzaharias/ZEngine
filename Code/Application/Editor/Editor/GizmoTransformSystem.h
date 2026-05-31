@@ -35,7 +35,7 @@ namespace eng
 	struct VersionComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditModeComponent;
 }
@@ -60,7 +60,7 @@ namespace editor::gizmo
 			eng::TransformTemplate,
 			eng::UUIDComponent,
 			eng::WindowManager,
-			gamestate::EditModeComponent>;
+			shared::gamestate::EditModeComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

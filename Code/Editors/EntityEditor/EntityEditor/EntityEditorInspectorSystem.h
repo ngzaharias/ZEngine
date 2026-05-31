@@ -35,7 +35,7 @@ namespace eng::level
 	struct EntityComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditorComponent;
 }
@@ -59,7 +59,7 @@ namespace editor::entity
 			editor::entity::OpenInspectorEvent,
 			eng::AssetManager,
 			eng::level::EntityComponent,
-			gamestate::EditorComponent>;
+			shared::gamestate::EditorComponent>;
 
 		InspectorSystem(ecs::EntityWorld& world);
 

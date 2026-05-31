@@ -3,7 +3,7 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditModeComponent;
 }
@@ -27,7 +27,7 @@ namespace shared::spellcraft
 			::Write<
 			shared::spellcraft::CastComponent>
 			::Read<
-			gamestate::EditModeComponent,
+			shared::gamestate::EditModeComponent,
 			shared::spellcraft::BookComponent,
 			shared::spellcraft::ExplosionComponent,
 			shared::spellcraft::ExplosionHitEvent,

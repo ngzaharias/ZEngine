@@ -15,7 +15,7 @@ namespace editor::theme
 	struct WindowEvent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditorComponent;
 }
@@ -31,7 +31,7 @@ namespace editor::theme
 			editor::theme::WindowComponent>
 			::Read<
 			editor::theme::WindowEvent,
-			gamestate::EditorComponent>;
+			shared::gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

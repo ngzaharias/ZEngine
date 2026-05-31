@@ -10,26 +10,26 @@
 #include "GameClient/GameStateStateComponent.h"
 #include "GameClient/GameStateTypes.h"
 
-void gamestate::StateSystem::Update(World& world, const GameTime& gameTime)
+void shared::gamestate::StateSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	for (const auto& request : world.Events<gamestate::ChangeRequestEvent>())
+	for (const auto& request : world.Events<shared::gamestate::ChangeRequestEvent>())
 	{
-		auto& stateComponent = world.WriteComponent<gamestate::StateComponent>();
+		auto& stateComponent = world.WriteComponent<shared::gamestate::StateComponent>();
 		stateComponent.m_Queue.Append(request.m_Queue);
 	}
 
-	const auto& constComponent = world.ReadComponent<gamestate::StateComponent>();
-	const bool hasEmptyState = std::holds_alternative<gamestate::None>(constComponent.m_State);
+	const auto& constComponent = world.ReadComponent<shared::gamestate::StateComponent>();
+	const bool hasEmptyState = std::holds_alternative<shared::gamestate::None>(constComponent.m_State);
 	const bool hasStateQueued = !constComponent.m_Queue.IsEmpty();
-	const bool hasStateFinished = world.HasAny<gamestate::ChangeFinishedEvent>();
+	const bool hasStateFinished = world.HasAny<shared::gamestate::ChangeFinishedEvent>();
 	if ((hasEmptyState && hasStateQueued) || hasStateFinished)
 	{
-		auto& stateComponent = world.WriteComponent<gamestate::StateComponent>();
+		auto& stateComponent = world.WriteComponent<shared::gamestate::StateComponent>();
 
 		// remove old state
-		stateComponent.m_State = gamestate::None();
+		stateComponent.m_State = shared::gamestate::None();
 
 		// append new state
 		if (!stateComponent.m_Queue.IsEmpty())

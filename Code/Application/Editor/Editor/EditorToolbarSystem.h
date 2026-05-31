@@ -39,7 +39,7 @@ namespace eng::settings
 	struct DebugComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditModeComponent;
 	struct EditModeToggleEvent;
@@ -60,8 +60,8 @@ namespace editor
 			editor::sprite::OpenWindowEvent,
 			editor::texture::OpenWindowEvent,
 			eng::settings::DebugComponent,
-			gamestate::EditModeComponent,
-			gamestate::EditModeToggleEvent>;
+			shared::gamestate::EditModeComponent,
+			shared::gamestate::EditModeToggleEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -27,7 +27,7 @@ void editor::input::WindowSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasComponent<gamestate::EditorComponent>())
+	if (!world.HasComponent<shared::gamestate::EditorComponent>())
 		return;
 
 	constexpr ImGuiWindowFlags s_WindowFlags =

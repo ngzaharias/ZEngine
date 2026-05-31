@@ -9,13 +9,13 @@
 #include "SharedGameState/GameStateEditorComponent.h"
 #include "SharedGameState/GameStateEditorSystem.h"
 
-void gamestate::RegisterModule(ecs::EntityWorld& world)
+void shared::gamestate::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<gamestate::DebugComponent>();
-	world.RegisterComponent<gamestate::EditModeComponent>();
-	world.RegisterComponent<gamestate::EditorComponent>();
-	world.RegisterEvent<gamestate::EditModeToggleEvent>();
-	world.RegisterSystem<gamestate::DebugSystem>();
-	world.RegisterSystem<gamestate::EditModeSystem>();
-	world.RegisterSystem<gamestate::EditorSystem>();
+	world.RegisterComponent<shared::gamestate::DebugComponent>();
+	world.RegisterComponent<shared::gamestate::EditModeComponent>();
+	world.RegisterComponent<shared::gamestate::EditorComponent>();
+	world.RegisterEvent<shared::gamestate::EditModeToggleEvent>();
+	world.RegisterSystem<shared::gamestate::DebugSystem>();
+	world.RegisterSystem<shared::gamestate::EditModeSystem>();
+	world.RegisterSystem<shared::gamestate::EditorSystem>();
 }

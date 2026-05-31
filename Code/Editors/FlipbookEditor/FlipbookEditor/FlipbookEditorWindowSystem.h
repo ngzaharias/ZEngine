@@ -23,7 +23,7 @@ namespace eng
 	class AssetManager;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditorComponent;
 }
@@ -43,7 +43,7 @@ namespace editor::flipbook
 			eng::AssetManager>
 			::Read<
 			editor::flipbook::OpenWindowEvent,
-			gamestate::EditorComponent>;
+			shared::gamestate::EditorComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

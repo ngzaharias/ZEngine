@@ -3,19 +3,19 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace gamestate
+namespace shared::gamestate
 {
 	struct EditorComponent;
 }
 
-namespace gamestate
+namespace shared::gamestate
 {
 	class EditorSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			gamestate::EditorComponent>;
+			shared::gamestate::EditorComponent>;
 
 		void Initialise(World& world);
 	};

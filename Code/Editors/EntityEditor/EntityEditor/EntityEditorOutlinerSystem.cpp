@@ -252,7 +252,7 @@ void editor::entity::OutlinerSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
-	if (!world.HasComponent<gamestate::EditorComponent>())
+	if (!world.HasComponent<shared::gamestate::EditorComponent>())
 		return;
 
 	for (const auto& request : world.Events<editor::entity::OpenOutlinerEvent>())
