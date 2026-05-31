@@ -4,7 +4,7 @@
 #include "ECS/Entity.h"
 #include "ECS/Event.h"
 
-namespace tactics
+namespace shared::tactics
 {
 	struct AbilityPreviewEvent final : public ecs::Event
 	{

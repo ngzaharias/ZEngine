@@ -45,15 +45,15 @@ void gui::HUDSystem::Update(World& world, const GameTime& gameTime)
 
 	using SelectedQuery = ecs::query
 		::Added<
-		tactics::PawnSelectedComponent>
+		shared::tactics::PawnSelectedComponent>
 		::Include<
 		const ecs::NameComponent,
-		const tactics::PawnAbilitiesComponent>;
+		const shared::tactics::PawnAbilitiesComponent>;
 	for (auto&& view : world.Query<SelectedQuery>())
 	{
 		const auto& nameComponent = view.ReadRequired<ecs::NameComponent>();
-		const auto& abilityComponent = view.ReadRequired<tactics::PawnAbilitiesComponent>();
-		const auto& abilityTable = world.ReadResource<tactics::AbilityTable>();
+		const auto& abilityComponent = view.ReadRequired<shared::tactics::PawnAbilitiesComponent>();
+		const auto& abilityTable = world.ReadResource<shared::tactics::AbilityTable>();
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		auto& hud = uiManager.WriteDataContext<gui::DCHud>(strHUD_xaml);
 
@@ -72,10 +72,10 @@ void gui::HUDSystem::Update(World& world, const GameTime& gameTime)
 
 	using RemovedSelectedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<tactics::PawnSelectedComponent>;
+		::Removed<shared::tactics::PawnSelectedComponent>;
 	for (auto&& view : world.Query<RemovedSelectedQuery>())
 	{
-		if (world.HasAny<ecs::query::Include<tactics::PawnSelectedComponent>>())
+		if (world.HasAny<ecs::query::Include<shared::tactics::PawnSelectedComponent>>())
 			continue;
 
 		auto& uiManager = world.WriteResource<eng::UIManager>();

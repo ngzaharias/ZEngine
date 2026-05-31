@@ -9,12 +9,12 @@ namespace
 }
 
 template<>
-void Visitor::ReadCustom(tactics::PawnAbilitiesTemplate& value) const
+void Visitor::ReadCustom(shared::tactics::PawnAbilitiesTemplate& value) const
 {
 	Read(strAbilities, value.m_Abilities, value.m_Abilities);
 }
 template<>
-void Visitor::WriteCustom(const tactics::PawnAbilitiesTemplate& value)
+void Visitor::WriteCustom(const shared::tactics::PawnAbilitiesTemplate& value)
 {
 	Write(strAbilities, value.m_Abilities);
 }

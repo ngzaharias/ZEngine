@@ -4,7 +4,7 @@
 #include "Core/Name.h"
 #include "ECS/Component.h"
 
-namespace tactics
+namespace shared::tactics
 {
 	struct PawnAbilitiesComponent final : public ecs::Component
 	{

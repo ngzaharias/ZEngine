@@ -18,7 +18,7 @@ namespace gui
 	struct HUDTemplate;
 }
 
-namespace tactics
+namespace shared::tactics
 {
 	class AbilityTable;
 	struct PawnAbilitiesComponent;
@@ -36,9 +36,9 @@ namespace gui
 			::Read<
 			ecs::NameComponent,
 			gui::HUDTemplate,
-			tactics::AbilityTable,
-			tactics::PawnAbilitiesComponent,
-			tactics::PawnSelectedComponent>;
+			shared::tactics::AbilityTable,
+			shared::tactics::PawnAbilitiesComponent,
+			shared::tactics::PawnSelectedComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

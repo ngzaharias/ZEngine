@@ -18,7 +18,7 @@ namespace eng::settings
 	struct DebugComponent;
 }
 
-namespace tactics
+namespace shared::tactics
 {
 	struct PawnSelectedComponent;
 }
@@ -28,7 +28,7 @@ namespace shared::tilemap
 	struct AgentComponent;
 }
 
-namespace tactics
+namespace shared::tactics
 {
 	class PawnSelectionSystem final : public ecs::System
 	{
@@ -36,7 +36,7 @@ namespace tactics
 		using World = ecs::WorldView
 			::Write<
 			eng::InputManager,
-			tactics::PawnSelectedComponent>
+			shared::tactics::PawnSelectedComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,

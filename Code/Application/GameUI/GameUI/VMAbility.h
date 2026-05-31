@@ -3,7 +3,7 @@
 #include "Core/Name.h"
 #include "Engine/UIViewModel.h"
 
-namespace tactics
+namespace shared::tactics
 {
 	struct Ability;
 }
@@ -13,7 +13,7 @@ namespace gui
 	struct VMAbility final : public eng::UIViewModel
 	{
 	public:
-		VMAbility(const str::Name& name, const tactics::Ability& ability);
+		VMAbility(const str::Name& name, const shared::tactics::Ability& ability);
 
 		const str::Name& GetName() const { return m_Name; }
 		const char* GetDisplay() const { return m_Display.c_str(); }

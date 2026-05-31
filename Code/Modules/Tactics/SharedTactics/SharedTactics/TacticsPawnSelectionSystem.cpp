@@ -33,14 +33,14 @@ namespace
 	}
 }
 
-void tactics::PawnSelectionSystem::Update(World& world, const GameTime& gameTime)
+void shared::tactics::PawnSelectionSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	if (world.HasAny<ecs::query::Added<shared::tilemap::AgentComponent>>())
 	{
 		input::Layer layer;
-		layer.m_Priority = tactics::EInputPriority::PawnSelection;
+		layer.m_Priority = shared::tactics::EInputPriority::PawnSelection;
 		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, true);
 		layer.m_Bindings.Emplace(strDeselect, input::EKey::Mouse_Right, true);
 
@@ -108,14 +108,14 @@ void tactics::PawnSelectionSystem::Update(World& world, const GameTime& gameTime
 				agentEntity = hitEntity;
 		}
 
-		if (agentEntity && !world.HasComponent<tactics::PawnSelectedComponent>(agentEntity))
-			world.AddComponent<tactics::PawnSelectedComponent>(agentEntity);
+		if (agentEntity && !world.HasComponent<shared::tactics::PawnSelectedComponent>(agentEntity))
+			world.AddComponent<shared::tactics::PawnSelectedComponent>(agentEntity);
 
 		// remove previous selection
-		for (auto&& selectedView : world.Query<ecs::query::Include<const tactics::PawnSelectedComponent>>())
+		for (auto&& selectedView : world.Query<ecs::query::Include<const shared::tactics::PawnSelectedComponent>>())
 		{
 			if (selectedView != agentEntity)
-				world.RemoveComponent<tactics::PawnSelectedComponent>(selectedView);
+				world.RemoveComponent<shared::tactics::PawnSelectedComponent>(selectedView);
 		}
 	}
 }

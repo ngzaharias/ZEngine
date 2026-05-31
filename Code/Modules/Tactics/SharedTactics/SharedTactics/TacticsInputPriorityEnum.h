@@ -2,7 +2,7 @@
 
 #include "Engine/InputManager.h"
 
-namespace tactics
+namespace shared::tactics
 {
 	enum EInputPriority
 	{

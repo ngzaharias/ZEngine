@@ -5,7 +5,7 @@
 
 #include <NsCore/ReflectionImplement.h>
 
-gui::VMAbility::VMAbility(const str::Name& name, const tactics::Ability& ability)
+gui::VMAbility::VMAbility(const str::Name& name, const shared::tactics::Ability& ability)
 	: m_Name(name)
 	, m_Display(ability.m_Display)
 	, m_Tooltip(ability.m_Tooltip)

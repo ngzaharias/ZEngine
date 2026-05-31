@@ -5,7 +5,7 @@
 #include "Engine/TableManager.h"
 #include "Math/Vector.h"
 
-namespace tactics
+namespace shared::tactics
 {
 	struct Path
 	{
@@ -31,8 +31,8 @@ namespace tactics
 	{
 		str::String m_Display = {};
 		str::String m_Tooltip = {};
-		tactics::Skill m_Skill = {};
+		shared::tactics::Skill m_Skill = {};
 	};
 
-	class AbilityTable final : public eng::TableManager<str::Name, tactics::Ability> { };
+	class AbilityTable final : public eng::TableManager<str::Name, shared::tactics::Ability> { };
 }

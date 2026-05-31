@@ -118,12 +118,12 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		shared::cursor::RegisterModule(m_EntityWorld);
 		shared::hidden::RegisterModule(m_EntityWorld);
 		shared::network::RegisterModule(m_EntityWorld);
+		shared::tactics::RegisterModule(m_EntityWorld);
 		shared::tilemap::RegisterModule(m_EntityWorld);
 		shared::voxel::RegisterModule(m_EntityWorld);
 		softbody::RegisterModule(m_EntityWorld);
 		spellcraft::RegisterModule(m_EntityWorld);
 		tabletop::RegisterModule(m_EntityWorld);
-		tactics::RegisterModule(m_EntityWorld);
 	}
 }
 

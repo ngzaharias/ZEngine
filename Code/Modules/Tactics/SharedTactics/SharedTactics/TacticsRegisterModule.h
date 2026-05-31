@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace tactics
+namespace shared::tactics
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

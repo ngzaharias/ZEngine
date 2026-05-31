@@ -32,7 +32,7 @@ void gui::DCHud::OnAbilityPreviewCommand(Noesis::BaseComponent* param)
 {
 	if (const auto* vmAbility = Noesis::DynamicCast<gui::VMAbility*>(param))
 	{
-		auto& data = m_EntityWorld->AddEvent<tactics::AbilityPreviewEvent>();
+		auto& data = m_EntityWorld->AddEvent<shared::tactics::AbilityPreviewEvent>();
 		data.m_Entity = m_SelectedPawn->GetEntity();
 		data.m_Ability = vmAbility->GetName();
 	}

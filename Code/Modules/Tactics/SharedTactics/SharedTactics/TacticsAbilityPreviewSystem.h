@@ -10,7 +10,7 @@ namespace eng
 	struct TransformComponent;
 }
 
-namespace tactics
+namespace shared::tactics
 {
 	class AbilityTable;
 	struct AbilityPreviewComponent;
@@ -24,7 +24,7 @@ namespace shared::tilemap
 	struct GridComponent;
 }
 
-namespace tactics
+namespace shared::tactics
 {
 	class AbilityPreviewSystem final : public ecs::System
 	{
@@ -33,13 +33,13 @@ namespace tactics
 			::Write<
 			eng::InputManager,
 			eng::LinesComponent,
-			tactics::AbilityPreviewComponent>
+			shared::tactics::AbilityPreviewComponent>
 			::Read<
 			eng::TransformComponent,
-			tactics::AbilityPreviewEvent,
-			tactics::AbilityTable,
-			tactics::PawnAbilitiesComponent,
-			tactics::PawnSelectedComponent,
+			shared::tactics::AbilityPreviewEvent,
+			shared::tactics::AbilityTable,
+			shared::tactics::PawnAbilitiesComponent,
+			shared::tactics::PawnSelectedComponent,
 			shared::tilemap::GridComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
