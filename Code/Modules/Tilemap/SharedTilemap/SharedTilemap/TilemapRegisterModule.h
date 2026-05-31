@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace tilemap
+namespace shared::tilemap
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

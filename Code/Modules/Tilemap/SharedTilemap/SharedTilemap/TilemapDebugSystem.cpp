@@ -20,7 +20,7 @@
 #include "SharedTilemap/TilemapAgentComponent.h"
 #include "SharedTilemap/TilemapGridComponent.h"
 
-void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
+void shared::tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -44,10 +44,10 @@ void tilemap::DebugSystem::Update(World& world, const GameTime& gameTime)
 		using GridQuery = ecs::query
 			::Include<
 			const eng::TransformComponent,
-			const tilemap::GridComponent>;
+			const shared::tilemap::GridComponent>;
 		for (auto&& gridView : world.Query<GridQuery>())
 		{
-			const auto& gridComponent = gridView.ReadRequired<tilemap::GridComponent>();
+			const auto& gridComponent = gridView.ReadRequired<shared::tilemap::GridComponent>();
 			const auto& gridTransform = gridView.ReadRequired<eng::TransformComponent>();
 			const Quaternion rotate = Quaternion::FromRotator(gridTransform.m_Rotate);
 			const Vector3f normal = Vector3f::AxisZ * rotate;

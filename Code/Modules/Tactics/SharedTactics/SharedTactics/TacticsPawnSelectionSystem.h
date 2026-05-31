@@ -23,7 +23,7 @@ namespace tactics
 	struct PawnSelectedComponent;
 }
 
-namespace tilemap
+namespace shared::tilemap
 {
 	struct AgentComponent;
 }
@@ -45,7 +45,7 @@ namespace tactics
 			eng::settings::DebugComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
-			tilemap::AgentComponent>;
+			shared::tilemap::AgentComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

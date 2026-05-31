@@ -10,18 +10,18 @@
 #include "SharedTilemap/TilemapGridComponent.h"
 #include "SharedTilemap/TilemapGridTemplate.h"
 
-void tilemap::RegisterModule(ecs::EntityWorld& world)
+void shared::tilemap::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<tilemap::AgentComponent>();
-	world.RegisterComponent<tilemap::AgentTemplate>();
-	world.RegisterComponent<tilemap::GridComponent>();
-	world.RegisterComponent<tilemap::GridTemplate>();
-	world.RegisterSystem<tilemap::DebugSystem>();
+	world.RegisterComponent<shared::tilemap::AgentComponent>();
+	world.RegisterComponent<shared::tilemap::AgentTemplate>();
+	world.RegisterComponent<shared::tilemap::GridComponent>();
+	world.RegisterComponent<shared::tilemap::GridTemplate>();
+	world.RegisterSystem<shared::tilemap::DebugSystem>();
 
 	// templates
 	{
 		auto& manager = world.WriteResource<eng::TemplateManager>();
-		manager.RegisterComponent<tilemap::AgentTemplate>();
-		manager.RegisterComponent<tilemap::GridTemplate>();
+		manager.RegisterComponent<shared::tilemap::AgentTemplate>();
+		manager.RegisterComponent<shared::tilemap::GridTemplate>();
 	}
 }

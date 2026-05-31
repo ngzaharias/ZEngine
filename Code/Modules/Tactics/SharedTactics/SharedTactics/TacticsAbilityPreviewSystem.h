@@ -19,7 +19,7 @@ namespace tactics
 	struct PawnSelectedComponent;
 }
 
-namespace tilemap
+namespace shared::tilemap
 {
 	struct GridComponent;
 }
@@ -40,7 +40,7 @@ namespace tactics
 			tactics::AbilityTable,
 			tactics::PawnAbilitiesComponent,
 			tactics::PawnSelectedComponent,
-			tilemap::GridComponent>;
+			shared::tilemap::GridComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

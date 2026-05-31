@@ -26,9 +26,9 @@ namespace
 	using World = tactics::AbilityPreviewSystem::World;
 	Vector3f GetTileSize(World& world)
 	{
-		for (auto&& view : world.Query<ecs::query::Include<const tilemap::GridComponent>>())
+		for (auto&& view : world.Query<ecs::query::Include<const shared::tilemap::GridComponent>>())
 		{
-			const auto& grid = view.ReadRequired<tilemap::GridComponent>();
+			const auto& grid = view.ReadRequired<shared::tilemap::GridComponent>();
 			return grid.m_TileSize;
 		}
 		return Vector3f::Zero;

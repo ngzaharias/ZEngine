@@ -37,7 +37,7 @@ void tactics::PawnSelectionSystem::Update(World& world, const GameTime& gameTime
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<tilemap::AgentComponent>>())
+	if (world.HasAny<ecs::query::Added<shared::tilemap::AgentComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = tactics::EInputPriority::PawnSelection;
@@ -50,7 +50,7 @@ void tactics::PawnSelectionSystem::Update(World& world, const GameTime& gameTime
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<tilemap::AgentComponent>;
+		::Removed<shared::tilemap::AgentComponent>;
 	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
@@ -104,7 +104,7 @@ void tactics::PawnSelectionSystem::Update(World& world, const GameTime& gameTime
 		{
 			const physx::PxRaycastHit& closestHit = hitcall.block;
 			const ecs::Entity hitEntity = ToEntity(hitcall.block.actor);
-			if (world.HasComponent<tilemap::AgentComponent>(hitEntity))
+			if (world.HasComponent<shared::tilemap::AgentComponent>(hitEntity))
 				agentEntity = hitEntity;
 		}
 

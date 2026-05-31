@@ -2,7 +2,7 @@
 
 #include "ECS/Component.h"
 
-namespace tilemap
+namespace shared::tilemap
 {
 	struct AgentComponent final : public ecs::Component
 	{

@@ -3,7 +3,7 @@
 #include "ECS/Component.h"
 #include "Math/Vector.h"
 
-namespace tilemap
+namespace shared::tilemap
 {
 	struct GridComponent final : public ecs::Component
 	{

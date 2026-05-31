@@ -18,13 +18,13 @@ namespace eng::settings
 	struct DebugComponent;
 }
 
-namespace tilemap
+namespace shared::tilemap
 {
 	struct AgentComponent;
 	struct GridComponent;
 }
 
-namespace tilemap
+namespace shared::tilemap
 {
 	class DebugSystem final : public ecs::System
 	{
@@ -39,8 +39,8 @@ namespace tilemap
 			eng::settings::DebugComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
-			tilemap::AgentComponent,
-			tilemap::GridComponent>;
+			shared::tilemap::AgentComponent,
+			shared::tilemap::GridComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
