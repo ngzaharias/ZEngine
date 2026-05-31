@@ -12,13 +12,13 @@ namespace eng
 	struct TransformComponent;
 }
 
-namespace hexmap
+namespace shared::hexmap
 {
 	struct LayerComponent;
 	struct RootComponent;
 }
 
-namespace hexmap
+namespace shared::hexmap
 {
 	class ModifySystem final : public ecs::System
 	{
@@ -26,13 +26,13 @@ namespace hexmap
 		using World = ecs::WorldView
 			::Write<
 			eng::InputManager,
-			hexmap::LayerComponent>
+			shared::hexmap::LayerComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
-			hexmap::RootComponent>;
+			shared::hexmap::RootComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -42,11 +42,11 @@ namespace
 	}
 }
 
-void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
+void shared::hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<hexmap::LayerComponent>>())
+	if (world.HasAny<ecs::query::Added<shared::hexmap::LayerComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -64,7 +64,7 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<hexmap::LayerComponent>;
+		::Removed<shared::hexmap::LayerComponent>;
 	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
@@ -113,10 +113,10 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 			Vector3f intersectPos;
 			if (math::Intersection(ray, plane, intersectPos))
 			{
-				for (auto&& layerView : world.Query<ecs::query::Include<hexmap::LayerComponent>>())
+				for (auto&& layerView : world.Query<ecs::query::Include<shared::hexmap::LayerComponent>>())
 				{
-					const auto& layer = layerView.ReadRequired<hexmap::LayerComponent>();
-					const auto& root = world.ReadComponent<hexmap::RootComponent>(layer.m_Root);
+					const auto& layer = layerView.ReadRequired<shared::hexmap::LayerComponent>();
+					const auto& root = world.ReadComponent<shared::hexmap::RootComponent>(layer.m_Root);
 
 					const HexPos hexPos = hexagon::ToOffset(intersectPos.XZ(), root.m_HexRadius);
 					const HexPos min = ToHexPos(layer.m_Origin, layer.m_HexCount);
@@ -129,7 +129,7 @@ void hexmap::ModifySystem::Update(World& world, const GameTime& gameTime)
 					const Vector2i localPos = hexPos - min;
 					const int32 index = math::To1Dimension(localPos, root.m_HexCount.x);
 
-					auto& write = layerView.WriteRequired<hexmap::LayerComponent>();
+					auto& write = layerView.WriteRequired<shared::hexmap::LayerComponent>();
 					write.m_HexData[index] = { value };
 				}
 			}

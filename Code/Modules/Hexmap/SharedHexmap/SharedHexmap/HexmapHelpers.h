@@ -2,7 +2,7 @@
 
 class Vector2i;
 
-namespace hexmap
+namespace shared::hexmap
 {
 	class HexPos;
 	class LayerPos;

@@ -5,7 +5,7 @@
 #include "SharedHexmap/HexmapData.h"
 #include "Math/AABB.h"
 
-namespace hexmap
+namespace shared::hexmap
 {
 	struct RootComponent final : public ecs::Component
 	{

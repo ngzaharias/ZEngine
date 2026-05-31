@@ -25,13 +25,13 @@ namespace eng::level
 	struct EntityComponent;
 }
 
-namespace hexmap
+namespace shared::hexmap
 {
 	struct LayerComponent;
 	struct RootComponent;
 }
 
-namespace hexmap
+namespace shared::hexmap
 {
 	class LoadSystem final : public ecs::System
 	{
@@ -43,10 +43,10 @@ namespace hexmap
 			eng::LinesComponent,
 			eng::StaticMeshComponent,
 			eng::TransformComponent,
-			hexmap::LayerComponent>
+			shared::hexmap::LayerComponent>
 			::Read<
 			client::settings::DebugComponent,
-			hexmap::RootComponent>;
+			shared::hexmap::RootComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

@@ -33,7 +33,7 @@ namespace
 	const str::Guid strTexture = str::Guid::Create("3c8610fc623e4496951dcefeaf0495ab");
 }
 
-void hexmap::RenderSystem::Initialise(World& world)
+void shared::hexmap::RenderSystem::Initialise(World& world)
 {
 	PROFILE_FUNCTION();
 
@@ -47,7 +47,7 @@ void hexmap::RenderSystem::Initialise(World& world)
 	assetManager.RequestAsset(strTexture);
 }
 
-void hexmap::RenderSystem::Shutdown(World& world)
+void shared::hexmap::RenderSystem::Shutdown(World& world)
 {
 	PROFILE_FUNCTION();
 
@@ -61,7 +61,7 @@ void hexmap::RenderSystem::Shutdown(World& world)
 	assetManager.ReleaseAsset(strTexture);
 }
 
-void hexmap::RenderSystem::Update(World& world, const GameTime& gameTime)
+void shared::hexmap::RenderSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -115,15 +115,15 @@ void hexmap::RenderSystem::Update(World& world, const GameTime& gameTime)
 		using RenderQuery = ecs::query
 			::Include<
 			const eng::TransformComponent,
-			const hexmap::LayerComponent>;
+			const shared::hexmap::LayerComponent>;
 
 		for (auto&& renderView : world.Query<RenderQuery>())
 		{
-			const auto& layer = renderView.ReadRequired<hexmap::LayerComponent>();
+			const auto& layer = renderView.ReadRequired<shared::hexmap::LayerComponent>();
 			if (!world.IsAlive(layer.m_Root))
 				continue;
 
-			const auto& root = world.ReadComponent<hexmap::RootComponent>(layer.m_Root);
+			const auto& root = world.ReadComponent<shared::hexmap::RootComponent>(layer.m_Root);
 			const auto& transform = renderView.ReadRequired<eng::TransformComponent>();
 
 			const Vector2f spriteSize = s_SpriteSize;

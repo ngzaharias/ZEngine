@@ -6,7 +6,7 @@
 #include "ECS/Entity.h"
 #include "SharedHexmap/HexmapData.h"
 
-namespace hexmap
+namespace shared::hexmap
 {
 	/// \brief 
 	struct LayerComponent final : public ecs::Component

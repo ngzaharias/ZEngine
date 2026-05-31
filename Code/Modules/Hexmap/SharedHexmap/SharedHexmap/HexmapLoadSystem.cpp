@@ -17,20 +17,20 @@
 #include "SharedHexmap/HexmapLayerComponent.h"
 #include "SharedHexmap/HexmapRootComponent.h"
 
-void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
+void shared::hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	// load
 	using RootQuery = ecs::query
 		::Updated<
-		hexmap::RootComponent>
+		shared::hexmap::RootComponent>
 		::Include<
 		const eng::level::EntityComponent,
-		const hexmap::RootComponent>;
+		const shared::hexmap::RootComponent>;
 	for (auto&& rootView : world.Query<RootQuery>())
 	{
-		const auto& root = rootView.ReadRequired<hexmap::RootComponent>();
+		const auto& root = rootView.ReadRequired<shared::hexmap::RootComponent>();
 		const auto& level = rootView.ReadRequired<eng::level::EntityComponent>();
 
 		const HexPos hexMin = hexagon::ToOffset(root.m_Zone.m_Min, root.m_HexRadius);
@@ -46,10 +46,10 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 		}
 
 		Set<LayerPos> loaded;
-		for (auto&& layerView : world.Query<ecs::query::Include<const eng::TransformComponent, const hexmap::LayerComponent>>())
+		for (auto&& layerView : world.Query<ecs::query::Include<const eng::TransformComponent, const shared::hexmap::LayerComponent>>())
 		{
 			const auto& transform = layerView.ReadRequired<eng::TransformComponent>();
-			const auto& layer = layerView.ReadRequired<hexmap::LayerComponent>();
+			const auto& layer = layerView.ReadRequired<shared::hexmap::LayerComponent>();
 
 			if (inRange.Contains(layer.m_Origin))
 			{
@@ -69,7 +69,7 @@ void hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 			const Vector3f worldPos = hexagon::ToWorldPos(hexPos, root.m_HexRadius).X0Y();
 
 			const ecs::Entity entity = world.CreateEntity();
-			auto& layer = world.AddComponent<hexmap::LayerComponent>(entity);
+			auto& layer = world.AddComponent<shared::hexmap::LayerComponent>(entity);
 			layer.m_Origin = layerPos;
 			layer.m_Root = rootView;
 			layer.m_HexCount = root.m_HexCount;

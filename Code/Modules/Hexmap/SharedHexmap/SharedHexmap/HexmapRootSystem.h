@@ -12,13 +12,13 @@ namespace eng
 	struct TransformComponent;
 }
 
-namespace hexmap
+namespace shared::hexmap
 {
 	struct RootComponent;
 	struct RootTemplate;
 }
 
-namespace hexmap
+namespace shared::hexmap
 {
 	class RootSystem final : public ecs::System
 	{
@@ -27,12 +27,12 @@ namespace hexmap
 			::Write<
 			eng::CameraComponent,
 			eng::InputManager,
-			hexmap::RootComponent>
+			shared::hexmap::RootComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
-			hexmap::RootTemplate>;
+			shared::hexmap::RootTemplate>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

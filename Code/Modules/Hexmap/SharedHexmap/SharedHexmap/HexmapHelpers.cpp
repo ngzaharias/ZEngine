@@ -4,12 +4,12 @@
 #include "SharedHexmap/HexmapHelpers.h"
 #include "Math/Vector.h"
 
-hexmap::LayerPos hexmap::ToLayerPos(const HexPos& hexPos, const Vector2i& stride)
+shared::hexmap::LayerPos shared::hexmap::ToLayerPos(const HexPos& hexPos, const Vector2i& stride)
 {
 	return LayerPos(hexPos.x / stride.x, hexPos.y / stride.y);
 }
 
-hexmap::HexPos hexmap::ToHexPos(const LayerPos& hexPos, const Vector2i& stride)
+shared::hexmap::HexPos shared::hexmap::ToHexPos(const LayerPos& hexPos, const Vector2i& stride)
 {
 	return HexPos(hexPos.x * stride.x, hexPos.y * stride.y);
 }

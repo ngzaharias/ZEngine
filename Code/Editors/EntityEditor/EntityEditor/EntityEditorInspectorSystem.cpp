@@ -104,7 +104,7 @@ namespace
 		ToggleComponent<client::hidden::CountTemplate>(world, entity);
 		ToggleComponent<client::hidden::GroupTemplate>(world, entity);
 		ToggleComponent<client::hidden::ObjectTemplate>(world, entity);
-		ToggleComponent<hexmap::RootTemplate>(world, entity);
+		ToggleComponent<shared::hexmap::RootTemplate>(world, entity);
 		ToggleComponent<shared::softbody::ChainTemplate>(world, entity);
 	}
 
@@ -209,11 +209,11 @@ namespace
 		InspectComponent<gui::HUDTemplate>(world, entity, inspector);
 		InspectComponent<gui::input::BindingsTemplate>(world, entity, inspector);
 		InspectComponent<gui::main_menu::WindowTemplate>(world, entity, inspector);
-		InspectComponent<hexmap::RootTemplate>(world, entity, inspector);
 		InspectComponent<shared::camera::Move2DTemplate>(world, entity, inspector);
 		InspectComponent<shared::camera::Move3DTemplate>(world, entity, inspector);
 		InspectComponent<shared::camera::Pan3DTemplate>(world, entity, inspector);
 		InspectComponent<shared::camera::Zoom2DTemplate>(world, entity, inspector);
+		InspectComponent<shared::hexmap::RootTemplate>(world, entity, inspector);
 		InspectComponent<shared::softbody::ChainTemplate>(world, entity, inspector);
 		inspector.End();
 

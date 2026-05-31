@@ -17,19 +17,19 @@ namespace eng::settings
 	struct DebugComponent;
 }
 
-namespace hexmap
-{
-	struct LayerComponent;
-	struct RootComponent;
-}
-
 namespace render
 {
 	struct OpaqueComponent;
 	struct ShadowComponent;
 }
 
-namespace hexmap
+namespace shared::hexmap
+{
+	struct LayerComponent;
+	struct RootComponent;
+}
+
+namespace shared::hexmap
 {
 	class RenderSystem final : public ecs::System
 	{
@@ -44,9 +44,9 @@ namespace hexmap
 			eng::settings::DebugComponent,
 			eng::TransformComponent,
 			eng::WindowManager,
-			hexmap::LayerComponent,
-			hexmap::RootComponent,
-			render::ShadowComponent>;
+			render::ShadowComponent,
+			shared::hexmap::LayerComponent,
+			shared::hexmap::RootComponent>;
 
 		void Initialise(World& world);
 		void Shutdown(World& world);

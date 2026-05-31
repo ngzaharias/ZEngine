@@ -62,11 +62,11 @@ namespace
 	}
 }
 
-void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
+void shared::hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<hexmap::RootComponent>>())
+	if (world.HasAny<ecs::query::Added<shared::hexmap::RootComponent>>())
 	{
 		input::Layer layer;
 		layer.m_Priority = eng::EInputPriority::Gameplay;
@@ -78,7 +78,7 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<hexmap::RootComponent>;
+		::Removed<shared::hexmap::RootComponent>;
 	if (world.HasAny<RemovedQuery>())
 	{
 		auto& input = world.WriteResource<eng::InputManager>();
@@ -95,9 +95,9 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 		const auto& input = world.ReadResource<eng::InputManager>();
 		if (input.m_ScrollDelta.y != 0)
 		{
-			for (auto&& view : world.Query<ecs::query::Include<hexmap::RootComponent>>())
+			for (auto&& view : world.Query<ecs::query::Include<shared::hexmap::RootComponent>>())
 			{
-				auto& root = view.WriteRequired<hexmap::RootComponent>();
+				auto& root = view.WriteRequired<shared::hexmap::RootComponent>();
 				root.m_Zoom -= input.m_ScrollDelta.y * 0.1f;
 				root.m_Zoom = math::Clamp(root.m_Zoom, 0.f, 1.f);
 			}
@@ -122,9 +122,9 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 			const auto& transform = cameraView.ReadRequired<eng::TransformComponent>();
 			const auto& camera = cameraView.ReadRequired<eng::CameraComponent>();
 
-			for (auto&& rootView : world.Query<ecs::query::Include<hexmap::RootComponent>>())
+			for (auto&& rootView : world.Query<ecs::query::Include<shared::hexmap::RootComponent>>())
 			{
-				auto& root = rootView.WriteRequired<hexmap::RootComponent>();
+				auto& root = rootView.WriteRequired<shared::hexmap::RootComponent>();
 				if (std::holds_alternative<eng::Orthographic>(camera.m_Projection))
 				{
 					constexpr float zoomMin = 1000.f;
@@ -144,14 +144,14 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 			}
 		}
 	}
-	
+
 	using AddedQuery = ecs::query
-		::Added<const hexmap::RootTemplate>
-		::Include<const hexmap::RootTemplate>;
+		::Added<const shared::hexmap::RootTemplate>
+		::Include<const shared::hexmap::RootTemplate>;
 	for (auto&& view : world.Query<AddedQuery>())
 	{
-		const auto& rootTemplate = view.ReadRequired<hexmap::RootTemplate>();
-		auto& rootComponent = world.AddComponent<hexmap::RootComponent>(view);
+		const auto& rootTemplate = view.ReadRequired<shared::hexmap::RootTemplate>();
+		auto& rootComponent = world.AddComponent<shared::hexmap::RootComponent>(view);
 		rootComponent.m_HexRadius = rootTemplate.m_HexRadius;
 		rootComponent.m_HexCount = rootTemplate.m_HexCount;
 		rootComponent.m_Zoom = rootTemplate.m_Zoom;
@@ -159,20 +159,20 @@ void hexmap::RootSystem::Update(World& world, const GameTime& gameTime)
 	}
 
 	using UpdatedQuery = ecs::query
-		::Updated<const hexmap::RootTemplate>
-		::Include<hexmap::RootComponent, const hexmap::RootTemplate>;
+		::Updated<const shared::hexmap::RootTemplate>
+		::Include<shared::hexmap::RootComponent, const shared::hexmap::RootTemplate>;
 	for (auto&& view : world.Query<UpdatedQuery>())
 	{
-		const auto& rootTemplate = view.ReadRequired<hexmap::RootTemplate>();
-		auto& rootComponent = view.WriteRequired<hexmap::RootComponent>();
+		const auto& rootTemplate = view.ReadRequired<shared::hexmap::RootTemplate>();
+		auto& rootComponent = view.WriteRequired<shared::hexmap::RootComponent>();
 		rootComponent.m_HexRadius = rootTemplate.m_HexRadius;
 		rootComponent.m_HexCount = rootTemplate.m_HexCount;
 		rootComponent.m_Zoom = rootTemplate.m_Zoom;
 		rootComponent.m_Zone = rootTemplate.m_Zone;
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<const hexmap::RootTemplate>>())
+	for (auto&& view : world.Query<ecs::query::Removed<const shared::hexmap::RootTemplate>>())
 	{
-		world.RemoveComponent<hexmap::RootComponent>(view);
+		world.RemoveComponent<shared::hexmap::RootComponent>(view);
 	}
 }

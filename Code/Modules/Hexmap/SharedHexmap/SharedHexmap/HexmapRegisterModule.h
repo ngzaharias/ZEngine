@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace hexmap
+namespace shared::hexmap
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

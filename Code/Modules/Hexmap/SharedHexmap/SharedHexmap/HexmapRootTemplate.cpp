@@ -12,13 +12,13 @@ namespace
 }
 
 template<>
-void Visitor::ReadCustom(hexmap::RootTemplate& value) const
+void Visitor::ReadCustom(shared::hexmap::RootTemplate& value) const
 {
 	Read(strHexRadius, value.m_HexRadius, value.m_HexRadius);
 	Read(strHexCount, value.m_HexCount, value.m_HexCount);
 }
 template<>
-void Visitor::WriteCustom(const hexmap::RootTemplate& value)
+void Visitor::WriteCustom(const shared::hexmap::RootTemplate& value)
 {
 	Write(strHexRadius, value.m_HexRadius);
 	Write(strHexCount, value.m_HexCount);

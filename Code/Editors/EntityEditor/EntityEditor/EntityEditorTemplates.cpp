@@ -158,13 +158,13 @@ void editor::entity::Inspector::VisitCustom(const eng::VisibilityTemplate& value
 }
 
 template<>
-void editor::entity::Inspector::VisitCustom(const hexmap::RootTemplate& valueOld)
+void editor::entity::Inspector::VisitCustom(const shared::hexmap::RootTemplate& valueOld)
 {
-	hexmap::RootTemplate valueNew = valueOld;
-	VISIT(hexmap::RootTemplate, m_HexRadius);
-	VISIT(hexmap::RootTemplate, m_HexCount);
-	VISIT(hexmap::RootTemplate, m_Zoom);
-	VISIT(hexmap::RootTemplate, m_Zone);
+	shared::hexmap::RootTemplate valueNew = valueOld;
+	VISIT(shared::hexmap::RootTemplate, m_HexRadius);
+	VISIT(shared::hexmap::RootTemplate, m_HexCount);
+	VISIT(shared::hexmap::RootTemplate, m_Zoom);
+	VISIT(shared::hexmap::RootTemplate, m_Zone);
 }
 
 template<>

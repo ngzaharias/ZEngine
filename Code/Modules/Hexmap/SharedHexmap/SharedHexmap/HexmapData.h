@@ -3,7 +3,7 @@
 #include "Math/Hexagon.h"
 #include "Math/Vector.h"
 
-namespace hexmap
+namespace shared::hexmap
 {
 	class LayerPos
 	{

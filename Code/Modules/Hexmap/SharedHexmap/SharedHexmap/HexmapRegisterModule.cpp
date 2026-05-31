@@ -12,19 +12,19 @@
 #include "SharedHexmap/HexmapRootSystem.h"
 #include "SharedHexmap/HexmapRootTemplate.h"
 
-void hexmap::RegisterModule(ecs::EntityWorld& world)
+void shared::hexmap::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<hexmap::LayerComponent>();
-	world.RegisterComponent<hexmap::RootComponent>();
-	world.RegisterComponent<hexmap::RootTemplate>();
-	world.RegisterSystem<hexmap::LoadSystem>();
-	world.RegisterSystem<hexmap::ModifySystem>();
-	world.RegisterSystem<hexmap::RenderSystem>();
-	world.RegisterSystem<hexmap::RootSystem>();
+	world.RegisterComponent<shared::hexmap::LayerComponent>();
+	world.RegisterComponent<shared::hexmap::RootComponent>();
+	world.RegisterComponent<shared::hexmap::RootTemplate>();
+	world.RegisterSystem<shared::hexmap::LoadSystem>();
+	world.RegisterSystem<shared::hexmap::ModifySystem>();
+	world.RegisterSystem<shared::hexmap::RenderSystem>();
+	world.RegisterSystem<shared::hexmap::RootSystem>();
 
 	// templates
 	{
 		auto& manager = world.WriteResource<eng::TemplateManager>();
-		manager.RegisterComponent<hexmap::RootTemplate>();
+		manager.RegisterComponent<shared::hexmap::RootTemplate>();
 	}
 }
