@@ -4,10 +4,10 @@
 #include "Serialize/Visitor.h"
 
 template<>
-void Visitor::ReadCustom(tabletop::CardTemplate& value) const
+void Visitor::ReadCustom(shared::tabletop::CardTemplate& value) const
 {
 }
 template<>
-void Visitor::WriteCustom(const tabletop::CardTemplate& value)
+void Visitor::WriteCustom(const shared::tabletop::CardTemplate& value)
 {
 }

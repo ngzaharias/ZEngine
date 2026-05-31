@@ -5,7 +5,7 @@ namespace ecs
 	class EntityWorld;
 }
 
-namespace tabletop
+namespace shared::tabletop
 {
 	void RegisterModule(ecs::EntityWorld& world);
 }

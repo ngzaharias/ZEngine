@@ -2,7 +2,7 @@
 
 #include "ECS/Component.h"
 
-namespace tabletop
+namespace shared::tabletop
 {
 	/// \brief 
 	struct DeckComponent final : public ecs::Component

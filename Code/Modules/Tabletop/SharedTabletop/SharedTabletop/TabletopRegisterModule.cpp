@@ -9,17 +9,17 @@
 #include "SharedTabletop/TabletopDeckComponent.h"
 #include "SharedTabletop/TabletopDeckTemplate.h"
 
-void tabletop::RegisterModule(ecs::EntityWorld& world)
+void shared::tabletop::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<tabletop::CardComponent>();
-	world.RegisterComponent<tabletop::CardTemplate>();
-	world.RegisterComponent<tabletop::DeckComponent>();
-	world.RegisterComponent<tabletop::DeckTemplate>();
+	world.RegisterComponent<shared::tabletop::CardComponent>();
+	world.RegisterComponent<shared::tabletop::CardTemplate>();
+	world.RegisterComponent<shared::tabletop::DeckComponent>();
+	world.RegisterComponent<shared::tabletop::DeckTemplate>();
 
 	// templates
 	{
 		auto& manager = world.WriteResource<eng::TemplateManager>();
-		manager.RegisterComponent<tabletop::CardTemplate>();
-		manager.RegisterComponent<tabletop::DeckTemplate>();
+		manager.RegisterComponent<shared::tabletop::CardTemplate>();
+		manager.RegisterComponent<shared::tabletop::DeckTemplate>();
 	}
 }

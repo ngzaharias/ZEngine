@@ -3,7 +3,7 @@
 #include "Core/Guid.h"
 #include "ECS/Component.h"
 
-namespace tabletop
+namespace shared::tabletop
 {
 	/// \brief 
 	struct CardTemplate final : public ecs::TemplateComponent
