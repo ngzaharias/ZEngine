@@ -3,7 +3,13 @@ project "Imgui"
 	location "%{wks.location}/Framework/Imgui"
 
 	files 
-	{ 
+	{
+		"%{wks.location}/../Code/Framework/%{prj.name}/*.natvis",
+		"%{wks.location}/../Code/Framework/%{prj.name}/premake5.*",
+		"%{wks.location}/../Code/Framework/%{prj.name}/%{prj.name}/**.h",
+		"%{wks.location}/../Code/Framework/%{prj.name}/%{prj.name}/**.cpp",
+		"%{wks.location}/../Code/Framework/%{prj.name}/%{prj.name}/**.inl",
+
 		"%{prj.location}/**.h",
 		"%{prj.location}/**.inl",
 		"%{prj.location}/**.cpp",
@@ -15,7 +21,7 @@ project "Imgui"
 		"%{wks.location}/../3rdParty/imnodes/0.5/Include/imnodes/*.cpp",
 		"%{wks.location}/../3rdParty/imguizmo/1.83/Include/imguizmo/*.h",
 		"%{wks.location}/../3rdParty/imguizmo/1.83/Include/imguizmo/*.inl",
-		"%{wks.location}/../3rdParty/imguizmo/1.83/Include/imguizmo/*.cpp",
+		"%{wks.location}/../3rdParty/imguizmo/1.83/Include/imguizmo/*.cpp", 
 	}
 		
 	vpaths 

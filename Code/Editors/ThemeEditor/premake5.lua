@@ -3,6 +3,17 @@ project "ThemeEditor"
 	pchheader "ThemeEditorPCH.h"
 	pchsource "ThemeEditor/ThemeEditorPCH.cpp"
 	location "%{wks.location}/Editors/ThemeEditor"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
@@ -25,5 +36,5 @@ project "ThemeEditor"
 		"%{wks.location}/../Code/Framework/ImGui/",
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
-		"%{wks.location}/../Code/Modules/GameState/",
+		"%{wks.location}/../Code/Modules/GameState/SharedGameState/",
 	}

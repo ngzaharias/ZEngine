@@ -4,6 +4,17 @@ project "GameDebug"
 	pchsource "GameDebug/GameDebugPCH.cpp"
 	location "%{wks.location}/Application/GameDebug"
 
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
+
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
@@ -27,12 +38,9 @@ project "GameDebug"
 		"%{wks.location}/../Code/Application/GameDebug/",
 		"%{wks.location}/../Code/Application/GameServer/",
 		"%{wks.location}/../Code/Application/GameUI/",
-		"%{wks.location}/../Code/Debuggers/DebugCrafting/",
 		"%{wks.location}/../Code/Debuggers/DebugEntity/",
-		"%{wks.location}/../Code/Debuggers/DebugInventory/",
 		"%{wks.location}/../Code/Editors/FlipbookEditor/",
 		"%{wks.location}/../Code/Editors/InputEditor/",
-		"%{wks.location}/../Code/Editors/SpellEditor/",
 		"%{wks.location}/../Code/Editors/SpriteEditor/",
 		"%{wks.location}/../Code/Editors/TableEditor/",
 		"%{wks.location}/../Code/Editors/TextureEditor/",
@@ -46,10 +54,13 @@ project "GameDebug"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/ClientHidden/",
-		"%{wks.location}/../Code/Modules/Hexmap/",
-		"%{wks.location}/../Code/Modules/Inventory/",
-		"%{wks.location}/../Code/Modules/Softbody/",
-		"%{wks.location}/../Code/Modules/Tabletop/",
-		"%{wks.location}/../Code/Modules/Voxel/",
+		"%{wks.location}/../Code/Modules/Crafting/DebugCrafting/",
+		"%{wks.location}/../Code/Modules/Hexmap/SharedHexmap/",
+		"%{wks.location}/../Code/Modules/Hidden/ClientHidden/",
+		"%{wks.location}/../Code/Modules/Inventory/DebugInventory/",
+		"%{wks.location}/../Code/Modules/Inventory/SharedInventory/",
+		"%{wks.location}/../Code/Modules/Softbody/SharedSoftbody/",
+		"%{wks.location}/../Code/Modules/Spellcraft/EditorSpellcraft/",
+		"%{wks.location}/../Code/Modules/Tabletop/SharedTabletop/",
+		"%{wks.location}/../Code/Modules/Voxel/SharedVoxel/",
 	}

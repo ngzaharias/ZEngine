@@ -4,6 +4,17 @@ project "GameServer"
 	pchsource "GameServer/GameServerPCH.cpp"
 	location "%{wks.location}/Application/GameServer"
 
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
+
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
@@ -29,11 +40,11 @@ project "GameServer"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Inventory/",
-		"%{wks.location}/../Code/Modules/ServerCursor/",
-		"%{wks.location}/../Code/Modules/ServerHidden/",
-		"%{wks.location}/../Code/Modules/ServerNetwork/",
-		"%{wks.location}/../Code/Modules/SharedCursor/",
-		"%{wks.location}/../Code/Modules/SharedHidden/",
-		"%{wks.location}/../Code/Modules/SharedNetwork/",
+		"%{wks.location}/../Code/Modules/Cursor/ServerCursor/",
+		"%{wks.location}/../Code/Modules/Cursor/SharedCursor/",
+		"%{wks.location}/../Code/Modules/Hidden/ServerHidden/",
+		"%{wks.location}/../Code/Modules/Hidden/SharedHidden/",
+		"%{wks.location}/../Code/Modules/Inventory/SharedInventory/",
+		"%{wks.location}/../Code/Modules/Network/ServerNetwork/",
+		"%{wks.location}/../Code/Modules/Network/SharedNetwork/",
 	}

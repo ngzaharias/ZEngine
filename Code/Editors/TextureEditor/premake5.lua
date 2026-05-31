@@ -3,6 +3,17 @@ project "TextureEditor"
 	pchheader "TextureEditorPCH.h"
 	pchsource "TextureEditor/TextureEditorPCH.cpp"
 	location "%{wks.location}/Editors/TextureEditor"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
@@ -26,5 +37,5 @@ project "TextureEditor"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/GameState/",
+		"%{wks.location}/../Code/Modules/GameState/SharedGameState/",
 	}

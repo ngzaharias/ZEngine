@@ -4,6 +4,17 @@ project "Engine"
 	pchsource "Engine/EnginePCH.cpp"
 	location "%{wks.location}/Framework/Engine"
 
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
+
 	removefiles 
 	{ 
 		"Engine/Vulkan/*", 

@@ -3,6 +3,17 @@ project "Render"
 	pchheader "RenderPCH.h"
 	pchsource "Render/RenderPCH.cpp"
 	location "%{wks.location}/Framework/Render"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
@@ -30,5 +41,5 @@ project "Render"
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Voxel/",
+		"%{wks.location}/../Code/Modules/Voxel/SharedVoxel/",
 	}

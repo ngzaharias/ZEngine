@@ -9,13 +9,15 @@ project "Editor"
 	pchsource "Editor/EditorPCH.cpp"
 	location "%{wks.location}/Application/Editor"
 
+	local root = path.getdirectory(_SCRIPT)
 	files 
 	{ 
-		"%{wks.location}/../Code/Application/Editor/*.natvis",
-		"%{wks.location}/../Code/Application/Editor/premake5.*",
-		"%{wks.location}/../Code/Application/Editor/Editor/**.h",
-		"%{wks.location}/../Code/Application/Editor/Editor/**.cpp",
-		"%{wks.location}/../Code/Application/Editor/Editor/**.inl",
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
 	}
 
 	vpaths 
@@ -53,7 +55,6 @@ project "Editor"
 		"%{wks.location}/../Code/Editors/EntityEditor/",
 		"%{wks.location}/../Code/Editors/FlipbookEditor/",
 		"%{wks.location}/../Code/Editors/InputEditor/",
-		"%{wks.location}/../Code/Editors/SpellEditor/",
 		"%{wks.location}/../Code/Editors/SpriteEditor/",
 		"%{wks.location}/../Code/Editors/TableEditor/",
 		"%{wks.location}/../Code/Editors/TextureEditor/",
@@ -69,11 +70,12 @@ project "Editor"
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Camera/",
-		"%{wks.location}/../Code/Modules/ClientHidden/",
-		"%{wks.location}/../Code/Modules/GameState/",
-		"%{wks.location}/../Code/Modules/Inventory/",
-		"%{wks.location}/../Code/Modules/Softbody/",
+		"%{wks.location}/../Code/Modules/Camera/SharedCamera",
+		"%{wks.location}/../Code/Modules/GameState/SharedGameState/",
+		"%{wks.location}/../Code/Modules/Hidden/ClientHidden/",
+		"%{wks.location}/../Code/Modules/Inventory/SharedInventory/",
+		"%{wks.location}/../Code/Modules/Softbody/SharedSoftbody/",
+		"%{wks.location}/../Code/Modules/Spellcraft/EditorSpellcraft/",
 	}
 
 	libdirs 
@@ -122,11 +124,11 @@ project "Editor"
 
 		-- Editors
 		"AssetBrowser",
+		"EditorSpellcraft",
 		"EntityEditor",
 		"FlipbookEditor",
 		"InputEditor",
 		"NodeGraph",
-		"SpellEditor",
 		"SpriteEditor",
 		"TableEditor",
 		"TextureEditor",
@@ -145,26 +147,26 @@ project "Editor"
 		"Serialize",
 
 		-- Modules
-		"Camera",
 		"ClientCursor",
 		"ClientHidden",
 		"ClientNetwork",
-		"Crafting",
-		"GameState",
-		"Hexmap",
 		"ServerCursor",
 		"ServerHidden",
-		"Inventory",
 		"ServerNetwork",
+		"SharedCamera",
+		"SharedCrafting",
 		"SharedCursor",
+		"SharedGameState",
+		"SharedHexmap",
 		"SharedHidden",
+		"SharedInventory",
 		"SharedNetwork",
-		"Softbody",
-		"Spellcraft",
-		"Tabletop",
-		"Tactics",
-		"Tilemap",
-		"Voxel",
+		"SharedSoftbody",
+		"SharedSpellcraft",
+		"SharedTabletop",
+		"SharedTactics",
+		"SharedTilemap",
+		"SharedVoxel",
 
 		-- 3rdParty
 		"assimp.lib",

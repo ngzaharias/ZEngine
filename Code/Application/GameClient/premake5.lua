@@ -4,6 +4,17 @@ project "GameClient"
 	pchsource "GameClient/GameClientPCH.cpp"
 	location "%{wks.location}/Application/GameClient"
 
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
+
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
@@ -36,20 +47,20 @@ project "GameClient"
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Camera/",
-		"%{wks.location}/../Code/Modules/ClientCursor/",
-		"%{wks.location}/../Code/Modules/ClientHidden/",
-		"%{wks.location}/../Code/Modules/ClientNetwork/",
-		"%{wks.location}/../Code/Modules/Crafting/",
-		"%{wks.location}/../Code/Modules/Hexmap/",
-		"%{wks.location}/../Code/Modules/Inventory/",
-		"%{wks.location}/../Code/Modules/SharedCursor/",
-		"%{wks.location}/../Code/Modules/SharedHidden/",
-		"%{wks.location}/../Code/Modules/SharedNetwork/",
-		"%{wks.location}/../Code/Modules/Softbody/",
-		"%{wks.location}/../Code/Modules/Spellcraft/",
-		"%{wks.location}/../Code/Modules/Tabletop/",
-		"%{wks.location}/../Code/Modules/Tactics/",
-		"%{wks.location}/../Code/Modules/Tilemap/",
-		"%{wks.location}/../Code/Modules/Voxel/",
+		"%{wks.location}/../Code/Modules/Camera/SharedCamera/",
+		"%{wks.location}/../Code/Modules/Crafting/SharedCrafting/",
+		"%{wks.location}/../Code/Modules/Cursor/ClientCursor/",
+		"%{wks.location}/../Code/Modules/Cursor/SharedCursor/",
+		"%{wks.location}/../Code/Modules/Hexmap/SharedHexmap/",
+		"%{wks.location}/../Code/Modules/Hidden/ClientHidden/",
+		"%{wks.location}/../Code/Modules/Hidden/SharedHidden/",
+		"%{wks.location}/../Code/Modules/Inventory/SharedInventory/",
+		"%{wks.location}/../Code/Modules/Network/ClientNetwork/",
+		"%{wks.location}/../Code/Modules/Network/SharedNetwork/",
+		"%{wks.location}/../Code/Modules/Softbody/SharedSoftbody/",
+		"%{wks.location}/../Code/Modules/Spellcraft/SharedSpellcraft/",
+		"%{wks.location}/../Code/Modules/Tabletop/SharedTabletop/",
+		"%{wks.location}/../Code/Modules/Tactics/SharedTactics/",
+		"%{wks.location}/../Code/Modules/Tilemap/SharedTilemap/",
+		"%{wks.location}/../Code/Modules/Voxel/SharedVoxel/",
 	}

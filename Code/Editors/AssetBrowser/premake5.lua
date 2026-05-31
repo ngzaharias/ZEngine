@@ -3,6 +3,17 @@ project "AssetBrowser"
 	pchheader "AssetBrowserPCH.h"
 	pchsource "AssetBrowser/AssetBrowserPCH.cpp"
 	location "%{wks.location}/Editors/AssetBrowser"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
@@ -26,5 +37,5 @@ project "AssetBrowser"
 		"%{wks.location}/../Code/Framework/ImGui/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/GameState/",
+		"%{wks.location}/../Code/Modules/GameState/SharedGameState/",
 	}

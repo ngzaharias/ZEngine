@@ -4,6 +4,17 @@ project "GameUI"
 	pchsource "GameUI/GameUIPCH.cpp"
 	location "%{wks.location}/Application/GameUI"
 
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
+
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
@@ -28,7 +39,7 @@ project "GameUI"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Camera/",
-		"%{wks.location}/../Code/Modules/ClientHidden/",
-		"%{wks.location}/../Code/Modules/Tactics/",
+		"%{wks.location}/../Code/Modules/Camera/SharedCamera/",
+		"%{wks.location}/../Code/Modules/Hidden/ClientHidden/",
+		"%{wks.location}/../Code/Modules/Tactics/SharedTactics/",
 	}

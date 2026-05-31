@@ -10,14 +10,15 @@ project "Game"
 	pchsource "Game/GamePCH.cpp"
 	location "%{wks.location}/Application/Game"
 
+	local root = path.getdirectory(_SCRIPT)
 	files 
 	{ 
-		"%{wks.location}/../Code/Application/Game/*.natvis",
-		"%{wks.location}/../Code/Application/Game/premake5.*",
-		"%{wks.location}/../Code/Application/Game/Game/**.h",
-		"%{wks.location}/../Code/Application/Game/Game/**.cpp",
-		"%{wks.location}/../Code/Application/Game/Game/**.inl",
-		"%{wks.location}/../Code/Application/Game/Resource/**.*",
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
 	}
 
 	vpaths 
@@ -61,23 +62,23 @@ project "Game"
 		"%{wks.location}/../Code/Framework/Network/",
 		"%{wks.location}/../Code/Framework/Render/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Camera/",
-		"%{wks.location}/../Code/Modules/ClientCursor/",
-		"%{wks.location}/../Code/Modules/ClientHidden/",
-		"%{wks.location}/../Code/Modules/ClientNetwork/",
-		"%{wks.location}/../Code/Modules/Hexmap/",
-		"%{wks.location}/../Code/Modules/Inventory/",
-		"%{wks.location}/../Code/Modules/ServerCursor/",
-		"%{wks.location}/../Code/Modules/ServerHidden/",
-		"%{wks.location}/../Code/Modules/ServerNetwork/",
-		"%{wks.location}/../Code/Modules/SharedCursor/",
-		"%{wks.location}/../Code/Modules/SharedHidden/",
-		"%{wks.location}/../Code/Modules/SharedNetwork/",
-		"%{wks.location}/../Code/Modules/Softbody/",
-		"%{wks.location}/../Code/Modules/Tabletop/",
-		"%{wks.location}/../Code/Modules/Tactics/",
-		"%{wks.location}/../Code/Modules/Tilemap/",
-		"%{wks.location}/../Code/Modules/Voxel/",
+		"%{wks.location}/../Code/Modules/Camera/SharedCamera/",
+		"%{wks.location}/../Code/Modules/Cursor/ClientCursor/",
+		"%{wks.location}/../Code/Modules/Cursor/ServerCursor/",
+		"%{wks.location}/../Code/Modules/Cursor/SharedCursor/",
+		"%{wks.location}/../Code/Modules/Hexmap/SharedHexmap/",
+		"%{wks.location}/../Code/Modules/Hidden/ClientHidden/",
+		"%{wks.location}/../Code/Modules/Hidden/ServerHidden/",
+		"%{wks.location}/../Code/Modules/Hidden/SharedHidden/",
+		"%{wks.location}/../Code/Modules/Inventory/SharedInventory/",
+		"%{wks.location}/../Code/Modules/Network/ClientNetwork/",
+		"%{wks.location}/../Code/Modules/Network/ServerNetwork/",
+		"%{wks.location}/../Code/Modules/Network/SharedNetwork/",
+		"%{wks.location}/../Code/Modules/Softbody/SharedSoftbody/",
+		"%{wks.location}/../Code/Modules/Tabletop/SharedTabletop/",
+		"%{wks.location}/../Code/Modules/Tactics/SharedTactics/",
+		"%{wks.location}/../Code/Modules/Tilemap/SharedTilemap/",
+		"%{wks.location}/../Code/Modules/Voxel/SharedVoxel/",
 	}
 
 	libdirs 
@@ -113,7 +114,6 @@ project "Game"
 		"GameClient",
 		"GameDebug",
 		"GameServer",
-		"GameState",
 		"GameUI",
 
 		-- Bindings
@@ -136,25 +136,26 @@ project "Game"
 		"Serialize",
 
 		-- Modules
-		"Camera",
 		"ClientCursor",
 		"ClientHidden",
 		"ClientNetwork",
-		"Crafting",
-		"Hexmap",
 		"ServerCursor",
 		"ServerHidden",
-		"Inventory",
 		"ServerNetwork",
+		"SharedCamera",
+		"SharedCrafting",
 		"SharedCursor",
+		"SharedGameState",
+		"SharedHexmap",
 		"SharedHidden",
+		"SharedInventory",
 		"SharedNetwork",
-		"Softbody",
-		"Spellcraft",
-		"Tabletop",
-		"Tactics",
-		"Tilemap",
-		"Voxel",
+		"SharedSoftbody",
+		"SharedSpellcraft",
+		"SharedTabletop",
+		"SharedTactics",
+		"SharedTilemap",
+		"SharedVoxel",
 
 		-- 3rdParty
 		"assimp.lib",
