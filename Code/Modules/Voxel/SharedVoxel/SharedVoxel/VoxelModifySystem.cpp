@@ -1,5 +1,5 @@
 #include "VoxelPCH.h"
-#include "Voxel/VoxelModifySystem.h"
+#include "SharedVoxel/VoxelModifySystem.h"
 
 #include "Core/Algorithms.h"
 #include "Core/Guid.h"
@@ -19,9 +19,9 @@
 #include "Math/Algorithms.h"
 #include "Math/CollisionMath.h"
 #include "Math/Sphere.h"
-#include "Voxel/VoxelChunkComponent.h"
-#include "Voxel/VoxelModifyComponent.h"
-#include "Voxel/VoxelModifySettingsComponent.h"
+#include "SharedVoxel/VoxelChunkComponent.h"
+#include "SharedVoxel/VoxelModifyComponent.h"
+#include "SharedVoxel/VoxelModifySettingsComponent.h"
 
 // #todo: enable only when voxels are present
 

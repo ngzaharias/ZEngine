@@ -1,5 +1,5 @@
 #include "VoxelPCH.h"
-#include "Voxel/VoxelMeshingSystem.h"
+#include "SharedVoxel/VoxelMeshingSystem.h"
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
@@ -8,10 +8,10 @@
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Math/VectorMath.h"
-#include "Voxel/VoxelChunkChangedComponent.h"
-#include "Voxel/VoxelChunkComponent.h"
-#include "Voxel/VoxelChunkLoadedComponent.h"
-#include "Voxel/VoxelModifyComponent.h"
+#include "SharedVoxel/VoxelChunkChangedComponent.h"
+#include "SharedVoxel/VoxelChunkComponent.h"
+#include "SharedVoxel/VoxelChunkLoadedComponent.h"
+#include "SharedVoxel/VoxelModifyComponent.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>

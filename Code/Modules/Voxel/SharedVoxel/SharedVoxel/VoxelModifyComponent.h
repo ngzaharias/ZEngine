@@ -3,7 +3,7 @@
 #include "Core/Array.h"
 #include "ECS/Component.h"
 #include "Math/Vector.h"
-#include "Voxel/VoxelTypes.h"
+#include "SharedVoxel/VoxelTypes.h"
 
 namespace voxel
 {

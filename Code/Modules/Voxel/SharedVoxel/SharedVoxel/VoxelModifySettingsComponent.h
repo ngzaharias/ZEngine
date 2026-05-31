@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ECS/Component.h"
-#include "Voxel/VoxelTypes.h"
+#include "SharedVoxel/VoxelTypes.h"
 
 namespace voxel
 {

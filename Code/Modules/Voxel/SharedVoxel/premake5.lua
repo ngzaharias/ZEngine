@@ -1,15 +1,26 @@
-project "Voxel"
+project "SharedVoxel"
 	kind "StaticLib"
 	pchheader "VoxelPCH.h"
-	pchsource "Voxel/VoxelPCH.cpp"
-	location "%{wks.location}/Modules/Voxel"
+	pchsource "SharedVoxel/VoxelPCH.cpp"
+	location "%{wks.location}/Modules/Voxel/SharedVoxel"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"Voxel/**.h", 
-			"Voxel/**.cpp", 
-			"Voxel/**.inl" } },
+			"SharedVoxel/**.h", 
+			"SharedVoxel/**.cpp", 
+			"SharedVoxel/**.inl" } },
 	}
 
 	includedirs 
@@ -27,5 +38,5 @@ project "Voxel"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Voxel/",
+		"%{wks.location}/../Code/Modules/Voxel/SharedVoxel/",
 	}

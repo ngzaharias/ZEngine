@@ -2,11 +2,11 @@
 
 #include "Core/Array.h"
 #include "ECS/Component.h"
-#include "Voxel/VoxelTypes.h"
+#include "SharedVoxel/VoxelTypes.h"
 
 namespace voxel
 {
-	struct ChunkTemplate final : public ecs::TemplateComponent
+	struct ChunkComponent final : public ecs::Component
 	{
 		Array<voxel::Block> m_Data;
 	};

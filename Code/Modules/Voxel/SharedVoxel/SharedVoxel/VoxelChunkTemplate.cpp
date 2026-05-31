@@ -1,5 +1,5 @@
 #include "VoxelPCH.h"
-#include "Voxel/VoxelChunkTemplate.h"
+#include "SharedVoxel/VoxelChunkTemplate.h"
 
 #include "Core/EnumHelpers.h"
 #include "Serialize/Visitor.h"

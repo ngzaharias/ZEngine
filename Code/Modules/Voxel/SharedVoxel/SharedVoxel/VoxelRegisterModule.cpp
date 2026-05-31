@@ -1,17 +1,17 @@
 #include "VoxelPCH.h"
-#include "Voxel/VoxelRegisterModule.h"
+#include "SharedVoxel/VoxelRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/TemplateManager.h"
-#include "Voxel/VoxelChunkChangedComponent.h"
-#include "Voxel/VoxelChunkComponent.h"
-#include "Voxel/VoxelChunkLoadedComponent.h"
-#include "Voxel/VoxelChunkTemplate.h"
-#include "Voxel/VoxelMeshingSystem.h"
-#include "Voxel/VoxelModifyComponent.h"
-#include "Voxel/VoxelModifySettingsComponent.h"
-#include "Voxel/VoxelModifySystem.h"
+#include "SharedVoxel/VoxelChunkChangedComponent.h"
+#include "SharedVoxel/VoxelChunkComponent.h"
+#include "SharedVoxel/VoxelChunkLoadedComponent.h"
+#include "SharedVoxel/VoxelChunkTemplate.h"
+#include "SharedVoxel/VoxelMeshingSystem.h"
+#include "SharedVoxel/VoxelModifyComponent.h"
+#include "SharedVoxel/VoxelModifySettingsComponent.h"
+#include "SharedVoxel/VoxelModifySystem.h"
 
 void voxel::RegisterModule(ecs::EntityWorld& world)
 {
