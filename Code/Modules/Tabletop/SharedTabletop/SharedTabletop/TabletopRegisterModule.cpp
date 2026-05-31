@@ -1,13 +1,13 @@
 #include "TabletopPCH.h"
-#include "Tabletop/TabletopRegisterModule.h"
+#include "SharedTabletop/TabletopRegisterModule.h"
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
 #include "Engine/TemplateManager.h"
-#include "Tabletop/TabletopCardComponent.h"
-#include "Tabletop/TabletopCardTemplate.h"
-#include "Tabletop/TabletopDeckComponent.h"
-#include "Tabletop/TabletopDeckTemplate.h"
+#include "SharedTabletop/TabletopCardComponent.h"
+#include "SharedTabletop/TabletopCardTemplate.h"
+#include "SharedTabletop/TabletopDeckComponent.h"
+#include "SharedTabletop/TabletopDeckTemplate.h"
 
 void tabletop::RegisterModule(ecs::EntityWorld& world)
 {

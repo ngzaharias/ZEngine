@@ -1,15 +1,26 @@
-project "Tabletop"
+project "SharedTabletop"
 	kind "StaticLib"
 	pchheader "TabletopPCH.h"
-	pchsource "Tabletop/TabletopPCH.cpp"
-	location "%{wks.location}/Modules/Tabletop"
+	pchsource "SharedTabletop/TabletopPCH.cpp"
+	location "%{wks.location}/Modules/Tabletop/SharedTabletop"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"Tabletop/**.h", 
-			"Tabletop/**.cpp", 
-			"Tabletop/**.inl" } },
+			"SharedTabletop/**.h", 
+			"SharedTabletop/**.cpp", 
+			"SharedTabletop/**.inl" } },
 	}
 
 	includedirs 
@@ -25,5 +36,5 @@ project "Tabletop"
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Tabletop/",
+		"%{wks.location}/../Code/Modules/Tabletop/SharedTabletop/",
 	}

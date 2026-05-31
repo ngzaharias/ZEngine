@@ -1,5 +1,5 @@
 #include "TabletopPCH.h"
-#include "Tabletop/TabletopDeckTemplate.h"
+#include "SharedTabletop/TabletopDeckTemplate.h"
 
 #include "Serialize/Visitor.h"
 
