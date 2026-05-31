@@ -1,15 +1,26 @@
-project "Inventory"
+project "DebugInventory"
 	kind "StaticLib"
 	pchheader "InventoryPCH.h"
-	pchsource "Inventory/InventoryPCH.cpp"
-	location "%{wks.location}/Modules/Inventory"
+	pchsource "DebugInventory/InventoryPCH.cpp"
+	location "%{wks.location}/Modules/Inventory/DebugInventory"
+
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
 	
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"Inventory/**.h", 
-			"Inventory/**.cpp", 
-			"Inventory/**.inl" } },
+			"DebugInventory/**.h", 
+			"DebugInventory/**.cpp", 
+			"DebugInventory/**.inl" } },
 	}
 
 	includedirs 
@@ -24,5 +35,6 @@ project "Inventory"
 		"%{wks.location}/../Code/Framework/Imgui/",
 		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Serialize/",
-		"%{wks.location}/../Code/Modules/Inventory/",
+		"%{wks.location}/../Code/Modules/Inventory/DebugInventory",
+		"%{wks.location}/../Code/Modules/Inventory/SharedInventory",
 	}

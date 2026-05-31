@@ -1,6 +1,6 @@
-project "Inventory_ut"
+project "SharedInventory_ut"
 	kind "ConsoleApp"
-	location "%{wks.location}/Modules/Inventory_ut"
+	location "%{wks.location}/Modules/Inventory/SharedInventory_ut"
 
 	defines { "Z_UNIT_TEST" }
 
@@ -10,12 +10,23 @@ project "Inventory_ut"
 		"6319", 
 	}
 
+	local root = path.getdirectory(_SCRIPT)
+	files 
+	{ 
+		root .. "/premake5.lua",
+		root .. "/*.natvis",
+		root .. "/%{prj.name}/**.h",
+		root .. "/%{prj.name}/**.cpp",
+		root .. "/%{prj.name}/**.inl",
+		root .. "/Resource/**",
+	}
+
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"Inventory_ut/**.h", 
-			"Inventory_ut/**.cpp", 
-			"Inventory_ut/**.inl" } },
+			"SharedInventory_ut/**.h", 
+			"SharedInventory_ut/**.cpp", 
+			"SharedInventory_ut/**.inl" } },
 	}
 
 	includedirs 
@@ -26,7 +37,7 @@ project "Inventory_ut"
 		"%{wks.location}/../Code/Framework/Engine/",
 		"%{wks.location}/../Code/Framework/Input/",
 		"%{wks.location}/../Code/Framework/Math/",
-		"%{wks.location}/../Code/Modules/Inventory/",
+		"%{wks.location}/../Code/Modules/Inventory/SharedInventory/",
 	}
 
 	libdirs 
@@ -53,7 +64,7 @@ project "Inventory_ut"
 		"Engine",
 		"Math",
 
-		"Inventory",
+		"SharedInventory",
 
 		"OptickCore.lib",
 	}

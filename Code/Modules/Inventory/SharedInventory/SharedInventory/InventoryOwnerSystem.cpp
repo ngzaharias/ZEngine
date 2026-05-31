@@ -1,13 +1,13 @@
 #include "InventoryPCH.h"
-#include "Inventory/InventoryOwnerSystem.h"
+#include "SharedInventory/InventoryOwnerSystem.h"
 
 #include "Core/Algorithms.h"
 #include "Core/Optional.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Inventory/InventoryOwnerComponent.h"
-#include "Inventory/InventoryStorageChangesComponent.h"
+#include "SharedInventory/InventoryOwnerComponent.h"
+#include "SharedInventory/InventoryStorageChangesComponent.h"
 
 void inventory::OwnerSystem::Update(World& world, const GameTime& gameTime)
 {

@@ -1,4 +1,4 @@
-#include "DebugInventoryPCH.h"
+#include "InventoryPCH.h"
 #include "DebugInventory/InventoryRegisterModule.h"
 
 #include "DebugInventory/InventoryWindowComponent.h"

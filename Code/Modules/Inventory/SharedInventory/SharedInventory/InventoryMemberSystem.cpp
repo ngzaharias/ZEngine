@@ -1,14 +1,14 @@
 #include "InventoryPCH.h"
-#include "Inventory/InventoryMemberSystem.h"
+#include "SharedInventory/InventoryMemberSystem.h"
 
 #include "Core/Algorithms.h"
 #include "Core/Optional.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
-#include "Inventory/InventoryMemberComponent.h"
-#include "Inventory/InventoryStorageChangesComponent.h"
-#include "Inventory/InventoryStorageComponent.h"
+#include "SharedInventory/InventoryMemberComponent.h"
+#include "SharedInventory/InventoryStorageChangesComponent.h"
+#include "SharedInventory/InventoryStorageComponent.h"
 
 void inventory::MemberSystem::Update(World& world, const GameTime& gameTime)
 {

@@ -3,7 +3,7 @@
 #include "Core/Guid.h"
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
-#include "Inventory/InventoryMemberEnum.h"
+#include "SharedInventory/InventoryMemberEnum.h"
 
 namespace inventory
 {
