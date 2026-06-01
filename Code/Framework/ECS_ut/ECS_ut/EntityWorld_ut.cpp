@@ -734,7 +734,7 @@ CLASS_TEST_CASE("AddEvent will add an event to the world.")
 	int32 count = 0;
 	world.AddEvent<Event>();
 	world.Update({});
-	for (const Event& eventData : view.Events<Event>())
+	for (const Event& eventData : view.Events<const Event>())
 		count++;
 	CHECK(count == 1);
 }
@@ -750,7 +750,7 @@ CLASS_TEST_CASE("AddEvent will add an event to the world but the data won't be a
 
 	int32 count = 0;
 	world.AddEvent<Event>();
-	for (const Event& eventData : view.Events<Event>())
+	for (const Event& eventData : view.Events<const Event>())
 		count++;
 	CHECK(count == 0);
 }
@@ -767,7 +767,7 @@ CLASS_TEST_CASE("AddEvent can add multiple of the same event to the world at a t
 
 	using WorldView = ecs::WorldView::Read<Event>;
 	WorldView view = world.WorldView<WorldView>();
-	const auto& wrapper = view.Events<Event>();
+	const auto& wrapper = view.Events<const Event>();
 	CHECK(wrapper.m_Main.GetCount() == 2);
 }
 

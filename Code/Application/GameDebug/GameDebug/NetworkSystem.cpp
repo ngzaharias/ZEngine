@@ -107,11 +107,11 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 
 	{
 		World clientWorld = m_ClientWorld.WorldView<World>();
-		for (const auto& request : clientworld.Events<const debug::NetworkEvent>())
+		for (const auto& request : clientWorld.Events<const debug::NetworkEvent>())
 			Z_LOG(ELog::Debug, "Client: {}", request.m_Data);
 
 		World serverWorld = m_ServerWorld.WorldView<World>();
-		for (const auto& request : serverworld.Events<const debug::NetworkEvent>())
+		for (const auto& request : serverWorld.Events<const debug::NetworkEvent>())
 			Z_LOG(ELog::Debug, "Server: {}", request.m_Data);
 	}
 }
