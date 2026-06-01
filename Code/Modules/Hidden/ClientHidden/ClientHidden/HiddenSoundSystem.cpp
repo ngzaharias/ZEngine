@@ -6,6 +6,7 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/SavegameComponent.h"
 #include "Engine/SoundSequenceRequestComponent.h"
 
 namespace

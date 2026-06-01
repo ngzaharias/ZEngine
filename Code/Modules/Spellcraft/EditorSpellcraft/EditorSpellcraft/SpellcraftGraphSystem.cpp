@@ -9,6 +9,7 @@
 #include "EditorSpellcraft/SpellcraftLinkCreateEvent.h"
 #include "EditorSpellcraft/SpellcraftLinkDestroyEvent.h"
 #include "EditorSpellcraft/SpellcraftNodeCreateEvent.h"
+#include "EditorSpellcraft/SpellcraftWindowComponent.h"
 
 void editor::spellcraft::GraphSystem::Update(World& world, const GameTime& gameTime)
 {
