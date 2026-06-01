@@ -3,6 +3,7 @@
 #include "Core/Array.h"
 #include "Core/Path.h"
 #include "Core/String.h"
+#include "Core/TypeTraits.h"
 
 using int32 = int32_t;
 using uint8 = uint8_t;
@@ -39,8 +40,16 @@ public:
 	void Write(const void* data, uint32 bytes);
 
 private:
+	// Read
+	template<typename Value>
+	void ReadArray(Array<Value>& values) const;
+
 	template<typename Type>
 	inline void ReadCustom(Type& value) const;
+
+	// Write
+	template<typename Value>
+	void WriteArray(const Array<Value>& values);
 
 	template<typename Type>
 	inline void WriteCustom(const Type& value);
