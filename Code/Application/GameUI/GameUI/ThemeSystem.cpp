@@ -52,7 +52,7 @@ void gui::ThemeSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
-	if (world.HasAny<ecs::query::Added<const eng::TablesReloadedEvent>>())
+	if (world.HasAny<eng::TablesReloadedEvent>())
 		UpdateTheme(world);
 	if (world.HasAny<ecs::query::Updated<eng::settings::GameplayComponent>>())
 		UpdateTheme(world);

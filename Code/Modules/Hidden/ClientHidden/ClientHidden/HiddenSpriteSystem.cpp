@@ -68,7 +68,7 @@ void client::hidden::SpriteSystem::Update(World& world, const GameTime& gameTime
 		sprite.m_Colour = theme.m_Highlight;
 	}
 
-	if (world.HasAny<ecs::query::Added<const eng::TablesReloadedEvent>>())
+	if (world.HasAny<eng::TablesReloadedEvent>())
 		Refresh(world);
 	if (world.HasAny<ecs::query::Updated<eng::settings::GameplayComponent>>())
 		Refresh(world);
