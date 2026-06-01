@@ -65,7 +65,7 @@ void gui::main_menu::MenuSystem::Update(World& world, const GameTime& gameTime)
 	{
 	}
 
-	for (const auto& request : world.Events<gui::main_menu::NewGameEvent>())
+	for (const auto& request : world.Events<const gui::main_menu::NewGameEvent>())
 	{
 		world.AddEvent<eng::level::LoadEvent>(request.m_Level);
 	}

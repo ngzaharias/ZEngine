@@ -58,7 +58,7 @@ void gui::settings_menu::MenuSystem::Update(World& world, const GameTime& gameTi
 		world.AddComponent<gui::settings_menu::WindowComponent>(world.CreateEntity());
 	}
 
-	for (const auto& eventData : world.Events<gui::settings_menu::ValueEvent>())
+	for (const auto& eventData : world.Events<const gui::settings_menu::ValueEvent>())
 	{
 		// audio
 		if (eventData.m_EffectVolume)

@@ -234,7 +234,10 @@ template<typename... TWrite, typename... TRead>
 template<class TEvent>
 auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Events() -> decltype(auto)
 {
-	return m_EntityWorld.m_EventStorage.GetEvents<TEvent>();
+	static_assert(std::is_const<TEvent>::value, "Type must be const.");
+
+	using NonConst = std::remove_const_t<TEvent>;
+	return m_EntityWorld.m_EventStorage.GetEvents<NonConst>();
 }
 
 template<typename... TWrite, typename... TRead>

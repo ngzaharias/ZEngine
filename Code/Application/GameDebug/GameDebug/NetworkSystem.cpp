@@ -35,7 +35,7 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 	constexpr Vector2f s_DefaultPos = Vector2f(100.f, 100.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(300.f, 200.f);
 
-	for (const auto& request : world.Events<debug::NetworkWindowEvent>())
+	for (const auto& request : world.Events<const debug::NetworkWindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
@@ -107,11 +107,11 @@ void debug::NetworkSystem::Update(World& world, const GameTime& gameTime)
 
 	{
 		World clientWorld = m_ClientWorld.WorldView<World>();
-		for (const auto& request : clientWorld.Events<debug::NetworkEvent>())
+		for (const auto& request : clientworld.Events<const debug::NetworkEvent>())
 			Z_LOG(ELog::Debug, "Client: {}", request.m_Data);
 
 		World serverWorld = m_ServerWorld.WorldView<World>();
-		for (const auto& request : serverWorld.Events<debug::NetworkEvent>())
+		for (const auto& request : serverworld.Events<const debug::NetworkEvent>())
 			Z_LOG(ELog::Debug, "Server: {}", request.m_Data);
 	}
 }

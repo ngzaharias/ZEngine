@@ -12,7 +12,7 @@ void server::hidden::RevealSystem::Update(World& world, const GameTime& gameTime
 {
 	PROFILE_FUNCTION();
 
-	for (const auto& selectedData : world.Events<shared::hidden::SelectedEvent>())
+	for (const auto& selectedData : world.Events<const shared::hidden::SelectedEvent>())
 	{
 		auto& revealedData = world.AddEvent<shared::hidden::RevealedEvent>();
 		revealedData.m_Entity = selectedData.m_Entity;

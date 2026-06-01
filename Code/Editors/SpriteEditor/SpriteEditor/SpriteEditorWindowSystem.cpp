@@ -61,7 +61,7 @@ namespace
 
 	void Asset_New(World& world)
 	{
-		for (const auto& request : world.Events<editor::sprite::AssetNewEvent>())
+		for (const auto& request : world.Events<const editor::sprite::AssetNewEvent>())
 		{
 			auto& window = world.WriteComponent<editor::sprite::WindowComponent>(request.m_Entity);
 			window.m_UnsavedChanges = true;
@@ -80,7 +80,7 @@ namespace
 
 	void Asset_Open(World& world)
 	{
-		for (const auto& request : world.Events<editor::sprite::AssetOpenEvent>())
+		for (const auto& request : world.Events<const editor::sprite::AssetOpenEvent>())
 		{
 			const auto& settings = world.ReadComponent<editor::sprite::SettingsComponent>();
 
@@ -107,7 +107,7 @@ namespace
 
 	void Asset_Save(World& world)
 	{
-		for (const auto& request : world.Events<editor::sprite::AssetSaveEvent>())
+		for (const auto& request : world.Events<const editor::sprite::AssetSaveEvent>())
 		{
 			const auto& settings = world.ReadComponent<editor::sprite::SettingsComponent>();
 			const auto& window = world.ReadComponent<editor::sprite::WindowComponent>(request.m_Entity);
@@ -402,7 +402,7 @@ void editor::sprite::WindowSystem::Update(World& world, const GameTime& gameTime
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);
 
-	for (const auto& request : world.Events<editor::sprite::OpenWindowEvent>())
+	for (const auto& request : world.Events<const editor::sprite::OpenWindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

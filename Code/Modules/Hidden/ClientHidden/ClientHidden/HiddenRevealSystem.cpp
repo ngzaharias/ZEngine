@@ -146,7 +146,7 @@ void client::hidden::RevealSystem::Update(World& world, const GameTime& gameTime
 		}
 	}
 
-	for (const auto& eventData : world.Events<shared::hidden::RevealedEvent>())
+	for (const auto& eventData : world.Events<const shared::hidden::RevealedEvent>())
 	{
 		using Query = ecs::query
 			::Include<

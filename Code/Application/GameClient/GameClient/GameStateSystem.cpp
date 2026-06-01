@@ -14,7 +14,7 @@ void shared::gamestate::StateSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
-	for (const auto& request : world.Events<shared::gamestate::ChangeRequestEvent>())
+	for (const auto& request : world.Events<const shared::gamestate::ChangeRequestEvent>())
 	{
 		auto& stateComponent = world.WriteComponent<shared::gamestate::StateComponent>();
 		stateComponent.m_Queue.Append(request.m_Queue);

@@ -15,7 +15,7 @@ void shared::spellcraft::CastSystem::Update(World& world, const GameTime& gameTi
 {
 	PROFILE_FUNCTION();
 
-	for (const auto& hitEvent : world.Events<shared::spellcraft::ExplosionHitEvent>())
+	for (const auto& hitEvent : world.Events<const shared::spellcraft::ExplosionHitEvent>())
 	{
 		if (!hitEvent.m_OnHit.IsValid())
 			continue;
@@ -28,7 +28,7 @@ void shared::spellcraft::CastSystem::Update(World& world, const GameTime& gameTi
 		castComponent.m_Direction = hitEvent.m_Direction;
 	}
 
-	for (const auto& hitEvent : world.Events<shared::spellcraft::ProjectileHitEvent>())
+	for (const auto& hitEvent : world.Events<const shared::spellcraft::ProjectileHitEvent>())
 	{
 		if (!hitEvent.m_OnHit.IsValid())
 			continue;

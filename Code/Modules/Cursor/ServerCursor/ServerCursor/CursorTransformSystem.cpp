@@ -14,7 +14,7 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 {
 	PROFILE_FUNCTION();
 
-	for (const auto& eventData : world.Events<shared::cursor::ClientTransformEvent>())
+	for (const auto& eventData : world.Events<const shared::cursor::ClientTransformEvent>())
 	{
 		const auto& serverComponent = world.ReadComponent<server::cursor::TransformComponent>();
 		const auto& peers = serverComponent.m_Peers;

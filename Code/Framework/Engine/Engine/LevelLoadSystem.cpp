@@ -56,7 +56,7 @@ void eng::level::LoadSystem::Update(World& world, const GameTime& gameTime)
 	const auto& directoryComponent = world.ReadComponent<eng::level::DirectoryComponent>();
 
 	// requests
-	for (const auto& request : world.Events<eng::level::LoadEvent>())
+	for (const auto& request : world.Events<const eng::level::LoadEvent>())
 	{
 		const ecs::Entity levelEntity = world.CreateEntity();
 		auto& loadingComponent = world.AddComponent<eng::level::LoadingComponent>(levelEntity);

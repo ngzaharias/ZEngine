@@ -38,7 +38,7 @@ void editor::spellcraft::WindowSystem::Update(World& world, const GameTime& game
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);
 
-	for (const auto& request : world.Events<editor::spellcraft::WindowEvent>())
+	for (const auto& request : world.Events<const editor::spellcraft::WindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

@@ -59,7 +59,7 @@ namespace
 
 	void ProcessRequests(World& world)
 	{
-		for (const auto& event : world.Events<shared::tactics::AbilityPreviewEvent>())
+		for (const auto& event : world.Events<const shared::tactics::AbilityPreviewEvent>())
 		{
 			auto& previewComponent = !world.HasComponent<shared::tactics::AbilityPreviewComponent>(event.m_Entity)
 				? world.AddComponent<shared::tactics::AbilityPreviewComponent>(event.m_Entity)

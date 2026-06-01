@@ -320,7 +320,7 @@ void editor::entity::InspectorSystem::Update(World& world, const GameTime& gameT
 		input.RemoveLayer(strInput);
 	}
 
-	for (const auto& request : world.Events<editor::entity::OpenInspectorEvent>())
+	for (const auto& request : world.Events<const editor::entity::OpenInspectorEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

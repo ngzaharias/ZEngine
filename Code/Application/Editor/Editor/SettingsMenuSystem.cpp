@@ -26,7 +26,7 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 {
 	PROFILE_FUNCTION();
 
-	for (const auto& request : world.Events<editor::settings::WindowEvent>())
+	for (const auto& request : world.Events<const editor::settings::WindowEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

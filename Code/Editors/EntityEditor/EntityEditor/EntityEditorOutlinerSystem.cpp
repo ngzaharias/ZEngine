@@ -255,7 +255,7 @@ void editor::entity::OutlinerSystem::Update(World& world, const GameTime& gameTi
 	if (!world.HasComponent<shared::gamestate::EditorComponent>())
 		return;
 
-	for (const auto& request : world.Events<editor::entity::OpenOutlinerEvent>())
+	for (const auto& request : world.Events<const editor::entity::OpenOutlinerEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();

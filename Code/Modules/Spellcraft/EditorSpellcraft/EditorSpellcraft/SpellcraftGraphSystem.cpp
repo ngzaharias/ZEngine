@@ -23,7 +23,7 @@ void editor::spellcraft::GraphSystem::Update(World& world, const GameTime& gameT
 	for (auto&& view : world.Query<ecs::query::Removed<const editor::spellcraft::WindowComponent>>())
 		world.RemoveComponent<editor::spellcraft::GraphComponent>(view);
 
-	for (const auto& event : world.Events<editor::spellcraft::LinkCreateEvent>())
+	for (const auto& event : world.Events<const editor::spellcraft::LinkCreateEvent>())
 	{
 		if (!world.HasComponent<editor::spellcraft::GraphComponent>(event.m_Entity))
 			continue;
@@ -38,7 +38,7 @@ void editor::spellcraft::GraphSystem::Update(World& world, const GameTime& gameT
 		graph.CreateLink(fieldA.m_Type, event.m_SourceId, event.m_TargetId);
 	}
 
-	for (const auto& event : world.Events<editor::spellcraft::LinkDestroyEvent>())
+	for (const auto& event : world.Events<const editor::spellcraft::LinkDestroyEvent>())
 	{
 		if (!world.HasComponent<editor::spellcraft::GraphComponent>(event.m_Entity))
 			continue;
@@ -48,7 +48,7 @@ void editor::spellcraft::GraphSystem::Update(World& world, const GameTime& gameT
 		graph.DestroyLink(event.m_LinkId);
 	}
 
-	for (const auto& event : world.Events<editor::spellcraft::NodeCreateEvent>())
+	for (const auto& event : world.Events<const editor::spellcraft::NodeCreateEvent>())
 	{
 		if (!world.HasComponent<editor::spellcraft::GraphComponent>(event.m_Entity))
 			continue;
