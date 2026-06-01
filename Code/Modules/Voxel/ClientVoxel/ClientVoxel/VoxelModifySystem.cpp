@@ -1,6 +1,7 @@
 #include "VoxelPCH.h"
-#include "SharedVoxel/VoxelModifySystem.h"
+#include "ClientVoxel/VoxelModifySystem.h"
 
+#include "ClientVoxel/VoxelModifySettingsComponent.h"
 #include "Core/Algorithms.h"
 #include "Core/Guid.h"
 #include "Core/Raytracer.h"
@@ -20,8 +21,7 @@
 #include "Math/CollisionMath.h"
 #include "Math/Sphere.h"
 #include "SharedVoxel/VoxelChunkComponent.h"
-#include "SharedVoxel/VoxelModifyComponent.h"
-#include "SharedVoxel/VoxelModifySettingsComponent.h"
+#include "SharedVoxel/VoxelClientModifyEvent.h"
 
 // #todo: enable only when voxels are present
 
@@ -44,6 +44,8 @@ namespace
 	const str::Name strVoxel5 = str::Name::Create("VoxelModify_Voxel5");
 	const str::Name strVoxel6 = str::Name::Create("VoxelModify_Voxel6");
 
+	using World = client::voxel::ModifySystem::World;
+
 	int32 ToInnerIndex(const Vector3i& innerPos)
 	{
 		return innerPos.x
@@ -51,7 +53,7 @@ namespace
 			+ innerPos.z * shared::voxel::s_BlockCount2D;
 	}
 
-	Vector3f Raycast(shared::voxel::ModifySystem::World& world, const Segment3f& segment)
+	Vector3f Raycast(World& world, const Segment3f& segment)
 	{
 		Array<ecs::Entity> voxelEntities;
 		auto& lines = world.WriteComponent<eng::LinesComponent>();
@@ -109,7 +111,7 @@ namespace
 	}
 }
 
-void shared::voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
+void client::voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -124,14 +126,14 @@ void shared::voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 		layer.m_Bindings.Emplace(strRadius4, input::EKey::Numpad_4);
 		layer.m_Bindings.Emplace(strRadius5, input::EKey::Numpad_5);
 		layer.m_Bindings.Emplace(strRadius6, input::EKey::Numpad_6);
-		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, false);
-		layer.m_Bindings.Emplace(strVoxel0, input::EKey::Num_0);
-		layer.m_Bindings.Emplace(strVoxel1, input::EKey::Num_1);
-		layer.m_Bindings.Emplace(strVoxel2, input::EKey::Num_2);
-		layer.m_Bindings.Emplace(strVoxel3, input::EKey::Num_3);
-		layer.m_Bindings.Emplace(strVoxel4, input::EKey::Num_4);
-		layer.m_Bindings.Emplace(strVoxel5, input::EKey::Num_5);
-		layer.m_Bindings.Emplace(strVoxel6, input::EKey::Num_6);
+		layer.m_Bindings.Emplace(strSelect,  input::EKey::Mouse_Left, false);
+		layer.m_Bindings.Emplace(strVoxel0,  input::EKey::Num_0);
+		layer.m_Bindings.Emplace(strVoxel1,  input::EKey::Num_1);
+		layer.m_Bindings.Emplace(strVoxel2,  input::EKey::Num_2);
+		layer.m_Bindings.Emplace(strVoxel3,  input::EKey::Num_3);
+		layer.m_Bindings.Emplace(strVoxel4,  input::EKey::Num_4);
+		layer.m_Bindings.Emplace(strVoxel5,  input::EKey::Num_5);
+		layer.m_Bindings.Emplace(strVoxel6,  input::EKey::Num_6);
 
 		auto& input = world.WriteResource<eng::InputManager>();
 		input.AppendLayer(strInput, layer);
@@ -182,7 +184,7 @@ void shared::voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 		auto& lines = world.WriteComponent<eng::LinesComponent>();
 		lines.AddAABB(alignPos, shared::voxel::s_BlockSize1D * 0.5f, Vector4f(1.f));
 
-		auto& settings = world.WriteComponent<shared::voxel::ModifySettingsComponent>();
+		auto& settings = world.WriteComponent<client::voxel::ModifySettingsComponent>();
 		if (input.IsPressed(strRadius0))
 			settings.m_Radius = 0;
 		if (input.IsPressed(strRadius1))
@@ -215,8 +217,7 @@ void shared::voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 
 		if (input.IsPressed(strSelect))
 		{
-			const ecs::Entity entity = world.CreateEntity();
-			auto& requestComponent = world.AddComponent<shared::voxel::ModifyComponent>(entity);
+			auto& event = world.AddEvent<shared::voxel::ClientModifyEvent>();
 
 			const int32 radius = settings.m_Radius;
 			const shared::voxel::EType type = settings.m_Type;
@@ -227,11 +228,8 @@ void shared::voxel::ModifySystem::Update(World& world, const GameTime& gameTime)
 					shared::voxel::s_BlockSize1D * index.y,
 					shared::voxel::s_BlockSize1D * index.z);
 
-				requestComponent.m_Changes.Emplace(alignPos + offset, shared::voxel::Block{ shared::voxel::EFlags::None, type });
+				event.m_Changes.Emplace(alignPos + offset, shared::voxel::Block{ shared::voxel::EFlags::None, type });
 			}
 		}
 	}
-
-	for (auto&& view : world.Query<ecs::query::Include<const shared::voxel::ModifyComponent>>())
-		world.DestroyEntity(view);
 }

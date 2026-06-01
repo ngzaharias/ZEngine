@@ -4,6 +4,7 @@
 #include "ClientCursor/CursorRegisterModule.h"
 #include "ClientHidden/HiddenRegisterModule.h"
 #include "ClientNetwork/NetworkRegisterModule.h"
+#include "ClientVoxel/VoxelRegisterModule.h"
 #include "ECS/TypeRegistry.h"
 #include "ECS/WorldView.h"
 #include "Engine/AchievementTable.h"
@@ -108,6 +109,7 @@ void client::GameClient::Register(const Dependencies& dependencies)
 		client::cursor::RegisterModule(m_EntityWorld);
 		client::hidden::RegisterModule(m_EntityWorld);
 		client::network::RegisterModule(m_EntityWorld);
+		client::voxel::RegisterModule(m_EntityWorld);
 		gui::RegisterModule(m_EntityWorld);
 		icon::RegisterModule(m_EntityWorld);
 		render::RegisterModule(m_EntityWorld);

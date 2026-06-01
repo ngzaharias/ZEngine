@@ -3,6 +3,11 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace client::voxel
+{
+	struct ModifySettingsComponent;
+}
+
 namespace eng
 {
 	class InputManager;
@@ -18,23 +23,22 @@ namespace eng
 namespace shared::voxel
 {
 	struct ChunkComponent;
-	struct ModifyComponent;
-	struct ModifySettingsComponent;
+	struct ClientModifyEvent;
 }
 
-namespace shared::voxel
+namespace client::voxel
 {
 	class ModifySystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
+			client::voxel::ModifySettingsComponent,
 			eng::InputManager,
 			eng::LinesComponent,
 			eng::TextComponent,
 			eng::TransformComponent,
-			shared::voxel::ModifyComponent,
-			shared::voxel::ModifySettingsComponent>
+			shared::voxel::ClientModifyEvent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,

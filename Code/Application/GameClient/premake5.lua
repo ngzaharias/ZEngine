@@ -62,5 +62,6 @@ project "GameClient"
 		"%{wks.location}/../Code/Modules/Tabletop/SharedTabletop/",
 		"%{wks.location}/../Code/Modules/Tactics/SharedTactics/",
 		"%{wks.location}/../Code/Modules/Tilemap/SharedTilemap/",
+		"%{wks.location}/../Code/Modules/Voxel/ClientVoxel/",
 		"%{wks.location}/../Code/Modules/Voxel/SharedVoxel/",
 	}

@@ -1,17 +1,12 @@
 #include "VoxelPCH.h"
-#include "SharedVoxel/VoxelMeshingSystem.h"
+#include "ClientVoxel/VoxelMeshingSystem.h"
 
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
 #include "Engine/DynamicMeshComponent.h"
-#include "Engine/TransformComponent.h"
-#include "Math/VectorMath.h"
-#include "SharedVoxel/VoxelChunkChangedComponent.h"
 #include "SharedVoxel/VoxelChunkComponent.h"
-#include "SharedVoxel/VoxelChunkLoadedComponent.h"
-#include "SharedVoxel/VoxelModifyComponent.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -145,48 +140,19 @@ namespace
 	}
 }
 
-void shared::voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
+void client::voxel::MeshingSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
-
-	Set<ecs::Entity> entitiesToUpdate;
-	for (auto&& requestView : world.Query<ecs::query::Include<const shared::voxel::ModifyComponent>>())
-	{
-		const auto& modifyComponent = requestView.ReadRequired<shared::voxel::ModifyComponent>();
-		for (const shared::voxel::Modify& request : modifyComponent.m_Changes)
-		{
-			for (auto&& chunkView : world.Query<ecs::query::Include<shared::voxel::ChunkComponent, const eng::TransformComponent>>())
-			{
-				const auto& transform = chunkView.ReadRequired<eng::TransformComponent>();
-
-				const Vector3i requestPos = math::ToGridPos(request.m_WorldPos - transform.m_Translate, shared::voxel::s_ChunkSize1D);
-				if (requestPos != Vector3i::Zero)
-					continue;
-
-				const Vector3f worldPos = request.m_WorldPos - transform.m_Translate;
-				const Vector3i innerPos = math::ToGridPos(worldPos, shared::voxel::s_BlockSize1D);
-				const int32 innerIndex = ToInnerIndex(innerPos);
-				auto& chunk = chunkView.WriteRequired<shared::voxel::ChunkComponent>();
-				chunk.m_Data[innerIndex] = request.m_Data;
-
-				entitiesToUpdate.Add(chunkView);
-			}
-		}
-	}
 
 	for (auto&& view : world.Query<ecs::query::Include<const shared::voxel::ChunkComponent>::Exclude<const eng::DynamicMeshComponent>>())
 		world.AddComponent<eng::DynamicMeshComponent>(view);
 
 	using ChunkAddedQuery = ecs::query::Added<const shared::voxel::ChunkComponent>::Include<const eng::DynamicMeshComponent>;
 	using MeshAddedQuery = ecs::query::Added<const eng::DynamicMeshComponent>::Include<const shared::voxel::ChunkComponent>;
-	using ChangedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const shared::voxel::ChunkComponent, const shared::voxel::ChunkChangedComponent>;
-	using LoadedQuery = ecs::query::Include<const eng::DynamicMeshComponent, const shared::voxel::ChunkComponent, const shared::voxel::ChunkLoadedComponent>;
 
+	Set<ecs::Entity> entitiesToUpdate;
 	entitiesToUpdate.Add(world.Query<ChunkAddedQuery>());
 	entitiesToUpdate.Add(world.Query<MeshAddedQuery>());
-	entitiesToUpdate.Add(world.Query<ChangedQuery>());
-	entitiesToUpdate.Add(world.Query<LoadedQuery>());
-
 	for (const ecs::Entity& entity : entitiesToUpdate)
 	{
 		const auto& chunkComponent = world.ReadComponent<shared::voxel::ChunkComponent>(entity);
@@ -198,47 +164,47 @@ void shared::voxel::MeshingSystem::Update(World& world, const GameTime& gameTime
 
 		for (auto&& [i, block] : enumerate::Forward(chunkComponent.m_Data))
 		{
-			if (block.m_Type == EType::None)
+			if (block.m_Type == shared::voxel::EType::None)
 				continue;
 
 			const Vector3i innerPos = ToInnerPos(i);
 			const Vector3f vertexOffset = Vector3f(
-				innerPos.x * s_BlockSize1D,
-				innerPos.y * s_BlockSize1D,
-				innerPos.z * s_BlockSize1D);
+				innerPos.x * shared::voxel::s_BlockSize1D,
+				innerPos.y * shared::voxel::s_BlockSize1D,
+				innerPos.z * shared::voxel::s_BlockSize1D);
 
 			Vector2f texCoordOffset = Vector2f::Zero;
 			switch (block.m_Type)
 			{
-			case EType::Black:
+			case shared::voxel::EType::Black:
 				texCoordOffset.x += s_TexCoordB.x;
 				texCoordOffset.x += s_TexCoordB.x;
 				break;
 
-			case EType::Green:
+			case shared::voxel::EType::Green:
 				texCoordOffset.x += s_TexCoordB.x;
 				break;
 
-			case EType::Grey:
+			case shared::voxel::EType::Grey:
 				break;
 
-			case EType::Orange:
+			case shared::voxel::EType::Orange:
 				texCoordOffset.x += s_TexCoordB.x;
 				texCoordOffset.x += s_TexCoordB.x;
 				texCoordOffset.y += s_TexCoordB.y;
 				break;
 
-			case EType::Purple:
+			case shared::voxel::EType::Purple:
 				texCoordOffset.x += s_TexCoordB.x;
 				texCoordOffset.y += s_TexCoordB.y;
 				break;
 
-			case EType::Red:
+			case shared::voxel::EType::Red:
 				texCoordOffset.y += s_TexCoordB.y;
 				break;
 			}
 
-			const Vector3i innerPos_XNeg = ToNeighbourPos(innerPos, EDirection::XNeg);
+			const Vector3i innerPos_XNeg = ToNeighbourPos(innerPos, shared::voxel::EDirection::XNeg);
 			if (!HasBlock(innerPos_XNeg, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesXNeg);
@@ -248,7 +214,7 @@ void shared::voxel::MeshingSystem::Update(World& world, const GameTime& gameTime
 				SetOffset(texCoordOffset, meshComponent.m_TexCoords);
 			}
 
-			const Vector3i innerPos_XPos = ToNeighbourPos(innerPos, EDirection::XPos);
+			const Vector3i innerPos_XPos = ToNeighbourPos(innerPos, shared::voxel::EDirection::XPos);
 			if (!HasBlock(innerPos_XPos, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesXPos);
@@ -258,7 +224,7 @@ void shared::voxel::MeshingSystem::Update(World& world, const GameTime& gameTime
 				SetOffset(texCoordOffset, meshComponent.m_TexCoords);
 			}
 
-			const Vector3i innerPos_YNeg = ToNeighbourPos(innerPos, EDirection::YNeg);
+			const Vector3i innerPos_YNeg = ToNeighbourPos(innerPos, shared::voxel::EDirection::YNeg);
 			if (!HasBlock(innerPos_YNeg, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesYNeg);
@@ -268,7 +234,7 @@ void shared::voxel::MeshingSystem::Update(World& world, const GameTime& gameTime
 				SetOffset(texCoordOffset, meshComponent.m_TexCoords);
 			}
 
-			const Vector3i innerPos_YPos = ToNeighbourPos(innerPos, EDirection::YPos);
+			const Vector3i innerPos_YPos = ToNeighbourPos(innerPos, shared::voxel::EDirection::YPos);
 			if (!HasBlock(innerPos_YPos, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesYPos);
@@ -278,7 +244,7 @@ void shared::voxel::MeshingSystem::Update(World& world, const GameTime& gameTime
 				SetOffset(texCoordOffset, meshComponent.m_TexCoords);
 			}
 
-			const Vector3i innerPos_ZNeg = ToNeighbourPos(innerPos, EDirection::ZNeg);
+			const Vector3i innerPos_ZNeg = ToNeighbourPos(innerPos, shared::voxel::EDirection::ZNeg);
 			if (!HasBlock(innerPos_ZNeg, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesZNeg);
@@ -288,7 +254,7 @@ void shared::voxel::MeshingSystem::Update(World& world, const GameTime& gameTime
 				SetOffset(texCoordOffset, meshComponent.m_TexCoords);
 			}
 
-			const Vector3i innerPos_ZPos = ToNeighbourPos(innerPos, EDirection::ZPos);
+			const Vector3i innerPos_ZPos = ToNeighbourPos(innerPos, shared::voxel::EDirection::ZPos);
 			if (!HasBlock(innerPos_ZPos, chunkComponent.m_Data))
 			{
 				meshComponent.m_Vertices.Append(s_VerticesZPos);

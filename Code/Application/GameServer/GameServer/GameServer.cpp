@@ -13,9 +13,11 @@
 #include "ServerCursor/CursorRegisterModule.h"
 #include "ServerHidden/HiddenRegisterModule.h"
 #include "ServerNetwork/NetworkRegisterModule.h"
+#include "ServerVoxel/VoxelRegisterModule.h"
 #include "SharedCursor/CursorRegisterModule.h"
 #include "SharedHidden/HiddenRegisterModule.h"
 #include "SharedNetwork/NetworkRegisterModule.h"
+#include "SharedVoxel/VoxelRegisterModule.h"
 
 server::GameServer::GameServer(ecs::TypeRegistry& typeRegistry)
 	: m_TypeRegistry(typeRegistry)
@@ -59,9 +61,11 @@ void server::GameServer::Register(const Dependencies& dependencies)
 		server::cursor::RegisterModule(m_EntityWorld);
 		server::hidden::RegisterModule(m_EntityWorld);
 		server::network::RegisterModule(m_EntityWorld);
+		server::voxel::RegisterModule(m_EntityWorld);
 		shared::cursor::RegisterModule(m_EntityWorld);
 		shared::hidden::RegisterModule(m_EntityWorld);
 		shared::network::RegisterModule(m_EntityWorld);
+		shared::voxel::RegisterModule(m_EntityWorld);
 	}
 }
 
