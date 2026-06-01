@@ -106,9 +106,8 @@ void ecs::ReplicationHost::ProcessEntities()
 			EntityDestroy(peerId, entity);
 		}
 
-		for (ecs::ComponentId typeId = 0; typeId < ecs::COMPONENTS_MAX; ++typeId)
+		for (auto&& [typeId, entry] : registry.GetComponentMap())
 		{
-			const ecs::TypeComponent& entry = registry.GetComponentInfo(typeId);
 			if (!entry.m_IsReplicated)
 				continue;
 
@@ -118,7 +117,7 @@ void ecs::ReplicationHost::ProcessEntities()
 			enumerate::Intersection(replicated, queries.GetGroup(entry.m_UpdatedId), toUpdate);
 			enumerate::Intersection(replicated, queries.GetGroup(entry.m_RemovedId), toRemove);
 
-			// #note: this only handles component AFTER an entity was marked for replication
+			// #note: this only handles components AFTER an entity was marked for replication
 			for (const ecs::Entity& entity : toAdd)
 				ComponentAdd(peerId, entity, entry);
 			for (const ecs::Entity& entity : toUpdate)
@@ -134,9 +133,8 @@ void ecs::ReplicationHost::ProcessEntities()
 			EntityCreate(peerId, entity);
 		}
 		// ...and their components
-		for (ecs::ComponentId typeId = 0; typeId < ecs::COMPONENTS_MAX; ++typeId)
+		for (auto&& [typeId, entry] : registry.GetComponentMap())
 		{
-			const ecs::TypeComponent& entry = registry.GetComponentInfo(typeId);
 			if (!entry.m_IsReplicated)
 				continue;
 
