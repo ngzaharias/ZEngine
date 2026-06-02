@@ -44,6 +44,11 @@ void core::LogShutdown()
 	m_CrashLogger->flush();
 	m_DebugLogger->flush();
 	m_NetworkLogger->flush();
+
+	m_AssertLogger.reset();
+	m_CrashLogger.reset();
+	m_DebugLogger.reset();
+	m_NetworkLogger.reset();
 #endif 
 }
 
