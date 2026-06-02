@@ -260,6 +260,22 @@ void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ValidateAccess()
 {
 	using TAccessList = TypeList<TWrite..., TRead...>;
 
+	using TAddedRead = TypeConst<ecs::query::AddedAccess<TQuery>>::type;
+	constexpr bool hasAddedRead = core::ContainsAll(TAddedRead{}, TAccessList{});
+	static_assert(hasAddedRead, "WorldView doesn't have Read (or Write) access to Component in Added Query.");
+
+	using TRemovedRead = TypeConst<ecs::query::RemovedAccess<TQuery>>::type;
+	constexpr bool hasRemovedRead = core::ContainsAll(TRemovedRead{}, TAccessList{});
+	static_assert(hasRemovedRead, "WorldView doesn't have Read (or Write) access to Component in Removed Query.");
+
+	using TUpdatedRead = TypeConst<ecs::query::UpdatedAccess<TQuery>>::type;
+	constexpr bool hasUpdatedRead = core::ContainsAll(TUpdatedRead{}, TAccessList{});
+	static_assert(hasUpdatedRead, "WorldView doesn't have Read (or Write) access to Component in Updated Query.");
+
+	using TExcludeRead = TypeConst<ecs::query::ExcludeAccess<TQuery>>::type;
+	constexpr bool hasExcludeRead = core::ContainsAll(TExcludeRead{}, TAccessList{});
+	static_assert(hasExcludeRead, "WorldView doesn't have Read (or Write) access to Component in Exclude Query.");
+
 	using TIncludeWrite = TypeNonConst<ecs::query::IncludeAccess<TQuery>>::type;
 	constexpr bool hasIncludeWrite = core::ContainsAll(TIncludeWrite{}, TWriteList{});
 	static_assert(hasIncludeWrite, "WorldView doesn't have Write access to Component in Include Query.");
