@@ -22,6 +22,9 @@ void eng::NetworkManager::Initialise()
 	m_Factory.Register<ecs::ComponentUpdateMessage>(ecs::EMessage::ComponentUpdate);
 	m_Factory.Register<ecs::ComponentRemoveMessage>(ecs::EMessage::ComponentRemove);
 	m_Factory.Register<ecs::EventAddMessage>(ecs::EMessage::EventAdd);
+
+	m_Host.Startup();
+	m_Peer.Connect();
 }
 
 void eng::NetworkManager::Update(const GameTime& gameTime)

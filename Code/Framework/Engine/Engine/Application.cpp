@@ -165,12 +165,12 @@ void eng::Application::Initialise()
 
 	// do first
 	m_WindowManager.Initialise();
+	m_PlatformManager.Initialise();
 
 	m_AssetManager.Initialise();
 	m_ImguiManager.Initialise(*m_WindowManager.GetWindow(0));
 	m_NetworkManager.Initialise();
 	m_PhysicsManager.Initialise();
-	m_PlatformManager.Initialise();
 	m_TableHeadmaster.Initialise(str::Path(str::EPath::Assets, "Tables"));
 }
 
