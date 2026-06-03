@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/TransformTemplate.h"
 
+#include "Core/MemBuffer.h"
 #include "Math/Matrix.h"
 #include "Serialize/Visitor.h"
 
@@ -14,6 +15,21 @@ namespace
 Matrix4x4 eng::TransformTemplate::ToTransform() const
 {
 	return Matrix4x4::FromTransform(m_Translate, m_Rotate, m_Scale);
+}
+
+template<>
+void MemBuffer::ReadCustom(eng::TransformTemplate& value) const
+{
+	Read(value.m_Translate);
+	Read(value.m_Rotate);
+	Read(value.m_Scale);
+}
+template<>
+void MemBuffer::WriteCustom(const eng::TransformTemplate& value)
+{
+	Write(value.m_Translate);
+	Write(value.m_Rotate);
+	Write(value.m_Scale);
 }
 
 template<>

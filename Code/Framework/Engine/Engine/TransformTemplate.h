@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/Component.h"
+#include "ECS/IsReplicated.h"
 #include "Math/Rotator.h"
 #include "Math/Vector.h"
 
@@ -9,6 +10,7 @@ class Matrix4x4;
 namespace eng
 {
 	struct TransformTemplate final : public ecs::TemplateComponent
+		, ecs::IsReplicated
 	{
 		Matrix4x4 ToTransform() const;
 

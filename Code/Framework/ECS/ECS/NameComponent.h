@@ -3,10 +3,12 @@
 #include "Core/String.h"
 #include "Core/StringView.h"
 #include "ECS/Component.h"
+#include "ECS/IsReplicated.h"
 
 namespace ecs
 {
 	struct NameComponent final : public ecs::Component
+		, ecs::IsReplicated
 	{
 		NameComponent() = default;
 		NameComponent(const str::StringView& value) : m_Name(value) { }
