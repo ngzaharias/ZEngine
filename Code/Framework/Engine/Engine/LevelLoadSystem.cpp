@@ -9,11 +9,13 @@
 #include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
+#include "Engine/ClientComponent.h"
 #include "Engine/LevelDirectoryComponent.h"
 #include "Engine/LevelEntityComponent.h"
 #include "Engine/LevelLoadedComponent.h"
-#include "Engine/LevelLoadingComponent.h"
 #include "Engine/LevelLoadEvent.h"
+#include "Engine/LevelLoadingComponent.h"
+#include "Engine/ServerComponent.h"
 #include "Engine/TemplateManager.h"
 
 #include <filesystem>
@@ -23,6 +25,13 @@ namespace
 	constexpr float s_FadeOutTime = 6.f;
 
 	const str::Name strLevels = NAME("Levels");
+
+	enum class EType
+	{
+		Both,
+		ClientOnly,
+		ServerOnly,
+	};
 }
 
 eng::level::LoadSystem::LoadSystem(ecs::EntityWorld& entityWorld)
@@ -116,6 +125,8 @@ void eng::level::LoadSystem::LoadLevel(World& world, const str::Name& levelName,
 {
 	constexpr const char* s_Extension = ".template";
 
+	const bool isClient = world.HasComponent<eng::ClientComponent>();
+	const bool isServer = world.HasComponent<eng::ServerComponent>();
 	const auto& manager = world.ReadResource<eng::TemplateManager>();
 
 	{
@@ -148,9 +159,17 @@ void eng::level::LoadSystem::LoadLevel(World& world, const str::Name& levelName,
 			Visitor visitor;
 			visitor.LoadFromFile(filepath);
 
-			const ecs::Entity entity = world.CreateEntity();
-			world.AddComponent<eng::level::EntityComponent>(entity, levelName);
-			manager.WriteEntity(m_EntityWorld, entity, visitor);
+			EType type;
+			visitor.Read("m_Type", type, EType::Both);
+			const bool hasClient = isClient && type == EType::ClientOnly;
+			const bool hasServer = isServer && type == EType::ServerOnly;
+
+			if (hasClient || hasServer || type == EType::Both)
+			{
+				const ecs::Entity entity = world.CreateEntity();
+				world.AddComponent<eng::level::EntityComponent>(entity, levelName);
+				manager.WriteEntity(m_EntityWorld, entity, visitor);
+			}
 		}
 	}
 }

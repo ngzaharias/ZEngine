@@ -12,6 +12,8 @@ namespace ecs
 namespace eng
 {
 	class TemplateManager;
+	struct ClientComponent;
+	struct ServerComponent;
 }
 
 namespace eng::level
@@ -42,7 +44,10 @@ namespace eng::level
 			eng::level::LoadedComponent,
 			eng::level::LoadingComponent,
 			eng::level::LoadEvent,
-			eng::TemplateManager>;
+			eng::TemplateManager>
+			::Read<
+			eng::ClientComponent,
+			eng::ServerComponent>;
 		
 		LoadSystem(ecs::EntityWorld& entityWorld);
 
