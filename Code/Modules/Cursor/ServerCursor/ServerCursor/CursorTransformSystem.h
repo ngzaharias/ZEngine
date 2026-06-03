@@ -8,6 +8,7 @@
 
 namespace ecs
 {
+	struct NameComponent;
 	struct ReplicationComponent;
 }
 
@@ -34,6 +35,7 @@ namespace server::cursor
 	public:
 		using World = ecs::WorldView
 			::Write<
+			ecs::NameComponent,
 			ecs::ReplicationComponent,
 			server::cursor::TransformComponent,
 			shared::cursor::TransformComponent>

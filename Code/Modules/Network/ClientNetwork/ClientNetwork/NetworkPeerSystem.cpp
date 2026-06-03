@@ -41,8 +41,10 @@ void client::network::PeerSystem::Update(World& world, const GameTime& gameTime)
 			if (hasConnected)
 			{
 				const ecs::Entity entity = world.CreateEntity();
-				auto& component = world.AddComponent<client::network::PeerComponent>(entity);
-				component.m_PeerId = peerId;
+				world.AddComponent<ecs::NameComponent>(entity, "Peer");
+
+				auto& peerComponent = world.AddComponent<client::network::PeerComponent>(entity);
+				peerComponent.m_PeerId = peerId;
 			}
 			else
 			{

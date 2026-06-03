@@ -2,6 +2,7 @@
 #include "ServerCursor/CursorTransformSystem.h"
 
 #include "ECS/EntityWorld.h"
+#include "ECS/NameComponent.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/ReplicationComponent.h"
 #include "ECS/WorldView.h"
@@ -33,6 +34,7 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 		const net::PeerId peerId = peerComponent.m_PeerId;
 
 		const ecs::Entity entity = world.CreateEntity();
+		world.AddComponent<ecs::NameComponent>(entity, "Cursor");
 		world.AddComponent<ecs::ReplicationComponent>(entity);
 
 		auto& sharedComponent = world.AddComponent<shared::cursor::TransformComponent>(entity);

@@ -4,5 +4,5 @@
 
 namespace shared::gamestate
 {
-	struct DebugComponent final : public ecs::Component { };
+	struct DebugComponent final : public ecs::SoloComponent { };
 };
