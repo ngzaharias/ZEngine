@@ -20,6 +20,8 @@ namespace shared::voxel
 
 namespace server::replication
 {
+	/// \brief System responsible for adding/removing ReplicationComponent.
+	/// It is expected that this module will include all other modules and that this system runs towards the end of a frame.
 	class ManagerSystem final : public ecs::System
 	{
 	public:
