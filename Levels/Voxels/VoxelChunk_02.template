@@ -1,5 +1,6 @@
 m_UUID = "4f29dd84ca0d4335b8e5370317e2d8b7"
 m_Name = "VoxelChunk_02"
+m_Type = "ServerOnly"
 
 ['eng::TransformTemplate']
 m_Translate = { X = 2000.0, Y = 0.0, Z = 0.0 }
