@@ -5,11 +5,13 @@
 #include "ECS/WorldView.h"
 #include "Engine/AssetSystem.h"
 #include "Engine/CameraSystem.h"
+#include "Engine/ClientSystem.h"
 #include "Engine/FlipbookSystem.h"
 #include "Engine/LevelLoadSystem.h"
 #include "Engine/LightSystem.h"
 #include "Engine/MusicSystem.h"
 #include "Engine/PhysicsSystem.h"
+#include "Engine/ServerSystem.h"
 #include "Engine/SettingsLaunchSystem.h"
 #include "Engine/SoundPlaySystem.h"
 #include "Engine/SoundPlaySystem.h"
@@ -27,6 +29,7 @@ void eng::RegisterClientSystems(ecs::EntityWorld& world)
 {
 	world.RegisterSystem<eng::AssetSystem>();
 	world.RegisterSystem<eng::CameraSystem>();
+	world.RegisterSystem<eng::ClientSystem>();
 	world.RegisterSystem<eng::FlipbookSystem>();
 	world.RegisterSystem<eng::LightSystem>();
 	world.RegisterSystem<eng::MusicSystem>();
@@ -42,6 +45,7 @@ void eng::RegisterClientSystems(ecs::EntityWorld& world)
 
 void eng::RegisterServerSystems(ecs::EntityWorld& world)
 {
+	world.RegisterSystem<eng::ServerSystem>();
 }
 
 void eng::RegisterSharedSystems(ecs::EntityWorld& world)

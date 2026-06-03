@@ -11,6 +11,7 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/CameraTemplate.h"
 #include "Engine/CameraTemplate.h"
+#include "Engine/ClientComponent.h"
 #include "Engine/DynamicMeshComponent.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/FlipbookTemplate.h"
@@ -34,6 +35,7 @@
 #include "Engine/RigidDynamicComponent.h"
 #include "Engine/RigidStaticComponent.h"
 #include "Engine/SavegameComponent.h"
+#include "Engine/ServerComponent.h"
 #include "Engine/SettingsAudioComponent.h"
 #include "Engine/SettingsDebugComponent.h"
 #include "Engine/SettingsGameplayComponent.h"
@@ -136,6 +138,7 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& world)
 	world.RegisterComponent<eng::AssetComponent>();
 	world.RegisterComponent<eng::CameraComponent>();
 	world.RegisterComponent<eng::CameraTemplate>();
+	world.RegisterComponent<eng::ClientComponent>();
 	world.RegisterComponent<eng::EditorComponent>();
 	world.RegisterComponent<eng::FlipbookComponent>();
 	world.RegisterComponent<eng::FlipbookTemplate>();
@@ -148,6 +151,7 @@ void eng::RegisterSharedComponents(ecs::EntityWorld& world)
 	world.RegisterComponent<eng::PhysicsTemplate>();
 	world.RegisterComponent<eng::RigidDynamicComponent>();
 	world.RegisterComponent<eng::RigidStaticComponent>();
+	world.RegisterComponent<eng::ServerComponent>();
 	world.RegisterComponent<eng::settings::LaunchComponent>();
 	world.RegisterComponent<eng::SpriteComponent>();
 	world.RegisterComponent<eng::SpriteTemplate>();
