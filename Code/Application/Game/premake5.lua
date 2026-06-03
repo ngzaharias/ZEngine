@@ -143,6 +143,7 @@ project "Game"
 		"ServerCursor",
 		"ServerHidden",
 		"ServerNetwork",
+		"ServerReplication",
 		"ServerVoxel",
 		"SharedCamera",
 		"SharedCrafting",

@@ -3,7 +3,12 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
-namespace eng
+namespace ecs
+{
+	struct ReplicationComponent;
+}
+
+namespace shared::cursor
 {
 	struct TransformComponent;
 }
@@ -11,22 +16,19 @@ namespace eng
 namespace shared::voxel
 {
 	struct ChunkComponent;
-	struct ChunkTemplate;
-	struct ClientModifyEvent;
 }
 
-namespace server::voxel
+namespace server::replication
 {
-	class ChunkSystem final : public ecs::System
+	class ManagerSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			shared::voxel::ChunkComponent>
+			ecs::ReplicationComponent>
 			::Read<
-			eng::TransformComponent,
-			shared::voxel::ChunkTemplate,
-			shared::voxel::ClientModifyEvent>;
+			shared::cursor::TransformComponent,
+			shared::voxel::ChunkComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

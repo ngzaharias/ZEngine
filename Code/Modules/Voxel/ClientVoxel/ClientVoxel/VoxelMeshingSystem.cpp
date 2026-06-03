@@ -147,11 +147,19 @@ void client::voxel::MeshingSystem::Update(World& world, const GameTime& gameTime
 	for (auto&& view : world.Query<ecs::query::Include<const shared::voxel::ChunkComponent>::Exclude<const eng::DynamicMeshComponent>>())
 		world.AddComponent<eng::DynamicMeshComponent>(view);
 
-	using ChunkAddedQuery = ecs::query::Added<const shared::voxel::ChunkComponent>::Include<const eng::DynamicMeshComponent>;
-	using MeshAddedQuery = ecs::query::Added<const eng::DynamicMeshComponent>::Include<const shared::voxel::ChunkComponent>;
+	using ChunkAddedQuery = ecs::query
+		::Added<const shared::voxel::ChunkComponent>
+		::Include<const eng::DynamicMeshComponent>;
+	using ChunkUpdatedQuery = ecs::query
+		::Updated<const shared::voxel::ChunkComponent>
+		::Include<const eng::DynamicMeshComponent, const shared::voxel::ChunkComponent>;
+	using MeshAddedQuery = ecs::query
+		::Added<const eng::DynamicMeshComponent>
+		::Include<const shared::voxel::ChunkComponent>;
 
 	Set<ecs::Entity> entitiesToUpdate;
 	entitiesToUpdate.Add(world.Query<ChunkAddedQuery>());
+	entitiesToUpdate.Add(world.Query<ChunkUpdatedQuery>());
 	entitiesToUpdate.Add(world.Query<MeshAddedQuery>());
 	for (const ecs::Entity& entity : entitiesToUpdate)
 	{

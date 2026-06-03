@@ -154,6 +154,7 @@ project "Editor"
 		"ServerCursor",
 		"ServerHidden",
 		"ServerNetwork",
+		"ServerReplication",
 		"ServerVoxel",
 		"SharedCamera",
 		"SharedCrafting",

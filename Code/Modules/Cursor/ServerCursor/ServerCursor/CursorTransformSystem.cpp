@@ -35,7 +35,6 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 
 		const ecs::Entity entity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(entity, "Cursor");
-		world.AddComponent<ecs::ReplicationComponent>(entity);
 
 		auto& sharedComponent = world.AddComponent<shared::cursor::TransformComponent>(entity);
 		sharedComponent.m_PeerId = peerId;

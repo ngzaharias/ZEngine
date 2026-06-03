@@ -36,7 +36,6 @@ namespace server::cursor
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			ecs::ReplicationComponent,
 			server::cursor::TransformComponent,
 			shared::cursor::TransformComponent>
 			::Read<
