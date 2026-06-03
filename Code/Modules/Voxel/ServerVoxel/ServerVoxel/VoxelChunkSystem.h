@@ -3,6 +3,11 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace ecs
+{
+	struct ReplicationComponent;
+}
+
 namespace eng
 {
 	struct TransformComponent;
@@ -11,6 +16,7 @@ namespace eng
 namespace shared::voxel
 {
 	struct ChunkComponent;
+	struct ChunkTemplate;
 	struct ClientModifyEvent;
 }
 
@@ -21,9 +27,11 @@ namespace server::voxel
 	public:
 		using World = ecs::WorldView
 			::Write<
+			ecs::ReplicationComponent,
 			shared::voxel::ChunkComponent>
 			::Read<
 			eng::TransformComponent,
+			shared::voxel::ChunkTemplate,
 			shared::voxel::ClientModifyEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
