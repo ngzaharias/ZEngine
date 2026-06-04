@@ -13,6 +13,11 @@ namespace shared::cursor
 	struct TransformComponent;
 }
 
+namespace shared::tilemap
+{
+	struct GridComponent;
+}
+
 namespace shared::voxel
 {
 	struct ChunkComponent;
@@ -30,6 +35,7 @@ namespace server::replication
 			ecs::ReplicationComponent>
 			::Read<
 			shared::cursor::TransformComponent,
+			shared::tilemap::GridComponent,
 			shared::voxel::ChunkComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

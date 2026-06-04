@@ -121,6 +121,7 @@ project "Editor"
 		"DebugCrafting",
 		"DebugEntity",
 		"DebugInventory",
+		"DebugTilemap",
 
 		-- Editors
 		"AssetBrowser",
@@ -155,6 +156,7 @@ project "Editor"
 		"ServerHidden",
 		"ServerNetwork",
 		"ServerReplication",
+		"ServerTilemap",
 		"ServerVoxel",
 		"SharedCamera",
 		"SharedCrafting",

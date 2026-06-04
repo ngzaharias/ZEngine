@@ -123,6 +123,7 @@ project "Game"
 		"DebugCrafting",
 		"DebugEntity",
 		"DebugInventory",
+		"DebugTilemap",
 
 		-- Framework
 		"Core",
@@ -144,6 +145,7 @@ project "Game"
 		"ServerHidden",
 		"ServerNetwork",
 		"ServerReplication",
+		"ServerTilemap",
 		"ServerVoxel",
 		"SharedCamera",
 		"SharedCrafting",

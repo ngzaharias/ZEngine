@@ -14,10 +14,12 @@
 #include "ServerHidden/HiddenRegisterModule.h"
 #include "ServerNetwork/NetworkRegisterModule.h"
 #include "ServerReplication/ReplicationRegisterModule.h"
+#include "ServerTilemap/TilemapRegisterModule.h"
 #include "ServerVoxel/VoxelRegisterModule.h"
 #include "SharedCursor/CursorRegisterModule.h"
 #include "SharedHidden/HiddenRegisterModule.h"
 #include "SharedNetwork/NetworkRegisterModule.h"
+#include "SharedTilemap/TilemapRegisterModule.h"
 #include "SharedVoxel/VoxelRegisterModule.h"
 
 server::GameServer::GameServer(ecs::TypeRegistry& typeRegistry)
@@ -63,10 +65,12 @@ void server::GameServer::Register(const Dependencies& dependencies)
 		server::hidden::RegisterModule(m_EntityWorld);
 		server::network::RegisterModule(m_EntityWorld);
 		server::replication::RegisterModule(m_EntityWorld);
+		server::tilemap::RegisterModule(m_EntityWorld);
 		server::voxel::RegisterModule(m_EntityWorld);
 		shared::cursor::RegisterModule(m_EntityWorld);
 		shared::hidden::RegisterModule(m_EntityWorld);
 		shared::network::RegisterModule(m_EntityWorld);
+		shared::tilemap::RegisterModule(m_EntityWorld);
 		shared::voxel::RegisterModule(m_EntityWorld);
 	}
 }

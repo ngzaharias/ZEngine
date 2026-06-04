@@ -6,6 +6,7 @@
 #include "ECS/ReplicationComponent.h"
 #include "ECS/WorldView.h"
 #include "SharedCursor/CursorTransformComponent.h"
+#include "SharedTilemap/TilemapGridComponent.h"
 #include "SharedVoxel/VoxelChunkComponent.h"
 
 void server::replication::ManagerSystem::Update(World& world, const GameTime& gameTime)
@@ -15,6 +16,8 @@ void server::replication::ManagerSystem::Update(World& world, const GameTime& ga
 	Set<ecs::Entity> entitiesToUpdate;
 	entitiesToUpdate.Add(world.Query<ecs::query::Added<shared::cursor::TransformComponent>>());
 	entitiesToUpdate.Add(world.Query<ecs::query::Removed<shared::cursor::TransformComponent>>());
+	entitiesToUpdate.Add(world.Query<ecs::query::Added<shared::tilemap::GridComponent>>());
+	entitiesToUpdate.Add(world.Query<ecs::query::Removed<shared::tilemap::GridComponent>>());
 	entitiesToUpdate.Add(world.Query<ecs::query::Added<shared::voxel::ChunkComponent>>());
 	entitiesToUpdate.Add(world.Query<ecs::query::Removed<shared::voxel::ChunkComponent>>());
 
@@ -23,6 +26,7 @@ void server::replication::ManagerSystem::Update(World& world, const GameTime& ga
 		const bool hasComponent = world.HasComponent<ecs::ReplicationComponent>(entity);
 		const bool wantComponent = 
 			world.HasComponent<shared::cursor::TransformComponent>(entity) ||
+			world.HasComponent<shared::tilemap::GridComponent>(entity) ||
 			world.HasComponent<shared::voxel::ChunkComponent>(entity);
 		if (!hasComponent && wantComponent)
 		{

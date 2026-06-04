@@ -1,13 +1,11 @@
 #pragma once
 
 #include "ECS/Component.h"
-#include "ECS/IsReplicated.h"
 #include "Math/Vector.h"
 
 namespace shared::tilemap
 {
-	struct GridComponent final : public ecs::Component
-		, ecs::IsReplicated
+	struct GridTemplate final : public ecs::TemplateComponent
 	{
 		Vector3i m_GridSize = Vector3i::Zero;
 		Vector3f m_TileSize = Vector3f::Zero;

@@ -4,12 +4,14 @@
 #include "Core/Guid.h"
 #include "Core/Optional.h"
 #include "ECS/Component.h"
+#include "ECS/IsReplicated.h"
 #include "Math/Vector.h"
 
 namespace eng
 {
 	// \brief 
 	struct SpriteTemplate final : public ecs::TemplateComponent
+		, ecs::IsReplicated
 	{
 		str::Guid m_Sprite = {};
 		

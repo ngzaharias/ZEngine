@@ -1,5 +1,6 @@
 m_UUID = '541449afd20c4baea1db0806751c886e'
 m_Name = 'Board'
+m_Type = "ServerOnly"
 
 ['eng::SpriteTemplate']
 m_Size = { X = 640, Y = 640 }
@@ -10,6 +11,6 @@ m_Rotate = { Pitch = 0.0, Roll = 0.0, Yaw = -0.0 }
 m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
 m_Translate = { X = 0.0, Y = 0.0, Z = 100.0 }
 
-['tilemap::GridTemplate']
+['shared::tilemap::GridTemplate']
 m_GridSize = { X = 8, Y = 8 }
 m_TileSize = { X = 80, Y = 80 }

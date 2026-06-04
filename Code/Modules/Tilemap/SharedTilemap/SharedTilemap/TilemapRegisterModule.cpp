@@ -6,7 +6,6 @@
 #include "Engine/TemplateManager.h"
 #include "SharedTilemap/TilemapAgentComponent.h"
 #include "SharedTilemap/TilemapAgentTemplate.h"
-#include "SharedTilemap/TilemapDebugSystem.h"
 #include "SharedTilemap/TilemapGridComponent.h"
 #include "SharedTilemap/TilemapGridTemplate.h"
 
@@ -16,7 +15,6 @@ void shared::tilemap::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterComponent<shared::tilemap::AgentTemplate>();
 	world.RegisterComponent<shared::tilemap::GridComponent>();
 	world.RegisterComponent<shared::tilemap::GridTemplate>();
-	world.RegisterSystem<shared::tilemap::DebugSystem>();
 
 	// templates
 	{

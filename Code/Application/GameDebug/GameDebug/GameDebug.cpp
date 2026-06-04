@@ -4,6 +4,7 @@
 #include "DebugCrafting/CraftingRegisterModule.h"
 #include "DebugEntity/EntityRegisterModule.h"
 #include "DebugInventory/InventoryRegisterModule.h"
+#include "DebugTilemap/TilemapRegisterModule.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/TypeRegistry.h"
@@ -111,6 +112,7 @@ void debug::GameDebug::Register()
 	debug::crafting::RegisterModule(m_ClientWorld, m_ServerWorld);
 	debug::entity::RegisterModule(m_ClientWorld, m_ServerWorld);
 	debug::inventory::RegisterModule(m_ClientWorld, m_ServerWorld);
+	debug::tilemap::RegisterModule(m_ClientWorld, m_ServerWorld);
 }
 
 void debug::GameDebug::Initialise()
