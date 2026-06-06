@@ -3,7 +3,7 @@
 #include "Core/Name.h"
 #include "ECS/Component.h"
 
-namespace shared::tactics
+namespace client::tactics
 {
 	struct AbilityPreviewComponent final : public ecs::Component
 	{

@@ -1,6 +1,8 @@
 #include "TacticsPCH.h"
-#include "SharedTactics/TacticsPawnSelectionSystem.h"
+#include "ClientTactics/TacticsPawnSelectionSystem.h"
 
+#include "ClientTactics/TacticsInputPriorityEnum.h"
+#include "ClientTactics/TacticsPawnSelectedComponent.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -14,8 +16,6 @@
 #include "Engine/WindowManager.h"
 #include "Math/Ray.h"
 #include "SharedGameState/GameStateEditModeComponent.h"
-#include "SharedTactics/TacticsInputPriorityEnum.h"
-#include "SharedTactics/TacticsPawnSelectedComponent.h"
 #include "SharedTilemap/TilemapAgentComponent.h"
 
 #include <PhysX/PxRigidActor.h>
@@ -33,14 +33,14 @@ namespace
 	}
 }
 
-void shared::tactics::PawnSelectionSystem::Update(World& world, const GameTime& gameTime)
+void client::tactics::PawnSelectionSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
 	if (world.HasAny<ecs::query::Added<shared::tilemap::AgentComponent>>())
 	{
 		input::Layer layer;
-		layer.m_Priority = shared::tactics::EInputPriority::PawnSelection;
+		layer.m_Priority = client::tactics::EInputPriority::PawnSelection;
 		layer.m_Bindings.Emplace(strSelect, input::EKey::Mouse_Left, true);
 		layer.m_Bindings.Emplace(strDeselect, input::EKey::Mouse_Right, true);
 
@@ -108,14 +108,14 @@ void shared::tactics::PawnSelectionSystem::Update(World& world, const GameTime& 
 				agentEntity = hitEntity;
 		}
 
-		if (agentEntity && !world.HasComponent<shared::tactics::PawnSelectedComponent>(agentEntity))
-			world.AddComponent<shared::tactics::PawnSelectedComponent>(agentEntity);
+		if (agentEntity && !world.HasComponent<client::tactics::PawnSelectedComponent>(agentEntity))
+			world.AddComponent<client::tactics::PawnSelectedComponent>(agentEntity);
 
 		// remove previous selection
-		for (auto&& selectedView : world.Query<ecs::query::Include<const shared::tactics::PawnSelectedComponent>>())
+		for (auto&& selectedView : world.Query<ecs::query::Include<const client::tactics::PawnSelectedComponent>>())
 		{
 			if (selectedView != agentEntity)
-				world.RemoveComponent<shared::tactics::PawnSelectedComponent>(selectedView);
+				world.RemoveComponent<client::tactics::PawnSelectedComponent>(selectedView);
 		}
 	}
 }

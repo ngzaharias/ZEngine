@@ -1,6 +1,7 @@
 #include "GameUIPCH.h"
 #include "GameUI/HUDSystem.h"
 
+#include "ClientTactics/TacticsPawnSelectedComponent.h"
 #include "Core/Name.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
@@ -10,8 +11,7 @@
 #include "GameUI/DCHUD.h"
 #include "GameUI/HUDTemplate.h"
 #include "SharedTactics/TacticsAbilityTable.h"
-#include "SharedTactics/TacticsPawnAbilitiesComponent.h"
-#include "SharedTactics/TacticsPawnSelectedComponent.h"
+#include "SharedTactics/TacticsPawnAbilitiesTemplate.h"
 
 #include <NsGui/ObservableCollection.h>
 
@@ -45,20 +45,20 @@ void gui::HUDSystem::Update(World& world, const GameTime& gameTime)
 
 	using SelectedQuery = ecs::query
 		::Added<
-		shared::tactics::PawnSelectedComponent>
+		client::tactics::PawnSelectedComponent>
 		::Include<
 		const ecs::NameComponent,
-		const shared::tactics::PawnAbilitiesComponent>;
+		const shared::tactics::PawnAbilitiesTemplate>;
 	for (auto&& view : world.Query<SelectedQuery>())
 	{
 		const auto& nameComponent = view.ReadRequired<ecs::NameComponent>();
-		const auto& abilityComponent = view.ReadRequired<shared::tactics::PawnAbilitiesComponent>();
+		const auto& abilityTemplate = view.ReadRequired<shared::tactics::PawnAbilitiesTemplate>();
 		const auto& abilityTable = world.ReadResource<shared::tactics::AbilityTable>();
 		auto& uiManager = world.WriteResource<eng::UIManager>();
 		auto& hud = uiManager.WriteDataContext<gui::DCHud>(strHUD_xaml);
 
 		auto vmAbilities = Noesis::MakePtr<Noesis::ObservableCollection<gui::VMAbility>>();
-		for (const str::Name& name : abilityComponent.m_Abilities)
+		for (const str::Name& name : abilityTemplate.m_Abilities)
 		{
 			const auto& ability = abilityTable.GetObject(name);
 			auto vmAbility = Noesis::MakePtr<gui::VMAbility>(name, ability);
@@ -72,10 +72,10 @@ void gui::HUDSystem::Update(World& world, const GameTime& gameTime)
 
 	using RemovedSelectedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<shared::tactics::PawnSelectedComponent>;
+		::Removed<client::tactics::PawnSelectedComponent>;
 	for (auto&& view : world.Query<RemovedSelectedQuery>())
 	{
-		if (world.HasAny<ecs::query::Include<shared::tactics::PawnSelectedComponent>>())
+		if (world.HasAny<ecs::query::Include<client::tactics::PawnSelectedComponent>>())
 			continue;
 
 		auto& uiManager = world.WriteResource<eng::UIManager>();

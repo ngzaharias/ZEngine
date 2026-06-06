@@ -2,7 +2,7 @@
 
 #include "Engine/InputManager.h"
 
-namespace shared::tactics
+namespace client::tactics
 {
 	enum EInputPriority
 	{

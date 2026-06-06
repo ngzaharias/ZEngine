@@ -3,6 +3,7 @@
 #include "Core/Array.h"
 #include "Core/Variant.h"
 #include "ECS/Component.h"
+#include "ECS/IsReplicated.h"
 #include "Math/Rotator.h"
 #include "Math/Vector.h"
 
@@ -51,6 +52,7 @@ namespace eng
 	using Rigidbody = Variant<RigidDynamic, RigidStatic>;
 
 	struct PhysicsTemplate final : public ecs::TemplateComponent
+		, ecs::IsReplicated
 	{
 		Rigidbody m_Rigidbody = { };
 		Array<Shape> m_Shapes = { };

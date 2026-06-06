@@ -3,21 +3,23 @@
 template<class TManager>
 bool eng::TableHeadmaster::IsRegistered() const
 {
-	using NonConst = std::remove_const<TManager>::type;
-	const eng::TableId tableId = ToTypeId<NonConst, eng::TableTag>();
+	const eng::TableId tableId = ToTypeId<TManager, eng::TableTag>();
 	return m_Entries.Contains(tableId);
 }
 
 template<class TManager, typename... TArgs>
 void eng::TableHeadmaster::Register(const str::String& filename, TArgs&&... args)
 {
-	Z_PANIC(!IsRegistered<TManager>(), "TableManager is already registered!");
+	static_assert(!std::is_const<TManager>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TManager>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TManager>, "Type cannot be a pointer.");
 
-	using NonConst = std::remove_const<TManager>::type;
-	const eng::TableId tableId = ToTypeId<NonConst, eng::TableTag>();
+	if (IsRegistered<TManager>())
+		return;
 
+	const eng::TableId tableId = ToTypeId<TManager, eng::TableTag>();
 	eng::TableEntry& entry = m_Entries.Emplace(tableId);
-	entry.m_Name = ToTypeName<NonConst>();
+	entry.m_Name = ToTypeName<TManager>();
 	entry.m_Filename = filename;
 	entry.m_Manager = new TManager(std::forward<TArgs>(args)...);
 }
@@ -25,10 +27,13 @@ void eng::TableHeadmaster::Register(const str::String& filename, TArgs&&... args
 template<class TManager>
 auto eng::TableHeadmaster::GetManager() -> TManager&
 {
-	Z_PANIC(IsRegistered<TManager>(), "TableManager isn't registered!");
+	static_assert(!std::is_const<TManager>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TManager>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TManager>, "Type cannot be a pointer.");
 
-	using NonConst = std::remove_const<TManager>::type;
-	const eng::TableId tableId = ToTypeId<NonConst, eng::TableTag>();
+	Z_PANIC(IsRegistered<TManager>(), "Manager isn't registered!");
+
+	const eng::TableId tableId = ToTypeId<TManager, eng::TableTag>();
 	const eng::TableEntry& entry = m_Entries.Get(tableId);
 	return *static_cast<TManager*>(entry.m_Manager);
 }
@@ -36,10 +41,13 @@ auto eng::TableHeadmaster::GetManager() -> TManager&
 template<class TManager>
 auto eng::TableHeadmaster::GetManager() const -> const TManager&
 {
-	Z_PANIC(IsRegistered<TManager>(), "TableManager isn't registered!");
+	static_assert(!std::is_const<TManager>::value, "Type cannot be const.");
+	static_assert(!std::is_reference_v<TManager>, "Type cannot be a reference.");
+	static_assert(!std::is_pointer_v<TManager>, "Type cannot be a pointer.");
 
-	using NonConst = std::remove_const<TManager>::type;
-	const eng::TableId tableId = ToTypeId<NonConst, eng::TableTag>();
+	Z_PANIC(IsRegistered<TManager>(), "Manager isn't registered!");
+
+	const eng::TableId tableId = ToTypeId<TManager, eng::TableTag>();
 	const eng::TableEntry& entry = m_Entries.Get(tableId);
 	return *static_cast<TManager*>(entry.m_Manager);
 }

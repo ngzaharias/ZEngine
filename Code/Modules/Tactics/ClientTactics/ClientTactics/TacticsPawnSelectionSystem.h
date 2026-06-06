@@ -3,6 +3,11 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace client::tactics
+{
+	struct PawnSelectedComponent;
+}
+
 namespace eng
 {
 	class InputManager;
@@ -18,17 +23,12 @@ namespace eng::settings
 	struct DebugComponent;
 }
 
-namespace shared::tactics
-{
-	struct PawnSelectedComponent;
-}
-
 namespace shared::tilemap
 {
 	struct AgentComponent;
 }
 
-namespace shared::tactics
+namespace client::tactics
 {
 	class PawnSelectionSystem final : public ecs::System
 	{
@@ -36,7 +36,7 @@ namespace shared::tactics
 		using World = ecs::WorldView
 			::Write<
 			eng::InputManager,
-			shared::tactics::PawnSelectedComponent>
+			client::tactics::PawnSelectedComponent>
 			::Read<
 			eng::ActiveComponent,
 			eng::CameraComponent,

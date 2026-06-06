@@ -15,6 +15,7 @@ namespace shared::cursor
 
 namespace shared::tilemap
 {
+	struct AgentComponent;
 	struct GridComponent;
 }
 
@@ -35,6 +36,7 @@ namespace server::replication
 			ecs::ReplicationComponent>
 			::Read<
 			shared::cursor::TransformComponent,
+			shared::tilemap::AgentComponent,
 			shared::tilemap::GridComponent,
 			shared::voxel::ChunkComponent>;
 

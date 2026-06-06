@@ -3,6 +3,13 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace client::tactics
+{
+	struct AbilityPreviewComponent;
+	struct AbilityPreviewEvent;
+	struct PawnSelectedComponent;
+}
+
 namespace eng
 {
 	class InputManager;
@@ -13,10 +20,7 @@ namespace eng
 namespace shared::tactics
 {
 	class AbilityTable;
-	struct AbilityPreviewComponent;
-	struct AbilityPreviewEvent;
-	struct PawnAbilitiesComponent;
-	struct PawnSelectedComponent;
+	struct PawnAbilitiesTemplate;
 }
 
 namespace shared::tilemap
@@ -24,7 +28,7 @@ namespace shared::tilemap
 	struct GridComponent;
 }
 
-namespace shared::tactics
+namespace client::tactics
 {
 	class AbilityPreviewSystem final : public ecs::System
 	{
@@ -33,13 +37,13 @@ namespace shared::tactics
 			::Write<
 			eng::InputManager,
 			eng::LinesComponent,
-			shared::tactics::AbilityPreviewComponent>
+			client::tactics::AbilityPreviewComponent>
 			::Read<
+			client::tactics::AbilityPreviewEvent,
+			client::tactics::PawnSelectedComponent,
 			eng::TransformComponent,
-			shared::tactics::AbilityPreviewEvent,
 			shared::tactics::AbilityTable,
-			shared::tactics::PawnAbilitiesComponent,
-			shared::tactics::PawnSelectedComponent,
+			shared::tactics::PawnAbilitiesTemplate,
 			shared::tilemap::GridComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

@@ -2,7 +2,7 @@
 
 #include "ECS/Component.h"
 
-namespace shared::tactics
+namespace client::tactics
 {
 	struct PawnSelectedComponent final : public ecs::Component
 	{

@@ -3,6 +3,11 @@
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
 
+namespace client::tactics
+{
+	struct PawnSelectedComponent;
+}
+
 namespace ecs
 {
 	struct NameComponent;
@@ -21,8 +26,7 @@ namespace gui
 namespace shared::tactics
 {
 	class AbilityTable;
-	struct PawnAbilitiesComponent;
-	struct PawnSelectedComponent;
+	struct PawnAbilitiesTemplate;
 }
 
 namespace gui
@@ -34,11 +38,11 @@ namespace gui
 			::Write<
 			eng::UIManager>
 			::Read<
+			client::tactics::PawnSelectedComponent,
 			ecs::NameComponent,
 			gui::HUDTemplate,
 			shared::tactics::AbilityTable,
-			shared::tactics::PawnAbilitiesComponent,
-			shared::tactics::PawnSelectedComponent>;
+			shared::tactics::PawnAbilitiesTemplate>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};

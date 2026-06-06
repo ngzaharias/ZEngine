@@ -3,7 +3,7 @@
 
 #include "ECS/EntityWorld.h"
 #include "GameUI/VMPawn.h"
-#include "SharedTactics/TacticsAbilityPreviewEvent.h"
+#include "ClientTactics/TacticsAbilityPreviewEvent.h"
 
 #include <NsCore/Delegate.h>
 #include <NsCore/ReflectionImplement.h>
@@ -32,7 +32,7 @@ void gui::DCHud::OnAbilityPreviewCommand(Noesis::BaseComponent* param)
 {
 	if (const auto* vmAbility = Noesis::DynamicCast<gui::VMAbility*>(param))
 	{
-		auto& data = m_EntityWorld->AddEvent<shared::tactics::AbilityPreviewEvent>();
+		auto& data = m_EntityWorld->AddEvent<client::tactics::AbilityPreviewEvent>();
 		data.m_Entity = m_SelectedPawn->GetEntity();
 		data.m_Ability = vmAbility->GetName();
 	}

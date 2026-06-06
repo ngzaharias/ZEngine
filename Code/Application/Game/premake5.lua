@@ -140,6 +140,7 @@ project "Game"
 		"ClientCursor",
 		"ClientHidden",
 		"ClientNetwork",
+		"ClientTactics",
 		"ClientVoxel",
 		"ServerCursor",
 		"ServerHidden",

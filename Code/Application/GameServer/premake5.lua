@@ -48,6 +48,7 @@ project "GameServer"
 		"%{wks.location}/../Code/Modules/Network/ServerNetwork/",
 		"%{wks.location}/../Code/Modules/Network/SharedNetwork/",
 		"%{wks.location}/../Code/Modules/Replication/ServerReplication/",
+		"%{wks.location}/../Code/Modules/Tactics/SharedTactics/",
 		"%{wks.location}/../Code/Modules/Tilemap/ServerTilemap/",
 		"%{wks.location}/../Code/Modules/Tilemap/SharedTilemap/",
 		"%{wks.location}/../Code/Modules/Voxel/ServerVoxel/",

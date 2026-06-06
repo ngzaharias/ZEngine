@@ -15,6 +15,8 @@ namespace eng
 	class AssetManager;
 	class NetworkManager;
 	class PhysicsManager;
+	class PlatformManager;
+	class TableHeadmaster;
 	class TemplateManager;
 }
 
@@ -25,6 +27,8 @@ namespace server
 		eng::AssetManager& m_AssetManager;
 		eng::NetworkManager& m_NetworkManager;
 		eng::PhysicsManager& m_PhysicsManager;
+		eng::PlatformManager& m_PlatformManager;
+		eng::TableHeadmaster& m_TableHeadmaster;
 		eng::TemplateManager& m_TemplateManager;
 	};
 

@@ -1,11 +1,23 @@
 #include "TacticsPCH.h"
 #include "SharedTactics/TacticsPawnAbilitiesTemplate.h"
 
+#include "Core/MemBuffer.h"
 #include "Serialize/Visitor.h"
 
 namespace
 {
 	const str::StringView strAbilities = "m_Abilities";
+}
+
+template<>
+void MemBuffer::ReadCustom(shared::tactics::PawnAbilitiesTemplate& value) const
+{
+	Read(value.m_Abilities);
+}
+template<>
+void MemBuffer::WriteCustom(const shared::tactics::PawnAbilitiesTemplate& value)
+{
+	Write(value.m_Abilities);
 }
 
 template<>

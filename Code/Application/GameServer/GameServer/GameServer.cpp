@@ -5,8 +5,10 @@
 #include "Engine/AssetManager.h"
 #include "Engine/NetworkManager.h"
 #include "Engine/PhysicsManager.h"
+#include "Engine/PlatformManager.h"
 #include "Engine/RegisterComponents.h"
 #include "Engine/RegisterSystems.h"
+#include "Engine/TableHeadmaster.h"
 #include "Engine/TemplateManager.h"
 #include "GameServer/RegisterComponents.h"
 #include "GameServer/RegisterSystems.h"
@@ -19,6 +21,7 @@
 #include "SharedCursor/CursorRegisterModule.h"
 #include "SharedHidden/HiddenRegisterModule.h"
 #include "SharedNetwork/NetworkRegisterModule.h"
+#include "SharedTactics/TacticsRegisterModule.h"
 #include "SharedTilemap/TilemapRegisterModule.h"
 #include "SharedVoxel/VoxelRegisterModule.h"
 
@@ -39,6 +42,8 @@ void server::GameServer::Register(const Dependencies& dependencies)
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetHost());
 		m_EntityWorld.RegisterResource(dependencies.m_NetworkManager.GetPeer());
 		m_EntityWorld.RegisterResource(dependencies.m_PhysicsManager);
+		m_EntityWorld.RegisterResource(dependencies.m_PlatformManager);
+		m_EntityWorld.RegisterResource(dependencies.m_TableHeadmaster);
 		m_EntityWorld.RegisterResource(dependencies.m_TemplateManager);
 		m_EntityWorld.RegisterResource(m_ReplicationHost);
 		m_EntityWorld.RegisterResource(m_TypeRegistry);
@@ -70,6 +75,7 @@ void server::GameServer::Register(const Dependencies& dependencies)
 		shared::cursor::RegisterModule(m_EntityWorld);
 		shared::hidden::RegisterModule(m_EntityWorld);
 		shared::network::RegisterModule(m_EntityWorld);
+		shared::tactics::RegisterModule(m_EntityWorld);
 		shared::tilemap::RegisterModule(m_EntityWorld);
 		shared::voxel::RegisterModule(m_EntityWorld);
 	}

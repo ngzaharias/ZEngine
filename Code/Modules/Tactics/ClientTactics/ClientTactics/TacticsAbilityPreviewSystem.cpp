@@ -1,6 +1,10 @@
 #include "TacticsPCH.h"
-#include "SharedTactics/TacticsAbilityPreviewSystem.h"
+#include "ClientTactics/TacticsAbilityPreviewSystem.h"
 
+#include "ClientTactics/TacticsAbilityPreviewComponent.h"
+#include "ClientTactics/TacticsAbilityPreviewEvent.h"
+#include "ClientTactics/TacticsInputPriorityEnum.h"
+#include "ClientTactics/TacticsPawnSelectedComponent.h"
 #include "Core/Algorithms.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
@@ -9,12 +13,8 @@
 #include "Engine/LinesComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Math/VectorMath.h"
-#include "SharedTactics/TacticsAbilityPreviewComponent.h"
-#include "SharedTactics/TacticsAbilityPreviewEvent.h"
 #include "SharedTactics/TacticsAbilityTable.h"
-#include "SharedTactics/TacticsInputPriorityEnum.h"
-#include "SharedTactics/TacticsPawnAbilitiesComponent.h"
-#include "SharedTactics/TacticsPawnSelectedComponent.h"
+#include "SharedTactics/TacticsPawnAbilitiesTemplate.h"
 #include "SharedTilemap/TilemapGridComponent.h"
 
 namespace
@@ -23,7 +23,7 @@ namespace
 	const str::Name strExecute = str::Name::Create("Execute");
 	const str::Name strInput = str::Name::Create("AbilityPreviewSystem");
 
-	using World = shared::tactics::AbilityPreviewSystem::World;
+	using World = client::tactics::AbilityPreviewSystem::World;
 	Vector3f GetTileSize(World& world)
 	{
 		for (auto&& view : world.Query<ecs::query::Include<const shared::tilemap::GridComponent>>())
@@ -36,10 +36,10 @@ namespace
 
 	void ProcessInput(World& world)
 	{
-		for (auto&& view : world.Query<ecs::query::Added<shared::tactics::AbilityPreviewComponent>>())
+		for (auto&& view : world.Query<ecs::query::Added<client::tactics::AbilityPreviewComponent>>())
 		{
 			input::Layer layer;
-			layer.m_Priority = shared::tactics::EInputPriority::AbilityPreview;
+			layer.m_Priority = client::tactics::EInputPriority::AbilityPreview;
 			layer.m_Bindings.Emplace(strExecute, input::EKey::Mouse_Left, true);
 			layer.m_Bindings.Emplace(strCancel, input::EKey::Mouse_Right, true);
 
@@ -49,7 +49,7 @@ namespace
 
 		using RemovedQuery = ecs::query
 			::Condition<ecs::Alive, ecs::Dead>
-			::Removed<shared::tactics::AbilityPreviewComponent>;
+			::Removed<client::tactics::AbilityPreviewComponent>;
 		for (auto&& view : world.Query<RemovedQuery>())
 		{
 			auto& input = world.WriteResource<eng::InputManager>();
@@ -59,20 +59,20 @@ namespace
 
 	void ProcessRequests(World& world)
 	{
-		for (const auto& event : world.Events<const shared::tactics::AbilityPreviewEvent>())
+		for (const auto& event : world.Events<const client::tactics::AbilityPreviewEvent>())
 		{
-			auto& previewComponent = !world.HasComponent<shared::tactics::AbilityPreviewComponent>(event.m_Entity)
-				? world.AddComponent<shared::tactics::AbilityPreviewComponent>(event.m_Entity)
-				: world.WriteComponent<shared::tactics::AbilityPreviewComponent>(event.m_Entity);
+			auto& previewComponent = !world.HasComponent<client::tactics::AbilityPreviewComponent>(event.m_Entity)
+				? world.AddComponent<client::tactics::AbilityPreviewComponent>(event.m_Entity)
+				: world.WriteComponent<client::tactics::AbilityPreviewComponent>(event.m_Entity);
 			previewComponent.m_Ability = event.m_Ability;
 		}
 
 		using ChangedQuery = ecs::query
-			::Include<shared::tactics::AbilityPreviewComponent>
-			::Removed<shared::tactics::PawnSelectedComponent>;
+			::Include<client::tactics::AbilityPreviewComponent>
+			::Removed<client::tactics::PawnSelectedComponent>;
 		for (auto&& view : world.Query<ChangedQuery>())
 		{
-			world.RemoveComponent<shared::tactics::AbilityPreviewComponent>(view);
+			world.RemoveComponent<client::tactics::AbilityPreviewComponent>(view);
 		}
 	}
 
@@ -80,16 +80,16 @@ namespace
 	{
 		using Query = ecs::query
 			::Include<
+			const client::tactics::AbilityPreviewComponent,
 			const eng::TransformComponent,
-			const shared::tactics::AbilityPreviewComponent,
-			const shared::tactics::PawnAbilitiesComponent>;
+			const shared::tactics::PawnAbilitiesTemplate>;
 		for (auto&& view : world.Query<Query>())
 		{
 			const Vector3f tileSize = GetTileSize(world);
-			const auto& abilityComponent = view.ReadRequired<shared::tactics::PawnAbilitiesComponent>();
-			const auto& previewComponent = view.ReadRequired<shared::tactics::AbilityPreviewComponent>();
+			const auto& abilityTemplate = view.ReadRequired<shared::tactics::PawnAbilitiesTemplate>();
+			const auto& previewComponent = view.ReadRequired<client::tactics::AbilityPreviewComponent>();
 			const auto& transformComponent = view.ReadRequired<eng::TransformComponent>();
-			if (!enumerate::Contains(abilityComponent.m_Abilities, previewComponent.m_Ability))
+			if (!enumerate::Contains(abilityTemplate.m_Abilities, previewComponent.m_Ability))
 				return;
 
 			const auto& table = world.ReadResource<shared::tactics::AbilityTable>();
@@ -124,17 +124,17 @@ namespace
 			const auto& inputManager = world.ReadResource<eng::InputManager>();
 			if (inputManager.IsPressed(strExecute))
 			{
-				world.RemoveComponent<shared::tactics::AbilityPreviewComponent>(view);
+				world.RemoveComponent<client::tactics::AbilityPreviewComponent>(view);
 			}
 			else if (inputManager.IsPressed(strCancel))
 			{
-				world.RemoveComponent<shared::tactics::AbilityPreviewComponent>(view);
+				world.RemoveComponent<client::tactics::AbilityPreviewComponent>(view);
 			}
 		}
 	}
 }
 
-void shared::tactics::AbilityPreviewSystem::Update(World& world, const GameTime& gameTime)
+void client::tactics::AbilityPreviewSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 

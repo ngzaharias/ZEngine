@@ -151,6 +151,7 @@ project "Editor"
 		"ClientCursor",
 		"ClientHidden",
 		"ClientNetwork",
+		"ClientTactics",
 		"ClientVoxel",
 		"ServerCursor",
 		"ServerHidden",

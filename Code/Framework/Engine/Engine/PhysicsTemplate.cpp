@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "Engine/PhysicsTemplate.h"
 
+#include "Core/MemBuffer.h"
 #include "Serialize/Visitor.h"
 
 #include "imgui/Property.h"
@@ -24,6 +25,19 @@ namespace
 	const str::StringView strLOCK_LINEAR_X = "eLOCK_LINEAR_X";
 	const str::StringView strLOCK_LINEAR_Y = "eLOCK_LINEAR_Y";
 	const str::StringView strLOCK_LINEAR_Z = "eLOCK_LINEAR_Z";
+}
+
+template<>
+void MemBuffer::ReadCustom(eng::PhysicsTemplate& value) const
+{
+	Read(value.m_Rigidbody);
+	Read(value.m_Shapes);
+}
+template<>
+void MemBuffer::WriteCustom(const eng::PhysicsTemplate& value)
+{
+	Write(value.m_Rigidbody);
+	Write(value.m_Shapes);
 }
 
 template<>
