@@ -1,5 +1,6 @@
 m_UUID = '28a08c03168f4f51348e16ffe6c414df'
 m_Name = 'Red_Queen'
+m_Type = "ServerOnly"
 
 ['eng::PhysicsTemplate'.m_Rigidbody.RigidDynamic]
 [['eng::PhysicsTemplate'.m_Shapes]]

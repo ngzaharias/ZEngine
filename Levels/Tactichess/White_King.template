@@ -1,5 +1,6 @@
 m_UUID = 'ab796fabd443487f82d9eafc48e52ad5'
 m_Name = 'White_King'
+m_Type = "ServerOnly"
 
 ['eng::SpriteTemplate']
 m_Size = { X = 80, Y = 80 }

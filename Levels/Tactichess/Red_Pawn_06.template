@@ -1,5 +1,6 @@
 m_UUID = '119a54a06bb04d395c87b36c1c67ae96'
 m_Name = 'Red_Pawn_06'
+m_Type = "ServerOnly"
 
 ['eng::PhysicsTemplate'.m_Rigidbody.RigidDynamic]
 [['eng::PhysicsTemplate'.m_Shapes]]
