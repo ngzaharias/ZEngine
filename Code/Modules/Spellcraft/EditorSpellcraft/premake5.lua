@@ -2,7 +2,7 @@ project "EditorSpellcraft"
 	kind "StaticLib"
 	pchheader "SpellcraftPCH.h"
 	pchsource "EditorSpellcraft/SpellcraftPCH.cpp"
-	location "%{wks.location}/Spellcraft/EditorSpellcraft"
+	location "%{wks.location}/Modules/Spellcraft/EditorSpellcraft"
 
 	local root = path.getdirectory(_SCRIPT)
 	files 
