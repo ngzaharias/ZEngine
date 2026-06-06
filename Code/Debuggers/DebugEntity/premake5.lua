@@ -2,7 +2,7 @@ project "DebugEntity"
 	kind "StaticLib"
 	pchheader "EntityPCH.h"
 	pchsource "DebugEntity/EntityPCH.cpp"
-	location "%{wks.location}/Modules/DebugEntity"
+	location "%{wks.location}/Debuggers/DebugEntity"
 
 	local root = path.getdirectory(_SCRIPT)
 	files 
