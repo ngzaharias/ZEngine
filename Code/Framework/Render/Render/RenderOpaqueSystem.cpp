@@ -32,9 +32,7 @@
 
 namespace
 {
-	const str::Guid strDebugDepthShader = GUID("2f0111d089594da7a2442b80f21b318f");
 	const str::Guid strPhongShader = GUID("ba38d79a20274095b6b45ceca225cb3e");
-	const str::Guid strUnlitShader = GUID("a926fe4131fa440b8dd72086d3258b75");
 
 	struct Sort
 	{
@@ -65,9 +63,7 @@ void render::OpaqueSystem::Initialise(World& world)
 	glGenBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
-	assetManager.RequestAsset(strDebugDepthShader);
 	assetManager.RequestAsset(strPhongShader);
-	assetManager.RequestAsset(strUnlitShader);
 }
 
 void render::OpaqueSystem::Shutdown(World& world)
@@ -79,9 +75,7 @@ void render::OpaqueSystem::Shutdown(World& world)
 	glDeleteBuffers(1, &m_TexParamBuffer);
 
 	auto& assetManager = world.WriteResource<eng::AssetManager>();
-	assetManager.ReleaseAsset(strDebugDepthShader);
 	assetManager.ReleaseAsset(strPhongShader);
-	assetManager.ReleaseAsset(strUnlitShader);
 }
 
 void render::OpaqueSystem::Update(World& world, const GameTime& gameTime)
@@ -263,7 +257,7 @@ void render::OpaqueSystem::RenderBatch(World& world, const render::BatchId& id, 
 		}
 
 		// normals
-		if (shader->a_Normal)
+		if (shader->a_Normal && binding.m_NormalBuffer)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, binding.m_NormalBuffer);
 
