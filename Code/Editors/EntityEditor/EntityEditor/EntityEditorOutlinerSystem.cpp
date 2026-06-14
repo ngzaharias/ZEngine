@@ -96,12 +96,12 @@ namespace
 		commands.EntityDestroy(eng::ToUUID(world, entity));
 	}
 
-	void Icon(const icon::Data& icon, const ImVec2& size = ImVec2(15, 15))
+	void Icon(const icon::Data& icon, const Vector2f& size = Vector2f(22.f))
 	{
 		imgui::Image(icon.m_TextureId, size, icon.m_UV0, icon.m_UV1);
 	}
 
-	bool ButtonIcon(const char* label, const char* tooltip, const icon::Data& icon, const ImVec2& size = ImVec2(22, 22), const bool active = false)
+	bool ButtonIcon(const char* label, const char* tooltip, const icon::Data& icon, const ImVec2& size = Vector2f(22.f), const bool active = false)
 	{
 		const bool result = imgui::ImageButton(label, active, icon.m_TextureId, size, icon.m_UV0, icon.m_UV1);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
@@ -173,6 +173,7 @@ namespace
 			const eng::VisibilityTemplate>;
 		for (auto&& view : world.Query<Query>())
 		{
+			constexpr Vector2f size = Vector2f(22.f);
 			imgui::RaiiID id(view.GetEntity().GetIndex());
 
 			const char* name = "<unknown>";;
@@ -194,19 +195,21 @@ namespace
 			}
 			else
 			{
-				ImGui::Dummy(Vector2f(22.f));
+				ImGui::Dummy(size);
 			}
 
 			ImGui::SameLine();
-			Icon(GetIcon(view), Vector2f(22.f));
+			Icon(GetIcon(view), size);
 			ImGui::SameLine();
 
 			const bool isSelected = view == select.m_Entity;
-			if (ImGui::Selectable(name, isSelected))
+			ImGui::SetWindowFontScale(1.6f);
+			if (ImGui::Selectable(name, isSelected, 0, Vector2f(0.f, size.y)))
 			{
 				auto& select = world.WriteComponent<editor::entity::SelectComponent>();
 				select.m_Entity = view;
 			}
+			ImGui::SetWindowFontScale(1.f);
 
 			ImGui::OpenPopupOnItemClick(name);
 			if (ImGui::BeginPopup(name))
