@@ -37,6 +37,9 @@
 #include "GameDebug/LevelOpenWindowComponent.h"
 #include "GameDebug/LevelReloadSystem.h"
 #include "GameDebug/MenuBarSystem.h"
+#include "GameDebug/ModelGenSystem.h"
+#include "GameDebug/ModelGenWindowComponent.h"
+#include "GameDebug/ModelGenWindowEvent.h"
 #include "GameDebug/NetworkEvent.h"
 #include "GameDebug/NetworkSystem.h"
 #include "GameDebug/NetworkWindowComponent.h"
@@ -69,6 +72,7 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterComponent<debug::ImNodesDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::InspectorDemoWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::level::OpenWindowComponent>();
+	m_ClientWorld.RegisterComponent<debug::ModelGenWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::NetworkWindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::settings::WindowComponent>();
 	m_ClientWorld.RegisterComponent<debug::ShapeWindowComponent>();
@@ -81,6 +85,7 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterEvent<debug::level::ReloadEvent>(); 
 	m_ClientWorld.RegisterEvent<debug::level::SaveAsEvent>();
 	m_ClientWorld.RegisterEvent<debug::level::SaveEvent>();
+	m_ClientWorld.RegisterEvent<debug::ModelGenWindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::NetworkEvent>();
 	m_ClientWorld.RegisterEvent<debug::NetworkWindowEvent>();
 	m_ClientWorld.RegisterEvent<debug::ServerWindowEvent>();
@@ -97,6 +102,7 @@ void debug::GameDebug::Register()
 	m_ClientWorld.RegisterSystem<debug::level::OpenSystem>();
 	m_ClientWorld.RegisterSystem<debug::level::ReloadSystem>();
 	m_ClientWorld.RegisterSystem<debug::MenuBarSystem>();
+	m_ClientWorld.RegisterSystem<debug::ModelGenSystem>();
 	m_ClientWorld.RegisterSystem<debug::NetworkSystem>(m_ClientWorld, m_ServerWorld);
 	m_ClientWorld.RegisterSystem<debug::OverlaySystem>();
 	m_ClientWorld.RegisterSystem<debug::PhysicsSystem>();

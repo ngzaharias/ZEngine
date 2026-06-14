@@ -28,6 +28,7 @@
 #include "GameDebug/DebugSplineWindowEvent.h"
 #include "GameDebug/EditorSettingsWindowEvent.h"
 #include "GameDebug/LevelOpenWindowComponent.h"
+#include "GameDebug/ModelGenWindowEvent.h"
 #include "GameDebug/SettingsWindowComponent.h"
 #include "GameDebug/SettingsWindowEvent.h"
 #include "InputEditor/InputEditorWindowEvent.h"
@@ -138,6 +139,8 @@ void debug::MenuBarSystem::Update(World& world, const GameTime& gameTime)
 				world.AddEvent<debug::entity::WindowEvent>();
 			if (ImGui::MenuItem("Inventory"))
 				world.AddEvent<debug::inventory::WindowEvent>();
+			if (ImGui::MenuItem("ModelGen"))
+				world.AddEvent<debug::ModelGenWindowEvent>();
 			if (ImGui::MenuItem("Network"))
 				world.AddEvent<debug::NetworkWindowEvent>();
 			if (ImGui::MenuItem("Optick (external)"))

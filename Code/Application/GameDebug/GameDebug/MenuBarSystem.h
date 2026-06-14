@@ -9,6 +9,7 @@ namespace debug
 	struct ImGuiDemoEvent;
 	struct ImNodesDemoEvent;
 	struct InspectorDemoEvent;
+	struct ModelGenWindowEvent;
 	struct NetworkWindowEvent;
 	struct ShapeWindowEvent;
 	struct SplineWindowEvent;
@@ -103,6 +104,7 @@ namespace debug
 			debug::level::ReloadEvent,
 			debug::level::SaveAsEvent,
 			debug::level::SaveEvent,
+			debug::ModelGenWindowEvent,
 			debug::NetworkWindowEvent,
 			debug::settings::WindowEvent,
 			debug::ShapeWindowEvent,
