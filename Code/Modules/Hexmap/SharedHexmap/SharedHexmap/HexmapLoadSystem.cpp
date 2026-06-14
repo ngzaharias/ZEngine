@@ -84,7 +84,6 @@ void shared::hexmap::LoadSystem::Update(World& world, const GameTime& gameTime)
 
 			auto& transform = world.AddComponent<eng::TransformComponent>(entity);
 			transform.m_Translate = worldPos;
-			transform.m_Rotate = Rotator(90.f, 0.f, 0.f);
 
 			world.AddComponent<eng::level::EntityComponent>(entity, level.m_Name);
 		}

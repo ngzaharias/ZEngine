@@ -26,7 +26,7 @@
 
 namespace
 {
-	constexpr Vector2f s_SpriteSize = Vector2f(238.f, 207.f);
+	constexpr Vector2f s_SpriteSize = Vector2f(238.f, 238.f);
 
 	const str::Guid strMesh = str::Guid::Create("ecf9330f287d40fea37789491c3c32a3");
 	const str::Guid strShader = str::Guid::Create("94eb696e6c1841309a2071df1f0f1823");
@@ -136,7 +136,7 @@ void shared::hexmap::RenderSystem::Update(World& world, const GameTime& gameTime
 				1.f);
 
 			Matrix4x4 model = transform.ToTransform();
-			model.SetScale(math::Multiply(modelScale, fragmentScale));
+			model.SetScale(2.f);
 
 			const int32 width = root.m_HexCount.x;
 			const int32 height = root.m_HexCount.y;
