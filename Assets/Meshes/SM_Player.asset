@@ -1,0 +1,5 @@
+m_Guid = "0a8574b3ab824744b877a3668cf8b9f7"
+m_Name = "SM_Player"
+m_Type = "StaticMesh"
+
+m_SourceFile = ".\\Meshes\\SM_Player.glb"

@@ -1,0 +1,5 @@
+m_Guid = "ecf9330f287d40fea37789491c3c32a3"
+m_Name = "SM_HexF"
+m_Type = "StaticMesh"
+
+m_SourceFile = ".\\Meshes\\SM_HexF.glb"
