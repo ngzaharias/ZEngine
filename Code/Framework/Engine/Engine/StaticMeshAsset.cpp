@@ -38,9 +38,12 @@ bool eng::StaticMeshAssetLoader::Bind(eng::StaticMeshAsset& asset) const
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * asset.m_TexCoords0.GetCount(), asset.m_TexCoords0.GetData(), GL_STATIC_DRAW);
 
 	// normal
-	glGenBuffers(1, &binding.m_NormalBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, binding.m_NormalBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * asset.m_Normals.GetCount(), asset.m_Normals.GetData(), GL_STATIC_DRAW);
+	if (!asset.m_Normals.IsEmpty())
+	{
+		glGenBuffers(1, &binding.m_NormalBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, binding.m_NormalBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * asset.m_Normals.GetCount(), asset.m_Normals.GetData(), GL_STATIC_DRAW);
+	}
 
 	// index
 	glGenBuffers(1, &binding.m_IndexBuffer);
@@ -67,6 +70,8 @@ bool eng::StaticMeshAssetLoader::Unbind(eng::StaticMeshAsset& asset) const
 
 bool eng::StaticMeshAssetLoader::Load(eng::StaticMeshAsset& asset, Visitor& visitor) const
 {
+	constexpr float s_Scale = 100.f;
+
 	PROFILE_FUNCTION();
 
 	visitor.Read(strSourceFile, asset.m_SourceFile, {});
@@ -98,12 +103,12 @@ bool eng::StaticMeshAssetLoader::Load(eng::StaticMeshAsset& asset, Visitor& visi
 
 		// Bounds
 		{
-			asset.m_Bounds.m_Min.x = mesh->mAABB.mMin.x;
-			asset.m_Bounds.m_Min.y = mesh->mAABB.mMin.y;
-			asset.m_Bounds.m_Min.z = mesh->mAABB.mMin.z;
-			asset.m_Bounds.m_Max.x = mesh->mAABB.mMax.x;
-			asset.m_Bounds.m_Max.y = mesh->mAABB.mMax.y;
-			asset.m_Bounds.m_Max.z = mesh->mAABB.mMax.z;
+			asset.m_Bounds.m_Min.x = mesh->mAABB.mMin.x * s_Scale;
+			asset.m_Bounds.m_Min.y = mesh->mAABB.mMin.y * s_Scale;
+			asset.m_Bounds.m_Min.z = mesh->mAABB.mMin.z * s_Scale;
+			asset.m_Bounds.m_Max.x = mesh->mAABB.mMax.x * s_Scale;
+			asset.m_Bounds.m_Max.y = mesh->mAABB.mMax.y * s_Scale;
+			asset.m_Bounds.m_Max.z = mesh->mAABB.mMax.z * s_Scale;
 		}
 
 		// Indices
@@ -126,9 +131,12 @@ bool eng::StaticMeshAssetLoader::Load(eng::StaticMeshAsset& asset, Visitor& visi
 			aiVector3D* normal = mesh->mNormals;
 			const int32 count = mesh->HasNormals() ? mesh->mNumVertices : 0;
 
-			asset.m_Normals.Reserve(count);
+ 			asset.m_Normals.Reserve(count);
 			for (int32 j = 0; j < count; ++j, ++normal)
-				asset.m_Normals.Emplace(normal->x, normal->z, normal->y);
+				asset.m_Normals.Emplace(
+					normal->x, 
+					normal->z, 
+					normal->y);
 		}
 
 		// Vertices
@@ -138,7 +146,10 @@ bool eng::StaticMeshAssetLoader::Load(eng::StaticMeshAsset& asset, Visitor& visi
 
 			asset.m_Vertices.Reserve(mesh->mNumVertices);
 			for (int32 j = 0; j < count; ++j, ++vertex)
-				asset.m_Vertices.Emplace(vertex->x, vertex->z, vertex->y);
+				asset.m_Vertices.Emplace(
+					vertex->x * s_Scale, 
+					vertex->z * s_Scale, 
+					vertex->y * s_Scale);
 		}
 
 		// Texture Coordinates 0
