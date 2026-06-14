@@ -321,6 +321,22 @@ void imgui::GraphPoint(const Vector2f& value, float thickness)
 	drawList->AddCircle(localPos, controlRadius, colour);
 }
 
+void imgui::GraphText(const Vector2f& position, const char* text)
+{
+	const ImU32 colour = ImGui::GetColorU32(ImGuiCol_PlotLines);
+	const ImRect inner_bb = GetInner();
+	const ImRect range_bb = GetRange();
+	const ImVec2 mousePos = ImGui::GetIO().MousePos;
+
+	const ImVec2 localPos = ToLocal(position, inner_bb, range_bb);
+	ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+	const char* text_begin; const char* text_end;
+	const ImU32 col = ImGui::GetColorU32(ImGuiCol_Text);
+	ImFormatStringToTempBuffer(&text_begin, &text_end, text);
+	drawList->AddText(localPos, col, text_begin, text_end);
+}
+
 void imgui::GraphShape(AABB2f& value, float rounding, float thickness, ImDrawFlags flags)
 {
 	const int dragIdx1 = GenerateDragIndex();
