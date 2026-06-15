@@ -6,6 +6,7 @@
 #include "Engine/AssetSystem.h"
 #include "Engine/CameraSystem.h"
 #include "Engine/ClientSystem.h"
+#include "Engine/FileDropSystem.h"
 #include "Engine/FlipbookSystem.h"
 #include "Engine/LevelLoadSystem.h"
 #include "Engine/LightSystem.h"
@@ -30,6 +31,7 @@ void eng::RegisterClientSystems(ecs::EntityWorld& world)
 	world.RegisterSystem<eng::AssetSystem>();
 	world.RegisterSystem<eng::CameraSystem>();
 	world.RegisterSystem<eng::ClientSystem>();
+	world.RegisterSystem<eng::FileDropSystem>();
 	world.RegisterSystem<eng::FlipbookSystem>();
 	world.RegisterSystem<eng::LightSystem>();
 	world.RegisterSystem<eng::MusicSystem>();

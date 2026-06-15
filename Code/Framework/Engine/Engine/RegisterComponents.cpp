@@ -13,6 +13,8 @@
 #include "Engine/CameraTemplate.h"
 #include "Engine/ClientComponent.h"
 #include "Engine/DynamicMeshComponent.h"
+#include "Engine/FileDropEvent.h"
+#include "Engine/FileDropSystem.h"
 #include "Engine/FlipbookComponent.h"
 #include "Engine/FlipbookTemplate.h"
 #include "Engine/FrameBufferComponent.h"
@@ -114,6 +116,7 @@ void eng::RegisterClientComponents(ecs::EntityWorld& world)
 	world.RegisterComponent<eng::VisibilityComponent>();
 	world.RegisterComponent<eng::VisibilityTemplate>();
 	world.RegisterEvent<eng::application::CloseEvent>();
+	world.RegisterEvent<eng::FileDropEvent>();
 	world.RegisterEvent<eng::TablesReloadedEvent>();
 
 	// templates

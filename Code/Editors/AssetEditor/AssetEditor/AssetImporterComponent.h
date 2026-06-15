@@ -7,11 +7,11 @@
 
 namespace editor::assets
 {
-	struct WindowComponent final : public ecs::Component
+	struct ImporterComponent final : public ecs::Component
 	{
 		int32 m_Identifier = 0;
 		str::String m_Label = {};
 
-		Array<eng::AssetFile> m_Sorted = {};
+		Array<str::Path> m_Files = {};
 	};
 }

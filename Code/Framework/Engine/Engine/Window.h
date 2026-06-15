@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Array.h"
+#include "Core/Path.h"
 #include "Core/Set.h"
 #include "Math/Vector.h"
 
@@ -29,6 +31,9 @@ namespace eng
 
 		virtual bool ShouldClose() const { return false; }
 
+		/// \brief Consume all the operating system drag drop file requests that happened since the last frame.
+		virtual void ConsumeFiles(Array<str::Path>& out_Files);
+
 		virtual void GatherGamepad(Set<input::EKey>& out_Keys) const {}
 		virtual void GatherKeyboard(Set<input::EKey>& out_Keys) const {}
 		virtual void GatherMouse(Set<input::EKey>& out_Keys, Vector2f& out_Delta, Vector2f& out_Position) const {}
@@ -45,6 +50,7 @@ namespace eng
 		Window& operator=(const Window&) = delete;
 
 	protected:
+		Array<str::Path> m_Files = {};
 		Vector2i m_Position = Vector2i::Zero;
 		Vector2f m_Scale = Vector2f::Zero;
 		Vector2u m_Size = Vector2u::Zero;

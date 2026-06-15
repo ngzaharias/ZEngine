@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Array.h"
+#include "Core/Path.h"
 #include "Engine/Monitor.h"
 #include "Engine/WindowModeEnum.h"
 
@@ -25,6 +26,8 @@ namespace eng
 
 		auto Create(const eng::WindowConfig& config) -> const eng::Window*;
 		bool Destroy(const eng::Window* value);
+
+		void ConsumeFiles(Array<str::Path>& out_Files);
 
 		auto GetMonitor(const int32 index) const -> const eng::Monitor*;
 		auto GetMonitors() const -> const Array<eng::Monitor>&;

@@ -2,7 +2,6 @@
 
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
-#include "Engine/AssetManager.h"
 #include "imgui/Identifier.h"
 
 namespace ecs
@@ -10,30 +9,29 @@ namespace ecs
 	struct NameComponent;
 }
 
+namespace editor::assets
+{
+	struct ImporterComponent;
+}
+
 namespace eng
 {
 	class AssetManager;
-	struct AssetFile;
+	struct FileDropEvent;
 }
 
 namespace editor::assets
 {
-	struct OpenWindowEvent;
-	struct WindowComponent;
-}
-
-namespace editor::assets
-{
-	class WindowSystem final : public ecs::System
+	class ImporterSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
 			ecs::NameComponent,
-			editor::assets::WindowComponent>
+			editor::assets::ImporterComponent,
+			eng::AssetManager>
 			::Read<
-			editor::assets::OpenWindowEvent,
-			eng::AssetManager>;
+			eng::FileDropEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
 

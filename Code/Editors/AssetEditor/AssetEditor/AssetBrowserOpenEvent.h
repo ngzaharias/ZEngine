@@ -4,5 +4,5 @@
 
 namespace editor::assets
 {
-	struct OpenWindowEvent final : public ecs::Event { };
+	struct BrowserOpenEvent final : public ecs::Event { };
 }

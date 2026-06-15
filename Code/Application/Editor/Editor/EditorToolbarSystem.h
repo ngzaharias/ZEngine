@@ -5,7 +5,7 @@
 
 namespace editor::assets
 {
-	struct OpenWindowEvent;
+	struct BrowserOpenEvent;
 }
 
 namespace editor::entity
@@ -52,7 +52,7 @@ namespace editor
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::assets::OpenWindowEvent,
+			editor::assets::BrowserOpenEvent,
 			editor::entity::OpenInspectorEvent,
 			editor::entity::OpenOutlinerEvent,
 			editor::flipbook::OpenWindowEvent,

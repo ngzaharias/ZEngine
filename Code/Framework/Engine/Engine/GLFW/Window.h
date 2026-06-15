@@ -1,6 +1,9 @@
 #pragma once
 
 #ifdef Z_GLFW
+
+#include "Core/Array.h"
+#include "Core/Path.h"
 #include "Core/Set.h"
 #include "Engine/Window.h"
 #include "Math/Vector.h"
@@ -30,6 +33,7 @@ namespace glfw
 		void Refresh(const eng::EWindowMode& windowMode, const Vector2u& resolution, const int32 refreshRate, const int32 monitor) override;
 
 	private:
+		static void Callback_DropTarget(GLFWwindow* glfwWindow, int count, const char** paths);
 		static void Callback_FramebufferResized(GLFWwindow* glfwWindow, int width, int height);
 		static void Callback_ScrollChanged(GLFWwindow* glfwWindow, double xOffset, double yOffset);
 		static void Callback_WindowClose(GLFWwindow* glfwWindow);
@@ -40,7 +44,7 @@ namespace glfw
 		static void Callback_WindowPos(GLFWwindow* glfwWindow, int xpos, int ypos);
 		static void Callback_WindowRefresh(GLFWwindow* glfwWindow);
 		static void Callback_WindowSize(GLFWwindow* glfwWindow, int width, int height);
-
+	
 	private:
 		Vector2f m_MousePos = Vector2f::Zero;
 		Vector2f m_MouseDelta = Vector2f::Zero;

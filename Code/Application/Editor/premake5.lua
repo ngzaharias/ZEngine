@@ -51,7 +51,7 @@ project "Editor"
 		"%{wks.location}/../Code/Application/GameServer/",
 		"%{wks.location}/../Code/Application/GameUI/",
 		"%{wks.location}/../Code/Bindings/Steam/",
-		"%{wks.location}/../Code/Editors/AssetBrowser/",
+		"%{wks.location}/../Code/Editors/AssetEditor/",
 		"%{wks.location}/../Code/Editors/EntityEditor/",
 		"%{wks.location}/../Code/Editors/FlipbookEditor/",
 		"%{wks.location}/../Code/Editors/InputEditor/",
@@ -124,7 +124,7 @@ project "Editor"
 		"DebugTilemap",
 
 		-- Editors
-		"AssetBrowser",
+		"AssetEditor",
 		"EditorSpellcraft",
 		"EntityEditor",
 		"FlipbookEditor",

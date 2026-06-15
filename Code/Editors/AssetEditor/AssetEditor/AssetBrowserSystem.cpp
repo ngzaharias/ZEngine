@@ -1,8 +1,8 @@
-#include "AssetBrowserPCH.h"
-#include "AssetBrowser/AssetBrowserWindowSystem.h"
+#include "AssetPCH.h"
+#include "AssetEditor/AssetBrowserSystem.h"
 
-#include "AssetBrowser/AssetBrowserOpenWindowEvent.h"
-#include "AssetBrowser/AssetBrowserWindowComponent.h"
+#include "AssetEditor/AssetBrowserOpenEvent.h"
+#include "AssetEditor/AssetBrowserComponent.h"
 #include "Core/SortHelpers.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/NameComponent.h"
@@ -15,7 +15,7 @@
 
 namespace
 {
-	using World = editor::assets::WindowSystem::World;
+	using World = editor::assets::BrowserSystem::World;
 
 	str::String ToLabel(const char* label, const int32 index)
 	{
@@ -47,7 +47,7 @@ namespace
 	}
 }
 
-void editor::assets::WindowSystem::Update(World& world, const GameTime& gameTime)
+void editor::assets::BrowserSystem::Update(World& world, const GameTime& gameTime)
 {
 	PROFILE_FUNCTION();
 
@@ -58,13 +58,13 @@ void editor::assets::WindowSystem::Update(World& world, const GameTime& gameTime
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(800, 600.f);
 
-	for (const auto& request : world.Events<const editor::assets::OpenWindowEvent>())
+	for (const auto& request : world.Events<const editor::assets::BrowserOpenEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
 		const ecs::Entity windowEntity = world.CreateEntity();
 		world.AddComponent<ecs::NameComponent>(windowEntity, "Asset Browser");
 
-		auto& window = world.AddComponent<editor::assets::WindowComponent>(windowEntity);
+		auto& window = world.AddComponent<editor::assets::BrowserComponent>(windowEntity);
 		window.m_Identifier = identifier;
 		window.m_Label = ToLabel("Asset Browser", identifier);
 
@@ -76,16 +76,16 @@ void editor::assets::WindowSystem::Update(World& world, const GameTime& gameTime
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::assets::WindowComponent>;
+		::Removed<editor::assets::BrowserComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		const auto& window = world.ReadComponent<editor::assets::WindowComponent>(view, false);
+		const auto& window = world.ReadComponent<editor::assets::BrowserComponent>(view, false);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Include<editor::assets::WindowComponent>>())
+	for (auto&& view : world.Query<ecs::query::Include<editor::assets::BrowserComponent>>())
 	{
-		auto& windowComponent = view.WriteRequired<editor::assets::WindowComponent>();
+		auto& windowComponent = view.WriteRequired<editor::assets::BrowserComponent>();
 
 		bool isWindowOpen = true;
 		imgui::SetNextWindowPos(s_DefaultPos, ImGuiCond_FirstUseEver);

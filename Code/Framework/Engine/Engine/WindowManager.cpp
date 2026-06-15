@@ -170,6 +170,12 @@ bool eng::WindowManager::Destroy(const eng::Window* value)
 	return false;
 }
 
+void eng::WindowManager::ConsumeFiles(Array<str::Path>& out_Files)
+{
+	for (eng::Window* window : m_Windows)
+		window->ConsumeFiles(out_Files);
+}
+
 const eng::Monitor* eng::WindowManager::GetMonitor(const int32 index) const
 {
 	if (index < m_Monitors.GetCount())

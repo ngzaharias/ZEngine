@@ -224,6 +224,7 @@ glfw::Window::Window(const eng::WindowConfig& config)
 	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glfwSetWindowTitle(m_Window, "Tactichess");
 
+	glfwSetDropCallback(m_Window, Callback_DropTarget);
 	glfwSetFramebufferSizeCallback(m_Window, Callback_FramebufferResized);
 	glfwSetScrollCallback(m_Window, Callback_ScrollChanged);
 	glfwSetWindowCloseCallback(m_Window, Callback_WindowClose);
@@ -370,6 +371,16 @@ void glfw::Window::Refresh(const eng::EWindowMode& windowMode, const Vector2u& s
 		m_Position = position;
 		m_RefreshRate = mode->refreshRate;
 	} break;
+	}
+}
+
+void glfw::Window::Callback_DropTarget(GLFWwindow* glfwWindow, int count, const char** paths)
+{
+	auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
+	for (int32 i = 0; i < count; ++i)
+	{
+		const str::Path filepath = str::Path(paths[i]);
+		window->m_Files.Append(std::move(filepath));
 	}
 }
 

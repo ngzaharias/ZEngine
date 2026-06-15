@@ -1,8 +1,8 @@
-project "AssetBrowser"
+project "AssetEditor"
 	kind "StaticLib"
-	pchheader "AssetBrowserPCH.h"
-	pchsource "AssetBrowser/AssetBrowserPCH.cpp"
-	location "%{wks.location}/Editors/AssetBrowser"
+	pchheader "AssetPCH.h"
+	pchsource "AssetEditor/AssetPCH.cpp"
+	location "%{wks.location}/Editors/AssetEditor"
 
 	local root = path.getdirectory(_SCRIPT)
 	files 
@@ -18,9 +18,9 @@ project "AssetBrowser"
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"AssetBrowser/**.h", 
-			"AssetBrowser/**.cpp", 
-			"AssetBrowser/**.inl" } },
+			"AssetEditor/**.h", 
+			"AssetEditor/**.cpp", 
+			"AssetEditor/**.inl" } },
 	}
 
 	includedirs 
@@ -29,7 +29,7 @@ project "AssetBrowser"
 		"%{wks.location}/../3rdParty/imgui/1.91/Include/",
 		"%{wks.location}/../3rdParty/magic_enum/0.8.0/Include/",
 		"%{wks.location}/../3rdParty/optick/1.3.1/Include/",
-		"%{wks.location}/../Code/Editors/AssetBrowser/",
+		"%{wks.location}/../Code/Editors/AssetEditor/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
 		"%{wks.location}/../Code/Framework/Engine/",

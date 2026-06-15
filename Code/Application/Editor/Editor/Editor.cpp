@@ -1,7 +1,7 @@
 #include "EditorPCH.h"
 #include "Editor/Editor.h"
 
-#include "AssetBrowser/AssetBrowserRegisterModule.h"
+#include "AssetEditor/AssetRegisterModule.h"
 #include "ECS/EntityWorld.h"
 #include "ECS/QueryTypes.h"
 #include "ECS/WorldView.h"
@@ -40,8 +40,8 @@ void editor::Editor::Register()
 	PROFILE_FUNCTION();
 
 	m_ClientWorld.RegisterComponent<editor::gizmo::TransformComponent>();
-	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
 	m_ClientWorld.RegisterComponent<editor::settings::LocalComponent>();
+	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
 	m_ClientWorld.RegisterSystem<editor::AssetReloadSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();
