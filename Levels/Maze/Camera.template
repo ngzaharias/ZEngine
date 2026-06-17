@@ -1,0 +1,10 @@
+m_UUID = "0957346bd22e428a88ae84a3c939991d"
+m_Name = "Camera"
+
+['shared::camera::Move3DTemplate']
+['eng::CameraTemplate']
+
+['eng::TransformTemplate']
+m_Translate = { X = 360.0, Y = 617.0, Z = -505.0 }
+m_Rotate = { Pitch = +45.0, Yaw = -35.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

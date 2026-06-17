@@ -1,0 +1,10 @@
+m_UUID = "d3eaab360ac1466f9db1130a55f81106"
+m_Name = "Light_Ambient"
+
+['eng::light::AmbientTemplate']
+m_Colour = { X = 0.0, Y = 0.1, Z = 0.1 }
+
+['eng::TransformTemplate']
+m_Translate = { X = 0.0, Y = 1000.0, Z = 0.0 }
+m_Rotate = { Pitch = -50.0, Yaw = 150.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }

@@ -1,0 +1,13 @@
+m_UUID = "4552998fd50b4553bfea23b44c97e3bb"
+m_Name = "Player"
+
+['eng::VisibilityTemplate']
+m_IsVisible = true
+
+['eng::StaticMeshTemplate']
+m_StaticMesh = "0a8574b3ab824744b877a3668cf8b9f7"
+
+['eng::TransformTemplate']
+m_Translate = { X = 0.0, Y = 0.0, Z = 0.0 }
+m_Rotate = { Pitch = 0.0, Yaw = 0.0, Roll = 0.0 }
+m_Scale = { X = 1.0, Y = 1.0, Z = 1.0 }
