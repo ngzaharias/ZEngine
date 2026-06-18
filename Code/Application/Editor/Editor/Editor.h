@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ImportEditor/ImportManager.h"
+
 class GameTime;
 
 namespace ecs
@@ -24,5 +26,7 @@ namespace editor
 	public:
 		ecs::EntityWorld& m_ClientWorld;
 		ecs::EntityWorld& m_ServerWorld;
+
+		editor::importer::Manager m_ImportManager;
 	};
 }

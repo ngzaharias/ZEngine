@@ -3,28 +3,17 @@
 #include "Core/Path.h"
 #include "Core/SparseArray.h"
 #include "Core/TypeInfo.h"
+#include "ImportEditor/ImportEntry.h"
 
 namespace editor::importer
 {
-	using ImporterId = TypeId;
-	struct ImporterTag {};
+	struct Tag {};
 
-	class Importer
-	{
-		virtual ~Importer() {};
-	};
-
-	struct ImportEntry
-	{
-		Importer* m_Importer = nullptr;
-		TypeId m_TypeId = -1;
-	};
-
-	struct ImportManager final
+	struct Manager final
 	{
 	public:
-		void Initialise();
-		void Shutdown();
+		Manager();
+		~Manager();
 
 		template<class TImporter>
 		bool IsRegistered() const;
@@ -36,7 +25,7 @@ namespace editor::importer
 		TImporter& Get();
 
 	private:
-		SparseArray<ImporterId, ImportEntry> m_Entries = { };
+		SparseArray<TypeId, Entry> m_Entries = { };
 	};
 }
 

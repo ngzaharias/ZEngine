@@ -1,26 +1,26 @@
 #pragma once
 
 template<class TImporter>
-bool editor::importer::ImportManager::IsRegistered() const
+bool editor::importer::Manager::IsRegistered() const
 {
-	const ecs::ImporterId resourceId = ToTypeId<TImporter, ecs::ImporterTag>();
-	return m_Entries.Contains(resourceId);
+	const TypeId typeId = ToTypeId<TImporter, Tag>();
+	return m_Entries.Contains(typeId);
 }
 
 template<class TImporter, typename... TArgs>
-void editor::importer::ImportManager::Register(TArgs&&... args)
+void editor::importer::Manager::Register(TArgs&&... args)
 {
-	const TypeId importerId = ToTypeId<TImporter, ecs::ImporterTag>();
+	const TypeId typeId = ToTypeId<TImporter, Tag>();
 
-	ImportEntry& entry = m_Entries.Emplace(importerId);
-	entry.m_System = new TImporter(std::forward<TArgs>(args)...);
-	entry.m_TypeId = importerId;
+	Entry& entry = m_Entries.Emplace(typeId);
+	entry.m_Importer = new TImporter(std::forward<TArgs>(args)...);
+	entry.m_TypeId = typeId;
 }
 
 template<class TImporter>
-TImporter& editor::importer::ImportManager::Get()
+TImporter& editor::importer::Manager::Get()
 {
-	const ecs::ImporterId resourceId = ToTypeId<TImporter, ecs::ImporterTag>();
-	const ecs::ImporterEntry& entry = m_Entries.Get(resourceId);
+	const TypeId typeId = ToTypeId<TImporter, Tag>();
+	const Entry& entry = m_Entries.Get(typeId);
 	return *static_cast<TImporter*>(entry.m_Importer);
 }
