@@ -43,7 +43,6 @@ void editor::Editor::Register()
 	m_ClientWorld.RegisterComponent<editor::gizmo::TransformComponent>();
 	m_ClientWorld.RegisterComponent<editor::settings::LocalComponent>();
 	m_ClientWorld.RegisterComponent<editor::settings::WindowComponent>();
-	m_ClientWorld.RegisterResource(m_ImportManager);
 	m_ClientWorld.RegisterSystem<editor::AssetReloadSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::CrosshairSystem>();
 	m_ClientWorld.RegisterSystem<editor::gizmo::TransformSystem>();

@@ -3,19 +3,17 @@
 
 #include "ECS/EntityWorld.h"
 #include "ECS/WorldView.h"
-#include "ImportEditor/ImportManager.h"
-#include "ImportEditor/ImportStaticMeshImporter.h"
-#include "ImportEditor/ImportWindowComponent.h"
-#include "ImportEditor/ImportWindowSystem.h"
+#include "ImportEditor/ImportAdvanceEvent.h"
+#include "ImportEditor/ImportQueueComponent.h"
+#include "ImportEditor/ImportQueueSystem.h"
+#include "ImportEditor/ImportStaticMeshComponent.h"
+#include "ImportEditor/ImportStaticMeshSystem.h"
 
 void editor::importer::RegisterModule(ecs::EntityWorld& world)
 {
-	world.RegisterComponent<editor::importer::WindowComponent>();
-	world.RegisterSystem<editor::importer::WindowSystem>();
-
-	// importers
-	{
-		auto& importManager = world.WriteResource<editor::importer::Manager>();
-		importManager.Register<editor::importer::StaticMeshImporter>();
-	}
+	world.RegisterComponent<editor::importer::QueueComponent>();
+	world.RegisterComponent<editor::importer::StaticMeshComponent>();
+	world.RegisterEvent<editor::importer::AdvanceEvent>();
+	world.RegisterSystem<editor::importer::QueueSystem>();
+	world.RegisterSystem<editor::importer::StaticMeshSystem>();
 }

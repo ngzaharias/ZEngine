@@ -45,6 +45,7 @@ namespace eng
 		bool Bind(eng::StaticMeshAsset& asset) const;
 		bool Unbind(eng::StaticMeshAsset& asset) const;
 
+		bool Save(eng::StaticMeshAsset& asset, Visitor& visitor) const;
 		bool Load(eng::StaticMeshAsset& asset, Visitor& visitor) const;
 	};
 }

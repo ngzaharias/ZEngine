@@ -68,6 +68,12 @@ bool eng::StaticMeshAssetLoader::Unbind(eng::StaticMeshAsset& asset) const
 	return true;
 }
 
+bool eng::StaticMeshAssetLoader::Save(eng::StaticMeshAsset& asset, Visitor& visitor) const
+{
+	visitor.Write(strSourceFile, asset.m_SourceFile);
+	return true;
+}
+
 bool eng::StaticMeshAssetLoader::Load(eng::StaticMeshAsset& asset, Visitor& visitor) const
 {
 	constexpr float s_Scale = 100.f;

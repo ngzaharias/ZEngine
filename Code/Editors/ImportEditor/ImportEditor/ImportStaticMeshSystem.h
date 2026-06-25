@@ -5,26 +5,28 @@
 
 namespace editor::importer
 {
-	struct WindowComponent;
+	struct AdvanceEvent;
+	struct QueueComponent;
+	struct StaticMeshComponent;
 }
 
 namespace eng
 {
 	class AssetManager;
-	struct FileDropEvent;
 }
 
 namespace editor::importer
 {
-	class WindowSystem final : public ecs::System
+	class StaticMeshSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			editor::importer::WindowComponent,
+			editor::importer::AdvanceEvent,
+			editor::importer::StaticMeshComponent,
 			eng::AssetManager>
 			::Read<
-			eng::FileDropEvent>;
+			editor::importer::QueueComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 	};
