@@ -43,8 +43,8 @@ void editor::importer::StaticMeshSystem::Update(World& world, const GameTime& ga
 		{
 			const str::StringView filename = sourcePath.GetFileNameNoExtension();
 			str::Path filepath = sourcePath.GetDirectory();
-			filepath += filename;
-			filepath += ".asset";
+			filepath.Append(filename);
+			filepath.Append(".asset");
 
 			auto& importComponent = !world.HasComponent<editor::importer::StaticMeshComponent>()
 				? world.AddComponent<editor::importer::StaticMeshComponent>()

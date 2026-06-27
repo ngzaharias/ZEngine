@@ -190,7 +190,7 @@ namespace
 			if (!filepath.IsEmpty())
 			{
 				auto& writeSettings = world.WriteComponent<editor::texture::SettingsComponent>();
-				writeSettings.m_Save = str::Path(filepath.GetParent(), "\\");
+				writeSettings.m_Save = filepath.GetParent();
 
 				auto& writeWindow = world.WriteComponent<editor::texture::WindowComponent>(entity);
 				auto& assetManager = world.WriteResource<eng::AssetManager>();

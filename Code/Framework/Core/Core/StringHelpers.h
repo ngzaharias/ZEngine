@@ -37,11 +37,13 @@ namespace str
 	/// Substring: "MY"
 	/// Result: " STRING "
 	void Trim(str::String& string, const str::StringView& substring);
+	
 	/// \brief Trims the substring from the left of the string.
 	/// String: "MY STRING MY"
 	/// Substring: "MY"
 	/// Result: " STRING MY"
 	void TrimLeft(str::String& string, const str::StringView& substring);
+
 	/// \brief Trims the substring from the right of the string.
 	/// String: "MY STRING MY"
 	/// Substring: "MY"
@@ -57,6 +59,7 @@ namespace str
 	/// String: "My StRiNg"
 	/// Result: "my string"
 	void ToLower(str::String& string);
+
 	/// \brief Converts all characters to their uppercase counterpart if it exists.
 	/// String: "My StRiNg"
 	/// Result: "MY STRING" 
