@@ -21,6 +21,7 @@
 #include "EntityEditor/EntityEditorRegisterModule.h"
 #include "FlipbookEditor/FlipbookEditorRegisterModule.h"
 #include "Icons/IconsRegisterModule.h"
+#include "ImportEditor/ImportRegisterModule.h"
 #include "InputEditor/InputEditorRegisterModule.h"
 #include "SharedGameState/GameStateRegisterModule.h"
 #include "SpriteEditor/SpriteEditorRegisterModule.h"
@@ -55,6 +56,7 @@ void editor::Editor::Register()
 	editor::assets::RegisterModule(m_ClientWorld);
 	editor::entity::RegisterModule(m_ClientWorld);
 	editor::flipbook::RegisterModule(m_ClientWorld);
+	editor::importer::RegisterModule(m_ClientWorld);
 	editor::input::RegisterModule(m_ClientWorld);
 	editor::spellcraft::RegisterModule(m_ClientWorld);
 	editor::sprite::RegisterModule(m_ClientWorld);

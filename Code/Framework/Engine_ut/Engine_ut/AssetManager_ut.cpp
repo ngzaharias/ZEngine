@@ -25,9 +25,9 @@ namespace
 			m_AssetPath = root.GetParent();
 			m_AssetPath = m_AssetPath.GetParent();
 			m_AssetPath = m_AssetPath.GetParent();
-			m_AssetPath += "\\Code\\";
-			m_AssetPath += root.GetStem();
-			m_AssetPath += "\\Assets\\AssetManager_ut";
+			m_AssetPath.AppendDir("Code");
+			m_AssetPath.AppendDir(root.GetStem());
+			m_AssetPath.AppendDir("Assets\\AssetManager_ut");
 			SetPath(str::EPath::Assets, m_AssetPath);
 
 			m_Manager.RegisterAsset<MyAsset, MyLoader>(strMyAsset);

@@ -85,11 +85,6 @@ void str::Path::operator=(const str::StringView& rhs)
 	m_Value = str::String(rhs);
 }
 
-void str::Path::operator+=(const str::StringView& rhs)
-{
-	m_Value += str::String(rhs);
-}
-
 bool str::Path::HasExtension() const
 {
 	if (IsEmpty())
@@ -177,6 +172,17 @@ str::StringView str::Path::GetStem() const
 		return str::StringView(m_Value.c_str() + find + 1, size - find - 1);
 
 	return m_Value;
+}
+
+void str::Path::Append(const str::StringView value)
+{
+	m_Value += str::String(value);
+}
+
+void str::Path::AppendDir(const str::StringView value)
+{
+	m_Value += "\\";
+	m_Value += str::String(value);
 }
 
 void str::Path::Clear()

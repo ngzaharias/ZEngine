@@ -56,9 +56,9 @@ namespace eng
 			m_AssetPath = root.GetParent();
 			m_AssetPath = m_AssetPath.GetParent();
 			m_AssetPath = m_AssetPath.GetParent();
-			m_AssetPath += "\\Code\\";
-			m_AssetPath += root.GetStem();
-			m_AssetPath += "\\Assets\\TableHeadmaster_ut";
+			m_AssetPath.AppendDir("Code");
+			m_AssetPath.AppendDir(root.GetStem());
+			m_AssetPath.AppendDir("Assets\\TableHeadmaster_ut");
 		}
 
 		~RAIIHelper()

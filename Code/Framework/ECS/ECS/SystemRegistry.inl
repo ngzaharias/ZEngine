@@ -46,10 +46,6 @@ void ecs::SystemRegistry::InitialiseFunction(ecs::EntityWorld& entityWorld, ecs:
 	{
 		tSystem.Initialise(worldView);
 	}
-	else
-	{
-		tSystem.Initialise();
-	}
 }
 
 template<typename TSystem>
@@ -63,10 +59,6 @@ void ecs::SystemRegistry::ShutdownFunction(ecs::EntityWorld& entityWorld, ecs::S
 	{
 		tSystem.Shutdown(worldView);
 	}
-	else
-	{
-		tSystem.Shutdown();
-	}
 }
 
 template<typename TSystem>
@@ -79,9 +71,5 @@ void ecs::SystemRegistry::UpdateFunction(ecs::EntityWorld& entityWorld, ecs::Sys
 	if constexpr (requires{ tSystem.Update(worldView, gameTime); })
 	{
 		tSystem.Update(worldView, gameTime);
-	}
-	else
-	{
-		tSystem.Update(gameTime);
 	}
 }

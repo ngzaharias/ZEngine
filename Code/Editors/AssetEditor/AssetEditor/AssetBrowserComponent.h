@@ -12,6 +12,9 @@ namespace editor::assets
 		int32 m_Identifier = 0;
 		str::String m_Label = {};
 
-		Array<eng::AssetFile> m_Sorted = {};
+		str::Path m_Current = {};
+		Array<str::Path> m_Files = {};
+		Array<str::Path> m_Folders = {};
+		Array<str::Path> m_Parents = {};
 	};
 }

@@ -42,8 +42,6 @@ namespace str
 		void operator=(const str::String& rhs);
 		void operator=(const str::StringView& rhs);
 
-		void operator+=(const str::StringView& rhs);
-
 		operator str::StringView() const { return m_Value; }
 
 		bool HasExtension() const;
@@ -81,6 +79,13 @@ namespace str
 		///							  +++++++
 		str::StringView GetStem() const;
 
+		/// \brief Appends a string to the end of the path.
+		void Append(const str::StringView value);
+
+		/// \brief Appends a string to the end of the path with a separator.
+		void AppendDir(const str::StringView value);
+
+		/// \brief Clears the path.
 		void Clear();
 
 	private:

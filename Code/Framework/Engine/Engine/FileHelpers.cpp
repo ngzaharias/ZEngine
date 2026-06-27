@@ -18,7 +18,7 @@ str::Path eng::GetAppDataDirectory()
 	wcstombs_s(count, cDirectory, wDirectory, MAX_PATH);
 
 	str::String string = cDirectory;
-	return str::Path(std::move(string), "\\ZEngine\\");
+	return str::Path(std::move(string), "\\ZEngine");
 #endif
 }
 
@@ -30,9 +30,9 @@ str::Path eng::GetAssetsDirectory()
 	str::Path path = directory.string();
 	while (!path.IsEmpty())
 	{
-		path += "\\Assets";
+		path.AppendDir("Assets");
 		if (std::filesystem::is_directory(path.ToChar()))
-			return str::Path(path, "\\");
+			return path;
 
 		path = path.GetParent();
 		path = path.GetParent();
@@ -50,9 +50,9 @@ str::Path eng::GetConfigDirectory()
 	str::Path path = directory.string();
 	while (!path.IsEmpty())
 	{
-		path += "\\Config";
+		path.AppendDir("Config");
 		if (std::filesystem::is_directory(path.ToChar()))
-			return str::Path(path, "\\");
+			return path;
 
 		path = path.GetParent();
 		path = path.GetParent();
@@ -93,9 +93,9 @@ str::Path eng::GetLevelsDirectory()
 	str::Path path = directory.string();
 	while (!path.IsEmpty())
 	{
-		path += "\\Levels";
+		path.AppendDir("Levels");
 		if (std::filesystem::is_directory(path.ToChar()))
-			return str::Path(path, "\\");
+			return path;
 
 		path = path.GetParent();
 		path = path.GetParent();
@@ -113,9 +113,9 @@ str::Path eng::GetThirdPartyDirectory()
 	str::Path path = directory.string();
 	while (!path.IsEmpty())
 	{
-		path += "\\3rdParty";
+		path.AppendDir("3rdParty");
 		if (std::filesystem::is_directory(path.ToChar()))
-			return str::Path(path, "\\");
+			return path;
 
 		path = path.GetParent();
 		path = path.GetParent();
@@ -136,7 +136,7 @@ str::Path eng::GetWorkingDirectory()
 	wcstombs_s(count, cDirectory, wDirectory, MAX_PATH);
 
 	str::String string = cDirectory;
-	return str::Path(std::move(string), "\\");
+	return str::Path(std::move(string));
 #endif
 }
 

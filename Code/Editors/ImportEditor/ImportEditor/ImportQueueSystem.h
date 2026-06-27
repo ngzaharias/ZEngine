@@ -2,16 +2,11 @@
 
 #include "ECS/System.h"
 #include "ECS/WorldView.h"
-#include "imgui/Identifier.h"
 
-namespace ecs
+namespace editor::importer
 {
-	struct NameComponent;
-}
-
-namespace editor::assets
-{
-	struct ImporterComponent;
+	struct AdvanceEvent;
+	struct QueueComponent;
 }
 
 namespace eng
@@ -20,22 +15,19 @@ namespace eng
 	struct FileDropEvent;
 }
 
-namespace editor::assets
+namespace editor::importer
 {
-	class ImporterSystem final : public ecs::System
+	class QueueSystem final : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView
 			::Write<
-			ecs::NameComponent,
-			editor::assets::ImporterComponent,
+			editor::importer::QueueComponent,
 			eng::AssetManager>
 			::Read<
+			editor::importer::AdvanceEvent,
 			eng::FileDropEvent>;
 
 		void Update(World& world, const GameTime& gameTime);
-
-	private:
-		imgui::Identifier m_WindowIds = {};
 	};
 }
