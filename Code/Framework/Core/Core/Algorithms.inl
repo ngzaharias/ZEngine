@@ -188,3 +188,9 @@ auto enumerate::Reverse(Range&& value)
 
 	return Wrapper{ std::forward<Range>(value) };
 }
+
+template<typename Range, typename Predicate>
+void enumerate::Sort(Range&& range, const Predicate& predicate)
+{
+	std::sort(range.begin(), range.end(), predicate);
+}

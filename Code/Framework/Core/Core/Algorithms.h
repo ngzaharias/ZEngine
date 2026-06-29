@@ -44,7 +44,10 @@ namespace enumerate
 	auto Forward(Range&& value);
 
 	template<typename Range>
-	inline auto Reverse(Range&& value);
+	auto Reverse(Range&& value);
+
+	template<typename Range, typename Predicate>
+	void Sort(Range&& range, const Predicate& predicate);
 }
 
 #include "Algorithms.inl"
