@@ -13,8 +13,8 @@ namespace editor::assets
 		str::String m_Label = {};
 
 		str::Path m_Current = {};
-		Array<str::Path> m_Files = {};
-		Array<str::Path> m_Folders = {};
 		Array<str::Path> m_Parents = {};
+		Array<str::Path> m_Folders = {};
+		Array<eng::AssetFile> m_Files = {};
 	};
 }

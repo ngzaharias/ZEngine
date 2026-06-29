@@ -44,7 +44,6 @@ namespace
 {
 	const str::Name strInput = str::Name::Create("Outliner");
 	const str::Name strSave = str::Name::Create("Outliner_Save");
-	const str::Name strSprite = str::Name::Create("Sprite");
 
 	using World = editor::entity::OutlinerSystem::World;
 	using WindowView = ecs::EntityView
@@ -84,10 +83,22 @@ namespace
 		return icon::ENTITY;
 	}
 
-	void CreateEntity(World& world, const str::Path& path)
+	void CreateEntity(World& world)
 	{
 		auto& commands = world.WriteResource<editor::entity::CommandManager>();
-		commands.EntityCreate(path);
+		commands.EntityCreate();
+	}
+
+	void CreateFromAsset(World& world, const str::Guid& uuid)
+	{
+		auto& commands = world.WriteResource<editor::entity::CommandManager>();
+		commands.EntityCreateFromAsset(uuid);
+	}
+
+	void CreateFromTemplate(World& world, const str::Path& path)
+	{
+		auto& commands = world.WriteResource<editor::entity::CommandManager>();
+		commands.EntityCreateFromTemplate(path);
 	}
 
 	void DestroyEntity(World& world, const ecs::Entity& entity)
@@ -118,7 +129,7 @@ namespace
 			if (ImGui::BeginMenu("Create"))
 			{
 				if (ImGui::MenuItem("Entity"))
-					CreateEntity(world, {});
+					CreateEntity(world);
 				ImGui::Separator();
 
 				str::String name;
@@ -126,7 +137,7 @@ namespace
 				{
 					name = filepath.GetFileNameNoExtension();
 					if (ImGui::MenuItem(name.c_str()))
-						CreateEntity(world, filepath);
+						CreateFromTemplate(world, filepath);
 				}
 
 				ImGui::EndMenu();
@@ -221,7 +232,7 @@ namespace
 		}
 	}
 
-	void Draw_EntityDrop(ecs::EntityWorld& world)
+	void Draw_EntityDrop(World& world)
 	{
 		const auto* window = ImGui::GetCurrentWindow();
 
@@ -233,13 +244,7 @@ namespace
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("eng::AssetFile"))
 			{
 				const eng::AssetFile& file = *(const eng::AssetFile*)payload->Data;
-				if (file.m_Type == strSprite)
-				{
-					//const ecs::Entity entity = CreateEntity(m_World, file.m_Name);
-					//world.AddComponent<eng::VisibilityComponent>(entity);
-					//auto& spriteComponent = world.AddComponent<eng::SpriteComponent>(entity);
-					//spriteComponent.m_Sprite = file.m_Guid;
-				}
+				CreateFromAsset(world, file.m_Guid);
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -300,7 +305,7 @@ void editor::entity::OutlinerSystem::Update(World& world, const GameTime& gameTi
 		{
 			Draw_MenuBar(world, view);
 			Draw_EntityList(m_World, world);
-			Draw_EntityDrop(m_World);
+			Draw_EntityDrop(world);
 		}
 		ImGui::End();
 

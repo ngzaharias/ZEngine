@@ -20,6 +20,10 @@ namespace
 {
 	using World = editor::assets::BrowserSystem::World;
 
+	const str::StringView strGuid = "m_Guid";
+	const str::StringView strName = "m_Name";
+	const str::StringView strType = "m_Type";
+
 	str::String ToLabel(const char* label, const int32 index)
 	{
 		return std::format("{}: {}", label, index);
@@ -82,7 +86,16 @@ namespace
 			subpath = entry.path().string();
 			if (subpath.GetFileExtension() == ".asset")
 			{
-				data.m_Files.Append(subpath);
+				Visitor visitor;
+				if (visitor.LoadFromFile(subpath))
+				{
+					eng::AssetFile& file = data.m_Files.Emplace();
+					file.m_Path = subpath;
+
+					visitor.Read(strGuid, file.m_Guid, {});
+					visitor.Read(strName, file.m_Name, {});
+					visitor.Read(strType, file.m_Type, {});
+				}
 			}
 			else if (subpath.IsDirectory())
 			{
@@ -90,8 +103,15 @@ namespace
 			}
 		}
 
-		Sort(data.m_Files);
-		Sort(data.m_Folders);
+		enumerate::Sort(data.m_Files, [](const eng::AssetFile& a, const eng::AssetFile& b)
+			{
+				return a.m_Path < b.m_Path;
+			});
+
+		enumerate::Sort(data.m_Folders, [](const str::Path& a, const str::Path& b)
+			{
+				return a < b;
+			});
 	}
 }
 
@@ -171,18 +191,20 @@ void editor::assets::BrowserSystem::Update(World& world, const GameTime& gameTim
 			}
 
 			// files
-			for (const str::Path& filepath : window.m_Files)
+			for (const eng::AssetFile& file : window.m_Files)
 			{
 				constexpr Vector2f size = Vector2f(22.f);
-				const str::String label = str::String(filepath.GetFileNameNoExtension());
+				const str::Path& path = file.m_Path;
+				const str::String label = str::String(path.GetFileNameNoExtension());
 				Icon(icon::FILE_BLANK, size);
 				ImGui::SameLine();
 				ImGui::Selectable(label.c_str());
-				//if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-				//{
-				//	ImGui::SetDragDropPayload("eng::AssetFile", &file, sizeof(eng::AssetFile));
-				//	ImGui::EndDragDropSource();
-				//}
+
+				if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+				{
+					ImGui::SetDragDropPayload("eng::AssetFile", &file, sizeof(eng::AssetFile));
+					ImGui::EndDragDropSource();
+				}
 			}
 			ImGui::SetWindowFontScale(1.f);
 		}

@@ -40,7 +40,9 @@ namespace editor::entity
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
-		void EntityCreate(const str::Path& path);
+		void EntityCreate();
+		void EntityCreateFromAsset(const str::Guid& uuid);
+		void EntityCreateFromTemplate(const str::Path& path);
 		
 		void EntityDestroy(const str::Guid& uuid);
 		

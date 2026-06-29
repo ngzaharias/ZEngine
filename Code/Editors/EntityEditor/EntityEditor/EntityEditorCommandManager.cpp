@@ -97,9 +97,19 @@ void editor::entity::CommandManager::AddCommands(Array<Command*>&& commands)
 	m_ExecStack.Append(commands);
 }
 
-void editor::entity::CommandManager::EntityCreate(const str::Path& path)
+void editor::entity::CommandManager::EntityCreate()
 {
-	m_ExecStack.Append(new editor::entity::EntityCreate(path));
+	m_ExecStack.Append(new editor::entity::EntityCreate());
+}
+
+void editor::entity::CommandManager::EntityCreateFromAsset(const str::Guid& uuid)
+{
+	m_ExecStack.Append(new editor::entity::EntityCreateFromAsset(uuid));
+}
+
+void editor::entity::CommandManager::EntityCreateFromTemplate(const str::Path& path)
+{
+	m_ExecStack.Append(new editor::entity::EntityCreateFromTemplate(path));
 }
 
 void editor::entity::CommandManager::EntityDestroy(const str::Guid& uuid)

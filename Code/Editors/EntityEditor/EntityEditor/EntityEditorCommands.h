@@ -126,7 +126,36 @@ namespace editor::entity
 	struct EntityCreate : public Command
 	{
 	public:
-		EntityCreate(const str::Path& path);
+		EntityCreate();
+
+		const char* ToString() const override;
+
+		void Exec(ecs::EntityWorld& world) override;
+		void Undo(ecs::EntityWorld& world) override;
+
+	private:
+		str::Guid m_UUID = {};
+	};
+
+	struct EntityCreateFromAsset : public Command
+	{
+	public:
+		EntityCreateFromAsset(const str::Guid& assetUUID);
+
+		const char* ToString() const override;
+
+		void Exec(ecs::EntityWorld& world) override;
+		void Undo(ecs::EntityWorld& world) override;
+
+	private:
+	 	str::Guid m_AssetUUID = {};
+		str::Guid m_EntityUUID = {};
+	};
+
+	struct EntityCreateFromTemplate : public Command
+	{
+	public:
+		EntityCreateFromTemplate(const str::Path& path);
 
 		const char* ToString() const override;
 
