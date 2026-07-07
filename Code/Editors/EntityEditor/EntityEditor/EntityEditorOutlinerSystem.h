@@ -36,6 +36,11 @@ namespace eng::light
 	struct PointTemplate;
 }
 
+namespace render
+{
+	struct DockspaceComponent;
+}
+
 namespace shared::gamestate
 {
 	struct EditorComponent;
@@ -64,6 +69,7 @@ namespace editor::entity
 			eng::light::DirectionalTemplate,
 			eng::light::PointTemplate,
 			eng::StaticMeshTemplate,
+			render::DockspaceComponent,
 			shared::gamestate::EditorComponent>;
 
 		OutlinerSystem(ecs::EntityWorld& world);

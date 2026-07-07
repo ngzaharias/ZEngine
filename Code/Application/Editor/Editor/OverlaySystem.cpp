@@ -9,10 +9,9 @@
 #include "Engine/CameraComponent.h"
 #include "Engine/SettingsDebugComponent.h"
 #include "Engine/TransformComponent.h"
-#include "Engine/Window.h"
-#include "Engine/WindowManager.h"
 #include "EntityEditor/EntityEditorSelectComponent.h"
 #include "Icons/Icons.h"
+#include "Render/RenderDockspaceComponent.h"
 #include "SharedGameState/GameStateEditModeComponent.h"
 
 #include "imgui/imgui.h"
@@ -53,9 +52,9 @@ namespace
 		ImGuiWindowClass windowClass;
 		windowClass.ViewportFlagsOverrideClear |= ImGuiViewportFlags_NoAutoMerge;
 
-		ImGuiViewport* viewport = ImGui::GetMainViewport();
-		const Vector2f viewportPos = viewport->Pos;
-		const Vector2f viewportSize = viewport->Size;
+		const auto& dockspace = world.ReadComponent<render::DockspaceComponent>();
+		const Vector2f viewportPos = dockspace.m_Pos;
+		const Vector2f viewportSize = dockspace.m_Size;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -65,7 +64,7 @@ namespace
 
 		ImGui::SetNextWindowBgAlpha(0.2f);
 		ImGui::SetNextWindowClass(&windowClass);
-		ImGui::SetNextWindowPos(viewportPos + Vector2f(viewportSize.x - 86.f, 100.f));
+		ImGui::SetNextWindowPos(viewportPos + Vector2f(viewportSize.x - 86.f, 20.f));
 		ImGui::SetNextWindowSize(Vector2f(66.f, 100.f));
 		if (ImGui::Begin("Camera##editor", nullptr, s_WindowFlags))
 		{
@@ -142,9 +141,9 @@ namespace
 		ImGuiWindowClass windowClass;
 		windowClass.ViewportFlagsOverrideClear |= ImGuiViewportFlags_NoAutoMerge;
 
-		ImGuiViewport* viewport = ImGui::GetMainViewport();
-		const Vector2f viewportPos = viewport->Pos;
-		const Vector2f viewportSize = viewport->Size;
+		const auto& dockspace = world.ReadComponent<render::DockspaceComponent>();
+		const Vector2f viewportPos = dockspace.m_Pos;
+		const Vector2f viewportSize = dockspace.m_Size;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -154,7 +153,7 @@ namespace
 
 		ImGui::SetNextWindowBgAlpha(0.2f);
 		ImGui::SetNextWindowClass(&windowClass);
-		ImGui::SetNextWindowPos(viewportPos + Vector2f(20.f, 100.f));
+		ImGui::SetNextWindowPos(viewportPos + Vector2f(20.f, 20.f));
 		ImGui::SetNextWindowSize(Vector2f(22.f, 100.f));
 		if (ImGui::Begin("Transform##editor", nullptr, s_WindowFlags))
 		{

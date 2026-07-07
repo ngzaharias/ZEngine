@@ -15,6 +15,7 @@
 #include "Math/Math.h"
 #include "Math/Matrix.h"
 #include "Math/Vector.h"
+#include "Render/RenderDockspaceComponent.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_user.h"
@@ -48,15 +49,11 @@ void debug::OverlaySystem::Update(World& world, const GameTime& gameTime)
 	windowClass.ViewportFlagsOverrideClear |= ImGuiViewportFlags_NoAutoMerge;
 	ImGui::SetNextWindowClass(&windowClass);
 
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(viewport->Pos);
-	ImGui::SetNextWindowSize(viewport->Size);
+	const auto& dockspace = world.ReadComponent<render::DockspaceComponent>();
+	ImGui::SetNextWindowPos(dockspace.m_Pos);
+	ImGui::SetNextWindowSize(dockspace.m_Size);
 	if (ImGui::Begin("Overlay", nullptr, s_Flags))
 	{
-		ImGui::NewLine();
-		ImGui::NewLine();
-		ImGui::NewLine();
-
 		// version
 		{
 			const auto& component = world.ReadComponent<eng::VersionComponent>();

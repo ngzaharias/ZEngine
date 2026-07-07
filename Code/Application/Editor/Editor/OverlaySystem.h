@@ -16,7 +16,6 @@ namespace editor::gizmo
 
 namespace eng
 {
-	class WindowManager;
 	struct ActiveComponent;
 	struct CameraComponent;
 	struct EditorComponent;
@@ -26,6 +25,11 @@ namespace eng
 namespace eng::settings
 {
 	struct DebugComponent;
+}
+
+namespace render
+{
+	struct DockspaceComponent;
 }
 
 namespace shared::gamestate
@@ -48,7 +52,7 @@ namespace editor
 			eng::ActiveComponent,
 			eng::EditorComponent,
 			eng::settings::DebugComponent,
-			eng::WindowManager,
+			render::DockspaceComponent,
 			shared::gamestate::EditModeComponent>;
 
 		void Update(World& world, const GameTime& gameTime);

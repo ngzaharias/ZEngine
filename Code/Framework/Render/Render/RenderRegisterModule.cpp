@@ -7,6 +7,8 @@
 #include "Render/RenderCursorSystem.h"
 #include "Render/RenderDebugComponent.h"
 #include "Render/RenderDebugSystem.h"
+#include "Render/RenderDockspaceComponent.h"
+#include "Render/RenderDockspaceSystem.h"
 #include "Render/RenderImGuiComponent.h"
 #include "Render/RenderImGuiSystem.h"
 #include "Render/RenderOpaqueComponent.h"
@@ -25,6 +27,7 @@ void render::RegisterModule(ecs::EntityWorld& world)
 {
 	world.RegisterComponent<render::CursorComponent>();
 	world.RegisterComponent<render::DebugComponent>();
+	world.RegisterComponent<render::DockspaceComponent>();
 	world.RegisterComponent<render::ImGuiComponent>();
 	world.RegisterComponent<render::OpaqueComponent>();
 	world.RegisterComponent<render::ShadowComponent>();
@@ -33,6 +36,7 @@ void render::RegisterModule(ecs::EntityWorld& world)
 	world.RegisterComponent<render::UIPreComponent>();
 	world.RegisterSystem<render::CursorSystem>();
 	world.RegisterSystem<render::DebugSystem>();
+	world.RegisterSystem<render::DockspaceSystem>();
 	world.RegisterSystem<render::ImGuiSystem>();
 	world.RegisterSystem<render::OpaqueSystem>();
 	world.RegisterSystem<render::ShadowSystem>();

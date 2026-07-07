@@ -16,6 +16,11 @@ namespace eng
 	struct VersionComponent;
 }
 
+namespace render
+{
+	struct DockspaceComponent;
+}
+
 namespace debug
 {
 	class OverlaySystem final : public ecs::System
@@ -25,7 +30,8 @@ namespace debug
 			::Read<
 			eng::level::LoadedComponent,
 			eng::VersionComponent,
-			eng::WindowManager>;
+			eng::WindowManager,
+			render::DockspaceComponent>;
 
 		void Update(World& world, const GameTime& gameTime);
 
