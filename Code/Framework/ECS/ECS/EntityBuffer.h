@@ -2,7 +2,7 @@
 
 #include "Core/Array.h"
 #include "Core/Map.h"
-#include "Core/SparseArray.h"
+#include "Core/SparseSet.h"
 #include "ECS/ComponentContainer.h"
 #include "ECS/ComponentId.h"
 #include "ECS/ComponentTag.h"
@@ -16,7 +16,7 @@ namespace ecs
 		friend class EntityStorage;
 		friend class ReplicationPeer;
 
-		using Containers = SparseArray<ecs::ComponentId, ecs::IComponentContainer*>;
+		using Containers = SparseSet<ecs::ComponentId, ecs::IComponentContainer*>;
 		using Changes = Map<ecs::Entity, ecs::EntityChange>;
 		using Handles = Array<ecs::Entity>;
 

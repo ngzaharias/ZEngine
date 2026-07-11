@@ -162,7 +162,7 @@ CLASS_TEST_CASE("GetContainers returns all registered containers.")
 	buffer.RegisterComponent<ComponentA>();
 	buffer.RegisterComponent<ComponentB>();
 
-	const SparseArray<ecs::ComponentId, ecs::IComponentContainer*>& containers = buffer.GetContainers();
+	const SparseSet<ecs::ComponentId, ecs::IComponentContainer*>& containers = buffer.GetContainers();
 	CHECK(containers.GetCount() == 2);
 }
 

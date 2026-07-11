@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/SparseArray.h"
+#include "Core/SparseSet.h"
 #include "ECS/Entity.h"
 
 namespace ecs
@@ -58,7 +58,7 @@ namespace ecs
 		inline void RemoveAll() override;
 
 	private:
-		SparseArray<Entity, TComponent> m_Data = { };
+		SparseSet<Entity, TComponent> m_Data = { };
 	};
 }
 

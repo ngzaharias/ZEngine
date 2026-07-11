@@ -4,7 +4,7 @@
 #include "Core/Guid.h"
 #include "Core/Optional.h"
 #include "Core/Set.h"
-#include "Core/SparseArray.h"
+#include "Core/SparseSet.h"
 #include "Core/Variant.h"
 #include "ECS/Component.h"
 #include "ECS/Entity.h"

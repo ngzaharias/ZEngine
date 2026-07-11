@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Path.h"
-#include "Core/SparseArray.h"
+#include "Core/SparseSet.h"
 #include "Engine/Asset.h"
 #include "Engine/AssetLoader.h"
 
@@ -26,7 +26,7 @@ namespace eng
 		int32 m_PixelRange = 0;
 
 		uint32 m_TextureId = 0;
-		SparseArray<Charcode, Glyph> m_Glyphs = { };
+		SparseSet<Charcode, Glyph> m_Glyphs = { };
 	};
 
 	class FontAssetLoader final : public eng::AssetLoader

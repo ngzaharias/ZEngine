@@ -54,7 +54,7 @@ CLASS_TEST_CASE("GetAll returns all registered containers.")
 	buffer.RegisterEvent<EventA>();
 	buffer.RegisterEvent<EventB>();
 
-	const SparseArray<ecs::EventId, ecs::IEventContainer*>& containers = buffer.GetAll();
+	const SparseSet<ecs::EventId, ecs::IEventContainer*>& containers = buffer.GetAll();
 	CHECK(containers.GetCount() == 2);
 }
 

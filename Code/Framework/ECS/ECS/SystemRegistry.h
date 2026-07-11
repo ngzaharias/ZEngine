@@ -2,7 +2,7 @@
 
 #include "Core/Array.h"
 #include "Core/Map.h"
-#include "Core/SparseArray.h"
+#include "Core/SparseSet.h"
 #include "Core/TypeInfo.h"
 #include "ECS/Component.h"
 #include "ECS/ComponentId.h"
@@ -22,7 +22,7 @@ namespace ecs
 namespace ecs
 {
 	using SystemDependencies = Map<TypeId, Set<TypeId>>;
-	using SystemEntries = SparseArray<TypeId, ecs::SystemEntry>;
+	using SystemEntries = SparseSet<TypeId, ecs::SystemEntry>;
 	using SystemOrder = Array<ecs::SystemEntry*>;
 
 	class SystemRegistry

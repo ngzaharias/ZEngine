@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Name.h"
-#include "Core/SparseArray.h"
+#include "Core/SparseSet.h"
 #include "Core/TypeInfo.h"
 #include "Engine/TableEntry.h"
 
@@ -16,7 +16,7 @@ namespace eng
 	class TableHeadmaster final
 	{
 		static constexpr const char* s_Extension = ".table";
-		using Entries = SparseArray<eng::TableId, eng::TableEntry>;
+		using Entries = SparseSet<eng::TableId, eng::TableEntry>;
 
 	public:
 		/// \brief 

@@ -9,10 +9,10 @@
 using int32 = int32_t;
 
 template<typename Key, typename Value>
-class SparseArray final
+class SparseSet final
 {
-	using Dense = Array<Key>;
 	using Sparse = Array<int32>;
+	using Dense = Array<Key>;
 	using Values = Array<Value>;
 
 public:
@@ -126,15 +126,15 @@ public:
 	auto end() const -> IteratorConst;
 
 private:
+	/// \brief Maps a Key to its index in the m_Values array.
+	Sparse m_Sparse = { };
+
 	/// \brief Maps an index in the m_Values array to its Key.
 	/// Used for quick removal of individual items and can be used for iterating over all keys.
 	Dense m_Dense = { };
-
-	/// \brief Maps a Key to its index in the m_Values array.
-	Sparse m_Sparse = { };
 
 	/// \brief Holds the actual data/values.
 	Values m_Values = { };
 };
 
-#include "SparseArray.inl"
+#include "SparseSet.inl"

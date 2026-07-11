@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/SparseArray.h"
+#include "Core/SparseSet.h"
 #include "ECS/ResourceId.h"
 #include "ECS/ResourceTag.h"
 
@@ -25,7 +25,7 @@ namespace ecs
 		TResource& Get();
 
 	private:
-		SparseArray<ecs::ResourceId, ecs::ResourceEntry> m_Entries = { };
+		SparseSet<ecs::ResourceId, ecs::ResourceEntry> m_Entries = { };
 	};
 }
 

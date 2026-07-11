@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/SparseArray.h"
+#include "Core/SparseSet.h"
 #include "ECS/EventId.h"
 #include "ECS/EventContainer.h"
 #include "ECS/EventTag.h"
@@ -9,7 +9,7 @@ namespace ecs
 {
 	class EventBuffer final
 	{
-		using Containers = SparseArray<ecs::EventId, ecs::IEventContainer*>;
+		using Containers = SparseSet<ecs::EventId, ecs::IEventContainer*>;
 
 	public:
 		template<class TEvent>
