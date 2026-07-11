@@ -259,9 +259,9 @@ CLASS_TEST_CASE("Insert copy value.")
 	MyStruct myStructB = { 2 };
 	MyStruct myStructC = { 3 };
 	Array<MyStruct> myArray;
-	myArray.Insert(myStructA, 0);
-	myArray.Insert(myStructB, 0);
-	myArray.Insert(myStructC, 0);
+	myArray.Insert(0, myStructA);
+	myArray.Insert(0, myStructB);
+	myArray.Insert(0, myStructC);
 
 	REQUIRE(myArray.GetCount() == 3);
 	CHECK(myArray[0].m_Int32 == 3);
@@ -275,9 +275,9 @@ CLASS_TEST_CASE("Insert move value.")
 	MyStruct myStructB = { 2 };
 	MyStruct myStructC = { 3 };
 	Array<MyStruct> myArray;
-	myArray.Insert(std::move(myStructA), 0);
-	myArray.Insert(std::move(myStructB), 0);
-	myArray.Insert(std::move(myStructC), 0);
+	myArray.Insert(0, std::move(myStructA));
+	myArray.Insert(0, std::move(myStructB));
+	myArray.Insert(0, std::move(myStructC));
 
 	REQUIRE(myArray.GetCount() == 3);
 	CHECK(myArray[0].m_Int32 == 3);

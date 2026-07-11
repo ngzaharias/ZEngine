@@ -371,7 +371,7 @@ bool imgui::WriteArray(Array<Value>& values)
 	if (command)
 	{
 		core::VariantMatch(*command,
-			[&values](const Insert& data) { values.Insert(Value{}, data.i);	},
+			[&values](const Insert& data) { values.Insert(data.i, Value{});	},
 			[&values](const Remove& data) { values.RemoveOrderedAt(data.i); });
 	}
 

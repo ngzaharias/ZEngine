@@ -38,8 +38,10 @@ public:
 
 	/// \brief Checks if the container is empty.
 	bool IsEmpty() const;
+
 	/// \brief Gets the number of elements the container is sized for.
 	int32 GetCapacity() const;
+
 	/// \brief Gets the number of elements in the container.
 	int32 GetCount() const;
 
@@ -59,6 +61,7 @@ public:
 
 	/// \brief Increases the container to at least X size without appending elements.
 	void Increase(const int32 newCapacity);
+
 	/// \brief Reserves the container to at least X size without appending elements.
 	void Reserve(const int32 newCapacity);
 
@@ -89,14 +92,13 @@ public:
 
 	/// \brief Inserts a new element at a specific index in the container.
 	/// Assumes that the index is within the containers current bounds.
-	auto Insert(Type&& value, const int32 index)->Type&;
+	auto Insert(const int32 index, Type&& value)->Type&;
 	/// \brief Inserts a new element at a specific index in the container.
 	/// Assumes that the index is within the containers current bounds.
-	auto Insert(const Type& value, const int32 index)->Type&;
+	auto Insert(const int32 index, const Type& value)->Type&;
 
 	/// \brief Removes the last element from the container and returns a copy of it.
 	auto Pop()->Type;
-
 
 	/// \brief Removes the X element from the container, but doesn't preserve the order of the elements.
 	void RemoveAt(const int32 index);

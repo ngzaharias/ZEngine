@@ -230,7 +230,7 @@ auto Array<Type>::Emplace(Args&&... args)->Type&
 }
 
 template<typename Type>
-auto Array<Type>::Insert(Type&& value, const int32 index)->Type&
+auto Array<Type>::Insert(const int32 index, Type&& value)->Type&
 {
 	static_assert(std::is_move_constructible<Type>::value, "Implement Move Constructor.");
 
@@ -239,7 +239,7 @@ auto Array<Type>::Insert(Type&& value, const int32 index)->Type&
 }
 
 template<typename Type>
-auto Array<Type>::Insert(const Type& value, const int32 index)->Type&
+auto Array<Type>::Insert(const int32 index, const Type& value)->Type&
 {
 	const auto itr = m_Values.begin() + index;
 	return *m_Values.insert(itr, std::move(value));
