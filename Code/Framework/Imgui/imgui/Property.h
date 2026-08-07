@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Optional.h"
-#include "Core/SparseSet.h"
+#include "Core/SparseMap.h"
 #include "Core/String.h"
 #include "Core/StringView.h"
 #include "Core/Variant.h"

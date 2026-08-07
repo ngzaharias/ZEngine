@@ -3,7 +3,7 @@
 #include "Core/Assert.h"
 
 template<typename Key, typename Value>
-bool SparseSet<Key, Value>::Contains(const Key& key) const
+bool SparseMap<Key, Value>::Contains(const Key& key) const
 {
 	static_assert(requires (Key a, Key b) { a == b; }, "Implement method 'bool operator==(const Key& rhs) const'.");
 
@@ -23,26 +23,26 @@ bool SparseSet<Key, Value>::Contains(const Key& key) const
 }
 
 template<typename Key, typename Value>
-int32 SparseSet<Key, Value>::GetCapacity() const
+int32 SparseMap<Key, Value>::GetCapacity() const
 {
 	return m_Values.GetCapacity();
 }
 
 template<typename Key, typename Value>
-bool SparseSet<Key, Value>::IsEmpty() const
+bool SparseMap<Key, Value>::IsEmpty() const
 {
 	return m_Values.IsEmpty();
 }
 
 template<typename Key, typename Value>
-int32 SparseSet<Key, Value>::GetCount() const
+int32 SparseMap<Key, Value>::GetCount() const
 {
 	return m_Values.GetCount();
 }
 
 // #todo: use uint32 so you can't have negative values ?
 template<typename Key, typename Value>
-int32 SparseSet<Key, Value>::GetIndex(const Key& key) const
+int32 SparseMap<Key, Value>::GetIndex(const Key& key) const
 {
 	if constexpr (requires { key.GetIndex(); })
 	{
@@ -55,20 +55,20 @@ int32 SparseSet<Key, Value>::GetIndex(const Key& key) const
 	else
 	{
 		static_assert(false,
-			"Can't use SpSparseSet 'Key' type as an index as it isn't an integral. "
+			"Can't use SpSparseMap 'Key' type as an index as it isn't an integral. "
 			"Implement method 'int32 GetIndex() const'.");
 	}
 }
 
 template<typename Key, typename Value>
-void SparseSet<Key, Value>::Reserve(const int32 count)
+void SparseMap<Key, Value>::Reserve(const int32 count)
 {
 	m_Dense.Reserve(count);
 	m_Values.Reserve(count);
 }
 
 template<typename Key, typename Value>
-Value& SparseSet<Key, Value>::Get(const Key& key)
+Value& SparseMap<Key, Value>::Get(const Key& key)
 {
 	Z_PANIC(Contains(key), "");
 	const int32 sparseIndex = GetIndex(key);
@@ -76,7 +76,7 @@ Value& SparseSet<Key, Value>::Get(const Key& key)
 }
 
 template<typename Key, typename Value>
-const Value& SparseSet<Key, Value>::Get(const Key& key) const
+const Value& SparseMap<Key, Value>::Get(const Key& key) const
 {
 	Z_PANIC(Contains(key), "");
 	const int32 sparseIndex = GetIndex(key);
@@ -84,7 +84,7 @@ const Value& SparseSet<Key, Value>::Get(const Key& key) const
 }
 
 template<typename Key, typename Value>
-Value* SparseSet<Key, Value>::Try(const Key& key)
+Value* SparseMap<Key, Value>::Try(const Key& key)
 {
 	if (!Contains(key))
 		return nullptr;
@@ -94,7 +94,7 @@ Value* SparseSet<Key, Value>::Try(const Key& key)
 }
 
 template<typename Key, typename Value>
-const Value* SparseSet<Key, Value>::Try(const Key& key) const
+const Value* SparseMap<Key, Value>::Try(const Key& key) const
 {
 	if (!Contains(key))
 		return nullptr;
@@ -104,29 +104,29 @@ const Value* SparseSet<Key, Value>::Try(const Key& key) const
 }
 
 template<typename Key, typename Value>
-const Array<Key>& SparseSet<Key, Value>::GetKeys() const
+const Array<Key>& SparseMap<Key, Value>::GetKeys() const
 {
 	return m_Dense;
 }
 
 template<typename Key, typename Value>
-Array<Value>& SparseSet<Key, Value>::GetValues()
+Array<Value>& SparseMap<Key, Value>::GetValues()
 {
 	return m_Values;
 }
 
 template<typename Key, typename Value>
-const Array<Value>& SparseSet<Key, Value>::GetValues() const
+const Array<Value>& SparseMap<Key, Value>::GetValues() const
 {
 	return m_Values;
 }
 
 template<typename Key, typename Value>
 template<typename... Args>
-Value& SparseSet<Key, Value>::Emplace(const Key& key, Args&& ...args)
+Value& SparseMap<Key, Value>::Emplace(const Key& key, Args&& ...args)
 {
-	static_assert(std::is_move_constructible<Value>::value, "SparseSet 'Value' type is not move-constructible.");
-	static_assert(std::is_move_assignable<Value>::value, "SparseSet 'Value' type is not move-assignable.");
+	static_assert(std::is_move_constructible<Value>::value, "SparseMap 'Value' type is not move-constructible.");
+	static_assert(std::is_move_assignable<Value>::value, "SparseMap 'Value' type is not move-assignable.");
 
 	if (Contains(key))
 	{
@@ -149,10 +149,10 @@ Value& SparseSet<Key, Value>::Emplace(const Key& key, Args&& ...args)
 }
 
 template<typename Key, typename Value>
-Value& SparseSet<Key, Value>::Set(const Key& key, Value&& value)
+Value& SparseMap<Key, Value>::Set(const Key& key, Value&& value)
 {
-	static_assert(std::is_move_constructible<Value>::value, "SparseSet 'Value' type is not move-constructible.");
-	static_assert(std::is_move_assignable<Value>::value, "SparseSet 'Value' type is not move-assignable.");
+	static_assert(std::is_move_constructible<Value>::value, "SparseMap 'Value' type is not move-constructible.");
+	static_assert(std::is_move_assignable<Value>::value, "SparseMap 'Value' type is not move-assignable.");
 
 	if (Contains(key))
 	{
@@ -175,9 +175,9 @@ Value& SparseSet<Key, Value>::Set(const Key& key, Value&& value)
 }
 
 template<typename Key, typename Value>
-Value& SparseSet<Key, Value>::Set(const Key& key, const Value& value)
+Value& SparseMap<Key, Value>::Set(const Key& key, const Value& value)
 {
-	static_assert(std::is_copy_constructible<Value>::value, "SparseSet 'Value' type is not copy-constructible.");
+	static_assert(std::is_copy_constructible<Value>::value, "SparseMap 'Value' type is not copy-constructible.");
 
 	if (Contains(key))
 	{
@@ -200,9 +200,9 @@ Value& SparseSet<Key, Value>::Set(const Key& key, const Value& value)
 }
 
 template<typename Key, typename Value>
-void SparseSet<Key, Value>::Remove(const Key& key)
+void SparseMap<Key, Value>::Remove(const Key& key)
 {
-	static_assert(std::is_move_assignable<Value>::value, "SparseSet 'Value' type is not move-assignable.");
+	static_assert(std::is_move_assignable<Value>::value, "SparseMap 'Value' type is not move-assignable.");
 	Z_PANIC(Contains(key), "Trying to remove a value that doesn't exist!");
 
 	const int32 sparseIndex = GetIndex(key);
@@ -224,7 +224,7 @@ void SparseSet<Key, Value>::Remove(const Key& key)
 }
 
 template<typename Key, typename Value>
-void SparseSet<Key, Value>::RemoveAll()
+void SparseMap<Key, Value>::RemoveAll()
 {
 	m_Sparse.RemoveAll();
 	m_Dense.RemoveAll();
@@ -236,7 +236,7 @@ void SparseSet<Key, Value>::RemoveAll()
 //////////////////////////////////////////////////////////////////////////
 
 template<typename Key, typename Value>
-SparseSet<Key, Value>::Iterator::Iterator(Dense& dense, Values& values, const int32 index)
+SparseMap<Key, Value>::Iterator::Iterator(Dense& dense, Values& values, const int32 index)
 	: m_Dense(dense)
 	, m_Values(values)
 	, m_Index(index)
@@ -244,20 +244,20 @@ SparseSet<Key, Value>::Iterator::Iterator(Dense& dense, Values& values, const in
 }
 
 template<typename Key, typename Value>
-auto SparseSet<Key, Value>::Iterator::operator*() -> Pair
+auto SparseMap<Key, Value>::Iterator::operator*() -> Pair
 {
 	return { m_Dense[m_Index], m_Values[m_Index] };
 }
 
 template<typename Key, typename Value>
-auto SparseSet<Key, Value>::Iterator::operator++() -> Iterator&
+auto SparseMap<Key, Value>::Iterator::operator++() -> Iterator&
 {
 	m_Index++;
 	return *this;
 }
 
 template<typename Key, typename Value>
-auto SparseSet<Key, Value>::Iterator::operator++(int32) -> Iterator
+auto SparseMap<Key, Value>::Iterator::operator++(int32) -> Iterator
 {
 	Iterator iterator = *this;
 	m_Index++;
@@ -265,13 +265,13 @@ auto SparseSet<Key, Value>::Iterator::operator++(int32) -> Iterator
 }
 
 template<typename Key, typename Value>
-bool SparseSet<Key, Value>::Iterator::operator==(const Iterator& rhs) const
+bool SparseMap<Key, Value>::Iterator::operator==(const Iterator& rhs) const
 {
 	return m_Index == rhs.m_Index;
 }
 
 template<typename Key, typename Value>
-bool SparseSet<Key, Value>::Iterator::operator!=(const Iterator& rhs) const
+bool SparseMap<Key, Value>::Iterator::operator!=(const Iterator& rhs) const
 {
 	return m_Index != rhs.m_Index;
 }
@@ -281,7 +281,7 @@ bool SparseSet<Key, Value>::Iterator::operator!=(const Iterator& rhs) const
 //////////////////////////////////////////////////////////////////////////
 
 template<typename Key, typename Value>
-SparseSet<Key, Value>::IteratorConst::IteratorConst(const Dense& dense, const Values& values, const int32 index)
+SparseMap<Key, Value>::IteratorConst::IteratorConst(const Dense& dense, const Values& values, const int32 index)
 	: m_Dense(dense)
 	, m_Values(values)
 	, m_Index(index)
@@ -289,20 +289,20 @@ SparseSet<Key, Value>::IteratorConst::IteratorConst(const Dense& dense, const Va
 }
 
 template<typename Key, typename Value>
-auto SparseSet<Key, Value>::IteratorConst::operator*() -> PairConst
+auto SparseMap<Key, Value>::IteratorConst::operator*() -> PairConst
 {
 	return { m_Dense[m_Index], m_Values[m_Index] };
 }
 
 template<typename Key, typename Value>
-auto SparseSet<Key, Value>::IteratorConst::operator++() -> IteratorConst&
+auto SparseMap<Key, Value>::IteratorConst::operator++() -> IteratorConst&
 {
 	m_Index++;
 	return *this;
 }
 
 template<typename Key, typename Value>
-auto SparseSet<Key, Value>::IteratorConst::operator++(int32) -> IteratorConst
+auto SparseMap<Key, Value>::IteratorConst::operator++(int32) -> IteratorConst
 {
 	IteratorConst iterator = *this;
 	m_Index++;
@@ -310,13 +310,13 @@ auto SparseSet<Key, Value>::IteratorConst::operator++(int32) -> IteratorConst
 }
 
 template<typename Key, typename Value>
-bool SparseSet<Key, Value>::IteratorConst::operator==(const IteratorConst& rhs) const
+bool SparseMap<Key, Value>::IteratorConst::operator==(const IteratorConst& rhs) const
 {
 	return m_Index == rhs.m_Index;
 }
 
 template<typename Key, typename Value>
-bool SparseSet<Key, Value>::IteratorConst::operator!=(const IteratorConst& rhs) const
+bool SparseMap<Key, Value>::IteratorConst::operator!=(const IteratorConst& rhs) const
 {
 	return m_Index != rhs.m_Index;
 }
@@ -326,25 +326,25 @@ bool SparseSet<Key, Value>::IteratorConst::operator!=(const IteratorConst& rhs) 
 //////////////////////////////////////////////////////////////////////////
 
 template<typename Key, typename Value>
-auto SparseSet<Key, Value>::begin() -> Iterator
+auto SparseMap<Key, Value>::begin() -> Iterator
 {
 	return Iterator(m_Dense, m_Values, 0);
 }
 
 template<typename Key, typename Value>
-auto SparseSet<Key, Value>::end() -> Iterator
+auto SparseMap<Key, Value>::end() -> Iterator
 {
 	return Iterator(m_Dense, m_Values, m_Values.GetCount());
 }
 
 template<typename Key, typename Value>
-auto SparseSet<Key, Value>::begin() const -> IteratorConst
+auto SparseMap<Key, Value>::begin() const -> IteratorConst
 {
 	return IteratorConst(m_Dense, m_Values, 0);
 }
 
 template<typename Key, typename Value>
-auto SparseSet<Key, Value>::end() const -> IteratorConst
+auto SparseMap<Key, Value>::end() const -> IteratorConst
 {
 	return IteratorConst(m_Dense, m_Values, m_Values.GetCount());
 }

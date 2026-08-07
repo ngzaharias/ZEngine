@@ -1,0 +1,6 @@
+- Archtypes
+- Adding/Added
+- Removing/Removed
+- Alive/Dead
+- Updating/Updated
+- Include/Exclude

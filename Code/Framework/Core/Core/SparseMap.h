@@ -9,7 +9,7 @@
 using int32 = int32_t;
 
 template<typename Key, typename Value>
-class SparseSet final
+class SparseMap final
 {
 	using Sparse = Array<int32>;
 	using Dense = Array<Key>;
@@ -137,4 +137,4 @@ private:
 	Values m_Values = { };
 };
 
-#include "SparseSet.inl"
+#include "SparseMap.inl"
