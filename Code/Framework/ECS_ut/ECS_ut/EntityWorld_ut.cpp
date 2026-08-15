@@ -56,11 +56,6 @@ namespace
 		bool m_Bool = false; 
 	};
 
-	struct StaticComponent final : public ecs::StaticComponent 
-	{ 
-		bool m_Bool = false; 
-	};
-
 	class System : public ecs::System
 	{
 	public:
@@ -86,7 +81,7 @@ namespace
 	};
 }
 
-CLASS_TEST_CASE("IsRegistered will return true for a component that is registered.")
+CLASS_TEST_CASE("IsRegistered will return true for a Component that is registered.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -94,14 +89,59 @@ CLASS_TEST_CASE("IsRegistered will return true for a component that is registere
 	CHECK(world.IsRegistered<Component>());
 }
 
-CLASS_TEST_CASE("IsRegistered will return false for a component that isn't registered.")
+CLASS_TEST_CASE("IsRegistered will return false for a Component that isn't registered.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	CHECK(!world.IsRegistered<Component>());
 }
 
-CLASS_TEST_CASE("IsRegistered will return true for a event that is registered.")
+CLASS_TEST_CASE("IsRegistered will return true for a FrameComponent that is registered.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<FComponent>();
+	CHECK(world.IsRegistered<FComponent>());
+}
+
+CLASS_TEST_CASE("IsRegistered will return false for a FrameComponent that isn't registered.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	CHECK(!world.IsRegistered<FComponent>());
+}
+
+CLASS_TEST_CASE("IsRegistered will return true for a SoloComponent that is registered.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<SComponent>();
+	CHECK(world.IsRegistered<SComponent>());
+}
+
+CLASS_TEST_CASE("IsRegistered will return false for a SoloComponent that isn't registered.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	CHECK(!world.IsRegistered<SComponent>());
+}
+
+CLASS_TEST_CASE("IsRegistered will return true for a StaticComponent that is registered.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<TComponent>();
+	CHECK(world.IsRegistered<TComponent>());
+}
+
+CLASS_TEST_CASE("IsRegistered will return false for a StaticComponent that isn't registered.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	CHECK(!world.IsRegistered<TComponent>());
+}
+
+CLASS_TEST_CASE("IsRegistered will return true for an Event that is registered.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -109,14 +149,14 @@ CLASS_TEST_CASE("IsRegistered will return true for a event that is registered.")
 	CHECK(world.IsRegistered<Event>());
 }
 
-CLASS_TEST_CASE("IsRegistered will return false for a event that isn't registered.")
+CLASS_TEST_CASE("IsRegistered will return false for an Event that isn't registered.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	CHECK(!world.IsRegistered<Event>());
 }
 
-CLASS_TEST_CASE("IsRegistered will return true for a resource that is registered.")
+CLASS_TEST_CASE("IsRegistered will return true for a Resource that is registered.")
 {
 	Resource resource;
 	ecs::TypeRegistry types;
@@ -132,22 +172,7 @@ CLASS_TEST_CASE("IsRegistered will return false for a Resource that isn't regist
 	CHECK(!world.IsRegistered<Resource>());
 }
 
-CLASS_TEST_CASE("IsRegistered will return true for a component that is registered.")
-{
-	ecs::TypeRegistry types;
-	ecs::EntityWorld world(types);
-	world.RegisterComponent<StaticComponent>();
-	CHECK(world.IsRegistered<StaticComponent>());
-}
-
-CLASS_TEST_CASE("IsRegistered will return false for a StaticComponent that isn't registered.")
-{
-	ecs::TypeRegistry types;
-	ecs::EntityWorld world(types);
-	CHECK(!world.IsRegistered<StaticComponent>());
-}
-
-CLASS_TEST_CASE("IsRegistered will return true for a system that is registered.")
+CLASS_TEST_CASE("IsRegistered will return true for a System that is registered.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -155,7 +180,7 @@ CLASS_TEST_CASE("IsRegistered will return true for a system that is registered."
 	CHECK(world.IsRegistered<System>());
 }
 
-CLASS_TEST_CASE("IsRegistered will return false for a system that isn't registered.")
+CLASS_TEST_CASE("IsRegistered will return false for a System that isn't registered.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -337,18 +362,32 @@ CLASS_TEST_CASE("DestroyEntity doesn't change the values of an entity.")
 	CHECK(entity.GetVersion() == 0);
 }
 
-CLASS_TEST_CASE("RegisterComponent will register a component with the world.")
+CLASS_TEST_CASE("RegisterComponent will register a Component with the world.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	CHECK_NOTHROW(world.RegisterComponent<Component>());
 }
 
-CLASS_TEST_CASE("RegisterComponent will register a solo component with the world.")
+CLASS_TEST_CASE("RegisterComponent will register a FrameComponent with the world.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	CHECK_NOTHROW(world.RegisterComponent<FComponent>());
+}
+
+CLASS_TEST_CASE("RegisterComponent will register a SoloComponent with the world.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	CHECK_NOTHROW(world.RegisterComponent<SComponent>());
+}
+
+CLASS_TEST_CASE("RegisterComponent will register a StaticComponent with the world.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	CHECK_NOTHROW(world.RegisterComponent<TComponent>());
 }
 
 CLASS_TEST_CASE("RegisterComponent will crash if the same component is registered twice.")
@@ -611,7 +650,7 @@ CLASS_TEST_CASE("HasComponent returns false if the solo component was added but 
 	CHECK(!world.HasComponent<SComponent>());
 }
 
-CLASS_TEST_CASE("ReadComponent returns a component that can't be modified.")
+CLASS_TEST_CASE("ReadComponent returns a Component that can't be modified.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -624,7 +663,20 @@ CLASS_TEST_CASE("ReadComponent returns a component that can't be modified.")
 	// component.m_Bool = true; // doesn't compile
 }
 
-CLASS_TEST_CASE("ReadComponent returns the solo component that can't be modified.")
+CLASS_TEST_CASE("ReadComponent returns a FrameComponent that can't be modified.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<Component>();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<Component>(entity);
+	world.Update({});
+	auto& component = world.ReadComponent<FComponent>(entity);
+	// component.m_Bool = true; // doesn't compile
+}
+
+CLASS_TEST_CASE("ReadComponent returns the SoloComponent that can't be modified.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -637,7 +689,17 @@ CLASS_TEST_CASE("ReadComponent returns the solo component that can't be modified
 	// component.m_Bool = true; // doesn't compile
 }
 
-CLASS_TEST_CASE("ReadComponent crashes when the component hasn't been added to the entity.")
+CLASS_TEST_CASE("ReadComponent returns a StaticComponent that can't be modified.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<TComponent>();
+
+	auto& component = world.ReadComponent<TComponent>();
+	// component.m_Bool = true; // doesn't compile
+}
+
+CLASS_TEST_CASE("ReadComponent crashes when the Component hasn't been added to the entity.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -647,7 +709,17 @@ CLASS_TEST_CASE("ReadComponent crashes when the component hasn't been added to t
 	//CHECK_THROWS(world.ReadComponent<Component>(entity));
 }
 
-CLASS_TEST_CASE("ReadComponent crashes when the solo component hasn't been added.")
+CLASS_TEST_CASE("ReadComponent crashes when the FrameComponent hasn't been added to the entity.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<Component>();
+	ecs::Entity entity = world.CreateEntity();
+
+	//CHECK_THROWS(world.ReadComponent<Component>(entity));
+}
+
+CLASS_TEST_CASE("ReadComponent crashes when the SoloComponent hasn't been added.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -657,7 +729,17 @@ CLASS_TEST_CASE("ReadComponent crashes when the solo component hasn't been added
 	//CHECK_THROWS(world.ReadComponent<SComponent>());
 }
 
-CLASS_TEST_CASE("WriteComponent returns a component that can be modified.")
+CLASS_TEST_CASE("ReadComponent crashes when the StaticComponent hasn't been registerd.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<TComponent>();
+	world.Initialise();
+
+	//CHECK_THROWS(world.ReadComponent<SComponent>());
+}
+
+CLASS_TEST_CASE("WriteComponent returns a Component that can be modified.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -672,7 +754,22 @@ CLASS_TEST_CASE("WriteComponent returns a component that can be modified.")
 	CHECK(component.m_Bool);
 }
 
-CLASS_TEST_CASE("WriteComponent returns the solo component that can be modified.")
+CLASS_TEST_CASE("WriteComponent returns a FrameComponent that can be modified.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<FComponent>();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<FComponent>(entity);
+	world.Update({});
+
+	auto& component = world.WriteComponent<FComponent>(entity);
+	component.m_Bool = true;
+	CHECK(component.m_Bool);
+}
+
+CLASS_TEST_CASE("WriteComponent returns a SoloComponent that can be modified.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -687,7 +784,22 @@ CLASS_TEST_CASE("WriteComponent returns the solo component that can be modified.
 	CHECK(component.m_Bool);
 }
 
-CLASS_TEST_CASE("WriteComponent crashes when the component hasn't been added to the entity.")
+CLASS_TEST_CASE("WriteComponent returns a StaticComponent that can be modified.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<TComponent>();
+	world.Initialise();
+
+	world.AddComponent<TComponent>();
+	world.Update({});
+
+	auto& component = world.WriteComponent<TComponent>();
+	component.m_Bool = true;
+	CHECK(component.m_Bool);
+}
+
+CLASS_TEST_CASE("WriteComponent crashes when the Component hasn't been added to the entity.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -697,7 +809,17 @@ CLASS_TEST_CASE("WriteComponent crashes when the component hasn't been added to 
 	//CHECK_THROWS(world.WriteComponent<Component>(entity));
 }
 
-CLASS_TEST_CASE("WriteComponent crashes when the solo component hasn't been added.")
+CLASS_TEST_CASE("WriteComponent crashes when the FrameComponent hasn't been added to the entity.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.RegisterComponent<FComponent>();
+	ecs::Entity entity = world.CreateEntity();
+
+	//CHECK_THROWS(world.WriteComponent<FComponent>(entity));
+}
+
+CLASS_TEST_CASE("WriteComponent crashes when the SoloComponent hasn't been added.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -705,6 +827,15 @@ CLASS_TEST_CASE("WriteComponent crashes when the solo component hasn't been adde
 	world.Initialise();
 
 	//CHECK_THROWS(world.WriteComponent<SComponent>());
+}
+
+CLASS_TEST_CASE("WriteComponent crashes when the StaticComponent hasn't been registered.")
+{
+	ecs::TypeRegistry types;
+	ecs::EntityWorld world(types);
+	world.Initialise();
+
+	//CHECK_THROWS(world.WriteComponent<TComponent>());
 }
 
 CLASS_TEST_CASE("RegisterEvent will register an event with the world.")
@@ -832,56 +963,6 @@ CLASS_TEST_CASE("WriteResource crashes when the resource hasn't been registered.
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	//CHECK_THROWS(world.WriteResource<Resource>());
-}
-
-CLASS_TEST_CASE("RegisterComponent will register an component with the world.")
-{
-	ecs::TypeRegistry types;
-	ecs::EntityWorld world(types);
-	CHECK_NOTHROW(world.RegisterComponent<StaticComponent>());
-}
-
-CLASS_TEST_CASE("RegisterComponent will crash if the same component is registered twice.")
-{
-	ecs::TypeRegistry types;
-	ecs::EntityWorld world(types);
-	world.RegisterComponent<StaticComponent>();
-	//CHECK_THROWS(world.RegisterComponent<StaticComponent>());
-}
-
-CLASS_TEST_CASE("ReadComponent returns a component that can't be modified.")
-{
-	ecs::TypeRegistry types;
-	ecs::EntityWorld world(types);
-	world.RegisterComponent<StaticComponent>();
-
-	auto& component = world.ReadComponent<StaticComponent>();
-	// component.m_Bool = true; // doesn't compile
-}
-
-CLASS_TEST_CASE("ReadComponent crashes when the StaticComponent.hasn't been registered.")
-{
-	ecs::TypeRegistry types;
-	ecs::EntityWorld world(types);
-	//CHECK_THROWS(world.ReadComponent<StaticComponent>());
-}
-
-CLASS_TEST_CASE("WriteComponent returns a component that can be modified.")
-{
-	ecs::TypeRegistry types;
-	ecs::EntityWorld world(types);
-	world.RegisterComponent<StaticComponent>();
-
-	auto& component = world.WriteComponent<StaticComponent>();
-	component.m_Bool = true;
-	CHECK(component.m_Bool);
-}
-
-CLASS_TEST_CASE("WriteComponent crashes when the StaticComponent.hasn't been registered.")
-{
-	ecs::TypeRegistry types;
-	ecs::EntityWorld world(types);
-	//CHECK_THROWS(world.WriteComponent<StaticComponent>());
 }
 
 CLASS_TEST_CASE("RegisterSystem will register a system with the world.")
