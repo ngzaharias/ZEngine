@@ -29,5 +29,6 @@ project "ECS"
 		"%{wks.location}/../3rdParty/SteamworksSDK/Include/",
 		"%{wks.location}/../Code/Framework/Core/",
 		"%{wks.location}/../Code/Framework/ECS/",
+		"%{wks.location}/../Code/Framework/Math/",
 		"%{wks.location}/../Code/Framework/Network/",
 	}

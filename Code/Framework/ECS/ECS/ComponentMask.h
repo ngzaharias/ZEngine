@@ -16,32 +16,77 @@ namespace ecs
 
 	class ComponentMask
 	{
+		static constexpr uint32 COUNT = COMPONENTS_MAX;
+		static constexpr uint16 STRIDE = sizeof(uint64) * 8;
+		static constexpr uint16 CHUNKS = COUNT / STRIDE;
+
 	public:
-		ComponentMask operator|(const ComponentMask& rhs) const;
-		ComponentMask operator&(const ComponentMask& rhs) const;
-		ComponentMask operator^(const ComponentMask& rhs) const;
-		ComponentMask operator~() const;
+		struct Iterator
+		{
+			friend class ComponentMask;
 
-		ComponentMask& operator|=(const ComponentMask& rhs);
-		ComponentMask& operator&=(const ComponentMask& rhs);
-		ComponentMask& operator^=(const ComponentMask& rhs);
+			auto operator*() -> ecs::ComponentId;
+			auto operator++() -> Iterator&;
+			bool operator!=(const Iterator& rhs) const;
 
-		void Reset();
-		void Clear(const int32 index);
-		void Raise(const int32 index);
-		bool Has(const int32 index) const;
+			const ComponentMask& m_Mask;
+			int32 m_Index;
+		};
 
-		bool HasAll() const;
-		bool HasAll(const ComponentMask& rhs) const;
+		auto begin() const -> Iterator;
+		auto end() const -> Iterator;
 
-		bool HasAny() const;
-		bool HasAny(const ComponentMask& rhs) const;
+	public:
+		[[nodiscard]] bool operator<(const ecs::ComponentMask& rhs) const noexcept;
+		[[nodiscard]] bool operator<=(const ecs::ComponentMask& rhs) const noexcept;
+		[[nodiscard]] bool operator>(const ecs::ComponentMask& rhs) const noexcept;
+		[[nodiscard]] bool operator>=(const ecs::ComponentMask& rhs) const noexcept;
+		[[nodiscard]] bool operator==(const ecs::ComponentMask& rhs) const noexcept;
+		[[nodiscard]] bool operator!=(const ecs::ComponentMask& rhs) const noexcept;
 
-		bool HasNone() const;
-		bool HasNone(const ComponentMask& rhs) const;
+		[[nodiscard]] ecs::ComponentMask operator|(const ecs::ComponentMask& rhs) const noexcept;
+		[[nodiscard]] ecs::ComponentMask operator&(const ecs::ComponentMask& rhs) const noexcept;
+		[[nodiscard]] ecs::ComponentMask operator^(const ecs::ComponentMask& rhs) const noexcept;
+		[[nodiscard]] ecs::ComponentMask operator~() const noexcept;
+
+		ecs::ComponentMask& operator|=(const ecs::ComponentMask& rhs) noexcept;
+		ecs::ComponentMask& operator&=(const ecs::ComponentMask& rhs) noexcept;
+		ecs::ComponentMask& operator^=(const ecs::ComponentMask& rhs) noexcept;
+
+		/// \brief Clears the bit at index.
+		void Clear(const int32 index) noexcept;
+		/// \brief Clears all bits in the mask that are raised in value.
+		void Clear(const ecs::ComponentMask& value) noexcept;
+		/// \brief Clears all bits in the mask.
+		void ClearAll() noexcept;
+
+		/// \brief Raises the bit at index.
+		void Raise(const int32 index) noexcept;
+		/// \brief Raises all bits in the mask that are raised in value.
+		void Raise(const ecs::ComponentMask& value) noexcept;
+		/// \brief Raises all bits in the mask.
+		void RaiseAll() noexcept;
+
+		/// \brief Returns true if the bit at index is raised.
+		bool Has(const int32 index) const noexcept;
+
+		/// \brief Returns true if all bits are raised.
+		bool HasAll() const noexcept;
+		/// \brief Returns true if all bits that are raised in value are also raised in the mask.
+		bool HasAll(const ecs::ComponentMask& value) const noexcept;
+
+		/// \brief Returns true if any bits are raised.
+		bool HasAny() const noexcept;
+		/// \brief Returns true if any bits that are raised in value are also raised in the mask.
+		bool HasAny(const ecs::ComponentMask& value) const noexcept;
+
+		/// \brief Returns true if no bits are raised.
+		bool HasNone() const noexcept;
+		/// \brief Returns true if none of the bits that are raised in value are raised in the mask.
+		bool HasNone(const ecs::ComponentMask& value) const noexcept;
 
 	private:
-		std::bitset<COMPONENTS_MAX> m_Data;
+		uint64 m_Data[CHUNKS] = {};
 	};
 
 	template<typename TComponent>
