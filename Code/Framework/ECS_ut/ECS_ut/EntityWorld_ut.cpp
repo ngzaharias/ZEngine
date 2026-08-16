@@ -12,10 +12,10 @@ class GameTime { };
 
 namespace
 {
-	int32 m_SystemLastUpdated = 0;
-	bool m_IsSystemInitialised = false;
-	bool m_IsSystemUpdated = false;
-	bool m_IsSystemShutdown = false;
+	int32 s_SystemLastUpdated = 0;
+	bool s_IsSystemInitialised = false;
+	bool s_IsSystemUpdated = false;
+	bool s_IsSystemShutdown = false;
 
 	struct Component final : public ecs::Component
 	{
@@ -56,28 +56,28 @@ namespace
 		bool m_Bool = false; 
 	};
 
-	class System : public ecs::System
-	{
-	public:
-		using World = ecs::WorldView;
-
-		void Initialise() override { m_IsSystemInitialised = true; }
-		void Shutdown() override { m_IsSystemShutdown = true; }
-		void Update(World& world, const GameTime& gameTime) { m_IsSystemUpdated = true; }
-	};
-
 	class SystemA : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView::Write<Component>;
-		void Update(World& world, const GameTime& gameTime) { m_SystemLastUpdated = 1; }
+		void Update(World& world, const GameTime& gameTime) { s_SystemLastUpdated = 1; }
 	};
 
 	class SystemB : public ecs::System
 	{
 	public:
 		using World = ecs::WorldView::Read<Component>;
-		void Update(World& world, const GameTime& gameTime) { m_SystemLastUpdated = 2; }
+		void Update(World& world, const GameTime& gameTime) { s_SystemLastUpdated = 2; }
+	};
+
+	class SystemC : public ecs::System
+	{
+	public:
+		using World = ecs::WorldView;
+
+		void Initialise(World& world) { s_IsSystemInitialised = true; }
+		void Shutdown(World& world) { s_IsSystemShutdown = true; }
+		void Update(World& world, const GameTime& gameTime) { s_IsSystemUpdated = true; }
 	};
 }
 
@@ -176,98 +176,98 @@ CLASS_TEST_CASE("IsRegistered will return true for a System that is registered."
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterSystem<System>();
-	CHECK(world.IsRegistered<System>());
+	world.RegisterSystem<SystemC>();
+	CHECK(world.IsRegistered<SystemC>());
 }
 
 CLASS_TEST_CASE("IsRegistered will return false for a System that isn't registered.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	CHECK(!world.IsRegistered<System>());
+	CHECK(!world.IsRegistered<SystemC>());
 }
 
 CLASS_TEST_CASE("Initialise will call initialise on registered systems.")
 {
-	m_IsSystemInitialised = false;
+	s_IsSystemInitialised = false;
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterSystem<System>();
+	world.RegisterSystem<SystemC>();
 
 	world.Initialise();
-	CHECK(m_IsSystemInitialised);
+	CHECK(s_IsSystemInitialised);
 }
 
 CLASS_TEST_CASE("Initialise won't call initialise on unregistered systems.")
 {
-	m_IsSystemInitialised = false;
+	s_IsSystemInitialised = false;
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 
 	world.Initialise();
-	CHECK(!m_IsSystemInitialised);
+	CHECK(!s_IsSystemInitialised);
 }
 
 CLASS_TEST_CASE("Shutdown will call shutdown on registered systems.")
 {
-	m_IsSystemShutdown = false;
+	s_IsSystemShutdown = false;
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterSystem<System>();
+	world.RegisterSystem<SystemC>();
 	world.Initialise();
 
 	world.Shutdown();
-	CHECK(m_IsSystemShutdown);
+	CHECK(s_IsSystemShutdown);
 }
 
 CLASS_TEST_CASE("Shutdown won't call shutdown if the world wasn't initialised.")
 {
-	m_IsSystemShutdown = false;
+	s_IsSystemShutdown = false;
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterSystem<System>();
+	world.RegisterSystem<SystemC>();
 
 	world.Shutdown();
-	CHECK(!m_IsSystemShutdown);
+	CHECK(!s_IsSystemShutdown);
 }
 
 CLASS_TEST_CASE("Shutdown won't call shutdown on unregistered systems.")
 {
-	m_IsSystemShutdown = false;
+	s_IsSystemShutdown = false;
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.Initialise();
 
 	world.Shutdown();
-	CHECK(!m_IsSystemShutdown);
+	CHECK(!s_IsSystemShutdown);
 }
 
 CLASS_TEST_CASE("Update will call update on registered systems.")
 {
-	m_IsSystemUpdated = false;
+	s_IsSystemUpdated = false;
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterSystem<System>();
+	world.RegisterSystem<SystemC>();
 	world.Initialise();
 
 	world.Update({});
-	CHECK(m_IsSystemUpdated);
+	CHECK(s_IsSystemUpdated);
 }
 
 CLASS_TEST_CASE("Update won't call update on unregistered systems.")
 {
-	m_IsSystemUpdated = false;
+	s_IsSystemUpdated = false;
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.Initialise();
 
 	world.Update({});
-	CHECK(!m_IsSystemUpdated);
+	CHECK(!s_IsSystemUpdated);
 }
 
 CLASS_TEST_CASE("Update will call update on systems that write to a component before a system that reads from the component.")
 {
-	m_SystemLastUpdated = 0;
+	s_SystemLastUpdated = 0;
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<Component>();
@@ -276,7 +276,7 @@ CLASS_TEST_CASE("Update will call update on systems that write to a component be
 	world.Initialise();
 
 	world.Update({});
-	CHECK(m_SystemLastUpdated == 2);
+	CHECK(s_SystemLastUpdated == 2);
 }
 
 CLASS_TEST_CASE("IsAlive returns false on an entity that was just created.")
@@ -667,10 +667,10 @@ CLASS_TEST_CASE("ReadComponent returns a FrameComponent that can't be modified."
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterComponent<Component>();
+	world.RegisterComponent<FComponent>();
 
 	ecs::Entity entity = world.CreateEntity();
-	world.AddComponent<Component>(entity);
+	world.AddComponent<FComponent>(entity);
 	world.Update({});
 	auto& component = world.ReadComponent<FComponent>(entity);
 	// component.m_Bool = true; // doesn't compile
@@ -790,8 +790,6 @@ CLASS_TEST_CASE("WriteComponent returns a StaticComponent that can be modified."
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<TComponent>();
 	world.Initialise();
-
-	world.AddComponent<TComponent>();
 	world.Update({});
 
 	auto& component = world.WriteComponent<TComponent>();
@@ -969,14 +967,14 @@ CLASS_TEST_CASE("RegisterSystem will register a system with the world.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	CHECK_NOTHROW(world.RegisterSystem<System>());
+	CHECK_NOTHROW(world.RegisterSystem<SystemC>());
 }
 
 CLASS_TEST_CASE("RegisterSystem will crash if the same system is registered twice.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterSystem<System>();
+	world.RegisterSystem<SystemC>();
 	//CHECK_THROWS(world.RegisterSystem<System>());
 }
 
@@ -984,8 +982,8 @@ CLASS_TEST_CASE("GetSystem will return a registered system.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
-	world.RegisterSystem<System>();
-	CHECK_NOTHROW(world.GetSystem<System>());
+	world.RegisterSystem<SystemC>();
+	CHECK_NOTHROW(world.GetSystem<SystemC>());
 }
 
 CLASS_TEST_CASE("GetSystem will crash the game if called on an unregistered system.")
