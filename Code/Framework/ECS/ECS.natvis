@@ -12,4 +12,14 @@
       <Item Name="Storage">Storage()</Item>
     </Expand>
   </Type>
+  <Type Name="ecs::ComponentMask">
+    <Expand>
+      <IndexListItems>
+        <Size>COUNT</Size>
+        <ValueNode>
+          (m_Data[$i / 64] &gt;&gt; ($i % 64)) &amp; 1
+        </ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
 </AutoVisualizer>
