@@ -180,37 +180,113 @@ CLASS_TEST_CASE("operator!=(ComponentMask).")
 
 CLASS_TEST_CASE("operator|(ComponentMask).")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+	ecs::ComponentMask maskC;
+	maskA.Raise(0); maskA.Raise(1);
+	maskB.Raise(1); maskB.Raise(2);
+
+	maskC = maskA | maskB;
+	CHECK(maskC.Has(0));
+	CHECK(maskC.Has(1));
+	CHECK(maskC.Has(2));
 }
 
 CLASS_TEST_CASE("operator&(ComponentMask).")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+	ecs::ComponentMask maskC;
+	maskA.Raise(0); maskA.Raise(1);
+	maskB.Raise(1); maskB.Raise(2);
+
+	maskC = maskA & maskB;
+	CHECK(!maskC.Has(0));
+	CHECK(maskC.Has(1));
+	CHECK(!maskC.Has(2));
 }
 
 CLASS_TEST_CASE("operator^(ComponentMask).")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+	ecs::ComponentMask maskC;
+	maskA.Raise(0); maskA.Raise(1);
+	maskB.Raise(1); maskB.Raise(2);
+
+	maskC = maskA ^ maskB;
+	CHECK(maskC.Has(0));
+	CHECK(!maskC.Has(1));
+	CHECK(maskC.Has(2));
 }
 
 CLASS_TEST_CASE("operator~().")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+
+	constexpr int32 counH = ecs::COMPONENTS_MAX / 2;
+	constexpr int32 countF = ecs::COMPONENTS_MAX;
+	for (int32 i = 0; i < counH; ++i)
+		maskA.Raise(i);
+	
+	maskB = ~maskA;
+
+	for (int32 i = 0; i < counH; ++i)
+		CHECK(!maskB.Has(i));
+	for (int32 i = counH; i < countF; ++i)
+		CHECK(maskB.Has(i));
 }
 
 CLASS_TEST_CASE("operator|=(ComponentMask).")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+	ecs::ComponentMask maskC;
+	maskA.Raise(0);
+	maskA.Raise(1);
+	maskB.Raise(1);
+	maskB.Raise(2);
+
+	maskC = maskA;
+	maskC |= maskB;
+	CHECK(maskC.Has(0));
+	CHECK(maskC.Has(1));
+	CHECK(maskC.Has(2));
 }
 
 CLASS_TEST_CASE("operator&=(ComponentMask).")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+	ecs::ComponentMask maskC;
+	maskA.Raise(0);
+	maskA.Raise(1);
+	maskB.Raise(1);
+	maskB.Raise(2);
+
+	maskC = maskA;
+	maskC &= maskB;
+	CHECK(!maskC.Has(0));
+	CHECK(maskC.Has(1));
+	CHECK(!maskC.Has(2));
 }
 
 CLASS_TEST_CASE("operator^=(ComponentMask).")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+	ecs::ComponentMask maskC;
+	maskA.Raise(0);
+	maskA.Raise(1);
+	maskB.Raise(1);
+	maskB.Raise(2);
+
+	maskC = maskA;
+	maskC ^= maskB;
+	CHECK(maskC.Has(0));
+	CHECK(!maskC.Has(1));
+	CHECK(maskC.Has(2));
 }
 
 CLASS_TEST_CASE("Clear(int32).")
@@ -224,7 +300,17 @@ CLASS_TEST_CASE("Clear(int32).")
 
 CLASS_TEST_CASE("Clear(ComponentMask).")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+	ecs::ComponentMask maskC;
+	maskA.Raise(0); maskA.Raise(1);
+	maskB.Raise(1); maskB.Raise(2);
+
+	maskC = maskA;
+	maskC.Clear(maskB);
+	CHECK(maskC.Has(0));
+	CHECK(!maskC.Has(1));
+	CHECK(!maskC.Has(2));
 }
 
 CLASS_TEST_CASE("ClearAll().")
@@ -246,7 +332,17 @@ CLASS_TEST_CASE("Raise(int32).")
 
 CLASS_TEST_CASE("Raise(ComponentMask).")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+	ecs::ComponentMask maskC;
+	maskA.Raise(0); maskA.Raise(1);
+	maskB.Raise(1); maskB.Raise(2);
+
+	maskC = maskA;
+	maskC.Raise(maskB);
+	CHECK(maskC.Has(0));
+	CHECK(maskC.Has(1));
+	CHECK(maskC.Has(2));
 }
 
 CLASS_TEST_CASE("RaiseAll().")
@@ -283,7 +379,15 @@ CLASS_TEST_CASE("HasAll().")
 
 CLASS_TEST_CASE("HasAll(ComponentMask).")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+	ecs::ComponentMask maskC;
+	maskA.Raise(0); maskA.Raise(1);
+	maskB.Raise(1); maskB.Raise(2);
+
+	maskC.Raise(0); maskC.Raise(1);
+	CHECK(!maskA.HasAll(maskB));
+	CHECK(maskA.HasAll(maskC));
 }
 
 CLASS_TEST_CASE("HasAny().")
@@ -302,7 +406,15 @@ CLASS_TEST_CASE("HasAny().")
 
 CLASS_TEST_CASE("HasAny(ComponentMask).")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+	ecs::ComponentMask maskC;
+	maskA.Raise(0); maskA.Raise(1); maskA.Raise(2);
+	maskB.Raise(2); maskB.Raise(3); maskB.Raise(4);
+
+	maskC.Raise(0); maskC.Raise(1); maskC.Raise(2); maskC.Raise(3);
+	CHECK(maskC.HasAll(maskA));
+	CHECK(!maskC.HasAll(maskB));
 }
 
 CLASS_TEST_CASE("HasNone().")
@@ -321,54 +433,62 @@ CLASS_TEST_CASE("HasNone().")
 
 CLASS_TEST_CASE("HasNone(ComponentMask).")
 {
-	CHECK(false);
+	ecs::ComponentMask maskA;
+	ecs::ComponentMask maskB;
+	ecs::ComponentMask maskC;
+	maskA.Raise(0); maskA.Raise(1);
+	maskB.Raise(1); maskB.Raise(2);
+
+	maskC.Raise(2);
+	CHECK(!maskA.HasNone(maskB));
+	CHECK(maskA.HasNone(maskC));
 }
 
-CLASS_TEST_CASE("No components.")
+CLASS_TEST_CASE("ToComponentMask with no components.")
 {
 	auto componentMask = ecs::ToComponentMask<>();
 	CHECK(componentMask.Has(s_ComponentAId) == false);
 	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-CLASS_TEST_CASE("Single component.")
+CLASS_TEST_CASE("ToComponentMask with a single component.")
 {
 	auto componentMask = ecs::ToComponentMask<ComponentA>();
 	CHECK(componentMask.Has(s_ComponentAId) == true);
 	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-CLASS_TEST_CASE("Multiple components.")
+CLASS_TEST_CASE("ToComponentMask with multiple components.")
 {
 	auto componentMask = ecs::ToComponentMask<ComponentA, ComponentB>();
 	CHECK(componentMask.Has(s_ComponentAId) == true);
 	CHECK(componentMask.Has(s_ComponentBId) == true);
 }
 
-CLASS_TEST_CASE("TypeList with no components.")
+CLASS_TEST_CASE("ToComponentMask with a TypeList of no components.")
 {
 	auto componentMask = ecs::ToComponentMask(TypeList<>{});
 	CHECK(componentMask.Has(s_ComponentAId) == false);
 	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-CLASS_TEST_CASE("TypeList with one component.")
+CLASS_TEST_CASE("ToComponentMask with a TypeList of one component.")
 {
 	auto componentMask = ecs::ToComponentMask(TypeList<ComponentA>{});
 	CHECK(componentMask.Has(s_ComponentAId) == true);
 	CHECK(componentMask.Has(s_ComponentBId) == false);
 }
 
-CLASS_TEST_CASE("TypeList with multiple components.")
+CLASS_TEST_CASE("ToComponentMask with a TypeList of multiple components.")
 {
 	auto componentMask = ecs::ToComponentMask(TypeList<ComponentA, ComponentB>{});
 	CHECK(componentMask.Has(s_ComponentAId) == true);
 	CHECK(componentMask.Has(s_ComponentBId) == true);
 }
 
-CLASS_TEST_CASE("Const and non-const result in the same mask.")
+CLASS_TEST_CASE("ToComponentMask has const and non-const result in the same mask.")
 {
 	auto componentMaskA = ecs::ToComponentMask<ComponentA>();
 	auto componentMaskB = ecs::ToComponentMask<const ComponentA>();
-	CHECK(componentMaskA.HasAll(componentMaskB));
+	CHECK(componentMaskA == componentMaskB);
 }
