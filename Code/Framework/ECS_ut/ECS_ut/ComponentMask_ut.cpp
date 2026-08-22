@@ -444,6 +444,19 @@ CLASS_TEST_CASE("HasNone(ComponentMask).")
 	CHECK(maskA.HasNone(maskC));
 }
 
+CLASS_TEST_CASE("Range-based for loop.")
+{
+	ecs::ComponentMask mask;
+	mask.Raise(6); mask.Raise(7);
+	mask.Raise(88); mask.Raise(102);
+
+	int32 i = 0;
+	ecs::ComponentId checks[] = { 6, 7, 88, 102 };
+	for (ecs::ComponentId value : mask)
+		CHECK(value == checks[i++]);
+	CHECK(i == 4);
+}
+
 CLASS_TEST_CASE("ToComponentMask with no components.")
 {
 	auto componentMask = ecs::ToComponentMask<>();

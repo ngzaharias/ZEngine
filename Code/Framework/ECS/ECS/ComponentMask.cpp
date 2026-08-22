@@ -9,7 +9,9 @@ auto ecs::ComponentMask::Iterator::operator*() -> ecs::ComponentId
 
 auto ecs::ComponentMask::Iterator::operator++() -> Iterator&
 {
-	while (m_Index++ < COUNT && !m_Mask.Has(m_Index)) {}
+	while (++m_Index < COUNT && !m_Mask.Has(m_Index)) 
+	{
+	}
 	return *this;
 }
 
@@ -22,7 +24,11 @@ bool ecs::ComponentMask::Iterator::operator!=(const Iterator& rhs) const
 
 auto ecs::ComponentMask::begin() const -> Iterator
 {
-	return Iterator{ *this, 0 };
+	Iterator itr = { *this, 0 };
+	if (!Has(0))
+		itr.operator++();
+
+	return itr;
 }
 
 auto ecs::ComponentMask::end() const -> Iterator
