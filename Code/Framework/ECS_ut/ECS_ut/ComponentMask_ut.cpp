@@ -225,16 +225,16 @@ CLASS_TEST_CASE("operator~().")
 	ecs::ComponentMask maskA;
 	ecs::ComponentMask maskB;
 
-	constexpr int32 counH = ecs::COMPONENTS_MAX / 2;
+	constexpr int32 countH = ecs::COMPONENTS_MAX / 2;
 	constexpr int32 countF = ecs::COMPONENTS_MAX;
-	for (int32 i = 0; i < counH; ++i)
+	for (int32 i = 0; i < countH; ++i)
 		maskA.Raise(i);
 	
 	maskB = ~maskA;
 
-	for (int32 i = 0; i < counH; ++i)
+	for (int32 i = 0; i < countH; ++i)
 		CHECK(!maskB.Has(i));
-	for (int32 i = counH; i < countF; ++i)
+	for (int32 i = countH; i < countF; ++i)
 		CHECK(maskB.Has(i));
 }
 
