@@ -37,6 +37,11 @@ namespace ecs
 		auto end() const -> Iterator;
 
 	public:
+		ecs::ComponentMask()
+		{
+			memset(m_Data, 0, sizeof(m_Data));
+		}
+
 		[[nodiscard]] bool operator<(const ecs::ComponentMask& rhs) const noexcept;
 		[[nodiscard]] bool operator<=(const ecs::ComponentMask& rhs) const noexcept;
 		[[nodiscard]] bool operator>(const ecs::ComponentMask& rhs) const noexcept;

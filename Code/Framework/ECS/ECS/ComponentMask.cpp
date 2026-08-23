@@ -20,7 +20,6 @@ bool ecs::ComponentMask::Iterator::operator!=(const Iterator& rhs) const
 	return m_Index != rhs.m_Index;
 }
 
-//////////////////////////////////////////////////////////////////////////
 
 auto ecs::ComponentMask::begin() const -> Iterator
 {
@@ -35,6 +34,8 @@ auto ecs::ComponentMask::end() const -> Iterator
 {
 	return Iterator{ *this, COUNT };
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 bool ecs::ComponentMask::operator<(const ComponentMask& rhs) const noexcept
 {
