@@ -79,12 +79,8 @@ namespace
 
 		const auto& registry = world.m_TypeRegistry;
 		const auto& entities = world.m_EntityStorage.GetEntityMap();
-		const ecs::ComponentMask& componentMask = entities.Get(entity);
-		for (ecs::ComponentId typeId = 0; typeId < ecs::COMPONENTS_MAX; ++typeId)
+		for (ecs::ComponentId typeId : entities.Get(entity))
 		{
-			if (!componentMask.Has(typeId))
-				continue;
-
 			const ecs::TypeComponent& componentInfo = registry.GetComponentInfo(typeId);
 			const ecs::TypeInfo& typeInfo = registry.GetTypeInfo(componentInfo.m_GlobalId);
 			imgui::BulletHeader(typeInfo.m_Name.c_str());
