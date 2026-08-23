@@ -38,7 +38,7 @@ namespace
 CLASS_TEST_CASE("OnEntityCreate will create a new entity.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -56,7 +56,7 @@ CLASS_TEST_CASE("OnEntityCreate will create a new entity.")
 CLASS_TEST_CASE("OnEntityCreate and OnEntityDestroy called on the same entity in the same frame will result in no entity being created.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -87,7 +87,7 @@ CLASS_TEST_CASE("OnEntityCreate and CreateEntity called in the same frame will r
 
 	net::Entity nentity(0);
 	ecs::Entity entityA = world.CreateEntity();
-	ecs::Entity entityB(1);
+	ecs::Entity entityB(2, 0);
 
 	ecs::EntityCreateMessage message;
 	message.m_Entity = nentity;
@@ -102,7 +102,7 @@ CLASS_TEST_CASE("OnEntityCreate and CreateEntity called in the same frame will r
 CLASS_TEST_CASE("OnEntityCreate called after OnEntityDestroy in the same frame will result in no change to the entity.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -135,7 +135,7 @@ CLASS_TEST_CASE("OnEntityCreate called after OnEntityDestroy in the same frame w
 CLASS_TEST_CASE("OnEntityDestroy will destroy the matching entity.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -162,7 +162,7 @@ CLASS_TEST_CASE("OnEntityDestroy will destroy the matching entity.")
 CLASS_TEST_CASE("OnEntityCreate and OnComponentAdd called in the same frame will result in the entity being alive and the component being added.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -192,7 +192,7 @@ CLASS_TEST_CASE("OnEntityCreate and OnComponentAdd called in the same frame will
 CLASS_TEST_CASE("OnEntityCreate and OnComponentAdd and OnEntityDestroy all called in the same frame will result in the entity being destroyed.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -227,7 +227,7 @@ CLASS_TEST_CASE("OnEntityCreate and OnComponentAdd and OnEntityDestroy all calle
 CLASS_TEST_CASE("OnComponentAdd will add the component to the matching entity.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -257,7 +257,7 @@ CLASS_TEST_CASE("OnComponentAdd will add the component to the matching entity.")
 CLASS_TEST_CASE("OnComponentAdd will add the component with its data.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -289,7 +289,7 @@ CLASS_TEST_CASE("OnComponentAdd will add the component with its data.")
 CLASS_TEST_CASE("OnComponentAdd and OnComponentRemove called in the same frame will result in the component not being added.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -326,7 +326,7 @@ CLASS_TEST_CASE("OnComponentAdd and OnComponentRemove called in the same frame w
 CLASS_TEST_CASE("OnComponentAdd called after OnComponentRemove in the same frame will result in the component being added.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -371,7 +371,7 @@ CLASS_TEST_CASE("OnComponentAdd called after OnComponentRemove in the same frame
 CLASS_TEST_CASE("OnComponentRemove will remove the component from the matching entity.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -408,7 +408,7 @@ CLASS_TEST_CASE("OnComponentRemove will remove the component from the matching e
 CLASS_TEST_CASE("OnComponentUpdate will update the data of the component.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
@@ -448,7 +448,7 @@ CLASS_TEST_CASE("OnComponentUpdate will update the data of the component.")
 CLASS_TEST_CASE("OnComponentUpdate will mark the component as updated in queries.")
 {
 	net::Entity nentity(0);
-	ecs::Entity entity(0);
+	ecs::Entity entity(1, 0);
 
 	RAIIWrapper raii;
 	ecs::EntityWorld& world = raii.m_World;
