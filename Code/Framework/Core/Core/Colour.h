@@ -6,12 +6,18 @@ class Colour
 {
 public:
 	constexpr Colour() noexcept 
-		: r(), g(), b(), a() { }
+		: r(0.f), g(0.f), b(0.f), a(0.f) { }
 	constexpr Colour(const int32 rgb) noexcept
 		: r(((rgb >> 16) & 0xFF) / 255.f)
 		, g(((rgb >> 8) & 0xFF) / 255.f)
 		, b(((rgb >> 0) & 0xFF) / 255.f)
 		, a(1.f)
+	{ }
+	constexpr Colour(const uint32 rgb) noexcept
+		: r(((rgb >> 24) & 0xFF) / 255.f)
+		, g(((rgb >> 16) & 0xFF) / 255.f)
+		, b(((rgb >> 8) & 0xFF) / 255.f)
+		, a(((rgb >> 0) & 0xFF) / 255.f)
 	{ }
 	constexpr Colour(const float rgb, const float alpha = 1.f) noexcept
 		: r(rgb), g(rgb), b(rgb), a(alpha) { }
@@ -23,6 +29,9 @@ public:
 		: r(rgba.x), g(rgba.y), b(rgba.z), a(rgba.w) { }
 
 	operator Vector4f() const { return Vector4f(r, g, b, a); }
+
+	[[nodiscard]] constexpr bool operator==(const Colour& rhs) const noexcept { return (r == rhs.r) && (g == rhs.g) && (b == rhs.b) && (a == rhs.a); }
+	[[nodiscard]] constexpr bool operator!=(const Colour& rhs) const noexcept { return (r != rhs.r) || (g != rhs.g) || (b != rhs.b) || (a != rhs.a); }
 
 	[[nodiscard]] constexpr Colour operator*(const float rhs) const noexcept { return Colour(r * rhs, g * rhs, b * rhs, a * rhs); }
 	[[nodiscard]] constexpr Colour operator/(const float rhs) const noexcept { return Colour(r / rhs, g / rhs, b / rhs, a / rhs); }
