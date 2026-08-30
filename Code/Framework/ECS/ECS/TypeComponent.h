@@ -17,6 +17,8 @@ namespace ecs
 {
 	struct TypeComponent
 	{
+		uint16 m_Bytes = 0;
+
 		TypeId m_GlobalId = -1;
 		TypeId m_LocalId = -1;
 
@@ -27,6 +29,9 @@ namespace ecs
 
 		bool m_IsReplicated = false;
 		bool m_IsTemplate = false;
+
+		using Destructor = void(void*);
+		Destructor* m_Destructor = nullptr;
 
 		using HasSolo = bool(ecs::EntityStorage&, const ecs::Entity&);
 		HasSolo* m_HasSolo = nullptr;

@@ -19,6 +19,7 @@ void ecs::TypeRegistry::RegisterComponent()
 	info.m_LocalId = localId;
 
 	ecs::TypeComponent& entry = m_ComponentMap[localId];
+	entry.m_Bytes = sizeof(TComponent);
 	entry.m_GlobalId = globalId;
 	entry.m_LocalId = localId;
 
@@ -29,6 +30,9 @@ void ecs::TypeRegistry::RegisterComponent()
 
 	entry.m_IsReplicated = isReplicated;
 	entry.m_IsTemplate = isTemplate;
+
+	if constexpr (!std::is_trivially_destructible<TComponent>::value)
+		entry.m_Destructor = [](void* data) { reinterpret_cast<TComponent*>(data)->~TComponent(); };
 
 	entry.m_HasSolo = &HasComponentSolo<TComponent>;
 	entry.m_AddSolo = &AddComponentSolo<TComponent>;
