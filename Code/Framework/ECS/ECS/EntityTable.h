@@ -15,23 +15,29 @@ namespace ecs
 	class EntityTable
 	{
 	public:
-		~EntityTable();
-
 		// Allocates memory for a new page and appends it.
 		auto AppendPage() -> ecs::EntityPage&;
-		// De-constructs a page and all of its components, and deallocates its memory and removes it.
+
+		// De-constructs the components of all pages that match the component mask.
+		void DestructAllPages(const ecs::ComponentMask& componentMask);
+
+		// Deallocates the memory of a page and removes it.
 		void RemovePage(const int32 index);
-		// De-constructs all pages and all components, and deallocates the memory and removes them all.
-		void RemoveAllPages();
-		// De-constructs the last page and of its components, and deallocates the memory and removes it.
+		// Deallocates the memory of the last page and removes it, and optionally de-constructs all of its components.
 		void RemoveLastPage();
+		// Deallocates the memory of all pages and removes them, and optionally de-constructs all components.
+		void RemoveAllPages();
 
 		// Appends the entity to the table.
 		// Will create a new page for it if the last page is full.
 		void AppendEntity(const ecs::Entity& entity);
+
+		// De-constructs the components of the entity that match the component mask.
+		void DestructEntity(const ecs::Entity& entity, const ecs::ComponentMask& componentMask);
+
 		// Removes the entity from the table and optionally destructs its components.
 		// Will remove the last page if its size drops to 0.
-		void RemoveEntity(const ecs::Entity& entity, const bool destruct);
+		void RemoveEntity(const ecs::Entity& entity);
 
 		bool HasComponent(const ecs::Entity& entity, const ecs::ComponentId& componentId) const;
 

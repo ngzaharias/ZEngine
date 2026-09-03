@@ -45,7 +45,8 @@ namespace ecs
 		void CreateTable(const ecs::EntityLayout& tableLayout);
 		void DestroyTable(const int32 index);
 		void DestroyTable(const ecs::EntityLayout& tableLayout);
-		void CleanupTables();
+		void MoveTable(const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout);
+		void OptimizeTables();
 
 		auto GetTable(const int32 index) -> ecs::EntityTable&;
 		auto GetTable(const str::Guid& tableId) -> ecs::EntityTable&;

@@ -16,6 +16,10 @@ namespace ecs
 
 		virtual int32 GetCount() const = 0;
 
+		virtual auto GetComponent(const ecs::Entity& entity) -> char* = 0;
+
+		virtual auto GetEntities() const -> const Array<ecs::Entity>& = 0;
+
 		virtual void Move(const ecs::Entity& entity, IComponentContainer& destination) = 0;
 
 		virtual void MoveAll(IComponentContainer& destination) = 0;
@@ -38,6 +42,10 @@ namespace ecs
 		inline bool Contains(const ecs::Entity& entity) const override;
 
 		inline int32 GetCount() const;
+
+		inline auto GetComponent(const ecs::Entity& entity) -> char*;
+
+		inline auto GetEntities() const -> const Array<ecs::Entity>&;
 
 		inline TComponent& Get(const ecs::Entity& entity);
 		inline const TComponent& Get(const ecs::Entity& entity) const;

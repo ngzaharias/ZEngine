@@ -19,6 +19,19 @@ inline int32 ecs::ComponentContainer<TComponent>::GetCount() const
 }
 
 template<typename TComponent>
+inline auto ecs::ComponentContainer<TComponent>::GetComponent(const ecs::Entity& entity) -> char*
+{
+	TComponent& component = m_Data.Get(entity);
+	return reinterpret_cast<char*>(&component);
+}
+
+template<typename TComponent>
+inline auto ecs::ComponentContainer<TComponent>::GetEntities() const -> const Array<ecs::Entity>&
+{
+	return m_Data.GetKeys();
+}
+
+template<typename TComponent>
 inline TComponent& ecs::ComponentContainer<TComponent>::Get(const ecs::Entity& entity)
 {
 	return m_Data.Get(entity);
