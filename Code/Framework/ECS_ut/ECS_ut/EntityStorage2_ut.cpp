@@ -2,6 +2,7 @@
 
 #include "ECS/EntityBuffer.h"
 #include "ECS/EntityStorage2.h"
+#include "ECS/QueryRegistry.h"
 #include "ECS/TypeRegistry.h"
 
 #define CLASS_TEST_CASE(name) TEST_CASE("ecs::EntityStorage2. " name, "[ecs::EntityStorage2]")
@@ -26,108 +27,109 @@ namespace
 
 CLASS_TEST_CASE("Create an entity.")
 {
-	ecs::EntityBuffer buffer;
-	ecs::TypeRegistry registry;
-	ecs::EntityStorage2 storage(registry);
-	registry.RegisterComponent<ComponentA>();
-	buffer.RegisterComponent<ComponentA>();
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentA>();
 
-	ecs::Entity entity = buffer.CreateEntity();
+	ecs::Entity entity = entityBuffer.CreateEntity();
 
-	storage.FlushChanges(buffer);
+	entityStorage.FlushChanges(entityBuffer);
 
-	CHECK(storage.IsAlive(entity));
+	CHECK(entityStorage.IsAlive(entity));
 }
 
 CLASS_TEST_CASE("Create multiple entities in the same frame.")
 {
-	ecs::EntityBuffer buffer;
-	ecs::TypeRegistry registry;
-	ecs::EntityStorage2 storage(registry);
-	registry.RegisterComponent<ComponentA>();
-	buffer.RegisterComponent<ComponentA>();
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentA>();
 
-	ecs::Entity entityA = buffer.CreateEntity();
-	ecs::Entity entityB = buffer.CreateEntity();
-	ecs::Entity entityC = buffer.CreateEntity();
-	storage.FlushChanges(buffer);
+	ecs::Entity entityA = entityBuffer.CreateEntity();
+	ecs::Entity entityB = entityBuffer.CreateEntity();
+	ecs::Entity entityC = entityBuffer.CreateEntity();
+	entityStorage.FlushChanges(entityBuffer);
 
-	CHECK(storage.IsAlive(entityA));
-	CHECK(storage.IsAlive(entityB));
-	CHECK(storage.IsAlive(entityC));
+	CHECK(entityStorage.IsAlive(entityA));
+	CHECK(entityStorage.IsAlive(entityB));
+	CHECK(entityStorage.IsAlive(entityC));
 }
 
 CLASS_TEST_CASE("Create multiple entities in subsequent frames.")
 {
-	ecs::EntityBuffer buffer;
-	ecs::TypeRegistry registry;
-	ecs::EntityStorage2 storage(registry);
-	registry.RegisterComponent<ComponentA>();
-	buffer.RegisterComponent<ComponentA>();
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentA>();
 
-	ecs::Entity entityA = buffer.CreateEntity();
-	storage.FlushChanges(buffer);
+	ecs::Entity entityA = entityBuffer.CreateEntity();
+	entityStorage.FlushChanges(entityBuffer);
 
-	ecs::Entity entityB = buffer.CreateEntity();
-	storage.FlushChanges(buffer);
+	ecs::Entity entityB = entityBuffer.CreateEntity();
+	entityStorage.FlushChanges(entityBuffer);
 
-	ecs::Entity entityC = buffer.CreateEntity();
-	storage.FlushChanges(buffer);
+	ecs::Entity entityC = entityBuffer.CreateEntity();
+	entityStorage.FlushChanges(entityBuffer);
 
-	CHECK(storage.IsAlive(entityA));
-	CHECK(storage.IsAlive(entityB));
-	CHECK(storage.IsAlive(entityC));
+	CHECK(entityStorage.IsAlive(entityA));
+	CHECK(entityStorage.IsAlive(entityB));
+	CHECK(entityStorage.IsAlive(entityC));
 }
 
 CLASS_TEST_CASE("Create an entity with a component.")
 {
-	const ecs::ComponentId componentId = ToTypeId<ComponentA, ecs::ComponentTag>();
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentA>();
 
-	ecs::EntityBuffer buffer;
-	ecs::TypeRegistry registry;
-	ecs::EntityStorage2 storage(registry);
-	registry.RegisterComponent<ComponentA>();
-	buffer.RegisterComponent<ComponentA>();
-
-	ecs::Entity entity = buffer.CreateEntity();
+	ecs::Entity entity = entityBuffer.CreateEntity();
 
 	{
-		auto& component = buffer.AddComponent<ComponentA>(entity);
+		auto& component = entityBuffer.AddComponent<ComponentA>(entity);
 		component.m_Bool = true;
 	}
 
-	storage.FlushChanges(buffer);
+	entityStorage.FlushChanges(entityBuffer);
 
 	{
-		REQUIRE(storage.IsAlive(entity));
-		REQUIRE(storage.HasComponent<ComponentA>(entity));
-		auto& component = storage.GetComponent<ComponentA>(entity);
+		REQUIRE(entityStorage.IsAlive(entity));
+		REQUIRE(entityStorage.HasComponent<ComponentA>(entity));
+		auto& component = entityStorage.GetComponent<ComponentA>(entity);
 		CHECK(component.m_Bool == true);
 	}
 }
 
 CLASS_TEST_CASE("Create an entity with multiple components.")
 {
-	const ecs::ComponentId componentId = ToTypeId<ComponentA, ecs::ComponentTag>();
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	typeRegistry.RegisterComponent<ComponentB>();
+	typeRegistry.RegisterComponent<ComponentC>();
+	entityBuffer.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentB>();
+	entityBuffer.RegisterComponent<ComponentC>();
 
-	ecs::EntityBuffer buffer;
-	ecs::TypeRegistry registry;
-	ecs::EntityStorage2 storage(registry);
-	registry.RegisterComponent<ComponentA>();
-	registry.RegisterComponent<ComponentB>();
-	registry.RegisterComponent<ComponentC>();
-	buffer.RegisterComponent<ComponentA>();
-	buffer.RegisterComponent<ComponentB>();
-	buffer.RegisterComponent<ComponentC>();
-
-	ecs::Entity entity = buffer.CreateEntity();
+	ecs::Entity entity = entityBuffer.CreateEntity();
 
 	{
-		auto& componentA = buffer.AddComponent<ComponentA>(entity);
+		auto& componentA = entityBuffer.AddComponent<ComponentA>(entity);
 		componentA.m_Bool = true;
-		auto& componentB = buffer.AddComponent<ComponentB>(entity);
+		auto& componentB = entityBuffer.AddComponent<ComponentB>(entity);
 		componentB.m_Int32 = 1337;
-		auto& componentC = buffer.AddComponent<ComponentC>(entity);
+		auto& componentC = entityBuffer.AddComponent<ComponentC>(entity);
 		componentC.m_Array = new char[5];
 		componentC.m_Array[0] = 'H';
 		componentC.m_Array[1] = 'E';
@@ -136,21 +138,21 @@ CLASS_TEST_CASE("Create an entity with multiple components.")
 		componentC.m_Array[4] = 'O';
 	}
 
-	storage.FlushChanges(buffer);
+	entityStorage.FlushChanges(entityBuffer);
 
 	{
-		REQUIRE(storage.IsAlive(entity));
-		REQUIRE(storage.HasComponent<ComponentA>(entity));
-		REQUIRE(storage.HasComponent<ComponentB>(entity));
-		REQUIRE(storage.HasComponent<ComponentC>(entity));
+		REQUIRE(entityStorage.IsAlive(entity));
+		REQUIRE(entityStorage.HasComponent<ComponentA>(entity));
+		REQUIRE(entityStorage.HasComponent<ComponentB>(entity));
+		REQUIRE(entityStorage.HasComponent<ComponentC>(entity));
 
-		auto& componentA = storage.GetComponent<ComponentA>(entity);
+		auto& componentA = entityStorage.GetComponent<ComponentA>(entity);
 		CHECK(componentA.m_Bool == true);
 
-		auto& componentB = storage.GetComponent<ComponentB>(entity);
+		auto& componentB = entityStorage.GetComponent<ComponentB>(entity);
 		CHECK(componentB.m_Int32 == 1337);
 
-		auto& componentC = storage.GetComponent<ComponentC>(entity);
+		auto& componentC = entityStorage.GetComponent<ComponentC>(entity);
 		CHECK(componentC.m_Array[0] == 'H');
 		CHECK(componentC.m_Array[1] == 'E');
 		CHECK(componentC.m_Array[2] == 'L');
@@ -161,72 +163,70 @@ CLASS_TEST_CASE("Create an entity with multiple components.")
 
 CLASS_TEST_CASE("Create multiple entities with the same component.")
 {
-	const ecs::ComponentId componentId = ToTypeId<ComponentA, ecs::ComponentTag>();
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentA>();
 
-	ecs::EntityBuffer buffer;
-	ecs::TypeRegistry registry;
-	ecs::EntityStorage2 storage(registry);
-	registry.RegisterComponent<ComponentA>();
-	buffer.RegisterComponent<ComponentA>();
-
-	ecs::Entity entityA = buffer.CreateEntity();
-	ecs::Entity entityB = buffer.CreateEntity();
-	ecs::Entity entityC = buffer.CreateEntity();
+	ecs::Entity entityA = entityBuffer.CreateEntity();
+	ecs::Entity entityB = entityBuffer.CreateEntity();
+	ecs::Entity entityC = entityBuffer.CreateEntity();
 
 	{
-		auto& componentA = buffer.AddComponent<ComponentA>(entityA);
+		auto& componentA = entityBuffer.AddComponent<ComponentA>(entityA);
 		componentA.m_Bool = false;
-		auto& componentB = buffer.AddComponent<ComponentA>(entityB);
+		auto& componentB = entityBuffer.AddComponent<ComponentA>(entityB);
 		componentB.m_Bool = true;
-		auto& componentC = buffer.AddComponent<ComponentA>(entityC);
+		auto& componentC = entityBuffer.AddComponent<ComponentA>(entityC);
 		componentC.m_Bool = false;
 	}
 
-	storage.FlushChanges(buffer);
+	entityStorage.FlushChanges(entityBuffer);
 
 	{
-		REQUIRE(storage.IsAlive(entityA));
-		REQUIRE(storage.IsAlive(entityB));
-		REQUIRE(storage.IsAlive(entityC));
-		REQUIRE(storage.HasComponent<ComponentA>(entityA));
-		REQUIRE(storage.HasComponent<ComponentA>(entityB));
-		REQUIRE(storage.HasComponent<ComponentA>(entityC));
+		REQUIRE(entityStorage.IsAlive(entityA));
+		REQUIRE(entityStorage.IsAlive(entityB));
+		REQUIRE(entityStorage.IsAlive(entityC));
+		REQUIRE(entityStorage.HasComponent<ComponentA>(entityA));
+		REQUIRE(entityStorage.HasComponent<ComponentA>(entityB));
+		REQUIRE(entityStorage.HasComponent<ComponentA>(entityC));
 
-		auto& componentA = storage.GetComponent<ComponentA>(entityA);
+		auto& componentA = entityStorage.GetComponent<ComponentA>(entityA);
 		CHECK(componentA.m_Bool == false);
 
-		auto& componentB = storage.GetComponent<ComponentA>(entityB);
+		auto& componentB = entityStorage.GetComponent<ComponentA>(entityB);
 		CHECK(componentB.m_Bool == true);
 
-		auto& componentC = storage.GetComponent<ComponentA>(entityC);
+		auto& componentC = entityStorage.GetComponent<ComponentA>(entityC);
 		CHECK(componentC.m_Bool == false);
 	}
 }
 
 CLASS_TEST_CASE("Create multiple entities with different components.")
 {
-	const ecs::ComponentId componentId = ToTypeId<ComponentA, ecs::ComponentTag>();
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	typeRegistry.RegisterComponent<ComponentB>();
+	typeRegistry.RegisterComponent<ComponentC>();
+	entityBuffer.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentB>();
+	entityBuffer.RegisterComponent<ComponentC>();
 
-	ecs::EntityBuffer buffer;
-	ecs::TypeRegistry registry;
-	ecs::EntityStorage2 storage(registry);
-	registry.RegisterComponent<ComponentA>();
-	registry.RegisterComponent<ComponentB>();
-	registry.RegisterComponent<ComponentC>();
-	buffer.RegisterComponent<ComponentA>();
-	buffer.RegisterComponent<ComponentB>();
-	buffer.RegisterComponent<ComponentC>();
-
-	ecs::Entity entityA = buffer.CreateEntity();
-	ecs::Entity entityB = buffer.CreateEntity();
-	ecs::Entity entityC = buffer.CreateEntity();
+	ecs::Entity entityA = entityBuffer.CreateEntity();
+	ecs::Entity entityB = entityBuffer.CreateEntity();
+	ecs::Entity entityC = entityBuffer.CreateEntity();
 
 	{
-		auto& componentA = buffer.AddComponent<ComponentA>(entityA);
+		auto& componentA = entityBuffer.AddComponent<ComponentA>(entityA);
 		componentA.m_Bool = true;
-		auto& componentB = buffer.AddComponent<ComponentB>(entityB);
+		auto& componentB = entityBuffer.AddComponent<ComponentB>(entityB);
 		componentB.m_Int32 = 1337;
-		auto& componentC = buffer.AddComponent<ComponentC>(entityC);
+		auto& componentC = entityBuffer.AddComponent<ComponentC>(entityC);
 		componentC.m_Array = new char[5];
 		componentC.m_Array[0] = 'H';
 		componentC.m_Array[1] = 'E';
@@ -235,23 +235,23 @@ CLASS_TEST_CASE("Create multiple entities with different components.")
 		componentC.m_Array[4] = 'O';
 	}
 
-	storage.FlushChanges(buffer);
+	entityStorage.FlushChanges(entityBuffer);
 
 	{
-		REQUIRE(storage.IsAlive(entityA));
-		REQUIRE(storage.IsAlive(entityB));
-		REQUIRE(storage.IsAlive(entityC));
-		REQUIRE(storage.HasComponent<ComponentA>(entityA));
-		REQUIRE(storage.HasComponent<ComponentB>(entityB));
-		REQUIRE(storage.HasComponent<ComponentC>(entityC));
+		REQUIRE(entityStorage.IsAlive(entityA));
+		REQUIRE(entityStorage.IsAlive(entityB));
+		REQUIRE(entityStorage.IsAlive(entityC));
+		REQUIRE(entityStorage.HasComponent<ComponentA>(entityA));
+		REQUIRE(entityStorage.HasComponent<ComponentB>(entityB));
+		REQUIRE(entityStorage.HasComponent<ComponentC>(entityC));
 
-		auto& componentA = storage.GetComponent<ComponentA>(entityA);
+		auto& componentA = entityStorage.GetComponent<ComponentA>(entityA);
 		CHECK(componentA.m_Bool == true);
 
-		auto& componentB = storage.GetComponent<ComponentB>(entityB);
+		auto& componentB = entityStorage.GetComponent<ComponentB>(entityB);
 		CHECK(componentB.m_Int32 == 1337);
 
-		auto& componentC = storage.GetComponent<ComponentC>(entityC);
+		auto& componentC = entityStorage.GetComponent<ComponentC>(entityC);
 		CHECK(componentC.m_Array[0] == 'H');
 		CHECK(componentC.m_Array[1] == 'E');
 		CHECK(componentC.m_Array[2] == 'L');
@@ -262,68 +262,122 @@ CLASS_TEST_CASE("Create multiple entities with different components.")
 
 CLASS_TEST_CASE("Destroy an entity.")
 {
-	ecs::EntityBuffer buffer;
-	ecs::TypeRegistry registry;
-	ecs::EntityStorage2 storage(registry);
-	registry.RegisterComponent<ComponentA>();
-	buffer.RegisterComponent<ComponentA>();
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentA>();
 
-	ecs::Entity entity = buffer.CreateEntity();
-	storage.FlushChanges(buffer);
+	ecs::Entity entity = entityBuffer.CreateEntity();
+	entityStorage.FlushChanges(entityBuffer);
 
-	buffer.DestroyEntity(entity);
-	storage.FlushChanges(buffer);
+	entityBuffer.DestroyEntity(entity);
+	entityStorage.FlushChanges(entityBuffer);
 
-	CHECK(!storage.IsAlive(entity));
+	CHECK(!entityStorage.IsAlive(entity));
 }
 
 CLASS_TEST_CASE("Add a component to an entity.")
 {
-	const ecs::ComponentId componentId = ToTypeId<ComponentA, ecs::ComponentTag>();
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentA>();
 
-	ecs::EntityBuffer buffer;
-	ecs::TypeRegistry registry;
-	ecs::EntityStorage2 storage(registry);
-	registry.RegisterComponent<ComponentA>();
-	buffer.RegisterComponent<ComponentA>();
-
-	ecs::Entity entity = buffer.CreateEntity();
-	storage.FlushChanges(buffer);
+	ecs::Entity entity = entityBuffer.CreateEntity();
+	entityStorage.FlushChanges(entityBuffer);
 
 	{
-		auto& component = buffer.AddComponent<ComponentA>(entity);
+		auto& component = entityBuffer.AddComponent<ComponentA>(entity);
 		component.m_Bool = true;
 	}
 
-	storage.FlushChanges(buffer);
+	entityStorage.FlushChanges(entityBuffer);
 
 	{
-		REQUIRE(storage.IsAlive(entity));
-		REQUIRE(storage.HasComponent<ComponentA>(entity));
-		auto& component = storage.GetComponent<ComponentA>(entity);
+		REQUIRE(entityStorage.IsAlive(entity));
+		REQUIRE(entityStorage.HasComponent<ComponentA>(entity));
+		auto& component = entityStorage.GetComponent<ComponentA>(entity);
 		CHECK(component.m_Bool == true);
 	}
 }
 
 CLASS_TEST_CASE("Remove a component from an entity.")
 {
-	const ecs::ComponentId componentId = ToTypeId<ComponentA, ecs::ComponentTag>();
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentA>();
+	queryRegistry.Initialise();
 
-	ecs::EntityBuffer buffer;
-	ecs::TypeRegistry registry;
-	ecs::EntityStorage2 storage(registry);
-	registry.RegisterComponent<ComponentA>();
-	buffer.RegisterComponent<ComponentA>();
+	ecs::Entity entity = entityBuffer.CreateEntity();
+	entityBuffer.AddComponent<ComponentA>(entity);
+	entityStorage.FlushChanges(entityBuffer);
 
-	ecs::Entity entity = buffer.CreateEntity();
-	buffer.AddComponent<ComponentA>(entity);
-	storage.FlushChanges(buffer);
+	entityBuffer.RemoveComponent<ComponentA>(entity);
+	entityStorage.FlushChanges(entityBuffer);
 
-	buffer.RemoveComponent<ComponentA>(entity);
-	storage.FlushChanges(buffer);
+	REQUIRE(entityStorage.IsAlive(entity));
+	CHECK(!entityStorage.HasComponent<ComponentA>(entity));
 
-	REQUIRE(storage.IsAlive(entity));
-	CHECK(!storage.HasComponent<ComponentA>(entity));
+	entityStorage.FlushChanges(entityBuffer);
+}
 
-	storage.FlushChanges(buffer);
+CLASS_TEST_CASE("Include query with a single component.")
+{
+	using Query = ecs::query::Include<ComponentA>;
+	static const ecs::QueryId queryId = ecs::QueryProxy<Query>::Id();
+
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	typeRegistry.RegisterComponent<ComponentB>();
+	entityBuffer.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentB>();
+	queryRegistry.Initialise();
+
+	ecs::Entity entityA = entityBuffer.CreateEntity();
+	ecs::Entity entityB = entityBuffer.CreateEntity();
+	entityBuffer.AddComponent<ComponentA>(entityA);
+	entityBuffer.AddComponent<ComponentA>(entityB);
+	entityBuffer.AddComponent<ComponentB>(entityB);
+	entityStorage.FlushChanges(entityBuffer);
+
+	const ecs::QueryGroupB& group = queryRegistry.GetGroupB(queryId);
+	CHECK(group.GetCount() == 2);
+}
+
+CLASS_TEST_CASE("Include query with multiple components.")
+{
+	using Query = ecs::query::Include<ComponentA, ComponentB>;
+	static const ecs::QueryId queryId = ecs::QueryProxy<Query>::Id();
+
+	ecs::EntityBuffer entityBuffer;
+	ecs::TypeRegistry typeRegistry;
+	ecs::QueryRegistry queryRegistry;
+	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
+	typeRegistry.RegisterComponent<ComponentA>();
+	typeRegistry.RegisterComponent<ComponentB>();
+	entityBuffer.RegisterComponent<ComponentA>();
+	entityBuffer.RegisterComponent<ComponentB>();
+	queryRegistry.Initialise();
+
+	ecs::Entity entityA = entityBuffer.CreateEntity();
+	ecs::Entity entityB = entityBuffer.CreateEntity();
+	ecs::Entity entityC = entityBuffer.CreateEntity();
+	entityBuffer.AddComponent<ComponentA>(entityA);
+	entityBuffer.AddComponent<ComponentB>(entityA);
+	entityBuffer.AddComponent<ComponentA>(entityB);
+	entityBuffer.AddComponent<ComponentB>(entityC);
+	entityStorage.FlushChanges(entityBuffer);
+
+	const ecs::QueryGroupB& group = queryRegistry.GetGroupB(queryId);
+	CHECK(group.GetCount() == 1);
 }

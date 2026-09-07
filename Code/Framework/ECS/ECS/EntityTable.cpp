@@ -20,14 +20,14 @@ namespace
 
 auto ecs::EntityTable::AppendPage() -> ecs::EntityPage&
 {
-	EntityPage& entityPage = m_EntityPages.Emplace();
+	ecs::EntityPage& entityPage = m_EntityPages.Emplace();
 	entityPage.m_Data = new char[m_EntitySize * s_EntitiesPerPage];
 	return entityPage;
 }
 
 void ecs::EntityTable::RemovePage(const int32 index)
 {
-	EntityPage& entityPage = m_EntityPages[index];
+	ecs::EntityPage& entityPage = m_EntityPages[index];
 	delete[] entityPage.m_Data;
 	m_EntityPages.RemoveAt(index);
 }
@@ -42,6 +42,8 @@ void ecs::EntityTable::RemoveAllPages()
 	for (ecs::EntityPage& entityPage : m_EntityPages)
 		delete[] entityPage.m_Data;
 	m_EntityPages.RemoveAll();
+	m_EntityMap.RemoveAll();
+	m_UpdateMap.RemoveAll();
 }
 
 void ecs::EntityTable::DestructAllPages(const ecs::ComponentMask& componentMask)

@@ -11,6 +11,12 @@
 
 namespace ecs
 {
+	struct EntityInfo
+	{
+		ecs::ComponentMask m_UpdatedMask = {};
+		int32 m_Index = -1;
+	};
+
 	/// \brief Stores the components for all entities of a single archetype spread across multiple pages.
 	class EntityTable
 	{
@@ -62,6 +68,8 @@ namespace ecs
 		// Array of pages that hold the components for each entity.
 		Array<ecs::EntityPage> m_EntityPages = {};
 		// Maps an entity to its index within the pages.
-		Map<ecs::Entity, uint16> m_EntityMap = {};
+		Map<ecs::Entity, int32> m_EntityMap = {};
+		// Map of entities that had at least 1 component updated.
+		Map<ecs::Entity, ecs::ComponentMask> m_UpdateMap = {};
 	};
 }

@@ -10,17 +10,23 @@
 namespace ecs
 {
 	class EntityBuffer;
+	class QueryRegistry;
 	class TypeRegistry;
 }
 
 namespace ecs
 {
-
 	/// \brief Stores all the components for all entities of all archetypes.
 	class EntityStorage2
 	{
+		enum class EChange
+		{
+			Created = 0,
+			Destroyed,
+		};
+
 	public:
-		EntityStorage2(const ecs::TypeRegistry& registry);
+		EntityStorage2(ecs::QueryRegistry& queryRegistry, const ecs::TypeRegistry& typeRegistry);
 
 		void FlushChanges(ecs::EntityBuffer& entityBuffer);
 
@@ -55,13 +61,15 @@ namespace ecs
 		auto GetOrCreateTable(const ecs::EntityLayout& tableLayout) -> ecs::EntityTable&;
 
 		void CreateEntity(const ecs::Entity& entity, const ecs::ComponentMask& componentMask);
-		void DestroyEntity(const ecs::Entity& entity);
-		void MoveEntity(const ecs::Entity& entity, const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout);
+		void UpdateEntity(const ecs::Entity& entity, const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout);
 
 		auto GetComponent(const ecs::Entity& entity, const ecs::ComponentId& componentId) -> char*;
 
 	private:
+		ecs::QueryRegistry& m_QueryRegistry;
 		const ecs::TypeRegistry& m_TypeRegistry;
+
+		Map<str::Guid, EChange> m_TableChanges = {};
 
 		// Array of tables that hold the components for all archetypes.
 		Array<ecs::EntityTable> m_Tables = {};
