@@ -79,36 +79,36 @@ namespace ecs
 		void RemoveComponent(const ecs::Entity& entity);
 
 		template<typename TComponent>
-		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
+		bool HasComponent(const ecs::Entity& entity) const;
 
 		template<typename TComponent>
-		auto ReadComponent(const ecs::Entity& entity, const bool alive = true) -> const TComponent&;
+		auto ReadComponent(const ecs::Entity& entity) -> const TComponent&;
 
 		template<typename TComponent>
-		auto WriteComponent(const ecs::Entity& entity, const bool alive = true) -> TComponent&;
+		auto WriteComponent(const ecs::Entity& entity) -> TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Solo/Static Component
 
 		template<typename TComponent, typename... TArgs>
-		requires ecs::IsSoloOrStaticComponent<TComponent>
+		requires ecs::IsSoloComponent<TComponent>
 		auto AddComponent(TArgs&&... args) -> TComponent&;
 
 		template<typename TComponent>
-		requires ecs::IsSoloOrStaticComponent<TComponent>
+		requires ecs::IsSoloComponent<TComponent>
 		void RemoveComponent();
 
 		template<typename TComponent>
-		requires ecs::IsSoloOrStaticComponent<TComponent>
-		bool HasComponent(const bool alive = true) const;
+		requires ecs::IsSoloComponent<TComponent>
+		bool HasComponent() const;
 
 		template<typename TComponent>
 		requires ecs::IsSoloOrStaticComponent<TComponent>
-		auto ReadComponent(const bool alive = true) -> const TComponent&;
+		auto ReadComponent() -> const TComponent&;
 
 		template<typename TComponent>
 		requires ecs::IsSoloOrStaticComponent<TComponent>
-		auto WriteComponent(const bool alive = true) -> TComponent&;
+		auto WriteComponent() -> TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event
