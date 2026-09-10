@@ -44,6 +44,8 @@ void ecs::EntityTable::RemoveAllPages()
 	m_EntityPages.RemoveAll();
 	m_EntityMap.RemoveAll();
 	m_UpdateMap.RemoveAll();
+
+	m_EntityCount = 0;
 }
 
 void ecs::EntityTable::DestructAllPages(const ecs::ComponentMask& componentMask)
@@ -120,7 +122,7 @@ void ecs::EntityTable::RemoveEntity(const ecs::Entity& entity)
 	m_EntityCount--;
 
 	// pop the page if there are no entities left in it
-	const int32 pagesNeeded = m_EntityCount / s_EntitiesPerPage;
+	const int32 pagesNeeded = (m_EntityCount + s_EntitiesPerPage - 1) / s_EntitiesPerPage;
 	while (pagesNeeded < m_EntityPages.GetCount())
 		RemoveLastPage();
 }
