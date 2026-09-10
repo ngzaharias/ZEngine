@@ -395,6 +395,7 @@ CLASS_TEST_CASE("RegisterComponent will crash if the same component is registere
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<Component>();
+
 	//CHECK_THROWS(world.RegisterComponent<Component>());
 }
 
@@ -452,7 +453,7 @@ CLASS_TEST_CASE("AddComponent will crash the game if called twice on the same en
 
 	ecs::Entity entity = world.CreateEntity();
 	world.AddComponent<Component>(entity);
-	//CHECK_THROWS(world.AddComponent<Component>(entity));
+	world.AddComponent<Component>(entity);
 	//CHECK_THROWS(world.Update({}));
 }
 
@@ -464,7 +465,7 @@ CLASS_TEST_CASE("AddComponent will crash the game if called twice on the same so
 	world.Initialise();
 
 	world.AddComponent<SComponent>();
-	//CHECK_THROWS(world.AddComponent<SComponent>());
+	world.AddComponent<SComponent>();
 	//CHECK_THROWS(world.Update({}));
 }
 
@@ -539,8 +540,11 @@ CLASS_TEST_CASE("RemoveComponent will crash the game if called on an entity that
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<Component>();
+	world.Initialise();
 
 	ecs::Entity entity = world.CreateEntity();
+	world.Update({});
+
 	//CHECK_THROWS(world.RemoveComponent<Component>(entity));
 	//CHECK_THROWS(world.Update({}));
 }
@@ -587,8 +591,11 @@ CLASS_TEST_CASE("HasComponent returns false if a component hasn't been added to 
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<Component>();
+	world.Initialise();
 
 	ecs::Entity entity = world.CreateEntity();
+	world.Update({});
+
 	CHECK(!world.HasComponent<Component>(entity));
 }
 
@@ -628,7 +635,7 @@ CLASS_TEST_CASE("HasComponent returns true if the solo component was removed but
 	CHECK(world.HasComponent<SComponent>());
 }
 
-CLASS_TEST_CASE("HasComponent returns false if a component was added but the world hasn't updated yet.")
+CLASS_TEST_CASE("HasComponent crashes if a component was added but the world hasn't updated yet.")
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
@@ -636,7 +643,7 @@ CLASS_TEST_CASE("HasComponent returns false if a component was added but the wor
 
 	ecs::Entity entity = world.CreateEntity();
 	world.AddComponent<Component>(entity);
-	CHECK(!world.HasComponent<Component>(entity));
+	//CHECK_THROWS(!world.HasComponent<Component>(entity));
 }
 
 CLASS_TEST_CASE("HasComponent returns false if the solo component was added but the world hasn't updated yet.")
@@ -694,6 +701,7 @@ CLASS_TEST_CASE("ReadComponent returns a StaticComponent that can't be modified.
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<TComponent>();
+	world.Initialise();
 
 	auto& component = world.ReadComponent<TComponent>();
 	// component.m_Bool = true; // doesn't compile
@@ -704,7 +712,10 @@ CLASS_TEST_CASE("ReadComponent crashes when the Component hasn't been added to t
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<Component>();
+	world.Initialise();
+
 	ecs::Entity entity = world.CreateEntity();
+	world.Update({});
 
 	//CHECK_THROWS(world.ReadComponent<Component>(entity));
 }
@@ -714,7 +725,10 @@ CLASS_TEST_CASE("ReadComponent crashes when the FrameComponent hasn't been added
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<Component>();
+	world.Initialise();
+
 	ecs::Entity entity = world.CreateEntity();
+	world.Update({});
 
 	//CHECK_THROWS(world.ReadComponent<Component>(entity));
 }
@@ -802,8 +816,8 @@ CLASS_TEST_CASE("WriteComponent crashes when the Component hasn't been added to 
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<Component>();
-	ecs::Entity entity = world.CreateEntity();
 
+	ecs::Entity entity = world.CreateEntity();
 	//CHECK_THROWS(world.WriteComponent<Component>(entity));
 }
 
@@ -812,8 +826,8 @@ CLASS_TEST_CASE("WriteComponent crashes when the FrameComponent hasn't been adde
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterComponent<FComponent>();
-	ecs::Entity entity = world.CreateEntity();
 
+	ecs::Entity entity = world.CreateEntity();
 	//CHECK_THROWS(world.WriteComponent<FComponent>(entity));
 }
 
@@ -848,6 +862,7 @@ CLASS_TEST_CASE("RegisterEvent will crash if the same event is registered twice.
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterEvent<Event>();
+
 	//CHECK_THROWS(world.RegisterEvent<Event>());
 }
 
@@ -904,6 +919,7 @@ CLASS_TEST_CASE("AddEvent will crash the game if called on an unregistered event
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
+
 	//CHECK_THROWS(world.AddEvent<Event>());
 }
 
@@ -921,6 +937,7 @@ CLASS_TEST_CASE("RegisterResource will crash if the same resource is registered 
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterResource(resource);
+
 	//CHECK_THROWS(world.RegisterResource(resource));
 }
 
@@ -940,6 +957,7 @@ CLASS_TEST_CASE("ReadResource crashes when the resource hasn't been registered."
 	Resource resource;
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
+
 	//CHECK_THROWS(world.ReadResource<Resource>());
 }
 
@@ -960,6 +978,7 @@ CLASS_TEST_CASE("WriteResource crashes when the resource hasn't been registered.
 	Resource resource;
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
+
 	//CHECK_THROWS(world.WriteResource<Resource>());
 }
 
@@ -975,6 +994,7 @@ CLASS_TEST_CASE("RegisterSystem will crash if the same system is registered twic
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
 	world.RegisterSystem<SystemC>();
+
 	//CHECK_THROWS(world.RegisterSystem<System>());
 }
 
@@ -990,6 +1010,7 @@ CLASS_TEST_CASE("GetSystem will crash the game if called on an unregistered syst
 {
 	ecs::TypeRegistry types;
 	ecs::EntityWorld world(types);
+
 	//CHECK_THROWS(world.GetSystem<System>());
 }
 
@@ -1016,7 +1037,7 @@ CLASS_TEST_CASE("StaticComponent is available during initialise.")
 
 		void Initialise(World& world)
 		{
-			CHECK(world.HasComponent<TComponent>());
+			CHECK_NOTHROW(world.ReadComponent<TComponent>());
 		};
 	};
 
@@ -1037,7 +1058,7 @@ CLASS_TEST_CASE("StaticComponent is available during shutdown.")
 
 		void Shutdown(World& world)
 		{
-			CHECK(world.HasComponent<TComponent>());
+			CHECK_NOTHROW(world.ReadComponent<TComponent>());
 		};
 	};
 
