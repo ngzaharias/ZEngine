@@ -39,6 +39,9 @@ void ecs::EntityStorage2::FlushChanges(ecs::EntityBuffer& entityBuffer)
 			const bool hasRemoved = sourceLayout.m_RemovedMask.HasAny();
 			if (sourceLayout.m_IsDead)
 			{
+				for (auto&& [entity, unused] : table.m_EntityMap)
+					entityBuffer.RecycleEntity(entity);
+
 				const ecs::ComponentMask componentMask = table.m_EntityLayout.GetMask();
 				table.DestructAllPages(componentMask);
 				table.RemoveAllPages();
@@ -52,7 +55,7 @@ void ecs::EntityStorage2::FlushChanges(ecs::EntityBuffer& entityBuffer)
 				ecs::EntityLayout targetLayout = sourceLayout;
 				targetLayout.m_AddedMask.ClearAll();
 				targetLayout.m_RemovedMask.ClearAll();
-				targetLayout.m_IncludeMask.Clear(sourceLayout.m_AddedMask);
+				targetLayout.m_IncludeMask.Clear(sourceLayout.m_RemovedMask);
 				MoveTable(sourceLayout, targetLayout);
 			}
 		}
@@ -78,11 +81,23 @@ void ecs::EntityStorage2::FlushChanges(ecs::EntityBuffer& entityBuffer)
 				const ecs::EntityLayout sourceLayout = table.m_EntityLayout;
 
 				ecs::EntityLayout targetLayout = sourceLayout;
-				targetLayout.m_AddedMask = changes.m_Added;
-				targetLayout.m_RemovedMask.Raise(changes.m_Removed);
-				targetLayout.m_IncludeMask.Raise(changes.m_Added);
-				targetLayout.m_IncludeMask.Clear(changes.m_Removed);
-				targetLayout.m_IsDead |= changes.m_IsDestroy;
+				if (changes.m_IsDestroy)
+				{
+					targetLayout.m_AddedMask.ClearAll();
+					targetLayout.m_IncludeMask.ClearAll();
+					targetLayout.m_RemovedMask.Raise(changes.m_Added);
+					targetLayout.m_RemovedMask.Raise(changes.m_Removed);
+					targetLayout.m_RemovedMask.Raise(sourceLayout.m_AddedMask);
+					targetLayout.m_RemovedMask.Raise(sourceLayout.m_IncludeMask);
+				}
+				else
+				{
+					targetLayout.m_AddedMask = changes.m_Added;
+					targetLayout.m_IncludeMask.Raise(changes.m_Added);
+					targetLayout.m_IncludeMask.Clear(changes.m_Removed);
+					targetLayout.m_RemovedMask.Raise(changes.m_Removed);
+				}
+				targetLayout.m_IsDead = changes.m_IsDestroy;
 
 				UpdateEntity(entity, sourceLayout, targetLayout);
 			}
