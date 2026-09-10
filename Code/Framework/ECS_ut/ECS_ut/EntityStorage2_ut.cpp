@@ -328,7 +328,7 @@ CLASS_TEST_CASE("Remove a component from an entity.")
 	entityStorage.FlushChanges(entityBuffer);
 }
 
-CLASS_TEST_CASE("Include query with a single component.")
+CLASS_TEST_CASE("Table is registered with Query when it is created.")
 {
 	using Query = ecs::query::Include<ComponentA>;
 	static const ecs::QueryId queryId = ecs::QueryProxy<Query>::Id();
@@ -338,25 +338,27 @@ CLASS_TEST_CASE("Include query with a single component.")
 	ecs::QueryRegistry queryRegistry;
 	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
 	typeRegistry.RegisterComponent<ComponentA>();
-	typeRegistry.RegisterComponent<ComponentB>();
 	entityBuffer.RegisterComponent<ComponentA>();
-	entityBuffer.RegisterComponent<ComponentB>();
 	queryRegistry.Initialise();
 
-	ecs::Entity entityA = entityBuffer.CreateEntity();
-	ecs::Entity entityB = entityBuffer.CreateEntity();
-	entityBuffer.AddComponent<ComponentA>(entityA);
-	entityBuffer.AddComponent<ComponentA>(entityB);
-	entityBuffer.AddComponent<ComponentB>(entityB);
+	{
+		const ecs::QueryGroupB& group = queryRegistry.GetGroupB(queryId);
+		REQUIRE(group.GetCount() == 0);
+	}
+
+	ecs::Entity entity = entityBuffer.CreateEntity();
+	entityBuffer.AddComponent<ComponentA>(entity);
 	entityStorage.FlushChanges(entityBuffer);
 
-	const ecs::QueryGroupB& group = queryRegistry.GetGroupB(queryId);
-	CHECK(group.GetCount() == 2);
+	{
+		const ecs::QueryGroupB& group = queryRegistry.GetGroupB(queryId);
+		CHECK(group.GetCount() == 1);
+	}
 }
 
-CLASS_TEST_CASE("Include query with multiple components.")
+CLASS_TEST_CASE("Table is unregistered with Query when it is destroyed.")
 {
-	using Query = ecs::query::Include<ComponentA, ComponentB>;
+	using Query = ecs::query::Include<ComponentA>;
 	static const ecs::QueryId queryId = ecs::QueryProxy<Query>::Id();
 
 	ecs::EntityBuffer entityBuffer;
@@ -364,20 +366,23 @@ CLASS_TEST_CASE("Include query with multiple components.")
 	ecs::QueryRegistry queryRegistry;
 	ecs::EntityStorage2 entityStorage(queryRegistry, typeRegistry);
 	typeRegistry.RegisterComponent<ComponentA>();
-	typeRegistry.RegisterComponent<ComponentB>();
 	entityBuffer.RegisterComponent<ComponentA>();
-	entityBuffer.RegisterComponent<ComponentB>();
 	queryRegistry.Initialise();
 
-	ecs::Entity entityA = entityBuffer.CreateEntity();
-	ecs::Entity entityB = entityBuffer.CreateEntity();
-	ecs::Entity entityC = entityBuffer.CreateEntity();
-	entityBuffer.AddComponent<ComponentA>(entityA);
-	entityBuffer.AddComponent<ComponentB>(entityA);
-	entityBuffer.AddComponent<ComponentA>(entityB);
-	entityBuffer.AddComponent<ComponentB>(entityC);
+	ecs::Entity entity = entityBuffer.CreateEntity();
+	entityBuffer.AddComponent<ComponentA>(entity);
 	entityStorage.FlushChanges(entityBuffer);
 
-	const ecs::QueryGroupB& group = queryRegistry.GetGroupB(queryId);
-	CHECK(group.GetCount() == 1);
+	{
+		const ecs::QueryGroupB& group = queryRegistry.GetGroupB(queryId);
+		REQUIRE(group.GetCount() == 1);
+	}
+
+	entityBuffer.DestroyEntity(entity);
+	entityStorage.FlushChanges(entityBuffer);
+
+	{
+		const ecs::QueryGroupB& group = queryRegistry.GetGroupB(queryId);
+		CHECK(group.GetCount() == 0);
+	}
 }
