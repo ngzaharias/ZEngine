@@ -12,7 +12,6 @@ namespace
 {
 	struct ComponentA final : public ecs::Component {};
 	struct ComponentB final : public ecs::Component {};
-	struct ComponentC final : public ecs::Component {};
 
 	struct TComponentA final : public ecs::StaticComponent {};
 	struct TComponentB final : public ecs::StaticComponent {};
@@ -52,13 +51,14 @@ CLASS_TEST_CASE("CreateEntity.")
 {
 	ecs::TypeRegistry registry;
 	ecs::EntityWorld entityWorld(registry);
-	ecs::WorldView world = entityWorld.WorldView<ecs::WorldView>();
+	entityWorld.Initialise();
 
-	CHECK(world.CreateEntity() == ecs::Entity(1));
-	CHECK(world.CreateEntity() == ecs::Entity(2));
-	CHECK(world.CreateEntity() == ecs::Entity(3));
-	CHECK(world.CreateEntity() == ecs::Entity(4));
-	CHECK(world.CreateEntity() == ecs::Entity(5));
+	ecs::WorldView worldView = entityWorld.WorldView<ecs::WorldView>();
+	CHECK(worldView.CreateEntity() == ecs::Entity(1));
+	CHECK(worldView.CreateEntity() == ecs::Entity(2));
+	CHECK(worldView.CreateEntity() == ecs::Entity(3));
+	CHECK(worldView.CreateEntity() == ecs::Entity(4));
+	CHECK(worldView.CreateEntity() == ecs::Entity(5));
 }
 
 CLASS_TEST_CASE("DestroyEntity.")
@@ -67,8 +67,9 @@ CLASS_TEST_CASE("DestroyEntity.")
 
 	ecs::TypeRegistry registry;
 	ecs::EntityWorld entityWorld(registry);
-	WorldView worldView = entityWorld.WorldView<WorldView>();
+	entityWorld.Initialise();
 
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 	ecs::Entity entity = worldView.CreateEntity();
 	entityWorld.Update({});
 
@@ -103,8 +104,9 @@ CLASS_TEST_CASE("IsAlive.")
 
 	ecs::TypeRegistry registry;
 	ecs::EntityWorld entityWorld(registry);
-	WorldView worldView = entityWorld.WorldView<WorldView>();
+	entityWorld.Initialise();
 
+	WorldView worldView = entityWorld.WorldView<WorldView>();
 	ecs::Entity entity;
 	CHECK(!worldView.IsAlive(entity));
 	entity = worldView.CreateEntity();
@@ -124,6 +126,7 @@ CLASS_TEST_CASE("AddComponent.")
 
 	RAIIHelper raii;
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+
 	WorldView worldView = entityWorld.WorldView<WorldView>();
 	ecs::Entity entity = worldView.CreateEntity();
 
@@ -349,7 +352,7 @@ CLASS_TEST_CASE("Updated Query isn't triggered when using ReadComponent.")
 	CHECK(worldView.Count<ecs::query::Updated<ComponentA, ComponentB>>() == 0);
 }
 
-CLASS_TEST_CASE("Updated Query isn't triggered when using WriteComponent.")
+CLASS_TEST_CASE("Updated Query is triggered when using WriteComponent.")
 {
 	using WorldView = ecs::WorldView
 		::Write<ComponentA, ComponentB>;
@@ -401,8 +404,23 @@ CLASS_TEST_CASE("Components that are added to an entity are present in the inclu
 	CHECK(worldView.Count<ecs::query::Include<ComponentA>>() == 2);
 	CHECK(worldView.Count<ecs::query::Include<ComponentB>>() == 2);
 	CHECK(worldView.Count<ecs::query::Include<ComponentA, ComponentB>>() == 1);
+}
 
-	// Query is cleared when component is removed.
+CLASS_TEST_CASE("Components that are removed from an entity aren't present in the include query.")
+{
+	using WorldView = ecs::WorldView
+		::Write<ComponentA, ComponentB>;
+
+	RAIIHelper raii;
+	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
+	WorldView worldView = entityWorld.WorldView<WorldView>();
+
+	worldView.AddComponent<ComponentA>(raii.m_EntityA);
+	worldView.AddComponent<ComponentB>(raii.m_EntityB);
+	worldView.AddComponent<ComponentA>(raii.m_EntityC);
+	worldView.AddComponent<ComponentB>(raii.m_EntityC);
+	entityWorld.Update({});
+
 	worldView.RemoveComponent<ComponentA>(raii.m_EntityA);
 	worldView.RemoveComponent<ComponentB>(raii.m_EntityB);
 	worldView.RemoveComponent<ComponentA>(raii.m_EntityC);
@@ -423,12 +441,10 @@ CLASS_TEST_CASE("Components that are removed from an entity are present in the e
 	ecs::EntityWorld& entityWorld = raii.m_EntityWorld;
 	WorldView worldView = entityWorld.WorldView<WorldView>();
 
-	// #note: component component count towards being excluded
 	CHECK(worldView.Count<ecs::query::Exclude<ComponentA>>() == 4);
 	CHECK(worldView.Count<ecs::query::Exclude<ComponentB>>() == 4);
 	CHECK(worldView.Count<ecs::query::Exclude<ComponentA, ComponentB>>() == 4);
 
-	// Query is cleared when component is added.
 	worldView.AddComponent<ComponentA>(raii.m_EntityA);
 	worldView.AddComponent<ComponentB>(raii.m_EntityB);
 	worldView.AddComponent<ComponentA>(raii.m_EntityC);
@@ -455,8 +471,10 @@ CLASS_TEST_CASE("Components that are added and its entity is destroyed in the sa
 
 	CHECK(worldView.Count<ecs::query::Added<ComponentA>>() == 0);
 	CHECK(worldView.Count<ecs::query::Removed<ComponentA>>() == 0);
+	CHECK(worldView.Count<ecs::query::Include<ComponentA>>() == 0);
 	CHECK(worldView.Count<ecs::query::Condition<ecs::Dead>::Added<ComponentA>>() == 0);
 	CHECK(worldView.Count<ecs::query::Condition<ecs::Dead>::Removed<ComponentA>>() == 1);
+	CHECK(worldView.Count<ecs::query::Condition<ecs::Dead>::Include<ComponentA>>() == 0);
 }
 
 CLASS_TEST_CASE("Components that are updated and removed in the same frame are only present in the removed query.")
@@ -478,6 +496,7 @@ CLASS_TEST_CASE("Components that are updated and removed in the same frame are o
 
 	CHECK(worldView.Count<ecs::query::Updated<ComponentA>>() == 0);
 	CHECK(worldView.Count<ecs::query::Removed<ComponentA>>() == 1);
+	CHECK(worldView.Count<ecs::query::Include<ComponentA>>() == 0);
 }
 
 CLASS_TEST_CASE("Components that are updated the frame after a component was removed isn't present in the updated query.")
@@ -494,8 +513,6 @@ CLASS_TEST_CASE("Components that are updated the frame after a component was rem
 
 	worldView.RemoveComponent<ComponentA>(raii.m_EntityA);
 	entityWorld.Update({});
-
-	worldView.WriteComponent<ComponentA>(raii.m_EntityA, false);
 	entityWorld.Update({});
 
 	CHECK(worldView.Count<ecs::query::Updated<ComponentA>>() == 0);
@@ -520,8 +537,10 @@ CLASS_TEST_CASE("Components that are updated and its entity is destroyed in the 
 
 	CHECK(worldView.Count<ecs::query::Updated<ComponentA>>() == 0);
 	CHECK(worldView.Count<ecs::query::Removed<ComponentA>>() == 0);
+	CHECK(worldView.Count<ecs::query::Include<ComponentA>>() == 0);
 	CHECK(worldView.Count<ecs::query::Condition<ecs::Dead>::Updated<ComponentA>>() == 0);
 	CHECK(worldView.Count<ecs::query::Condition<ecs::Dead>::Removed<ComponentA>>() == 1);
+	CHECK(worldView.Count<ecs::query::Condition<ecs::Dead>::Include<ComponentA>>() == 0);
 }
 
 CLASS_TEST_CASE("Components that are updated the frame after an entity is destroyed aren't present in the updated query.")
@@ -538,8 +557,6 @@ CLASS_TEST_CASE("Components that are updated the frame after an entity is destro
 
 	worldView.DestroyEntity(raii.m_EntityA);
 	entityWorld.Update({});
-
-	worldView.WriteComponent<ComponentA>(raii.m_EntityA, false);
 	entityWorld.Update({});
 
 	CHECK(worldView.Count<ecs::query::Updated<ComponentA>>() == 0);
