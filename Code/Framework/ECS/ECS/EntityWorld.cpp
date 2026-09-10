@@ -5,18 +5,24 @@
 #include "ECS/System.h"
 
 ecs::EntityWorld::EntityWorld(ecs::TypeRegistry& typeRegistry)
-	: m_TypeRegistry(typeRegistry)
+	: m_EntityBuffer()
 	, m_EntityStorage(m_QueryRegistry)
+	, m_EntityStorage2(m_QueryRegistry, typeRegistry)
 	, m_EventStorage()
+	, m_TypeRegistry(typeRegistry)
 	, m_QueryRegistry()
 	, m_ResourceRegistry()
 	, m_SystemRegistry()
 {
+	m_StaticEntity = CreateEntity();
 }
 
 void ecs::EntityWorld::Initialise()
 {
 	PROFILE_FUNCTION();
+
+	// flush static components
+	m_EntityStorage2.FlushChanges(m_EntityBuffer);
 
 	RegisterComponent<ecs::NameComponent>();
 
@@ -25,7 +31,7 @@ void ecs::EntityWorld::Initialise()
 	//Z_LOG(ELog::Debug, "{}", LogUpdateOrder());
 
 	// flush the initialise
-	m_EntityStorage.FlushChanges();
+	m_EntityStorage2.FlushChanges(m_EntityBuffer);
 }
 
 void ecs::EntityWorld::Shutdown()
@@ -41,7 +47,7 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 
 	m_SystemRegistry.Update(*this, gameTime);
 
-	m_EntityStorage.FlushChanges();
+	m_EntityStorage2.FlushChanges(m_EntityBuffer);
 	m_EventStorage.FlushChanges();
 }
 

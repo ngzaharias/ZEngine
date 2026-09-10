@@ -2,7 +2,7 @@
 
 #include "Core/Map.h"
 #include "ECS/Component.h"
-#include "ECS/EntityStorage.h"
+#include "ECS/EntityStorage2.h"
 #include "ECS/EventStorage.h"
 #include "ECS/IsReplicated.h"
 #include "ECS/QueryRegistry.h"
@@ -63,36 +63,36 @@ namespace ecs
 		void RemoveComponent(const ecs::Entity& entity);
 
 		template<typename TComponent>
-		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
+		bool HasComponent(const ecs::Entity& entity) const;
 
 		template<typename TComponent>
-		auto ReadComponent(const ecs::Entity& entity, const bool alive = true) -> const TComponent&;
+		auto ReadComponent(const ecs::Entity& entity) -> const TComponent&;
 
 		template<typename TComponent>
-		auto WriteComponent(const ecs::Entity& entity, const bool alive = true) -> TComponent&;
+		auto WriteComponent(const ecs::Entity& entity) -> TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Solo/Static Component
 
 		template<typename TComponent, typename... TArgs>
-		requires ecs::IsSoloOrStaticComponent<TComponent>
+		requires ecs::IsSoloComponent<TComponent>
 		auto AddComponent(TArgs&&... args) -> TComponent&;
 
 		template<typename TComponent>
-		requires ecs::IsSoloOrStaticComponent<TComponent>
+		requires ecs::IsSoloComponent<TComponent>
 		void RemoveComponent();
 
 		template<typename TComponent>
-		requires ecs::IsSoloOrStaticComponent<TComponent>
-		bool HasComponent(const bool alive = true) const;
+		requires ecs::IsSoloComponent<TComponent>
+		bool HasComponent() const;
 
 		template<typename TComponent>
 		requires ecs::IsSoloOrStaticComponent<TComponent>
-		auto ReadComponent(const bool alive = true) -> const TComponent&;
+		auto ReadComponent() -> const TComponent&;
 
 		template<typename TComponent>
 		requires ecs::IsSoloOrStaticComponent<TComponent>
-		auto WriteComponent(const bool alive = true)->TComponent&;
+		auto WriteComponent()->TComponent&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event
@@ -151,10 +151,13 @@ namespace ecs
 		auto TryComponentsForView(const ecs::Entity& entity) const->std::tuple<TComponents*...>;
 
 	public:
-		ecs::TypeRegistry& m_TypeRegistry;
+		ecs::Entity m_StaticEntity = {};
+		ecs::EntityBuffer m_EntityBuffer;
 		ecs::EntityStorage m_EntityStorage;
+		ecs::EntityStorage2 m_EntityStorage2;
 		ecs::EventStorage m_EventStorage;
 
+		ecs::TypeRegistry& m_TypeRegistry;
 		ecs::QueryRegistry m_QueryRegistry;
 		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
