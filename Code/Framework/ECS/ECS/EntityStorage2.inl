@@ -34,8 +34,7 @@ auto ecs::EntityStorage2::TryComponent(const ecs::Entity& entity) -> TComponent*
 	ecs::EntityTable& table = m_Tables[tableIndex];
 
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	auto* component = table.TryComponent(entity, componentId);
-	return component
-		? *static_cast<TComponent*>(component)
-		: nullptr;
+	if (auto* component = table.TryComponent(entity, componentId))
+		return reinterpret_cast<TComponent*>(component);
+	return nullptr;
 }

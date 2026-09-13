@@ -314,14 +314,14 @@ auto ecs::EntityWorld::GetSystem() -> TSystem&
 // EntityView
 
 template<typename TComponent>
-auto ecs::EntityWorld::GetComponentForView(const ecs::Entity& entity) const -> TComponent*
+auto ecs::EntityWorld::GetComponentForView(const ecs::Entity& entity) -> TComponent*
 {
 	using NonConst = std::remove_const<TComponent>::type;
 	return &m_EntityStorage2.GetComponent<NonConst>(entity);
 }
 
 template<typename...TComponents>
-auto ecs::EntityWorld::GetComponentsForView(const ecs::Entity& entity) const -> std::tuple<TComponents*...>
+auto ecs::EntityWorld::GetComponentsForView(const ecs::Entity& entity) -> std::tuple<TComponents*...>
 {
 	std::tuple<TComponents*...> components;
 	((std::get<TComponents*>(components) = GetComponentForView<TComponents>(entity)), ...);
@@ -329,14 +329,14 @@ auto ecs::EntityWorld::GetComponentsForView(const ecs::Entity& entity) const -> 
 }
 
 template<typename TComponent>
-auto ecs::EntityWorld::TryComponentForView(const ecs::Entity& entity) const -> TComponent*
+auto ecs::EntityWorld::TryComponentForView(const ecs::Entity& entity) -> TComponent*
 {
 	using NonConst = std::remove_const<TComponent>::type;
 	return m_EntityStorage2.TryComponent<NonConst>(entity);
 }
 
 template<typename...TComponents>
-auto ecs::EntityWorld::TryComponentsForView(const ecs::Entity& entity) const -> std::tuple<TComponents*...>
+auto ecs::EntityWorld::TryComponentsForView(const ecs::Entity& entity) -> std::tuple<TComponents*...>
 {
 	std::tuple<TComponents*...> components;
 	((std::get<TComponents*>(components) = TryComponentForView<TComponents>(entity)), ...);
