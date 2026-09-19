@@ -39,15 +39,15 @@ namespace ecs
 
 		auto begin()
 		{
-			return QueryIterator<TQuery>{ std::begin(m_Data), m_World };
+			return QueryIterator<TQuery>{ m_World, std::begin(m_Data), std::end(m_Data) };
 		}
 
 		auto end()
 		{
-			return QueryIterator<TQuery>{ std::end(m_Data), m_World };
+			return QueryIterator<TQuery>{ m_World, std::end(m_Data), std::end(m_Data)};
 		}
 
 		ecs::EntityWorld& m_World;
-		const ecs::QueryGroup& m_Data;
+		const ecs::QueryGroupB& m_Data;
 	};
 }

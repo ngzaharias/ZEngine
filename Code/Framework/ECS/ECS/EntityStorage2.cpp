@@ -114,7 +114,14 @@ void ecs::EntityStorage2::FlushChanges(ecs::EntityBuffer& entityBuffer)
 			{
 				char* sourceData = storage->GetComponent(entity);
 				char* targetData = GetComponent(entity, componentId);
-				memcpy(targetData, sourceData, componentInfo.m_Bytes);
+				if (componentInfo.m_Copystructor)
+				{
+					componentInfo.m_Copystructor(sourceData, targetData);
+				}
+				else
+				{
+					memcpy(targetData, sourceData, componentInfo.m_Bytes);
+				}
 			}
 			storage->RemoveAll();
 		}

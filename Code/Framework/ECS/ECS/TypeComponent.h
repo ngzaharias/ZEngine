@@ -30,6 +30,8 @@ namespace ecs
 		bool m_IsReplicated = false;
 		bool m_IsTemplate = false;
 
+		using Copystructor = void(void*, void*);
+		Copystructor* m_Copystructor = nullptr;
 		using Destructor = void(void*);
 		Destructor* m_Destructor = nullptr;
 

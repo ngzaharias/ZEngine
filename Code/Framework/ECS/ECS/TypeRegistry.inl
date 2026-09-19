@@ -19,6 +19,7 @@ void ecs::TypeRegistry::RegisterComponent()
 	info.m_LocalId = localId;
 
 	ecs::TypeComponent& entry = m_ComponentMap[localId];
+	entry.m_Name = NAME(info.m_Name);
 	entry.m_Bytes = sizeof(TComponent);
 	entry.m_GlobalId = globalId;
 	entry.m_LocalId = localId;
@@ -31,8 +32,10 @@ void ecs::TypeRegistry::RegisterComponent()
 	entry.m_IsReplicated = isReplicated;
 	entry.m_IsTemplate = isTemplate;
 
+	if constexpr (!std::is_trivially_copyable<TComponent>::value)
+		entry.m_Copystructor = &Copystructor<TComponent>;
 	if constexpr (!std::is_trivially_destructible<TComponent>::value)
-		entry.m_Destructor = [](void* data) { reinterpret_cast<TComponent*>(data)->~TComponent(); };
+		entry.m_Destructor = &Destructor<TComponent>;
 
 	entry.m_HasSolo = &HasComponentSolo<TComponent>;
 	entry.m_AddSolo = &AddComponentSolo<TComponent>;
@@ -46,6 +49,18 @@ void ecs::TypeRegistry::RegisterComponent()
 		entry.m_ReadData = &ReadComponentData<TComponent>;
 		entry.m_WriteData = &WriteComponentData<TComponent>;
 	}
+}
+
+template<typename TComponent>
+void ecs::TypeRegistry::Copystructor(void* source, void* target)
+{
+	new (target) TComponent(*static_cast<const TComponent*>(source));
+}
+
+template<typename TComponent>
+void ecs::TypeRegistry::Destructor(void* component)
+{
+	static_cast<TComponent*>(component)->~TComponent();
 }
 
 template<typename TComponent>
