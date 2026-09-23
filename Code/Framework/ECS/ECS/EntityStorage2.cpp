@@ -95,9 +95,9 @@ void ecs::EntityStorage2::FlushChanges(ecs::EntityBuffer& entityBuffer)
 				else
 				{
 					targetLayout.m_AddedMask = changes.m_Added;
+					targetLayout.m_RemovedMask = changes.m_Removed;
 					targetLayout.m_IncludeMask.Raise(changes.m_Added);
 					targetLayout.m_IncludeMask.Clear(changes.m_Removed);
-					targetLayout.m_RemovedMask.Raise(changes.m_Removed);
 				}
 				targetLayout.m_IsDead = changes.m_IsDestroy;
 
