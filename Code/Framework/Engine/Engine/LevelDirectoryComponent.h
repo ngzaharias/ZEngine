@@ -10,6 +10,6 @@ namespace eng::level
 	/// \brief Contains every available level that can be loaded.
 	struct DirectoryComponent final : public ecs::StaticComponent
 	{
-		Map<str::Name, str::Path> m_Levels;
+		Map<str::Name, str::Path> m_Levels = {};
 	};
 }
