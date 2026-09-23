@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/TypeList.h"
 #include "ECS/EntityTable.h"
 #include "ECS/EntityView.h"
 #include "ECS/QueryRegistry.h"
@@ -11,8 +12,11 @@ namespace ecs
 	template<typename TQuery>
 	struct QueryIterator
 	{
+		using Removed = ecs::query::RemovedAccess<TQuery>::NonConst;
 		using Updated = ecs::query::UpdatedAccess<TQuery>::NonConst;
-		using Required = ecs::query::IncludeAccess<TQuery>::NonConst;
+		using Include = ecs::query::IncludeAccess<TQuery>::NonConst;
+
+		using Required = TypeMerge<Include, Removed>::TypeList;
 		using Optional = ecs::query::OptionalAccess<TQuery>::NonConst;
 
 		using EntityView = ecs::EntityView_t<Required, Optional>;
