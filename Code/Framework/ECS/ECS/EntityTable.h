@@ -21,6 +21,12 @@ namespace ecs
 	class EntityTable
 	{
 	public:
+		using PageArray = Array<ecs::EntityPage>;
+		using EntityToPage = Map<ecs::Entity, int32>;
+		using EntityToMask = Map<ecs::Entity, ecs::ComponentMask>;
+		using ComponentToLayout = Map<ecs::ComponentId, ecs::ComponentLayout>;
+
+	public:
 		// Allocates memory for a new page and appends it.
 		auto AppendPage() -> ecs::EntityPage&;
 
@@ -59,17 +65,17 @@ namespace ecs
 		// Layout of all the components in the table and if it is for alive/dead entities.
 		ecs::EntityLayout m_EntityLayout = {};
 		// Maps a component id to its layout in entity data.
-		Map<ecs::ComponentId, ecs::ComponentLayout> m_ComponentMap = {};
+		ComponentToLayout m_ComponentMap = {};
 
 		// Number of entities in the table.
 		int32 m_EntityCount = 0;
 		// Size in bytes of all components on a single entity.
 		int32 m_EntitySize = 0;
 		// Array of pages that hold the components for each entity.
-		Array<ecs::EntityPage> m_EntityPages = {};
+		PageArray m_EntityPages = {};
 		// Maps an entity to its index within the pages.
-		Map<ecs::Entity, int32> m_EntityMap = {};
+		EntityToPage m_EntityMap = {};
 		// Map of entities that had at least 1 component updated.
-		Map<ecs::Entity, ecs::ComponentMask> m_UpdateMap = {};
+		EntityToMask m_UpdatedMap = {};
 	};
 }

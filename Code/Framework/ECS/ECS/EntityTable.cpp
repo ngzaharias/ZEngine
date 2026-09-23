@@ -43,7 +43,7 @@ void ecs::EntityTable::RemoveAllPages()
 		delete[] entityPage.m_Data;
 	m_EntityPages.RemoveAll();
 	m_EntityMap.RemoveAll();
-	m_UpdateMap.RemoveAll();
+	m_UpdatedMap.RemoveAll();
 
 	m_EntityCount = 0;
 }
@@ -53,15 +53,13 @@ void ecs::EntityTable::DestructAllPages(const ecs::ComponentMask& componentMask)
 	for (const ecs::ComponentId& componentId : componentMask)
 	{
 		const ecs::ComponentLayout& componentLayout = m_ComponentMap.Get(componentId);
-		if (!componentLayout.m_Destructor)
-			continue;
-
 		for (ecs::EntityPage& entityPage : m_EntityPages)
 		{
 			for (int32 entityIndex = 0; entityIndex < m_EntityCount; ++entityIndex)
 			{
-				const int32 offset = m_EntitySize * componentId;
-				componentLayout.m_Destructor(entityPage.m_Data + offset);
+				const int32 entityOffset = ToOffset(entityIndex, m_EntitySize);
+				const int32 componentOffset = componentLayout.m_Offset;
+				componentLayout.m_Destructor(entityPage.m_Data + entityOffset + componentOffset);
 			}
 		}
 	}
@@ -93,7 +91,7 @@ void ecs::EntityTable::DestructEntity(const ecs::Entity& entity, const ecs::Comp
 		if (!componentLayout.m_Destructor)
 			continue;
 
-		const int32 componentOffset = m_EntitySize * componentId;
+		const int32 componentOffset = componentLayout.m_Offset;
 		componentLayout.m_Destructor(entityPage.m_Data + entityOffset + componentOffset);
 	}
 }
@@ -115,7 +113,16 @@ void ecs::EntityTable::RemoveEntity(const ecs::Entity& entity)
 		ecs::EntityPage& entityPageB = m_EntityPages[pageIndexB];
 		char* entityDataA = &entityPageA.m_Data[entityOffsetA];
 		char* entityDataB = &entityPageB.m_Data[entityOffsetB];
+		// #note: this should work because we're not de-constructing any components when we do the swap
 		memcpy(entityDataB, entityDataA, m_EntitySize);
+
+		// #todo: if there is corruption, copy each component individually
+		//for (const auto& [componentId, componentLayout] : m_ComponentMap)
+		//{
+		//	char* sourceComponent = &entityDataA[componentLayout.m_Offset];
+		//	char* targetComponent = &entityDataB[componentLayout.m_Offset];
+		//	componentLayout.m_Copystructor(sourceComponent, targetComponent);
+		//}
 	}
 
 	m_EntityMap.Remove(entity);

@@ -12,6 +12,14 @@ namespace ecs
 {
 	struct EntityLayout
 	{
+		bool operator==(const ecs::EntityLayout& rhs) const
+		{
+			return m_IsDead      == rhs.m_IsDead
+				&& m_AddedMask   == rhs.m_AddedMask
+				&& m_IncludeMask == rhs.m_IncludeMask
+				&& m_RemovedMask == rhs.m_RemovedMask;
+		}
+
 		bool operator<(const ecs::EntityLayout& rhs) const
 		{
 			return (m_AddedMask != rhs.m_AddedMask)

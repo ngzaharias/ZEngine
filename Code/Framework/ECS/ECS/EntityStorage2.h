@@ -47,7 +47,7 @@ namespace ecs
 		template<class TComponent>
 		auto TryComponent(const ecs::Entity& entity) -> TComponent*;
 
-	private:
+	public:
 		void CreateTable(const ecs::EntityLayout& tableLayout);
 		void DestroyTable(const int32 index);
 		void DestroyTable(const ecs::EntityLayout& tableLayout);
@@ -61,7 +61,8 @@ namespace ecs
 		auto GetOrCreateTable(const ecs::EntityLayout& tableLayout) -> ecs::EntityTable&;
 
 		void CreateEntity(const ecs::Entity& entity, const ecs::ComponentMask& componentMask);
-		void UpdateEntity(const ecs::Entity& entity, const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout);
+		void MoveEntity(const ecs::Entity& entity, const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout);
+		void UpdateEntity(const ecs::Entity& entity, const ecs::ComponentMask& componentMask);
 
 		auto GetComponent(const ecs::Entity& entity, const ecs::ComponentId& componentId) -> char*;
 

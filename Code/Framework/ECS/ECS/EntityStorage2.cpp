@@ -26,13 +26,15 @@ ecs::EntityStorage2::EntityStorage2(ecs::QueryRegistry& queryRegistry, const ecs
 
 void ecs::EntityStorage2::FlushChanges(ecs::EntityBuffer& entityBuffer)
 {
+	PROFILE_FUNCTION();
+
 	{
 		PROFILE_CUSTOM("Update previous tables.");
 		const int32 count = m_Tables.GetCount();
 		for (int32 i = count - 1; i >= 0; --i)
 		{
 			ecs::EntityTable& table = m_Tables[i];
-			table.m_UpdateMap.RemoveAll();
+			table.m_UpdatedMap.RemoveAll();
 
 			const ecs::EntityLayout sourceLayout = table.m_EntityLayout;
 			const bool hasAdded = sourceLayout.m_AddedMask.HasAny();
@@ -99,7 +101,8 @@ void ecs::EntityStorage2::FlushChanges(ecs::EntityBuffer& entityBuffer)
 				}
 				targetLayout.m_IsDead = changes.m_IsDestroy;
 
-				UpdateEntity(entity, sourceLayout, targetLayout);
+				MoveEntity(entity, sourceLayout, targetLayout);
+				UpdateEntity(entity, changes.m_Updated);
 			}
 		}
 		entityBuffer.m_EntityChanges.RemoveAll();
@@ -109,20 +112,17 @@ void ecs::EntityStorage2::FlushChanges(ecs::EntityBuffer& entityBuffer)
 		PROFILE_CUSTOM("Copy components to tables.");
 		for (auto&& [componentId, storage] : entityBuffer.m_Components)
 		{
-			const ecs::TypeComponent componentInfo = m_TypeRegistry.GetComponentInfo(componentId);
+			if (storage->GetCount() == 0)
+				continue;
+
+			const ecs::TypeComponent& componentInfo = m_TypeRegistry.GetComponentInfo(componentId);
 			for (const ecs::Entity& entity : storage->GetEntities())
 			{
 				char* sourceData = storage->GetComponent(entity);
 				char* targetData = GetComponent(entity, componentId);
-				if (componentInfo.m_Copystructor)
-				{
-					componentInfo.m_Copystructor(sourceData, targetData);
-				}
-				else
-				{
-					memcpy(targetData, sourceData, componentInfo.m_Bytes);
-				}
+				componentInfo.m_Copystructor(sourceData, targetData);
 			}
+
 			storage->RemoveAll();
 		}
 	}
@@ -176,9 +176,12 @@ void ecs::EntityStorage2::CreateTable(const ecs::EntityLayout& tableLayout)
 		const ecs::TypeComponent& componentType = m_TypeRegistry.GetComponentInfo(componentId);
 
 		ecs::ComponentLayout& layout = table.m_ComponentMap[componentId];
-		layout.m_Destructor = componentType.m_Destructor;
+		layout.m_Name = componentType.m_Name;
 		layout.m_Offset = table.m_EntitySize;
 		layout.m_Bytes = componentType.m_Bytes;
+		layout.m_Constructor = componentType.m_Constructor;
+		layout.m_Copystructor = componentType.m_Copystructor;
+		layout.m_Destructor = componentType.m_Destructor;
 
 		// do last
 		table.m_EntitySize += componentType.m_Bytes;
@@ -228,7 +231,7 @@ void ecs::EntityStorage2::MoveTable(const ecs::EntityLayout& sourceLayout, const
 
 			char* sourceComponent = &sourceData[sourceLayout.m_Offset];
 			char* targetComponent = &targetData[targetLayout.m_Offset];
-			memcpy(targetComponent, sourceComponent, sourceLayout.m_Bytes);
+			targetLayout.m_Copystructor(sourceComponent, targetComponent);
 		}
 
 		// #todo: different way to fetch table index
@@ -299,40 +302,49 @@ void ecs::EntityStorage2::CreateEntity(const ecs::Entity& entity, const ecs::Com
 	m_EntityMap[entity] = m_GuidMap.Get(table.m_TableId);
 }
 
-void ecs::EntityStorage2::UpdateEntity(const ecs::Entity& entity, const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout)
+void ecs::EntityStorage2::MoveEntity(const ecs::Entity& entity, const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout)
 {
-	// #edge-case: target table first else you'll invalidate the source table if the target needs to be created
-	ecs::EntityTable& targetTable = GetOrCreateTable(targetLayout);
-	ecs::EntityTable& sourceTable = GetTable(sourceLayout);
-
-	targetTable.AppendEntity(entity);
-
-	// move components
+	if (sourceLayout != targetLayout)
 	{
-		char* sourceData = sourceTable.GetEntityData(entity);
-		char* targetData = targetTable.GetEntityData(entity);
-		auto& sourceMap = sourceTable.m_ComponentMap;
-		auto& targetMap = targetTable.m_ComponentMap;
+		// #edge-case: target table first else you'll invalidate the source table if the target needs to be created
+		ecs::EntityTable& targetTable = GetOrCreateTable(targetLayout);
+		ecs::EntityTable& sourceTable = GetTable(sourceLayout);
 
-		const ecs::ComponentMask componentMask = 
-			sourceTable.m_EntityLayout.GetMask() & 
-			targetTable.m_EntityLayout.GetMask();
-		for (const ecs::ComponentId& componentId : componentMask)
+		targetTable.AppendEntity(entity);
+
+		// move components
 		{
-			const ecs::ComponentLayout& sourceLayout = sourceMap.Get(componentId);
-			const ecs::ComponentLayout& targetLayout = targetMap.Get(componentId);
-			Z_PANIC(sourceLayout.m_Bytes == targetLayout.m_Bytes, "Component size mismatch!");
+			char* sourceData = sourceTable.GetEntityData(entity);
+			char* targetData = targetTable.GetEntityData(entity);
+			auto& sourceMap = sourceTable.m_ComponentMap;
+			auto& targetMap = targetTable.m_ComponentMap;
 
-			char* sourceComponent = &sourceData[sourceLayout.m_Offset];
-			char* targetComponent = &targetData[targetLayout.m_Offset];
-			memcpy(targetComponent, sourceComponent, sourceLayout.m_Bytes);
+			const ecs::ComponentMask componentMask =
+				sourceTable.m_EntityLayout.GetMask() &
+				targetTable.m_EntityLayout.GetMask();
+			for (const ecs::ComponentId& componentId : componentMask)
+			{
+				const ecs::ComponentLayout& sourceLayout = sourceMap.Get(componentId);
+				const ecs::ComponentLayout& targetLayout = targetMap.Get(componentId);
+				Z_PANIC(sourceLayout.m_Bytes == targetLayout.m_Bytes, "Component size mismatch!");
+
+				char* sourceComponent = &sourceData[sourceLayout.m_Offset];
+				char* targetComponent = &targetData[targetLayout.m_Offset];
+				targetLayout.m_Copystructor(sourceComponent, targetComponent);
+			}
 		}
+
+		sourceTable.RemoveEntity(entity);
+
+		// #todo: different way to fetch table index
+		m_EntityMap[entity] = m_GuidMap.Get(targetTable.m_TableId);
 	}
+}
 
-	sourceTable.RemoveEntity(entity);
-
-	// #todo: different way to fetch table index
-	m_EntityMap[entity] = m_GuidMap.Get(targetTable.m_TableId);
+void ecs::EntityStorage2::UpdateEntity(const ecs::Entity& entity, const ecs::ComponentMask& componentMask)
+{
+	ecs::EntityTable& table = GetTable(entity);
+	table.m_UpdatedMap.Set(entity, componentMask);
 }
 
 auto ecs::EntityStorage2::GetComponent(const ecs::Entity& entity, const ecs::ComponentId& componentId) -> char*
