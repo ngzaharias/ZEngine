@@ -28,10 +28,10 @@ void eng::TemplateManager::WriteEntity(ecs::EntityWorld& world, const ecs::Entit
 {
 	PROFILE_FUNCTION();
 
-	auto& nameComponent = world.HasComponent<ecs::NameComponent>(entity)
+	auto& nameComponent = world.IsAlive(entity) && world.HasComponent<ecs::NameComponent>(entity)
 		? world.WriteComponent<ecs::NameComponent>(entity)
 		: world.AddComponent<ecs::NameComponent>(entity);
-	auto& uuidComponent = world.HasComponent<eng::UUIDComponent>(entity)
+	auto& uuidComponent = world.IsAlive(entity) && world.HasComponent<eng::UUIDComponent>(entity)
 		? world.WriteComponent<eng::UUIDComponent>(entity)
 		: world.AddComponent<eng::UUIDComponent>(entity);
 
