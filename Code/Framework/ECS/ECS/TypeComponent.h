@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Name.h"
 #include "Core/String.h"
 #include "Core/TypeInfo.h"
 #include "ECS/QueryId.h"
@@ -17,6 +18,7 @@ namespace ecs
 {
 	struct TypeComponent
 	{
+		str::Name m_Name = {};
 		uint16 m_Bytes = 0;
 
 		TypeId m_GlobalId = -1;
@@ -30,6 +32,8 @@ namespace ecs
 		bool m_IsReplicated = false;
 		bool m_IsTemplate = false;
 
+		using Constructor = void(void*);
+		Constructor* m_Constructor = nullptr;
 		using Copystructor = void(void*, void*);
 		Copystructor* m_Copystructor = nullptr;
 		using Destructor = void(void*);

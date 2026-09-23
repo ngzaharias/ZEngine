@@ -65,9 +65,11 @@ namespace ecs
 		void WriteComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
 
 		template<typename TComponent>
+		static void Constructor(void* data);
+		template<typename TComponent>
 		static void Copystructor(void* source, void* target);
 		template<typename TComponent>
-		static void Destructor(void* component);
+		static void Destructor(void* data);
 
 		template<typename TComponent>
 		static bool HasComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity);
