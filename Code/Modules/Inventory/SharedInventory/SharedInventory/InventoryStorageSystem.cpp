@@ -266,12 +266,13 @@ void shared::inventory::StorageSystem::ProcessMemberRemoveRequests(World& world)
 
 	// member lifetime is external so we need to listen to it being destroyed
 	using RemovedQuery = ecs::query
-		::Condition<ecs::Dead>
-		::Removed<shared::inventory::MemberComponent>;
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<const shared::inventory::MemberComponent>
+		::Include<const shared::inventory::MemberComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
 		// if storage was also destroyed in the previous frame
-		const auto& memberComponent = world.ReadComponent<shared::inventory::MemberComponent>(view, false);
+		const auto& memberComponent = view.ReadRequired<shared::inventory::MemberComponent>();
 		if (!world.IsAlive(memberComponent.m_Storage))
 			continue;
 

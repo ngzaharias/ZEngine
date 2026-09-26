@@ -137,10 +137,11 @@ void editor::assets::BrowserSystem::Update(World& world, const GameTime& gameTim
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::assets::BrowserComponent>;
+		::Removed<const editor::assets::BrowserComponent>
+		::Include<const editor::assets::BrowserComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		const auto& window = world.ReadComponent<editor::assets::BrowserComponent>(view, false);
+		const auto& window = view.ReadRequired<editor::assets::BrowserComponent>();
 		m_WindowIds.Release(window.m_Identifier);
 	}
 

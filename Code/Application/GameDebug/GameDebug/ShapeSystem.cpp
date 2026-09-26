@@ -187,10 +187,11 @@ void debug::ShapeSystem::Update(World& world, const GameTime& gameTime)
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<debug::ShapeWindowComponent>;
+		::Removed<const debug::ShapeWindowComponent>
+		::Include<const debug::ShapeWindowComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		const auto& window = world.ReadComponent<debug::ShapeWindowComponent>(view, false);
+		const auto& window = view.ReadRequired<debug::ShapeWindowComponent>();
 		m_WindowIds.Release(window.m_Identifier);
 	}
 

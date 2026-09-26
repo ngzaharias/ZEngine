@@ -390,15 +390,6 @@ void editor::sprite::WindowSystem::Update(World& world, const GameTime& gameTime
 		input.AppendLayer(strInput, layer);
 	}
 
-	using RemovedQuery = ecs::query
-		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::sprite::WindowComponent>;
-	if (world.HasAny<RemovedQuery>())
-	{
-		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInput);
-	}
-
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);
 
@@ -419,11 +410,15 @@ void editor::sprite::WindowSystem::Update(World& world, const GameTime& gameTime
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::sprite::WindowComponent>;
+		::Removed<const editor::sprite::WindowComponent>
+		::Include<const editor::sprite::WindowComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		auto& window = world.ReadComponent<editor::sprite::WindowComponent>(view, false);
+		const auto& window = view.ReadRequired<editor::sprite::WindowComponent>();
 		m_WindowIds.Release(window.m_Identifier);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInput);
 	}
 
 	for (auto&& view : world.Query<ecs::query::Include<editor::sprite::WindowComponent>>())

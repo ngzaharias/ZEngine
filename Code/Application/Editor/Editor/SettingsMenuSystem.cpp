@@ -40,10 +40,11 @@ void editor::settings::MenuSystem::Update(World& world, const GameTime& gameTime
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::settings::WindowComponent>;
+		::Removed<const editor::settings::WindowComponent>
+		::Include<const editor::settings::WindowComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		auto& window = world.ReadComponent<editor::settings::WindowComponent>(view, false);
+		const auto& window = view.ReadRequired<editor::settings::WindowComponent>();
 		m_WindowIds.Release(window.m_Identifier);
 	}
 

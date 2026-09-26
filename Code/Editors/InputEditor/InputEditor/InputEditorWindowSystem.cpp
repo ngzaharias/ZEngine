@@ -50,10 +50,11 @@ void editor::input::WindowSystem::Update(World& world, const GameTime& gameTime)
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::input::WindowComponent>;
+		::Removed<const editor::input::WindowComponent>
+		::Include<const editor::input::WindowComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		auto& window = world.ReadComponent<editor::input::WindowComponent>(view, false);
+		const auto& window = view.ReadRequired<editor::input::WindowComponent>();
 		m_WindowIds.Release(window.m_Identifier);
 	}
 

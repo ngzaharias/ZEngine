@@ -118,10 +118,11 @@ void debug::entity::WindowSystem::Update(World& world, const GameTime& gameTime)
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<debug::entity::WindowComponent>;
+		::Removed<const debug::entity::WindowComponent>
+		::Include<const debug::entity::WindowComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		auto& window = world.ReadComponent<debug::entity::WindowComponent>(view, false);
+		const auto& window = world.ReadComponent<debug::entity::WindowComponent>(view);
 		m_WindowIds.Release(window.m_Identifier);
 	}
 

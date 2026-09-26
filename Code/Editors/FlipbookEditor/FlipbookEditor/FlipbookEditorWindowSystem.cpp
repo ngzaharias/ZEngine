@@ -334,10 +334,11 @@ void editor::flipbook::WindowSystem::Update(World& world, const GameTime& gameTi
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::flipbook::WindowComponent>;
+		::Removed<const editor::flipbook::WindowComponent>
+		::Include<const editor::flipbook::WindowComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		const auto& window = world.ReadComponent<editor::flipbook::WindowComponent>(view, false);
+		const auto& window = view.ReadRequired<editor::flipbook::WindowComponent>();
 		m_WindowIds.Release(window.m_Identifier);
 	}
 

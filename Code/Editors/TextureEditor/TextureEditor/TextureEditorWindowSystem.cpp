@@ -236,15 +236,6 @@ void editor::texture::WindowSystem::Update(World& world, const GameTime& gameTim
 		input.AppendLayer(strInput, layer);
 	}
 
-	using RemovedQuery = ecs::query
-		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::texture::WindowComponent>;
-	if (world.HasAny<RemovedQuery>())
-	{
-		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInput);
-	}
-
 	constexpr Vector2f s_DefaultPos = Vector2f(400.f, 200.f);
 	constexpr Vector2f s_DefaultSize = Vector2f(1080, 800.f);
 
@@ -263,11 +254,15 @@ void editor::texture::WindowSystem::Update(World& world, const GameTime& gameTim
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::texture::WindowComponent>;
+		::Removed<const editor::texture::WindowComponent>
+		::Include<const editor::texture::WindowComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		auto& window = world.ReadComponent<editor::texture::WindowComponent>(view, false);
+		const auto& window = view.ReadRequired<editor::texture::WindowComponent>();
 		m_WindowIds.Release(window.m_Identifier);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInput);
 	}
 
 	for (auto&& view : world.Query<ecs::query::Include<editor::texture::WindowComponent>>())

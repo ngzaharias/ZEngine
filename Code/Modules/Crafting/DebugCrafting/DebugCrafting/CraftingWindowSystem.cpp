@@ -50,10 +50,11 @@ void debug::crafting::WindowSystem::Update(World& world, const GameTime& gameTim
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<debug::crafting::WindowComponent>;
+		::Removed<const debug::crafting::WindowComponent>
+		::Include<const debug::crafting::WindowComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		const auto& window = world.ReadComponent<debug::crafting::WindowComponent>(view, false);
+		const auto& window = view.ReadRequired<debug::crafting::WindowComponent>();
 		m_WindowIds.Release(window.m_Identifier);
 	}
 

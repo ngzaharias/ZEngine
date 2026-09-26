@@ -51,10 +51,11 @@ void editor::spellcraft::WindowSystem::Update(World& world, const GameTime& game
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::spellcraft::WindowComponent>;
+		::Removed<const editor::spellcraft::WindowComponent>
+		::Include<const editor::spellcraft::WindowComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		const auto& window = world.ReadComponent<editor::spellcraft::WindowComponent>(view, false);
+		const auto& window = view.ReadRequired<editor::spellcraft::WindowComponent>();
 		m_WindowIds.Release(window.m_Identifier);
 	}
 

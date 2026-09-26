@@ -311,15 +311,6 @@ void editor::entity::InspectorSystem::Update(World& world, const GameTime& gameT
 		input.AppendLayer(strInput, layer);
 	}
 
-	using RemovedQuery = ecs::query
-		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::entity::InspectorComponent>;
-	if (world.HasAny<RemovedQuery>())
-	{
-		auto& input = world.WriteResource<eng::InputManager>();
-		input.RemoveLayer(strInput);
-	}
-
 	for (const auto& request : world.Events<const editor::entity::OpenInspectorEvent>())
 	{
 		const int32 identifier = m_WindowIds.Borrow();
@@ -333,11 +324,15 @@ void editor::entity::InspectorSystem::Update(World& world, const GameTime& gameT
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::entity::InspectorComponent>;
+		::Removed<const editor::entity::InspectorComponent>
+		::Include<const editor::entity::InspectorComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		const auto& window = world.ReadComponent<editor::entity::InspectorComponent>(view, false);
+		const auto& window = view.ReadRequired<editor::entity::InspectorComponent>();
 		m_WindowIds.Release(window.m_Identifier);
+
+		auto& input = world.WriteResource<eng::InputManager>();
+		input.RemoveLayer(strInput);
 	}
 
 	for (auto&& windowView : world.Query<ecs::query::Include<editor::entity::InspectorComponent>>())

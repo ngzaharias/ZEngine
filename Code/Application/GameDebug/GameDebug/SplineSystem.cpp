@@ -140,10 +140,11 @@ void debug::SplineSystem::Update(World& world, const GameTime& gameTime)
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<debug::SplineWindowComponent>;
+		::Removed<const debug::SplineWindowComponent>
+		::Include<const debug::SplineWindowComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		const auto& window = world.ReadComponent<debug::SplineWindowComponent>(view, false);
+		const auto& window = view.ReadRequired<debug::SplineWindowComponent>();
 		m_WindowIds.Release(window.m_Identifier);
 	}
 

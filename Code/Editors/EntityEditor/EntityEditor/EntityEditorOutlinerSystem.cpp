@@ -280,10 +280,11 @@ void editor::entity::OutlinerSystem::Update(World& world, const GameTime& gameTi
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<editor::entity::OutlinerComponent>;
+		::Removed<const editor::entity::OutlinerComponent>
+		::Include<const editor::entity::OutlinerComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		const auto& window = world.ReadComponent<editor::entity::OutlinerComponent>(view, false);
+		const auto& window = view.ReadRequired<editor::entity::OutlinerComponent>();
 		m_WindowIds.Release(window.m_Identifier);
 	}
 
