@@ -31,7 +31,7 @@ void eng::TemplateManager::WriteComponent(ecs::EntityWorld& world, const ecs::En
 	if (!world.IsRegistered<TComponent>())
 		return;
 
-	auto& component = world.IsAlive(entity) && world.HasComponent<TComponent>(entity)
+	auto& component = world.HasComponent<TComponent>(entity)
 		? world.WriteComponent<TComponent>(entity)
 		: world.AddComponent<TComponent>(entity);
 	visitor.Read(component);
