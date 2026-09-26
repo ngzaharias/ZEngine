@@ -54,7 +54,7 @@ void shared::inventory::MemberSystem::ProcessRemoveRequests(World& world)
 
 	for (const StorageChange& data : changesComponent.m_StorageDestroyed)
 	{
-		const auto& storageComponent = world.ReadComponent<shared::inventory::StorageComponent>(data.m_Storage, false);
+		const auto& storageComponent = world.ReadComponent<shared::inventory::StorageComponent>(data.m_Storage);
 		for (const ecs::Entity& memberEntity : storageComponent.m_Members)
 			removeRequests.Add(memberEntity);
 	}
@@ -62,5 +62,4 @@ void shared::inventory::MemberSystem::ProcessRemoveRequests(World& world)
 	// process requests, no safety checks as that indicates an error in the system
 	for (const ecs::Entity& memberEntity : removeRequests)
 		world.RemoveComponent<shared::inventory::MemberComponent>(memberEntity);
-
 }
