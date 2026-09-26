@@ -20,23 +20,23 @@ namespace str
 		};
 
 	public:
-		static Guid Unassigned;
+		static str::Guid Unassigned;
 
-		Guid() { m_Data.m_U64[0] = 0; m_Data.m_U64[1] = 0; }
-		Guid(const uint64 (&value)[2]) { m_Data.m_U64[0] = value[0]; m_Data.m_U64[1] = value[1]; }
+		str::Guid() { m_Data.m_U64[0] = 0; m_Data.m_U64[1] = 0; }
+		str::Guid(const uint64 (&value)[2]) { m_Data.m_U64[0] = value[0]; m_Data.m_U64[1] = value[1]; }
 
 		str::String ToString() const;
 
 		inline bool IsValid() const { return m_Data.m_U64[0] != 0 || m_Data.m_U64[1] != 0; }
 
-		inline bool operator<(Guid const& rhs) const { return m_Data.m_U64[0] < rhs.m_Data.m_U64[0] || (m_Data.m_U64[0] == rhs.m_Data.m_U64[0] && m_Data.m_U64[1] < rhs.m_Data.m_U64[1]); }
-		inline bool operator==(Guid const& rhs) const { return m_Data.m_U64[0] == rhs.m_Data.m_U64[0] && m_Data.m_U64[1] == rhs.m_Data.m_U64[1]; }
-		inline bool operator!=(Guid const& rhs) const { return m_Data.m_U64[0] != rhs.m_Data.m_U64[0] || m_Data.m_U64[1] != rhs.m_Data.m_U64[1]; }
+		inline bool operator<(const str::Guid& rhs) const { return (m_Data.m_U64[0] != rhs.m_Data.m_U64[0]) ? (m_Data.m_U64[0] < rhs.m_Data.m_U64[0]) : (m_Data.m_U64[1] < rhs.m_Data.m_U64[1]); }
+		inline bool operator==(str::Guid const& rhs) const { return m_Data.m_U64[0] == rhs.m_Data.m_U64[0] && m_Data.m_U64[1] == rhs.m_Data.m_U64[1]; }
+		inline bool operator!=(str::Guid const& rhs) const { return m_Data.m_U64[0] != rhs.m_Data.m_U64[0] || m_Data.m_U64[1] != rhs.m_Data.m_U64[1]; }
 
-		static Guid Create(const uint64 value);
-		static Guid Create(const str::StringView& string);
+		static str::Guid Create(const uint64 value);
+		static str::Guid Create(const str::StringView& string);
 
-		static Guid Generate();
+		static str::Guid Generate();
 
 		static bool IsValidString(const str::StringView& string);
 
