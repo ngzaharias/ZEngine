@@ -15,26 +15,19 @@ namespace ecs
 	{
 		operator const ecs::QueryGroupB& () const { return m_Data; }
 
-		static int32 Count(ecs::EntityWorld& world, const ecs::QueryGroupB& data)
+		static int32 Count(ecs::EntityWorld& entityWorld, const ecs::QueryGroupB& queryGroup)
 		{
 			int32 count = 0;
-			for (const str::Guid& tableId : data)
-			{
-				const ecs::EntityTable& table = world.m_EntityStorage2.GetTable(tableId);
-				count += table.m_EntityCount;
-			}
+			auto range = QueryRange<TQuery>{ entityWorld, queryGroup };
+			for (auto&& view : range)
+				count++;
 			return count;
 		}
 
-		static bool HasAny(ecs::EntityWorld& world, const ecs::QueryGroupB& data)
+		static bool HasAny(ecs::EntityWorld& entityWorld, const ecs::QueryGroupB& queryGroup)
 		{
-			for (const str::Guid& tableId : data)
-			{
-				const ecs::EntityTable& table = world.m_EntityStorage2.GetTable(tableId);
-				if (table.m_EntityCount > 0)
-					return true;
-			}
-			return false;
+			auto range = QueryRange<TQuery>{ entityWorld, queryGroup };
+			return range.begin() != range.end();
 		}
 
 		auto begin()
