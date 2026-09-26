@@ -305,9 +305,13 @@ void eng::PhysicsSystem::ProcessRemoved(World& world)
 		world.RemoveComponent<eng::PhysicsComponent>(view);
 	}
 
-	for (auto&& view : world.Query<ecs::query::Removed<eng::PhysicsComponent>>())
+	using RemovedQuery = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<eng::PhysicsComponent>
+		::Include<eng::PhysicsComponent>;
+	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		auto& component = world.WriteComponent<eng::PhysicsComponent>(view, false);
+		auto& component = view.WriteRequired<eng::PhysicsComponent>();
 		if (!component.m_PxRigidActor)
 			continue;
 

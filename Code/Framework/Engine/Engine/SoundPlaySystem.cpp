@@ -100,11 +100,13 @@ void eng::sound::PlaySystem::Update(World& world, const GameTime& gameTime)
 
 	using RemovedQuery = ecs::query
 		::Condition<ecs::Alive, ecs::Dead>
-		::Removed<eng::sound::ObjectComponent>;
+		::Removed<const eng::sound::ObjectComponent>
+		::Include<const eng::sound::ObjectComponent>;
 	for (auto&& view : world.Query<RemovedQuery>())
 	{
-		auto& object = world.WriteComponent<eng::sound::ObjectComponent>(view, false);
+		auto& object = view.WriteRequired<eng::sound::ObjectComponent>();
 		delete object.m_Sound;
+		object.m_Sound = nullptr;
 
 		auto& assetManager = world.WriteResource<eng::AssetManager>();
 		assetManager.ReleaseAsset(object.m_Asset);
