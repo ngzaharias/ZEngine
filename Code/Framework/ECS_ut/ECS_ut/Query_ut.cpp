@@ -717,6 +717,134 @@ CLASS_TEST_CASE("Removed query does trigger when a component is removed and the 
 	CHECK(world.Count<Query>() == 1);
 }
 
+CLASS_TEST_CASE("Removed + Include query does trigger when one component is removed (alive).")
+{
+	using Query = ecs::query
+		::Condition<ecs::Alive>
+		::Removed<ComponentA>
+		::Include<ComponentB>;
+
+	WorldWrapper wrapper;
+	World world = wrapper.GetWorld();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<ComponentA>(entity);
+	world.AddComponent<ComponentB>(entity);
+	wrapper.Update();
+
+	world.RemoveComponent<ComponentA>(entity);
+	wrapper.Update();
+
+	CHECK(world.Count<Query>() == 1);
+}
+
+CLASS_TEST_CASE("Removed + Include query doesn't trigger when both components are removed (alive).")
+{
+	using Query = ecs::query
+		::Condition<ecs::Alive>
+		::Removed<ComponentA>
+		::Include<ComponentB>;
+
+	WorldWrapper wrapper;
+	World world = wrapper.GetWorld();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<ComponentA>(entity);
+	world.AddComponent<ComponentB>(entity);
+	wrapper.Update();
+
+	world.RemoveComponent<ComponentA>(entity);
+	world.RemoveComponent<ComponentB>(entity);
+	wrapper.Update();
+
+	CHECK(world.Count<Query>() == 0);
+}
+
+CLASS_TEST_CASE("Removed + Include query doesn't trigger when both components are removed (dead).")
+{
+	using Query = ecs::query
+		::Condition<ecs::Dead>
+		::Removed<ComponentA>
+		::Include<ComponentB>;
+
+	WorldWrapper wrapper;
+	World world = wrapper.GetWorld();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<ComponentA>(entity);
+	world.AddComponent<ComponentB>(entity);
+	wrapper.Update();
+
+	world.RemoveComponent<ComponentA>(entity);
+	world.RemoveComponent<ComponentB>(entity);
+	wrapper.Update();
+
+	CHECK(world.Count<Query>() == 0);
+}
+
+CLASS_TEST_CASE("Removed + Include query doesn't trigger when an entity is destroyed (alive).")
+{
+	using Query = ecs::query
+		::Condition<ecs::Alive>
+		::Removed<ComponentA>
+		::Include<ComponentB>;
+
+	WorldWrapper wrapper;
+	World world = wrapper.GetWorld();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<ComponentA>(entity);
+	world.AddComponent<ComponentB>(entity);
+	wrapper.Update();
+
+	world.DestroyEntity(entity);
+	wrapper.Update();
+
+	CHECK(world.Count<Query>() == 0);
+}
+
+CLASS_TEST_CASE("Removed + Include query does trigger when an entity is destroyed (dead).")
+{
+	using Query = ecs::query
+		::Condition<ecs::Dead>
+		::Removed<ComponentA>
+		::Include<ComponentB>;
+
+	WorldWrapper wrapper;
+	World world = wrapper.GetWorld();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<ComponentA>(entity);
+	world.AddComponent<ComponentB>(entity);
+	wrapper.Update();
+
+	world.DestroyEntity(entity);
+	wrapper.Update();
+
+	CHECK(world.Count<Query>() == 1);
+}
+
+CLASS_TEST_CASE("Removed + Include query does trigger when an entity is destroyed (alive + dead).")
+{
+	using Query = ecs::query
+		::Condition<ecs::Alive, ecs::Dead>
+		::Removed<ComponentA>
+		::Include<ComponentB>;
+
+	WorldWrapper wrapper;
+	World world = wrapper.GetWorld();
+
+	ecs::Entity entity = world.CreateEntity();
+	world.AddComponent<ComponentA>(entity);
+	world.AddComponent<ComponentB>(entity);
+	wrapper.Update();
+
+	world.DestroyEntity(entity);
+	wrapper.Update();
+
+	CHECK(world.Count<Query>() == 1);
+}
+
 #pragma endregion
 
 #pragma region UPDATED
