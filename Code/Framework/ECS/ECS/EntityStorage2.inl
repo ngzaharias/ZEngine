@@ -3,9 +3,11 @@
 template<typename TComponent>
 bool ecs::EntityStorage2::HasComponent(const ecs::Entity& entity) const
 {
-	Z_PANIC(m_EntityMap.Contains(entity), "");
+	const auto find = m_EntityMap.Find(entity);
+	if (find == m_EntityMap.end())
+		return false;
 
-	const int32 tableIndex = m_EntityMap.Get(entity);
+	const int32 tableIndex = find->second;
 	const ecs::EntityTable& table = m_Tables[tableIndex];
 
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();

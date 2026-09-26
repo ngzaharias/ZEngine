@@ -85,8 +85,8 @@ void ecs::EntityStorage2::FlushChanges(ecs::EntityBuffer& entityBuffer)
 				ecs::EntityLayout targetLayout = sourceLayout;
 				if (changes.m_IsDestroy)
 				{
-					targetLayout.m_AddedMask.ClearAll();
-					targetLayout.m_IncludeMask.ClearAll();
+					targetLayout.m_AddedMask = changes.m_Added;
+					targetLayout.m_IncludeMask.Raise(changes.m_Added);
 					targetLayout.m_RemovedMask.Raise(changes.m_Added);
 					targetLayout.m_RemovedMask.Raise(changes.m_Removed);
 					targetLayout.m_RemovedMask.Raise(sourceLayout.m_AddedMask);
@@ -170,7 +170,7 @@ void ecs::EntityStorage2::CreateTable(const ecs::EntityLayout& tableLayout)
 	table.m_TableId = tableId;
 	table.m_EntityLayout = tableLayout;
 
-	const ecs::ComponentMask componentMask = tableLayout.m_IncludeMask | tableLayout.m_RemovedMask;
+	const ecs::ComponentMask componentMask = tableLayout.m_AddedMask | tableLayout.m_IncludeMask | tableLayout.m_RemovedMask;
 	for (const ecs::ComponentId componentId : componentMask)
 	{
 		const ecs::TypeComponent& componentType = m_TypeRegistry.GetComponentInfo(componentId);
