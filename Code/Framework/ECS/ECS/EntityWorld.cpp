@@ -20,13 +20,15 @@ ecs::EntityWorld::EntityWorld(ecs::TypeRegistry& typeRegistry)
 void ecs::EntityWorld::Initialise()
 {
 	PROFILE_FUNCTION();
+	
+	// initialise queries before any tables are created
+	m_QueryRegistry.Initialise();
 
 	// flush static components
 	m_EntityStorage2.FlushChanges(m_EntityBuffer);
 
 	RegisterComponent<ecs::NameComponent>();
 
-	m_QueryRegistry.Initialise();
 	m_SystemRegistry.Initialise(*this);
 	//Z_LOG(ELog::Debug, "{}", LogUpdateOrder());
 
