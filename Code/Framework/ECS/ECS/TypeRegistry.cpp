@@ -47,49 +47,37 @@ const ecs::TypeEvent* ecs::TypeRegistry::TryTypeEvent(const ecs::EventId& typeId
 bool ecs::TypeRegistry::HasComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const
 {
 	const ecs::TypeComponent& entry = m_ComponentMap.Get(typeId);
-	return entry.m_HasSolo(storage, entity);
+	return entry.m_HasComponent(storage, entity);
 }
 
-void ecs::TypeRegistry::AddComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const
+void ecs::TypeRegistry::AddComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId typeId, const ecs::Entity& entity) const
 {
 	const ecs::TypeComponent& entry = m_ComponentMap.Get(typeId);
-	entry.m_AddSolo(storage, entity);
+	entry.m_AddComponent(buffer, entity);
 }
 
-void ecs::TypeRegistry::AddComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const
+void ecs::TypeRegistry::AddComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const
 {
 	const ecs::TypeComponent& entry = m_ComponentMap.Get(typeId);
-	entry.m_AddData(storage, entity, data);
+	entry.m_AddComponentData(buffer, entity, data);
 }
 
-void ecs::TypeRegistry::UpdateComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const
+void ecs::TypeRegistry::RemoveComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId typeId, const ecs::Entity& entity) const
 {
 	const ecs::TypeComponent& entry = m_ComponentMap.Get(typeId);
-	entry.m_UpdateSolo(storage, entity);
-}
-
-void ecs::TypeRegistry::UpdateComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const
-{
-	const ecs::TypeComponent& entry = m_ComponentMap.Get(typeId);
-	entry.m_UpdateData(storage, entity, data);
-}
-
-void ecs::TypeRegistry::RemoveComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const
-{
-	const ecs::TypeComponent& entry = m_ComponentMap.Get(typeId);
-	entry.m_RemoveSolo(storage, entity);
+	entry.m_RemoveComponent(buffer, entity);
 }
 
 void ecs::TypeRegistry::ReadComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, MemBuffer& data) const
 {
 	const ecs::TypeComponent& entry = m_ComponentMap.Get(typeId);
-	entry.m_ReadData(storage, entity, data);
+	entry.m_ReadComponentData(storage, entity, data);
 }
 
-void ecs::TypeRegistry::WriteComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const
+void ecs::TypeRegistry::WriteComponent(ecs::EntityBuffer& buffer, ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const
 {
 	const ecs::TypeComponent& entry = m_ComponentMap.Get(typeId);
-	entry.m_WriteData(storage, entity, data);
+	entry.m_WriteComponentData(buffer, storage, entity, data);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -98,5 +86,5 @@ void ecs::TypeRegistry::WriteComponent(ecs::EntityStorage& storage, const ecs::C
 void ecs::TypeRegistry::AddEvent(ecs::EventBuffer& buffer, const ecs::EventId typeId, const MemBuffer& data) const
 {
 	const ecs::TypeEvent& entry = m_EventMap.Get(typeId);
-	entry.m_Add(buffer, data);
+	entry.m_AddEvent(buffer, data);
 }

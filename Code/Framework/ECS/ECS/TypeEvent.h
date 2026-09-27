@@ -18,7 +18,14 @@ namespace ecs
 		TypeId m_LocalId = -1;
 		bool m_IsReplicated = false;
 
-		using Add = void(ecs::EventBuffer&, const MemBuffer&);
-		Add* m_Add = nullptr;
+		using AddEvent = void(ecs::EventBuffer&, const MemBuffer&);
+		AddEvent* m_AddEvent = nullptr;
 	};
+
+	template<typename TEvent>
+	void AddEvent(ecs::EventBuffer& buffer, const MemBuffer& data)
+	{
+		TEvent& event = buffer.AddEvent<TEvent>();
+		data.Read(event);
+	}
 }

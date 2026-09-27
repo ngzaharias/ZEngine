@@ -1,71 +1,42 @@
+#pragma once
 
-template<class TComponent>
-bool ecs::EntityStorage::IsRegistered() const
+template<typename TComponent>
+bool ecs::EntityStorage::HasComponent(const ecs::Entity& entity) const
 {
-	return m_EntityBuffer.IsRegistered<TComponent>();
-}
+	const auto find = m_EntityMap.Find(entity);
+	if (find == m_EntityMap.end())
+		return false;
 
-template<class TComponent>
-void ecs::EntityStorage::RegisterComponent()
-{
-	auto* aliveComponents = new ecs::ComponentContainer<TComponent>();
-	auto* deadComponents = new ecs::ComponentContainer<TComponent>();
+	const int32 tableIndex = find->second;
+	const ecs::EntityTable& table = m_Tables[tableIndex];
 
-	const ecs::ComponentId typeId = ToTypeId<TComponent, ecs::ComponentTag>();
-	m_AliveComponents.Set(typeId, aliveComponents);
-	m_DeadComponents.Set(typeId, deadComponents);
-	m_EntityBuffer.RegisterComponent<TComponent>();
-
-	if constexpr (std::derived_from<TComponent, ecs::FrameComponent>)
-		m_FrameComponents.Add(typeId);
-	if constexpr (std::derived_from<TComponent, ecs::StaticComponent>)
-		aliveComponents->Emplace(m_Entity);
-}
-
-template<typename TComponent, typename... TArgs>
-auto ecs::EntityStorage::AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&
-{
-	return m_EntityBuffer.AddComponent<TComponent>(entity, std::forward<TArgs>(args)...);
+	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
+	return table.HasComponent(entity, componentId);
 }
 
 template<typename TComponent>
-void ecs::EntityStorage::RemoveComponent(const ecs::Entity& entity)
+auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity) -> TComponent&
 {
-	m_EntityBuffer.RemoveComponent<TComponent>(entity);
-}
+	Z_PANIC(m_EntityMap.Contains(entity), "");
 
-template<class TComponent>
-bool ecs::EntityStorage::HasComponent(const ecs::Entity& entity, const bool alive /*= true*/) const
-{
-	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	const ecs::IComponentContainer* istorage = alive
-		? m_AliveComponents.Get(componentId)
-		: m_DeadComponents.Get(componentId);
-	return istorage->Contains(entity);
-}
-
-template<class TComponent>
-auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const bool alive /*= true*/) const -> TComponent&
-{
-	using Storage = ecs::ComponentContainer<TComponent>;
+	const int32 tableIndex = m_EntityMap.Get(entity);
+	ecs::EntityTable& table = m_Tables[tableIndex];
 
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	ecs::IComponentContainer* istorage = alive
-		? m_AliveComponents.Get(componentId)
-		: m_DeadComponents.Get(componentId);
-	Storage* storage = static_cast<Storage*>(istorage);
-	return storage->Get(entity);
+	auto* component = table.GetComponent(entity, componentId);
+	return *reinterpret_cast<TComponent*>(component);
 }
 
-template<class TComponent>
-auto ecs::EntityStorage::TryComponent(const ecs::Entity& entity, const bool alive /*= true*/) const -> TComponent*
+template<typename TComponent>
+auto ecs::EntityStorage::TryComponent(const ecs::Entity& entity) -> TComponent*
 {
-	using Storage = ecs::ComponentContainer<TComponent>;
+	Z_PANIC(m_EntityMap.Contains(entity), "");
+
+	const int32 tableIndex = m_EntityMap.Get(entity);
+	ecs::EntityTable& table = m_Tables[tableIndex];
 
 	const ecs::ComponentId componentId = ToTypeId<TComponent, ecs::ComponentTag>();
-	ecs::IComponentContainer* istorage = alive
-		? m_AliveComponents.Get(componentId)
-		: m_DeadComponents.Get(componentId);
-	Storage* storage = static_cast<Storage*>(istorage);
-	return storage->Try(entity);
+	if (auto* component = table.TryComponent(entity, componentId))
+		return reinterpret_cast<TComponent*>(component);
+	return nullptr;
 }

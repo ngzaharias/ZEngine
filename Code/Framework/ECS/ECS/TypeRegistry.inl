@@ -32,115 +32,20 @@ void ecs::TypeRegistry::RegisterComponent()
 	entry.m_IsReplicated = isReplicated;
 	entry.m_IsTemplate = isTemplate;
 
-	entry.m_Constructor = &Constructor<TComponent>;
-	entry.m_Copystructor = &Copystructor<TComponent>;
-	entry.m_Destructor = &Destructor<TComponent>;
+	entry.m_ConstructComponent = &ecs::ConstructComponent<TComponent>;
+	entry.m_CopystructComponent = &ecs::CopystructComponent<TComponent>;
+	entry.m_DestructComponent = &ecs::DestructComponent<TComponent>;
 
-	entry.m_HasSolo = &HasComponentSolo<TComponent>;
-	entry.m_AddSolo = &AddComponentSolo<TComponent>;
-	entry.m_UpdateSolo = &UpdateComponentSolo<TComponent>;
-	entry.m_RemoveSolo = &RemoveComponentSolo<TComponent>;
-
+	entry.m_HasComponent = &ecs::HasComponent<TComponent>;
+	entry.m_AddComponent = &ecs::AddComponent<TComponent>;
+	entry.m_RemoveComponent = &ecs::RemoveComponent<TComponent>;
+	
 	if constexpr (isReplicated)
 	{
-		entry.m_AddData = &AddComponentData<TComponent>;
-		entry.m_UpdateData = &UpdateComponentData<TComponent>;
-		entry.m_ReadData = &ReadComponentData<TComponent>;
-		entry.m_WriteData = &WriteComponentData<TComponent>;
+		entry.m_AddComponentData = &ecs::AddComponent<TComponent>;
+		entry.m_ReadComponentData = &ecs::ReadComponent<TComponent>;
+		entry.m_WriteComponentData = &ecs::WriteComponent<TComponent>;
 	}
-}
-
-template<typename TComponent>
-void ecs::TypeRegistry::Constructor(void* data)
-{
-	new (data) TComponent();
-}
-
-template<typename TComponent>
-void ecs::TypeRegistry::Copystructor(void* source, void* target)
-{
-	new (target) TComponent(*static_cast<TComponent*>(source));
-}
-
-template<typename TComponent>
-void ecs::TypeRegistry::Destructor(void* data)
-{
-	TComponent* component = static_cast<TComponent*>(data);
-	component->~TComponent();
-}
-
-template<typename TComponent>
-bool ecs::TypeRegistry::HasComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity)
-{
-	return storage.HasComponent<TComponent>(entity);
-}
-
-template<typename TComponent>
-void ecs::TypeRegistry::AddComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data)
-{
-	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
-	auto& component = buffer.AddComponent<TComponent>(entity);
-	data.Read(component);
-}
-
-template<typename TComponent>
-void ecs::TypeRegistry::AddComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity)
-{
-	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
-	buffer.AddComponent<TComponent>(entity);
-}
-
-template<typename TComponent>
-void ecs::TypeRegistry::UpdateComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data)
-{
-	// if the component was already added, we need to fetch it from the buffer
-	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
-	if (buffer.HasComponent<TComponent>(entity))
-	{
-		auto& component = buffer.WriteComponent<TComponent>(entity);
-		data.Read(component);
-	}
-	// otherwise fetch it from the storage
-	else
-	{
-		// only mark for update if it's already in storage
-		buffer.UpdateComponent<TComponent>(entity);
-
-		auto& component = storage.GetComponent<TComponent>(entity);
-		data.Read(component);
-	}
-}
-
-template<typename TComponent>
-void ecs::TypeRegistry::UpdateComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity)
-{
-	// only mark for update if it's already in storage
-	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
-	if (!buffer.HasComponent<TComponent>(entity))
-	{
-		buffer.UpdateComponent<TComponent>(entity);
-	}
-}
-
-template<typename TComponent>
-void ecs::TypeRegistry::RemoveComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity)
-{
-	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
-	buffer.RemoveComponent<TComponent>(entity);
-}
-
-template<typename TComponent>
-void ecs::TypeRegistry::ReadComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, MemBuffer& data)
-{
-	const auto& component = storage.GetComponent<TComponent>(entity);
-	data.Write(component);
-}
-
-template<typename TComponent>
-void ecs::TypeRegistry::WriteComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data)
-{
-	auto& component = storage.GetComponent<TComponent>(entity);
-	data.Read(component);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -150,6 +55,8 @@ template<typename TEvent>
 void ecs::TypeRegistry::RegisterEvent()
 {
 	static_assert(std::derived_from<TEvent, ecs::Event>, "Type doesn't inherit from ecs::Event.");
+
+	constexpr bool isReplicated = std::derived_from<TEvent, ecs::IsReplicated>;
 
 	const TypeId globalId = ToTypeId<TEvent>();
 	const TypeId localId = ToTypeId<TEvent, ecs::EventTag>();
@@ -164,17 +71,10 @@ void ecs::TypeRegistry::RegisterEvent()
 	entry.m_LocalId = localId;
 	entry.m_IsReplicated = std::derived_from<TEvent, ecs::IsReplicated>;
 
-	if constexpr (std::derived_from<TEvent, ecs::IsReplicated>)
+	if constexpr (isReplicated)
 	{
-		entry.m_Add = &AddEventMethod<TEvent>;
+		entry.m_AddEvent = &ecs::AddEvent<TEvent>;
 	}
-}
-
-template<typename TEvent>
-void ecs::TypeRegistry::AddEventMethod(ecs::EventBuffer& buffer, const MemBuffer& data)
-{
-	TEvent& event = buffer.AddEvent<TEvent>();
-	data.Read(event);
 }
 
 //////////////////////////////////////////////////////////////////////////

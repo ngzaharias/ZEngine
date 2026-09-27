@@ -2,7 +2,7 @@
 
 #include "Core/Map.h"
 #include "ECS/Component.h"
-#include "ECS/EntityStorage2.h"
+#include "ECS/EntityStorage.h"
 #include "ECS/EventStorage.h"
 #include "ECS/IsReplicated.h"
 #include "ECS/QueryRegistry.h"
@@ -37,6 +37,8 @@ namespace ecs
 		void Shutdown();
 
 		void Update(const GameTime& gameTime);
+
+		void FlushChanges();
 
 		template<typename TType>
 		bool IsRegistered() const;
@@ -154,13 +156,12 @@ namespace ecs
 		ecs::Entity m_StaticEntity = {};
 		ecs::EntityBuffer m_EntityBuffer;
 		ecs::EntityStorage m_EntityStorage;
-		ecs::EntityStorage2 m_EntityStorage2;
 		ecs::EventStorage m_EventStorage;
 
-		ecs::TypeRegistry& m_TypeRegistry;
 		ecs::QueryRegistry m_QueryRegistry;
 		ecs::ResourceRegistry m_ResourceRegistry;
 		ecs::SystemRegistry m_SystemRegistry;
+		ecs::TypeRegistry& m_TypeRegistry;
 	};
 }
 

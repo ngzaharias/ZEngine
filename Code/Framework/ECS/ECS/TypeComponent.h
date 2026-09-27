@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Name.h"
+#include "Core/MemBuffer.h"
 #include "Core/String.h"
 #include "Core/TypeInfo.h"
 #include "ECS/QueryId.h"
@@ -32,33 +33,47 @@ namespace ecs
 		bool m_IsReplicated = false;
 		bool m_IsTemplate = false;
 
-		using Constructor = void(void*);
-		Constructor* m_Constructor = nullptr;
-		using Copystructor = void(void*, void*);
-		Copystructor* m_Copystructor = nullptr;
-		using Destructor = void(void*);
-		Destructor* m_Destructor = nullptr;
+		using ConstructComponent = void(void*);
+		ConstructComponent* m_ConstructComponent = nullptr;
+		using CopystructComponent = void(void*, void*);
+		CopystructComponent* m_CopystructComponent = nullptr;
+		using DestructComponent = void(void*);
+		DestructComponent* m_DestructComponent = nullptr;
 
-		using HasSolo = bool(ecs::EntityStorage&, const ecs::Entity&);
-		HasSolo* m_HasSolo = nullptr;
+		using HasComponent = bool(ecs::EntityStorage&, const ecs::Entity&);
+		HasComponent* m_HasComponent = nullptr;
+		using AddComponent = void(ecs::EntityBuffer&, const ecs::Entity&);
+		AddComponent* m_AddComponent = nullptr;
+		using RemoveComponent = void(ecs::EntityBuffer&, const ecs::Entity&);
+		RemoveComponent* m_RemoveComponent = nullptr;
 
-		using AddSolo = void(ecs::EntityStorage&, const ecs::Entity&);
-		AddSolo* m_AddSolo = nullptr;
-		using AddData = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
-		AddData* m_AddData = nullptr;
-
-		using UpdateSolo = void(ecs::EntityStorage&, const ecs::Entity&);
-		UpdateSolo* m_UpdateSolo = nullptr;
-		using UpdateData = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
-		UpdateData* m_UpdateData = nullptr;
-
-		using RemoveSolo = void(ecs::EntityStorage&, const ecs::Entity&);
-		RemoveSolo* m_RemoveSolo = nullptr;
-
-		using ReadData = void(ecs::EntityStorage&, const ecs::Entity&, MemBuffer&);
-		ReadData* m_ReadData = nullptr;
-
-		using WriteData = void(ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
-		WriteData* m_WriteData = nullptr;
+		using AddComponentData = void(ecs::EntityBuffer&, const ecs::Entity&, const MemBuffer&);
+		AddComponentData* m_AddComponentData = nullptr;
+		using ReadComponentData = void(ecs::EntityStorage&, const ecs::Entity&, MemBuffer&);
+		ReadComponentData* m_ReadComponentData = nullptr;
+		using WriteComponentData = void(ecs::EntityBuffer&, ecs::EntityStorage&, const ecs::Entity&, const MemBuffer&);
+		WriteComponentData* m_WriteComponentData = nullptr;
 	};
+
+	template<typename TComponent>
+	static void ConstructComponent(void* data);
+	template<typename TComponent>
+	static void CopystructComponent(void* source, void* target);
+	template<typename TComponent>
+	static void DestructComponent(void* data);
+
+	template<typename TComponent>
+	static bool HasComponent(ecs::EntityStorage& storage, const ecs::Entity& entity);
+	template<typename TComponent>
+	static void AddComponent(ecs::EntityBuffer& buffer, const ecs::Entity& entity);
+	template<typename TComponent>
+	static void AddComponent(ecs::EntityBuffer& buffer, const ecs::Entity& entity, const MemBuffer& data);
+	template<typename TComponent>
+	static void RemoveComponent(ecs::EntityBuffer& buffer, const ecs::Entity& entity);
+	template<typename TComponent>
+	static void ReadComponent(ecs::EntityStorage& storage, const ecs::Entity& entity, MemBuffer& data);
+	template<typename TComponent>
+	static void WriteComponent(ecs::EntityBuffer& buffer, ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
 }
+
+#include "ECS/TypeComponent.inl"

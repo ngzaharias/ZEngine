@@ -17,7 +17,7 @@ namespace ecs
 		using Optional = ecs::query::OptionalAccess<TQuery>::NonConst;
 
 		using EntityView = ecs::EntityView_t<Required, Optional>;
-		using TableIterator = ecs::QueryGroupB::const_iterator;
+		using TableIterator = ecs::QueryGroup::const_iterator;
 		using EntityIterator = ecs::EntityTable::EntityToPage::const_iterator;
 
 		QueryIterator(ecs::EntityWorld& world, const TableIterator& tableItr, const TableIterator& tableEnd)
@@ -66,7 +66,7 @@ namespace ecs
 			if (m_Updated.HasNone())
 				return true;
 
-			ecs::EntityTable& table = m_World.m_EntityStorage2.GetTable(*m_TableItr);
+			ecs::EntityTable& table = m_World.m_EntityStorage.GetTable(*m_TableItr);
 			const auto find = table.m_UpdatedMap.Find(m_EntityItr->first);
 			if (find == table.m_UpdatedMap.end())
 				return false;
@@ -96,7 +96,7 @@ namespace ecs
 		{
 			while (IsValidTable())
 			{
-				ecs::EntityTable& table = m_World.m_EntityStorage2.GetTable(*m_TableItr);
+				ecs::EntityTable& table = m_World.m_EntityStorage.GetTable(*m_TableItr);
 				m_EntityItr = table.m_EntityMap.begin();
 				m_EntityEnd = table.m_EntityMap.end();
 				if (m_EntityItr != m_EntityEnd)

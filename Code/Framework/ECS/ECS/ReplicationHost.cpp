@@ -160,7 +160,7 @@ void ecs::ReplicationHost::ProcessEvents()
 
 	for (auto&& [peerId, replicationData] : m_ReplicationMap)
 	{
-		// #hack: we iterate the keys of the remote buffer but fetch from the local buffer
+		// #hack: we iterate the keys of the sync buffer but fetch from the main buffer
 		const ecs::EventBuffer& mainBuffer = storage.GetMainBuffer();
 		const ecs::EventBuffer& syncBuffer = storage.GetSyncBuffer();
 		for (const ecs::EventId& typeId : syncBuffer.GetAll().GetKeys())
@@ -250,7 +250,7 @@ void ecs::ReplicationHost::ComponentAdd(const net::PeerId& peerId, const ecs::En
 	auto* message = host.RequestMessage<ecs::ComponentAddMessage>(ecs::EMessage::ComponentAdd);
 	message->m_Entity = ToNetEntity(entity);
 	message->m_TypeId = entry.m_LocalId;
-	entry.m_ReadData(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
+	entry.m_ReadComponentData(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
 
 	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);
@@ -262,7 +262,7 @@ void ecs::ReplicationHost::ComponentUpdate(const net::PeerId& peerId, const ecs:
 	auto* message = host.RequestMessage<ecs::ComponentUpdateMessage>(ecs::EMessage::ComponentUpdate);
 	message->m_Entity = ToNetEntity(entity);
 	message->m_TypeId = entry.m_LocalId;
-	entry.m_ReadData(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
+	entry.m_ReadComponentData(m_EntityWorld.m_EntityStorage, entity, message->m_Data);
 
 	host.SendMessage(peerId, message);
 	host.ReleaseMessage(message);

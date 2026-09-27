@@ -30,7 +30,7 @@ template<typename ...TRequired, typename ...TOptional>
 template<typename TComponent>
 auto ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::WriteRequired() const -> TComponent&
 {
-	ecs::EntityBuffer& buffer = m_World.m_EntityStorage.GetEntityBuffer();
+	ecs::EntityBuffer& buffer = m_World.m_EntityBuffer;
 	buffer.UpdateComponent<TComponent>(m_Entity);
 	return *std::get<TComponent*>(m_Required);
 }
@@ -56,7 +56,7 @@ auto ecs::EntityView_t<TypeList<TRequired...>, TypeList<TOptional...>>::WriteOpt
 	auto* component = std::get<TComponent*>(m_Optional);
 	if (component)
 	{
-		ecs::EntityBuffer& buffer = m_World.m_EntityStorage.GetEntityBuffer();
+		ecs::EntityBuffer& buffer = m_World.m_EntityBuffer;
 		buffer.UpdateComponent<TComponent>(m_Entity);
 	}
 	return component;

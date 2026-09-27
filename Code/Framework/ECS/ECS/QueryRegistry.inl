@@ -33,13 +33,3 @@ inline ecs::QueryId ecs::QueryProxy<TQuery>::Id()
 
 	return m_QueryId;
 }
-
-template<typename TQuery>
-const ecs::QueryGroup& ecs::QueryRegistry::GetGroup() const
-{
-	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
-	const auto find = m_Groups.Find(queryId);
-	Z_PANIC(find != m_Groups.end(), "Query hasn't been registered! Ensure that Initialise has been called.");
-
-	return find->second;
-}

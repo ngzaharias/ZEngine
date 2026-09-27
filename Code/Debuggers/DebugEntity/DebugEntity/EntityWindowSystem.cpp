@@ -55,7 +55,7 @@ namespace
 
 	void DebugEntities(ecs::EntityWorld& world, ecs::Entity& inout_Selected)
 	{
-		const auto& entities = world.m_EntityStorage2.GetEntityMap();
+		const auto& entities = world.m_EntityStorage.GetEntityMap();
 		for (const auto& [entity, index] : entities)
 			DebugEntity(world, entity, inout_Selected);
 	}
@@ -78,7 +78,7 @@ namespace
 		ImGui::Separator();
 
 		const auto& registry = world.m_TypeRegistry;
-		const auto& storage = world.m_EntityStorage2;
+		const auto& storage = world.m_EntityStorage;
 		const auto& entities = storage.GetEntityMap();
 		const ecs::EntityTable& table = storage.GetTable(entity);
 		const ecs::EntityLayout& layout = table.m_EntityLayout;

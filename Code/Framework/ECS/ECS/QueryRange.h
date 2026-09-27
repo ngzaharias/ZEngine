@@ -13,9 +13,9 @@ namespace ecs
 	template<typename TQuery>
 	struct QueryRange
 	{
-		operator const ecs::QueryGroupB& () const { return m_Data; }
+		operator const ecs::QueryGroup& () const { return m_Data; }
 
-		static int32 Count(ecs::EntityWorld& entityWorld, const ecs::QueryGroupB& queryGroup)
+		static int32 Count(ecs::EntityWorld& entityWorld, const ecs::QueryGroup& queryGroup)
 		{
 			int32 count = 0;
 			auto range = QueryRange<TQuery>{ entityWorld, queryGroup };
@@ -24,7 +24,7 @@ namespace ecs
 			return count;
 		}
 
-		static bool HasAny(ecs::EntityWorld& entityWorld, const ecs::QueryGroupB& queryGroup)
+		static bool HasAny(ecs::EntityWorld& entityWorld, const ecs::QueryGroup& queryGroup)
 		{
 			auto range = QueryRange<TQuery>{ entityWorld, queryGroup };
 			return range.begin() != range.end();
@@ -41,6 +41,6 @@ namespace ecs
 		}
 
 		ecs::EntityWorld& m_World;
-		const ecs::QueryGroupB& m_Data;
+		const ecs::QueryGroup& m_Data;
 	};
 }

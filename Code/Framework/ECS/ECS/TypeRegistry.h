@@ -38,6 +38,7 @@ namespace ecs
 		using ResourceMap	= Map<ecs::ResourceId,	ecs::TypeResource>;
 		using SystemMap		= Map<ecs::SystemId,	ecs::TypeSystem>;
 
+	public:
 		const TypeMap& GetTypeMap() const;
 		const ecs::TypeInfo& GetTypeInfo(const TypeId typeId) const;
 
@@ -55,38 +56,16 @@ namespace ecs
 		template<typename TComponent>
 		void RegisterComponent();
 
-		bool HasComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
-		void AddComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
-		void AddComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
-		void UpdateComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
-		void UpdateComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
-		void RemoveComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity) const;
-		void ReadComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, MemBuffer& data) const;
-		void WriteComponent(ecs::EntityStorage& storage, const ecs::ComponentId typeId, const ecs::Entity& entity, const MemBuffer& data) const;
+		bool HasComponent(ecs::EntityStorage& storage, const ecs::ComponentId componentId, const ecs::Entity& entity) const;
 
-		template<typename TComponent>
-		static void Constructor(void* data);
-		template<typename TComponent>
-		static void Copystructor(void* source, void* target);
-		template<typename TComponent>
-		static void Destructor(void* data);
+		void AddComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId componentId, const ecs::Entity& entity) const;
+		void AddComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId componentId, const ecs::Entity& entity, const MemBuffer& data) const;
 
-		template<typename TComponent>
-		static bool HasComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity);
-		template<typename TComponent>
-		static void AddComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
-		template<typename TComponent>
-		static void AddComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity);
-		template<typename TComponent>
-		static void UpdateComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
-		template<typename TComponent>
-		static void UpdateComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity);
-		template<typename TComponent>
-		static void RemoveComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity);
-		template<typename TComponent>
-		static void ReadComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, MemBuffer& data);
-		template<typename TComponent>
-		static void WriteComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data);
+		void RemoveComponent(ecs::EntityBuffer& buffer, const ecs::ComponentId componentId, const ecs::Entity& entity) const;
+
+		void ReadComponent(ecs::EntityStorage& storage, const ecs::ComponentId componentId, const ecs::Entity& entity, MemBuffer& data) const;
+
+		void WriteComponent(ecs::EntityBuffer& buffer, ecs::EntityStorage& storage, const ecs::ComponentId componentId, const ecs::Entity& entity, const MemBuffer& data) const;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Event
@@ -94,10 +73,7 @@ namespace ecs
 		template<typename TEvent>
 		void RegisterEvent();
 
-		void AddEvent(ecs::EventBuffer& buffer, const ecs::EventId typeId, const MemBuffer& data) const;
-
-		template<typename TEvent>
-		static void AddEventMethod(ecs::EventBuffer& buffer, const MemBuffer& data);
+		void AddEvent(ecs::EventBuffer& buffer, const ecs::EventId eventId, const MemBuffer& data) const;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Resource

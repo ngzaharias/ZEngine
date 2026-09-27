@@ -22,10 +22,8 @@ namespace ecs
 namespace ecs
 {
 	using QueryId = int32;
-	using QueryGroup = Set<ecs::Entity>;
-	using QueryGroupB = Set<str::Guid>;
+	using QueryGroup = Set<str::Guid>;
 	using QueryGroups = Map<ecs::QueryId, QueryGroup>;
-	using QueryGroupsB = Map<ecs::QueryId, QueryGroupB>;
 	using QueryMasks = Map<ecs::QueryId, ecs::QueryMask>;
 
 	template<class TQuery>
@@ -49,15 +47,11 @@ namespace ecs
 
 		static ecs::QueryMasks& GetMasks();
 
-		template<typename TQuery>
-		const ecs::QueryGroup& GetGroup() const;
 		const ecs::QueryGroup& GetGroup(const ecs::QueryId queryId) const;
-		const ecs::QueryGroupB& GetGroupB(const ecs::QueryId queryId) const;
 
 	private:
 		static inline ecs::QueryMasks m_Masks;
 		ecs::QueryGroups m_Groups = { };
-		ecs::QueryGroupsB m_GroupsB = { };
 	};
 }
 

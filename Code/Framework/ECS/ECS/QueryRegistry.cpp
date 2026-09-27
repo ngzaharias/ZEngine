@@ -9,15 +9,12 @@ void ecs::QueryRegistry::Initialise()
 	PROFILE_FUNCTION();
 
 	for (const auto& [queryId, queryMask] : m_Masks)
-	{
 		m_Groups[queryId];
-		m_GroupsB[queryId];
-	}
 }
 
 void ecs::QueryRegistry::RegisterTable(const str::Guid& tableId, const ecs::EntityLayout& layout)
 {
-	for (auto&& [queryId, group] : m_GroupsB)
+	for (auto&& [queryId, group] : m_Groups)
 	{
 		const ecs::QueryMask& queryMask = m_Masks.Get(queryId);
 		const bool hasAlive = queryMask.m_ConditionAlive && !layout.m_IsDead;
@@ -41,7 +38,7 @@ void ecs::QueryRegistry::RegisterTable(const str::Guid& tableId, const ecs::Enti
 
 void ecs::QueryRegistry::UnregisterTable(const str::Guid& tableId, const ecs::EntityLayout& layout)
 {
-	for (auto&& [queryId, group] : m_GroupsB)
+	for (auto&& [queryId, group] : m_Groups)
 		group.Remove(tableId);
 }
 
@@ -54,10 +51,4 @@ const ecs::QueryGroup& ecs::QueryRegistry::GetGroup(const ecs::QueryId queryId) 
 {
 	Z_PANIC(m_Groups.Contains(queryId), "Query hasn't been registered! Ensure that Initialise has been called.");
 	return m_Groups.Get(queryId);
-}
-
-const ecs::QueryGroupB& ecs::QueryRegistry::GetGroupB(const ecs::QueryId queryId) const
-{
-	Z_PANIC(m_GroupsB.Contains(queryId), "Query hasn't been registered! Ensure that Initialise has been called.");
-	return m_GroupsB.Get(queryId);
 }
