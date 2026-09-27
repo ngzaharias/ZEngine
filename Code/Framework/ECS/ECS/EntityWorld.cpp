@@ -6,13 +6,12 @@
 
 ecs::EntityWorld::EntityWorld(ecs::TypeRegistry& typeRegistry)
 	: m_EntityBuffer()
-	, m_EntityStorage(m_QueryRegistry)
-	, m_EntityStorage2(m_QueryRegistry, typeRegistry)
+	, m_EntityStorage(typeRegistry)
 	, m_EventStorage()
-	, m_TypeRegistry(typeRegistry)
 	, m_QueryRegistry()
 	, m_ResourceRegistry()
 	, m_SystemRegistry()
+	, m_TypeRegistry(typeRegistry)
 {
 	m_StaticEntity = CreateEntity();
 }
@@ -25,7 +24,7 @@ void ecs::EntityWorld::Initialise()
 	m_QueryRegistry.Initialise();
 
 	// flush static components
-	m_EntityStorage2.FlushChanges(m_EntityBuffer);
+	m_EntityStorage.FlushChanges(m_EntityBuffer, m_QueryRegistry);
 
 	RegisterComponent<ecs::NameComponent>();
 
@@ -33,7 +32,7 @@ void ecs::EntityWorld::Initialise()
 	//Z_LOG(ELog::Debug, "{}", LogUpdateOrder());
 
 	// flush the initialise
-	m_EntityStorage2.FlushChanges(m_EntityBuffer);
+	m_EntityStorage.FlushChanges(m_EntityBuffer, m_QueryRegistry);
 }
 
 void ecs::EntityWorld::Shutdown()
@@ -48,8 +47,11 @@ void ecs::EntityWorld::Update(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	m_SystemRegistry.Update(*this, gameTime);
+}
 
-	m_EntityStorage2.FlushChanges(m_EntityBuffer);
+void ecs::EntityWorld::FlushChanges()
+{
+	m_EntityStorage.FlushChanges(m_EntityBuffer, m_QueryRegistry);
 	m_EventStorage.FlushChanges();
 }
 

@@ -117,7 +117,7 @@ void ecs::ReplicationPeer::OnProcessMessages(const Array<const net::Message*>& m
 
 void ecs::ReplicationPeer::OnEntityCreate(const ecs::EntityCreateMessage* message)
 {
-	ecs::EntityBuffer& buffer = m_EntityWorld.m_EntityStorage.GetEntityBuffer();
+	ecs::EntityBuffer& buffer = m_EntityWorld.m_EntityBuffer;
 	const net::Entity& hostEntity = message->m_Entity;
 	const auto findEntity = m_HostToPeer.Find(hostEntity);
 	if (findEntity != m_HostToPeer.end())
@@ -141,7 +141,7 @@ void ecs::ReplicationPeer::OnEntityDestroy(const ecs::EntityDestroyMessage* mess
 	const net::Entity& hostEntity = message->m_Entity;
 	const ecs::Entity& peerEntity = m_HostToPeer[hostEntity];
 
-	ecs::EntityBuffer& buffer = m_EntityWorld.m_EntityStorage.GetEntityBuffer();
+	ecs::EntityBuffer& buffer = m_EntityWorld.m_EntityBuffer;
 	buffer.DestroyEntity(peerEntity);
 	m_ToDestroy.Set(peerEntity, hostEntity);
 }
@@ -154,8 +154,7 @@ void ecs::ReplicationPeer::OnComponentAdd(const ecs::ComponentAddMessage* messag
 	Z_PANIC(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity {} doesn't exist on peer!", message->m_Entity.m_Value);
 
 	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
-	ecs::EntityStorage& storage = m_EntityWorld.m_EntityStorage;
-	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
+	ecs::EntityBuffer& buffer = m_EntityWorld.m_EntityBuffer;
 
 	const ecs::Entity& entity = m_HostToPeer.Get(message->m_Entity);
 	ecs::EntityChange& change = buffer.m_EntityChanges[entity];
@@ -173,11 +172,10 @@ void ecs::ReplicationPeer::OnComponentUpdate(const ecs::ComponentUpdateMessage* 
 	Z_PANIC(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity {} doesn't exist on peer!", message->m_Entity.m_Value);
 
 	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
-	ecs::EntityStorage& storage = m_EntityWorld.m_EntityStorage;
-	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
+	ecs::EntityBuffer& buffer = m_EntityWorld.m_EntityBuffer;
 
 	const ecs::Entity& entity = m_HostToPeer.Get(message->m_Entity);
-	registry.UpdateComponent(storage, message->m_TypeId, entity, message->m_Data);
+	registry.UpdateComponent(buffer, message->m_TypeId, entity, message->m_Data);
 
 	ecs::EntityChange& change = buffer.m_EntityChanges[entity];
 	change.m_Updated.Raise(message->m_TypeId);
@@ -188,11 +186,10 @@ void ecs::ReplicationPeer::OnComponentRemove(const ecs::ComponentRemoveMessage* 
 	Z_PANIC(enumerate::Contains(m_HostToPeer, message->m_Entity), "Entity {} doesn't exist on peer!", message->m_Entity.m_Value);
 
 	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
-	ecs::EntityStorage& storage = m_EntityWorld.m_EntityStorage;
-	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
+	ecs::EntityBuffer& buffer = m_EntityWorld.m_EntityBuffer;
 
 	const ecs::Entity& entity = m_HostToPeer.Get(message->m_Entity);
-	registry.RemoveComponent(storage, message->m_TypeId, entity);
+	registry.RemoveComponent(buffer, message->m_TypeId, entity);
 
 	ecs::EntityChange& change = buffer.m_EntityChanges[entity];
 	change.m_Added.Clear(message->m_TypeId);

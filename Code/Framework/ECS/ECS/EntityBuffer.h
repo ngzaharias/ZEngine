@@ -14,7 +14,6 @@ namespace ecs
 	class EntityBuffer final
 	{
 		friend class EntityStorage;
-		friend class EntityStorage2;
 		friend class ReplicationPeer;
 
 		using Containers = SparseMap<ecs::ComponentId, ecs::IComponentContainer*>;

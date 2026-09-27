@@ -100,4 +100,7 @@ void server::GameServer::Update(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 
 	m_EntityWorld.Update(gameTime);
+
+	m_ReplicationHost.Update(gameTime);
+	m_EntityWorld.FlushChanges();
 }

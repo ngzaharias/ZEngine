@@ -85,10 +85,6 @@ void game::Application::Update(const GameTime& gameTime)
 	PROFILE_FUNCTION();
 	eng::Application::Update(gameTime);
 
-	// host first, then peer
-	m_GameServer.m_ReplicationHost.Update(gameTime);
-	m_GameClient.m_ReplicationPeer.Update(gameTime);
-
 	// debug first, then client, then server
 	m_GameDebug.Update(gameTime);
 	m_GameClient.Update(gameTime);

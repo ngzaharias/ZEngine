@@ -66,7 +66,7 @@ namespace ecs
 			if (m_Updated.HasNone())
 				return true;
 
-			ecs::EntityTable& table = m_World.m_EntityStorage2.GetTable(*m_TableItr);
+			ecs::EntityTable& table = m_World.m_EntityStorage.GetTable(*m_TableItr);
 			const auto find = table.m_UpdatedMap.Find(m_EntityItr->first);
 			if (find == table.m_UpdatedMap.end())
 				return false;
@@ -96,7 +96,7 @@ namespace ecs
 		{
 			while (IsValidTable())
 			{
-				ecs::EntityTable& table = m_World.m_EntityStorage2.GetTable(*m_TableItr);
+				ecs::EntityTable& table = m_World.m_EntityStorage.GetTable(*m_TableItr);
 				m_EntityItr = table.m_EntityMap.begin();
 				m_EntityEnd = table.m_EntityMap.end();
 				if (m_EntityItr != m_EntityEnd)
