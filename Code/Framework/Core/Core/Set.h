@@ -4,6 +4,13 @@
 
 using int32 = int32_t;
 
+template<typename T>
+concept IsRange = requires(const T& value)
+{
+	value.begin();
+	value.end();
+};
+
 template<typename Type>
 class Set
 {
@@ -38,6 +45,10 @@ public:
 	void Add(Set&& range);
 	/// \brief Adds a range of elements to the container.
 	void Add(const Set& range);
+	/// \brief Adds a range of elements to the container.
+	template<typename Range>
+	requires IsRange<Range>
+	void Add(const Range& range);
 
 	/// \brief Removes an element from the container if it exists.
 	void Remove(const Type& value);

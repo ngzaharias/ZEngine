@@ -99,6 +99,14 @@ void Set<Type>::Add(const Set& range)
 }
 
 template<typename Type>
+template<typename Range>
+requires IsRange<Range>
+void Set<Type>::Add(const Range& range)
+{
+	m_Values.insert(range.begin(), range.end());
+}
+
+template<typename Type>
 void Set<Type>::Remove(const Type& value)
 {
 	m_Values.erase(value);
