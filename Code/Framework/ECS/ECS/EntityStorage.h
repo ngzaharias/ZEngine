@@ -1,88 +1,87 @@
 #pragma once
 
-#include "Core/Array.h"
-#include "Core/Guid.h"
 #include "Core/Map.h"
+#include "Core/Set.h"
+#include "Core/SparseMap.h"
+#include "ECS/Component.h"
+#include "ECS/ComponentContainer.h"
+#include "ECS/ComponentId.h"
+#include "ECS/ComponentMask.h"
+#include "ECS/ComponentTag.h"
 #include "ECS/Entity.h"
-#include "ECS/EntityLayout.h"
-#include "ECS/EntityTable.h"
+#include "ECS/EntityBuffer.h"
 
 namespace ecs
 {
-	class EntityBuffer;
+	class EntityWorld;
+	class FrameBuffer;
 	class QueryRegistry;
-	class TypeRegistry;
 }
 
 namespace ecs
 {
-	/// \brief Stores all the components for all entities of all archetypes.
 	class EntityStorage
 	{
-		enum class EChange
-		{
-			Created = 0,
-			Destroyed,
-		};
+		friend class EntityWorld;
+
+		using Components = SparseMap<ecs::ComponentId, ecs::IComponentContainer*>;
+		using EntityMap = Map<ecs::Entity, ecs::ComponentMask>;
+		using EntitySet = Array<ecs::Entity>;
 
 	public:
-		EntityStorage(const ecs::TypeRegistry& typeRegistry);
+		EntityStorage(ecs::QueryRegistry& queryRegistry);
 
-		void FlushChanges(ecs::EntityBuffer& entityBuffer, ecs::QueryRegistry& queryRegistry);
+		void FlushChanges();
 
-		auto GetEntityMap() const -> const Map<ecs::Entity, int32>&;
+		auto GetEntityBuffer() -> ecs::EntityBuffer&;
+		auto GetEntityBuffer() const -> const ecs::EntityBuffer&;
+
+		auto GetEntityMap() const -> const EntityMap&;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
 		bool IsAlive(const ecs::Entity& entity) const;
 
+		auto CreateEntity() -> ecs::Entity;
+
+		void DestroyEntity(const ecs::Entity& entity);
+
 		//////////////////////////////////////////////////////////////////////////
 		// Component
 
 		template<class TComponent>
-		bool HasComponent(const ecs::Entity& entity) const;
+		bool IsRegistered() const;
 
 		template<class TComponent>
-		auto GetComponent(const ecs::Entity& entity) -> TComponent&;
+		void RegisterComponent();
+
+		template<class TComponent, typename... TArgs>
+		auto AddComponent(const ecs::Entity& entity, TArgs&&... args) -> TComponent&;
 
 		template<class TComponent>
-		auto TryComponent(const ecs::Entity& entity) -> TComponent*;
+		void RemoveComponent(const ecs::Entity& entity);
 
-	public:
-		void CreateTable(const ecs::EntityLayout& tableLayout);
-		void DestroyTable(const int32 index);
-		void DestroyTable(const ecs::EntityLayout& tableLayout);
-		void MoveTable(const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout);
-		void OptimizeTables();
+		template<class TComponent>
+		bool HasComponent(const ecs::Entity& entity, const bool alive = true) const;
 
-		auto GetTable(const int32 index) -> ecs::EntityTable&;
-		auto GetTable(const str::Guid& tableId) -> ecs::EntityTable&;
-		auto GetTable(const ecs::Entity& entity) -> ecs::EntityTable&;
-		auto GetTable(const ecs::Entity& entity) const -> const ecs::EntityTable&;
-		auto GetTable(const ecs::EntityLayout& tableLayout) -> ecs::EntityTable&;
-		auto GetOrCreateTable(const ecs::EntityLayout& tableLayout) -> ecs::EntityTable&;
+		template<class TComponent>
+		auto GetComponent(const ecs::Entity& entity, const bool alive = true) const -> TComponent&;
 
-		void CreateEntity(const ecs::Entity& entity, const ecs::ComponentMask& componentMask);
-		void MoveEntity(const ecs::Entity& entity, const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout);
-		void UpdateEntity(const ecs::Entity& entity, const ecs::ComponentMask& componentMask);
-
-		auto GetComponent(const ecs::Entity& entity, const ecs::ComponentId& componentId) -> char*;
+		template<class TComponent>
+		auto TryComponent(const ecs::Entity& entity, const bool alive = true) const -> TComponent*;
 
 	private:
-		const ecs::TypeRegistry& m_TypeRegistry;
+		ecs::Entity m_Entity = {};
+		ecs::EntityBuffer m_EntityBuffer;
+		ecs::QueryRegistry& m_QueryRegistry;
 
-		Map<str::Guid, EChange> m_TableChanges = {};
+		Components m_AliveComponents;
+		Components m_DeadComponents;
+		EntityMap m_AliveEntities;
+		EntitySet m_DeadEntities;
 
-		// Array of tables that hold the components for all archetypes.
-		Array<ecs::EntityTable> m_Tables = {};
-		// Maps an entity to its table index.
-		// #todo: use a paged array instead of a map
-		Map<ecs::Entity, int32> m_EntityMap = {};
-		// Maps a guid to the table index.
-		Map<str::Guid, int32> m_GuidMap = {};
-		// Maps a layout to the table index.
-		Map<ecs::EntityLayout, int32> m_LayoutMap = {};
+		Set<ecs::ComponentId> m_FrameComponents;
 	};
 }
 

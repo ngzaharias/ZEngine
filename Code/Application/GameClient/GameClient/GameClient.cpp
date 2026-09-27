@@ -173,9 +173,6 @@ void client::GameClient::Update(const GameTime& gameTime)
 
 	m_EntityWorld.Update(gameTime);
 	m_UIManager.Update(gameTime);
-
-	m_ReplicationPeer.Update(gameTime);
-	m_EntityWorld.FlushChanges();
 }
 
 void client::GameClient::PostUpdate(const GameTime& gameTime)

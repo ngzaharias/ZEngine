@@ -1,351 +1,173 @@
 #include "ECS/EntityStorage.h"
 
 #include "Core/Profiler.h"
-#include "ECS/EntityBuffer.h"
 #include "ECS/QueryRegistry.h"
-#include "ECS/TypeRegistry.h"
 
-ecs::EntityStorage::EntityStorage(const ecs::TypeRegistry& typeRegistry)
-	: m_TypeRegistry(typeRegistry)
+ecs::EntityStorage::EntityStorage(ecs::QueryRegistry& queryRegistry)
+	: m_QueryRegistry(queryRegistry)
 {
+	m_Entity = CreateEntity();
 }
 
-void ecs::EntityStorage::FlushChanges(ecs::EntityBuffer& entityBuffer, ecs::QueryRegistry& queryRegistry)
+auto ecs::EntityStorage::GetEntityBuffer() -> ecs::EntityBuffer&
+{
+	return m_EntityBuffer;
+}
+
+auto ecs::EntityStorage::GetEntityBuffer() const -> const ecs::EntityBuffer&
+{
+	return m_EntityBuffer;
+}
+
+auto ecs::EntityStorage::GetEntityMap() const -> const EntityMap&
+{
+	return m_AliveEntities;
+}
+
+bool ecs::EntityStorage::IsAlive(const ecs::Entity& entity) const
+{
+	return m_AliveEntities.Contains(entity);
+}
+
+auto ecs::EntityStorage::CreateEntity() -> ecs::Entity
+{
+	return m_EntityBuffer.CreateEntity();
+}
+
+void ecs::EntityStorage::DestroyEntity(const ecs::Entity& entity)
+{
+	Z_PANIC(IsAlive(entity), "Entity isn't alive!");
+	m_EntityBuffer.DestroyEntity(entity);
+}
+
+void ecs::EntityStorage::FlushChanges()
 {
 	PROFILE_FUNCTION();
 
+	const ecs::QueryMasks& queryMasks = ecs::QueryRegistry::GetMasks();
+
 	{
-		PROFILE_CUSTOM("Update previous tables.");
-		const int32 count = m_Tables.GetCount();
-		for (int32 i = count - 1; i >= 0; --i)
-		{
-			ecs::EntityTable& table = m_Tables[i];
-			table.m_UpdatedMap.RemoveAll();
-
-			const ecs::EntityLayout sourceLayout = table.m_EntityLayout;
-			const bool hasAdded = sourceLayout.m_AddedMask.HasAny();
-			const bool hasRemoved = sourceLayout.m_RemovedMask.HasAny();
-			if (sourceLayout.m_IsDead)
-			{
-				for (auto&& [entity, unused] : table.m_EntityMap)
-					entityBuffer.RecycleEntity(entity);
-
-				const ecs::ComponentMask componentMask = table.m_EntityLayout.GetMask();
-				table.DestructAllPages(componentMask);
-				table.RemoveAllPages();
-			}
-			else if (hasAdded || hasRemoved)
-			{
-				// destruct all components that were removed last frame
-				if (hasRemoved)
-					table.DestructAllPages(sourceLayout.m_RemovedMask);
-
-				ecs::EntityLayout targetLayout = sourceLayout;
-				targetLayout.m_AddedMask.ClearAll();
-				targetLayout.m_RemovedMask.ClearAll();
-				targetLayout.m_IncludeMask.Clear(sourceLayout.m_RemovedMask);
-				MoveTable(sourceLayout, targetLayout);
-			}
-		}
+		PROFILE_CUSTOM("Remove dead components.");
+		for (ecs::IComponentContainer* storage : m_DeadComponents.GetValues())
+			storage->RemoveAll();
 	}
 
 	{
 		PROFILE_CUSTOM("Remove frame components.");
-	}
-
-	{
-		PROFILE_CUSTOM("Move entities to tables.");
-		for (auto&& [entity, changes] : entityBuffer.m_EntityChanges)
+		for (ecs::ComponentId typeId : m_FrameComponents)
 		{
-			const auto find = m_EntityMap.Find(entity);
-			if (find == m_EntityMap.end())
-			{
-				CreateEntity(entity, changes.m_Added);
-			}
-			else
-			{
-				// #edge-case: copy table layout since a new table might be created as a part of the move
-				const ecs::EntityTable& table = GetTable(find->second);
-				const ecs::EntityLayout sourceLayout = table.m_EntityLayout;
-
-				ecs::EntityLayout targetLayout = sourceLayout;
-				if (changes.m_IsDestroy)
-				{
-					targetLayout.m_AddedMask = changes.m_Added;
-					targetLayout.m_IncludeMask.Raise(changes.m_Added);
-					targetLayout.m_RemovedMask.Raise(changes.m_Added);
-					targetLayout.m_RemovedMask.Raise(changes.m_Removed);
-					targetLayout.m_RemovedMask.Raise(sourceLayout.m_AddedMask);
-					targetLayout.m_RemovedMask.Raise(sourceLayout.m_IncludeMask);
-				}
-				else
-				{
-					targetLayout.m_AddedMask = changes.m_Added;
-					targetLayout.m_RemovedMask = changes.m_Removed;
-					targetLayout.m_IncludeMask.Raise(changes.m_Added);
-					targetLayout.m_IncludeMask.Clear(changes.m_Removed);
-				}
-				targetLayout.m_IsDead = changes.m_IsDestroy;
-
-				MoveEntity(entity, sourceLayout, targetLayout);
-				UpdateEntity(entity, changes.m_Updated);
-			}
-		}
-		entityBuffer.m_EntityChanges.RemoveAll();
-	}
-
-	{
-		PROFILE_CUSTOM("Copy components to tables.");
-		for (auto&& [componentId, storage] : entityBuffer.m_Components)
-		{
-			if (storage->GetCount() == 0)
-				continue;
-
-			const ecs::TypeComponent& componentInfo = m_TypeRegistry.GetComponentInfo(componentId);
-			for (const ecs::Entity& entity : storage->GetEntities())
-			{
-				char* sourceData = storage->GetComponent(entity);
-				char* targetData = GetComponent(entity, componentId);
-				componentInfo.m_Copystructor(sourceData, targetData);
-			}
-
+			ecs::IComponentContainer* storage = m_AliveComponents.Get(typeId);
 			storage->RemoveAll();
 		}
 	}
 
 	{
+		PROFILE_CUSTOM("Remove dead entities from queries.");
+		for (const ecs::Entity& entity : m_DeadEntities)
+		{
+			for (const auto& [queryId, queryMask] : queryMasks)
+			{
+				ecs::QueryGroup& queryGroup = m_QueryRegistry.m_Groups[queryId];
+				queryGroup.Remove(entity);
+			}
+
+			m_EntityBuffer.RecycleEntity(entity);
+		}
+		m_DeadEntities.RemoveAll();
+	}
+
+	{
+		PROFILE_CUSTOM("Clear any queries that refresh each frame.");
+		for (const auto& [queryId, queryMask] : queryMasks)
+		{
+			ecs::QueryGroup& queryGroup = m_QueryRegistry.m_Groups[queryId];
+
+			const bool isSingleFrameQuery =
+				queryMask.m_AddedMask.HasAny() ||
+				queryMask.m_RemovedMask.HasAny() ||
+				queryMask.m_UpdatedMask.HasAny();
+
+			if (isSingleFrameQuery)
+				queryGroup.RemoveAll();
+		}
+	}
+
+	{
+		PROFILE_CUSTOM("Move added components from buffer -> alive.");
+		for (auto&& [componentId, fStorage] : m_EntityBuffer.m_Components)
+		{
+			ecs::IComponentContainer* eStorage = m_AliveComponents.Get(componentId);
+			fStorage->MoveAll(*eStorage);
+		}
+	}
+
+	{
 		PROFILE_CUSTOM("Update queries.");
-		for (auto&& [tableId, change] : m_TableChanges)
+
+		// updates queries
+		// inserts new entities
+		// moves components from alive -> dead
+		for (auto&& [entity, changes] : m_EntityBuffer.m_EntityChanges)
 		{
-			const ecs::EntityTable& table = GetTable(tableId);
-			switch (change)
+			ecs::ComponentMask& componentMask = m_AliveEntities[entity];
+			componentMask |= changes.m_Added;
+
+			// mark all components as removed
+			if (changes.m_IsDestroy)
+				changes.m_Removed |= componentMask;
+
+			// move components from alive -> dead
+			// update the component mask
+			if (changes.m_Removed.HasAny())
 			{
-			case EChange::Created:
-				queryRegistry.RegisterTable(tableId, table.m_EntityLayout);
-				break;
-			case EChange::Destroyed:
-				queryRegistry.UnregisterTable(tableId, table.m_EntityLayout);
-				break;
+				for (auto&& [componentId, aStorage] : m_AliveComponents)
+				{
+					if (!changes.m_Removed.Has(componentId))
+						continue;
+
+					ecs::IComponentContainer* dStorage = m_DeadComponents.Get(componentId);
+					aStorage->Move(entity, *dStorage);
+				}
+
+				componentMask &= ~changes.m_Removed;
+				changes.m_Added &= ~changes.m_Removed;
+				changes.m_Updated &= ~changes.m_Removed;
+			}
+
+			// update queries
+			for (const auto& [queryId, queryMask] : queryMasks)
+			{
+				ecs::QueryGroup& queryGroup = m_QueryRegistry.m_Groups[queryId];
+
+				const bool hasAllAdded = changes.m_Added.HasAll(queryMask.m_AddedMask);
+				const bool hasAllRemoved = changes.m_Removed.HasAll(queryMask.m_RemovedMask);
+				const bool hasAllUpdated = changes.m_Updated.HasAll(queryMask.m_UpdatedMask);
+
+				const bool hasAllIncludes = componentMask.HasAll(queryMask.m_IncludeMask);
+				const bool hasNoneExcludes = componentMask.HasNone(queryMask.m_ExcludeMask);
+
+				const bool hasAnyCondition = 
+					queryMask.m_ConditionAlive == !changes.m_IsDestroy ||
+					queryMask.m_ConditionDead == changes.m_IsDestroy;
+
+				if (hasAllAdded && hasAllRemoved && hasAllUpdated && hasAllIncludes && hasNoneExcludes && hasAnyCondition)
+				{
+					queryGroup.Add(entity);
+				}
+				else
+				{
+					queryGroup.Remove(entity);
+				}
+			}
+
+			// move entity from alive -> dead
+			if (changes.m_IsDestroy)
+			{
+				m_AliveEntities.Remove(entity);
+				m_DeadEntities.Append(entity);
 			}
 		}
-		m_TableChanges.RemoveAll();
-	}
-}
-
-auto ecs::EntityStorage::GetEntityMap() const -> const Map<ecs::Entity, int32>&
-{
-	return m_EntityMap;
-}
-
-bool ecs::EntityStorage::IsAlive(const ecs::Entity& entity) const
-{
-	const auto find = m_EntityMap.Find(entity);
-	if (find == m_EntityMap.end())
-		return false;
-
-	const ecs::EntityTable& table = m_Tables[find->second];
-	return !table.m_EntityLayout.m_IsDead;
-}
-
-void ecs::EntityStorage::CreateTable(const ecs::EntityLayout& tableLayout)
-{
-	Z_PANIC(!m_LayoutMap.Contains(tableLayout), "");
-
-	const str::Guid tableId = str::Guid::Generate();
-	const int32 index = m_Tables.GetCount();
-	m_GuidMap.Set(tableId, index);
-	m_LayoutMap.Set(tableLayout, index);
-
-	ecs::EntityTable& table = m_Tables.Emplace();
-	table.m_TableId = tableId;
-	table.m_EntityLayout = tableLayout;
-
-	const ecs::ComponentMask componentMask = tableLayout.m_AddedMask | tableLayout.m_IncludeMask | tableLayout.m_RemovedMask;
-	for (const ecs::ComponentId componentId : componentMask)
-	{
-		const ecs::TypeComponent& componentType = m_TypeRegistry.GetComponentInfo(componentId);
-
-		ecs::ComponentLayout& layout = table.m_ComponentMap[componentId];
-		layout.m_Name = componentType.m_Name;
-		layout.m_Offset = table.m_EntitySize;
-		layout.m_Bytes = componentType.m_Bytes;
-		layout.m_Constructor = componentType.m_Constructor;
-		layout.m_Copystructor = componentType.m_Copystructor;
-		layout.m_Destructor = componentType.m_Destructor;
-
-		// do last
-		table.m_EntitySize += componentType.m_Bytes;
 	}
 
-	m_TableChanges[tableId] = EChange::Created;
-}
-
-void ecs::EntityStorage::DestroyTable(const int32 index)
-{
-	// #note: don't remove the table from storage, that is done separately as it is an expensive operation
-	ecs::EntityTable& table = m_Tables[index];
-	table.DestructAllPages(table.m_EntityLayout.m_IncludeMask | table.m_EntityLayout.m_RemovedMask);
-	table.RemoveAllPages();
-}
-
-void ecs::EntityStorage::DestroyTable(const ecs::EntityLayout& tableLayout)
-{
-	const int32 index = m_LayoutMap.Get(tableLayout);
-	DestroyTable(index);
-}
-
-void ecs::EntityStorage::MoveTable(const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout)
-{
-	// #edge-case: target table first else you'll invalidate the source table if the target needs to be created
-	ecs::EntityTable& targetTable = GetOrCreateTable(targetLayout);
-	ecs::EntityTable& sourceTable = GetTable(sourceLayout);
-
-	// move components
-	for (auto&& [entity, index] : sourceTable.m_EntityMap)
-	{
-		targetTable.AppendEntity(entity);
-
-		char* sourceData = sourceTable.GetEntityData(entity);
-		char* targetData = targetTable.GetEntityData(entity);
-		auto& sourceMap = sourceTable.m_ComponentMap;
-		auto& targetMap = targetTable.m_ComponentMap;
-
-		const ecs::ComponentMask componentMask =
-			(sourceTable.m_EntityLayout.m_IncludeMask | sourceTable.m_EntityLayout.m_RemovedMask) &
-			(targetTable.m_EntityLayout.m_IncludeMask | targetTable.m_EntityLayout.m_RemovedMask);
-		for (const ecs::ComponentId& componentId : componentMask)
-		{
-			const ecs::ComponentLayout& sourceLayout = sourceMap.Get(componentId);
-			const ecs::ComponentLayout& targetLayout = targetMap.Get(componentId);
-			Z_PANIC(sourceLayout.m_Bytes == targetLayout.m_Bytes, "Component size mismatch!");
-
-			char* sourceComponent = &sourceData[sourceLayout.m_Offset];
-			char* targetComponent = &targetData[targetLayout.m_Offset];
-			targetLayout.m_Copystructor(sourceComponent, targetComponent);
-		}
-
-		// #todo: different way to fetch table index
-		m_EntityMap[entity] = m_GuidMap.Get(targetTable.m_TableId);
-	}
-
-	sourceTable.RemoveAllPages();
-}
-
-void ecs::EntityStorage::OptimizeTables()
-{
-	// #todo: fix maps
-	for (int32 i = m_Tables.GetCount(); i > 0; --i)
-	{
-		ecs::EntityTable& table = m_Tables[i];
-		if (table.m_EntityMap.IsEmpty())
-			m_Tables.RemoveAt(i);
-	}
-}
-
-auto ecs::EntityStorage::GetTable(const int32 index) -> ecs::EntityTable&
-{
-	return m_Tables[index];
-}
-
-auto ecs::EntityStorage::GetTable(const str::Guid& tableId) -> ecs::EntityTable&
-{
-	const int32 index = m_GuidMap.Get(tableId);
-	return m_Tables[index];
-}
-
-auto ecs::EntityStorage::GetTable(const ecs::Entity& entity) -> ecs::EntityTable&
-{
-	const int32 index = m_EntityMap.Get(entity);
-	return m_Tables[index];
-}
-
-auto ecs::EntityStorage::GetTable(const ecs::Entity& entity) const -> const ecs::EntityTable&
-{
-	const int32 index = m_EntityMap.Get(entity);
-	return m_Tables[index];
-}
-
-auto ecs::EntityStorage::GetTable(const ecs::EntityLayout& tableLayout) -> ecs::EntityTable&
-{
-	const int32 index = m_LayoutMap.Get(tableLayout);
-	return m_Tables[index];
-}
-
-auto ecs::EntityStorage::GetOrCreateTable(const ecs::EntityLayout& tableLayout) -> ecs::EntityTable&
-{
-	const auto find = m_LayoutMap.Find(tableLayout);
-	if (find != m_LayoutMap.end())
-	{
-		return m_Tables[find->second];
-	}
-	else
-	{
-		CreateTable(tableLayout);
-		return m_Tables.GetLast();
-	}
-}
-
-void ecs::EntityStorage::CreateEntity(const ecs::Entity& entity, const ecs::ComponentMask& componentMask)
-{
-	const ecs::EntityLayout layout = { 
-		.m_AddedMask = componentMask, 
-		.m_IncludeMask = componentMask };
-
-	ecs::EntityTable& table = GetOrCreateTable(layout);
-	table.AppendEntity(entity);
-
-	// #todo: different way to fetch table index
-	m_EntityMap[entity] = m_GuidMap.Get(table.m_TableId);
-}
-
-void ecs::EntityStorage::MoveEntity(const ecs::Entity& entity, const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout)
-{
-	if (sourceLayout != targetLayout)
-	{
-		// #edge-case: target table first else you'll invalidate the source table if the target needs to be created
-		ecs::EntityTable& targetTable = GetOrCreateTable(targetLayout);
-		ecs::EntityTable& sourceTable = GetTable(sourceLayout);
-
-		targetTable.AppendEntity(entity);
-
-		// move components
-		{
-			char* sourceData = sourceTable.GetEntityData(entity);
-			char* targetData = targetTable.GetEntityData(entity);
-			auto& sourceMap = sourceTable.m_ComponentMap;
-			auto& targetMap = targetTable.m_ComponentMap;
-
-			const ecs::ComponentMask componentMask =
-				sourceTable.m_EntityLayout.GetMask() &
-				targetTable.m_EntityLayout.GetMask();
-			for (const ecs::ComponentId& componentId : componentMask)
-			{
-				const ecs::ComponentLayout& sourceLayout = sourceMap.Get(componentId);
-				const ecs::ComponentLayout& targetLayout = targetMap.Get(componentId);
-				Z_PANIC(sourceLayout.m_Bytes == targetLayout.m_Bytes, "Component size mismatch!");
-
-				char* sourceComponent = &sourceData[sourceLayout.m_Offset];
-				char* targetComponent = &targetData[targetLayout.m_Offset];
-				targetLayout.m_Copystructor(sourceComponent, targetComponent);
-			}
-		}
-
-		sourceTable.RemoveEntity(entity);
-
-		// #todo: different way to fetch table index
-		m_EntityMap[entity] = m_GuidMap.Get(targetTable.m_TableId);
-	}
-}
-
-void ecs::EntityStorage::UpdateEntity(const ecs::Entity& entity, const ecs::ComponentMask& componentMask)
-{
-	ecs::EntityTable& table = GetTable(entity);
-	table.m_UpdatedMap.Set(entity, componentMask);
-}
-
-auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const ecs::ComponentId& componentId) -> char*
-{
-	const int32 tableIndex = m_EntityMap.Get(entity);
-	ecs::EntityTable& table = GetTable(tableIndex);
-	return table.GetComponent(entity, componentId);
+	m_EntityBuffer.m_EntityChanges.RemoveAll();
 }

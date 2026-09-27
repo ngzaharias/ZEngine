@@ -50,6 +50,99 @@ void ecs::TypeRegistry::RegisterComponent()
 	}
 }
 
+template<typename TComponent>
+void ecs::TypeRegistry::Constructor(void* data)
+{
+	new (data) TComponent();
+}
+
+template<typename TComponent>
+void ecs::TypeRegistry::Copystructor(void* source, void* target)
+{
+	new (target) TComponent(*static_cast<TComponent*>(source));
+}
+
+template<typename TComponent>
+void ecs::TypeRegistry::Destructor(void* data)
+{
+	TComponent* component = static_cast<TComponent*>(data);
+	component->~TComponent();
+}
+
+template<typename TComponent>
+bool ecs::TypeRegistry::HasComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity)
+{
+	return storage.HasComponent<TComponent>(entity);
+}
+
+template<typename TComponent>
+void ecs::TypeRegistry::AddComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data)
+{
+	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
+	auto& component = buffer.AddComponent<TComponent>(entity);
+	data.Read(component);
+}
+
+template<typename TComponent>
+void ecs::TypeRegistry::AddComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity)
+{
+	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
+	buffer.AddComponent<TComponent>(entity);
+}
+
+template<typename TComponent>
+void ecs::TypeRegistry::UpdateComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data)
+{
+	// if the component was already added, we need to fetch it from the buffer
+	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
+	if (buffer.HasComponent<TComponent>(entity))
+	{
+		auto& component = buffer.WriteComponent<TComponent>(entity);
+		data.Read(component);
+	}
+	// otherwise fetch it from the storage
+	else
+	{
+		// only mark for update if it's already in storage
+		buffer.UpdateComponent<TComponent>(entity);
+
+		auto& component = storage.GetComponent<TComponent>(entity);
+		data.Read(component);
+	}
+}
+
+template<typename TComponent>
+void ecs::TypeRegistry::UpdateComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity)
+{
+	// only mark for update if it's already in storage
+	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
+	if (!buffer.HasComponent<TComponent>(entity))
+	{
+		buffer.UpdateComponent<TComponent>(entity);
+	}
+}
+
+template<typename TComponent>
+void ecs::TypeRegistry::RemoveComponentSolo(ecs::EntityStorage& storage, const ecs::Entity& entity)
+{
+	ecs::EntityBuffer& buffer = storage.GetEntityBuffer();
+	buffer.RemoveComponent<TComponent>(entity);
+}
+
+template<typename TComponent>
+void ecs::TypeRegistry::ReadComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, MemBuffer& data)
+{
+	const auto& component = storage.GetComponent<TComponent>(entity);
+	data.Write(component);
+}
+
+template<typename TComponent>
+void ecs::TypeRegistry::WriteComponentData(ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data)
+{
+	auto& component = storage.GetComponent<TComponent>(entity);
+	data.Read(component);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Event
 
