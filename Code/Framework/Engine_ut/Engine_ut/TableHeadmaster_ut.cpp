@@ -56,7 +56,7 @@ namespace eng
 			m_AssetPath = root.GetParent();
 			m_AssetPath = m_AssetPath.GetParent();
 			m_AssetPath = m_AssetPath.GetParent();
-			m_AssetPath.AppendDir("Code");
+			m_AssetPath.AppendDir("Code\\Framework");
 			m_AssetPath.AppendDir(root.GetStem());
 			m_AssetPath.AppendDir("Assets\\TableHeadmaster_ut");
 		}
@@ -135,7 +135,7 @@ namespace eng
 		int32 value = 0;
 		RAIIHelper raiihelper;
 		auto& headmaster = raiihelper.m_Headmaster;
-		headmaster.Register<ShutdownTable>("ShutdownTable", value);
+		headmaster.Register<ShutdownTable>("GuidKeyTable", value);
 		headmaster.Shutdown();
 
 		CHECK(value == 1);
@@ -146,7 +146,7 @@ namespace eng
 		int32 value = 0;
 		RAIIHelper raiihelper;
 		auto& headmaster = raiihelper.m_Headmaster;
-		headmaster.Register<ShutdownTable>("ShutdownTable", value);
+		headmaster.Register<ShutdownTable>("GuidKeyTable", value);
 		headmaster.Initialise(raiihelper.m_AssetPath);
 
 		CHECK(value == 0);
