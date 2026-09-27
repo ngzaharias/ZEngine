@@ -30,6 +30,8 @@ namespace ecs
 
 		void FlushChanges(ecs::EntityBuffer& entityBuffer);
 
+		auto GetEntityMap() const -> const Map<ecs::Entity, int32>&;
+
 		//////////////////////////////////////////////////////////////////////////
 		// Entity
 
@@ -57,6 +59,7 @@ namespace ecs
 		auto GetTable(const int32 index) -> ecs::EntityTable&;
 		auto GetTable(const str::Guid& tableId) -> ecs::EntityTable&;
 		auto GetTable(const ecs::Entity& entity) -> ecs::EntityTable&;
+		auto GetTable(const ecs::Entity& entity) const -> const ecs::EntityTable&;
 		auto GetTable(const ecs::EntityLayout& tableLayout) -> ecs::EntityTable&;
 		auto GetOrCreateTable(const ecs::EntityLayout& tableLayout) -> ecs::EntityTable&;
 

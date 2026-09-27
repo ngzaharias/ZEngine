@@ -147,6 +147,11 @@ void ecs::EntityStorage2::FlushChanges(ecs::EntityBuffer& entityBuffer)
 
 }
 
+auto ecs::EntityStorage2::GetEntityMap() const -> const Map<ecs::Entity, int32>&
+{
+	return m_EntityMap;
+}
+
 bool ecs::EntityStorage2::IsAlive(const ecs::Entity& entity) const
 {
 	const auto find = m_EntityMap.Find(entity);
@@ -264,6 +269,12 @@ auto ecs::EntityStorage2::GetTable(const str::Guid& tableId) -> ecs::EntityTable
 }
 
 auto ecs::EntityStorage2::GetTable(const ecs::Entity& entity) -> ecs::EntityTable&
+{
+	const int32 index = m_EntityMap.Get(entity);
+	return m_Tables[index];
+}
+
+auto ecs::EntityStorage2::GetTable(const ecs::Entity& entity) const -> const ecs::EntityTable&
 {
 	const int32 index = m_EntityMap.Get(entity);
 	return m_Tables[index];
