@@ -30,22 +30,12 @@ namespace ecs
 			return range.begin() != range.end();
 		}
 
-		auto begin()
+		auto begin() const
 		{
 			return QueryIterator<TQuery>{ m_World, std::begin(m_Data), std::end(m_Data) };
 		}
 
-		auto cbegin() const
-		{
-			return QueryIterator<TQuery>{ m_World, std::begin(m_Data), std::end(m_Data) };
-		}
-
-		auto end()
-		{
-			return QueryIterator<TQuery>{ m_World, std::end(m_Data), std::end(m_Data)};
-		}
-
-		auto cend() const
+		auto end() const
 		{
 			return QueryIterator<TQuery>{ m_World, std::end(m_Data), std::end(m_Data)};
 		}
