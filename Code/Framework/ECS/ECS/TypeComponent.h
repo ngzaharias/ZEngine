@@ -26,7 +26,6 @@ namespace ecs
 		TypeId m_LocalId = -1;
 
 		ecs::QueryId m_AddedId = -1;
-		ecs::QueryId m_UpdatedId = -1;
 		ecs::QueryId m_RemovedId = -1;
 		ecs::QueryId m_IncludeId = -1;
 

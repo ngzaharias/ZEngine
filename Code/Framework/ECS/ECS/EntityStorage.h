@@ -58,6 +58,7 @@ namespace ecs
 
 		auto GetTable(const int32 index) -> ecs::EntityTable&;
 		auto GetTable(const str::Guid& tableId) -> ecs::EntityTable&;
+		auto GetTable(const str::Guid& tableId) const -> const ecs::EntityTable&;
 		auto GetTable(const ecs::Entity& entity) -> ecs::EntityTable&;
 		auto GetTable(const ecs::Entity& entity) const -> const ecs::EntityTable&;
 		auto GetTable(const ecs::EntityLayout& tableLayout) -> ecs::EntityTable&;

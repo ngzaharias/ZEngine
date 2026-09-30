@@ -97,6 +97,7 @@ void ecs::ReplicationHost::ProcessEntities()
 
 	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
 	const auto& queries = m_EntityWorld.m_QueryRegistry;
+	const auto& storage = m_EntityWorld.m_EntityStorage;
 
 	for (auto&& [peerId, replicationData] : m_ReplicationMap)
 	{
@@ -113,9 +114,35 @@ void ecs::ReplicationHost::ProcessEntities()
 
 			Set<ecs::Entity> toAdd, toUpdate, toRemove;
 			const Set<ecs::Entity>& replicated = replicationData.m_Replicated;
-			enumerate::Intersection(replicated, queries.GetGroup(entry.m_AddedId), toAdd);
-			enumerate::Intersection(replicated, queries.GetGroup(entry.m_UpdatedId), toUpdate);
-			enumerate::Intersection(replicated, queries.GetGroup(entry.m_RemovedId), toRemove);
+			for (const str::Guid& tableId : queries.GetGroup(entry.m_AddedId))
+			{
+				const ecs::EntityTable& table = storage.GetTable(tableId);
+				for (const auto& [entity, index] : table.m_EntityMap)
+				{
+					if (replicated.Contains(entity))
+						toAdd.Add(entity);
+				}
+			}
+
+			for (const str::Guid& tableId : queries.GetGroup(entry.m_RemovedId))
+			{
+				const ecs::EntityTable& table = storage.GetTable(tableId);
+				for (const auto& [entity, index] : table.m_EntityMap)
+				{
+					if (replicated.Contains(entity))
+						toRemove.Add(entity);
+				}
+			}
+
+			for (const str::Guid& tableId : queries.GetGroup(entry.m_IncludeId))
+			{
+				const ecs::EntityTable& table = storage.GetTable(tableId);
+				for (const auto& [entity, mask] : table.m_UpdatedMap)
+				{
+					if (replicated.Contains(entity))
+						toUpdate.Add(entity);
+				}
+			}
 
 			// #note: this only handles components AFTER an entity was marked for replication
 			for (const ecs::Entity& entity : toAdd)
@@ -139,7 +166,15 @@ void ecs::ReplicationHost::ProcessEntities()
 				continue;
 
 			Set<ecs::Entity> toAdd;
-			enumerate::Intersection(created, queries.GetGroup(entry.m_IncludeId), toAdd);
+			for (const str::Guid& tableId : queries.GetGroup(entry.m_IncludeId))
+			{
+				const ecs::EntityTable& table = storage.GetTable(tableId);
+				for (const auto& [entity, index] : table.m_EntityMap)
+				{
+					if (created.Contains(entity))
+						toAdd.Add(entity);
+				}
+			}
 
 			for (const ecs::Entity& entity : toAdd)
 				ComponentAdd(peerId, entity, entry);

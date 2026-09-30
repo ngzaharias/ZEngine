@@ -25,7 +25,6 @@ void ecs::TypeRegistry::RegisterComponent()
 	entry.m_LocalId = localId;
 
 	entry.m_AddedId = ecs::QueryProxy<ecs::query::Added<TComponent>>::Id();
-	entry.m_UpdatedId = ecs::QueryProxy<ecs::query::Updated<TComponent>>::Id();
 	entry.m_RemovedId = ecs::QueryProxy<ecs::query::Removed<TComponent>>::Id();
 	entry.m_IncludeId = ecs::QueryProxy<ecs::query::Include<TComponent>>::Id();
 

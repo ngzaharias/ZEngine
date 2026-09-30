@@ -253,6 +253,12 @@ auto ecs::EntityStorage::GetTable(const str::Guid& tableId) -> ecs::EntityTable&
 	return m_Tables[index];
 }
 
+auto ecs::EntityStorage::GetTable(const str::Guid& tableId) const -> const ecs::EntityTable&
+{
+	const int32 index = m_GuidMap.Get(tableId);
+	return m_Tables[index];
+}
+
 auto ecs::EntityStorage::GetTable(const ecs::Entity& entity) -> ecs::EntityTable&
 {
 	const int32 index = m_EntityMap.Get(entity);
