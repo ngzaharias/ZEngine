@@ -33,6 +33,15 @@ void ecs::ReplicationHost::Initialise()
 		host.m_OnPeerDisconnected.Connect(*this, &ecs::ReplicationHost::OnPeerDisconnected),
 		host.m_OnProcessMessages.Connect(*this, &ecs::ReplicationHost::OnProcessMessages),
 	};
+
+	const auto& registry = m_EntityWorld.ReadResource<ecs::TypeRegistry>();
+	for (auto&& [componentId, entry] : registry.GetComponentMap())
+	{
+		if (!entry.m_IsReplicated)
+			continue;
+
+		m_ReplicationMask.Raise(componentId);
+	}
 }
 
 void ecs::ReplicationHost::Shutdown()
@@ -107,10 +116,10 @@ void ecs::ReplicationHost::ProcessEntities()
 			EntityDestroy(peerId, entity);
 		}
 
-		for (auto&& [typeId, entry] : registry.GetComponentMap())
+		// entities that had component changes this frame
+		for (const ecs::ComponentId componentId : m_ReplicationMask)
 		{
-			if (!entry.m_IsReplicated)
-				continue;
+			const ecs::TypeComponent& entry = registry.GetComponentInfo(componentId);
 
 			Set<ecs::Entity> toAdd, toUpdate, toRemove;
 			const Set<ecs::Entity>& replicated = replicationData.m_Replicated;
@@ -144,7 +153,6 @@ void ecs::ReplicationHost::ProcessEntities()
 				}
 			}
 
-			// #note: this only handles components AFTER an entity was marked for replication
 			for (const ecs::Entity& entity : toAdd)
 				ComponentAdd(peerId, entity, entry);
 			for (const ecs::Entity& entity : toUpdate)
@@ -154,30 +162,19 @@ void ecs::ReplicationHost::ProcessEntities()
 		}
 
 		// entities that were added to replication this frame
+		// ...and their components
 		const Set<ecs::Entity>& created = replicationData.m_ToCreate;
 		for (const ecs::Entity& entity : created)
 		{
 			EntityCreate(peerId, entity);
-		}
-		// ...and their components
-		for (auto&& [typeId, entry] : registry.GetComponentMap())
-		{
-			if (!entry.m_IsReplicated)
-				continue;
 
-			Set<ecs::Entity> toAdd;
-			for (const str::Guid& tableId : queries.GetGroup(entry.m_IncludeId))
+			const ecs::EntityTable& table = storage.GetTable(entity);
+			const ecs::ComponentMask componentMask = table.m_EntityLayout.m_IncludeMask & m_ReplicationMask;
+			for (const ecs::ComponentId componentId : componentMask)
 			{
-				const ecs::EntityTable& table = storage.GetTable(tableId);
-				for (const auto& [entity, index] : table.m_EntityMap)
-				{
-					if (created.Contains(entity))
-						toAdd.Add(entity);
-				}
-			}
-
-			for (const ecs::Entity& entity : toAdd)
+				const ecs::TypeComponent& entry = registry.GetComponentInfo(componentId);
 				ComponentAdd(peerId, entity, entry);
+			}
 		}
 
 		replicationData.m_ToCreate.RemoveAll();

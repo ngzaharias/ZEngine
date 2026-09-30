@@ -5,6 +5,7 @@
 #include "Core/Set.h"
 #include "Core/SparseMap.h"
 #include "Core/TypeInfo.h"
+#include "ECS/ComponentMask.h"
 #include "ECS/Entity.h"
 #include "ECS/EventId.h"
 #include "Network/PeerId.h"
@@ -87,6 +88,7 @@ namespace ecs
 
 	private:
 		ecs::EntityWorld& m_EntityWorld;
+		ecs::ComponentMask m_ReplicationMask;
 
 		DelegateCollection m_Collection;
 		ReplicationMap m_ReplicationMap;
