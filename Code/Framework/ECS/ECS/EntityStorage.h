@@ -57,6 +57,7 @@ namespace ecs
 		void OptimizeTables();
 
 		auto GetTable(const int32 index) -> ecs::EntityTable&;
+		auto GetTable(const int32 index) const -> const ecs::EntityTable&;
 		auto GetTable(const str::Guid& tableId) -> ecs::EntityTable&;
 		auto GetTable(const str::Guid& tableId) const -> const ecs::EntityTable&;
 		auto GetTable(const ecs::Entity& entity) -> ecs::EntityTable&;
