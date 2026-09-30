@@ -54,7 +54,18 @@ void ecs::ReadComponent(ecs::EntityStorage& storage, const ecs::Entity& entity, 
 template<typename TComponent>
 void ecs::WriteComponent(ecs::EntityBuffer& buffer, ecs::EntityStorage& storage, const ecs::Entity& entity, const MemBuffer& data)
 {
-	buffer.UpdateComponent<TComponent>(entity);
-	auto& component = storage.GetComponent<TComponent>(entity);
-	data.Read(component);
+	// if the component was added this frame, we modify it and don't mark it for update
+	if (buffer.HasComponent<TComponent>(entity))
+	{
+		auto& component = buffer.WriteComponent<TComponent>(entity);
+		data.Read(component);
+	}
+	// otherwise fetch it from the storage and mark as updated
+	else
+	{
+		buffer.UpdateComponent<TComponent>(entity);
+
+		auto& component = storage.GetComponent<TComponent>(entity);
+		data.Read(component);
+	}
 }
