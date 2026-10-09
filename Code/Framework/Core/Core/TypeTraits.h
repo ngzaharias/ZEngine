@@ -53,7 +53,7 @@ namespace core
 	}
 
 	template<typename TType, typename... TOther>
-	constexpr bool Contains(const TType&, const TypeList<TOther...>&)
+	constexpr bool Contains(const TypeList<TOther...>&, const TType&)
 	{
 		return Contains<TType, TOther...>();
 	}
