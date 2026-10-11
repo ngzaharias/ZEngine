@@ -3,6 +3,8 @@
 #include "Core/Array.h"
 #include "Core/Guid.h"
 #include "Core/Map.h"
+#include "ECS/ComponentContainer.h"
+#include "ECS/ComponentId.h"
 #include "ECS/Entity.h"
 #include "ECS/EntityLayout.h"
 #include "ECS/EntityTable.h"
@@ -19,6 +21,8 @@ namespace ecs
 	/// \brief Stores all the components for all entities of all archetypes.
 	class EntityStorage
 	{
+		using Containers = SparseMap<ecs::ComponentId, ecs::IComponentContainer*>;
+
 		enum class EChange
 		{
 			Created = 0,
@@ -39,6 +43,12 @@ namespace ecs
 
 		//////////////////////////////////////////////////////////////////////////
 		// Component
+
+		template<class TComponent>
+		bool IsRegistered() const;
+
+		template<class TComponent>
+		void RegisterComponent();
 
 		template<class TComponent>
 		bool HasComponent(const ecs::Entity& entity) const;
@@ -76,6 +86,7 @@ namespace ecs
 
 		Map<str::Guid, EChange> m_TableChanges = {};
 
+		Containers m_FrameComponents = {};
 		// Array of tables that hold the components for all archetypes.
 		Array<ecs::EntityTable> m_Tables = {};
 		// Maps an entity to its table index.

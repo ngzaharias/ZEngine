@@ -22,7 +22,7 @@ namespace ecs
 
 		QueryIterator(ecs::EntityWorld& world, const TableIterator& tableItr, const TableIterator& tableEnd)
 			: m_World(world)
-			, m_Updated(ecs::ToComponentMask(Updated{}))
+			, m_UpdatedComponents(ecs::ToComponentMask(Updated{}))
 			, m_TableItr(tableItr)
 			, m_TableEnd(tableEnd)
 		{
@@ -63,15 +63,26 @@ namespace ecs
 	private:
 		bool IsValidEntity()
 		{
-			if (m_Updated.HasNone())
-				return true;
+			const ecs::Entity& entity = m_EntityItr->first;
+			if (m_UpdatedComponents.HasAny())
+			{
+				ecs::EntityTable& table = m_World.m_EntityStorage.GetTable(*m_TableItr);
+				const auto find = table.m_UpdatedMap.Find(entity);
+				if (find == table.m_UpdatedMap.end())
+					return false;
 
-			ecs::EntityTable& table = m_World.m_EntityStorage.GetTable(*m_TableItr);
-			const auto find = table.m_UpdatedMap.Find(m_EntityItr->first);
-			if (find == table.m_UpdatedMap.end())
-				return false;
-			
-			return find->second.HasAll(m_Updated);
+				if (!find->second.HasAll(m_Updated))
+					return false;
+			}
+
+			for (const ecs::ComponentId componentId : m_FrameComponents)
+			{
+				auto* container = m_World.m_EntityStorage.m_FrameComponents.Get(componentId);
+				if (!container->Contains(entity))
+					return false;
+			}
+
+			return true;
 		}
 
 		bool IsValidTable()
@@ -111,8 +122,9 @@ namespace ecs
 
 	private:
 		ecs::EntityWorld& m_World;
+		ecs::ComponentMask m_FrameComponents;
+		ecs::ComponentMask m_UpdatedComponents;
 
-		ecs::ComponentMask m_Updated;
 		TableIterator m_TableItr;
 		TableIterator m_TableEnd;
 		EntityIterator m_EntityItr;

@@ -60,6 +60,7 @@ void ecs::EntityWorld::RegisterComponent()
 	Z_PANIC(!IsRegistered<TComponent>(), "Component is already registered!");
 
 	m_EntityBuffer.RegisterComponent<TComponent>();
+	m_EntityStorage.RegisterComponent<TComponent>();
 	m_TypeRegistry.RegisterComponent<TComponent>();
 
 	if constexpr (std::derived_from<TComponent, ecs::StaticComponent>)

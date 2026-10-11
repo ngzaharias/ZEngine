@@ -51,6 +51,17 @@ void ecs::EntityStorage::FlushChanges(ecs::EntityBuffer& entityBuffer, ecs::Quer
 
 	{
 		PROFILE_CUSTOM("Remove frame components.");
+		for (auto&& [componentId, container] : m_FrameComponents)
+			container->RemoveAll();
+	}
+
+	{
+		PROFILE_CUSTOM("Copy frame components.");
+		for (auto&& [componentId, targetContainer] : m_FrameComponents)
+		{
+			auto& sourceContainer = entityBuffer.GetContainerAt(componentId);
+			sourceContainer.MoveAll(*targetContainer);
+		}
 	}
 
 	{
