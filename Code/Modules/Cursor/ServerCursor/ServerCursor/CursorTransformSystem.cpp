@@ -28,7 +28,10 @@ void server::cursor::TransformSystem::Update(World& world, const GameTime& gameT
 		sharedComponent.m_Translate = eventData.m_Translate;
 	}
 
-	for (auto&& view : world.Query<ecs::query::Added<server::network::PeerComponent>::Include<const server::network::PeerComponent>>())
+	using AddedQuery = ecs::query
+		::Added<server::network::PeerComponent>
+		::Include<const server::network::PeerComponent>;
+	for (auto&& view : world.Query<AddedQuery>())
 	{
 		const auto& peerComponent = view.ReadRequired<server::network::PeerComponent>();
 		const net::PeerId peerId = peerComponent.m_PeerId;
