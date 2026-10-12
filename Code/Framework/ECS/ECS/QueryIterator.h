@@ -12,7 +12,6 @@ namespace ecs
 	template<typename TQuery>
 	struct QueryIterator
 	{
-		using Updated = ecs::query::UpdatedAccess<TQuery>::NonConst;
 		using Required = ecs::query::IncludeAccess<TQuery>::NonConst;
 		using Optional = ecs::query::OptionalAccess<TQuery>::NonConst;
 
@@ -20,9 +19,9 @@ namespace ecs
 		using TableIterator = ecs::QueryGroup::const_iterator;
 		using EntityIterator = ecs::EntityTable::EntityToPage::const_iterator;
 
-		QueryIterator(ecs::EntityWorld& world, const TableIterator& tableItr, const TableIterator& tableEnd)
-			: m_World(world)
-			, m_UpdatedComponents(ecs::ToComponentMask(Updated{}))
+		QueryIterator(ecs::EntityWorld& entityWorld, const ecs::QueryMask& queryMask, const TableIterator& tableItr, const TableIterator& tableEnd)
+			: m_EntityWorld(entityWorld)
+			, m_QueryMask(queryMask)
 			, m_TableItr(tableItr)
 			, m_TableEnd(tableEnd)
 		{
@@ -32,7 +31,7 @@ namespace ecs
 
 		auto operator*() -> EntityView
 		{
-			return EntityView(m_World, m_EntityItr->first);
+			return EntityView(m_EntityWorld, m_EntityItr->first);
 		}
 
 		auto operator++() -> QueryIterator&
@@ -64,22 +63,26 @@ namespace ecs
 		bool IsValidEntity()
 		{
 			const ecs::Entity& entity = m_EntityItr->first;
-			if (m_UpdatedComponents.HasAny())
+			const ecs::ComponentMask& updatedMask = m_QueryMask.m_TableUpdatedMask;
+			if (updatedMask.HasAny())
 			{
-				ecs::EntityTable& table = m_World.m_EntityStorage.GetTable(*m_TableItr);
+				ecs::EntityTable& table = m_EntityWorld.m_EntityStorage.GetTable(*m_TableItr);
 				const auto find = table.m_UpdatedMap.Find(entity);
 				if (find == table.m_UpdatedMap.end())
 					return false;
 
-				if (!find->second.HasAll(m_Updated))
+				if (!find->second.HasAll(updatedMask))
 					return false;
 			}
 
-			for (const ecs::ComponentId componentId : m_FrameComponents)
+			const ecs::ComponentMask& externalMask = m_QueryMask.m_ExternIncludeMask;
+			if (externalMask.HasAny())
 			{
-				auto* container = m_World.m_EntityStorage.m_FrameComponents.Get(componentId);
-				if (!container->Contains(entity))
-					return false;
+				for (const ecs::ComponentId componentId : externalMask)
+				{
+					if (!m_EntityWorld.m_EntityStorage.HasComponent(entity, componentId))
+						return false;
+				}
 			}
 
 			return true;
@@ -97,7 +100,7 @@ namespace ecs
 				m_EntityItr++;
 				if (m_EntityItr != m_EntityEnd)
 					continue;
-			
+
 				m_TableItr++;
 				SkipEmptyTables();
 			}
@@ -107,7 +110,7 @@ namespace ecs
 		{
 			while (IsValidTable())
 			{
-				ecs::EntityTable& table = m_World.m_EntityStorage.GetTable(*m_TableItr);
+				ecs::EntityTable& table = m_EntityWorld.m_EntityStorage.GetTable(*m_TableItr);
 				m_EntityItr = table.m_EntityMap.begin();
 				m_EntityEnd = table.m_EntityMap.end();
 				if (m_EntityItr != m_EntityEnd)
@@ -121,9 +124,8 @@ namespace ecs
 		}
 
 	private:
-		ecs::EntityWorld& m_World;
-		ecs::ComponentMask m_FrameComponents;
-		ecs::ComponentMask m_UpdatedComponents;
+		ecs::EntityWorld& m_EntityWorld;
+		const ecs::QueryMask& m_QueryMask;
 
 		TableIterator m_TableItr;
 		TableIterator m_TableEnd;

@@ -13,34 +13,45 @@ namespace ecs
 	template<typename TQuery>
 	struct QueryRange
 	{
-		operator const ecs::QueryGroup& () const { return m_Data; }
+	public:
+		QueryRange(ecs::EntityWorld& entityWorld, const ecs::QueryGroup& queryGroup, const ecs::QueryMask& queryMask)
+			: m_EntityWorld(entityWorld)
+			, m_QueryGroup(queryGroup)
+			, m_QueryMask(queryMask)
+		{
+		}
 
-		static int32 Count(ecs::EntityWorld& entityWorld, const ecs::QueryGroup& queryGroup)
+	public:
+		auto begin() const
+		{
+			return QueryIterator<TQuery>{ m_EntityWorld, m_QueryMask, std::begin(m_QueryGroup), std::end(m_QueryGroup) };
+		}
+
+		auto end() const
+		{
+			return QueryIterator<TQuery>{ m_EntityWorld, m_QueryMask, std::end(m_QueryGroup), std::end(m_QueryGroup) };
+		}
+
+
+	public:
+		static int32 Count(ecs::EntityWorld& entityWorld, const ecs::QueryGroup& queryGroup, const ecs::QueryMask& queryMask)
 		{
 			int32 count = 0;
-			auto range = QueryRange<TQuery>{ entityWorld, queryGroup };
+			auto range = QueryRange<TQuery>{ entityWorld, queryGroup, queryMask };
 			for (auto&& view : range)
 				count++;
 			return count;
 		}
 
-		static bool HasAny(ecs::EntityWorld& entityWorld, const ecs::QueryGroup& queryGroup)
+		static bool HasAny(ecs::EntityWorld& entityWorld, const ecs::QueryGroup& queryGroup, const ecs::QueryMask& queryMask)
 		{
-			auto range = QueryRange<TQuery>{ entityWorld, queryGroup };
+			auto range = QueryRange<TQuery>{ entityWorld, queryGroup, queryMask };
 			return range.begin() != range.end();
 		}
 
-		auto begin() const
-		{
-			return QueryIterator<TQuery>{ m_World, std::begin(m_Data), std::end(m_Data) };
-		}
-
-		auto end() const
-		{
-			return QueryIterator<TQuery>{ m_World, std::end(m_Data), std::end(m_Data)};
-		}
-
-		ecs::EntityWorld& m_World;
-		const ecs::QueryGroup& m_Data;
+	private:
+		ecs::EntityWorld& m_EntityWorld;
+		const ecs::QueryGroup& m_QueryGroup;
+		const ecs::QueryMask& m_QueryMask;
 	};
 }

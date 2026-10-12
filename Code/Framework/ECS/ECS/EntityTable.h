@@ -11,12 +11,6 @@
 
 namespace ecs
 {
-	struct EntityInfo
-	{
-		ecs::ComponentMask m_UpdatedMask = {};
-		int32 m_Index = -1;
-	};
-
 	/// \brief Stores the components for all entities of a single archetype spread across multiple pages.
 	class EntityTable
 	{

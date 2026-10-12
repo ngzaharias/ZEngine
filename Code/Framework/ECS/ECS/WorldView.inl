@@ -210,7 +210,8 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Count() -> int32
 	{
 		static const ecs::QueryId queryId = ecs::QueryProxy<TType>::Id();
 		const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
-		return ecs::QueryRange<TType>::Count(m_EntityWorld, queryGroup);
+		const ecs::QueryMask& queryMask = m_QueryRegistry.GetMask(queryId);
+		return ecs::QueryRange<TType>::Count(m_EntityWorld, queryGroup, queryMask);
 	}
 }
 
@@ -226,7 +227,8 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::HasAny() -> bool
 	{
 		static const ecs::QueryId queryId = ecs::QueryProxy<TType>::Id();
 		const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
-		return ecs::QueryRange<TType>::HasAny(m_EntityWorld, queryGroup);
+		const ecs::QueryMask& queryMask = m_QueryRegistry.GetMask(queryId);
+		return ecs::QueryRange<TType>::HasAny(m_EntityWorld, queryGroup, queryMask);
 	}
 }
 
@@ -250,7 +252,8 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Query() -> ecs::
 
 	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
 	const ecs::QueryGroup& queryGroup = m_QueryRegistry.GetGroup(queryId);
-	return ecs::QueryRange<TQuery>{ m_EntityWorld, queryGroup };
+	const ecs::QueryMask& queryMask = m_QueryRegistry.GetMask(queryId);
+	return ecs::QueryRange<TQuery>{ m_EntityWorld, queryGroup, queryMask };
 }
 
 

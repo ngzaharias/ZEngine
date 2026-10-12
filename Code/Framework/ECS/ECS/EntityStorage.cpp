@@ -322,41 +322,40 @@ void ecs::EntityStorage::CreateEntity(const ecs::Entity& entity, const ecs::Comp
 
 void ecs::EntityStorage::MoveEntity(const ecs::Entity& entity, const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout)
 {
-	if (sourceLayout != targetLayout)
+	Z_PANIC(sourceLayout != targetLayout, "");
+
+	// #edge-case: target table first else you'll invalidate the source table if the target needs to be created
+	ecs::EntityTable& targetTable = GetOrCreateTable(targetLayout);
+	ecs::EntityTable& sourceTable = GetTable(sourceLayout);
+
+	targetTable.AppendEntity(entity);
+
+	// move components
 	{
-		// #edge-case: target table first else you'll invalidate the source table if the target needs to be created
-		ecs::EntityTable& targetTable = GetOrCreateTable(targetLayout);
-		ecs::EntityTable& sourceTable = GetTable(sourceLayout);
+		char* sourceData = sourceTable.GetEntityData(entity);
+		char* targetData = targetTable.GetEntityData(entity);
+		auto& sourceMap = sourceTable.m_ComponentMap;
+		auto& targetMap = targetTable.m_ComponentMap;
 
-		targetTable.AppendEntity(entity);
-
-		// move components
+		const ecs::ComponentMask componentMask =
+			sourceTable.m_EntityLayout.GetMask() &
+			targetTable.m_EntityLayout.GetMask();
+		for (const ecs::ComponentId& componentId : componentMask)
 		{
-			char* sourceData = sourceTable.GetEntityData(entity);
-			char* targetData = targetTable.GetEntityData(entity);
-			auto& sourceMap = sourceTable.m_ComponentMap;
-			auto& targetMap = targetTable.m_ComponentMap;
+			const ecs::ComponentLayout& sourceLayout = sourceMap.Get(componentId);
+			const ecs::ComponentLayout& targetLayout = targetMap.Get(componentId);
+			Z_PANIC(sourceLayout.m_Bytes == targetLayout.m_Bytes, "Component size mismatch!");
 
-			const ecs::ComponentMask componentMask =
-				sourceTable.m_EntityLayout.GetMask() &
-				targetTable.m_EntityLayout.GetMask();
-			for (const ecs::ComponentId& componentId : componentMask)
-			{
-				const ecs::ComponentLayout& sourceLayout = sourceMap.Get(componentId);
-				const ecs::ComponentLayout& targetLayout = targetMap.Get(componentId);
-				Z_PANIC(sourceLayout.m_Bytes == targetLayout.m_Bytes, "Component size mismatch!");
-
-				char* sourceComponent = &sourceData[sourceLayout.m_Offset];
-				char* targetComponent = &targetData[targetLayout.m_Offset];
-				targetLayout.m_Copystructor(sourceComponent, targetComponent);
-			}
+			char* sourceComponent = &sourceData[sourceLayout.m_Offset];
+			char* targetComponent = &targetData[targetLayout.m_Offset];
+			targetLayout.m_Copystructor(sourceComponent, targetComponent);
 		}
-
-		sourceTable.RemoveEntity(entity);
-
-		// #todo: different way to fetch table index
-		m_EntityMap[entity] = m_GuidMap.Get(targetTable.m_TableId);
 	}
+
+	sourceTable.RemoveEntity(entity);
+
+	// #todo: different way to fetch table index
+	m_EntityMap[entity] = m_GuidMap.Get(targetTable.m_TableId);
 }
 
 void ecs::EntityStorage::UpdateEntity(const ecs::Entity& entity, const ecs::ComponentMask& componentMask)
@@ -365,9 +364,32 @@ void ecs::EntityStorage::UpdateEntity(const ecs::Entity& entity, const ecs::Comp
 	table.m_UpdatedMap.Set(entity, componentMask);
 }
 
+bool ecs::EntityStorage::HasComponent(const ecs::Entity& entity, const ecs::ComponentId& componentId)
+{
+	if (m_FrameComponentMask.Has(componentId))
+	{
+		auto* storage = m_FrameComponents.Get(componentId);
+		return storage->Contains(entity);
+	}
+	else
+	{
+		const int32 tableIndex = m_EntityMap.Get(entity);
+		ecs::EntityTable& table = GetTable(tableIndex);
+		return table.GetComponent(entity, componentId);
+	}
+}
+
 auto ecs::EntityStorage::GetComponent(const ecs::Entity& entity, const ecs::ComponentId& componentId) -> char*
 {
-	const int32 tableIndex = m_EntityMap.Get(entity);
-	ecs::EntityTable& table = GetTable(tableIndex);
-	return table.GetComponent(entity, componentId);
+	if (m_FrameComponentMask.Has(componentId))
+	{
+		auto* storage = m_FrameComponents.Get(componentId);
+		return storage->GetComponent(entity);
+	}
+	else
+	{
+		const int32 tableIndex = m_EntityMap.Get(entity);
+		ecs::EntityTable& table = GetTable(tableIndex);
+		return table.GetComponent(entity, componentId);
+	}
 }

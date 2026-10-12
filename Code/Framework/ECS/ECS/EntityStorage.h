@@ -79,14 +79,16 @@ namespace ecs
 		void MoveEntity(const ecs::Entity& entity, const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout);
 		void UpdateEntity(const ecs::Entity& entity, const ecs::ComponentMask& componentMask);
 
+		bool HasComponent(const ecs::Entity& entity, const ecs::ComponentId& componentId);
 		auto GetComponent(const ecs::Entity& entity, const ecs::ComponentId& componentId) -> char*;
 
-	private:
+	public:
 		const ecs::TypeRegistry& m_TypeRegistry;
 
 		Map<str::Guid, EChange> m_TableChanges = {};
 
 		Containers m_FrameComponents = {};
+		ecs::ComponentMask m_FrameComponentMask = {};
 		// Array of tables that hold the components for all archetypes.
 		Array<ecs::EntityTable> m_Tables = {};
 		// Maps an entity to its table index.

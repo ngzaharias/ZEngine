@@ -21,15 +21,15 @@ void ecs::QueryRegistry::RegisterTable(const str::Guid& tableId, const ecs::Enti
 		const bool hasDead = queryMask.m_ConditionDead && layout.m_IsDead;
 		if (!hasAlive && !hasDead)
 			continue;
-		if (!layout.m_AddedMask.HasAll(queryMask.m_AddedMask))
+		if (!layout.m_AddedMask.HasAll(queryMask.m_TableAddedMask))
 			continue;
-		if (!layout.m_RemovedMask.HasAll(queryMask.m_RemovedMask))
+		if (!layout.m_RemovedMask.HasAll(queryMask.m_TableRemovedMask))
 			continue;
-		if (!layout.m_IncludeMask.HasAll(queryMask.m_UpdatedMask))
+		if (!layout.m_IncludeMask.HasAll(queryMask.m_TableUpdatedMask))
 			continue;
-		if (!layout.m_IncludeMask.HasAll(queryMask.m_IncludeMask))
+		if (!layout.m_IncludeMask.HasAll(queryMask.m_TableIncludeMask))
 			continue;
-		if (!layout.m_IncludeMask.HasNone(queryMask.m_ExcludeMask))
+		if (!layout.m_IncludeMask.HasNone(queryMask.m_TableExcludeMask))
 			continue;
 
 		group.Add(tableId);
@@ -40,6 +40,11 @@ void ecs::QueryRegistry::UnregisterTable(const str::Guid& tableId, const ecs::En
 {
 	for (auto&& [queryId, group] : m_Groups)
 		group.Remove(tableId);
+}
+
+const ecs::QueryMask& ecs::QueryRegistry::GetMask(const ecs::QueryId queryId)
+{
+	return m_Masks.Get(queryId);
 }
 
 ecs::QueryMasks& ecs::QueryRegistry::GetMasks()

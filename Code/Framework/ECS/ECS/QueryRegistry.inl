@@ -12,15 +12,40 @@ inline ecs::QueryId ecs::QueryProxy<TQuery>::Id()
 		isRegistered = true;
 		const ecs::QueryId queryId = ToTypeId<TQuery, ecs::QueryTag>();
 
-		ecs::QueryMask queryMask;
-		queryMask.m_AddedMask = ecs::ToComponentMask(ecs::query::AddedAccess<TQuery>{});
-		queryMask.m_RemovedMask = ecs::ToComponentMask(ecs::query::RemovedAccess<TQuery>{});
-		queryMask.m_UpdatedMask = ecs::ToComponentMask(ecs::query::UpdatedAccess<TQuery>{});
-		queryMask.m_IncludeMask = ecs::ToComponentMask(ecs::query::IncludeAccess<TQuery>{});
-		queryMask.m_ExcludeMask = ecs::ToComponentMask(ecs::query::ExcludeAccess<TQuery>{});
-		queryMask.m_ConditionAlive = core::Contains(ecs::Alive{}, ecs::query::ConditionAccess<TQuery>{});
-		queryMask.m_ConditionDead = core::Contains(ecs::Dead{}, ecs::query::ConditionAccess<TQuery>{});
+		using AddedAccess = ecs::query::AddedAccess<TQuery>;
+		using RemovedAccess = ecs::query::RemovedAccess<TQuery>;
+		using UpdatedAccess = ecs::query::UpdatedAccess<TQuery>;
+		using IncludeAccess = ecs::query::IncludeAccess<TQuery>;
+		using ExcludeAccess = ecs::query::ExcludeAccess<TQuery>;
+		using ExternalAccess = TypeDerived<ecs::FrameComponent, IncludeAccess>::type;
 
+		const ecs::ComponentMask addedMask = ecs::ToComponentMask(AddedAccess{});
+		const ecs::ComponentMask removedMask = ecs::ToComponentMask(RemovedAccess{});
+		const ecs::ComponentMask updatedMask = ecs::ToComponentMask(UpdatedAccess{});
+		const ecs::ComponentMask includeMask = ecs::ToComponentMask(IncludeAccess{});
+		const ecs::ComponentMask excludeMask = ecs::ToComponentMask(ExcludeAccess{});
+		const ecs::ComponentMask externalMask = ecs::ToComponentMask(ExternalAccess{});
+
+		ecs::QueryMask queryMask;
+		queryMask.m_ExternIncludeMask = externalMask;
+
+		queryMask.m_TableAddedMask = addedMask;
+		queryMask.m_TableRemovedMask = removedMask;
+		queryMask.m_TableUpdatedMask = updatedMask;
+		queryMask.m_TableIncludeMask = includeMask;
+		queryMask.m_TableExcludeMask = excludeMask;
+
+		// entity tables can't contain any external components
+		queryMask.m_TableAddedMask.Clear(externalMask);
+		queryMask.m_TableRemovedMask.Clear(externalMask);
+		queryMask.m_TableUpdatedMask.Clear(externalMask);
+		queryMask.m_TableIncludeMask.Clear(externalMask);
+		queryMask.m_TableExcludeMask.Clear(externalMask);
+
+		queryMask.m_ConditionAlive = core::Contains(ecs::query::ConditionAccess<TQuery>{}, ecs::Alive{});
+		queryMask.m_ConditionDead = core::Contains(ecs::query::ConditionAccess<TQuery>{}, ecs::Dead{});
+
+		// default to alive if not specified
 		if (!queryMask.m_ConditionAlive && !queryMask.m_ConditionDead)
 			queryMask.m_ConditionAlive = true;
 

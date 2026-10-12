@@ -45,6 +45,7 @@ namespace ecs
 		void RegisterTable(const str::Guid& tableId, const ecs::EntityLayout& layout);
 		void UnregisterTable(const str::Guid& tableId, const ecs::EntityLayout& layout);
 
+		static const ecs::QueryMask& GetMask(const ecs::QueryId queryId);
 		static ecs::QueryMasks& GetMasks();
 
 		const ecs::QueryGroup& GetGroup(const ecs::QueryId queryId) const;
