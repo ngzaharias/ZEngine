@@ -28,7 +28,10 @@ void ecs::EntityStorage::FlushChanges(ecs::EntityBuffer& entityBuffer, ecs::Quer
 			if (sourceLayout.m_IsDead)
 			{
 				for (auto&& [entity, unused] : table.m_EntityMap)
+				{
 					entityBuffer.RecycleEntity(entity);
+					m_EntityMap.Remove(entity);
+				}
 
 				const ecs::ComponentMask componentMask = table.m_EntityLayout.GetMask();
 				table.DestructAllPages(componentMask);
@@ -322,7 +325,8 @@ void ecs::EntityStorage::CreateEntity(const ecs::Entity& entity, const ecs::Comp
 
 void ecs::EntityStorage::MoveEntity(const ecs::Entity& entity, const ecs::EntityLayout& sourceLayout, const ecs::EntityLayout& targetLayout)
 {
-	Z_PANIC(sourceLayout != targetLayout, "");
+	if (sourceLayout == targetLayout)
+		return;
 
 	// #edge-case: target table first else you'll invalidate the source table if the target needs to be created
 	ecs::EntityTable& targetTable = GetOrCreateTable(targetLayout);
