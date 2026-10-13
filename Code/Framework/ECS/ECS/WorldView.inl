@@ -248,6 +248,7 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Query() -> ecs::
 {
 #ifndef Z_RELEASE
 	ValidateAccess<TQuery>();
+	ValidateQuery<TQuery>();
 #endif
 
 	static const ecs::QueryId queryId = ecs::QueryProxy<TQuery>::Id();
@@ -255,7 +256,6 @@ auto ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::Query() -> ecs::
 	const ecs::QueryMask& queryMask = m_QueryRegistry.GetMask(queryId);
 	return ecs::QueryRange<TQuery>{ m_EntityWorld, queryGroup, queryMask };
 }
-
 
 template<typename... TWrite, typename... TRead>
 template<class TQuery>
@@ -294,4 +294,15 @@ void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ValidateAccess()
 	using TOptionalRead = TypeConst<ecs::query::OptionalAccess<TQuery>>::type;
 	constexpr bool hasOptionalRead = core::ContainsAll(TOptionalRead{}, TAccessList{});
 	static_assert(hasOptionalRead, "WorldView doesn't have Read (or Write) access to Component in Optional Query.");
+}
+
+template<typename... TWrite, typename... TRead>
+template<class TQuery>
+void ecs::WorldView_t<TypeList<TWrite...>, TypeList<TRead...>>::ValidateQuery()
+{
+	// frame components
+	{
+		using RemovedAccess = TypeDerived<ecs::FrameComponent, ecs::query::RemovedAccess<TQuery>>::type;
+		static_assert(RemovedAccess::IsEmpty, "Removed Query doesn't support FrameComponent.");
+	}
 }

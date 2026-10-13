@@ -6,8 +6,10 @@ namespace ecs
 {
 	struct QueryMask
 	{
-		// Mask of components that are stored externally of the entity table.
-		ecs::ComponentMask m_ExternIncludeMask = {};
+		// Mask of frame components that must be present on the entity.
+		ecs::ComponentMask m_FrameIncludeMask = {};
+		// Mask of frame components that cannot be present on the entity.
+		ecs::ComponentMask m_FrameExcludeMask = {};
 
 		// Mask of components that must have been added in the previous frame.
 		ecs::ComponentMask m_TableAddedMask = {};

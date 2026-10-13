@@ -143,6 +143,8 @@ namespace ecs
 	private:
 		template<class TQuery>
 		void ValidateAccess();
+		template<class TQuery>
+		void ValidateQuery();
 
 	private:
 		ecs::EntityWorld& m_EntityWorld;

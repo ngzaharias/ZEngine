@@ -12,42 +12,49 @@ inline ecs::QueryId ecs::QueryProxy<TQuery>::Id()
 		isRegistered = true;
 		const ecs::QueryId queryId = ToTypeId<TQuery, ecs::QueryTag>();
 
-		using AddedAccess = ecs::query::AddedAccess<TQuery>;
-		using RemovedAccess = ecs::query::RemovedAccess<TQuery>;
-		using UpdatedAccess = ecs::query::UpdatedAccess<TQuery>;
-		using IncludeAccess = ecs::query::IncludeAccess<TQuery>;
-		using ExcludeAccess = ecs::query::ExcludeAccess<TQuery>;
-		using ExternalAccess = TypeDerived<ecs::FrameComponent, IncludeAccess>::type;
-
-		const ecs::ComponentMask addedMask = ecs::ToComponentMask(AddedAccess{});
-		const ecs::ComponentMask removedMask = ecs::ToComponentMask(RemovedAccess{});
-		const ecs::ComponentMask updatedMask = ecs::ToComponentMask(UpdatedAccess{});
-		const ecs::ComponentMask includeMask = ecs::ToComponentMask(IncludeAccess{});
-		const ecs::ComponentMask excludeMask = ecs::ToComponentMask(ExcludeAccess{});
-		const ecs::ComponentMask externalMask = ecs::ToComponentMask(ExternalAccess{});
-
 		ecs::QueryMask queryMask;
-		queryMask.m_ExternIncludeMask = externalMask;
 
-		queryMask.m_TableAddedMask = addedMask;
-		queryMask.m_TableRemovedMask = removedMask;
-		queryMask.m_TableUpdatedMask = updatedMask;
-		queryMask.m_TableIncludeMask = includeMask;
-		queryMask.m_TableExcludeMask = excludeMask;
+		// frame components
+		{
+			using AddedAccess = TypeDerived<ecs::FrameComponent, ecs::query::AddedAccess<TQuery>>::type;
+			using IncludeAccess = TypeDerived<ecs::FrameComponent, ecs::query::IncludeAccess<TQuery>>::type;
+			using ExcludeAccess = TypeDerived<ecs::FrameComponent, ecs::query::ExcludeAccess<TQuery>>::type;
 
-		// entity tables can't contain any external components
-		queryMask.m_TableAddedMask.Clear(externalMask);
-		queryMask.m_TableRemovedMask.Clear(externalMask);
-		queryMask.m_TableUpdatedMask.Clear(externalMask);
-		queryMask.m_TableIncludeMask.Clear(externalMask);
-		queryMask.m_TableExcludeMask.Clear(externalMask);
+			// no need to maintain added + include, just store in the same mask
+			queryMask.m_FrameIncludeMask |= ecs::ToComponentMask(AddedAccess{});
+			queryMask.m_FrameIncludeMask |= ecs::ToComponentMask(IncludeAccess{});
+			queryMask.m_FrameExcludeMask = ecs::ToComponentMask(ExcludeAccess{});
+		}
 
-		queryMask.m_ConditionAlive = core::Contains(ecs::query::ConditionAccess<TQuery>{}, ecs::Alive{});
-		queryMask.m_ConditionDead = core::Contains(ecs::query::ConditionAccess<TQuery>{}, ecs::Dead{});
+		// table components
+		{
+			using AddedAccess = ecs::query::AddedAccess<TQuery>;
+			using RemovedAccess = ecs::query::RemovedAccess<TQuery>;
+			using UpdatedAccess = ecs::query::UpdatedAccess<TQuery>;
+			using IncludeAccess = ecs::query::IncludeAccess<TQuery>;
+			using ExcludeAccess = ecs::query::ExcludeAccess<TQuery>;
 
-		// default to alive if not specified
-		if (!queryMask.m_ConditionAlive && !queryMask.m_ConditionDead)
-			queryMask.m_ConditionAlive = true;
+			queryMask.m_TableAddedMask = ecs::ToComponentMask(AddedAccess{});
+			queryMask.m_TableRemovedMask = ecs::ToComponentMask(RemovedAccess{});
+			queryMask.m_TableUpdatedMask = ecs::ToComponentMask(UpdatedAccess{});
+			queryMask.m_TableIncludeMask = ecs::ToComponentMask(IncludeAccess{});
+			queryMask.m_TableExcludeMask = ecs::ToComponentMask(ExcludeAccess{});
+
+			// entity tables can't contain any frame components
+			queryMask.m_TableAddedMask.Clear(queryMask.m_FrameIncludeMask);
+			queryMask.m_TableIncludeMask.Clear(queryMask.m_FrameIncludeMask);
+			queryMask.m_TableExcludeMask.Clear(queryMask.m_FrameExcludeMask);
+		}
+
+		// conditions
+		{
+			queryMask.m_ConditionAlive = core::Contains(ecs::query::ConditionAccess<TQuery>{}, ecs::Alive{});
+			queryMask.m_ConditionDead = core::Contains(ecs::query::ConditionAccess<TQuery>{}, ecs::Dead{});
+
+			// default to alive if not specified
+			if (!queryMask.m_ConditionAlive && !queryMask.m_ConditionDead)
+				queryMask.m_ConditionAlive = true;
+		}
 
 		ecs::QueryMasks& queryMasks = ecs::QueryRegistry::GetMasks();
 		Z_PANIC(queryMasks.Find(queryId) == queryMasks.end(), "QueryId already present in QueryRegistry!");

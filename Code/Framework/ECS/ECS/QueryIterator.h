@@ -63,24 +63,31 @@ namespace ecs
 		bool IsValidEntity()
 		{
 			const ecs::Entity& entity = m_EntityItr->first;
-			const ecs::ComponentMask& updatedMask = m_QueryMask.m_TableUpdatedMask;
-			if (updatedMask.HasAny())
+			if (m_QueryMask.m_TableUpdatedMask.HasAny())
 			{
 				ecs::EntityTable& table = m_EntityWorld.m_EntityStorage.GetTable(*m_TableItr);
 				const auto find = table.m_UpdatedMap.Find(entity);
 				if (find == table.m_UpdatedMap.end())
 					return false;
 
-				if (!find->second.HasAll(updatedMask))
+				if (!find->second.HasAll(m_QueryMask.m_TableUpdatedMask))
 					return false;
 			}
 
-			const ecs::ComponentMask& externalMask = m_QueryMask.m_ExternIncludeMask;
-			if (externalMask.HasAny())
+			if (m_QueryMask.m_FrameIncludeMask.HasAny())
 			{
-				for (const ecs::ComponentId componentId : externalMask)
+				for (const ecs::ComponentId componentId : m_QueryMask.m_FrameIncludeMask)
 				{
 					if (!m_EntityWorld.m_EntityStorage.HasComponent(entity, componentId))
+						return false;
+				}
+			}
+
+			if (m_QueryMask.m_FrameExcludeMask.HasAny())
+			{
+				for (const ecs::ComponentId componentId : m_QueryMask.m_FrameExcludeMask)
+				{
+					if (m_EntityWorld.m_EntityStorage.HasComponent(entity, componentId))
 						return false;
 				}
 			}
