@@ -10,6 +10,8 @@ struct TypeList
 	using Append = TypeList<Types..., Added...>;
 
 	using NonConst = TypeList<std::remove_const_t<Types>...>;
+
+	static constexpr bool IsEmpty = sizeof...(Types) == 0;
 };
 
 template<typename...>
