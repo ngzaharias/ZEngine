@@ -160,7 +160,11 @@ void shared::softbody::ChainSystem::Update(World& world, const GameTime& gameTim
 		const auto& chainTemplate = view.ReadRequired<shared::softbody::ChainTemplate>();
 		auto& chainComponent = world.AddComponent<shared::softbody::ChainComponent>(view);
 		for (int32 i = 0; i < chainTemplate.m_Links; ++i)
-			chainComponent.m_Links.Emplace();
+		{
+			shared::softbody::ChainLink& link = chainComponent.m_Links.Emplace();
+			link.m_Position = Vector2f::Zero;
+			link.m_Direction = Vector2f::AxisX;
+		}
 	}
 
 	using TemplateUpdatedQuery = ecs::query
