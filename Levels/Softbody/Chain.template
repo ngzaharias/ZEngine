@@ -1,8 +1,8 @@
 m_UUID = "10ed57cf87da4005aa152c1f1e763d8c"
 m_Name = "Chain"
 
-['softbody::ChainTemplate']
-m_Links = 4
+['shared::softbody::ChainTemplate']
+m_Links = 2
 
 ['eng::TransformTemplate']
 m_Rotate = { Pitch = 0, Roll = 0, Yaw = 0 }
